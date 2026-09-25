@@ -24,15 +24,17 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // the progress rail's trailing "Generate" jump entry is a second
 // /generate/i button on every mount now.
 import { GeneratorShell } from "./GeneratorShell";
-import { confirmKind } from "./__fixtures__/band-helpers";
+import { answerSide, confirmKind } from "./__fixtures__/band-helpers";
+import { TEST_SIDE, corridorGeometryResponse } from "./test-fixtures";
 import { DEFAULT_SHOULDER, hasLocation } from "@/lib/scenarios";
 import type { ShoulderScenario } from "@/lib/scenarios";
 
 // A real site (the standing E Colfax test spot) — the pinned counterpart
-// to the fresh-load default.
+// to the fresh-load default.  #290: with its side answered (ruling 10 —
+// a located plan's checks wait on the side).
 const PINNED: ShoulderScenario = {
   ...DEFAULT_SHOULDER,
-  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.73997, lng: -104.96632 },
+  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.73997, lng: -104.96632, work: { ...TEST_SIDE } },
 };
 
 const CLEAN_AUDIT = {
@@ -99,6 +101,10 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       status: 200,
       json: async () => OK_BD,
     } as unknown as Response);
+  }
+  // #290: the WHERE band's geometry read — the side control's choices.
+  if (url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve(corridorGeometryResponse());
   }
   return Promise.resolve({
     ok: true,
@@ -258,9 +264,21 @@ describe("no location, no certification (#186)", () => {
     await confirmKind();
     await flushDebounce();
     await settle();
+    // #290 (RULE 5, stated): the kind is not the last thing owed any more.
+    // Ruling 10 — a located plan's side is needs-you, and nothing is
+    // checked until it is answered.  With no road confirmed (this path),
+    // the side control offers the four headings (open-points ruling 1).
+    expect(btn().disabled).toBe(true);
+    expect(screen.getByTestId("strip-side-unconfirmed").textContent).toBe(
+      "◌AWAITING OCCUPIED SIDE",
+    );
+    expect(document.body.textContent).not.toContain("READY FOR TCS REVIEW");
+    await answerSide();
+    await flushDebounce();
+    await settle();
     expect(btn().disabled).toBe(false);
     // Confirmed: the checks fire, and the verdict the strip used to show
-    // too early is now the answer for a kind a person chose.
+    // too early is now the answer for a kind (and a side) a person chose.
     expect(document.body.textContent).toContain("READY FOR TCS REVIEW");
   });
 

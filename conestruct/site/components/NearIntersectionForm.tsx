@@ -253,6 +253,25 @@ export function NearIntersectionForm({
           />
         </Field>
 
+        {/* #290: under the work-start model the cross street is placed
+            by the plan, from the intersection marked on the map, along the
+            road from the work start (ruling 7) — there is no side or
+            distance to type.  The line says where it comes from; the
+            validation's reason (the mark is missing) stays under it. */}
+        {scenario.meta.pinModel === "work_start" ? (
+          <Field>
+            <LabelRow>Where is the intersection?</LabelRow>
+            <span className="tr-prov" data-testid="ni-placed-by-plan">
+              {scenario.meta.intersection
+                ? `${scenario.meta.intersection.name ?? "the marked intersection"} · marked on the map — the plan places it along the road from the work start`
+                : "not marked — mark the cross street on the map"}
+            </span>
+            {!approachesValidation.ok && (
+              <FieldErrorLine>{approachesValidation.message}</FieldErrorLine>
+            )}
+          </Field>
+        ) : (
+        <>
         <Field>
           <LabelRow htmlFor="ni-side">Where is the intersection?</LabelRow>
           <select id="ni-side"
@@ -289,6 +308,8 @@ export function NearIntersectionForm({
             <FieldErrorLine>{approachesValidation.message}</FieldErrorLine>
           )}
         </Field>
+        </>
+        )}
 
         <CheckRow
           on={legs[0]?.signalized ?? false}

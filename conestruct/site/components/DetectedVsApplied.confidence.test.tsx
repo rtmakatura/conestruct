@@ -206,13 +206,14 @@ describe("#274 inferred must not look like measured", () => {
     expect(clause("Lanes per direction")).not.toMatch(/no source tag/);
   });
 
-  it("a row with genuinely no method still SAYS the absence (Rule 10)", () => {
-    // Bearing comes off the candidate geometry, not the classifier, so
-    // there is no method to state — and the absence is stated rather
-    // than left as a gap the reader has to interpret.
+  it("#290: the typed-bearing row is retired — no 'Bearing' row renders", () => {
+    // It was the one row with no classifier method (the bearing came off
+    // the candidate geometry and was compared with the TYPED value).  The
+    // typed bearing is retired (FLOW.md §5a, Rule 5): the direction is
+    // derived from the road and the confirmed side, stated by the WHERE
+    // band in the side's own words — so there is no row to compare.
     mount(scenario("inferred", "inferred"));
-    expect(clause("Bearing")).toMatch(/no source tag/);
-    expect(clause("Bearing")).not.toMatch(/measured|inferred/);
+    expect(() => ledgerRow("Bearing")).toThrow(/no row labelled "Bearing"/);
   });
 
   it("stating the method does not make a measured row look inferred", () => {

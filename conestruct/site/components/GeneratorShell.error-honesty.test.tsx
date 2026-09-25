@@ -39,7 +39,7 @@ const FOUR_BY_FOURTEEN: ShoulderScenario = {
   ...DEFAULT_SHOULDER,
   lanes: 4,
   laneWidth: 14,
-  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.71466, lng: -104.94071 },
+  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.71466, lng: -104.94071, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
 };
 
 // What a non-mirrored 422 (workZoneSpeed > posted speed) looks like after

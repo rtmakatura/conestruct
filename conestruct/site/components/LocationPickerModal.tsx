@@ -38,9 +38,7 @@ import {
   MAX_LANES_PER_DIRECTION,
 } from "@/lib/scenarios/validation";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
-import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
-  buildCorridorPolyline,
   CORRIDOR_ZONES,
   ZONE_CHANNEL,
   ZONE_COLOR,
@@ -49,6 +47,12 @@ import {
   type CorridorZone,
 } from "@/lib/corridor-polyline";
 import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
+import type { Scenario } from "@/lib/scenarios";
+import {
+  geometryToPolyline,
+  useCorridorGeometry,
+  type GeometryFetch,
+} from "@/lib/corridor-geometry";
 
 type MapboxNamespace = typeof MapboxGL;
 
@@ -63,8 +67,15 @@ export interface LocationPickerInitial {
   address?: string;
   lat?: number;
   lng?: number;
-  bearingDeg?: number;
-  workZoneFt?: number;
+  /**
+   * #290 — the scenario as the band holds it.  The overlay is the
+   * BACKEND's geometry for it (/render/corridor-geometry, ruling 7), asked
+   * with this modal's live pin and road pick in place of the saved ones.
+   * Absent (a caller that tracks no scenario) → no overlay is drawn.
+   * Replaces the retired ``bearingDeg`` (the typed direction, #298) and
+   * ``workZoneFt`` (the band's Extent is the one length control, P2).
+   */
+  scenario?: Scenario;
   // Pre-existing scenario kind so the corridor preview knows the
   // closure type (shoulder vs lane vs shifting) for taper math.
   scenarioKind: ScenarioKind;
@@ -117,8 +128,6 @@ export interface LocationPickerResult {
   address: string;
   lat: number;
   lng: number;
-  bearingDeg?: number;
-  workZoneFt: number;
   classification: RoadClassification | null;
   overrides: RoadFieldOverrides;
   /**
@@ -232,12 +241,8 @@ function isValidLat(n: number): boolean {
 function isValidLng(n: number): boolean {
   return Number.isFinite(n) && n >= -180 && n <= 180;
 }
-// Bearing is presented as a 0–359 integer (360 normalises to 0 before
-// the value ever reaches the input).  Out-of-range or fractional
-// values trip the inline error and disable Save.
-function isValidBearing(n: number): boolean {
-  return Number.isFinite(n) && n >= 0 && n <= 359;
-}
+// A candidate's raw OSM bearing, normalised to 0–359.  (#290: never a
+// typed direction any more — the cross-street parallel filter reads it.)
 function normaliseBearing(n: number): number {
   const r = ((Math.round(n) % 360) + 360) % 360;
   return r;
@@ -305,11 +310,13 @@ function ConfPips({ c }: { c: Confidence }) {
 }
 
 // Build the marker DOM: a circle "pin" with an arrow extending from its
-// centre in the direction of travel. Updating ``bearingDeg`` rotates the
-// arrow around the pin without re-creating the marker.
+// centre in the direction of travel.  #290: the direction is the one the
+// BACKEND derived from the road and the confirmed side; null (no side yet)
+// hides the arrow — a pin with no direction draws none (the pre-side
+// ruling: no shape without a direction).
 function buildMarkerEl(): {
   root: HTMLDivElement;
-  setBearing: (deg: number) => void;
+  setBearing: (deg: number | null) => void;
 } {
   const root = document.createElement("div");
   root.style.position = "relative";
@@ -367,8 +374,9 @@ function buildMarkerEl(): {
 
   return {
     root,
-    setBearing: (deg: number) => {
-      arrowSvg.style.transform = `rotate(${deg}deg)`;
+    setBearing: (deg: number | null) => {
+      arrowSvg.style.display = deg === null ? "none" : "";
+      if (deg !== null) arrowSvg.style.transform = `rotate(${deg}deg)`;
     },
   };
 }
@@ -416,8 +424,10 @@ export function LocationPickerModal({
   const [hasPin, setHasPin] = useState(initialHasPin);
   const [lat, setLat] = useState(initialHasPin ? initial.lat! : 0);
   const [lng, setLng] = useState(initialHasPin ? initial.lng! : 0);
+  // #290: the picked candidate's raw OSM bearing — a road fact, read by
+  // the cross-street parallel filter only.  Not a direction of travel.
   const [bearing, setBearing] = useState(
-    initial.bearingDeg !== undefined ? normaliseBearing(initial.bearingDeg) : 0,
+    restoredRoad ? normaliseBearing(restoredRoad.candidate.bearing) : 0,
   );
   // All candidate ways returned by /api/road-bearing within snap range,
   // already deduplicated server-side by (name||ref, class, octant).
@@ -455,14 +465,8 @@ export function LocationPickerModal({
   const [lngInput, setLngInput] = useState(
     initialHasPin ? fmt4(initial.lng!) : "",
   );
-  const [bearingInput, setBearingInput] = useState(
-    initial.bearingDeg !== undefined
-      ? String(normaliseBearing(initial.bearingDeg))
-      : "",
-  );
   const [latError, setLatError] = useState<string | null>(null);
   const [lngError, setLngError] = useState<string | null>(null);
-  const [bearingError, setBearingError] = useState<string | null>(null);
 
   // ---- Search / geocode --------------------------------------------------
   const [searchQuery, setSearchQuery] = useState(initial.address ?? "");
@@ -490,17 +494,6 @@ export function LocationPickerModal({
   const [overrides, setOverrides] = useState<RoadFieldOverrides>(
     restoredRoad?.overrides ?? {},
   );
-
-  // ---- Work zone length --------------------------------------------------
-  const [workZoneFt, setWorkZoneFt] = useState(
-    Math.max(0, initial.workZoneFt ?? 0),
-  );
-  const [workZoneInput, setWorkZoneInput] = useState(
-    initial.workZoneFt && initial.workZoneFt > 0
-      ? String(Math.round(initial.workZoneFt))
-      : "",
-  );
-  const [workZoneError, setWorkZoneError] = useState<string | null>(null);
 
   // ---- Cross street (near_intersection kind only, #117) ------------------
   // Second pin marking the intersection.  The map's click handler
@@ -538,7 +531,9 @@ export function LocationPickerModal({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapboxGL.Map | null>(null);
   const markerRef = useRef<MapboxGL.Marker | null>(null);
-  const setMarkerBearingRef = useRef<((deg: number) => void) | null>(null);
+  const setMarkerBearingRef = useRef<((deg: number | null) => void) | null>(null);
+  // #290: the backend's derived direction of travel at the pin, or null.
+  const markerTravelRef = useRef<number | null>(null);
   const mapboxRef = useRef<MapboxNamespace | null>(null);
   const corridorReadyRef = useRef(false);
   // Mirrors the latest computed corridor so the deferred ``installCorridor``
@@ -582,125 +577,69 @@ export function LocationPickerModal({
         null)
       : null);
 
-  // ---- Corridor spec lengths (backend-fed, engine-removal PR D) ----------
-  // The MUTCD zone lengths (taper/buffer/advance/downstream) come from
-  // POST /api/render/corridor-spec — the same backend tables the plan
-  // itself uses; the frontend mirror they replace is deleted.  The
-  // lengths depend only on (kind, speed, roadType), so pin drags,
-  // bearing edits, and work-zone typing redraw the polyline instantly
-  // from the cached lengths — only a speed or road-type change refetches
-  // (debounced 300 ms).  On failure the last lengths stay in use with an
-  // explicit "unavailable" note; nothing is ever computed locally.
-  //
-  // UX-01: the fetch uses the same domain-clamped speed Save will apply
-  // (snapSpeedToDomain), so the corridor the operator reviews is the one
-  // the form keeps — same invariant the retired local math enforced.
-  const previewSpeed = snapSpeedToDomain(
-    initial.scenarioKind,
-    effectiveSpeed ?? initial.speedMph ?? 35,
-  );
-  const [specLengths, setSpecLengths] = useState<CorridorSpecLengths | null>(
-    null,
-  );
-  const [specStatus, setSpecStatus] = useState<SpecStatus>("idle");
+  // ---- The corridor: the BACKEND's geometry (#290, ruling 7) -------------
+  // The overlay used to fetch zone lengths (/api/render/corridor-spec) and
+  // walk them out from the pin along the typed bearing itself — a frontend
+  // mirror of corridor math (Rule 3) whose direction #298 found inverted.
+  // Now it asks /api/render/corridor-geometry for the corridor as the plan
+  // lays it: the work segment from the pin, each approach upstream of it.
+  // The question is the band's scenario with THIS modal's live pin and
+  // road pick in place of the saved ones.  The confirmed side is kept only
+  // while the pin and the road are the ones it was confirmed on; otherwise
+  // the answer is "side not confirmed" and the map draws the pin and the
+  // ruled sentence, nothing directional.
   const kindConfirmed = initial.kindConfirmed ?? true;
-  const specLengthsRef = useRef<CorridorSpecLengths | null>(null);
-  specLengthsRef.current = specLengths;
-  const specTokenRef = useRef(0);
-
-  useEffect(() => {
-    if (!open) return;
-    const myToken = ++specTokenRef.current;
-    // Finding 1: no live check for a kind nobody chose.  The lengths are
-    // cleared rather than kept, so no earlier answer draws as this one.
-    if (!kindConfirmed) {
-      setSpecLengths(null);
-      setSpecStatus("kind");
-      return;
-    }
-    setSpecStatus("loading");
-    const timer = setTimeout(async () => {
-      try {
-        const r = await fetch("/api/render/corridor-spec", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            kind: initial.scenarioKind,
-            speed: previewSpeed,
-            roadType: effectiveRoadType,
-            // #267: the widths the plan will use — relayed, not derived.
-            laneWidth: initial.laneWidth,
-            divided: initial.divided,
-          }),
-        });
-        if (specTokenRef.current !== myToken) return;
-        if (!r.ok) {
-          setSpecStatus("error");
-          return;
-        }
-        const j = (await r.json()) as CorridorSpecLengths;
-        if (specTokenRef.current !== myToken) return;
-        setSpecLengths(j);
-        setSpecStatus("ready");
-      } catch {
-        if (specTokenRef.current === myToken) setSpecStatus("error");
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [
-    open,
-    initial.scenarioKind,
-    previewSpeed,
-    effectiveRoadType,
-    kindConfirmed,
-    initial.laneWidth,
-    initial.divided,
-  ]);
-
-  // ---- Corridor projection ----------------------------------------------
-  // Geometry only — anchor, bearing, typed work-zone length; the zone
-  // lengths are the backend's (above).  Null until the first lengths
-  // arrive: the preview shows an explicit updating/unavailable note
-  // rather than a locally-derived extent.
-  const corridor = useMemo<CorridorPolyline | null>(() => {
-    if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return null;
-    if (workZoneFt <= 0) return null;
-    if (!specLengths) return null;
-    // #140: the picked candidate's relayed OSM geometry makes the
-    // preview follow the road through curves — the same source the
-    // render POST relays (preview must equal applied).  No pick yet
-    // (or a pre-#140 restored candidate) → straight frame, as before.
-    const pickedCenterline =
-      selectedCandidateIdx !== null
-        ? (bearingCandidates[selectedCandidateIdx]?.geometry ?? null)
-        : null;
-    return buildCorridorPolyline({
-      anchorLat: lat,
-      anchorLng: lng,
-      bearingDeg: bearing,
-      advanceWarningFt: specLengths.advance_warning_ft,
-      taperFt: specLengths.taper_ft,
-      bufferFt: specLengths.buffer_ft,
-      workZoneFt,
-      downstreamTaperFt: specLengths.downstream_taper_ft,
-      centerline: pickedCenterline,
-    });
-  }, [hasPin, lat, lng, bearing, workZoneFt, specLengths, selectedCandidateIdx, bearingCandidates]);
+  const pickedCandidate =
+    selectedCandidateIdx !== null ? (bearingCandidates[selectedCandidateIdx] ?? null) : null;
+  const baseScenario = initial.scenario ?? null;
+  const previewScenario = useMemo<Scenario | null>(() => {
+    if (!baseScenario || !hasPin || !isValidLat(lat) || !isValidLng(lng)) return null;
+    const samePin = baseScenario.meta.lat === lat && baseScenario.meta.lng === lng;
+    const sameRoad =
+      (baseScenario.meta.confirmedRoad?.candidate.way_id ?? null) ===
+      (pickedCandidate?.way_id ?? null);
+    const { bearingDeg: _typed, work, ...meta } = baseScenario.meta;
+    void _typed;
+    return {
+      ...baseScenario,
+      meta: {
+        ...meta,
+        lat,
+        lng,
+        ...(samePin && sameRoad && work ? { work } : {}),
+        // Only the relay reads this (candidate + the pin it is keyed to):
+        // it materializes the road's geometry and direction facts.
+        confirmedRoad: pickedCandidate
+          ? ({ candidate: pickedCandidate, pinLat: lat, pinLng: lng } as ConfirmedRoad)
+          : null,
+      },
+    } as Scenario;
+  }, [baseScenario, hasPin, lat, lng, pickedCandidate]);
 
   // #186/#211: while detection is resolving or a multi-candidate pick is
-  // pending, NOTHING binds the drawing to a road — the bearing was reset
-  // to 0 and no geometry is selected, so the old behavior drew a
-  // due-north chord that described no real state.  Absence renders as
-  // absence: the map draws no corridor until the operator picks (the
-  // extent ROWS stay — the zone lengths are backend facts independent of
-  // geometry).  Manual mode (no candidates at all) keeps its chord: the
-  // typed bearing is the only fact there, and the extent panel names the
-  // straight projection.
+  // pending, NOTHING binds the drawing to a road, so nothing is asked and
+  // nothing is drawn — absence renders as absence.
   const pendingPick =
     classify.state === "resolving" || classify.state === "awaiting_pick";
+  const geometry: GeometryFetch = useCorridorGeometry(
+    open && !pendingPick ? previewScenario : null,
+  );
+  const laidOut = geometry.state === "ready" ? geometry.geometry : null;
+  // Rule 112: before the kind is confirmed only the work segment draws.
+  const corridor = useMemo<CorridorPolyline | null>(
+    () => (laidOut ? geometryToPolyline(laidOut, { showApproaches: kindConfirmed }) : null),
+    [laidOut, kindConfirmed],
+  );
   const drawnCorridor = pendingPick ? null : corridor;
+  // The pre-side ruling: the pin and one sentence, nothing else.
+  const awaitingSide = laidOut?.status === "side_not_confirmed";
+  const travel = laidOut?.status === "laid_out" ? laidOut.travel_bearing_deg : null;
+  useEffect(() => {
+    markerTravelRef.current = travel;
+    setMarkerBearingRef.current?.(travel);
+  }, [travel]);
 
-  // Sync the corridor onto the live map.  ``corridorDataRef`` is the
+    // Sync the corridor onto the live map.  ``corridorDataRef`` is the
   // canonical "what should the line show" so the deferred installer
   // (running on ``load`` after style swap or initial init) can read it.
   // When ``drawnCorridor`` is null we clear the source so a half-edited
@@ -757,7 +696,7 @@ export function LocationPickerModal({
   // changes, road-property overrides all just redraw the polyline.
   // Use the Recenter button to get a "show me everything" view back.
   const shouldAutoFitInitialRef = useRef(
-    initialHasPin && (initial.workZoneFt ?? 0) > 0,
+    initialHasPin && (initial.scenario?.workLen ?? 0) > 0,
   );
   useEffect(() => {
     if (!corridor) return;
@@ -867,10 +806,6 @@ export function LocationPickerModal({
       // an operator re-picks or re-types otherwise.  The ref is cleared
       // in step so the single-candidate guard reads the cleared value.
       setBearing(0);
-      setBearingInput("");
-      bearingInputRef.current = "";
-      setBearingError(null);
-      setMarkerBearingRef.current?.(0);
       setClassify({ state: "resolving" });
       try {
         const r = await fetch("/api/road-bearing", {
@@ -880,9 +815,7 @@ export function LocationPickerModal({
         });
         if (bearingTokenRef.current !== myToken) return;
         if (!r.ok) {
-          setBearingWarning(
-            "Couldn't reach road-detection service. Enter bearing manually.",
-          );
+          setBearingWarning("Couldn't reach road-detection service.");
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
           setClassify({
@@ -900,7 +833,7 @@ export function LocationPickerModal({
           // for a completed scan below).  The ↻ Re-detect roads control
           // is the retry affordance.
           setBearingWarning(
-            "Road detection is unavailable right now — use ↻ Re-detect roads to retry, or enter bearing manually.",
+            "Road detection is unavailable right now — use ↻ Re-detect roads to retry.",
           );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
@@ -914,7 +847,7 @@ export function LocationPickerModal({
         setDetectionContext({ isUrban: j.isUrban, placeName: j.placeName });
         if (cands.length === 0) {
           setBearingWarning(
-            "No road detected within 30 m. Verify the location or enter bearing manually.",
+            "No road detected within 30 m. Verify the location — with no road, the band asks which way traffic heads.",
           );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
@@ -927,18 +860,12 @@ export function LocationPickerModal({
         setBearingWarning(null);
         setBearingCandidates(cands);
         if (cands.length === 1) {
-          // Unambiguous — adopt the detected bearing if the operator
-          // hasn't typed one (otherwise leave their override alone),
-          // and synthesize properties from the candidate's OSM tags.
+          // Unambiguous — select it and synthesize properties from the
+          // candidate's OSM tags.  (#290: its bearing is kept as a road
+          // fact only; no direction of travel is adopted from it.)
           const only = cands[0];
-          const newBearing = normaliseBearing(only.bearing);
           setSelectedCandidateIdx(0);
-          if (bearingInputRef.current.trim() === "") {
-            setBearing(newBearing);
-            setBearingInput(String(newBearing));
-            setBearingError(null);
-            setMarkerBearingRef.current?.(newBearing);
-          }
+          setBearing(normaliseBearing(only.bearing));
           setClassify({
             state: "detected",
             result: classifyFromCandidate(only, j.isUrban, j.placeName),
@@ -953,9 +880,7 @@ export function LocationPickerModal({
         }
       } catch {
         if (bearingTokenRef.current === myToken) {
-          setBearingWarning(
-            "Couldn't reach road-detection service. Enter bearing manually.",
-          );
+          setBearingWarning("Couldn't reach road-detection service.");
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
           setClassify({
@@ -967,12 +892,6 @@ export function LocationPickerModal({
     },
     [],
   );
-
-  // The bearing-input string is captured in a ref so the async detection
-  // callback can read its *current* value without re-creating the
-  // closure (which would tear the request token-guard).
-  const bearingInputRef = useRef(bearingInput);
-  bearingInputRef.current = bearingInput;
 
   // ---- Cross-street detection (near_intersection kind, #117) ------------
   // Everything the second-pin derivation needs, mirrored into a ref:
@@ -1040,28 +959,15 @@ export function LocationPickerModal({
         return;
       }
       const ctx = crossDetectCtxRef.current;
-      // The anchor pin sits one downstream-taper length below station
-      // 0, so the derivation needs the same backend-fed length the
-      // corridor preview draws (engine-removal PR D — the local spec
-      // mirror is deleted).  If the lengths haven't arrived yet, the
-      // proposal degrades to the manual-entry path rather than deriving
-      // a station from a locally-guessed taper.
-      const lengths = specLengthsRef.current;
-      if (!lengths) {
-        setCrossStreet(null);
-        setCrossStatus("error");
-        return;
-      }
+      // #290: raw facts only — the cross street's name, legs, signal,
+      // speed and lanes.  Where it sits relative to the work is the
+      // backend's to measure from the marked pin (ruling 7); the station
+      // this used to derive from the pin and the corridor lengths is gone.
       const derived = deriveCrossStreet({
         detection: j,
         mainlineWayId: ctx.mainline?.way_id ?? null,
         mainlineName: ctx.mainline?.name ?? null,
-        mainlineBearingDeg: ctx.bearing,
-        anchorLat: ctx.lat,
-        anchorLng: ctx.lng,
-        crossLat: qLat,
-        crossLng: qLng,
-        downstreamTaperFt: lengths.downstream_taper_ft,
+        mainlineBearingDeg: ctx.mainline ? normaliseBearing(ctx.mainline.bearing) : null,
       });
       setCrossStreet(derived);
       setCrossStatus(derived ? "detected" : "none");
@@ -1087,7 +993,7 @@ export function LocationPickerModal({
   // ---- Marker / pin management ------------------------------------------
 
   const ensureMarker = useCallback(
-    (mlat: number, mlng: number, mbearing: number) => {
+    (mlat: number, mlng: number, mbearing: number | null) => {
       const map = mapRef.current;
       const mapbox = mapboxRef.current;
       if (!map || !mapbox) return;
@@ -1152,7 +1058,7 @@ export function LocationPickerModal({
       setLatError(null);
       setLngError(null);
 
-      ensureMarker(newLat, newLng, bearing);
+      ensureMarker(newLat, newLng, markerTravelRef.current);
 
       const map = mapRef.current;
       if (map && opts.fly && !suppressFlyToRef.current) {
@@ -1178,7 +1084,7 @@ export function LocationPickerModal({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bearing, ensureMarker, detectAt],
+    [ensureMarker, detectAt],
   );
 
   // Snap the map (if pin is off-screen) and the pin to provided coords.
@@ -1382,7 +1288,7 @@ export function LocationPickerModal({
       map.on("styledata", installCorridor);
 
       if (initialHasPin) {
-        ensureMarker(initial.lat!, initial.lng!, bearing);
+        ensureMarker(initial.lat!, initial.lng!, markerTravelRef.current);
         if (!restoredRoad) {
           // No valid saved confirmation for this pin — run detection so
           // road properties + corridor populate on first open of an
@@ -1566,48 +1472,10 @@ export function LocationPickerModal({
     }
   };
 
-  const onBearingChange = (raw: string) => {
-    setBearingInput(raw);
-    if (raw.trim() === "") {
-      setBearingError(null);
-      // Empty input — fall back to the operator's currently-selected
-      // candidate if any, else 0.  The arrow rotates so the operator
-      // sees the change immediately.
-      const fallback =
-        selectedCandidateIdx !== null
-          ? normaliseBearing(bearingCandidates[selectedCandidateIdx].bearing)
-          : 0;
-      setBearing(fallback);
-      setMarkerBearingRef.current?.(fallback);
-      return;
-    }
-    // Reject anything that isn't a positive integer up-front.  ``parseFloat``
-    // would silently accept "37.5" or "37foo" — both are valid for the
-    // input box but not for a compass bearing.
-    if (!/^\d+$/.test(raw.trim())) {
-      setBearingError("Enter a whole number");
-      return;
-    }
-    const n = parseInt(raw, 10);
-    if (!Number.isFinite(n)) {
-      setBearingError("Invalid number");
-      return;
-    }
-    if (!isValidBearing(n)) {
-      setBearingError("Bearing must be between 0 and 359");
-      return;
-    }
-    setBearingError(null);
-    const rounded = normaliseBearing(n);
-    setBearing(rounded);
-    setMarkerBearingRef.current?.(rounded);
-  };
-
-  // Apply a specific candidate to the bearing field AND synthesize
-  // the road properties from that candidate's OSM tags.  Used by the
-  // picker buttons and indirectly by ``onUseDetectedBearing`` when
-  // only one candidate exists.  Property panel and bearing are now
-  // derived from the same picked candidate — they cannot disagree.
+  // Apply a specific candidate: select it and synthesize the road
+  // properties from its OSM tags.  Used by the picker buttons.  (#290:
+  // the candidate's bearing is kept as a road fact; the direction of
+  // travel is derived by the backend from the road and the side.)
   const applyCandidate = useCallback(
     (idx: number) => {
       if (idx < 0 || idx >= bearingCandidates.length) return;
@@ -1615,9 +1483,6 @@ export function LocationPickerModal({
       const b = normaliseBearing(c.bearing);
       setSelectedCandidateIdx(idx);
       setBearing(b);
-      setBearingInput(String(b));
-      setBearingError(null);
-      setMarkerBearingRef.current?.(b);
       setClassify({
         state: "detected",
         result: classifyFromCandidate(
@@ -1630,19 +1495,6 @@ export function LocationPickerModal({
     [bearingCandidates, detectionContext],
   );
 
-  const onUseDetectedBearing = () => {
-    // Re-apply the picked candidate (covers the single-candidate case
-    // too — detection auto-selects index 0 there).  Ambiguous-unpicked
-    // and zero-candidate cases render the button disabled: the pick
-    // lives in the rail-top card, and pre-applying is the bug the
-    // picker exists to prevent.
-    if (selectedCandidateIdx !== null) {
-      applyCandidate(selectedCandidateIdx);
-      return;
-    }
-    if (bearingCandidates.length === 1) applyCandidate(0);
-  };
-
   // Explicit fresh analysis at an unmoved pin — the ONLY way to re-run
   // detection without moving the pin (reopening the dialog is not a
   // trigger).  Same reset semantics as a pin move: overrides clear so
@@ -1651,38 +1503,6 @@ export function LocationPickerModal({
     if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return;
     setOverrides({});
     void detectAt(lat, lng);
-  };
-
-  const onFlipDirection = () => {
-    const flipped = normaliseBearing(bearing + 180);
-    setBearing(flipped);
-    setBearingInput(String(flipped));
-    setBearingError(null);
-    setMarkerBearingRef.current?.(flipped);
-  };
-
-  const onWorkZoneChange = (raw: string) => {
-    setWorkZoneInput(raw);
-    if (raw.trim() === "") {
-      setWorkZoneError(null);
-      setWorkZoneFt(0);
-      return;
-    }
-    if (!/^\d+$/.test(raw.trim())) {
-      setWorkZoneError("Whole number of feet");
-      return;
-    }
-    const n = parseInt(raw, 10);
-    if (!Number.isFinite(n) || n < 0) {
-      setWorkZoneError("Invalid length");
-      return;
-    }
-    if (n > 50000) {
-      setWorkZoneError("Implausibly long — under 50,000 ft");
-      return;
-    }
-    setWorkZoneError(null);
-    setWorkZoneFt(n);
   };
 
   // ---- Search bar / geocode ---------------------------------------------
@@ -1768,8 +1588,6 @@ export function LocationPickerModal({
     isValidLng(lng) &&
     !latError &&
     !lngError &&
-    !bearingError &&
-    !workZoneError &&
     !roadUnresolved &&
     classify.state !== "resolving";
 
@@ -1803,9 +1621,6 @@ export function LocationPickerModal({
       address,
       lat,
       lng,
-      bearingDeg:
-        bearingInput.trim() === "" ? undefined : normaliseBearing(bearing),
-      workZoneFt,
       classification: classify.state === "detected" ? classify.result : null,
       overrides,
       crossStreet: isNearIntersectionKind ? crossStreet : null,
@@ -1998,6 +1813,18 @@ export function LocationPickerModal({
                     Click the map or search to drop a pin
                   </div>
                 )}
+                {/* #290, the pre-side ruling: "before the side is
+                    confirmed, the picker draws the pin and the sentence
+                    'Say which side is occupied to lay out the work' — no
+                    segment, and no direction-free circle". */}
+                {hasPin && awaitingSide && (
+                  <div
+                    className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none"
+                    data-testid="picker-side-sentence"
+                  >
+                    {SIDE_SENTENCE}
+                  </div>
+                )}
                 {/* Bottom-right stack: Recenter button (above) + legend.
                     Recenter is the explicit "show me the whole corridor"
                     control; we no longer auto-refit on pin drags. */}
@@ -2060,7 +1887,7 @@ export function LocationPickerModal({
                       </svg>
                       Recenter
                     </button>
-                    <CorridorLegend />
+                    <CorridorLegend zones={corridor.segments.map((z) => z.zone)} />
                   </div>
                 )}
               </div>
@@ -2121,19 +1948,6 @@ export function LocationPickerModal({
               />
 
               <div className="border-t border-[color:var(--rule)]">
-                <WorkZonePanel
-                  workZoneInput={workZoneInput}
-                  workZoneError={workZoneError}
-                  onWorkZoneChange={onWorkZoneChange}
-                  bearingInput={bearingInput}
-                  bearingError={bearingError}
-                  onBearingChange={onBearingChange}
-                  bearingCandidates={bearingCandidates}
-                  selectedCandidateIdx={selectedCandidateIdx}
-                  onUseDetectedBearing={onUseDetectedBearing}
-                  onFlipDirection={onFlipDirection}
-                  hasPin={hasPin}
-                />
                 {isNearIntersectionKind && (
                   <CrossStreetPanel
                     hasPin={hasPin}
@@ -2149,7 +1963,19 @@ export function LocationPickerModal({
                 <CorridorPreviewPanel
                   corridor={corridor}
                   hasPin={hasPin}
-                  specStatus={specStatus}
+                  status={
+                    !baseScenario
+                      ? "idle"
+                      : geometry.state === "error"
+                        ? "error"
+                        : geometry.state === "loading" && !laidOut
+                          ? "loading"
+                          : awaitingSide
+                            ? "side"
+                            : !kindConfirmed
+                              ? "kind"
+                              : "ready"
+                  }
                   pendingPick={pendingPick}
                 />
               </div>
@@ -2287,10 +2113,9 @@ function CrossStreetPanel({
         <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0">
           {crossStreetLabel(crossStreet.name)} —{" "}
           {crossStreet.legCount === 1 ? "one-way" : "two-way"}
-          {crossStreet.signalized ? ", signal detected" : ""}. Crossing
-          about {Math.abs(crossStreet.alongStationFt).toLocaleString("en-US")}{" "}
-          ft {crossStreet.alongStationFt < 0 ? "past" : "before"} the work
-          zone. You&apos;ll confirm the details in the form.
+          {crossStreet.signalized ? ", signal detected" : ""}. The plan
+          places it along the road from where the work starts. You&apos;ll
+          confirm the details in the form.
         </p>
       )}
     </div>
@@ -2300,14 +2125,17 @@ function CrossStreetPanel({
 // Static legend bar.  Positioning is owned by the parent — this is
 // rendered inside the bottom-right stack alongside the Recenter
 // button, so it shouldn't carry its own absolute coords.
-function CorridorLegend() {
-  const rows: Array<{ zone: CorridorZone }> = [
-    { zone: "advance_warning" },
-    { zone: "transition" },
-    { zone: "buffer" },
-    { zone: "work_zone" },
-    { zone: "downstream" },
+// Rule 109: a row per channel DRAWN — the work alone before the kind is
+// confirmed, all five once the approaches lay out.
+function CorridorLegend({ zones }: { zones: CorridorZone[] }) {
+  const order: CorridorZone[] = [
+    "advance_warning",
+    "transition",
+    "buffer",
+    "work_zone",
+    "downstream",
   ];
+  const rows = order.filter((z) => zones.includes(z)).map((zone) => ({ zone }));
   return (
     <div className="bg-black/75 border border-white/15 px-3 py-2 flex flex-col gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-white max-w-[200px]">
       {rows.map((r) => (
@@ -2825,195 +2653,6 @@ function DividedEditor({
   );
 }
 
-// ---- WorkZonePanel --------------------------------------------------------
-
-function WorkZonePanel({
-  workZoneInput,
-  workZoneError,
-  onWorkZoneChange,
-  bearingInput,
-  bearingError,
-  onBearingChange,
-  bearingCandidates,
-  selectedCandidateIdx,
-  onUseDetectedBearing,
-  onFlipDirection,
-  hasPin,
-}: {
-  workZoneInput: string;
-  workZoneError: string | null;
-  onWorkZoneChange: (v: string) => void;
-  bearingInput: string;
-  bearingError: string | null;
-  onBearingChange: (v: string) => void;
-  bearingCandidates: RoadCandidate[];
-  selectedCandidateIdx: number | null;
-  onUseDetectedBearing: () => void;
-  onFlipDirection: () => void;
-  hasPin: boolean;
-}) {
-  const ambiguous = bearingCandidates.length > 1;
-  const selectedCandidate =
-    selectedCandidateIdx !== null
-      ? (bearingCandidates[selectedCandidateIdx] ?? null)
-      : null;
-  // Disabled when there is nothing to apply: no candidates at all, or
-  // an ambiguous set with no pick yet — that decision lives in the
-  // rail-top Which-road card, not this row.  After a pick, the button
-  // re-applies the picked candidate's bearing.
-  const useDetectedDisabled =
-    bearingCandidates.length === 0 ||
-    (ambiguous && selectedCandidate === null);
-  // #152 A: the detected bearing is the labeled DEFAULT, not a hidden
-  // action — when the field holds exactly the selected candidate's
-  // bearing, the row says so; a manual value names what it displaced.
-  const detectedBearing = selectedCandidate
-    ? normaliseBearing(selectedCandidate.bearing)
-    : null;
-  const usingDetected =
-    detectedBearing !== null &&
-    bearingInput.trim() !== "" &&
-    /^\d+$/.test(bearingInput.trim()) &&
-    normaliseBearing(parseInt(bearingInput, 10)) === detectedBearing;
-  const useDetectedTitle =
-    bearingCandidates.length === 0
-      ? "No bearing detected at this pin"
-      : ambiguous && selectedCandidate === null
-        ? "Pick a road above first"
-        : usingDetected
-          ? `Detected bearing ${detectedBearing}° is in use`
-          : `Use ${normaliseBearing(
-              (selectedCandidate ?? bearingCandidates[0]).bearing,
-            )}° detected from OSM`;
-  return (
-    <div>
-      <div className="px-6 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-        Work zone
-      </div>
-
-      <div className="px-6 py-1">
-        {/* Work zone length — matches RoadFieldRow's 2-col rhythm */}
-        <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 min-h-[52px]">
-          <div className="min-w-0">
-            <div className="text-[13px] text-white font-medium leading-none">
-              Work zone length (ft)
-            </div>
-            <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] leading-tight">
-              {workZoneError ? (
-                <span className="text-[color:var(--fail)]">{workZoneError}</span>
-              ) : (
-                <>Whole feet, &lt; 50,000</>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center justify-end min-w-0">
-            <input
-              type="number"
-              inputMode="numeric"
-              value={workZoneInput}
-              onChange={(e) => onWorkZoneChange(e.target.value)}
-              aria-label="Work zone length in feet"
-              placeholder="200"
-              className="field-input flex-1 min-w-0 text-right"
-            />
-          </div>
-        </div>
-
-        {/* Direction of travel — label + caption on the left mirrors a
-            normal row, but the right side has 3 controls so we break it
-            into its own block below to keep buttons readable. */}
-        <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 min-h-[52px]">
-          <div className="min-w-0">
-            <div className="text-[13px] text-white font-medium leading-none">
-              Direction of travel (°)
-            </div>
-            <div
-              className="mt-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] leading-tight truncate"
-              title="Compass bearing in degrees clockwise from north."
-            >
-              {bearingError ? (
-                <span className="text-[color:var(--fail)]">{bearingError}</span>
-              ) : selectedCandidate && usingDetected ? (
-                <CandidateCaption
-                  candidate={selectedCandidate}
-                  multi={ambiguous}
-                />
-              ) : selectedCandidate ? (
-                <>
-                  Manual bearing — detected {detectedBearing}° available
-                  below
-                </>
-              ) : (
-                <>0–359 clockwise from north</>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center justify-end min-w-0">
-            <input
-              type="number"
-              inputMode="numeric"
-              value={bearingInput}
-              onChange={(e) => onBearingChange(e.target.value)}
-              aria-label="Direction of travel in degrees"
-              placeholder="0–359"
-              className="field-input flex-1 min-w-0 text-right"
-            />
-          </div>
-        </div>
-
-        {/* Bearing action row — sits flush under the bearing input,
-            full-width so the two buttons read as one cluster. */}
-        <div className="flex gap-2 pb-2 -mt-1">
-          <button
-            type="button"
-            onClick={onUseDetectedBearing}
-            disabled={useDetectedDisabled}
-            title={useDetectedTitle}
-            aria-pressed={usingDetected}
-            className={`flex-1 border border-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-              usingDetected
-                ? "bg-[color:var(--act)] text-[color:var(--on-act)]"
-                : "bg-transparent text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
-            }`}
-          >
-            {usingDetected ? "✓ Detected (in use)" : "Use Detected"}
-          </button>
-          <button
-            type="button"
-            onClick={onFlipDirection}
-            disabled={!hasPin}
-            title="Reverse direction by 180°"
-            className="flex-1 border border-[color:var(--ink-on-dark-faint)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 hover:border-white hover:text-white transition-colors disabled:opacity-40"
-          >
-            ⟲ Flip
-          </button>
-        </div>
-
-        {/* #214 (via #227, GO ruling 7): with a selected road whose
-            geometry will drive the corridor, the typed bearing is
-            consumed sign-only (centerline.ts ±90° test) — say so
-            BEFORE the user types.  Display-only: no handler changes;
-            Flip and the manual/no-geometry path are byte-identical. */}
-        {selectedCandidate && (selectedCandidate.geometry?.length ?? 0) > 1 && (
-          <div className="tr-prov pb-2">
-            road geometry governs the drawing — this field sets the
-            travel-direction sign only (Flip reverses it)
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Rail-top detection-outcome card (#152 Surface A).  Once detection has
-// run at a pin, the operator always sees exactly one outcome here —
-// silence is indistinguishable from a hang, so every branch renders:
-//   resolving   → in-flight skeleton line
-//   0 candidates → explicit empty state ("set manually"), never nothing
-//   1 candidate  → the detected road as a pre-selected row — the same
-//                  confirm affordance the multi-list uses, already
-//                  applied (detection auto-picks the sole match)
-//   2+          → the WhichRoadCard pick flow, unchanged
 function DetectionOutcomeCard({
   classifyState,
   emptyMessage,
@@ -3057,8 +2696,11 @@ function DetectionOutcomeCard({
             {emptyMessage ?? "No roads detected"}
           </div>
           <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
-            Set direction of travel and road properties manually below, or
-            drag the pin closer to the roadway.
+            {/* #290: there is no direction to set here any more — with
+                no road, the band asks which way traffic heads. */}
+            Set road properties manually below, or drag the pin closer to
+            the roadway. With no road, the band asks which way traffic
+            heads.
           </div>
         </div>
       </div>
@@ -3241,22 +2883,27 @@ function CandidatePicker({
 
 // ---- CorridorPreviewPanel -------------------------------------------------
 
-/** The corridor-spec request's state.  "kind" (#289 finding 1): not
- *  asked, because the kind is not confirmed. */
-type SpecStatus = "idle" | "loading" | "ready" | "error" | "kind";
+/** #290 — the geometry answer's state as this panel speaks it.  "side":
+ *  the side is not confirmed (nothing directional exists).  "kind" (#289
+ *  finding 1): the work is drawn, the approaches wait on the kind. */
+type PreviewStatus = "idle" | "loading" | "ready" | "error" | "side" | "kind";
+
+/** The pre-side ruling's sentence, verbatim — one string for the map and
+ *  the panel.  (The same words as the rail's SIDE_BLOCKER.) */
+const SIDE_SENTENCE = "Say which side is occupied to lay out the work";
 
 function CorridorPreviewPanel({
   corridor,
   hasPin,
-  specStatus,
+  status,
   pendingPick,
 }: {
   corridor: CorridorPolyline | null;
   hasPin: boolean;
-  // Backend corridor-spec fetch state (engine-removal PR D).  The zone
-  // lengths are server-computed; this panel names the wait/failure
+  // #290: the backend geometry's state.  Every length and direction is
+  // the backend's; this panel names the wait / the missing answer
   // instead of ever drawing a locally-derived extent.
-  specStatus: SpecStatus;
+  status: PreviewStatus;
   // Detection resolving / multi-candidate pick pending: the map draws
   // no corridor (#186) and the Centerline row stays absent — no
   // geometry claim exists yet to disclose (#211).
@@ -3274,19 +2921,19 @@ function CorridorPreviewPanel({
             Drop a pin to compute the corridor.
           </div>
         )}
-        {hasPin && !corridor && specStatus === "loading" && (
+        {hasPin && status === "loading" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
             Computing corridor extent…
           </div>
         )}
-        {hasPin && !corridor && specStatus === "error" && (
+        {hasPin && status === "error" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1">
-            Corridor preview unavailable — couldn&apos;t reach the spacing
+            Corridor preview unavailable — couldn&apos;t reach the layout
             service. You can still save; the plan is validated when
             generated.
           </div>
         )}
-        {hasPin && !corridor && specStatus !== "loading" && specStatus !== "error" && (
+        {hasPin && (status === "side" || status === "kind" || status === "idle") && (
           <div
             className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1"
             data-testid="picker-corridor-note"
@@ -3299,12 +2946,14 @@ function CorridorPreviewPanel({
                 once the kind is confirmed.  One element, two sentences —
                 the #263 type census counts elements, and this is the
                 same note in the same register. */}
-            {specStatus === "kind"
-              ? "Corridor lengths wait on the kind of work — choose it after you save."
-              : "Enter a work-zone length to compute the corridor."}
+            {status === "side"
+              ? `${SIDE_SENTENCE}.`
+              : status === "kind"
+                ? "Corridor lengths wait on the kind of work — choose it after you save."
+                : "Save the pin; the corridor lays out on the band."}
           </div>
         )}
-        {corridor && (
+        {corridor && status === "ready" && (
           <>
             <ExtentRows corridor={corridor} />
             {/* #211: the Centerline provenance row — the same vocabulary
@@ -3328,21 +2977,11 @@ function CorridorPreviewPanel({
                   }
                 >
                   {corridor.coverageFt === null
-                    ? "none — straight projection from typed bearing"
+                    ? "none — straight projection along the heading"
                     : corridor.coverageFt >= corridor.totalLengthFt
                       ? "OSM, full corridor"
                       : `covers 0–${fmtFt(corridor.coverageFt)} ft, bearing beyond`}
                 </span>
-              </div>
-            )}
-            {specStatus === "loading" && (
-              <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] pt-2">
-                Preview updating…
-              </div>
-            )}
-            {specStatus === "error" && (
-              <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] pt-2">
-                Preview may be stale — spacing service unreachable.
               </div>
             )}
           </>

@@ -33,8 +33,7 @@ vi.mock("./LocationPickerModal", () => ({
           address: "E Bayaud Ave, Denver",
           lat: 39.71466,
           lng: -104.94071,
-          bearingDeg: 85,
-          workZoneFt: 400,
+          // #290: no bearing, no length — see mountPinned.
           classification: null,
           overrides: {},
         })
@@ -46,7 +45,8 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { answerSide, openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { corridorGeometryResponse } from "./test-fixtures";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -86,6 +86,10 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
       json: async () => AUDIT,
     } as unknown as Response);
   }
+  // #290: the WHERE band's geometry read — the side control's choices.
+  if (url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve(corridorGeometryResponse());
+  }
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -113,9 +117,17 @@ async function mountPinned(initial: Scenario) {
   await openWhere();
   await user.click(screen.getByText("Pick on map"));
   await user.click(screen.getByText("APPLY_PIN"));
-  // A pin answers WHERE, so the column moves on to WHAT; the corridor
-  // rows sit under the extent field, so this case goes back.
+  // #290 (RULE 5, stated): the corridor rows are the audit's, and no check
+  // fires until the pin's side is answered (ruling 10) — so the side is
+  // answered here, as a person does.  The work-zone length is the band's
+  // Extent field now (the picker's length field is retired, one length
+  // control — P2), so the operator's 400 ft is typed there, committed on
+  // Enter.
+  await answerSide();
   await openWhere();
+  const extent = document.getElementById("band-worklen") as HTMLInputElement;
+  await user.clear(extent);
+  await user.type(extent, "400{Enter}");
   // #289: the bar is gone, so the settle signal is the rows themselves.
   await waitFor(() =>
     expect(document.querySelector('[data-testid="zone-work_zone"]')).not.toBeNull(),

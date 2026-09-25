@@ -131,17 +131,25 @@ describe("every render sender carries meta.pinModel (#290)", () => {
     expect([...urls].some((u) => u.includes("/api/render/audit"))).toBe(true);
     expect([...urls].some((u) => u.includes("/api/render/device-breakdown"))).toBe(true);
     expect([...urls].some((u) => u.includes("/api/render/bundle"))).toBe(true);
-    for (const b of bodies) expect(b.meta.pinModel, b.url).toBe("corridor_end");
+    // #290 (RULE 5, stated): since the visible ship every sender sends the
+    // work-start model — the first ship's "corridor_end" pin is what moved.
+    for (const b of bodies) expect(b.meta.pinModel, b.url).toBe("work_start");
+    for (const b of bodies) expect(b.meta.bearingDeg, b.url).toBeUndefined();
   });
 
-  it("a plan saved before the field existed is sent as corridor_end, never re-read", async () => {
-    const { pinModel: _absent, ...oldMeta } = PINNED_SHOULDER.meta;
-    const saved = JSON.parse(JSON.stringify({ ...PINNED_SHOULDER, meta: oldMeta }));
+  it("a plan saved before the change opens with its side unset — and no check fires for it (ruling 10)", async () => {
+    const { pinModel: _absent, work: _side, ...oldMeta } = PINNED_SHOULDER.meta;
+    const saved = JSON.parse(
+      JSON.stringify({ ...PINNED_SHOULDER, meta: { ...oldMeta, bearingDeg: 180 } }),
+    );
     expect(saved.meta.pinModel).toBeUndefined();
-    render(<GeneratorShell mode="sandbox" initialScenario={toScenario(saved)} />);
+    const loaded = toScenario(saved);
+    expect(loaded.meta.pinModel).toBe("work_start");
+    expect(loaded.meta.pinModelFrom).toBe("corridor_end");
+    render(<GeneratorShell mode="sandbox" initialScenario={loaded} />);
     await settle();
-    const bodies = renderBodies();
-    expect(bodies.length).toBeGreaterThan(0);
-    for (const b of bodies) expect(b.meta.pinModel, b.url).toBe("corridor_end");
+    // Never silently re-read: nothing is checked for a direction nobody
+    // confirmed.  The band asks for the side (MoveLedger.form, WhereBand).
+    expect(renderBodies().filter((b) => !b.url.includes("corridor-geometry"))).toEqual([]);
   });
 });

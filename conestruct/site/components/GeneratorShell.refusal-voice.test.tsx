@@ -55,7 +55,7 @@ const FLOOR_400 =
 const FLAGGER_MULTILANE: FlaggerLaneClosureScenario = {
   ...DEFAULT_FLAGGER,
   detectedLanesTotal: 4,
-  meta: { ...DEFAULT_FLAGGER.meta, lat: 39.71466, lng: -104.94071 },
+  meta: { ...DEFAULT_FLAGGER.meta, lat: 39.71466, lng: -104.94071, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
 };
 
 type Deferred = {

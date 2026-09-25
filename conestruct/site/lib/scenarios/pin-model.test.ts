@@ -1,11 +1,13 @@
 // #290 — the scenario version field, ``meta.pinModel``, on the frontend.
 //
-// Rulings (validation-artifacts/committed/issue-290-pin-work/rulings.md,
-// 2026-09-25): today's pin is "corridor_end" (1); the old value is
-// "corridor_end" (3); nothing recorded before the change is silently
-// re-read (10).  The backend reads the field first (tests/test_pin_model.py);
-// these pin that every scenario the app can hold carries it — born stamped,
-// carried through every meta writer, stamped at the one load gate.
+// Rulings (validation-artifacts/committed/issue-290-pin-work/rulings.md):
+// today's pin was "corridor_end" (1); the old value is "corridor_end" (3);
+// "Pre-change plans and fixtures open with side unset, marked needs-you;
+// never silently re-read" (10).  Since the visible ship every scenario is
+// born "work_start"; a stored corridor_end plan opens in the work-start
+// model with its pin kept, its typed bearing dropped, its side unset and
+// the conversion recorded.  RULE 5 (stated): the first ship's version of
+// this suite pinned "born corridor_end" — that is what this ship changes.
 
 import { describe, expect, it } from "vitest";
 import {
@@ -20,6 +22,7 @@ import {
   carryAcrossKinds,
   carryMeta,
   defaultFor,
+  hasConfirmedSide,
   toScenario,
   withPinModel,
 } from "./index";
@@ -35,37 +38,83 @@ const DEFAULTS = [
   DEFAULT_MOBILE_OP_MULTILANE,
   DEFAULT_NEAR_INTERSECTION,
 ];
+const PIN = { lat: 39.74, lng: -104.95 };
 
-describe("born stamped", () => {
-  it("every default scenario means corridor_end", () => {
-    for (const d of DEFAULTS) expect(d.meta.pinModel, d.kind).toBe("corridor_end");
+describe("born in the work-start model", () => {
+  it("every default scenario means work_start, with no side yet", () => {
+    for (const d of DEFAULTS) {
+      expect(d.meta.pinModel, d.kind).toBe("work_start");
+      expect(d.meta.work, d.kind).toBeUndefined();
+    }
     for (const { v } of SCENARIO_KINDS) {
-      expect(defaultFor(v).meta.pinModel, v).toBe("corridor_end");
+      expect(defaultFor(v).meta.pinModel, v).toBe("work_start");
+    }
+  });
+
+  it("the near_intersection default carries no cross-street station", () => {
+    for (const a of DEFAULT_NEAR_INTERSECTION.approaches) {
+      expect(a.alongStationFt).toBeUndefined();
     }
   });
 });
 
-describe("the load gate (saved plans, downloads)", () => {
-  it("a stored scenario without the field is stamped corridor_end — and nothing else changes", () => {
-    const stored = { ...DEFAULT_SHOULDER, meta: { project: "p", address: "a", lat: 39.7, lng: -104.9 } };
+describe("the load gate: a pre-change plan opens with its side unset (ruling 10)", () => {
+  const stored = {
+    ...DEFAULT_SHOULDER,
+    meta: { project: "p", address: "a", ...PIN, pinModel: "corridor_end", bearingDeg: 180 },
+  };
+
+  it("keeps the pin, drops the typed bearing, leaves the side unset, records the conversion", () => {
     const loaded = toScenario(JSON.parse(JSON.stringify(stored)));
-    expect(loaded.meta.pinModel).toBe("corridor_end");
-    const { pinModel: _dropped, ...restMeta } = loaded.meta;
-    expect({ ...loaded, meta: restMeta }).toEqual(stored);
+    expect(loaded.meta.pinModel).toBe("work_start");
+    expect(loaded.meta.lat).toBe(PIN.lat);
+    expect(loaded.meta.lng).toBe(PIN.lng);
+    expect(loaded.meta.bearingDeg).toBeUndefined();
+    expect(loaded.meta.work).toBeUndefined();
+    expect(loaded.meta.pinModelFrom).toBe("corridor_end");
+    expect(hasConfirmedSide(loaded.meta)).toBe(false);
+    // Nothing else about the plan moves.
+    const { meta: _a, ...restA } = loaded;
+    const { meta: _b, ...restB } = stored;
+    expect(restA).toEqual(restB);
   });
 
-  it("a present value is kept verbatim, never re-read", () => {
-    const stored = { ...DEFAULT_SHOULDER, meta: { ...DEFAULT_SHOULDER.meta, pinModel: "work_start" } };
-    expect(toScenario(stored).meta.pinModel).toBe("work_start");
+  it("a plan saved before the field existed is read as corridor_end, and converted the same way", () => {
+    const { pinModel: _p, ...meta } = stored.meta;
+    const loaded = toScenario({ ...stored, meta });
+    expect(loaded.meta.pinModel).toBe("work_start");
+    expect(loaded.meta.pinModelFrom).toBe("corridor_end");
   });
 
-  it("a legacy flat plan is stamped corridor_end", () => {
+  it("a stored plan with no pin is converted without the needs-you record", () => {
+    const loaded = toScenario({ ...DEFAULT_SHOULDER, meta: { ...DEFAULT_SHOULDER.meta, pinModel: "corridor_end" } });
+    expect(loaded.meta.pinModel).toBe("work_start");
+    expect(loaded.meta.pinModelFrom).toBeUndefined();
+  });
+
+  it("a near_intersection plan's frontend-computed station is dropped; its marked intersection stays", () => {
+    const ni = {
+      ...DEFAULT_NEAR_INTERSECTION,
+      meta: {
+        ...DEFAULT_NEAR_INTERSECTION.meta,
+        ...PIN,
+        pinModel: "corridor_end",
+        intersection: { lat: 39.741, lng: -104.95, name: "E 17th Ave" },
+      },
+      approaches: DEFAULT_NEAR_INTERSECTION.approaches.map((a) => ({ ...a, alongStationFt: -200 })),
+    };
+    const loaded = toScenario(ni);
+    if (loaded.kind !== "near_intersection") throw new Error("kind");
+    for (const a of loaded.approaches) expect(a.alongStationFt).toBeUndefined();
+    expect(loaded.meta.intersection?.name).toBe("E 17th Ave");
+  });
+
+  it("a legacy flat plan opens in the work-start model too", () => {
     const legacy = {
       closure: "shoulder",
       project: "",
       address: "",
-      lat: 39.7,
-      lng: -104.9,
+      ...PIN,
       roadType: "rural_divided",
       speed: 65,
       lanes: 2,
@@ -74,34 +123,61 @@ describe("the load gate (saved plans, downloads)", () => {
       workLen: 1000,
       night: false,
     };
-    expect(toScenario(legacy).meta.pinModel).toBe("corridor_end");
+    const loaded = toScenario(legacy);
+    expect(loaded.meta.pinModel).toBe("work_start");
+    expect(loaded.meta.pinModelFrom).toBe("corridor_end");
   });
 
-  it("withPinModel is idempotent", () => {
-    const once = withPinModel(DEFAULT_FLAGGER);
-    expect(withPinModel(once)).toBe(once);
+  it("a work_start plan is returned untouched", () => {
+    const ws = { ...DEFAULT_SHOULDER, meta: { ...DEFAULT_SHOULDER.meta, ...PIN, work: { side: "right" as const, heading: "N" as const } } };
+    expect(withPinModel(ws)).toBe(ws);
   });
 });
 
-describe("carried through every meta writer", () => {
-  it("the pin writer, the kind switches and the centerline relay keep it", () => {
-    const moved = withPin(DEFAULT_SHOULDER.meta, { lat: 39.74, lng: -104.95 });
-    expect(moved.pinModel).toBe("corridor_end");
-    const pinned = { ...DEFAULT_SHOULDER, meta: moved };
-    expect(carryMeta(pinned, DEFAULT_FLAGGER).meta.pinModel).toBe("corridor_end");
-    expect(carryAcrossKinds(pinned, DEFAULT_FLAGGER).meta.pinModel).toBe("corridor_end");
-    const relayed = withRelayedCenterline({
-      ...pinned,
-      meta: {
-        ...moved,
-        confirmedRoad: {
-          pinLat: moved.lat,
-          pinLng: moved.lng,
-          candidate: { geometry: [[39.74, -104.95], [39.75, -104.95]] },
-        },
+describe("the side: confirmed only when built, cleared when the pin moves", () => {
+  it("only the right side counts; a corridor_end scenario has no side to confirm", () => {
+    const base = { ...DEFAULT_SHOULDER.meta, ...PIN };
+    expect(hasConfirmedSide(base)).toBe(false);
+    expect(hasConfirmedSide({ ...base, work: { side: "right", heading: "N" } })).toBe(true);
+    expect(hasConfirmedSide({ ...base, work: { side: "left", heading: "N" } })).toBe(false);
+    expect(hasConfirmedSide({ ...base, pinModel: "corridor_end" })).toBe(true);
+  });
+
+  it("a pin move drops the side (its direction named the road at the old pin)", () => {
+    const meta = { ...DEFAULT_SHOULDER.meta, ...PIN, work: { side: "right" as const, heading: "N" as const } };
+    expect(withPin(meta, { lat: PIN.lat + 0.01 }).work).toBeUndefined();
+    expect(withPin(meta, { lat: PIN.lat }).work).toEqual(meta.work);
+  });
+});
+
+describe("carried through the meta writers that do not move the pin", () => {
+  it("the kind switches and the relay keep the pin model and the side", () => {
+    const sided = {
+      ...DEFAULT_SHOULDER,
+      meta: { ...DEFAULT_SHOULDER.meta, ...PIN, work: { side: "right" as const, travel: "with_geometry" as const } },
+    };
+    expect(carryMeta(sided, DEFAULT_FLAGGER).meta.work).toEqual(sided.meta.work);
+    expect(carryAcrossKinds(sided, DEFAULT_FLAGGER).meta.pinModel).toBe("work_start");
+  });
+
+  it("the relay sends the road's raw direction facts beside its geometry — only under work_start", () => {
+    const road = {
+      pinLat: PIN.lat,
+      pinLng: PIN.lng,
+      candidate: {
+        bearing: 180.49,
+        tags: { oneway: "yes" },
+        geometry: [
+          [39.74, -104.95],
+          [39.73, -104.95],
+        ],
       },
-    } as unknown as typeof pinned);
+    };
+    const ws = { ...DEFAULT_SHOULDER, meta: { ...DEFAULT_SHOULDER.meta, ...PIN, confirmedRoad: road } };
+    const relayed = withRelayedCenterline(ws as unknown as typeof DEFAULT_SHOULDER);
     expect(relayed.meta.centerline).toBeDefined();
-    expect(relayed.meta.pinModel).toBe("corridor_end");
+    expect(relayed.meta.roadDirection).toEqual({ osmBearingDeg: 180.49, oneway: "yes" });
+    const ce = { ...ws, meta: { ...ws.meta, pinModel: "corridor_end" as const } };
+    expect(withRelayedCenterline(ce as unknown as typeof DEFAULT_SHOULDER).meta.roadDirection).toBeUndefined();
   });
 });

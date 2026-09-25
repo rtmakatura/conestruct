@@ -137,6 +137,7 @@ vi.mock("./GeneratorSidebar", () => ({
               ...scenario.meta,
               lat: 39.5186,
               lng: -104.7614,
+              work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */,
               confirmedRoad: (
                 globalThis as { __road?: ConfirmedRoad }
               ).__road,

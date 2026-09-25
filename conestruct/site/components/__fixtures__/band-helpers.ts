@@ -34,6 +34,35 @@ async function openVia(testid: string, want: string): Promise<void> {
 }
 
 /**
+ * #290 — answer move 4's side, as a person does: open WHERE, wait for the
+ * side control's choices (the backend's geometry read — the suite's fetch
+ * mock answers it with `corridorGeometryResponse()`), click the first
+ * BUILT one.  Under the work-start model no check fires and Generate
+ * stays blocked until a located plan's side is confirmed (ruling 10).
+ */
+export async function answerSide(): Promise<void> {
+  await openWhere();
+  const deadline = Date.now() + 3000;
+  for (;;) {
+    const option = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('[data-testid="side-option"]'),
+    ).find((b) => b.getAttribute("aria-disabled") !== "true");
+    if (option) {
+      await act(async () => {
+        fireEvent.click(option);
+      });
+      return;
+    }
+    if (Date.now() > deadline) {
+      throw new Error("no side choice on screen — does the fetch mock answer corridor-geometry?");
+    }
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 50));
+    });
+  }
+}
+
+/**
  * Open the WHERE band — the picker opener, the move ledger, the extent
  * field and the kind chips.
  *

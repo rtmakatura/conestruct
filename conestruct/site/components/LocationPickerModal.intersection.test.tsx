@@ -75,11 +75,10 @@ function mount(intersection: typeof X | null) {
       initial={{
         scenarioKind: "near_intersection",
         speedMph: 35,
-        workZoneFt: 500,
+        // #290: no bearing, no length — the picker takes neither now.
         address: "Lafayette, CO",
         lat: PIN.lat,
         lng: PIN.lng,
-        bearingDeg: 0,
         intersection,
       }}
       onCancel={() => {}}

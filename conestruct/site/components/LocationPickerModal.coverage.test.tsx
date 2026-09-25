@@ -1,33 +1,32 @@
 // @vitest-environment happy-dom
 //
-// #211 mounted-flow tests: the Centerline provenance row in the
-// corridor-extent panel, driven through the REAL modal (the road-pick
-// suite's pattern — typed coords fire the real detectAt fetch; no
-// Mapbox token, so the manual-coords path drives everything).  Rule 11:
-// the defect class was a drawing/label surface, so the assertions read
-// the rendered panel, not helper internals.
+// #211 / #290 mounted-flow tests: the corridor-extent panel of the REAL
+// modal, driven the road-pick suite's way (typed coords fire the real
+// detectAt fetch; no Mapbox token, so the manual-coords path drives it).
+// Rule 11: the defect class was a drawing/label surface, so the
+// assertions read the rendered panel and the request the modal sent.
 //
-// The four states:
+// #290 (RULE 5, stated): the panel used to draw from lengths it fetched
+// (/api/render/corridor-spec) walked out from the pin along the TYPED
+// bearing — the frontend mirror whose direction #298 found inverted.  It
+// now draws the BACKEND's geometry (/api/render/corridor-geometry, ruling
+// 7).  The states this suite pinned survive; the typed bearing's words
+// do not:
 //   partial coverage  → "covers 0–N ft, bearing beyond"  (PDF vocabulary)
 //   full coverage     → "OSM, full corridor"
-//   pending pick      → no Centerline row at all (#186 — no geometry
-//                       claim exists until the operator picks)
-//   manual (no road)  → "none — straight projection from typed bearing"
+//   pending pick      → no Centerline row, no geometry asked (#186)
+//   manual (no road)  → "none — straight projection along the heading"
+//   side unconfirmed  → the pre-side ruling's sentence, no extent
+//   kind unconfirmed  → the work drawn, the lengths wait on the kind
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { LocationPickerModal } from "./LocationPickerModal";
 import type { RoadCandidate, RoadDetectResponse } from "@/lib/road-detection/types";
-import { destinationPoint, M_PER_FT } from "@/lib/geodesy";
+import type { CorridorGeometry } from "@/lib/corridor-geometry";
+import { DEFAULT_SHOULDER, type Scenario } from "@/lib/scenarios";
 
 const PIN: [number, number] = [40.0176, -105.13];
-
-// Straight-east candidate geometry reaching lengthFt from the pin.
-function eastGeometry(lengthFt: number): Array<[number, number]> {
-  return [0, lengthFt / 2, lengthFt].map((ft) =>
-    destinationPoint(PIN[0], PIN[1], 90, ft * M_PER_FT),
-  );
-}
 
 function candidate(overrides: Partial<RoadCandidate>): RoadCandidate {
   return {
@@ -51,27 +50,86 @@ function candidate(overrides: Partial<RoadCandidate>): RoadCandidate {
       turn_lanes_backward: null,
     },
     signal_distance_m: null,
+    geometry: [
+      [PIN[0], PIN[1]],
+      [PIN[0], PIN[1] + 0.01],
+    ],
     ...overrides,
   };
 }
 
-// Zone lengths: with the 400 ft work zone typed below, total = 1,200 ft.
-const SPEC_LENGTHS = {
-  advance_warning_ft: 500,
-  taper_ft: 100,
-  buffer_ft: 100,
-  downstream_taper_ft: 100,
+const ROAD = candidate({});
+
+// The band's scenario: pinned at PIN, the road confirmed there, and the
+// side confirmed on it (with the road's vertex order).
+const SIDED: Scenario = {
+  ...DEFAULT_SHOULDER,
+  workLen: 400,
+  meta: {
+    ...DEFAULT_SHOULDER.meta,
+    lat: PIN[0],
+    lng: PIN[1],
+    bearingDeg: 123, // a stale typed value: must never be sent
+    work: { side: "right", travel: "with_geometry" },
+    confirmedRoad: {
+      candidate: ROAD,
+      pinLat: PIN[0],
+      pinLng: PIN[1],
+    } as unknown as NonNullable<Scenario["meta"]["confirmedRoad"]>,
+  },
+} as Scenario;
+
+// Zone lengths: work 400 + buffer 100 + taper 100 + advance 500 +
+// downstream 100 = total 1,200 ft.
+function laidOut(coverageFt: number | null): CorridorGeometry {
+  const path: Array<[number, number]> = [
+    [PIN[0], PIN[1]],
+    [PIN[0], PIN[1] + 0.001],
+  ];
+  const part = (extended = false) => [{ points: path, extended }];
+  return {
+    status: "laid_out",
+    pin_model: "work_start",
+    pin: PIN,
+    travel_bearing_deg: 90,
+    work: { length_ft: 400, points: path, parts: part() },
+    approaches: [
+      {
+        id: "primary",
+        travel_bearing_deg: 90,
+        zones: [
+          { zone: "downstream", length_ft: 100, points: path, parts: part() },
+          { zone: "buffer", length_ft: 100, points: path, parts: part() },
+          { zone: "transition", length_ft: 100, points: path, parts: part() },
+          { zone: "advance_warning", length_ft: 500, points: path, parts: part(true) },
+        ],
+      },
+    ],
+    coverage_ft: coverageFt,
+    message: null,
+    side_options: [
+      { work: { side: "right", travel: "with_geometry" }, label: "South side · eastbound traffic", built: true },
+    ],
+  };
+}
+
+const SIDE_NOT_CONFIRMED: CorridorGeometry = {
+  ...laidOut(null),
+  status: "side_not_confirmed",
+  travel_bearing_deg: null,
+  work: null,
+  approaches: [],
 };
 
-function stubFetches(detect: RoadDetectResponse) {
+function stubFetches(detect: RoadDetectResponse, geometry: CorridorGeometry) {
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string) => {
       if (String(url).includes("/api/road-bearing")) {
         return { ok: true, status: 200, json: async () => detect };
       }
-      if (String(url).includes("/api/render/corridor-spec")) {
-        return { ok: true, status: 200, json: async () => SPEC_LENGTHS };
+      if (String(url).includes("/api/render/corridor-geometry")) {
+        return { ok: true, status: 200, json: async () => geometry };
       }
       return { ok: false, status: 500, json: async () => ({}) };
     }),
@@ -88,25 +146,30 @@ function detection(candidates: RoadCandidate[]): RoadDetectResponse {
   };
 }
 
-function mountModal() {
+function mountModal(scenario: Scenario = SIDED, kindConfirmed = true) {
   return render(
     <LocationPickerModal
       open
-      initial={{ scenarioKind: "shoulder", speedMph: 65, workZoneFt: 400 }}
+      initial={{ scenarioKind: "shoulder", speedMph: 65, scenario, kindConfirmed }}
       onCancel={() => {}}
       onSave={vi.fn()}
     />,
   );
 }
 
-function typeCoords() {
+function typeCoords(lat = PIN[0], lng = PIN[1]) {
   fireEvent.change(screen.getByLabelText("Latitude"), {
-    target: { value: String(PIN[0]) },
+    target: { value: String(lat) },
   });
   fireEvent.change(screen.getByLabelText("Longitude"), {
-    target: { value: String(PIN[1]) },
+    target: { value: String(lng) },
   });
 }
+
+const geometryBodies = () =>
+  (fetch as unknown as { mock: { calls: unknown[][] } }).mock.calls
+    .filter((c) => String(c[0]).includes("/api/render/corridor-geometry"))
+    .map((c) => JSON.parse(String((c[1] as RequestInit).body)).scenario as Scenario);
 
 beforeEach(() => {
   delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -118,21 +181,19 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("the Centerline provenance row (#211)", () => {
+describe("the Centerline provenance row (#211), on the backend's geometry", () => {
   it("partial coverage: 'covers 0–N ft, bearing beyond' in the PDF's vocabulary", async () => {
-    stubFetches(detection([candidate({ geometry: eastGeometry(200) })]));
+    stubFetches(detection([ROAD]), laidOut(200));
     mountModal();
     typeCoords();
     await screen.findByText("Centerline", undefined, { timeout: 3000 });
-    expect(
-      await screen.findByText(/covers 0–200 ft, bearing beyond/i, undefined, {
-        timeout: 3000,
-      }),
-    ).toBeTruthy();
+    expect(await screen.findByText(/covers 0–200 ft, bearing beyond/i)).toBeTruthy();
+    // The extent rows are the backend's lengths, total included.
+    expect(screen.getByText("1,200 ft")).toBeTruthy();
   });
 
   it("full coverage: 'OSM, full corridor'", async () => {
-    stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
+    stubFetches(detection([ROAD]), laidOut(5000));
     mountModal();
     typeCoords();
     expect(
@@ -140,104 +201,88 @@ describe("the Centerline provenance row (#211)", () => {
     ).toBeTruthy();
   });
 
-  it("pending multi-candidate pick: no Centerline row (no geometry claim yet)", async () => {
+  it("pending multi-candidate pick: no Centerline row, and no geometry asked", async () => {
     stubFetches(
-      detection([
-        candidate({ geometry: eastGeometry(2000) }),
-        candidate({ way_id: "111002", bearing: 270, snap_distance_m: 9 }),
-      ]),
+      detection([ROAD, candidate({ way_id: "111002", bearing: 270, snap_distance_m: 9 })]),
+      laidOut(5000),
     );
     mountModal();
     typeCoords();
     await screen.findByText(/Which road\? · 2 detected/i, undefined, { timeout: 3000 });
-    // The extent rows themselves stay (backend lengths), but no
-    // centerline claim renders while the pick is pending.
     expect(screen.queryByText("Centerline")).toBeNull();
-    expect(screen.queryByText(/OSM, full corridor/i)).toBeNull();
+    await new Promise((r) => setTimeout(r, 400));
+    expect(geometryBodies()).toEqual([]);
   });
 
-  it("manual mode (no road detected): 'none — straight projection from typed bearing'", async () => {
-    stubFetches(detection([]));
-    mountModal();
+  it("manual mode (no road): 'none — straight projection along the heading'", async () => {
+    stubFetches(detection([]), laidOut(null));
+    mountModal({ ...SIDED, meta: { ...SIDED.meta, confirmedRoad: null, work: { side: "right", heading: "E" } } } as Scenario);
     typeCoords();
     expect(
-      await screen.findByText(/none — straight projection from typed bearing/i, undefined, {
+      await screen.findByText(/none — straight projection along the heading/i, undefined, {
         timeout: 3000,
       }),
     ).toBeTruthy();
+    expect(screen.queryByText(/typed bearing/i)).toBeNull();
   });
 });
 
-const fetchedUrls = () =>
-  (fetch as unknown as { mock: { calls: unknown[][] } }).mock.calls.map((c) =>
-    String(c[0]),
-  );
-
-describe("#289 finding 1 — the corridor spec waits on a confirmed kind (Rule 10)", () => {
-  it("unconfirmed: no corridor-spec request, no corridor, and the note says why", async () => {
-    stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
-    render(
-      <LocationPickerModal
-        open
-        initial={{
-          scenarioKind: "shoulder",
-          kindConfirmed: false,
-          speedMph: 65,
-          workZoneFt: 400,
-        }}
-        onCancel={() => {}}
-        onSave={vi.fn()}
-      />,
-    );
+describe("#290 — what the panel says before the answers it waits on", () => {
+  it("side unconfirmed: the pre-side ruling's sentence, and no extent", async () => {
+    stubFetches(detection([ROAD]), SIDE_NOT_CONFIRMED);
+    mountModal();
     typeCoords();
-    // Detection runs (it sends lat/lng — no kind); the spec does not.
+    expect(
+      await screen.findByText("Say which side is occupied to lay out the work.", undefined, {
+        timeout: 3000,
+      }),
+    ).toBeTruthy();
+    expect(screen.queryByText("Centerline")).toBeNull();
+    expect(screen.queryByText(/^Total$/i)).toBeNull();
+  });
+
+  it("kind unconfirmed: the lengths wait on the kind (#289 finding 1) — no extent rows", async () => {
+    stubFetches(detection([ROAD]), laidOut(5000));
+    mountModal(SIDED, false);
+    typeCoords();
     expect(
       await screen.findByText(/Corridor lengths wait on the kind of work/i, undefined, {
         timeout: 3000,
       }),
     ).toBeTruthy();
-    expect(fetchedUrls().some((u) => u.includes("/api/road-bearing"))).toBe(true);
-    expect(fetchedUrls().some((u) => u.includes("/api/render/corridor-spec"))).toBe(false);
-    expect(screen.queryByText(/OSM, full corridor/i)).toBeNull();
+    expect(screen.queryByText(/^Total$/i)).toBeNull();
   });
+});
 
-  // #267 — "preview must equal applied": the picker relays the plan's own
-  // width facts; the backend derives the shoulder width from them.
-  it("PAYLOAD (#267): the corridor-spec request carries the scenario's laneWidth and divided", async () => {
-    stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
-    render(
-      <LocationPickerModal
-        open
-        initial={{
-          scenarioKind: "shoulder",
-          speedMph: 65,
-          workZoneFt: 400,
-          laneWidth: 11,
-          divided: false,
-        }}
-        onCancel={() => {}}
-        onSave={vi.fn()}
-      />,
-    );
-    typeCoords();
-    await screen.findByText(/OSM, full corridor/i, undefined, { timeout: 3000 });
-    const calls = (fetch as unknown as { mock: { calls: unknown[][] } }).mock.calls.filter((c) =>
-      String(c[0]).includes("/api/render/corridor-spec"),
-    );
-    expect(calls.length).toBeGreaterThan(0);
-    const body = JSON.parse(String((calls.at(-1)![1] as RequestInit).body));
-    expect(body.kind).toBe("shoulder");
-    expect(body.laneWidth).toBe(11);
-    expect(body.divided).toBe(false);
-    // The shoulder width is never computed here — the backend derives it.
-    expect(body).not.toHaveProperty("shoulderWidth");
-  });
-
-  it("confirmed (the default for a caller that does not say): the spec is asked, as before", async () => {
-    stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
+describe("#290 — the geometry request: the modal's live pin and road, never a bearing", () => {
+  it("carries the pin and the picked road, keeps the side it was confirmed on, drops the typed bearing", async () => {
+    stubFetches(detection([ROAD]), laidOut(5000));
     mountModal();
     typeCoords();
     await screen.findByText(/OSM, full corridor/i, undefined, { timeout: 3000 });
-    expect(fetchedUrls().some((u) => u.includes("/api/render/corridor-spec"))).toBe(true);
+    const body = geometryBodies().at(-1)!;
+    expect(body.meta.lat).toBe(PIN[0]);
+    expect(body.meta.lng).toBe(PIN[1]);
+    expect(body.meta.pinModel).toBe("work_start");
+    expect(body.meta.work).toEqual({ side: "right", travel: "with_geometry" });
+    expect(body.meta.confirmedRoad?.candidate.way_id).toBe("111001");
+    expect("bearingDeg" in body.meta).toBe(false);
+    // The retired lengths endpoint is never asked.
+    const urls = (fetch as unknown as { mock: { calls: unknown[][] } }).mock.calls.map((c) =>
+      String(c[0]),
+    );
+    expect(urls.some((u) => u.includes("/api/render/corridor-spec"))).toBe(false);
+  });
+
+  it("a moved pin asks without the side — it was confirmed on the road at the old pin", async () => {
+    stubFetches(detection([ROAD]), SIDE_NOT_CONFIRMED);
+    mountModal();
+    typeCoords(PIN[0] + 0.001, PIN[1]);
+    await screen.findByText("Say which side is occupied to lay out the work.", undefined, {
+      timeout: 3000,
+    });
+    const body = geometryBodies().at(-1)!;
+    expect(body.meta.lat).toBe(PIN[0] + 0.001);
+    expect(body.meta.work).toBeUndefined();
   });
 });

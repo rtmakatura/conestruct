@@ -47,7 +47,6 @@ vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 function crossStreet(over: Partial<CrossStreetCandidate>): CrossStreetCandidate {
   return {
     name: "Oak Street",
-    alongStationFt: -250,
     legCount: 2,
     signalized: true,
     speedMph: 30,
@@ -67,16 +66,21 @@ function crossStreet(over: Partial<CrossStreetCandidate>): CrossStreetCandidate 
   };
 }
 
+// #290 (RULE 5, stated): the picker hands back no bearing and no length
+// (the direction comes from the road and the side; the band's Extent is
+// the one length), and the cross street carries no station — the marked
+// intersection does, and the backend measures it along the road from the
+// work start (ruling 7).  So the stub returns `intersection`, as the real
+// modal does (#234), named after the cross street it marked.
 function result(cs: CrossStreetCandidate) {
   return {
     address: "Lafayette, CO",
     lat: 39.9936,
     lng: -105.0897,
-    bearingDeg: 0,
-    workZoneFt: 500,
     classification: null,
     overrides: {},
     crossStreet: cs,
+    intersection: { lat: 39.9943, lng: -105.0897, name: cs.name },
   };
 }
 
@@ -92,7 +96,7 @@ vi.mock("./LocationPickerModal", () => ({
       <button
         type="button"
         onClick={() =>
-          onSave(result(crossStreet({ alongStationFt: -400, signalized: false })))
+          onSave(result(crossStreet({ name: "Elm Street", signalized: false })))
         }
       >
         APPLY_PIN_B
@@ -118,8 +122,8 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { MIN_AUDIT } from "./test-fixtures";
-import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { MIN_AUDIT, TEST_SIDE, corridorGeometryResponse } from "./test-fixtures";
+import { answerSide, openWhere, openWhat } from "./__fixtures__/band-helpers";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -139,6 +143,10 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       status: 200,
       blob: async () => new Blob(["zip"]),
     } as unknown as Response);
+  }
+  // #290: the WHERE band's geometry read — the side control's choices.
+  if (url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve(corridorGeometryResponse());
   }
   // #261: the audit answer is wire-shaped (the shell reads it for the
   // audit card's count); the suite's own audit branches above still win.
@@ -205,6 +213,11 @@ function generateButton(): HTMLElement {
 }
 
 async function generate(user: ReturnType<typeof userEvent.setup>) {
+  // #290: the stub's ALL_ZIP posts whether or not Generate staged, so a
+  // payload assertion is only a claim about a plan the operator COULD
+  // generate if the primary was enabled first.  (Before this line, the
+  // "manual entry" case passed with Generate disabled.)
+  expect(generateButton().hasAttribute("disabled")).toBe(false);
   // Generate stages the page (restage lifecycle); the bundle POST that
   // carries the payload under test fires from Zone 2's "All (.zip)".
   await user.click(screen.getByText("Generate plan"));
@@ -221,6 +234,7 @@ describe("near_intersection picker → form → payload", () => {
     await openWhere();
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
+    await answerSide();
 
     // The detection-filled lane count needs confirmation; a manual
     // edit IS the confirmation (direction A → 1 through lane).
@@ -248,7 +262,6 @@ describe("near_intersection picker → form → payload", () => {
         laneWidth: 12,
         signalized: true,
         bearingDeg: 90,
-        alongStationFt: -250,
       },
       {
         id: "cross_b",
@@ -258,9 +271,12 @@ describe("near_intersection picker → form → payload", () => {
         laneWidth: 12,
         signalized: true,
         bearingDeg: 270,
-        alongStationFt: -250,
       },
     ]);
+    // Where the cross street sits is the marked intersection's, sent as
+    // is for the backend to measure (#290 ruling 7).
+    expect(bundleBody?.scenario.meta.intersection?.name).toBe("Oak Street");
+    expect(bundleBody?.scenario.meta.work).toEqual({ side: "right", heading: "N" });
     // Mainline stays the default the user never touched.
     expect(bundleBody?.scenario.lanes).toBe(2);
     expect(bundleBody?.scenario.workLen).toBe(500);
@@ -275,13 +291,15 @@ describe("near_intersection picker → form → payload", () => {
 
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
+    await answerSide();
 
     // Needs-confirmation hold: the turn-lane-suspect copy shows and
-    // the CTA is disabled until the user confirms.
+    // the CTA is disabled until the user confirms.  (#290: the side
+    // answer leaves WHERE open, so the hold is read in WHAT.)
+    await openWhat();
     expect(screen.getByText(/turn pockets/i)).toBeTruthy();
     expect(generateButton().hasAttribute("disabled")).toBe(true);
 
-    await openWhat();
     await user.click(screen.getByText("Lane count is right"));
     expect(screen.queryByText("Lane count is right")).toBeNull();
     expect(generateButton().hasAttribute("disabled")).toBe(false);
@@ -301,16 +319,17 @@ describe("near_intersection picker → form → payload", () => {
 
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_NOTAG"));
+    await answerSide();
 
     // #174 ruling (option d): the substituted count holds for
     // confirmation too, with a reason naming the assumption — a
     // substituted value must not render identically to a detected one.
+    await openWhat();
     expect(screen.getByText(/assumed 1 per direction, not detected/i)).toBeTruthy();
     expect(generateButton().hasAttribute("disabled")).toBe(true);
 
     // A manual edit IS the confirmation (existing convention): setting
     // the count clears the hold without ticking the confirm.
-    await openWhat();
     await user.click(chipIn("Cross-street lanes — direction A", "2"));
     expect(generateButton().hasAttribute("disabled")).toBe(false);
 
@@ -326,6 +345,7 @@ describe("near_intersection picker → form → payload", () => {
 
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
+    await answerSide();
     await openWhat();
     await user.click(chipIn("Cross-street lanes — direction A", "1"));
 
@@ -333,13 +353,14 @@ describe("near_intersection picker → form → payload", () => {
 
     await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_B"));
+    await answerSide();
 
     // PIN_B's candidate is different content → it re-fills, and its
     // detection-filled lanes need confirming again.
     await openWhat();
     await user.click(screen.getByText("Lane count is right"));
     await generate(user);
-    expect(bundleBody?.scenario.approaches[0].alongStationFt).toBe(-400);
+    expect(bundleBody?.scenario.meta.intersection?.name).toBe("Elm Street");
     expect(bundleBody?.scenario.approaches[0].signalized).toBe(false);
     expect(bundleBody?.scenario.approaches[0].lanesPerDirection).toBe(2);
   });
@@ -355,7 +376,16 @@ describe("near_intersection picker → form → payload", () => {
         mode="sandbox"
         initialScenario={{
           ...DEFAULT_NEAR_INTERSECTION,
-          meta: { ...DEFAULT_NEAR_INTERSECTION.meta, lat: 39.7, lng: -104.9 },
+          // #290: a marked intersection and a side, so the claim stays
+          // "no DETECTION" (a marked point is a pin, not an OSM read) and
+          // the plan can generate (the gate this case now asserts).
+          meta: {
+            ...DEFAULT_NEAR_INTERSECTION.meta,
+            lat: 39.7,
+            lng: -104.9,
+            intersection: { lat: 39.7007, lng: -104.9, name: null },
+            work: { ...TEST_SIDE },
+          },
         }}
       />,
     );

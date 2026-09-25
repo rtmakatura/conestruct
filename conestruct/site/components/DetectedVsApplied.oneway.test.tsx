@@ -173,8 +173,9 @@ describe("#278 the one-way row", () => {
   it("a way OSM never tagged renders no row at all (Rule 10)", () => {
     mount(flagger(null));
     expect(ledgerRow("One-way")).toBeNull();
-    // and the rest of the block is unaffected
-    expect(ledgerRow("Bearing")).not.toBeNull();
+    // and the rest of the block is unaffected (#290: the speed row — the
+    // typed-bearing row this used to name is retired)
+    expect(ledgerRow("Speed limit")).not.toBeNull();
   });
 
   it("kinds with no applied counterpart carry no row, even with the tag detected", () => {

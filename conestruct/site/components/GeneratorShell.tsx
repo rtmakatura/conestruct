@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DEFAULT_SCENARIO, hasLocation, type Scenario } from "@/lib/scenarios";
+import {
+  DEFAULT_SCENARIO,
+  hasConfirmedSide,
+  hasLocation,
+  type Scenario,
+} from "@/lib/scenarios";
 import type { StagedCorrection } from "@/lib/scenarios/types";
 import {
   SITE_SCAN_UNAVAILABLE_CODE,
@@ -422,10 +427,28 @@ export function GeneratorShell({
   // and Generate is gated on the same flag (`deriveRail`).  The
   // jurisdiction suggest sends lat/lng only.  The debug snapshot
   // (?debug=1 only, on click) is not a check and is left as is.
-  const checksArmed = kindState === "confirmed";
+  //
+  // #290: and until the side is confirmed (ruling 10: side unset is
+  // needs-you).  Under the work-start model the direction every corridor
+  // surface reads comes from the side, and a near_intersection plan's
+  // cross street cannot even be placed without it — so no check fires for
+  // a side nobody gave, exactly as none fires for a kind nobody picked.
+  // Only where there IS a pin: with none, nothing directional exists to
+  // guess (and the counts no side moves answer as they always did).
+  const sideConfirmed = !hasLocation(scenario.meta) || hasConfirmedSide(scenario.meta);
+  const checksArmed = kindState === "confirmed" && sideConfirmed;
+  // The two effects below SEND `fetchScenario`, which trails `scenario` by
+  // the debounce — so the side must be on the scenario being sent, not only
+  // on the live one.  Without this, the side click opens the gate one
+  // debounce window before the sent scenario carries the side, and one
+  // side-less audit + breakdown goes out (caught by kind-confirm's PAYLOAD
+  // case).
+  const fetchArmed =
+    checksArmed &&
+    (!hasLocation(fetchScenario.meta) || hasConfirmedSide(fetchScenario.meta));
 
   useEffect(() => {
-    if (!checksArmed) return;
+    if (!fetchArmed) return;
     const controller = new AbortController();
     // #192: carry the previous breakdown through the refetch so the
     // results zone dims in place instead of unmounting (presented only
@@ -482,11 +505,11 @@ export function GeneratorShell({
       }
     })();
     return () => controller.abort();
-  }, [fetchScenario, retryNonce, checksArmed]);
+  }, [fetchScenario, retryNonce, fetchArmed]);
 
   useEffect(() => {
-    // Finding 1 — see `checksArmed`.
-    if (!checksArmed) return;
+    // Finding 1 — see `checksArmed` (and `fetchArmed`, #290).
+    if (!fetchArmed) return;
     const controller = new AbortController();
     setVerifySlow(false);
     const slowTimer = setTimeout(() => setVerifySlow(true), SLOW_VERIFY_MS);
@@ -568,7 +591,7 @@ export function GeneratorShell({
       controller.abort();
       clearTimeout(slowTimer);
     };
-  }, [fetchScenario, retryNonce, checksArmed]);
+  }, [fetchScenario, retryNonce, fetchArmed]);
 
   // #258 (#193): the package announcement's own arming — set by the
   // operator's actions (Generate, Retry, proceed-anyway), never by an
@@ -1410,8 +1433,17 @@ export function GeneratorShell({
   // under the cursor.  Read off the live request state, never a timer.
   // Spec 34 (#249) reads the same fact for the strip block's disable;
   // the working band mounts on it; the root's write lock keys on it.
+  //
+  // #290: and only while the checks are ARMED.  The stamped audit view
+  // reads "loading" whenever its stamp trails the wire — but a disarmed
+  // plan sends nothing, so that "loading" is no request at all.  A pin
+  // moved after a Generate clears the side (withPin → withoutSide), which
+  // disarms the checks; without this term the stamp never catches up, the
+  // column stays write-locked, and the side control — the one answer that
+  // would re-arm it — is locked with it.
   const planInFlight =
     generated &&
+    checksArmed &&
     (deviceBreakdown.state === "loading" || stripAudit.state === "loading");
   // Ruling a: a file render is a request too — the band and the lock
   // cover it; the plan pair outranks it in the sentence.
@@ -1750,7 +1782,10 @@ export function GeneratorShell({
             // #289 finding 1: a pin with no confirmed kind — the strip
             // says only "choose the kind of work" (no verdict for a kind
             // nobody picked; the checks behind it are not fired).
-            kindUnconfirmed={hasLocation(scenario.meta) && !checksArmed}
+            kindUnconfirmed={hasLocation(scenario.meta) && kindState !== "confirmed"}
+            sideUnconfirmed={
+              hasLocation(scenario.meta) && kindState === "confirmed" && !sideConfirmed
+            }
             audit={stripAudit}
             verifySlow={verifySlow}
             // Rule 117 — S4's verdict slot is "mounted and EMPTY, holding

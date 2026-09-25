@@ -93,8 +93,12 @@ export interface NearIntersectionApproach {
    * Negative = intersection past the work zone (near-side work);
    * greater than workLen = intersection before it (far-side work).
    * Both legs of the one cross street carry the same value.
+   *
+   * #290: sent only on a ``"corridor_end"`` pin.  Under ``"work_start"``
+   * the backend measures it from ``meta.intersection`` along the road
+   * from the work start, and the request never carries it (ruling 7).
    */
-  alongStationFt: number;
+  alongStationFt?: number;
   /**
    * Parsed OSM lane tags of the cross-street way, relayed from detection
    * (issue #120): raw total, forward, backward, and center-turn-lane
@@ -325,6 +329,32 @@ export type StagedCorrection =
 /** #290 — the pin's meaning; see ``ScenarioMeta.pinModel``. */
 export type PinModel = "corridor_end" | "work_start";
 
+/**
+ * #290 — which side of the road the work occupies, and which way that
+ * side's traffic runs (mirrors the backend's ``WorkPlacement``).  Written
+ * VERBATIM from one of the backend's ``side_options`` (the side control
+ * never composes it): ``travel`` relative to the relayed road's vertex
+ * order when a road is confirmed, ``heading`` (N / E / S / W) when not.
+ * Absent ⇒ the side is not confirmed (ruling 10: needs-you).
+ */
+export interface WorkPlacement {
+  side?: "right" | "left" | "median";
+  travel?: "with_geometry" | "against_geometry";
+  heading?: "N" | "E" | "S" | "W";
+}
+
+/**
+ * #290 — the confirmed road's raw direction facts at the pin (its OSM
+ * vertex-order bearing and ``oneway`` tag).  WIRE-ONLY, like
+ * ``centerline``: materialized by ``withRelayedCenterline`` at
+ * serialization from ``confirmedRoad``; the backend honours the one-way
+ * tag with it (ruling 8, #298).
+ */
+export interface RoadDirection {
+  osmBearingDeg: number;
+  oneway: string | null;
+}
+
 export interface ScenarioMeta {
   project: string;
   address: string;
@@ -342,13 +372,24 @@ export interface ScenarioMeta {
    * reads it before anything reads the pin.  ``"corridor_end"``: the pin
    * is the corridor's downstream-most point and ``bearingDeg`` points from
    * it toward the first sign — every plan to date.  ``"work_start"``: the
-   * pin marks where the work starts (FLOW.md §5a), refused by the backend
-   * until the work-start corridor lands.  Stamped where a scenario is
-   * born (every DEFAULT_*, the legacy migration, ``toScenario``); optional
-   * in the type only so hand-built test metas need not carry it — the
-   * backend reads absence as ``"corridor_end"`` too (rulings.md, ruling 3).
+   * pin marks where the work starts (FLOW.md §5a) — what every new plan
+   * means since #290's visible ship.  Stamped where a scenario is born
+   * (every DEFAULT_*, ``toScenario``); optional in the type only so
+   * hand-built test metas need not carry it (the backend reads absence
+   * as ``"corridor_end"``, rulings.md ruling 3).
    */
   pinModel?: PinModel;
+  /** #290 — the occupied side; see ``WorkPlacement``. */
+  work?: WorkPlacement;
+  /** #290 — wire-only road direction facts; see ``RoadDirection``. */
+  roadDirection?: RoadDirection;
+  /**
+   * #290 ruling 10 — set when a plan saved under ``"corridor_end"`` was
+   * opened in the work-start model (``toScenario``): the pin is kept,
+   * the side is unset, and the band says so.  Frontend provenance only;
+   * the backend ignores the key.
+   */
+  pinModelFrom?: "corridor_end";
   /**
    * Engineering-style location text shown on the title block (e.g.
    * "I-25 NB, MP 144.5–146, Colorado Springs"). Distinct from

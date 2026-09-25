@@ -242,6 +242,55 @@ export async function fetchDeviceBreakdown(
   return new Response(upstream.body, { status: 200, headers });
 }
 
+// #290 — the laid-out corridor as geometry, per approach, plus the side
+// control's choices (POST /render/corridor-geometry on Modal).  A read: no
+// scan, no generator.  Ruling 7: "each approach's geometry returned by the
+// backend, never sent on the request" — the picker draws from this instead
+// of walking the pin along a bearing itself.
+export async function fetchCorridorGeometry(
+  scenario: Scenario,
+): Promise<Response> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    return new Response("Render service not configured", { status: 503 });
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(
+      `${url.replace(/\/$/, "")}/render/corridor-geometry`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${secret}`,
+        },
+        body: JSON.stringify(withRelayedCenterline(scenario)),
+      },
+    );
+  } catch (err) {
+    console.error("corridor geometry fetch failed", err);
+    return new Response("Render service unreachable", { status: 502 });
+  }
+
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    console.error(`corridor geometry upstream ${upstream.status}`, detail);
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
+    return new Response("Corridor geometry failed", { status: 502 });
+  }
+
+  const headers = new Headers();
+  headers.set(
+    "content-type",
+    upstream.headers.get("content-type") ?? "application/json",
+  );
+  headers.set("cache-control", "private, no-store");
+  return new Response(upstream.body, { status: 200, headers });
+}
+
 export async function fetchAuditTrail(
   scenario: Scenario,
 ): Promise<Response> {

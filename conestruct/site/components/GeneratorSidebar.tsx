@@ -14,7 +14,7 @@ import {
   type ScenarioMeta,
 } from "@/lib/scenarios";
 import { applyOverridesToScenario } from "@/lib/scenarios/overrides";
-import { withPin } from "@/lib/scenarios/site-corrections";
+import { withPin, withoutSide } from "@/lib/scenarios/site-corrections";
 import {
   summarizeHandoff,
   type HandoffEvent,
@@ -292,12 +292,22 @@ export function GeneratorSidebar({
     // at the same pin keeps them (a re-save is not a move).  withPin is
     // THE door: the manual Latitude / Longitude fields go through the
     // same helper (fix-224-manual-pin-move).
+    // #290: the pin marks the work, and its direction is derived from the
+    // road and the confirmed side — never typed, so the picker returns no
+    // bearing and none is kept.  The side is keyed to the road AT the pin:
+    // withPin drops it on a move, and a save that confirms a DIFFERENT way
+    // drops it here (its travel direction named the old road's geometry).
+    const moved = withPin(cur.meta, { lat: r.lat, lng: r.lng });
+    const roadChanged =
+      (cur.meta.confirmedRoad?.candidate.way_id ?? null) !==
+      (r.confirmedRoad?.candidate.way_id ?? null);
+    const { bearingDeg: _typed, ...keptMeta } = roadChanged ? withoutSide(moved) : moved;
+    void _typed;
     let next: Scenario = {
       ...cur,
       meta: {
-        ...withPin(cur.meta, { lat: r.lat, lng: r.lng }),
+        ...keptMeta,
         address: r.address || cur.meta.address,
-        bearingDeg: r.bearingDeg,
         // The committed road choice, persisted with the scenario so it
         // survives picker close/reopen and page reload (it rides the
         // saved plan verbatim).  Null overwrites deliberately: a save
@@ -310,9 +320,6 @@ export function GeneratorSidebar({
         intersection: r.intersection ?? null,
       },
     } as Scenario;
-    if (r.workZoneFt > 0) {
-      next = { ...next, workLen: r.workZoneFt } as Scenario;
-    }
     let delta: AutoApplyDelta | null = null;
     const detectionJson = r.classification ? JSON.stringify(r.classification) : null;
     const isNewDetection =
@@ -518,11 +525,14 @@ export function GeneratorSidebar({
             address: scenario.meta.address,
             lat: scenario.meta.lat,
             lng: scenario.meta.lng,
-            bearingDeg: scenario.meta.bearingDeg,
-            workZoneFt: scenario.workLen,
+            // #290: the overlay is the backend's geometry for this
+            // scenario (ruling 7) — the typed bearing and the picker's own
+            // length field are retired; the band's Extent is the one
+            // length control.
+            scenario,
             scenarioKind: scenario.kind,
-            // #289 finding 1: the picker's corridor-spec request waits on
-            // a confirmed kind, like every other live check.
+            // #289 finding 1: the approaches draw only for a confirmed
+            // kind, like every other live answer.
             kindConfirmed: kindState === "confirmed",
             speedMph: scenario.speed,
             // #267: the plan's own width facts, for the preview's taper.

@@ -82,6 +82,11 @@ async function settle() {
 }
 
 const breakdowns = () => calls.filter((c) => c.url.includes("device-breakdown"));
+// #290 (RULE 5, stated): the WHERE band's side control reads the road's
+// geometry when the band opens (POST /render/corridor-geometry — a read:
+// no check, no write, no plan).  "Opening a band asks nothing" now means
+// nothing BUT that read; every other request is still counted.
+const asked = () => calls.filter((c) => !c.url.includes("/api/render/corridor-geometry"));
 const scenarioOf = (c: Call) => c.body.scenario as Record<string, unknown>;
 const openBand = () =>
   document.querySelector('[data-testid="band-stack"]')?.getAttribute("data-open-band");
@@ -260,8 +265,8 @@ describe("defect 2 — kind, location, extent and dates open the band that owns 
       expect(openBand()).toBe(band);
       // Not S7: no revision band, no staged editor.
       expect(document.body.textContent).not.toContain("REVISING ·");
-      // Opening a band is navigation — it asks the backend nothing.
-      expect(calls).toHaveLength(0);
+      // Opening a band is navigation — it checks and writes nothing.
+      expect(asked()).toHaveLength(0);
     });
   }
 
@@ -282,8 +287,8 @@ describe("defect 2 — kind, location, extent and dates open the band that owns 
     await settle();
     expect(openBand()).toBe("where");
     expect(document.body.textContent).not.toContain("REVISING ·");
-    // Nothing was written, nothing was asked.
-    expect(calls).toHaveLength(0);
+    // Nothing was written, nothing was checked.
+    expect(asked()).toHaveLength(0);
     // Back into S7 on speed: the 55 is still staged.
     await changeOneThing("speed");
     expect((document.getElementById("revise-speed") as HTMLSelectElement).value).toBe("55");

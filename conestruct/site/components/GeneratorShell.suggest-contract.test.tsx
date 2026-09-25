@@ -56,7 +56,7 @@ vi.mock("./GeneratorSidebar", () => ({
         onClick={() =>
           setScenario({
             ...scenario,
-            meta: { ...scenario.meta, lat: 39.7392, lng: -104.9903 },
+            meta: { ...scenario.meta, lat: 39.7392, lng: -104.9903, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
           })
         }
       >
@@ -67,7 +67,7 @@ vi.mock("./GeneratorSidebar", () => ({
         onClick={() =>
           setScenario({
             ...scenario,
-            meta: { ...scenario.meta, lat: 39.5186, lng: -104.7614 },
+            meta: { ...scenario.meta, lat: 39.5186, lng: -104.7614, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
           })
         }
       >

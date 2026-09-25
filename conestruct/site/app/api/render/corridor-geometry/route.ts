@@ -1,0 +1,39 @@
+import { NextRequest } from "next/server";
+import { fetchCorridorGeometry } from "@/lib/render-proxy";
+import { isScenario } from "@/lib/scenarios";
+import { rateLimitOr429 } from "@/lib/rate-limit";
+
+// #122: give cold-start / heavy renders headroom under Vercel's function
+// limit (60s < the backend's 120s cap) instead of an opaque NetworkError.
+export const maxDuration = 60;
+
+// #290: proxy for the picker's corridor overlay and the WHERE band's side
+// control (POST /render/corridor-geometry on Modal) — the scenario in, the
+// work segment, each approach's zones and the side choices out.  Same
+// body cap and rate-limit posture as the device breakdown, whose shape
+// this follows ({ scenario }).
+const MAX_BODY_BYTES = 32 * 1024;
+
+export async function POST(req: NextRequest) {
+  const over = await rateLimitOr429(req, "render-corridor-geometry", 30);
+  if (over) return over;
+
+  const len = Number(req.headers.get("content-length") ?? "0");
+  if (len > MAX_BODY_BYTES) {
+    return new Response("Payload too large", { status: 413 });
+  }
+
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response("Invalid JSON", { status: 400 });
+  }
+
+  const scenario = (body as { scenario?: unknown })?.scenario;
+  if (!isScenario(scenario)) {
+    return new Response("Invalid scenario", { status: 400 });
+  }
+
+  return fetchCorridorGeometry(scenario);
+}

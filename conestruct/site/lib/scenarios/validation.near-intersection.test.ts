@@ -17,16 +17,28 @@ import {
   validateWorkZone,
 } from "@/lib/scenarios/validation";
 
+// #290: the station checks below are the corridor_end model's — a plan
+// whose frontend sent its own ``alongStationFt``.  The helpers build that
+// model explicitly (with the pre-#290 default station, -200); the
+// work-start model's own rule has its own describe at the end.
 function scenario(
   over: Partial<NearIntersectionScenario> = {},
 ): NearIntersectionScenario {
-  return { ...DEFAULT_NEAR_INTERSECTION, ...over };
+  return {
+    ...DEFAULT_NEAR_INTERSECTION,
+    meta: { ...DEFAULT_NEAR_INTERSECTION.meta, pinModel: "corridor_end" },
+    approaches: DEFAULT_NEAR_INTERSECTION.approaches.map((a) => ({
+      ...a,
+      alongStationFt: -200,
+    })),
+    ...over,
+  };
 }
 
 function leg(
   over: Partial<NearIntersectionApproach> = {},
 ): NearIntersectionApproach {
-  return { ...DEFAULT_NEAR_INTERSECTION.approaches[0], ...over };
+  return { ...DEFAULT_NEAR_INTERSECTION.approaches[0], alongStationFt: -200, ...over };
 }
 
 describe("validateLanes — near_intersection mainline", () => {
@@ -193,5 +205,37 @@ describe("validateApproaches — the 422 + generator mirror", () => {
       }),
     );
     expect(v).toEqual({ ok: true, message: null });
+  });
+});
+
+describe("validateApproaches — the work-start model (#290)", () => {
+  // The backend places the cross street from the marked intersection
+  // (ruling 7) and refuses one inside the work zone itself; what the
+  // frontend checks is that there IS a mark, once there is a pin.
+  const located = {
+    ...DEFAULT_NEAR_INTERSECTION.meta,
+    lat: 39.7,
+    lng: -104.9,
+  };
+
+  it("a located plan with no marked cross street is told to mark it", () => {
+    const v = validateApproaches({ ...DEFAULT_NEAR_INTERSECTION, meta: located });
+    expect(v).toEqual({
+      ok: false,
+      message: "Mark the cross street on the map — the plan places it from there.",
+    });
+  });
+
+  it("a marked cross street passes — no station is asked for, none is checked", () => {
+    const v = validateApproaches({
+      ...DEFAULT_NEAR_INTERSECTION,
+      meta: { ...located, intersection: { lat: 39.701, lng: -104.9, name: "E 17th Ave" } },
+    });
+    expect(v).toEqual({ ok: true, message: null });
+    for (const a of DEFAULT_NEAR_INTERSECTION.approaches) expect(a.alongStationFt).toBeUndefined();
+  });
+
+  it("before a pin nothing is asked of the cross street (the location's reason is the truth)", () => {
+    expect(validateApproaches(DEFAULT_NEAR_INTERSECTION)).toEqual({ ok: true, message: null });
   });
 });

@@ -132,14 +132,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(screen.getByText(/8 m from pin · way 111001/i)).toBeTruthy();
     expect(saveButton().disabled).toBe(true);
     expect(screen.getByText("Pick a road to continue")).toBeTruthy();
-
-    // inc-5: the Direction row's button is a plain disabled "Use
-    // Detected" while ambiguous-unpicked — never a live "Pick Road".
     expect(screen.queryByText("Pick Road")).toBeNull();
-    const useDetected = screen.getByRole("button", {
-      name: "Use Detected",
-    }) as HTMLButtonElement;
-    expect(useDetected.disabled).toBe(true);
 
     // Picking a road resolves the block: Save enables, the hint leaves,
     // the card collapses to a summary, and road properties load.
@@ -149,10 +142,9 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(screen.queryByText(/8 m from pin · way 111001/i)).toBeNull();
     expect(screen.getByRole("button", { name: "Change" })).toBeTruthy();
     expect(screen.getByText("Speed limit (mph)")).toBeTruthy();
-    expect(useDetected.disabled).toBe(false); // re-applies the pick now
   });
 
-  it("payload: Save after a pick carries the picked candidate's bearing and classification", async () => {
+  it("payload: Save after a pick carries the picked road and its classification — and no bearing (#290)", async () => {
     stubDetection(detection([EASTBOUND, WESTBOUND]));
     mountModal();
     typeCoords();
@@ -163,24 +155,14 @@ describe("multi-candidate road pick gates Save (#139)", () => {
 
     expect(onSave).toHaveBeenCalledTimes(1);
     const result = onSave.mock.calls[0][0];
-    expect(result.bearingDeg).toBe(270);
+    // #290: the picker returns no direction — it is derived by the backend
+    // from the road and the side the band confirms (ruling 8).  The pick
+    // is the confirmed road itself.
+    expect("bearingDeg" in result).toBe(false);
+    expect(result.confirmedRoad.candidate.way_id).toBe("111002");
     expect(result.classification).not.toBeNull();
     expect(result.classification.raw.roadName).toBe("E Baseline Rd");
     expect(result.classification.speedLimitMph).toBe(45);
-  });
-
-  it("a hand-typed bearing is NOT an escape from the pick (deliberate behavior change)", async () => {
-    stubDetection(detection([EASTBOUND, WESTBOUND]));
-    mountModal();
-    typeCoords();
-
-    await screen.findByText(/Which road\?/i);
-    fireEvent.change(
-      screen.getByLabelText("Direction of travel in degrees"),
-      { target: { value: "45" } },
-    );
-    expect(saveButton().disabled).toBe(true);
-    expect(screen.getByText("Pick a road to continue")).toBeTruthy();
   });
 
   it("Change re-expands the picker and a re-pick updates the payload", async () => {
@@ -194,10 +176,10 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     fireEvent.click(screen.getByRole("button", { name: /westbound/i }));
     fireEvent.click(saveButton());
 
-    expect(onSave.mock.calls[0][0].bearingDeg).toBe(270);
+    expect(onSave.mock.calls[0][0].confirmedRoad.candidate.way_id).toBe("111002");
   });
 
-  it("single candidate: confirmed card with the pre-selected row, no amber hint, Save enabled, bearing auto-applied (#152 A)", async () => {
+  it("single candidate: confirmed card with the pre-selected row, no amber hint, Save enabled (#152 A)", async () => {
     stubDetection(detection([EASTBOUND]));
     mountModal();
     typeCoords();
@@ -210,16 +192,20 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(screen.getByText(/8 m from pin · way 111001/i)).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
-    expect(
-      (screen.getByLabelText(
-        "Direction of travel in degrees",
-      ) as HTMLInputElement).value,
-    ).toBe("90");
-    // The detected bearing reads as the labeled default on the
-    // Direction row.
-    expect(
-      screen.getByRole("button", { name: "✓ Detected (in use)" }),
-    ).toBeTruthy();
+  });
+
+  it("#290: the typed direction is retired — no field, no Use Detected, no Flip, no length", async () => {
+    // FLOW.md §5a: "The typed bearing field retires deliberately (Rule 5)";
+    // the band's Extent is the one length control (P2).
+    stubDetection(detection([EASTBOUND]));
+    mountModal();
+    typeCoords();
+    await screen.findByText("Speed limit (mph)");
+    expect(screen.queryByLabelText("Direction of travel in degrees")).toBeNull();
+    expect(screen.queryByRole("button", { name: /Use Detected|Detected \(in use\)/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Flip/ })).toBeNull();
+    expect(screen.queryByText(/Work zone length \(ft\)/)).toBeNull();
+    expect(screen.queryByText(/travel-direction sign only/)).toBeNull();
   });
 
   it("zero candidates: explicit empty-state card, Save stays enabled, null classification (accepted boundary)", async () => {
@@ -230,7 +216,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     await screen.findByText(/No road detected within 30 m/i);
     // #152 A: the outcome card names the empty result — never nothing.
     expect(
-      screen.getByText(/Set direction of travel and road properties manually/i),
+      screen.getByText(/Set road properties manually below/i),
     ).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
@@ -246,7 +232,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
 
     await screen.findByText(/Couldn't reach road-detection service/i);
     expect(
-      screen.getByText(/Set direction of travel and road properties manually/i),
+      screen.getByText(/Set road properties manually below/i),
     ).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
@@ -273,10 +259,11 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(await screen.findByText(/Detecting roads at pin…/i)).toBeTruthy();
   });
 
-  it("a moved pin to an unresolved location clears the stale direction of travel (#149)", async () => {
+  it("a moved pin to an unresolved location clears the stale road pick (#149)", async () => {
     // First pin resolves to one road; a later pin move lands on an
-    // ambiguous location — the bearing from the first road is stale and
-    // must not linger while the pick is unresolved.
+    // ambiguous location — the first road's pick is stale and must not
+    // linger while the new pick is unresolved.  (#290: there is no typed
+    // direction left to go stale; the road pick is what carries over.)
     let phase = 0;
     vi.stubGlobal(
       "fetch",
@@ -291,11 +278,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText("Speed limit (mph)");
-    const bearing = screen.getByLabelText(
-      "Direction of travel in degrees",
-    ) as HTMLInputElement;
-    expect(bearing.value).toBe("90");
+    await screen.findByText(/Road detected · 1 match/i);
 
     phase = 1;
     fireEvent.change(screen.getByLabelText("Latitude"), {
@@ -303,29 +286,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     });
 
     await screen.findByText(/Which road\?/i);
-    expect(bearing.value).toBe("");
+    expect(screen.queryByText(/Road detected · 1 match/i)).toBeNull();
     expect(saveButton().disabled).toBe(true); // unresolved gates Save
-  });
-
-  it("a hand-typed differing bearing demotes the default: caption names the manual state, Use Detected restores it (#152 A)", async () => {
-    stubDetection(detection([EASTBOUND]));
-    mountModal();
-    typeCoords();
-
-    await screen.findByText("Speed limit (mph)");
-    const input = screen.getByLabelText(
-      "Direction of travel in degrees",
-    ) as HTMLInputElement;
-    fireEvent.change(input, { target: { value: "45" } });
-
-    expect(
-      screen.getByText(/Manual bearing — detected 90° available/i),
-    ).toBeTruthy();
-    const useDetected = screen.getByRole("button", { name: "Use Detected" });
-    fireEvent.click(useDetected);
-    expect(input.value).toBe("90");
-    expect(
-      screen.getByRole("button", { name: "✓ Detected (in use)" }),
-    ).toBeTruthy();
   });
 });

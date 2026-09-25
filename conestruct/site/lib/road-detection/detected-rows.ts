@@ -59,7 +59,6 @@ export type Verdict = "match" | "differ" | "unset";
 /** The row labels, as a closed set, so a consumer selects a row by a
  *  name the compiler checks rather than by a string that can drift. */
 export type DetectedRowLabel =
-  | "Bearing"
   | "Speed limit"
   | "Lanes per direction"
   | "Road type"
@@ -167,17 +166,11 @@ export function deriveDetectedRows(scenario: Scenario): DetectedModel | null {
     };
   };
 
+  // #290: no "Bearing" row.  It compared the TYPED bearing with the
+  // road's, and the typed bearing is retired (FLOW.md §5a, Rule 5): the
+  // direction is derived from the road and the confirmed side, and the
+  // WHERE band states it in the side's own words.
   const rows: DetectedRow[] = [];
-  rows.push(
-    mkRow({
-      label: "Bearing",
-      appliedValue: meta.bearingDeg,
-      appliedDisplay:
-        meta.bearingDeg !== undefined ? `${Math.round(meta.bearingDeg)}°` : null,
-      detectedValue: cand.bearing,
-      detectedDisplay: `${Math.round(cand.bearing)}°`,
-    }),
-  );
 
   if (cls.speedLimitMph !== undefined && "speed" in scenario) {
     const detected = cls.speedLimitMph;
@@ -371,16 +364,8 @@ export function detectedRow(
   return model?.rows.find((r) => r.label === label) ?? null;
 }
 
-/**
- * #214's caveat, byte-identical across every rebuild of this surface.
- *
- * Both sentences are facts of the current state — which input wins is
- * never left unsaid.  #289 keeps #214's disclosure "restyled, never
- * deleted"; this is the string, and the WHAT band renders it under the
- * grid rather than under a block that no longer exists.
- */
-export function bearingCaveat(geomDrives: boolean): string {
-  return geomDrives
-    ? "road geometry governs the drawing — the typed bearing sets the travel-direction sign only"
-    : "no road geometry on file — the typed bearing drives the drawing";
-}
+// #214's caveat ("road geometry governs the drawing — the typed bearing
+// sets the travel-direction sign only") RETIRES with the typed bearing it
+// described, as FLOW.md §5a rules: "The typed bearing field retires
+// deliberately (Rule 5); the #214 disclosure sentence and its
+// byte-identity pin retire with it."  (#290)

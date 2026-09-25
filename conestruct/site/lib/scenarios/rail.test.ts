@@ -22,6 +22,7 @@ import {
   LOCATION_BLOCKER,
   RECHECK_BLOCKER,
   REFUSAL_BLOCKER,
+  SIDE_BLOCKER,
   type RailInput,
 } from "./rail";
 
@@ -38,8 +39,20 @@ function input(scenario: Scenario, over: Partial<RailInput> = {}): RailInput {
   };
 }
 
+// #290: a located scenario that clears every gate has its side confirmed
+// (the work-start model; ruling 10) and, for near_intersection, its cross
+// street marked — the station is the backend's now, measured from it.
 function pinned<S extends Scenario>(s: S): S {
-  return { ...s, meta: { ...s.meta, lat: 39.7, lng: -104.9 } };
+  return {
+    ...s,
+    meta: {
+      ...s.meta,
+      lat: 39.7,
+      lng: -104.9,
+      work: { side: "right", heading: "N" },
+      intersection: { lat: 39.701, lng: -104.9, name: "E 17th Ave" },
+    },
+  };
 }
 
 function entryById(rail: ReturnType<typeof deriveRail>, id: string) {
@@ -89,9 +102,12 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
     expect(rail.blocker?.message).toMatch(/wider than the plan sheet can draw/);
   });
 
-  it("rank 3: the approaches mirror", () => {
+  it("rank 3: the approaches mirror (a corridor_end plan's sent station)", () => {
+    const base = pinned(DEFAULT_NEAR_INTERSECTION);
     const s: NearIntersectionScenario = {
-      ...pinned(DEFAULT_NEAR_INTERSECTION),
+      ...base,
+      // #290: the frontend station check is the corridor_end model's.
+      meta: { ...base.meta, pinModel: "corridor_end", work: undefined },
       approaches: DEFAULT_NEAR_INTERSECTION.approaches.map((a) => ({
         ...a,
         alongStationFt: 100, // inside the 500-ft work zone
@@ -102,6 +118,36 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
     expect(rail.blocker?.message).toMatch(
       /can't be inside the work zone/,
     );
+  });
+
+  it("rank 3 under the work-start model: an unmarked cross street (#290)", () => {
+    const base = pinned(DEFAULT_NEAR_INTERSECTION);
+    const s: NearIntersectionScenario = {
+      ...base,
+      meta: { ...base.meta, intersection: null },
+    };
+    const rail = deriveRail(input(s));
+    expect(rail.blocker?.entryId).toBe("extra");
+    expect(rail.blocker?.message).toBe(
+      "Mark the cross street on the map — the plan places it from there.",
+    );
+  });
+
+  it("#290: a located work-start pin with no confirmed side names the side, right after the kind", () => {
+    const base = pinned(DEFAULT_SHOULDER);
+    const unsided = { ...base, meta: { ...base.meta, work: undefined } };
+    expect(deriveRail(input(unsided)).blocker).toEqual({
+      message: SIDE_BLOCKER,
+      entryId: "location",
+    });
+    // The kind still ranks first when both are open.
+    expect(deriveRail(input(unsided, { kindConfirmed: false })).blocker?.message).toBe(
+      "Choose the kind of work",
+    );
+    // A greyed (not built) side never counts as confirmed.
+    const left = { ...base, meta: { ...base.meta, work: { side: "left" as const, heading: "N" as const } } };
+    expect(deriveRail(input(left)).blocker?.message).toBe(SIDE_BLOCKER);
+    expect(SIDE_BLOCKER).toBe("Say which side is occupied to lay out the work");
   });
 
   it("rank 4: the needs-confirmation hold", () => {

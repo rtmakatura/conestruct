@@ -222,10 +222,28 @@ export function validateApproaches(scenario: Scenario): ApproachesValidation {
     }
   }
 
+  // #290: under the work-start model the backend places the cross street
+  // from the marked intersection (ruling 7) and refuses one inside the
+  // work zone itself — the station checks below are the corridor_end
+  // model's, run on a frontend-computed station that no longer exists.
+  // What the frontend can check is that there is a marked intersection.
+  if (scenario.meta.pinModel === "work_start") {
+    // Only once there is a pin: before one there is nothing to mark the
+    // cross street against, and the location's own reason is the truth.
+    const located = scenario.meta.lat !== 0 && scenario.meta.lng !== 0;
+    if (located && !scenario.meta.intersection) {
+      return {
+        ok: false,
+        message: "Mark the cross street on the map — the plan places it from there.",
+      };
+    }
+    return { ok: true, message: null };
+  }
+
   // One cross street: both legs share the crossing point.  The form
   // holds a single field so disagreement is normally unrepresentable,
   // but the payload is validated, not the widgets (rule 10 posture).
-  const along = legs[0].alongStationFt;
+  const along = legs[0].alongStationFt ?? Number.NaN;
   if (legs.some((leg) => leg.alongStationFt !== along)) {
     return {
       ok: false,

@@ -8,7 +8,6 @@
 // a needs-confirmation flag (OSM lane counts near intersections are
 // routinely inflated by turn pockets).
 
-import { M_PER_FT, haversineM, initialBearingDeg } from "../geodesy";
 import { snapSpeedToDomain } from "../scenarios/auto-apply";
 import type { NearIntersectionApproach } from "../scenarios/types";
 import { clampLanesToDomain } from "../scenarios/validation";
@@ -32,15 +31,11 @@ const SIGNAL_NEARBY_M = 30;
 const PARALLEL_TOLERANCE_DEG = 25;
 
 export interface CrossStreetCandidate {
-  /** Display name of the proposed cross street, when OSM has one. */
+  /** Display name of the proposed cross street, when OSM has one.
+   *  (#290: no station.  Where the cross street sits relative to the work
+   *  is the backend's to measure, from the marked intersection along the
+   *  road from the work start — ruling 7, Rule 3.) */
   name: string | null;
-  /**
-   * Derived crossing point on the mainline station axis (0 =
-   * downstream end of the work zone, increasing upstream), rounded to
-   * whole feet.  Shown in an editable field — a sloppy second pin is
-   * off by tens of feet, and the user corrects it there.
-   */
-  alongStationFt: number;
   /** One direction of travel (oneway cross street) or two. */
   legCount: 1 | 2;
   /** True when a traffic-signal node sits within SIGNAL_NEARBY_M. */
@@ -80,20 +75,10 @@ export interface DeriveCrossStreetInput {
   /** The picked mainline's identity, to exclude it from candidates. */
   mainlineWayId: string | null;
   mainlineName: string | null;
-  mainlineBearingDeg: number;
-  /** Work-zone anchor pin (the corridor anchor). */
-  anchorLat: number;
-  anchorLng: number;
-  /** The intersection pin. */
-  crossLat: number;
-  crossLng: number;
-  /**
-   * Length of the downstream taper in the corridor spec — the anchor
-   * pin sits at the corridor's downstream tip, one downstream-taper
-   * length below station 0 (lib/corridor-polyline.ts convention:
-   * anchor(0) → downstream taper → work zone → …).
-   */
-  downstreamTaperFt: number;
+  /** The confirmed mainline's own OSM bearing (the candidate's raw
+   *  fact), to exclude parallels; null with no confirmed road, and the
+   *  parallel filter then has nothing to compare against. */
+  mainlineBearingDeg: number | null;
 }
 
 /** Smallest angular difference between two bearings, ignoring
@@ -103,31 +88,18 @@ export function bearingDeltaMod180(a: number, b: number): number {
   return Math.min(d, 180 - d);
 }
 
-/**
- * Signed distance (ft) from the anchor pin to the cross pin, measured
- * along the mainline bearing (positive = upstream, the direction
- * stations grow), then shifted into the work-zone station frame.
- */
-export function alongStationFromPins(
-  anchorLat: number,
-  anchorLng: number,
-  crossLat: number,
-  crossLng: number,
-  mainlineBearingDeg: number,
-  downstreamTaperFt: number,
-): number {
-  const distM = haversineM(anchorLat, anchorLng, crossLat, crossLng);
-  const brg = initialBearingDeg(anchorLat, anchorLng, crossLat, crossLng);
-  const theta = ((brg - mainlineBearingDeg) * Math.PI) / 180;
-  const alongFt = (distM / M_PER_FT) * Math.cos(theta);
-  return Math.round(alongFt - downstreamTaperFt);
-}
+// #290: ``alongStationFromPins`` is retired.  It walked the pin to the
+// cross pin along the typed bearing and subtracted the downstream taper
+// because the pin sat at the corridor's downstream tip — frontend corridor
+// math (Rule 3) keyed to the meaning #298 found inverted.  The backend now
+// measures the station from ``meta.intersection`` (schemas.
+// work_start_cross_station).
 
 function pickCrossCandidate(
   detection: RoadDetectOk,
   mainlineWayId: string | null,
   mainlineName: string | null,
-  mainlineBearingDeg: number,
+  mainlineBearingDeg: number | null,
 ): RoadCandidate | null {
   const eligible = detection.candidates.filter((c) => {
     if (mainlineWayId !== null && c.way_id === mainlineWayId) return false;
@@ -139,6 +111,7 @@ function pickCrossCandidate(
       return false;
     }
     return (
+      mainlineBearingDeg === null ||
       bearingDeltaMod180(c.bearing, mainlineBearingDeg) > PARALLEL_TOLERANCE_DEG
     );
   });
@@ -227,7 +200,7 @@ export function approachesFromCrossStreet(
     lanesPerDirection: cs.lanesPerDirection ?? 1,
     laneWidth: 12,
     signalized: cs.signalized,
-    alongStationFt: cs.alongStationFt,
+    // #290: no alongStationFt — a work-start plan never carries one.
     // Lane-tag relays (issue #120): both legs carry the same way's tags.
     // Undefined (not null) when absent — the scenario IS the wire
     // payload, and an omitted field is the "no signal" the backend gate
@@ -275,14 +248,6 @@ export function deriveCrossStreet(
 
   return {
     name: cand.name ?? cand.ref,
-    alongStationFt: alongStationFromPins(
-      input.anchorLat,
-      input.anchorLng,
-      input.crossLat,
-      input.crossLng,
-      input.mainlineBearingDeg,
-      input.downstreamTaperFt,
-    ),
     legCount: oneway ? 1 : 2,
     signalized:
       cand.signal_distance_m !== null &&

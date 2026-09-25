@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  alongStationFromPins,
   approachesFromCrossStreet,
   bearingDeltaMod180,
   deriveCrossStreet,
@@ -61,46 +60,12 @@ describe("bearingDeltaMod180", () => {
   });
 });
 
-describe("alongStationFromPins", () => {
-  it("projects a pin straight up the mainline into the station frame", () => {
-    // Cross pin exactly 1,000 ft north of the anchor, mainline bearing
-    // north: raw along-distance 1,000 ft, minus the 100-ft downstream
-    // taper the anchor sits below station 0.
-    const [clat, clng] = destinationPoint(
-      ANCHOR.lat,
-      ANCHOR.lng,
-      0,
-      1000 * M_PER_FT,
-    );
-    const along = alongStationFromPins(
-      ANCHOR.lat,
-      ANCHOR.lng,
-      clat,
-      clng,
-      0,
-      100,
-    );
-    expect(Math.abs(along - 900)).toBeLessThanOrEqual(1);
-  });
-
-  it("signs the projection negative behind the anchor (downstream side)", () => {
-    const [clat, clng] = destinationPoint(
-      ANCHOR.lat,
-      ANCHOR.lng,
-      180,
-      300 * M_PER_FT,
-    );
-    const along = alongStationFromPins(
-      ANCHOR.lat,
-      ANCHOR.lng,
-      clat,
-      clng,
-      0,
-      100,
-    );
-    expect(Math.abs(along - -400)).toBeLessThanOrEqual(1);
-  });
-});
+// #290: ``alongStationFromPins`` is retired — it walked the pin to the
+// cross pin along the typed bearing and subtracted the downstream taper
+// because the pin sat at the corridor's downstream tip (frontend corridor
+// math, Rule 3, keyed to the meaning #298 found inverted).  The backend
+// measures the station from meta.intersection now; its tests are
+// tests/test_work_start_near_intersection.py.
 
 describe("lanesSuspicion", () => {
   it("flags explicit turn-lane tags", () => {
@@ -154,11 +119,6 @@ describe("deriveCrossStreet", () => {
     mainlineWayId: "m1",
     mainlineName: "Main Street",
     mainlineBearingDeg: 0,
-    anchorLat: ANCHOR.lat,
-    anchorLng: ANCHOR.lng,
-    crossLat: ANCHOR.lat,
-    crossLng: ANCHOR.lng,
-    downstreamTaperFt: 100,
   };
 
   it("excludes the mainline and picks the perpendicular road", () => {
@@ -231,7 +191,6 @@ describe("deriveCrossStreet", () => {
 describe("approachesFromCrossStreet", () => {
   const cs: CrossStreetCandidate = {
     name: "Oak Street",
-    alongStationFt: -250,
     legCount: 2,
     signalized: true,
     speedMph: 30,
@@ -262,9 +221,10 @@ describe("approachesFromCrossStreet", () => {
     expect(legs.map((l) => l.id)).toEqual(["cross_a", "cross_b"]);
     expect(legs[0].bearingDeg).toBe(90);
     expect(legs[1].bearingDeg).toBe(270);
-    // One cross street: the shared fields agree by construction.
-    expect(legs[0].alongStationFt).toBe(-250);
-    expect(legs[1].alongStationFt).toBe(-250);
+    // #290: no station on either leg — a work-start plan never carries
+    // one (the backend places the cross street from the marked pin).
+    expect(legs[0].alongStationFt).toBeUndefined();
+    expect(legs[1].alongStationFt).toBeUndefined();
     expect(legs.every((l) => l.signalized)).toBe(true);
     expect(legs.every((l) => l.speed === 30)).toBe(true);
     expect(legs.every((l) => l.lanesPerDirection === 2)).toBe(true);

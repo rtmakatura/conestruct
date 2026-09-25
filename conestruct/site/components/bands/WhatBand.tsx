@@ -48,7 +48,6 @@ import {
   speedOptions,
 } from "@/lib/scenarios/what-cells";
 import {
-  bearingCaveat,
   deriveDetectedRows,
   detectedRow,
   clauseIsAmber,
@@ -302,18 +301,11 @@ export function WhatBand({
   };
   const dividedLine = detectLine("Divided");
   const showsDivided = showsDividedToggle(scenario);
+  // #290: the "Bearing" line and #214's caveat retire with the typed
+  // bearing (FLOW.md §5a) — the direction is the WHERE band's side now.
   const roadTypeLines = [
-    detectLine("Bearing"),
     detectLine("One-way"),
     showsDivided ? null : dividedLine,
-    detected
-      ? {
-          key: "bearing-caveat",
-          // #214's sentence, verbatim — the caveat that never drops.
-          text: bearingCaveat(detected.geomDrives),
-          amber: false,
-        }
-      : null,
   ].filter((l): l is { key: string; text: string; amber: boolean } => l !== null);
 
   const jState = jurisdictionCellState({

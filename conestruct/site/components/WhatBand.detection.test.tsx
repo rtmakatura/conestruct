@@ -143,52 +143,33 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     expect(document.querySelector('[data-testid="what-detection"]')).toBeNull();
   });
 
-  it("#214 repro: typed 90 over detected 85 — both values render, and the role sentence stands before any typing", () => {
+  // #290 (RULE 5, stated): FLOW.md §5a — "The typed bearing field retires
+  // deliberately (Rule 5); the #214 disclosure sentence and its
+  // byte-identity pin retire with it."  These two cases were #214's repro
+  // and its inverse sentence; they now pin the retirement.
+  it("#290: no typed-bearing line and no #214 sentence — with or without geometry", () => {
     mount(pinnedShoulder());
-    // The plan's value and detection's, in the bearing's own line.
-    // #289 hand-check, 2026-09-23, fix 3: that line now sits UNDER THE
-    // ROAD-TYPE CELL rather than in a loose block below the grid — "the
-    // four loose provenance lines move under the fields they describe."
-    const bearing = document.querySelector(
-      '[data-testid="detect-bearing"]',
-    )!.textContent!;
-    expect(bearing).toMatch(/90°/);
-    expect(bearing).toMatch(/OSM · 85° ·/);
-    // #214's sentence, byte-identical, before the user types anything.
-    expect(
-      screen.getByText(
-        /road geometry governs the drawing — the typed bearing sets the travel-direction sign only/,
-      ),
-    ).toBeTruthy();
-    // Fix 3: the bearing and #214's sentence are the road-type cell's.
-    expect(
-      document.querySelector('[data-testid="cell-road-type"]')!.textContent,
-    ).toMatch(/road geometry governs the drawing/);
-    // The SOURCE line went to the WHERE band's own provenance — where
-    // the road came from is a fact about the pin, not about a WHAT
+    expect(document.querySelector('[data-testid="detect-bearing"]')).toBeNull();
+    expect(document.querySelector('[data-testid="detect-bearing-caveat"]')).toBeNull();
+    expect(document.body.textContent).not.toMatch(/travel-direction sign only/);
+    const road = confirmedRoad();
+    (road.candidate as { geometry: null }).geometry = null;
+    cleanup();
+    mount(
+      pinnedShoulder({
+        meta: { ...pinnedShoulder().meta, confirmedRoad: road },
+      } as Partial<Scenario>),
+    );
+    expect(document.body.textContent).not.toMatch(/typed bearing drives the drawing/);
+  });
+
+  it("the SOURCE line still rides the WHERE band's own provenance", () => {
+    // Where the road came from is a fact about the pin, not about a WHAT
     // field.  `whereProvenance` composes it (band-facts), and this suite
     // mounts WhatBand alone, so the string is asserted at its producer.
     expect(whereProvenance(pinnedShoulder())).toMatch(
       /OSM detection · way 1042 · sole match auto-adopted/,
     );
-  });
-
-  it("no geometry on file: the honest inverse sentence (typed bearing drives)", () => {
-    const road = confirmedRoad();
-    (road.candidate as { geometry: null }).geometry = null;
-    mount(
-      pinnedShoulder({
-        meta: {
-          ...pinnedShoulder().meta,
-          confirmedRoad: road,
-        },
-      } as Partial<Scenario>),
-    );
-    expect(
-      screen.getByText(
-        /no road geometry on file — the typed bearing drives the drawing/,
-      ),
-    ).toBeTruthy();
   });
 
   it("each cell carries its own clause, under its own field (rule 137)", () => {
@@ -230,13 +211,8 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     } as Scenario;
     mount(flagger);
     expect(document.querySelector('[data-testid="detect-divided"]')).toBeNull();
-    expect(document.querySelector('[data-testid="detect-bearing"]')).not.toBeNull();
-    // Fix 3: both live under the road-type cell now, so "no divided line
-    // for a kind that has no divided" is still the claim, just read in
-    // the cell rather than in a footer.
-    expect(
-      document.querySelector('[data-testid="cell-road-type"] [data-testid="detect-bearing"]'),
-    ).not.toBeNull();
+    // #290: the typed-bearing line that used to sit beside it is retired.
+    expect(document.querySelector('[data-testid="detect-bearing"]')).toBeNull();
     // #209, and it is a DELIBERATE change from the ledger's behaviour:
     // the ledger rendered no lanes ROW for a kind with no lane count, and
     // the grid renders the CELL read-only with the reason instead — rule

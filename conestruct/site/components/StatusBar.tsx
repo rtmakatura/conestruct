@@ -180,6 +180,13 @@ interface Props {
    * LOCATION.
    */
   kindUnconfirmed?: boolean;
+  /**
+   * #290: a pin with a confirmed kind but no confirmed side (the
+   * work-start model's needs-you, ruling 10).  Same treatment as the kind
+   * branch, ranked right after it: no verdict for a direction nobody
+   * gave — the shell fires no check until the side is answered.
+   */
+  sideUnconfirmed?: boolean;
   audit: AuditState;
   /**
    * Cold-start honesty (Refs #122, rule 10): true once the in-flight
@@ -244,6 +251,7 @@ function StatusBarState({
   refusal = null,
   locationUnset = false,
   kindUnconfirmed = false,
+  sideUnconfirmed = false,
   audit,
   verifySlow,
   bandVoice = false,
@@ -266,6 +274,17 @@ function StatusBarState({
       <div className="status-bar idle unavail" data-testid="strip-kind-unconfirmed">
         <Sym g="◌" />
         <span>AWAITING KIND OF WORK</span>
+      </div>
+    );
+  }
+
+  // #290: the same shape for the side.  The strip names the state; the
+  // disabled primary carries the instruction (SIDE_BLOCKER, #260 P2).
+  if (sideUnconfirmed) {
+    return (
+      <div className="status-bar idle unavail" data-testid="strip-side-unconfirmed">
+        <Sym g="◌" />
+        <span>AWAITING OCCUPIED SIDE</span>
       </div>
     );
   }

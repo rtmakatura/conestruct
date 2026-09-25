@@ -122,8 +122,9 @@ const PICKER_RESULT = {
   address: "E Colfax Ave & Race St, Denver",
   lat: 39.73997,
   lng: -104.96632,
-  bearingDeg: 90,
-  workZoneFt: 800,
+  // #290: the picker returns no bearing and no length — the direction is
+  // derived from the road and the side; the band's Extent is the one
+  // length control (P2).
   classification: COLFAX,
   overrides: {},
   crossStreet: null,
@@ -248,6 +249,16 @@ async function mountSandbox() {
   });
 }
 
+// #290: the work-zone length is the WHERE band's Extent field now (the
+// picker's length field is retired) — set it the way a person does,
+// committed on Enter (#252: one edit, one request).
+async function setExtent(user: ReturnType<typeof userEvent.setup>, ft: string) {
+  await openWhere();
+  const field = document.getElementById("band-worklen") as HTMLInputElement;
+  await user.clear(field);
+  await user.type(field, `${ft}{Enter}`);
+}
+
 async function generate(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByText("Generate plan"));
   await user.click(screen.getByText("ALL_ZIP"));
@@ -263,6 +274,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
 
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
+    await setExtent(user, "800");
 
     await openWhere();
 
@@ -319,6 +331,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
 
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
+    await setExtent(user, "800");
     await openWhat();
     // #289 hand-check, 2026-09-23, correction 1: night operation is a
     // cell in the WHAT band's second group, and its answer is a chip —
@@ -336,7 +349,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     const s = bundleBody!.scenario;
     expect(s.kind).toBe("shoulder");
     expect(s.speed).toBe(35); // detection speed, not DEFAULT_SHOULDER's 65
-    expect(s.workLen).toBe(800); // picker work zone, not the default 1000
+    expect(s.workLen).toBe(800); // the typed extent, not the default 1000
     expect(s.night).toBe(true); // the manual toggle survives the round trip
     // Shoulder's own relay shape is re-derived from the confirmed road.
     expect(s.detectedLanesTotal).toBe(5);

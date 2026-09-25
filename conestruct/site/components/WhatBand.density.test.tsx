@@ -24,7 +24,6 @@ import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import type { JurisdictionSuggestion } from "@/lib/jurisdiction";
-import { bearingCaveat } from "@/lib/road-detection/detected-rows";
 import { WhatBand } from "./bands/WhatBand";
 import {
   JurisdictionControls,
@@ -186,9 +185,12 @@ describe("each field shows the control, ONE provenance line and its one action l
     expect(atRest(rt).map((n) => n.textContent)).toEqual([
       document.querySelector('[data-testid="prov-road-type"]')!.textContent,
     ]);
-    // Bearing and #214 are detail.
-    expect(panel("road-type")!.hasAttribute("hidden")).toBe(true);
-    expect(panel("road-type")!.querySelector('[data-testid="detect-bearing"]')).not.toBeNull();
+    // #290: its details were the typed-bearing line and #214's caveat,
+    // both retired with the typed bearing (FLOW.md §5a).  On a shoulder
+    // plan there is nothing more to say, so there is no panel — rule
+    // "a field with nothing more to say has no toggle", below.
+    expect(panel("road-type")).toBeNull();
+    expect(document.querySelector('[data-testid="detect-bearing"]')).toBeNull();
   });
 
   it("jurisdiction at rest: the select and its line; the suggestion's one line spans the band under the row", () => {
@@ -265,22 +267,24 @@ describe("each field shows the control, ONE provenance line and its one action l
 
 describe("the details toggle — click / tap, never hover (rules 141, 142)", () => {
   it("opens and closes inline, and says which it is", async () => {
+    // #290: exercised on the jurisdiction cell — the road-type cell has no
+    // details left on a shoulder plan (its typed-bearing lines retired).
     mount();
     const user = userEvent.setup();
-    const t = toggle("road-type")!;
+    const t = toggle("jurisdiction")!;
     expect(t.tagName).toBe("BUTTON");
     expect(t.getAttribute("aria-expanded")).toBe("false");
-    expect(t.getAttribute("aria-controls")).toBe(panel("road-type")!.id);
-    expect(t.getAttribute("aria-label")).toBe("Details for Road type");
+    expect(t.getAttribute("aria-controls")).toBe(panel("jurisdiction")!.id);
+    expect(t.getAttribute("aria-label")).toMatch(/^Details for /);
     // Rule 17's info symbol beside rule 18's word.
     expect(t.textContent).toBe("idetails");
     await user.click(t);
     expect(t.getAttribute("aria-expanded")).toBe("true");
-    expect(panel("road-type")!.hasAttribute("hidden")).toBe(false);
+    expect(panel("jurisdiction")!.hasAttribute("hidden")).toBe(false);
     // Inline: the panel is inside the cell it is about.
-    expect(cell("road-type").contains(panel("road-type"))).toBe(true);
+    expect(cell("jurisdiction").contains(panel("jurisdiction"))).toBe(true);
     await user.click(t);
-    expect(panel("road-type")!.hasAttribute("hidden")).toBe(true);
+    expect(panel("jurisdiction")!.hasAttribute("hidden")).toBe(true);
   });
 
   it("the keyboard opens it too — it is a button, not a hover target", async () => {
@@ -328,11 +332,14 @@ describe("the details toggle — click / tap, never hover (rules 141, 142)", () 
   });
 });
 
-describe("#214's disclosure stays standing, byte-identical, behind the toggle (#198)", () => {
-  it("the caveat is in the document, closed, with its exact text", () => {
+// #290 (RULE 5, stated): FLOW.md §5a — "The typed bearing field retires
+// deliberately (Rule 5); the #214 disclosure sentence and its
+// byte-identity pin retire with it."  This was that pin.
+describe("#214's disclosure retires with the typed bearing (FLOW.md §5a, #290)", () => {
+  it("neither the caveat nor its sentence is anywhere in the band", () => {
     mount();
-    const caveat = document.querySelector('[data-testid="detect-bearing-caveat"]')!;
-    expect(caveat.textContent).toBe(bearingCaveat(true));
-    expect(caveat.closest('[data-testid="info-road-type"]')!.hasAttribute("hidden")).toBe(true);
+    expect(document.querySelector('[data-testid="detect-bearing-caveat"]')).toBeNull();
+    expect(document.body.textContent).not.toMatch(/travel-direction sign only/);
+    expect(document.body.textContent).not.toMatch(/typed bearing/);
   });
 });

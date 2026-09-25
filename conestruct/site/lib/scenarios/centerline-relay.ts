@@ -19,5 +19,18 @@ export function withRelayedCenterline<S extends Scenario>(scenario: S): S {
   const geometry = confirmed?.candidate.geometry;
   if (!confirmed || !geometry || geometry.length < 2) return scenario;
   if (confirmed.pinLat !== meta.lat || confirmed.pinLng !== meta.lng) return scenario;
-  return { ...scenario, meta: { ...meta, centerline: geometry } };
+  // #290: under the work-start model the road's raw direction facts ride
+  // with its geometry, behind the same staleness key — the backend
+  // honours the one-way tag with them (ruling 8, #298).  Never on a
+  // corridor_end pin, whose backend gate refuses the key.
+  const roadDirection =
+    meta.pinModel === "work_start"
+      ? {
+          roadDirection: {
+            osmBearingDeg: ((confirmed.candidate.bearing % 360) + 360) % 360,
+            oneway: confirmed.candidate.tags?.oneway ?? null,
+          },
+        }
+      : {};
+  return { ...scenario, meta: { ...meta, centerline: geometry, ...roadDirection } };
 }

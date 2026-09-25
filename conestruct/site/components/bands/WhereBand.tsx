@@ -60,8 +60,14 @@ import {
   whereProvenance,
 } from "@/lib/scenarios/band-facts";
 import { deriveMoveLedger, type MoveRow } from "@/lib/scenarios/move-ledger";
+import {
+  selectedSideOption,
+  useCorridorGeometry,
+  type GeometryFetch,
+  type SideOption,
+} from "@/lib/corridor-geometry";
 import { KIND_BLOCKER } from "@/lib/scenarios/rail";
-import { hasLocation } from "@/lib/scenarios";
+import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
 import { OpenBand } from "./BandPrimitives";
 import { ManualFallback } from "./ManualFallback";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
@@ -106,16 +112,18 @@ function MoveLedgerRows({
   scenario,
   jurisdictionName,
   kindConfirmed,
+  sideLabel,
   onOpenPicker,
   locked,
 }: {
   scenario: Scenario;
   jurisdictionName: string | null;
   kindConfirmed: boolean;
+  sideLabel: string | null;
   onOpenPicker: () => void;
   locked: boolean;
 }) {
-  const ledger = deriveMoveLedger(scenario, jurisdictionName, kindConfirmed);
+  const ledger = deriveMoveLedger(scenario, jurisdictionName, kindConfirmed, sideLabel);
   const row = (r: MoveRow) => (
     <div
       key={r.id}
@@ -164,6 +172,69 @@ function MoveLedgerRows({
   return (
     <div className="a-moves" data-testid="move-ledger">
       {ledger.rows.map(row)}
+    </div>
+  );
+}
+
+/**
+ * #290 — move 4's side control (ruling 8): "the road's two edges in
+ * compass words ('East side · northbound traffic') ... the plain control
+ * phones use".  The choices, their words and which are built are the
+ * BACKEND's (`side_options` from /render/corridor-geometry): each carries
+ * the exact `meta.work` it writes, and a click writes it verbatim — no
+ * direction is composed here (Rule 3).  Left / median render greyed out,
+ * named, with the backend's note (the open-points ruling 2).
+ */
+function SideControl({
+  fetchState,
+  scenario,
+  setMeta,
+  locked,
+}: {
+  fetchState: GeometryFetch;
+  scenario: Scenario;
+  setMeta: (m: ScenarioMeta) => void;
+  locked: boolean;
+}) {
+  const options: SideOption[] = fetchState.geometry?.side_options ?? [];
+  const selected = selectedSideOption(options, scenario.meta.work);
+  return (
+    <div className="mt-4" data-testid="side-control">
+      <div className="tr-field">Occupied side</div>
+      {options.length === 0 ? (
+        <div className="tr-prov mt-1" data-testid="side-control-note">
+          {/* P8: one honest line while the road's sides are read; a
+              failure says so rather than offering a guessed choice. */}
+          {fetchState.state === "error"
+            ? "the road's sides are unavailable — reopen the map to retry"
+            : "reading the road's sides…"}
+        </div>
+      ) : (
+        <div className="a-chips mt-2" role="radiogroup" aria-label="Occupied side">
+          {options.map((o) => {
+            const on = selected === o;
+            return (
+              <button
+                key={o.label}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                aria-disabled={locked || !o.built || undefined}
+                className={`chip${on ? " is-on" : ""}${o.built ? "" : " is-gated"}`}
+                data-write=""
+                data-testid="side-option"
+                onClick={() => {
+                  if (locked || !o.built || on) return;
+                  setMeta({ ...scenario.meta, work: { ...o.work } });
+                }}
+              >
+                <span>{o.label}</span>
+                {!o.built && o.note && <span className="tr-prov">{o.note}</span>}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -281,6 +352,16 @@ export function WhereBand({
   const locked = useWriteLock();
   const located = hasLocation(scenario.meta);
   const stale = roadIsStale(scenario);
+  // #290: the backend's geometry for this pin — the side control's worded
+  // choices (and, once the side is set, its answer's words for the
+  // ledger).  Asked only for a located work-start pin.  It is a read, not
+  // a check: no verdict is formed from it, and the choices do not depend
+  // on the kind, so it is asked before the kind is confirmed too.
+  const workStart = scenario.meta.pinModel === "work_start";
+  const geometry = useCorridorGeometry(located && workStart && !stale ? scenario : null);
+  const sideLabel =
+    selectedSideOption(geometry.geometry?.side_options ?? [], scenario.meta.work)?.label ?? null;
+  const sided = hasConfirmedSide(scenario.meta);
   // §2.2's S2: a road confirmed AT THIS PIN.  A stale road is not a
   // confirmation of anything here (the #149 failure class), so it does
   // not arm the chips either.
@@ -399,6 +480,19 @@ export function WhereBand({
           pin
         </div>
       )}
+      {/* #290 ruling 10: a plan saved before the pin marked the work start
+          opens with its pin kept and its side unset — never silently
+          re-read.  The band says why it is asking. */}
+      {located && scenario.meta.pinModelFrom === "corridor_end" && !sided && (
+        <div
+          className="tr-prov mt-2"
+          style={{ color: "var(--warn)" }}
+          data-testid="pin-model-converted"
+        >
+          ⚠ saved before the pin marked the work start — say which side is
+          occupied to lay the work out from this pin
+        </div>
+      )}
 
       {located && (
         <>
@@ -406,9 +500,23 @@ export function WhereBand({
             scenario={scenario}
             jurisdictionName={jurisdictionName}
             kindConfirmed={kindConfirmed}
+            sideLabel={sideLabel}
             onOpenPicker={onOpenPicker}
             locked={locked}
           />
+
+          {/* #290 move 4: the side control, above the kind chips — the two
+              answers §4.4 asks together.  Same arming as the chips: a road
+              confirmed at this pin, or a manual pin (no road → the four
+              headings). */}
+          {workStart && chipsShown && (
+            <SideControl
+              fetchState={geometry}
+              scenario={scenario}
+              setMeta={setMeta}
+              locked={locked}
+            />
+          )}
 
           {/* Move 3's producer.  §4.3 puts the extent in the WHERE band,
               and this is the ONE work-zone length field in setup now: the
@@ -519,6 +627,9 @@ export function WhereBand({
                     ? // #289 finding 1: the lengths are the kind's, and
                       // no check is fired for a kind nobody confirmed.
                       "corridor lengths wait on the kind of work"
+                    : !sided
+                      ? // #290: nor for a side nobody gave.
+                        "corridor lengths wait on the occupied side"
                     : // Rule 3 / rule 10: an audit response without the
                       // lengths degrades to an honest note, never a
                       // locally-computed extent.

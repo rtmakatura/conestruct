@@ -28,7 +28,7 @@
 
 import type { Refusal } from "@/lib/render-types";
 import type { Scenario, ScenarioKind } from "./types";
-import { hasLocation } from "./index";
+import { hasConfirmedSide, hasLocation } from "./index";
 import { matchRefusalAffordance } from "./auto-apply";
 import {
   validateApproaches,
@@ -149,6 +149,10 @@ export const LOCATION_BLOCKER =
  *  One string on the WHERE primary, the WHAT pending line and the
  *  Generate frame (rule 139: one derivation, every surface). */
 export const KIND_BLOCKER = "Choose the kind of work";
+/** #290 — the pre-side ruling's sentence, verbatim ("before the side is
+ *  confirmed, the picker draws the pin and the sentence ..."), and the
+ *  one reason every surface gives while the side is unset (rule 139). */
+export const SIDE_BLOCKER = "Say which side is occupied to lay out the work";
 
 export const RAIL_ANCHOR_PREFIX = "rail-step-";
 
@@ -286,6 +290,11 @@ export function deriveRail({
   // true reason.
   else if (located && !kindConfirmed)
     blocker = { message: KIND_BLOCKER, entryId: "location" };
+  // #290, RULE 5 (stated): a new rank, right after the kind — both are
+  // the WHERE band's answers, and the direction every corridor surface
+  // needs comes from the side (ruling 8).  Only under the work-start model.
+  else if (located && !hasConfirmedSide(scenario.meta))
+    blocker = { message: SIDE_BLOCKER, entryId: "location" };
   else if (!lanes.ok && lanes.message)
     blocker = { message: lanes.message, entryId: "road" };
   else if (!approaches.ok && approaches.message)

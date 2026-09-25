@@ -148,8 +148,8 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { MIN_AUDIT } from "./test-fixtures";
-import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { MIN_AUDIT, corridorGeometryResponse } from "./test-fixtures";
+import { answerSide, openWhere, openWhat } from "./__fixtures__/band-helpers";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -169,6 +169,10 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       status: 200,
       blob: async () => new Blob(["zip"]),
     } as unknown as Response);
+  }
+  // #290: the WHERE band's geometry read — the side control's choices.
+  if (url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve(corridorGeometryResponse());
   }
   // #261: the audit answer is wire-shaped (the shell reads it for the
   // audit card's count); the suite's own audit branches above still win.
@@ -317,6 +321,8 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     // operator landed on GENERATION BLOCKED for a combination they never
     // chose (P3; rule 10 in reverse).
     await user.click(screen.getByText("APPLY_PIN_FIVE_LANES"));
+    // #290: a new pin's side is answered before anything is checked.
+    await answerSide();
 
     await openWhat();
 

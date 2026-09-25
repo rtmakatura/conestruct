@@ -104,7 +104,7 @@ export const DEFAULT_SHOULDER: ShoulderScenario = {
     address: "",
     lat: 0,
     lng: 0,
-    pinModel: "corridor_end",
+    pinModel: "work_start",
   },
   roadType: "rural_divided",
   speed: 65,
@@ -129,7 +129,7 @@ export const DEFAULT_FLAGGER: FlaggerLaneClosureScenario = {
     address: "",
     lat: 0,
     lng: 0,
-    pinModel: "corridor_end",
+    pinModel: "work_start",
   },
   roadType: "rural_undivided",
   speed: 45,
@@ -150,7 +150,7 @@ export const DEFAULT_LANE_CLOSURE: LaneClosureDividedScenario = {
     address: "",
     lat: 0,
     lng: 0,
-    pinModel: "corridor_end",
+    pinModel: "work_start",
   },
   roadType: "freeway",
   speed: 65,
@@ -164,7 +164,7 @@ export const DEFAULT_LANE_CLOSURE: LaneClosureDividedScenario = {
 
 export const DEFAULT_WORK_BEYOND_SHOULDER: WorkBeyondShoulderScenario = {
   kind: "work_beyond_shoulder",
-  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "work_start" },
   roadType: "rural_undivided",
   speed: 45,
   laneWidth: 12,
@@ -176,7 +176,7 @@ export const DEFAULT_WORK_BEYOND_SHOULDER: WorkBeyondShoulderScenario = {
 
 export const DEFAULT_MOBILE_OP_2LANE: MobileOp2LaneScenario = {
   kind: "mobile_op_2lane",
-  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "work_start" },
   roadType: "rural_undivided",
   speed: 45,
   laneWidth: 12,
@@ -188,7 +188,7 @@ export const DEFAULT_MOBILE_OP_2LANE: MobileOp2LaneScenario = {
 
 export const DEFAULT_MOBILE_OP_MULTILANE: MobileOpMultilaneScenario = {
   kind: "mobile_op_multilane",
-  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "work_start" },
   roadType: "freeway",
   speed: 65,
   laneWidth: 12,
@@ -202,11 +202,13 @@ export const DEFAULT_MOBILE_OP_MULTILANE: MobileOpMultilaneScenario = {
 // while it is absent from ENABLED_SCENARIO_KINDS; the default exists so
 // tests and the eventual enablement have a canonical starting point.
 // Values clear every backend rejection: speed within 25-55, 2 lanes per
-// direction (the layout requires >= 2), and a near-side cross street
-// whose curb-to-curb box stays outside the work zone.
+// direction (the layout requires >= 2).  #290: no alongStationFt — under
+// the work-start model the backend places the cross street from the
+// marked intersection (meta.intersection), and a request carrying a
+// station is refused.
 export const DEFAULT_NEAR_INTERSECTION: NearIntersectionScenario = {
   kind: "near_intersection",
-  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "work_start" },
   roadType: "urban_arterial",
   speed: 35,
   lanes: 2,
@@ -224,7 +226,6 @@ export const DEFAULT_NEAR_INTERSECTION: NearIntersectionScenario = {
       lanesPerDirection: 1,
       laneWidth: 12,
       signalized: false,
-      alongStationFt: -200,
     },
   ],
 };
@@ -466,6 +467,19 @@ export function hasLocation(meta: ScenarioMeta): boolean {
   return meta.lat !== 0 && meta.lng !== 0;
 }
 
+// #290 — the one "is the side confirmed?" predicate (ruling 10: side unset
+// is needs-you).  Under the work-start model the direction every corridor
+// surface needs comes from the side, so nothing checks, draws or
+// generates without one: the rail's blocker, the shell's check gate, the
+// ledger's row 4 and the verdict strip all read THIS.  Only the built
+// side counts ("right"); left / median are named and greyed, never
+// written (the open-points ruling 2).  A corridor_end scenario carries its
+// direction in bearingDeg and has no side to confirm.
+export function hasConfirmedSide(meta: ScenarioMeta): boolean {
+  if (meta.pinModel !== "work_start") return true;
+  return meta.work?.side === "right";
+}
+
 // Narrow helpers — useful in form components so each sub-form receives
 // a guaranteed-shape scenario rather than the union.
 export function asShoulder(s: Scenario): ShoulderScenario | null {
@@ -567,7 +581,8 @@ function metaFromLegacy(p: LegacyScenarioParams): ScenarioMeta {
     address: p.address ?? "",
     lat: p.lat ?? 0,
     lng: p.lng ?? 0,
-    // #290: a legacy plan predates every pin model but the first.
+    // #290: a legacy plan predates every pin model but the first;
+    // toScenario opens it in the work-start model (withPinModel).
     pinModel: "corridor_end",
   };
 }
@@ -606,18 +621,49 @@ export function migrateLegacy(p: LegacyScenarioParams): Scenario {
   };
 }
 
-// #290 — the scenario version field, stamped where a stored scenario
-// re-enters the app.  A saved plan written before the field existed meant
-// "corridor_end" (the only model there has been), so absence is stamped
-// with exactly that and nothing else: never re-read as a newer meaning
-// (rulings.md, rulings 3 and 10).  A present value is kept verbatim.
+// #290 — where a stored scenario re-enters the app (the plan page and
+// every download: toScenario).  Ruling 10: "Pre-change plans and fixtures
+// open with side unset, marked needs-you; never silently re-read."  A plan
+// saved under "corridor_end" (or before the field existed, which meant the
+// same) opens in the work-start model:
+//   * the pin is KEPT — it is the operator's mark, and in the picture they
+//     saw it sat at the work (checkpoint §0: 50 ft from it);
+//   * the typed bearing is DROPPED — its meaning is the one #298 inverted,
+//     so it is not re-read as a direction; the direction is re-derived
+//     from the road and a side the operator confirms;
+//   * the side is UNSET, so the WHERE band asks for it (needs-you) and no
+//     check fires until it is answered;
+//   * a near_intersection plan's frontend-computed cross-street station is
+//     dropped (the backend measures it from meta.intersection now);
+//   * ``pinModelFrom`` records that this happened, so the band can say so.
+// A work_start plan is returned untouched.
 export function withPinModel<S extends Scenario>(s: S): S {
-  if (!s.meta || s.meta.pinModel !== undefined) return s;
-  return { ...s, meta: { ...s.meta, pinModel: "corridor_end" } };
+  if (!s.meta || s.meta.pinModel === "work_start") return s;
+  const { bearingDeg: _typed, work: _work, ...meta } = s.meta;
+  void _typed;
+  void _work;
+  const next = {
+    ...s,
+    meta: {
+      ...meta,
+      pinModel: "work_start" as const,
+      ...(hasLocation(s.meta) ? { pinModelFrom: "corridor_end" as const } : {}),
+    },
+  };
+  if (next.kind === "near_intersection") {
+    return {
+      ...next,
+      approaches: next.approaches.map(({ alongStationFt: _station, ...a }) => {
+        void _station;
+        return a;
+      }),
+    } as S;
+  }
+  return next as S;
 }
 
 export function toScenario(value: unknown): Scenario {
   if (isScenario(value)) return withPinModel(value);
-  if (isLegacyParams(value)) return migrateLegacy(value);
+  if (isLegacyParams(value)) return withPinModel(migrateLegacy(value));
   return DEFAULT_SHOULDER;
 }

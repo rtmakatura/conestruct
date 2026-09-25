@@ -21,15 +21,16 @@
 //     nearest-intersection producer for any kind.  #281's own ruling:
 //     "until then the tag prints the road name, lat/lng in provenance".
 //   · Move 4's proposal, "Your tap looks like a right-shoulder closure",
-//     has no derivation.  #281: "the chips render unselected with no
-//     '✓ proposed'".  The row asks the question; it proposes nothing.
-//     Since the post-fidelity hand-check (2026-09-24) the question it asks
-//     is the KIND, which the chips below answer; left/right side is Phase
-//     3's and returns with #290.
-//   · Move 5, "See the plan grow", is Phase 3's approaches.  It is
-//     `pending` with the design's own subline.
+//     has no derivation (#284).  #281: "the chips render unselected with
+//     no '✓ proposed'".  The row asks the question; it proposes nothing.
+//     Since #290 the question is "Which side is occupied?" again, answered
+//     by the side control (the backend's worded choices, ruling 8) and the
+//     kind chips together (Part 1 §4.4).
+//   · Move 5, "See the plan grow", is laid out once move 4 is answered —
+//     the approaches render on the picker's aerial.
 
-import { hasLocation } from "./index";
+import { hasConfirmedSide, hasLocation } from "./index";
+import { KIND_BLOCKER, SIDE_BLOCKER } from "./rail";
 import type { Scenario } from "./types";
 import { confirmedRoadLabel, kindLabel } from "./band-facts";
 
@@ -39,7 +40,7 @@ import { confirmedRoadLabel, kindLabel } from "./band-facts";
  *  band's provenance rather than by a move. */
 export type MoveState = "done" | "attention" | "pending";
 
-export type MoveId = "spot" | "start" | "extent" | "kind" | "grow";
+export type MoveId = "spot" | "start" | "extent" | "side" | "grow";
 
 /** Rule 68's right track: a link verb, or a provenance word. */
 export type MoveVerb = "CHANGE" | "MOVE";
@@ -106,12 +107,19 @@ export function deriveMoveLedger(
    *  owns the breakdown fetch that carries it. */
   jurisdictionName: string | null = null,
   /** A person confirmed the kind (the shell's `kindState === "confirmed"`)
-   *  — move 4's answer.  Handed in: the ledger never infers it. */
+   *  — half of move 4's answer.  Handed in: the ledger never infers it. */
   kindConfirmed = false,
+  /** #290 — the confirmed side in the backend's own words ("East side ·
+   *  northbound traffic", ruling 8), or null while it is unset or its
+   *  words have not arrived.  Handed in: the ledger computes no direction
+   *  (Rule 3). */
+  sideLabel: string | null = null,
 ): MoveLedger {
   const located = hasLocation(scenario.meta);
   const road = confirmedRoadLabel(scenario);
   const extent = scenario.workLen > 0;
+  const sided = hasConfirmedSide(scenario.meta);
+  const answered = located && sided && kindConfirmed;
 
   const rows: MoveRow[] = [
     {
@@ -164,36 +172,38 @@ export function deriveMoveLedger(
       subline: null,
     },
     {
-      // #289 post-fidelity hand-check, finding 2 (Ryan, 2026-09-24): "The
-      // move-ledger row 'Which side is occupied?' shows needs-you with no
-      // control to answer it. Today the kind chips are its answer;
-      // left/right side is Phase 3's. The row reads 'Kind of work —
-      // choose below' (⚠, needs you) and resolves to ✓ with the confirmed
-      // kind as its value once confirmed. Side proper returns with #290."
-      // So move 4 asks the question this phase CAN answer: the kind, with
-      // the chips below as its control.  It resolves only on a person's
-      // confirmation (suggest-never-set) — a picked-but-unconfirmed chip
-      // is still "needs you".
-      id: "kind",
-      label: kindConfirmed ? "Kind of work" : "Kind of work — choose below",
-      state: !located ? "pending" : kindConfirmed ? "done" : "attention",
-      glyph: GLYPH[!located ? "pending" : kindConfirmed ? "done" : "attention"],
-      value: located && kindConfirmed ? kindLabel(scenario.kind) : null,
-      // Rule 68: a link OR a word.  Confirmed, the row's control is still
-      // the chips below it, so it carries the producer word, not a verb.
+      // #290: move 4 is "Which side is occupied?" again (Part 1 §4.4) —
+      // the #289 hand-check's interim ("Kind of work — choose below", Ryan
+      // 2026-09-24: "Side proper returns with #290") ends here.  Its
+      // answer is the side AND the kind, together, as §4.4 asks them: the
+      // side from the plain control (ruling 8), the kind from the chips
+      // and Confirm (suggest-never-set).  It is done only when both are,
+      // and its subline says which half is still open — the ruled
+      // sentence for the side, the kind's own reason for the kind.
+      id: "side",
+      label: "Which side is occupied?",
+      state: !located ? "pending" : answered ? "done" : "attention",
+      glyph: GLYPH[!located ? "pending" : answered ? "done" : "attention"],
+      value: answered
+        ? [sideLabel, kindLabel(scenario.kind)].filter(Boolean).join(" · ")
+        : null,
+      // Rule 68: a link OR a word.  Answered, the row's controls are
+      // still the side control and chips below it — a producer word.
       verb: null,
-      word: !located ? "pending" : kindConfirmed ? "confirmed" : "needs you",
-      subline: null,
+      word: !located ? "pending" : answered ? "confirmed" : "needs you",
+      subline: !located || answered ? null : !sided ? SIDE_BLOCKER : KIND_BLOCKER,
     },
     {
+      // Move 5: the payoff, not a move (§4.5).  Laid out once move 4 is
+      // answered — the approaches render on the picker's aerial.
       id: "grow",
       label: "See the plan grow",
-      state: "pending",
-      glyph: GLYPH.pending,
-      value: null,
+      state: answered ? "done" : "pending",
+      glyph: GLYPH[answered ? "done" : "pending"],
+      value: answered ? "approaches laid out" : null,
       verb: null,
-      word: "pending",
-      subline: "approaches lay out after you confirm",
+      word: answered ? "laid out" : "pending",
+      subline: answered ? null : "approaches lay out after you confirm",
     },
   ];
 

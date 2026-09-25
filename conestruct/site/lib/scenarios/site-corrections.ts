@@ -164,8 +164,20 @@ export function withPin(
   const nextLat = patch.lat ?? meta.lat;
   const nextLng = patch.lng ?? meta.lng;
   const moved = nextLat !== meta.lat || nextLng !== meta.lng;
-  const base = moved ? withoutSiteCorrections(meta) : meta;
+  const base = moved ? withoutSide(withoutSiteCorrections(meta)) : meta;
   return { ...base, ...patch };
+}
+
+/** #290: a pin move clears the confirmed side too.  Its `travel` names a
+ *  direction along the road AT the pin (and its heading the traffic
+ *  there); a moved pin may sit on another road, or another stretch of it,
+ *  so the answer is asked again rather than carried (ruling 10 —
+ *  never silently re-read).  Key dropped, never an empty object. */
+export function withoutSide(meta: ScenarioMeta): ScenarioMeta {
+  if (meta.work === undefined) return meta;
+  const next = { ...meta } as Record<string, unknown>;
+  delete next.work;
+  return next as unknown as ScenarioMeta;
 }
 
 /** A pin move: the corrections' subject no longer exists — clear them

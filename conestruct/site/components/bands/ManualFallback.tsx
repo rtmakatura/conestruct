@@ -15,8 +15,9 @@
 // does not draw it would remove a recovery path the design never
 // considered.
 //
-// UNCHANGED, verbatim from `GeneratorSidebar.tsx:1175-1274`: the four
-// inputs, the blur-gated work-zone validation, and — the load-bearing
+// UNCHANGED, verbatim from `GeneratorSidebar.tsx:1175-1274` (less the
+// typed bearing, retired by #290 — its fourth input): the inputs, the
+// blur-gated work-zone validation, and — the load-bearing
 // part — a typed coordinate going through `withPin`, so a manual pin move
 // clears the site-condition corrections exactly as the picker's Save does
 // (fix-224-manual-pin-move).  A second door onto `meta.lat/lng` that
@@ -74,31 +75,11 @@ export function ManualFallback({
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label className="tr-field block mb-1">Bearing (° from N)</label>
-          <input
-            type="number"
-            step="1"
-            min="0"
-            max="359"
-            data-write=""
-            className="field-input w-full"
-            value={meta.bearingDeg ?? ""}
-            placeholder="0–359"
-            onChange={(e) => {
-              const raw = e.target.value;
-              if (raw === "") {
-                setMeta({ ...meta, bearingDeg: undefined });
-              } else {
-                const n = parseInt(raw, 10);
-                setMeta({
-                  ...meta,
-                  bearingDeg: Number.isFinite(n) ? n : undefined,
-                });
-              }
-            }}
-          />
-        </div>
+        {/* #290: the typed "Bearing (° from N)" is retired (Rule 5,
+            FLOW.md §5a: "the typed bearing field retires").  With no
+            confirmed road the direction is the band's side control — the
+            four headings, "traffic heads N / E / S / W" (the open-points
+            ruling 1) — one control, so this panel carries no second one. */}
         <div>
           <label className="tr-field block mb-1">Work zone (ft)</label>
           <input

@@ -61,44 +61,71 @@ const row = (s: Scenario, id: MoveRow["id"], jurisdiction: string | null = null)
   return found;
 };
 
-// #289 post-fidelity hand-check, finding 2 (Ryan, 2026-09-24): move 4
-// asks for the KIND — the chips below answer it — and resolves only on a
-// person's confirmation.  Side proper returns with #290.
-describe("move 4 is the kind of work (post-fidelity hand-check, finding 2)", () => {
-  const kind = (s: Scenario, confirmed: boolean) => {
-    const found = deriveMoveLedger(s, null, confirmed).rows.find((r) => r.id === "kind");
-    if (!found) throw new Error("no kind row");
+// #290 (RULE 5, stated): move 4 is "Which side is occupied?" again — the
+// #289 hand-check's interim ("Kind of work — choose below", Ryan
+// 2026-09-24: "Side proper returns with #290") ends here.  Part 1 §4.4
+// asks the side and the kind together, so the row is answered only when
+// both are: the side from the plain control (ruling 8, in the backend's
+// words), the kind from the chips and Confirm (suggest-never-set).
+describe("move 4 is the occupied side, with the kind (#290)", () => {
+  const SIDED = {
+    ...CONFIRMED,
+    meta: { ...CONFIRMED.meta, work: { side: "right", travel: "with_geometry" } },
+  } as Scenario;
+  const side = (s: Scenario, kindConfirmed: boolean, sideLabel: string | null = null) => {
+    const found = deriveMoveLedger(s, null, kindConfirmed, sideLabel).rows.find(
+      (r) => r.id === "side",
+    );
+    if (!found) throw new Error("no side row");
     return found;
   };
 
-  it("unconfirmed: 'Kind of work — choose below', ⚠, needs you — no answer invented", () => {
-    const r = kind(CONFIRMED, false);
-    expect(r.label).toBe("Kind of work — choose below");
+  it("unsided: ⚠, needs you, and the subline is the ruled sentence — no answer invented", () => {
+    const r = side(CONFIRMED, true);
+    expect(r.label).toBe("Which side is occupied?");
     expect(r.state).toBe("attention");
     expect(r.glyph).toBe("⚠");
     expect(r.word).toBe("needs you");
     expect(r.value).toBeNull();
+    expect(r.subline).toBe("Say which side is occupied to lay out the work");
   });
 
-  it("confirmed: ✓ with the confirmed kind as its value", () => {
-    const r = kind(CONFIRMED, true);
-    expect(r.label).toBe("Kind of work");
+  it("sided but the kind unconfirmed: still needs you, and the subline names the kind", () => {
+    const r = side(SIDED, false, "East side · northbound traffic");
+    expect(r.state).toBe("attention");
+    expect(r.value).toBeNull();
+    expect(r.subline).toBe("Choose the kind of work");
+  });
+
+  it("both answered: ✓ with the side in the backend's words and the kind", () => {
+    const r = side(SIDED, true, "East side · northbound traffic");
     expect(r.state).toBe("done");
     expect(r.glyph).toBe("✓");
-    expect(r.value).toBe(kindLabel(CONFIRMED.kind));
+    expect(r.value).toBe(`East side · northbound traffic · ${kindLabel(SIDED.kind)}`);
+    expect(r.subline).toBeNull();
   });
 
-  it("no row asks 'Which side is occupied?' any more", () => {
-    for (const confirmed of [false, true]) {
-      const labels = deriveMoveLedger(CONFIRMED, null, confirmed).rows.map((r) => r.label);
-      expect(labels.join(" | ")).not.toContain("Which side");
-    }
+  it("move 5 lays out only once move 4 is answered", () => {
+    const grow = (s: Scenario, k: boolean) =>
+      deriveMoveLedger(s, null, k, "East side · northbound traffic").rows.find(
+        (r) => r.id === "grow",
+      );
+    expect(grow(CONFIRMED, true)?.state).toBe("pending");
+    expect(grow(SIDED, false)?.state).toBe("pending");
+    const done = grow(SIDED, true);
+    expect(done?.state).toBe("done");
+    expect(done?.value).toBe("approaches laid out");
   });
 
   it("before a pin it is pending, like the rows above it", () => {
-    const r = kind({ ...CONFIRMED, meta: { ...CONFIRMED.meta, lat: 0, lng: 0 } } as Scenario, true);
+    const r = side({ ...SIDED, meta: { ...SIDED.meta, lat: 0, lng: 0 } } as Scenario, true);
     expect(r.state).toBe("pending");
     expect(r.value).toBeNull();
+  });
+
+  it("no row asks for the kind by itself any more", () => {
+    const labels = deriveMoveLedger(CONFIRMED, null, false).rows.map((r) => r.label);
+    expect(labels.join(" | ")).not.toContain("Kind of work");
   });
 });
 

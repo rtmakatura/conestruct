@@ -129,8 +129,8 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { MIN_AUDIT, PINNED_SHOULDER } from "./test-fixtures";
-import { confirmKind } from "./__fixtures__/band-helpers";
+import { MIN_AUDIT, PINNED_SHOULDER, corridorGeometryResponse } from "./test-fixtures";
+import { answerSide, confirmKind } from "./__fixtures__/band-helpers";
 
 type Call = { url: string; body: Record<string, unknown> };
 let calls: Call[] = [];
@@ -157,6 +157,10 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       status: 200,
       json: async () => MIN_AUDIT,
     } as unknown as Response);
+  }
+  // #290: the WHERE band's geometry read (the side control's choices).
+  if (url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve(corridorGeometryResponse());
   }
   return Promise.resolve({
     ok: true,
@@ -195,14 +199,20 @@ async function settle() {
 }
 
 /** A fresh /sandbox session with a road confirmed through the picker —
- *  the state Ryan's hand-check starts from. */
-async function freshWithRoad() {
+ *  the state Ryan's hand-check starts from.  #290: and, by default, the
+ *  occupied side answered, so the cases below speak about the KIND alone;
+ *  the side's own gating is pinned in its own cases (`side: false`). */
+async function freshWithRoad({ side = true }: { side?: boolean } = {}) {
   const user = userEvent.setup();
   render(<GeneratorShell mode="sandbox" />);
   await settle();
   await user.click(screen.getByTestId("where-open-picker"));
   await user.click(screen.getByText("SAVE_ROAD"));
   await settle();
+  if (side) {
+    await answerSide();
+    await settle();
+  }
   return user;
 }
 
@@ -341,29 +351,60 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(generateBtn().disabled).toBe(false);
   });
 
-  // #289 post-fidelity hand-check, finding 2 — the move ledger's row 4 is
-  // the kind, answered by the chips, resolved only by the confirm.
-  it("the move ledger asks for the kind, and resolves to ✓ with it only once confirmed", async () => {
-    const user = await freshWithRoad();
-    const move = () => screen.getByTestId("move-kind");
+  // #290 (RULE 5, stated): move 4 is "Which side is occupied?" again —
+  // the side from the plain control, the kind from the chips and Confirm
+  // (Part 1 §4.4).  The #289 interim row "Kind of work" is retired.
+  it("the move ledger asks which side is occupied, and resolves only once side AND kind are answered", async () => {
+    const user = await freshWithRoad({ side: false });
+    const move = () => screen.getByTestId("move-side");
+    expect(document.querySelector('[data-testid="move-kind"]')).toBeNull();
     expect(move().getAttribute("data-move-state")).toBe("attention");
-    expect(move().textContent).toContain("Kind of work — choose below");
+    expect(move().textContent).toContain("Which side is occupied?");
     expect(move().textContent).toContain("needs you");
-    expect(move().textContent).toContain("⚠");
-    expect(document.body.textContent).not.toContain("Which side is occupied?");
+    expect(move().textContent).toContain("Say which side is occupied to lay out the work");
 
-    // A click is a selection, not the answer.
-    await user.click(chip("shoulder"));
+    await answerSide();
+    await settle();
+    // The side is answered; the kind is still open — the row says so.
     expect(move().getAttribute("data-move-state")).toBe("attention");
+    expect(move().textContent).toContain("Choose the kind of work");
 
+    await user.click(chip("shoulder"));
     await confirmKind();
-    // WHERE collapsed on the confirm; re-open it to read the ledger.
     await user.click(screen.getByTestId("fact-link-where"));
     await settle();
     expect(move().getAttribute("data-move-state")).toBe("done");
-    expect(move().textContent).toContain("✓");
+    expect(move().textContent).toContain("East side · traffic heads north");
     expect(move().textContent).toContain("Shoulder work");
-    expect(move().textContent).not.toContain("needs you");
+    expect(screen.getByTestId("move-grow").getAttribute("data-move-state")).toBe("done");
+  });
+
+  it("#290, PAYLOAD: a confirmed kind with no side fires no check, and Generate names the side", async () => {
+    const user = await freshWithRoad({ side: false });
+    await user.click(chip("shoulder"));
+    await confirmKind();
+    await settle();
+    expect(liveChecks()).toHaveLength(0);
+    expect(generateBtn().disabled).toBe(true);
+    expect(
+      document.querySelector('[data-testid="cta-reason"]')?.textContent,
+    ).toContain("Say which side is occupied to lay out the work");
+
+    await answerSide();
+    await settle();
+    expect(liveChecks().length).toBeGreaterThan(0);
+    const audit = calls.filter((c) => c.url.includes("/api/render/audit"));
+    // Every check request carries the side — none went out before it,
+    // including in the debounce window after the click (`fetchArmed`).
+    const checks = calls.filter(
+      (c) => c.url.includes("/api/render/audit") || c.url.includes("/api/render/device-breakdown"),
+    );
+    expect(audit.length).toBeGreaterThan(0);
+    for (const c of checks) {
+      const sent = (c.body.scenario ?? c.body) as { meta: { work?: unknown } };
+      expect(sent.meta.work, c.url).toEqual({ side: "right", heading: "N" });
+    }
+    expect(generateBtn().disabled).toBe(false);
   });
 
   it("PAYLOAD: the generated plan carries the kind the operator clicked", async () => {

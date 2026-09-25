@@ -67,7 +67,7 @@ const parker = (demo as { jurisdictions: Record<string, unknown> })
 // the right one to assert.
 const PINNED: Scenario = {
   ...DEFAULT_SCENARIO,
-  meta: { ...DEFAULT_SCENARIO.meta, lat: 39.5186, lng: -104.7614 },
+  meta: { ...DEFAULT_SCENARIO.meta, lat: 39.5186, lng: -104.7614, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
   schedule: {
     date_mode: "single",
     work_date: "2026-10-07",

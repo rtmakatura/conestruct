@@ -522,10 +522,10 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — the picker modal (#166 sizing)",
     css: [],
     tsx: [
-      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 48 }, // #209: +1, the numeric editor's range alert
+      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 41 }, // #209: +1, the numeric editor's range alert; #290: -7, the retired work-zone panel (typed length + direction of travel)
       { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 8 }, // #234: +1, the restored-intersection line
-      { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 8 },
-      { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 6 },
+      { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 9 }, // #290: +1, the pre-side ruling's sentence on the map (the "drop a pin" overlay's own treatment)
+      { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 4 }, // #290: -2, the retired work-zone panel's two inputs
       { file: "components/LocationPickerModal.tsx", cls: "text-[15px]", count: 1 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[17px]", count: 1 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[9px]", count: 3 },
@@ -685,6 +685,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 285,
+  tsxUses: 277, // #290: -8 net (the work-zone panel out, the pre-side sentence in)
   tsxFiles: 35,
 } as const;

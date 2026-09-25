@@ -30,8 +30,9 @@ vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { MIN_AUDIT } from "./test-fixtures";
+import { MIN_AUDIT, TEST_SIDE, corridorGeometryResponse } from "./test-fixtures";
 import {
+  answerSide,
   changeOneThing,
   openWhereAfterGenerate,
   editAfterGenerate,
@@ -77,6 +78,10 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   if (url.includes("/api/render/audit")) {
     return Promise.resolve({ ok: true, status: 200, json: async () => MIN_AUDIT } as unknown as Response);
   }
+  // #290: the WHERE band's geometry read — the side control's choices.
+  if (url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve(corridorGeometryResponse());
+  }
   return Promise.resolve({ ok: true, status: 200, json: async () => ({}) } as unknown as Response);
 });
 
@@ -113,7 +118,8 @@ async function mountPinnedWithCorrections() {
           ...DEFAULT_SHOULDER.meta,
           lat: 39.7113,
           lng: -105.0815,
-          bearingDeg: 180,
+          // #290: the side replaces the typed bearing (ruling 8).
+          work: { ...TEST_SIDE },
           siteConditionOverrides: CORRECTIONS,
         },
       }}
@@ -157,6 +163,7 @@ describe("manual coordinate entry is a pin move (fix-224-manual-pin-move)", () =
     let sent = await generate(user);
     expect(sent.meta.lat).toBe(39.7113);
     expect(sent.meta.siteConditionOverrides).toEqual(CORRECTIONS);
+    expect(sent.meta.work).toEqual(TEST_SIDE);
     // The move.  #289: the pin is the WHERE band's, and the way to it
     // after a generate is the setup line's LOCATION value (CHANGE
     // SOMETHING ELSE retired, 2026-09-23 — the value links replace it).
@@ -164,9 +171,17 @@ describe("manual coordinate entry is a pin move (fix-224-manual-pin-move)", () =
     // Reopen remounts the Location step with the manual panel closed.
     await ensureManualOpen(user);
     fireEvent.change(latInput(), { target: { value: "39.7114" } });
+    // #290 (RULE 5, stated): a pin move also drops the side — which side is
+    // occupied was said of the old point (withPin → withoutSide), so it is
+    // owed again before Generate, and answered here.
+    await waitFor(() =>
+      expect(document.querySelector('[data-testid="side-option"][aria-checked="true"]')).toBeNull(),
+    );
+    await answerSide();
     bundleBody = null;
     sent = await generate(user);
     expect(sent.meta.lat).toBe(39.7114);
     expect("siteConditionOverrides" in sent.meta).toBe(false);
+    expect(sent.meta.work).toEqual(TEST_SIDE);
   });
 });
