@@ -63,6 +63,7 @@ export type {
   NearIntersectionRoadType,
   NearIntersectionScenario,
   NearIntersectionWorkType,
+  PinModel,
   RoadType,
   Scenario,
   ScenarioKind,
@@ -103,6 +104,7 @@ export const DEFAULT_SHOULDER: ShoulderScenario = {
     address: "",
     lat: 0,
     lng: 0,
+    pinModel: "corridor_end",
   },
   roadType: "rural_divided",
   speed: 65,
@@ -127,6 +129,7 @@ export const DEFAULT_FLAGGER: FlaggerLaneClosureScenario = {
     address: "",
     lat: 0,
     lng: 0,
+    pinModel: "corridor_end",
   },
   roadType: "rural_undivided",
   speed: 45,
@@ -147,6 +150,7 @@ export const DEFAULT_LANE_CLOSURE: LaneClosureDividedScenario = {
     address: "",
     lat: 0,
     lng: 0,
+    pinModel: "corridor_end",
   },
   roadType: "freeway",
   speed: 65,
@@ -160,7 +164,7 @@ export const DEFAULT_LANE_CLOSURE: LaneClosureDividedScenario = {
 
 export const DEFAULT_WORK_BEYOND_SHOULDER: WorkBeyondShoulderScenario = {
   kind: "work_beyond_shoulder",
-  meta: { project: "", address: "", lat: 0, lng: 0 },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
   roadType: "rural_undivided",
   speed: 45,
   laneWidth: 12,
@@ -172,7 +176,7 @@ export const DEFAULT_WORK_BEYOND_SHOULDER: WorkBeyondShoulderScenario = {
 
 export const DEFAULT_MOBILE_OP_2LANE: MobileOp2LaneScenario = {
   kind: "mobile_op_2lane",
-  meta: { project: "", address: "", lat: 0, lng: 0 },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
   roadType: "rural_undivided",
   speed: 45,
   laneWidth: 12,
@@ -184,7 +188,7 @@ export const DEFAULT_MOBILE_OP_2LANE: MobileOp2LaneScenario = {
 
 export const DEFAULT_MOBILE_OP_MULTILANE: MobileOpMultilaneScenario = {
   kind: "mobile_op_multilane",
-  meta: { project: "", address: "", lat: 0, lng: 0 },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
   roadType: "freeway",
   speed: 65,
   laneWidth: 12,
@@ -202,7 +206,7 @@ export const DEFAULT_MOBILE_OP_MULTILANE: MobileOpMultilaneScenario = {
 // whose curb-to-curb box stays outside the work zone.
 export const DEFAULT_NEAR_INTERSECTION: NearIntersectionScenario = {
   kind: "near_intersection",
-  meta: { project: "", address: "", lat: 0, lng: 0 },
+  meta: { project: "", address: "", lat: 0, lng: 0, pinModel: "corridor_end" },
   roadType: "urban_arterial",
   speed: 35,
   lanes: 2,
@@ -563,6 +567,8 @@ function metaFromLegacy(p: LegacyScenarioParams): ScenarioMeta {
     address: p.address ?? "",
     lat: p.lat ?? 0,
     lng: p.lng ?? 0,
+    // #290: a legacy plan predates every pin model but the first.
+    pinModel: "corridor_end",
   };
 }
 
@@ -600,8 +606,18 @@ export function migrateLegacy(p: LegacyScenarioParams): Scenario {
   };
 }
 
+// #290 — the scenario version field, stamped where a stored scenario
+// re-enters the app.  A saved plan written before the field existed meant
+// "corridor_end" (the only model there has been), so absence is stamped
+// with exactly that and nothing else: never re-read as a newer meaning
+// (rulings.md, rulings 3 and 10).  A present value is kept verbatim.
+export function withPinModel<S extends Scenario>(s: S): S {
+  if (!s.meta || s.meta.pinModel !== undefined) return s;
+  return { ...s, meta: { ...s.meta, pinModel: "corridor_end" } };
+}
+
 export function toScenario(value: unknown): Scenario {
-  if (isScenario(value)) return value;
+  if (isScenario(value)) return withPinModel(value);
   if (isLegacyParams(value)) return migrateLegacy(value);
   return DEFAULT_SHOULDER;
 }

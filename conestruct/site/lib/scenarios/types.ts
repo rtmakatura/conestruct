@@ -322,6 +322,9 @@ export type StagedCorrection =
   | StagedManualCondition
   | StagedFieldEdit;
 
+/** #290 — the pin's meaning; see ``ScenarioMeta.pinModel``. */
+export type PinModel = "corridor_end" | "work_start";
+
 export interface ScenarioMeta {
   project: string;
   address: string;
@@ -333,6 +336,19 @@ export interface ScenarioMeta {
    */
   lat: number;
   lng: number;
+  /**
+   * #290 — what the pin MEANS: the scenario version field, mirrored from
+   * the backend's ``ScenarioMeta.pinModel`` (src/api/schemas.py), which
+   * reads it before anything reads the pin.  ``"corridor_end"``: the pin
+   * is the corridor's downstream-most point and ``bearingDeg`` points from
+   * it toward the first sign — every plan to date.  ``"work_start"``: the
+   * pin marks where the work starts (FLOW.md §5a), refused by the backend
+   * until the work-start corridor lands.  Stamped where a scenario is
+   * born (every DEFAULT_*, the legacy migration, ``toScenario``); optional
+   * in the type only so hand-built test metas need not carry it — the
+   * backend reads absence as ``"corridor_end"`` too (rulings.md, ruling 3).
+   */
+  pinModel?: PinModel;
   /**
    * Engineering-style location text shown on the title block (e.g.
    * "I-25 NB, MP 144.5–146, Colorado Springs"). Distinct from
