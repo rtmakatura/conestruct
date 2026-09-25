@@ -35,6 +35,7 @@ from sentry_sdk.integrations.starlette import StarletteIntegration
 from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
 from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
+    CrossStreetStationError,
     Scenario,
     _map_road_type,
     flagger_lane_ineligible_high,
@@ -238,11 +239,6 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
         raise _pin_model_refusal(
             "pinModel 'work_start' derives the direction from the road and the side; "
             "drop meta.bearingDeg."
-        )
-    if scenario.kind == "near_intersection":
-        raise _pin_model_refusal(
-            "pinModel 'work_start' is not built for near_intersection yet: its cross-street "
-            "station is still computed from a 'corridor_end' pin."
         )
     if work is None or work.side is None:
         return
@@ -628,6 +624,13 @@ def _placements_for(
     _ensure_lane_confidence(scenario)
     try:
         params, generator, kwargs = scenario_to_call(scenario)
+    except CrossStreetStationError as exc:
+        # #290: a work-start near_intersection plan whose cross street the
+        # backend could not place — the operator's input, told as such.
+        raise HTTPException(
+            status_code=400,
+            detail={"error": "generator_rejected", "message": str(exc)},
+        ) from exc
     except UnknownJurisdictionError as exc:
         # #257: the bridge resolves ``jurisdiction_key`` to the record's
         # display name (``params.jurisdiction_name``); a bad key is an

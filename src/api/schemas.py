@@ -130,6 +130,17 @@ class RoadDirection(BaseModel):
     oneway: str | None = Field(default=None, max_length=8)
 
 
+class IntersectionPin(BaseModel):
+    """#234's marked intersection — the near_intersection kind's second pin
+    and its cross street's name, as the picker persists it on
+    ``meta.intersection``.  Provenance until #290; under the work-start
+    model the backend measures the cross street's station from it."""
+
+    lat: float = Field(ge=-90.0, le=90.0)
+    lng: float = Field(ge=-180.0, le=180.0)
+    name: str | None = Field(default=None, max_length=200)
+
+
 class ScenarioMeta(BaseModel):
     project: str = ""
     address: str = ""
@@ -160,6 +171,9 @@ class ScenarioMeta(BaseModel):
     # ``WorkPlacement`` / ``RoadDirection``.  Only read under "work_start".
     work: WorkPlacement | None = None
     roadDirection: RoadDirection | None = None
+    # #234 / #290 — see ``IntersectionPin``.  Read only by a work-start
+    # near_intersection plan; otherwise carried and ignored, as before.
+    intersection: IntersectionPin | None = None
     # Engineering-style location text shown on the title block (e.g.
     # "I-25 NB, MP 144.5–146, Colorado Springs").  Distinct from
     # ``address`` — that's a geocodable street address used for the
@@ -676,7 +690,14 @@ class IntersectionApproach(BaseModel):
     # inside [0, workLen] are rejected on the scenario (in-intersection
     # work is Phase 2).  Bounds keep the value finite and inside the
     # same envelope as workLen itself.
-    alongStationFt: float = Field(ge=-WORK_LEN_MAX_FT, le=WORK_LEN_MAX_FT)
+    #
+    # #290: sent only with a ``corridor_end`` pin, whose frontend computed
+    # it.  Under ``work_start`` the backend computes it from the marked
+    # intersection (``meta.intersection``) along the road from the work
+    # start, and the request never carries it (ruling 7: geometry is the
+    # backend's, never sent on the request) — see
+    # ``NearIntersectionScenario._check_station_producer``.
+    alongStationFt: float | None = Field(default=None, ge=-WORK_LEN_MAX_FT, le=WORK_LEN_MAX_FT)
 
     # Detection relays (issue #120) — the parsed OSM lane tags of the
     # cross-street way (raw total plus per-direction and center-turn-lane
@@ -755,13 +776,37 @@ class NearIntersectionScenario(
         return self
 
     @model_validator(mode="after")
+    def _check_station_producer(self) -> Self:
+        # #290: one producer for the cross street's station per pin model.
+        # A corridor_end plan carries the value its frontend computed; a
+        # work_start plan carries the marked intersection and never the
+        # station (the backend measures it along the road, ruling 7).
+        stations = [a.alongStationFt for a in self.approaches]
+        if self.meta.pinModel == "work_start":
+            if any(v is not None for v in stations):
+                raise ValueError(
+                    "pinModel 'work_start': the backend computes each approach's "
+                    "alongStationFt from meta.intersection; drop alongStationFt."
+                )
+            if self.meta.intersection is None:
+                raise ValueError(
+                    "pinModel 'work_start' near_intersection needs meta.intersection "
+                    "(the marked cross street) to place the approaches."
+                )
+        elif any(v is None for v in stations):
+            raise ValueError("every approach needs alongStationFt on a 'corridor_end' pin.")
+        return self
+
+    @model_validator(mode="after")
     def _check_intersection_outside_work_zone(self) -> Self:
         # Phase 1 is Cases 18/19: work NEAR an intersection.  Work
         # within the intersection interior (MUTCD Figures 6P-26/27,
         # §6N.12.14-16) is out of scope — a clean 422 here, not a
-        # silently-wrong near-side plan (rule 10).
+        # silently-wrong near-side plan (rule 10).  A work_start plan's
+        # stations are computed later, and checked there
+        # (``work_start_cross_station``).
         for a in self.approaches:
-            if 0.0 <= a.alongStationFt <= self.workLen:
+            if a.alongStationFt is not None and 0.0 <= a.alongStationFt <= self.workLen:
                 raise ValueError(
                     f"approach {a.id!r}: the cross street crosses inside the "
                     f"work zone (alongStationFt={a.alongStationFt:g}, work "
@@ -1041,6 +1086,65 @@ def plan_shoulder_width_ft(kind: str, divided: bool | None, road_type: str | Non
     return 8.0
 
 
+class CrossStreetStationError(ValueError):
+    """A work-start near_intersection plan's computed cross-street station
+    is unusable — the render API turns it into an honest 400."""
+
+
+def work_start_cross_station(scenario: NearIntersectionScenario, params: ScenarioParams) -> float:
+    """The cross street's station in the layout frame, measured on the backend (#290).
+
+    Replaces the frontend's ``alongStationFromPins`` (lib/road-detection/
+    cross-street.ts) for a work-start pin — corridor math is the backend's
+    (Rule 3; ruling 7).  The corridor is laid from the work start with the
+    derived direction; the marked intersection's along-road station (the
+    #207 classification frame, arc length on a centerline) less the
+    downstream taper is its station in the layout frame (0 = the work's
+    downstream end, growing upstream).  Both legs of one cross street share
+    it, as before.
+
+    Raises :class:`CrossStreetStationError` when the side is not confirmed
+    (the station's sign — near side or far side — is the direction) or
+    when the cross street lands inside the work zone (Cases 18/19 are work
+    NEAR an intersection; the same refusal the corridor_end schema gives).
+    """
+    from src.rules.corridor import build_corridor
+
+    meta = scenario.meta
+    cross = meta.intersection
+    if params.bearing_deg is None or cross is None or not (meta.lat and meta.lng):
+        raise CrossStreetStationError(
+            "near_intersection needs the pin, the marked intersection and a confirmed side: "
+            "which side of the work the cross street is on decides the plan."
+        )
+    corridor = build_corridor(
+        lat=meta.lat,
+        lng=meta.lng,
+        bearing_deg=params.bearing_deg,
+        speed_mph=params.speed_mph,
+        work_zone_ft=params.work_zone_length_ft,
+        closure_type=params.closure_type,
+        road_type=params.road_type,
+        lane_width_ft=params.lane_width_ft,
+        shoulder_width_ft=params.shoulder_width_ft,
+        centerline=params.centerline,
+        pin_model="work_start",
+    )
+    station = round(corridor.along_station_ft(cross.lat, cross.lng) - corridor.downstream_taper_ft)
+    if 0.0 <= station <= params.work_zone_length_ft:
+        raise CrossStreetStationError(
+            f"the marked cross street crosses inside the work zone (station {station:g} ft, "
+            f"work zone spans 0..{params.work_zone_length_ft:g}).  Work within the "
+            "intersection (MUTCD Figures 6P-26/27) is not supported."
+        )
+    if abs(station) > WORK_LEN_MAX_FT:
+        raise CrossStreetStationError(
+            f"the marked cross street is {abs(station):,.0f} ft from the work along the road — "
+            "too far for a near-intersection plan."
+        )
+    return float(station)
+
+
 def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     """Translate a parsed Scenario into a generator invocation.
 
@@ -1220,6 +1324,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             near_intersection=True,
             **meta_kw,
         )
+        station = (
+            work_start_cross_station(scenario, params) if params.pin_model == "work_start" else None
+        )
         approaches = [
             ApproachParams(
                 id=a.id,
@@ -1227,7 +1334,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
                 road_type=_map_road_type(a.roadType, a.speed),
                 num_lanes=a.lanesPerDirection,
                 lane_width_ft=a.laneWidth,
-                along_station_ft=a.alongStationFt,
+                along_station_ft=station if station is not None else float(a.alongStationFt or 0.0),
                 signalized=a.signalized,
             )
             for a in scenario.approaches
