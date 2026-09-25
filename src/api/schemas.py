@@ -107,6 +107,19 @@ class ScenarioMeta(BaseModel):
     # validation unchecked).
     lat: float = 0.0
     lng: float = 0.0
+    # #290 — what the pin MEANS: the scenario version field, read before
+    # anything reads the pin (render_api._ensure_pin_model_built).
+    #   "corridor_end" — the pin is the corridor's downstream-most point
+    #     and ``bearingDeg`` points from it toward the first sign
+    #     (src/rules/corridor.py:22-30).  Every plan, fixture and sender
+    #     to date means this (rulings.md, ruling 1: measured on prod).
+    #   "work_start" — the pin marks where the work starts (FLOW.md §5a).
+    #     Declared now so the contract has a name; refused until the
+    #     work-start corridor lands.
+    # Absent ⇒ "corridor_end" (ruling 3): a sender or saved plan that
+    # predates the field keeps meaning exactly what it meant — never
+    # silently re-read (Rule 10, ruling 10).
+    pinModel: Literal["corridor_end", "work_start"] = "corridor_end"
     # Engineering-style location text shown on the title block (e.g.
     # "I-25 NB, MP 144.5–146, Colorado Springs").  Distinct from
     # ``address`` — that's a geocodable street address used for the

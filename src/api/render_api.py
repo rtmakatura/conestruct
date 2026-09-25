@@ -178,6 +178,9 @@ def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False)
     than the bare 422 a Pydantic narrowing would produce if we removed
     the kinds from the discriminated union outright.
     """
+    # #290: the pin model is read FIRST, before any gate or reader touches
+    # the pin — its meaning decides what every later step computes.
+    _ensure_pin_model_built(scenario)
     # #282: one chokepoint, because every endpoint already funnels through
     # here.  ``allow_preview`` is opt-IN, so a new endpoint added later
     # refuses the flag by default rather than silently honouring it.
@@ -191,6 +194,29 @@ def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False)
         raise HTTPException(
             status_code=400,
             detail=(f"This scenario type is not yet available. Currently supported: {enabled}."),
+        )
+
+
+def _ensure_pin_model_built(scenario: Scenario) -> None:
+    """Refuse a pin model this backend cannot compute yet (#290).
+
+    ``meta.pinModel`` names what the pin means.  Only ``corridor_end`` —
+    the meaning every plan to date carries — has a corridor behind it.
+    ``work_start`` is declared on the wire so the contract exists before
+    anything sends it, and refused here until the work-start corridor
+    lands: computing a ``work_start`` pin as a ``corridor_end`` one would
+    lay the corridor from the wrong point and call it the plan (Rule 10).
+    Honest 400 naming the field, at the chokepoint every scenario endpoint
+    already funnels through.
+    """
+    if scenario.meta.pinModel != "corridor_end":
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"meta.pinModel {scenario.meta.pinModel!r} is not built yet: this backend "
+                "lays out a corridor only from a pin that marks the corridor's downstream "
+                "end ('corridor_end'). Send 'corridor_end', or omit the field."
+            ),
         )
 
 
@@ -1414,6 +1440,12 @@ def _audit_projection_and_params_for(
         # on the wire; not_run/not_requested when no scan was asked for).
         site_scan=site_scan.provenance.model_dump(mode="json"),
     )
+    # #290 — the pin model, echoed where a pin exists so the audit (and the
+    # replication snapshot, built from this projection) records what the
+    # pin meant.  No pin ⇒ no key: a meaning with nothing to mean is absence
+    # (Rule 10), and every coordinate-less audit stays byte-identical.
+    if scenario.meta.lat or scenario.meta.lng:
+        projection["pin"] = {"model": scenario.meta.pinModel}
     return projection, params
 
 
