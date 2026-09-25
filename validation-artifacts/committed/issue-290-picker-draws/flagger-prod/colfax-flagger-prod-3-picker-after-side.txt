@@ -1,0 +1,31 @@
+WORK ZONE · DEFINE
+Define Work Zone
+
+Drop a pin, review the detected road properties, and set the work-zone length.
+
+SEARCH
++ OR ENTER COORDINATES MANUALLY
+STREETS
+© Mapbox © OpenStreetMap Improve this map © Maxar
+✓ ROAD DETECTED · 1 MATCH
+EAST COLFAX AVENUE WESTBOUND (PRIMARY, 270°)
+4 M FROM PIN · WAY 1547338997
+ROAD PROPERTIES
+↻ RE-DETECT ROADS
+Speed limit (mph)
+OSM · MEASURED
+Lanes per direction
+OSM · MEASURED
+Road type
+OSM · INFERRED
+Rural — undivided
+Rural — divided
+Urban arterial
+Freeway / interstate
+Divided
+OSM · INFERRED
+DIVIDED
+UNDIVIDED
+CORRIDOR EXTENT
+Cancel
+Save & Close

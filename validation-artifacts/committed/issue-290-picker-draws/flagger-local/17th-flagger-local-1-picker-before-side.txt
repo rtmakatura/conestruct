@@ -1,0 +1,36 @@
+WORK ZONE · DEFINE
+Define Work Zone
+
+Drop a pin where the work starts, and review the detected road properties.
+
+SEARCH
+− HIDE COORDINATE ENTRY
+LAT / LNG DECIMAL DEGREES
+STREETS
+© Mapbox © OpenStreetMap Improve this map © Maxar
+SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK
+✓ ROAD DETECTED · 1 MATCH
+LAFAYETTE STREET NORTHBOUND (RESIDENTIAL, 0°)
+19 M FROM PIN · WAY 581254411
+ROAD PROPERTIES
+↻ RE-DETECT ROADS
+Speed limit (mph)
+OSM · INFERRED
+Low-confidence fallback — won't apply unless you accept it.
+USE 25 MPH
+Lanes per direction
+OSM · MEASURED
+Road type
+OSM · INFERRED
+Rural — undivided
+Rural — divided
+Urban arterial
+Freeway / interstate
+Divided
+OSM · INFERRED
+DIVIDED
+UNDIVIDED
+CORRIDOR EXTENT
+SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK.
+Cancel
+Save & Close

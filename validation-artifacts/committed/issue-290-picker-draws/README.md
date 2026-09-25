@@ -41,3 +41,25 @@ the exact request replayed offline.
 
 The prod screenshot of the fix is taken after the ship (the fix is in the
 Modal backend, which only a deploy puts on prod).
+
+## The flagger case ("check the flagger case draws both approaches on prod")
+
+Same probe with `AUDIT_KIND=flagger`.
+
+- **flagger-prod/** — prod, main 659d800.  It does NOT draw.
+  - `colfax-flagger-prod-*`: E Colfax (39.74020, -104.95600).  Detected as one-way way
+    1547338997, so the band asked to confirm two-way traffic.  The corridor was
+    `corridor_unbuildable`, "3.8 m off" — the same defect.
+  - `17th-flagger-prod-*`: 39.74362, -104.97070.  Detected as Lafayette St, a two-way
+    residential street 19 m from the pin (way 581254411).  Both sides were offered, and the
+    corridor was `corridor_unbuildable`, "82.9 m off".
+- **flagger-local/** — this branch's stack, at the same Lafayette pin.  `laid_out` with BOTH
+  approaches:
+  - primary: northbound, 359.9°;
+  - opposing: southbound, 180.3°;
+  - each: downstream 50, buffer 495, taper 100, advance warning 1,050.
+
+  `17th-flagger-local-3-picker-after-side.png` shows the work north of the pin, the primary
+  advance warning south of it, and the opposing advance warning north of the work's far end.
+  Its Centerline row reads "covers 265–2,382 ft": the way ends 265 ft short of the anchor, the
+  end-tangent case the frame fix also carries.

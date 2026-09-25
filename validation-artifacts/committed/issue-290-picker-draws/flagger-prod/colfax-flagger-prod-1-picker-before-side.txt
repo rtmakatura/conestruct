@@ -1,0 +1,34 @@
+WORK ZONE · DEFINE
+Define Work Zone
+
+Drop a pin, review the detected road properties, and set the work-zone length.
+
+SEARCH
+− HIDE COORDINATE ENTRY
+LAT / LNG DECIMAL DEGREES
+STREETS
+© Mapbox © OpenStreetMap Improve this map © Maxar
+SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK
+⚠ WHICH ROAD? · 4 DETECTED
+DETECTED FROM OSM: 270° (EAST COLFAX AVENUE WESTBOUND, PRIMARY) · WAY 1547338997
+CHANGE
+ROAD PROPERTIES
+↻ RE-DETECT ROADS
+Speed limit (mph)
+OSM · MEASURED
+Lanes per direction
+OSM · MEASURED
+Road type
+OSM · INFERRED
+Rural — undivided
+Rural — divided
+Urban arterial
+Freeway / interstate
+Divided
+OSM · INFERRED
+DIVIDED
+UNDIVIDED
+CORRIDOR EXTENT
+SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK.
+Cancel
+Save & Close

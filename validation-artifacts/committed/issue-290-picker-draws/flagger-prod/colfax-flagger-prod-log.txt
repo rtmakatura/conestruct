@@ -1,0 +1,26 @@
+site https://www.conestruct.com/sandbox
+pin 39.74020,-104.95600
+ranAt 2026-09-25T18:01:57.440Z
+open picker
+pin typed
+picked candidate: EAST COLFAX AVENUE WESTBOUND
+save
+after confirm buttons: ["CHANGE","idetails","idetails","Confirm Denver","Dismiss","Daytime","Night","Local","Collector","Arterial","Confirm Arterial","Dismiss","Road carries two-way trafficDetection saw a one-way street — confirm to enable this plan","Use AFADAutomated paddle","Pilot carConvoy lead vehicle","Pedestrian detourADA route required","Generate plan"]
+side options: ["North side · westbound traffic [disabled=null]","South side · westbound trafficleft side — not built yet [disabled=true]"]
+choose side
+reopen picker
+done
+
+GEOMETRY
+{"phase":"picked candidate: EAST COLFAX AVENUE WESTBOUND","kind":"shoulder","pinModel":"work_start","lat":39.7402,"lng":-104.956,"work":null,"road":{"way":"1547338997","pinLat":39.7402,"pinLng":-104.956,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["North side · westbound traffic","South side · westbound traffic (not built)"],"travel":null}}
+{"phase":"save","kind":"shoulder","pinModel":"work_start","lat":39.7402,"lng":-104.956,"work":null,"road":{"way":"1547338997","pinLat":39.7402,"pinLng":-104.956,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["North side · westbound traffic","South side · westbound traffic (not built)"],"travel":null}}
+{"phase":"save","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.7402,"lng":-104.956,"work":null,"road":{"way":"1547338997","pinLat":39.7402,"pinLng":-104.956,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["North side · westbound traffic","South side · westbound traffic (not built)"],"travel":null}}
+{"phase":"after confirm buttons: [\"CHANGE\",\"idetails\",\"idetails\",\"Confirm Denver\",\"Dismiss\",\"Daytime\",\"Night\",\"Local\",\"Collector\",\"Arterial\",\"Confirm Arterial\",\"Dismiss\",\"Road carries two-way trafficDetection saw a one-way street — confirm to enable this plan\",\"Use AFADAutomated paddle\",\"Pilot carConvoy lead vehicle\",\"Pedestrian detourADA route required\",\"Generate plan\"]","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.7402,"lng":-104.956,"work":null,"road":{"way":"1547338997","pinLat":39.7402,"pinLng":-104.956,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["North side · westbound traffic","South side · westbound traffic (not built)"],"travel":null}}
+{"phase":"choose side","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.7402,"lng":-104.956,"work":{"side":"right","travel":"with_geometry"},"road":{"way":"1547338997","pinLat":39.7402,"pinLng":-104.956,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"corridor_unbuildable","message":"ValueError: work-start corridor does not return to the pin (3.8 m off): the road geometry cannot carry the corridor this far downstream of the work","work":null,"approaches":[],"side_options":["North side · westbound traffic","South side · westbound traffic (not built)"],"travel":null}}
+{"phase":"reopen picker","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.7402,"lng":-104.956,"work":{"side":"right","travel":"with_geometry"},"road":{"way":"1547338997","pinLat":39.7402,"pinLng":-104.956,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"corridor_unbuildable","message":"ValueError: work-start corridor does not return to the pin (3.8 m off): the road geometry cannot carry the corridor this far downstream of the work","work":null,"approaches":[],"side_options":["North side · westbound traffic","South side · westbound traffic (not built)"],"travel":null}}

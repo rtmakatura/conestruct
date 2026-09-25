@@ -1,0 +1,53 @@
+WORK ZONE · DEFINE
+Define Work Zone
+
+Drop a pin where the work starts, and review the detected road properties.
+
+SEARCH
++ OR ENTER COORDINATES MANUALLY
+STREETS
+© Mapbox © OpenStreetMap Improve this map © Maxar
+RECENTER
+ADVANCE WARNING
+TAPER
+BUFFER
+WORK ZONE
+DOWNSTREAM
+✓ ROAD DETECTED · 1 MATCH
+LAFAYETTE STREET NORTHBOUND (RESIDENTIAL, 0°)
+19 M FROM PIN · WAY 581254411
+ROAD PROPERTIES
+↻ RE-DETECT ROADS
+Speed limit (mph)
+OSM · INFERRED
+Low-confidence fallback — won't apply unless you accept it.
+USE 25 MPH
+Lanes per direction
+OSM · MEASURED
+Road type
+OSM · INFERRED
+Rural — undivided
+Rural — divided
+Urban arterial
+Freeway / interstate
+Divided
+OSM · INFERRED
+DIVIDED
+UNDIVIDED
+CORRIDOR EXTENT
+TOTAL
+2,695 ft
+Advance warning
+1,050 ft
+Taper
+100 ft
+Buffer
+495 ft
+Work zone
+1,000 ft
+Downstream
+50 ft
+CENTERLINE
+COVERS 265–2,382 FT, BEARING BEYOND
+Cancel
+Save & Close

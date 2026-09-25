@@ -1,0 +1,67 @@
+conestruct.
+DEMO
+/
+MUTCD PLAN GENERATOR
+MUTCD 2023 · CDOT
+Method of Handling Traffic — plan generator
+×
+PLAN DECLINED · DETECTION SAW A ONE-WAY STREET — CONFIRM TWO-WAY TRAFFIC IN THE ROAD SECTION TO PROCEED.
+NEEDS REVIEW
+STEP 1 OF 4
+WHERE
+East Colfax Avenue westbound · City Park · 39.74020, -104.95600 · OSM detection · way 1547338997 · operator pick
+
+Where is the work?
+
+The segment below is what the plan is built from. Change what is wrong; the map is in the picker.
+
+Edit on map
+✓
+Found the spot
+East Colfax Avenue Westbound
+CHANGE
+✓
+Work starts
+East Colfax Avenue Westbound
+MOVE
+✓
+Extent
+1,000 ft · typed
+CHANGE
+✓
+Which side is occupied?
+North side · westbound traffic · Flagger lane closure
+confirmed
+✓
+See the plan grow
+approaches laid out
+laid out
+Occupied side
+North side · westbound traffic
+South side · westbound trafficleft side — not built yet
+Shoulder work
+TA-3/TA-5 · S-630-1
+Flagger lane closure
+TA-10 · S-630-1
+Lane closure near intersection
+Cases 18/19 · S-630-1
+4 more kinds are not enabled — each waits on its typical sheet being validated against the generator.
+Work zone length (ft)
+typed · the extent the plan is built for
+corridor extent unavailable — awaiting verification
+Confirm — flagger lane closure
+✓
+What's the job?
+flagger lane closure · 30 mph · 12 ft · Urban arterial · Not set
+CHANGE
+Generate plan
+Generation declined — see the notice below.
+Output requires TCS review · every dimension cited to MUTCD or CDOT
+No package yet
+
+Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.
+
+© 2026 CONESTRUCT · BUILT IN COLORADO
+TERMS
+PRIVACY
+OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT

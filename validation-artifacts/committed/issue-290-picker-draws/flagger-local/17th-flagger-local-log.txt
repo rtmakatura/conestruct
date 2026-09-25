@@ -1,0 +1,26 @@
+site http://127.0.0.1:3290/sandbox
+pin 39.74362,-104.97070
+ranAt 2026-09-25T18:04:02.718Z
+open picker
+pin typed
+picked candidate: LAFAYETTE STREET NORTHBOUND
+save
+after confirm buttons: ["CHANGE","idetails","idetails","idetails","Confirm Denver","Dismiss","Daytime","Night","Local","Collector","Arterial","Confirm Local","Dismiss","Use AFADAutomated paddle","Pilot carConvoy lead vehicle","Pedestrian detourADA route required","Generate plan"]
+side options: ["East side · northbound traffic [disabled=null]","West side · southbound traffic [disabled=null]"]
+choose side
+reopen picker
+done
+
+GEOMETRY
+{"phase":"pin typed","kind":"shoulder","pinModel":"work_start","lat":39.74362,"lng":-104.9707,"work":null,"road":{"way":"581254411","pinLat":39.74362,"pinLng":-104.9707,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["East side · northbound traffic","West side · southbound traffic"],"travel":null}}
+{"phase":"save","kind":"shoulder","pinModel":"work_start","lat":39.74362,"lng":-104.9707,"work":null,"road":{"way":"581254411","pinLat":39.74362,"pinLng":-104.9707,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["East side · northbound traffic","West side · southbound traffic"],"travel":null}}
+{"phase":"save","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.74362,"lng":-104.9707,"work":null,"road":{"way":"581254411","pinLat":39.74362,"pinLng":-104.9707,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["East side · northbound traffic","West side · southbound traffic"],"travel":null}}
+{"phase":"after confirm buttons: [\"CHANGE\",\"idetails\",\"idetails\",\"idetails\",\"Confirm Denver\",\"Dismiss\",\"Daytime\",\"Night\",\"Local\",\"Collector\",\"Arterial\",\"Confirm Local\",\"Dismiss\",\"Use AFADAutomated paddle\",\"Pilot carConvoy lead vehicle\",\"Pedestrian detourADA route required\",\"Generate plan\"]","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.74362,"lng":-104.9707,"work":null,"road":{"way":"581254411","pinLat":39.74362,"pinLng":-104.9707,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["East side · northbound traffic","West side · southbound traffic"],"travel":null}}
+{"phase":"choose side","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.74362,"lng":-104.9707,"work":{"side":"right","travel":"with_geometry"},"road":{"way":"581254411","pinLat":39.74362,"pinLng":-104.9707,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"laid_out","message":null,"work":{"length_ft":1000,"n":13},"approaches":[{"id":"primary","travel":359.91,"zones":["downstream:50","buffer:495","transition:100","advance_warning:1050"]},{"id":"opposing","travel":180.3,"zones":["downstream:50","buffer:495","transition:100","advance_warning:1050"]}],"side_options":["East side · northbound traffic","West side · southbound traffic"],"travel":359.91}}
+{"phase":"reopen picker","kind":"flagger_lane_closure","pinModel":"work_start","lat":39.74362,"lng":-104.9707,"work":{"side":"right","travel":"with_geometry"},"road":{"way":"581254411","pinLat":39.74362,"pinLng":-104.9707,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"laid_out","message":null,"work":{"length_ft":1000,"n":13},"approaches":[{"id":"primary","travel":359.91,"zones":["downstream:50","buffer:495","transition:100","advance_warning:1050"]},{"id":"opposing","travel":180.3,"zones":["downstream:50","buffer:495","transition:100","advance_warning:1050"]}],"side_options":["East side · northbound traffic","West side · southbound traffic"],"travel":359.91}}
