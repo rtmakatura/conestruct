@@ -232,30 +232,33 @@ def test_a_two_way_road_offers_its_two_edges(client: TestClient) -> None:
     ]
 
 
-def test_a_one_way_road_offers_its_legal_right_edge_and_names_the_left(
-    client: TestClient,
-) -> None:
-    """#298's case: one-way northbound.  Southbound is not offered at all;
-    the left edge is named and greyed out (not built)."""
+def test_a_one_way_road_offers_only_its_legal_right_edge(client: TestClient) -> None:
+    """#298's case: one-way northbound.  Southbound is not offered at all.
+
+    #290 hand-check (RULE 5, stated — this case used to assert the left
+    edge named and greyed out): the unbuildable left edge is not offered
+    either.  The ruling superseding the open-points ruling 2: "an option
+    the user can't choose, named in jargon, is noise (P13, P18)"."""
     opts = options(
         client,
         {"centerline": ROAD, "roadDirection": {"osmBearingDeg": 0.0, "oneway": "yes"}},
     )
     assert [(o["label"], o["work"], o["built"]) for o in opts] == [
         ("East side · northbound traffic", {"side": "right", "travel": "with_geometry"}, True),
-        ("West side · northbound traffic", {"side": "left", "travel": "with_geometry"}, False),
     ]
-    assert opts[1]["note"] == "left side — not built yet"
+    assert all("note" not in o for o in opts)
 
 
-def test_a_divided_carriageway_names_the_median(client: TestClient) -> None:
+def test_a_divided_one_way_carriageway_offers_no_median_side(client: TestClient) -> None:
+    """Formerly "names the median" — the same ruling: the median edge is
+    not offered, not even greyed out."""
     opts = options(
         client,
         {"centerline": ROAD, "roadDirection": {"osmBearingDeg": 0.0, "oneway": "yes"}},
         divided=True,
     )
-    assert opts[1]["work"]["side"] == "median"
-    assert opts[1]["note"] == "median side — not built yet"
+    assert [o["work"]["side"] for o in opts] == ["right"]
+    assert all(o["built"] for o in opts)
 
 
 def test_no_road_offers_the_four_headings(client: TestClient) -> None:

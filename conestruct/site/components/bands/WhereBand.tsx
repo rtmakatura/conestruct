@@ -182,8 +182,10 @@ function MoveLedgerRows({
  * phones use".  The choices, their words and which are built are the
  * BACKEND's (`side_options` from /render/corridor-geometry): each carries
  * the exact `meta.work` it writes, and a click writes it verbatim — no
- * direction is composed here (Rule 3).  Left / median render greyed out,
- * named, with the backend's note (the open-points ruling 2).
+ * direction is composed here (Rule 3).  Only BUILT sides render: the #290
+ * hand-check ruling superseding the open-points ruling 2 — "an option the
+ * user can't choose, named in jargon, is noise (P13, P18)".  The backend
+ * no longer sends one; the filter keeps an older backend's from showing.
  */
 function SideControl({
   fetchState,
@@ -196,7 +198,9 @@ function SideControl({
   setMeta: (m: ScenarioMeta) => void;
   locked: boolean;
 }) {
-  const options: SideOption[] = fetchState.geometry?.side_options ?? [];
+  const options: SideOption[] = (fetchState.geometry?.side_options ?? []).filter(
+    (o) => o.built,
+  );
   const selected = selectedSideOption(options, scenario.meta.work);
   return (
     <div className="mt-4" data-testid="side-control">
@@ -219,17 +223,16 @@ function SideControl({
                 type="button"
                 role="radio"
                 aria-checked={on}
-                aria-disabled={locked || !o.built || undefined}
-                className={`chip${on ? " is-on" : ""}${o.built ? "" : " is-gated"}`}
+                aria-disabled={locked || undefined}
+                className={`chip${on ? " is-on" : ""}`}
                 data-write=""
                 data-testid="side-option"
                 onClick={() => {
-                  if (locked || !o.built || on) return;
+                  if (locked || on) return;
                   setMeta({ ...scenario.meta, work: { ...o.work } });
                 }}
               >
                 <span>{o.label}</span>
-                {!o.built && o.note && <span className="tr-prov">{o.note}</span>}
               </button>
             );
           })}

@@ -49,7 +49,9 @@ export interface SideOption {
   work: WorkPlacement;
   /** "East side · northbound traffic" — the backend's words (ruling 8). */
   label: string;
-  /** False: named and greyed out, not built (the open-points ruling 2). */
+  /** False: not buildable yet.  Never rendered — the #290 hand-check
+   *  ruling (superseding the open-points ruling 2); the backend sends
+   *  none, and the band filters any an older backend sends. */
   built: boolean;
   note?: string;
 }

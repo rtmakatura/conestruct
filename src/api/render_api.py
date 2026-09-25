@@ -1109,9 +1109,12 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
 
     * A confirmed two-way road: its two edges, each the RIGHT side of the
       traffic beside it.
-    * A confirmed one-way road: only the legal direction's right edge is
-      built; its left edge — the median on a divided road — is named and
-      greyed out, ``built: False`` (the open-points ruling 2).
+    * A confirmed one-way road: only the legal direction's right edge.
+      Its left edge (the median on a divided road) is NOT offered — the #290
+      hand-check ruling superseding the open-points ruling 2: "an option
+      the user can't choose, named in jargon, is noise (P13, P18)".  Every
+      option is ``built: True``; the field stays on the wire for the day a
+      left-side layout is built.
     * No confirmed road: the four headings (the open-points ruling 1),
       "traffic heads N / E / S / W", each with its right edge.
     """
@@ -1121,7 +1124,6 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
     options: list[dict[str, Any]] = []
     if params.centerline and len(params.centerline) >= 2:
         road = meta.roadDirection
-        left_word = "median" if getattr(scenario, "divided", False) else "left"
         for travel in ("with_geometry", "against_geometry"):
             bearing = travel_bearing_at(
                 meta.lat, meta.lng, centerline=params.centerline, travel=travel, heading=None
@@ -1138,16 +1140,6 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
                     "built": True,
                 }
             )
-            if road is not None and road.oneway in ("yes", "-1"):
-                left_side = _cardinal(bearing - 90.0)[0]
-                options.append(
-                    {
-                        "work": {"side": left_word, "travel": travel},
-                        "label": f"{left_side} side · {bound} traffic",
-                        "built": False,
-                        "note": f"{left_word} side — not built yet",
-                    }
-                )
         return options
     for heading, bearing in HEADING_DEG.items():
         right_side, bound = _cardinal(bearing + 90.0)[0], _cardinal(bearing)[1]

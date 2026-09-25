@@ -258,3 +258,38 @@ Visible change: none. Nothing sends `work_start` until the frontend ship.
 - the typed direction retired;
 - the overlay drawn from the backend's geometry;
 - the pre-change plans opening with the side unset.
+
+---
+
+## The hand-check on prod, verbatim (Ryan, 2026-09-25, after the visible ship `659d800`)
+
+> Hand-check on prod, N Broadway southbound (way 1329434113), side chosen:
+>
+> 1. DEFECT — the picker draws nothing after the side is confirmed. CORRIDOR EXTENT is empty and
+> the aerial has no work segment or approaches. That is the visible point of #290 and #298.
+> Reproduce on prod first, find why (does the modal know the side? does /render/corridor-geometry
+> get called and with what? what does it return?), fix it, and prove it with a prod screenshot of
+> this pin showing the work at the pin and the advance warning north of it.
+> 2. The side control drops the greyed "median side — not built yet" option entirely. An option
+> the user can't choose, named in jargon, is noise (P13, P18); record it in rulings.md as
+> superseding ruling 2 of the four open points. The buildable sides stay.
+> 3. The side control's selected state takes rule 135's chip treatment — accent border, the wash,
+> a ✓ — so the choice is visible. Fix the spacing between options.
+> 4. The picker's subtitle no longer mentions setting the length.
+>
+> Stack all four on one branch; one verified commit each; stop with the verdict, the file table,
+> the prod screenshot from item 1, and ONE ship line. Also check the flagger case draws both
+> approaches on prod before you stop.
+
+**On the record:**
+- **This supersedes the open-points ruling 2** ("left and median edges show greyed out, named but
+  not built"). The side control offers only the sides a plan can be built for. A left or median
+  edge is not offered at all, greyed or otherwise: "an option the user can't choose, named in
+  jargon, is noise (P13, P18)". The backend's `_side_options` stops emitting them, and the band
+  renders only `built` options. The `built` field stays on the wire for the day a left-side
+  layout is built.
+- **The way id.** The hand-check names way 1329434113. The prod probe at the same pin detected
+  "NORTH BROADWAY SOUTHBOUND" as way **131232822** (`validation-artifacts/committed/
+  issue-290-picker-draws/repro-prod/`), and the fix is proven on that way.
+- **Item 1's cause** is recorded with its evidence in
+  `validation-artifacts/committed/issue-290-picker-draws/README.md`.
