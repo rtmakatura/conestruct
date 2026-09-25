@@ -10,8 +10,10 @@
 //   and inspectable behind the toggle, text byte-identical (#198)."
 //
 // So a cell is: label (and, when the field has more to say, its toggle
-// on the same row), the control, rule 137's one provenance line, the
-// suggestion's one actionable line, and the details panel.
+// on the same row), the control, rule 137's one provenance line, and the
+// details panel.  The suggestion's one actionable line is `CellAction`,
+// below: a full-width row under the grid row that holds its field
+// (rulings.md, "The suggestion row spans the band").
 //
 // THE TOGGLE.  Rule 17's info symbol is "i" (mono 12.5, rule 18's
 // #34a9e8), and rule 18 puts every symbol beside a word, so it reads
@@ -31,7 +33,6 @@ export function FieldCell({
   label,
   htmlFor,
   provenance,
-  action = null,
   info = null,
   children,
   testid,
@@ -41,9 +42,6 @@ export function FieldCell({
   /** Rule 137's line — required, never empty.  The caller renders it so
    *  its own amber / error treatment and test ids stay where they were. */
   provenance: ReactNode;
-  /** The suggestion needing action: one line + Confirm / Dismiss (or its
-   *  standing record + Undo, #227).  Null when nothing asks for action. */
-  action?: ReactNode;
   /** Everything else about this field.  Null means the field has nothing
    *  more to say, and then it has no toggle. */
   info?: ReactNode;
@@ -88,7 +86,6 @@ export function FieldCell({
       </div>
       {children}
       {provenance}
-      {action}
       {hasInfo && (
         <div
           id={panelId}
@@ -99,6 +96,43 @@ export function FieldCell({
           {info}
         </div>
       )}
+    </div>
+  );
+}
+
+/** The suggestion needing action — one line + Confirm / Dismiss, or a
+ *  standing record + Undo (#227) — as a full-width row of the grid,
+ *  directly under the grid row that holds its field.
+ *
+ *  Ryan, 2026-09-24 (rulings.md, "The suggestion row spans the band"):
+ *  inside a WHAT cell the row has 236.67 px at 1440 and its parts need
+ *  ~374, so it cannot be one line there.  Spanning the band it can; the
+ *  sentence names its field ("Pin suggests: …", "Detected road suggests
+ *  street class: …"), so it stays attached by text and by position.  A
+ *  departure from #201's "Confirm beside its control", recorded as one.
+ *
+ *  The caller renders it LAST in its field's grid row (in the DOM as on
+ *  screen, so focus order is reading order) and passes the slot's
+ *  "action" section; when that renders nothing the row is `:empty` and
+ *  takes no track (CSS). */
+export function CellAction({
+  label,
+  testid,
+  children,
+}: {
+  label: string;
+  testid: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className="a-cell-action"
+      role="group"
+      // As the toggle's: the field's own label stays the field's.
+      aria-label={`Suggestion for ${label}`}
+      data-testid={`action-${testid}`}
+    >
+      {children}
     </div>
   );
 }

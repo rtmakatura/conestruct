@@ -39,7 +39,7 @@ import type { ReactNode } from "react";
 import type { Scenario, ScenarioKind } from "@/lib/scenarios";
 import { PLAN_DETAILS } from "@/lib/scenarios/what-cells";
 import { useWriteLock } from "../WriteLock";
-import { FieldCell } from "./FieldCell";
+import { CellAction, FieldCell } from "./FieldCell";
 import type { SectionSlot } from "../JurisdictionSection";
 
 /** Does this scenario show the explicit divided toggle?  #85: every road
@@ -61,7 +61,6 @@ function Cell({
   htmlFor,
   provenance,
   line = null,
-  action = null,
   detail = null,
   children,
   testid,
@@ -72,8 +71,6 @@ function Cell({
   /** A detection fact about THIS field (fix 3).  #289 WHAT density: it
    *  is detail, behind the field's toggle — "the divided clause". */
   line?: { key: string; text: string; amber: boolean } | null;
-  /** The suggestion needing action (street classification's). */
-  action?: ReactNode;
   /** Anything else about the field (street classification's map chip
    *  and its suggestion's evidence). */
   detail?: ReactNode;
@@ -86,7 +83,6 @@ function Cell({
       label={label}
       htmlFor={htmlFor}
       testid={testid}
-      action={action}
       provenance={
         <span className="tr-prov" data-testid={`prov-${testid}`}>
           {provenance}
@@ -326,6 +322,13 @@ export function PlanDetails({
           </Cell>
         )}
 
+        {scheduleCells}
+
+        {/* Street classification is the group's LAST cell, so its
+            suggestion row — a full-width row under the grid row holding
+            the field (rulings.md, "The suggestion row spans the band") —
+            is the last item in the DOM as on screen: no cell after it for
+            focus to jump back up to. */}
         {streetClass && (
           <Cell
             label="Street classification"
@@ -337,15 +340,17 @@ export function PlanDetails({
                 ? "your change · operator-set from here on"
                 : "not set · operator-set when picked"
             }
-            action={streetClass("action")}
             detail={streetClass("detail")}
             testid="street-class"
           >
             {streetClass("control")}
           </Cell>
         )}
-
-        {scheduleCells}
+        {streetClass && (
+          <CellAction label="Street classification" testid="street-class">
+            {streetClass("action")}
+          </CellAction>
+        )}
       </div>
 
       {windows}

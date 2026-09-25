@@ -4622,6 +4622,35 @@ input[type="number"] {
 .workbench .a-info[hidden] {
   display: none;
 }
+/* #289 — the suggestion row spans the band (Ryan, 2026-09-24; rulings.md,
+   "The suggestion row spans the band").  In a WHAT cell the row had
+   236.67 px at 1440 against ~374 px of parts, so it could not be one
+   line; as a full-width grid item under the row holding its field it has
+   the band.  At a ≥520 px viewport it is ONE line — symbol · sentence ·
+   Confirm · Dismiss — with the sentence the one part that may shrink;
+   below 520 it wraps as it always did.  An action slot that renders
+   nothing leaves the item empty, and an empty item takes no track (no
+   extra row, no extra gap). */
+.workbench .a-grid > .a-cell-action {
+  grid-column: 1 / -1;
+}
+.workbench .a-cell-action:empty {
+  display: none;
+}
+@media (min-width: 520px) {
+  .workbench .a-cell-action .sugg-row {
+    flex-wrap: nowrap;
+    align-self: stretch;
+  }
+  .workbench .a-cell-action .sugg-row > span:not(.sugg-glyph):not(.sys-glyph) {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .workbench .a-cell-action .sugg-row > button {
+    flex: none;
+    white-space: nowrap;
+  }
+}
 /* A slot the shell builds can render nothing (street classification with
    no map on record and no suggestion evidence); an empty panel offers no
    toggle. */

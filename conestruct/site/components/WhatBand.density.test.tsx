@@ -191,12 +191,22 @@ describe("each field shows the control, ONE provenance line and its one action l
     expect(panel("road-type")!.querySelector('[data-testid="detect-bearing"]')).not.toBeNull();
   });
 
-  it("jurisdiction at rest: the select, its line, and the one suggestion line with Confirm / Dismiss", () => {
+  it("jurisdiction at rest: the select and its line; the suggestion's one line spans the band under the row", () => {
     mount();
     const j = cell("jurisdiction");
-    const rest = atRest(j);
-    expect(rest.map((n) => n.className)).toEqual(["tr-prov", "sugg-row"]);
-    const row = rest[1];
+    expect(atRest(j).map((n) => n.className)).toEqual(["tr-prov"]);
+    // rulings.md, "The suggestion row spans the band": the action row is
+    // a grid item of the same grid, AFTER the row's last cell (work
+    // dates) — last in the DOM as on screen — named for its field.
+    const action = document.querySelector('[data-testid="action-jurisdiction"]')!;
+    expect(action.parentElement).toBe(j.parentElement);
+    expect(action.previousElementSibling).toBe(cell("work-dates"));
+    expect(action.nextElementSibling).toBeNull();
+    expect(action.getAttribute("role")).toBe("group");
+    expect(action.getAttribute("aria-label")).toBe("Suggestion for Jurisdiction");
+    const rows = [...action.querySelectorAll(".sugg-row")];
+    expect(rows).toHaveLength(1);
+    const row = rows[0];
     expect(row.textContent).toContain("Pin suggests: Denver");
     expect(row.querySelector("button.confirm")!.textContent).toBe("Confirm Denver");
     expect(row.querySelector("button.ghost")!.textContent).toBe("Dismiss");
@@ -215,10 +225,32 @@ describe("each field shows the control, ONE provenance line and its one action l
     expect(screen.getByTestId("plan-details").contains(sc)).toBe(true);
     expect(cell("road-type").querySelector(".classpick")).toBeNull();
     expect(sc.querySelector(".classpick")).not.toBeNull();
-    const rest = atRest(sc);
-    expect(rest.map((n) => n.className)).toEqual(["tr-prov", "sugg-row"]);
-    expect(rest[1].textContent).toContain("Detected road suggests street class: Arterial (OSM primary)");
-    expect(rest[1].querySelector("button.confirm")!.textContent).toBe("Confirm Arterial");
+    expect(atRest(sc).map((n) => n.className)).toEqual(["tr-prov"]);
+    // The group's last cell, then its action row — the grid's last item.
+    const action = document.querySelector('[data-testid="action-street-class"]')!;
+    expect(action.previousElementSibling).toBe(sc);
+    expect(action.nextElementSibling).toBeNull();
+    const row = action.querySelector(".sugg-row")!;
+    expect(row.textContent).toContain("Detected road suggests street class: Arterial (OSM primary)");
+    expect(row.querySelector("button.confirm")!.textContent).toBe("Confirm Arterial");
+  });
+
+  it("the suggestion row spans the grid, one line at ≥520 px, wrapping below; an empty one takes no track", () => {
+    const block = (sel: string, from = 0) => {
+      const i = css.indexOf(`${sel} {`, from);
+      expect(i, sel).toBeGreaterThan(-1);
+      return css.slice(i, css.indexOf("}", i));
+    };
+    expect(block(".workbench .a-grid > .a-cell-action")).toMatch(/grid-column:\s*1 \/ -1/);
+    expect(block(".workbench .a-cell-action:empty")).toMatch(/display:\s*none/);
+    const wide = css.indexOf("@media (min-width: 520px) {\n  .workbench .a-cell-action .sugg-row {");
+    expect(wide).toBeGreaterThan(-1);
+    const row = block(".workbench .a-cell-action .sugg-row", wide);
+    expect(row).toMatch(/flex-wrap:\s*nowrap/);
+    expect(row).toMatch(/align-self:\s*stretch/);
+    expect(block(".workbench .a-cell-action .sugg-row > button", wide)).toMatch(/flex:\s*none/);
+    // Below 520 nothing overrides the row's own `flex-wrap: wrap`.
+    expect(block(".workbench .jbar-suggest .sugg-row")).toMatch(/flex-wrap:\s*wrap/);
   });
 
   it("the kind's case note is detail, not a second clause on the provenance line", () => {

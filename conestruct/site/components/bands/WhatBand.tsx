@@ -60,7 +60,7 @@ import { handoffNotesByCell } from "./HandoffNotes";
 import { PlanDetails, showsDividedToggle } from "./PlanDetails";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
-import { FieldCell } from "./FieldCell";
+import { CellAction, FieldCell } from "./FieldCell";
 import type { SectionSlot } from "../JurisdictionSection";
 import { useWriteLock } from "../WriteLock";
 
@@ -91,8 +91,8 @@ export function jurisdictionCellState(opts: {
  *  prop is required rather than optional.
  *
  *  #289 WHAT density (rulings.md, "After the S4 prod run"): ONE
- *  provenance line and the suggestion's one actionable line stay under
- *  the field; the detection lines, the handoff sentences and anything
+ *  provenance line stays under the field (the suggestion's actionable
+ *  line is a `CellAction` row under the grid row); the detection lines, the handoff sentences and anything
  *  else about the field (`detail`) move behind its details toggle
  *  (FieldCell).  Same nodes, same test ids — only the container moved. */
 function Cell({
@@ -103,7 +103,6 @@ function Cell({
   error = false,
   notes = [],
   lines = [],
-  action = null,
   detail = null,
   children,
   testid,
@@ -124,8 +123,6 @@ function Cell({
    *  detected bearing is a fact, not a warning, so it carries no glyph
    *  unless its own clause is amber. */
   lines?: Array<{ key: string; text: string; amber: boolean }>;
-  /** The suggestion needing action — one line + Confirm / Dismiss. */
-  action?: ReactNode;
   /** Anything else about this field, ahead of its lines and notes. */
   detail?: ReactNode;
   children: ReactNode;
@@ -138,7 +135,6 @@ function Cell({
       label={label}
       htmlFor={htmlFor}
       testid={testid}
-      action={action}
       provenance={
         <span
           className={`tr-prov${amber ? " is-amber" : ""}${error ? " is-error" : ""}`}
@@ -522,7 +518,6 @@ export function WhatBand({
           htmlFor="what-jurisdiction"
           provenance={jurisdictionProv}
           error={jState === "not-evaluated"}
-          action={jurisdictionSuggest?.("action")}
           detail={
             jurisdictionSuggest ||
             (jState === "evaluated" && jurisdictionValue !== pickedLabel) ? (
@@ -612,6 +607,14 @@ export function WhatBand({
             />
           )}
         </Cell>
+        {/* The jurisdiction suggestion's one line, spanning the band under
+            this row — the last item of the row in the DOM as on screen
+            (rulings.md, "The suggestion row spans the band"). */}
+        {jurisdictionSuggest && (
+          <CellAction label="Jurisdiction" testid="jurisdiction">
+            {jurisdictionSuggest("action")}
+          </CellAction>
+        )}
       </div>
 
       {/* THE TITLE-BLOCK ROW.

@@ -212,10 +212,13 @@ describe("street classification is its own cell in the second group", () => {
     expect(
       screen.getByTestId("cell-road-type").querySelector('[data-testid^="class-"]'),
     ).toBeNull();
-    // The control and the action line sit in the cell; the detail sits in
-    // the cell's details panel, closed.
+    // The control sits in the cell; the detail sits in the cell's details
+    // panel, closed; the action line is the row after the cell.
     expect(cell.querySelector('[data-testid="class-control"]')).not.toBeNull();
-    const action = cell.querySelector('[data-testid="class-action"]')!;
+    // The action line spans the band under the cell's row (rulings.md,
+    // "The suggestion row spans the band"): the grid item after the cell.
+    const action = document.querySelector('[data-testid="class-action"]')!;
+    expect(action.closest('[data-testid="action-street-class"]')!.previousElementSibling).toBe(cell);
     expect(action.closest(".a-info")).toBeNull();
     const detail = cell.querySelector('[data-testid="class-detail"]')!;
     expect(detail.closest('[data-testid="info-street-class"]')!.hasAttribute("hidden")).toBe(true);

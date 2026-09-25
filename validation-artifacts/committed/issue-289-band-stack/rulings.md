@@ -600,3 +600,36 @@ switched off. The evaluated sentence is taken at its longest: `data/jurisdiction
 - **The reserve:** `min-height` **3em** (31.5 px at 10.5 / 1.5, two lines). It was **4.5em**
   (47.25 px), which was not measured: the sheet's own comment called it "one above the longest
   sentence's estimate". The WHAT row gives back 15.75 px at both widths, and no state re-flows it.
+
+## The suggestion row spans the band — a departure from #201 (Ryan, 2026-09-24)
+
+The ask: "Suggestion rows on one line at ≥520 px: symbol · sentence · Confirm · Dismiss inline;
+wrap only below 520. #198 strings byte-identical." It cannot be met inside a WHAT cell. Measured
+on prod `b81c722` (`prod-b81c722/what-height-prod-1440.json`, `suggRows`), a cell gives the
+suggestion row **236.67 px** at 1440. The jurisdiction row's parts need **~374 px** (the
+figure reported at the time). Exactly: ⌁ 16 · "Pin suggests: Denver" 138.63 · Confirm Denver
+122.44 · Dismiss 73.22 = 350.29, plus three of the row's 10 px gaps = **380.29 px**. The street-class sentence alone is wider than the row. At 380 the row has 282 px.
+
+Ryan's ruling, verbatim: "Option 1. The suggestion row spans the full WHAT band directly under
+the grid row holding its field, one line at ≥520 px viewport, wrapping as today below. Its
+sentence already names its field, so it stays attached by text and by position. Record it in
+rulings.md as a departure from #201's 'Confirm beside its control', with the measured widths
+(236.67 px available vs ~374 needed) as the reason. #198 strings byte-identical."
+
+- **The departure:** #201 put a suggestion's Confirm beside the control it applies to, inside
+  that field's cell. The row now leaves the cell and becomes a full-width grid item
+  (`CellAction`) directly under the grid row holding its field. The sentence names the field
+  ("Pin suggests: …", "Detected road suggests street class: …"), and the row is a
+  `role="group"` named "Suggestion for <field>".
+- **The order:** each row is the LAST item of its field's grid row, in the DOM as on screen, so
+  focus order is reading order. The jurisdiction row follows Work dates. Street
+  classification becomes the second group's last cell, so its row ends the group.
+- **One line at ≥520 px viewport:** `nowrap`. The sentence is the one part that may shrink
+  (wrapping inside its own box); Confirm and Dismiss do not. Below 520 the row wraps as before.
+- **Strings:** unchanged. The action row renders the slot's `"action"` section, the same nodes.
+- **Measured locally, same route** (`what-density/span/`):
+  - 1440: both rows are one line, 32 px tall in an 809.98 px row (were 57.75 and 96).
+  - 600: one line, 32 px.
+  - 380: wrapping as before.
+  - WHAT at 1440: **996 px**. That is 1044 with #276's re-measure alone, and 1059.75 on prod
+    before this branch.
