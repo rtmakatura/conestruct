@@ -1,0 +1,66 @@
+{
+  "id": "shoulder-1440-04-side-chosen-kind-owed",
+  "strip": "◌AWAITING KIND OF WORK",
+  "cta": "Choose the kind of work",
+  "generateDisabled": true,
+  "ledger": [
+    {
+      "id": "move-ledger",
+      "state": null,
+      "text": "✓Found the spotNorth Broadway SouthboundCHANGE✓Work startsNorth Broadway SouthboundMOVE✓Extent1,000 ft · typedCHANGE✓Which side is occupied?West side · southbound trafficconfirmed⚠Kind of work — confirm belowneeds you◌See the plan growpendingapproaches lay out after you confirm"
+    },
+    {
+      "id": "move-spot",
+      "state": "done",
+      "text": "✓Found the spotNorth Broadway SouthboundCHANGE"
+    },
+    {
+      "id": "move-action-spot",
+      "state": null,
+      "text": "CHANGE"
+    },
+    {
+      "id": "move-start",
+      "state": "done",
+      "text": "✓Work startsNorth Broadway SouthboundMOVE"
+    },
+    {
+      "id": "move-action-start",
+      "state": null,
+      "text": "MOVE"
+    },
+    {
+      "id": "move-extent",
+      "state": "done",
+      "text": "✓Extent1,000 ft · typedCHANGE"
+    },
+    {
+      "id": "move-action-extent",
+      "state": null,
+      "text": "CHANGE"
+    },
+    {
+      "id": "move-side",
+      "state": "done",
+      "text": "✓Which side is occupied?West side · southbound trafficconfirmed"
+    },
+    {
+      "id": "move-kind",
+      "state": "attention",
+      "text": "⚠Kind of work — confirm belowneeds you"
+    },
+    {
+      "id": "move-grow",
+      "state": "pending",
+      "text": "◌See the plan growpendingapproaches lay out after you confirm"
+    }
+  ],
+  "sideOptions": [
+    {
+      "text": "✓ West side · southbound traffic",
+      "checked": "true"
+    }
+  ],
+  "picker": null,
+  "hScroll": false
+}

@@ -1,0 +1,14 @@
+shoulder-1440-01-fresh: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+shoulder-1440-02-picker-before-side: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+shoulder-1440-03-located: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+shoulder-1440-04-side-chosen-kind-owed: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+shoulder-1440-05-both-answered: strip="✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" cta=null hScroll=false
+shoulder-1440-06-picker-laid-out: strip="✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" cta=null hScroll=false
+shoulder-1440-07-generated: strip="⚠VERIFIED · 2 plan flagsREVIEW FLAGS" cta=null hScroll=false
+pdf: C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-289-kind-and-field\validation-artifacts\committed\issue-290-evidence-sweep\prod\shoulder-1440-plan.pdf buttons=["conestruct.","Shoulder work","North Broadway Southbound","1,000 ft","30 mph","4 lanes","10.5 ft lanes","Urban arterial","Not set","dates not set","Dismiss","Assert","Dismiss","Assert","Assert","Assert","Assert","Apply 0 corrections","↓ All (.zip)","Download PDF↓","Download XLSX↓","Download PDF↓","Download .md↓","Download PDF↓","iPricing quoteFYI · contractor estimate — not a permit fee · expand to configure & preview›","✓Checked & passed14each cited›","◌Pending / not verified1›","iReferenceNot set · Not set · MUTCD 11th + CO Suppl. › CDOT Specs §630›","Terms","Privacy"]
+GEOMETRY
+{"status":"side_not_confirmed","approaches":[],"sides":["West side · southbound traffic"],"message":null}
+{"status":"side_not_confirmed","approaches":[],"sides":["West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",180.49]],"sides":["West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",180.49]],"sides":["West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",180.49]],"sides":["West side · southbound traffic"],"message":null}

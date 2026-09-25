@@ -1,0 +1,14 @@
+flagger-1440-01-fresh: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+flagger-1440-02-picker-before-side: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+flagger-1440-03-located: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+flagger-1440-04-kind-confirmed-side-owed: strip="◌AWAITING OCCUPIED SIDE" cta="Say which side is occupied to lay out the work" hScroll=false
+flagger-1440-05-both-answered: strip="⚠VERIFIED · 1 validation warningREVIEW WARNINGS" cta=null hScroll=false
+flagger-1440-06-picker-both-approaches: strip="⚠VERIFIED · 1 validation warningREVIEW WARNINGS" cta=null hScroll=false
+flagger-1440-07-generated: strip="⚠VERIFIED · 2 plan flagsREVIEW FLAGS" cta=null hScroll=false
+pdf: C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-289-kind-and-field\validation-artifacts\committed\issue-290-evidence-sweep\prod\flagger-1440-plan.pdf buttons=["conestruct.","Flagger lane closure","Lafayette Street Northbound","1,000 ft","55 mph","12 ft lanes","Urban arterial","Not set","dates not set","Dismiss","Assert","Dismiss","Assert","Assert","Assert","Assert","Apply 0 corrections","↓ All (.zip)","Download PDF↓","Download XLSX↓","Download PDF↓","Download .md↓","Download PDF↓","iPricing quoteFYI · contractor estimate — not a permit fee · expand to configure & preview›","✓Checked & passed15each cited›","◌Pending / not verified1›","iReferenceNot set · Not set · MUTCD 11th + CO Suppl. › CDOT Specs §630›","Terms","Privacy"]
+GEOMETRY
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",359.91],["opposing",180.3]],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",359.91],["opposing",180.3]],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}

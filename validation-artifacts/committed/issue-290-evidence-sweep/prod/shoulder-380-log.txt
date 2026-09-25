@@ -1,0 +1,13 @@
+shoulder-380-01-fresh: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+shoulder-380-02-picker-before-side: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+shoulder-380-03-located: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+shoulder-380-04-side-chosen-kind-owed: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+shoulder-380-05-both-answered: strip="✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" cta=null hScroll=false
+shoulder-380-06-picker-laid-out: strip="✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" cta=null hScroll=false
+shoulder-380-07-generated: strip="⚠VERIFIED · 2 plan flagsREVIEW FLAGS" cta=null hScroll=false
+GEOMETRY
+{"status":"side_not_confirmed","approaches":[],"sides":["West side · southbound traffic"],"message":null}
+{"status":"side_not_confirmed","approaches":[],"sides":["West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",180.49]],"sides":["West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",180.49]],"sides":["West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",180.49]],"sides":["West side · southbound traffic"],"message":null}

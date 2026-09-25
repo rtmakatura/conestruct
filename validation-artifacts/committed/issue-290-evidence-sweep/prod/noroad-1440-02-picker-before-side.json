@@ -1,0 +1,14 @@
+{
+  "id": "noroad-1440-02-picker-before-side",
+  "strip": "◌AWAITING LOCATION · no site chosen",
+  "cta": "Set a location first — pick on map or enter manually.",
+  "generateDisabled": true,
+  "ledger": [],
+  "sideOptions": [],
+  "picker": {
+    "subtitle": "Drop a pin where the work starts, and review the detected road properties.",
+    "sideSentence": "Say which side is occupied to lay out the work",
+    "refused": null
+  },
+  "hScroll": false
+}

@@ -1,0 +1,10 @@
+{
+  "id": "flagger-380-04-kind-confirmed-side-owed",
+  "strip": "◌AWAITING OCCUPIED SIDE",
+  "cta": "Say which side is occupied to lay out the work",
+  "generateDisabled": true,
+  "ledger": [],
+  "sideOptions": [],
+  "picker": null,
+  "hScroll": false
+}

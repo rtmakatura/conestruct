@@ -1,0 +1,13 @@
+flagger-380-01-fresh: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+flagger-380-02-picker-before-side: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+flagger-380-03-located: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+flagger-380-04-kind-confirmed-side-owed: strip="◌AWAITING OCCUPIED SIDE" cta="Say which side is occupied to lay out the work" hScroll=false
+flagger-380-05-both-answered: strip="⚠VERIFIED · 1 validation warningREVIEW WARNINGS" cta=null hScroll=false
+flagger-380-06-picker-both-approaches: strip="⚠VERIFIED · 1 validation warningREVIEW WARNINGS" cta=null hScroll=false
+flagger-380-07-generated: strip="⚠VERIFIED · 2 plan flagsREVIEW FLAGS" cta=null hScroll=false
+GEOMETRY
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",359.91],["opposing",180.3]],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}
+{"status":"laid_out","approaches":[["primary",359.91],["opposing",180.3]],"sides":["East side · northbound traffic","West side · southbound traffic"],"message":null}

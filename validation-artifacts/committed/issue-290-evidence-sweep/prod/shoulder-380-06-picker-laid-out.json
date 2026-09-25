@@ -1,0 +1,70 @@
+{
+  "id": "shoulder-380-06-picker-laid-out",
+  "strip": "✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW",
+  "cta": null,
+  "generateDisabled": false,
+  "ledger": [
+    {
+      "id": "move-ledger",
+      "state": null,
+      "text": "✓Found the spotNorth Broadway SouthboundCHANGE✓Work startsNorth Broadway SouthboundMOVE✓Extent1,000 ft · typedCHANGE✓Which side is occupied?West side · southbound trafficconfirmed✓Kind of workShoulder workconfirmed✓See the plan growapproaches laid outlaid out"
+    },
+    {
+      "id": "move-spot",
+      "state": "done",
+      "text": "✓Found the spotNorth Broadway SouthboundCHANGE"
+    },
+    {
+      "id": "move-action-spot",
+      "state": null,
+      "text": "CHANGE"
+    },
+    {
+      "id": "move-start",
+      "state": "done",
+      "text": "✓Work startsNorth Broadway SouthboundMOVE"
+    },
+    {
+      "id": "move-action-start",
+      "state": null,
+      "text": "MOVE"
+    },
+    {
+      "id": "move-extent",
+      "state": "done",
+      "text": "✓Extent1,000 ft · typedCHANGE"
+    },
+    {
+      "id": "move-action-extent",
+      "state": null,
+      "text": "CHANGE"
+    },
+    {
+      "id": "move-side",
+      "state": "done",
+      "text": "✓Which side is occupied?West side · southbound trafficconfirmed"
+    },
+    {
+      "id": "move-kind",
+      "state": "done",
+      "text": "✓Kind of workShoulder workconfirmed"
+    },
+    {
+      "id": "move-grow",
+      "state": "done",
+      "text": "✓See the plan growapproaches laid outlaid out"
+    }
+  ],
+  "sideOptions": [
+    {
+      "text": "✓ West side · southbound traffic",
+      "checked": "true"
+    }
+  ],
+  "picker": {
+    "subtitle": "Drop a pin where the work starts, and review the detected road properties.",
+    "sideSentence": null,
+    "refused": null
+  },
+  "hScroll": false
+}

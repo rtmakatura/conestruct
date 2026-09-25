@@ -1,0 +1,74 @@
+{
+  "id": "flagger-380-06-picker-both-approaches",
+  "strip": "⚠VERIFIED · 1 validation warningREVIEW WARNINGS",
+  "cta": null,
+  "generateDisabled": false,
+  "ledger": [
+    {
+      "id": "move-ledger",
+      "state": null,
+      "text": "✓Found the spotLafayette Street NorthboundCHANGE✓Work startsLafayette Street NorthboundMOVE✓Extent1,000 ft · typedCHANGE✓Which side is occupied?East side · northbound trafficconfirmed✓Kind of workFlagger lane closureconfirmed✓See the plan growapproaches laid outlaid out"
+    },
+    {
+      "id": "move-spot",
+      "state": "done",
+      "text": "✓Found the spotLafayette Street NorthboundCHANGE"
+    },
+    {
+      "id": "move-action-spot",
+      "state": null,
+      "text": "CHANGE"
+    },
+    {
+      "id": "move-start",
+      "state": "done",
+      "text": "✓Work startsLafayette Street NorthboundMOVE"
+    },
+    {
+      "id": "move-action-start",
+      "state": null,
+      "text": "MOVE"
+    },
+    {
+      "id": "move-extent",
+      "state": "done",
+      "text": "✓Extent1,000 ft · typedCHANGE"
+    },
+    {
+      "id": "move-action-extent",
+      "state": null,
+      "text": "CHANGE"
+    },
+    {
+      "id": "move-side",
+      "state": "done",
+      "text": "✓Which side is occupied?East side · northbound trafficconfirmed"
+    },
+    {
+      "id": "move-kind",
+      "state": "done",
+      "text": "✓Kind of workFlagger lane closureconfirmed"
+    },
+    {
+      "id": "move-grow",
+      "state": "done",
+      "text": "✓See the plan growapproaches laid outlaid out"
+    }
+  ],
+  "sideOptions": [
+    {
+      "text": "✓ East side · northbound traffic",
+      "checked": "true"
+    },
+    {
+      "text": "West side · southbound traffic",
+      "checked": "false"
+    }
+  ],
+  "picker": {
+    "subtitle": "Drop a pin where the work starts, and review the detected road properties.",
+    "sideSentence": null,
+    "refused": null
+  },
+  "hScroll": false
+}

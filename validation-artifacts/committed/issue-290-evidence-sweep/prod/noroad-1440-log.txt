@@ -1,0 +1,9 @@
+noroad-1440-01-fresh: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+noroad-1440-02-picker-before-side: strip="◌AWAITING LOCATION · no site chosen" cta="Set a location first — pick on map or enter manually." hScroll=false
+noroad-1440-03-located: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+noroad-1440-04-no-road-side-control: strip="◌AWAITING KIND OF WORK" cta="Choose the kind of work" hScroll=false
+noroad-1440-05-both-answered: strip="⚠VERIFIED · 1 validation warningREVIEW WARNINGS" cta=null hScroll=false
+GEOMETRY
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · traffic heads north","South side · traffic heads east","West side · traffic heads south","North side · traffic heads west"],"message":null}
+{"status":"side_not_confirmed","approaches":[],"sides":["East side · traffic heads north","South side · traffic heads east","West side · traffic heads south","North side · traffic heads west"],"message":null}
+{"status":"laid_out","approaches":[["primary",0]],"sides":["East side · traffic heads north","South side · traffic heads east","West side · traffic heads south","North side · traffic heads west"],"message":null}
