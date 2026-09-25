@@ -1,0 +1,86 @@
+{
+  "site": "https://www.conestruct.com/sandbox",
+  "ranAt": "2026-09-25T02:41:05.232Z",
+  "widths": {
+    "380": {
+      "inFlight": true,
+      "workingBandAfterCapture": true,
+      "s4Facts": {
+        "workingBand": true,
+        "verdictSlot": {
+          "mounted": true,
+          "visibility": "visible",
+          "display": "block",
+          "height": 80,
+          "text": ""
+        },
+        "factLines": [
+          {
+            "opacity": 0.5,
+            "locked": true,
+            "text": "✓WhereEast Colfax Avenue Westbound · 1,000 ft · shoulder worklocked"
+          },
+          {
+            "opacity": 0.5,
+            "locked": true,
+            "text": "✓What's the job?shoulder work · 30 mph · 2 lanes · 12 ft · Urban arterial · Not "
+          },
+          {
+            "opacity": 0.5,
+            "locked": true,
+            "text": "◌Generatelocked"
+          }
+        ],
+        "aerialOpacity": null,
+        "placeholder": "02 · RESULTSNo package yet — the plan is being built.",
+        "placeholderBox": {
+          "border": "1px solid rgb(44, 62, 83)",
+          "ground": "rgb(16, 28, 41)",
+          "padding": "22px 16px",
+          "lineColor": "rgb(110, 124, 142)"
+        },
+        "primaries": 0
+      }
+    },
+    "1440": {
+      "inFlight": true,
+      "workingBandAfterCapture": true,
+      "s4Facts": {
+        "workingBand": true,
+        "verdictSlot": {
+          "mounted": true,
+          "visibility": "visible",
+          "display": "block",
+          "height": 57,
+          "text": ""
+        },
+        "factLines": [
+          {
+            "opacity": 0.5,
+            "locked": true,
+            "text": "✓WhereEast Colfax Avenue Westbound · 1,000 ft · shoulder worklocked"
+          },
+          {
+            "opacity": 0.5,
+            "locked": true,
+            "text": "✓What's the job?shoulder work · 30 mph · 2 lanes · 12 ft · Urban arterial · Not "
+          },
+          {
+            "opacity": 0.5,
+            "locked": true,
+            "text": "◌Generatelocked"
+          }
+        ],
+        "aerialOpacity": null,
+        "placeholder": "02 · RESULTSNo package yet — the plan is being built.",
+        "placeholderBox": {
+          "border": "1px solid rgb(44, 62, 83)",
+          "ground": "rgb(16, 28, 41)",
+          "padding": "22px 16px",
+          "lineColor": "rgb(110, 124, 142)"
+        },
+        "primaries": 0
+      }
+    }
+  }
+}

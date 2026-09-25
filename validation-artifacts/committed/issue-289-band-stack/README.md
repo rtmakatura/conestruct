@@ -15,7 +15,7 @@
 | 3 | **WHERE + WHAT + the generate frame (S1–S3)** — the first visible ship | **done** `b5de343` (+ fixes `5d198af`…`7b22aac`) |
 | 4 | S4's lock states + the fact-line mount at the settle | **done** `6724c7f` (+ fixes `4e314aa`…`3647c06`) |
 | 5 | S7 revision | **done** `fd86079` |
-| 6 | evidence — prod legs at both widths | **done** S7: `9ddbea3` (`s7-prod/`); S1–S3, S5, S7: `74d96b7` (`fidelity-after/`); S4: `s4-prod/` (prod `8e2761e`, 2026-09-24; one delta: no placeholder on a first Generate, fixed on `issue-289-s4-prod`, prod re-measure pending) |
+| 6 | evidence — prod legs at both widths | **done** S7: `9ddbea3` (`s7-prod/`); S1–S3, S5, S7: `74d96b7` (`fidelity-after/`); S4: `s4-prod/` (prod `8e2761e`, 2026-09-24; one delta: no placeholder on a first Generate, fixed `e9b74ef`) and its re-measure on prod `b81c722`: `prod-b81c722/` (placeholder present, rule 117's figures) |
 | — | hand-check 2026-09-23 — two defects, one gap | **done** `b80bdeb`, `17b419b`, `67156f8`, `193faab`, `a04bd73` |
 | — | the fidelity audit (165 deltas) and pass F1–F8 | **done** `7137a6f`, `85c865c`, `9e8c7bb`, `9dc1a14`…`403b482`; measured `74d96b7` (18 left, triaged) |
 | — | the fidelity follow-up (S7 details, spinner, rule 165, gutter) | **done** `19076b3` |
@@ -31,7 +31,7 @@ the settle → S7 revision → evidence. STOP after S1–S3."
 
 | acceptance | where it is met |
 |---|---|
-| Every S1–S4 and S7 state measured on prod at both widths | S1–S3, S5, S7: `fidelity-after/`; S7's four situations: `s7-prod/`; S4: `s4-prod/`, measured in flight at both widths. Rule 117 is met except the results placeholder: a first Generate shows the pre-Generate breakdown as a "Previous answer" (ruled: the carry applies only to a plan that was presented; fixed on `issue-289-s4-prod`, re-measure on prod after it ships) |
+| Every S1–S4 and S7 state measured on prod at both widths | S1–S3, S5, S7: `fidelity-after/`; S7's four situations: `s7-prod/`; S4: `s4-prod/`, measured in flight at both widths. Rule 117 is met except the results placeholder: a first Generate shows the pre-Generate breakdown as a "Previous answer" (ruled: the carry applies only to a plan that was presented; fixed `e9b74ef`). Re-measured on prod `b81c722` at both widths: `prod-b81c722/`, where the placeholder renders with rule 117's border, ground, padding and ink, and no "Previous answer". |
 | Exactly one band open; the rest fact or pending lines | `BandStack.one-open.test.tsx` (`3a2502b`) |
 | A preview writes nothing — no band, no lock, no memo — payload level | `GeneratorShell.revision.test.tsx` (`dcb8ab4`, and the one-request cases) |
 | Escape cancels with zero requests; APPLY the only writer; the sentence enumerates | Escape `39dd7ec`; enumeration `67156f8`; APPLY `fd86079` |
