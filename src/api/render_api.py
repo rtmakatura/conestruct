@@ -1079,6 +1079,88 @@ def _zone_spans(c: Any) -> list[tuple[str, float, float]]:
     return spans
 
 
+_CARDINALS: tuple[tuple[str, str], ...] = (
+    ("North", "northbound"),
+    ("East", "eastbound"),
+    ("South", "southbound"),
+    ("West", "westbound"),
+)
+
+
+def _cardinal(bearing_deg: float) -> tuple[str, str]:
+    """The nearest of N / E / S / W, as a side word and a traffic word.
+
+    CHOSEN (#290): the side control's words quantize to the nearest
+    cardinal — "East side · northbound traffic" (ruling 8) — the way a
+    crew and an 811 ticket say it.  Only the words quantize; the geometry
+    each choice writes (``travel`` against the relayed road) is exact.
+    """
+    return _CARDINALS[int(((bearing_deg % 360.0) + 45.0) // 90.0) % 4]
+
+
+def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
+    """The side control's choices for this pin, worded and gated (#290).
+
+    Ruling 8: "the road's two edges in compass words ('East side ·
+    northbound traffic'); backend derives direction from the confirmed road
+    + side, honouring the one-way tag."  Each option carries the exact
+    ``meta.work`` it writes, so the control writes it verbatim and no
+    direction is computed on the frontend (Rule 3).
+
+    * A confirmed two-way road: its two edges, each the RIGHT side of the
+      traffic beside it.
+    * A confirmed one-way road: only the legal direction's right edge is
+      built; its left edge — the median on a divided road — is named and
+      greyed out, ``built: False`` (the open-points ruling 2).
+    * No confirmed road: the four headings (the open-points ruling 1),
+      "traffic heads N / E / S / W", each with its right edge.
+    """
+    from src.rules.corridor import HEADING_DEG, against_legal_direction, travel_bearing_at
+
+    meta = scenario.meta
+    options: list[dict[str, Any]] = []
+    if params.centerline and len(params.centerline) >= 2:
+        road = meta.roadDirection
+        left_word = "median" if getattr(scenario, "divided", False) else "left"
+        for travel in ("with_geometry", "against_geometry"):
+            bearing = travel_bearing_at(
+                meta.lat, meta.lng, centerline=params.centerline, travel=travel, heading=None
+            )
+            if road is not None and against_legal_direction(
+                bearing, road.osmBearingDeg, road.oneway
+            ):
+                continue
+            right_side, bound = _cardinal(bearing + 90.0)[0], _cardinal(bearing)[1]
+            options.append(
+                {
+                    "work": {"side": "right", "travel": travel},
+                    "label": f"{right_side} side · {bound} traffic",
+                    "built": True,
+                }
+            )
+            if road is not None and road.oneway in ("yes", "-1"):
+                left_side = _cardinal(bearing - 90.0)[0]
+                options.append(
+                    {
+                        "work": {"side": left_word, "travel": travel},
+                        "label": f"{left_side} side · {bound} traffic",
+                        "built": False,
+                        "note": f"{left_word} side — not built yet",
+                    }
+                )
+        return options
+    for heading, bearing in HEADING_DEG.items():
+        right_side, bound = _cardinal(bearing + 90.0)[0], _cardinal(bearing)[1]
+        options.append(
+            {
+                "work": {"side": "right", "heading": heading},
+                "label": f"{right_side} side · traffic heads {bound.removesuffix('bound')}",
+                "built": True,
+            }
+        )
+    return options
+
+
 @app.post("/render/corridor-geometry")
 def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     """The laid-out corridor as geometry, per approach (#290, ruling 7).
@@ -1109,11 +1191,7 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     """
     _ensure_scenario_enabled(scenario)
     try:
-        params, _generator, _kwargs = scenario_to_call(scenario)
-    except CrossStreetStationError as exc:
-        raise HTTPException(
-            status_code=400, detail={"error": "generator_rejected", "message": str(exc)}
-        ) from exc
+        params, _generator, _kwargs = scenario_to_call(scenario, place_cross_street=False)
     except UnknownJurisdictionError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -1131,10 +1209,13 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         "approaches": [],
         "coverage_ft": None,
         "message": None,
+        "side_options": [],
     }
     if not located:
         out["status"] = "no_pin"
         return JSONResponse(out)
+    if pin_model == "work_start":
+        out["side_options"] = _side_options(scenario, params)
     if params.bearing_deg is None:
         out["status"] = "side_not_confirmed" if pin_model == "work_start" else "no_bearing"
         return JSONResponse(out)

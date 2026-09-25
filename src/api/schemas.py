@@ -1145,12 +1145,18 @@ def work_start_cross_station(scenario: NearIntersectionScenario, params: Scenari
     return float(station)
 
 
-def scenario_to_call(scenario: Scenario) -> GeneratorCall:
+def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> GeneratorCall:
     """Translate a parsed Scenario into a generator invocation.
 
     Returns ``(params, generator_fn, kwargs)``.  Call as
     ``placements = generator_fn(params, **kwargs)`` and feed the
     placements to the renderers along with ``params``.
+
+    ``place_cross_street=False`` (#290) is for callers that want the params
+    only — ``/render/corridor-geometry`` answers before the side is
+    confirmed, when a work-start near_intersection plan's cross street
+    cannot be placed yet.  Its approaches then carry a 0.0 station that is
+    never generated from.
     """
     meta_kw = {**_meta_params(scenario.meta), "jurisdiction_name": _jurisdiction_name(scenario)}
 
@@ -1325,7 +1331,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             **meta_kw,
         )
         station = (
-            work_start_cross_station(scenario, params) if params.pin_model == "work_start" else None
+            work_start_cross_station(scenario, params)
+            if params.pin_model == "work_start" and place_cross_street
+            else (0.0 if params.pin_model == "work_start" else None)
         )
         approaches = [
             ApproachParams(

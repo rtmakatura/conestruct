@@ -204,3 +204,109 @@ def test_the_preview_flag_is_refused_like_everywhere_else(client: TestClient) ->
     res = client.post("/render/corridor-geometry", headers=AUTH, json=body)
     assert res.status_code == 400
     assert "preview" in res.text.lower()
+
+
+# ---------------------------------------------------------------------------
+# The side control's choices (ruling 8; the open-points rulings 1 and 2)
+# ---------------------------------------------------------------------------
+
+# A road through the pin, vertex order south -> north.
+ROAD = [
+    list(_destination_point(*PIN, 180.0, 800.0)),
+    list(_destination_point(*PIN, 0.0, 800.0)),
+]
+
+
+def options(client: TestClient, meta: dict[str, Any], **over: Any) -> list[dict[str, Any]]:
+    body = {**shoulder({"pinModel": "work_start", **meta}), **over}
+    g = geometry(client, body)
+    assert g["status"] == "side_not_confirmed"
+    return g["side_options"]
+
+
+def test_a_two_way_road_offers_its_two_edges(client: TestClient) -> None:
+    opts = options(client, {"centerline": ROAD})
+    assert [(o["label"], o["work"], o["built"]) for o in opts] == [
+        ("East side · northbound traffic", {"side": "right", "travel": "with_geometry"}, True),
+        ("West side · southbound traffic", {"side": "right", "travel": "against_geometry"}, True),
+    ]
+
+
+def test_a_one_way_road_offers_its_legal_right_edge_and_names_the_left(
+    client: TestClient,
+) -> None:
+    """#298's case: one-way northbound.  Southbound is not offered at all;
+    the left edge is named and greyed out (not built)."""
+    opts = options(
+        client,
+        {"centerline": ROAD, "roadDirection": {"osmBearingDeg": 0.0, "oneway": "yes"}},
+    )
+    assert [(o["label"], o["work"], o["built"]) for o in opts] == [
+        ("East side · northbound traffic", {"side": "right", "travel": "with_geometry"}, True),
+        ("West side · northbound traffic", {"side": "left", "travel": "with_geometry"}, False),
+    ]
+    assert opts[1]["note"] == "left side — not built yet"
+
+
+def test_a_divided_carriageway_names_the_median(client: TestClient) -> None:
+    opts = options(
+        client,
+        {"centerline": ROAD, "roadDirection": {"osmBearingDeg": 0.0, "oneway": "yes"}},
+        divided=True,
+    )
+    assert opts[1]["work"]["side"] == "median"
+    assert opts[1]["note"] == "median side — not built yet"
+
+
+def test_no_road_offers_the_four_headings(client: TestClient) -> None:
+    opts = options(client, {})
+    assert [o["label"] for o in opts] == [
+        "East side · traffic heads north",
+        "South side · traffic heads east",
+        "West side · traffic heads south",
+        "North side · traffic heads west",
+    ]
+    assert [o["work"]["heading"] for o in opts] == ["N", "E", "S", "W"]
+    assert all(o["built"] for o in opts)
+
+
+def test_near_intersection_answers_before_the_side_is_chosen(client: TestClient) -> None:
+    """Its cross street cannot be placed without a direction, but the
+    control must still be offered — the geometry read never places it."""
+    body = {
+        "kind": "near_intersection",
+        "meta": {
+            "project": "s290",
+            "address": "",
+            "lat": PIN[0],
+            "lng": PIN[1],
+            "pinModel": "work_start",
+            "intersection": {"lat": PIN[0] + 0.002, "lng": PIN[1], "name": "E 17th Ave"},
+        },
+        "roadType": "urban_arterial",
+        "speed": 35,
+        "lanes": 2,
+        "laneWidth": 12,
+        "divided": False,
+        "workType": "utility_cut",
+        "duration": "short",
+        "workLen": 500,
+        "night": False,
+        "approaches": [
+            {
+                "id": "cross_a",
+                "speed": 30,
+                "roadType": "urban_arterial",
+                "lanesPerDirection": 1,
+                "laneWidth": 12,
+                "signalized": False,
+            }
+        ],
+    }
+    g = geometry(client, body)
+    assert g["status"] == "side_not_confirmed"
+    assert len(g["side_options"]) == 4
+
+
+def test_corridor_end_offers_no_side_control(client: TestClient) -> None:
+    assert geometry(client, shoulder({"bearingDeg": 0.0}))["side_options"] == []
