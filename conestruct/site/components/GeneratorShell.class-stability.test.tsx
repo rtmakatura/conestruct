@@ -283,7 +283,9 @@ describe("#276 — the jurisdiction cell's states: no skeleton, one reserved lin
 
     const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
     expect(css).toMatch(
-      /\.workbench \.a-cell \.tr-prov\[data-testid="prov-jurisdiction"\] \{\s*min-height: 4\.5em;/,
+      // The tallest state, measured on prod at both widths (two lines at
+      // rule 6's 1.5): rulings.md, "#276's reserve, re-measured".
+      /\.workbench \.a-cell \.tr-prov\[data-testid="prov-jurisdiction"\] \{\s*min-height: 3em;/,
     );
     expect(css).not.toMatch(/\.jbar-skel-line \{/);
     await quiesce();

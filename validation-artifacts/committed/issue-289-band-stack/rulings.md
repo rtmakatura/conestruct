@@ -578,3 +578,25 @@ ship line"):
    inspectable behind the toggle, text byte-identical (#198). Street classification becomes its
    own cell in the second group, out of the road-type cell. Measure the WHAT band's height at
    1440 before and after."
+
+## #276's reserve, re-measured — 2026-09-24
+
+Ryan, verbatim: "#276's reserved height re-measured: the tallest state was sized when the
+TIGER caveats rendered inline; they now sit behind 'i details'. Reserve the new tallest state,
+measured, and record the change."
+
+Measured on prod `b81c722` with `what-density/what-height.cjs` (`reserveStates`). Each state's
+words are set on a clone of the jurisdiction provenance line, in place, with the reserve
+switched off. The evaluated sentence is taken at its longest: `data/jurisdictions`' E-470,
+`toll_authority` / "MHT".
+
+| state | 1440 (line 272.67 px) | 380 (line 318 px) |
+|---|---|---|
+| unset — "MUTCD + Colorado Supplement only" | 15.75 | 15.75 |
+| evaluating | 31.5 | 31.5 |
+| evaluated (longest) | 31.5 | 31.5 |
+| not evaluated | 31.5 | 31.5 |
+
+- **The reserve:** `min-height` **3em** (31.5 px at 10.5 / 1.5, two lines). It was **4.5em**
+  (47.25 px), which was not measured: the sheet's own comment called it "one above the longest
+  sentence's estimate". The WHAT row gives back 15.75 px at both widths, and no state re-flows it.

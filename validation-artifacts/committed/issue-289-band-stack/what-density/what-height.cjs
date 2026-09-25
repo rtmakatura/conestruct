@@ -21,11 +21,14 @@ const { hook } = require("../live-check.cjs");
 const SITE = process.env.AUDIT_SITE || "https://www.conestruct.com/sandbox";
 const OUT = process.env.AUDIT_OUT || __dirname;
 const TAG = process.env.AUDIT_TAG || "run";
+// The viewport width: 1440 by default, 380 for the phone layout.
+const W = Number(process.env.AUDIT_W || 1440);
+const H = W <= 480 ? 800 : 1000;
 const PIN = { lat: "39.74020", lng: "-104.95600" };
 
 (async () => {
   const browser = await chromium.launch();
-  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 } })).newPage();
+  const page = await (await browser.newContext({ viewport: { width: W, height: H } })).newPage();
   await page.goto(SITE, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(4000);
 
@@ -75,7 +78,7 @@ const PIN = { lat: "39.74020", lng: "-104.95600" };
       break;
     }
   }
-  await page.mouse.move(1438, 500);
+  await page.mouse.move(W - 2, Math.round(H / 2));
   await page.waitForTimeout(1500);
 
   const m = await page.evaluate(() => {
@@ -92,6 +95,62 @@ const PIN = { lat: "39.74020", lng: "-104.95600" };
         ]),
       ),
       toggles: band.querySelectorAll(".a-info-toggle").length,
+      // The suggestion rows at rest (outside the details panels): the
+      // row, and each part's width — what "one line" has to fit.
+      suggRows: [...band.querySelectorAll(".sugg-row")]
+        .filter((r) => !r.closest(".a-info"))
+        .map((r) => ({
+          cell: r.closest("[data-testid^='cell-']")?.getAttribute("data-testid"),
+          rowW: Math.round(r.getBoundingClientRect().width * 100) / 100,
+          rowH: h(r),
+          parts: [...r.children].map((c) => ({
+            tag: c.tagName.toLowerCase() + (c.className ? "." + c.className : ""),
+            text: (c.textContent || "").trim(),
+            w: Math.round(c.getBoundingClientRect().width * 100) / 100,
+            h: h(c),
+          })),
+        })),
+      // #276's states, each measured in place: a clone of the line, in
+      // the same parent (so the same width and type), its reserve
+      // switched off, carrying each state's words in turn.  The words
+      // are WhatBand's own `jurisdictionProv` strings; the evaluated one
+      // at its longest authority / term (data/jurisdictions: E-470's
+      // toll_authority, "MHT").
+      reserveStates: (() => {
+        const p = band.querySelector('[data-testid="prov-jurisdiction"]');
+        if (!p) return null;
+        const states = {
+          unset: "MUTCD + Colorado Supplement only",
+          evaluating: "evaluating — the option you picked, not yet confirmed for this plan",
+          evaluated: "evaluated · toll & authority · calls this plan a MHT",
+          "not-evaluated": "not evaluated — the check did not answer; the option you picked stands",
+        };
+        const out = {};
+        for (const [k, text] of Object.entries(states)) {
+          const c = p.cloneNode(false);
+          c.removeAttribute("data-testid");
+          c.style.minHeight = "0";
+          c.textContent = text;
+          p.parentElement.insertBefore(c, p);
+          out[k] = h(c);
+          c.remove();
+        }
+        return out;
+      })(),
+      // #276's reserve on the jurisdiction line.
+      provJurisdiction: (() => {
+        const p = band.querySelector('[data-testid="prov-jurisdiction"]');
+        if (!p) return null;
+        const cs = getComputedStyle(p);
+        return {
+          text: (p.textContent || "").trim(),
+          h: h(p),
+          minHeight: cs.minHeight,
+          lineHeight: cs.lineHeight,
+          fontSize: cs.fontSize,
+          w: Math.round(p.getBoundingClientRect().width * 100) / 100,
+        };
+      })(),
     };
   });
   if (!m) throw new Error("WHAT band not open");
