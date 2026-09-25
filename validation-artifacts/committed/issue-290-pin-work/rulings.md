@@ -288,8 +288,30 @@ Visible change: none. Nothing sends `work_start` until the frontend ship.
   jargon, is noise (P13, P18)". The backend's `_side_options` stops emitting them, and the band
   renders only `built` options. The `built` field stays on the wire for the day a left-side
   layout is built.
+- **Left-side work on one-way streets is #300** (Ryan, 2026-09-25: "Left-side work on one-way
+  streets is #300 — cite it in rulings.md where the side control offers only the right-hand
+  side"). Until #300 lands, the side control offers a one-way road's right-hand side only.
 - **The way id.** The hand-check names way 1329434113. The prod probe at the same pin detected
   "NORTH BROADWAY SOUTHBOUND" as way **131232822** (`validation-artifacts/committed/
   issue-290-picker-draws/repro-prod/`), and the fix is proven on that way.
 - **Item 1's cause** is recorded with its evidence in
   `validation-artifacts/committed/issue-290-picker-draws/README.md`.
+
+---
+
+## The follow-up to the hand-check, verbatim (Ryan, 2026-09-25, after `issue-290-picker-draws` shipped)
+
+> Left-side work on one-way streets is #300 — cite it in rulings.md where the side control offers
+> only the right-hand side. One more fix to stack on the next branch: once the side is chosen, the
+> ledger's "Which side is occupied?" row ticks with the side as its value; the kind question gets
+> its own row ("Kind of work — confirm below"). Right now the side row keeps saying needs-you
+> with "Choose the kind of work" under it after the side is picked.
+
+**On the record:**
+- #300 is cited above, at the side control's right-hand-only line.
+- **The move ledger answers one question per row.**
+  - "Which side is occupied?" ticks when the side is chosen, with the side, in the backend's
+    words, as its value.
+  - "Kind of work — confirm below" is its own row and needs you until a person confirms the
+    kind. After that it reads "Kind of work", with the kind as its value.
+  - "See the plan grow" still waits on both.
