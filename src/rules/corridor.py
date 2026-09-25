@@ -792,13 +792,26 @@ def build_corridor(
     jurisdiction: str = "CDOT",
     centerline: tuple[tuple[float, float], ...] | None = None,
     downstream_taper_ft: float | None = None,
+    pin_model: str = "corridor_end",
 ) -> WorkCorridor:
     """Build a :class:`WorkCorridor` from user inputs and MUTCD/CDOT distances.
 
     Args:
-        lat, lng: anchor (downstream-most point of the corridor — see
-            module docstring).
-        bearing_deg: compass bearing from anchor toward the upstream end.
+        lat, lng: the pin.  Under ``pin_model="corridor_end"`` it is the
+            anchor (downstream-most point of the corridor — see module
+            docstring).  Under ``"work_start"`` it is where the work
+            starts (#290).
+        bearing_deg: under ``"corridor_end"``, the compass bearing from
+            anchor toward the upstream end.  Under ``"work_start"``, the
+            direction of travel of the occupied lane's traffic at the
+            work start — derived on the backend from the road and the
+            side, never typed (rulings.md, ruling 8).
+        pin_model: what the pin means (the scenario version field,
+            ``ScenarioMeta.pinModel``).  ``"work_start"`` moves the anchor
+            here (ruling 7): the corridor comes back in the same frame
+            every reader already speaks — anchor at the downstream end of
+            the downstream taper, bearing upstream — with the work zone's
+            upstream edge on the pin.
         speed_mph: posted speed.
         work_zone_ft: physical length of the work area itself
             (everything between the buffer and the downstream taper).
@@ -850,11 +863,27 @@ def build_corridor(
         else downstream_taper_length(num_lanes_closed, use_max=downstream_taper_use_max)
     )
 
-    return WorkCorridor(
-        anchor_lat=lat,
-        anchor_lng=lng,
+    if pin_model == "corridor_end":
+        return WorkCorridor(
+            anchor_lat=lat,
+            anchor_lng=lng,
+            anchor_description=anchor_description,
+            bearing_deg=bearing_deg % 360.0,
+            advance_warning_ft=float(advance_ft),
+            taper_ft=float(taper_ft),
+            buffer_ft=float(buffer_ft),
+            work_zone_ft=float(work_zone_ft),
+            downstream_taper_ft=float(downstream_ft),
+            centerline=centerline,
+        )
+    if pin_model != "work_start":
+        raise ValueError(
+            f"Unknown pin_model {pin_model!r}; expected 'corridor_end' or 'work_start'"
+        )
+    return _corridor_from_work_start(
+        work_start=(lat, lng),
+        travel_bearing_deg=bearing_deg % 360.0,
         anchor_description=anchor_description,
-        bearing_deg=bearing_deg % 360.0,
         advance_warning_ft=float(advance_ft),
         taper_ft=float(taper_ft),
         buffer_ft=float(buffer_ft),
@@ -862,6 +891,170 @@ def build_corridor(
         downstream_taper_ft=float(downstream_ft),
         centerline=centerline,
     )
+
+
+# #290 ruling 1 on the open points: with no confirmed road, the direction
+# is a four-way choice, "traffic heads N / E / S / W" — coarse by design,
+# and labelled coarse where it is shown.
+HEADING_DEG: dict[str, float] = {"N": 0.0, "E": 90.0, "S": 180.0, "W": 270.0}
+
+
+def travel_bearing_at(
+    lat: float,
+    lng: float,
+    *,
+    centerline: tuple[tuple[float, float], ...] | None,
+    travel: str | None,
+    heading: str | None,
+) -> float:
+    """The occupied lane's direction of travel at the work start (#290).
+
+    Derived, never typed (FLOW.md §5a; rulings.md, ruling 8).  With the
+    confirmed road's relayed centerline, it is the local tangent of the
+    segment nearest the pin, taken in the polyline's vertex order
+    (``travel="with_geometry"``) or against it (``"against_geometry"``).
+    The side control on the frontend offers its two choices off this same
+    relayed polyline, so the enum and the geometry cannot disagree.
+    Without a centerline it is the ruled four-way heading.
+
+    Raises ``ValueError`` when the input that decides it is missing — the
+    request gate refuses such a scenario first, so this is a backstop.
+    """
+    if centerline is not None and len(centerline) >= 2:
+        if travel not in ("with_geometry", "against_geometry"):
+            raise ValueError("a confirmed road needs meta.work.travel to derive the direction")
+        best_d = math.inf
+        best_seg = 0
+        for i in range(len(centerline) - 1):
+            d, _t = _project_onto_segment_m(lat, lng, *centerline[i], *centerline[i + 1])
+            if d < best_d:
+                best_d = d
+                best_seg = i
+        tangent = _initial_bearing_deg(*centerline[best_seg], *centerline[best_seg + 1])
+        return tangent if travel == "with_geometry" else (tangent + 180.0) % 360.0
+    if heading not in HEADING_DEG:
+        raise ValueError("no confirmed road: meta.work.heading (N / E / S / W) sets the direction")
+    return HEADING_DEG[heading]
+
+
+def against_legal_direction(
+    travel_bearing_deg: float, osm_bearing_deg: float, oneway: str | None
+) -> bool:
+    """True when the derived travel direction runs against a one-way road.
+
+    ``osm_bearing_deg`` is the confirmed way's own bearing at the pin in
+    OSM vertex order (the detection's raw fact); ``oneway`` its raw tag.
+    ``yes`` means traffic runs in vertex order, ``-1`` against it, and
+    anything else (``no``, absent) means both ways, so nothing conflicts.
+    Honouring the tag is ruling 8's "honouring the one-way tag": a plan
+    must never direct traffic that isn't there (#158's reason, #298).
+    More than 90° from the legal direction is "against".
+    """
+    if oneway == "yes":
+        legal = osm_bearing_deg % 360.0
+    elif oneway == "-1":
+        legal = (osm_bearing_deg + 180.0) % 360.0
+    else:
+        return False
+    delta = abs(((travel_bearing_deg - legal + 540.0) % 360.0) - 180.0)
+    return delta > 90.0
+
+
+# Round-trip tolerance for the work-start translation, in meters.  CHOSEN
+# (#290): an invariant check, not a design distance — the translated
+# corridor must put its work zone's upstream edge back on the pin.  The
+# walk is exact arithmetic along the same frame both ways, so real
+# drift is sub-millimetre; 0.5 m only absorbs a projection landing on
+# the neighbouring segment at a shared vertex.  A miss this large means
+# the frame could not represent the corridor (see below), and building
+# it anyway would lay the corridor somewhere the operator did not mark.
+_WORK_START_ROUND_TRIP_TOL_M = 0.5
+
+
+def _corridor_from_work_start(
+    *,
+    work_start: tuple[float, float],
+    travel_bearing_deg: float,
+    anchor_description: str,
+    advance_warning_ft: float,
+    taper_ft: float,
+    buffer_ft: float,
+    work_zone_ft: float,
+    downstream_taper_ft: float,
+    centerline: tuple[tuple[float, float], ...] | None,
+) -> WorkCorridor:
+    """The work-start pin, laid out in the corridor frame (#290, ruling 7).
+
+    The pin is the work zone's upstream edge for the occupied lane's
+    traffic, so in the corridor frame it sits at station
+    ``downstream_taper_ft + work_zone_ft``.  The anchor is therefore that
+    far DOWNSTREAM of the pin — walked along the road when a centerline is
+    attached (arc length, #140), dead-reckoned along the direction of
+    travel otherwise — and the corridor's bearing is the local upstream
+    direction at the anchor, so the station frame's direction sign agrees
+    with the pin's even where the road curves between them.
+
+    Raises ``ValueError`` when the translated corridor does not return
+    the pin to its own work-zone edge (e.g. the anchor would fall past
+    the end of the relayed geometry on a curve, where the frame projects
+    the anchor back onto the polyline).  An honest refusal: the readers
+    already turn a ``ValueError`` from corridor construction into a
+    disclosed not-run, never a guessed corridor (Rule 10).
+    """
+    upstream_bearing = (travel_bearing_deg + 180.0) % 360.0
+    lengths = {
+        "advance_warning_ft": advance_warning_ft,
+        "taper_ft": taper_ft,
+        "buffer_ft": buffer_ft,
+        "work_zone_ft": work_zone_ft,
+        "downstream_taper_ft": downstream_taper_ft,
+    }
+    # A frame anchored AT the pin, stations growing upstream: the anchor
+    # we want is at station −(work + downstream) in it.
+    at_pin = WorkCorridor(
+        anchor_lat=work_start[0],
+        anchor_lng=work_start[1],
+        anchor_description=anchor_description,
+        bearing_deg=upstream_bearing,
+        centerline=centerline,
+        **lengths,
+    )
+    shift_ft = work_zone_ft + downstream_taper_ft
+    anchor = at_pin.point_at_station_ft(-shift_ft)
+    bearing_at_anchor = upstream_bearing
+    frame = at_pin._centerline_frame()
+    if frame is not None and centerline is not None:
+        cum_m, pin_arc_m, sign = frame
+        anchor_arc_m = pin_arc_m - sign * shift_ft * M_PER_FT
+        seg = 0
+        for i in range(len(cum_m) - 1):
+            if cum_m[i] <= anchor_arc_m <= cum_m[i + 1]:
+                seg = i
+                break
+        else:
+            seg = 0 if anchor_arc_m < 0.0 else len(cum_m) - 2
+        a, b = centerline[seg], centerline[seg + 1]
+        # Upstream along the arc is the pin's +station direction: toward
+        # higher vertex indices when sign > 0.
+        bearing_at_anchor = (
+            _initial_bearing_deg(*a, *b) if sign > 0 else _initial_bearing_deg(*b, *a)
+        )
+    corridor = WorkCorridor(
+        anchor_lat=anchor[0],
+        anchor_lng=anchor[1],
+        anchor_description=anchor_description,
+        bearing_deg=bearing_at_anchor % 360.0,
+        centerline=centerline,
+        **lengths,
+    )
+    back = corridor.point_at_station_ft(shift_ft)
+    miss_m = _haversine_m(back[0], back[1], work_start[0], work_start[1])
+    if miss_m > _WORK_START_ROUND_TRIP_TOL_M:
+        raise ValueError(
+            f"work-start corridor does not return to the pin ({miss_m:.1f} m off): the "
+            "road geometry cannot carry the corridor this far downstream of the work"
+        )
+    return corridor
 
 
 def placed_downstream_taper_ft(placements: Iterable[Any]) -> float:
