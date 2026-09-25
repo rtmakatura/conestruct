@@ -633,3 +633,28 @@ rulings.md as a departure from #201's 'Confirm beside its control', with the mea
   - 380: wrapping as before.
   - WHAT at 1440: **996 px**. That is 1044 with #276's re-measure alone, and 1059.75 on prod
     before this branch.
+
+### #276's reserve — corrected: it follows the line's width (2026-09-24, prod `c5d79a7`)
+
+The 3em above was measured at 1440 and 380 only. Between them the band is three columns wide
+with narrower lines, and there the tallest state is taller. At 600 it is 47.25 px (three
+lines) against the 31.5 reserve; at 520 it is 63. So a state change still re-flowed the row,
+which is what #276 forbids. The 4.5em before it was also short, at 520. Found by the
+verification of the last #289 evidence (`prod-c5d79a7/`).
+
+Swept in place on prod, line width 100–320 px, the same four states at their longest
+(`prod-c5d79a7/reserve-276/sweep-prod.json`):
+
+| line width | tallest state | reserve |
+|---|---|---|
+| ≥ 242 px | 31.5 (2 lines) | 3em |
+| 168–241 | 47.25 (3) | 4.5em |
+| 121–167 | 63 (4) | 6em |
+| 101–120 | 78.75 (5) | 7.5em (below every live cell: the narrowest is 130.33 at a 481 viewport) |
+
+- **The reserve:** the jurisdiction cell is the query container (`container-type:
+  inline-size`), and the line reserves by those thresholds.
+- **Measured locally** at 380 / 481 / 520 / 600 / 700 / 768 / 840 / 1440 (`local-ladder-*`):
+  the reserve equals the tallest state at every width. WHAT at 1440 is unchanged at 996.
+- **Record corrected:** this supersedes "3em … at both widths" above as the reserve's value;
+  that table stays as what was measured at the time.

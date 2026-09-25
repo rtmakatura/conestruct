@@ -281,12 +281,18 @@ describe("#276 — the jurisdiction cell's states: no skeleton, one reserved lin
     expect(document.querySelector('[data-testid="prov-jurisdiction"]')).toBe(prov);
     noSkeleton();
 
-    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
-    expect(css).toMatch(
-      // The tallest state, measured on prod at both widths (two lines at
-      // rule 6's 1.5): rulings.md, "#276's reserve, re-measured".
-      /\.workbench \.a-cell \.tr-prov\[data-testid="prov-jurisdiction"\] \{\s*min-height: 3em;/,
-    );
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    // The tallest state follows the line's width, swept on prod
+    // (rulings.md, "#276's reserve, re-measured"): the cell is the query
+    // container, and each tier reserves that width's tallest state.
+    expect(css).toMatch(/\.workbench \[data-testid="cell-jurisdiction"\] \{\s*container-type: inline-size;/);
+    const sel = String.raw`\.workbench \.a-cell \.tr-prov\[data-testid="prov-jurisdiction"\] \{\s*min-height: `;
+    expect(css).toMatch(new RegExp(sel + String.raw`7\.5em;`));
+    for (const [w, em] of [["121", "6em"], ["168", "4\\.5em"], ["242", "3em"]]) {
+      expect(css, `${w} → ${em}`).toMatch(
+        new RegExp(String.raw`@container \(min-width: ${w}px\) \{\s*` + sel + em + ";"),
+      );
+    }
     expect(css).not.toMatch(/\.jbar-skel-line \{/);
     await quiesce();
   });

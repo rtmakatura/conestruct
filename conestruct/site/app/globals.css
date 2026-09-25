@@ -4696,15 +4696,37 @@ input[type="number"] {
    cell's provenance line reserves its tallest state, so unset (one line)
    → evaluating → evaluated / not evaluated (two, at the grid's cell
    widths) never re-flows the row.
-   RE-MEASURED 2026-09-24 on prod b81c722 (rulings.md, "#276's reserve,
-   re-measured"): the four states in place at 1440 (272.67 px line) and
-   380 (318 px) measure 15.75 / 31.5 / 31.5 / 31.5 — the tallest is two
-   lines, 3em at rule 6's 1.5, including the evaluated sentence at its
-   longest (E-470's "toll & authority · … a MHT").  The 4.5em it replaces
-   was an estimate from when the suggestion's TIGER caveats rendered
-   inline; they sit behind the cell's "i details" now. */
+   RE-MEASURED 2026-09-24 on prod c5d79a7 (rulings.md, "#276's reserve,
+   re-measured"): the tallest state is a function of the LINE's width, so
+   the reserve is too.  Swept in place, line width 100–320 px, the four
+   states with the evaluated sentence at its longest (E-470's "toll &
+   authority · … a MHT"): ≥242 px → 2 lines · 168–241 → 3 · 121–167 → 4
+   · 101–120 → 5, at rule 6's 1.5.  The line is the cell's width, so the
+   jurisdiction cell is the query container: 1440 and ≤480 (272.67 /
+   318 px) take 3em; the 3-column band between (e.g. 143 px at 520,
+   170–226 at 600–768) takes 6em / 4.5em.  b8f3159's flat 3em was
+   measured at 1440 and 380 only and fell short in between (the 4.5em
+   before it did too, at 520). */
+.workbench [data-testid="cell-jurisdiction"] {
+  container-type: inline-size;
+}
 .workbench .a-cell .tr-prov[data-testid="prov-jurisdiction"] {
-  min-height: 3em;
+  min-height: 7.5em;
+}
+@container (min-width: 121px) {
+  .workbench .a-cell .tr-prov[data-testid="prov-jurisdiction"] {
+    min-height: 6em;
+  }
+}
+@container (min-width: 168px) {
+  .workbench .a-cell .tr-prov[data-testid="prov-jurisdiction"] {
+    min-height: 4.5em;
+  }
+}
+@container (min-width: 242px) {
+  .workbench .a-cell .tr-prov[data-testid="prov-jurisdiction"] {
+    min-height: 3em;
+  }
 }
 .workbench .a-cell .tr-prov.is-error {
   color: var(--fail);
