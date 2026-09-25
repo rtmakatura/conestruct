@@ -68,6 +68,14 @@ BASELINE = {
     # CORRECTED BY OPERATOR line beside the DRAFT trailer.
     "scanned-dismissed": {"edge": 0, "box_cross": 0, "collisions": 0},
     "scanned-asserted": {"edge": 0, "box_cross": 0, "collisions": 0},
+    # #290 (k) commit 4: each scanned fixture's work-start twin — the same
+    # plan said in the work-start model (the pin on the plan's work start,
+    # heading and side instead of a typed bearing; make_twins.py in the arc
+    # folder).  Same bar: containment zero.
+    "scanned-ok-work-start": {"edge": 0, "box_cross": 0, "collisions": 0},
+    "scanned-not-checked-work-start": {"edge": 0, "box_cross": 0, "collisions": 0},
+    "scanned-dismissed-work-start": {"edge": 0, "box_cross": 0, "collisions": 0},
+    "scanned-asserted-work-start": {"edge": 0, "box_cross": 0, "collisions": 0},
 }
 
 SCAN_PAYLOAD = Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json"
@@ -248,6 +256,10 @@ def test_flowing_pdfs_stay_inside_margins(
         ("scanned-not-checked", "unavailable", True),
         ("scanned-dismissed", "ok", False),
         ("scanned-asserted", "ok", False),
+        ("scanned-ok-work-start", "ok", False),
+        ("scanned-not-checked-work-start", "unavailable", True),
+        ("scanned-dismissed-work-start", "ok", False),
+        ("scanned-asserted-work-start", "ok", False),
     ],
 )
 def test_scanned_fixtures_really_scan(
