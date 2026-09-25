@@ -238,9 +238,13 @@ def offline_aerial(monkeypatch: pytest.MonkeyPatch) -> list[Any]:
     monkeypatch.setattr(ps, "_validate_corridor_bearing", lambda corridor: None)
     real = ps._fetch_mapbox_aerial
 
-    def capture(lat: float, lng: float, token: str, corridor: Any = None) -> Any:
+    # #290 commit 7 (RULE 5, stated): the fetch also takes the laid-out
+    # approaches now; the wrapper passes them through unchanged.
+    def capture(
+        lat: float, lng: float, token: str, corridor: Any = None, approaches: Any = None
+    ) -> Any:
         corridors.append(corridor)
-        return real(lat, lng, token, corridor=corridor)
+        return real(lat, lng, token, corridor=corridor, approaches=approaches)
 
     monkeypatch.setattr(ps, "_fetch_mapbox_aerial", capture)
     return corridors

@@ -3588,11 +3588,103 @@ def _aerial_overlay_part(corridor: WorkCorridor) -> str:
     return ",".join(parts)
 
 
+# #290 checkpoint (k) commit 7 — page 2 draws the work AND the approaches,
+# from the same producer as the picker (src/rules/corridor_layout.py, P11:
+# "the same five channels on the picker and page 2").  The zone colours and
+# width ranks MIRROR lib/corridor-zones.ts (ZONE_COLOR, ZONE_CHANNEL
+# .widthRank): #131's non-colour channel for a surface whose paths cannot
+# dash is the width rank, "the ONLY non-colour channel the Static Images
+# preview can carry".  Footage past the mapped road (#211) takes the
+# picker's own treatment — the zone's colour and width, faded (the picker's
+# line-opacity 0.35 against 0.9) — so an approach that runs off the mapped
+# road stays readable as its zone.  (Rendered at the Lafayette pin, the
+# work-zone-only 1 px / 0.4 stroke made the opposing approach invisible.)
+_LAID_OUT_ZONE_COLOR: dict[str, str] = {
+    "advance_warning": "FFD166",
+    "transition": "F3722C",
+    "buffer": "FF7A00",
+    "work_zone": "1EC8A5",
+    "downstream": "8A8A8A",
+}
+_LAID_OUT_ZONE_RANK: dict[str, int] = {
+    "downstream": 1,
+    "work_zone": 2,
+    "buffer": 3,
+    "transition": 4,
+    "advance_warning": 5,
+}
+_LAID_OUT_ZONE_WORD: dict[str, str] = {
+    "advance_warning": "Advance warning",
+    "transition": "Taper",
+    "buffer": "Buffer",
+    "work_zone": "Work zone",
+    "downstream": "Downstream",
+}
+# The picker's legend order (upstream first — the motorist's order).
+_LAID_OUT_LEGEND_ORDER: tuple[str, ...] = (
+    "advance_warning",
+    "transition",
+    "buffer",
+    "work_zone",
+    "downstream",
+)
+_LAID_OUT_OPACITY: str = "0.9"
+_LAID_OUT_EXT_OPACITY: str = "0.35"
+# Mapbox Static Images URLs are capped at 8,192 characters.  The laid-out
+# corridor carries up to ~12 paths; each path's points are thinned (never
+# its endpoints) until the URL fits.  CHOSEN steps.
+_AERIAL_URL_MAX_CHARS: int = 8000
+_LAID_OUT_POINT_STEPS: tuple[int, ...] = (100, 40, 16, 2)
+# Padding (px) around the auto-framed corridor, so the first sign is not
+# drawn against the image edge.
+_LAID_OUT_PADDING_PX: int = 60
+
+
+def _aerial_laid_out_overlays(
+    approaches: list[tuple[str, WorkCorridor]], max_points: int = 100
+) -> str:
+    """The static-URL path overlays for a work-start plan's laid-out corridor.
+
+    Every approach's non-work zones first, the work zone last (drawn on
+    top).  Each zone in the picker's colour at its width rank; a part on the
+    end tangent (past the mapped road) the same stroke, faded.
+    """
+    from src.rules.corridor_layout import zone_parts, zone_spans
+
+    def path(zone: str, part: Any) -> str:
+        width = 1 + _LAID_OUT_ZONE_RANK[zone]
+        opacity = _LAID_OUT_EXT_OPACITY if part.extended else _LAID_OUT_OPACITY
+        return (
+            f"path-{width}+{_LAID_OUT_ZONE_COLOR[zone]}-{opacity}"
+            f"({urllib_quote(encode_polyline(part.points), safe='')})"
+        )
+
+    overlays: list[str] = []
+    for _approach_id, c in approaches:
+        for zone, a, b in zone_spans(c):
+            if zone == "work_zone":
+                continue
+            overlays.extend(
+                path(zone, part)
+                for part in zone_parts(c, a, b, max_points)
+                if len(part.points) >= 2
+            )
+    primary = approaches[0][1]
+    work = next(span for span in zone_spans(primary) if span[0] == "work_zone")
+    overlays.extend(
+        path("work_zone", part)
+        for part in zone_parts(primary, work[1], work[2], max_points)
+        if len(part.points) >= 2
+    )
+    return ",".join(overlays)
+
+
 def _fetch_mapbox_aerial(
     lat: float,
     lng: float,
     token: str,
     corridor: WorkCorridor | None = None,
+    approaches: list[tuple[str, WorkCorridor]] | None = None,
 ) -> Path | None:
     """Fetch a Mapbox satellite tile, optionally with a work-zone overlay.
 
@@ -3618,8 +3710,24 @@ def _fetch_mapbox_aerial(
     for any reason (network error, bad token, rate limit).  Errors are
     logged to stdout rather than raised — the aerial is an optional
     enhancement, not a required component of the plan sheet.
+
+    #290 checkpoint (k) commit 7: with ``approaches`` (a work-start plan)
+    the overlay is the whole laid-out corridor — every approach's zones and
+    the work, as the picker draws them — and the viewport is ``auto`` with
+    padding, framing all of it north-up.  A corridor_end plan's URL is
+    byte-identical to before.
     """
-    if corridor is not None:
+    query: dict[str, str] = {"access_token": token}
+    if corridor is not None and approaches:
+        _validate_corridor_bearing(corridor)
+        overlays = ""
+        for max_points in _LAID_OUT_POINT_STEPS:
+            overlays = f"{_aerial_laid_out_overlays(approaches, max_points)}/"
+            if len(overlays) < _AERIAL_URL_MAX_CHARS - 200:
+                break
+        viewport = "auto"
+        query["padding"] = str(_LAID_OUT_PADDING_PX)
+    elif corridor is not None:
         _validate_corridor_bearing(corridor)
         overlays = f"{_aerial_overlay_part(corridor)}/"
         # Center the camera on the work-zone midpoint and pick a zoom
@@ -3638,7 +3746,7 @@ def _fetch_mapbox_aerial(
         f"{overlays}{viewport}/{_AERIAL_IMG_W_PX}x{_AERIAL_IMG_H_PX}@2x"
     )
     try:
-        r = httpx.get(url, params={"access_token": token}, timeout=15.0)
+        r = httpx.get(url, params=query, timeout=15.0)
         r.raise_for_status()
         fd, tmp_path = tempfile.mkstemp(suffix=".png", prefix="mht_aerial_")
         with os.fdopen(fd, "wb") as f:
@@ -3716,7 +3824,11 @@ def _draw_corridor_details_box(
         location_row = ("Work starts", _format_latlng(work_start[0], work_start[1]))
         direction_row = (
             "Direction of travel",
-            f"{travel_bearing_deg:.0f}°" if travel_bearing_deg is not None else "Not specified",
+            # #290 commit 7: rounded, then wrapped — 359.9° printed "360°"
+            # (Lafayette St northbound, rendered); a compass reads 0°.
+            f"{round(travel_bearing_deg) % 360}°"
+            if travel_bearing_deg is not None
+            else "Not specified",
         )
     else:
         location_row = ("Anchor", _format_latlng(corridor.anchor_lat, corridor.anchor_lng))
@@ -3790,6 +3902,49 @@ def _draw_aerial_page_footer(
     c.drawString(PAGE_W - MARGIN - 4.0 - text_w, y, sheet_text)
 
 
+def _draw_laid_out_legend(
+    c: canvas.Canvas,
+    x: float,
+    y: float,
+    approaches: list[tuple[str, WorkCorridor]],
+) -> None:
+    """Page 2's legend for the laid-out corridor (#290 commit 7).
+
+    The picker's five channels, in its order and words, each a short stroke
+    in the zone's colour at its width rank (#131: colour is never the only
+    channel), then the extended-footage key and — for a flagger — the two
+    approaches named by direction (checkpoint P9).
+    """
+    from src.rules.corridor_layout import approach_travel_bearing_deg, cardinal
+
+    c.setFont("Helvetica", 8)
+    cursor = x
+    for zone in _LAID_OUT_LEGEND_ORDER:
+        c.setStrokeColor(colors.HexColor(f"#{_LAID_OUT_ZONE_COLOR[zone]}"))
+        c.setLineWidth(0.5 + 0.5 * _LAID_OUT_ZONE_RANK[zone])
+        c.line(cursor, y + 2.5, cursor + 16.0, y + 2.5)
+        cursor += 20.0
+        c.setFillColor(colors.HexColor("#333333"))
+        word = _LAID_OUT_ZONE_WORD[zone]
+        c.drawString(cursor, y, word)
+        cursor += c.stringWidth(word, "Helvetica", 8) + 12.0
+    c.saveState()
+    c.setStrokeColor(colors.HexColor(f"#{_LAID_OUT_ZONE_COLOR['work_zone']}"))
+    c.setStrokeAlpha(float(_LAID_OUT_EXT_OPACITY))
+    c.setLineWidth(0.5 + 0.5 * _LAID_OUT_ZONE_RANK["work_zone"])
+    c.line(cursor, y + 2.5, cursor + 16.0, y + 2.5)
+    c.restoreState()
+    cursor += 20.0
+    c.setFillColor(colors.HexColor("#333333"))
+    tail = "faded: past the mapped road"
+    if len(approaches) > 1:
+        bounds = [cardinal(approach_travel_bearing_deg(cc))[1] for _i, cc in approaches]
+        tail += f"   ·   Two approaches: {bounds[0]} (the work's side) and {bounds[1]}"
+    c.drawString(cursor, y, tail)
+    c.setLineWidth(1.0)
+    c.setStrokeColor(colors.black)
+
+
 def _render_aerial_page(
     c: canvas.Canvas,
     png_path: Path,
@@ -3803,6 +3958,7 @@ def _render_aerial_page(
     title: str,
     scale_label: str,
     corridor: WorkCorridor | None = None,
+    approaches: list[tuple[str, WorkCorridor]] | None = None,
 ) -> None:
     """Render the dedicated aerial-context page (page 2 of 2).
 
@@ -3902,7 +4058,21 @@ def _render_aerial_page(
         c.drawString(caption_x, cap_y, f"SITE: {_format_latlng(lat, lng)}")
     c.setFont("Helvetica-Oblique", 8)
     c.setFillColor(colors.HexColor("#555555"))
-    if corridor is not None:
+    if corridor is not None and approaches:
+        # #290 commit 7: the drawing IS the laid-out corridor now, so the
+        # caption's line is its legend (P9: every channel has a word) and
+        # the disclaimer moves one line down, inside the caption block.
+        _draw_laid_out_legend(c, caption_x, cap_y - 32.0, approaches)
+        c.setFont("Helvetica-Oblique", 8)
+        c.setFillColor(colors.HexColor("#555555"))
+        c.drawString(
+            caption_x,
+            cap_y - 44.0,
+            "Mapbox satellite imagery with street labels — for context only.  "
+            "Not a survey product.  Verify all field conditions on site.",
+        )
+        disclaimer = None
+    elif corridor is not None:
         disclaimer = (
             f"Work zone ({corridor.work_zone_ft:,.0f} ft) shown in orange.  "
             "Advance warning, taper, and buffer not depicted.  "
@@ -3914,7 +4084,8 @@ def _render_aerial_page(
             "Mapbox satellite imagery with street labels — for context only.  "
             "Not a survey product.  Verify all field conditions on site."
         )
-    c.drawString(caption_x, cap_y - 32.0, disclaimer)
+    if disclaimer is not None:
+        c.drawString(caption_x, cap_y - 32.0, disclaimer)
 
     # 5. Corridor details box — optional.
     if corridor is not None:
@@ -4055,6 +4226,7 @@ def render_plan_sheet(
     # plain pin at the anchor) but loses the overlay and panel.
     aerial_png: Path | None = None
     aerial_corridor: WorkCorridor | None = None
+    aerial_approaches: list[tuple[str, WorkCorridor]] | None = None
     if site_lat is not None and site_lng is not None and (site_lat or site_lng):
         token = os.environ.get("MAPBOX_TOKEN", "")
         if not token:
@@ -4104,7 +4276,39 @@ def render_plan_sheet(
                         f"{type(exc).__name__}: {exc}"
                     )
                     aerial_corridor = None
-            aerial_png = _fetch_mapbox_aerial(site_lat, site_lng, token, corridor=aerial_corridor)
+                # #290 checkpoint (k) commit 7: a work-start plan's page 2
+                # draws every approach, built by the picker's producer
+                # (corridor_layout.approach_corridors) from the same inputs.
+                if (
+                    aerial_corridor is not None
+                    and getattr(params, "pin_model", "corridor_end") == "work_start"
+                ):
+                    from src.rules.corridor_layout import approach_corridors
+
+                    try:
+                        aerial_approaches = approach_corridors(
+                            aerial_corridor,
+                            flagger=_is_flagger_scenario(params),
+                            pin_model="work_start",
+                            speed_mph=params.speed_mph,
+                            work_zone_ft=params.work_zone_length_ft,
+                            closure_type=corridor_closure_type,
+                            road_type=params.road_type,
+                            lane_width_ft=params.lane_width_ft,
+                            shoulder_width_ft=params.shoulder_width_ft,
+                            jurisdiction=params.jurisdiction,
+                            centerline=getattr(params, "centerline", None),
+                            downstream_taper_ft=placed_downstream_taper_ft(placements),
+                        )
+                    except ValueError as exc:
+                        print(
+                            "[corridor] failed to lay out the approaches for page 2: "
+                            f"{type(exc).__name__}: {exc}"
+                        )
+                        aerial_approaches = None
+            aerial_png = _fetch_mapbox_aerial(
+                site_lat, site_lng, token, corridor=aerial_corridor, approaches=aerial_approaches
+            )
 
     page1_total = "2" if aerial_png is not None else "1"
 
@@ -4158,6 +4362,7 @@ def render_plan_sheet(
             title=title,
             scale_label=scale_label,
             corridor=aerial_corridor,
+            approaches=aerial_approaches,
         )
         _draw_sheet_border(c)
         c.showPage()

@@ -59,7 +59,11 @@ from src.narrative.crew_narrative import (
 )
 from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
-from src.rules.corridor import _initial_bearing_deg
+from src.rules.corridor_layout import approach_corridors as _approach_corridors
+from src.rules.corridor_layout import approach_travel_bearing_deg as _approach_travel
+from src.rules.corridor_layout import cardinal as _cardinal
+from src.rules.corridor_layout import zone_parts as _zone_parts
+from src.rules.corridor_layout import zone_spans as _zone_spans
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
 from src.rules.devices import DeviceType, cone_display_name
 from src.rules.jurisdiction import (
@@ -1053,49 +1057,9 @@ _CORRIDOR_TAPER_FAMILY: dict[str, str] = {
 }
 
 
-_CORRIDOR_ZONES: tuple[str, ...] = (
-    "downstream",
-    "work_zone",
-    "buffer",
-    "transition",
-    "advance_warning",
-)
-
-
-def _zone_spans(c: Any) -> list[tuple[str, float, float]]:
-    """Each zone's station span, from the anchor, in corridor order."""
-    lengths = (
-        c.downstream_taper_ft,
-        c.work_zone_ft,
-        c.buffer_ft,
-        c.taper_ft,
-        c.advance_warning_ft,
-    )
-    spans: list[tuple[str, float, float]] = []
-    cursor = 0.0
-    for name, length in zip(_CORRIDOR_ZONES, lengths, strict=True):
-        spans.append((name, cursor, cursor + length))
-        cursor += length
-    return spans
-
-
-_CARDINALS: tuple[tuple[str, str], ...] = (
-    ("North", "northbound"),
-    ("East", "eastbound"),
-    ("South", "southbound"),
-    ("West", "westbound"),
-)
-
-
-def _cardinal(bearing_deg: float) -> tuple[str, str]:
-    """The nearest of N / E / S / W, as a side word and a traffic word.
-
-    CHOSEN (#290): the side control's words quantize to the nearest
-    cardinal — "East side · northbound traffic" (ruling 8) — the way a
-    crew and an 811 ticket say it.  Only the words quantize; the geometry
-    each choice writes (``travel`` against the relayed road) is exact.
-    """
-    return _CARDINALS[int(((bearing_deg % 360.0) + 45.0) // 90.0) % 4]
+# #290 checkpoint (k) commit 7: the zone walk, the approaches and the
+# compass words live in src/rules/corridor_layout.py — one producer for
+# this endpoint (the picker) and the plan sheet's page 2 (P11).
 
 
 def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
@@ -1187,7 +1151,7 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     except UnknownJurisdictionError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    from src.rules.corridor import build_corridor, opposing_work_start, station_path
+    from src.rules.corridor import build_corridor, station_path
 
     meta = scenario.meta
     pin_model = params.pin_model
@@ -1232,21 +1196,9 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
             pin_model=pin_model,
             **corridor_kwargs,
         )
-        corridors = [("primary", primary)]
-        if flagger and pin_model == "work_start":
-            far_end, opposing_travel = opposing_work_start(primary)
-            corridors.append(
-                (
-                    "opposing",
-                    build_corridor(
-                        lat=far_end[0],
-                        lng=far_end[1],
-                        bearing_deg=opposing_travel,
-                        pin_model="work_start",
-                        **corridor_kwargs,
-                    ),
-                )
-            )
+        corridors = _approach_corridors(
+            primary, flagger=flagger, pin_model=pin_model, **corridor_kwargs
+        )
     except ValueError as exc:
         out["status"] = "corridor_unbuildable"
         out["message"] = f"{type(exc).__name__}: {exc}"
@@ -1256,25 +1208,16 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         return [[round(lat, 7), round(lng, 7)] for lat, lng in station_path(c, a, b)]
 
     def parts(c: Any, a: float, b: float) -> list[dict[str, Any]]:
-        # #211 carried over: footage past the relayed road geometry (drawn
-        # on the end tangent) is flagged ``extended`` so the overlay can
-        # draw it visibly different from road-backed footage — never a
-        # tangent posing as the road (Rule 10).  Split at THIS corridor's
-        # geometry boundaries: ``start`` on the downstream side (a
-        # work-start anchor past the end of the way, #290 hand-check) and
-        # ``coverage`` upstream.  No centerline: one road-less part, as
-        # before — the chord IS the model there.
-        coverage = c.centerline_coverage_ft()
-        if coverage is None:
-            return [{"points": points(c, a, b), "extended": False}]
-        start = c.centerline_start_ft() or 0.0
-        cuts = [(a, start, True), (max(a, start), min(b, coverage), False), (coverage, b, True)]
-        out_parts = []
-        for lo, hi, extended in cuts:
-            lo, hi = max(lo, a), min(hi, b)
-            if hi > lo:
-                out_parts.append({"points": points(c, lo, hi), "extended": extended})
-        return out_parts or [{"points": points(c, a, b), "extended": True}]
+        # #211 carried over: footage past the relayed road geometry is
+        # flagged ``extended`` (corridor_layout.zone_parts — the same split
+        # page 2 draws).
+        return [
+            {
+                "points": [[round(lat, 7), round(lng, 7)] for lat, lng in part.points],
+                "extended": part.extended,
+            }
+            for part in _zone_parts(c, a, b)
+        ]
 
     travel = (
         params.bearing_deg
@@ -1289,12 +1232,10 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         "parts": parts(primary, work_span[1], work_span[2]),
     }
     for approach_id, c in corridors:
-        far_end = c.point_at_station_ft(c.downstream_taper_ft + c.work_zone_ft)
-        near = c.point_at_station_ft(c.downstream_taper_ft + c.work_zone_ft - 1.0)
         out["approaches"].append(
             {
                 "id": approach_id,
-                "travel_bearing_deg": round(_initial_bearing_deg(*far_end, *near), 2),
+                "travel_bearing_deg": round(_approach_travel(c), 2),
                 "zones": [
                     {
                         "zone": name,

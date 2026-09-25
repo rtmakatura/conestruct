@@ -76,3 +76,18 @@ Same probe with `AUDIT_KIND=flagger`.
   advance warning south of it, and the opposing advance warning north of the work's far end.
   Its Centerline row reads "covers 265–2,382 ft": the way ends 265 ft short of the anchor, the
   end-tangent case the frame fix also carries.
+
+## page2-local/ — checkpoint (k) commit 7: the PDF's page 2 (this branch, local)
+
+`probes/page2.py` replays a prod-captured request (`prod-after/*-sided-request.json`) through
+this branch's `POST /render/pdf`, with the relay the site's proxy applies and a real Mapbox
+server token read from the environment (never written to disk), and rasterises page 2.
+
+- `broadway-page2.png`: N Broadway SB.  The work runs south from the pin and the advance
+  warning is drawn north of it (#298's acceptance, on page 2).  The whole corridor is framed,
+  with the legend under the image and "Direction of travel: 180°".
+- `lafayette-flagger-page2.png`: the Lafayette flagger.  Both approaches are drawn: the
+  primary south of the pin, and the opposing one north of the work's far end.  The opposing
+  one is faded, because the OSM way ends there ("covers 265–2,381 ft").  The legend reads
+  "Two approaches: northbound (the work's side) and southbound", and the direction reads
+  "0°" (it printed "360°" before this commit).
