@@ -1670,9 +1670,15 @@ export function LocationPickerModal({
             <h2 className="text-white text-[17px] font-semibold m-0">
               Define Work Zone
             </h2>
-            <p className="text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0">
-              Drop a pin, review the detected road properties, and set the
-              work-zone length.
+            {/* #290 hand-check item 4: the length field left the picker (the
+                band's Extent is the one length, P2), so the subtitle stops
+                asking for it; the pin's meaning is what it says instead. */}
+            <p
+              className="text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"
+              data-testid="picker-subtitle"
+            >
+              Drop a pin where the work starts, and review the detected road
+              properties.
             </p>
           </div>
           <button

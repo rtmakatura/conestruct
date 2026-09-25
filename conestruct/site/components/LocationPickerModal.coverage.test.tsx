@@ -181,6 +181,19 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+// #290 hand-check item 4: "The picker's subtitle no longer mentions
+// setting the length."  The length field left the picker; the band's
+// Extent is the one length control.
+describe("the picker's subtitle", () => {
+  it("does not ask for a length; it says the pin marks where the work starts", () => {
+    stubFetches(detection([ROAD]), SIDE_NOT_CONFIRMED);
+    mountModal();
+    const subtitle = screen.getByTestId("picker-subtitle").textContent ?? "";
+    expect(subtitle).not.toMatch(/length/i);
+    expect(subtitle).toContain("Drop a pin where the work starts");
+  });
+});
+
 describe("the Centerline provenance row (#211), on the backend's geometry", () => {
   it("partial coverage: 'covers 0–N ft, bearing beyond' in the PDF's vocabulary", async () => {
     stubFetches(detection([ROAD]), laidOut(200));
