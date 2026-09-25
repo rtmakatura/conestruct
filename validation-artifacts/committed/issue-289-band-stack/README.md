@@ -22,6 +22,10 @@
 | — | the strip reserve re-measured (80 / 57, landing 141 / 164) | **done** `9e28383`, `d41d410` |
 | — | post-fidelity hand-check on `19076b3` — passes, two findings | **done** `d41d410` (recorded), `1d5cd58`, `7b88507` |
 | — | #289's remaining acceptance and absorbed issues | **done** — see below |
+| — | S4 first-Generate placeholder; 380 hint; FIND at 13.5 | **done** `e9b74ef`, `dc9ef5e`, `ea94ebb` |
+| — | WHAT density (P19): one line per field, "i details", street class its own cell | **done** `b81c722`; `what-density/` |
+| — | density follow-ups: #276 reserve 3em (measured), toggle fix, suggestion row spans the band (a #201 departure) | **done** `b8f3159`, `46d4e18`, `c5d79a7`; `prod-b81c722/` |
+| — | the last evidence: WHAT 996 px at 1440 on prod, rows one line at 1440 / 600 | **done** `prod-c5d79a7/` (one finding for Ryan: the jurisdiction row's place at 380) |
 
 Ryan's commit order, verbatim from the ruling: "rulings.md + checkpoint.md → WHERE + WHAT +
 the generate frame (S1–S3, the first visible ship) → S4 lock states + the fact-line mount at

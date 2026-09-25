@@ -1,0 +1,105 @@
+{
+  "site": "http://localhost:3100/sandbox",
+  "tag": "l-768",
+  "ranAt": "2026-09-25T03:35:52.327Z",
+  "settled": true,
+  "band": 1043.25,
+  "grids": [
+    105,
+    187.75,
+    105,
+    291
+  ],
+  "cells": {
+    "cell-speed": 105,
+    "cell-lanes": 105,
+    "cell-lane-width": 105,
+    "cell-road-type": 120.75,
+    "cell-jurisdiction": 120.75,
+    "cell-work-dates": 120.75,
+    "cell-project": 105,
+    "cell-location-description": 105,
+    "cell-work-type": 105,
+    "cell-night": 105,
+    "cell-reduction": 105,
+    "cell-divided": 105,
+    "cell-street-class": 105
+  },
+  "toggles": 4,
+  "suggRows": [
+    {
+      "rowW": 670,
+      "rowH": 32,
+      "parts": [
+        {
+          "tag": "span.sugg-glyph",
+          "text": "⌁",
+          "w": 16,
+          "h": 12.5
+        },
+        {
+          "tag": "span",
+          "text": "Pin suggests: Denver",
+          "w": 428.34,
+          "h": 15.75
+        },
+        {
+          "tag": "button.confirm",
+          "text": "Confirm Denver",
+          "w": 122.44,
+          "h": 32
+        },
+        {
+          "tag": "button.ghost",
+          "text": "Dismiss",
+          "w": 73.22,
+          "h": 32
+        }
+      ]
+    },
+    {
+      "rowW": 670,
+      "rowH": 32,
+      "parts": [
+        {
+          "tag": "span.sugg-glyph",
+          "text": "⌁",
+          "w": 16,
+          "h": 12.5
+        },
+        {
+          "tag": "span",
+          "text": "Detected road suggests street class: Arterial (OSM primary)",
+          "w": 414.28,
+          "h": 15.75
+        },
+        {
+          "tag": "button.confirm",
+          "text": "Confirm Arterial",
+          "w": 136.5,
+          "h": 32
+        },
+        {
+          "tag": "button.ghost",
+          "text": "Dismiss",
+          "w": 73.22,
+          "h": 32
+        }
+      ]
+    }
+  ],
+  "reserveStates": {
+    "unset": 15.75,
+    "evaluating": 47.25,
+    "evaluated": 31.5,
+    "not-evaluated": 47.25
+  },
+  "provJurisdiction": {
+    "text": "MUTCD + Colorado Supplement only",
+    "h": 47.25,
+    "minHeight": "47.25px",
+    "lineHeight": "15.75px",
+    "fontSize": "10.5px",
+    "w": 226
+  }
+}
