@@ -69,6 +69,10 @@ export interface CorridorGeometry {
   work: { length_ft: number; points: LatLng[]; parts: GeometryPart[] } | null;
   approaches: GeometryApproach[];
   coverage_ft: number | null;
+  /** First road-backed station (#290 hand-check): above 0 when the work
+   *  runs past the downstream end of the relayed way.  Absent from an
+   *  older backend — read as 0. */
+  coverage_start_ft?: number | null;
   message: string | null;
   side_options: SideOption[];
 }
@@ -96,6 +100,15 @@ export function selectedSideOption(
 const BOUND = ["northbound", "eastbound", "southbound", "westbound"] as const;
 function boundWord(deg: number): string {
   return BOUND[Math.floor((((deg % 360) + 360) % 360 + 45) / 90) % 4];
+}
+
+/** The backend's refusal, in its own words, for the picker to state
+ *  (Rule 10: a corridor that cannot be laid out says why, never draws
+ *  blank).  The exception's type name is the wire's, not the operator's. */
+export function refusalReason(g: CorridorGeometry | null): string | null {
+  if (!g || (g.status !== "corridor_unbuildable" && g.status !== "no_bearing")) return null;
+  if (g.status === "no_bearing") return "no direction of travel for this pin";
+  return (g.message ?? "the layout service gave no reason").replace(/^\w+Error:\s*/, "");
 }
 
 /**
@@ -179,6 +192,7 @@ export function geometryToPolyline(
     },
     totalLengthFt: cursor,
     coverageFt: g.coverage_ft,
+    coverageStartFt: g.coverage_ft === null ? null : (g.coverage_start_ft ?? 0),
     bbox: [minLng, minLat, maxLng, maxLat],
   };
 }

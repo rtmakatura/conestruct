@@ -1,0 +1,24 @@
+site http://127.0.0.1:3290/sandbox
+pin 39.73370,-104.98753
+ranAt 2026-09-25T17:48:14.874Z
+open picker
+pin typed
+picked candidate: NORTH BROADWAY SOUTHBOUND
+save
+after confirm buttons: ["CHANGE","idetails","idetails","idetails","idetails","Confirm Denver","Dismiss","Daytime","Night","No reduction","Reduced","idetails","Undivided","Divided","Local","Collector","Arterial","Confirm Arterial","Dismiss","Generate plan"]
+side options: ["West side · southbound traffic [disabled=null]","East side · southbound trafficmedian side — not built yet [disabled=true]"]
+choose side
+reopen picker
+done
+
+GEOMETRY
+{"phase":"picked candidate: NORTH BROADWAY SOUTHBOUND","kind":"shoulder","pinModel":"work_start","lat":39.7337,"lng":-104.98753,"work":null,"road":{"way":"131232822","pinLat":39.7337,"pinLng":-104.98753,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["West side · southbound traffic","East side · southbound traffic (not built)"],"travel":null}}
+{"phase":"save","kind":"shoulder","pinModel":"work_start","lat":39.7337,"lng":-104.98753,"work":null,"road":{"way":"131232822","pinLat":39.7337,"pinLng":-104.98753,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["West side · southbound traffic","East side · southbound traffic (not built)"],"travel":null}}
+{"phase":"after confirm buttons: [\"CHANGE\",\"idetails\",\"idetails\",\"idetails\",\"idetails\",\"Confirm Denver\",\"Dismiss\",\"Daytime\",\"Night\",\"No reduction\",\"Reduced\",\"idetails\",\"Undivided\",\"Divided\",\"Local\",\"Collector\",\"Arterial\",\"Confirm Arterial\",\"Dismiss\",\"Generate plan\"]","kind":"shoulder","pinModel":"work_start","lat":39.7337,"lng":-104.98753,"work":null,"road":{"way":"131232822","pinLat":39.7337,"pinLng":-104.98753,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"side_not_confirmed","message":null,"work":null,"approaches":[],"side_options":["West side · southbound traffic","East side · southbound traffic (not built)"],"travel":null}}
+{"phase":"choose side","kind":"shoulder","pinModel":"work_start","lat":39.7337,"lng":-104.98753,"work":{"side":"right","travel":"with_geometry"},"road":{"way":"131232822","pinLat":39.7337,"pinLng":-104.98753,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"laid_out","message":null,"work":{"length_ft":1000,"n":15},"approaches":[{"id":"primary","travel":180.49,"zones":["downstream:50","buffer:200","transition:50","advance_warning:300"]}],"side_options":["West side · southbound traffic","East side · southbound traffic (not built)"],"travel":180.49}}
+{"phase":"reopen picker","kind":"shoulder","pinModel":"work_start","lat":39.7337,"lng":-104.98753,"work":{"side":"right","travel":"with_geometry"},"road":{"way":"131232822","pinLat":39.7337,"pinLng":-104.98753,"hasGeometry":true},"workLen":1000}
+{"status":200,"answer":{"status":"laid_out","message":null,"work":{"length_ft":1000,"n":15},"approaches":[{"id":"primary","travel":180.49,"zones":["downstream:50","buffer:200","transition:50","advance_warning:300"]}],"side_options":["West side · southbound traffic","East side · southbound traffic (not built)"],"travel":180.49}}

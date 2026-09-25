@@ -50,6 +50,7 @@ import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
 import type { Scenario } from "@/lib/scenarios";
 import {
   geometryToPolyline,
+  refusalReason,
   useCorridorGeometry,
   type GeometryFetch,
 } from "@/lib/corridor-geometry";
@@ -633,6 +634,9 @@ export function LocationPickerModal({
   const drawnCorridor = pendingPick ? null : corridor;
   // The pre-side ruling: the pin and one sentence, nothing else.
   const awaitingSide = laidOut?.status === "side_not_confirmed";
+  // #290 hand-check: the backend could not lay this corridor out — its
+  // reason is stated, never a blank map (Rule 10).
+  const refusal = refusalReason(laidOut);
   const travel = laidOut?.status === "laid_out" ? laidOut.travel_bearing_deg : null;
   useEffect(() => {
     markerTravelRef.current = travel;
@@ -1972,11 +1976,14 @@ export function LocationPickerModal({
                           ? "loading"
                           : awaitingSide
                             ? "side"
-                            : !kindConfirmed
+                            : refusal !== null
+                              ? "refused"
+                              : !kindConfirmed
                               ? "kind"
                               : "ready"
                   }
                   pendingPick={pendingPick}
+                  refusal={refusal}
                 />
               </div>
             </div>
@@ -2886,7 +2893,7 @@ function CandidatePicker({
 /** #290 — the geometry answer's state as this panel speaks it.  "side":
  *  the side is not confirmed (nothing directional exists).  "kind" (#289
  *  finding 1): the work is drawn, the approaches wait on the kind. */
-type PreviewStatus = "idle" | "loading" | "ready" | "error" | "side" | "kind";
+type PreviewStatus = "idle" | "loading" | "ready" | "error" | "side" | "kind" | "refused";
 
 /** The pre-side ruling's sentence, verbatim — one string for the map and
  *  the panel.  (The same words as the rail's SIDE_BLOCKER.) */
@@ -2897,6 +2904,7 @@ function CorridorPreviewPanel({
   hasPin,
   status,
   pendingPick,
+  refusal,
 }: {
   corridor: CorridorPolyline | null;
   hasPin: boolean;
@@ -2908,7 +2916,10 @@ function CorridorPreviewPanel({
   // no corridor (#186) and the Centerline row stays absent — no
   // geometry claim exists yet to disclose (#211).
   pendingPick: boolean;
+  /** The backend's reason it could not lay the corridor out ("refused"). */
+  refusal: string | null;
 }) {
+  const coverageStart = corridor?.coverageStartFt ?? 0;
   return (
     <div className="border-t border-[color:var(--rule)]">
       <div className="px-6 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
@@ -2931,6 +2942,14 @@ function CorridorPreviewPanel({
             Corridor preview unavailable — couldn&apos;t reach the layout
             service. You can still save; the plan is validated when
             generated.
+          </div>
+        )}
+        {hasPin && status === "refused" && (
+          <div
+            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1"
+            data-testid="picker-corridor-refused"
+          >
+            Can&apos;t lay the corridor out here — {refusal}
           </div>
         )}
         {hasPin && (status === "side" || status === "kind" || status === "idle") && (
@@ -2971,16 +2990,21 @@ function CorridorPreviewPanel({
                 <span
                   className={
                     corridor.coverageFt !== null &&
+                    coverageStart <= 0 &&
                     corridor.coverageFt >= corridor.totalLengthFt
                       ? "text-[color:var(--ink-on-dark)]"
                       : "text-[color:var(--none)]"
                   }
                 >
+                  {/* #290 hand-check: the road-backed range can start past
+                      the anchor (the work runs beyond the way's downstream
+                      end) — the row names both ends, never "0" for a
+                      station the road does not reach. */}
                   {corridor.coverageFt === null
                     ? "none — straight projection along the heading"
-                    : corridor.coverageFt >= corridor.totalLengthFt
+                    : coverageStart <= 0 && corridor.coverageFt >= corridor.totalLengthFt
                       ? "OSM, full corridor"
-                      : `covers 0–${fmtFt(corridor.coverageFt)} ft, bearing beyond`}
+                      : `covers ${fmtFt(Math.max(0, coverageStart))}–${fmtFt(Math.min(corridor.coverageFt, corridor.totalLengthFt))} ft, bearing beyond`}
                 </span>
               </div>
             )}

@@ -334,5 +334,61 @@ def test_footage_past_the_road_geometry_is_flagged_extended(client: TestClient) 
     assert [p["extended"] for p in g["work"]["parts"]] == [False]
 
 
+def test_a_pin_beside_the_centerline_is_laid_out(client: TestClient) -> None:
+    """#290 hand-check, prod N Broadway SB (way 131232822): the pin sat
+    ~11 m east of the way's centerline and the endpoint answered
+    ``corridor_unbuildable`` ("does not return to the pin (11.0 m off)"),
+    so the picker drew nothing after the side was confirmed.  Same shape:
+    a north-south road, the pin 11 m east of it, traffic southbound (the
+    one-way's legal direction is the vertex order here)."""
+    road = [
+        list(_destination_point(*PIN, 0.0, 1500.0)),
+        list(_destination_point(*PIN, 180.0, 1500.0)),
+    ]
+    beside = _destination_point(*PIN, 90.0, 11.0)
+    body = shoulder(
+        {
+            "pinModel": "work_start",
+            "centerline": road,
+            "work": {"side": "right", "travel": "with_geometry"},
+        }
+    )
+    body["meta"]["lat"], body["meta"]["lng"] = beside
+    g = geometry(client, body)
+    assert g["status"] == "laid_out", g["message"]
+    assert round(g["travel_bearing_deg"]) % 360 == 180
+    (primary,) = g["approaches"]
+    first_sign = zone(primary, "advance_warning")["points"][-1]
+    assert first_sign[0] > PIN[0]  # the approach is NORTH of the work
+
+
+def test_a_road_that_ends_downstream_still_lays_out_the_work(client: TestClient) -> None:
+    """#290 hand-check, prod N Broadway SB (way 131232822): the relayed way
+    ended 11 m short of the anchor (1,050 ft downstream of the pin) and the
+    endpoint answered ``corridor_unbuildable`` — the picker drew nothing.
+    Same shape here: northbound traffic, the road ending 300 m (984 ft)
+    north of the pin.  The work is laid at the pin; its last 66 ft (and
+    the downstream taper) run on the end tangent, flagged ``extended``."""
+    ends_north = [
+        list(_destination_point(*PIN, 180.0, 800.0)),
+        list(_destination_point(*PIN, 0.0, 300.0)),
+    ]
+    g = geometry(
+        client,
+        shoulder(
+            {
+                "pinModel": "work_start",
+                "centerline": ends_north,
+                "work": {"side": "right", "travel": "with_geometry"},
+            }
+        ),
+    )
+    assert g["status"] == "laid_out", g["message"]
+    # Work parts run downstream -> upstream: the tangent overhang first.
+    assert [p["extended"] for p in g["work"]["parts"]] == [True, False]
+    (primary,) = g["approaches"]
+    assert all(not p["extended"] for p in zone(primary, "advance_warning")["parts"])
+
+
 def test_corridor_end_offers_no_side_control(client: TestClient) -> None:
     assert geometry(client, shoulder({"bearingDeg": 0.0}))["side_options"] == []

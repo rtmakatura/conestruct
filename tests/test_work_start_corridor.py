@@ -134,20 +134,68 @@ def test_against_the_vertex_order_runs_the_other_way() -> None:
     assert _haversine_m(*work_downstream, *_arc(135 - arc_deg)) < 1.0
 
 
-def test_geometry_that_runs_out_is_refused_not_guessed() -> None:
-    """The anchor would sit past the end of a 150 m road geometry: the frame
-    cannot carry it, and a guessed corridor would be laid somewhere the
-    operator did not mark (Rule 10).  ValueError, which every reader
-    already turns into a disclosed not-run."""
-    short = (PIN, _destination_point(*PIN, 0.0, 150.0))
-    with pytest.raises(ValueError, match="does not return to the pin"):
-        build_corridor(
-            *PIN,
-            bearing_deg=0.0,
-            pin_model="work_start",
-            centerline=short,
-            **COMMON,
+def test_geometry_that_runs_out_downstream_still_lays_the_work_at_the_pin() -> None:
+    """#290 hand-check (RULE 5, stated — this case used to assert a
+    refusal).  The anchor sits past the end of a 150 m road geometry.  On
+    prod that refused every pin within work + downstream of its way's end
+    (N Broadway SB: 11.0 m short), so the picker drew nothing.  The frame
+    now carries the anchor on the end tangent, exactly as the station walk
+    already did, so the corridor lays the work AT the pin and reports the
+    overhang: ``centerline_start_ft`` is the footage drawn past the
+    geometry (flagged extended on every surface, #211)."""
+    geometry_m = 150.0
+    short = (PIN, _destination_point(*PIN, 0.0, geometry_m))
+    c = build_corridor(*PIN, bearing_deg=0.0, pin_model="work_start", centerline=short, **COMMON)
+    work_downstream, work_upstream = c.work_zone_endpoints()
+    assert _haversine_m(*work_upstream, *PIN) < 0.01
+    assert _ft(work_downstream, PIN) == pytest.approx(1000.0, abs=0.1)
+    shift_ft = c.work_zone_ft + c.downstream_taper_ft
+    assert c.centerline_start_ft() == pytest.approx(shift_ft - geometry_m / M_PER_FT, abs=0.1)
+
+
+def test_a_curve_that_ends_downstream_round_trips_to_the_pin() -> None:
+    """The same overhang on a curve: 150 degrees of the arc, the pin 30
+    degrees (~785 ft) from its end, traffic clockwise.  The work's
+    upstream edge is the pin; the road-backed part follows the arc."""
+    arc = tuple(_arc(t) for t in range(0, 151))
+    pin = _arc(120)
+    travel = travel_bearing_at(*pin, centerline=arc, travel="with_geometry", heading=None)
+    c = build_corridor(*pin, bearing_deg=travel, pin_model="work_start", centerline=arc, **COMMON)
+    _, work_upstream = c.work_zone_endpoints()
+    assert _haversine_m(*work_upstream, *pin) < 0.5
+    along_ft = math.radians(30) * ARC_RADIUS_FT
+    start_ft = c.centerline_start_ft()
+    assert start_ft is not None
+    assert start_ft == pytest.approx(c.work_zone_ft + c.downstream_taper_ft - along_ft, abs=1.0)
+    # Every station from there up is on the road.
+    assert _haversine_m(*c.point_at_station_ft(start_ft), *_arc(150)) < 1.0
+
+
+def test_a_pin_beside_the_road_lays_the_work_at_its_place_on_the_road() -> None:
+    """#290 hand-check, the prod defect itself: N Broadway SB, a manual pin
+    ~11 m east of the way's centerline, was refused ("does not return to
+    the pin (11.0 m off)") in BOTH directions — the round trip compared the
+    road-walked edge with the raw pin.  The work's upstream edge is the
+    pin's projection onto the road; the approach runs upstream from there."""
+    line = (_destination_point(*PIN, 0.0, 1500.0), _destination_point(*PIN, 180.0, 1500.0))
+    beside = _destination_point(*PIN, 90.0, 11.0)  # 11 m east, like the prod pin
+    for travel in (180.0, 0.0):
+        c = build_corridor(
+            *beside, bearing_deg=travel, pin_model="work_start", centerline=line, **COMMON
         )
+        work_downstream, work_upstream = c.work_zone_endpoints()
+        assert _haversine_m(*work_upstream, *PIN) < 0.5, travel
+        assert _ft(work_downstream, PIN) == pytest.approx(1000.0, abs=1.0)
+        heading = _bearing(PIN, work_downstream)
+        assert abs(((heading - travel + 540) % 360) - 180) < 1.0, travel
+
+
+def test_a_corridor_end_pin_on_the_road_has_no_downstream_overhang() -> None:
+    """The anchor-extension changes nothing for a pin ON the geometry — the
+    corridor_end model's every pin: its first road-backed station is 0."""
+    line = (_destination_point(*PIN, 180.0, 500.0), _destination_point(*PIN, 0.0, 500.0))
+    c = build_corridor(*PIN, bearing_deg=180.0, centerline=line, **COMMON)
+    assert c.centerline_start_ft() == 0.0
 
 
 # ---------------------------------------------------------------------------

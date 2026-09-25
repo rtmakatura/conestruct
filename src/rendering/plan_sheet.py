@@ -3739,10 +3739,15 @@ def _draw_corridor_details_box(
     # tangent.
     if corridor.centerline:
         covered_ft = corridor.centerline_coverage_ft() or 0.0
-        if covered_ft >= corridor.total_length_ft:
+        # #290 hand-check: a work-start anchor can sit past the way's
+        # downstream end, so the road-backed range starts above 0 — named,
+        # the picker's vocabulary.  0 for every pin on the road (unchanged).
+        start_ft = corridor.centerline_start_ft() or 0.0
+        if start_ft <= 0.0 and covered_ft >= corridor.total_length_ft:
             rows.append(("Centerline", "OSM, full corridor"))
         else:
-            rows.append(("Centerline", f"covers 0–{covered_ft:,.0f} ft, bearing beyond"))
+            end_ft = min(covered_ft, corridor.total_length_ft)
+            rows.append(("Centerline", f"covers {start_ft:,.0f}–{end_ft:,.0f} ft, bearing beyond"))
 
     label_x = box_x + pad
     value_x = box_x + pad + 110.0  # leaves the value column ~150 pt wide in a 50 % box

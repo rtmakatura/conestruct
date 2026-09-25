@@ -201,6 +201,37 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
     ).toBeTruthy();
   });
 
+  // #290 hand-check (prod N Broadway SB): the way ended past the pin but
+  // short of the work's downstream end.  The road-backed range starts
+  // past the anchor, and the row names both ends — never "0".
+  it("geometry that starts past the anchor: 'covers S–C ft'", async () => {
+    stubFetches(detection([ROAD]), { ...laidOut(5000), coverage_start_ft: 36 });
+    mountModal();
+    typeCoords();
+    expect(
+      await screen.findByText(/covers 36–1,200 ft, bearing beyond/i, undefined, { timeout: 3000 }),
+    ).toBeTruthy();
+    expect(screen.queryByText(/OSM, full corridor/i)).toBeNull();
+  });
+
+  it("a corridor the backend cannot lay out: its reason is stated, not a blank panel", async () => {
+    stubFetches(detection([ROAD]), {
+      ...laidOut(null),
+      status: "corridor_unbuildable",
+      travel_bearing_deg: null,
+      work: null,
+      approaches: [],
+      message: "ValueError: the road geometry cannot carry the corridor",
+    });
+    mountModal();
+    typeCoords();
+    const note = await screen.findByTestId("picker-corridor-refused", undefined, { timeout: 3000 });
+    expect(note.textContent).toContain("Can't lay the corridor out here");
+    expect(note.textContent).toContain("the road geometry cannot carry the corridor");
+    expect(note.textContent).not.toContain("ValueError");
+    expect(screen.queryByText("Centerline")).toBeNull();
+  });
+
   it("pending multi-candidate pick: no Centerline row, and no geometry asked", async () => {
     stubFetches(
       detection([ROAD, candidate({ way_id: "111002", bearing: 270, snap_distance_m: 9 })]),

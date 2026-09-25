@@ -380,6 +380,21 @@ class WorkCorridor:
                 best_d = d
                 anchor_arc_m = cum_m[i] + t * (cum_m[i + 1] - cum_m[i])
                 anchor_seg = i
+        # #290 hand-check: the anchor takes the same end-tangent extension
+        # :meth:`_project_point` gives every feature — the inverse of the
+        # tangent walk in :meth:`point_at_station_ft`.  Clamped, an anchor
+        # past the end of the relayed way snapped onto its end vertex, and
+        # every station shifted by the overhang: a work-start pin whose
+        # anchor (work + downstream past it) fell beyond the way's end
+        # could not be laid out at all (N Broadway SB, 11.0 m).
+        if anchor_arc_m <= 0.0:
+            _, t = _project_onto_line_m(self.anchor_lat, self.anchor_lng, *pts[0], *pts[1])
+            if t < 0.0:
+                anchor_arc_m = t * (cum_m[1] - cum_m[0])
+        elif anchor_arc_m >= cum_m[-1]:
+            _, t = _project_onto_line_m(self.anchor_lat, self.anchor_lng, *pts[-2], *pts[-1])
+            if t > 1.0:
+                anchor_arc_m = cum_m[-2] + t * (cum_m[-1] - cum_m[-2])
         tangent = _initial_bearing_deg(*pts[anchor_seg], *pts[anchor_seg + 1])
         diff = ((tangent - self.bearing_deg + 540.0) % 360.0) - 180.0
         sign = 1.0 if abs(diff) <= 90.0 else -1.0
@@ -391,8 +406,9 @@ class WorkCorridor:
         """Corridor station (ft, from the anchor) still covered by real geometry.
 
         Stations beyond this fall on the tangent continuation.  None
-        when no centerline is attached.  Station 0 (the anchor) is
-        always covered — the anchor projects onto the polyline.
+        when no centerline is attached.  The anchor itself may lie past
+        the downstream end of the geometry (#290: the tangent-extended
+        anchor); :meth:`centerline_start_ft` is that side's boundary.
         """
         frame = self._centerline_frame()
         if frame is None:
@@ -400,6 +416,23 @@ class WorkCorridor:
         cum_m, anchor_arc_m, sign = frame
         arc_room_m = (cum_m[-1] - anchor_arc_m) if sign > 0 else anchor_arc_m
         return arc_room_m * FT_PER_M
+
+    def centerline_start_ft(self) -> float | None:
+        """First corridor station (ft, from the anchor) backed by real geometry.
+
+        0 when the anchor projects onto the polyline (every corridor_end
+        pin, which snaps to the road).  Positive when the anchor sits on
+        the tangent continuation past the geometry's DOWNSTREAM end —
+        a work-start anchor walked beyond the end of the relayed way
+        (#290); stations below this are drawn on that tangent.  None when
+        no centerline is attached.
+        """
+        frame = self._centerline_frame()
+        if frame is None:
+            return None
+        cum_m, anchor_arc_m, sign = frame
+        overhang_m = -anchor_arc_m if sign > 0 else anchor_arc_m - cum_m[-1]
+        return max(0.0, overhang_m) * FT_PER_M
 
     def work_zone_path_points(self, max_points: int = 100) -> list[tuple[float, float]]:
         """Vertices of the work-zone overlay path, downstream → upstream.
@@ -1096,7 +1129,15 @@ def _corridor_from_work_start(
         **lengths,
     )
     back = corridor.point_at_station_ft(shift_ft)
-    miss_m = _haversine_m(back[0], back[1], work_start[0], work_start[1])
+    # #290 hand-check: the invariant is "the work zone's upstream edge is
+    # the pin's place ON THE ROAD" — the pin's own station 0 in its frame
+    # (its projection onto the centerline; the pin itself without one).
+    # Compared with the raw pin, every pin not exactly on the centerline
+    # missed by its lateral offset: prod N Broadway SB, a pin 11 m east of
+    # the way's centerline, was refused in both directions and the picker
+    # drew nothing.
+    on_road = at_pin.point_at_station_ft(0.0)
+    miss_m = _haversine_m(back[0], back[1], on_road[0], on_road[1])
     if miss_m > _WORK_START_ROUND_TRIP_TOL_M:
         raise ValueError(
             f"work-start corridor does not return to the pin ({miss_m:.1f} m off): the "

@@ -70,6 +70,10 @@ export interface CorridorPolyline {
   // Station (ft from the anchor) still covered by real road geometry;
   // null when the frame has no centerline (manual straight projection).
   coverageFt: number | null;
+  // #290 hand-check: the first road-backed station, when the backend's
+  // geometry starts past the anchor (the work-start anchor beyond the
+  // way's downstream end).  Absent / 0: the road reaches the anchor.
+  coverageStartFt?: number | null;
   // West, south, east, north — suitable for ``map.fitBounds``.
   bbox: [number, number, number, number];
 }

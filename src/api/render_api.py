@@ -1208,6 +1208,7 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         "work": None,
         "approaches": [],
         "coverage_ft": None,
+        "coverage_start_ft": None,
         "message": None,
         "side_options": [],
     }
@@ -1267,16 +1268,21 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         # on the end tangent) is flagged ``extended`` so the overlay can
         # draw it visibly different from road-backed footage — never a
         # tangent posing as the road (Rule 10).  Split at THIS corridor's
-        # coverage station; no centerline or full coverage: one part.
+        # geometry boundaries: ``start`` on the downstream side (a
+        # work-start anchor past the end of the way, #290 hand-check) and
+        # ``coverage`` upstream.  No centerline: one road-less part, as
+        # before — the chord IS the model there.
         coverage = c.centerline_coverage_ft()
-        if coverage is None or coverage >= b:
+        if coverage is None:
             return [{"points": points(c, a, b), "extended": False}]
-        if coverage <= a:
-            return [{"points": points(c, a, b), "extended": True}]
-        return [
-            {"points": points(c, a, coverage), "extended": False},
-            {"points": points(c, coverage, b), "extended": True},
-        ]
+        start = c.centerline_start_ft() or 0.0
+        cuts = [(a, start, True), (max(a, start), min(b, coverage), False), (coverage, b, True)]
+        out_parts = []
+        for lo, hi, extended in cuts:
+            lo, hi = max(lo, a), min(hi, b)
+            if hi > lo:
+                out_parts.append({"points": points(c, lo, hi), "extended": extended})
+        return out_parts or [{"points": points(c, a, b), "extended": True}]
 
     travel = (
         params.bearing_deg
@@ -1311,6 +1317,10 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         )
     coverage = primary.centerline_coverage_ft()
     out["coverage_ft"] = round(coverage, 1) if coverage is not None else None
+    # #290 hand-check: where the road-backed footage BEGINS — above 0 when
+    # the anchor sits past the downstream end of the way.
+    start = primary.centerline_start_ft()
+    out["coverage_start_ft"] = round(start, 1) if start is not None else None
     return JSONResponse(out)
 
 
