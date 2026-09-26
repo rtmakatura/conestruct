@@ -37,16 +37,31 @@ export async function POST(req: NextRequest) {
     return new Response("Invalid JSON", { status: 400 });
   }
 
-  const b = (body ?? {}) as { scenario?: unknown; stage?: unknown; width?: unknown; height?: unknown };
+  const b = (body ?? {}) as {
+    scenario?: unknown;
+    stage?: unknown;
+    width?: unknown;
+    height?: unknown;
+    zoom?: unknown;
+  };
   if (!isScenario(b.scenario)) {
     return new Response("Invalid scenario", { status: 400 });
   }
   const stage = STAGES.find((s) => s === b.stage);
   const width = px(b.width, 120);
   const height = px(b.height, 80);
-  if (!stage || width === null || height === null) {
+  // The band's zoom step (Ryan's hand-check ruling, 2026-09-26): optional;
+  // an integer from one step out to three in (the backend's bounds).
+  const zoom = b.zoom === undefined ? 0 : b.zoom;
+  const zoomOk = typeof zoom === "number" && Number.isInteger(zoom) && zoom >= -1 && zoom <= 3;
+  if (!stage || width === null || height === null || !zoomOk) {
     return new Response("Invalid picture request", { status: 400 });
   }
 
-  return fetchCorridorMap(b.scenario, { stage, width, height });
+  return fetchCorridorMap(b.scenario, {
+    stage,
+    width,
+    height,
+    ...(zoom !== 0 ? { zoom } : {}),
+  });
 }

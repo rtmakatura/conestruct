@@ -21,6 +21,7 @@ rule 110's palette is not what any surface draws; these are.
 
 from __future__ import annotations
 
+import math
 from typing import Any
 from urllib.parse import quote as urllib_quote
 
@@ -82,6 +83,72 @@ PIN_COLOR: str = "E8710A"
 PIN_ZOOM: int = 17
 
 STAGES: tuple[str, ...] = ("pin", "work", "laid_out")
+
+# The band's zoom (Ryan's hand-check ruling on #301, 2026-09-26): steps from
+# the whole-corridor framing — one step OUT for context, up to ZOOM_IN_MAX
+# steps in.  CHOSEN: 3.  A 1,400–2,700 ft corridor fits at about zoom 15–16
+# in the band's frame; three steps in (8x linear) reach 18–19, where lane
+# edges read on Mapbox satellite and before its imagery softens.
+ZOOM_OUT_MAX: int = 1
+ZOOM_IN_MAX: int = 3
+# Mapbox Static Images tiles are 512 px at zoom 0.
+_TILE_PX: int = 512
+_ZOOM_CEILING: float = 22.0
+
+
+def _mercator(lat: float, lng: float) -> tuple[float, float]:
+    s = math.sin(math.radians(max(-85.0, min(85.0, lat))))
+    return (lng + 180.0) / 360.0, 0.5 - math.log((1 + s) / (1 - s)) / (4 * math.pi)
+
+
+def _unmercator(x: float, y: float) -> tuple[float, float]:
+    n = math.pi - 2 * math.pi * y
+    return math.degrees(math.atan(math.sinh(n))), x * 360.0 - 180.0
+
+
+def drawn_points(
+    approaches: list[tuple[str, WorkCorridor]], *, stage: str
+) -> list[tuple[float, float]]:
+    """Every point the overlay draws at ``stage`` (the work alone at "work")."""
+    points: list[tuple[float, float]] = []
+    if stage == "laid_out":
+        for _approach_id, c in approaches:
+            for zone, a, b in zone_spans(c):
+                if zone != "work_zone":
+                    for part in zone_parts(c, a, b):
+                        points.extend(part.points)
+    primary = approaches[0][1]
+    work = next(span for span in zone_spans(primary) if span[0] == "work_zone")
+    for part in zone_parts(primary, work[1], work[2]):
+        points.extend(part.points)
+    return points
+
+
+def fit_view(
+    points: list[tuple[float, float]], width: int, height: int, padding: int
+) -> tuple[tuple[float, float], float]:
+    """The centre and zoom that fit ``points`` inside the frame, less padding.
+
+    Web Mercator, 512 px tiles — the framing Mapbox's own ``auto`` computes,
+    done here so the band's zoom steps have a number to step from.
+    """
+    xs, ys = zip(*(_mercator(lat, lng) for lat, lng in points), strict=True)
+    span_x = max(max(xs) - min(xs), 1e-9)
+    span_y = max(max(ys) - min(ys), 1e-9)
+    zoom = min(
+        math.log2(max(width - 2 * padding, 1) / (_TILE_PX * span_x)),
+        math.log2(max(height - 2 * padding, 1) / (_TILE_PX * span_y)),
+        _ZOOM_CEILING,
+    )
+    centre = _unmercator((max(xs) + min(xs)) / 2, (max(ys) + min(ys)) / 2)
+    return centre, zoom
+
+
+def work_midpoint(approaches: list[tuple[str, WorkCorridor]]) -> tuple[float, float]:
+    """The work segment's middle — where a zoomed-in view looks (P21)."""
+    primary = approaches[0][1]
+    work = next(span for span in zone_spans(primary) if span[0] == "work_zone")
+    return primary.point_at_station_ft((work[1] + work[2]) / 2.0)
 
 
 def laid_out_overlays(
@@ -149,6 +216,7 @@ def band_image_url(
     stage: str,
     width: int,
     height: int,
+    zoom: int = 0,
 ) -> tuple[str, dict[str, str]]:
     """The band aerial's Static Images URL and query (token excluded).
 
@@ -156,15 +224,28 @@ def band_image_url(
     before the side is confirmed (#290's pre-side ruling, P16).  Otherwise
     the corridor's overlays (page 2's own, :func:`fit_overlays`) with the pin
     on top, framed ``auto`` with padding.
+
+    ``zoom`` (−:data:`ZOOM_OUT_MAX` … +:data:`ZOOM_IN_MAX`) steps from that
+    framing; 0 is the shipped whole-corridor ``auto`` view, unchanged.  A
+    step in looks at the work's middle; the step out at the corridor's.
+    The overlay and the pin are the same at every step.
     """
+    if not -ZOOM_OUT_MAX <= zoom <= ZOOM_IN_MAX:
+        raise ValueError(f"zoom step {zoom} outside -{ZOOM_OUT_MAX}..{ZOOM_IN_MAX}")
     pin = pin_marker(lat, lng)
     size = f"{width}x{height}@2x"
     base = f"https://api.mapbox.com/styles/v1/mapbox/{STYLE}/static/"
     if stage == "pin" or not approaches:
-        return f"{base}{pin}/{lng:.6f},{lat:.6f},{PIN_ZOOM},0/{size}", {}
+        return f"{base}{pin}/{lng:.6f},{lat:.6f},{PIN_ZOOM + zoom},0/{size}", {}
     overlays = fit_overlays(approaches, stage=stage, suffix=f",{pin}")
     padding = NARROW_PADDING_PX if width < NARROW_BELOW_PX else PADDING_PX
-    return f"{base}{overlays}auto/{size}", {"padding": str(padding)}
+    if zoom == 0:
+        return f"{base}{overlays}auto/{size}", {"padding": str(padding)}
+    centre, fit = fit_view(drawn_points(approaches, stage=stage), width, height, padding)
+    if zoom > 0:
+        centre = work_midpoint(approaches)
+    z = max(0.0, min(_ZOOM_CEILING, fit + zoom))
+    return f"{base}{overlays}{centre[1]:.6f},{centre[0]:.6f},{z:.2f},0/{size}", {}
 
 
 def fetch_png(url: str, query: dict[str, str], token: str) -> bytes:

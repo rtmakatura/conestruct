@@ -33,7 +33,16 @@ export interface AerialRequest {
   stage: AerialStage;
   width: number;
   height: number;
+  /** The zoom step (hand-check ruling, 2026-09-26): absent = the whole
+   *  corridor; −1 one step out; +1..+3 in.  Sent only when not 0. */
+  zoom?: number;
 }
+
+/** The band's zoom bounds — the backend's (static_aerial.ZOOM_OUT_MAX /
+ *  ZOOM_IN_MAX, CHOSEN there).  A mirror for rendering the buttons'
+ *  bounds only; the backend refuses a step outside them. */
+export const ZOOM_OUT_MAX = 1;
+export const ZOOM_IN_MAX = 3;
 
 export type AerialFetch =
   | { state: "idle" }
@@ -74,9 +83,17 @@ export function forgetAerials() {
  */
 export function useCorridorAerial(req: AerialRequest | null): AerialFetch {
   const key = req ? JSON.stringify(req) : null;
-  const [result, setResult] = useState<AerialFetch>(() =>
-    key && cache.has(key) ? { state: "ready", src: cache.get(key)! } : { state: "idle" },
-  );
+  // Every answer is tagged with the request it answers.  On the render in
+  // which the request changes, the effect below has not run yet, so the
+  // held answer is the OLD request's — and an old picture returned as this
+  // request's would show another corridor as this one (Rule 10; the #301
+  // zoom hand-check's hold made the window visible).  An answer is
+  // returned only for its own request.
+  const [answer, setAnswer] = useState<{ key: string | null; fetch: AerialFetch }>(() => ({
+    key,
+    fetch: key && cache.has(key) ? { state: "ready", src: cache.get(key)! } : { state: "idle" },
+  }));
+  const setResult = (fetch: AerialFetch) => setAnswer({ key, fetch });
   const tokenRef = useRef(0);
   useEffect(() => {
     const token = ++tokenRef.current;
@@ -130,6 +147,11 @@ export function useCorridorAerial(req: AerialRequest | null): AerialFetch {
       clearTimeout(timer);
       controller.abort();
     };
+    // `setResult` closes over `key`, which is the dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
-  return result;
+  if (key === null) return { state: "idle" };
+  if (answer.key === key) return answer.fetch;
+  const cached = cache.get(key);
+  return cached ? { state: "ready", src: cached } : { state: "loading" };
 }

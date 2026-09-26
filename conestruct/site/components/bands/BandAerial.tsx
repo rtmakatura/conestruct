@@ -35,7 +35,13 @@ import {
   refusalReason,
   type GeometryFetch,
 } from "@/lib/corridor-geometry";
-import { aerialStage, useCorridorAerial, type AerialStage } from "@/lib/corridor-aerial";
+import {
+  ZOOM_IN_MAX,
+  ZOOM_OUT_MAX,
+  aerialStage,
+  useCorridorAerial,
+  type AerialStage,
+} from "@/lib/corridor-aerial";
 import { ZONE_CHANNEL, ZONE_COLOR, ZONE_LABEL, type CorridorZone } from "@/lib/corridor-zones";
 
 // Upstream first — the motorist's order, the picker's and page 2's legend.
@@ -95,9 +101,34 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
   // picture of the previous answer is a stale corridor (Rule 10).
   const g = geometry.state === "ready" ? geometry.geometry : null;
   const stage = aerialStage(g, kindConfirmed);
+  // Zoom (Ryan's hand-check ruling, 2026-09-26).  The step belongs to ONE
+  // picture — this scenario, stage and frame — so a new picture always
+  // opens on the whole corridor, with no effect to reset it.
+  const base = stage && size ? JSON.stringify({ scenario, stage, size }) : null;
+  const [zoomAt, setZoomAt] = useState<{ base: string | null; step: number }>({
+    base: null,
+    step: 0,
+  });
+  const step = zoomAt.base === base ? zoomAt.step : 0;
   const aerial = useCorridorAerial(
-    stage && size ? { scenario, stage, width: size.width, height: size.height } : null,
+    stage && size
+      ? {
+          scenario,
+          stage,
+          width: size.width,
+          height: size.height,
+          ...(step !== 0 ? { zoom: step } : {}),
+        }
+      : null,
   );
+  // P16: while a zoom step is drawn, the previous picture OF THE SAME
+  // corridor stays — no blank, no wait note on the image.  A different
+  // corridor (base) is never held over (Rule 10).
+  const held = useRef<{ base: string | null; src: string } | null>(null);
+  if (aerial.state === "ready") held.current = { base, src: aerial.src };
+  const holding =
+    aerial.state === "loading" && held.current !== null && held.current.base === base;
+  const src = aerial.state === "ready" ? aerial.src : holding ? held.current!.src : null;
 
   if (geometry.state === "ready" && g?.status === "no_pin") return null;
 
@@ -111,10 +142,14 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
         ? `Can't lay the corridor out here — ${aerial.message.replace(/^\w+Error:\s*/, "")}`
         : AERIAL_FAILED;
   } else if (aerial.state === "error") note = AERIAL_FAILED;
-  else if (aerial.state !== "ready") note = AERIAL_WAIT;
+  else if (aerial.state !== "ready" && !holding) note = AERIAL_WAIT;
   else if (stage === "pin") note = SIDE_BLOCKER;
 
-  const shown = aerial.state === "ready" && stage !== null;
+  const shown = src !== null && stage !== null;
+  const zoomTo = (next: number) => {
+    if (next < -ZOOM_OUT_MAX || next > ZOOM_IN_MAX) return;
+    setZoomAt({ base, step: next });
+  };
   const approaches = g?.approaches ?? [];
   const extended =
     stage === "laid_out"
@@ -131,7 +166,45 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
           // optimise or resize, and it cannot load a blob: URL through its
           // loader.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={aerial.src} alt={ALT[stage]} data-testid="band-aerial-img" />
+          <img src={src} alt={ALT[stage]} data-testid="band-aerial-img" />
+        )}
+        {shown && (
+          // The zoom controls: reads (data-read), never locked by the
+          // write lock.  At a bound a button is aria-disabled — still
+          // focusable, and it does nothing.
+          <div className="a-aerial-zoom" data-testid="band-aerial-zoom" data-step={step}>
+            <button
+              type="button"
+              className="a-aerial-zbtn"
+              data-read
+              aria-label="Zoom in"
+              aria-disabled={step >= ZOOM_IN_MAX || undefined}
+              onClick={() => zoomTo(step + 1)}
+            >
+              +
+            </button>
+            <button
+              type="button"
+              className="a-aerial-zbtn"
+              data-read
+              aria-label="Zoom out"
+              aria-disabled={step <= -ZOOM_OUT_MAX || undefined}
+              onClick={() => zoomTo(step - 1)}
+            >
+              −
+            </button>
+            {step !== 0 && (
+              <button
+                type="button"
+                className="a-aerial-zbtn a-aerial-reset tr-prov"
+                data-read
+                aria-label="Reset to the whole corridor"
+                onClick={() => zoomTo(0)}
+              >
+                Reset
+              </button>
+            )}
+          </div>
         )}
         {note && (
           <div

@@ -60,3 +60,23 @@ describe("the corridor-map proxy", () => {
     expect(forwarded).toEqual([]);
   });
 });
+
+describe("the zoom step (hand-check ruling, 2026-09-26)", () => {
+  it("forwards a step when one is asked for, and nothing when it is the whole corridor", async () => {
+    await post({ scenario: DEFAULT_SHOULDER, stage: "laid_out", width: 600, height: 300, zoom: 2 });
+    await post({ scenario: DEFAULT_SHOULDER, stage: "laid_out", width: 600, height: 300, zoom: 0 });
+    expect(forwarded.map((f) => (f as { picture: unknown }).picture)).toEqual([
+      { stage: "laid_out", width: 600, height: 300, zoom: 2 },
+      { stage: "laid_out", width: 600, height: 300 },
+    ]);
+  });
+
+  it("refuses a step outside one out / three in, or not a whole number", async () => {
+    for (const zoom of [-2, 4, 1.5, "1"]) {
+      const res = await post({ scenario: DEFAULT_SHOULDER, stage: "laid_out", width: 600, height: 300, zoom });
+      expect(res.status).toBe(400);
+    }
+    expect(forwarded).toEqual([]);
+  });
+});
+

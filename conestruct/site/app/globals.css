@@ -5108,3 +5108,42 @@ input[type="number"] {
     height: 250px;
   }
 }
+
+/* The band aerial's zoom (Ryan's hand-check ruling, 2026-09-26): + / −
+   and Reset on the image, top-right (clear of the Mapbox logo and
+   attribution at the bottom).  32 px, 44 at 380 — rule 133's pair. */
+.workbench .a-aerial-zoom {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.workbench .a-aerial-zbtn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--ink);
+  background: rgb(var(--ws-surface-rgb) / 0.9);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+.workbench .a-aerial-reset {
+  padding: 0 8px;
+}
+.workbench .a-aerial-zbtn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+.workbench .a-aerial-zbtn:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 1px;
+}
+@media (max-width: 480px) {
+  .workbench .a-aerial-zbtn {
+    min-width: 44px;
+    height: 44px;
+  }
+}

@@ -302,7 +302,7 @@ export type CorridorMapStage = "pin" | "work" | "laid_out";
 
 export async function fetchCorridorMap(
   scenario: Scenario,
-  picture: { stage: CorridorMapStage; width: number; height: number },
+  picture: { stage: CorridorMapStage; width: number; height: number; zoom?: number },
 ): Promise<Response> {
   const url = process.env.MODAL_RENDER_URL;
   const secret = process.env.MODAL_RENDER_SECRET;

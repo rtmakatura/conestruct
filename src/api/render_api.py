@@ -1209,6 +1209,9 @@ class CorridorMapRequest(BaseModel):
     # CSS px; the image is drawn @2x.  Mapbox's own limit is 1280.
     width: int = Field(ge=120, le=1280)
     height: int = Field(ge=80, le=1280)
+    # The band's zoom step (Ryan's hand-check ruling, 2026-09-26): 0 is the
+    # whole corridor; one step out; up to three in (static_aerial, CHOSEN).
+    zoom: int = Field(default=0, ge=-1, le=3)
 
 
 @app.post("/render/corridor-map")
@@ -1259,7 +1262,13 @@ def render_corridor_map(req: CorridorMapRequest) -> Response:
             {"status": "unavailable", "message": "no map token configured"}, status_code=503
         )
     url, query = _static_aerial.band_image_url(
-        meta.lat, meta.lng, approaches, stage=req.stage, width=req.width, height=req.height
+        meta.lat,
+        meta.lng,
+        approaches,
+        stage=req.stage,
+        width=req.width,
+        height=req.height,
+        zoom=req.zoom,
     )
     try:
         png = _static_aerial.fetch_png(url, query, token)

@@ -106,12 +106,18 @@ def client() -> TestClient:
     return TestClient(app)
 
 
-def band(client: TestClient, scenario: dict[str, Any], stage: str, w: int = 600, h: int = 300):
-    return client.post(
-        "/render/corridor-map",
-        headers=AUTH,
-        json={"scenario": scenario, "stage": stage, "width": w, "height": h},
-    )
+def band(
+    client: TestClient,
+    scenario: dict[str, Any],
+    stage: str,
+    w: int = 600,
+    h: int = 300,
+    zoom: int | None = None,
+):
+    body: dict[str, Any] = {"scenario": scenario, "stage": stage, "width": w, "height": h}
+    if zoom is not None:
+        body["zoom"] = zoom
+    return client.post("/render/corridor-map", headers=AUTH, json=body)
 
 
 def overlays_of(url: str) -> str:
@@ -269,3 +275,123 @@ def test_unquoted_overlay_is_well_formed(client: TestClient, mapbox: list[dict[s
     overlays = unquote(overlays_of(mapbox[-1]["url"]))
     assert overlays.count("path-") >= 9
     assert len(mapbox[-1]["url"]) < 8192
+
+
+# ---------------------------------------------------------------------------
+# Zoom (Ryan's hand-check ruling on #301, 2026-09-26): "+ / − ... re-request
+# /render/corridor-map with a zoom step; the default framing stays the whole
+# corridor ... allow one step out for context; + allows up to N steps in, N
+# CHOSEN and recorded.  Keep the pin and overlay."
+# ---------------------------------------------------------------------------
+
+_VIEW = re.compile(
+    r"/static/(?P<overlays>.*)/(?P<lng>-?[\d.]+),(?P<lat>-?[\d.]+),(?P<z>[\d.]+),0/(?P<w>\d+)x(?P<h>\d+)@2x$"
+)
+
+
+def view_of(url: str) -> dict[str, Any]:
+    m = _VIEW.search(url)
+    assert m, url
+    return {
+        "overlays": m.group("overlays"),
+        "lat": float(m.group("lat")),
+        "lng": float(m.group("lng")),
+        "z": float(m.group("z")),
+    }
+
+
+def _pixel_box(points, lat, lng, z, w, h):  # noqa: ANN001
+    """Where each point lands in a w x h frame centred at (lat, lng), zoom z."""
+    import math
+
+    def merc(la: float, lo: float) -> tuple[float, float]:
+        s_ = math.sin(math.radians(la))
+        return (lo + 180) / 360, 0.5 - math.log((1 + s_) / (1 - s_)) / (4 * math.pi)
+
+    cx, cy = merc(lat, lng)
+    scale = 512 * 2**z
+    return [
+        ((x - cx) * scale + w / 2, (y - cy) * scale + h / 2) for x, y in (merc(*p) for p in points)
+    ]
+
+
+def test_step_zero_is_the_shipped_framing(client: TestClient, mapbox: list[dict[str, Any]]) -> None:
+    band(client, fixture("broadway-sb"), "laid_out")
+    default = mapbox[-1]["url"]
+    band(client, fixture("broadway-sb"), "laid_out", zoom=0)
+    assert mapbox[-1]["url"] == default
+    assert "/auto/" in default
+
+
+@pytest.mark.parametrize("name", ["broadway-sb", "lafayette-flagger"])
+def test_the_steps_keep_the_overlay_and_the_pin(
+    client: TestClient, mapbox: list[dict[str, Any]], name: str
+) -> None:
+    band(client, fixture(name), "laid_out")
+    shipped = overlays_of(mapbox[-1]["url"])
+    for zoom in (-1, 1, 2, 3):
+        band(client, fixture(name), "laid_out", zoom=zoom)
+        assert view_of(mapbox[-1]["url"])["overlays"] == shipped, zoom
+        assert "padding" not in mapbox[-1]["params"]
+
+
+def test_the_fit_holds_the_whole_corridor_and_each_step_is_one_level(
+    client: TestClient, mapbox: list[dict[str, Any]]
+) -> None:
+    """The backend's fit (the number the steps step from) puts every drawn
+    point inside the frame at step 0's zoom; −1 is one level out; +1..+3 are
+    one level in each."""
+    from src.api.schemas import scenario_to_call
+    from src.rules.corridor_layout import laid_out
+
+    scenario = fixture("lafayette-flagger")
+    from pydantic import TypeAdapter
+
+    from src.api.schemas import Scenario
+
+    params, *_ = scenario_to_call(
+        TypeAdapter(Scenario).validate_python(scenario), place_cross_street=False
+    )
+    _primary, approaches = laid_out(params, scenario["meta"]["lat"], scenario["meta"]["lng"])
+    points = sa.drawn_points(approaches, stage="laid_out")
+    (clat, clng), fit = sa.fit_view(points, 600, 300, sa.PADDING_PX)
+    for x, y in _pixel_box(points, clat, clng, fit, 600, 300):
+        assert sa.PADDING_PX - 1 <= x <= 600 - sa.PADDING_PX + 1
+        assert sa.PADDING_PX - 1 <= y <= 300 - sa.PADDING_PX + 1
+
+    band(client, scenario, "laid_out", zoom=-1)
+    out = view_of(mapbox[-1]["url"])
+    assert out["z"] == pytest.approx(fit - 1, abs=0.01)
+    # One step out looks at the corridor's middle.
+    assert (out["lat"], out["lng"]) == pytest.approx((clat, clng), abs=1e-6)
+    for zoom in (1, 2, 3):
+        band(client, scenario, "laid_out", zoom=zoom)
+        assert view_of(mapbox[-1]["url"])["z"] == pytest.approx(fit + zoom, abs=0.01)
+
+
+def test_a_step_in_looks_at_the_work(client: TestClient, mapbox: list[dict[str, Any]]) -> None:
+    """P21: zooming in centres on the work segment's middle — what the pin marks."""
+    band(client, fixture("broadway-sb"), "laid_out", zoom=3)
+    view = view_of(mapbox[-1]["url"])
+    # The work runs south from the pin (#298's fix): its middle is south of
+    # the pin, on the same road.
+    pin = fixture("broadway-sb")["meta"]
+    assert view["lat"] < pin["lat"]
+    assert abs(view["lng"] - pin["lng"]) < 0.001
+
+
+def test_before_the_side_the_steps_move_the_pin_view(
+    client: TestClient, mapbox: list[dict[str, Any]]
+) -> None:
+    scenario = unsided("broadway-sb")
+    for zoom, z in ((-1, sa.PIN_ZOOM - 1), (3, sa.PIN_ZOOM + 3)):
+        band(client, scenario, "pin", zoom=zoom)
+        assert f",{z},0/" in mapbox[-1]["url"]
+        assert "path-" not in mapbox[-1]["url"]
+
+
+def test_the_steps_are_bounded(client: TestClient, mapbox: list[dict[str, Any]]) -> None:
+    """One step out, three in (CHOSEN, static_aerial.ZOOM_IN_MAX)."""
+    assert (sa.ZOOM_OUT_MAX, sa.ZOOM_IN_MAX) == (1, 3)
+    for zoom in (-2, 4):
+        assert band(client, fixture("broadway-sb"), "laid_out", zoom=zoom).status_code == 422

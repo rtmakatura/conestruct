@@ -206,3 +206,27 @@ move all three surfaces together.
 **On the record:**
 - **The corridor-spec deletion is its own commit.** It covers the backend endpoint, its request model and taper-family table; the Next route and its test; `fetchCorridorSpec`; and the endpoint's tests. The cross-surface "one downstream length" test keeps its picker leg, now reading what the picker draws (`/render/corridor-geometry`).
 - **The local sweep is not run.** `sweep.cjs` is committed with the prod evidence on a separate branch after the ship, run headless against `https://www.conestruct.com/sandbox`.
+
+---
+
+## The hand-check ruling: zoom on the band's aerial, verbatim (Ryan, 2026-09-26, after `d6e00a7` shipped)
+
+> Ryan's hand-check on #301: "looks great." One addition: the band's aerial gets zoom. Keep option (a) — no mapbox-gl on the band. Add + / − controls on the image (32 px, 44 at 380, data-read, never locked by the write lock) that re-request /render/corridor-map with a zoom step; the default framing stays the whole corridor, − never zooms out past it... actually allow one step out for context; + allows up to N steps in, N CHOSEN and recorded. Keep the pin and overlay; the legend doesn't change. Show the previous image until the new one arrives (P16 — no blank, no spinner on the image). A "reset" returns to the whole-corridor framing. Record the ruling in rulings.md.
+>
+> Then the prod sweep on the shipped version plus the zoom states, committed on the same branch, and ONE ship line. Then the #301 and #302 close texts as plain text in this chat.
+
+**How it is built:**
+- **The request:** `POST /render/corridor-map` takes `zoom`, an integer step from **−1** (one step out, for context) to **+3**.
+  - **N = 3, CHOSEN.** A corridor of about 1,400–2,700 ft fits at roughly zoom 15–16 in the band's frame, and three steps in (8× linear) reaches zoom 18–19, where the lane edges and cones' ground are legible on Mapbox satellite. Beyond that the imagery softens.
+- **Step 0 is unchanged:** the whole-corridor `auto` framing that shipped, byte for byte.
+- **Other steps take an explicit centre and zoom, computed on the backend (Rule 3):**
+  - **The base:** the backend's own fit of every drawn point into the frame, with the same padding.
+  - **Zooming in** centres on the **work segment's midpoint**, the thing the pin marks (P21).
+  - **One step out** centres on the **corridor's middle**.
+  - **Before the side:** the steps apply to the pin view's zoom 17, centred on the pin.
+- **The band:**
+  - + / − and "Reset" sit on the image. They are 32 px, and 44 px at ≤480.
+  - They are `data-read` and never disabled by the write lock. At a bound, a button is `aria-disabled`: still focusable, and it does nothing.
+  - Reset appears only away from step 0.
+  - While a zoom step loads, the **previous picture of the same corridor stays**, with no blank and no wait note on the image. A new scenario or stage still clears it (Rule 10: never another corridor's picture). A new scenario, stage or frame size resets the zoom to 0.
+  - The pin, the overlay and the legend are unchanged.

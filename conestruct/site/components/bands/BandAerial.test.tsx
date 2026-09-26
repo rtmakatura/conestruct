@@ -206,3 +206,90 @@ describe("the band's aerial, state by state", () => {
     expect(q("band-aerial")?.hasAttribute("data-read")).toBe(true);
   });
 });
+
+// Ryan's hand-check ruling on #301, 2026-09-26: "+ / − controls on the image
+// (32 px, 44 at 380, data-read, never locked by the write lock) that
+// re-request /render/corridor-map with a zoom step ... Show the previous
+// image until the new one arrives (P16 — no blank, no spinner on the
+// image).  A "reset" returns to the whole-corridor framing."
+describe("the band's aerial zooms", () => {
+  const btn = (label: string) =>
+    document.querySelector<HTMLButtonElement>(`[data-testid="band-aerial-zoom"] [aria-label="${label}"]`);
+
+  async function drawn() {
+    render(<BandAerial scenario={SCENARIO} geometry={answer("laid_out")} kindConfirmed />);
+    await settle();
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
+  }
+
+  it("+ re-requests a step in; the previous picture stays, with no wait note, until it lands", async () => {
+    await drawn();
+    await act(async () => btn("Zoom in")!.click());
+    // Held: the same corridor's picture, no blank, no note on the image.
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
+    expect(q("band-aerial-note")).toBeNull();
+    await settle();
+    expect(requests.map((r) => (r as { zoom?: number }).zoom ?? 0)).toEqual([0, 1]);
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-2");
+    expect(q("band-aerial-zoom")?.getAttribute("data-step")).toBe("1");
+  });
+
+  it("one step out, three in — the bounds do nothing, and say so to assistive tech", async () => {
+    await drawn();
+    await act(async () => btn("Zoom out")!.click());
+    await settle();
+    expect(btn("Zoom out")!.getAttribute("aria-disabled")).toBe("true");
+    await act(async () => btn("Zoom out")!.click());
+    await settle();
+    expect(q("band-aerial-zoom")?.getAttribute("data-step")).toBe("-1");
+    for (let i = 0; i < 5; i++) {
+      await act(async () => btn("Zoom in")!.click());
+      await settle();
+    }
+    expect(q("band-aerial-zoom")?.getAttribute("data-step")).toBe("3");
+    expect(btn("Zoom in")!.getAttribute("aria-disabled")).toBe("true");
+    expect(requests.map((r) => (r as { zoom?: number }).zoom ?? 0)).toEqual([0, -1, 0, 1, 2, 3].filter(
+      // the step back to 0 is the first picture, already drawn — not asked again
+      (z, i) => !(z === 0 && i > 0),
+    ));
+  });
+
+  it("Reset appears away from the whole corridor and returns to it — the first picture, not asked again", async () => {
+    await drawn();
+    expect(btn("Reset to the whole corridor")).toBeNull();
+    await act(async () => btn("Zoom in")!.click());
+    await settle();
+    await act(async () => btn("Reset to the whole corridor")!.click());
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
+    expect(q("band-aerial-zoom")?.getAttribute("data-step")).toBe("0");
+    expect(btn("Reset to the whole corridor")).toBeNull();
+    await settle();
+    expect(requests).toHaveLength(2);
+  });
+
+  it("a different corridor opens on the whole corridor and never holds the old picture (Rule 10)", async () => {
+    const { rerender } = render(
+      <BandAerial scenario={SCENARIO} geometry={answer("laid_out")} kindConfirmed />,
+    );
+    await settle();
+    await act(async () => btn("Zoom in")!.click());
+    await settle();
+    const moved = { ...SCENARIO, meta: { ...SCENARIO.meta, lat: SCENARIO.meta.lat + 0.001 } };
+    rerender(<BandAerial scenario={moved} geometry={answer("laid_out")} kindConfirmed />);
+    expect(q("band-aerial-img")).toBeNull();
+    expect(q("band-aerial-note")?.textContent).toBe(AERIAL_WAIT);
+    await settle();
+    expect((requests.at(-1) as { zoom?: number }).zoom).toBeUndefined();
+    expect(q("band-aerial-zoom")?.getAttribute("data-step")).toBe("0");
+  });
+
+  it("the controls are reads: data-read, never disabled (the write lock leaves them live)", async () => {
+    await drawn();
+    for (const label of ["Zoom in", "Zoom out"]) {
+      const b = btn(label)!;
+      expect(b.hasAttribute("data-read")).toBe(true);
+      expect(b.disabled).toBe(false);
+    }
+  });
+});
+
