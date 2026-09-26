@@ -24,6 +24,7 @@ import type { ReactNode } from "react";
 import type { SectionSlot } from "./JurisdictionSection";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { CorridorSpecLengths } from "@/lib/render-types";
+import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import {
@@ -206,7 +207,15 @@ export function BandStack(props: BandStackProps) {
           kindConfirmed={kindState === "confirmed"}
           onConfirm={() => {
             onKindConfirmed?.();
-            setOpenOverride("what");
+            // #290 prod sweep finding: with the side still owed, Confirm
+            // does not move on — it hands the choice back to the column
+            // (`null`), which keeps WHERE open (the side control is here)
+            // and opens WHAT itself the moment the side is chosen
+            // (deriveBands' `natural`).  Side already answered: WHAT, as
+            // before.
+            setOpenOverride(
+              hasLocation(scenario.meta) && !hasConfirmedSide(scenario.meta) ? null : "what",
+            );
           }}
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}

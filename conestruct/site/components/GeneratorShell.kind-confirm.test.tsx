@@ -392,6 +392,26 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(screen.getByTestId("move-grow").getAttribute("data-move-state")).toBe("done");
   });
 
+  // #290 prod sweep finding (flagger-*-04-kind-confirmed-side-owed): the
+  // kind confirmed BEFORE the side used to open WHAT with the side control
+  // folded away.  Ryan, 2026-09-25: "WHERE's Confirm doesn't move on to
+  // WHAT while the side is owed, and the side control stays open on WHERE
+  // until chosen."
+  it("confirming the kind before the side keeps WHERE open on the side control, then moves on when it is chosen", async () => {
+    const user = await freshWithRoad({ side: false });
+    await user.click(chip("flagger_lane_closure"));
+    await confirmKind();
+    await settle();
+    expect(openBand()).toBe("where");
+    expect(document.querySelectorAll('[data-testid="side-option"]').length).toBeGreaterThan(0);
+    expect(screen.getByTestId("move-kind").getAttribute("data-move-state")).toBe("done");
+    expect(screen.getByTestId("move-side").getAttribute("data-move-state")).toBe("attention");
+
+    await answerSide();
+    await settle();
+    expect(openBand()).toBe("what");
+  });
+
   it("#290, PAYLOAD: a confirmed kind with no side fires no check, and Generate names the side", async () => {
     const user = await freshWithRoad({ side: false });
     await user.click(chip("shoulder"));

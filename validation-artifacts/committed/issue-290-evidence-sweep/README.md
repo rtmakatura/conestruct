@@ -36,7 +36,7 @@ No horizontal scroll in any state at either width (`hScroll: false` in every rec
      occupied to lay out the work".
    - But the side control is inside the collapsed WHERE band, and nothing on screen leads back
      to it. The shoulder order (side first) doesn't hit this.
-   - Not fixed here; commit 9 is evidence.
+   - Not fixed in commit 9 (evidence only); fixed in the next commit on this branch; see local-fix/ below.
 2. **Capture artifact, not a defect.** In full-page screenshots the fixed site header lands
    mid-page (for example `shoulder-380-04`, over the ledger's first row). Full-page capture
    repositions fixed elements; the page itself scrolls under the header.
@@ -46,3 +46,21 @@ No horizontal scroll in any state at either width (`hScroll: false` in every rec
 4. **Not reachable on prod now:** a refused corridor. The picker states the backend's reason,
    and `LocationPickerModal.coverage.test.tsx` covers it. The prod pins that used to trigger it
    (`issue-290-picker-draws/repro-prod/`) now lay out.
+
+## local-fix/ — the kind-before-side fix, re-shot (this branch's backend and site, local)
+
+Ryan, 2026-09-25: "WHERE's Confirm doesn't move on to WHAT while the side is owed, and the side
+control stays open on WHERE until chosen." This is the same `sweep.cjs flagger 1440` run with
+`AUDIT_SITE=http://127.0.0.1:3290/sandbox`.
+
+- `flagger-1440-04-kind-confirmed-side-owed.png`: the kind is confirmed and the side is owed.
+  - The column stays on **STEP 1 WHERE**.
+  - "Which side is occupied?" is the washed row (⚠ needs you), with both side options open
+    beneath it. The kind row is ✓.
+  - The strip still reads AWAITING OCCUPIED SIDE, and Generate's reason names the side.
+  - On prod before the fix, the same state had the column on STEP 2 WHAT with the side control
+    folded away (`prod/flagger-1440-04-kind-confirmed-side-owed.png`).
+- `flagger-1440-05-both-answered.*`: once the side is chosen, the column moves on to WHAT by
+  itself.
+- WHAT's own CHANGE link still opens it while the side is owed. That is an explicit request, and
+  only the column's own move waits.

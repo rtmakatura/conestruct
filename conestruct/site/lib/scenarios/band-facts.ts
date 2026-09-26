@@ -23,7 +23,7 @@
 // imports `hasLocation` rather than re-deriving "is there a pin".
 
 import { candidateLabel, crossStreetLabel } from "../road-detection/labels";
-import { SCENARIO_KINDS, hasLocation } from "./index";
+import { SCENARIO_KINDS, hasConfirmedSide, hasLocation } from "./index";
 import type { Scenario, ScenarioKind } from "./types";
 
 /** The two bands, plus the GENERATE slot's id.
@@ -387,6 +387,16 @@ export function deriveBands({
   // kind.  Before that it is a pending line, and its reason is the one
   // thing still owed.
   const whatReady = located && kindConfirmed;
+  // #290 prod sweep finding (Ryan, 2026-09-25: "WHERE's Confirm doesn't
+  // move on to WHAT while the side is owed, and the side control stays
+  // open on WHERE until chosen").  The side is WHERE's question too, so
+  // the column's OWN reading of the live question stays on WHERE while it
+  // is owed — the side control is in that band.  Confirming the kind
+  // first used to open WHAT while the strip said AWAITING OCCUPIED SIDE,
+  // with the side control folded away.  WHAT stays REACHABLE (its CHANGE
+  // link is an explicit request, honoured below); only the column's own
+  // move waits, and it moves the moment the side is chosen.
+  const sideOwed = located && !hasConfirmedSide(scenario.meta);
 
   // The column's own reading of "which question is live".
   //
@@ -404,7 +414,7 @@ export function deriveBands({
   // the confirm press, and the press is what collapses it.  The chips
   // start with none pressed (components/bands/WhereBand.tsx), so the
   // confirm is now a decision again rather than ceremony.
-  const natural: BandId = whatReady ? "what" : "where";
+  const natural: BandId = whatReady && !sideOwed ? "what" : "where";
   // An override onto WHAT before the kind is confirmed is refused here
   // rather than trusted: WHAT is pending, and a pending line has no band
   // to open (rule 59).

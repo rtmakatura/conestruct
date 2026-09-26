@@ -111,6 +111,15 @@ describe("the chosen side is visible, and the options are spaced", () => {
     await act(async () => {
       option.click();
     });
+    // RULE 5, stated (the kind-before-side fix): this plan's kind is
+    // already confirmed, so the side was the last WHERE answer owed and
+    // the column moves on to WHAT (deriveBands' `natural`).  Re-open WHERE
+    // the way a person does to see the choice.
+    expect(
+      document.querySelector('[data-testid="band-stack"]')?.getAttribute("data-open-band"),
+    ).toBe("what");
+    await openWhere();
+    await waitForOptions();
     const checked = document.querySelector<HTMLElement>(
       '[data-testid="side-option"][aria-checked="true"]',
     );

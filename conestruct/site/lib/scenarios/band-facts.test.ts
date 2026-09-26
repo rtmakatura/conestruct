@@ -130,3 +130,25 @@ describe("defect 2 — the setup line is its values, each one a target", () => {
     );
   });
 });
+
+
+// #290 prod sweep finding (Ryan, 2026-09-25): "WHERE's Confirm doesn't
+// move on to WHAT while the side is owed, and the side control stays open
+// on WHERE until chosen."
+describe("the column waits on the occupied side (#290 sweep)", () => {
+  const { work: _side, ...unsidedMeta } = PINNED_SHOULDER.meta;
+  const UNSIDED = { ...PINNED_SHOULDER, meta: unsidedMeta } as Scenario;
+
+  it("kind confirmed, side owed: the column's own choice is WHERE", () => {
+    expect(deriveBands({ scenario: UNSIDED, jurisdictionName: null, openOverride: null, kindConfirmed: true }).open).toBe("where");
+  });
+
+  it("the side answered: the column moves on to WHAT", () => {
+    expect(deriveBands({ scenario: PINNED_SHOULDER, jurisdictionName: null, openOverride: null, kindConfirmed: true }).open).toBe("what");
+  });
+
+  it("WHAT stays reachable by its link while the side is owed — an explicit request", () => {
+    const m = deriveBands({ scenario: UNSIDED, jurisdictionName: null, kindConfirmed: true, openOverride: "what" });
+    expect(m.open).toBe("what");
+  });
+});
