@@ -8,33 +8,19 @@
 // 133, 135.
 //
 // ─────────────────────────────────────────────────────────────────────
-// A RECORDED DEVIATION FROM RULING 189, AND ITS REASON
+// RULING 189, NOW WHOLE: THE BAND OWNS THE AERIAL (#301 piece 1)
 //
 // Ruling 189: "Phase 2: the Where band owns the aerial and the outcome;
-// the picker modal stays for the decision work."  This band owns the
-// OUTCOME — the move ledger, the extent, the kind, the confirmed road's
-// provenance.  It does NOT own the aerial, and that is a deviation
-// recorded here rather than papered over:
-//
-//   · There is no aerial component outside `LocationPickerModal.tsx`.
-//     The map, its sources, its layers and its whole interaction model
-//     are 3,293 lines of modal state; lifting them into the band is the
-//     migration ruling 189 phases ("it migrates piece by piece in Phase 3
-//     and after"), not a detail of this ship.
-//   · Rule 14 forbids the obvious cheat.  A striped placeholder is
-//     Part 1 §7.17's own device for a document that cannot generate
-//     imagery; on a live surface it is a placeholder bar, which rule 14
-//     bans anywhere.  So the band shows no aerial rather than a fake one.
-//   · `lib/corridor-map.ts` builds a Mapbox Static Images URL and its
-//     header names `app/api/corridor-map/route.ts` as its consumer.
-//     That route DOES NOT EXIST (checked at e60c91c).  A static aerial is
-//     therefore a route plus a token path plus its own failure states,
-//     which is its own commit.
-//
-// What the band does instead is say so, in the one place a reader looks:
-// the band's provenance carries the pin's coordinates (Part 1 §7.15
-// reserves the lat/lng for provenance lines), and the picker is one
-// button away.  Nothing claims a map is coming.
+// the picker modal stays for the decision work."  Phase 2 shipped the
+// outcome and recorded the aerial as a deviation (no aerial outside the
+// modal, a placeholder banned by rule 14, and a static-image route that
+// did not exist).  #301 closes it: `BandAerial`, under the move ledger, is
+// a read-only picture of the corridor drawn by the backend
+// (POST /render/corridor-map — #302's one layout call, page 2's own
+// overlay), so the side and the kind are confirmed with their consequence
+// in view.  The modal keeps the decision work (detection, candidates, the
+// cross street, suggestions) and stays one button away.
+// Authority: validation-artifacts/committed/issue-301-band-aerial/rulings.md.
 // ─────────────────────────────────────────────────────────────────────
 
 import { useState } from "react";
@@ -69,6 +55,7 @@ import {
 import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
 import { OpenBand } from "./BandPrimitives";
+import { BandAerial } from "./BandAerial";
 import { ManualFallback } from "./ManualFallback";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
 import { useWriteLock } from "../WriteLock";
@@ -520,6 +507,19 @@ export function WhereBand({
             onOpenPicker={onOpenPicker}
             locked={locked}
           />
+
+          {/* #301 piece 1: the aerial, under the ledger and above the side
+              control — the side question sits right under the picture it
+              changes.  A read (data-read): it stays live under the write
+              lock.  Only for a work-start pin whose road is current; the
+              stale-road warning above is the answer otherwise. */}
+          {workStart && !stale && (
+            <BandAerial
+              scenario={scenario}
+              geometry={geometry}
+              kindConfirmed={kindConfirmed}
+            />
+          )}
 
           {/* #290 move 4: the side control, above the kind chips — the two
               answers §4.4 asks together.  Same arming as the chips: a road

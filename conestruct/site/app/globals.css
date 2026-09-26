@@ -5048,3 +5048,63 @@ input[type="number"] {
 .workbench .sym-proposed {
   color: var(--ink-on-dark);
 }
+
+/* ─── #301 piece 1 · the aerial on the WHERE band ───
+   Rules 103–109 as ruled for the band (issue-301-band-aerial/rulings.md):
+   the frame is sized before the image arrives, so nothing moves when it
+   does (P1) — 300 px (rule 104's S2) and 250 px at 380 (rule 172).  The
+   legend sits UNDER the image at every width (ruling 5).  Tokens only: the
+   swatches' colours come from ZONE_COLOR inline, never a hex here. */
+.workbench .a-aerial {
+  margin-top: 14px;
+}
+.workbench .a-aerial-frame {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  background: var(--canvas-tint);
+  border: 1px solid var(--rule);
+}
+.workbench .a-aerial-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Rule 106's centre hint: the pre-side sentence, the wait, the refusal. */
+.workbench .a-aerial-note {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: calc(100% - 32px);
+  padding: 9px 13px;
+  text-align: center;
+  color: var(--ink);
+  background: rgb(var(--ws-surface-rgb) / 0.9);
+  border: 1px solid var(--rule);
+}
+.workbench .a-aerial-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px 14px;
+  margin-top: 8px;
+}
+.workbench .a-aerial-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Rule 109's 26 px swatch; its height is the zone's width rank — the one
+   non-colour channel the static image carries (#131). */
+.workbench .a-aerial-swatch {
+  flex: 0 0 26px;
+  width: 26px;
+}
+.workbench .a-aerial-line {
+  grid-column: 1 / -1;
+}
+@media (max-width: 480px) {
+  .workbench .a-aerial-frame {
+    height: 250px;
+  }
+}

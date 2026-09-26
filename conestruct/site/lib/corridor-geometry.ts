@@ -100,7 +100,7 @@ export function selectedSideOption(
 // backend's own ``travel_bearing_deg``, quantized like the backend's side
 // words (nearest cardinal).
 const BOUND = ["northbound", "eastbound", "southbound", "westbound"] as const;
-function boundWord(deg: number): string {
+export function boundWord(deg: number): string {
   return BOUND[Math.floor((((deg % 360) + 360) % 360 + 45) / 90) % 4];
 }
 

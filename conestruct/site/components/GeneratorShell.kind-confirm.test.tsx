@@ -275,12 +275,19 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
       document.querySelector('[data-testid="cta-reason"]')?.textContent,
     ).toContain("Choose the kind of work");
 
-    const before = calls.length;
+    // RULE 5, stated (#301): the WHERE band's two READS — the geometry read
+    // and the aerial's picture, both enumerated beside GeneratorShell's
+    // senders as reads that form no verdict — fire on their own debounce,
+    // and the aerial's can land inside this click's window.  What this case
+    // pins is that the GENERATE path sends nothing, so reads are not counted.
+    const READS = ["/api/render/corridor-geometry", "/api/corridor-map"];
+    const sent = () => calls.filter((c) => !READS.some((r) => c.url.includes(r))).length;
+    const before = sent();
     await user.click(generateBtn());
     await settle();
     // No request of any kind — so no generate-path payload exists for a
     // kind nobody chose.
-    expect(calls.length).toBe(before);
+    expect(sent()).toBe(before);
     expect(bundles()).toHaveLength(0);
     // And the column did not move on: still the WHERE band, no results.
     expect(openBand()).toBe("where");
