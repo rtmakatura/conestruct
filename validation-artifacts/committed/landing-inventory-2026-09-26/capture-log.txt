@@ -1,0 +1,6 @@
+landing-f2a93c1-1440-light.png: status 200, scrollWidth 1440 (viewport 1440)
+standalone html: 1559 KB, 1 stylesheet(s) inlined
+landing-f2a93c1-380-light.png: status 200, scrollWidth 485 (viewport 380)
+prod-root-1440.png: status 200, url https://www.conestruct.com/, title "Conestruct — MUTCD plans in seconds", description "Describe a work zone. Conestruct computes the taper, buffer, device count and sign placement — then ships a stamped-ready PDF, Excel device list and crew narrative."
+prod /landing chain: 308 https://www.conestruct.com/landing -> /sandbox | 200 https://www.conestruct.com/sandbox; final https://www.conestruct.com/sandbox; title "Sandbox · Conestruct"; description "Public sandbox for the Conestruct MHT generator. Configure a Colorado work zone and watch every MUTCD calculation cite back to its source. Sign up to save plans and download real PDF, XLSX, and crew narrative outputs."
+prod-root-380.png: status 200, url https://www.conestruct.com/, title "Conestruct — MUTCD plans in seconds", description "Describe a work zone. Conestruct computes the taper, buffer, device count and sign placement — then ships a stamped-ready PDF, Excel device list and crew narrative."

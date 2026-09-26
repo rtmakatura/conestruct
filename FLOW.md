@@ -11,6 +11,8 @@ Two primary users. Both are producing an MHT (a traffic-control plan package) fo
 
 Secondary, later: the TCS who stamps it (reads the audit), the crew who sets it (reads the crew sheet). They read deliverables, not the screen.
 
+**Public, before launch: the prospect.** Someone who has heard of Conestruct and lands on conestruct.com before it opens. Sees only the public page, never the generator. Wants: what this is, whether it is for them, and a way to hear when it opens. (R3, coming-soon-gate, 2026-09-26.)
+
 **Consequence:** the screen serves the rep and the estimator. The TCS and crew are served by the PDFs. Anything on the screen that exists for the TCS is a candidate to move into the audit PDF or behind a disclosure.
 
 ## 2. What a good session is

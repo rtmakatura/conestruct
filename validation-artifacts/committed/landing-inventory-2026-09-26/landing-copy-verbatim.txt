@@ -1,0 +1,187 @@
+# Rendered copy of /landing at f2a93c1, 1440 light, Hero in READY state
+
+## <head>
+viewport: width=device-width, initial-scale=1
+title: Conestruct — MUTCD plans in seconds
+description: Describe a work zone. Conestruct computes the taper, buffer, device count and sign placement — then ships a stamped-ready PDF, Excel device list and crew narrative.
+og:title: Conestruct — MUTCD plans in seconds
+og:description: MUTCD-compliant traffic control plans in under two minutes. Built in Colorado.
+og:url: https://conestruct.com
+og:site_name: Conestruct
+og:type: website
+twitter:card: summary
+twitter:title: Conestruct — MUTCD plans in seconds
+twitter:description: MUTCD-compliant traffic control plans in under two minutes. Built in Colorado.
+
+## body innerText
+conestruct
+V0.4 · COLORADO · MUTCD 2023
+How it works
+Sample plan
+Sign in
+Try the demo →
+PROJECT: CONESTRUCT.COM / LANDING
+SCALE: AS NOTED
+01 · MHT GENERATOR · COLORADO
+MUTCD-compliant traffic control plans in under two minutes.
+Plan.
+Generate.
+Go.
+
+Describe a work zone. Conestruct computes the taper, buffer, device count and sign placement — then ships a stamped-ready PDF, Excel device list and crew narrative.
+
+Try the demo
+→
+FREE · NO SIGNUP · ~90 SEC
+SCENARIO INPUT
+road_type: rural divided hwy
+speed_limit: 65 mph
+closure: right shoulder
+length: 0.4 mi
+lanes_dir: 2
+project: I-25 MM 184
+READY
+100%
+METHOD OF HANDLING TRAFFIC
+MUTCD 2023 · CDOT S-630-1 · CASE 11
+WORK AREA
+L/3 = 217 ft
+SHOULDER TAPER
+B = 645 ft
+BUFFER
+0.40 mi
+WORK ZONE
+W20-1
+W20-2
+W21-5aR
+N
+COMPUTING TAPER · SPACING · SIGN PLACEMENT
+LEGEND
+Channelizing device (cone)
+Advance warning sign
+Arrow board
+NOTES
+Taper L/3
+217 ft
+Buffer B
+645 ft
+Spacing
+65 ft o.c.
+Devices
+25 cones/drums · 14 signs
+~90S FROM SCENARIO TO PDF
+· · · ·
+3 SCENARIOS SUPPORTED
+· · · ·
+PDF + XLSX + MD IN ONE CLICK
+· · · ·
+100% MUTCD-CITED
+The math is the
+product.
+02 · SHOW THE WORK
+MUTCD § 6B.08 · MERGING TAPER LENGTH
+L
+=
+W
+×
+S
+=
+12
+×
+65
+=
+780 ft
+LANE WIDTH (W)
+12 FT
+SPEED LIMIT (S)
+65 MPH
+TAPER GEOMETRY · NOT TO SCALE
+L = 780 ft · B = 645 ft
+L = 780 ft
+B = 645 ft
+65 ft o.c.
+✓
+MUTCD § 6B.08
+✓
+MUTCD TABLE 6B-4
+✓
+CDOT S-630-1
+
+Every dimension on a Conestruct plan is computed from MUTCD formulas, cited, and shown on the audit trail. Drag the sliders — watch the plan recompute in real time.
+
+01
+Merging taper length
+W × S FOR ≥ 45 MPH
+780 ft
+MUTCD § 6B.08
+02
+Buffer space
+STOPPING SIGHT DISTANCE @ S
+645 ft
+MUTCD TABLE 6B-2
+03
+Channelizing device spacing
+≤ S FT IN TAPER · ≤ 2×S ON TANGENT
+65 ft o.c.
+MUTCD § 6K.01
+04
+Advance warning sign placement
+THREE-SIGN SERIES · RURAL HIGHWAY
+500 / 1000 / 1500 ft
+MUTCD TABLE 6B-1
+05
+S-630-1 case match
+SHOULDER CLOSURE · DIVIDED HIGHWAY
+Case 11
+CDOT S-630-1 · SHEET 7
+03 · GET STARTED · FREE DEMO
+Stop drawing. Start describing.
+
+Built by TCS, for TCS. Colorado-first. Drop in a scenario, get a PDF your supervisor can stamp.
+
+Try the demo
+→
+OUTPUT
+PDF + XLSX + MD
+SHEET SIZE
+11×17 LANDSCAPE
+STANDARD
+MUTCD 2023
+SUPPLEMENT
+CDOT S-630-1
+TIME
+~90 SECONDS
+PRICE
+FREE DEMO
+© 2026 CONESTRUCT
+BUILT IN COLORADO
+TERMS
+PRIVACY
+OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT
+
+## SVG <text> nodes (PlanSheet / TaperViz)
+WORK AREA
+L/3 = 217 ft
+SHOULDER TAPER
+B = 645 ft
+BUFFER
+0.40 mi
+WORK ZONE
+W20-1
+W20-2
+W21-5aR
+N
+L = 780 ft
+B = 645 ft
+65 ft o.c.
+
+## Links
+conestruct -> /
+How it works -> /#math
+Sample plan -> #
+Sign in -> /sign-in
+Try the demo → -> /sandbox
+Try the demo → -> /sandbox
+Try the demo → -> /sandbox
+TERMS -> /terms
+PRIVACY -> /privacy
