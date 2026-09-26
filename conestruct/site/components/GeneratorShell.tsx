@@ -421,8 +421,7 @@ export function GeneratorShell({
   // say they wait on it (`corridorSpecLengths` below).
   //
   // EVERY SENDER OF THE SCENARIO, enumerated: the breakdown and the audit
-  // (gated here); the S7 preview (gated in `firePreview`); the picker's
-  // corridor-spec (gated in the modal via `initial.kindConfirmed`); the
+  // (gated here); the S7 preview (gated in `firePreview`); the
   // bundle, the per-file downloads, save and the quote are post-generate
   // and Generate is gated on the same flag (`deriveRail`).  The
   // jurisdiction suggest sends lat/lng only.  The debug snapshot

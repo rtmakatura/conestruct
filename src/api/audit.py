@@ -1483,8 +1483,8 @@ def build_audit_trail(
         # buffer, the Table 6B-1 A+B+C sum, and the layout's actual
         # downstream-taper run when it placed one (the §6B.08 50-ft-
         # per-lane floor otherwise) — ``placed_downstream_taper_ft``,
-        # the one producer the plan sheet's CORRIDOR DETAILS and the
-        # corridor-spec preview share (#257).  Geometry (anchor/bearing)
+        # the one producer the plan sheet's CORRIDOR DETAILS reads too
+        # (#257).  Geometry (anchor/bearing)
         # stays with the client — this block is lengths only.
         "corridor_spec": {
             "taper_ft": _ft(L_required),

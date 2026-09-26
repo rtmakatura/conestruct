@@ -1068,10 +1068,10 @@ def _jurisdiction_name(scenario: Scenario) -> str | None:
 def plan_shoulder_width_ft(kind: str, divided: bool | None, road_type: str | None) -> float:
     """The shoulder width the PLAN builds for a scenario kind — one producer.
 
-    Every ``scenario_to_call`` branch reads it, and so does the picker's
-    corridor preview (``POST /render/corridor-spec``), so the preview's
-    shoulder taper is the plan's by construction (#267: "preview must equal
-    applied").  The values are the branches' own, unchanged: 10 ft on a
+    Every ``scenario_to_call`` branch reads it.  (#267 made the picker's
+    corridor preview read it too, "preview must equal applied"; #301
+    deleted that preview endpoint — the picker draws #302's one layout
+    call.)  The values are the branches' own, unchanged: 10 ft on a
     divided road, 8 ft on an undivided one; the lane-closure kinds carry
     the width their fixed geometry assumes.  Only the shoulder-family
     kinds (shoulder, work_beyond_shoulder) feed it to a taper.

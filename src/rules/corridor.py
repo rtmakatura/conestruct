@@ -1166,8 +1166,8 @@ def placed_downstream_taper_ft(placements: Iterable[Any]) -> float:
     the same choice the generators make (``layout.py``'s CHOSEN marker).
 
     Readers: the audit's ``corridor_spec`` (the sidebar), the plan sheet's
-    CORRIDOR DETAILS box, the crew's step-3 station; the corridor-spec
-    preview returns the floor because it has no layout yet.
+    CORRIDOR DETAILS box, the crew's step-3 station; the corridor-geometry
+    read returns the floor because it has no layout yet.
     """
     stations = [
         float(p.station_ft)

@@ -94,10 +94,10 @@ export interface SiteAdjustmentRecord {
 }
 
 // Engine-removal PR B/D — the corridor-preview zone lengths, backend-
-// computed (the audit's own numbers).  Geometry (anchor/bearing/work-zone
-// length) stays client-side: these are MUTCD lengths only.  The same
-// shape comes back from POST /api/render/corridor-spec (the picker
-// modal's source).  OPTIONAL on the audit sections: absent during a
+// computed (the audit's own numbers): the WHERE band's Extent rows, the
+// corridor's one speaker (#301 piece 2).  MUTCD lengths only.  (The
+// picker's own copy, POST /api/render/corridor-spec, is deleted — #301.)
+// OPTIONAL on the audit sections: absent during a
 // deploy window / rollback, in which case the preview degrades to
 // "unavailable" — it is never recomputed client-side.
 export interface CorridorSpecLengths {

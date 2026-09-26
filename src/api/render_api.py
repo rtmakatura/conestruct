@@ -38,10 +38,8 @@ from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
     CrossStreetStationError,
     Scenario,
-    _map_road_type,
     flagger_lane_ineligible_high,
     lanes_arithmetic_mismatch,
-    plan_shoulder_width_ft,
     scenario_to_call,
 )
 from src.api.site_scan import (
@@ -86,10 +84,8 @@ from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.spacing import (
-    advance_warning_spacing,
     buffer_space,
     device_spacing_in_taper,
-    downstream_taper_length,
     one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     shoulder_taper_length,
@@ -1018,46 +1014,6 @@ def jurisdiction_suggest(req: JurisdictionSuggestRequest) -> JSONResponse:
     return JSONResponse(suggest(req.lat, req.lng))
 
 
-class CorridorSpecRequest(BaseModel):
-    """Inputs for the corridor-preview zone lengths (engine-removal PR B).
-
-    Mirrors the frontend ``BuildCorridorInput`` minus the geometry
-    (anchor/bearing stay client-side — they position the drawing, they
-    are not MUTCD math).  ``kind`` takes the scenario-kind vocabulary;
-    gated kinds are accepted deliberately: this computes preview
-    lengths, it does not generate a plan, so the enablement gate does
-    not apply.
-    """
-
-    kind: str
-    speed: int = Field(ge=20, le=75, multiple_of=5)
-    laneWidth: float = Field(default=12.0, ge=8.0, le=20.0)
-    # #267 ("preview must equal applied"): the shoulder width is the
-    # PLAN's, derived here by ``plan_shoulder_width_ft`` from the relayed
-    # raw facts (kind, divided, roadType) — the frontend never computes
-    # it.  An explicit value still wins, for callers that pass one.
-    shoulderWidth: float | None = Field(default=None, ge=0.0, le=20.0)
-    divided: bool | None = None
-    roadType: str | None = None
-
-
-# Scenario kind → taper family for the corridor preview.  Mirrors the
-# frontend SCENARIO_TO_CLOSURE map this endpoint exists to retire
-# (corridor-spacing.ts): shoulder-family kinds use the L/3 shoulder
-# taper, the flagger kind uses the fixed one-lane two-way taper, and
-# every lane-closure kind (including the gated mobile ops and
-# near_intersection) uses the full merging L.
-_CORRIDOR_TAPER_FAMILY: dict[str, str] = {
-    "shoulder": "shoulder",
-    "work_beyond_shoulder": "shoulder",
-    "flagger_lane_closure": "one_lane_two_way",
-    "lane_closure_divided": "lane",
-    "mobile_op_2lane": "lane",
-    "mobile_op_multilane": "lane",
-    "near_intersection": "lane",
-}
-
-
 # #290 checkpoint (k) commit 7: the zone walk, the approaches and the
 # compass words live in src/rules/corridor_layout.py — one producer for
 # this endpoint (the picker) and the plan sheet's page 2 (P11).
@@ -1127,9 +1083,9 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     pin along a bearing itself (lib/centerline.ts, lib/corridor-polyline.ts
     — a documented frontend mirror of corridor math, Rule 3).
 
-    A read: no scan, no generator, no memo, no lock.  Lengths are the
-    params-only figures ``/render/corridor-spec`` returns (the downstream
-    taper at the §6B.08 floor the plan builds, #257).
+    A read: no scan, no generator, no memo, no lock.  Lengths come from
+    #302's one layout call (the downstream taper at the §6B.08 floor the
+    plan builds, #257 — there is no layout here to read a placed run from).
 
     Response::
 
@@ -1317,65 +1273,6 @@ def render_corridor_map(req: CorridorMapRequest) -> Response:
         content=png,
         media_type="image/png",
         headers={"cache-control": "private, max-age=600"},
-    )
-
-
-@app.post("/render/corridor-spec")
-def render_corridor_spec(req: CorridorSpecRequest) -> JSONResponse:
-    """Corridor-preview zone lengths, backend-computed (PR B, D-full).
-
-    Serves the LocationPickerModal's live preview after PR D deletes
-    the frontend spacing mirror; the sidebar preview reads the same
-    block from the audit response instead (``sections.corridor_spec``).
-    Unmapped or absent road types degrade explicitly: ``road_category``
-    is null and the advance-warning sum falls back to
-    ``advance_warning_spacing``'s speed inference — never a 4xx, the
-    preview must not be more fragile than the plan itself.
-    """
-    family = _CORRIDOR_TAPER_FAMILY.get(req.kind)
-    if family is None:
-        raise HTTPException(
-            status_code=422,
-            detail=f"Unknown scenario kind {req.kind!r} for corridor preview.",
-        )
-    if family == "shoulder":
-        shoulder_ft = (
-            req.shoulderWidth
-            if req.shoulderWidth is not None
-            else plan_shoulder_width_ft(req.kind, req.divided, req.roadType)
-        )
-        taper_ft = shoulder_taper_length(req.speed, shoulder_ft)
-    elif family == "one_lane_two_way":
-        taper_ft = one_lane_two_way_taper_length()
-    else:
-        taper_ft = taper_length(req.speed, req.laneWidth)
-
-    try:
-        category: str | None = _map_road_type(req.roadType, req.speed) if req.roadType else None
-    except ValueError:
-        category = None
-    # advance_warning_spacing refuses to auto-infer at 55+ (rural vs
-    # expressway/freeway differ by thousands of feet — unsafe for a
-    # PLAN).  For the map PREVIEW we mirror the retiring frontend
-    # heuristic exactly ("rural" at 45+) so PR D changes no drawn
-    # extent; the plan itself always carries an explicit road type, so
-    # this lenient branch can never leak into a deliverable.
-    lookup = "rural" if category is None and req.speed >= 55 else category
-    abc = advance_warning_spacing(req.speed, lookup)
-
-    return JSONResponse(
-        {
-            "taper_ft": round(taper_ft),
-            "buffer_ft": round(buffer_space(req.speed)),
-            "advance_warning_ft": round(abc["A"] + abc["B"] + abc["C"]),
-            # #257: the floor the plan builds (layout.py's CHOSEN marker) —
-            # the same figure the audit's corridor_spec carries once the
-            # layout exists, so the picker legend equals the sidebar.  The
-            # former ``numLanesClosed`` × ceiling was a length no surface
-            # built and no client ever sent.
-            "downstream_taper_ft": round(downstream_taper_length(1)),
-            "road_category": category,
-        }
     )
 
 

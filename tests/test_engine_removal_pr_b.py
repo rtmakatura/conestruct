@@ -13,7 +13,10 @@ Four additions, all additive to the audit projection:
     was the last frontend-derived Colorado number.
   * ``sections.corridor_spec`` — the corridor-preview zone lengths.
   * ``POST /render/corridor-spec`` — the picker modal's preview source
-    (D-full), gated-kind tolerant, explicit unmapped-road-type behavior.
+    (D-full).  DELETED by #301 (Ryan, 2026-09-26: "dead code that computes
+    a buffer without the work-zone speed — the exact #302 defect waiting
+    for a caller"); its tests went with it.  The picker draws #302's one
+    layout call, pinned by tests/test_corridor_agreement.py.
 """
 
 from __future__ import annotations
@@ -201,80 +204,6 @@ def test_corridor_spec_present_for_flagger_with_100ft_taper() -> None:
 
 
 # ---------------------------------------------------------------------------
-# POST /render/corridor-spec
-# ---------------------------------------------------------------------------
-
-
-def test_corridor_spec_endpoint_shoulder(client: TestClient) -> None:
-    res = client.post(
-        "/render/corridor-spec",
-        headers=_auth_headers(),
-        json={"kind": "shoulder", "speed": 65, "shoulderWidth": 10.0, "roadType": "rural_divided"},
-    )
-    assert res.status_code == 200, res.text
-    j = res.json()
-    assert j["taper_ft"] == round(10.0 * 65 / 3)  # L/3 at >=45 mph
-    assert j["buffer_ft"] == 645
-    assert j["advance_warning_ft"] == 1500
-    assert j["road_category"] == "rural"
-    # #257: the floor the plan builds — the sidebar's figure, not the ceiling.
-    assert j["downstream_taper_ft"] == 50
-
-
-def test_corridor_spec_endpoint_accepts_gated_kinds(client: TestClient) -> None:
-    # Preview lengths, not a plan — the enablement gate deliberately
-    # does not apply.
-    res = client.post(
-        "/render/corridor-spec",
-        headers=_auth_headers(),
-        json={"kind": "near_intersection", "speed": 35, "laneWidth": 12.0},
-    )
-    assert res.status_code == 200, res.text
-    assert res.json()["taper_ft"] == round(12.0 * 35 * 35 / 60)  # full L, quadratic
-
-
-def test_corridor_spec_endpoint_flagger_fixed_taper(client: TestClient) -> None:
-    res = client.post(
-        "/render/corridor-spec",
-        headers=_auth_headers(),
-        json={"kind": "flagger_lane_closure", "speed": 45},
-    )
-    assert res.status_code == 200
-    assert res.json()["taper_ft"] == 100
-
-
-def test_corridor_spec_endpoint_unmapped_road_type_degrades_explicitly(
-    client: TestClient,
-) -> None:
-    # Unknown road type at 65 mph: category null, advance falls back to
-    # the preview's documented "rural" guess — 200, never a 4xx/500
-    # (the preview must not be more fragile than the plan).
-    res = client.post(
-        "/render/corridor-spec",
-        headers=_auth_headers(),
-        json={"kind": "shoulder", "speed": 65, "roadType": "cowpath"},
-    )
-    assert res.status_code == 200, res.text
-    j = res.json()
-    assert j["road_category"] is None
-    assert j["advance_warning_ft"] == 1500  # rural fallback
-
-
-def test_corridor_spec_endpoint_unknown_kind_422(client: TestClient) -> None:
-    res = client.post(
-        "/render/corridor-spec",
-        headers=_auth_headers(),
-        json={"kind": "hovercraft", "speed": 45},
-    )
-    assert res.status_code == 422
-
-
-def test_corridor_spec_endpoint_requires_auth(client: TestClient) -> None:
-    res = client.post("/render/corridor-spec", json={"kind": "shoulder", "speed": 45})
-    assert res.status_code == 401
-
-
-# ---------------------------------------------------------------------------
 # #267 — "preview must equal applied": the picker's preview relays the raw
 # facts (kind, speed, laneWidth, divided, roadType) and the backend derives
 # the shoulder width with the PLAN's own producer.
@@ -293,51 +222,3 @@ def test_plan_shoulder_width_is_the_branches_own_table() -> None:
     assert plan_shoulder_width_ft("mobile_op_multilane", True, None) == 10.0
     for kind in ("flagger_lane_closure", "mobile_op_2lane", "near_intersection"):
         assert plan_shoulder_width_ft(kind, False, None) == 8.0
-
-
-@pytest.mark.parametrize(
-    ("divided", "road_type", "speed"),
-    [
-        (True, "rural_divided", 55),
-        (False, "rural_undivided", 55),
-        (False, "urban_arterial", 35),
-        (True, "freeway", 65),
-    ],
-)
-def test_corridor_spec_preview_equals_the_plans_taper(
-    client: TestClient, divided: bool, road_type: str, speed: int
-) -> None:
-    """The picker preview, fed the same raw facts the plan is built from,
-    returns the taper the plan's audit states — undivided included (the
-    preview used to default to 10 ft where the plan builds 8)."""
-    plan = client.post(
-        "/render/audit",
-        headers=_auth_headers(),
-        json=_shoulder_body(divided=divided, roadType=road_type, speed=speed),
-    )
-    assert plan.status_code == 200, plan.text
-    applied = plan.json()["sections"]["corridor_spec"]["taper_ft"]
-
-    preview = client.post(
-        "/render/corridor-spec",
-        headers=_auth_headers(),
-        json={
-            "kind": "shoulder",
-            "speed": speed,
-            "laneWidth": 12.0,
-            "divided": divided,
-            "roadType": road_type,
-        },
-    )
-    assert preview.status_code == 200, preview.text
-    assert preview.json()["taper_ft"] == applied
-
-
-def test_corridor_spec_explicit_shoulder_width_still_wins(client: TestClient) -> None:
-    res = client.post(
-        "/render/corridor-spec",
-        headers=_auth_headers(),
-        json={"kind": "shoulder", "speed": 65, "shoulderWidth": 10.0, "divided": False},
-    )
-    assert res.status_code == 200, res.text
-    assert res.json()["taper_ft"] == round(10.0 * 65 / 3)

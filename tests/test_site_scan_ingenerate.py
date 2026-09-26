@@ -195,7 +195,9 @@ def test_parity_detect_then_generate_equals_auto_scan(
     # Path A — the retired manual flow, replayed at the function level
     # over the plan's own corridor inputs (what /render/detect-site did
     # in corridor mode, minus the HTTP hop that s2-arc17 removed).
-    from src.api.render_api import _map_road_type
+    # Its home: render_api only re-exported it, until #301 deleted the
+    # corridor-spec endpoint that imported it there.
+    from src.api.schemas import _map_road_type
     from src.rules.corridor import build_corridor
 
     corridor = build_corridor(

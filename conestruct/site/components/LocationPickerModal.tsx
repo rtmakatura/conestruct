@@ -83,9 +83,9 @@ export interface LocationPickerInitial {
   /**
    * #289 hand-check, 2026-09-23 finding 1 (Rule 10): has a PERSON
    * confirmed `scenarioKind`?  Until they have, it is the discriminant's
-   * placeholder, and the corridor-spec request below would ask the
-   * backend about a kind nobody chose.  False → that request does not
-   * fire and the panel says what it is waiting for.  Defaults to true
+   * placeholder.  False → the overlay draws the work alone and the
+   * panel says what it is waiting for (the corridor-spec request this
+   * once gated is deleted — #301).  Defaults to true
    * for callers that do not track it.
    */
   kindConfirmed?: boolean;
@@ -94,8 +94,8 @@ export interface LocationPickerInitial {
   // scenario currently carries.
   speedMph: number;
   /**
-   * #267 — the scenario's raw width facts, relayed to the corridor-spec
-   * preview so its taper is the plan's ("preview must equal applied").
+   * #267 — the scenario's raw width facts (relayed once to the
+   * corridor-spec preview, deleted by #301; "preview must equal applied").
    * The backend derives the shoulder width from kind + divided + road
    * type with the plan's own producer; this side never computes it.
    * Absent on kinds that carry no such field.

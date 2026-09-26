@@ -627,8 +627,9 @@ def test_audit_buffer_line_names_the_table_not_a_jurisdiction() -> None:
 # One length for the word "downstream": the run of downstream-taper cones
 # the layout actually placed (the §6B.08 floor when it placed none).  The
 # sidebar reads it from the audit's ``sections.corridor_spec``; the plan
-# sheet's CORRIDOR DETAILS box, the picker's ``/render/corridor-spec``
-# and the crew's step-3 station must print the same figure, and the
+# sheet's CORRIDOR DETAILS box, the picker's ``/render/corridor-geometry``
+# (#301: the source it draws since #290 — the old ``/render/corridor-spec``
+# is deleted) and the crew's step-3 station must print the same figure, and the
 # sheet's total corridor must be the sum of the rows it prints.  On
 # d6bd79d the sheet and the picker carried the §6B.08 ceiling (100 ft)
 # from the scan-bbox corridor frame while every other surface said 50.
@@ -656,18 +657,14 @@ def test_downstream_taper_is_one_length_on_every_surface(
     downstream = int(spec["downstream_taper_ft"])
     assert downstream > 0
 
-    # The picker's source: the corridor-spec endpoint (the body the proxy
-    # sends — kind, speed, roadType; nothing else).
-    picker = _post(
-        api,
-        "/render/corridor-spec",
-        {
-            "kind": scenario["kind"],
-            "speed": scenario["speed"],
-            "roadType": scenario.get("roadType"),
-        },
-    ).json()
-    assert picker["downstream_taper_ft"] == downstream, "picker legend vs sidebar"
+    # The picker's source: the corridor-geometry read (#290), which draws
+    # #302's one layout call.  RULE 5, stated (#301): this leg read the
+    # deleted /render/corridor-spec; it now reads what the picker draws, on
+    # the fixtures that carry a direction.
+    geometry = _post(api, "/render/corridor-geometry", scenario).json()
+    if geometry["status"] == "laid_out":
+        zones = {z["zone"]: z["length_ft"] for z in geometry["approaches"][0]["zones"]}
+        assert round(zones["downstream"]) == downstream, "picker drawing vs sidebar"
 
     # The crew's step 3 names the same station when it places the run.
     md = _post(api, "/render/markdown", scenario).text

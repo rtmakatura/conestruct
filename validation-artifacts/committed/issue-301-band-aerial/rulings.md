@@ -194,3 +194,15 @@ move all three surfaces together.
 **Deleted:** `lib/corridor-map.ts`, `lib/centerline.ts`, `buildCorridorPolyline`.
 
 **One branch:** Ship A (backend), Ship B (site) and the evidence sweep (local stack, 1440 and 380).
+
+---
+
+## The ruling after the memory stop, verbatim (Ryan, 2026-09-26, at `1289027`)
+
+> Memory freed. Rulings:
+> 1. /render/corridor-spec is dead code that computes a buffer without the work-zone speed — the exact #302 defect waiting for a caller. Delete it in this arc, with its tests, as its own commit.
+> 2. Skip the local sweep — it's the heaviest step and prod is the real evidence anyway. Finish commits 5 and 6 plus the corridor-spec deletion, verify, and give me ONE ship line. After I ship, run sweep.cjs against prod (headless browser only, no local backend or dev server) and commit it as an evidence branch.
+
+**On the record:**
+- **The corridor-spec deletion is its own commit.** It covers the backend endpoint, its request model and taper-family table; the Next route and its test; `fetchCorridorSpec`; and the endpoint's tests. The cross-surface "one downstream length" test keeps its picker leg, now reading what the picker draws (`/render/corridor-geometry`).
+- **The local sweep is not run.** `sweep.cjs` is committed with the prod evidence on a separate branch after the ship, run headless against `https://www.conestruct.com/sandbox`.

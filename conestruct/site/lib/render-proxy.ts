@@ -387,60 +387,6 @@ export async function fetchAuditTrail(
   return new Response(upstream.body, { status: 200, headers });
 }
 
-// Engine-removal PR D: corridor-preview zone lengths for the picker
-// modal.  The body mirrors CorridorSpecRequest (render_api.py) — kind /
-// speed / optional roadType.  #267: plus the scenario's raw width facts,
-// laneWidth and divided, so the preview's taper is the plan's; the
-// backend derives the shoulder width from them with the plan's own
-// producer (plan_shoulder_width_ft).  Absent on kinds without the field,
-// where the backend's default is the plan's.
-export interface CorridorSpecRequestBody {
-  kind: string;
-  speed: number;
-  roadType?: string | null;
-  laneWidth?: number;
-  divided?: boolean;
-}
-
-export async function fetchCorridorSpec(
-  body: CorridorSpecRequestBody,
-): Promise<Response> {
-  const url = process.env.MODAL_RENDER_URL;
-  const secret = process.env.MODAL_RENDER_SECRET;
-  if (!url || !secret) {
-    return new Response("Render service not configured", { status: 503 });
-  }
-
-  let upstream: Response;
-  try {
-    upstream = await fetch(`${url.replace(/\/$/, "")}/render/corridor-spec`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${secret}`,
-      },
-      body: JSON.stringify(body),
-    });
-  } catch (err) {
-    console.error("corridor spec fetch failed", err);
-    return new Response("Render service unreachable", { status: 502 });
-  }
-
-  if (!upstream.ok) {
-    const detail = await upstream.text().catch(() => "");
-    console.error(`corridor spec upstream ${upstream.status}`, detail);
-    return new Response("Corridor spec failed", { status: 502 });
-  }
-
-  const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
-  headers.set("cache-control", "private, no-store");
-  return new Response(upstream.body, { status: 200, headers });
-}
-
 type BundlePart = { kind: RenderKind; bytes: ArrayBuffer; contentType: string };
 
 async function fetchPartFromModal(
