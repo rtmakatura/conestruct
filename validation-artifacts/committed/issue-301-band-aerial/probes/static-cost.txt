@@ -1,0 +1,15 @@
+﻿== broadway-sb (shoulder, one-way, way 131232822)
+   /render/pdf 200 in 17203 ms (whole PDF, incl. one Mapbox fetch)
+   overlays: 5 paths, 282 chars encoded (210 decoded); whole URL w/o token 368 chars; limit 8,192; page-2 guard 8000
+   viewport auto; padding 60
+   page-2 (1200x500@2x)     status [200, 200, 200] padding 60: 407 ms median (runs 407, 403, 452), 788 KiB PNG, cache-control 'max-age=43200,s-maxage=43200', x-cache 'Hit from cloudfront'
+   band 1440 (600x250@2x)   status [200, 200, 200] padding 60: 407 ms median (runs 832, 407, 395), 180 KiB PNG, cache-control 'max-age=43200,s-maxage=43200', x-cache 'Hit from cloudfront'
+   band 380 (348x220@2x)    status [200, 200, 200] padding 30: 405 ms median (runs 725, 405, 382), 94 KiB PNG, cache-control 'max-age=43200,s-maxage=43200', x-cache 'Hit from cloudfront'
+[corridor-validation] WARNING: No motorway/trunk/primary/secondary road detected at anchor (39.74650, -104.97092) within 50 m (closest road within 50 m: 'unclassified').  Verify coordinates correspond to the actual work zone.
+== lafayette (flagger, two approaches, way 581254411)
+   /render/pdf 200 in 2072 ms (whole PDF, incl. one Mapbox fetch)
+   overlays: 11 paths, 538 chars encoded (432 decoded); whole URL w/o token 624 chars; limit 8,192; page-2 guard 8000
+   viewport auto; padding 60
+   page-2 (1200x500@2x)     status [200, 200, 200] padding 60: 418 ms median (runs 440, 418, 409), 750 KiB PNG, cache-control 'max-age=43200,s-maxage=43200', x-cache 'Hit from cloudfront'
+   band 1440 (600x250@2x)   status [200, 200, 200] padding 60: 411 ms median (runs 1612, 411, 378), 206 KiB PNG, cache-control 'max-age=43200,s-maxage=43200', x-cache 'Hit from cloudfront'
+   band 380 (348x220@2x)    status [200, 200, 200] padding 30: 391 ms median (runs 608, 391, 348), 94 KiB PNG, cache-control 'max-age=43200,s-maxage=43200', x-cache 'Hit from cloudfront'

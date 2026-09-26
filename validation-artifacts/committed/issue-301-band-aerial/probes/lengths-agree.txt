@@ -1,0 +1,82 @@
+﻿== broadway (fixture, shoulder 30 mph)   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 180.49°
+     advance_warning  picker    300.0  page2    300.0  band    300  agree
+     transition       picker     50.0  page2     50.0  band     50  agree
+     buffer           picker    200.0  page2    200.0  band    200  agree
+     downstream       picker     50.0  page2     50.0  band     50  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== broadway @ 45 mph   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 180.49°
+     advance_warning  picker   1050.0  page2   1050.0  band   1050  agree
+     transition       picker    150.0  page2    150.0  band    150  agree
+     buffer           picker    360.0  page2    360.0  band    360  agree
+     downstream       picker     50.0  page2     50.0  band     50  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== broadway @ 45 mph, work-zone speed 35   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 180.49°
+     advance_warning  picker   1050.0  page2   1050.0  band   1050  agree
+     transition       picker    150.0  page2    150.0  band    150  agree
+     buffer           picker    360.0  page2    360.0  band    360  agree
+     downstream       picker     50.0  page2     50.0  band     50  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== lafayette (fixture, flagger 55 mph)   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 359.91°
+     advance_warning  picker   1050.0  page2   1050.0  band   1050  agree
+     transition       picker    100.0  page2    100.0  band    100  agree
+     buffer           picker    495.0  page2    495.0  band    495  agree
+     downstream       picker     50.0  page2     50.0  band     50  agree
+   approach opposing travel 180.3°
+     advance_warning  picker   1050.0  page2   1050.0  band      —  agree
+     transition       picker    100.0  page2    100.0  band      —  agree
+     buffer           picker    495.0  page2    495.0  band      —  agree
+     downstream       picker     50.0  page2     50.0  band      —  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== lafayette @ 35 mph   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 359.91°
+     advance_warning  picker    300.0  page2    300.0  band    300  agree
+     transition       picker    100.0  page2    100.0  band    100  agree
+     buffer           picker    250.0  page2    250.0  band    250  agree
+     downstream       picker     50.0  page2     50.0  band     50  agree
+   approach opposing travel 180.3°
+     advance_warning  picker    300.0  page2    300.0  band      —  agree
+     transition       picker    100.0  page2    100.0  band      —  agree
+     buffer           picker    250.0  page2    250.0  band      —  agree
+     downstream       picker     50.0  page2     50.0  band      —  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== lafayette @ 55 mph, work-zone speed 45   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 359.91°
+     advance_warning  picker   1050.0  page2   1050.0  band   1050  agree
+     transition       picker    100.0  page2    100.0  band    100  agree
+     buffer           picker    495.0  page2    495.0  band    495  agree
+     downstream       picker     50.0  page2     50.0  band     50  agree
+   approach opposing travel 180.3°
+     advance_warning  picker   1050.0  page2   1050.0  band      —  agree
+     transition       picker    100.0  page2    100.0  band      —  agree
+     buffer           picker    495.0  page2    495.0  band      —  agree
+     downstream       picker     50.0  page2     50.0  band      —  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== broadway @ 65 mph   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 180.49°
+     advance_warning  picker   1050.0  page2   1050.0  band   1050  agree
+     transition       picker    216.7  page2    216.7  band    217  agree
+     buffer           picker    645.0  page2    645.0  band    645  agree
+     downstream       picker     50.0  page2     50.0  band     50  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== broadway @ 65 mph, work-zone speed 60   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 180.49°
+     advance_warning  picker   1050.0  page2   1050.0  band   1050  agree
+     transition       picker    216.7  page2    216.7  band    217  agree
+     buffer           picker    645.0  page2    645.0  band    570  DISAGREE
+     downstream       picker     50.0  page2     50.0  band     50  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== broadway @ 75 mph, work-zone speed 65   geometry 200 · audit 200 · pdf 200
+   approach primary  travel 180.49°
+     advance_warning  picker   1050.0  page2   1050.0  band   1050  agree
+     transition       picker    250.0  page2    250.0  band    250  agree
+     buffer           picker    820.0  page2    820.0  band    650  DISAGREE
+     downstream       picker     50.0  page2     50.0  band     50  agree
+     work_zone        picker 1000.0  page2 1000.0  band workLen 1000
+== lafayette @ 65 mph, work-zone speed 55   geometry 422 · audit 422 · pdf 422
+    {"detail":[{"type":"less_than_equal","loc":["body","flagger_lane_closure","speed"],"msg":"Input should be less than or equal to 55","input":65,"ctx":{"le":55}}]} {"detail":[{"type":"less_than_equal","loc":["body","flagger_lane_closure","speed"],"msg":"Input should be less than or equal to 55","input":65,"ctx":{"le":55}}]}
+
+rows that disagree (rounded to whole feet): 2

@@ -1,0 +1,2 @@
+﻿broadway-prod-after              (200, 'laid_out', 2382) runs 3103, 761, 720 ms; median 761 ms
+lafayette-flagger-prod-after     (200, 'laid_out', 3960) runs 627, 632, 877 ms; median 632 ms
