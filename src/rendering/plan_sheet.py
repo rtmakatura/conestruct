@@ -38,6 +38,7 @@ from reportlab.pdfgen import canvas
 from src._dotenv import load_dotenv
 from src.api.site_scan import corrections_disclosure, not_checked_disclosure
 from src.generation.layout import rightmost_lane_assumption_active
+from src.rendering import static_aerial as _static_aerial
 from src.rules.corridor import (
     M_PER_FT,
     WorkCorridor,
@@ -3587,94 +3588,21 @@ def _aerial_overlay_part(corridor: WorkCorridor) -> str:
 
 
 # #290 checkpoint (k) commit 7 — page 2 draws the work AND the approaches,
-# from the same producer as the picker (src/rules/corridor_layout.py, P11:
-# "the same five channels on the picker and page 2").  The zone colours and
-# width ranks MIRROR lib/corridor-zones.ts (ZONE_COLOR, ZONE_CHANNEL
-# .widthRank): #131's non-colour channel for a surface whose paths cannot
-# dash is the width rank, "the ONLY non-colour channel the Static Images
-# preview can carry".  Footage past the mapped road (#211) takes the
-# picker's own treatment — the zone's colour and width, faded (the picker's
-# line-opacity 0.35 against 0.9) — so an approach that runs off the mapped
-# road stays readable as its zone.  (Rendered at the Lafayette pin, the
-# work-zone-only 1 px / 0.4 stroke made the opposing approach invisible.)
-_LAID_OUT_ZONE_COLOR: dict[str, str] = {
-    "advance_warning": "FFD166",
-    "transition": "F3722C",
-    "buffer": "FF7A00",
-    "work_zone": "1EC8A5",
-    "downstream": "8A8A8A",
-}
-_LAID_OUT_ZONE_RANK: dict[str, int] = {
-    "downstream": 1,
-    "work_zone": 2,
-    "buffer": 3,
-    "transition": 4,
-    "advance_warning": 5,
-}
-_LAID_OUT_ZONE_WORD: dict[str, str] = {
-    "advance_warning": "Advance warning",
-    "transition": "Taper",
-    "buffer": "Buffer",
-    "work_zone": "Work zone",
-    "downstream": "Downstream",
-}
-# The picker's legend order (upstream first — the motorist's order).
-_LAID_OUT_LEGEND_ORDER: tuple[str, ...] = (
-    "advance_warning",
-    "transition",
-    "buffer",
-    "work_zone",
-    "downstream",
-)
-_LAID_OUT_OPACITY: str = "0.9"
-_LAID_OUT_EXT_OPACITY: str = "0.35"
-# Mapbox Static Images URLs are capped at 8,192 characters.  The laid-out
-# corridor carries up to ~12 paths; each path's points are thinned (never
-# its endpoints) until the URL fits.  CHOSEN steps.
-_AERIAL_URL_MAX_CHARS: int = 8000
-_LAID_OUT_POINT_STEPS: tuple[int, ...] = (100, 40, 16, 2)
-# Padding (px) around the auto-framed corridor, so the first sign is not
-# drawn against the image edge.
-_LAID_OUT_PADDING_PX: int = 60
-
-
-def _aerial_laid_out_overlays(
-    approaches: list[tuple[str, WorkCorridor]], max_points: int = 100
-) -> str:
-    """The static-URL path overlays for a work-start plan's laid-out corridor.
-
-    Every approach's non-work zones first, the work zone last (drawn on
-    top).  Each zone in the picker's colour at its width rank; a part on the
-    end tangent (past the mapped road) the same stroke, faded.
-    """
-    from src.rules.corridor_layout import zone_parts, zone_spans
-
-    def path(zone: str, part: Any) -> str:
-        width = 1 + _LAID_OUT_ZONE_RANK[zone]
-        opacity = _LAID_OUT_EXT_OPACITY if part.extended else _LAID_OUT_OPACITY
-        return (
-            f"path-{width}+{_LAID_OUT_ZONE_COLOR[zone]}-{opacity}"
-            f"({urllib_quote(encode_polyline(part.points), safe='')})"
-        )
-
-    overlays: list[str] = []
-    for _approach_id, c in approaches:
-        for zone, a, b in zone_spans(c):
-            if zone == "work_zone":
-                continue
-            overlays.extend(
-                path(zone, part)
-                for part in zone_parts(c, a, b, max_points)
-                if len(part.points) >= 2
-            )
-    primary = approaches[0][1]
-    work = next(span for span in zone_spans(primary) if span[0] == "work_zone")
-    overlays.extend(
-        path("work_zone", part)
-        for part in zone_parts(primary, work[1], work[2], max_points)
-        if len(part.points) >= 2
-    )
-    return ",".join(overlays)
+# from the same producer as the picker.  #301: the overlay builder and its
+# channels live in src/rendering/static_aerial.py, the ONE builder page 2 and
+# the WHERE band's aerial share (the band's picture is page 2's overlay,
+# byte for byte, plus its pin).  The private names below are page 2's own
+# spellings of that module's values, kept so this file reads as before.
+_LAID_OUT_ZONE_COLOR = _static_aerial.ZONE_COLOR
+_LAID_OUT_ZONE_RANK = _static_aerial.ZONE_RANK
+_LAID_OUT_ZONE_WORD = _static_aerial.ZONE_WORD
+_LAID_OUT_LEGEND_ORDER = _static_aerial.LEGEND_ORDER
+_LAID_OUT_OPACITY = _static_aerial.OPACITY
+_LAID_OUT_EXT_OPACITY = _static_aerial.EXT_OPACITY
+_AERIAL_URL_MAX_CHARS = _static_aerial.URL_MAX_CHARS
+_LAID_OUT_POINT_STEPS = _static_aerial.POINT_STEPS
+_LAID_OUT_PADDING_PX = _static_aerial.PADDING_PX
+_aerial_laid_out_overlays = _static_aerial.laid_out_overlays
 
 
 def _fetch_mapbox_aerial(
@@ -3718,11 +3646,7 @@ def _fetch_mapbox_aerial(
     query: dict[str, str] = {"access_token": token}
     if corridor is not None and approaches:
         _validate_corridor_bearing(corridor)
-        overlays = ""
-        for max_points in _LAID_OUT_POINT_STEPS:
-            overlays = f"{_aerial_laid_out_overlays(approaches, max_points)}/"
-            if len(overlays) < _AERIAL_URL_MAX_CHARS - 200:
-                break
+        overlays = _static_aerial.fit_overlays(approaches)
         viewport = "auto"
         query["padding"] = str(_LAID_OUT_PADDING_PX)
     elif corridor is not None:

@@ -21,8 +21,9 @@ import os
 import tempfile
 from collections.abc import Awaitable, Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
+import httpx
 import sentry_sdk
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
@@ -57,6 +58,7 @@ from src.narrative.crew_narrative import (
     generate_crew_narrative,
     generate_crew_narrative_pdf,
 )
+from src.rendering import static_aerial as _static_aerial
 from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor_layout import approach_travel_bearing_deg as _approach_travel
@@ -1238,6 +1240,84 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     start = primary.centerline_start_ft()
     out["coverage_start_ft"] = round(start, 1) if start is not None else None
     return JSONResponse(out)
+
+
+class CorridorMapRequest(BaseModel):
+    """``POST /render/corridor-map``'s body: the scenario and the picture asked for."""
+
+    scenario: Scenario
+    # "pin": before the side (the pin alone); "work": the side chosen, the
+    # kind not yet confirmed (the work segment only — rule 112); "laid_out":
+    # the whole corridor.
+    stage: Literal["pin", "work", "laid_out"]
+    # CSS px; the image is drawn @2x.  Mapbox's own limit is 1280.
+    width: int = Field(ge=120, le=1280)
+    height: int = Field(ge=80, le=1280)
+
+
+@app.post("/render/corridor-map")
+def render_corridor_map(req: CorridorMapRequest) -> Response:
+    """The WHERE band's aerial: the laid-out corridor as a PNG (#301 piece 1).
+
+    Ruling 1 on the #301 checkpoint: "Option (a), scenario in, PNG out,
+    drawn on the backend, thin Next proxy."  The corridor is
+    :func:`~src.rules.corridor_layout.laid_out` (#302 — the one layout call)
+    and the overlay is page 2's own builder
+    (:mod:`src.rendering.static_aerial`), so the band's picture is page 2's
+    overlay, byte for byte, plus the pin.  The Mapbox token stays here; the
+    browser receives only the image.
+
+    A read: no scan, no generator.  Anything that is not a picture answers
+    JSON with a ``status`` the band states in words (Rule 10 — an absence
+    renders as an absence, never a stale or guessed image):
+
+    * 409 ``no_pin`` / ``side_not_confirmed`` / ``corridor_unbuildable``
+      (with the backend's ``message``) — the geometry read says the same;
+    * 503 ``unavailable`` — no map token configured;
+    * 502 ``unavailable`` — the image fetch failed.
+    """
+    scenario = req.scenario
+    _ensure_scenario_enabled(scenario)
+    try:
+        params, _generator, _kwargs = scenario_to_call(scenario, place_cross_street=False)
+    except UnknownJurisdictionError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    meta = scenario.meta
+    if not (meta.lat and meta.lng):
+        return JSONResponse({"status": "no_pin", "message": None}, status_code=409)
+    approaches = None
+    if req.stage != "pin":
+        if params.pin_model != "work_start" or params.bearing_deg is None:
+            return JSONResponse({"status": "side_not_confirmed", "message": None}, status_code=409)
+        try:
+            _primary, approaches = _laid_out(params, meta.lat, meta.lng)
+        except ValueError as exc:
+            return JSONResponse(
+                {"status": "corridor_unbuildable", "message": f"{type(exc).__name__}: {exc}"},
+                status_code=409,
+            )
+    token = os.environ.get("MAPBOX_TOKEN", "")
+    if not token:
+        return JSONResponse(
+            {"status": "unavailable", "message": "no map token configured"}, status_code=503
+        )
+    url, query = _static_aerial.band_image_url(
+        meta.lat, meta.lng, approaches, stage=req.stage, width=req.width, height=req.height
+    )
+    try:
+        png = _static_aerial.fetch_png(url, query, token)
+    except httpx.HTTPError as exc:
+        print(f"[mapbox] band aerial fetch failed: {type(exc).__name__}")
+        return JSONResponse(
+            {"status": "unavailable", "message": "the aerial image could not be fetched"},
+            status_code=502,
+        )
+    return Response(
+        content=png,
+        media_type="image/png",
+        headers={"cache-control": "private, max-age=600"},
+    )
 
 
 @app.post("/render/corridor-spec")
