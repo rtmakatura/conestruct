@@ -809,6 +809,14 @@ body {
      (rules 73, 74, 87, 126).  First consumer: NEEDS YOU. */
   --da-ground: #101c29;
   --da-hair: #223345;
+  /* coming-soon-gate A2-Q9 — the Plan Sheet's two surfaces, each with one
+     role.  The sheet's ground is --da-ground at 72 %, so the plus-grid
+     shows through it (design/PlanSheet.dc.html rgba(16,28,41,.72)); the
+     channels are declared like --ws-surface-rgb.  The grid line is
+     decorative (P9's exemption, labelled): the "+" marks behind the
+     public page, nothing else. */
+  --da-ground-rgb: 16 28 41;
+  --sheet-grid: #1c2b3b;
   --z-strip: 30;
   --z-nav: 40;
   --z-frame: 60;
@@ -5145,5 +5153,613 @@ input[type="number"] {
   .workbench .a-aerial-zbtn {
     min-width: 44px;
     height: 44px;
+  }
+}
+
+/* ─── coming-soon-gate Arc 2 — the Plan Sheet (R5a) ───
+   The public page at `/`.  Authority: design/PlanSheet.dc.html (1440)
+   and PlanSheetPhone.dc.html (390); rebuilt on workbench tokens.  Type is
+   the roles (tr-step / tr-section / tr-field / tr-prov / tr-question)
+   plus four declared sites (type-exceptions.ts "the coming-soon page"):
+   the body register twice (--fs-body-value) and the wordmark at the two
+   hero sizes (R7: a second owner, no new size).  Colour classes here
+   come AFTER the roles so they win at equal specificity.  One layout
+   switch at 768 (the phone artboard below it), the lower sheet's two
+   columns from 1024, and the type switches at the 520 container (R7,
+   tr-question). */
+.workbench .cs-page {
+  position: relative;
+  isolation: isolate;
+  padding: 40px 40px 120px;
+}
+.workbench .cs-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+.workbench .cs-grid path {
+  stroke: var(--sheet-grid);
+  stroke-width: 1;
+  fill: none;
+}
+.workbench .cs-body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  line-height: 1.5;
+  color: var(--ink-on-dark);
+}
+.workbench .cs-title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-body-value);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.workbench .cs-measure {
+  max-width: 560px;
+}
+.workbench .cs-on-ink {
+  color: var(--ink);
+}
+.workbench .cs-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--act);
+  text-decoration: none;
+}
+.workbench .cs-link:hover {
+  color: var(--act-bright);
+}
+.workbench .cs-only-narrow {
+  display: none;
+}
+
+/* Nav items (the sheet variant of PublicChrome): tr-step's face at the
+   nav's tracking and casing (AppNav's 0.16em). */
+.workbench .cs-navlink {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  text-decoration: none;
+}
+.workbench .cs-navlink-act {
+  margin-left: auto;
+  border-left: 1px solid var(--rule);
+  color: var(--act);
+}
+.workbench .cs-navlink-act:hover {
+  color: var(--act-bright);
+}
+
+/* The sheet. */
+.workbench .cs-sheet {
+  position: relative;
+  border: 1px solid var(--rule);
+  background: rgb(var(--da-ground-rgb) / 0.72);
+}
+.workbench .cs-crop {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  pointer-events: none;
+}
+.workbench .cs-crop path {
+  stroke: var(--paper-line);
+  stroke-width: 1;
+  fill: none;
+}
+.workbench .cs-sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 40px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .cs-head-prov {
+  margin-left: auto;
+}
+
+/* The drawing. */
+.workbench .cs-drawing {
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 40px 32px;
+}
+.workbench .cs-drawing-head {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  justify-content: space-between;
+}
+.workbench .cs-drawing-art {
+  margin: 8px 0 16px;
+}
+.workbench .cs-drawing-art svg {
+  overflow: visible;
+}
+/* One drawing per width: the wide sheet's, or the phone artboard's. */
+.workbench .cs-drawing-art .cs-wide {
+  display: block;
+}
+.workbench .cs-drawing-art .cs-narrow {
+  display: none;
+}
+.workbench .cs-drawing-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+.workbench .cs-drawing-foot .cs-only-wide {
+  margin-left: auto;
+}
+.workbench .cs-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.workbench .cs-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.workbench .cs-swatch {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+.workbench .cs-road {
+  stroke: var(--paper-line);
+  stroke-width: 1;
+}
+.workbench .cs-lane {
+  stroke: var(--paper-line-soft);
+  stroke-width: 1;
+  stroke-dasharray: 18 14;
+}
+.workbench .cs-lane-sm {
+  stroke-dasharray: 14 10;
+}
+.workbench .cs-flow {
+  stroke: var(--ink-on-dark-faint);
+  stroke-width: 1;
+  fill: none;
+}
+.workbench .cs-sign {
+  stroke: var(--ink-on-dark);
+  stroke-width: 1;
+  fill: none;
+}
+.workbench .cs-dev {
+  fill: var(--ink);
+}
+.workbench .cs-box {
+  fill: var(--paper);
+  stroke: var(--paper-line);
+  stroke-width: 1;
+}
+.workbench .cs-call {
+  stroke: var(--ink);
+  stroke-width: 1;
+  fill: none;
+}
+.workbench .cs-pin {
+  stroke-width: 1.5;
+}
+.workbench .cs-call-dot {
+  fill: var(--ink);
+}
+.workbench .cs-doc {
+  fill: none;
+  stroke: var(--paper-line);
+  stroke-width: 1;
+}
+.workbench .cs-doc-line {
+  stroke: var(--paper-line-soft);
+  stroke-width: 1;
+}
+.workbench .cs-doc-title {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+/* The lower sheet: intro | title block + notify. */
+.workbench .cs-lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.workbench .cs-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+}
+/* R7: the wordmark shares the two hero sizes — a second owner of
+   --fs-hero-numeral / --fs-hero-numeral-380 (the counts numerals are the
+   first), no new size.  The numerals switch at 980; the wordmark at the
+   520 container, as R7 rules. */
+.workbench .cs-wordmark {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-hero-numeral);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+@container (max-width: 519px) {
+  .workbench .cs-wordmark {
+    font-size: var(--fs-hero-numeral-380);
+  }
+}
+.workbench .cs-intro-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+.workbench .cs-notify-col {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+}
+.workbench .cs-tb {
+  margin: 0;
+}
+.workbench .cs-tb-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+}
+.workbench .cs-tb-k,
+.workbench .cs-tb-v {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .cs-tb-k {
+  border-right: 1px solid var(--da-hair);
+}
+.workbench .cs-tb-row:last-child .cs-tb-k,
+.workbench .cs-tb-row:last-child .cs-tb-v {
+  border-bottom-color: var(--rule);
+}
+.workbench .cs-notify {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 16px 16px;
+}
+.workbench .cs-notify h1 {
+  margin: 0;
+}
+/* The page's one primary (P18): rule 130's .pri, at its label's width
+   and the design's 28 px padding on the wide sheet. */
+.workbench .cs-notify .pri {
+  width: auto;
+  padding: 0 28px;
+  text-decoration: none;
+}
+@media (min-width: 1024px) {
+  .workbench .cs-lower {
+    grid-template-columns: minmax(0, 1fr) 560px;
+    min-height: 538px;
+  }
+  .workbench .cs-intro {
+    padding: 0 40px;
+    border-right: 1px solid var(--rule);
+  }
+  .workbench .cs-notify-col {
+    border-top: 0;
+  }
+}
+
+/* Sections 01–04. */
+.workbench .cs-section {
+  position: relative;
+  margin-top: 120px;
+}
+.workbench .cs-section[id] {
+  scroll-margin-top: 24px;
+}
+.workbench .cs-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .cs-head h2 {
+  margin: 0;
+}
+.workbench .cs-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+.workbench .cs-cards-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.workbench .cs-cards-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.workbench .cs-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .cs-card-pad {
+  gap: 8px;
+  padding: 24px 20px;
+}
+.workbench .cs-step-art {
+  display: block;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .cs-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+}
+/* 02: the hairlines between items are the strip's ground showing
+   through a 1 px gap, so they hold at four, two or one column. */
+.workbench .cs-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 24px;
+  border: 1px solid var(--rule);
+  background: var(--da-hair);
+}
+.workbench .cs-strip-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 20px;
+  background: var(--da-ground);
+}
+.workbench .cs-sources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 80px;
+  margin-top: 32px;
+}
+.workbench .cs-sources-text,
+.workbench .cs-sources-refs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.workbench .cs-sources-refs {
+  gap: 12px;
+}
+.workbench .cs-sources-text h3 {
+  margin: 0;
+}
+.workbench .cs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.workbench .cs-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+  color: var(--ink);
+}
+/* Closing band.  "Get notified" here is rule 132's ghost (.dl-btn) —
+   the outlined secondary (A2-Q10); the sheet's .pri is the one primary. */
+.workbench .cs-close {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 120px;
+  padding: 40px;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .cs-close-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.workbench .cs-close .dl-btn {
+  margin-top: 0;
+  margin-left: auto;
+  padding: 0 28px;
+  text-decoration: none;
+}
+
+@media (max-width: 1023px) {
+  .workbench .cs-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The phone artboard (PlanSheetPhone.dc.html). */
+@media (max-width: 767px) {
+  .workbench .cs-only-wide {
+    display: none;
+  }
+  .workbench .cs-only-narrow {
+    display: inline;
+  }
+  .workbench .cs-navlink {
+    padding: 0 16px;
+  }
+  .workbench .cs-page {
+    padding: 16px 14px 72px;
+  }
+  .workbench .cs-crop {
+    display: none;
+  }
+  .workbench .cs-sheet-head {
+    gap: 12px;
+    padding: 0 12px;
+  }
+  /* The phone artboard's header carries no standards line (the title
+     block states them). */
+  .workbench .cs-sheet-head .cs-head-prov {
+    display: none;
+  }
+  .workbench .cs-drawing {
+    padding: 12px;
+  }
+  .workbench .cs-drawing-head .tr-step {
+    display: none;
+  }
+  .workbench .cs-drawing-head {
+    justify-content: flex-end;
+  }
+  .workbench .cs-drawing-art .cs-wide {
+    display: none;
+  }
+  .workbench .cs-drawing-art .cs-narrow {
+    display: block;
+  }
+  .workbench .cs-drawing-art {
+    margin: 4px 0 12px;
+  }
+  .workbench .cs-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    width: 100%;
+  }
+  .workbench .cs-intro {
+    gap: 12px;
+    padding: 24px 12px;
+  }
+  .workbench .cs-intro-links {
+    display: none;
+  }
+  .workbench .cs-tb-row {
+    grid-template-columns: 104px minmax(0, 1fr);
+  }
+  .workbench .cs-tb-k,
+  .workbench .cs-tb-v {
+    padding: 0 12px;
+  }
+  .workbench .cs-notify {
+    align-items: stretch;
+    padding: 20px 12px 16px;
+  }
+  .workbench .cs-notify .pri {
+    width: 100%;
+  }
+  .workbench .cs-section {
+    margin-top: 72px;
+  }
+  .workbench .cs-head {
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+  .workbench .cs-head .cs-head-prov {
+    display: none;
+  }
+  .workbench .cs-cards,
+  .workbench .cs-cards-3,
+  .workbench .cs-cards-2 {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .workbench .cs-step-art {
+    display: none;
+  }
+  .workbench .cs-card-pad,
+  .workbench .cs-card-text {
+    gap: 6px;
+    padding: 16px;
+  }
+  .workbench .cs-strip {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 16px;
+  }
+  .workbench .cs-strip-item {
+    gap: 6px;
+    padding: 16px;
+  }
+  .workbench .cs-sources {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    margin-top: 16px;
+  }
+  .workbench .cs-sources-text {
+    gap: 12px;
+  }
+  .workbench .cs-chip {
+    padding: 0 10px;
+  }
+  .workbench .cs-close {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    margin-top: 72px;
+    padding: 24px 16px;
+  }
+  .workbench .cs-close .dl-btn {
+    margin-left: 0;
+  }
+}
+
+/* R10 — the drawing's one load animation: the road lines draw, then
+   signs, devices and zone bands fade in, once, ~1.5 s.  The only motion
+   on any Conestruct surface besides the working band's track, and it
+   exists ONLY under no-preference: with reduced motion (or no support
+   for the query) nothing below applies and the drawing is static in its
+   end state.  Opacity and a mask's scale only — nothing moves a box
+   (P1).  Recorded as a deviation in checkpoint-arc2.md; pinned by
+   lib/design/motion.test.ts. */
+@media (prefers-reduced-motion: no-preference) {
+  .workbench .cs-draw {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: cs-draw 1.4s ease-out both;
+  }
+  .workbench .cs-fade {
+    animation: cs-fade 0.5s ease-out both;
+  }
+}
+@keyframes cs-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes cs-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
