@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { PUBLIC_LINE, PUBLIC_TITLE } from "@/lib/public-copy";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,15 +19,16 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+// coming-soon-gate D3 / C-S2: "stamped-ready PDF" (contradicted the draft
+// notice), "in under two minutes" and "MUTCD plans in seconds"
+// (unmeasured) are gone; the public page's one line is the description.
 export const metadata: Metadata = {
-  title: "Conestruct — MUTCD plans in seconds",
-  description:
-    "Describe a work zone. Conestruct computes the taper, buffer, device count and sign placement — then ships a stamped-ready PDF, Excel device list and crew narrative.",
+  title: PUBLIC_TITLE,
+  description: PUBLIC_LINE,
   metadataBase: new URL("https://conestruct.com"),
   openGraph: {
-    title: "Conestruct — MUTCD plans in seconds",
-    description:
-      "MUTCD-compliant traffic control plans in under two minutes. Built in Colorado.",
+    title: PUBLIC_TITLE,
+    description: PUBLIC_LINE,
     url: "https://conestruct.com",
     siteName: "Conestruct",
     type: "website",

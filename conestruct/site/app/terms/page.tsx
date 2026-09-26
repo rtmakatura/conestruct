@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
+import { PublicChrome } from "@/components/PublicChrome";
 import { TERMS_VERSION } from "@/lib/legal";
 
 export const metadata: Metadata = {
@@ -9,16 +8,17 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="max-w-page mx-auto px-6 md:px-12">
-      <Nav />
-      <main className="pt-12 pb-16 max-w-[720px]">
-        <h1 className="text-[36px] font-bold tracking-tight text-ink mb-2 leading-[1.1]">
+    // coming-soon-gate C-Q8: the placeholder's chrome; words unchanged,
+    // classes moved onto workbench tokens and ruled sizes (D2).
+    <PublicChrome>
+      <article className="pt-10 max-md:pt-6 max-w-[720px]">
+        <h1 className="tr-question">
           Terms of Service
         </h1>
-        <p className="text-[11px] text-ink-faint font-mono uppercase tracking-[0.1em] mb-8">
+        <p className="tr-step mt-2 mb-6">
           DRAFT · VERSION {TERMS_VERSION}
         </p>
-        <div className="space-y-4 text-[15px] leading-relaxed text-ink">
+        <div className="space-y-4 font-sans text-[length:var(--fs-body-value)] leading-[1.6] text-[color:var(--ink-on-dark)]">
           <p>
             This document is a placeholder. A complete Terms of Service will be
             published before paid use of Conestruct begins.
@@ -46,8 +46,7 @@ export default function TermsPage() {
             </li>
           </ul>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </article>
+    </PublicChrome>
   );
 }

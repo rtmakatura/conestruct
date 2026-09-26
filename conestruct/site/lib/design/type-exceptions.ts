@@ -407,18 +407,18 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "app/app/page.tsx", cls: "text-[28px]", count: 1 },
       { file: "app/onboarding/page.tsx", cls: "text-[10px]", count: 1 },
       { file: "app/onboarding/page.tsx", cls: "text-[28px]", count: 1 },
-      { file: "app/privacy/page.tsx", cls: "text-[11px]", count: 1 },
-      { file: "app/privacy/page.tsx", cls: "text-[15px]", count: 1 },
-      { file: "app/privacy/page.tsx", cls: "text-[36px]", count: 1 },
-      { file: "app/terms/page.tsx", cls: "text-[11px]", count: 1 },
-      { file: "app/terms/page.tsx", cls: "text-[15px]", count: 1 },
-      { file: "app/terms/page.tsx", cls: "text-[36px]", count: 1 },
+      // coming-soon-gate C-Q8: app/privacy and app/terms leave the census
+      // — their 36/15/11 px moved onto type roles 5 and 2 and the ruled
+      // --fs-body-value (six sites, six uses, two files paid down).
       { file: "components/AppFooter.tsx", cls: "text-[10px]", count: 1 },
       // #289 fidelity F4: the v0.4 tag and the TA / sheet middle cell left
       // the nav (rules 22–23 — the citation joined the right slot's one
       // string), and the wordmark took rule 22's 14.5 px (was 16).
+      // coming-soon-gate C-Q8: the wordmark's drawing MOVED to
+      // Wordmark.tsx (shared with the public chrome) — same class, one
+      // site out of AppNav and one into Wordmark.
       { file: "components/AppNav.tsx", cls: "text-[10px]", count: 4 },
-      { file: "components/AppNav.tsx", cls: "text-[14.5px]", count: 1 },
+      { file: "components/Wordmark.tsx", cls: "text-[14.5px]", count: 1 },
       { file: "components/AppSheetMeta.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/FinalCTA.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/FinalCTA.tsx", cls: "text-[17px]", count: 1 },
@@ -669,7 +669,10 @@ export const CENSUS_PINS = {
   // #301 piece 2: the modal's per-zone length rows go (the band's rows
   // are the one speaker) — the modal's text-[15px] Total value was its
   // only site of that size in the file.  93 -> 92.
-  tsxSites: 92,
+  // coming-soon-gate C-Q8: the six legal-page sites leave (terms and
+  // privacy, 36/15/11 px each); the wordmark's site moves AppNav ->
+  // Wordmark (one out, one in).  92 -> 86.
+  tsxSites: 86,
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -687,6 +690,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 274, // #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value)
-  tsxFiles: 35,
+  tsxUses: 268, // #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxFiles: 34, // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;

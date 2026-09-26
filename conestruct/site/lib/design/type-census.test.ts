@@ -217,8 +217,10 @@ describe("#263 type census — Tailwind size classes in components/ and app/", (
     // #289 fidelity F4: the anchor was the H1's text-[28px], which left
     // the screen (sr-only now).  The nav wordmark's rule-22 size is the
     // anchor instead — a real site with a spec-traced value.
+    // coming-soon-gate C-Q8: the drawing moved to Wordmark.tsx (shared by
+    // AppNav and the public chrome); the anchor follows it.
     expect(observedTsx.map(tsxKey)).toContain(
-      "components/AppNav.tsx text-[14.5px] ×1",
+      "components/Wordmark.tsx text-[14.5px] ×1",
     );
   });
 
