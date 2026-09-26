@@ -279,6 +279,12 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // symbols"), carried by the fidelity pass's own row — the
         // same one-value-two-surfaces reason --fs-primary appears twice.
         "var(--fs-field-label)",
+        // coming-soon-gate Arc 2 (R7, A2-T): the public page's wordmark is
+        // the hero tokens' second owner, and its body copy reads rule 8's
+        // body token — the same one-value-two-surfaces reason as above.
+        "var(--fs-hero-numeral)",
+        "var(--fs-hero-numeral-380)",
+        "var(--fs-body-value)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",

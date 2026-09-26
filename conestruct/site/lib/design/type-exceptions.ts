@@ -73,6 +73,19 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
+  {
+    name: "the coming-soon page (coming-soon-gate Arc 2)",
+    sizes: ["var(--fs-hero-numeral)", "var(--fs-hero-numeral-380)", "var(--fs-body-value)"],
+    reason:
+      "the public Plan Sheet at `/` (R5a).  R7: the big wordmark shares the two hero sizes — a SECOND OWNER of the tokens the counts numerals own, no new size — switching at the 520 container as R7 rules (the numerals switch at 980).  Its body copy and card titles read rule 8's body token, the register every body value on the workbench already uses.  Everything else on the page is a role (tr-step / tr-section / tr-field / tr-prov / tr-question) or a reused class (.pri, .dl-btn).  A2-T; R8's 16 px input exception has no site since A2-Q1 removed the form, so it is not declared",
+    css: [
+      { selector: ".workbench .cs-wordmark", size: "var(--fs-hero-numeral)" },
+      { selector: ".workbench .cs-wordmark", size: "var(--fs-hero-numeral-380)" },
+      { selector: ".workbench .cs-body", size: "var(--fs-body-value)" },
+      { selector: ".workbench .cs-title", size: "var(--fs-body-value)" },
+    ],
+    tsx: [],
+  },
   // "page h1" (28px) is DELETED — #289 fidelity F4 (ruled Q2): the visible
   // H1 is removed from the screen; it stays in the DOM as `sr-only`, which
   // carries no size, so the exception has no site left.
@@ -639,7 +652,11 @@ export const CENSUS_PINS = {
   // #289 fidelity follow-up: rule 165's 380 pill at 8.5.  117 -> 118.
   // After the S4 prod run (Ryan, 2026-09-24): FIND's label back to rule
   // 8's 13.5 token.  118 -> 119; sizes unchanged (the token is in use).
-  cssDeclarations: 119,
+  // coming-soon-gate Arc 2 (R7, A2-T): the Plan Sheet's four — the
+  // wordmark at 62 and at the 520 container's 42, the body and the card
+  // title at the body token.  119 -> 123; sizes unchanged (all three
+  // token names already in the sheet).
+  cssDeclarations: 123,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
