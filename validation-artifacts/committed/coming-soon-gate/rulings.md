@@ -35,3 +35,19 @@
 **R7 — The wordmark shares the two hero sizes:** 62px (`--fs-hero-numeral`) at desktop, 42px (`--fs-hero-numeral-380`) below 520px. A second owner is recorded in the type census; no new size. *(Recommendation applied without objection; revisit on Ryan's word.)*
 
 **R8 — Form inputs below 520px set text at 16px** so iOS does not zoom on focus. One ruled exception in the type census with that owner and reason. *(Same.)*
+
+## Checkpoint rulings (Ryan, 2026-09-26) — cite as C-Qn
+Ryan: "yes to all" on the checkpoint's recommendations.
+
+- **C-Q1** Signed-out visitor to a gated page → redirect to `/`, no sign-in link (R1.5).
+- **C-Q2** Signed-out call to `/api/*` → 401 JSON, no redirect.
+- **C-Q3** Signed in but not allowlisted → treated exactly as signed out; session kept.
+- **C-Q4** `/sign-up` stays behind the gate (no 404).
+- **C-Q5** `/landing` and `/try` → `/` as 307. `lib/redirects.test.ts:25-36` changes with it (Rule-5 churn row).
+- **C-Q6** Sign-in lands on `/sandbox` (`fallbackRedirectUrl="/sandbox"`), not the dormant `/app` (R1.6).
+- **C-Q7** Supersedes D4's list. Archived helpers are never edited; they are copied forward into `scripts/` and the header is added there, through one shared `scripts/gate.cjs` + `scripts/gate.py`. `scripts/verify-single-nav.mjs` is edited in place. `audit-lib.js`'s header goes in its forward copy's callers.
+- **C-Q8** `/terms` and `/privacy` take the placeholder's chrome in this arc: no "Sign in", no "Try the demo", no dead links on any public page.
+- **C-S1** Yes: the gate and the placeholder ship together, one branch, one ship.
+- **C-S2** Yes: the page title's "MUTCD plans in seconds" goes (untraced speed claim, D3's rule). New title: "Conestruct — coming soon".
+- **C-E1** Ship waits on Ryan confirming `GATE_ALLOWED_EMAILS` and `GATE_BYPASS_TOKEN` are set in Vercel prod and locally, and the Clerk restrictions in both instances. The middleware check holds regardless of dashboard settings.
+- **R5 correction:** the two design files were sent in chat, not copied; Ryan adds them to `validation-artifacts/committed/coming-soon-gate/design/` before Arc 2. Arc 1 does not need them.
