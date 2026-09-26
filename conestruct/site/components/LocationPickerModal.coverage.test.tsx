@@ -201,8 +201,12 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
     typeCoords();
     await screen.findByText("Centerline", undefined, { timeout: 3000 });
     expect(await screen.findByText(/covers 0–200 ft, bearing beyond/i)).toBeTruthy();
-    // The extent rows are the backend's lengths, total included.
-    expect(screen.getByText("1,200 ft")).toBeTruthy();
+    // RULE 5, stated (#301 piece 2, ruling 7): "the audit is the one
+    // speaker; the modal's per-zone length rows go."  This case used to
+    // read the total off those rows; the panel now states no length at all
+    // — the WHERE band's rows do (the audit's corridor_spec).
+    expect(screen.queryByText("1,200 ft")).toBeNull();
+    expect(screen.queryByText("Total")).toBeNull();
   });
 
   it("full coverage: 'OSM, full corridor'", async () => {

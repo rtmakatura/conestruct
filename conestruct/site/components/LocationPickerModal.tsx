@@ -2980,7 +2980,11 @@ function CorridorPreviewPanel({
         )}
         {corridor && status === "ready" && (
           <>
-            <ExtentRows corridor={corridor} />
+            {/* #301 piece 2 (ruling 7): "the audit is the one speaker; the
+                modal's per-zone length rows go."  The corridor's lengths
+                are stated once, by the WHERE band's rows (the audit's
+                corridor_spec — what the plan builds); this panel keeps
+                what only the picker knows, the road's coverage. */}
             {/* #211: the Centerline provenance row — the same vocabulary
                 as the PDF's CORRIDOR DETAILS row, so the two surfaces
                 can never describe the same fact differently.  Absent
@@ -3017,69 +3021,6 @@ function CorridorPreviewPanel({
           </>
         )}
       </div>
-    </div>
-  );
-}
-
-function ExtentRows({ corridor }: { corridor: CorridorPolyline }) {
-  // Always render all 5 zones in upstream → downstream order (the order
-  // a motorist encounters them), even if a segment is 0 ft.  Keeps the
-  // layout stable as the operator types and prevents the list from
-  // jumping around.
-  const display: Array<{ zone: CorridorZone; lengthFt: number }> = [
-    {
-      zone: "advance_warning",
-      lengthFt:
-        corridor.segments.find((s) => s.zone === "advance_warning")?.lengthFt ??
-        0,
-    },
-    {
-      zone: "transition",
-      lengthFt:
-        corridor.segments.find((s) => s.zone === "transition")?.lengthFt ?? 0,
-    },
-    {
-      zone: "buffer",
-      lengthFt:
-        corridor.segments.find((s) => s.zone === "buffer")?.lengthFt ?? 0,
-    },
-    {
-      zone: "work_zone",
-      lengthFt:
-        corridor.segments.find((s) => s.zone === "work_zone")?.lengthFt ?? 0,
-    },
-    {
-      zone: "downstream",
-      lengthFt:
-        corridor.segments.find((s) => s.zone === "downstream")?.lengthFt ?? 0,
-    },
-  ];
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-baseline justify-between py-1 border-b border-[color:var(--rule)]">
-        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-          Total
-        </span>
-        <span className="text-white font-semibold text-[15px] tabular-nums">
-          {fmtFt(corridor.totalLengthFt)} ft
-        </span>
-      </div>
-      {display.map((d) => (
-        <div
-          key={d.zone}
-          className="flex items-baseline justify-between gap-3 py-1"
-        >
-          <span className="flex items-center gap-2 min-w-0 flex-1">
-            <ZoneChannelSwatch zone={d.zone} className="flex-shrink-0" />
-            <span className="text-[12px] text-[color:var(--ink-on-dark)] truncate">
-              {ZONE_LABEL[d.zone]}
-            </span>
-          </span>
-          <span className="font-mono text-[12px] text-white tabular-nums whitespace-nowrap">
-            {fmtFt(d.lengthFt)} ft
-          </span>
-        </div>
-      ))}
     </div>
   );
 }

@@ -522,11 +522,10 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — the picker modal (#166 sizing)",
     css: [],
     tsx: [
-      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 42 }, // #209: +1, the numeric editor's range alert; #290: -7, the retired work-zone panel (typed length + direction of travel); #290 hand-check: +1, the refused-corridor note
+      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 41 }, // #209: +1, the numeric editor's range alert; #290: -7, the retired work-zone panel (typed length + direction of travel); #290 hand-check: +1, the refused-corridor note; #301 piece 2: -1, the extent panel's "Total" label
       { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 8 }, // #234: +1, the restored-intersection line
-      { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 9 }, // #290: +1, the pre-side ruling's sentence on the map (the "drop a pin" overlay's own treatment)
+      { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 7 }, // #290: +1, the pre-side ruling's sentence on the map (the "drop a pin" overlay's own treatment); #301 piece 2: -2, the per-zone length rows (label + value) — the band's rows are the one speaker
       { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 4 }, // #290: -2, the retired work-zone panel's two inputs
-      { file: "components/LocationPickerModal.tsx", cls: "text-[15px]", count: 1 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[17px]", count: 1 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[9px]", count: 3 },
     ],
@@ -667,7 +666,10 @@ export const CENSUS_PINS = {
   // #289 fidelity F6: the draft notice's callout (text-[10px] heading,
   // text-[13px] paragraph) becomes one .tr-prov line — two sites leave
   // GeneratorShell.  95 -> 93.
-  tsxSites: 93,
+  // #301 piece 2: the modal's per-zone length rows go (the band's rows
+  // are the one speaker) — the modal's text-[15px] Total value was its
+  // only site of that size in the file.  93 -> 92.
+  tsxSites: 92,
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -685,6 +687,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 278, // #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note)
+  tsxUses: 274, // #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value)
   tsxFiles: 35,
 } as const;
