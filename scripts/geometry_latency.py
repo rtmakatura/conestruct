@@ -3,6 +3,8 @@ issue-301-band-aerial/probes/geometry_latency.py -- "the Python probe
 pattern" -- which stays as recorded.  Changes: ROOT resolves from
 scripts/, and every POST sends the gate's bypass header
 (scripts/gate.py -- exits loudly on prod without GATE_BYPASS_TOKEN).
+Cosmetic: the imports are re-sorted and the final print() is wrapped, as
+ruff check / ruff format require outside the archive.
 
 #301 checkpoint (b) — how long the corridor-geometry READ takes on prod.
 
