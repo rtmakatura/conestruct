@@ -291,6 +291,61 @@ export async function fetchCorridorGeometry(
   return new Response(upstream.body, { status: 200, headers });
 }
 
+// #301 piece 1 — the WHERE band's aerial (POST /render/corridor-map on
+// Modal): the scenario and the picture asked for in, a PNG out.  The
+// backend draws it (the one layout call, page 2's overlay) and holds the
+// Mapbox token; this relays the bytes.  When there is nothing to draw the
+// backend answers JSON with a ``status`` (no_pin, side_not_confirmed,
+// corridor_unbuildable, unavailable) — relayed as-is so the band can say
+// which, in words (Rule 10).
+export type CorridorMapStage = "pin" | "work" | "laid_out";
+
+export async function fetchCorridorMap(
+  scenario: Scenario,
+  picture: { stage: CorridorMapStage; width: number; height: number },
+): Promise<Response> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    return new Response("Render service not configured", { status: 503 });
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${url.replace(/\/$/, "")}/render/corridor-map`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${secret}`,
+      },
+      body: JSON.stringify({ scenario: withRelayedCenterline(scenario), ...picture }),
+    });
+  } catch (err) {
+    console.error("corridor map fetch failed", err);
+    return new Response("Render service unreachable", { status: 502 });
+  }
+
+  const contentType = upstream.headers.get("content-type") ?? "";
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    if (contentType.startsWith("application/json") && [409, 502, 503].includes(upstream.status)) {
+      return new Response(detail, {
+        status: upstream.status,
+        headers: { "content-type": "application/json", "cache-control": "private, no-store" },
+      });
+    }
+    console.error(`corridor map upstream ${upstream.status}`, detail);
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
+    return new Response("Corridor map failed", { status: 502 });
+  }
+
+  const headers = new Headers();
+  headers.set("content-type", contentType || "image/png");
+  headers.set("cache-control", upstream.headers.get("cache-control") ?? "private, max-age=600");
+  return new Response(upstream.body, { status: 200, headers });
+}
+
 export async function fetchAuditTrail(
   scenario: Scenario,
 ): Promise<Response> {

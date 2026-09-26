@@ -427,6 +427,11 @@ export function GeneratorShell({
   // and Generate is gated on the same flag (`deriveRail`).  The
   // jurisdiction suggest sends lat/lng only.  The debug snapshot
   // (?debug=1 only, on click) is not a check and is left as is.
+  // Two READS send it before the kind, by design, and form no verdict: the
+  // corridor-geometry read (#290 — the side control's choices, the
+  // picker's overlay; `useCorridorGeometry`) and, #301, the WHERE band's
+  // aerial (`useCorridorAerial`, lib/corridor-aerial.ts → POST
+  // /api/corridor-map), a picture of the same scenario.
   //
   // #290: and until the side is confirmed (ruling 10: side unset is
   // needs-you).  Under the work-start model the direction every corridor
