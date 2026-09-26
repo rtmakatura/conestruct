@@ -12,7 +12,6 @@ import {
   ZONE_COLOR,
   ZONE_LABEL,
 } from "./corridor-zones";
-import { corridorMapUrl, type CorridorSpec } from "./corridor-map";
 
 describe("ZONE_CHANNEL non-colour distinguishability (issue #131)", () => {
   it("gives every zone a distinct dash signature", () => {
@@ -51,30 +50,7 @@ describe("corridor legend completeness (issue #131)", () => {
   });
 });
 
-const SPEC: CorridorSpec = {
-  anchorLat: 39.7,
-  anchorLng: -104.98,
-  bearingDeg: 90,
-  advanceWarningFt: 500,
-  taperFt: 200,
-  bufferFt: 300,
-  workZoneFt: 400,
-  downstreamTaperFt: 100,
-};
-
-describe("static preview: single-sourced colour + width-tier (issue #131)", () => {
-  const url = corridorMapUrl(SPEC, "test-token");
-
-  it("draws every zone with the shared ZONE_COLOR (no divergent duplicate table)", () => {
-    for (const z of CORRIDOR_ZONES) {
-      const hex = ZONE_COLOR[z].slice(1).toLowerCase();
-      expect(url).toContain(`+${hex}(`);
-    }
-  });
-
-  it("width-tiers the path overlays so zones differ by thickness, not colour alone", () => {
-    const widths = [...url.matchAll(/path-(\d+)\+/g)].map((m) => Number(m[1]));
-    expect(widths.length).toBe(CORRIDOR_ZONES.length);
-    expect(new Set(widths).size).toBeGreaterThan(1);
-  });
-});
+// #301: the "static preview" block that pinned lib/corridor-map.ts's URL
+// builder is gone with the builder.  The Static Images surfaces (PDF page 2
+// and the band's aerial) are drawn on the backend; tests/test_corridor_map.py
+// pins their colours, width ranks and words EQUAL to the tables above.

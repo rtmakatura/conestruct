@@ -3456,8 +3456,8 @@ _AERIAL_OVERLAY_EXT_OPACITY: str = "0.4"
 
 # Mapbox style for the page-2 aerial (#141).  satellite-streets-v12
 # composites road labels and highway shields over the imagery —
-# chosen to match the frontend's existing style (corridor-map.ts
-# DEFAULTS and the picker map), and because the white-halo labels stay
+# chosen to match the picker map's style (and, #301, the band's aerial,
+# static_aerial.STYLE), and because the white-halo labels stay
 # legible when the sheet is photocopied in grayscale (measured in the
 # Arc 10 evidence pair).  The bare satellite style it replaces named
 # nothing: location without identity on a crew document.
