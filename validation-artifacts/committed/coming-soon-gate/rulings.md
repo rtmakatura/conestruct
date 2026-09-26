@@ -61,3 +61,15 @@ Ryan: "yes to all" on the checkpoint's recommendations.
 **R10 — The drawing animates once on load** (road lines draw, then signs, devices and zone bands fade in, ~1.5 s), and is static under `prefers-reduced-motion`. The only motion on any Conestruct surface; the product's no-motion rule is unchanged. *(Approved as shown; same.)*
 
 **R11 — Access setup as actually done for Arc 1:** Clerk prod is in Access mode → Invite-only; the three users (`ryan@conestruct.com`, James, Zac) were created by hand; no Clerk allowlist (Open-mode only, paid). `GATE_ALLOWED_EMAILS` is the enforcement. C-E1's "Clerk restrictions" means this.
+
+## Arc 2 checkpoint rulings (Ryan, 2026-09-26) — cite as A2-Qn
+- **A2-Q1 — No sign-up form in Arc 2.** "Get notified" (nav, sheet, closing band) is a `mailto:ryan@conestruct.com` link with subject "Conestruct — let me know when it opens". No email provider, no `/api/waitlist`, no rate-limiter change, no Sentry change, no /privacy change. The title block keeps its rows; the form area becomes the question "Want to know when it opens?" + the mailto button + the line "Email us and we'll write back once, when Conestruct opens." R2's form moves to its own arc (provider, fail-closed limiter, Sentry scrubbing, /privacy v-bump — CC's checkpoint §§2–3, 7 carry over as its starting point).
+- **A2-Q2/Q3/Q4** — moot under A2-Q1.
+- **A2-Q5** — the drawing matches the product: buffer empty; channelizing devices along the lane line through the work area.
+- **A2-Q6** — CC's proposed replacement wording, all items, as written in `checkpoint-arc2.md` §6. The reference chips keep only the four verified. The drawing's label names no disabled kind.
+- **A2-Q7** — callout in `--ink`, not `--act`.
+- **A2-Q8** — existing button and input styles.
+- **A2-Q9** — two new tokens (grid line, sheet ground); the grid stays.
+- **A2-Q10** — the closing "Get notified ↑" is the outlined secondary style; one primary per screen.
+- **A2-T** — type-size exceptions and R10's recorded motion exception as proposed; 9/9.5 px labels become 10 px.
+- **A2-I** — draft a `gh issue create` body for the unflagged lane/shoulder width assumptions (Rule 10); Ryan posts it.
