@@ -3,10 +3,17 @@
 // artifact?  Counts <nav> elements and screenshots a mid-scroll
 // viewport (not fullPage) where a genuine duplicate would be visible.
 import { chromium } from "playwright";
+// coming-soon-gate C-Q7: edited in place (scripts/ is not an archive) —
+// the gate's bypass header, on requests to the site only; throws on prod
+// without GATE_BYPASS_TOKEN.  The default moves from the apex to www:
+// the apex answers with a 307 to www, and the header does not survive a
+// redirect hop (scripts/gate.cjs).
+import { applyGate } from "./gate.cjs";
 
-const base = process.env.GEN2_BASE ?? "https://conestruct.com";
+const base = process.env.GEN2_BASE ?? "https://www.conestruct.com";
 const browser = await chromium.launch({ channel: "msedge", headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await applyGate(page, base);
 await page.goto(`${base}/sandbox`, { waitUntil: "networkidle", timeout: 120000 });
 
 const counts = await page.evaluate(() => ({
