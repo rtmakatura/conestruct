@@ -1,0 +1,129 @@
+conestruct.
+DEMO
+/
+MUTCD PLAN GENERATOR
+MUTCD 2023 · CDOT
+Method of Handling Traffic — plan generator
+×
+PLAN DECLINED · LANE WIDTH 10.5 FT IS BELOW THE 11 FT MINIMUM FOR FREEWAY WORK ZONES (CDOT S-630-1 SHEET 7 CASE 11 '11' MIN.' ANNOTATION). INCREASE LANE WIDTH TO AT LEAST 11 FT, OR VERIFY THE SCENARIO IS NOT ACTUALLY ON A FREEWAY.
+NEEDS INPUT
+✓
+Where
+South Valley Highway Southeast · 1,000 ft · shoulder work
+CHANGE
+STEP 2 OF 4
+WHAT
+prefilled from the road · guesses marked
+
+Anything we got wrong?
+
+Everything here came off the road you confirmed. Change what is wrong; ignore what is right.
+
+Speed limit
+25 mph
+30 mph
+35 mph
+40 mph
+45 mph
+50 mph
+55 mph
+60 mph
+65 mph
+70 mph
+75 mph
+OSM · 60 mph · measured
+Lanes per direction
+i
+DETAILS
+1
+2
+3
+4
+OSM · 4 · measured
+Lane width
+i
+DETAILS
+9 ft
+9.5 ft
+10 ft
+10.5 ft
+11 ft
+11.5 ft
+12 ft
+12.5 ft
+13 ft
+13.5 ft
+14 ft
+your change · operator-set from here on
+Road type
+i
+DETAILS
+Rural — undivided
+Rural — divided
+Urban arterial
+Freeway / interstate
+OSM · Freeway / interstate · measured
+Jurisdiction
+i
+DETAILS
+Not set — MUTCD + CDOT only
+CDOT (state highway)
+Denver
+Lakewood
+Englewood
+Littleton
+Centennial
+Parker
+Greeley
+Thornton
+E-470
+MUTCD + Colorado Supplement only
+Work dates
+not set · windows and permit lead times need a date
+⌁
+Pin suggests: Denver
+CONFIRM DENVER
+DISMISS
+Project name
+operator-set · names the file and the title block
+Location description
+optional · the address stands in when this is empty
+THE REST OF THIS PLAN
+inputs the grid has no cell for — every one of them changes the plan
+Work type
+Utility locate
+Survey crew
+Signal cabinet
+Guardrail repair
+Other
+your change · operator-set from here on
+Night operation
+Daytime
+Night
+night work adds retroreflective devices
+Work-zone speed reduction
+No reduction
+Reduced
+a lower limit through the zone
+Street classification
+Local
+Collector
+Arterial
+not set · operator-set when picked
+⌁
+Detected road suggests street class: Arterial (OSM motorway)
+CONFIRM ARTERIAL
+DISMISS
+◌
+Select a jurisdiction to see its windows
+Generate plan
+Generation declined — see the notice below.
+Output requires TCS review · every dimension cited to MUTCD or CDOT
+No package yet
+
+Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.
+
+© 2026 CONESTRUCT · BUILT IN COLORADO
+TERMS
+PRIVACY
+OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT

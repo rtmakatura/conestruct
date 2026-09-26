@@ -1,0 +1,186 @@
+healthz: {'status': 'ok', 'sha': '0ddc85efd824930fa8307d9a9fb7b6faffff517e'}
+
+==================== broadway
+road: North Broadway (None) way 131232822 primary oneway=yes | kind shoulder roadType urban_arterial 30 mph lanes 4 divided True side {'side': 'right', 'travel': 'with_geometry'}
+
+-- WITH adjustments (site scan on, as the site sends)
+prod /api/render/audit: pass=False | Required: True. Signs placed: 6 left, 8 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 1, 'v1_limitations': 1, 'is_clean': False} | site adjustments: ['adjacent_intersection', 'pedestrian_facility']
+replay is_divided=True scan=ok adjustments=['adjacent_intersection', 'pedestrian_facility']
+  LEFT  (6): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, G20-5P@500, G20-2@-150
+  RIGHT (8): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, R9-9@1,000, G20-5P@500, R9-9@0, G20-2@-150
+  added by adjustments: ['R9-9@1,000 (+54.0)', 'R9-9@0 (+54.0)']
+  option today                                          6 left · 8 right -> FAIL
+  option a  literal families (drop 6I guide: M4-9a)     6 left · 8 right -> FAIL
+  option a' a, less ped facility signs (R9-8..R9-11a)   6 left · 6 right -> PASS
+  option b  not added by an adjustment (origin tag)     6 left · 6 right -> PASS
+  option c  a' and b                                    6 left · 6 right -> PASS
+  option d  the shoulder exception only                 6 left · 8 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               6 left · 6 right -> PASS (not required: one shoulder closed)
+
+-- WITHOUT adjustments (no site scan)
+prod /api/render/audit: pass=True | Required: True. Signs placed: 6 left, 6 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 0, 'v1_limitations': 0, 'is_clean': True} | site adjustments: []
+replay is_divided=True scan=not_run adjustments=[]
+  LEFT  (6): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, G20-5P@500, G20-2@-150
+  RIGHT (6): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, G20-5P@500, G20-2@-150
+  added by adjustments: []
+  option today                                          6 left · 6 right -> PASS
+  option a  literal families (drop 6I guide: M4-9a)     6 left · 6 right -> PASS
+  option a' a, less ped facility signs (R9-8..R9-11a)   6 left · 6 right -> PASS
+  option b  not added by an adjustment (origin tag)     6 left · 6 right -> PASS
+  option c  a' and b                                    6 left · 6 right -> PASS
+  option d  the shoulder exception only                 6 left · 6 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               6 left · 6 right -> PASS (not required: one shoulder closed)
+
+==================== denver-demo
+road: North Broadway (None) way 132915888 primary oneway=yes | kind shoulder roadType urban_arterial 30 mph lanes 4 divided True side {'side': 'right', 'travel': 'with_geometry'}
+
+-- WITH adjustments (site scan on, as the site sends)
+prod /api/render/audit: pass=False | Required: True. Signs placed: 6 left, 10 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 1, 'v1_limitations': 2, 'is_clean': False} | site adjustments: ['adjacent_intersection', 'adjacent_interchange', 'pedestrian_facility', 'bicycle_facility']
+replay is_divided=True scan=ok adjustments=['adjacent_intersection', 'adjacent_interchange', 'pedestrian_facility', 'bicycle_facility']
+  LEFT  (6): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, G20-5P@500, G20-2@-150
+  RIGHT (10): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, R9-9@1,000, M4-9a@1,000, G20-5P@500, R9-9@0, M4-9a@0, G20-2@-150
+  added by adjustments: ['R9-9@1,000 (+54.0)', 'R9-9@0 (+54.0)', 'M4-9a@1,000 (+46.0)', 'M4-9a@0 (+46.0)']
+  option today                                          6 left · 10 right -> FAIL
+  option a  literal families (drop 6I guide: M4-9a)     6 left · 8 right -> FAIL
+  option a' a, less ped facility signs (R9-8..R9-11a)   6 left · 6 right -> PASS
+  option b  not added by an adjustment (origin tag)     6 left · 6 right -> PASS
+  option c  a' and b                                    6 left · 6 right -> PASS
+  option d  the shoulder exception only                 6 left · 10 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               6 left · 6 right -> PASS (not required: one shoulder closed)
+
+-- WITHOUT adjustments (no site scan)
+prod /api/render/audit: pass=True | Required: True. Signs placed: 6 left, 6 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 0, 'v1_limitations': 0, 'is_clean': True} | site adjustments: []
+replay is_divided=True scan=not_run adjustments=[]
+  LEFT  (6): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, G20-5P@500, G20-2@-150
+  RIGHT (6): W20-1@1,550, W20-2@1,450, W21-5aR@1,350, G20-1@1,100, G20-5P@500, G20-2@-150
+  added by adjustments: []
+  option today                                          6 left · 6 right -> PASS
+  option a  literal families (drop 6I guide: M4-9a)     6 left · 6 right -> PASS
+  option a' a, less ped facility signs (R9-8..R9-11a)   6 left · 6 right -> PASS
+  option b  not added by an adjustment (origin tag)     6 left · 6 right -> PASS
+  option c  a' and b                                    6 left · 6 right -> PASS
+  option d  the shoulder exception only                 6 left · 6 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               6 left · 6 right -> PASS (not required: one shoulder closed)
+
+==================== e470-control
+road: E-470 (E470) way 8388109 motorway oneway=yes | kind shoulder roadType freeway 75 mph lanes 2 divided True side {'side': 'right', 'travel': 'with_geometry'}
+
+-- WITH adjustments (site scan on, as the site sends)
+prod /api/render/audit: pass=True | Required: True. Signs placed: 12 left, 12 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 0, 'v1_limitations': 1, 'is_clean': False} | site adjustments: ['adjacent_interchange']
+replay is_divided=True scan=ok adjustments=['adjacent_interchange']
+  LEFT  (12): W20-1@7,210, W20-2@4,570, W21-5aR@3,070, W16-2a@3,070, W21-5aR@2,820, W7-3a@2,820, W5-1@2,570, G20-1@1,100, G20-5P@833, G20-5P@500, G20-5P@167, G20-2@-150
+  RIGHT (12): W20-1@7,210, W20-2@4,570, W21-5aR@3,070, W16-2a@3,070, W21-5aR@2,820, W7-3a@2,820, W5-1@2,570, G20-1@1,100, G20-5P@833, G20-5P@500, G20-5P@167, G20-2@-150
+  added by adjustments: []
+  option today                                          12 left · 12 right -> PASS
+  option a  literal families (drop 6I guide: M4-9a)     12 left · 12 right -> PASS
+  option a' a, less ped facility signs (R9-8..R9-11a)   12 left · 12 right -> PASS
+  option b  not added by an adjustment (origin tag)     12 left · 12 right -> PASS
+  option c  a' and b                                    12 left · 12 right -> PASS
+  option d  the shoulder exception only                 12 left · 12 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               12 left · 12 right -> PASS (not required: one shoulder closed)
+
+-- WITHOUT adjustments (no site scan)
+prod /api/render/audit: pass=True | Required: True. Signs placed: 12 left, 12 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 0, 'v1_limitations': 0, 'is_clean': True} | site adjustments: []
+replay is_divided=True scan=not_run adjustments=[]
+  LEFT  (12): W20-1@7,210, W20-2@4,570, W21-5aR@3,070, W16-2a@3,070, W21-5aR@2,820, W7-3a@2,820, W5-1@2,570, G20-1@1,100, G20-5P@833, G20-5P@500, G20-5P@167, G20-2@-150
+  RIGHT (12): W20-1@7,210, W20-2@4,570, W21-5aR@3,070, W16-2a@3,070, W21-5aR@2,820, W7-3a@2,820, W5-1@2,570, G20-1@1,100, G20-5P@833, G20-5P@500, G20-5P@167, G20-2@-150
+  added by adjustments: []
+  option today                                          12 left · 12 right -> PASS
+  option a  literal families (drop 6I guide: M4-9a)     12 left · 12 right -> PASS
+  option a' a, less ped facility signs (R9-8..R9-11a)   12 left · 12 right -> PASS
+  option b  not added by an adjustment (origin tag)     12 left · 12 right -> PASS
+  option c  a' and b                                    12 left · 12 right -> PASS
+  option d  the shoulder exception only                 12 left · 12 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               12 left · 12 right -> PASS (not required: one shoulder closed)
+
+==================== i25-urban
+road: South Valley Highway (I 25) way 37927445 motorway oneway=yes | kind shoulder roadType freeway 60 mph lanes 3 divided True side {'side': 'right', 'travel': 'with_geometry'}
+
+-- WITH adjustments (site scan on, as the site sends)
+prod /api/render/audit: pass=False | Required: True. Signs placed: 12 left, 14 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 1, 'v1_limitations': 2, 'is_clean': False} | site adjustments: ['adjacent_intersection', 'adjacent_interchange', 'pedestrian_facility']
+replay is_divided=True scan=ok adjustments=['adjacent_intersection', 'adjacent_interchange', 'pedestrian_facility']
+  LEFT  (12): W20-1@6,910, W20-2@4,270, W21-5aR@2,770, W16-2a@2,770, W21-5aR@2,520, W7-3a@2,520, W5-1@2,270, G20-1@1,100, G20-5P@833, G20-5P@500, G20-5P@167, G20-2@-150
+  RIGHT (14): W20-1@6,910, W20-2@4,270, W21-5aR@2,770, W16-2a@2,770, W21-5aR@2,520, W7-3a@2,520, W5-1@2,270, G20-1@1,100, R9-9@1,000, G20-5P@833, G20-5P@500, G20-5P@167, R9-9@0, G20-2@-150
+  added by adjustments: ['R9-9@1,000 (+48.0)', 'R9-9@0 (+48.0)']
+  option today                                          12 left · 14 right -> FAIL
+  option a  literal families (drop 6I guide: M4-9a)     12 left · 14 right -> FAIL
+  option a' a, less ped facility signs (R9-8..R9-11a)   12 left · 12 right -> PASS
+  option b  not added by an adjustment (origin tag)     12 left · 12 right -> PASS
+  option c  a' and b                                    12 left · 12 right -> PASS
+  option d  the shoulder exception only                 12 left · 14 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               12 left · 12 right -> PASS (not required: one shoulder closed)
+
+-- WITHOUT adjustments (no site scan)
+prod /api/render/audit: pass=True | Required: True. Signs placed: 12 left, 12 right.
+prod plan_flags: {'validation_warnings': 0, 'compliance_fails': 0, 'v1_limitations': 0, 'is_clean': True} | site adjustments: []
+replay is_divided=True scan=not_run adjustments=[]
+  LEFT  (12): W20-1@6,910, W20-2@4,270, W21-5aR@2,770, W16-2a@2,770, W21-5aR@2,520, W7-3a@2,520, W5-1@2,270, G20-1@1,100, G20-5P@833, G20-5P@500, G20-5P@167, G20-2@-150
+  RIGHT (12): W20-1@6,910, W20-2@4,270, W21-5aR@2,770, W16-2a@2,770, W21-5aR@2,520, W7-3a@2,520, W5-1@2,270, G20-1@1,100, G20-5P@833, G20-5P@500, G20-5P@167, G20-2@-150
+  added by adjustments: []
+  option today                                          12 left · 12 right -> PASS
+  option a  literal families (drop 6I guide: M4-9a)     12 left · 12 right -> PASS
+  option a' a, less ped facility signs (R9-8..R9-11a)   12 left · 12 right -> PASS
+  option b  not added by an adjustment (origin tag)     12 left · 12 right -> PASS
+  option c  a' and b                                    12 left · 12 right -> PASS
+  option d  the shoulder exception only                 12 left · 12 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               12 left · 12 right -> PASS (not required: one shoulder closed)
+
+==================== NEGATIVE CASE: the left-side W20-1 removed
+
+-- broadway (shoulder, divided): generator plan 12 signs; removed W20-1@1,550 (-46.0)
+  option today                                          5 left · 6 right -> FAIL
+  option a  literal families (drop 6I guide: M4-9a)     5 left · 6 right -> FAIL
+  option a' a, less ped facility signs (R9-8..R9-11a)   5 left · 6 right -> FAIL
+  option b  not added by an adjustment (origin tag)     5 left · 6 right -> FAIL
+  option c  a' and b                                    5 left · 6 right -> FAIL
+  option d  the shoulder exception only                 5 left · 6 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               5 left · 6 right -> PASS (not required: one shoulder closed)
+  validator CO_SIGN_BOTH_SIDES: 1 error(s): ["Sign 'W20-1' at station 1550 ft (offset +46.0 ft) has no mirror sign on the opposite side of the roadway."]
+  +ped&bike today                                          5 left · 10 right -> FAIL
+  +ped&bike a  literal families (drop 6I guide: M4-9a)     5 left · 8 right -> FAIL
+  +ped&bike a' a, less ped facility signs (R9-8..R9-11a)   5 left · 6 right -> FAIL
+  +ped&bike b  not added by an adjustment (origin tag)     5 left · 6 right -> FAIL
+  +ped&bike c  a' and b                                    5 left · 6 right -> FAIL
+  +ped&bike d  the shoulder exception only                 5 left · 10 right -> PASS (not required: one shoulder closed)
+  +ped&bike d+a' exception, and a' elsewhere               5 left · 6 right -> PASS (not required: one shoulder closed)
+
+-- e470-control (shoulder, divided): generator plan 24 signs; removed W20-1@7,210 (-28.0)
+  option today                                          11 left · 12 right -> FAIL
+  option a  literal families (drop 6I guide: M4-9a)     11 left · 12 right -> FAIL
+  option a' a, less ped facility signs (R9-8..R9-11a)   11 left · 12 right -> FAIL
+  option b  not added by an adjustment (origin tag)     11 left · 12 right -> FAIL
+  option c  a' and b                                    11 left · 12 right -> FAIL
+  option d  the shoulder exception only                 11 left · 12 right -> PASS (not required: one shoulder closed)
+  option d+a' exception, and a' elsewhere               11 left · 12 right -> PASS (not required: one shoulder closed)
+  validator CO_SIGN_BOTH_SIDES: 1 error(s): ["Sign 'W20-1' at station 7210 ft (offset +28.0 ft) has no mirror sign on the opposite side of the roadway."]
+  +ped&bike today                                          11 left · 16 right -> FAIL
+  +ped&bike a  literal families (drop 6I guide: M4-9a)     11 left · 14 right -> FAIL
+  +ped&bike a' a, less ped facility signs (R9-8..R9-11a)   11 left · 12 right -> FAIL
+  +ped&bike b  not added by an adjustment (origin tag)     11 left · 12 right -> FAIL
+  +ped&bike c  a' and b                                    11 left · 12 right -> FAIL
+  +ped&bike d  the shoulder exception only                 11 left · 16 right -> PASS (not required: one shoulder closed)
+  +ped&bike d+a' exception, and a' elsewhere               11 left · 12 right -> PASS (not required: one shoulder closed)
+
+-- lane closure divided (TA-19 / Case 10), 65 mph rural_divided: generator plan 14 signs; removed W20-1@3,925 (-28.0)
+  option today                                          6 left · 7 right -> FAIL
+  option a  literal families (drop 6I guide: M4-9a)     6 left · 7 right -> FAIL
+  option a' a, less ped facility signs (R9-8..R9-11a)   6 left · 7 right -> FAIL
+  option b  not added by an adjustment (origin tag)     6 left · 7 right -> FAIL
+  option c  a' and b                                    6 left · 7 right -> FAIL
+  option d  the shoulder exception only                 6 left · 7 right -> FAIL
+  option d+a' exception, and a' elsewhere               6 left · 7 right -> FAIL
+  validator CO_SIGN_BOTH_SIDES: 1 error(s): ["Sign 'W20-1' at station 3925 ft (offset +28.0 ft) has no mirror sign on the opposite side of the roadway."]
+  +ped&bike today                                          6 left · 11 right -> FAIL
+  +ped&bike a  literal families (drop 6I guide: M4-9a)     6 left · 9 right -> FAIL
+  +ped&bike a' a, less ped facility signs (R9-8..R9-11a)   6 left · 7 right -> FAIL
+  +ped&bike b  not added by an adjustment (origin tag)     6 left · 7 right -> FAIL
+  +ped&bike c  a' and b                                    6 left · 7 right -> FAIL
+  +ped&bike d  the shoulder exception only                 6 left · 11 right -> FAIL
+  +ped&bike d+a' exception, and a' elsewhere               6 left · 7 right -> FAIL
