@@ -1,0 +1,48 @@
+{
+  "id": "shoulder-380-03-side-chosen-kind-owed-work",
+  "settled": "settled",
+  "strip": "◌AWAITING KIND OF WORK",
+  "openBand": "where",
+  "aerial": {
+    "stage": "work",
+    "zoomStep": null,
+    "dataRead": true,
+    "note": null,
+    "legendRows": [
+      "Work zone"
+    ],
+    "legendLines": [
+      "Approaches lay out after you confirm the kind"
+    ],
+    "alt": "Aerial: the work segment at the pin",
+    "frame": {
+      "x": 31,
+      "w": 318,
+      "h": 250
+    },
+    "legend": {
+      "x": 31,
+      "w": 318,
+      "h": 38
+    },
+    "imgNatural": [
+      632,
+      496
+    ]
+  },
+  "ledger": [
+    "✓Found the spotNorth Broadway SouthboundCHANGE✓Work startsNorth Broadway SouthboundMOVE✓Extent1,000 ft · typedCHANGE✓Which side is occupied?West side · southbound trafficconfirmed⚠Kind of work — confirm belowneeds you◌See the plan growpendingapproaches lay out after you confirm",
+    "✓Found the spotNorth Broadway SouthboundCHANGE",
+    "CHANGE",
+    "✓Work startsNorth Broadway SouthboundMOVE",
+    "MOVE",
+    "✓Extent1,000 ft · typedCHANGE",
+    "CHANGE",
+    "✓Which side is occupied?West side · southbound trafficconfirmed",
+    "⚠Kind of work — confirm belowneeds you",
+    "◌See the plan growpendingapproaches lay out after you confirm"
+  ],
+  "pickerExtent": null,
+  "viewport": 380,
+  "hScroll": false
+}

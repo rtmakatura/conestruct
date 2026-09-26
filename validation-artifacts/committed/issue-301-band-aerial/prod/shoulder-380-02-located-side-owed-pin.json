@@ -1,0 +1,40 @@
+{
+  "id": "shoulder-380-02-located-side-owed-pin",
+  "settled": "settled",
+  "strip": "◌AWAITING KIND OF WORK",
+  "openBand": "where",
+  "aerial": {
+    "stage": "pin",
+    "zoomStep": null,
+    "dataRead": true,
+    "note": "Say which side is occupied to lay out the work",
+    "legendRows": [],
+    "legendLines": [],
+    "alt": "Aerial at the pin — nothing is laid out until the side is chosen",
+    "frame": {
+      "x": 31,
+      "w": 318,
+      "h": 250
+    },
+    "legend": null,
+    "imgNatural": [
+      632,
+      496
+    ]
+  },
+  "ledger": [
+    "✓Found the spotNorth Broadway SouthboundCHANGE✓Work startsNorth Broadway SouthboundMOVE✓Extent1,000 ft · typedCHANGE⚠Which side is occupied?needs youSay which side is occupied to lay out the work⚠Kind of work — confirm belowneeds you◌See the plan growpendingapproaches lay out after you confirm",
+    "✓Found the spotNorth Broadway SouthboundCHANGE",
+    "CHANGE",
+    "✓Work startsNorth Broadway SouthboundMOVE",
+    "MOVE",
+    "✓Extent1,000 ft · typedCHANGE",
+    "CHANGE",
+    "⚠Which side is occupied?needs youSay which side is occupied to lay out the work",
+    "⚠Kind of work — confirm belowneeds you",
+    "◌See the plan growpendingapproaches lay out after you confirm"
+  ],
+  "pickerExtent": null,
+  "viewport": 380,
+  "hScroll": false
+}

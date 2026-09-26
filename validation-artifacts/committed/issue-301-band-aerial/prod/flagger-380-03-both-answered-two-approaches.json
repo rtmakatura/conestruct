@@ -1,0 +1,53 @@
+{
+  "id": "flagger-380-03-both-answered-two-approaches",
+  "settled": "settled",
+  "strip": "⚠VERIFIED · 1 validation warningREVIEW WARNINGS",
+  "openBand": "where",
+  "aerial": {
+    "stage": "laid_out",
+    "zoomStep": null,
+    "dataRead": true,
+    "note": null,
+    "legendRows": [
+      "Advance warning",
+      "Taper",
+      "Buffer",
+      "Work zone",
+      "Downstream",
+      "Faded: past the mapped road"
+    ],
+    "legendLines": [
+      "Two approaches: northbound (the work's side) and southbound"
+    ],
+    "alt": "Aerial: the laid-out corridor — the work and its approaches",
+    "frame": {
+      "x": 31,
+      "w": 318,
+      "h": 250
+    },
+    "legend": {
+      "x": 31,
+      "w": 318,
+      "h": 113
+    },
+    "imgNatural": [
+      632,
+      496
+    ]
+  },
+  "ledger": [
+    "✓Found the spotLafayette Street NorthboundCHANGE✓Work startsLafayette Street NorthboundMOVE✓Extent1,000 ft · typedCHANGE✓Which side is occupied?East side · northbound trafficconfirmed✓Kind of workFlagger lane closureconfirmed✓See the plan growapproaches laid outlaid out",
+    "✓Found the spotLafayette Street NorthboundCHANGE",
+    "CHANGE",
+    "✓Work startsLafayette Street NorthboundMOVE",
+    "MOVE",
+    "✓Extent1,000 ft · typedCHANGE",
+    "CHANGE",
+    "✓Which side is occupied?East side · northbound trafficconfirmed",
+    "✓Kind of workFlagger lane closureconfirmed",
+    "✓See the plan growapproaches laid outlaid out"
+  ],
+  "pickerExtent": null,
+  "viewport": 380,
+  "hScroll": false
+}

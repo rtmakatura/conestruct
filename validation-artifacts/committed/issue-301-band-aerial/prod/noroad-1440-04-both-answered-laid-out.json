@@ -1,0 +1,50 @@
+{
+  "id": "noroad-1440-04-both-answered-laid-out",
+  "settled": "settled",
+  "strip": "◌VERIFYING · waking the verification server — the first check can take a few extra seconds",
+  "openBand": "where",
+  "aerial": {
+    "stage": "laid_out",
+    "zoomStep": null,
+    "dataRead": true,
+    "note": null,
+    "legendRows": [
+      "Advance warning",
+      "Taper",
+      "Buffer",
+      "Work zone",
+      "Downstream"
+    ],
+    "legendLines": [],
+    "alt": "Aerial: the laid-out corridor — the work and its approaches",
+    "frame": {
+      "x": 297,
+      "w": 846,
+      "h": 300
+    },
+    "legend": {
+      "x": 297,
+      "w": 846,
+      "h": 16
+    },
+    "imgNatural": [
+      1688,
+      596
+    ]
+  },
+  "ledger": [
+    "⚠Found the spotCHANGE✓Work startsMOVE✓Extent1,000 ft · typedCHANGE✓Which side is occupied?East side · traffic heads northconfirmed✓Kind of workShoulder workconfirmed✓See the plan growapproaches laid outlaid out",
+    "⚠Found the spotCHANGE",
+    "CHANGE",
+    "✓Work startsMOVE",
+    "MOVE",
+    "✓Extent1,000 ft · typedCHANGE",
+    "CHANGE",
+    "✓Which side is occupied?East side · traffic heads northconfirmed",
+    "✓Kind of workShoulder workconfirmed",
+    "✓See the plan growapproaches laid outlaid out"
+  ],
+  "pickerExtent": null,
+  "viewport": 1440,
+  "hScroll": false
+}

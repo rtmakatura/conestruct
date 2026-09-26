@@ -1,0 +1,50 @@
+{
+  "id": "shoulder-380-05-picker-extent-coverage-only",
+  "settled": "settled",
+  "strip": "✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW",
+  "openBand": "where",
+  "aerial": {
+    "stage": "laid_out",
+    "zoomStep": null,
+    "dataRead": true,
+    "note": null,
+    "legendRows": [
+      "Advance warning",
+      "Taper",
+      "Buffer",
+      "Work zone",
+      "Downstream"
+    ],
+    "legendLines": [],
+    "alt": "Aerial: the laid-out corridor — the work and its approaches",
+    "frame": {
+      "x": 31,
+      "w": 318,
+      "h": 250
+    },
+    "legend": {
+      "x": 31,
+      "w": 318,
+      "h": 59
+    },
+    "imgNatural": [
+      632,
+      496
+    ]
+  },
+  "ledger": [
+    "✓Found the spotNorth Broadway SouthboundCHANGE✓Work startsNorth Broadway SouthboundMOVE✓Extent1,000 ft · typedCHANGE✓Which side is occupied?West side · southbound trafficconfirmed✓Kind of workShoulder workconfirmed✓See the plan growapproaches laid outlaid out",
+    "✓Found the spotNorth Broadway SouthboundCHANGE",
+    "CHANGE",
+    "✓Work startsNorth Broadway SouthboundMOVE",
+    "MOVE",
+    "✓Extent1,000 ft · typedCHANGE",
+    "CHANGE",
+    "✓Which side is occupied?West side · southbound trafficconfirmed",
+    "✓Kind of workShoulder workconfirmed",
+    "✓See the plan growapproaches laid outlaid out"
+  ],
+  "pickerExtent": "✓ Road detected · 1 matchNorth Broadway southbound (primary, 180°)11 m from pin · way 131232822Road properties↻ Re-detect roadsSpeed limit (mph)OSM · measuredLanes per directionOSM · measured5 lanes/direction detected (OSM) — plans draw at most 4 lanes per direction. Plan will use 4.Road typeOSM · inferredRural — undividedRural — dividedUrban arterialFreeway / interstateDividedOSM · inferredDividedUndividedCorridor extentCenterlineOSM, full corridor",
+  "viewport": 380,
+  "hScroll": false
+}

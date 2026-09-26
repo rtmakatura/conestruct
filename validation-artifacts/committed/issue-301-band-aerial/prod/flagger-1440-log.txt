@@ -1,0 +1,7 @@
+flagger-1440-01-fresh-no-aerial: settled=absent stage=- note=null rows=[] lines=[] frame=null img=null hScroll=false
+flagger-1440-02-kind-confirmed-side-owed-pin: settled=settled stage=pin note="Say which side is occupied to lay out the work" rows=[] lines=[] frame={"x":297,"w":846,"h":300} img=[1688,596] hScroll=false
+flagger-1440-03-both-answered-two-approaches: settled=settled stage=laid_out note=null rows=["Advance warning","Taper","Buffer","Work zone","Downstream","Faded: past the mapped road"] lines=["Two approaches: northbound (the work's side) and southbound"] frame={"x":297,"w":846,"h":300} img=[1688,596] hScroll=false
+PICTURES REQUESTED
+{"stage":"pin","width":844,"height":298}
+{"stage":"pin","width":844,"height":298}
+{"stage":"laid_out","width":844,"height":298}

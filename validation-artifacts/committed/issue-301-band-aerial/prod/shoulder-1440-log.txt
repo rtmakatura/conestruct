@@ -1,0 +1,9 @@
+shoulder-1440-01-fresh-no-aerial: settled=absent stage=- note=null rows=[] lines=[] frame=null img=null hScroll=false
+shoulder-1440-02-located-side-owed-pin: settled=settled stage=pin note="Say which side is occupied to lay out the work" rows=[] lines=[] frame={"x":297,"w":846,"h":300} img=[1688,596] hScroll=false
+shoulder-1440-03-side-chosen-kind-owed-work: settled=settled stage=work note=null rows=["Work zone"] lines=["Approaches lay out after you confirm the kind"] frame={"x":297,"w":846,"h":300} img=[1688,596] hScroll=false
+shoulder-1440-04-both-answered-laid-out: settled=settled stage=laid_out note=null rows=["Advance warning","Taper","Buffer","Work zone","Downstream"] lines=[] frame={"x":297,"w":846,"h":300} img=[1688,596] hScroll=false
+shoulder-1440-05-picker-extent-coverage-only: settled=settled stage=laid_out note=null rows=["Advance warning","Taper","Buffer","Work zone","Downstream"] lines=[] frame={"x":297,"w":846,"h":300} img=[1688,596] hScroll=false
+PICTURES REQUESTED
+{"stage":"pin","width":844,"height":298}
+{"stage":"work","width":844,"height":298}
+{"stage":"laid_out","width":844,"height":298}

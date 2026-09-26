@@ -1,0 +1,40 @@
+{
+  "id": "flagger-380-02-kind-confirmed-side-owed-pin",
+  "settled": "settled",
+  "strip": "◌AWAITING OCCUPIED SIDE",
+  "openBand": "where",
+  "aerial": {
+    "stage": "pin",
+    "zoomStep": null,
+    "dataRead": true,
+    "note": "Say which side is occupied to lay out the work",
+    "legendRows": [],
+    "legendLines": [],
+    "alt": "Aerial at the pin — nothing is laid out until the side is chosen",
+    "frame": {
+      "x": 31,
+      "w": 318,
+      "h": 250
+    },
+    "legend": null,
+    "imgNatural": [
+      632,
+      496
+    ]
+  },
+  "ledger": [
+    "✓Found the spotLafayette Street NorthboundCHANGE✓Work startsLafayette Street NorthboundMOVE✓Extent1,000 ft · typedCHANGE⚠Which side is occupied?needs youSay which side is occupied to lay out the work✓Kind of workFlagger lane closureconfirmed◌See the plan growpendingapproaches lay out after you confirm",
+    "✓Found the spotLafayette Street NorthboundCHANGE",
+    "CHANGE",
+    "✓Work startsLafayette Street NorthboundMOVE",
+    "MOVE",
+    "✓Extent1,000 ft · typedCHANGE",
+    "CHANGE",
+    "⚠Which side is occupied?needs youSay which side is occupied to lay out the work",
+    "✓Kind of workFlagger lane closureconfirmed",
+    "◌See the plan growpendingapproaches lay out after you confirm"
+  ],
+  "pickerExtent": null,
+  "viewport": 380,
+  "hScroll": false
+}
