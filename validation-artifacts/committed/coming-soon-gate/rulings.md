@@ -51,3 +51,13 @@ Ryan: "yes to all" on the checkpoint's recommendations.
 - **C-S2** Yes: the page title's "MUTCD plans in seconds" goes (untraced speed claim, D3's rule). New title: "Conestruct — coming soon".
 - **C-E1** Ship waits on Ryan confirming `GATE_ALLOWED_EMAILS` and `GATE_BYPASS_TOKEN` are set in Vercel prod and locally, and the Clerk restrictions in both instances. The middleware check holds regardless of dashboard settings.
 - **R5 correction:** the two design files were sent in chat, not copied; Ryan adds them to `validation-artifacts/committed/coming-soon-gate/design/` before Arc 2. Arc 1 does not need them.
+
+## Arc 2 design rulings (Ryan, 2026-09-26, in chat)
+
+**R5a — supersedes R5's design: B+, "The Plan Sheet," is the coming-soon page** ("Looks great", on the canvas "Conestruct — Coming soon"). Authority: `design/PlanSheet.dc.html` (1440 wide) and `design/PlanSheetPhone.dc.html` (390 wide). R5's "build it so copy and layout are easy to change" still holds. `design/TitleBlock*.dc.html` stay as the record of B.
+
+**R9 — The drawing uses the product's corridor-zone colours** (`ZONE_COLOR`, `lib/corridor-zones.ts:32-36`: advance warning, taper/transition, buffer, work zone, downstream), each with its word in the legend (Rule 13). This page is their second consumer; one source, imported, never re-typed. *(Approved as shown; the canvas has a grey fallback if Ryan reverses it.)*
+
+**R10 — The drawing animates once on load** (road lines draw, then signs, devices and zone bands fade in, ~1.5 s), and is static under `prefers-reduced-motion`. The only motion on any Conestruct surface; the product's no-motion rule is unchanged. *(Approved as shown; same.)*
+
+**R11 — Access setup as actually done for Arc 1:** Clerk prod is in Access mode → Invite-only; the three users (`ryan@conestruct.com`, James, Zac) were created by hand; no Clerk allowlist (Open-mode only, paid). `GATE_ALLOWED_EMAILS` is the enforcement. C-E1's "Clerk restrictions" means this.

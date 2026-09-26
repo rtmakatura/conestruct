@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Conestruct — coming soon (The Plan Sheet)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#14202e;color:#c8d1dd}
+a{color:#34a9e8}a:hover{color:#56bcf2}
+input::placeholder{color:#93a0b0}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #56bcf2;outline-offset:2px}
+.pri:hover{background:#56bcf2}
+.m{font-family:'JetBrains Mono',ui-monospace,monospace}
+.step{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;line-height:1.2;letter-spacing:.12em;color:#93a0b0}
+.sec{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;line-height:1.2;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#eaf0f7}
+.prov{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;line-height:1.5;letter-spacing:.04em;color:#93a0b0}
+.q{margin:0;font-size:22px;line-height:1.25;font-weight:600;color:#eaf0f7}
+.body{margin:0;font-size:13.5px;line-height:1.5;color:#c8d1dd}
+.lab{display:flex;flex-direction:column;gap:6px;font-size:12.5px;line-height:1.4;font-weight:500;color:#eaf0f7}
+.inp{height:56px;box-sizing:border-box;padding:0 16px;background:#14202e;border:1px solid #2c3e53;border-radius:0;color:#eaf0f7;font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+.tbl{display:flex;align-items:center;height:44px;padding:0 16px;border-right:1px solid #223345;border-bottom:1px solid #223345}
+.tbv{display:flex;align-items:center;height:44px;padding:0 16px;border-bottom:1px solid #223345;font-size:12.5px;font-weight:500;color:#eaf0f7}
+.card{border:1px solid #2c3e53;background:#101c29;display:flex;flex-direction:column}
+.chip{display:inline-flex;align-items:center;height:32px;padding:0 12px;border:1px solid #2c3e53;background:#101c29;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.04em;color:#eaf0f7}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+.anim .draw{stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 1.4s ease-out forwards}
+.anim .fade{opacity:0;animation:fade .5s ease-out forwards}
+@media (prefers-reduced-motion: reduce){.anim .draw{stroke-dashoffset:0;animation:none}.anim .fade{opacity:1;animation:none}}
+</style>
+</helmet>
+<div class="{{animClass}}" style="position: relative; width: 1440px; height: 2840px; box-sizing: border-box; background: #14202e; font-family: Inter, ui-sans-serif, system-ui, sans-serif; overflow: hidden">
+<svg width="1440" height="2840" viewBox="0 0 1440 2840" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+<defs>
+<pattern id="pg" width="48" height="48" patternUnits="userSpaceOnUse" x="12" y="4">
+<path d="M20 24H28M24 20V28" stroke="#1c2b3b" stroke-width="1" fill="none"></path>
+</pattern>
+</defs>
+<rect x="0" y="53" width="1440" height="2787" fill="url(#pg)"></rect>
+</svg>
+
+<nav style="position: relative; display: flex; align-items: stretch; height: 52px; background: #16232f; border-bottom: 1px solid #2c3e53">
+<a href="/" style="display: flex; align-items: center; padding: 0 20px; border-right: 1px solid #2c3e53; font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em; color: #eaf0f7; text-decoration: none">conestruct<span style="color: #ff8a2e">.</span></a>
+<a href="#how" class="m" style="display: flex; align-items: center; padding: 0 20px; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #93a0b0; text-decoration: none">How it works</a>
+<a href="#sources" class="m" style="display: flex; align-items: center; padding: 0 20px; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #93a0b0; text-decoration: none">Sources</a>
+<a href="#notify" class="m" style="margin-left: auto; display: flex; align-items: center; padding: 0 20px; border-left: 1px solid #2c3e53; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #34a9e8; text-decoration: none">Get notified</a>
+</nav>
+
+<!-- ============ THE SHEET ============ -->
+<section style="position: relative; margin: 40px 40px 0; height: 980px; border: 1px solid #2c3e53; background: rgba(16, 28, 41, 0.72)">
+<svg width="1360" height="980" viewBox="0 0 1360 980" aria-hidden="true" style="position: absolute; left: -1px; top: -1px">
+<path d="M-12 0H14M0 -12V14M1348 0H1374M1360 -12V14M-12 980H14M0 966V992M1348 980H1374M1360 966V992" stroke="#3a4d66" stroke-width="1" fill="none"></path>
+</svg>
+<div style="display: flex; align-items: center; gap: 24px; height: 40px; padding: 0 20px; border-bottom: 1px solid #223345">
+<span class="step">SHEET</span><span class="sec">Coming soon</span>
+<span class="prov" style="margin-left: auto">colorado · mutcd 2023 · cdot s-630-1</span>
+</div>
+
+<!-- drawing -->
+<div style="position: relative; height: 400px; border-bottom: 1px solid #2c3e53">
+<svg width="100%" height="400" viewBox="0 0 1358 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Plan drawing: a lane closure on a two-lane, one-direction road. Advance warning signs, a merging taper and a buffer are laid out upstream of the work; a downstream taper follows it. Not to scale." style="display: block">
+<text x="1318" y="40" text-anchor="end" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" letter-spacing="0.4" fill="#93a0b0">not to scale</text>
+<text x="40" y="40" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" letter-spacing="1.2" fill="#93a0b0">LANE CLOSURE · MULTILANE, ONE DIRECTION</text>
+<!-- road -->
+<line class="draw" x1="40" y1="140" x2="1318" y2="140" stroke="#3a4d66" stroke-width="1"></line>
+<line class="draw" x1="40" y1="260" x2="1318" y2="260" stroke="#3a4d66" stroke-width="1"></line>
+<line class="draw" x1="40" y1="200" x2="1318" y2="200" stroke="#2e4058" stroke-width="1" stroke-dasharray="18 14"></line>
+<path d="M80 170H124M116 164L124 170L116 176M80 230H124M116 224L124 230L116 236" stroke="#93a0b0" stroke-width="1" fill="none"></path>
+<!-- zone bands -->
+<rect class="fade" style="animation-delay: .7s" x="140" y="264" width="420" height="6" fill="{{z.adv}}"></rect>
+<rect class="fade" style="animation-delay: .8s" x="560" y="264" width="220" height="6" fill="{{z.tap}}"></rect>
+<rect class="fade" style="animation-delay: .9s" x="780" y="264" width="120" height="6" fill="{{z.buf}}"></rect>
+<rect class="fade" style="animation-delay: 1s" x="900" y="264" width="240" height="6" fill="{{z.work}}"></rect>
+<rect class="fade" style="animation-delay: 1.1s" x="1140" y="264" width="100" height="6" fill="{{z.down}}"></rect>
+<!-- signs -->
+<g class="fade" style="animation-delay: .4s" stroke="#c8d1dd" stroke-width="1" fill="none">
+<rect x="214" y="288" width="12" height="12" transform="rotate(45 220 294)"></rect>
+<rect x="354" y="288" width="12" height="12" transform="rotate(45 360 294)"></rect>
+<rect x="494" y="288" width="12" height="12" transform="rotate(45 500 294)"></rect>
+<path d="M220 300V314M360 300V314M500 300V314"></path>
+</g>
+<!-- taper devices -->
+<g class="fade" style="animation-delay: .9s" fill="#eaf0f7">
+<rect x="558" y="253" width="6" height="6"></rect><rect x="589" y="245" width="6" height="6"></rect><rect x="620" y="237" width="6" height="6"></rect><rect x="651" y="229" width="6" height="6"></rect><rect x="682" y="221" width="6" height="6"></rect><rect x="713" y="213" width="6" height="6"></rect><rect x="744" y="205" width="6" height="6"></rect><rect x="775" y="199" width="6" height="6"></rect>
+<rect x="820" y="199" width="6" height="6"></rect><rect x="862" y="199" width="6" height="6"></rect>
+<rect x="1160" y="213" width="6" height="6"></rect><rect x="1190" y="229" width="6" height="6"></rect><rect x="1220" y="245" width="6" height="6"></rect>
+</g>
+<!-- the work -->
+<g class="fade" style="animation-delay: 1.1s">
+<rect x="900" y="206" width="240" height="50" fill="#243447" stroke="#3a4d66" stroke-width="1"></rect>
+<text x="1020" y="235" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" font-weight="500" letter-spacing="1.8" fill="#eaf0f7">WORK</text>
+</g>
+<!-- callout on the work -->
+<g class="fade" style="animation-delay: 1.3s">
+<path d="M1020 206V112H980" stroke="#56bcf2" stroke-width="1" fill="none"></path>
+<circle cx="1020" cy="206" r="3" fill="#56bcf2"></circle>
+<text x="972" y="116" text-anchor="end" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" letter-spacing="0.4" fill="#eaf0f7">you mark the work — the rest is laid out around it</text>
+</g>
+<!-- legend -->
+<g font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" letter-spacing="0.4" fill="#93a0b0">
+<rect x="140" y="346" width="10" height="10" fill="{{z.adv}}"></rect><text x="158" y="355">advance warning</text>
+<rect x="330" y="346" width="10" height="10" fill="{{z.tap}}"></rect><text x="348" y="355">taper</text>
+<rect x="430" y="346" width="10" height="10" fill="{{z.buf}}"></rect><text x="448" y="355">buffer</text>
+<rect x="530" y="346" width="10" height="10" fill="{{z.work}}"></rect><text x="548" y="355">work zone</text>
+<rect x="660" y="346" width="10" height="10" fill="{{z.down}}"></rect><text x="678" y="355">downstream</text>
+<text x="1318" y="355" text-anchor="end">illustration · a real plan is drawn on the road you pick</text>
+</g>
+</svg>
+</div>
+
+<!-- lower sheet -->
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 560px; height: 538px">
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: 0 40px; border-right: 1px solid #2c3e53">
+<span class="step">A TRAFFIC CONTROL PLAN GENERATOR · COMING SOON</span>
+<div style="font-weight: 600; font-size: 62px; line-height: 1; letter-spacing: -0.01em; color: #eaf0f7">conestruct<span style="color: #ff8a2e">.</span></div>
+<p class="body" style="max-width: 560px">Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest — every dimension cited to MUTCD 2023 or CDOT, every plan a draft for a licensed professional to review.</p>
+<div style="display: flex; gap: 24px; margin-top: 8px">
+<a href="#how" style="font-size: 13.5px; text-decoration: none">How a plan is made ↓</a>
+<a href="#sources" style="font-size: 13.5px; text-decoration: none">What it cites ↓</a>
+</div>
+</div>
+
+<div id="notify" style="display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: 140px minmax(0, 1fr)">
+<div class="tbl step">PROJECT</div><div class="tbv">Conestruct</div>
+<div class="tbl step">STATUS</div><div class="tbv">Coming soon</div>
+<div class="tbl step">STANDARD</div><div class="tbv">MUTCD 2023 · CDOT S-630-1</div>
+<div class="tbl step">REGION</div><div class="tbv">Colorado</div>
+<div class="tbl step" style="border-bottom-color: #2c3e53">OUTPUT</div><div class="tbv" style="border-bottom-color: #2c3e53">Draft plans for licensed review</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 16px 16px">
+<h1 class="q">Want to know when it opens?</h1>
+<sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 12px; height: 160px">
+<label class="lab">Work email<input class="inp" type="email" placeholder="you@company.com"></label>
+<div style="display: flex; align-items: flex-end; gap: 12px">
+<label class="lab" style="flex-grow: 1"><span>Company <span class="prov">optional</span></span><input class="inp" type="text"></label>
+<button class="pri" type="button" onClick="{{send}}" style="height: 56px; padding: 0 28px; background: #34a9e8; color: #0c1622; border: 0; border-radius: 0; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 15.5px; font-weight: 600; cursor: pointer">Notify me</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 8px; height: 160px; box-sizing: border-box; padding: 0 16px; border: 1px solid #2c3e53; background: #14202e">
+<span class="body" style="color: #eaf0f7">Thanks. We'll email you once, when Conestruct opens.</span>
+<a href="#" onClick="{{reset}}" style="font-size: 13.5px">Use a different address</a>
+</div>
+</sc-if>
+<p class="prov" style="margin: 0">one email when conestruct opens · the address is used for nothing else</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============ 01 HOW ============ -->
+<section id="how" style="position: relative; margin: 120px 40px 0">
+<div style="display: flex; align-items: baseline; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid #2c3e53">
+<span class="step">01</span><span class="sec">How a plan is made</span>
+<span class="prov" style="margin-left: auto">pin · job · plan</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 24px">
+<div class="card">
+<svg width="100%" height="140" viewBox="0 0 440 140" aria-hidden="true" style="display: block; border-bottom: 1px solid #223345">
+<path d="M0 60H440M0 100H440" stroke="#3a4d66" stroke-width="1"></path><path d="M0 80H440" stroke="#2e4058" stroke-dasharray="14 10"></path>
+<path d="M220 88V52" stroke="#56bcf2" stroke-width="1"></path><circle cx="220" cy="46" r="7" fill="none" stroke="#56bcf2" stroke-width="1.5"></circle><circle cx="220" cy="90" r="3" fill="#56bcf2"></circle>
+<text x="232" y="122" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" fill="#93a0b0">work starts here · 210 ft N of W 38th Ave</text>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px">
+<span class="step">STEP 1</span>
+<span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">Mark the work</span>
+<span class="body">An address, a cross-street pair, or a pin — the way an 811 ticket describes it. The system finds the road and names the nearest intersection.</span>
+</div>
+</div>
+<div class="card">
+<svg width="100%" height="140" viewBox="0 0 440 140" aria-hidden="true" style="display: block; border-bottom: 1px solid #223345">
+<path d="M0 50H440M0 110H440" stroke="#3a4d66" stroke-width="1"></path><path d="M0 80H440" stroke="#2e4058" stroke-dasharray="14 10"></path>
+<rect x="150" y="82" width="140" height="26" fill="#243447" stroke="#3a4d66"></rect>
+<text x="220" y="99" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="9.5" letter-spacing="1.4" fill="#eaf0f7">RIGHT LANE</text>
+<path d="M150 124V130H290V124" stroke="#56bcf2" fill="none"></path>
+<text x="220" y="30" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" fill="#93a0b0">lane closure · 300 ft · confirmed</text>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px">
+<span class="step">STEP 2</span>
+<span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">Say what the job is</span>
+<span class="body">Kind of work, length, which side. The road's own details come filled in for you to check — the kind of work is always yours to confirm.</span>
+</div>
+</div>
+<div class="card">
+<svg width="100%" height="140" viewBox="0 0 440 140" aria-hidden="true" style="display: block; border-bottom: 1px solid #223345">
+<rect x="120" y="18" width="200" height="106" fill="none" stroke="#3a4d66"></rect>
+<path d="M132 54H308M132 70H270M132 86H290" stroke="#2e4058"></path>
+<rect x="240" y="96" width="80" height="28" fill="none" stroke="#3a4d66"></rect>
+<path d="M132 34H200" stroke="#eaf0f7" stroke-width="2"></path>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px">
+<span class="step">STEP 3</span>
+<span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">Take the plan</span>
+<span class="body">The drawing, the device count and a price — with anything that needs a person flagged first, and everything that passed one click away.</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============ 02 WHAT YOU HAND OVER ============ -->
+<section style="position: relative; margin: 120px 40px 0">
+<div style="display: flex; align-items: baseline; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid #2c3e53">
+<span class="step">02</span><span class="sec">What you hand over</span>
+<span class="prov" style="margin-left: auto">each one written for the person who reads it</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 24px; border: 1px solid #2c3e53; background: #101c29">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 24px 20px; border-right: 1px solid #223345">
+<span class="step">FOR THE BID</span><span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">The plan sheet</span>
+<span class="body">The traffic control drawing, laid out on the road you picked.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 24px 20px; border-right: 1px solid #223345">
+<span class="step">FOR THE PRICE</span><span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">The count and the quote</span>
+<span class="body">Every device the plan calls for, and what it comes to at your rates.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 24px 20px; border-right: 1px solid #223345">
+<span class="step">FOR THE REVIEWER</span><span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">The audit</span>
+<span class="body">Every check the system ran, and the source behind every dimension.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 24px 20px">
+<span class="step">FOR THE CREW</span><span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">The crew sheet</span>
+<span class="body">What to set and where, written for the people setting it.</span>
+</div>
+</div>
+</section>
+
+<!-- ============ 03 SOURCES ============ -->
+<section id="sources" style="position: relative; margin: 120px 40px 0">
+<div style="display: flex; align-items: baseline; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid #2c3e53">
+<span class="step">03</span><span class="sec">Every dimension has a source</span>
+</div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 80px; margin-top: 32px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h2 class="q">Where did that number come from?</h2>
+<p class="body" style="max-width: 520px">Every taper, buffer and spacing on the sheet carries its citation — the MUTCD 2023 section, table or figure, or the CDOT S-630-1 sheet it came from — so the person who reviews the plan can check it in one step. When the system can't source a value, it says so instead of guessing.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span class="prov">some of the references it cites</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span class="chip">MUTCD 2023 · Table 6B-1</span>
+<span class="chip">§6B.06</span>
+<span class="chip">§6N.12</span>
+<span class="chip">§6N.16</span>
+<span class="chip">Fig. 6P-22</span>
+<span class="chip">Table 6B-3</span>
+<span class="chip">CDOT S-630-1 · Sheet 10</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============ 04 WHO ============ -->
+<section style="position: relative; margin: 120px 40px 0">
+<div style="display: flex; align-items: baseline; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid #2c3e53">
+<span class="step">04</span><span class="sec">Who it's for</span>
+<span class="prov" style="margin-left: auto">traffic-control subcontractors · colorado first</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 24px">
+<div class="card" style="padding: 24px 20px; gap: 8px">
+<span class="step">IN THE FIELD</span>
+<span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">The sales rep with a bid due today</span>
+<span class="body">On site or just back from it, on a laptop or a phone. Knows where the work is. Leaves with a plan and a price to attach to the bid.</span>
+</div>
+<div class="card" style="padding: 24px 20px; gap: 8px">
+<span class="step">AT THE DESK</span>
+<span style="font-size: 13.5px; font-weight: 600; color: #eaf0f7">The estimator building a quote</span>
+<span class="body">Works from a description or a set of coordinates. Needs a device count that drives the number, and can come back to change one thing and see what it did.</span>
+</div>
+</div>
+</section>
+
+<!-- ============ CLOSE ============ -->
+<section style="position: relative; margin: 120px 40px 0; display: flex; align-items: center; gap: 24px; padding: 40px; border: 1px solid #2c3e53; background: #101c29">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="sec">Built in Colorado</span>
+<span class="body">For the people who set the cones, and the people who price them.</span>
+</div>
+<a href="#notify" class="pri" style="margin-left: auto; display: flex; align-items: center; height: 56px; padding: 0 28px; background: #34a9e8; color: #0c1622; font-size: 15.5px; font-weight: 600; text-decoration: none">Get notified ↑</a>
+</section>
+
+<footer style="position: absolute; left: 0; right: 0; bottom: 0; height: 64px; box-sizing: border-box; display: flex; align-items: center; gap: 24px; padding: 0 40px; background: #16232f; border-top: 1px solid #2c3e53; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #93a0b0">
+<span>© 2026 Conestruct · Built in Colorado</span>
+<a href="/terms" style="margin-left: auto; color: #93a0b0; text-decoration: none">Terms</a>
+<a href="/privacy" style="color: #93a0b0; text-decoration: none">Privacy</a>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"animate":{"editor":"boolean","default":true,"section":"Motion"},"zoneColours":{"editor":"boolean","default":true,"section":"Drawing"},"$preview":{"width":1440,"height":2840}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sent: false }; }
+  renderVals() {
+    var colours = this.props.zoneColours ?? true;
+    return {
+      animClass: (this.props.animate ?? true) ? 'anim' : '',
+      z: colours
+        ? { adv: '#FFD166', tap: '#F3722C', buf: '#FF7A00', work: '#1EC8A5', down: '#8A8A8A' }
+        : { adv: '#3a4d66', tap: '#56718f', buf: '#7a93b0', work: '#aebbcc', down: '#2e4058' },
+      sent: this.state.sent,
+      notSent: !this.state.sent,
+      send: () => this.setState({ sent: true }),
+      reset: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ sent: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
