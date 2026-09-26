@@ -1,0 +1,157 @@
+conestruct.
+DEMO
+/
+MUTCD PLAN GENERATOR
+TA-3 · S-630-1 · MUTCD 2023 · CDOT
+Method of Handling Traffic — plan generator
+⚠
+VERIFIED · 3 PLAN FLAGS
+REVIEW FLAGS
+Plan generated — 44 devices, 12 types.
+✓
+Setup
+Shoulder work · North Broadway Southbound · 1,000 ft · 30 mph · 4 lanes · 10.5 ft lanes · Urban arterial · Not set · dates not set
+pick a value to change it
+NEEDS YOU
+
+changed the plan, or waiting on your word · 2 changed this plan · 1 needs attention
+
+3
+▲
+Pedestrian sidewalks present
+
+changed this plan · 6 devices added
+
+MUTCD § 6C.02
+▲
+Bike lane / cycleway present
+
+changed this plan · 2 devices added
+
+MUTCD § 9C.101
+⚠
+Signs on both sides of divided highway
+
+needs attention · Required: True. Signs placed: 6 left, 10 right.
+
+CDOT S-630-1 (July 2026) Sheet 2, General Note 8
+SITE CONDITIONS — SCANNED
+▲
+Adjacent at-grade intersection
+
+detected · 39 found · nearest 95.8 ft
+
+OPENSTREETMAP
+DISMISS
+▲
+Adjacent interchange (highway ramps)
+
+detected · 8 found · nearest 10.8 ft
+
+OPENSTREETMAP
+DISMISS
+▲
+Pedestrian sidewalks
+
+detected · 41 found · nearest 95.1 ft
+
+OPENSTREETMAP
+DISMISS
+▲
+Bike lane / cycleway
+
+detected · 5 found · nearest 101.4 ft
+
+OPENSTREETMAP
+DISMISS
+✓
+School zone
+
+none along the corridor
+
+OPENSTREETMAP
+ASSERT
+◌
+Limited sight distance
+
+not asserted · Curve, hill crest — moves advance signs 50% farther upstream.
+
+OPERATOR
+ASSERT
+◌
+Driveways present
+
+not asserted · Advisory: maintain access gaps in channelization.
+
+OPERATOR
+ASSERT
+no corrections staged · staging costs nothing, Apply re-generates once
+APPLY 0 CORRECTIONS
+corridor scan · 26 sep · 14:13 utc · 17.6 s · apply re-generates the plan
+TOTAL DEVICES
+44
+on the plan sheet
+UNIQUE TYPES
+12
+distinct device types to source
+Baseline · MHT
+Taper L
+50 ft
+Buffer B
+200 ft
+Device spacing
+30 ft o.c.
+Work zone
+1,000 ft
+4 files
+↓ ALL (.ZIP)
+Plan sheet
+PDF
+11×17 · TA-3 · S-630-1
+44 devices
+Download PDF
+↓
+Device list
+XLSX
+CDOT BID-READY
+12 types
+Download XLSX
+↓
+Crew instructions
+PDF + MD
+SETUP + TAKEDOWN
+14 steps
+Download PDF
+↓
+Download .md
+↓
+Audit trail
+PDF
+EVERY CHECK CITED
+13 checks
+Download PDF
+↓
+i
+Pricing quote
+FYI · contractor estimate — not a permit fee · expand to configure & preview
+›
+✓
+Checked & passed
+13
+each cited
+›
+◌
+Pending / not verified
+2
+›
+i
+Reference
+Not set · Not set · MUTCD 11th + CO Suppl. › CDOT Specs §630
+›
+
+Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.
+
+© 2026 CONESTRUCT · BUILT IN COLORADO
+TERMS
+PRIVACY
+OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT

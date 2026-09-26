@@ -1,0 +1,5 @@
+healthz: {'status': 'ok', 'sha': '0ddc85efd824930fa8307d9a9fb7b6faffff517e'}
+-- WITH site scan: HTTP 400
+{"detail": "This scenario type is not yet available. Currently supported: flagger_lane_closure, near_intersection, shoulder."}
+-- WITHOUT site scan: HTTP 400
+{"detail": "This scenario type is not yet available. Currently supported: flagger_lane_closure, near_intersection, shoulder."}

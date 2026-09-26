@@ -1,0 +1,19 @@
+site https://www.conestruct.com/sandbox
+pin 39.73370,-104.98753
+ranAt 2026-09-26T14:12:17.415Z
+picked candidate: NORTH BROADWAY SOUTHBOUND
+REQ POST /api/render/corridor-geometry
+RES 200 /api/render/corridor-geometry
+REQ POST /api/render/corridor-geometry
+RES 200 /api/render/corridor-geometry
+side options: ["West side · southbound traffic [disabled=null]"]
+chose side: West side · southbound traffic
+REQ POST /api/render/device-breakdown
+REQ POST /api/render/audit
+RES 200 /api/render/device-breakdown
+generate
+REQ POST /api/render/device-breakdown
+REQ POST /api/render/audit
+RES 200 /api/render/device-breakdown
+RES 200 /api/render/audit
+audit answered: true

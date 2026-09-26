@@ -1,0 +1,104 @@
+file                                                           kind      adj       recorded -> a' | d
+tests/snapshots/audit_flagger_reduction_carve_out_pre_correction.json flagger   -         PASS 5/7 -> same | same
+tests/snapshots/audit_flagger_reduction_fines_double_required.json flagger   -         PASS 15/17 -> same | same
+tests/snapshots/audit_shoulder_65mph.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_65mph_pre_item2.json            shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_75mph.json                      shoulder  -         PASS 12/12 -> same | text
+tests/snapshots/audit_shoulder_75mph_pre_item2.json            shoulder  -         PASS 8/8 -> same | text
+tests/snapshots/audit_shoulder_no_reduction.json               shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_no_reduction_pre_item1.json     shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_no_reduction_pre_item2.json     shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_no_reduction_pre_item3.json     shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_reduction_10.json               shoulder  -         PASS 14/14 -> same | text
+tests/snapshots/audit_shoulder_reduction_10_pre_item3.json     shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_reduction_25.json               shoulder  -         PASS 15/15 -> same | text
+tests/snapshots/audit_shoulder_reduction_25_pre_item3.json     shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/audit_shoulder_reduction_65mph_envelope.json   shoulder  -         PASS 17/17 -> same | text
+tests/snapshots/audit_shoulder_urban25_quadratic.json          shoulder  -         PASS 0/6 -> same | same
+tests/snapshots/corpus/flagger_grid_afad.json                  flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_all_toggles.json           flagger   -         PASS 6/10 -> same | same
+tests/snapshots/corpus/flagger_grid_duration_long.json         flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_lanewidth_10.json          flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_lanewidth_12.json          flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_lanewidth_13.json          flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_lanewidth_14.json          flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_lanewidth_9.json           flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_night.json                 flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_pedestrian_access.json     flagger   -         PASS 6/10 -> same | same
+tests/snapshots/corpus/flagger_grid_pilot_car.json             flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_road_urban_arterial.json   flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_road_urban_arterial_35.json flagger   -         PASS 6/7 -> same | same
+tests/snapshots/corpus/flagger_grid_speed_20.json              flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_speed_25.json              flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_speed_30.json              flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_speed_35.json              flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_speed_40.json              flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_speed_50.json              flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_speed_55.json              flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_worklen_2500.json          flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_worklen_500.json           flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_worklen_5280.json          flagger   -         PASS 6/9 -> same | same
+tests/snapshots/corpus/flagger_grid_worktype_chip_seal.json    flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_worktype_other.json        flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_worktype_patching.json     flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/flagger_grid_worktype_water_main.json   flagger   -         PASS 6/8 -> same | same
+tests/snapshots/corpus/grid_duration_long.json                 shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_lanewidth_10.json                  shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_lanewidth_11.json                  shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_lanewidth_13.json                  shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_lanewidth_14.json                  shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_lanewidth_8.json                   shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_lanewidth_9.json                   shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_night.json                         shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_reduced_55_45.json                 shoulder  -         PASS 16/16 -> same | text
+tests/snapshots/corpus/grid_reduced_55_50.json                 shoulder  -         PASS 16/16 -> same | text
+tests/snapshots/corpus/grid_reduced_65_60.json                 shoulder  -         PASS 16/16 -> same | text
+tests/snapshots/corpus/grid_reduced_75_65.json                 shoulder  -         PASS 16/16 -> same | text
+tests/snapshots/corpus/grid_reduced_75_70.json                 shoulder  -         PASS 16/16 -> same | text
+tests/snapshots/corpus/grid_road_freeway.json                  shoulder  -         PASS 12/12 -> same | text
+tests/snapshots/corpus/grid_road_rural_undivided.json          shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_road_urban_arterial.json           shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_site_adjacent_interchange.json     shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_site_adjacent_intersection.json    shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_site_bicycle_facility.json         shoulder  bicy      FAIL 7/9 -> FLIP text | FLIP text
+tests/snapshots/corpus/grid_site_driveways_present.json        shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_site_limited_sight_distance.json   shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_site_pedestrian_facility.json      shoulder  pede      FAIL 7/9 -> FLIP text | FLIP text
+tests/snapshots/corpus/grid_site_school_zone.json              shoulder  -         PASS 8/8 -> same | text
+tests/snapshots/corpus/grid_speed_20.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_25.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_30.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_35.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_40.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_45.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_50.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_60.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_65.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_70.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_speed_75.json                      shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_undivided.json                     shoulder  -         PASS 0/7 -> same | same
+tests/snapshots/corpus/grid_worklen_1000.json                  shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_worklen_10560.json                 shoulder  -         PASS 10/10 -> same | text
+tests/snapshots/corpus/grid_worklen_500.json                   shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_worklen_5000.json                  shoulder  -         PASS 8/8 -> same | text
+tests/snapshots/corpus/grid_worktype_guardrail.json            shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_worktype_other.json                shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_worktype_signal_cabinet.json       shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/grid_worktype_survey.json               shoulder  -         PASS 7/7 -> same | text
+tests/snapshots/corpus/ni-grid-far-buffer-anchor.json          (not a recorded audit; skipped)
+tests/snapshots/corpus/ni-grid-far-curb-anchor.json            (not a recorded audit; skipped)
+tests/snapshots/corpus/ni-grid-near-35x45-2ap.json             (not a recorded audit; skipped)
+tests/snapshots/corpus/ni-grid-near-midblock-rural.json        (not a recorded audit; skipped)
+tests/fixtures/tiering/adv-ni-denver.json                      near_intersection pede      PASS 1/12 -> text | same
+tests/fixtures/tiering/control-lakewood.json                   shoulder  pede      PASS 0/8 -> text | same
+tests/fixtures/tiering/scanned-asserted.json                   shoulder  pede+bicy FAIL 7/11 -> FLIP text | FLIP text
+tests/fixtures/tiering/scanned-dismissed.json                  shoulder  bicy      FAIL 6/8 -> FLIP text | FLIP text
+tests/fixtures/tiering/scanned-lakewood.json                   shoulder  pede+bicy FAIL 6/10 -> FLIP text | FLIP text
+tests/fixtures/tiering/scanned-not-checked.json                shoulder  pede      FAIL 7/9 -> FLIP text | FLIP text
+tests/fixtures/tiering/tiering-expectations.json               (not a recorded audit; skipped)
+conestruct/site/components/__fixtures__/audit-shoulder-full.json shoulder  pede+bicy FAIL 7/11 -> FLIP text | FLIP text
+
+files: 98
+option a': Note 8 pass flips 7, detail text changes 9
+option d: Note 8 pass flips 7, detail text changes 60
+option d+a': Note 8 pass flips 7, detail text changes 62
