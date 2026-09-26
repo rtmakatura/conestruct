@@ -1,0 +1,1518 @@
+{
+ "base": "http://localhost:3100",
+ "at": "2026-09-26T18:07:36.593Z",
+ "widths": {
+  "380": {
+   "m": {
+    "scrollWidth": 380,
+    "innerWidth": 380,
+    "h1": "19px",
+    "wordmark": "42px",
+    "body": "13.5px",
+    "drawing": [
+     "cs-narrow"
+    ],
+    "svgText": [
+     {
+      "text": "WORK",
+      "size": "10px",
+      "rendered": 13
+     }
+    ],
+    "edges": [
+     {
+      "cls": "cs-sheet",
+      "left": 14,
+      "right": 366
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 366
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 366
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 366
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 366
+     },
+     {
+      "cls": "cs-close",
+      "left": 14,
+      "right": 366
+     }
+    ],
+    "tbLabelLefts": [
+     15,
+     15,
+     15,
+     15,
+     15
+    ],
+    "tbRowHeights": [
+     44,
+     44,
+     44,
+     44,
+     44
+    ],
+    "mail": [
+     "Get notified",
+     "Get notified",
+     "Get notified"
+    ]
+   },
+   "earlyFade": {
+    "opacity": "0",
+    "anim": "cs-fade"
+   },
+   "moved": [],
+   "targets": 6,
+   "small": [],
+   "lowContrast": [
+    {
+     "sel": "text",
+     "text": "WORK",
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "opacity": 0,
+     "ratio": 1,
+     "size": 10,
+     "weight": "500",
+     "family": "__JetBrains_Mono_e896d9"
+    },
+    {
+     "sel": "text",
+     "text": "you mark the work — the rest is laid out",
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "opacity": 0,
+     "ratio": 1,
+     "size": 10.5,
+     "weight": "400",
+     "family": "__JetBrains_Mono_e896d9"
+    }
+   ],
+   "pairSet": [
+    {
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "ratio": 1
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "type": [
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|none|rgb(147, 160, 176)",
+     "n": 20,
+     "ex": "SHEET",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(200, 209, 221)",
+     "n": 13,
+     "ex": "Traffic control plans for Colo",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+     "n": 9,
+     "ex": "not to scale",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|600|none|rgb(234, 240, 247)",
+     "n": 9,
+     "ex": "Mark the work",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|500|uppercase|rgb(234, 240, 247)",
+     "n": 8,
+     "ex": "Coming soon",
+     "tr": "tr-section"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(234, 240, 247)",
+     "n": 6,
+     "ex": "you mark the work — the rest i",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|12.5px|500|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "Conestruct",
+     "tr": "tr-field"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+     "n": 4,
+     "ex": "© 2026 Conestruct · Built in C",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(52, 169, 232)",
+     "n": 2,
+     "ex": "How a plan is made ↓",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|19px|600|none|rgb(234, 240, 247)",
+     "n": 2,
+     "ex": "Want to know when it opens?",
+     "tr": "tr-question"
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(52, 169, 232)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__Inter_8b3a0b|42px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|42px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|15.5px|600|none|rgb(12, 22, 34)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13px|500|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    }
+   ],
+   "axe": [],
+   "reduced": {
+    "n": 20,
+    "animated": 0,
+    "notOpaque": 0,
+    "transformed": 0
+   },
+   "png": "plan-sheet-380-first-screen.png"
+  },
+  "390": {
+   "m": {
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "h1": "19px",
+    "wordmark": "42px",
+    "body": "13.5px",
+    "drawing": [
+     "cs-narrow"
+    ],
+    "svgText": [
+     {
+      "text": "WORK",
+      "size": "10px",
+      "rendered": 13
+     }
+    ],
+    "edges": [
+     {
+      "cls": "cs-sheet",
+      "left": 14,
+      "right": 376
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 376
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 376
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 376
+     },
+     {
+      "cls": "cs-section",
+      "left": 14,
+      "right": 376
+     },
+     {
+      "cls": "cs-close",
+      "left": 14,
+      "right": 376
+     }
+    ],
+    "tbLabelLefts": [
+     15,
+     15,
+     15,
+     15,
+     15
+    ],
+    "tbRowHeights": [
+     44,
+     44,
+     44,
+     44,
+     44
+    ],
+    "mail": [
+     "Get notified",
+     "Get notified",
+     "Get notified"
+    ]
+   },
+   "earlyFade": {
+    "opacity": "0",
+    "anim": "cs-fade"
+   },
+   "moved": [],
+   "targets": 6,
+   "small": [],
+   "lowContrast": [
+    {
+     "sel": "text",
+     "text": "WORK",
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "opacity": 0,
+     "ratio": 1,
+     "size": 10,
+     "weight": "500",
+     "family": "__JetBrains_Mono_e896d9"
+    },
+    {
+     "sel": "text",
+     "text": "you mark the work — the rest is laid out",
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "opacity": 0,
+     "ratio": 1,
+     "size": 10.5,
+     "weight": "400",
+     "family": "__JetBrains_Mono_e896d9"
+    }
+   ],
+   "pairSet": [
+    {
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "ratio": 1
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "type": [
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|none|rgb(147, 160, 176)",
+     "n": 20,
+     "ex": "SHEET",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(200, 209, 221)",
+     "n": 13,
+     "ex": "Traffic control plans for Colo",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+     "n": 9,
+     "ex": "not to scale",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|600|none|rgb(234, 240, 247)",
+     "n": 9,
+     "ex": "Mark the work",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|500|uppercase|rgb(234, 240, 247)",
+     "n": 8,
+     "ex": "Coming soon",
+     "tr": "tr-section"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(234, 240, 247)",
+     "n": 6,
+     "ex": "you mark the work — the rest i",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|12.5px|500|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "Conestruct",
+     "tr": "tr-field"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+     "n": 4,
+     "ex": "© 2026 Conestruct · Built in C",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(52, 169, 232)",
+     "n": 2,
+     "ex": "How a plan is made ↓",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|19px|600|none|rgb(234, 240, 247)",
+     "n": 2,
+     "ex": "Want to know when it opens?",
+     "tr": "tr-question"
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(52, 169, 232)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__Inter_8b3a0b|42px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|42px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|15.5px|600|none|rgb(12, 22, 34)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13px|500|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    }
+   ],
+   "axe": [],
+   "reduced": {
+    "n": 20,
+    "animated": 0,
+    "notOpaque": 0,
+    "transformed": 0
+   },
+   "png": "plan-sheet-390-first-screen.png"
+  },
+  "768": {
+   "m": {
+    "scrollWidth": 768,
+    "innerWidth": 768,
+    "h1": "22px",
+    "wordmark": "62px",
+    "body": "13.5px",
+    "drawing": [
+     "cs-wide"
+    ],
+    "svgText": [
+     {
+      "text": "WORK",
+      "size": "10px",
+      "rendered": 13
+     },
+     {
+      "text": "you mark the work — the rest is laid out around it",
+      "size": "10.5px",
+      "rendered": 14
+     },
+     {
+      "text": "work starts here",
+      "size": "10.5px",
+      "rendered": 14
+     },
+     {
+      "text": "the work · its length · its side",
+      "size": "10.5px",
+      "rendered": 14
+     }
+    ],
+    "edges": [
+     {
+      "cls": "cs-sheet",
+      "left": 40,
+      "right": 728
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 728
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 728
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 728
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 728
+     },
+     {
+      "cls": "cs-close",
+      "left": 40,
+      "right": 728
+     }
+    ],
+    "tbLabelLefts": [
+     41,
+     41,
+     41,
+     41,
+     41
+    ],
+    "tbRowHeights": [
+     44,
+     44,
+     44,
+     44,
+     44
+    ],
+    "mail": [
+     "Get notified",
+     "Get notified",
+     "Get notified"
+    ]
+   },
+   "earlyFade": {
+    "opacity": "0",
+    "anim": "cs-fade"
+   },
+   "moved": [],
+   "targets": 10,
+   "small": [],
+   "lowContrast": [
+    {
+     "sel": "text",
+     "text": "WORK",
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "opacity": 0,
+     "ratio": 1,
+     "size": 10,
+     "weight": "500",
+     "family": "__JetBrains_Mono_e896d9"
+    }
+   ],
+   "pairSet": [
+    {
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "ratio": 1
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "type": [
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|none|rgb(147, 160, 176)",
+     "n": 21,
+     "ex": "SHEET",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+     "n": 14,
+     "ex": "colorado · mutcd 2023 · cdot s",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(200, 209, 221)",
+     "n": 13,
+     "ex": "Traffic control plans for Colo",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|600|none|rgb(234, 240, 247)",
+     "n": 9,
+     "ex": "Mark the work",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|500|uppercase|rgb(234, 240, 247)",
+     "n": 8,
+     "ex": "Coming soon",
+     "tr": "tr-section"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+     "n": 6,
+     "ex": "How it works",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "you mark the work — the rest i",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|12.5px|500|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "Conestruct",
+     "tr": "tr-field"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(52, 169, 232)",
+     "n": 2,
+     "ex": "How a plan is made ↓",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|22px|600|none|rgb(234, 240, 247)",
+     "n": 2,
+     "ex": "Want to know when it opens?",
+     "tr": "tr-question"
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(52, 169, 232)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__Inter_8b3a0b|62px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|62px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|15.5px|600|none|rgb(12, 22, 34)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13px|500|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    }
+   ],
+   "axe": [],
+   "reduced": {
+    "n": 20,
+    "animated": 0,
+    "notOpaque": 0,
+    "transformed": 0
+   },
+   "png": "plan-sheet-768-first-screen.png"
+  },
+  "1024": {
+   "m": {
+    "scrollWidth": 1024,
+    "innerWidth": 1024,
+    "h1": "22px",
+    "wordmark": "62px",
+    "body": "13.5px",
+    "drawing": [
+     "cs-wide"
+    ],
+    "svgText": [
+     {
+      "text": "WORK",
+      "size": "10px",
+      "rendered": 13
+     },
+     {
+      "text": "you mark the work — the rest is laid out around it",
+      "size": "10.5px",
+      "rendered": 14
+     },
+     {
+      "text": "work starts here",
+      "size": "10.5px",
+      "rendered": 14
+     },
+     {
+      "text": "the work · its length · its side",
+      "size": "10.5px",
+      "rendered": 14
+     }
+    ],
+    "edges": [
+     {
+      "cls": "cs-sheet",
+      "left": 40,
+      "right": 984
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 984
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 984
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 984
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 984
+     },
+     {
+      "cls": "cs-close",
+      "left": 40,
+      "right": 984
+     }
+    ],
+    "tbLabelLefts": [
+     423,
+     423,
+     423,
+     423,
+     423
+    ],
+    "tbRowHeights": [
+     44,
+     44,
+     44,
+     44,
+     44
+    ],
+    "mail": [
+     "Get notified",
+     "Get notified",
+     "Get notified"
+    ]
+   },
+   "earlyFade": {
+    "opacity": "0",
+    "anim": "cs-fade"
+   },
+   "moved": [],
+   "targets": 10,
+   "small": [],
+   "lowContrast": [
+    {
+     "sel": "text",
+     "text": "WORK",
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "opacity": 0,
+     "ratio": 1,
+     "size": 10,
+     "weight": "500",
+     "family": "__JetBrains_Mono_e896d9"
+    }
+   ],
+   "pairSet": [
+    {
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "ratio": 1
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "type": [
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|none|rgb(147, 160, 176)",
+     "n": 21,
+     "ex": "SHEET",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+     "n": 14,
+     "ex": "colorado · mutcd 2023 · cdot s",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(200, 209, 221)",
+     "n": 13,
+     "ex": "Traffic control plans for Colo",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|600|none|rgb(234, 240, 247)",
+     "n": 9,
+     "ex": "Mark the work",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|500|uppercase|rgb(234, 240, 247)",
+     "n": 8,
+     "ex": "Coming soon",
+     "tr": "tr-section"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+     "n": 6,
+     "ex": "How it works",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "you mark the work — the rest i",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|12.5px|500|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "Conestruct",
+     "tr": "tr-field"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(52, 169, 232)",
+     "n": 2,
+     "ex": "How a plan is made ↓",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|22px|600|none|rgb(234, 240, 247)",
+     "n": 2,
+     "ex": "Want to know when it opens?",
+     "tr": "tr-question"
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(52, 169, 232)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__Inter_8b3a0b|62px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|62px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|15.5px|600|none|rgb(12, 22, 34)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13px|500|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    }
+   ],
+   "axe": [],
+   "reduced": {
+    "n": 20,
+    "animated": 0,
+    "notOpaque": 0,
+    "transformed": 0
+   },
+   "png": "plan-sheet-1024-first-screen.png"
+  },
+  "1440": {
+   "m": {
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "h1": "22px",
+    "wordmark": "62px",
+    "body": "13.5px",
+    "drawing": [
+     "cs-wide"
+    ],
+    "svgText": [
+     {
+      "text": "WORK",
+      "size": "10px",
+      "rendered": 13
+     },
+     {
+      "text": "you mark the work — the rest is laid out around it",
+      "size": "10.5px",
+      "rendered": 14
+     },
+     {
+      "text": "work starts here",
+      "size": "10.5px",
+      "rendered": 14
+     },
+     {
+      "text": "the work · its length · its side",
+      "size": "10.5px",
+      "rendered": 14
+     }
+    ],
+    "edges": [
+     {
+      "cls": "cs-sheet",
+      "left": 40,
+      "right": 1400
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 1400
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 1400
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 1400
+     },
+     {
+      "cls": "cs-section",
+      "left": 40,
+      "right": 1400
+     },
+     {
+      "cls": "cs-close",
+      "left": 40,
+      "right": 1400
+     }
+    ],
+    "tbLabelLefts": [
+     839,
+     839,
+     839,
+     839,
+     839
+    ],
+    "tbRowHeights": [
+     44,
+     44,
+     44,
+     44,
+     44
+    ],
+    "mail": [
+     "Get notified",
+     "Get notified",
+     "Get notified"
+    ]
+   },
+   "earlyFade": {
+    "opacity": "0",
+    "anim": "cs-fade"
+   },
+   "moved": [],
+   "targets": 10,
+   "small": [],
+   "lowContrast": [
+    {
+     "sel": "text",
+     "text": "WORK",
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "opacity": 0,
+     "ratio": 1,
+     "size": 10,
+     "weight": "500",
+     "family": "__JetBrains_Mono_e896d9"
+    }
+   ],
+   "pairSet": [
+    {
+     "fg": "#111d2a",
+     "bg": "#111d2a",
+     "ratio": 1
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "type": [
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|none|rgb(147, 160, 176)",
+     "n": 21,
+     "ex": "SHEET",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+     "n": 14,
+     "ex": "colorado · mutcd 2023 · cdot s",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(200, 209, 221)",
+     "n": 13,
+     "ex": "Traffic control plans for Colo",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|600|none|rgb(234, 240, 247)",
+     "n": 9,
+     "ex": "Mark the work",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|500|uppercase|rgb(234, 240, 247)",
+     "n": 8,
+     "ex": "Coming soon",
+     "tr": "tr-section"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+     "n": 6,
+     "ex": "How it works",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "you mark the work — the rest i",
+     "tr": "tr-prov"
+    },
+    {
+     "key": "__Inter_8b3a0b|12.5px|500|none|rgb(234, 240, 247)",
+     "n": 5,
+     "ex": "Conestruct",
+     "tr": "tr-field"
+    },
+    {
+     "key": "__Inter_8b3a0b|13.5px|400|none|rgb(52, 169, 232)",
+     "n": 2,
+     "ex": "How a plan is made ↓",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|22px|600|none|rgb(234, 240, 247)",
+     "n": 2,
+     "ex": "Want to know when it opens?",
+     "tr": "tr-question"
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|14.5px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(52, 169, 232)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": "tr-step"
+    },
+    {
+     "key": "__Inter_8b3a0b|62px|600|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "conestruct",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|62px|600|none|rgb(255, 138, 46)",
+     "n": 1,
+     "ex": ".",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|15.5px|600|none|rgb(12, 22, 34)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    },
+    {
+     "key": "__Inter_8b3a0b|13px|500|none|rgb(234, 240, 247)",
+     "n": 1,
+     "ex": "Get notified",
+     "tr": ""
+    }
+   ],
+   "axe": [],
+   "reduced": {
+    "n": 20,
+    "animated": 0,
+    "notOpaque": 0,
+    "transformed": 0
+   },
+   "png": "plan-sheet-1440-first-screen.png"
+  }
+ }
+}

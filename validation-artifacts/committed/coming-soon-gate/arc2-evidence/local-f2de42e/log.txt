@@ -1,0 +1,60 @@
+
+== 1440x900 ==
+scroll 1440/1440 ok · drawing cs-wide · h1 22px · wordmark 62px · body 13.5px
+svg text: "WORK" 10px | "you mark the work — the " 10.5px | "work starts here" 10.5px | "the work · its length · " 10.5px
+edges: cs-sheet 40-1400 | cs-section 40-1400 | cs-section 40-1400 | cs-section 40-1400 | cs-section 40-1400 | cs-close 40-1400
+title block: label lefts 839 · row heights 44
+mail links visible: 3 (Get notified / Get notified / Get notified)
+targets 10, under 32px: none
+contrast pairs (lowest first): #111d2a/#111d2a 1 · #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: WORK 1
+axe: 0 violations
+R10 no-preference: first fade at paint {"opacity":"0","anim":"cs-fade"} · rects moved during animation: none
+R10 reduce: {"n":20,"animated":0,"notOpaque":0,"transformed":0}
+
+== 1024x800 ==
+scroll 1024/1024 ok · drawing cs-wide · h1 22px · wordmark 62px · body 13.5px
+svg text: "WORK" 10px | "you mark the work — the " 10.5px | "work starts here" 10.5px | "the work · its length · " 10.5px
+edges: cs-sheet 40-984 | cs-section 40-984 | cs-section 40-984 | cs-section 40-984 | cs-section 40-984 | cs-close 40-984
+title block: label lefts 423 · row heights 44
+mail links visible: 3 (Get notified / Get notified / Get notified)
+targets 10, under 32px: none
+contrast pairs (lowest first): #111d2a/#111d2a 1 · #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: WORK 1
+axe: 0 violations
+R10 no-preference: first fade at paint {"opacity":"0","anim":"cs-fade"} · rects moved during animation: none
+R10 reduce: {"n":20,"animated":0,"notOpaque":0,"transformed":0}
+
+== 768x900 ==
+scroll 768/768 ok · drawing cs-wide · h1 22px · wordmark 62px · body 13.5px
+svg text: "WORK" 10px | "you mark the work — the " 10.5px | "work starts here" 10.5px | "the work · its length · " 10.5px
+edges: cs-sheet 40-728 | cs-section 40-728 | cs-section 40-728 | cs-section 40-728 | cs-section 40-728 | cs-close 40-728
+title block: label lefts 41 · row heights 44
+mail links visible: 3 (Get notified / Get notified / Get notified)
+targets 10, under 32px: none
+contrast pairs (lowest first): #111d2a/#111d2a 1 · #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: WORK 1
+axe: 0 violations
+R10 no-preference: first fade at paint {"opacity":"0","anim":"cs-fade"} · rects moved during animation: none
+R10 reduce: {"n":20,"animated":0,"notOpaque":0,"transformed":0}
+
+== 390x844 ==
+scroll 390/390 ok · drawing cs-narrow · h1 19px · wordmark 42px · body 13.5px
+svg text: "WORK" 10px
+edges: cs-sheet 14-376 | cs-section 14-376 | cs-section 14-376 | cs-section 14-376 | cs-section 14-376 | cs-close 14-376
+title block: label lefts 15 · row heights 44
+mail links visible: 3 (Get notified / Get notified / Get notified)
+targets 6, under 44px: none
+contrast pairs (lowest first): #111d2a/#111d2a 1 · #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: WORK 1; you mark the work — the rest is laid out 1
+axe: 0 violations
+R10 no-preference: first fade at paint {"opacity":"0","anim":"cs-fade"} · rects moved during animation: none
+R10 reduce: {"n":20,"animated":0,"notOpaque":0,"transformed":0}
+
+== 380x800 ==
+scroll 380/380 ok · drawing cs-narrow · h1 19px · wordmark 42px · body 13.5px
+svg text: "WORK" 10px
+edges: cs-sheet 14-366 | cs-section 14-366 | cs-section 14-366 | cs-section 14-366 | cs-section 14-366 | cs-close 14-366
+title block: label lefts 15 · row heights 44
+mail links visible: 3 (Get notified / Get notified / Get notified)
+targets 6, under 44px: none
+contrast pairs (lowest first): #111d2a/#111d2a 1 · #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: WORK 1; you mark the work — the rest is laid out 1
+axe: 0 violations
+R10 no-preference: first fade at paint {"opacity":"0","anim":"cs-fade"} · rects moved during animation: none
+R10 reduce: {"n":20,"animated":0,"notOpaque":0,"transformed":0}
