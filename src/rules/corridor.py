@@ -826,6 +826,7 @@ def build_corridor(
     centerline: tuple[tuple[float, float], ...] | None = None,
     downstream_taper_ft: float | None = None,
     pin_model: str = "corridor_end",
+    work_zone_speed_mph: int | None = None,
 ) -> WorkCorridor:
     """Build a :class:`WorkCorridor` from user inputs and MUTCD/CDOT distances.
 
@@ -881,6 +882,12 @@ def build_corridor(
         centerline: optional (lat, lng) road-geometry vertices — see
             :attr:`WorkCorridor.centerline`.  Drawing frame only (#140);
             zone lengths above are unaffected.
+        work_zone_speed_mph: the reduced work-zone speed, or ``None``.
+            Passed to :func:`buffer_space` exactly as the generators and
+            the audit pass it (#302): the CDOT Cases 26/27 step-downs
+            (65 -> 60, 75 -> 65) unlock the 570 / 650 ft buffer the plan
+            builds.  Without it a drawn corridor carried the posted-speed
+            645 / 820 ft buffer the plan never built.
 
     Returns:
         A populated :class:`WorkCorridor`.
@@ -889,7 +896,9 @@ def build_corridor(
     advance_ft = spacing["A"] + spacing["B"] + spacing["C"]
 
     taper_ft = _resolve_taper_ft(closure_type, speed_mph, lane_width_ft, shoulder_width_ft)
-    buffer_ft = buffer_space(speed_mph, jurisdiction=jurisdiction)
+    buffer_ft = buffer_space(
+        speed_mph, jurisdiction=jurisdiction, work_zone_speed_mph=work_zone_speed_mph
+    )
     downstream_ft = (
         downstream_taper_ft
         if downstream_taper_ft is not None

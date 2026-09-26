@@ -59,9 +59,9 @@ from src.narrative.crew_narrative import (
 )
 from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
-from src.rules.corridor_layout import approach_corridors as _approach_corridors
 from src.rules.corridor_layout import approach_travel_bearing_deg as _approach_travel
 from src.rules.corridor_layout import cardinal as _cardinal
+from src.rules.corridor_layout import laid_out as _laid_out
 from src.rules.corridor_layout import zone_parts as _zone_parts
 from src.rules.corridor_layout import zone_spans as _zone_spans
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
@@ -96,7 +96,6 @@ from src.rules.spacing import (
 from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
-    _is_flagger_scenario,
     validate_corridor_geometry,
     validate_layout,
 )
@@ -1151,7 +1150,7 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     except UnknownJurisdictionError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    from src.rules.corridor import build_corridor, station_path
+    from src.rules.corridor import station_path
 
     meta = scenario.meta
     pin_model = params.pin_model
@@ -1177,28 +1176,12 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         out["status"] = "side_not_confirmed" if pin_model == "work_start" else "no_bearing"
         return JSONResponse(out)
 
-    flagger = _is_flagger_scenario(params)
-    corridor_kwargs: dict[str, Any] = {
-        "speed_mph": params.speed_mph,
-        "work_zone_ft": params.work_zone_length_ft,
-        "closure_type": "flagger_alternating_2lane" if flagger else params.closure_type,
-        "road_type": params.road_type,
-        "lane_width_ft": params.lane_width_ft,
-        "shoulder_width_ft": params.shoulder_width_ft,
-        "jurisdiction": params.jurisdiction,
-        "centerline": params.centerline,
-    }
+    # #302: the one layout call every drawn corridor goes through — the
+    # same argument list page 2 and the band's aerial use (the work-zone
+    # speed included).  No layout here, so the downstream taper is the
+    # §6B.08 floor the plan places.
     try:
-        primary = build_corridor(
-            lat=meta.lat,
-            lng=meta.lng,
-            bearing_deg=params.bearing_deg,
-            pin_model=pin_model,
-            **corridor_kwargs,
-        )
-        corridors = _approach_corridors(
-            primary, flagger=flagger, pin_model=pin_model, **corridor_kwargs
-        )
+        primary, corridors = _laid_out(params, meta.lat, meta.lng)
     except ValueError as exc:
         out["status"] = "corridor_unbuildable"
         out["message"] = f"{type(exc).__name__}: {exc}"

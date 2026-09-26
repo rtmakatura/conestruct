@@ -5,6 +5,12 @@ page 2".  ``/render/corridor-geometry`` (the picker's overlay) and the plan
 sheet's page 2 both draw the corridor from THIS module, so the two can never
 disagree about where a zone lies or how many approaches a kind has:
 
+* :func:`laid_out` — THE call that builds a drawn corridor from a plan's
+  params (#302): the primary and its approaches, from one argument list
+  (:func:`corridor_kwargs`) carrying every length input the generators
+  use.  The picker's geometry, page 2 and the band's aerial all call it,
+  so no surface builds its corridor from a hand-written list that can
+  drift — which is how the work-zone speed went missing.
 * :func:`approach_corridors` — the primary corridor and, for a work-start
   flagger, the opposing traffic's (ruling 9: the pin is the closed lane's
   upstream end; the other traffic reaches the work at its far end).
@@ -22,6 +28,7 @@ Nothing here computes a zone LENGTH — those are the corridor's own
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any
 
@@ -30,6 +37,7 @@ from src.rules.corridor import (
     _initial_bearing_deg,
     build_corridor,
     opposing_work_start,
+    placed_downstream_taper_ft,
     station_path,
 )
 
@@ -145,3 +153,78 @@ def approach_corridors(
             )
         )
     return corridors
+
+
+def is_flagger(params: Any) -> bool:
+    """The flagger predicate every corridor surface uses (validators' own)."""
+    from src.rules.validators import _is_flagger_scenario
+
+    return bool(_is_flagger_scenario(params))
+
+
+def corridor_kwargs(params: Any, *, placements: Iterable[Any] | None = None) -> dict[str, Any]:
+    """The ``build_corridor`` arguments for a plan — the ONE list (#302).
+
+    Every length input the generators use: the speed, the work length, the
+    closure (a flagger maps to its one-lane two-way taper, as every surface
+    already did), the road type, the widths, the jurisdiction, the relayed
+    road, the work-zone speed (the buffer's CDOT step-downs), and — when the
+    caller has the layout — the downstream run the plan placed
+    (:func:`~src.rules.corridor.placed_downstream_taper_ft`, #257).  Without
+    placements the §6B.08 floor, which is what the layout places for every
+    enabled kind (the corridor-geometry read has no layout).
+    """
+    kwargs: dict[str, Any] = {
+        "speed_mph": params.speed_mph,
+        "work_zone_ft": params.work_zone_length_ft,
+        "closure_type": "flagger_alternating_2lane" if is_flagger(params) else params.closure_type,
+        "road_type": params.road_type,
+        "lane_width_ft": params.lane_width_ft,
+        "shoulder_width_ft": params.shoulder_width_ft,
+        "jurisdiction": params.jurisdiction,
+        "centerline": getattr(params, "centerline", None),
+        "work_zone_speed_mph": getattr(params, "work_zone_speed_mph", None),
+    }
+    if placements is not None:
+        kwargs["downstream_taper_ft"] = placed_downstream_taper_ft(placements)
+    return kwargs
+
+
+def primary_corridor(
+    params: Any, lat: float, lng: float, *, placements: Iterable[Any] | None = None
+) -> WorkCorridor:
+    """The plan's own corridor at the pin, from :func:`corridor_kwargs`.
+
+    Raises what ``build_corridor`` raises (``ValueError``).
+    """
+    return build_corridor(
+        lat=lat,
+        lng=lng,
+        bearing_deg=params.bearing_deg,
+        pin_model=str(getattr(params, "pin_model", "corridor_end")),
+        **corridor_kwargs(params, placements=placements),
+    )
+
+
+def laid_out_approaches(
+    primary: WorkCorridor, params: Any, *, placements: Iterable[Any] | None = None
+) -> list[tuple[str, WorkCorridor]]:
+    """:func:`approach_corridors` for a plan, from the same argument list."""
+    return approach_corridors(
+        primary,
+        flagger=is_flagger(params),
+        pin_model=str(getattr(params, "pin_model", "corridor_end")),
+        **corridor_kwargs(params, placements=placements),
+    )
+
+
+def laid_out(
+    params: Any, lat: float, lng: float, *, placements: Iterable[Any] | None = None
+) -> tuple[WorkCorridor, list[tuple[str, WorkCorridor]]]:
+    """The plan's laid-out corridor: ``(primary, approaches)`` (#302, #301).
+
+    ``params`` must carry a bearing (a confirmed side under the work-start
+    model).  Raises ``ValueError`` when the corridor cannot be built.
+    """
+    primary = primary_corridor(params, lat, lng, placements=placements)
+    return primary, laid_out_approaches(primary, params, placements=placements)

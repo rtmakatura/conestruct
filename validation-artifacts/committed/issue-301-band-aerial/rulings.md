@@ -128,3 +128,69 @@ left side on one-way streets is #300.
 #300 (the left side on one-way streets) · #299 (the north-up scan box) · #285 (the
 nearest-intersection tag) · #284 (the proposed kind). #301 is about where the corridor is drawn and
 who owns the drawing. It does not change what is laid out.
+
+---
+
+## The ruling, verbatim (Ryan, 2026-09-26, on `checkpoint.md` at `267bec3`)
+
+> Rulings on the #301 checkpoint:
+> 1. Option (a), scenario in, PNG out, drawn on the backend, thin Next proxy.
+> 2. The buffer defect is filed as #<number> — fix it as this arc's commit 1, citing it: one layout call for every surface, the agreement test (Broadway SB, Lafayette flagger, and the 65→60 case that fails on main today).
+> 3. The band uses the picker's colours so all three surfaces match. Record the rule 110 mismatch in rulings.md as a known deviation; not its own issue.
+> 4. Before the kind: a legend line instead of the dotted channel.
+> 5. Legend under the image at every width.
+> 6. S3's 104 px strip deferred to its own piece.
+> 7. Piece 2 in: the audit is the one speaker; the modal's per-zone length rows go.
+> Also delete corridor-map.ts, centerline.ts and buildCorridorPolyline.
+> Stack Ship A (backend) and Ship B (site) plus the evidence sweep on one branch. Stop with the verdict, the file table, what I'll see on the band, and ONE ship line.
+
+**The buffer defect is #302.** The ruling's "#<number>" placeholder resolves to #302, "Picker and
+PDF page 2 draw the wrong buffer when the work-zone speed limit is reduced — 645/820 ft drawn vs
+570/650 ft built" (filed 2026-09-26; its body cites this arc's checkpoint). Every commit that fixes
+it cites #302.
+
+### Known deviation: rule 110's palette (ruling 3)
+
+#281 Part 2 rule 110 draws the corridor's channels in `#f4c020` (advance warning), `#ff8a2e`
+dashed (taper), `#e0a63c` dashed (buffer), `#3fd3a8` (work zone) and `#7e8da1` dotted
+(downstream). Rule 12 and ruling 181 permit exactly two off-palette hexes, `#3fd3a8` and `#e0a63c`.
+
+**What every surface draws instead:** the picker (mapbox-gl), PDF page 2 (Static Images) and now
+the band's aerial (Static Images) all draw `ZONE_COLOR` (`conestruct/site/lib/corridor-zones.ts`,
+mirrored in Python as `_LAID_OUT_ZONE_COLOR`):
+
+| Zone | Colour |
+|---|---|
+| advance warning | `#FFD166` |
+| taper | `#F3722C` |
+| buffer | `#FF7A00` |
+| work zone | `#1EC8A5` |
+| downstream | `#8A8A8A` |
+
+The non-colour channel is width rank (a static path cannot dash). `ZONE_COLOR` is registered as the
+corridor's palette source in `lib/design/ink-exceptions.ts`.
+
+**Why:** the three surfaces show one corridor, and they match each other (P11). The band draws no
+hex of its own: its image comes from the backend, and its legend swatches read `ZONE_COLOR`.
+
+**Status:** a recorded deviation, not an issue, per the ruling. Adopting rule 110's palette would
+move all three surfaces together.
+
+### How the rulings map onto the build
+
+1. **Option (a):** `POST /render/corridor-map` (backend, PNG) and `app/api/corridor-map/route.ts`
+   (a binary proxy).
+2. **#302 is commit 1:**
+   - `corridor_layout.laid_out`, the one call that builds every drawn corridor;
+   - `build_corridor` gains `work_zone_speed_mph`;
+   - the agreement test on Broadway SB, the Lafayette flagger and the 65→60 case.
+3. **The picker's colours:** recorded above.
+4. **Before the kind:** the work segment only, and a legend line, no drawn channel.
+5. **The legend:** under the image at 1440 and 380.
+6. **S3's strip:** not built.
+7. **Piece 2:** the modal's per-zone `ExtentRows` removed; the band's rows (the audit) are the one
+   speaker.
+
+**Deleted:** `lib/corridor-map.ts`, `lib/centerline.ts`, `buildCorridorPolyline`.
+
+**One branch:** Ship A (backend), Ship B (site) and the evidence sweep (local stack, 1440 and 380).

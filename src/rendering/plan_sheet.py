@@ -41,9 +41,7 @@ from src.generation.layout import rightmost_lane_assumption_active
 from src.rules.corridor import (
     M_PER_FT,
     WorkCorridor,
-    build_corridor,
     encode_polyline,
-    placed_downstream_taper_ft,
 )
 from src.rules.device_aggregation import AggregatedDeviceRow
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
@@ -4233,42 +4231,19 @@ def render_plan_sheet(
             print("MAPBOX_TOKEN not set — skipping aerial page")
         else:
             if bearing_deg is not None:
-                # PR 4: ``_resolve_taper_ft`` discriminates flagger by
-                # closure-type STRING (``_FLAGGER_KINDS``), but
-                # ``params.closure_type`` stays "lane" for flagger
-                # scenarios — passing it verbatim routed the corridor
-                # taper through the merging-taper L formula (540 ft @
-                # 12 x 45) while every other surface showed the
-                # one-lane two-way 100 ft.  Map to the discriminator
-                # the resolver expects so PR 2's flagger branch
-                # actually fires.
-                corridor_closure_type = (
-                    "flagger_alternating_2lane"
-                    if _is_flagger_scenario(params)
-                    else params.closure_type
-                )
+                # #302: the one layout call every drawn corridor goes
+                # through (corridor_layout.corridor_kwargs) — the flagger's
+                # one-lane two-way taper (PR 4), the work-zone speed (the
+                # buffer's CDOT step-downs), and the downstream run the plan
+                # BUILT (#257: CORRIDOR DETAILS prints the placed run, never
+                # the scan frame's ceiling).  Under "work_start" the pin is
+                # the work zone's upstream edge and build_corridor moves the
+                # anchor (#290 ruling 7).
+                from src.rules.corridor_layout import laid_out_approaches, primary_corridor
+
                 try:
-                    aerial_corridor = build_corridor(
-                        lat=site_lat,
-                        lng=site_lng,
-                        bearing_deg=bearing_deg,
-                        speed_mph=params.speed_mph,
-                        work_zone_ft=params.work_zone_length_ft,
-                        closure_type=corridor_closure_type,
-                        road_type=params.road_type,
-                        lane_width_ft=params.lane_width_ft,
-                        shoulder_width_ft=params.shoulder_width_ft,
-                        jurisdiction=params.jurisdiction,
-                        centerline=getattr(params, "centerline", None),
-                        # #257: CORRIDOR DETAILS prints the downstream
-                        # taper the plan BUILT — the placed run every
-                        # surface reads — never the scan frame's ceiling.
-                        downstream_taper_ft=placed_downstream_taper_ft(placements),
-                        # #290: what the pin means.  Under "work_start" the
-                        # pin is the work zone's upstream edge and the
-                        # bearing the derived direction of travel;
-                        # build_corridor moves the anchor (ruling 7).
-                        pin_model=getattr(params, "pin_model", "corridor_end"),
+                    aerial_corridor = primary_corridor(
+                        params, site_lat, site_lng, placements=placements
                     )
                 except Exception as exc:  # noqa: BLE001
                     print(
@@ -4283,22 +4258,9 @@ def render_plan_sheet(
                     aerial_corridor is not None
                     and getattr(params, "pin_model", "corridor_end") == "work_start"
                 ):
-                    from src.rules.corridor_layout import approach_corridors
-
                     try:
-                        aerial_approaches = approach_corridors(
-                            aerial_corridor,
-                            flagger=_is_flagger_scenario(params),
-                            pin_model="work_start",
-                            speed_mph=params.speed_mph,
-                            work_zone_ft=params.work_zone_length_ft,
-                            closure_type=corridor_closure_type,
-                            road_type=params.road_type,
-                            lane_width_ft=params.lane_width_ft,
-                            shoulder_width_ft=params.shoulder_width_ft,
-                            jurisdiction=params.jurisdiction,
-                            centerline=getattr(params, "centerline", None),
-                            downstream_taper_ft=placed_downstream_taper_ft(placements),
+                        aerial_approaches = laid_out_approaches(
+                            aerial_corridor, params, placements=placements
                         )
                     except ValueError as exc:
                         print(
