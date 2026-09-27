@@ -130,3 +130,14 @@ Recorded here because CLAUDE.md and handoff.md are gitignored (`.gitignore:79`, 
 - One dev server per session, killed by process tree at session end.
 - No scratch browser run before the committed one on the same code.
 - Local test runs cover the affected files; the verifier's full-suite run is the one that counts.
+
+**R22 (Ryan, 2026-09-27)** — light lane:
+1. **Plan card at rest:** 02 "For the bid"'s tilted front sheet still renders jagged once settled (2 px white title line stair-steps). Fix the cause (first suspect: `crispEdges` set or inherited); smooth at rest and mid-move, 1× and 2×. Check the other three at rest.
+2. **Map — Colorado Springs:** inside the box, two lines ("colorado" / "springs") right of its marker.
+3. **Map — Denver:** replace the stem pin with an outlined `--dim` ring centred on the I-25/I-70 junction; "denver" label upper-right, clear of both roads.
+4. **Map — cities on routes:** schematic, so snap Fort Collins, Colorado Springs, Pueblo onto I-25 and Grand Junction onto I-70; Durango stays off-route; accessible label keeps "not a road map".
+5. **01 step text, verbatim:**
+   - Mark the work — "Type an address or two cross streets, or drop a pin. It's how an 811 ticket already describes a job. Conestruct finds the road, which way it runs, and whose road it is."
+   - Say what the job is — "Tell it the kind of work, how long, and which side. The road's own details come filled in for you to check. The kind of work is always your call."
+   - Take the plan — "You get the drawing and the device count, with a contractor estimate one click away. Anything that needs a person shows up first. Everything that passed is there when you want it."
+6. **Close band:** one row, shared edges. Map left; beside it one left-aligned stack ("BUILT IN COLORADO", the sentence, then "Get notified" 16 px below), vertically centred on the map, 40 px from it; equal band padding; no empty right half. Phone: map on top, stack below, same left edge.
