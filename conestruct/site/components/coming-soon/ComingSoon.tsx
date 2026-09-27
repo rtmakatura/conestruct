@@ -22,6 +22,7 @@ import {
 } from "./LowerDrawings";
 import { MilepostRoad } from "./MilepostRoad";
 import { PaperStack } from "./PaperStack";
+import { STACK_MOVES } from "./stack-moves";
 import { PlanDrawing } from "./PlanDrawing";
 
 // The coming-soon page, B+ "The Plan Sheet" (coming-soon-gate R5a).
@@ -153,7 +154,7 @@ export function ComingSoon() {
           <SectionHead id="cs-hand" n={HAND_OVER.n} title={HAND_OVER.title} prov={HAND_OVER.prov} />
           <div className="cs-stacks">
             {HAND_OVER.items.map((it, i) => (
-              <PaperStack key={it.step}>
+              <PaperStack key={it.step} move={STACK_MOVES[i]}>
                 <StackArt i={i as 0 | 1 | 2 | 3} />
                 <div className="cs-stack-text">
                   <span className="tr-step">{it.step}</span>

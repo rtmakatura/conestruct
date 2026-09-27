@@ -6,6 +6,8 @@
 // on --fan / --k); here: which card is in which state, that touch leaves
 // a card static, and that each card's marks replay in the ruled order.
 
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import Page from "@/app/page";
@@ -87,5 +89,28 @@ describe("R21 — each card's marks, in order", () => {
     expect(marks.map(idx)).toEqual([0, 1, 2, 3]);
     expect(marks.map((m) => m.parentElement?.querySelector("text")?.textContent)).toEqual(["1", "2", "3", "4"]);
     expect(s.textContent).not.toContain("✓");
+  });
+});
+
+describe("the server / client boundary (found in R21's browser leg)", () => {
+  it("a 'use client' module here exports components only — a value would reach the server page as a client reference, not the value", async () => {
+    const dir = __dirname;
+    const client = readdirSync(dir).filter(
+      (f) =>
+        /\.tsx?$/.test(f) &&
+        !/\.test\./.test(f) &&
+        /^\s*["']use client["']/.test(readFileSync(join(dir, f), "utf-8")),
+    );
+    expect(client.sort()).toEqual(["MilepostRoad.tsx", "PaperStack.tsx"]);
+    const mods: Record<string, Record<string, unknown>> = {
+      "MilepostRoad.tsx": await import("./MilepostRoad"),
+      "PaperStack.tsx": await import("./PaperStack"),
+    };
+    for (const f of client) {
+      for (const [name, v] of Object.entries(mods[f])) {
+        expect(typeof v, `${f} exports ${name}`).toBe("function");
+        expect(name, `${f} exports ${name}`).toMatch(/^[A-Z]/);
+      }
+    }
   });
 });

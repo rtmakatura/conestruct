@@ -117,13 +117,45 @@ export function StationDrawing({ i }: { i: 0 | 1 | 2 }) {
 }
 
 // ── 02: the four outputs as paper stacks ──────────────────────────────
-// 322 × 220 units; the top sheet (.cs-s1) carries the drawing.  The fan
-// is PaperStack's class toggle plus globals.css.
+// 322 × 220 units; the top sheet (.cs-s1) carries the drawing.  The
+// hover is PaperStack's class toggle plus globals.css.  R21: each card
+// moves its own way, and its sequenced marks (class cs-seq, --i their
+// place in the sequence) replay in turn: 1 the taper devices appear, 2
+// the amount bars fill ending on the total, 3 the citation boxes draw,
+// 4 the numbered squares fill 1 → 4.
+type Seq = React.CSSProperties & { "--i": number };
+const seq = (i: number): Seq => ({ "--i": i });
 const P = 322;
 const px = (x: number) => pc(x, P);
 
-function Bar({ x, y, w, h, cls }: { x: number; y: number; w: number; h: number; cls: string }) {
-  return <rect className={cls} x={px(x)} y={y} width={px(w)} height={h} />;
+function Bar({
+  x,
+  y,
+  w,
+  h,
+  cls,
+  i,
+  draw = false,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  cls: string;
+  i?: number;
+  draw?: boolean;
+}) {
+  return (
+    <rect
+      className={cls}
+      x={px(x)}
+      y={y}
+      width={px(w)}
+      height={h}
+      style={i === undefined ? undefined : seq(i)}
+      pathLength={draw ? 1 : undefined}
+    />
+  );
 }
 
 function Hair({ y, cls = "cs-doc-line" }: { y: number; cls?: string }) {
@@ -147,9 +179,22 @@ function Sheet1({ i }: { i: 0 | 1 | 2 | 3 }) {
             [196, 92],
             [220, 92],
           ] as const
-        ).map(([x, y]) => (
-          <rect key={x} className="cs-dev" x={px(x)} y={y} width="4" height="4" />
-        ))}
+        ).map(([x, y], k) =>
+          // The first four are the taper's: they appear one after another.
+          k < 4 ? (
+            <rect
+              key={x}
+              className="cs-dev cs-seq cs-seq-appear"
+              style={seq(k)}
+              x={px(x)}
+              y={y}
+              width="4"
+              height="4"
+            />
+          ) : (
+            <rect key={x} className="cs-dev" x={px(x)} y={y} width="4" height="4" />
+          ),
+        )}
         <Bar cls="cs-hole" x={170} y={99} w={54} h={18} />
         {(
           [
@@ -189,12 +234,12 @@ function Sheet1({ i }: { i: 0 | 1 | 2 | 3 }) {
             [210, 104, 44],
             [226, 126, 28],
           ] as const
-        ).map(([x, y, w]) => (
-          <Bar key={y} cls="cs-bar-dim" x={x} y={y} w={w} h={6} />
+        ).map(([x, y, w], k) => (
+          <Bar key={y} cls="cs-bar-dim cs-seq cs-seq-fill" i={k} x={x} y={y} w={w} h={6} />
         ))}
         <Hair y={156} cls="cs-road" />
         <Bar cls="cs-dev" x={36} y={166} w={80} h={8} />
-        <Bar cls="cs-bar-dim" x={200} y={166} w={54} h={8} />
+        <Bar cls="cs-bar-dim cs-seq cs-seq-fill" i={4} x={200} y={166} w={54} h={8} />
       </>
     );
   if (i === 2)
@@ -208,13 +253,13 @@ function Sheet1({ i }: { i: 0 | 1 | 2 | 3 }) {
             [140, 133, 84],
             [166, 159, 110],
           ] as const
-        ).map(([ty, y, w]) => (
+        ).map(([ty, y, w], k) => (
           <g key={y}>
             <text className="tr-step" fill="currentColor" x={px(36)} y={ty}>
               §
             </text>
             <Bar cls="cs-bar" x={52} y={y} w={w} h={6} />
-            <Bar cls="cs-hollow" x={196} y={y - 4} w={58} h={14} />
+            <Bar cls="cs-hollow cs-seq cs-seq-draw" i={k} draw x={196} y={y - 4} w={58} h={14} />
           </g>
         ))}
       </>
@@ -228,12 +273,12 @@ function Sheet1({ i }: { i: 0 | 1 | 2 | 3 }) {
           ["3", 122, 115, 150],
           ["4", 152, 145, 96],
         ] as const
-      ).map(([n, ty, y, w]) => (
+      ).map(([n, ty, y, w], k) => (
         <g key={n}>
           <text className="tr-step" fill="currentColor" x={px(36)} y={ty}>
             {n}
           </text>
-          <rect className="cs-dev" x={px(54)} y={y} width="6" height="6" />
+          <rect className="cs-dev cs-seq cs-seq-ink" style={seq(k)} x={px(54)} y={y} width="6" height="6" />
           <Bar cls="cs-bar" x={70} y={y} w={w} h={6} />
         </g>
       ))}
