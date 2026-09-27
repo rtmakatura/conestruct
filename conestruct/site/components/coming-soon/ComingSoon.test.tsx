@@ -7,11 +7,11 @@
 // matching the product's lane closure (A2-Q5).  Layout, targets and
 // contrast are the browser leg (happy-dom lays nothing out).
 
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import Page from "@/app/page";
 import { ZONE_COLOR, ZONE_LABEL } from "@/lib/corridor-zones";
-import { NOTIFY_HREF, SOURCES } from "@/lib/coming-soon-copy";
+import { FOUNDERS, HOW, NOTIFY_HREF, SOURCES } from "@/lib/coming-soon-copy";
 import { PUBLIC_LINE } from "@/lib/public-copy";
 
 afterEach(cleanup);
@@ -160,5 +160,150 @@ describe("the drawing — R9 colours and words, A2-Q5 placement", () => {
     // The animated parts carry the classes the no-preference block names.
     expect(c.querySelectorAll(".cs-draw").length).toBe(2);
     expect(c.querySelectorAll(".cs-fade").length).toBeGreaterThan(0);
+  });
+});
+
+// ── Arc 3 — sections 01 → close as FullPage.dc.html draws them (R12–R18) ──
+describe("Arc 3 — the sections beside the road", () => {
+  it("five section headers, 01 to 05, each a dimension line (R16); five milepost sections for the road (R13)", () => {
+    const c = mount();
+    const heads = [...c.querySelectorAll(".cs-head")];
+    expect(heads.map((h) => h.querySelector(".tr-step")?.textContent)).toEqual(["01", "02", "03", "04", "05"]);
+    expect(
+      [...c.querySelectorAll("[data-milepost]")].map((s) => [
+        s.getAttribute("data-milepost"),
+        s.querySelector(".cs-head .tr-step")?.textContent ?? "close",
+      ]),
+    ).toEqual([
+      ["0", "01"],
+      ["1", "02"],
+      ["2", "03"],
+      ["3", "04"],
+      ["4", "close"],
+    ]);
+  });
+
+  it("01 is the pin → job → plan strip: three stations, then the three step texts (R15)", () => {
+    const c = mount();
+    const strip = c.querySelector(".cs-strip3")!;
+    expect(strip.querySelectorAll(".cs-station > svg")).toHaveLength(3);
+    expect([...strip.querySelectorAll(".cs-station .tr-step")].map((t) => t.textContent)).toEqual([
+      "STEP 1 · PIN",
+      "STEP 2 · JOB",
+      "STEP 3 · PLAN",
+    ]);
+    expect([...strip.querySelectorAll(".cs-step-text h3")].map((t) => t.textContent)).toEqual([
+      "Mark the work",
+      "Say what the job is",
+      "Take the plan",
+    ]);
+    // The drawings are decorative; the strip's name is read once.
+    for (const svg of strip.querySelectorAll(".cs-station > svg")) {
+      expect(svg.getAttribute("aria-hidden")).toBe("true");
+    }
+    expect(c.querySelector(".sr-only")?.textContent).toBe(HOW.strip);
+  });
+
+  it("02's four paper stacks fan while a mouse is over them, and never on touch (R15)", () => {
+    const c = mount();
+    const stacks = [...c.querySelectorAll(".cs-stack")];
+    expect(stacks).toHaveLength(4);
+    const s = stacks[1];
+    expect(s.classList.contains("is-fanned")).toBe(false);
+    fireEvent.pointerEnter(s, { pointerType: "mouse" });
+    expect(s.classList.contains("is-fanned")).toBe(true);
+    fireEvent.pointerLeave(s, { pointerType: "mouse" });
+    expect(s.classList.contains("is-fanned")).toBe(false);
+    fireEvent.pointerEnter(s, { pointerType: "touch" });
+    expect(s.classList.contains("is-fanned")).toBe(false);
+    // Each stack has its three sheets for the fan to move.
+    for (const st of stacks) {
+      expect(st.querySelectorAll(".cs-s1, .cs-s2, .cs-s3")).toHaveLength(3);
+    }
+  });
+
+  it("03's detail: no figure, ONE note with three leaders, the buffer empty and devices on the lane through the work (R15, A2-Q5)", () => {
+    const c = mount();
+    const art = c.querySelector(".cs-detail-art")!;
+    expect(art.textContent).not.toMatch(/\d/);
+    expect([...art.querySelectorAll(".cs-dim-text")].map((t) => t.textContent)).toEqual([
+      "taper",
+      "buffer",
+      "spacing",
+    ]);
+    expect(
+      [...art.querySelectorAll("text")].filter((t) => t.textContent === "source cited in the audit"),
+    ).toHaveLength(1);
+    expect(art.querySelectorAll(".cs-leader")).toHaveLength(3);
+    const devs = [...art.querySelectorAll("rect.cs-dev")].map(
+      (r) => [parseFloat(r.getAttribute("x")!), parseFloat(r.getAttribute("y")!)] as const,
+    );
+    expect(devs.length).toBeGreaterThan(0);
+    // The buffer's dimension runs from the taper's end tick to the work's
+    // (x is written to two decimals, hence the 0.01 tolerance).
+    const pct = (u: number) => (u / 856) * 100;
+    expect(devs.filter(([x]) => x > pct(326) + 0.01 && x < pct(560) - 0.01)).toEqual([]);
+    expect(devs.filter(([x, y]) => x >= pct(560) - 0.01 && y === 207).length).toBeGreaterThanOrEqual(4);
+  });
+
+  it("04: the two cards, 'same plan' between them (R15)", () => {
+    const c = mount();
+    expect(c.querySelectorAll(".cs-who-card")).toHaveLength(2);
+    expect(c.querySelectorAll(".cs-who-card svg")).toHaveLength(2);
+    expect(c.querySelector(".cs-same")?.textContent).toBe("same plan");
+  });
+});
+
+describe("Arc 3 — the founders' note (R17, A3-Q1)", () => {
+  it("is verbatim, with A3-Q1's third paragraph", () => {
+    const c = mount();
+    const note = c.querySelector(".cs-founders-note")!;
+    expect(note.querySelector("h3")?.textContent).toBe("Ninety years of hard-won rules.");
+    expect([...note.querySelectorAll("p")].map((p) => p.textContent)).toEqual([...FOUNDERS.paragraphs]);
+    expect(FOUNDERS.paragraphs[0]).toMatch(
+      /^The first national manual on traffic control devices came out in 1935\. /,
+    );
+    expect(FOUNDERS.paragraphs[2]).toBe(
+      "We think the people who set the cones deserve tools as good as the rules they work under. So we're building one. It applies the manual to your road, shows the source for every taper, buffer and spacing, and leaves the calls that need experience to the people who have it.",
+    );
+    expect(c.textContent).not.toContain("every number");
+    expect(c.textContent).toContain("a note from the founders");
+  });
+
+  it("is signed by the three founders under 'The founders'", () => {
+    const c = mount();
+    expect(c.querySelector(".cs-founders-head")?.textContent).toBe("The founders");
+    expect(
+      [...c.querySelectorAll(".cs-founder")].map((li) => [...li.children].map((e) => e.textContent)),
+    ).toEqual([
+      ["Ryan", "PRODUCT & ENGINEERING"],
+      ["James", "GO-TO-MARKET & PRICING"],
+      ["Zac", "SALES & CUSTOMERS"],
+    ]);
+  });
+});
+
+describe("Arc 3 — the closing band (R18, A3-Q4)", () => {
+  it("draws Colorado and names it a drawing, not a road map", () => {
+    const c = mount();
+    const map = c.querySelector(".cs-close .cs-map")!;
+    expect(map.getAttribute("role")).toBe("img");
+    expect(map.getAttribute("aria-label")).toMatch(/^Drawing of Colorado, not a road map/);
+    const words = [...map.querySelectorAll("text")].map((t) => t.textContent);
+    for (const w of [
+      "fort collins",
+      "colorado springs",
+      "pueblo",
+      "grand junction",
+      "durango",
+      "denver",
+      "I-25",
+      "I-70",
+      "COLORADO",
+    ]) {
+      expect(words, w).toContain(w);
+    }
+    expect(map.querySelectorAll(".cs-map-city")).toHaveLength(5);
+    expect(c.querySelector(".cs-close .tr-section")?.textContent).toBe("Built in Colorado");
   });
 });

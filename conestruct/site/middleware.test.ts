@@ -107,6 +107,9 @@ const PUBLIC: Row[] = [
   { path: "/", method: "GET", file: "app/page.tsx" },
   { path: "/terms", method: "GET", file: "app/terms/page.tsx" },
   { path: "/privacy", method: "GET", file: "app/privacy/page.tsx" },
+  // A3-Q2: the "Road closed" page (R19), public like `/`.  Unknown paths
+  // stay gated — `/no-such-page` below still goes to `/`.
+  { path: "/404", method: "GET", file: "app/not-found.tsx" },
   { path: "/sign-in", method: "GET", file: "app/sign-in/[[...sign-in]]/page.tsx" },
   { path: "/sign-in/factor-one", method: "GET", file: "app/sign-in/[[...sign-in]]/page.tsx" },
   { path: "/api/clerk/webhook", method: "POST", file: "app/api/clerk/webhook/route.ts" },
@@ -131,6 +134,9 @@ const GATED_PAGES: Row[] = [
   { path: "/sign-inx", method: "GET", file: "" },
   { path: "/terms/extra", method: "GET", file: "" },
   { path: "/no-such-page", method: "GET", file: "" },
+  // Near-misses of /404 (A3-Q2 names the one path, nothing under it).
+  { path: "/404/extra", method: "GET", file: "" },
+  { path: "/4044", method: "GET", file: "" },
 ];
 
 const PLAN = "0b6a1f2e-6d7c-4f1e-9a55-2b1d3c4e5f60";

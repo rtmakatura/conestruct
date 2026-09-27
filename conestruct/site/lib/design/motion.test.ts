@@ -54,6 +54,25 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
     }
   });
 
+  it("Arc 3 (R15): 02's fan is the no-preference block's one transition, transform only; no coming-soon rule transitions anywhere else", () => {
+    const at = css.indexOf("@media (prefers-reduced-motion: no-preference)");
+    const noPref = block(at);
+    expect([...noPref.matchAll(/transition:\s*([^;]+);/g)].map((m) => m[1].trim())).toEqual([
+      "transform 0.25s ease-out",
+    ]);
+    expect(noPref).toMatch(
+      /\.workbench \.cs-s1,\s*\.workbench \.cs-s2,\s*\.workbench \.cs-s3 \{\s*transition: transform 0\.25s ease-out;/,
+    );
+    // Outside it, no rule whose selector names a .cs- class transitions.
+    const outside = css.replace(noPref, "");
+    const csTransitions = [...outside.matchAll(/([^{}]*)\{([^{}]*)\}/g)].filter(
+      ([, sel, body]) => /\.cs-/.test(sel) && /transition\s*:/.test(body),
+    );
+    expect(csTransitions.map(([, sel]) => sel.trim())).toEqual([]);
+    // Only one no-preference block.
+    expect(css.indexOf("@media (prefers-reduced-motion: no-preference)", at + 1)).toBe(-1);
+  });
+
   it("the no-preference block comes after the band's rules, so the band's own test still finds its block", () => {
     expect(css.indexOf("@media (prefers-reduced-motion: no-preference)")).toBeGreaterThan(
       css.indexOf(".workbench .wb-row {"),
