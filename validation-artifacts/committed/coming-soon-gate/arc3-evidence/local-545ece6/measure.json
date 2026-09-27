@@ -1,0 +1,1346 @@
+{
+ "base": "http://localhost:3100",
+ "at": "2026-09-27T22:06:20.657Z",
+ "widths": {
+  "380": {
+   "scroll": {
+    "scrollWidth": 380,
+    "innerWidth": 380
+   },
+   "top": {
+    "shown": false,
+    "h": 5723,
+    "reveal": 0,
+    "fadeY1": 300,
+    "marker": null,
+    "post01": 66,
+    "head01": 72,
+    "scrollY": 0,
+    "max": 6203
+   },
+   "steps": [
+    {
+     "shown": false,
+     "h": 5723,
+     "reveal": 344.7467474603458,
+     "fadeY1": 644.7467474603458,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 930,
+     "max": 6203
+    },
+    {
+     "shown": false,
+     "h": 5723,
+     "reveal": 1294.3302441632507,
+     "fadeY1": 1594.3302441632507,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 1861,
+     "max": 6203
+    },
+    {
+     "shown": false,
+     "h": 5723,
+     "reveal": 2242.893780074853,
+     "fadeY1": 2542.893780074853,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 2791,
+     "max": 6203
+    },
+    {
+     "shown": false,
+     "h": 5723,
+     "reveal": 3192.477276777758,
+     "fadeY1": 3492.477276777758,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 3722,
+     "max": 6203
+    },
+    {
+     "shown": false,
+     "h": 5723,
+     "reveal": 4141.040812689361,
+     "fadeY1": 4441.040812689361,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 4652,
+     "max": 6203
+    },
+    {
+     "shown": false,
+     "h": 5723,
+     "reveal": 5090.624309392265,
+     "fadeY1": 5390.624309392265,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 5583,
+     "max": 6203
+    },
+    {
+     "shown": false,
+     "h": 5723,
+     "reveal": 5723,
+     "fadeY1": 5724,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 6203,
+     "max": 6203
+    }
+   ],
+   "midEase": {
+    "shown": false,
+    "h": 5723,
+    "reveal": 2873.68220672,
+    "fadeY1": 3173.68220672,
+    "marker": null,
+    "post01": 66,
+    "head01": 72,
+    "scrollY": 6203,
+    "max": 6203
+   },
+   "end": {
+    "shown": false,
+    "h": 5723,
+    "reveal": 5723,
+    "fadeY1": 5724,
+    "marker": null,
+    "post01": 66,
+    "head01": 72,
+    "scrollY": 6203,
+    "max": 6203
+   },
+   "movedWhileScrolling": [],
+   "fan": {
+    "fanned": true,
+    "s3": "matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)",
+    "transition": "0.25s"
+   },
+   "movedWhileFanning": [],
+   "svgText": [
+    "10.5px",
+    "10px"
+   ],
+   "small": [],
+   "lowContrast": [],
+   "pairSet": [
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#101c29",
+     "ratio": 7.32
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "aheadCopy": {
+    "texts": 13
+   },
+   "axe": [],
+   "errors": [],
+   "reduced": {
+    "top": {
+     "shown": false,
+     "h": 5723,
+     "reveal": 5723,
+     "fadeY1": 5724,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 0,
+     "max": 6203
+    },
+    "mid": {
+     "shown": false,
+     "h": 5723,
+     "reveal": 5723,
+     "fadeY1": 5724,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 3102,
+     "max": 6203
+    },
+    "fanTransition": "0s"
+   },
+   "nf": {
+    "h1": "This road is closed.",
+    "scrollWidth": 380,
+    "innerWidth": 380,
+    "home": "/",
+    "svgText": [
+     "10.5px",
+     "10px"
+    ],
+    "status": 404,
+    "small": [],
+    "lowContrast": [],
+    "lowest": 6,
+    "axe": [],
+    "unknown": "307 -> /"
+   }
+  },
+  "390": {
+   "scroll": {
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "top": {
+    "shown": false,
+    "h": 5703,
+    "reveal": 0,
+    "fadeY1": 300,
+    "marker": null,
+    "post01": 66,
+    "head01": 72,
+    "scrollY": 0,
+    "max": 6108
+   },
+   "steps": [
+    {
+     "shown": false,
+     "h": 5703,
+     "reveal": 375.69217275532327,
+     "fadeY1": 675.6921727553233,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 916,
+     "max": 6108
+    },
+    {
+     "shown": false,
+     "h": 5703,
+     "reveal": 1315.563892662127,
+     "fadeY1": 1615.563892662127,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 1832,
+     "max": 6108
+    },
+    {
+     "shown": false,
+     "h": 5703,
+     "reveal": 2256.461673398523,
+     "fadeY1": 2556.461673398523,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 2749,
+     "max": 6108
+    },
+    {
+     "shown": false,
+     "h": 5703,
+     "reveal": 3196.333393305327,
+     "fadeY1": 3496.333393305327,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 3665,
+     "max": 6108
+    },
+    {
+     "shown": false,
+     "h": 5703,
+     "reveal": 4136.2051132121305,
+     "fadeY1": 4436.2051132121305,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 4581,
+     "max": 6108
+    },
+    {
+     "shown": false,
+     "h": 5703,
+     "reveal": 5076.076833118934,
+     "fadeY1": 5376.076833118934,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 5497,
+     "max": 6108
+    },
+    {
+     "shown": false,
+     "h": 5703,
+     "reveal": 5703,
+     "fadeY1": 5704,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 6108,
+     "max": 6108
+    }
+   ],
+   "midEase": {
+    "shown": false,
+    "h": 5703,
+    "reveal": 2863.63963392,
+    "fadeY1": 3163.63963392,
+    "marker": null,
+    "post01": 66,
+    "head01": 72,
+    "scrollY": 6108,
+    "max": 6108
+   },
+   "end": {
+    "shown": false,
+    "h": 5703,
+    "reveal": 5703,
+    "fadeY1": 5704,
+    "marker": null,
+    "post01": 66,
+    "head01": 72,
+    "scrollY": 6108,
+    "max": 6108
+   },
+   "movedWhileScrolling": [],
+   "fan": {
+    "fanned": true,
+    "s3": "matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)",
+    "transition": "0.25s"
+   },
+   "movedWhileFanning": [],
+   "svgText": [
+    "10.5px",
+    "10px"
+   ],
+   "small": [],
+   "lowContrast": [],
+   "pairSet": [
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#101c29",
+     "ratio": 7.32
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "aheadCopy": {
+    "texts": 13
+   },
+   "axe": [],
+   "errors": [],
+   "reduced": {
+    "top": {
+     "shown": false,
+     "h": 5703,
+     "reveal": 5703,
+     "fadeY1": 5704,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 0,
+     "max": 6108
+    },
+    "mid": {
+     "shown": false,
+     "h": 5703,
+     "reveal": 5703,
+     "fadeY1": 5704,
+     "marker": null,
+     "post01": 66,
+     "head01": 72,
+     "scrollY": 3054,
+     "max": 6108
+    },
+    "fanTransition": "0s"
+   },
+   "nf": {
+    "h1": "This road is closed.",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "home": "/",
+    "svgText": [
+     "10.5px",
+     "10px"
+    ],
+    "status": 404,
+    "small": [],
+    "lowContrast": [],
+    "lowest": 6,
+    "axe": [],
+    "unknown": "307 -> /"
+   }
+  },
+  "768": {
+   "scroll": {
+    "scrollWidth": 768,
+    "innerWidth": 768
+   },
+   "top": {
+    "shown": false,
+    "h": 4310,
+    "reveal": 0,
+    "fadeY1": 300,
+    "marker": null,
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 0,
+    "max": 4836
+   },
+   "steps": [
+    {
+     "shown": false,
+     "h": 4310,
+     "reveal": 69.37054987135762,
+     "fadeY1": 369.37054987135764,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 725,
+     "max": 4836
+    },
+    {
+     "shown": false,
+     "h": 4310,
+     "reveal": 818.2630287799916,
+     "fadeY1": 1118.2630287799916,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 1451,
+     "max": 4836
+    },
+    {
+     "shown": false,
+     "h": 4310,
+     "reveal": 1566.123975348531,
+     "fadeY1": 1866.123975348531,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2176,
+     "max": 4836
+    },
+    {
+     "shown": false,
+     "h": 4310,
+     "reveal": 2315.016454257165,
+     "fadeY1": 2615.016454257165,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2902,
+     "max": 4836
+    },
+    {
+     "shown": false,
+     "h": 4310,
+     "reveal": 3062.8774008257046,
+     "fadeY1": 3362.8774008257046,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 3627,
+     "max": 4836
+    },
+    {
+     "shown": false,
+     "h": 4310,
+     "reveal": 3810.7383473942436,
+     "fadeY1": 4110.738347394244,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 4352,
+     "max": 4836
+    },
+    {
+     "shown": false,
+     "h": 4310,
+     "reveal": 4310,
+     "fadeY1": 4311,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 4836,
+     "max": 4836
+    }
+   ],
+   "midEase": {
+    "shown": false,
+    "h": 4310,
+    "reveal": 2507.506528256,
+    "fadeY1": 2807.506528256,
+    "marker": null,
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 4836,
+    "max": 4836
+   },
+   "end": {
+    "shown": false,
+    "h": 4310,
+    "reveal": 4310,
+    "fadeY1": 4311,
+    "marker": null,
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 4836,
+    "max": 4836
+   },
+   "movedWhileScrolling": [],
+   "fan": {
+    "fanned": true,
+    "s3": "matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)",
+    "transition": "0.25s"
+   },
+   "movedWhileFanning": [],
+   "svgText": [
+    "10.5px",
+    "10px"
+   ],
+   "small": [],
+   "lowContrast": [],
+   "pairSet": [
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#101c29",
+     "ratio": 7.32
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "aheadCopy": {
+    "texts": 12
+   },
+   "axe": [],
+   "errors": [],
+   "reduced": {
+    "top": {
+     "shown": false,
+     "h": 4310,
+     "reveal": 4310,
+     "fadeY1": 4311,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 0,
+     "max": 4836
+    },
+    "mid": {
+     "shown": false,
+     "h": 4310,
+     "reveal": 4310,
+     "fadeY1": 4311,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2418,
+     "max": 4836
+    },
+    "fanTransition": "0s"
+   },
+   "nf": {
+    "h1": "This road is closed.",
+    "scrollWidth": 768,
+    "innerWidth": 768,
+    "home": "/",
+    "svgText": [
+     "10.5px",
+     "10px"
+    ],
+    "status": 404,
+    "small": [],
+    "lowContrast": [],
+    "lowest": 6,
+    "axe": [],
+    "unknown": "307 -> /"
+   }
+  },
+  "1024": {
+   "scroll": {
+    "scrollWidth": 1024,
+    "innerWidth": 1024
+   },
+   "top": {
+    "shown": true,
+    "h": 4159,
+    "reveal": 0,
+    "fadeY1": 300,
+    "marker": null,
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 0,
+    "max": 4616
+   },
+   "steps": [
+    {
+     "shown": true,
+     "h": 4159,
+     "reveal": 119.16684200754996,
+     "fadeY1": 419.16684200755,
+     "marker": "MILEPOST01advance warning",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 692,
+     "max": 4616
+    },
+    {
+     "shown": true,
+     "h": 4159,
+     "reveal": 832.6236153227303,
+     "fadeY1": 1132.6236153227303,
+     "marker": "MILEPOST02taper",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 1385,
+     "max": 4616
+    },
+    {
+     "shown": true,
+     "h": 4159,
+     "reveal": 1545.0508694844978,
+     "fadeY1": 1845.0508694844978,
+     "marker": "MILEPOST02taper",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2077,
+     "max": 4616
+    },
+    {
+     "shown": true,
+     "h": 4159,
+     "reveal": 2258.507642799678,
+     "fadeY1": 2558.507642799678,
+     "marker": "MILEPOST03buffer",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2770,
+     "max": 4616
+    },
+    {
+     "shown": true,
+     "h": 4159,
+     "reveal": 2970.9348969614457,
+     "fadeY1": 3270.9348969614457,
+     "marker": "MILEPOST04work zone",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 3462,
+     "max": 4616
+    },
+    {
+     "shown": true,
+     "h": 4159,
+     "reveal": 3683.362151123213,
+     "fadeY1": 3983.362151123213,
+     "marker": "MILEPOST04work zone",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 4154,
+     "max": 4616
+    },
+    {
+     "shown": true,
+     "h": 4159,
+     "reveal": 4159,
+     "fadeY1": 4160,
+     "marker": "MILEPOSTCOdownstream",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 4616,
+     "max": 4616
+    }
+   ],
+   "midEase": {
+    "shown": true,
+    "h": 4159,
+    "reveal": 2419.6565315584003,
+    "fadeY1": 2719.6565315584003,
+    "marker": "MILEPOST04work zone",
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 4616,
+    "max": 4616
+   },
+   "end": {
+    "shown": true,
+    "h": 4159,
+    "reveal": 4159,
+    "fadeY1": 4160,
+    "marker": "MILEPOSTCOdownstream",
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 4616,
+    "max": 4616
+   },
+   "movedWhileScrolling": [],
+   "fan": {
+    "fanned": true,
+    "s3": "matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)",
+    "transition": "0.25s"
+   },
+   "movedWhileFanning": [],
+   "svgText": [
+    "10.5px",
+    "10px"
+   ],
+   "small": [],
+   "lowContrast": [],
+   "pairSet": [
+    {
+     "fg": "#929ca9",
+     "bg": "#14202e",
+     "ratio": 5.92
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#101c29",
+     "ratio": 7.32
+    },
+    {
+     "fg": "#aab2bb",
+     "bg": "#14202e",
+     "ratio": 7.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "aheadCopy": {
+    "texts": 12
+   },
+   "axe": [],
+   "errors": [],
+   "reduced": {
+    "top": {
+     "shown": true,
+     "h": 4159,
+     "reveal": 4159,
+     "fadeY1": 4160,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 0,
+     "max": 4616
+    },
+    "mid": {
+     "shown": true,
+     "h": 4159,
+     "reveal": 4159,
+     "fadeY1": 4160,
+     "marker": "MILEPOST03buffer",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2308,
+     "max": 4616
+    },
+    "fanTransition": "0s"
+   },
+   "nf": {
+    "h1": "This road is closed.",
+    "scrollWidth": 1024,
+    "innerWidth": 1024,
+    "home": "/",
+    "svgText": [
+     "10.5px",
+     "10px"
+    ],
+    "status": 404,
+    "small": [],
+    "lowContrast": [],
+    "lowest": 6,
+    "axe": [],
+    "unknown": "307 -> /"
+   }
+  },
+  "1440": {
+   "scroll": {
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   },
+   "top": {
+    "shown": true,
+    "h": 3019,
+    "reveal": 0,
+    "fadeY1": 300,
+    "marker": null,
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 0,
+    "max": 3349
+   },
+   "steps": [
+    {
+     "shown": true,
+     "h": 3019,
+     "reveal": 14.248033560566334,
+     "fadeY1": 314.24803356056634,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 502,
+     "max": 3349
+    },
+    {
+     "shown": true,
+     "h": 3019,
+     "reveal": 545.1192099283342,
+     "fadeY1": 845.1192099283342,
+     "marker": "MILEPOST01advance warning",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 1005,
+     "max": 3349
+    },
+    {
+     "shown": true,
+     "h": 3019,
+     "reveal": 1074.9349764027268,
+     "fadeY1": 1374.9349764027268,
+     "marker": "MILEPOST02taper",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 1507,
+     "max": 3349
+    },
+    {
+     "shown": true,
+     "h": 3019,
+     "reveal": 1604.7507428771194,
+     "fadeY1": 1904.7507428771194,
+     "marker": "MILEPOST03buffer",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2009,
+     "max": 3349
+    },
+    {
+     "shown": true,
+     "h": 3019,
+     "reveal": 2135.621919244887,
+     "fadeY1": 2435.621919244887,
+     "marker": "MILEPOST04work zone",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 2512,
+     "max": 3349
+    },
+    {
+     "shown": true,
+     "h": 3019,
+     "reveal": 2665.43768571928,
+     "fadeY1": 2965.43768571928,
+     "marker": "MILEPOST04work zone",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 3014,
+     "max": 3349
+    },
+    {
+     "shown": true,
+     "h": 3019,
+     "reveal": 3019,
+     "fadeY1": 3020,
+     "marker": "MILEPOSTCOdownstream",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 3349,
+     "max": 3349
+    }
+   ],
+   "midEase": {
+    "shown": true,
+    "h": 3019,
+    "reveal": 1756.4181458944001,
+    "fadeY1": 2056.4181458944004,
+    "marker": "MILEPOST03buffer",
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 3349,
+    "max": 3349
+   },
+   "end": {
+    "shown": true,
+    "h": 3019,
+    "reveal": 3019,
+    "fadeY1": 3020,
+    "marker": "MILEPOSTCOdownstream",
+    "post01": 114,
+    "head01": 120,
+    "scrollY": 3349,
+    "max": 3349
+   },
+   "movedWhileScrolling": [],
+   "fan": {
+    "fanned": true,
+    "s3": "matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)",
+    "transition": "0.25s"
+   },
+   "movedWhileFanning": [],
+   "svgText": [
+    "10.5px",
+    "10px"
+   ],
+   "small": [],
+   "lowContrast": [],
+   "pairSet": [
+    {
+     "fg": "#929ca9",
+     "bg": "#14202e",
+     "ratio": 5.92
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#16232f",
+     "ratio": 6
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#16232f",
+     "ratio": 6.07
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#14202e",
+     "ratio": 6.19
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#111d2a",
+     "ratio": 6.4
+    },
+    {
+     "fg": "#93a0b0",
+     "bg": "#101c29",
+     "ratio": 6.47
+    },
+    {
+     "fg": "#34a9e8",
+     "bg": "#111d2a",
+     "ratio": 6.48
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#16232f",
+     "ratio": 6.79
+    },
+    {
+     "fg": "#0c1622",
+     "bg": "#34a9e8",
+     "ratio": 6.92
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#111d2a",
+     "ratio": 7.24
+    },
+    {
+     "fg": "#ff8a2e",
+     "bg": "#101c29",
+     "ratio": 7.32
+    },
+    {
+     "fg": "#aab2bb",
+     "bg": "#14202e",
+     "ratio": 7.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#14202e",
+     "ratio": 10.68
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#111d2a",
+     "ratio": 11.05
+    },
+    {
+     "fg": "#c8d1dd",
+     "bg": "#101c29",
+     "ratio": 11.16
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#16232f",
+     "ratio": 13.91
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#14202e",
+     "ratio": 14.35
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#111d2a",
+     "ratio": 14.85
+    },
+    {
+     "fg": "#eaf0f7",
+     "bg": "#101c29",
+     "ratio": 15
+    }
+   ],
+   "aheadCopy": {
+    "texts": 12
+   },
+   "axe": [],
+   "errors": [],
+   "reduced": {
+    "top": {
+     "shown": true,
+     "h": 3019,
+     "reveal": 3019,
+     "fadeY1": 3020,
+     "marker": null,
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 0,
+     "max": 3349
+    },
+    "mid": {
+     "shown": true,
+     "h": 3019,
+     "reveal": 3019,
+     "fadeY1": 3020,
+     "marker": "MILEPOST03buffer",
+     "post01": 114,
+     "head01": 120,
+     "scrollY": 1675,
+     "max": 3349
+    },
+    "fanTransition": "0s"
+   },
+   "nf": {
+    "h1": "This road is closed.",
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "home": "/",
+    "svgText": [
+     "10.5px",
+     "10px"
+    ],
+    "status": 404,
+    "small": [],
+    "lowContrast": [],
+    "lowest": 6,
+    "axe": [],
+    "unknown": "307 -> /"
+   }
+  }
+ }
+}

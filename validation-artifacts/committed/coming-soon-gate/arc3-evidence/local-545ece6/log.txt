@@ -1,0 +1,80 @@
+
+== 1440x900 ==
+/: scroll 1440/1440 ok · road shown true · page errors 0
+R13 at top: reveal 0 of 3019, marker null · 01 header at 120, 01 milepost at 114
+R13/R14 scroll steps (reveal/h marker): 14.248033560566334/3019 · 545.1192099283342/3019 MP 01advance warning · 1074.9349764027268/3019 MP 02taper · 1604.7507428771194/3019 MP 03buffer · 2135.621919244887/3019 MP 04work zone · 2665.43768571928/3019 MP 04work zone · 3019/3019 MP COdownstream
+R13 ease: one frame after a jump to the bottom reveal=1756.4181458944001; settled reveal=3019 of 3019 at scrollY 3349/3349; fade y1 3020
+P1 moved while scrolling: none · while fanning: none
+R15 fan on hover: {"fanned":true,"s3":"matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)","transition":"0.25s"}
+svg text sizes: 10.5px, 10px
+targets under 32px: none
+contrast lowest pairs: #929ca9/#14202e 5.92 · #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · below AA: none
+road "ahead" copy (R13's faint, fading road, excluded above): 12 texts
+axe /: 0 violations
+reduce: top reveal 3019/3019 fade y1 3020 marker null · mid reveal 3019 marker MILEPOST03buffer · fan transition 0s
+/404: 404 "This road is closed." home / · scroll 1440/1440 · svg text 10.5px,10px · targets under 32: none · lowest contrast 6 · below AA: none · axe 0 violations
+unknown path (anonymous): 307 -> /
+
+== 1024x800 ==
+/: scroll 1024/1024 ok · road shown true · page errors 0
+R13 at top: reveal 0 of 4159, marker null · 01 header at 120, 01 milepost at 114
+R13/R14 scroll steps (reveal/h marker): 119.16684200754996/4159 MP 01advance warning · 832.6236153227303/4159 MP 02taper · 1545.0508694844978/4159 MP 02taper · 2258.507642799678/4159 MP 03buffer · 2970.9348969614457/4159 MP 04work zone · 3683.362151123213/4159 MP 04work zone · 4159/4159 MP COdownstream
+R13 ease: one frame after a jump to the bottom reveal=2419.6565315584003; settled reveal=4159 of 4159 at scrollY 4616/4616; fade y1 4160
+P1 moved while scrolling: none · while fanning: none
+R15 fan on hover: {"fanned":true,"s3":"matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)","transition":"0.25s"}
+svg text sizes: 10.5px, 10px
+targets under 32px: none
+contrast lowest pairs: #929ca9/#14202e 5.92 · #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · below AA: none
+road "ahead" copy (R13's faint, fading road, excluded above): 12 texts
+axe /: 0 violations
+reduce: top reveal 4159/4159 fade y1 4160 marker null · mid reveal 4159 marker MILEPOST03buffer · fan transition 0s
+/404: 404 "This road is closed." home / · scroll 1024/1024 · svg text 10.5px,10px · targets under 32: none · lowest contrast 6 · below AA: none · axe 0 violations
+unknown path (anonymous): 307 -> /
+
+== 768x900 ==
+/: scroll 768/768 ok · road shown false · page errors 0
+R13 at top: reveal 0 of 4310, marker null · 01 header at 120, 01 milepost at 114
+R13/R14 scroll steps (reveal/h marker): 69.37054987135762/4310 · 818.2630287799916/4310 · 1566.123975348531/4310 · 2315.016454257165/4310 · 3062.8774008257046/4310 · 3810.7383473942436/4310 · 4310/4310
+R13 ease: one frame after a jump to the bottom reveal=2507.506528256; settled reveal=4310 of 4310 at scrollY 4836/4836; fade y1 4311
+P1 moved while scrolling: none · while fanning: none
+R15 fan on hover: {"fanned":true,"s3":"matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)","transition":"0.25s"}
+svg text sizes: 10.5px, 10px
+targets under 32px: none
+contrast lowest pairs: #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: none
+road "ahead" copy (R13's faint, fading road, excluded above): 12 texts
+axe /: 0 violations
+reduce: top reveal 4310/4310 fade y1 4311 marker null · mid reveal 4310 marker null · fan transition 0s
+/404: 404 "This road is closed." home / · scroll 768/768 · svg text 10.5px,10px · targets under 32: none · lowest contrast 6 · below AA: none · axe 0 violations
+unknown path (anonymous): 307 -> /
+
+== 390x844 ==
+/: scroll 390/390 ok · road shown false · page errors 0
+R13 at top: reveal 0 of 5703, marker null · 01 header at 72, 01 milepost at 66
+R13/R14 scroll steps (reveal/h marker): 375.69217275532327/5703 · 1315.563892662127/5703 · 2256.461673398523/5703 · 3196.333393305327/5703 · 4136.2051132121305/5703 · 5076.076833118934/5703 · 5703/5703
+R13 ease: one frame after a jump to the bottom reveal=2863.63963392; settled reveal=5703 of 5703 at scrollY 6108/6108; fade y1 5704
+P1 moved while scrolling: none · while fanning: none
+R15 fan on hover: {"fanned":true,"s3":"matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)","transition":"0.25s"}
+svg text sizes: 10.5px, 10px
+targets under 44px: none
+contrast lowest pairs: #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: none
+road "ahead" copy (R13's faint, fading road, excluded above): 13 texts
+axe /: 0 violations
+reduce: top reveal 5703/5703 fade y1 5704 marker null · mid reveal 5703 marker null · fan transition 0s
+/404: 404 "This road is closed." home / · scroll 390/390 · svg text 10.5px,10px · targets under 44: none · lowest contrast 6 · below AA: none · axe 0 violations
+unknown path (anonymous): 307 -> /
+
+== 380x800 ==
+/: scroll 380/380 ok · road shown false · page errors 0
+R13 at top: reveal 0 of 5723, marker null · 01 header at 72, 01 milepost at 66
+R13/R14 scroll steps (reveal/h marker): 344.7467474603458/5723 · 1294.3302441632507/5723 · 2242.893780074853/5723 · 3192.477276777758/5723 · 4141.040812689361/5723 · 5090.624309392265/5723 · 5723/5723
+R13 ease: one frame after a jump to the bottom reveal=2873.68220672; settled reveal=5723 of 5723 at scrollY 6203/6203; fade y1 5724
+P1 moved while scrolling: none · while fanning: none
+R15 fan on hover: {"fanned":true,"s3":"matrix(0.992546, 0.121869, -0.121869, 0.992546, 26, -6)","transition":"0.25s"}
+svg text sizes: 10.5px, 10px
+targets under 44px: none
+contrast lowest pairs: #93a0b0/#16232f 6 · #34a9e8/#16232f 6.07 · #93a0b0/#14202e 6.19 · #93a0b0/#111d2a 6.4 · #93a0b0/#101c29 6.47 · below AA: none
+road "ahead" copy (R13's faint, fading road, excluded above): 13 texts
+axe /: 0 violations
+reduce: top reveal 5723/5723 fade y1 5724 marker null · mid reveal 5723 marker null · fan transition 0s
+/404: 404 "This road is closed." home / · scroll 380/380 · svg text 10.5px,10px · targets under 44: none · lowest contrast 6 · below AA: none · axe 0 violations
+unknown path (anonymous): 307 -> /
