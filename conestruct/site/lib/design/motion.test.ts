@@ -27,17 +27,19 @@ function block(from: number): string {
 }
 
 describe("R10 — animation is the band's track and the coming-soon drawing, nothing else (hover colour transitions are not animation)", () => {
-  it("the only @keyframes are the band's sweep and the drawing's draw/fade", () => {
+  it("the only @keyframes are the band's sweep, the drawing's draw/fade and 02's mark replay (R21)", () => {
     const names = [...css.matchAll(/@keyframes\s+([\w-]+)/g)].map((m) => m[1]).sort();
-    expect(names).toEqual(["cs-draw", "cs-fade", "wb-sweep"]);
+    expect(names).toEqual(["cs-draw", "cs-fade", "cs-k", "wb-sweep"]);
   });
 
   it("every animation declaration is the band's or sits inside the no-preference block", () => {
     const at = css.indexOf("@media (prefers-reduced-motion: no-preference)");
     expect(at, "the drawing's no-preference block").toBeGreaterThan(-1);
     const noPref = block(at);
-    // Exactly two animations in it — the draw and the fade — each once.
-    expect(noPref.match(/animation:/g)).toHaveLength(2);
+    // Exactly three animations in it — the draw, the fade and 02's mark
+    // replay (R21) — each once.
+    expect(noPref.match(/animation:/g)).toHaveLength(3);
+    expect(noPref).toMatch(/\.workbench \.cs-stack\.is-fanned \.cs-seq \{[^}]*animation: cs-k 0\.35s ease-out both;/);
     expect(noPref).toMatch(/\.workbench \.cs-draw \{[^}]*animation: cs-draw 1\.4s ease-out both;/);
     expect(noPref).toMatch(/\.workbench \.cs-fade \{[^}]*animation: cs-fade 0\.5s ease-out both;/);
     // Outside it: only the band's sweep and the band's reduced-motion off.
@@ -46,22 +48,23 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
     expect(decls).toEqual(["none", "wb-sweep 1.5s linear infinite"]);
   });
 
-  it("the drawing animates opacity and a mask's scale only — nothing that moves a box (P1)", () => {
-    for (const name of ["cs-draw", "cs-fade"]) {
+  it("the drawing animates opacity and a mask's scale only — nothing that moves a box (P1); 02's replay animates --k only", () => {
+    const own: Record<string, string[]> = { "cs-draw": ["transform"], "cs-fade": ["opacity"], "cs-k": ["--k"] };
+    for (const name of Object.keys(own)) {
       const k = block(css.indexOf(`@keyframes ${name}`));
-      const props = [...k.matchAll(/([\w-]+)\s*:/g)].map((m) => m[1]);
-      expect(new Set(props), name).toEqual(new Set(name === "cs-draw" ? ["transform"] : ["opacity"]));
+      const props = [...k.matchAll(/(--[\w-]+|[\w-]+)\s*:/g)].map((m) => m[1]);
+      expect(new Set(props), name).toEqual(new Set(own[name]));
     }
   });
 
-  it("Arc 3 (R15): 02's fan is the no-preference block's one transition, transform only; no coming-soon rule transitions anywhere else", () => {
+  it("R15 / R21: 02's sheets are the no-preference block's one transition, on --fan (never transform: the compositor would rotate a bitmap); no coming-soon rule transitions anywhere else", () => {
     const at = css.indexOf("@media (prefers-reduced-motion: no-preference)");
     const noPref = block(at);
     expect([...noPref.matchAll(/transition:\s*([^;]+);/g)].map((m) => m[1].trim())).toEqual([
-      "transform 0.25s ease-out",
+      "--fan 0.35s ease-out",
     ]);
     expect(noPref).toMatch(
-      /\.workbench \.cs-s1,\s*\.workbench \.cs-s2,\s*\.workbench \.cs-s3 \{\s*transition: transform 0\.25s ease-out;/,
+      /\.workbench \.cs-s1,\s*\.workbench \.cs-s2,\s*\.workbench \.cs-s3 \{\s*transition: --fan 0\.35s ease-out;/,
     );
     // Outside it, no rule whose selector names a .cs- class transitions.
     const outside = css.replace(noPref, "");
@@ -71,6 +74,22 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
     expect(csTransitions.map(([, sel]) => sel.trim())).toEqual([]);
     // Only one no-preference block.
     expect(css.indexOf("@media (prefers-reduced-motion: no-preference)", at + 1)).toBe(-1);
+  });
+
+  it("R21: --fan rests at 0 and --k at 1, registered, so a stack that is not animating shows every mark in place", () => {
+    expect(css).toMatch(/@property --fan \{[^}]*syntax: "<number>";[^}]*initial-value: 0;/);
+    expect(css).toMatch(/@property --k \{[^}]*syntax: "<number>";[^}]*initial-value: 1;/);
+    // The derived properties: nothing in 02 sets transform or opacity to a
+    // literal that a transition or animation could hand to the compositor.
+    expect(css).toMatch(/\.workbench \.cs-seq-appear \{\s*opacity: var\(--k\);/);
+    expect(css).toMatch(/\.workbench \.cs-seq-fill \{[^}]*transform: scaleX\(var\(--k\)\);/);
+    expect(css).toMatch(/\.workbench \.cs-seq-draw \{[^}]*stroke-dashoffset: calc\(1 - var\(--k\)\);/);
+    expect(css).toMatch(/\.workbench \.cs-seq-ink \{[^}]*fill-opacity: var\(--k\);/);
+    for (const m of ["plan", "quote", "audit", "crew"]) {
+      const rules = [...css.matchAll(new RegExp(`\\.cs-stack\\[data-move="${m}"\\] \\.cs-s\\d \\{([^}]*)\\}`, "g"))];
+      expect(rules.length, m).toBeGreaterThan(0);
+      for (const [, body] of rules) expect(body, m).toMatch(/transform: [^;]*var\(--fan\)/);
+    }
   });
 
   it("the no-preference block comes after the band's rules, so the band's own test still finds its block", () => {
