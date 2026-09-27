@@ -111,3 +111,22 @@ Build straight through to the diff-verifier, then stop before ship. Put the ship
 3. **The audit** — back sheets shift slightly behind; the citation boxes beside each § row draw their outlines one by one.
 4. **The crew sheet** — the stack lifts from the top edge like a clipboard; the four numbered squares fill in turn, 1 → 4. No ✓ (reserved for verdicts).
 Each ≈ 300–400 ms, ≈ 40 ms stagger, ease-out; nothing outside the card moves (P1); touch shows the static stack; reduced motion: no animation. Extends R15 and the R10 motion record.
+
+## Light-lane rule amendments (Ryan, 2026-09-27, approving the timing audit's §3)
+
+Recorded here because CLAUDE.md and handoff.md are gitignored (`.gitignore:79`, `.gitignore:81`); the amended copies were handed over for Ryan to put in place.
+
+**CLAUDE.md l.8**, append after "One arc per issue.":
+> **Exception — the light lane:** cosmetic rounds on public pages (`/`, `/terms`, `/privacy`, `/404`; copy, layout, CSS or SVG only; no wire field, API route, middleware, gate, or scenario/audit/pricing logic) run without a checkpoint and without their own issue. They stop only if a ruling contradicts the code or a new factual claim can't be sourced; otherwise build with the recommended default and flag it at the top of the report. Procedure: handoff.md § Light lane.
+
+**handoff.md**, add a **§ Light lane** section with the audit's §3 steps 1–8 and its "Still gates the ship" list, word for word.
+
+**handoff.md l.52**, append: "Light-lane rounds run the light browser check instead (1440 + 390: status, sideways scroll, axe, target floors, contrast, page errors, crop of the changed region)."
+
+**handoff.md l.57**, append: "A light-lane round has no checkpoint; if one stops anyway, its table covers only the changed surfaces."
+
+**handoff.md "never" list**, add:
+- No local production `next build` (this machine can't finish one; Vercel builds on ship).
+- One dev server per session, killed by process tree at session end.
+- No scratch browser run before the committed one on the same code.
+- Local test runs cover the affected files; the verifier's full-suite run is the one that counts.
