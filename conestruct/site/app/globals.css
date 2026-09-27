@@ -5696,8 +5696,12 @@ input[type="number"] {
 
 /* The road's column.  Below 980 there is no road: the sections take the
    page's full width. */
+/* flow-root: section 01's top margin stays INSIDE the column, so the
+   road is measured from the sheet's foot and starts 40 px above 01's
+   milepost, not level with it (a collapsed margin put 01 at 0). */
 .workbench .cs-road-wrap {
   position: relative;
+  display: flow-root;
 }
 .workbench .cs-road-svg,
 .workbench .cs-mp {
