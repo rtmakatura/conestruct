@@ -104,3 +104,10 @@ Headline "Ninety years of hard-won rules." Three paragraphs as in the artboard. 
 - **Heads-up acknowledged** — 03's heading "Every dimension has a source" stays (A2-Q6); it's revisited when A2-I lands.
 
 Build straight through to the diff-verifier, then stop before ship. Put the ship line and post-ship legs in your report.
+
+**R21 (Ryan, 2026-09-27)** — The four stacks in 02 must stay crisp while fanning, and each gets its own hover move, tasteful and quiet:
+1. **The plan sheet** — current fan, plus the front sheet's taper devices appear one after another along the taper.
+2. **The count and the quote** — sheets slide apart downward (no rotation); the orange amount bars fill left to right in turn, ending on the total bar.
+3. **The audit** — back sheets shift slightly behind; the citation boxes beside each § row draw their outlines one by one.
+4. **The crew sheet** — the stack lifts from the top edge like a clipboard; the four numbered squares fill in turn, 1 → 4. No ✓ (reserved for verdicts).
+Each ≈ 300–400 ms, ≈ 40 ms stagger, ease-out; nothing outside the card moves (P1); touch shows the static stack; reduced motion: no animation. Extends R15 and the R10 motion record.
