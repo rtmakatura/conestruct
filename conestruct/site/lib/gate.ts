@@ -13,7 +13,10 @@ export const GATE_HEADER = "x-conestruct-gate";
 // `/privacy`, `/sign-in`, and the Clerk webhook."  `/sign-in(.*)`
 // because Clerk's <SignIn/> is a catch-all route that walks its own
 // sub-steps (/sign-in/factor-one, /sign-in/sso-callback …).
-const PUBLIC_EXACT = new Set(["/", "/terms", "/privacy", "/api/clerk/webhook"]);
+// A3-Q2 adds `/404` (the "Road closed" page, R19: "Public, like `/`").
+// Every other unknown path stays gated — an anonymous visitor there goes
+// to `/`, not to the 404.
+const PUBLIC_EXACT = new Set(["/", "/terms", "/privacy", "/404", "/api/clerk/webhook"]);
 
 export function isPublicPath(pathname: string): boolean {
   return (

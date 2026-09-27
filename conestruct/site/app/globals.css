@@ -5489,72 +5489,45 @@ input[type="number"] {
 .workbench .cs-head h2 {
   margin: 0;
 }
-.workbench .cs-cards {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
-  margin-top: 24px;
+/* R16: each header rule ends in drafting slash ticks (the artboard's
+   #56718f, no token: --ink-faint). */
+.workbench .cs-head {
+  position: relative;
 }
-.workbench .cs-cards-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.workbench .cs-head::before,
+.workbench .cs-head::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  width: 1px;
+  height: 12px;
+  background: var(--ink-faint);
+  transform: rotate(45deg);
 }
-.workbench .cs-cards-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.workbench .cs-head::before {
+  left: 0;
 }
-.workbench .cs-card {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--rule);
-  background: var(--da-ground);
+.workbench .cs-head::after {
+  right: 0;
 }
-.workbench .cs-card-pad {
-  gap: 8px;
-  padding: 24px 20px;
-}
-.workbench .cs-step-art {
-  display: block;
-  border-bottom: 1px solid var(--da-hair);
-}
-.workbench .cs-card-text {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 16px;
-}
-/* 02: the hairlines between items are the strip's ground showing
-   through a 1 px gap, so they hold at four, two or one column. */
-.workbench .cs-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px;
-  margin-top: 24px;
-  border: 1px solid var(--rule);
-  background: var(--da-hair);
-}
-.workbench .cs-strip-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 24px 20px;
-  background: var(--da-ground);
-}
+/* 03 (Arc 3): the words and references | the detail, from 1280. */
 .workbench .cs-sources {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 80px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
   margin-top: 32px;
+  align-items: start;
 }
-.workbench .cs-sources-text,
-.workbench .cs-sources-refs {
+.workbench .cs-sources-text {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-.workbench .cs-sources-refs {
-  gap: 12px;
-}
 .workbench .cs-sources-text h3 {
   margin: 0;
+}
+.workbench .cs-sources-prov {
+  margin-top: 8px;
 }
 .workbench .cs-chips {
   display: flex;
@@ -5573,12 +5546,15 @@ input[type="number"] {
   background: var(--da-ground);
   color: var(--ink);
 }
-/* Closing band.  "Get notified" here is rule 132's ghost (.dl-btn) —
-   the outlined secondary (A2-Q10); the sheet's .pri is the one primary. */
+/* Closing band (R18): the map | the words | "Get notified".  The link
+   is rule 132's ghost (.dl-btn) — the outlined secondary (A2-Q10); the
+   sheet's .pri is the one primary.  Below 1280 the link goes under the
+   words. */
 .workbench .cs-close {
-  display: flex;
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) auto;
+  gap: 24px 40px;
   align-items: center;
-  gap: 24px;
   margin-top: 120px;
   padding: 40px;
   border: 1px solid var(--rule);
@@ -5591,14 +5567,16 @@ input[type="number"] {
 }
 .workbench .cs-close .dl-btn {
   margin-top: 0;
-  margin-left: auto;
   padding: 0 28px;
   text-decoration: none;
 }
-
-@media (max-width: 1023px) {
-  .workbench .cs-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 1279px) {
+  .workbench .cs-close {
+    grid-template-columns: 320px minmax(0, 1fr);
+  }
+  .workbench .cs-close .dl-btn {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 
@@ -5683,31 +5661,7 @@ input[type="number"] {
   .workbench .cs-head .cs-head-prov {
     display: none;
   }
-  .workbench .cs-cards,
-  .workbench .cs-cards-3,
-  .workbench .cs-cards-2 {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-    margin-top: 16px;
-  }
-  .workbench .cs-step-art {
-    display: none;
-  }
-  .workbench .cs-card-pad,
-  .workbench .cs-card-text {
-    gap: 6px;
-    padding: 16px;
-  }
-  .workbench .cs-strip {
-    grid-template-columns: minmax(0, 1fr);
-    margin-top: 16px;
-  }
-  .workbench .cs-strip-item {
-    gap: 6px;
-    padding: 16px;
-  }
   .workbench .cs-sources {
-    grid-template-columns: minmax(0, 1fr);
     gap: 20px;
     margin-top: 16px;
   }
@@ -5717,15 +5671,502 @@ input[type="number"] {
   .workbench .cs-chip {
     padding: 0 10px;
   }
+  /* The map is 320 px; 12 px sides keep it inside a 380 px screen. */
   .workbench .cs-close {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
     gap: 16px;
     margin-top: 72px;
-    padding: 24px 16px;
+    padding: 24px 12px;
   }
   .workbench .cs-close .dl-btn {
+    grid-column: auto;
+    justify-self: stretch;
+  }
+}
+
+/* ─── coming-soon-gate Arc 3 — the full page (R12–R19) ───
+   Sections 01 → close as design/FullPage.dc.html draws them, the
+   milepost road beside them (R13) and its marker (R14), and the 404
+   (R19).  No new token and no new type size: the artboard's one
+   off-palette hex, #56718f, is --ink-faint here; text is the roles.
+   Layout switches: the road and the marker from 980 (R13, R14); two
+   columns in 03 / 04 / close from 1280; the phone artboard below 768
+   stacks everything. */
+
+/* The road's column.  Below 980 there is no road: the sections take the
+   page's full width. */
+.workbench .cs-road-wrap {
+  position: relative;
+}
+.workbench .cs-road-svg,
+.workbench .cs-mp {
+  display: none;
+}
+@media (min-width: 980px) {
+  .workbench .cs-road-wrap {
+    padding-left: 180px;
+  }
+  /* R13: 70 % opacity, in the left margin, never in the way. */
+  .workbench .cs-road-svg {
+    display: block;
+    position: absolute;
+    left: -40px;
+    top: 0;
+    opacity: 0.7;
+    overflow: visible;
+    pointer-events: none;
+  }
+  /* R14: the milepost marker, fixed top-right. */
+  .workbench .cs-mp {
+    display: flex;
+    position: fixed;
+    top: 24px;
+    right: 40px;
+    z-index: var(--z-strip);
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--rule);
+    background: var(--canvas-tint);
+    pointer-events: none;
+  }
+  .workbench .cs-mp[hidden] {
+    display: none;
+  }
+}
+/* Ahead of the highlight the road is faint (and masked to nothing). */
+.workbench .cs-road-ahead {
+  opacity: 0.18;
+}
+/* The stretch words: --ink-on-dark, not the artboard's faint ink, so
+   they hold 4.5:1 at the ruled 70 %. */
+.workbench .cs-road-word {
+  color: var(--ink-on-dark);
+}
+.workbench .cs-post-box {
+  fill: var(--da-ground);
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+}
+.workbench .cs-post-line {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+}
+
+/* 01 — one road drawn three times, then the three step texts. */
+.workbench .cs-strip3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 24px;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .cs-station {
+  grid-row: 1;
+}
+.workbench .cs-step-text {
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--rule);
+  border-right: 1px solid var(--da-hair);
+}
+.workbench .cs-strip3 > .cs-at-0 {
+  grid-column: 1;
+}
+.workbench .cs-strip3 > .cs-at-1 {
+  grid-column: 2;
+}
+.workbench .cs-strip3 > .cs-at-2 {
+  grid-column: 3;
+}
+.workbench .cs-step-text.cs-at-2 {
+  border-right: 0;
+}
+.workbench .cs-station-art {
+  display: block;
+  overflow: visible;
+}
+.workbench .cs-station-div {
+  stroke: var(--da-hair);
+  stroke-width: 1;
+}
+
+/* 02 — the four outputs as paper stacks.  The fan is PaperStack's
+   class; its transition is in the no-preference block below. */
+.workbench .cs-stacks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+.workbench .cs-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.workbench .cs-stack-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.workbench .cs-stack-art {
+  display: block;
+  overflow: visible;
+}
+.workbench .cs-s1,
+.workbench .cs-s2,
+.workbench .cs-s3 {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.workbench .cs-stack.is-fanned .cs-s3 {
+  transform: translate(26px, -6px) rotate(7deg);
+}
+.workbench .cs-stack.is-fanned .cs-s2 {
+  transform: translate(12px, -3px) rotate(3deg);
+}
+.workbench .cs-stack.is-fanned .cs-s1 {
+  transform: translate(-10px, -2px) rotate(-3deg);
+}
+.workbench .cs-sheet-under {
+  fill: var(--paper-deep);
+  stroke: var(--paper-line-soft);
+  stroke-width: 1;
+}
+.workbench .cs-hole {
+  fill: var(--canvas);
+  stroke: var(--paper-line);
+  stroke-width: 1;
+}
+.workbench .cs-bar {
+  fill: var(--paper-line);
+}
+.workbench .cs-bar-dim {
+  fill: var(--dim);
+}
+.workbench .cs-hollow {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+}
+.workbench .cs-lane-xs {
+  stroke-dasharray: 8 6;
+}
+.workbench .cs-lane-2xs {
+  stroke-dasharray: 6 5;
+}
+
+/* 03 — the detail: dimensions below the road, one note, three leaders. */
+.workbench .cs-detail {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .cs-detail-art {
+  display: block;
+  overflow: visible;
+}
+.workbench .cs-lane-md {
+  stroke-dasharray: 16 12;
+}
+.workbench .cs-dim-line {
+  stroke: var(--dim);
+  stroke-width: 1;
+  fill: none;
+}
+.workbench .cs-dim-text {
+  color: var(--dim);
+}
+.workbench .cs-leader {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+}
+.workbench .cs-leader-dot {
+  fill: var(--ink-faint);
+}
+
+/* 04 — the two cards and "same plan" between them. */
+.workbench .cs-who {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 32px;
+}
+.workbench .cs-who-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+  padding: 24px;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .cs-who-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.workbench .cs-who-art {
+  display: block;
+}
+.workbench .cs-device-frame {
+  fill: var(--canvas-tint);
+  stroke: var(--paper-line);
+  stroke-width: 1;
+}
+.workbench .cs-device-key {
+  fill: var(--ink-faint);
+}
+.workbench .cs-same {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+}
+.workbench .cs-same::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left: 1px dashed var(--paper-line);
+}
+.workbench .cs-same span {
+  position: relative;
+  padding: 4px 8px;
+  background: var(--canvas);
+}
+
+/* 05 — the founders' note (R17). */
+.workbench .cs-founders {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 32px;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .cs-founders-note {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px 40px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .cs-founders-note h3,
+.workbench .cs-founders-head {
+  margin: 0;
+}
+.workbench .cs-founders-head {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .cs-founders-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.workbench .cs-founder {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .cs-founder:last-child {
+  border-bottom: 0;
+}
+@media (min-width: 1024px) {
+  .workbench .cs-founders {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+  .workbench .cs-founders-note {
+    border-bottom: 0;
+    border-right: 1px solid var(--da-hair);
+  }
+}
+
+/* The close band's map (R18). */
+.workbench .cs-map {
+  display: block;
+  overflow: visible;
+}
+.workbench .cs-map-hatch {
+  stroke: var(--rule-soft);
+  stroke-width: 1;
+}
+.workbench .cs-map-range {
+  stroke: var(--paper-line-soft);
+  stroke-dasharray: 3 3;
+  fill: none;
+}
+.workbench .cs-map-road {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+  fill: none;
+}
+.workbench .cs-map-city {
+  fill: var(--ink-faint);
+}
+.workbench .cs-map-pin {
+  stroke: var(--dim);
+  fill: none;
+}
+.workbench .cs-map-pin-dot {
+  fill: var(--dim);
+}
+
+@media (min-width: 1280px) {
+  .workbench .cs-sources {
+    grid-template-columns: 440px minmax(0, 1fr);
+    gap: 64px;
+  }
+  .workbench .cs-who {
+    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .workbench .cs-same {
+    height: auto;
+  }
+  .workbench .cs-same::before {
+    top: 50%;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    border-left: 0;
+    border-top: 1px dashed var(--paper-line);
+  }
+}
+@media (max-width: 1279px) {
+  .workbench .cs-stacks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 40px;
+  }
+}
+
+/* The 404 (R19): the sheet, the closed road, the way home. */
+.workbench .cs-nf-art {
+  display: block;
+  overflow: visible;
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .cs-nf-hatch {
+  stroke: var(--ink-on-dark);
+  stroke-width: 1.5;
+}
+.workbench .cs-nf-barricade {
+  stroke: var(--ink-on-dark);
+  stroke-width: 1;
+}
+.workbench .cs-nf-plate {
+  fill: var(--da-ground);
+  stroke: var(--ink-on-dark);
+  stroke-width: 1;
+}
+.workbench .cs-nf-beyond {
+  fill: var(--canvas);
+  opacity: 0.55;
+}
+.workbench .cs-detour {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 8 6;
+  fill: none;
+}
+.workbench .cs-detour-head {
+  stroke-dasharray: none;
+}
+.workbench .cs-detour-box {
+  fill: var(--canvas-tint);
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+.workbench .cs-nf-foot {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 32px 40px;
+}
+.workbench .cs-nf-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.workbench .cs-nf-text h1 {
+  margin: 0;
+}
+.workbench .cs-nf-foot .pri {
+  width: auto;
+  margin-left: auto;
+  padding: 0 28px;
+  text-decoration: none;
+}
+
+/* The phone artboard: everything stacks; 01's strip becomes three
+   stacked stations; no road, no marker (hidden below 980 above). */
+@media (max-width: 767px) {
+  .workbench .cs-strip3 {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 16px;
+  }
+  .workbench .cs-strip3 > .cs-station,
+  .workbench .cs-strip3 > .cs-step-text {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .workbench .cs-step-text {
+    padding: 16px;
+    border-right: 0;
+  }
+  .workbench .cs-step-text + .cs-station {
+    border-top: 1px solid var(--rule);
+  }
+  .workbench .cs-station-div,
+  .workbench .cs-station-flow {
+    display: none;
+  }
+  .workbench .cs-stacks {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    margin-top: 16px;
+  }
+  .workbench .cs-who {
+    margin-top: 16px;
+  }
+  .workbench .cs-who-card {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+  .workbench .cs-founders {
+    margin-top: 16px;
+  }
+  .workbench .cs-founders-note {
+    padding: 20px 16px;
+  }
+  .workbench .cs-founders-head,
+  .workbench .cs-founder {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .workbench .cs-nf-foot {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 20px 12px;
+  }
+  .workbench .cs-nf-foot .pri {
+    width: 100%;
     margin-left: 0;
+  }
+  .workbench .cs-nf-scale {
+    display: none;
   }
 }
 
@@ -5736,7 +6177,11 @@ input[type="number"] {
    for the query) nothing below applies and the drawing is static in its
    end state.  Opacity and a mask's scale only — nothing moves a box
    (P1).  Recorded as a deviation in checkpoint-arc2.md; pinned by
-   lib/design/motion.test.ts. */
+   lib/design/motion.test.ts.
+   Arc 3 extends the exception twice, both recorded (rulings.md R13,
+   R15): the milepost road's scroll highlight, which is script, not CSS
+   (components/coming-soon/MilepostRoad.tsx — static under reduced
+   motion), and 02's fan transition, the one transition in this block. */
 @media (prefers-reduced-motion: no-preference) {
   .workbench .cs-draw {
     transform-box: fill-box;
@@ -5745,6 +6190,13 @@ input[type="number"] {
   }
   .workbench .cs-fade {
     animation: cs-fade 0.5s ease-out both;
+  }
+  /* R15 — 02's fan, eased over a quarter second, only here: with reduced
+     motion the sheets change place with no movement between. */
+  .workbench .cs-s1,
+  .workbench .cs-s2,
+  .workbench .cs-s3 {
+    transition: transform 0.25s ease-out;
   }
 }
 @keyframes cs-draw {

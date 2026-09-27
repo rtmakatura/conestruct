@@ -5,7 +5,7 @@
 
 Two primary users. Both are producing an MHT (a traffic-control plan package) for a specific job, and neither is a traffic engineer.
 
-**The field sales rep.** On site or just back from it, on a laptop or phone, needs an impromptu MHT to attach to a bid today. Knows where the work is. Does not know MUTCD. Wants: a defensible plan, fast, with a price. Will not read reference material.
+**The field sales rep.** On site or just back from it, on a laptop or phone, needs an impromptu MHT to attach to a bid today. Knows where the work is. Wants: a defensible plan, fast, with a price. Will not read reference material.
 
 **The office estimator.** At a desk, building a draft or a point of reference for a quote. Knows the job from a description or a set of coordinates. More patient than the rep, still not an engineer. Wants: a plan that will survive review, a device count that drives the number, and the ability to come back and adjust deliberately.
 

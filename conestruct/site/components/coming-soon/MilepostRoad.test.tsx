@@ -224,6 +224,33 @@ describe("R13 / A3-Q3 — prefers-reduced-motion: reduce", () => {
   });
 });
 
+describe("R14 — the marker never covers the nav", () => {
+  it("in a window tall enough to start the highlight at the top, it waits until the nav has scrolled away", () => {
+    Object.defineProperty(window, "innerHeight", { value: 3000, configurable: true, writable: true });
+    const nav = document.createElement("nav");
+    document.body.prepend(nav);
+    const real = Element.prototype.getBoundingClientRect as unknown as { getMockImplementation(): (this: Element) => DOMRect };
+    const inner = real.getMockImplementation();
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
+      if (this.tagName === "NAV") {
+        const top = -window.scrollY;
+        return { top, bottom: top + 52, height: 52, left: 0, right: 0, width: 0, x: 0, y: top, toJSON() {} } as DOMRect;
+      }
+      return inner.call(this);
+    });
+    const { marker, reveal } = mount();
+    expect(reveal()).toBeGreaterThan(0);
+    expect(marker().hidden).toBe(true);
+    scrollTo(30);
+    drain();
+    expect(marker().hidden).toBe(true);
+    scrollTo(60);
+    drain();
+    expect(marker().hidden).toBe(false);
+    nav.remove();
+  });
+});
+
 describe("R13 / R14 — below 980 px", () => {
   it("the marker never shows", () => {
     media.wide = false;

@@ -1,5 +1,7 @@
+import { Fragment } from "react";
 import {
   CLOSE,
+  FOUNDERS,
   HAND_OVER,
   HERO,
   HOW,
@@ -10,19 +12,34 @@ import {
   TITLE_BLOCK,
   WHO,
 } from "@/lib/coming-soon-copy";
+import {
+  ColoradoMap,
+  DetailDrawing,
+  LaptopArt,
+  PhoneArt,
+  StackArt,
+  StationDrawing,
+} from "./LowerDrawings";
+import { MilepostRoad } from "./MilepostRoad";
+import { PaperStack } from "./PaperStack";
 import { PlanDrawing } from "./PlanDrawing";
-import { StepDrawing } from "./StepDrawings";
 
 // The coming-soon page, B+ "The Plan Sheet" (coming-soon-gate R5a).
 // Authority: design/PlanSheet.dc.html (1440) and PlanSheetPhone.dc.html
-// (390) — rebuilt here on workbench tokens and type roles, never pasted.
-// Every word is in lib/coming-soon-copy.ts; every colour is a token
-// (checkpoint-arc2.md §2).  Serves the prospect (FLOW.md §1, R3): what
-// this is, whether it is for them, and a way to hear when it opens.
+// (390) for the sheet; design/FullPage.dc.html for sections 01 → close
+// (Arc 3, R12) — rebuilt here on workbench tokens and type roles, never
+// pasted.  Every word is in lib/coming-soon-copy.ts; every colour is a
+// token (checkpoint-arc2.md §2, checkpoint-arc3.md).  Serves the prospect
+// (FLOW.md §1, R3): what this is, whether it is for them, and a way to
+// hear when it opens.
 //
 // A2-Q1: no form.  "Get notified" is a mail link, in three places: the
 // nav, the sheet (the page's one primary, P18) and the closing band (the
 // outlined secondary, A2-Q10).  Nothing links to /sign-in (R1.5).
+//
+// Arc 3: the sheet is unchanged (R12).  Sections 01 → close sit beside
+// the milepost road (R13), each milepost section marked data-milepost;
+// 05 is the founders' note (R17), which the road's work zone runs past.
 
 function SectionHead({ id, n, title, prov }: { id: string; n: string; title: string; prov?: string }) {
   return (
@@ -113,77 +130,121 @@ export function ComingSoon() {
 
       <Sheet />
 
-      <section id="how" className="cs-section" aria-labelledby="cs-how">
-        <SectionHead id="cs-how" n={HOW.n} title={HOW.title} prov={HOW.prov} />
-        <div className="cs-cards cs-cards-3">
-          {HOW.steps.map((s, i) => (
-            <div key={s.step} className="cs-card">
-              <StepDrawing step={i as 0 | 1 | 2} />
-              <div className="cs-card-text">
-                <span className="tr-step">{s.step}</span>
-                <h3 className="cs-title">{s.title}</h3>
-                <p className="cs-body">{s.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="cs-section" aria-labelledby="cs-hand">
-        <SectionHead id="cs-hand" n={HAND_OVER.n} title={HAND_OVER.title} prov={HAND_OVER.prov} />
-        <div className="cs-strip">
-          {HAND_OVER.items.map((it) => (
-            <div key={it.step} className="cs-strip-item">
-              <span className="tr-step">{it.step}</span>
-              <h3 className="cs-title">{it.title}</h3>
-              <p className="cs-body">{it.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="sources" className="cs-section" aria-labelledby="cs-sources">
-        <SectionHead id="cs-sources" n={SOURCES.n} title={SOURCES.title} />
-        <div className="cs-sources">
-          <div className="cs-sources-text">
-            <h3 className="tr-question">{SOURCES.question}</h3>
-            <p className="cs-body cs-measure">{SOURCES.body}</p>
+      <MilepostRoad>
+        <section id="how" className="cs-section" data-milepost="0" aria-labelledby="cs-how">
+          <SectionHead id="cs-how" n={HOW.n} title={HOW.title} prov={HOW.prov} />
+          <p className="sr-only">{HOW.strip}</p>
+          <div className="cs-strip3">
+            {HOW.steps.map((s, i) => (
+              <Fragment key={s.step}>
+                <div className={`cs-station cs-at-${i}`}>
+                  <StationDrawing i={i as 0 | 1 | 2} />
+                </div>
+                <div className={`cs-step-text cs-at-${i}`}>
+                  <h3 className="cs-title">{s.title}</h3>
+                  <p className="cs-body">{s.body}</p>
+                </div>
+              </Fragment>
+            ))}
           </div>
-          <div className="cs-sources-refs">
-            <span className="tr-prov">{SOURCES.prov}</span>
-            <ul className="cs-chips">
-              {SOURCES.chips.map((c) => (
-                <li key={c} className="tr-prov cs-chip">
-                  {c}
-                </li>
+        </section>
+
+        <section className="cs-section" data-milepost="1" aria-labelledby="cs-hand">
+          <SectionHead id="cs-hand" n={HAND_OVER.n} title={HAND_OVER.title} prov={HAND_OVER.prov} />
+          <div className="cs-stacks">
+            {HAND_OVER.items.map((it, i) => (
+              <PaperStack key={it.step}>
+                <StackArt i={i as 0 | 1 | 2 | 3} />
+                <div className="cs-stack-text">
+                  <span className="tr-step">{it.step}</span>
+                  <h3 className="cs-title">{it.title}</h3>
+                  <p className="cs-body">{it.body}</p>
+                </div>
+              </PaperStack>
+            ))}
+          </div>
+        </section>
+
+        <section id="sources" className="cs-section" data-milepost="2" aria-labelledby="cs-sources">
+          <SectionHead id="cs-sources" n={SOURCES.n} title={SOURCES.title} />
+          <div className="cs-sources">
+            <div className="cs-sources-text">
+              <h3 className="tr-question">{SOURCES.question}</h3>
+              <p className="cs-body">{SOURCES.body}</p>
+              <span className="tr-prov cs-sources-prov">{SOURCES.prov}</span>
+              <ul className="cs-chips">
+                {SOURCES.chips.map((c) => (
+                  <li key={c} className="tr-prov cs-chip">
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="cs-detail">
+              <DetailDrawing />
+            </div>
+          </div>
+        </section>
+
+        <section className="cs-section" data-milepost="3" aria-labelledby="cs-who">
+          <SectionHead id="cs-who" n={WHO.n} title={WHO.title} prov={WHO.prov} />
+          <div className="cs-who">
+            {WHO.people.map((p, i) => (
+              <Fragment key={p.step}>
+                {i === 1 && (
+                  <div className="cs-same">
+                    <span className="tr-prov cs-on-ink">{WHO.same}</span>
+                  </div>
+                )}
+                <div className="cs-who-card">
+                  {i === 0 ? <PhoneArt /> : <LaptopArt />}
+                  <div className="cs-who-text">
+                    <span className="tr-step">{p.step}</span>
+                    <h3 className="cs-title">{p.title}</h3>
+                    <p className="cs-body">{p.body}</p>
+                  </div>
+                </div>
+              </Fragment>
+            ))}
+          </div>
+        </section>
+
+        <section className="cs-section" aria-labelledby="cs-founders">
+          <SectionHead id="cs-founders" n={FOUNDERS.n} title={FOUNDERS.title} prov={FOUNDERS.prov} />
+          <div className="cs-founders">
+            <div className="cs-founders-note">
+              <h3 className="tr-question">{FOUNDERS.headline}</h3>
+              {FOUNDERS.paragraphs.map((p) => (
+                <p key={p.slice(0, 24)} className="cs-body">
+                  {p}
+                </p>
               ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="cs-section" aria-labelledby="cs-who">
-        <SectionHead id="cs-who" n={WHO.n} title={WHO.title} prov={WHO.prov} />
-        <div className="cs-cards cs-cards-2">
-          {WHO.people.map((p) => (
-            <div key={p.step} className="cs-card cs-card-pad">
-              <span className="tr-step">{p.step}</span>
-              <h3 className="cs-title">{p.title}</h3>
-              <p className="cs-body">{p.body}</p>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className="cs-founders-side">
+              <h4 className="tr-section cs-founders-head">{FOUNDERS.signoff}</h4>
+              <ul className="cs-founders-list">
+                {FOUNDERS.people.map(([name, role]) => (
+                  <li key={name} className="cs-founder">
+                    <span className="cs-title">{name}</span>
+                    <span className="tr-step">{role}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
 
-      <section className="cs-close" aria-label={CLOSE.title}>
-        <div className="cs-close-text">
-          <span className="tr-section">{CLOSE.title}</span>
-          <p className="cs-body">{CLOSE.body}</p>
-        </div>
-        <a className="dl-btn cs-close-btn" href={NOTIFY_HREF}>
-          {CLOSE.link}
-        </a>
-      </section>
+        <section className="cs-close" data-milepost="4" aria-label={CLOSE.title}>
+          <ColoradoMap />
+          <div className="cs-close-text">
+            <span className="tr-section">{CLOSE.title}</span>
+            <p className="cs-body">{CLOSE.body}</p>
+          </div>
+          <a className="dl-btn cs-close-btn" href={NOTIFY_HREF}>
+            {CLOSE.link}
+          </a>
+        </section>
+      </MilepostRoad>
     </div>
   );
 }

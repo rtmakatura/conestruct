@@ -14,12 +14,17 @@ import { Wordmark } from "./Wordmark";
 // anchors and "Get notified", a mail link (A2-Q1) — and a full-width main
 // for the Plan Sheet.  Terms and Privacy keep the wordmark-only nav and
 // the generator's column.
+//
+// `wide` (Arc 3, R19): the 404's chrome — the wordmark-only nav and the
+// sheet's full-width main (design/NotFound.dc.html), no in-page anchors.
 export function PublicChrome({
   children,
   sheet = false,
+  wide = false,
 }: {
   children: React.ReactNode;
   sheet?: boolean;
+  wide?: boolean;
 }) {
   return (
     <div className="workbench min-h-screen flex flex-col">
@@ -39,7 +44,7 @@ export function PublicChrome({
           </>
         )}
       </nav>
-      {sheet ? (
+      {sheet || wide ? (
         <main className="flex-1 w-full [container-type:inline-size]">{children}</main>
       ) : (
         /* The generator's column (GeneratorShell.tsx:1749, Part 2 rule 24).

@@ -16,7 +16,8 @@ import {
 // rulings.md; the route table in middleware.test.ts is its spec).
 //
 // R1.2 — only `/`, `/terms`, `/privacy`, `/sign-in` and the Clerk webhook
-//        are public; every other path, `/api/*` included, is gated.
+//        are public (A3-Q2 adds `/404`, the "Road closed" page); every
+//        other path, `/api/*` included, is gated.
 // R1.3 — a signed-in user passes only if their VERIFIED primary email is
 //        in GATE_ALLOWED_EMAILS.  This holds whatever the Clerk dashboard
 //        says: public sign-up being closed there is defence in depth.
