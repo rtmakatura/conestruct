@@ -1,0 +1,406 @@
+{
+ "plan-1x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.488587",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "quote-1x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.426294",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "audit-1x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.426553",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "crew-1x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.426173",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "plan-1x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.565157",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "quote-1x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.570898",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "audit-1x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.565175",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "crew-1x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.565153",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "plan-2x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.42656",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "quote-2x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.426932",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "audit-2x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.48858",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "crew-2x-real": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.42618",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "plan-2x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.570895",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "quote-2x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.56519",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "audit-2x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 8,
+   "fan": "0.565176",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "crew-2x-slow": {
+  "mid": {
+   "fanned": true,
+   "running": 7,
+   "fan": "0.565161",
+   "marksAtRest": false
+  },
+  "settled": {
+   "fanned": true,
+   "running": 0,
+   "fan": "1",
+   "marksAtRest": true
+  },
+  "back": {
+   "fanned": false,
+   "running": 0,
+   "fan": "0",
+   "marksAtRest": true
+  },
+  "rotated": [],
+  "moved": []
+ },
+ "plan-touch": {
+  "fanned": false,
+  "running": 0,
+  "fan": "0",
+  "marksAtRest": true
+ },
+ "quote-touch": {
+  "fanned": false,
+  "running": 0,
+  "fan": "0",
+  "marksAtRest": true
+ },
+ "audit-touch": {
+  "fanned": false,
+  "running": 0,
+  "fan": "0",
+  "marksAtRest": true
+ },
+ "crew-touch": {
+  "fanned": false,
+  "running": 0,
+  "fan": "0",
+  "marksAtRest": true
+ },
+ "plan-reduce": {
+  "fanned": true,
+  "running": 0,
+  "fan": "1",
+  "marksAtRest": true,
+  "transition": "0s"
+ },
+ "quote-reduce": {
+  "fanned": true,
+  "running": 0,
+  "fan": "1",
+  "marksAtRest": true,
+  "transition": "0s"
+ },
+ "audit-reduce": {
+  "fanned": true,
+  "running": 0,
+  "fan": "1",
+  "marksAtRest": true,
+  "transition": "0s"
+ },
+ "crew-reduce": {
+  "fanned": true,
+  "running": 0,
+  "fan": "1",
+  "marksAtRest": true,
+  "transition": "0s"
+ }
+}
