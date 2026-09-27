@@ -5546,38 +5546,34 @@ input[type="number"] {
   background: var(--da-ground);
   color: var(--ink);
 }
-/* Closing band (R18): the map | the words | "Get notified".  The link
-   is rule 132's ghost (.dl-btn) — the outlined secondary (A2-Q10); the
-   sheet's .pri is the one primary.  Below 1280 the link goes under the
-   words. */
+/* Closing band (R18, R22): one row — the map, then one left-aligned
+   stack ("BUILT IN COLORADO", the sentence, "Get notified" 16 px below),
+   centred on the map, 40 px from it.  The band keeps the sections' edges
+   (P4) and equal 40 px padding; the row sits centred inside it, so no
+   half of the band is left empty.  The link is rule 132's ghost
+   (.dl-btn) — the outlined secondary (A2-Q10); the sheet's .pri is the
+   one primary. */
 .workbench .cs-close {
-  display: grid;
-  grid-template-columns: 320px minmax(0, 1fr) auto;
-  gap: 24px 40px;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  gap: 40px;
   margin-top: 120px;
   padding: 40px;
   border: 1px solid var(--rule);
   background: var(--da-ground);
 }
-.workbench .cs-close-text {
+.workbench .cs-close-stack {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
+  min-width: 0;
 }
 .workbench .cs-close .dl-btn {
-  margin-top: 0;
+  margin-top: 8px;
   padding: 0 28px;
   text-decoration: none;
-}
-@media (max-width: 1279px) {
-  .workbench .cs-close {
-    grid-template-columns: 320px minmax(0, 1fr);
-  }
-  .workbench .cs-close .dl-btn {
-    grid-column: 2;
-    justify-self: start;
-  }
 }
 
 /* The phone artboard (PlanSheetPhone.dc.html). */
@@ -5672,16 +5668,20 @@ input[type="number"] {
     padding: 0 10px;
   }
   /* The map is 320 px; 12 px sides keep it inside a 380 px screen. */
+  /* Phone (R22): the map on top, the stack below, one left edge. */
   .workbench .cs-close {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 16px;
     margin-top: 72px;
     padding: 24px 12px;
   }
+  .workbench .cs-close-stack {
+    align-self: stretch;
+  }
   .workbench .cs-close .dl-btn {
-    grid-column: auto;
-    justify-self: stretch;
+    align-self: stretch;
   }
 }
 
@@ -5861,8 +5861,13 @@ input[type="number"] {
 .workbench .cs-stack[data-move="plan"] .cs-s2 {
   transform: translate(calc(var(--fan) * 12px), calc(var(--fan) * -3px)) rotate(calc(var(--fan) * 3deg));
 }
+/* R22: the front sheet shifts but does not tilt.  Settled, it was painted
+   as vector (measured on prod 2026-09-27: shape-rendering auto, no compositor layer),
+   yet a 2 px near-white line tilted 3° must change pixel row every
+   ~19 px (1 / tan 3°), which reads as a stair at 1×.  Only the
+   low-contrast back sheets rotate. */
 .workbench .cs-stack[data-move="plan"] .cs-s1 {
-  transform: translate(calc(var(--fan) * -10px), calc(var(--fan) * -2px)) rotate(calc(var(--fan) * -3deg));
+  transform: translate(calc(var(--fan) * -10px), calc(var(--fan) * -2px));
 }
 /* 2 — the count and the quote: the sheets slide apart downward. */
 .workbench .cs-stack[data-move="quote"] .cs-s3 {
@@ -5879,9 +5884,11 @@ input[type="number"] {
   transform: translate(calc(var(--fan) * 4px), calc(var(--fan) * 2px));
 }
 /* 4 — the crew sheet: lifts from its top edge, like a clipboard. */
+/* R22: the lift is a whole-pixel move — the 0.97 scale it had put every
+   horizontal line on a fractional row, soft at 1× once settled. */
 .workbench .cs-stack[data-move="crew"] .cs-s1 {
   transform-origin: 50% 0;
-  transform: translateY(calc(var(--fan) * -5px)) scaleY(calc(1 - var(--fan) * 0.03));
+  transform: translateY(calc(var(--fan) * -5px));
 }
 .workbench .cs-stack[data-move="crew"] .cs-s2 {
   transform-origin: 50% 0;
@@ -6089,9 +6096,6 @@ input[type="number"] {
 .workbench .cs-map-pin {
   stroke: var(--dim);
   fill: none;
-}
-.workbench .cs-map-pin-dot {
-  fill: var(--dim);
 }
 
 @media (min-width: 1280px) {

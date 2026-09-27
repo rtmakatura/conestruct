@@ -413,14 +413,24 @@ export function LaptopArt() {
 // Plotted equirectangular from lat/long into a 286 × 210 box
 // (−109.05°…−102.05°, 37°…41°); every city within 2 px of its true
 // position (checkpoint-arc3.md §3).  A drawing, named as one (A3-Q4).
-// In CLOSE.map.cities order: dot x, dot y, label x, label y.
-const CITIES: readonly (readonly [number, number, number, number])[] = [
-  [170.2, 29.5, 180.2, 35.5], // fort collins
-  [180.8, 121.9, 190.8, 127.9], // colorado springs
-  [189.4, 152.4, 199.4, 158.4], // pueblo
-  [28.4, 109.8, 36.4, 125.8], // grand junction
-  [55.8, 203.8, 63.8, 208.8], // durango
+//
+// R22: schematic — the four route cities sit ON their interstate (Fort
+// Collins, Colorado Springs and Pueblo on I-25's vertices, Grand
+// Junction on I-70's; only Fort Collins moved, 4.1 px east from its
+// true 172.2), Durango stays off-route.  A city name of two words is set
+// on two lines beside its marker so it stays inside the box.
+// In CLOSE.map.cities order: marker centre x, y; label x, first baseline
+// y; whether the name breaks onto two lines (only where one line would
+// cross the box edge at x 296).
+const CITIES: readonly (readonly [number, number, number, number, boolean])[] = [
+  [176.3, 31.5, 182.3, 35.5, false], // fort collins — on I-25
+  [182.8, 123.9, 188.8, 122.4, true], // colorado springs — on I-25, two lines
+  [191.4, 154.4, 197.4, 158.4, false], // pueblo — on I-25
+  [30.4, 111.8, 36.4, 125.8, false], // grand junction — on I-70
+  [57.8, 205.8, 63.8, 208.8, false], // durango — off-route
 ];
+// I-25 × I-70 (the polylines' shared vertex): Denver's ring.
+const JUNCTION = [175.9, 76.1] as const;
 
 export function ColoradoMap() {
   const m = CLOSE.map;
@@ -453,18 +463,28 @@ export function ColoradoMap() {
         />
       </g>
       <rect className="cs-map-road" x="10" y="10" width="286" height="210" />
-      {CITIES.map(([x, y, lx, ly], k) => (
-        <g key={m.cities[k]}>
-          <rect className="cs-map-city" x={x} y={y} width="4" height="4" />
-          <text className="tr-step" fill="currentColor" x={lx} y={ly}>
-            {m.cities[k]}
-          </text>
-        </g>
-      ))}
-      <path className="cs-map-pin" d="M175.9 76.1V58.1" />
-      <circle className="cs-map-pin cs-pin" cx="175.9" cy="52.1" r="6" />
-      <circle className="cs-map-pin-dot" cx="175.9" cy="76.1" r="3" />
-      <text className="tr-prov cs-on-ink" fill="currentColor" x="185.9" y="56.1">
+      {CITIES.map(([x, y, lx, ly, two], k) => {
+        const words = two ? m.cities[k].split(" ") : [m.cities[k]];
+        return (
+          <g key={m.cities[k]} className="cs-map-town">
+            <rect className="cs-map-city" x={x - 2} y={y - 2} width="4" height="4" />
+            <text className="tr-step" fill="currentColor" x={lx} y={ly}>
+              {words.length === 1
+                ? words[0]
+                : words.map((w, i) => (
+                    <tspan key={w} x={lx} dy={i === 0 ? 0 : 11}>
+                      {w}
+                    </tspan>
+                  ))}
+            </text>
+          </g>
+        );
+      })}
+      {/* R22: Denver is a ring on the junction, its name upper-right, in
+          the quarter the two roads leave clear (I-25 runs north at
+          x ≈ 176, I-70 east and down). */}
+      <circle className="cs-map-pin cs-pin cs-map-denver" cx={JUNCTION[0]} cy={JUNCTION[1]} r="6" />
+      <text className="tr-prov cs-on-ink" fill="currentColor" x={JUNCTION[0] + 8} y={JUNCTION[1] - 9}>
         {m.pinned}
       </text>
       <text className="tr-step" fill="currentColor" x="186" y="20">

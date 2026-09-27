@@ -292,7 +292,7 @@ describe("Arc 3 — the closing band (R18, A3-Q4)", () => {
     const words = [...map.querySelectorAll("text")].map((t) => t.textContent);
     for (const w of [
       "fort collins",
-      "colorado springs",
+      "coloradosprings",
       "pueblo",
       "grand junction",
       "durango",
@@ -305,5 +305,73 @@ describe("Arc 3 — the closing band (R18, A3-Q4)", () => {
     }
     expect(map.querySelectorAll(".cs-map-city")).toHaveLength(5);
     expect(c.querySelector(".cs-close .tr-section")?.textContent).toBe("Built in Colorado");
+  });
+});
+
+// R22 — the polish round.
+describe("R22 — the map, 01's words and the close band", () => {
+  const num = (el: Element, a: string) => Number(el.getAttribute(a));
+  // A point's distance to a polyline "M x y L x y …".
+  const offRoute = (px: number, py: number, d: string) => {
+    const p = [...d.matchAll(/-?\d+(\.\d+)?/g)].map((m) => Number(m[0]));
+    let best = Infinity;
+    for (let i = 0; i + 3 < p.length; i += 2) {
+      const [ax, ay, bx, by] = [p[i], p[i + 1], p[i + 2], p[i + 3]];
+      const t = Math.max(0, Math.min(1, ((px - ax) * (bx - ax) + (py - ay) * (by - ay)) / ((bx - ax) ** 2 + (by - ay) ** 2)));
+      best = Math.min(best, Math.hypot(px - (ax + t * (bx - ax)), py - (ay + t * (by - ay))));
+    }
+    return best;
+  };
+
+  it("Colorado Springs is set on two lines inside the box, right of its marker", () => {
+    const map = mount().querySelector(".cs-map")!;
+    const town = [...map.querySelectorAll(".cs-map-town")].find((g) => g.textContent === "coloradosprings")!;
+    const marker = town.querySelector(".cs-map-city")!;
+    expect([...town.querySelectorAll("tspan")].map((t) => t.textContent)).toEqual(["colorado", "springs"]);
+    expect(num(town.querySelector("text")!, "x")).toBeGreaterThan(num(marker, "x") + 4);
+  });
+
+  it("the four route cities sit on their interstate, Durango off it; Denver is a ring on the junction; still 'not a road map'", () => {
+    const map = mount().querySelector(".cs-map")!;
+    const [i25, i70] = [...map.querySelectorAll("path.cs-map-road")].map((p) => p.getAttribute("d")!);
+    const centre = (name: string) => {
+      const g = [...map.querySelectorAll(".cs-map-town")].find((t) => t.textContent === name)!;
+      const r = g.querySelector(".cs-map-city")!;
+      return [num(r, "x") + 2, num(r, "y") + 2] as const;
+    };
+    for (const n of ["fort collins", "coloradosprings", "pueblo"]) expect(offRoute(...centre(n), i25), n).toBeLessThan(0.5);
+    expect(offRoute(...centre("grand junction"), i70)).toBeLessThan(0.5);
+    const durango = centre("durango");
+    expect(Math.min(offRoute(...durango, i25), offRoute(...durango, i70))).toBeGreaterThan(20);
+    const ring = map.querySelector(".cs-map-denver")!;
+    expect(ring.tagName.toLowerCase()).toBe("circle");
+    expect(offRoute(num(ring, "cx"), num(ring, "cy"), i25)).toBeLessThan(0.5);
+    expect(offRoute(num(ring, "cx"), num(ring, "cy"), i70)).toBeLessThan(0.5);
+    // No stem: nothing else in the pin's colour.
+    expect(map.querySelectorAll(".cs-map-pin")).toHaveLength(1);
+    const label = [...map.querySelectorAll("text")].find((t) => t.textContent === "denver")!;
+    expect(num(label, "x")).toBeGreaterThan(num(ring, "cx"));
+    expect(num(label, "y")).toBeLessThan(num(ring, "cy"));
+    expect(map.getAttribute("aria-label")).toContain("not a road map");
+  });
+
+  it("01's three step texts are R22's, verbatim", () => {
+    const c = mount();
+    expect([...c.querySelectorAll(".cs-step-text p")].map((p) => p.textContent)).toEqual([
+      "Type an address or two cross streets, or drop a pin. It's how an 811 ticket already describes a job. Conestruct finds the road, which way it runs, and whose road it is.",
+      "Tell it the kind of work, how long, and which side. The road's own details come filled in for you to check. The kind of work is always your call.",
+      "You get the drawing and the device count, with a contractor estimate one click away. Anything that needs a person shows up first. Everything that passed is there when you want it.",
+    ]);
+  });
+
+  it("the close band is the map and ONE stack: the label, the sentence, then 'Get notified'", () => {
+    const close = mount().querySelector(".cs-close")!;
+    expect([...close.children].map((e) => e.getAttribute("class")?.split(" ")[0])).toEqual(["cs-map", "cs-close-stack"]);
+    const stack = close.querySelector(".cs-close-stack")!;
+    expect([...stack.children].map((e) => e.textContent)).toEqual([
+      "Built in Colorado",
+      "For the people who set the cones, and the people who price them.",
+      "Get notified",
+    ]);
   });
 });

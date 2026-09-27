@@ -23,3 +23,17 @@ describe("R13 — the road's column", () => {
     expect(css.slice(wide, wide + 600)).toMatch(/\.cs-road-svg \{[^}]*display: block;/);
   });
 });
+
+describe("R22 — 02's front sheets settle on whole pixels, untilted", () => {
+  it("the plan card's front sheet shifts but never rotates, and the crew sheet lifts without scaling (a tilted 2 px line or a scaled row reads jagged or soft at 1×)", () => {
+    const rule = (m: string) => {
+      const at = css.indexOf(`.cs-stack[data-move="${m}"] .cs-s1 {`);
+      expect(at, m).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf("}", at));
+    };
+    expect(rule("plan")).toMatch(/transform: translate\(/);
+    expect(rule("plan")).not.toMatch(/rotate/);
+    expect(rule("crew")).toMatch(/transform: translateY\(/);
+    expect(rule("crew")).not.toMatch(/scale/);
+  });
+});

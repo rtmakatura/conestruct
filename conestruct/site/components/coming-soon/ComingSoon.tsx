@@ -237,13 +237,13 @@ export function ComingSoon() {
 
         <section className="cs-close" data-milepost="4" aria-label={CLOSE.title}>
           <ColoradoMap />
-          <div className="cs-close-text">
+          <div className="cs-close-stack">
             <span className="tr-section">{CLOSE.title}</span>
             <p className="cs-body">{CLOSE.body}</p>
+            <a className="dl-btn cs-close-btn" href={NOTIFY_HREF}>
+              {CLOSE.link}
+            </a>
           </div>
-          <a className="dl-btn cs-close-btn" href={NOTIFY_HREF}>
-            {CLOSE.link}
-          </a>
         </section>
       </MilepostRoad>
     </div>

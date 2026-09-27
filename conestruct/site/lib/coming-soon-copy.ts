@@ -62,6 +62,7 @@ export const NOTIFY = {
   line: "Email us and we'll write back once, when Conestruct opens.",
 } as const;
 
+// R22: the three step bodies are Ryan's, verbatim.
 // Arc 3 (R15): 01 is one road drawn three times — the pin → job → plan
 // strip — with the three step texts under it.
 export const HOW = {
@@ -78,19 +79,19 @@ export const HOW = {
     {
       step: "STEP 1 · PIN",
       title: "Mark the work",
-      body: "An address, a cross-street pair, or a pin — the way an 811 ticket describes it. The system finds the road, its direction and who owns it.",
+      body: "Type an address or two cross streets, or drop a pin. It's how an 811 ticket already describes a job. Conestruct finds the road, which way it runs, and whose road it is.",
       label: "work starts here",
     },
     {
       step: "STEP 2 · JOB",
       title: "Say what the job is",
-      body: "Kind of work, length, which side. The road's own details come filled in for you to check — the kind of work is always yours to confirm.",
+      body: "Tell it the kind of work, how long, and which side. The road's own details come filled in for you to check. The kind of work is always your call.",
       label: "the work · its length · its side",
     },
     {
       step: "STEP 3 · PLAN",
       title: "Take the plan",
-      body: "The drawing and the device count, with a contractor estimate one click away — anything that needs a person flagged first, everything that passed one click away.",
+      body: "You get the drawing and the device count, with a contractor estimate one click away. Anything that needs a person shows up first. Everything that passed is there when you want it.",
       label: "laid out around it",
     },
   ],
