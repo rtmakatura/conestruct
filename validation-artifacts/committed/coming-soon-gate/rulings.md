@@ -94,3 +94,13 @@ Headline "Ninety years of hard-won rules." Three paragraphs as in the artboard. 
 **R19 — 404:** "Road closed" page per `NotFound.dc.html`, drawn in the site's linework (outlined hatched barricade, outlined ROAD CLOSED sign, dashed DETOUR to home). Public, like `/`.
 
 **R20 — FLOW.md §1:** delete the sentence "Does not know MUTCD." from the field sales rep (Ryan: it's false). No replacement text.
+
+## Arc 3 checkpoint rulings (Ryan, 2026-09-27) — cite as A3-Qn
+
+- **A3-Q1** — R17's third paragraph becomes: "It applies the manual to your road, shows the source for every taper, buffer and spacing, and leaves the calls that need experience to the people who have it." (Matches the hero and 02; the full-number claim waits on A2-I.) The canvas artboard is updated to match; the committed `design/FullPage.dc.html` is superseded on this one sentence only.
+- **A3-Q2** — `/404` joins the gate's public paths. Unknown paths still go to `/`; pin both in the middleware table test.
+- **A3-Q3** — The milepost marker shows under reduced motion too, updating per stretch with no transition.
+- **A3-Q4** — The map's accessible label opens "Drawing of Colorado, not a road map…". Approved.
+- **Heads-up acknowledged** — 03's heading "Every dimension has a source" stays (A2-Q6); it's revisited when A2-I lands.
+
+Build straight through to the diff-verifier, then stop before ship. Put the ship line and post-ship legs in your report.
