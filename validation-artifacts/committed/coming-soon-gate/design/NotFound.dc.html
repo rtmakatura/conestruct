@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Road closed — Conestruct</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#14202e;color:#c8d1dd}
+a{color:#34a9e8}a:hover{color:#56bcf2}
+a:focus-visible{outline:2px solid #56bcf2;outline-offset:2px}
+.pri:hover{background:#56bcf2}
+.step{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;line-height:1.2;letter-spacing:.12em;color:#93a0b0}
+.prov{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;line-height:1.5;letter-spacing:.04em;color:#93a0b0}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; background: #14202e; overflow: hidden">
+<svg width="1440" height="900" viewBox="0 0 1440 900" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+<defs><pattern id="g6" width="48" height="48" patternUnits="userSpaceOnUse" x="12" y="4"><path d="M20 24H28M24 20V28" stroke="#1c2b3b" fill="none"></path></pattern></defs>
+<rect y="53" width="1440" height="847" fill="url(#g6)"></rect>
+</svg>
+
+<nav style="position: relative; display: flex; align-items: stretch; height: 52px; background: #16232f; border-bottom: 1px solid #2c3e53">
+<a href="/" style="display: flex; align-items: center; padding: 0 20px; border-right: 1px solid #2c3e53; font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em; color: #eaf0f7; text-decoration: none">conestruct<span style="color: #ff8a2e">.</span></a>
+</nav>
+
+<section style="position: relative; margin: 40px 40px 0; border: 1px solid #2c3e53; background: rgba(16, 28, 41, 0.72)">
+<div style="display: flex; align-items: center; gap: 24px; height: 40px; padding: 0 20px; border-bottom: 1px solid #223345">
+<span class="step">SHEET</span><span class="step" style="color: #eaf0f7; font-weight: 500; letter-spacing: .18em">404 · PAGE NOT FOUND</span>
+<span class="prov" style="margin-left: auto">not to scale</span>
+</div>
+<svg width="1358" height="400" viewBox="0 0 1358 400" role="img" aria-label="A road closed with a barricade and a Road Closed sign. A dashed detour line leaves the road before the barricade and leads back to the Conestruct home page." style="display: block; border-bottom: 1px solid #2c3e53">
+<path d="M40 150H1318M40 270H1318" stroke="#3a4d66"></path>
+<path d="M40 210H1318" stroke="#2e4058" stroke-dasharray="18 14"></path>
+<path d="M80 180H124M116 174L124 180L116 186M80 240H124M116 234L124 240L116 246" stroke="#93a0b0" fill="none"></path>
+<!-- barricade across both lanes, drawn in the page's linework: outlined bar, hatched -->
+<defs><pattern id="bar" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V8" stroke="#c8d1dd" stroke-width="1.5"></path></pattern></defs>
+<rect x="764" y="150" width="16" height="120" fill="url(#bar)" stroke="#c8d1dd"></rect>
+<text x="772" y="292" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" letter-spacing="0.4" fill="#93a0b0">barricade</text>
+<!-- road closed sign, outlined like the other signs -->
+<path d="M860 270V296" stroke="#c8d1dd"></path>
+<rect x="820" y="296" width="80" height="34" fill="#101c29" stroke="#c8d1dd"></rect>
+<text x="860" y="310" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" font-weight="500" letter-spacing="1.8" fill="#eaf0f7">ROAD</text>
+<text x="860" y="324" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" font-weight="500" letter-spacing="1.8" fill="#eaf0f7">CLOSED</text>
+<!-- beyond the closure: nothing -->
+<rect x="960" y="151" width="358" height="118" fill="#14202e" opacity="0.55"></rect>
+<!-- detour -->
+<path d="M560 150V70H240V40" stroke="#56bcf2" stroke-width="1.5" stroke-dasharray="8 6" fill="none"></path>
+<path d="M234 48L240 38L246 48" stroke="#56bcf2" stroke-width="1.5" fill="none"></path>
+<rect x="520" y="90" width="80" height="28" fill="#16232f" stroke="#56bcf2"></rect>
+<text x="560" y="108" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" letter-spacing="1.4" fill="#eaf0f7">DETOUR</text>
+<text x="252" y="44" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" fill="#eaf0f7">to conestruct.com</text>
+<text x="40" y="352" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" fill="#93a0b0">this page isn't here · the way home is open</text>
+</svg>
+<div style="display: flex; align-items: center; gap: 32px; padding: 32px 40px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-size: 22px; line-height: 1.25; font-weight: 600; color: #eaf0f7">This road is closed.</h1>
+<p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #c8d1dd">The page you were looking for isn't here. The detour takes you home.</p>
+</div>
+<a class="pri" href="/" style="margin-left: auto; display: flex; align-items: center; height: 56px; padding: 0 28px; background: #34a9e8; color: #0c1622; font-size: 15.5px; font-weight: 600; text-decoration: none">Back to conestruct.com</a>
+</div>
+</section>
+
+<footer style="position: absolute; left: 0; right: 0; bottom: 0; height: 64px; box-sizing: border-box; display: flex; align-items: center; gap: 24px; padding: 0 40px; background: #16232f; border-top: 1px solid #2c3e53; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #93a0b0">
+<span>© 2026 Conestruct · Built in Colorado</span>
+<a href="/terms" style="margin-left: auto; color: #93a0b0; text-decoration: none">Terms</a>
+<a href="/privacy" style="color: #93a0b0; text-decoration: none">Privacy</a>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

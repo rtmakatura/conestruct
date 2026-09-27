@@ -73,3 +73,24 @@ Ryan: "yes to all" on the checkpoint's recommendations.
 - **A2-Q10** — the closing "Get notified ↑" is the outlined secondary style; one primary per screen.
 - **A2-T** — type-size exceptions and R10's recorded motion exception as proposed; 9/9.5 px labels become 10 px.
 - **A2-I** — draft a `gh issue create` body for the unflagged lane/shoulder width assumptions (Rule 10); Ryan posts it.
+
+## Arc 3 rulings (Ryan, 2026-09-27, on the Claude Design canvas "Conestruct — Coming soon")
+
+**R12 — The full page is `design/FullPage.dc.html`; the 404 is `design/NotFound.dc.html`.** Reference, not source: rebuild with workbench tokens and existing components; copy is verbatim from the artboards. The hero above section 01 is unchanged from what's live.
+
+**R13 — The milepost road.** A road drawn down the left margin beside sections 01 → close, at 70% opacity, with a milepost at each section (01, 02, 03, 04, CO) and each stretch labelled with its zone word (advance warning, taper, buffer, work zone, downstream). Its stretch colours are `ZONE_COLOR`, used here as labelled decoration (extends R9). As the visitor scrolls, the road highlights from the top down, eased (no stepping), reaching the end of the road exactly at the bottom of the page. Below the highlight, the road fades to transparent, and the fade recedes as they scroll. No vehicle. Under `prefers-reduced-motion`: fully drawn, no fade, static. Hidden below 980 px. This extends R10's motion exception; record it.
+
+**R14 — Milepost marker.** A small fixed box top-right ("MILEPOST 02 · taper" + its colour swatch) that appears once the visitor reaches 01 and updates per stretch. Desktop only (≥ 980 px).
+
+**R15 — Sections 01–04 are "One Road":** 01 the pin → job → plan strip, then the three step texts; 02 the four outputs as paper stacks that **fan out on hover** (no transition under reduced motion; static on touch); 03 the taper-and-buffer detail with dimensions *below* the road and ONE note, "source cited in the audit", with three leaders; 04 the two cards with phone and laptop drawings, text vertically centred.
+
+**R16 — Section headers are dimension lines:** each header rule ends in drafting slash ticks.
+
+**R17 — Section 05, the founders note, verbatim:**
+Headline "Ninety years of hard-won rules." Three paragraphs as in the artboard. Sign-off column headed "The founders": Ryan · Product & engineering; James · Go-to-market & pricing; Zac · Sales & customers. Section tag "a note from the founders".
+
+**R18 — Closing band:** the drawn Colorado map (mountains hatched west of a dashed Front Range line, I-25, I-70, five cities, Denver pinned), "Built in Colorado", outlined "Get notified" mailto.
+
+**R19 — 404:** "Road closed" page per `NotFound.dc.html`, drawn in the site's linework (outlined hatched barricade, outlined ROAD CLOSED sign, dashed DETOUR to home). Public, like `/`.
+
+**R20 — FLOW.md §1:** delete the sentence "Does not know MUTCD." from the field sales rep (Ryan: it's false). No replacement text.
