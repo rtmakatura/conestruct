@@ -1,14 +1,14 @@
 # R21 evidence — 02's stacks: crisp while moving, one move per card
 
 ## `diagnosis/` — why it pixelated (on the Arc 3 code, `5971318`)
-`probe-pixelation.cjs <outdir> <variant>` hovers the plan card at 1440, 1× and 2×, with the transition slowed to 4 s so a frame is truly mid-fan. It reads Chrome's compositor layer tree during the move and crops mid and settled.
+`probe-pixelation.cjs <outdir> <variant>` (output: `probe-output.txt`, transcribed from the console) hovers the plan card at 1440, 1× and 2×, with the transition slowed to 4 s so a frame is truly mid-fan. It reads Chrome's compositor layer tree during the move and crops mid and settled.
 
 | Variant | Layers at rest → mid-fan (1×) | Rotated layers mid-fan | Edge mid-fan |
 |---|---|---|---|
 | Arc 3 as shipped (`transition: transform`) | 40 → 43 | **3 × 217×192** (the three sheets) | stair-stepped: hard 1 px steps along the sheet's top edge and the 2 px title line (`before-mid-vs-settled-1x-zoom5.png`, top) |
-| + `shape-rendering: geometricPrecision` | 40 → 43 | 3 | unchanged |
-| `transform-box: view-box` instead of `fill-box` | 40 → 43 | 3 | unchanged |
-| + `will-change: transform` | 54 → 54 (layers exist before the hover) | 3 | unchanged; permanent layers |
+| + `shape-rendering: geometricPrecision` | 40 → 43 | 3 | not compared by eye; the rotated layers remain |
+| `transform-box: view-box` instead of `fill-box` | 40 → 43 | 3 | not compared by eye; the rotated layers remain |
+| + `will-change: transform` | 54 → 54 (layers exist before the hover) | 3 | not compared by eye; the layers are permanent |
 | **fix: transition `--fan`, transform derived from it** | 40 → 40 | **0** | antialiased (`before-vs-fix-mid-1x-zoom5.png`, bottom) |
 
 **Cause:** Chrome runs a CSS `transform` transition on an SVG group on the compositor. It rasterises the group once, flat, and rotates that bitmap, so edges stair-step until the transition ends. Then the settled frame repaints as vector, which is why the resting fan looked fine (`before-mid-vs-settled-1x-zoom5.png`, bottom).

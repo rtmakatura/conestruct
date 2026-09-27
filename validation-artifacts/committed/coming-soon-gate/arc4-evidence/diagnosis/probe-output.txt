@@ -1,0 +1,17 @@
+probe-pixelation.cjs — console output, 2026-09-27, against `next dev` on the
+Arc 3 code (5971318) with each variant's CSS injected.  Transcribed verbatim
+from the session's terminal: the script prints to the console and did not
+write a log file, and the baseline cannot be re-run on this branch (the page
+now carries the fix).  One JSON line per run: layer counts at rest and
+mid-fan; the compositor layers carrying a rotation; the running transitions.
+
+{"VARIANT":"slow","dpr":1,"layersBefore":40,"layersDuring":43,"rotatedLayers":[{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true}],"anims":[{"state":"running","t":1783},{"state":"running","t":1783},{"state":"running","t":1783}]}
+{"VARIANT":"slow","dpr":2,"layersBefore":24,"layersDuring":31,"rotatedLayers":[{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true}],"anims":[{"state":"running","t":1783},{"state":"running","t":1783},{"state":"running","t":1783}]}
+{"VARIANT":"slow+geo","dpr":1,"layersBefore":40,"layersDuring":43,"rotatedLayers":[{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true}],"anims":[{"state":"running","t":1800},{"state":"running","t":1800},{"state":"running","t":1800}]}
+{"VARIANT":"slow+noFillBox","dpr":1,"layersBefore":40,"layersDuring":43,"rotatedLayers":[{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true}],"anims":[{"state":"running","t":1800},{"state":"running","t":1800},{"state":"running","t":1800}]}
+{"VARIANT":"slow+willchange","dpr":1,"layersBefore":54,"layersDuring":54,"rotatedLayers":[{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true},{"w":217,"h":192,"draws":true}],"anims":[{"state":"running","t":1783},{"state":"running","t":1783},{"state":"running","t":1783}]}
+{"VARIANT":"slow+fix","dpr":1,"layersBefore":40,"layersDuring":40,"rotatedLayers":[],"anims":[{"state":"running","t":1800},{"state":"running","t":1800},{"state":"running","t":1800}]}
+{"VARIANT":"slow+fix","dpr":2,"layersBefore":24,"layersDuring":24,"rotatedLayers":[],"anims":[{"state":"running","t":1783},{"state":"running","t":1783},{"state":"running","t":1783}]}
+
+(The geo / noFillBox / willchange runs were cut to their 1x line with
+`| head -1`; their 2x lines were not recorded.)
