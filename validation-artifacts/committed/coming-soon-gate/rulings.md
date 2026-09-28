@@ -141,3 +141,7 @@ Recorded here because CLAUDE.md and handoff.md are gitignored (`.gitignore:79`, 
    - Say what the job is — "Tell it the kind of work, how long, and which side. The road's own details come filled in for you to check. The kind of work is always your call."
    - Take the plan — "You get the drawing and the device count, with a contractor estimate one click away. Anything that needs a person shows up first. Everything that passed is there when you want it."
 6. **Close band:** one row, shared edges. Map left; beside it one left-aligned stack ("BUILT IN COLORADO", the sentence, then "Get notified" 16 px below), vertically centred on the map, 40 px from it; equal band padding; no empty right half. Phone: map on top, stack below, same left edge.
+
+**R23 (Ryan, 2026-09-27)** — light lane:
+1. **Equal rows:** the three name rows under "THE FOUNDERS" share the column's height equally (each row the same height; name + role vertically centred in its row). No row absorbs the leftover space. On phone, rows keep their natural height, stacked.
+2. **Alphabetical, top to bottom:** James · Go-to-market & pricing; Ryan · Product & engineering; Zac · Sales & customers.
