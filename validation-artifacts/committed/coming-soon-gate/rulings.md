@@ -145,3 +145,10 @@ Recorded here because CLAUDE.md and handoff.md are gitignored (`.gitignore:79`, 
 **R23 (Ryan, 2026-09-27)** — light lane:
 1. **Equal rows:** the three name rows under "THE FOUNDERS" share the column's height equally (each row the same height; name + role vertically centred in its row). No row absorbs the leftover space. On phone, rows keep their natural height, stacked.
 2. **Alphabetical, top to bottom:** James · Go-to-market & pricing; Ryan · Product & engineering; Zac · Sales & customers.
+
+**R24 (Ryan, 2026-09-28)** — light lane; supersedes R23 item 2's order:
+1. **Order, top to bottom:** Ryan · Product & engineering; James · Go-to-market & pricing; Zac · Sales & customers. R23 item 1 (equal rows) stands.
+2. **Photos left of the names**, in each row: a 56 px square (square corners, 1 px `--rule` border), 16 px gap, then the name + role stack; photo, name and role vertically centred in the row; all three rows share one left edge for photos and one for text.
+3. **Ryan's photo:** source is untracked at `validation-artifacts/committed/coming-soon-gate/design/founders/ryan-source.jpg` (512×512). Put a web copy in the site's static assets (square, sized for 56 px at 2×, compressed), commit it on the branch, then **delete the untracked source from main's checkout** after confirming you copied it (same as Arc 3; an untracked file at a path the branch commits blocks the ship merge). Alt text: "Ryan".
+4. **James and Zac placeholders:** same 56 px square, `--paper` fill, `--rule` border, their initial ("J", "Z") centred in the mono face at an existing ruled size, `--ink-faint`. `aria-hidden` on the placeholder; the name beside it carries the meaning. Built so swapping in a real photo later is one file + one line.
+5. **Phone:** same row layout (photo left, text right), rows at natural height.
