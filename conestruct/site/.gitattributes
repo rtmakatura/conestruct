@@ -1,0 +1,3 @@
+# vercel-ignore.sh runs under bash on Vercel's Linux image and under Git's
+# bash locally (tests/vercel-ignore.test.ts); a CRLF checkout breaks both.
+*.sh text eol=lf

@@ -2,13 +2,20 @@
 # Usage:
 #   .\scripts\ship.ps1 -Branch issue-136-single-lane-block   (merge branch, then ship)
 #   .\scripts\ship.ps1                                       (ship whatever main already is)
+#   .\scripts\ship.ps1 -FrontendCheckOnly -SiteUrl <url> -Sha <sha>
+#       (step 7 alone, read-only: is <url> serving a frontend current for <sha>?
+#        No merge, no push, no deploy.)
 #
 # Stops loudly at the first problem. Never force-merges, never skips the health check.
 # Blocks only on MODIFIED TRACKED files; untracked local files (specs, notes,
 # scratch folders) are listed for awareness but never block a ship.
 
 param(
-    [string]$Branch = ""
+    [string]$Branch = "",
+    [switch]$FrontendCheckOnly,
+    [string]$SiteUrl = "https://www.conestruct.com",
+    [string]$Sha = "",
+    [int]$FrontendTimeoutMin = 10
 )
 
 $ErrorActionPreference = "Stop"
@@ -19,6 +26,90 @@ function Fail($msg) {
     Write-Host ""
     Write-Host "SHIP FAILED: $msg" -ForegroundColor Red
     exit 1
+}
+
+# --- 7 (defined here, run after the backend verdict) -----------------------
+# The served-frontend check (ship-loop ruling R3).  The public / page is
+# outside the coming-soon gate, and its chunks carry the build's commit sha
+# (NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA).  "Current" only if the served sha is
+# HEAD, or git proves no change to the site or its inputs between the served
+# sha and HEAD (a Vercel skip, conestruct/site/vercel-ignore.sh --
+# the same list, read from that file).  Otherwise it polls, and after
+# $FrontendTimeoutMin minutes it FAILS.  It never prints "current" on a timeout.
+function Get-SiteInputs($root) {
+    $script = Get-Content (Join-Path $root "conestruct\site\vercel-ignore.sh") -Raw
+    $m = [regex]::Match($script, 'SITE_INPUTS=\(([\s\S]*?)\)')
+    if (-not $m.Success) { Fail "SITE_INPUTS not found in conestruct/site/vercel-ignore.sh" }
+    return @([regex]::Matches($m.Groups[1].Value, '"([^"]+)"') | ForEach-Object { $_.Groups[1].Value })
+}
+
+function Get-ServedShas($url, $root) {
+    $html = (Invoke-WebRequest -Uri "$url/" -UseBasicParsing -TimeoutSec 30).Content
+    $chunks = @([regex]::Matches($html, '/_next/static/chunks/[^"]+\.js') | ForEach-Object { $_.Value } | Sort-Object -Unique)
+    $hex = @{}
+    foreach ($c in $chunks) {
+        $js = (Invoke-WebRequest -Uri "$url$c" -UseBasicParsing -TimeoutSec 30).Content
+        foreach ($m in [regex]::Matches($js, '"([0-9a-f]{40})"')) { $hex[$m.Groups[1].Value] = $true }
+    }
+    # Other 40-hex strings live in the chunks too; the build sha is the one
+    # that is a commit in this repo.  (Continue: in Windows PowerShell 5.1 a
+    # native command's stderr under "Stop" throws, and cat-file -e on a
+    # non-commit writes to stderr.)
+    $ErrorActionPreference = "Continue"
+    $shas = @()
+    foreach ($h in $hex.Keys) {
+        git -C $root cat-file -e "$h^{commit}" 2>$null
+        if ($LASTEXITCODE -eq 0) { $shas += $h }
+    }
+    return $shas
+}
+
+function Test-Frontend($url, $head, $root, $timeoutMin) {
+    $inputs = Get-SiteInputs $root
+    $site = Join-Path $root "conestruct\site"
+    $headShort = $head.Substring(0, 7)
+    $ErrorActionPreference = "Continue"
+    Write-Host "Checking the served frontend at $url (up to $timeoutMin min)..." -ForegroundColor Cyan
+    $deadline = (Get-Date).AddMinutes($timeoutMin)
+    while ($true) {
+        $served = @()
+        $note = ""
+        try { $served = @(Get-ServedShas $url $root) } catch { $note = "(site unreachable: $($_.Exception.Message))" }
+        if ($served -contains $head) {
+            return "FRONTEND CURRENT: built at $headShort (the served sha is HEAD)."
+        }
+        if ($served.Count -eq 1) {
+            $s = $served[0]
+            git -C $site diff --quiet $s $head -- @inputs
+            if ($LASTEXITCODE -eq 0) {
+                return "FRONTEND CURRENT: served $($s.Substring(0, 7)); no change to the site or its inputs in $($s.Substring(0, 7))..$headShort (build skipped)."
+            }
+            $note = "served $($s.Substring(0, 7)); the site or its inputs changed since, waiting for the build of $headShort"
+        } elseif ($served.Count -gt 1) {
+            $note = "served chunks carry $($served.Count) commit shas ($(($served | ForEach-Object { $_.Substring(0, 7) }) -join ', ')), none of them HEAD"
+        } elseif ($note -eq "") {
+            $note = "no commit sha found in the served chunks"
+        }
+        if ((Get-Date) -ge $deadline) {
+            Write-Host ""
+            Write-Host "FRONTEND NOT VERIFIED" -ForegroundColor Red
+            Write-Host "  HEAD is $head"
+            Write-Host "  Last seen: $note"
+            Write-Host "  The frontend was not current within $timeoutMin minutes. Do NOT close the issue. Paste this output into the chat."
+            exit 1
+        }
+        Write-Host "  $note - retrying in 20 s..."
+        Start-Sleep -Seconds 20
+    }
+}
+
+if ($FrontendCheckOnly) {
+    # Read-only: the repo this script lives in, no checkout, no merge.
+    $root = Split-Path -Parent $PSScriptRoot
+    if ($Sha -eq "") { Fail "-FrontendCheckOnly needs -Sha" }
+    $full = (git -C $root rev-parse $Sha).Trim()
+    Write-Host (Test-Frontend $SiteUrl $full $root $FrontendTimeoutMin) -ForegroundColor Green
+    exit 0
 }
 
 Set-Location $RepoDir
@@ -63,7 +154,7 @@ if ($LASTEXITCODE -ne 0) { Fail "git push failed. Paste the output into the chat
 
 $head = (git rev-parse HEAD).Trim()
 $headShort = $head.Substring(0, 7)
-Write-Host "main is now $headShort. Frontend: Vercel deploys this automatically (~2 min)." -ForegroundColor Green
+Write-Host "main is now $headShort. Frontend: Vercel builds it, or skips it when nothing in the site changed (step 7 checks which)." -ForegroundColor Green
 
 # --- 4. Backend deploy ------------------------------------------------------
 $modal = Join-Path $RepoDir ".venv\Scripts\modal.exe"
@@ -89,14 +180,9 @@ while ((Get-Date) -lt $deadline) {
     Write-Host "  live: $liveSha - not yet $headShort, retrying..."
 }
 
-# --- 6. Verdict -------------------------------------------------------------
+# --- 6. Backend verdict -----------------------------------------------------
 Write-Host ""
-if ($liveSha -eq $head) {
-    Write-Host "SHIP VERIFIED" -ForegroundColor Green
-    Write-Host "  Backend live at $headShort (healthz sha matches HEAD)."
-    Write-Host "  Frontend: give Vercel ~2 minutes if this commit touched site/."
-    Write-Host "  Next: run the smoke test, then post the close comment."
-} else {
+if ($liveSha -ne $head) {
     Write-Host "SHIP NOT VERIFIED" -ForegroundColor Red
     Write-Host "  HEAD is $head"
     Write-Host "  Live is $liveSha"
@@ -104,3 +190,13 @@ if ($liveSha -eq $head) {
     Write-Host "  Do NOT close the issue. Paste this output into the chat."
     exit 1
 }
+Write-Host "  Backend live at $headShort (healthz sha matches HEAD)." -ForegroundColor Green
+
+# --- 7. Frontend verdict (exits 1 on a timeout) -------------------------------
+$frontend = Test-Frontend $SiteUrl $head $RepoDir $FrontendTimeoutMin
+
+Write-Host ""
+Write-Host "SHIP VERIFIED" -ForegroundColor Green
+Write-Host "  Backend live at $headShort (healthz sha matches HEAD)."
+Write-Host "  $frontend"
+Write-Host "  Next: Ryan's browser check, then the close comment."
