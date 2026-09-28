@@ -8,6 +8,8 @@
 #       or "PREVIEW NOT VERIFIED" (exit 1) on a failed build or after -TimeoutMin.
 #   .\scripts\preview-url.ps1 -DecideFromJson <file>
 #       The same decision on recorded inputs, one pass, no network (tests/test_preview_url.py).
+#   .\scripts\preview-url.ps1 -ParseGhListFromFile <file>
+#       How a recorded `gh api` list body parses: its item count and ids (tests).
 #
 # Why a separate script (validation-artifacts/committed/ship-loop/checkpoint-1.md §5):
 # the ship_gate hook refuses any command naming ship.ps1, even its read-only
@@ -21,7 +23,8 @@ param(
     [string]$Branch = "",
     [int]$TimeoutMin = 10,
     [int]$PollSec = 20,
-    [string]$DecideFromJson = ""
+    [string]$DecideFromJson = "",
+    [string]$ParseGhListFromFile = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -130,11 +133,28 @@ function Get-ServedShas($url, $root) {
     return $shas
 }
 
+# A GitHub JSON list as its items.  Windows PowerShell 5.1's ConvertFrom-Json
+# writes an array to the pipeline as ONE object, so @($raw | ConvertFrom-Json)
+# of "[]" is a one-item list holding an empty list (measured: it asked GitHub
+# for deployments//statuses).  Assigning first and then enumerating unrolls it.
+function ConvertFrom-GhList($raw) {
+    $parsed = ConvertFrom-Json $raw
+    return @($parsed | ForEach-Object { $_ } | Where-Object { $null -ne $_ })
+}
+
 function Get-Json($path) {
     $ErrorActionPreference = "Continue"
     $raw = gh api $path 2>$null | Out-String
     if ($LASTEXITCODE -ne 0) { throw "gh api $path failed" }
-    return @($raw | ConvertFrom-Json)
+    return ConvertFrom-GhList $raw
+}
+
+# --- test mode: how a recorded gh api list body parses ------------------------
+if ($ParseGhListFromFile -ne "") {
+    $items = @(ConvertFrom-GhList (Get-Content $ParseGhListFromFile -Raw))
+    Write-Output "items: $($items.Count)"
+    foreach ($i in $items) { Write-Output "id: $($i.id)" }
+    exit 0
 }
 
 # --- test mode: one decision on recorded inputs -------------------------------

@@ -137,3 +137,27 @@ def test_frontend_only_is_yes_only_when_every_file_is_a_site_input(
     r = run(tmp_path, files=files, deployments=deployed(), served=[TIP])
     assert r.returncode == 0, r.stdout + r.stderr
     assert r.stdout.strip().endswith(f"frontend-only: {expected}")
+
+
+# The live path's parse of a `gh api` list body.  "[]" is what GitHub returned
+# for 2401e11's Preview deployments (a skipped build); before the fix Windows
+# PowerShell 5.1 read it as one item and asked GitHub for deployments//statuses.
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    [
+        ("[]\n", ["items: 0"]),
+        ('[{"id": 6714883653, "environment": "Preview"}]\n', ["items: 1", "id: 6714883653"]),
+        ('[{"id": 1}, {"id": 2}]\n', ["items: 2", "id: 1", "id: 2"]),
+    ],
+)
+def test_a_gh_list_body_parses_to_its_items(tmp_path: Path, body: str, expected: list[str]) -> None:
+    path = tmp_path / "body.json"
+    path.write_text(body, encoding="utf-8")
+    r = subprocess.run(
+        [SHELL, "-NoProfile", "-File", str(SCRIPT), "-ParseGhListFromFile", str(path)],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert r.stdout.split() == " ".join(expected).split()
