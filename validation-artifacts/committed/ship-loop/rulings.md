@@ -122,4 +122,18 @@ Ruled on `checkpoint-3.md` (`55c9054`), pasted 2026-09-28:
 
 ## The ruling on `checkpoint-1.md`, verbatim
 
-*(stub: awaiting Ryan's ruling)*
+Ruled on `checkpoint-1.md` (`aec9a45`), pasted 2026-09-28:
+
+> Rulings, 2026-09-28 (Ryan), Change 1 checkpoint. Quote verbatim in rulings.md.
+>
+> R18. checkpoint-1.md approved as written: Clerk development instance for Preview, invite-only, the coming-soon gate opened on previews through a Preview-only email allowlist, no gate or backend code change.
+>
+> R19. DATABASE_URL stays off Preview. If any page Ryan checks on a preview crashes without it, stop and report; don't add it.
+>
+> R20. scripts/preview-url.ps1 approved: read-only, prints a URL only when the preview's bundle carries the branch tip's sha. The preview: line goes directly above result: and includes frontend-only: yes|no.
+>
+> R21. The R7 prod smoke is the four checks in checkpoint-1.md. The 10-minute / 20-second numbers are accepted as chosen, not sourced.
+>
+> R22. handoff.md edits (the preview: line and the R7 smoke) are drafted by CC as before/after text in the report; the chat applies them. The throwaway test branch is deleted by Ryan.
+>
+> Before building: paste Ryan's 12 dashboard steps here, in full, so he can follow them.
