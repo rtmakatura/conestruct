@@ -37,3 +37,17 @@ describe("R22 — 02's front sheets settle on whole pixels, untilted", () => {
     expect(rule("crew")).not.toMatch(/scale/);
   });
 });
+
+describe("R23 — the founders' rows share the column equally beside the note", () => {
+  it("from 1024 px the list fills the column with 1fr rows, content centred; nothing outside that query sets it", () => {
+    const at = css.indexOf(".workbench .cs-founders-side {");
+    expect(at).toBeGreaterThan(-1);
+    const query = css.lastIndexOf("@media", at);
+    expect(css.slice(query, query + 30)).toMatch(/@media \(min-width: 1024px\)/);
+    expect(css.slice(at)).toMatch(/\.cs-founders-side \{\s*display: flex;\s*flex-direction: column;/);
+    expect(css).toMatch(/\.cs-founders-list \{\s*flex: 1;\s*display: grid;\s*grid-auto-rows: 1fr;/);
+    expect(css.slice(at)).toMatch(/\.cs-founder \{\s*justify-content: center;/);
+    // Only the one grid-auto-rows rule, inside the 1024 query (phone rows keep their natural height).
+    expect(css.match(/grid-auto-rows: 1fr/g)).toHaveLength(1);
+  });
+});

@@ -270,14 +270,14 @@ describe("Arc 3 — the founders' note (R17, A3-Q1)", () => {
     expect(c.textContent).toContain("a note from the founders");
   });
 
-  it("is signed by the three founders under 'The founders'", () => {
+  it("is signed by the three founders under 'The founders', alphabetical top to bottom (R23)", () => {
     const c = mount();
     expect(c.querySelector(".cs-founders-head")?.textContent).toBe("The founders");
     expect(
       [...c.querySelectorAll(".cs-founder")].map((li) => [...li.children].map((e) => e.textContent)),
     ).toEqual([
-      ["Ryan", "PRODUCT & ENGINEERING"],
       ["James", "GO-TO-MARKET & PRICING"],
+      ["Ryan", "PRODUCT & ENGINEERING"],
       ["Zac", "SALES & CUSTOMERS"],
     ]);
   });

@@ -6069,6 +6069,21 @@ input[type="number"] {
     border-bottom: 0;
     border-right: 1px solid var(--da-hair);
   }
+  /* R23: beside the note, the three name rows share the column's height
+     equally (1fr each), name and role centred in each; no row takes the
+     leftover.  Stacked (below 1024), rows keep their natural height. */
+  .workbench .cs-founders-side {
+    display: flex;
+    flex-direction: column;
+  }
+  .workbench .cs-founders-list {
+    flex: 1;
+    display: grid;
+    grid-auto-rows: 1fr;
+  }
+  .workbench .cs-founder {
+    justify-content: center;
+  }
 }
 
 /* The close band's map (R18). */

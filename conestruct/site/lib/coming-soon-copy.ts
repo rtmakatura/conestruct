@@ -187,9 +187,10 @@ export const FOUNDERS = {
     "We think the people who set the cones deserve tools as good as the rules they work under. So we're building one. It applies the manual to your road, shows the source for every taper, buffer and spacing, and leaves the calls that need experience to the people who have it.",
   ],
   signoff: "The founders",
+  // R23: alphabetical, top to bottom.
   people: [
-    ["Ryan", "PRODUCT & ENGINEERING"],
     ["James", "GO-TO-MARKET & PRICING"],
+    ["Ryan", "PRODUCT & ENGINEERING"],
     ["Zac", "SALES & CUSTOMERS"],
   ],
 } as const;
