@@ -1,5 +1,17 @@
 # ship-loop — the rulings this arc is built under
 
+## Change 1 (branch `ship-loop-1`): the standing rulings in force, verbatim
+
+> R6. Change 1: Preview gets a Clerk development instance. Ryan does the dashboard part; CC writes step-by-step instructions for it.
+>
+> R7. For frontend-only branches, a preview hand-check PASS replaces the prod hand-check, plus a one-minute prod smoke. Branches that touch the backend keep today's path.
+
+Change 1's plan is `checkpoint-1.md`. Nothing is built and no Clerk, Vercel or Modal setting is
+changed until Ryan rules on it; that ruling is appended at the bottom as "The ruling on
+`checkpoint-1.md`, verbatim".
+
+---
+
 **Arc:** the faster ship loop: three changes (a Vercel preview hand-check, skipping the Vercel
 build for backend-only changes, and CC running `ship.ps1` after Ryan's go). Investigate first.
 **Base:** `fee2f77` (= `main` = `origin/main` = the prod backend `healthz` sha, checked 2026-09-28
@@ -107,3 +119,7 @@ Ruled on `checkpoint-3.md` (`55c9054`), pasted 2026-09-28:
 > R14. If the harness won't let a full run work in the ship worktree, stop and report. No workaround.
 >
 > R15. Delete origin/ship-loop-redproof. Recovery sha ca70344 recorded here; the red-proof evidence already lives in 0da5c3c.
+
+## The ruling on `checkpoint-1.md`, verbatim
+
+*(stub: awaiting Ryan's ruling)*
