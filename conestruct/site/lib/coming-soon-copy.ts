@@ -187,11 +187,13 @@ export const FOUNDERS = {
     "We think the people who set the cones deserve tools as good as the rules they work under. So we're building one. It applies the manual to your road, shows the source for every taper, buffer and spacing, and leaves the calls that need experience to the people who have it.",
   ],
   signoff: "The founders",
-  // R23: alphabetical, top to bottom.
+  // R24: Ryan, James, Zac, top to bottom (supersedes R23's order).  A
+  // photo is a file in public/founders/ plus its path here; without one
+  // the row shows the founder's initial in a placeholder square.
   people: [
-    ["James", "GO-TO-MARKET & PRICING"],
-    ["Ryan", "PRODUCT & ENGINEERING"],
-    ["Zac", "SALES & CUSTOMERS"],
+    { name: "Ryan", role: "PRODUCT & ENGINEERING", photo: "/founders/ryan.jpg" },
+    { name: "James", role: "GO-TO-MARKET & PRICING", photo: null },
+    { name: "Zac", role: "SALES & CUSTOMERS", photo: null },
   ],
 } as const;
 

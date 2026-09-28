@@ -270,16 +270,38 @@ describe("Arc 3 — the founders' note (R17, A3-Q1)", () => {
     expect(c.textContent).toContain("a note from the founders");
   });
 
-  it("is signed by the three founders under 'The founders', alphabetical top to bottom (R23)", () => {
+  it("is signed by the three founders under 'The founders': Ryan, James, Zac (R24)", () => {
     const c = mount();
     expect(c.querySelector(".cs-founders-head")?.textContent).toBe("The founders");
     expect(
-      [...c.querySelectorAll(".cs-founder")].map((li) => [...li.children].map((e) => e.textContent)),
+      [...c.querySelectorAll(".cs-founder .cs-founder-text")].map((t) => [...t.children].map((e) => e.textContent)),
     ).toEqual([
-      ["James", "GO-TO-MARKET & PRICING"],
       ["Ryan", "PRODUCT & ENGINEERING"],
+      ["James", "GO-TO-MARKET & PRICING"],
       ["Zac", "SALES & CUSTOMERS"],
     ]);
+  });
+
+  it("R24: a 56 px square left of each name — Ryan's photo (alt 'Ryan'), James's and Zac's initials, hidden from the accessibility tree", () => {
+    const rows = [...mount().querySelectorAll(".cs-founder")];
+    // The square comes first in each row, the text second.
+    for (const r of rows) {
+      expect(r.children[0].classList.contains("cs-founder-photo")).toBe(true);
+      expect(r.children[1].classList.contains("cs-founder-text")).toBe(true);
+    }
+    const img = rows[0].querySelector("img.cs-founder-photo")!;
+    expect(img.getAttribute("src")).toBe("/founders/ryan.jpg");
+    expect(img.getAttribute("alt")).toBe("Ryan");
+    expect([img.getAttribute("width"), img.getAttribute("height")]).toEqual(["56", "56"]);
+    for (const [r, initial] of [
+      [rows[1], "J"],
+      [rows[2], "Z"],
+    ] as const) {
+      const ph = r.querySelector(".cs-founder-initial")!;
+      expect(ph.textContent).toBe(initial);
+      expect(ph.getAttribute("aria-hidden")).toBe("true");
+      expect(r.querySelector("img")).toBeNull();
+    }
   });
 });
 

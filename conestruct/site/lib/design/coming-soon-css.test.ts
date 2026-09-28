@@ -46,7 +46,9 @@ describe("R23 — the founders' rows share the column equally beside the note", 
     expect(css.slice(query, query + 30)).toMatch(/@media \(min-width: 1024px\)/);
     expect(css.slice(at)).toMatch(/\.cs-founders-side \{\s*display: flex;\s*flex-direction: column;/);
     expect(css).toMatch(/\.cs-founders-list \{\s*flex: 1;\s*display: grid;\s*grid-auto-rows: 1fr;/);
-    expect(css.slice(at)).toMatch(/\.cs-founder \{\s*justify-content: center;/);
+    // R24: each row centres its photo and text vertically itself.
+    expect(css).toMatch(/\.workbench \.cs-founder \{\s*display: flex;\s*align-items: center;\s*gap: 16px;/);
+    expect(css).toMatch(/\.workbench \.cs-founder-photo \{[^}]*width: 56px;\s*height: 56px;\s*border: 1px solid var\(--rule\);/);
     // Only the one grid-auto-rows rule, inside the 1024 query (phone rows keep their natural height).
     expect(css.match(/grid-auto-rows: 1fr/g)).toHaveLength(1);
   });

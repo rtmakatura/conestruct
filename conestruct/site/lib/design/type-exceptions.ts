@@ -75,7 +75,7 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   },
   {
     name: "the coming-soon page (coming-soon-gate Arc 2)",
-    sizes: ["var(--fs-hero-numeral)", "var(--fs-hero-numeral-380)", "var(--fs-body-value)"],
+    sizes: ["var(--fs-hero-numeral)", "var(--fs-hero-numeral-380)", "var(--fs-body-value)", "var(--fs-step-question)"],
     reason:
       "the public Plan Sheet at `/` (R5a).  R7: the big wordmark shares the two hero sizes — a SECOND OWNER of the tokens the counts numerals own, no new size — switching at the 520 container as R7 rules (the numerals switch at 980).  Its body copy and card titles read rule 8's body token, the register every body value on the workbench already uses.  Everything else on the page is a role (tr-step / tr-section / tr-field / tr-prov / tr-question) or a reused class (.pri, .dl-btn).  A2-T; R8's 16 px input exception has no site since A2-Q1 removed the form, so it is not declared",
     css: [
@@ -83,6 +83,9 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".workbench .cs-wordmark", size: "var(--fs-hero-numeral-380)" },
       { selector: ".workbench .cs-body", size: "var(--fs-body-value)" },
       { selector: ".workbench .cs-title", size: "var(--fs-body-value)" },
+      // R24: a founder's initial in the 56 px placeholder square — the mono
+      // face at role 5's ruled size (a second owner of the token, no new size).
+      { selector: ".workbench .cs-founder-initial", size: "var(--fs-step-question)" },
     ],
     tsx: [],
   },
@@ -656,7 +659,10 @@ export const CENSUS_PINS = {
   // wordmark at 62 and at the 520 container's 42, the body and the card
   // title at the body token.  119 -> 123; sizes unchanged (all three
   // token names already in the sheet).
-  cssDeclarations: 123,
+  // coming-soon-gate R24: the founders' placeholder initial at role 5's
+  // --fs-step-question.  123 -> 124; sizes unchanged (tr-question already
+  // carries the token).
+  cssDeclarations: 124,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

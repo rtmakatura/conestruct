@@ -224,10 +224,22 @@ export function ComingSoon() {
             <div className="cs-founders-side">
               <h4 className="tr-section cs-founders-head">{FOUNDERS.signoff}</h4>
               <ul className="cs-founders-list">
-                {FOUNDERS.people.map(([name, role]) => (
+                {FOUNDERS.people.map(({ name, role, photo }) => (
                   <li key={name} className="cs-founder">
-                    <span className="cs-title">{name}</span>
-                    <span className="tr-step">{role}</span>
+                    {photo ? (
+                      // R24: already 112 px square for 56 px at 2×, so
+                      // there is nothing for next/image to resize.
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img className="cs-founder-photo" src={photo} width={56} height={56} alt={name} />
+                    ) : (
+                      <span className="cs-founder-photo cs-founder-initial" aria-hidden="true">
+                        {name[0]}
+                      </span>
+                    )}
+                    <span className="cs-founder-text">
+                      <span className="cs-title">{name}</span>
+                      <span className="tr-step">{role}</span>
+                    </span>
                   </li>
                 ))}
               </ul>

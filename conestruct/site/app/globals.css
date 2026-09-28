@@ -6051,12 +6051,42 @@ input[type="number"] {
   padding: 0;
   list-style: none;
 }
+/* R24: each row is the photo, 16 px, then the name + role stack, all
+   three centred on the row; photos share one left edge, texts another. */
 .workbench .cs-founder {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .cs-founder-text {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--da-hair);
+  min-width: 0;
+}
+/* The 56 px square, square corners, 1 px --rule border — a photo, or
+   the placeholder with the founder's initial (mono, role 5's ruled
+   size, --ink-faint on --paper). */
+.workbench .cs-founder-photo {
+  display: block;
+  flex: none;
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--rule);
+  object-fit: cover;
+}
+.workbench .cs-founder-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: var(--fs-step-question);
+  line-height: 1;
 }
 .workbench .cs-founder:last-child {
   border-bottom: 0;
@@ -6070,8 +6100,9 @@ input[type="number"] {
     border-right: 1px solid var(--da-hair);
   }
   /* R23: beside the note, the three name rows share the column's height
-     equally (1fr each), name and role centred in each; no row takes the
-     leftover.  Stacked (below 1024), rows keep their natural height. */
+     equally (1fr each); no row takes the leftover.  Each row centres its
+     photo and text on its own (align-items, R24).  Stacked (below 1024),
+     rows keep their natural height. */
   .workbench .cs-founders-side {
     display: flex;
     flex-direction: column;
@@ -6080,9 +6111,6 @@ input[type="number"] {
     flex: 1;
     display: grid;
     grid-auto-rows: 1fr;
-  }
-  .workbench .cs-founder {
-    justify-content: center;
   }
 }
 

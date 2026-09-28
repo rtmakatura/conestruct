@@ -285,6 +285,9 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         "var(--fs-hero-numeral)",
         "var(--fs-hero-numeral-380)",
         "var(--fs-body-value)",
+        // coming-soon-gate R24: the founders' placeholder initial, mono at
+        // role 5's size — the token's second owner.
+        "var(--fs-step-question)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",
