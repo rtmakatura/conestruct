@@ -87,3 +87,23 @@ Ruled on `checkpoint.md` (`5baf3a1`), pasted 2026-09-28:
 > R7. For frontend-only branches, a preview hand-check PASS replaces the prod hand-check, plus a one-minute prod smoke. Branches that touch the backend keep today's path.
 >
 > R8. Order 2 → 3 → 1. One ship line per change, stacked per the standing rule. Checkpoint before building 3 and before building 1.
+
+## The ruling on `checkpoint-3.md`, verbatim
+
+Ruled on `checkpoint-3.md` (`55c9054`), pasted 2026-09-28:
+
+> Rulings, 2026-09-28 (Ryan), Change 3 checkpoint. Quote verbatim in rulings.md.
+>
+> R9. R1's two deviations accepted: the ignore rule is a script (vercel-ignore.sh at the site root) because the one-liner skips a redeploy. Recorded as forced, not chosen.
+>
+> R10. Push-block scope: the hook blocks anything that moves main (push, merge, fast-forward, reset, via any command), any force push to any branch, and any remote branch deletion. Ordinary pushes of arc branches stay allowed.
+>
+> R11. "Last report" = CC's most recent message containing a result: line. The go counts only if it comes after that message and names a branch that appears in that result: line exactly.
+>
+> R12. Ryan will type three gos against -DryRun for the live red-proof (~5 min). Red-prove the refusals too: no go, a reused go, a branch not in the last report.
+>
+> R13. The first ship after Change 3 is Ryan's, by hand. The hook goes live after that ship.
+>
+> R14. If the harness won't let a full run work in the ship worktree, stop and report. No workaround.
+>
+> R15. Delete origin/ship-loop-redproof. Recovery sha ca70344 recorded here; the red-proof evidence already lives in 0da5c3c.
