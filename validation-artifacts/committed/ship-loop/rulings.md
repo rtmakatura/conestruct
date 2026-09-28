@@ -68,4 +68,22 @@ or settings change is made, until Ryan rules on the checkpoint.** His ruling is 
 
 ## The ruling, verbatim
 
-*(Not yet ruled. Appended when Ryan rules on `checkpoint.md`.)*
+Ruled on `checkpoint.md` (`5baf3a1`), pasted 2026-09-28:
+
+> Rulings, 2026-09-28 (Ryan). Quote verbatim in rulings.md.
+>
+> R1. Change 2 approved as proposed: the ignoreCommand in conestruct/site/vercel.json comparing $VERCEL_GIT_PREVIOUS_SHA..$VERCEL_GIT_COMMIT_SHA, covering the site plus the four outside paths; any error builds. Confirm an empty or missing PREVIOUS_SHA (first deploy of a branch, a redeploy) builds. Red-prove all three cases: backend-only skips, site change builds, shared-file change builds.
+>
+> R2. The four outside paths are a hand-kept list and will drift. Add a check that fails when the site or its tests read a path outside the site dir that is not on the list. If that costs more than ~30 min, say so at the next checkpoint instead of building it.
+>
+> R3. The ship.ps1 served-sha step approved: reports "current" only if the served sha equals HEAD or git proves no frontend change since it; fails after 10 minutes. It never prints "current" on a timeout.
+>
+> R4. Change 3 approved. CC may merge and push main ONLY by running ship.ps1, from a dedicated ship worktree, after Ryan writes "ship <branch>" naming a branch in CC's last report. One go = one branch = one run. The PreToolUse hook is the real guard (settings are bypassPermissions); red-prove it refuses: no go, a used go, a branch not in the last report, any git push/merge outside ship.ps1. The background-job rule stays as is; this is its one named exception.
+>
+> R5. After a CC-run ship: CC pastes the healthz sha, the served sha (or the skip), and the ship.ps1 output. Ryan's browser confirmation still closes the ship.
+>
+> R6. Change 1: Preview gets a Clerk development instance. Ryan does the dashboard part; CC writes step-by-step instructions for it.
+>
+> R7. For frontend-only branches, a preview hand-check PASS replaces the prod hand-check, plus a one-minute prod smoke. Branches that touch the backend keep today's path.
+>
+> R8. Order 2 → 3 → 1. One ship line per change, stacked per the standing rule. Checkpoint before building 3 and before building 1.
