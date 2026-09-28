@@ -2,24 +2,36 @@
 # Usage:
 #   .\scripts\ship.ps1 -Branch issue-136-single-lane-block   (merge branch, then ship)
 #   .\scripts\ship.ps1                                       (ship whatever main already is)
+#   .\scripts\ship.ps1 -Branch <name> -DryRun               (steps 1-2 only: print what
+#                                                             would ship, push nothing)
 #   .\scripts\ship.ps1 -FrontendCheckOnly -SiteUrl <url> -Sha <sha>
 #       (step 7 alone, read-only: is <url> serving a frontend current for <sha>?
 #        No merge, no push, no deploy.)
 #
+# Where it works (ship-loop ruling R4, validation-artifacts/committed/ship-loop/):
+# a dedicated ship worktree, .claude\worktrees\_ship, detached at origin/main and
+# created on first use.  Nobody's checkout is touched.  It merges origin/<branch>
+# (so the branch must be pushed) and pushes HEAD:main.  A copy of this script that
+# differs from main's hands over to main's copy, so a stale copy never ships.
+# CC may run it only after Ryan's "ship <branch>" go; the ship_gate PreToolUse
+# hook (scripts/hooks/ship_gate.py) enforces that.
+#
 # Stops loudly at the first problem. Never force-merges, never skips the health check.
-# Blocks only on MODIFIED TRACKED files; untracked local files (specs, notes,
-# scratch folders) are listed for awareness but never block a ship.
+# Blocks only on MODIFIED TRACKED files in the ship worktree.
 
 param(
     [string]$Branch = "",
+    [switch]$DryRun,
     [switch]$FrontendCheckOnly,
     [string]$SiteUrl = "https://www.conestruct.com",
     [string]$Sha = "",
-    [int]$FrontendTimeoutMin = 10
+    [int]$FrontendTimeoutMin = 10,
+    [switch]$Handoff
 )
 
 $ErrorActionPreference = "Stop"
 $RepoDir   = "C:\Users\rtmak\Documents\traffic-control-tool"
+$ShipDir   = Join-Path $RepoDir ".claude\worktrees\_ship"
 $HealthUrl = "https://rtmakatura--conestruct-render-fastapi-app.modal.run/healthz"
 
 function Fail($msg) {
@@ -112,48 +124,70 @@ if ($FrontendCheckOnly) {
     exit 0
 }
 
-Set-Location $RepoDir
+# Git reports progress on stderr; in Windows PowerShell 5.1 native stderr under
+# "Stop" throws.  From here every git call is checked by its exit code instead.
+$ErrorActionPreference = "Continue"
 
-# --- 1. Sanity checks -------------------------------------------------------
-$current = (git rev-parse --abbrev-ref HEAD).Trim()
-if ($current -ne "main") {
-    git checkout main | Out-Null
+# --- 1. The ship worktree, at origin/main -------------------------------------
+git -C $RepoDir fetch origin 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) { Fail "git fetch origin failed. Paste the output into the chat." }
+
+if (-not (Test-Path (Join-Path $ShipDir ".git"))) {
+    Write-Host "Creating the ship worktree at $ShipDir (first use)..." -ForegroundColor Cyan
+    git -C $RepoDir worktree add --detach $ShipDir origin/main 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { Fail "Could not create the ship worktree at $ShipDir." }
 }
+Set-Location $ShipDir
 
-# Split status into tracked changes (block) vs untracked files (inform only).
-$statusLines = git status --porcelain | Where-Object { $_ -ne "" }
-$trackedChanges = $statusLines | Where-Object { -not $_.StartsWith("??") }
-$untracked      = $statusLines | Where-Object { $_.StartsWith("??") }
-
-if ($untracked) {
-    Write-Host "Untracked local files (not blocking, just so you know):" -ForegroundColor DarkGray
-    $untracked | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
-}
-
+# Nothing is ever edited in the ship worktree; a tracked change there is a ghost.
+$trackedChanges = git status --porcelain | Where-Object { $_ -ne "" -and -not $_.StartsWith("??") }
 if ($trackedChanges) {
-    Write-Host "Modified tracked files:" -ForegroundColor Yellow
+    Write-Host "Modified tracked files in the ship worktree:" -ForegroundColor Yellow
     $trackedChanges | ForEach-Object { Write-Host "  $_" -ForegroundColor Yellow }
-    Fail "Tracked files have uncommitted changes. Commit or discard these first (unexplained edits are how we chase ghosts)."
+    Fail "The ship worktree has tracked edits. Nothing should edit it; look before discarding."
+}
+git checkout -q --detach origin/main 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) { Fail "Could not reset the ship worktree to origin/main." }
+
+# A stale copy of this script hands over to main's copy (same arguments).
+$mainCopy = Join-Path $ShipDir "scripts\ship.ps1"
+if (-not $Handoff -and ((Get-FileHash $PSCommandPath).Hash -ne (Get-FileHash $mainCopy).Hash)) {
+    Write-Host "This ship.ps1 differs from main's; handing over to $mainCopy" -ForegroundColor DarkGray
+    $handArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $mainCopy, "-Handoff",
+                  "-SiteUrl", $SiteUrl, "-FrontendTimeoutMin", $FrontendTimeoutMin)
+    if ($Branch -ne "") { $handArgs += @("-Branch", $Branch) }
+    if ($DryRun) { $handArgs += "-DryRun" }
+    & powershell @handArgs
+    exit $LASTEXITCODE
 }
 
-git fetch origin | Out-Null
-
-# --- 2. Merge (only if a branch was given) ----------------------------------
+# --- 2. Merge the pushed branch (fast-forward only) ---------------------------
 if ($Branch -ne "") {
-    Write-Host "Merging $Branch into main (fast-forward only)..." -ForegroundColor Cyan
-    git merge --ff-only $Branch
+    git rev-parse --verify -q "origin/$Branch" | Out-Null
+    if ($LASTEXITCODE -ne 0) { Fail "origin/$Branch does not exist. Push the branch first; a ship merges what was pushed." }
+    Write-Host "Merging origin/$Branch into main (fast-forward only)..." -ForegroundColor Cyan
+    git merge -q --ff-only "origin/$Branch"
     if ($LASTEXITCODE -ne 0) {
-        Fail "Fast-forward merge failed - main and $Branch have diverged. Paste this output into the chat; the usual fix is a cherry-pick, but let's look first."
+        git checkout -q --detach origin/main 2>&1 | Out-Null
+        Fail "Fast-forward merge failed - main and $Branch have diverged. Rebase the branch onto main and push it, then ship again."
     }
+}
+$head = (git rev-parse HEAD).Trim()
+$headShort = $head.Substring(0, 7)
+
+if ($DryRun) {
+    Write-Host ""
+    Write-Host "DRY RUN: would push $headShort to main and deploy it. The commits:" -ForegroundColor Cyan
+    git log --oneline origin/main..HEAD | ForEach-Object { Write-Host "  $_" }
+    git checkout -q --detach origin/main 2>&1 | Out-Null
+    Write-Host "DRY RUN: nothing pushed, nothing deployed; the ship worktree is back at origin/main." -ForegroundColor Cyan
+    exit 0
 }
 
 # --- 3. Push ----------------------------------------------------------------
-Write-Host "Pushing main..." -ForegroundColor Cyan
-git push
+Write-Host "Pushing $headShort to main..." -ForegroundColor Cyan
+git push origin HEAD:main
 if ($LASTEXITCODE -ne 0) { Fail "git push failed. Paste the output into the chat." }
-
-$head = (git rev-parse HEAD).Trim()
-$headShort = $head.Substring(0, 7)
 Write-Host "main is now $headShort. Frontend: Vercel builds it, or skips it when nothing in the site changed (step 7 checks which)." -ForegroundColor Green
 
 # --- 4. Backend deploy ------------------------------------------------------
@@ -193,7 +227,7 @@ if ($liveSha -ne $head) {
 Write-Host "  Backend live at $headShort (healthz sha matches HEAD)." -ForegroundColor Green
 
 # --- 7. Frontend verdict (exits 1 on a timeout) -------------------------------
-$frontend = Test-Frontend $SiteUrl $head $RepoDir $FrontendTimeoutMin
+$frontend = Test-Frontend $SiteUrl $head $ShipDir $FrontendTimeoutMin
 
 Write-Host ""
 Write-Host "SHIP VERIFIED" -ForegroundColor Green
