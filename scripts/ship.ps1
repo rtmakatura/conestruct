@@ -19,6 +19,10 @@
 # Stops loudly at the first problem. Never force-merges, never skips the health check.
 # Blocks only on MODIFIED TRACKED files in the ship worktree.
 
+# CmdletBinding: an unknown parameter is an ERROR.  Without it PowerShell drops
+# unknown arguments into $args silently, and a script that ignored -DryRun would
+# ship for real.
+[CmdletBinding()]
 param(
     [string]$Branch = "",
     [switch]$DryRun,
@@ -152,6 +156,12 @@ if ($LASTEXITCODE -ne 0) { Fail "Could not reset the ship worktree to origin/mai
 # A stale copy of this script hands over to main's copy (same arguments).
 $mainCopy = Join-Path $ShipDir "scripts\ship.ps1"
 if (-not $Handoff -and ((Get-FileHash $PSCommandPath).Hash -ne (Get-FileHash $mainCopy).Hash)) {
+    # Hand over only to a copy that understands -Handoff (and so -DryRun and
+    # CmdletBinding).  An older main copy would silently ignore those flags and
+    # ship for real: stop instead.
+    if (-not (Select-String -Path $mainCopy -Pattern '\[switch\]\$Handoff' -Quiet)) {
+        Fail "main's ship.ps1 predates the ship worktree (no -Handoff). Run main's copy directly as before; this copy will not hand over to it."
+    }
     Write-Host "This ship.ps1 differs from main's; handing over to $mainCopy" -ForegroundColor DarkGray
     $handArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $mainCopy, "-Handoff",
                   "-SiteUrl", $SiteUrl, "-FrontendTimeoutMin", $FrontendTimeoutMin)
