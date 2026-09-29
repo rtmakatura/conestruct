@@ -29,7 +29,8 @@ required      UPSTASH_REDIS_REST_URL                           lib/rate-limit.ts
 required      UPSTASH_REDIS_REST_TOKEN                         lib/rate-limit.ts:81 -- same
 required      NEXT_PUBLIC_SENTRY_DSN                           sentry.server.config.ts:3, sentry.client.config.ts:3, sentry.edge.config.ts:3 -- unset, error monitoring silently turns off
 
-not-required  SENTRY_AUTH_TOKEN                                next.config.mjs:24 -- build-time source-map upload only (.env.example:39)
+not-required  SENTRY_AUTH_TOKEN                                next.config.mjs:38 -- build-time source-map upload only (.env.example:39)
+not-required  NEXT_PUBLIC_SHEET_REVISED                        next.config.mjs:18, components/coming-soon/ComingSoon.tsx:60 -- set by next.config.mjs itself at build time (Denver's date, R42); never a Vercel variable
 not-required  NEXT_PUBLIC_AUTH_UI                              lib/feature-flags.ts:12 -- unset is the intended demo mode (.env.example:24)
 not-required  NEXT_PUBLIC_SENTRY_TEST                          app/debug/sentry-test/page.tsx:5 -- off by default, never set in Production (.env.example:44)
 not-required  SENTRY_TEST_ENABLED                              app/api/debug/sentry-test/route.ts:6 -- same
