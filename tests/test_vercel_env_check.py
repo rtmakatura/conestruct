@@ -136,7 +136,13 @@ exit /b 0
 """
 
 
-def run_check(tmp_path: Path, listing: str | None, whoami_exit: int = 0, env_exit: int = 0):
+def run_check(
+    tmp_path: Path,
+    listing: str | None,
+    whoami_exit: int = 0,
+    env_exit: int = 0,
+    pass_list: bool = True,
+):
     fake = tmp_path / "vercel.cmd"
     fake.write_text(FAKE_CLI.replace("\n", "\r\n"), encoding="ascii")
     log = tmp_path / "calls.log"
@@ -159,9 +165,8 @@ def run_check(tmp_path: Path, listing: str | None, whoami_exit: int = 0, env_exi
             str(CHECK),
             "-Vercel",
             str(fake),
-            "-Required",
-            str(LIST),
-        ],
+        ]
+        + (["-Required", str(LIST)] if pass_list else []),
         capture_output=True,
         text=True,
         timeout=120,
@@ -181,6 +186,15 @@ def test_the_real_listing_passes(tmp_path: Path) -> None:
     assert f"all {len(required())} required" in out, out
     assert [c.split()[0] for c in calls] == ["whoami", "env"], calls
     assert calls[1].split()[:3] == ["env", "ls", "production"], calls
+
+
+@needs_ps
+def test_run_alone_it_reads_the_list_beside_it(tmp_path: Path) -> None:
+    # Found live: Windows PowerShell 5.1 leaves $PSScriptRoot empty in param()
+    # defaults, so a default built there crashed before checking anything.
+    code, out, _ = run_check(tmp_path, "production-full.txt", pass_list=False)
+    assert code == 0, out
+    assert f"all {len(required())} required" in out, out
 
 
 @needs_ps

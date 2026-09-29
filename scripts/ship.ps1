@@ -179,6 +179,20 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) { Fail "gh is not on PA
 $ghLogin = gh auth status --hostname github.com 2>&1 | ForEach-Object { "$_" }
 if ($LASTEXITCODE -ne 0) { $ghLogin | ForEach-Object { Write-Host "  $_" }; Fail "gh is not logged in to github.com. Run gh auth login, then ship again. Nothing was merged or pushed." }
 
+# --- 1c. Vercel Production env (R29) -----------------------------------------
+# Every variable the site needs at runtime must have a Production row before
+# anything moves.  On 2026-09-28 a Preview-only CLERK_SECRET_KEY sent every
+# route to 500 on the first production build after that change (rulings.md, R28).
+# The list comes from the commit being shipped, so a branch that adds a
+# variable is checked against its own list.
+$listRef = if ($Branch -ne "") { "origin/$Branch" } else { "HEAD" }
+$envList = Join-Path $env:TEMP "conestruct-production-env.txt"
+git show ($listRef + ":scripts/production-env.txt") | Set-Content -Encoding utf8 $envList
+if ($LASTEXITCODE -ne 0) { Fail "Could not read scripts/production-env.txt at $listRef. Push the branch, rebased on main, then ship again. Nothing was merged or pushed." }
+Write-Host "Checking Vercel Production has every variable the site needs (R29)..." -ForegroundColor Cyan
+& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\vercel-env-check.ps1") -Required $envList
+if ($LASTEXITCODE -ne 0) { Fail "Vercel Production is missing a variable the site needs, or the Vercel CLI is not logged in (the check's output is above). Fix it, then ship again. Nothing was merged or pushed." }
+
 # --- 2. Merge the pushed branch (fast-forward only) ---------------------------
 if ($Branch -ne "") {
     git rev-parse --verify -q "origin/$Branch" | Out-Null
