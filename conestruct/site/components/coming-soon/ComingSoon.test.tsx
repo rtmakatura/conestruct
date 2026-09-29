@@ -21,7 +21,7 @@ const mount = () => render(<Page />).container;
 describe("the Plan Sheet — words and links", () => {
   it("'Get notified' is a mail link to ryan@conestruct.com with the ruled subject, in nav, sheet and closing band (A2-Q1)", () => {
     expect(NOTIFY_HREF).toBe(
-      "mailto:ryan@conestruct.com?subject=Conestruct%20%E2%80%94%20let%20me%20know%20when%20it%20opens",
+      "mailto:ryan@conestruct.com?subject=Conestruct%3A%20let%20me%20know%20when%20it%20opens",
     );
     const c = mount();
     const mail = [...c.querySelectorAll("a")].filter((a) => a.getAttribute("href") === NOTIFY_HREF);
@@ -56,7 +56,7 @@ describe("the Plan Sheet — words and links", () => {
 
   it("the hero line is PUBLIC_LINE — the page and its metadata say one thing (P2)", () => {
     expect(mount().textContent).toContain(PUBLIC_LINE);
-    expect(PUBLIC_LINE).toContain("every taper, buffer and spacing cited to MUTCD 2023 or CDOT");
+    expect(PUBLIC_LINE).toContain("Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT");
   });
 
   it("keeps only the four verified references (A2-Q6)", () => {

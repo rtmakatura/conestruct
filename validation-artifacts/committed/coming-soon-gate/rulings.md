@@ -163,3 +163,6 @@ Nothing else changes: same copy, same graphic, same styling, same spacing tokens
 - Prefer reordering the markup over CSS `order` tricks, so screen readers and tab order match what's on screen. If markup order must stay, say why.
 - Don't touch anything outside this section.
 - If a heading-level or landmark order changes as a result, flag it.
+
+**R33 (Ryan, 2026-09-29)** — light lane (Part A: `/`, `/404`, `/terms`, `/privacy`):
+Ruling 2026-09-29 (Ryan), R33: all written content on the landing page and the platform follows the unslop rules, now and going forward.

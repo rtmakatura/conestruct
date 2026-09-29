@@ -3,7 +3,7 @@ import { PublicChrome } from "@/components/PublicChrome";
 import { TERMS_VERSION } from "@/lib/legal";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Conestruct",
+  title: "Terms of Service · Conestruct",
 };
 
 export default function TermsPage() {

@@ -3,7 +3,7 @@ import { PublicChrome } from "@/components/PublicChrome";
 import { TERMS_VERSION } from "@/lib/legal";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Conestruct",
+  title: "Privacy Policy · Conestruct",
 };
 
 export default function PrivacyPage() {

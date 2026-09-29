@@ -11,7 +11,7 @@ import { PUBLIC_LINE } from "./public-copy";
 
 // A2-Q1: no form in Arc 2.  "Get notified" is a mail link.
 export const NOTIFY_EMAIL = "ryan@conestruct.com";
-export const NOTIFY_SUBJECT = "Conestruct — let me know when it opens";
+export const NOTIFY_SUBJECT = "Conestruct: let me know when it opens";
 export const NOTIFY_HREF = `mailto:${NOTIFY_EMAIL}?subject=${encodeURIComponent(NOTIFY_SUBJECT)}`;
 
 export const NAV = {
@@ -32,7 +32,7 @@ export const SHEET = {
 export const DRAWING = {
   label: "ILLUSTRATION · RIGHT LANE CLOSED",
   scale: "not to scale",
-  callout: "you mark the work — the rest is laid out around it",
+  callout: "you mark the work · the rest is laid out around it",
   note: "illustration · a real plan is drawn on the road you pick",
   work: "WORK",
   aria:
@@ -129,7 +129,7 @@ export const SOURCES = {
   n: "03",
   title: "Every dimension has a source",
   question: "Where did that number come from?",
-  body: "Every taper, buffer and spacing in the plan's audit carries its citation — the MUTCD 2023 section, table or figure, or the CDOT S-630-1 sheet it came from — so the person who reviews the plan can check it in one step. Where a value needs a person, the plan flags it rather than hiding it.",
+  body: "Every taper, buffer and spacing in the plan's audit carries its citation: the MUTCD 2023 section, table or figure, or the CDOT S-630-1 sheet it came from. The person who reviews the plan can check it in one step. Where a value needs a person, the plan flags it.",
   prov: "some of the references it cites",
   // A2-Q6: only the four verified by subject (checkpoint-arc2.md §3).
   // Each is a string the product already emits, so the citation counter
@@ -227,7 +227,7 @@ export const ROAD = {
 
 // R19 — the 404 (design/NotFound.dc.html).
 export const NOT_FOUND = {
-  title: "Road closed — Conestruct",
+  title: "Road closed · Conestruct",
   step: "SHEET",
   sheet: "404 · PAGE NOT FOUND",
   scale: "not to scale",

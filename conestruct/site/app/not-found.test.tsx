@@ -20,7 +20,7 @@ describe("R19 — the Road closed page", () => {
     expect(pri).toHaveLength(1);
     expect(pri[0].getAttribute("href")).toBe("/");
     expect(pri[0].textContent).toBe("Back to conestruct.com");
-    expect(metadata.title).toBe("Road closed — Conestruct");
+    expect(metadata.title).toBe("Road closed · Conestruct");
   });
 
   it("draws the closure: barricade, ROAD CLOSED sign, the detour home — one named drawing", () => {

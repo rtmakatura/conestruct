@@ -7,7 +7,7 @@
 // (shoulder and lane width) carry no citation; "a draft for a licensed
 // professional to review" matches the generator's draft notice.
 export const PUBLIC_LINE =
-  "Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest — every taper, buffer and spacing cited to MUTCD 2023 or CDOT, every plan a draft for a licensed professional to review.";
+  "Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.";
 
 // C-S2: the title's untraced speed claim ("MUTCD plans in seconds") is gone.
-export const PUBLIC_TITLE = "Conestruct — coming soon";
+export const PUBLIC_TITLE = "Conestruct · coming soon";
