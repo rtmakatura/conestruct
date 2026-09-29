@@ -205,3 +205,25 @@ Ryan, 2026-09-29, on the stacked `ship/r42-r45` report:
 Ryan, 2026-09-29, on the `ship/r42-r45` ship report (after "Browser check PASS."):
 
 > R47 (Ryan): yes. The cleanup also removes local-only branches already in main, same worktree rules. It also removes "redproof" throwaway branches (local and origin) whose last sha is recorded in a committed redproof doc, printing the restore command. Real unmerged work (issue-162-mapbox-browser-token, worktree-issue-151-jurisdiction-deltas) is never touched; list it once per ship. Small ship-loop branch, one go.
+
+## R50, verbatim
+
+From `cc-prompt-r48-r50.md` (Ryan, 2026-09-29). R48 and R49 are quoted in `coming-soon-gate/rulings.md`.
+
+> # Rulings R48–R50 (Ryan, 2026-09-29)
+>
+> Quote each verbatim in the matching rulings.md (R48/R49: coming-soon-gate; R50: ship-loop). Build on top of `docs/demo-prep-snapshot` so the snapshot ships with this. Do R50 first: nothing else ships while CI is red.
+>
+> ## R50: CI is failing on main (investigate first, then fix)
+>
+> GitHub Actions emails report "Python tests: All jobs have failed" on `main` (884081c, 2 annotations) and "Frontend tests: All jobs have failed" (6 annotations, 3m42s). Ryan has been getting a string of these, so it has likely been red for several ships while local runs passed.
+>
+> 1. Use `gh run list --workflow` and `gh run view --log-failed` (read-only) for both workflows. Report: the first red run on `main` (sha + date), and every failing test with its error, in plain words.
+> 2. Say why local runs passed and CI didn't (Windows vs Ubuntu, PowerShell-only tests, missing env such as `NEXT_PUBLIC_SHEET_REVISED`, Vercel CLI, network, timing). Name the commit that introduced each failure.
+> 3. Fix each one at its cause. A test that can only run on Windows is marked as skipped on non-Windows with the reason in the skip message; it does not silently pass. No deleting assertions to go green.
+> 4. **Close the gap so this can't recur:** `ship.ps1` checks that both CI workflows are green on the branch tip being shipped, before the merge (same place as the R29 env check). Red, missing, or still running stops the ship with "Nothing was merged or pushed." and names the failing workflow. Red-prove it against a scratch run or a fixture.
+> 5. Report: first red run, each failure → cause → fix, CI green links for the branch tip, and the red-proof.
+>
+> ## Report
+>
+> One stacked branch (snapshot + R50 + R48 + R49), usual report: verifier verdict verbatim, before/after screenshots for R48, the scroll check for R49, CI green on the tip, `preview:` line, and the go.

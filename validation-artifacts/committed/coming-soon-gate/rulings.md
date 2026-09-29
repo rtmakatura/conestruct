@@ -252,3 +252,20 @@ R42: [approved / change: ___].
 Then stack all three (ship-cleanup-superseded, sheet-flair, copy/leftovers) onto one branch in that order, resolve the rulings.md conflict, re-run the verifier, and give me one go.
 
 *CC's reading, flagged in the report: the R42 line arrived as the template, unfilled. The same message asks for R42 to be stacked and shipped in one go, so CC read it as approved with no change.*
+
+**R48, R49 (Ryan, 2026-09-29)**, verbatim from `cc-prompt-r48-r50.md` (R50 is quoted in `ship-loop/rulings.md`):
+
+> ## R48: callout line (light lane)
+>
+> The drawing callout becomes exactly: "Mark the work. Get the plan."
+>
+> Update the test that pins the old line; confirm the old line is gone from site code and tests.
+>
+> ## R49: smooth scroll (light lane)
+>
+> The "How a plan is made ↓" and "What it cites ↓" links scroll smoothly to their sections.
+>
+> - CSS `scroll-behavior: smooth` on `html`, wrapped in `@media (prefers-reduced-motion: no-preference)` so reduced-motion users jump instantly.
+> - Headings don't hide under anything fixed at the top (`scroll-margin-top` if needed).
+> - Focus moves to the target section after the scroll, so keyboard and screen-reader users land there too.
+> - Test in the browser at 1440 and 390, with and without reduced motion.
