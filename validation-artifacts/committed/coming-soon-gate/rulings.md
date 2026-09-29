@@ -184,3 +184,12 @@ R37. Part B approved as its own arc with a checkpoint (it touches backend string
 - data/jurisdictions/*.json stays verbatim (cited).
 - PDF: regenerate one plan sheet and one crew sheet before and after; attach both.
 Stack on copy/unslop-public; checkpoint before building.
+
+**R40 (Ryan, 2026-09-29)**, verbatim:
+
+Ruling R40, 2026-09-29 (Ryan). Quote verbatim in coming-soon-gate/rulings.md.
+
+Replace the notify line "Email us and we'll write back once, when Conestruct opens." with exactly:
+"Want a heads-up? Email us and we'll tell you the day it opens."
+
+Light lane. If copy/unslop-public hasn't shipped, add this to it as one more commit and re-run the preview; otherwise do it as its own light-lane branch off main. Update any test that pins the old line. Standard report: before/after at 1440 and 390, verifier verdict, preview: line, the go.

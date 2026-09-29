@@ -51,7 +51,7 @@ describe("the Plan Sheet — words and links", () => {
   it("the h1 is the question; the notify line is the ruled one", () => {
     const c = mount();
     expect([...c.querySelectorAll("h1")].map((h) => h.textContent)).toEqual(["Want to know when it opens?"]);
-    expect(c.textContent).toContain("Email us and we'll write back once, when Conestruct opens.");
+    expect(c.textContent).toContain("Want a heads-up? Email us and we'll tell you the day it opens.");
   });
 
   it("the hero line is PUBLIC_LINE — the page and its metadata say one thing (P2)", () => {

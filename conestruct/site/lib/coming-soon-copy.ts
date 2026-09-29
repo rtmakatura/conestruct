@@ -59,7 +59,7 @@ export const TITLE_BLOCK: readonly (readonly [string, string])[] = [
 export const NOTIFY = {
   question: "Want to know when it opens?",
   button: "Get notified",
-  line: "Email us and we'll write back once, when Conestruct opens.",
+  line: "Want a heads-up? Email us and we'll tell you the day it opens.",
 } as const;
 
 // R22: the three step bodies are Ryan's, verbatim.
