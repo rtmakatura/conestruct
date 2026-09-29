@@ -464,9 +464,16 @@ describe("R22 — the map, 01's words and the close band", () => {
 });
 
 describe("R33 / R34 / R35 — the unslop pass", () => {
-  it("R34: the callout is Ryan's two sentences; R35: 03's heading", () => {
+  it("R48: the callout is exactly Ryan's line, wide and narrow; R34's is gone; R35: 03's heading", () => {
     const c = mount();
-    expect(c.textContent).toContain("You mark the work. The rest is laid out around it.");
+    const wide = [...c.querySelectorAll(".cs-wide text")].filter((t) => /mark the work/i.test(t.textContent ?? ""));
+    const narrow = [...c.querySelectorAll(".cs-drawing-foot .cs-only-narrow")];
+    expect([...wide, ...narrow].map((e) => e.textContent)).toEqual([
+      "Mark the work. Get the plan.",
+      "Mark the work. Get the plan.",
+    ]);
+    expect(c.textContent).not.toContain("The rest is laid out around it.");
+    expect(c.textContent).not.toContain("You mark the work");
     expect(c.querySelector("#cs-sources")?.textContent).toBe("Every number shows where it came from");
   });
 
@@ -474,7 +481,7 @@ describe("R33 / R34 / R35 — the unslop pass", () => {
     const text = mount().textContent ?? "";
     expect(text).not.toContain("—");
     expect(text).toContain("Illustration. A real plan is drawn on the road you pick.");
-    for (const joined of ["you mark the work ·", "illustration · a real plan"]) {
+    for (const joined of ["mark the work ·", "illustration · a real plan"]) {
       expect(text.toLowerCase(), joined).not.toContain(joined);
     }
   });

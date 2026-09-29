@@ -32,7 +32,7 @@ export const SHEET = {
 export const DRAWING = {
   label: "ILLUSTRATION · RIGHT LANE CLOSED",
   scale: "not to scale",
-  callout: "You mark the work. The rest is laid out around it.",
+  callout: "Mark the work. Get the plan.",
   note: "Illustration. A real plan is drawn on the road you pick.",
   work: "WORK",
   aria:
