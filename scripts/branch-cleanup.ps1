@@ -77,7 +77,7 @@ function Remove-Links($dir) {
 
 $Main = (git -C $RepoDir rev-parse $Main).Trim()
 Write-Host ""
-Write-Host "Branch cleanup (R31, R44): branches already in main $($Main.Substring(0, 7)), by ancestry or by patch" -ForegroundColor Cyan
+Write-Host "Branch cleanup (R31, R44, R46): branches already in main $($Main.Substring(0, 7)), by ancestry, by patch or by superseded.txt" -ForegroundColor Cyan
 
 git -C $RepoDir fetch --prune $Remote 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Write-Host "  git fetch $Remote failed; cleanup skipped." -ForegroundColor Yellow; exit 1 }
@@ -91,47 +91,81 @@ foreach ($ln in (git -C $RepoDir worktree list --porcelain)) {
     elseif ($ln -like "locked*") { $cur.locked = $true }
 }
 
-$refs = git -C $RepoDir for-each-ref "--format=%(refname:strip=3) %(objectname)" "refs/remotes/$Remote"
-$removed = 0
-foreach ($r in $refs) {
-    $name, $sha = $r -split ' ', 2
-    if ($name -eq "HEAD" -or $name -eq "main" -or $name -eq "") { continue }
-    if (-not (Test-Shipped $sha)) {
-        if ($name -match $Throwaway) { $left += "$name at $sha -- unmerged throwaway red-proof branch (R32); delete it on origin when done" }
-        continue
+# Delete one branch whose work main carries: origin first, through the
+# gh-only push (R27) with a lease on $sha, then the local branch of the same
+# name and its worktree under R31's rules.  $localOk says whether the local
+# tip may go too.  Everything it would not remove goes to "Left for Ryan".
+function Remove-Branch($name, $sha, $localOk) {
+    if ($sha) {
+        git -C $RepoDir -c credential.helper= -c "credential.helper=!gh auth git-credential" push $Remote "--force-with-lease=refs/heads/${name}:$sha" ":refs/heads/$name" 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) { Write-Host "  FAILED to delete $Remote/$name at $sha" -ForegroundColor Red; $script:failed++; return }
+        Write-Host "  deleted $Remote/$name at $sha   (restore: git push $Remote ${sha}:refs/heads/$name)"
+        $script:removed++
     }
-
-    # origin: gh-only push (R27), with a lease on the sha just checked.
-    git -C $RepoDir -c credential.helper= -c "credential.helper=!gh auth git-credential" push $Remote "--force-with-lease=refs/heads/${name}:$sha" ":refs/heads/$name" 2>&1 | Out-Null
-    if ($LASTEXITCODE -ne 0) { Write-Host "  FAILED to delete $Remote/$name at $sha" -ForegroundColor Red; $failed++; continue }
-    Write-Host "  deleted $Remote/$name at $sha   (restore: git push $Remote ${sha}:refs/heads/$name)"
-    $removed++
 
     # The local branch of the same name.
     $localSha = (git -C $RepoDir rev-parse -q --verify "refs/heads/$name" 2>$null)
-    if (-not $localSha) { continue }
+    if (-not $localSha) { return }
     $localSha = $localSha.Trim()
-    if (-not (Test-Shipped $localSha)) { $left += "$name -- local branch at $localSha has commits main lacks; kept"; continue }
+    if (-not (& $localOk $localSha)) { $script:left += "$name -- local branch at $localSha has commits main lacks; kept"; return }
 
     $wt = $worktrees.Values | Where-Object { $_.branch -eq $name } | Select-Object -First 1
     if ($wt) {
         $p = $wt.path
         $inRoot = $p.StartsWith($WorktreeRoot + "\", [System.StringComparison]::OrdinalIgnoreCase)
-        if (-not $inRoot -or $p -ieq $ShipPath) { $left += "$name -- checked out at $p, outside .claude\worktrees; local branch kept at $localSha"; continue }
-        if ($wt.locked) { $left += "$name -- worktree $p is locked (a live session?); worktree and local branch kept at $localSha"; continue }
+        if (-not $inRoot -or $p -ieq $ShipPath) { $script:left += "$name -- checked out at $p, outside .claude\worktrees; local branch kept at $localSha"; return }
+        if ($wt.locked) { $script:left += "$name -- worktree $p is locked (a live session?); worktree and local branch kept at $localSha"; return }
         $dirty = git -C $p status --porcelain 2>$null
-        if ($dirty) { $left += "$name -- worktree $p has uncommitted changes; worktree and local branch kept at $localSha"; continue }
+        if ($dirty) { $script:left += "$name -- worktree $p has uncommitted changes; worktree and local branch kept at $localSha"; return }
         Remove-Links $p
         git -C $RepoDir worktree remove $p 2>&1 | ForEach-Object { Write-Host "    $_" }
-        if ($LASTEXITCODE -ne 0) { Write-Host "  FAILED to remove worktree $p" -ForegroundColor Red; $failed++; $left += "$name -- worktree $p could not be removed; local branch kept at $localSha"; continue }
+        if ($LASTEXITCODE -ne 0) { Write-Host "  FAILED to remove worktree $p" -ForegroundColor Red; $script:failed++; $script:left += "$name -- worktree $p could not be removed; local branch kept at $localSha"; return }
         Write-Host "  removed worktree $p"
     }
     git -C $RepoDir branch -D $name 2>&1 | Out-Null
-    if ($LASTEXITCODE -ne 0) { Write-Host "  FAILED to delete local $name" -ForegroundColor Red; $failed++; continue }
+    if ($LASTEXITCODE -ne 0) { Write-Host "  FAILED to delete local $name" -ForegroundColor Red; $script:failed++; return }
     Write-Host "  deleted local $name at $localSha"
 }
 
-if ($removed -eq 0) { Write-Host "  no merged branches on $Remote." }
+$refs = git -C $RepoDir for-each-ref "--format=%(refname:strip=3) %(objectname)" "refs/remotes/$Remote"
+$origin = @{}
+foreach ($r in $refs) { $n, $h = $r -split ' ', 2; if ($n) { $origin[$n] = $h } }
+$removed = 0
+foreach ($name in @($origin.Keys | Sort-Object)) {
+    $sha = $origin[$name]
+    if ($name -eq "HEAD" -or $name -eq "main" -or $name -eq "") { continue }
+    if (-not (Test-Shipped $sha)) {
+        if ($name -match $Throwaway) { $left += "$name at $sha -- unmerged throwaway red-proof branch (R32); delete it on origin when done" }
+        continue
+    }
+    Remove-Branch $name $sha { param($s) Test-Shipped $s }
+    $origin.Remove($name)
+}
+
+# R46: branches a restacked or rebuilt branch says it carries, listed in
+# scripts/superseded.txt on the new main as `<branch> <sha> -- why`.  A
+# conflict resolution changes a commit's patch, so neither ancestry nor
+# `git cherry` can see such a branch as shipped; the list, now in main, is
+# the record.  A listed branch goes only while it still sits at the listed
+# sha: one that moved since carries work the list never saw, and is kept
+# and listed.  main is never deleted, whatever the list says.
+$listed = @(git -C $RepoDir show "${Main}:scripts/superseded.txt" 2>$null)
+foreach ($ln in $listed) {
+    $t = $ln.Trim()
+    if (-not $t -or $t.StartsWith("#")) { continue }
+    $f = $t -split '\s+'
+    if ($f.Count -lt 2) { continue }
+    $name, $want = $f[0], $f[1]
+    if ($name -eq "HEAD" -or $name -eq "main") { continue }
+    $sha = $origin[$name]
+    $localSha = (git -C $RepoDir rev-parse -q --verify "refs/heads/$name" 2>$null)
+    if (-not $sha -and -not $localSha) { continue }  # already gone
+    if ($sha -and $sha -ne $want) { $left += "$name at $sha -- listed in superseded.txt at $want, but it moved since it was listed; kept"; continue }
+    Remove-Branch $name $sha ([scriptblock]::Create("param(`$s) `$s -eq '$want'"))
+    $origin.Remove($name)
+}
+
+if ($removed -eq 0) { Write-Host "  no merged or superseded branches on $Remote." }
 if ($left.Count -gt 0) {
     Write-Host "Left for Ryan:" -ForegroundColor Yellow
     $left | ForEach-Object { Write-Host "  $_" }

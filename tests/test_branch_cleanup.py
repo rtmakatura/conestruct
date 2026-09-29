@@ -290,6 +290,97 @@ def test_the_r31_cases_are_unchanged_with_superseded_branches_present(picked: di
     assert s["sentinel"].read_text(encoding="utf-8") == "keep me"
 
 
+# --- R46: branches a restack says it carries -----------------------------------------
+
+
+@pytest.fixture
+def listed(scratch: dict) -> dict:
+    """A restacked branch reached main carrying a scripts/superseded.txt that
+    names the branches whose work it carries (ship-loop ruling R46).  Their
+    commits need not match main by ancestry or by patch (a conflict
+    resolution changes the patch), so only the list can retire them."""
+    s = scratch
+    repo = s["repo"]
+    base = git(repo, "rev-parse", f"{s['a']}~1")
+    for name in ["rebuilt-x", "moved-y", "locked-z"]:
+        git(repo, "checkout", "-q", "-b", name, base)
+        s[name] = commit(repo, name)  # work git cherry cannot match in main
+    git(repo, "checkout", "-q", "main")
+    git(repo, "push", "-q", "origin", "rebuilt-x", "moved-y", "locked-z")
+    # moved-y gains a commit after it was listed.
+    git(repo, "checkout", "-q", "moved-y")
+    s["moved-y-now"] = commit(repo, "y2")
+    git(repo, "push", "-q", "origin", "moved-y")
+    git(repo, "checkout", "-q", "main")
+    git(repo, "worktree", "add", "-q", str(s["wt"] / "locked-z"), "locked-z")
+    git(repo, "worktree", "lock", "--reason", "a live session", str(s["wt"] / "locked-z"))
+    # The list, committed on main by the restacked branch.
+    (repo / "scripts").mkdir(exist_ok=True)
+    (repo / "scripts" / "superseded.txt").write_text(
+        "# branches whose work a restacked branch carries (R46)\n"
+        f"rebuilt-x {s['rebuilt-x']} -- carried by restack-1\n"
+        f"moved-y {s['moved-y']} -- carried by restack-1\n"
+        f"locked-z {s['locked-z']} -- carried by restack-1\n"
+        f"gone-w {'0' * 40} -- carried by an older restack; already deleted\n"
+        f"main {s['main']} -- never deleted, whatever a list says\n",
+        encoding="utf-8",
+    )
+    git(repo, "add", "scripts/superseded.txt")
+    git(repo, "commit", "-q", "-m", "restack-1 lists what it carries")
+    git(repo, "push", "-q", "origin", "main")
+    s["main"] = git(repo, "rev-parse", "HEAD")
+    return s
+
+
+@needs_ps
+def test_a_listed_branch_goes_though_git_cherry_cannot_match_it(listed: dict) -> None:
+    s = listed
+    cherry = git(s["repo"], "cherry", s["main"], s["rebuilt-x"]).splitlines()
+    assert cherry and all(ln.startswith("+ ") for ln in cherry), cherry  # the premise
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "rebuilt-x" not in remote_branches(s["repo"]), out
+    assert "rebuilt-x" not in local_branches(s["repo"]), out
+    assert f"deleted origin/rebuilt-x at {s['rebuilt-x']}" in out, out
+    assert f"(restore: git push origin {s['rebuilt-x']}:refs/heads/rebuilt-x)" in out, out
+    assert f"deleted local rebuilt-x at {s['rebuilt-x']}" in out, out
+
+
+@needs_ps
+def test_a_listed_branch_that_moved_since_the_listing_is_kept_and_listed(listed: dict) -> None:
+    s = listed
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "moved-y" in remote_branches(s["repo"]), out
+    assert git(s["repo"], "rev-parse", "origin/moved-y") == s["moved-y-now"]
+    left = out.split("Left for Ryan:", 1)[1]
+    assert "moved-y" in left and "moved since it was listed" in left, left
+
+
+@needs_ps
+def test_a_listed_branch_keeps_the_r31_safety_rules(listed: dict) -> None:
+    s = listed
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert f"deleted origin/locked-z at {s['locked-z']}" in out, out
+    left = out.split("Left for Ryan:", 1)[1]
+    assert "locked-z -- worktree" in left and "is locked" in left, left
+    assert (s["wt"] / "locked-z").exists()
+    # main is never deleted, whatever the list says; a branch already gone is skipped.
+    assert "main" in remote_branches(s["repo"]), out
+    assert "deleted origin/main" not in out, out
+    assert "FAILED" not in out, out
+
+
+@needs_ps
+def test_a_second_run_with_the_list_deletes_nothing(listed: dict) -> None:
+    s = listed
+    run_cleanup(s)
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "deleted" not in out, out
+
+
 # --- the wiring --------------------------------------------------------------------
 
 

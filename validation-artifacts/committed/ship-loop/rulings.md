@@ -193,3 +193,9 @@ From `cc-prompt-r42-r44.md` (Ryan, 2026-09-29). R42 and R43 are quoted in `comin
 > - Red-prove with the scratch remote: a cherry-picked copy is deleted, a branch with one extra commit is kept.
 > - First real run should remove `copy/unslop-platform` and `copy/unslop-platform-inventory` (check with `git cherry` in the report). If either has a `+` commit, list it and say what the commit is.
 > - Worktrees locked by the session that built the branch: the next ship's cleanup retries them. No change needed.
+
+## R46, verbatim
+
+Ryan, 2026-09-29, on the stacked `ship/r42-r45` report:
+
+> R46 (Ryan): whenever you restack or rebuild branches, commit a superseded.txt listing every branch whose work the new branch carries; ship.ps1's cleanup deletes the listed branches once the listing branch is in main (same safety rules as R31/R44). Start with copy/leftovers. I never delete branches by hand.

@@ -1,0 +1,14 @@
+# Branches whose work a restacked or rebuilt branch carries (ship-loop ruling R46).
+# After "SHIP VERIFIED", scripts/branch-cleanup.ps1 reads this file from the new
+# main and deletes each listed branch, on origin and locally, under R31's rules.
+# A listed branch goes only while it still sits at the listed sha; one that moved
+# since is kept and listed for Ryan.  main is never deleted.  Lines stay after
+# their branch is gone (a gone branch is skipped), so this file is also the
+# record of what each restack carried.  One line per branch:
+#   <branch> <full sha> -- carried by <new branch> (why)
+
+copy/unslop-platform 07e71f933d96a282bc14c4f7890a9eb2427f8dcb -- carried by copy/unslop-platform-b (8af3db3, 6ae0aca), in main at 8215533
+copy/unslop-platform-inventory 99b159faccc083be9699907d48b5669029067fef -- carried by copy/unslop-platform-b (8af3db3), in main at 8215533
+ship-cleanup-superseded c1658529940978701e311797b400edceff04064c -- carried by ship/r42-r45 (R44, 7577897)
+sheet-flair 5bc9a252ddc271728cacce50bdff138aa70b7a48 -- carried by ship/r42-r45 (R42, 7fdd6ff e9c01f1)
+copy/leftovers c41e0097d15af35c9581beabac481eb1f8ba7f57 -- carried by ship/r42-r45 (R43, d6d7971 f2a9f0b; d6d7971 differs from 4012524 only by the rulings.md conflict resolution)
