@@ -100,6 +100,24 @@ describe("#227 schedule window reference block", () => {
     expect(document.querySelectorAll(".sched-window-row").length).toBe(1);
   });
 
+  it("R45: no published windows says no restriction is shown because none is on record, and that this doesn't mean none exists", () => {
+    const none = {
+      name: "Thornton",
+      hours: { shape: "none", windows: [], holiday_rule: "none", conflict: null },
+      hours_eval: UNKNOWN,
+    } as unknown as JurisdictionBlock;
+    render(
+      <ScheduleWindows
+        scenario={scenarioWith({ jurisdiction_key: "thornton" })}
+        jurisdiction={none}
+      />,
+    );
+    const text = (document.querySelector(".sched-windows")?.textContent ?? "").replace(/\s+/g, " ");
+    expect(text).toContain(
+      "Thornton publishes no work-hour windows. No restriction shown: none is on record. That doesn't mean none exists.",
+    );
+  });
+
   it("unevaluated: real rows, class-scoped first, all ◌ 'set dates to check'", () => {
     render(
       <ScheduleWindows

@@ -205,6 +205,8 @@ describe("finesDoubleItem renderer", () => {
     expect(spec!.title).toBe("Fines Double envelope");
     expect(spec!.dim).toBeUndefined();
     const html = renderBody(spec);
+    // R45: the reduction is the cause, kept with a colon.
+    expect(html).toContain("Work-zone posted speed is reduced: Fines Double signing applies per");
     // Sign codes present
     expect(html).toContain("R2-10");
     expect(html).toContain("R2-11");

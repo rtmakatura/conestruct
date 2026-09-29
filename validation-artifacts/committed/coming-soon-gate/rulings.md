@@ -241,3 +241,14 @@ Report: a frame strip of the animation at 1440 and 390, the reduced-motion scree
 - `src/api/schemas.py:993` (`_map_road_type`, `'divided_highway'`): every `roadType` field on the wire is a pydantic `Literal` without `divided_highway` (`schemas.py:347-361, 621, 625`), so such a request is refused with pydantic's own 422 before this line runs.
 - `src/api/schemas.py:1357` (no generator bridge): every render endpoint calls `_ensure_scenario_enabled` before `scenario_to_call` (`render_api.py:818, 886, 919, 965, 1105, 1239, 1340, 1579, 1710, 1729, 1761, 1831`), and a disabled kind is refused there with a 400 of its own.
 - `src/rules/validators.py:1872` (road_type not a Table 6B-1 category): every `ScenarioParams.road_type` on the wire path is `_map_road_type`'s output (`schemas.py:1175-1342`), which returns only `rural`, `urban_high`, `urban_low` or `freeway`.
+
+**R45 (Ryan, 2026-09-29)**, verbatim:
+
+Rulings R45, 2026-09-29 (Ryan). Quote verbatim in coming-soon-gate/rulings.md.
+R43 flag 1: keep the cause. "Work-zone posted speed is reduced: Fines Double signing applies…"
+R43 flag 2: restore the dropped fact. "No restriction shown: none is on record. That doesn't mean none exists."
+R43 flag 3: accepted as is ("…not a permit fee · $X").
+R42: [approved / change: ___].
+Then stack all three (ship-cleanup-superseded, sheet-flair, copy/leftovers) onto one branch in that order, resolve the rulings.md conflict, re-run the verifier, and give me one go.
+
+*CC's reading, flagged in the report: the R42 line arrived as the template, unfilled. The same message asks for R42 to be stacked and shipped in one go, so CC read it as approved with no change.*

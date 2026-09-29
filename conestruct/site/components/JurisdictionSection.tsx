@@ -1206,8 +1206,9 @@ export function WorkHoursCard({
 
       {hours.shape === "none" || rows.length === 0 ? (
         <div className="text-[12px] text-[color:var(--none)] py-2">
-          ◌ {jurisdiction.name} publishes no work-hour windows. None on
-          record doesn&apos;t mean none exist.
+          ◌ {jurisdiction.name} publishes no work-hour windows. No
+          restriction shown: none is on record. That doesn&apos;t mean none
+          exists.
         </div>
       ) : (
         <div>

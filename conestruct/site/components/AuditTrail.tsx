@@ -1203,7 +1203,7 @@ export function finesDoubleItem(
     body: (
       <>
         <p>
-          Work-zone posted speed is reduced. Fines Double signing
+          Work-zone posted speed is reduced: Fines Double signing
           applies per CDOT S-630-1 Sheet 12, Fines Double Signing Notes.
           The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P
           assemblies at 2,640 ft intervals; the entrance R2-1 posts the
