@@ -27,29 +27,39 @@ function block(from: number): string {
 }
 
 describe("R10 — animation is the band's track and the coming-soon drawing, nothing else (hover colour transitions are not animation)", () => {
-  it("the only @keyframes are the band's sweep, the drawing's draw/fade and 02's mark replay (R21)", () => {
+  it("the only @keyframes are the band's sweep, the drawing's plotter (R10, R42: draw, fade, stroke, drop, stamp) and 02's mark replay (R21)", () => {
     const names = [...css.matchAll(/@keyframes\s+([\w-]+)/g)].map((m) => m[1]).sort();
-    expect(names).toEqual(["cs-draw", "cs-fade", "cs-k", "wb-sweep"]);
+    expect(names).toEqual(["cs-draw", "cs-drop", "cs-fade", "cs-k", "cs-stamp", "cs-stroke", "wb-sweep"]);
   });
 
   it("every animation declaration is the band's or sits inside the no-preference block", () => {
     const at = css.indexOf("@media (prefers-reduced-motion: no-preference)");
     expect(at, "the drawing's no-preference block").toBeGreaterThan(-1);
     const noPref = block(at);
-    // Exactly three animations in it — the draw, the fade and 02's mark
-    // replay (R21) — each once.
-    expect(noPref.match(/animation:/g)).toHaveLength(3);
+    // Exactly six animations in it — R42's plotter (draw, fade, stroke,
+    // drop, stamp) and 02's mark replay (R21) — each once.
+    expect(noPref.match(/animation:/g)).toHaveLength(6);
     expect(noPref).toMatch(/\.workbench \.cs-stack\.is-fanned \.cs-seq \{[^}]*animation: cs-k 0\.35s ease-out both;/);
-    expect(noPref).toMatch(/\.workbench \.cs-draw \{[^}]*animation: cs-draw 1\.4s ease-out both;/);
-    expect(noPref).toMatch(/\.workbench \.cs-fade \{[^}]*animation: cs-fade 0\.5s ease-out both;/);
+    expect(noPref).toMatch(/\.workbench \.cs-draw \{[^}]*animation: cs-draw 0\.45s ease-out both;/);
+    expect(noPref).toMatch(/\.workbench \.cs-fade \{[^}]*animation: cs-fade 0\.35s ease-out both;/);
+    expect(noPref).toMatch(/\.workbench \.cs-stroke \{[^}]*animation: cs-stroke 0\.4s ease-out both;/);
+    expect(noPref).toMatch(/\.workbench \.cs-drop \{[^}]*animation: cs-drop 0\.25s ease-out both;/);
+    expect(noPref).toMatch(/\.workbench \.cs-stamp \{[^}]*animation: cs-stamp 0\.28s ease-out 2\.05s both;/);
     // Outside it: only the band's sweep and the band's reduced-motion off.
     const outside = css.replace(noPref, "");
     const decls = [...outside.matchAll(/animation:\s*([^;]+);/g)].map((m) => m[1].trim()).sort();
     expect(decls).toEqual(["none", "wb-sweep 1.5s linear infinite"]);
   });
 
-  it("the drawing animates opacity and a mask's scale only — nothing that moves a box (P1); 02's replay animates --k only", () => {
-    const own: Record<string, string[]> = { "cs-draw": ["transform"], "cs-fade": ["opacity"], "cs-k": ["--k"] };
+  it("the drawing animates opacity, a mask's scale and a stroke's offset; R42's two recorded moves (a device's drop, the stamp's press) are transforms on absolutely placed or SVG marks, so no box moves in layout (P1); 02's replay animates --k only", () => {
+    const own: Record<string, string[]> = {
+      "cs-draw": ["transform"],
+      "cs-fade": ["opacity"],
+      "cs-stroke": ["stroke-dashoffset"],
+      "cs-drop": ["opacity", "transform"],
+      "cs-stamp": ["opacity", "transform"],
+      "cs-k": ["--k"],
+    };
     for (const name of Object.keys(own)) {
       const k = block(css.indexOf(`@keyframes ${name}`));
       const props = [...k.matchAll(/(--[\w-]+|[\w-]+)\s*:/g)].map((m) => m[1]);

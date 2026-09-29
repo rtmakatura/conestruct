@@ -8,7 +8,7 @@
 // contrast are the browser leg (happy-dom lays nothing out).
 
 import { cleanup, fireEvent, render } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import Page from "@/app/page";
 import { ZONE_COLOR, ZONE_LABEL } from "@/lib/corridor-zones";
 import { FOUNDERS, HOW, NOTIFY_HREF, SOURCES } from "@/lib/coming-soon-copy";
@@ -117,7 +117,7 @@ describe("the drawing — R9 colours and words, A2-Q5 placement", () => {
     const svgs = c.querySelectorAll(".cs-drawing-art > svg");
     expect(svgs, "the wide and the narrow drawing").toHaveLength(2);
     for (const svg of svgs) {
-      const fills = [...svg.querySelectorAll(":scope > rect.cs-fade")].map((r) => r.getAttribute("fill"));
+      const fills = [...svg.querySelectorAll(":scope > rect.cs-band")].map((r) => r.getAttribute("fill"));
       expect(fills).toEqual([
         ZONE_COLOR.advance_warning,
         ZONE_COLOR.transition,
@@ -134,7 +134,7 @@ describe("the drawing — R9 colours and words, A2-Q5 placement", () => {
     expect(svgs, "the wide and the narrow drawing").toHaveLength(2);
     for (const svg of svgs) {
       const band = (i: number) => {
-        const r = svg.querySelectorAll(":scope > rect.cs-fade")[i];
+        const r = svg.querySelectorAll(":scope > rect.cs-band")[i];
         const x = parseFloat(r.getAttribute("x") ?? "");
         return [x, x + parseFloat(r.getAttribute("width") ?? "")] as const;
       };
@@ -165,9 +165,66 @@ describe("the drawing — R9 colours and words, A2-Q5 placement", () => {
       expect(s.animationName, el.outerHTML.slice(0, 80)).toBe("");
       expect(s.animation, el.outerHTML.slice(0, 80)).toBe("");
     }
-    // The animated parts carry the classes the no-preference block names.
-    expect(c.querySelectorAll(".cs-draw").length).toBe(2);
+    // The animated parts carry the classes the no-preference block names:
+    // per drawing, three road masks and five bands draw (R42).
+    expect(c.querySelectorAll(".cs-draw").length).toBe(16);
     expect(c.querySelectorAll(".cs-fade").length).toBeGreaterThan(0);
+    expect(c.querySelectorAll(".cs-stroke").length).toBeGreaterThan(0);
+  });
+});
+
+describe("R42 — the sheet plots itself, then the stamp", () => {
+  const delayMs = (el: Element) => parseInt((el as HTMLElement).style.animationDelay, 10);
+
+  it("the devices drop one after another in traffic order, the last by about 2 s", () => {
+    const c = mount();
+    for (const svg of c.querySelectorAll(".cs-drawing-art > svg")) {
+      const devs = [...svg.querySelectorAll("rect.cs-dev")];
+      expect(devs.length).toBe(18);
+      expect(devs.every((d) => d.classList.contains("cs-drop"))).toBe(true);
+      const xs = devs.map((d) => parseFloat((d.parentElement as Element).getAttribute("x") ?? ""));
+      const ds = devs.map(delayMs);
+      for (let i = 1; i < devs.length; i++) {
+        expect(xs[i], "traffic order").toBeGreaterThan(xs[i - 1]);
+        expect(ds[i], "one after another").toBeGreaterThan(ds[i - 1]);
+      }
+      // 250 ms per drop (globals.css): the last lands by about 2 s.
+      expect(ds[ds.length - 1] + 250).toBeLessThanOrEqual(2100);
+    }
+  });
+
+  it("the drawing plots before the devices: road, arrows, signs, bands, the work box", () => {
+    const c = mount();
+    const svg = c.querySelector(".cs-drawing-art > svg") as Element;
+    const firstDevice = delayMs(svg.querySelector("rect.cs-dev") as Element);
+    for (const el of svg.querySelectorAll(".cs-draw, .cs-stroke")) {
+      expect(delayMs(el), el.outerHTML.slice(0, 60)).toBeLessThan(firstDevice);
+    }
+  });
+
+  it("the title block says sheet 1 of 1, and the stamp reads PRELIMINARY over it", () => {
+    const c = mount();
+    const rows = [...c.querySelectorAll(".cs-tb-row")].map((r) => [
+      r.querySelector("dt")?.textContent,
+      r.querySelector("dd")?.textContent,
+    ]);
+    expect(rows).toContainEqual(["SHEET", "1 of 1"]);
+    const stamp = c.querySelector(".cs-tb-wrap > .cs-stamp");
+    expect(stamp?.textContent).toBe("PRELIMINARY");
+    expect(stamp?.classList.contains("tr-section")).toBe(true);
+  });
+
+  it("the revised date is the build's (next.config.mjs), and with none the row is left out (Rule 10)", () => {
+    const rowsOf = () =>
+      [...mount().querySelectorAll(".cs-tb-row")].map((r) => r.querySelector("dt")?.textContent);
+    vi.stubEnv("NEXT_PUBLIC_SHEET_REVISED", "");
+    expect(rowsOf()).not.toContain("REVISED");
+    cleanup();
+    vi.stubEnv("NEXT_PUBLIC_SHEET_REVISED", "2026-09-29");
+    const c = mount();
+    const row = [...c.querySelectorAll(".cs-tb-row")].find((r) => r.querySelector("dt")?.textContent === "REVISED");
+    expect(row?.querySelector("dd")?.textContent).toBe("2026-09-29");
+    vi.unstubAllEnvs();
   });
 });
 

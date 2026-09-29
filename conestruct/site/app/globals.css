@@ -5284,6 +5284,11 @@ input[type="number"] {
 }
 .workbench .cs-drawing-art {
   margin: 8px 0 16px;
+  /* R42: a faint drafting grid behind the drawing, 24 px, in the sheet's
+     hairline.  Background only: it takes no room. */
+  background-image: linear-gradient(to right, var(--da-hair) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--da-hair) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 .workbench .cs-drawing-art svg {
   overflow: visible;
@@ -5349,6 +5354,16 @@ input[type="number"] {
 }
 .workbench .cs-box {
   fill: var(--paper);
+  stroke: var(--paper-line);
+  stroke-width: 1;
+}
+/* R42: the sheet's work box as two shapes, so its outline can plot before
+   its fill lands.  At rest the pair paints what .cs-box paints. */
+.workbench .cs-box-fill {
+  fill: var(--paper);
+}
+.workbench .cs-box-line {
+  fill: none;
   stroke: var(--paper-line);
   stroke-width: 1;
 }
@@ -5419,6 +5434,24 @@ input[type="number"] {
 }
 .workbench .cs-tb {
   margin: 0;
+}
+/* R42: the rubber stamp.  Absolutely placed over the title block's first
+   rows, right side, where the values are short, so it takes no room and
+   nothing moves when it lands.  One ink from the palette (--dim), on the
+   sheet: measured in the light-lane run, AA at its size. */
+.workbench .cs-tb-wrap {
+  position: relative;
+}
+.workbench .cs-stamp {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 2px solid var(--dim);
+  color: var(--dim);
+  transform: rotate(-6deg);
+  pointer-events: none;
 }
 .workbench .cs-tb-row {
   display: grid;
@@ -6302,13 +6335,28 @@ input[type="number"] {
    (components/coming-soon/MilepostRoad.tsx — static under reduced
    motion), and 02's fan transition, the one transition in this block. */
 @media (prefers-reduced-motion: no-preference) {
+  /* R42 — the plotter: each part carries its own delay inline; these are
+     the moves.  A line or band grows from its left end; a stroke traces
+     (pathLength 1); a device drops 12 px into place; the stamp presses
+     once the drawing is done. */
   .workbench .cs-draw {
     transform-box: fill-box;
     transform-origin: left center;
-    animation: cs-draw 1.4s ease-out both;
+    animation: cs-draw 0.45s ease-out both;
   }
   .workbench .cs-fade {
-    animation: cs-fade 0.5s ease-out both;
+    animation: cs-fade 0.35s ease-out both;
+  }
+  .workbench .cs-stroke {
+    stroke-dasharray: 1;
+    animation: cs-stroke 0.4s ease-out both;
+  }
+  .workbench .cs-drop {
+    transform-box: fill-box;
+    animation: cs-drop 0.25s ease-out both;
+  }
+  .workbench .cs-stamp {
+    animation: cs-stamp 0.28s ease-out 2.05s both;
   }
   /* R15 / R21 — 02's stacks, only here: with reduced motion the sheets
      change place with no movement between and every mark stays in
@@ -6338,6 +6386,37 @@ input[type="number"] {
   }
   to {
     opacity: 1;
+  }
+}
+/* R42 — a stroke traces from its start (pathLength 1, dasharray 1). */
+@keyframes cs-stroke {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* R42 — a device drops into its place. */
+@keyframes cs-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* R42 — the stamp presses: down from larger, at its resting angle. */
+@keyframes cs-stamp {
+  from {
+    opacity: 0;
+    transform: rotate(-6deg) scale(1.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-6deg) scale(1);
   }
 }
 /* R21 — a mark's replay: --k from 0 to its resting 1 (the derived

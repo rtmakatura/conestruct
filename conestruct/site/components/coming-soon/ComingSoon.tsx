@@ -7,8 +7,10 @@ import {
   HOW,
   NOTIFY,
   NOTIFY_HREF,
+  REVISED_KEY,
   SHEET,
   SOURCES,
+  STAMP,
   TITLE_BLOCK,
   WHO,
 } from "@/lib/coming-soon-copy";
@@ -50,6 +52,13 @@ function SectionHead({ id, n, title, prov }: { id: string; n: string; title: str
       {prov && <span className="tr-prov cs-head-prov">{prov}</span>}
     </div>
   );
+}
+
+// R42: the title block plus the revision date, when the build set one
+// (next.config.mjs).  No date, no row.
+export function titleBlock(): readonly (readonly [string, string])[] {
+  const revised = process.env.NEXT_PUBLIC_SHEET_REVISED;
+  return revised ? [...TITLE_BLOCK, [REVISED_KEY, revised]] : TITLE_BLOCK;
 }
 
 function Sheet() {
@@ -95,14 +104,19 @@ function Sheet() {
           </div>
         </div>
         <div id="notify" className="cs-notify-col">
-          <dl className="cs-tb">
-            {TITLE_BLOCK.map(([k, v]) => (
-              <div key={k} className="cs-tb-row">
-                <dt className="tr-step cs-tb-k">{k}</dt>
-                <dd className="tr-field cs-tb-v">{v}</dd>
-              </div>
-            ))}
-          </dl>
+          {/* R42: the stamp sits over the title block, absolutely placed,
+              so it takes no room and moves nothing when it lands. */}
+          <div className="cs-tb-wrap">
+            <dl className="cs-tb">
+              {titleBlock().map(([k, v]) => (
+                <div key={k} className="cs-tb-row">
+                  <dt className="tr-step cs-tb-k">{k}</dt>
+                  <dd className="tr-field cs-tb-v">{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="tr-section cs-stamp">{STAMP}</p>
+          </div>
           <div className="cs-notify">
             <h1 id="cs-notify-q" className="tr-question">
               {NOTIFY.question}

@@ -54,7 +54,19 @@ export const TITLE_BLOCK: readonly (readonly [string, string])[] = [
   ["STANDARD", "MUTCD 2023 · CDOT S-630-1"],
   ["REGION", "Colorado"],
   ["OUTPUT", "Draft plans for licensed review"],
+  // R42: the page is one sheet.
+  ["SHEET", "1 of 1"],
 ];
+
+// R42: the revision date is the date this sheet was built for production
+// (next.config.mjs sets it at build time, Denver's date), so it is the
+// ship date, never typed by hand.  With no date the row is left out
+// (Rule 10: absence renders as absence).
+export const REVISED_KEY = "REVISED";
+
+// R42: the rubber stamp pressed into the title block once the drawing is
+// done.  True of the page: nothing here is final yet.
+export const STAMP = "PRELIMINARY";
 
 export const NOTIFY = {
   question: "Want to know when it opens?",

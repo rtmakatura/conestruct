@@ -208,3 +208,22 @@ R39. The reviewer wording in the app's draft notice and the PDF stays punctuatio
 Build Part B on a fresh branch from main. The old copy/unslop-platform and copy/unslop-platform-inventory branches: leave them; list them under "Left for Ryan" and I'll delete them.
 
 After Part B's report, start R42 (the sheet flair) as its own light-lane branch from main.
+
+**R42 (Ryan, 2026-09-29)**, verbatim from `cc-prompt-r42-r44.md` (R44 is in `ship-loop/rulings.md`; R43 lands with its own branch):
+
+## R42 — sheet flair (light lane, branch off main)
+
+Make `section.cs-sheet` on `/` more eye-catching, in the plan-sheet style. Three additions:
+
+1. **Drawing plots itself:** on first load the lane-closure drawing draws in stroke by stroke (plotter style), then the cones drop into the taper one after another. Once only, about 2 seconds total, ease-out. No loop, no scroll trigger.
+2. **Status stamp:** after the drawing finishes, a rubber-stamp mark presses into the title block, slightly rotated, in one ink color from the existing palette. Text: "PRELIMINARY". Legible at AA contrast.
+3. **Real sheet details:** corner registration marks, a faint drafting grid behind the drawing, and "SHEET 1 OF 1" with a revision date (the ship date, real, not invented) in the title block.
+
+Rules:
+- `prefers-reduced-motion`: everything appears in its final state, no motion.
+- No layout shift: reserve final positions before the animation starts (measure CLS; target 0).
+- SVG + CSS only. No new libraries, no canvas, no video.
+- The drawing's final frame matches today's drawing apart from the stamp and sheet details.
+- Anything that looks like data must be true. If it isn't real, it doesn't go on.
+
+Report: a frame strip of the animation at 1440 and 390, the reduced-motion screenshot, CLS, the usual browser run, verifier verdict, `preview:` line, the go.
