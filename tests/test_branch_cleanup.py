@@ -212,6 +212,84 @@ def test_a_second_run_deletes_nothing(scratch: dict) -> None:
     assert remote_branches(s["repo"]) == {"main", "unmerged-c", "old-redproof"}
 
 
+# --- R44: branches whose work reached main by another route -----------------------
+
+
+@pytest.fixture
+def picked(scratch: dict) -> dict:
+    """Add branches whose commits were cherry-picked into main's history
+    rather than merged: their tips are not ancestors of main, so R31 alone
+    never deletes them (ship-loop ruling R44)."""
+    s = scratch
+    repo = s["repo"]
+    base = git(repo, "rev-parse", f"{s['a']}~1")
+    # picked-g: a copy of main's two commits (a1, b1), cherry-picked onto the
+    # base.  Every commit is patch-equivalent to one in main.
+    git(repo, "checkout", "-q", "-b", "picked-g", base)
+    git(repo, "cherry-pick", s["a"], s["b"])
+    s["picked-g"] = git(repo, "rev-parse", "HEAD")
+    # extra-h: the same copy plus one commit main lacks.
+    git(repo, "checkout", "-q", "-b", "extra-h", s["picked-g"])
+    s["extra-h"] = commit(repo, "h1")
+    # picked-locked: a copy whose worktree a live session holds.
+    git(repo, "checkout", "-q", "-b", "picked-locked", base)
+    git(repo, "cherry-pick", s["a"])
+    s["picked-locked"] = git(repo, "rev-parse", "HEAD")
+    git(repo, "checkout", "-q", "main")
+    git(repo, "push", "-q", "origin", "picked-g", "extra-h", "picked-locked")
+    git(repo, "worktree", "add", "-q", str(s["wt"] / "picked-locked"), "picked-locked")
+    git(repo, "worktree", "lock", "--reason", "a live session", str(s["wt"] / "picked-locked"))
+    return s
+
+
+@needs_ps
+def test_a_cherry_picked_copy_goes(picked: dict) -> None:
+    s = picked
+    cherry = git(s["repo"], "cherry", s["main"], s["picked-g"]).splitlines()
+    assert cherry and all(ln.startswith("- ") for ln in cherry), cherry  # the premise
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "picked-g" not in remote_branches(s["repo"]), out
+    assert "picked-g" not in local_branches(s["repo"]), out
+    assert f"deleted origin/picked-g at {s['picked-g']}" in out, out
+    assert f"(restore: git push origin {s['picked-g']}:refs/heads/picked-g)" in out, out
+    assert f"deleted local picked-g at {s['picked-g']}" in out, out
+
+
+@needs_ps
+def test_one_commit_main_lacks_keeps_the_branch(picked: dict) -> None:
+    s = picked
+    cherry = git(s["repo"], "cherry", s["main"], s["extra-h"]).splitlines()
+    assert sum(ln.startswith("+ ") for ln in cherry) == 1, cherry  # the premise
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "extra-h" in remote_branches(s["repo"]), out
+    assert git(s["repo"], "rev-parse", "extra-h") == s["extra-h"]
+    # Ordinary unmerged work: neither touched nor listed.
+    assert "extra-h" not in out, out
+
+
+@needs_ps
+def test_a_superseded_branch_keeps_the_r31_safety_rules(picked: dict) -> None:
+    s = picked
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert f"deleted origin/picked-locked at {s['picked-locked']}" in out, out
+    left = out.split("Left for Ryan:", 1)[1]
+    assert "picked-locked -- worktree" in left and "is locked" in left, left
+    assert (s["wt"] / "picked-locked").exists()
+    assert git(s["repo"], "rev-parse", "picked-locked") == s["picked-locked"]
+
+
+@needs_ps
+def test_the_r31_cases_are_unchanged_with_superseded_branches_present(picked: dict) -> None:
+    s = picked
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert remote_branches(s["repo"]) == {"main", "unmerged-c", "old-redproof", "extra-h"}, out
+    assert s["sentinel"].read_text(encoding="utf-8") == "keep me"
+
+
 # --- the wiring --------------------------------------------------------------------
 
 

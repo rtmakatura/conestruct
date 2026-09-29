@@ -179,3 +179,17 @@ Ruled on the `ship-env-check` report (`02480f6`), pasted 2026-09-28. R30's draft
 > R31. Branch cleanup is part of the ship. After "SHIP VERIFIED", ship.ps1 deletes from origin every branch whose tip is an ancestor of the new main (so stacked branches go too), and the matching local branches and their worktrees under .claude\worktrees (never _ship, never main). Unmerged branches are never touched. It prints each deletion with its sha so any branch can be restored. If the ship ends "NOT VERIFIED", no cleanup runs. Also delete light-sheet-flip and ship-creds-frontend-only as part of the first run (both are already in main, so the ancestor rule covers them). Red-prove with a scratch remote: merged branch deleted, unmerged branch kept, _ship untouched.
 >
 > R32. Throwaway red-proof branches: CC names them in its report with their last sha; the next ship.ps1 cleanup deletes them only if they're merged, otherwise they're listed under "left for Ryan". No other change to the hook.
+
+## R44, verbatim
+
+From `cc-prompt-r42-r44.md` (Ryan, 2026-09-29). R42 and R43 are quoted in `coming-soon-gate/rulings.md`.
+
+> ## R44 — cleanup also removes superseded branches
+>
+> The R31 cleanup only deletes branches whose tip is in main. Branches whose work was carried onto another branch (cherry-picked, rebased) are left behind, and Ryan was asked to delete them by hand. That's the gap.
+>
+> - After "SHIP VERIFIED", ship.ps1's cleanup also deletes any branch where **every** commit is patch-equivalent to a commit in main (`git cherry origin/main <branch>` prints only `-` lines). Same safety rules as R31: never `main`, never `_ship`, locked or dirty worktrees are listed rather than removed, each deletion prints its sha and restore command.
+> - A branch with even one `+` commit (work not in main) is never touched.
+> - Red-prove with the scratch remote: a cherry-picked copy is deleted, a branch with one extra commit is kept.
+> - First real run should remove `copy/unslop-platform` and `copy/unslop-platform-inventory` (check with `git cherry` in the report). If either has a `+` commit, list it and say what the commit is.
+> - Worktrees locked by the session that built the branch: the next ship's cleanup retries them. No change needed.
