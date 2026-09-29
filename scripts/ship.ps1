@@ -269,3 +269,11 @@ Write-Host "SHIP VERIFIED" -ForegroundColor Green
 Write-Host "  Backend live at $headShort (healthz sha matches HEAD)."
 Write-Host "  $frontend"
 Write-Host "  Next: Ryan's browser check, then the close comment."
+
+# --- 8. Branch cleanup (R31, R32) --------------------------------------------
+# Only here, after SHIP VERIFIED: both NOT VERIFIED verdicts exit above.  Deletes
+# every origin branch already in the new main, with its local branch and clean
+# worktree; prints each sha; lists what it left for Ryan.  A failure here does
+# not un-verify the ship.
+& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\branch-cleanup.ps1") -Main $head -RepoDir $RepoDir
+if ($LASTEXITCODE -ne 0) { Write-Host "CLEANUP INCOMPLETE: a deletion above failed. The ship itself is verified. Paste this output into the chat." -ForegroundColor Yellow }
