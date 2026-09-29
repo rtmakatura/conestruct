@@ -19,8 +19,10 @@
 #   - a matching local branch or worktree it would not remove (dirty, locked,
 #     outside .claude\worktrees, or local commits main lacks);
 #   - an unmerged throwaway red-proof branch (R32): by convention its name ends
-#     in -redproof, or has -redproof- in it.
-# Any other unmerged branch is never touched and not listed.
+#     in -redproof, or has -redproof- in it -- unless a committed red-proof doc
+#     records its last sha, in which case it goes (R47).
+# Any other unmerged branch is never touched.  On origin it is not listed; a
+# local-only one is real work and is listed once per ship (R47).
 #
 # A worktree is removed only after every junction/symlink inside it is
 # unlinked: the worktrees hold node_modules junctions into the main checkout,
