@@ -197,3 +197,14 @@ Light lane. If copy/unslop-public hasn't shipped, add this to it as one more com
 **R41 (Ryan, 2026-09-29)**, verbatim; supersedes R40's line:
 
 R41 (Ryan). The notify line becomes "Email us and we'll tell you the day it opens." (the heading keeps the question). Add to copy/unslop-public, same checks, then I'll ship.
+
+**R38, R39 (Ryan, 2026-09-29)**, verbatim; the Part B checkpoint (checkpoint-unslop-b.md):
+
+Browser check PASS.
+
+Rulings, 2026-09-29 (Ryan), Part B checkpoint. Quote verbatim in coming-soon-gate/rulings.md.
+R38. Q1 " · " for scenario titles. Q2 plain comma for road types. Q3 keep a lone "—" for a missing value (Rule 10 blank; not prose). Q4 crew-sheet template in scope. Q5 update only backend strings in recorded fixtures; jurisdiction text stays as recorded. Q6 "FYI: contractor estimate, not a permit fee".
+R39. The reviewer wording in the app's draft notice and the PDF stays punctuation-only until the lawyer's wording is back.
+Build Part B on a fresh branch from main. The old copy/unslop-platform and copy/unslop-platform-inventory branches: leave them; list them under "Left for Ryan" and I'll delete them.
+
+After Part B's report, start R42 (the sheet flair) as its own light-lane branch from main.
