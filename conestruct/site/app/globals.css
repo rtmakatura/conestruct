@@ -5271,9 +5271,9 @@ input[type="number"] {
   margin-left: auto;
 }
 
-/* The drawing. */
+/* The drawing — under the lower sheet since R25, so its rule is on top. */
 .workbench .cs-drawing {
-  border-bottom: 1px solid var(--rule);
+  border-top: 1px solid var(--rule);
   padding: 28px 40px 32px;
 }
 .workbench .cs-drawing-head {

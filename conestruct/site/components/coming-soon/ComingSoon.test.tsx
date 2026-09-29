@@ -42,6 +42,12 @@ describe("the Plan Sheet — words and links", () => {
     expect(c.querySelector(".cs-close a")?.classList.contains("dl-btn")).toBe(true);
   });
 
+  it("the sheet reads head, then wordmark + title block, then the drawing (R25) — in the markup, not by CSS order", () => {
+    const sheet = mount().querySelector("section.cs-sheet")!;
+    const parts = [...sheet.children].filter((e) => !e.classList.contains("cs-crop")).map((e) => e.className);
+    expect(parts).toEqual(["cs-sheet-head", "cs-lower", "cs-drawing"]);
+  });
+
   it("the h1 is the question; the notify line is the ruled one", () => {
     const c = mount();
     expect([...c.querySelectorAll("h1")].map((h) => h.textContent)).toEqual(["Want to know when it opens?"]);

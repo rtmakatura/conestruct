@@ -75,7 +75,8 @@ function Sheet() {
         <span className="tr-section">{SHEET.title}</span>
         <span className="tr-prov cs-head-prov">{SHEET.standards}</span>
       </div>
-      <PlanDrawing />
+      {/* R25: the wordmark and title block first, the drawing under them —
+          in the markup, so reading and tab order match the screen. */}
       <div className="cs-lower">
         <div className="cs-intro">
           <span className="tr-step cs-only-wide">{HERO.step}</span>
@@ -113,6 +114,7 @@ function Sheet() {
           </div>
         </div>
       </div>
+      <PlanDrawing />
     </section>
   );
 }
