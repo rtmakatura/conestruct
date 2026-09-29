@@ -12,6 +12,7 @@ read as text (like test_ship_push.py): the ship_gate hook gates any run of it.
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import subprocess
@@ -23,8 +24,19 @@ ROOT = Path(__file__).resolve().parents[1]
 CLEANUP = ROOT / "scripts" / "branch-cleanup.ps1"
 SHIP = ROOT / "scripts" / "ship.ps1"
 SHELL = shutil.which("powershell") or shutil.which("pwsh")
+# Windows only (R50): the cleanup runs on the Windows ship machine alone.  It
+# matches worktree paths with backslashes (Norm, and the ".claude\worktrees\"
+# prefix test), and this fixture's node_modules link is an NTFS junction made
+# with `cmd /c mklink /J`.  CI's Ubuntu runner has neither, so there these
+# tests are skipped, saying why, rather than run against a script that can't
+# work there.
+WINDOWS_ONLY = (
+    "Windows only: branch-cleanup.ps1 matches worktree paths with backslashes and"
+    " the fixture's node_modules link is an NTFS junction (cmd /c mklink /J)"
+)
 needs_ps = pytest.mark.skipif(
-    SHELL is None or shutil.which("git") is None, reason="needs PowerShell and git"
+    SHELL is None or shutil.which("git") is None or os.name != "nt",
+    reason=WINDOWS_ONLY if os.name != "nt" else "needs PowerShell and git",
 )
 
 

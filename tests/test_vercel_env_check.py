@@ -25,6 +25,8 @@ from pathlib import Path
 
 import pytest
 
+from tests._fake_cli import write_fake_cli
+
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "conestruct" / "site"
 LIST = ROOT / "scripts" / "production-env.txt"
@@ -120,19 +122,28 @@ def test_every_env_name_the_site_reads_is_classified() -> None:
 
 # --- the check, run for real against fixtures ------------------------------------
 
-FAKE_CLI = r"""@echo off
-echo %*>>"%FAKE_LOG%"
-if "%1"=="whoami" goto whoami
-if "%1"=="env" goto envls
-exit /b 2
-:whoami
-if "%FAKE_WHOAMI_EXIT%"=="0" (echo rtmakatura& exit /b 0)
-echo Error: No existing credentials found. Please run `vercel login`.
-exit /b 1
-:envls
-if not "%FAKE_ENV_EXIT%"=="0" (echo Error: could not list environment variables& exit /b 1)
-type "%FAKE_LISTING%"
-exit /b 0
+# The stand-in for the Vercel CLI (tests/_fake_cli.py runs it as a native
+# command on Windows and Linux alike): it logs its arguments, answers whoami
+# and `env ls` from the FAKE_* variables, and prints a fixture as the listing.
+FAKE_CLI = r"""
+import os, sys
+args = sys.argv[1:]
+with open(os.environ["FAKE_LOG"], "a", encoding="utf-8") as log:
+    log.write(" ".join(args) + "\n")
+if args[:1] == ["whoami"]:
+    if os.environ["FAKE_WHOAMI_EXIT"] == "0":
+        print("rtmakatura")
+        sys.exit(0)
+    print("Error: No existing credentials found. Please run `vercel login`.")
+    sys.exit(1)
+if args[:1] == ["env"]:
+    if os.environ["FAKE_ENV_EXIT"] != "0":
+        print("Error: could not list environment variables")
+        sys.exit(1)
+    sys.stdout.flush()
+    sys.stdout.buffer.write(open(os.environ["FAKE_LISTING"], "rb").read())
+    sys.exit(0)
+sys.exit(2)
 """
 
 
@@ -143,8 +154,7 @@ def run_check(
     env_exit: int = 0,
     pass_list: bool = True,
 ):
-    fake = tmp_path / "vercel.cmd"
-    fake.write_text(FAKE_CLI.replace("\n", "\r\n"), encoding="ascii")
+    fake = write_fake_cli(tmp_path, "vercel", FAKE_CLI)
     log = tmp_path / "calls.log"
     env = dict(os.environ)
     env.update(
@@ -238,6 +248,28 @@ def test_an_empty_listing_stops_the_ship(tmp_path: Path) -> None:
     code, out, _ = run_check(tmp_path, None)
     assert code == 1, out
     assert "listed no Production variables" in out, out
+
+
+@needs_ps
+def test_a_stand_in_that_cannot_run_never_falls_through_to_the_real_cli(
+    tmp_path: Path,
+) -> None:
+    # Found in CI (R50): Linux could not run the old .cmd stand-in, and the
+    # check went on to run the real `npx vercel` in its place.  With npx off
+    # PATH, the old code said so; the fix stops on the stand-in itself.
+    env = dict(os.environ, PATH=str(tmp_path))
+    r = subprocess.run(
+        [SHELL, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(CHECK)]
+        + ["-Vercel", str(tmp_path / "no-such-vercel"), "-Required", str(LIST)],
+        capture_output=True,
+        text=True,
+        timeout=120,
+        env=env,
+    )
+    out = r.stdout + r.stderr
+    assert r.returncode == 1, out
+    assert "could not run the Vercel CLI stand-in" in out, out
+    assert "npx" not in out, out
 
 
 # --- the wiring in the ship script ------------------------------------------------
