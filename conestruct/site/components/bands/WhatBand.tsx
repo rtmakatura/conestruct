@@ -332,7 +332,7 @@ export function WhatBand({
         ? `evaluated · ${(jurisdictionBlock as JurisdictionBlock).authority.replace("_", " & ")} · calls this plan a ${(jurisdictionBlock as JurisdictionBlock).tcp_term}`
         : jState === "evaluating"
           ? "evaluating: the option you picked, not yet confirmed for this plan"
-          : "not evaluated: the check didn't answer, so the option you picked stands";
+          : "not evaluated: the check didn't answer; the option you picked stands";
 
   const schedule = scenario.schedule ?? null;
   // Fix 1: the dates ARE the mode, so the cell reads them directly.

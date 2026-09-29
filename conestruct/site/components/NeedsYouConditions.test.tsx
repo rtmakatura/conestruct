@@ -112,7 +112,7 @@ const block = () => {
 };
 // #255: the backend's advisory (src/api/site_scan.py _VERIFY.strip()) —
 // on the provenance once, never per record.
-const ADVISORY = "The plan is built to the correction, so verify it in the field or on imagery before deploying.";
+const ADVISORY = "The plan is built to the correction. Verify it in the field or on imagery before deploying.";
 // Rule 78's standing sentence at zero, in FULL.  #288 clause 1 appended
 // the second clause the strip never printed, so these assertions read a
 // longer string — by exact match, as they always did.
@@ -431,8 +431,8 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
       reason: "removed",
       status: "moot" as const,
       scan_detected: false,
-      disclosure: "Operator dismissal of school zone is moot: the scan found none along the corridor, so there's nothing to dismiss.",
-      record_clause: "Operator dismissal of school zone is moot: the scan found none along the corridor, so there's nothing to dismiss.",
+      disclosure: "Operator dismissal of school zone is moot: the scan found none along the corridor. There's nothing to dismiss.",
+      record_clause: "Operator dismissal of school zone is moot: the scan found none along the corridor. There's nothing to dismiss.",
     };
     const scenario: Scenario = {
       ...DEFAULT_SCENARIO,

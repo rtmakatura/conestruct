@@ -1985,7 +1985,7 @@ def audit_projection(
                     f"Detection override: map data reported "
                     f"{_override_detected_clause(record)}; the user asserted "
                     f"{record.get('asserted', '')}. The plan is built to the "
-                    "assertion, so verify it in the field or on imagery before "
+                    "assertion. Verify it in the field or on imagery before "
                     "deploying."
                 ),
                 "tracking_issue": DETECTION_OVERRIDE_ISSUE,

@@ -227,3 +227,17 @@ Rules:
 - Anything that looks like data must be true. If it isn't real, it doesn't go on.
 
 Report: a frame strip of the animation at 1440 and 390, the reduced-motion screenshot, CLS, the usual browser run, verifier verdict, `preview:` line, the go.
+
+**R43 (Ryan, 2026-09-29)**, verbatim from `cc-prompt-r42-r44.md` (R42 lands with `sheet-flair`; R44 is in `ship-loop/rulings.md`):
+
+## R43 — copy leftovers (branch off main, after R42)
+
+- A 422 message counts as user-facing if the app can show it. Fix `schemas.py:993`, `:1357` and `validators.py:1872` if they can reach the screen; if they can't, leave them and say so.
+- "L = —" style placeholders stay (missing value).
+- Cut the joining words the verifier flagged ("so", "which isn't") where they restate without adding a fact.
+- Pricing chip: "FYI: contractor estimate, not a permit fee. Expand to configure and preview." No middle dot inside a phrase.
+
+**R43's first bullet, answered (2026-09-29): none of the three can reach the screen, so they stay.**
+- `src/api/schemas.py:993` (`_map_road_type`, `'divided_highway'`): every `roadType` field on the wire is a pydantic `Literal` without `divided_highway` (`schemas.py:347-361, 621, 625`), so such a request is refused with pydantic's own 422 before this line runs.
+- `src/api/schemas.py:1357` (no generator bridge): every render endpoint calls `_ensure_scenario_enabled` before `scenario_to_call` (`render_api.py:818, 886, 919, 965, 1105, 1239, 1340, 1579, 1710, 1729, 1761, 1831`), and a disabled kind is refused there with a 400 of its own.
+- `src/rules/validators.py:1872` (road_type not a Table 6B-1 category): every `ScenarioParams.road_type` on the wire path is `_map_road_type`'s output (`schemas.py:1175-1342`), which returns only `rural`, `urban_high`, `urban_low` or `freeway`.

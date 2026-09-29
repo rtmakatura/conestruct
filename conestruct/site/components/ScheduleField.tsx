@@ -300,7 +300,7 @@ function ScheduleWindowsBlock({
           </span>
           <span className="tr-prov">
             {jurisdiction.name} publishes no work-hour windows. None on
-            record, which isn&apos;t the same as none existing.
+            record doesn&apos;t mean none exist.
           </span>
         </div>
       </div>

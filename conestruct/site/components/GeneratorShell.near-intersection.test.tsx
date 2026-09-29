@@ -53,7 +53,7 @@ function crossStreet(over: Partial<CrossStreetCandidate>): CrossStreetCandidate 
     lanesPerDirection: 2,
     lanesSuspect: true,
     lanesSuspectReason:
-      "The map data shows marked turn lanes here, so its lane count " +
+      "The map data shows marked turn lanes here. Its lane count " +
       "usually includes turn pockets, so the through-lane count is " +
       "often lower.",
     roadType: "urban_arterial",

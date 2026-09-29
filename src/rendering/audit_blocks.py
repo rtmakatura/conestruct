@@ -286,7 +286,7 @@ def _corridor_blocks(corridor: dict[str, Any]) -> list[Block]:
             blocks.append(
                 _body(
                     "Corridor check unavailable. OpenStreetMap couldn't be "
-                    "reached at generation, so road-network warnings weren't "
+                    "reached at generation. Road-network warnings weren't "
                     "evaluated. Re-generate to retry."
                 )
             )

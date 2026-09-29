@@ -35,7 +35,7 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
       screen.getByRole("button", { name: /pending \/ not verified/i }),
     );
     expect(
-      screen.getByText(/Schedule marked .Not set., so the windows above are/i),
+      screen.getByText(/Schedule marked .Not set.. The windows above are/i),
     ).toBeTruthy();
     expect(screen.queryByText(/enter the\s+work date and start\/end times/i)).toBeNull();
   });
@@ -47,7 +47,7 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
       screen.getByRole("button", { name: /pending \/ not verified/i }),
     );
     expect(
-      screen.getByText(/Schedule marked .Not set., so the windows above are/i),
+      screen.getByText(/Schedule marked .Not set.. The windows above are/i),
     ).toBeTruthy();
     expect(screen.queryByText(/outside window/i)).toBeNull();
   });

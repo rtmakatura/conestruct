@@ -127,7 +127,9 @@ describe("quote breakdown invalidates on settings edits (#185)", () => {
     expect(screen.getByText(/inputs changed/i)).toBeTruthy();
     expect(screen.getByText(/Preview again for current totals/)).toBeTruthy();
     expect(
-      screen.getByText(/expand to configure & preview/i),
+      screen.getByText(
+        "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
+      ),
     ).toBeTruthy();
   });
 

@@ -74,7 +74,7 @@ export function handoffNoteText(
         const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
         return `Road type set to ${ROAD_TYPE_LABELS[event.to]} (from detected ${ROAD_TYPE_LABELS[event.from]}, ${srcLabel}).`;
       }
-      return `Detected ${ROAD_TYPE_LABELS[event.detected]} isn't valid for ${scenarioNoun(kind)} plans, so ${ROAD_TYPE_LABELS[event.inEffect]} was kept. Switch scenario kind to use it.`;
+      return `Detected ${ROAD_TYPE_LABELS[event.detected]} isn't valid for ${scenarioNoun(kind)} plans. ${ROAD_TYPE_LABELS[event.inEffect]} was kept. Switch scenario kind to use it.`;
     }
     // #198 families 1-3: lanes / divided / laneWidth cross the seam.
     case "lanes": {
@@ -101,7 +101,7 @@ export function handoffNoteText(
         // arithmetic the backend would have refused with, in the same
         // order, so the operator can check it: lanes x width + shoulder
         // against the sheet's 52 ft.
-        return `Lane width ${event.toFt} ft (narrowed from ${event.fromFt} ft because ${event.lanes} lanes × ${event.fromFt} ft + ${event.shoulderFt} ft shoulder is wider than the plan sheet can draw at ${MAX_DRAWABLE_HALF_ROAD_FT} ft per direction).`;
+        return `Lane width ${event.toFt} ft (narrowed from ${event.fromFt} ft: ${event.lanes} lanes × ${event.fromFt} ft + ${event.shoulderFt} ft shoulder is wider than the plan sheet can draw at ${MAX_DRAWABLE_HALF_ROAD_FT} ft per direction).`;
       }
       return `Lane width set to ${event.toFt} ft (OSM detection, was ${event.fromFt} ft).`;
     // #198 family 4: the reduction cleared by a lowered posted speed.

@@ -185,7 +185,7 @@ describe("hours verdict placement — plan-invalidating states only auto-open", 
     expect(chip.className).not.toContain("auto-expand");
     await userEvent.click(head);
     expect(
-      screen.getByText(/Schedule marked .Not set., so the windows above are/i),
+      screen.getByText(/Schedule marked .Not set.. The windows above are/i),
     ).toBeTruthy();
   });
 

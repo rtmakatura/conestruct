@@ -438,11 +438,11 @@
             "recorded_at": "2026-09-04T12:00:00+00:00",
             "status": "applied",
             "scan_detected": true,
-            "disclosure": "Operator dismissed the scan's pedestrian sidewalks: fenced off. The plan is built to the correction, so verify it in the field or on imagery before deploying.",
+            "disclosure": "Operator dismissed the scan's pedestrian sidewalks: fenced off. The plan is built to the correction. Verify it in the field or on imagery before deploying.",
             "record_clause": "Operator dismissed the scan's pedestrian sidewalks: fenced off."
           }
         ],
-        "corrections_advisory": "The plan is built to the correction, so verify it in the field or on imagery before deploying."
+        "corrections_advisory": "The plan is built to the correction. Verify it in the field or on imagery before deploying."
       }
     },
     "pending_verification": {
@@ -457,7 +457,7 @@
         },
         {
           "kind": "site_condition_overridden",
-          "label": "Operator dismissed the scan's pedestrian sidewalks: fenced off. The plan is built to the correction, so verify it in the field or on imagery before deploying.",
+          "label": "Operator dismissed the scan's pedestrian sidewalks: fenced off. The plan is built to the correction. Verify it in the field or on imagery before deploying.",
           "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/224"
         }
       ]

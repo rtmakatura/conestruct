@@ -130,7 +130,10 @@ describe("severity-ramp role assignments", () => {
     // preview, and the "not a permit fee" framing always.
     const head = screen.getByRole("button", { name: /Pricing quote/i });
     const prov = head.querySelector(".disc-prov")!;
-    expect(prov.textContent).toContain("expand to configure & preview");
+    expect(prov.textContent).toBe(
+      "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
+    );
+    expect(prov.textContent).not.toContain("·");
     expect(prov.querySelector(".quote-total")).toBeNull();
     expect(prov.textContent).not.toMatch(/\$/);
     expect(head.textContent).toContain("FYI");

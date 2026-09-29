@@ -144,7 +144,7 @@ export function lanesSuspicion(tags: RoadCandidate["tags"]): {
     return {
       suspect: true,
       reason:
-        "The map data shows marked turn lanes here, so its lane count " +
+        "The map data shows marked turn lanes here. Its lane count " +
         "usually includes turn pockets, so the through-lane count is " +
         "often lower.",
     };

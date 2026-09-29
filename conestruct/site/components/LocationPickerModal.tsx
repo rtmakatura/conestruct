@@ -1909,7 +1909,7 @@ export function LocationPickerModal({
                   <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2">
                     Map unavailable
                   </div>
-                  NEXT_PUBLIC_MAPBOX_TOKEN is not configured, so the interactive
+                  NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
                   map can&apos;t load. Enter coordinates manually below.
                 </div>
               </div>

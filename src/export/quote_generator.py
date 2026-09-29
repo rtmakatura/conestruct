@@ -194,7 +194,7 @@ _JURISDICTION_MAPPED_NOTE: str = "Jurisdiction-required: {doc}."
 _JURISDICTION_UNMAPPED_NOTE: str = (
     "Jurisdiction-required: {doc}. No single daily rate. NOT included in the "
     "quote total; price separately. CDOT Spec 630 bills these as individual "
-    "W-series signs by SF, so itemize per sign type."
+    "W-series signs by SF. Itemize per sign type."
 )
 
 

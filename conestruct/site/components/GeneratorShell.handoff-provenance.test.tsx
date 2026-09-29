@@ -337,7 +337,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     // it (#198's sixth family).
     expect(
       screen.getByText(
-        /Lane width 10\.5 ft \(narrowed from 12 ft because 4 lanes × 12 ft \+ 10 ft shoulder is wider than the plan sheet can draw at 52 ft per direction\)\./,
+        /Lane width 10\.5 ft \(narrowed from 12 ft: 4 lanes × 12 ft \+ 10 ft shoulder is wider than the plan sheet can draw at 52 ft per direction\)\./,
       ),
     ).toBeTruthy();
 

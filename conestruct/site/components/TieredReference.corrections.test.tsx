@@ -121,7 +121,7 @@ describe("section 03 — a moot correction (synthetic over scanned-lakewood)", (
       status: "moot",
       scan_detected: false,
       disclosure:
-        "Operator dismissal of school zone is moot: the scan found none along the corridor, so there's nothing to dismiss.",
+        "Operator dismissal of school zone is moot: the scan found none along the corridor. There's nothing to dismiss.",
     };
     const audit = {
       ...fx.audit,

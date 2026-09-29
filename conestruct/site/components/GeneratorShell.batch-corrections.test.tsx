@@ -98,7 +98,7 @@ const TAIL = {
   pending_verification: { count: 0, note: "", tracking_issue: null },
   plan_flags: { validation_warnings: 0, compliance_fails: 0, v1_limitations: 0, is_clean: true },
 };
-const ADVISORY = "The plan is built to the correction, so verify it in the field or on imagery before deploying.";
+const ADVISORY = "The plan is built to the correction. Verify it in the field or on imagery before deploying.";
 const audit = (corrections: unknown[] = []) => ({
   summary: {},
   sections: {

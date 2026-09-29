@@ -1774,7 +1774,7 @@ def _validate_approach_groups(
                     message=(
                         f"placement {i} carries approach_id={p.approach_id!r}, "
                         f"which matches no declared approach "
-                        f"({sorted(declared)!r}), so its station frame can't "
+                        f"({sorted(declared)!r}). Its station frame can't "
                         f"be resolved."
                     ),
                     mutcd_section="§6N.12.06",

@@ -1203,7 +1203,7 @@ export function finesDoubleItem(
     body: (
       <>
         <p>
-          Work-zone posted speed is reduced, so Fines Double signing
+          Work-zone posted speed is reduced. Fines Double signing
           applies per CDOT S-630-1 Sheet 12, Fines Double Signing Notes.
           The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P
           assemblies at 2,640 ft intervals; the entrance R2-1 posts the
@@ -1306,8 +1306,8 @@ export function corridorValidationItem(
       body: (
         <>
           <p>
-            OpenStreetMap couldn&apos;t be reached at generation, so
-            road-network warnings weren&apos;t evaluated.
+            OpenStreetMap couldn&apos;t be reached at generation.
+            Road-network warnings weren&apos;t evaluated.
           </p>
           <div className="check-list">
             <CheckRow

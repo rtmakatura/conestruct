@@ -93,7 +93,7 @@ _CHANNELIZER_OPTIONAL_NOTE: str = (
 # or have this wording checked against its own billing basis.
 _JURISDICTION_UNMAPPED_NOTE: str = (
     "Jurisdiction-required: {doc}. Unit is EACH for V1; CDOT Spec 630 bills "
-    "these as individual W-series signs by SF, so itemize per sign type; no "
+    "these as individual W-series signs by SF. Itemize per sign type; no "
     "single pay item."
 )
 _JURISDICTION_MAPPED_NOTE: str = "Jurisdiction-required: {doc}."

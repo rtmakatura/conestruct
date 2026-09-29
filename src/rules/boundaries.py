@@ -175,7 +175,7 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
             {
                 "kind": "unsupported_area",
                 "message": (
-                    f"Pin is in {in_unsupported.name}, which isn't in the supported "
+                    f"Pin is in {in_unsupported.name}, not in the supported "
                     "set. Baseline rules will apply unless you pick manually."
                 ),
                 "source": src,
@@ -193,7 +193,7 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
                 "kind": "unsupported_area",
                 "message": (
                     f"Pin is in {county.name} County, outside the mapped "
-                    "municipal boundaries and not in the supported set. "
+                    "municipal boundaries, not in the supported set. "
                     "Baseline rules will apply unless you pick manually."
                 ),
                 "source": {

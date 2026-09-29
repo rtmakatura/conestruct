@@ -689,7 +689,7 @@ def _placements_for(
         # at the API boundary rather than a min()-over-empty crash deep in
         # the renderer, which render_pdf would otherwise mask into a 500.
         # Mirrors the geometry-rejection detail shape above.
-        message = "No devices were generated for this scenario, so a plan can't be rendered."
+        message = "No devices were generated for this scenario. A plan can't be rendered."
         raise HTTPException(
             status_code=400,
             detail={

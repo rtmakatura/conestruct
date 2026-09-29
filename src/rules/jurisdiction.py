@@ -476,7 +476,7 @@ def _suggest_tier(record: dict[str, Any], ctx: PlanContext) -> tuple[str | None,
             return None, "tier assignment is not machine-decidable for this jurisdiction"
         return None, "jurisdiction publishes no permit tiers"
     if ctx.street_class is None:
-        return None, "street class not provided, so the Minor/Major split can't be resolved"
+        return None, "street class not provided; the Minor/Major split can't be resolved"
     if ctx.street_class == "arterial" and (ctx.closures & {"lane", "full", "detour"}):
         return major["label"], f"{major['label']}: {major.get('definition', '')}".strip()
     return minor["label"], f"{minor['label']}: {minor.get('definition', '')}".strip()

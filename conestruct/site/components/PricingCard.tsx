@@ -52,15 +52,17 @@ export function PricingCard(props: QuotePanelProps) {
       // element, not spliced into the sentence: it is a VALUE, and a
       // value findable only as a substring is not measurable (#185 asserts
       // the collapsed headline shows the number).
+      // R43: before a preview the line is two sentences, with no middle
+      // dot inside it; the dot stays only as the separator before a total.
       provenance={
-        <>
-          {FYI} ·{" "}
-          {total != null ? (
+        total != null ? (
+          <>
+            {FYI} ·{" "}
             <b className="quote-total">{fmtTotal(total)}</b>
-          ) : (
-            "expand to configure & preview"
-          )}
-        </>
+          </>
+        ) : (
+          `${FYI}. Expand to configure and preview.`
+        )
       }
       open={open}
       onToggle={() => setOpen((o) => !o)}

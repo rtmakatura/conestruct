@@ -183,8 +183,7 @@ DISMISS_REASON_TEXT: dict[str, str] = {
 
 SITE_CONDITION_OVERRIDE_ERROR = "site_condition_override_invalid"
 _VERIFY = (
-    " The plan is built to the correction, so verify it in the field or on imagery "
-    "before deploying."
+    " The plan is built to the correction. Verify it in the field or on imagery before deploying."
 )
 
 
@@ -267,19 +266,19 @@ def _apply_corrections(
                 status, text = (
                     "moot",
                     f"Operator dismissal of {label} is moot: the scan found none along "
-                    "the corridor, so there's nothing to dismiss.",
+                    "the corridor. There's nothing to dismiss.",
                 )
             else:
                 status, text = (
                     "moot",
                     f"Operator dismissal of {label} couldn't apply: the site scan didn't "
-                    "complete, so nothing was detected to dismiss.",
+                    "complete. Nothing was detected to dismiss.",
                 )
         else:  # assert
             if detected is True:
                 status, text = (
                     "moot",
-                    f"Operator assertion of {label} is moot: the scan detected it, so the "
+                    f"Operator assertion of {label} is moot: the scan detected it. The "
                     "assertion changes nothing.",
                 )
             else:

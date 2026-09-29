@@ -460,11 +460,11 @@
             "recorded_at": "2026-09-04T12:00:00+00:00",
             "status": "applied",
             "scan_detected": false,
-            "disclosure": "Operator asserted school zone; the scan found none along the corridor. The plan is built to the correction, so verify it in the field or on imagery before deploying.",
+            "disclosure": "Operator asserted school zone; the scan found none along the corridor. The plan is built to the correction. Verify it in the field or on imagery before deploying.",
             "record_clause": "Operator asserted school zone; the scan found none along the corridor."
           }
         ],
-        "corrections_advisory": "The plan is built to the correction, so verify it in the field or on imagery before deploying."
+        "corrections_advisory": "The plan is built to the correction. Verify it in the field or on imagery before deploying."
       }
     },
     "pending_verification": {
@@ -479,7 +479,7 @@
         },
         {
           "kind": "site_condition_overridden",
-          "label": "Operator asserted school zone; the scan found none along the corridor. The plan is built to the correction, so verify it in the field or on imagery before deploying.",
+          "label": "Operator asserted school zone; the scan found none along the corridor. The plan is built to the correction. Verify it in the field or on imagery before deploying.",
           "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/224"
         }
       ]

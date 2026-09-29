@@ -1034,7 +1034,7 @@ export function HoursVerdictBlock({
         hoursEval.status === "unknown" &&
         (scheduleTbd ? (
           <div className="text-[12px] text-[color:var(--none)]">
-            ◌ Schedule marked &ldquo;Not set&rdquo;, so the windows above are
+            ◌ Schedule marked &ldquo;Not set&rdquo;. The windows above are
             reference only. Choose a date mode in Setup to check a
             schedule against {jurisdiction.name}&apos;s windows.
           </div>
@@ -1206,8 +1206,8 @@ export function WorkHoursCard({
 
       {hours.shape === "none" || rows.length === 0 ? (
         <div className="text-[12px] text-[color:var(--none)] py-2">
-          ◌ {jurisdiction.name} publishes no work-hour windows. None is on
-          record, which doesn&apos;t mean none exists.
+          ◌ {jurisdiction.name} publishes no work-hour windows. None on
+          record doesn&apos;t mean none exist.
         </div>
       ) : (
         <div>
