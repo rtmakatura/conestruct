@@ -152,3 +152,14 @@ Recorded here because CLAUDE.md and handoff.md are gitignored (`.gitignore:79`, 
 3. **Ryan's photo:** source is untracked at `validation-artifacts/committed/coming-soon-gate/design/founders/ryan-source.jpg` (512×512). Put a web copy in the site's static assets (square, sized for 56 px at 2×, compressed), commit it on the branch, then **delete the untracked source from main's checkout** after confirming you copied it (same as Arc 3; an untracked file at a path the branch commits blocks the ship merge). Alt text: "Ryan".
 4. **James and Zac placeholders:** same 56 px square, `--paper` fill, `--rule` border, their initial ("J", "Z") centred in the mono face at an existing ruled size, `--ink-faint`. `aria-hidden` on the placeholder; the name beside it carries the meaning. Built so swapping in a real photo later is one file + one line.
 5. **Phone:** same row layout (photo left, text right), rows at natural height.
+
+**R25 (Ryan, 2026-09-28)** — light lane:
+In `section.cs-sheet`, reverse the vertical order:
+- **Top:** the "construct" part and the project / status / standard block.
+- **Bottom:** the graphic.
+
+Nothing else changes: same copy, same graphic, same styling, same spacing tokens. If the section is side-by-side at some widths rather than stacked, keep that layout there and flip only where it stacks; say at the top of the report which widths changed.
+
+- Prefer reordering the markup over CSS `order` tricks, so screen readers and tab order match what's on screen. If markup order must stay, say why.
+- Don't touch anything outside this section.
+- If a heading-level or landmark order changes as a result, flag it.
