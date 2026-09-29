@@ -12,8 +12,13 @@ on the same commands in validation-artifacts/committed/ship-loop/r26-r27-redproo
 from __future__ import annotations
 
 import re
+import shutil
+import subprocess
 from pathlib import Path
 
+import pytest
+
+SHELL = shutil.which("powershell") or shutil.which("pwsh")
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "ship.ps1"
 HELPER = "!gh auth git-credential"
 PUSH = f'git -c credential.helper= -c "credential.helper={HELPER}" push origin HEAD:main'
@@ -34,6 +39,19 @@ def test_the_one_push_is_the_gh_only_form() -> None:
     lines = code_lines()
     pushes = [ln for ln in lines if re.match(r"git\b.*\spush\s", ln)]
     assert pushes == [PUSH]
+
+
+@pytest.mark.skipif(SHELL is None, reason="needs PowerShell")
+def test_the_script_parses() -> None:
+    # PowerShell's parser only -- nothing in the script runs.
+    parse = (
+        "$e = $null; [void][System.Management.Automation.Language.Parser]::ParseFile("
+        f"'{SCRIPT}', [ref]$null, [ref]$e); $e | ForEach-Object {{ $_.ToString() }}; exit $e.Count"
+    )
+    r = subprocess.run(
+        [SHELL, "-NoProfile", "-Command", parse], capture_output=True, text=True, timeout=120
+    )
+    assert r.returncode == 0, r.stdout + r.stderr
 
 
 def test_a_gh_login_check_fails_the_ship_before_the_merge() -> None:

@@ -171,6 +171,14 @@ if (-not $Handoff -and ((Get-FileHash $PSCommandPath).Hash -ne (Get-FileHash $ma
     exit $LASTEXITCODE
 }
 
+# --- 1b. gh login (R27) ------------------------------------------------------
+# The push goes through gh only (step 3), so a bad gh login stops the ship here,
+# before anything moves.  Get-Command first: a missing gh would leave
+# $LASTEXITCODE at the last git call's 0 and the check would pass silently.
+if (-not (Get-Command gh -ErrorAction SilentlyContinue)) { Fail "gh is not on PATH. The push goes through gh (R27); install gh, run gh auth login, then ship again. Nothing was merged or pushed." }
+$ghLogin = gh auth status --hostname github.com 2>&1 | ForEach-Object { "$_" }
+if ($LASTEXITCODE -ne 0) { $ghLogin | ForEach-Object { Write-Host "  $_" }; Fail "gh is not logged in to github.com. Run gh auth login, then ship again. Nothing was merged or pushed." }
+
 # --- 2. Merge the pushed branch (fast-forward only) ---------------------------
 if ($Branch -ne "") {
     git rev-parse --verify -q "origin/$Branch" | Out-Null
@@ -196,7 +204,10 @@ if ($DryRun) {
 
 # --- 3. Push ----------------------------------------------------------------
 Write-Host "Pushing $headShort to main..." -ForegroundColor Cyan
-git push origin HEAD:main
+# gh only (R27): the empty helper first clears the Git Credential Manager, which
+# otherwise runs first, finds two github.com accounts and fails trying to ask
+# which (r26-r27-redproof.md).  -c appends, so the clear is load-bearing.
+git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin HEAD:main
 if ($LASTEXITCODE -ne 0) { Fail "git push failed. Paste the output into the chat." }
 Write-Host "main is now $headShort. Frontend: Vercel builds it, or skips it when nothing in the site changed (step 7 checks which)." -ForegroundColor Green
 

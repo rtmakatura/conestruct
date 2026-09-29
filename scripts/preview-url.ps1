@@ -43,6 +43,9 @@ function Fail($msg) {
 # list in conestruct/site/vercel-ignore.sh (paths relative to conestruct/site),
 # the one list ship.ps1 and the Vercel skip rule also read.  Anything else --
 # backend, scripts, docs -- is "no", so the branch keeps today's prod path.
+# R26: validation-artifacts/committed/** never reaches the build, so it doesn't
+# count against the answer: it is set aside first.  A branch of evidence alone
+# has no site change left and stays "no", like an empty one.
 function Get-SiteInputPrefixes($root) {
     $script = Get-Content (Join-Path $root "conestruct\site\vercel-ignore.sh") -Raw
     $m = [regex]::Match($script, 'SITE_INPUTS=\(([\s\S]*?)\)')
@@ -56,6 +59,7 @@ function Get-SiteInputPrefixes($root) {
 }
 
 function Get-FrontendOnly($files, $prefixes) {
+    $files = @(@($files) | Where-Object { $_ -and -not $_.StartsWith("validation-artifacts/committed/") })
     if (@($files).Count -eq 0) { return "no" }
     foreach ($f in $files) {
         $hit = $false
