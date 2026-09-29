@@ -381,6 +381,116 @@ def test_a_second_run_with_the_list_deletes_nothing(listed: dict) -> None:
     assert "deleted" not in out, out
 
 
+# --- R47: local-only branches, recorded throwaways, and real work listed once ----------
+
+
+@pytest.fixture
+def locals_(scratch: dict) -> dict:
+    """Local branches with no origin twin, and throwaway red-proof branches
+    whose last sha a committed red-proof doc records (ship-loop ruling R47)."""
+    s = scratch
+    repo = s["repo"]
+    # Local-only, already in main: one free, one in a dirty worktree.
+    git(repo, "branch", "local-l", s["a"])
+    git(repo, "branch", "local-dirty", s["a"])
+    git(repo, "worktree", "add", "-q", str(s["wt"] / "local-dirty"), "local-dirty")
+    (s["wt"] / "local-dirty" / "a1.txt").write_text("uncommitted edit", encoding="utf-8")
+    # Throwaways with unmerged commits.
+    for name in [
+        "rec-redproof",
+        "loc-redproof",
+        "unrec-redproof",
+        "elsewhere-redproof",
+        "real-work",
+    ]:
+        git(repo, "checkout", "-q", "-b", name, s["main"])
+        s[name] = commit(repo, name)
+    git(repo, "checkout", "-q", "main")
+    git(repo, "push", "-q", "origin", "rec-redproof")  # on origin and local
+    # The record: a committed red-proof doc naming the branch and its last sha.
+    docs = repo / "validation-artifacts" / "committed" / "arc"
+    docs.mkdir(parents=True, exist_ok=True)
+    (docs / "change-redproof.md").write_text(
+        "# change red-proof\n\n"
+        f"Throwaway `rec-redproof` at `{s['rec-redproof'][:7]}`; recovery sha of the tip.\n"
+        f"Throwaway `loc-redproof`, last sha {s['loc-redproof']}.\n",
+        encoding="utf-8",
+    )
+    # A sha recorded only in a doc that is not a red-proof doc does not count.
+    (docs / "notes.md").write_text(
+        f"`elsewhere-redproof` at {s['elsewhere-redproof']}\n", encoding="utf-8"
+    )
+    git(repo, "add", "validation-artifacts")
+    git(repo, "commit", "-q", "-m", "red-proof records")
+    git(repo, "push", "-q", "origin", "main")
+    s["main"] = git(repo, "rev-parse", "HEAD")
+    return s
+
+
+@needs_ps
+def test_a_local_only_branch_in_main_goes_under_the_worktree_rules(locals_: dict) -> None:
+    s = locals_
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "local-l" not in local_branches(s["repo"]), out
+    assert f"deleted local local-l at {s['a']}" in out, out
+    assert f"(restore: git branch local-l {s['a']})" in out, out
+    left = out.split("Left for Ryan:", 1)[1]
+    assert "local-dirty -- worktree" in left and "uncommitted changes" in left, left
+    assert "local-dirty" in local_branches(s["repo"])
+
+
+@needs_ps
+def test_a_recorded_throwaway_goes_on_origin_and_locally_with_its_restore_command(
+    locals_: dict,
+) -> None:
+    s = locals_
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "rec-redproof" not in remote_branches(s["repo"]), out
+    assert "rec-redproof" not in local_branches(s["repo"]), out
+    assert f"(restore: git push origin {s['rec-redproof']}:refs/heads/rec-redproof)" in out, out
+    assert "loc-redproof" not in local_branches(s["repo"]), out
+    assert f"(restore: git branch loc-redproof {s['loc-redproof']})" in out, out
+
+
+@needs_ps
+def test_an_unrecorded_throwaway_stays_and_is_listed(locals_: dict) -> None:
+    s = locals_
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    for name in ["unrec-redproof", "elsewhere-redproof", "old-redproof"]:
+        assert name in local_branches(s["repo"]), (name, out)
+    left = out.split("Left for Ryan:", 1)[1]
+    assert f"unrec-redproof at {s['unrec-redproof']}" in left, left
+    assert f"elsewhere-redproof at {s['elsewhere-redproof']}" in left, left
+    assert f"old-redproof at {s['old-redproof']}" in left, left  # R32, on origin
+
+
+@needs_ps
+def test_real_unmerged_work_is_never_touched_and_listed_once(locals_: dict) -> None:
+    s = locals_
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert git(s["repo"], "rev-parse", "real-work") == s["real-work"]
+    assert out.count("real-work") == 1, out
+    assert f"real-work at {s['real-work']}" in out.split("Unmerged work, kept (R47):", 1)[1], out
+    # Branches the origin loops already judged are not listed a second time.
+    assert out.count("dirty-d --") == 1, out
+    assert out.count("ahead-f --") == 1, out
+    # Unmerged work on origin stays unmentioned, as before.
+    assert "unmerged-c" not in out, out
+
+
+@needs_ps
+def test_a_second_run_with_locals_deletes_nothing(locals_: dict) -> None:
+    s = locals_
+    run_cleanup(s)
+    code, out = run_cleanup(s)
+    assert code == 0, out
+    assert "deleted" not in out, out
+
+
 # --- the wiring --------------------------------------------------------------------
 
 

@@ -199,3 +199,9 @@ From `cc-prompt-r42-r44.md` (Ryan, 2026-09-29). R42 and R43 are quoted in `comin
 Ryan, 2026-09-29, on the stacked `ship/r42-r45` report:
 
 > R46 (Ryan): whenever you restack or rebuild branches, commit a superseded.txt listing every branch whose work the new branch carries; ship.ps1's cleanup deletes the listed branches once the listing branch is in main (same safety rules as R31/R44). Start with copy/leftovers. I never delete branches by hand.
+
+## R47, verbatim
+
+Ryan, 2026-09-29, on the `ship/r42-r45` ship report (after "Browser check PASS."):
+
+> R47 (Ryan): yes. The cleanup also removes local-only branches already in main, same worktree rules. It also removes "redproof" throwaway branches (local and origin) whose last sha is recorded in a committed redproof doc, printing the restore command. Real unmerged work (issue-162-mapbox-browser-token, worktree-issue-151-jurisdiction-deltas) is never touched; list it once per ship. Small ship-loop branch, one go.

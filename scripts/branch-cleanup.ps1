@@ -1,5 +1,5 @@
 # branch-cleanup.ps1 -- after a verified ship, delete every branch already in
-# the new main (ship-loop rulings R31, R32, R44).  ship.ps1 runs it after
+# the new main (ship-loop rulings R31, R32, R44, R46, R47).  ship.ps1 runs it after
 # "SHIP VERIFIED" and never after a NOT VERIFIED verdict.
 # Usage:
 #   .\scripts\branch-cleanup.ps1 -Main <sha of the new main>
@@ -59,6 +59,20 @@ function Test-Superseded($sha) {
     return $true
 }
 
+# R47: a throwaway red-proof branch whose last sha a committed red-proof doc
+# records: a file under validation-artifacts/committed/ with "redproof" in its
+# name that, in the new main, names the branch and at least the first seven
+# characters of its tip.  The doc is where its restore sha lives.
+function Test-Recorded($name, $sha) {
+    $files = @(git -C $RepoDir grep -l -F -e $sha.Substring(0, 7) $Main -- ":(glob)validation-artifacts/committed/**/*redproof*" 2>$null)
+    foreach ($f in $files) {
+        $path = $f.Substring($Main.Length + 1)
+        $text = (git -C $RepoDir show "${Main}:$path" 2>$null) -join "`n"
+        if ($text.Contains($name)) { return $true }
+    }
+    return $false
+}
+
 # In main by ancestry (R31) or by patch (R44).
 function Test-Shipped($sha) { return ((Test-InMain $sha) -or (Test-Superseded $sha)) }
 
@@ -77,7 +91,7 @@ function Remove-Links($dir) {
 
 $Main = (git -C $RepoDir rev-parse $Main).Trim()
 Write-Host ""
-Write-Host "Branch cleanup (R31, R44, R46): branches already in main $($Main.Substring(0, 7)), by ancestry, by patch or by superseded.txt" -ForegroundColor Cyan
+Write-Host "Branch cleanup (R31, R44, R46, R47): branches already in main $($Main.Substring(0, 7)), by ancestry, by patch or by superseded.txt; local-only and recorded throwaways too" -ForegroundColor Cyan
 
 git -C $RepoDir fetch --prune $Remote 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Write-Host "  git fetch $Remote failed; cleanup skipped." -ForegroundColor Yellow; exit 1 }
@@ -124,21 +138,31 @@ function Remove-Branch($name, $sha, $localOk) {
     }
     git -C $RepoDir branch -D $name 2>&1 | Out-Null
     if ($LASTEXITCODE -ne 0) { Write-Host "  FAILED to delete local $name" -ForegroundColor Red; $script:failed++; return }
-    Write-Host "  deleted local $name at $localSha"
+    Write-Host "  deleted local $name at $localSha   (restore: git branch $name $localSha)"
 }
 
 $refs = git -C $RepoDir for-each-ref "--format=%(refname:strip=3) %(objectname)" "refs/remotes/$Remote"
 $origin = @{}
 foreach ($r in $refs) { $n, $h = $r -split ' ', 2; if ($n) { $origin[$n] = $h } }
 $removed = 0
+$handled = @{}  # names the origin loops already judged, local side included
 foreach ($name in @($origin.Keys | Sort-Object)) {
     $sha = $origin[$name]
     if ($name -eq "HEAD" -or $name -eq "main" -or $name -eq "") { continue }
     if (-not (Test-Shipped $sha)) {
-        if ($name -match $Throwaway) { $left += "$name at $sha -- unmerged throwaway red-proof branch (R32); delete it on origin when done" }
+        if ($name -match $Throwaway) {
+            if (Test-Recorded $name $sha) {
+                Remove-Branch $name $sha ([scriptblock]::Create("param(`$s) `$s -eq '$sha'"))
+                $handled[$name] = $true
+                $origin.Remove($name)
+            } else {
+                $left += "$name at $sha -- unmerged throwaway red-proof branch (R32); its sha is in no committed redproof doc, so kept"
+            }
+        }
         continue
     }
     Remove-Branch $name $sha { param($s) Test-Shipped $s }
+    $handled[$name] = $true
     $origin.Remove($name)
 }
 
@@ -162,13 +186,38 @@ foreach ($ln in $listed) {
     if (-not $sha -and -not $localSha) { continue }  # already gone
     if ($sha -and $sha -ne $want) { $left += "$name at $sha -- listed in superseded.txt at $want, but it moved since it was listed; kept"; continue }
     Remove-Branch $name $sha ([scriptblock]::Create("param(`$s) `$s -eq '$want'"))
+    $handled[$name] = $true
     $origin.Remove($name)
+}
+
+# R47: local branches with no origin twin, which the loops above never see.
+# In main (by ancestry or patch): they go, under the same worktree rules.  A
+# throwaway red-proof branch goes when a committed red-proof doc records its
+# last sha; otherwise it stays and is listed.  Anything else is real work: it
+# is never touched, and is listed once, below.  A name the origin loops
+# already judged (its local side kept or deleted there) is not judged again.
+$unmerged = @()
+foreach ($ln in @(git -C $RepoDir for-each-ref "--format=%(refname:short) %(objectname)" refs/heads)) {
+    $name, $sha = $ln -split ' ', 2
+    if (-not $name -or $name -eq "main" -or $name -eq "HEAD") { continue }
+    if ($origin.ContainsKey($name) -or $handled.ContainsKey($name)) { continue }
+    if (Test-Shipped $sha) { Remove-Branch $name $null { param($s) Test-Shipped $s }; continue }
+    if ($name -match $Throwaway) {
+        if (Test-Recorded $name $sha) { Remove-Branch $name $null ([scriptblock]::Create("param(`$s) `$s -eq '$sha'")) }
+        else { $left += "$name at $sha -- throwaway red-proof branch, local only; its sha is in no committed redproof doc, so kept" }
+        continue
+    }
+    $unmerged += "$name at $sha"
 }
 
 if ($removed -eq 0) { Write-Host "  no merged or superseded branches on $Remote." }
 if ($left.Count -gt 0) {
     Write-Host "Left for Ryan:" -ForegroundColor Yellow
     $left | ForEach-Object { Write-Host "  $_" }
+}
+if ($unmerged.Count -gt 0) {
+    Write-Host "Unmerged work, kept (R47):" -ForegroundColor Yellow
+    $unmerged | ForEach-Object { Write-Host "  $_ -- local only, not in main; never touched" }
 }
 if ($failed -gt 0) { exit 1 }
 exit 0
