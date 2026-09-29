@@ -1,0 +1,37 @@
+# The Vercel Production variables the site needs at runtime (ship-loop ruling R29).
+# Before the merge, the ship runs scripts/vercel-env-check.ps1 against this list;
+# any "required" name missing from `vercel env ls production` stops the ship.
+#
+# Every env name the site's code reads (process.env.* outside tests) and every
+# name in conestruct/site/.env.example is on one of these lines;
+# tests/test_vercel_env_check.py fails on a name that is on neither.  Each line:
+#   required|not-required  NAME  cite(s) -- why
+# A cite is <file>:<line>, the file relative to conestruct/site/; at least one of a name's cites
+# is a line that contains the name.  The Clerk variables are read by
+# @clerk/nextjs itself, not by our code, so their name-bearing cite is
+# .env.example; the Clerk wiring that reads them is cited beside it.
+
+required      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY                .env.example:3, middleware.ts:69, app/layout.tsx:44 -- clerkMiddleware and ClerkProvider
+required      CLERK_SECRET_KEY                                 .env.example:4, middleware.ts:69 -- clerkMiddleware; missing = every route 500 (the 2026-09-28 outage)
+required      NEXT_PUBLIC_CLERK_SIGN_IN_URL                    .env.example:7, app/layout.tsx:44 -- Clerk's sign-in route; unset, Clerk sends sign-in to its hosted pages
+required      NEXT_PUBLIC_CLERK_SIGN_UP_URL                    .env.example:8, app/layout.tsx:44 -- Clerk's sign-up route
+required      NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL  .env.example:9, app/layout.tsx:44 -- where Clerk lands a signed-in user
+required      NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL  .env.example:10, app/layout.tsx:44 -- where Clerk lands a signed-up user
+required      CLERK_WEBHOOK_SECRET                             app/api/clerk/webhook/route.ts:7 -- unset, the user/company sync webhook answers 500
+required      GATE_BYPASS_TOKEN                                middleware.ts:76 -- the coming-soon gate's bypass header
+required      GATE_ALLOWED_EMAILS                              middleware.ts:82 -- the coming-soon gate's allowlist
+required      MODAL_RENDER_URL                                 lib/render-proxy.ts:101, app/api/replication-snapshot/route.ts:41 -- every render/audit call to the backend
+required      MODAL_RENDER_SECRET                              lib/render-proxy.ts:102, app/api/replication-snapshot/route.ts:42 -- the shared secret on those calls
+required      MAPBOX_TOKEN                                     lib/geocode.ts:13 -- unset, address geocoding answers 503
+required      NEXT_PUBLIC_MAPBOX_TOKEN                         components/LocationPickerModal.tsx:396, components/bands/WhereBand.tsx:393 -- unset, the location map never loads
+required      DATABASE_URL                                     db/index.ts:9 -- unset, every saved-plan route throws
+required      UPSTASH_REDIS_REST_URL                           lib/rate-limit.ts:80 -- unset, the rate limiter silently turns off (fail-open)
+required      UPSTASH_REDIS_REST_TOKEN                         lib/rate-limit.ts:81 -- same
+required      NEXT_PUBLIC_SENTRY_DSN                           sentry.server.config.ts:3, sentry.client.config.ts:3, sentry.edge.config.ts:3 -- unset, error monitoring silently turns off
+
+not-required  SENTRY_AUTH_TOKEN                                next.config.mjs:24 -- build-time source-map upload only (.env.example:39)
+not-required  NEXT_PUBLIC_AUTH_UI                              lib/feature-flags.ts:12 -- unset is the intended demo mode (.env.example:24)
+not-required  NEXT_PUBLIC_SENTRY_TEST                          app/debug/sentry-test/page.tsx:5 -- off by default, never set in Production (.env.example:44)
+not-required  SENTRY_TEST_ENABLED                              app/api/debug/sentry-test/route.ts:6 -- same
+not-required  NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA                components/DebugSnapshotButton.tsx:251 -- Vercel sets it on every build
+not-required  NEXT_RUNTIME                                     instrumentation.ts:2 -- Next.js sets it
