@@ -114,7 +114,7 @@ def _add_warning_lights_on_taper_drums(
             f"Added {n} Type C steady-burn warning lights on taper drums for nighttime visibility."
         ),
         "devices_added": n,
-        "rule": ("MUTCD §6L.07 — warning lights on channelizing devices in nighttime work zones"),
+        "rule": ("MUTCD §6L.07: warning lights on channelizing devices in nighttime work zones"),
     }
     return placements + new_lights, record
 
@@ -165,7 +165,7 @@ def _add_portable_light_plant(
             "to illuminate the work area."
         ),
         "devices_added": 1,
-        "rule": ("CDOT M&S §630.05.1 — illumination requirement for nighttime work zones"),
+        "rule": ("CDOT M&S §630.05.1: illumination requirement for nighttime work zones"),
     }
     return placements + [plant], record
 
@@ -180,7 +180,7 @@ def _retroreflective_advisory() -> dict[str, Any]:
             "retroreflectivity at shift start."
         ),
         "devices_added": 0,
-        "rule": ("MUTCD §6F.01 + §6K.01 — retroreflectivity requirements for nighttime visibility"),
+        "rule": ("MUTCD §6F.01 + §6K.01: retroreflectivity requirements for nighttime visibility"),
     }
 
 

@@ -127,7 +127,7 @@
         "citation": "MUTCD § 6C.02",
         "devices_added": 6,
         "flag": "pedestrian_facility",
-        "rule": "MUTCD §6C.02 — pedestrian considerations in work zones"
+        "rule": "MUTCD §6C.02: pedestrian considerations in work zones"
       }
     ],
     "site_scan": {

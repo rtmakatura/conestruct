@@ -33,6 +33,7 @@ a generic 502 and never shown).
 from __future__ import annotations
 
 import copy
+import inspect
 
 import pytest
 from fastapi.testclient import TestClient
@@ -215,7 +216,11 @@ def test_confidence_gate_answers_without_any_enablement_patch(
     resp = client.post("/render/pdf", json=_ni_body(**MISMATCH_RELAYS), headers=AUTH)
     assert resp.status_code == 400, resp.text
     detail = resp.json()["detail"]
-    assert "not yet available" not in detail
+    # The gated-kind 400's wording, anchored to its source so a future copy
+    # change fails here loudly instead of leaving the absence check vacuous.
+    gated = "This scenario type isn't available yet"
+    assert gated in inspect.getsource(render_api._ensure_scenario_enabled)
+    assert gated not in detail
     assert "Lane count is right" in detail
 
 

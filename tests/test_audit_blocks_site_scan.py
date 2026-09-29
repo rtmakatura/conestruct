@@ -119,8 +119,8 @@ def test_ok_scan_prints_the_conditions_table_one_row_per_rule_bearing_condition(
     assert by_label["Pedestrian sidewalks"][2] == "18 found · nearest 46.6 ft from anchor"
     assert by_label["School zone"][1:] == ["None along the corridor", ""]
     # Keyless buckets: reference rows, present only when the wire carried them.
-    assert by_label["Hospital"][1] == "Reference — detected, no rule"
-    assert by_label["Railroad crossing"][1] == "Reference — none"
+    assert by_label["Hospital"][1] == "Reference: detected, no rule"
+    assert by_label["Railroad crossing"][1] == "Reference: none"
     assert "Road curvature" not in by_label
 
 
@@ -289,7 +289,7 @@ def test_applied_dismiss_rewrites_the_result_cell_and_keeps_the_evidence() -> No
     scan["corrections"] = [_correction("pedestrian_facility", "dismiss", "applied", "fenced")]
     blocks = _site_scan_blocks(scan)
     by_label = {r[0]: r for r in _rows(blocks)}
-    assert by_label["Pedestrian sidewalks"][1] == "DETECTED — dismissed by operator (fenced off)"
+    assert by_label["Pedestrian sidewalks"][1] == "DETECTED: dismissed by operator (fenced off)"
     assert by_label["Pedestrian sidewalks"][2] == "18 found · nearest 46.6 ft from anchor"
     assert by_label["School zone"][1] == "None along the corridor"
     texts = _texts(blocks)

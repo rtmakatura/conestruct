@@ -1074,7 +1074,7 @@ def build_audit_trail(
                 "geometry_note": (
                     "CDOT Case 42 chain-insertion geometry: R2-10 sits "
                     "260 ft upstream of W20-4 in each approach chain "
-                    "(W20-1 moves to R2-10 + C); exit per Case 17 — "
+                    "(W20-1 moves to R2-10 + C); exit per Case 17: "
                     "500 ft past the downstream taper end to R2-11, "
                     "500 ft further to the restoration R2-1. The "
                     "Case-11 generic formula (wz_start + 500) is not "
@@ -1141,8 +1141,8 @@ def build_audit_trail(
         )
         case_narrative = (
             "This scenario follows CDOT Standard Plan S-630-1, Case 18 "
-            "(Sheet 10) — traffic control around a work area near an "
-            "intersection, one lane closed — applied to an undivided "
+            '(Sheet 10), "traffic control around a work area near an '
+            'intersection, one lane closed", applied to an undivided '
             "highway with single-side mainline signing (both-sides "
             "posting applies to divided highways, multi-lane ramps, and "
             "one-way streets per CDOT S-630-1 Sheet 2 General Note 8), "
@@ -1153,8 +1153,8 @@ def build_audit_trail(
             "Three disclosed departures from the plate: (1) the Case 18 "
             "plate typifies corner-quadrant work with a full cross-street "
             "closure train; this plan confines the work space to the "
-            "mainline and places cross-street advance signing only — "
-            "corner-quadrant support is tracked at "
+            "mainline and places cross-street advance signing only. "
+            "Corner-quadrant support is tracked at "
             "https://github.com/rtmakatura/conestruct/issues/128. "
             "(2) The opposing mainline direction is not signed "
             "(single-side undivided convention; the plate signs both "
@@ -1231,9 +1231,9 @@ def build_audit_trail(
             # undivided roads with single-side signing (Refs #103).
             case_label = "Case 11 (reduced work-zone speed): Shoulder closure on undivided highway"
             case_narrative = (
-                f"This scenario follows CDOT Standard Plan S-630-1, Case 11 — "
+                f"This scenario follows CDOT Standard Plan S-630-1, Case 11, "
                 f"the general shoulder-work typical (drawn for "
-                f"freeway/expressway) — applied to an undivided highway with "
+                f"freeway/expressway), applied to an undivided highway with "
                 f"single-side signing per CDOT S-630-1 Sheet 2 General "
                 f"Note 8, with a reduced work-zone posted speed ({speed} → "
                 f"{wz_speed} mph) that does not match the Case 26/27 "
@@ -1251,9 +1251,9 @@ def build_audit_trail(
         else:
             case_label = "Case 11: Shoulder closure on undivided highway"
             case_narrative = (
-                "This scenario follows CDOT Standard Plan S-630-1, Case 11 — "
+                "This scenario follows CDOT Standard Plan S-630-1, Case 11, "
                 "the general shoulder-work typical (drawn for "
-                "freeway/expressway) — applied to an undivided highway with "
+                "freeway/expressway), applied to an undivided highway with "
                 "single-side signing per CDOT S-630-1 Sheet 2 General Note 8."
             )
     case_section: dict[str, Any] = {
@@ -1701,12 +1701,12 @@ def _site_citation(rule: str) -> str:
 
     #104 — the React panel's citation chip displays ``MUTCD § 6B.04`` style
     strings while the record's ``rule`` carries the full prose
-    (``MUTCD §6B.04 — increased advance warning ...``). Deriving the chip
-    from the prose (prefix before the em-dash, ``§`` spaced) keeps
+    (``MUTCD §6B.04: increased advance warning ...``). Deriving the chip
+    from the prose (prefix before the first ": ", ``§`` spaced) keeps
     site_adjustments.py's ``rule`` the single source: a citation fix there
     propagates to the panel with no second table to update.
     """
-    return rule.split(" — ")[0].replace("§", "§ ")
+    return rule.split(": ", 1)[0].replace("§", "§ ")
 
 
 def _override_detected_clause(record: dict[str, Any]) -> str:
@@ -1808,7 +1808,7 @@ def audit_projection(
     case_label = case.get("case", "")
     cdot_case_pending = "(TODO" in case_label
     if cdot_case_pending:
-        case["case"] = "CDOT S-630-1 case reference — verification pending"
+        case["case"] = "CDOT S-630-1 case reference: verification pending"
         items.append(
             {
                 "kind": "cdot_case_number",
@@ -1822,7 +1822,7 @@ def audit_projection(
 
     cdot_ref = taper.get("cdot_reference", "")
     if "(TODO" in cdot_ref:
-        taper["cdot_reference"] = "CDOT S-630-1 case reference — verification pending"
+        taper["cdot_reference"] = "CDOT S-630-1 case reference: verification pending"
         # Same underlying case-number question as ``case.case`` — only
         # appended to ``items`` once above, so the rollup reads
         # "1 reference pending," not "2."
@@ -1928,11 +1928,10 @@ def audit_projection(
                     f"Signalized {_ap_word} ({', '.join(_signalized_ids)}): "
                     "Conestruct places cross-street advance signing only "
                     "and does not evaluate traffic-signal operation. The "
-                    "signal-operation review — phasing, timing, and "
-                    "signal-head visibility per MUTCD §6N.12 (items 04 "
-                    "and 05; 11th Ed. p. 848) and MUTCD Part 4 — remains "
-                    "with the traffic "
-                    "control supervisor and the operating agency."
+                    "signal-operation review remains with the traffic "
+                    "control supervisor and the operating agency: phasing, "
+                    "timing, and signal-head visibility per MUTCD §6N.12 "
+                    "(items 04 and 05; 11th Ed. p. 848) and MUTCD Part 4."
                 ),
                 "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
             }
@@ -1953,7 +1952,7 @@ def audit_projection(
             {
                 "kind": "lane_count_low_confidence",
                 "label": (
-                    "Low confidence — verify lane count. The map data's "
+                    "Low confidence: verify the lane count. The map data's "
                     "lane tags contradict each other (the total doesn't "
                     "match the per-direction counts), so the detected "
                     "count this plan was sized to may include turn "
@@ -1983,10 +1982,10 @@ def audit_projection(
             {
                 "kind": "detection_overridden",
                 "label": (
-                    f"Detection override — map data reported "
+                    f"Detection override: map data reported "
                     f"{_override_detected_clause(record)}; the user asserted "
                     f"{record.get('asserted', '')}. The plan is built to the "
-                    "assertion — verify it in the field or on imagery before "
+                    "assertion, so verify it in the field or on imagery before "
                     "deploying."
                 ),
                 "tracking_issue": DETECTION_OVERRIDE_ISSUE,

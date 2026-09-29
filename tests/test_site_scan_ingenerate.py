@@ -389,7 +389,7 @@ def test_proceed_anyway_builds_with_manual_flags_and_the_disclosure(
     assert prov["status"] == "unavailable"
     assert prov["proceeded_anyway"] is True
     assert prov["disclosure"] == ss.NOT_CHECKED_DISCLOSURE
-    assert prov["disclosure"] == "SITE CONDITIONS NOT CHECKED — service unavailable at generation."
+    assert prov["disclosure"] == "SITE CONDITIONS NOT CHECKED: service unavailable at generation."
     assert prov["flags"] == {}
     assert prov["manual_flags_discarded"] == {}
     # The plan builds from the manual flags only — nothing invented.

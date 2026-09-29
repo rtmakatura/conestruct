@@ -43,9 +43,9 @@ COLFAX_OVERRIDE = {
 }
 
 COLFAX_LABEL = (
-    "Detection override — map data reported 5 total lanes (3 forward); "
+    "Detection override: map data reported 5 total lanes (3 forward); "
     "the user asserted one through lane in each direction. The plan is "
-    "built to the assertion — verify it in the field or on imagery "
+    "built to the assertion, so verify it in the field or on imagery "
     "before deploying."
 )
 

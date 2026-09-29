@@ -337,7 +337,7 @@ class TestFrames:
     def test_kind_is_not_a_flagger_scenario_and_names_itself(self) -> None:
         _, params = _generate()
         assert _is_flagger_scenario(params) is False
-        assert scenario_display_name(params) == "Lane Closure Near Intersection — Undivided"
+        assert scenario_display_name(params) == "Lane Closure Near Intersection · Undivided"
 
 
 # ---------------------------------------------------------------------------

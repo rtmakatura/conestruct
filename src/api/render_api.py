@@ -197,7 +197,7 @@ def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False)
         # and worse at three.
         raise HTTPException(
             status_code=400,
-            detail=(f"This scenario type is not yet available. Currently supported: {enabled}."),
+            detail=(f"This scenario type isn't available yet. Currently supported: {enabled}."),
         )
 
 
@@ -347,7 +347,7 @@ def _ensure_lane_eligible(scenario: Scenario) -> None:
             status_code=400,
             detail=(
                 "This road appears to carry more lanes than a flagger "
-                "operation covers — TA-10 applies where one through lane "
+                "operation covers. TA-10 applies where one through lane "
                 "runs in each direction. If detection is wrong, confirm "
                 "'Road has one through lane in each direction' in the "
                 "form and regenerate."
@@ -433,7 +433,7 @@ def _ensure_direction_eligible(scenario: Scenario) -> None:
         detail=(
             "This looks like a one-way street. A flagger operation (TA-10) "
             "alternates traffic through a single open lane between two opposing "
-            "directions — a one-way road has no opposing direction to hold, so "
+            "directions. A one-way road has no opposing direction to hold, so "
             "the plan would direct traffic that isn't there. If the detection is "
             "wrong and this road carries two-way traffic, confirm “Road carries "
             "two-way traffic” in the form and regenerate."
@@ -689,7 +689,7 @@ def _placements_for(
         # at the API boundary rather than a min()-over-empty crash deep in
         # the renderer, which render_pdf would otherwise mask into a 500.
         # Mirrors the geometry-rejection detail shape above.
-        message = "No devices were generated for this scenario; a plan cannot be rendered."
+        message = "No devices were generated for this scenario, so a plan can't be rendered."
         raise HTTPException(
             status_code=400,
             detail={

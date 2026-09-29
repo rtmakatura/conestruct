@@ -347,21 +347,21 @@ def scenario_display_name(params: ScenarioParams) -> str:
     ct = params.closure_type
     divided = params.is_divided
     if ct == "mobile":
-        return "Mobile Operation — Multi-Lane Road" if divided else "Mobile Operation — 2-Lane Road"
+        return "Mobile Operation · Multi-Lane Road" if divided else "Mobile Operation · 2-Lane Road"
     if ct == "off_road":
         return "Work Beyond the Shoulder"
     if ct == "lane" and not divided and params.near_intersection:
-        return "Lane Closure Near Intersection — Undivided"
+        return "Lane Closure Near Intersection · Undivided"
     if ct == "lane" and not divided:
         # Literal, not 2 * num_lanes: the flagger generator draws a
         # 2-lane road unconditionally (generate_flagger_alternating_2lane
         # docstring), so the label states the drawn geometry.
-        return "Flagger Alternating Traffic — 2-Lane Undivided"
+        return "Flagger Alternating Traffic · 2-Lane Undivided"
     if ct == "lane":
-        return "Right-Lane Closure — Divided Highway"
+        return "Right-Lane Closure · Divided Highway"
     if divided:
-        return "Shoulder Closure — Divided Highway"
-    return f"Shoulder Closure — {2 * params.num_lanes}-Lane Undivided"
+        return "Shoulder Closure · Divided Highway"
+    return f"Shoulder Closure · {2 * params.num_lanes}-Lane Undivided"
 
 
 def shoulder_ta_reference(road_type: str) -> str:
@@ -383,13 +383,13 @@ def shoulder_ta_reference(road_type: str) -> str:
 def scenario_display_name_short(params: ScenarioParams) -> str:
     """Compact closure label for tight columns (the PDF PARAMETERS box).
 
-    Drops the road-configuration qualifier after the em dash — the full
+    Drops the road-configuration qualifier after the " · " separator — the full
     title-block banner on the same sheet already carries it, so the
     PARAMETERS box stays legible without overflowing its half-width value
     column.  Still strictly more informative than the bare enum it
     replaces ("shoulder" -> "Shoulder Closure").
     """
-    return scenario_display_name(params).split(" — ")[0]
+    return scenario_display_name(params).split(" · ", 1)[0]
 
 
 @dataclass(frozen=True)
@@ -813,7 +813,7 @@ def validate_buffer_space(
     if actual_buffer < tolerance * expected:
         source_text = "CDOT S-630-1 Sheet 14" if is_cdot_min else "MUTCD Table 6B-2"
         tolerance_text = (
-            "no tolerance — CDOT minimum is a hard floor"
+            "no tolerance: CDOT minimum is a hard floor"
             if is_cdot_min
             else f"{BUFFER_SPACE_TOLERANCE_LOW:.0%} tolerance allowed"
         )
@@ -1007,7 +1007,7 @@ def validate_begin_end_road_work_pair(
                 message=(
                     "G20-2 END ROAD WORK is present but G20-1 (ROAD WORK NEXT "
                     "XX MILES, the upstream bookend) "
-                    "is missing — the two guide signs must bookend the work zone."
+                    "is missing. The two guide signs must bookend the work zone."
                 ),
                 mutcd_section="6H.35/6H.36",
                 device_index=None,
@@ -1475,7 +1475,7 @@ def validate_fines_double_envelope(
                     "Work-zone speed reduced below posted speed but no "
                     "W3-5 (ADVISORY SPEED) advance warning sign found. "
                     "S-630-1 Sheet 2 General Note 3 requires the "
-                    "reduction displayed in advance — at least one W3-5 "
+                    "reduction displayed in advance: at least one W3-5 "
                     "upstream of the reduced-speed work zone "
                     "(stepped sequence when the reduction exceeds 15 mph)."
                 ),
@@ -1774,7 +1774,7 @@ def _validate_approach_groups(
                     message=(
                         f"placement {i} carries approach_id={p.approach_id!r}, "
                         f"which matches no declared approach "
-                        f"({sorted(declared)!r}) — its station frame cannot "
+                        f"({sorted(declared)!r}), so its station frame can't "
                         f"be resolved."
                     ),
                     mutcd_section="§6N.12.06",

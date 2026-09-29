@@ -123,11 +123,11 @@
     },
     "site_adjustments": [
       {
-        "action": "Driveways present within work zone — maintain access gaps in channelization. Do not place channelizing devices across driveway entrances.",
+        "action": "Driveways present within the work zone. Maintain access gaps in channelization. Do not place channelizing devices across driveway entrances.",
         "citation": "MUTCD § 6K.01",
         "devices_added": 0,
         "flag": "driveways_present",
-        "rule": "MUTCD §6K.01 — access management in work zones"
+        "rule": "MUTCD §6K.01: access management in work zones"
       }
     ],
     "site_scan": {

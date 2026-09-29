@@ -84,7 +84,7 @@ def _str(section: dict[str, Any], key: str) -> str:
 
 def _summary_blocks(summary: dict[str, Any], status_line: str | None = None) -> list[Block]:
     case_id = _str(summary, "case_id") or "Audit Trail"
-    blocks: list[Block] = [Heading(1, _cell(f"Audit Trail — {case_id}"))]
+    blocks: list[Block] = [Heading(1, _cell(f"Audit Trail: {case_id}"))]
     rows: list[tuple[str, str]] = []
     # #220 — the triage summary leads the cover, sharing the screen
     # ledger's exact words (tier_ledger.ledger_line == tiering.ts
@@ -100,8 +100,8 @@ def _summary_blocks(summary: dict[str, Any], status_line: str | None = None) -> 
             f"{_g(summary, 'taper_length_ft')} ft ({_str(summary, 'taper_label')})",
         ),
         ("Buffer space", f"{_g(summary, 'buffer_space_ft')} ft"),
-        ("Device spacing — taper", f"{_g(summary, 'device_spacing_taper_ft')} ft"),
-        ("Device spacing — tangent", f"{_g(summary, 'device_spacing_tangent_ft')} ft"),
+        ("Device spacing: taper", f"{_g(summary, 'device_spacing_taper_ft')} ft"),
+        ("Device spacing: tangent", f"{_g(summary, 'device_spacing_tangent_ft')} ft"),
         ("Crew steps", str(summary.get("step_count", ""))),
     ]
     if "case_routing" in summary:
@@ -234,7 +234,7 @@ def _colorado_blocks(colorado: dict[str, Any]) -> list[Block]:
         )
     for info in colorado.get("info_items", []):
         blocks.append(
-            _body(f"{_str(info, 'label')} — {_str(info, 'detail')} ({_str(info, 'citation')})")
+            _body(f"{_str(info, 'label')}: {_str(info, 'detail')} ({_str(info, 'citation')})")
         )
     blocks.append(_body(f"All Colorado checks pass: {colorado.get('all_pass')}"))
     return blocks
@@ -285,8 +285,8 @@ def _corridor_blocks(corridor: dict[str, Any]) -> list[Block]:
         if corridor.get("reason") == "check_unavailable":
             blocks.append(
                 _body(
-                    "Corridor check unavailable — OpenStreetMap could not be "
-                    "reached at generation; road-network warnings were not "
+                    "Corridor check unavailable. OpenStreetMap couldn't be "
+                    "reached at generation, so road-network warnings weren't "
                     "evaluated. Re-generate to retry."
                 )
             )
@@ -384,7 +384,7 @@ def _site_scan_ok_blocks(scan: dict[str, Any]) -> list[Block]:
         b = buckets.get(bucket_name)
         correction = applied.get(DETECTION_TO_FLAG.get(bucket_name, ""))
         if correction is not None and correction.get("action") == "dismiss":
-            result = f"DETECTED — dismissed by operator ({correction_reason_text(correction)})"
+            result = f"DETECTED: dismissed by operator ({correction_reason_text(correction)})"
             evidence = _scan_evidence(b) if isinstance(b, dict) else ""
             rows.append([_cell(label), _cell(result), _cell(evidence)])
         elif correction is not None:
@@ -400,7 +400,7 @@ def _site_scan_ok_blocks(scan: dict[str, Any]) -> list[Block]:
         b = buckets.get(bucket_name)
         if not isinstance(b, dict):
             continue
-        result = "Reference — detected, no rule" if b.get("detected") else "Reference — none"
+        result = "Reference: detected, no rule" if b.get("detected") else "Reference: none"
         rows.append([_cell(label), _cell(result), _cell(_scan_evidence(b))])
     blocks.append(
         Table_(
@@ -532,11 +532,11 @@ def _approaches_blocks(approaches: dict[str, Any]) -> list[Block]:
     blocks.append(_body(_str(approaches, "narrative")))
     for ap in approaches.get("approaches", []):
         signal_note = (
-            " — SIGNALIZED (signal operation review required)" if ap.get("signalized") else ""
+            ", SIGNALIZED (signal operation review required)" if ap.get("signalized") else ""
         )
         blocks.append(
             _body(
-                f"Approach '{_str(ap, 'id')}' — {_g(ap, 'speed_mph')} mph, "
+                f"Approach '{_str(ap, 'id')}': {_g(ap, 'speed_mph')} mph, "
                 f"{_str(ap, 'road_type')}{signal_note}. {_str(ap, 'key_text')}."
             )
         )

@@ -83,7 +83,7 @@ def load_jurisdiction(key: str) -> dict[str, Any]:
     path = DATA_DIR / f"{key}.json"
     if not path.is_file():
         raise UnknownJurisdictionError(
-            f"unknown jurisdiction {key!r} — no data file; "
+            f"unknown jurisdiction {key!r}: no data file; "
             f"available: {', '.join(available_jurisdictions())}"
         )
     with open(path, encoding="utf-8") as f:
@@ -288,7 +288,7 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         return {
             "status": "unknown",
             "violations": [],
-            "note": "schedule marked Not set — hours not evaluated",
+            "note": "schedule marked Not set: hours not evaluated",
         }
     if sched.start_time is None or sched.end_time is None:
         return {
@@ -302,7 +302,7 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         day_kind = "weekday" if sched.work_date.weekday() < 5 else "weekend"
     else:
         day_kind = "weekday"
-        notes.append("work date TBD — weekday windows assumed (conservative)")
+        notes.append("work date TBD: weekday windows assumed (conservative)")
 
     s0, s1 = sched.start_time, sched.end_time
     # Overnight shifts (#188): end < start wraps past midnight.  Both
@@ -312,7 +312,7 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
     # segment (Denver's 0–5 continuation is tagged "weekday").
     segments = _schedule_segments(s0, s1)
     if len(segments) > 1:
-        notes.append("overnight shift — evaluated across midnight against the work date's windows")
+        notes.append("overnight shift: evaluated across midnight against the work date's windows")
     total_hours = sum(b - a for a, b in segments)
 
     violations: list[dict[str, Any]] = []
@@ -476,7 +476,7 @@ def _suggest_tier(record: dict[str, Any], ctx: PlanContext) -> tuple[str | None,
             return None, "tier assignment is not machine-decidable for this jurisdiction"
         return None, "jurisdiction publishes no permit tiers"
     if ctx.street_class is None:
-        return None, "street class not provided — cannot resolve the Minor/Major split"
+        return None, "street class not provided, so the Minor/Major split can't be resolved"
     if ctx.street_class == "arterial" and (ctx.closures & {"lane", "full", "detour"}):
         return major["label"], f"{major['label']}: {major.get('definition', '')}".strip()
     return minor["label"], f"{minor['label']}: {minor.get('definition', '')}".strip()

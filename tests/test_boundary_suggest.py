@@ -136,7 +136,7 @@ def test_centennial_pocket_pair() -> None:
     assert "Arapahoe County" in unsupported["message"]
     assert "outside the mapped municipal boundaries" in unsupported["message"]
     assert "unincorporated" not in unsupported["message"]
-    assert "baseline rules" in unsupported["message"]
+    assert "Baseline rules" in unsupported["message"]
 
 
 # ---------------------------------------------------------------------------

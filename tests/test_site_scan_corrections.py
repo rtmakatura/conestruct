@@ -201,9 +201,9 @@ def test_assert_of_an_absent_key_applies_and_its_record_fires(
     assert c["scan_detected"] is False
     assert c["reason"] is None
     assert c["disclosure"].startswith(
-        "Operator asserted school zone — the scan found none along the corridor."
+        "Operator asserted school zone; the scan found none along the corridor."
     )
-    clause = "Operator asserted school zone — the scan found none along the corridor."
+    clause = "Operator asserted school zone; the scan found none along the corridor."
     assert c["record_clause"] == clause
     assert c["record_clause"] + ss._VERIFY == c["disclosure"]
     assert scan["corrections_advisory"] == ss._VERIFY.strip()
@@ -305,7 +305,7 @@ def test_proceeded_after_outage_applies_asserts_and_moots_dismisses(
     by_flag = {c["flag"]: c for c in scan["corrections"]}
     assert by_flag["school_zone"]["status"] == "applied"
     assert by_flag["school_zone"]["scan_detected"] is None
-    assert "the site scan did not complete" in by_flag["school_zone"]["disclosure"]
+    assert "the site scan didn't complete" in by_flag["school_zone"]["disclosure"]
     assert by_flag["pedestrian_facility"]["status"] == "moot"
     assert "school_zone" in _fired(audit)
     assert "pedestrian_facility" not in _fired(audit)

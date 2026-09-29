@@ -136,7 +136,7 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
                 "kind": "near_boundary",
                 "message": (
                     f"Pin is {max(int(round(d)), 1)} ft from the {layer.name} "
-                    "boundary — jurisdiction lines here are jigsawed; verify "
+                    "boundary. Jurisdiction lines here are jigsawed; verify "
                     "which side the work zone falls on."
                 ),
                 "source": src,
@@ -175,15 +175,15 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
             {
                 "kind": "unsupported_area",
                 "message": (
-                    f"Pin is in {in_unsupported.name} — not in the supported "
-                    "set; baseline rules will apply unless you pick manually."
+                    f"Pin is in {in_unsupported.name}, which isn't in the supported "
+                    "set. Baseline rules will apply unless you pick manually."
                 ),
                 "source": src,
             },
         )
         reason = (
-            f"Pin is inside {in_unsupported.name} municipal limits — a "
-            "jurisdiction Conestruct does not carry yet "
+            f"Pin is inside {in_unsupported.name} municipal limits, a "
+            "jurisdiction Conestruct doesn't carry yet "
             f"(US Census TIGER/Line Place boundaries, {vintage} vintage)."
         )
     elif county is not None:
@@ -193,8 +193,8 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
                 "kind": "unsupported_area",
                 "message": (
                     f"Pin is in {county.name} County, outside the mapped "
-                    "municipal boundaries — not in the supported set; "
-                    "baseline rules will apply unless you pick manually."
+                    "municipal boundaries and not in the supported set. "
+                    "Baseline rules will apply unless you pick manually."
                 ),
                 "source": {
                     "doc": layers["meta"]["counties"]["source"],
@@ -228,8 +228,8 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
             "suggestion": nearest.key,
             "reason": (
                 f"Pin is {max(int(round(dist_ft)), 1)} ft outside {nearest.name} "
-                f"municipal limits (US Census TIGER/Line, {vintage} vintage) — "
-                "confirm only if the work zone is actually inside."
+                f"municipal limits (US Census TIGER/Line, {vintage} vintage). "
+                "Confirm only if the work zone is actually inside."
             ),
             "confidence": "near_boundary",
             "distance_to_boundary_ft": round(dist_ft, 1),

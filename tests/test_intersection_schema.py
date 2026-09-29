@@ -195,7 +195,7 @@ def test_duplicate_approach_ids_reject() -> None:
 
 
 def test_divided_mainline_rejects() -> None:
-    with pytest.raises(ValidationError, match="divided intersections are not supported"):
+    with pytest.raises(ValidationError, match="divided intersections aren't supported"):
         _ADAPTER.validate_python(_body(divided=True))
 
 

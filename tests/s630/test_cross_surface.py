@@ -359,7 +359,7 @@ def test_undivided_label_reads_lane_count_on_every_surface(lanes: int, tmp_path)
         "laneWidth": 10,
     }
     placements, params = _pipeline(body)
-    expected = f"Shoulder Closure — {2 * lanes}-Lane Undivided"
+    expected = f"Shoulder Closure · {2 * lanes}-Lane Undivided"
 
     assert scenario_display_name(params) == expected
     # Plan-sheet title block MHT TYPE row renders this wrapper.
@@ -408,7 +408,7 @@ def test_flagger_label_unchanged_by_lane_count_derivation() -> None:
     )
     params, _generator, _kwargs = scenario_to_call(scenario)
     assert params.num_lanes == 1
-    assert scenario_display_name(params) == "Flagger Alternating Traffic — 2-Lane Undivided"
+    assert scenario_display_name(params) == "Flagger Alternating Traffic · 2-Lane Undivided"
 
 
 def test_flagger_label_states_drawn_geometry_not_input_count() -> None:
@@ -428,7 +428,7 @@ def test_flagger_label_states_drawn_geometry_not_input_count() -> None:
         is_divided=False,
         jurisdiction="CDOT",
     )
-    assert scenario_display_name(params) == "Flagger Alternating Traffic — 2-Lane Undivided"
+    assert scenario_display_name(params) == "Flagger Alternating Traffic · 2-Lane Undivided"
 
 
 def test_narrative_rural_road_type_makes_no_lane_claim() -> None:

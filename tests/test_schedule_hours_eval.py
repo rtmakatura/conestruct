@@ -237,7 +237,7 @@ def test_tbd_with_residual_times_is_not_evaluated(client):
     assert ev == {
         "status": "unknown",
         "violations": [],
-        "note": "schedule marked Not set — hours not evaluated",
+        "note": "schedule marked Not set: hours not evaluated",
     }
 
 
@@ -253,7 +253,7 @@ def test_tbd_without_times_reads_the_same_gate(client):
         ),
     )
     assert ev["status"] == "unknown"
-    assert ev["note"] == "schedule marked Not set — hours not evaluated"
+    assert ev["note"] == "schedule marked Not set: hours not evaluated"
 
 
 def test_no_schedule_stays_unknown():

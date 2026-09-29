@@ -133,7 +133,7 @@
         "citation": "MUTCD § 7B.08",
         "devices_added": 2,
         "flag": "school_zone",
-        "rule": "MUTCD §7B.08 — school zone signing in proximity to work zones"
+        "rule": "MUTCD §7B.08: school zone signing in proximity to work zones"
       }
     ],
     "site_scan": {

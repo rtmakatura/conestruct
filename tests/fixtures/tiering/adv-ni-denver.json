@@ -190,8 +190,8 @@
    "case": {
     "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
     "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
-    "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 18 (Sheet 10) \u2014 traffic control around a work area near an intersection, one lane closed \u2014 applied to an undivided highway with single-side mainline signing (both-sides posting applies to divided highways, multi-lane ramps, and one-way streets per CDOT S-630-1 Sheet 2 General Note 8), plus a cross-street advance-warning set on each approach leg per MUTCD \u00a76N.12 and the Sheet 10 advance-signing key.",
-    "narrative_2": "Three disclosed departures from the plate: (1) the Case 18 plate typifies corner-quadrant work with a full cross-street closure train; this plan confines the work space to the mainline and places cross-street advance signing only \u2014 corner-quadrant support is tracked at https://github.com/rtmakatura/conestruct/issues/128. (2) The opposing mainline direction is not signed (single-side undivided convention; the plate signs both directions). (3) The plate typifies rural sign placement; urban applications require block-based placement per Sheet 10 Note 1. The plate's Type III corner barricade (work lasting more than 3 days) encloses the corner work area and is not placed, per departure (1)."
+    "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 18 (Sheet 10), \"traffic control around a work area near an intersection, one lane closed\", applied to an undivided highway with single-side mainline signing (both-sides posting applies to divided highways, multi-lane ramps, and one-way streets per CDOT S-630-1 Sheet 2 General Note 8), plus a cross-street advance-warning set on each approach leg per MUTCD \u00a76N.12 and the Sheet 10 advance-signing key.",
+    "narrative_2": "Three disclosed departures from the plate: (1) the Case 18 plate typifies corner-quadrant work with a full cross-street closure train; this plan confines the work space to the mainline and places cross-street advance signing only. Corner-quadrant support is tracked at https://github.com/rtmakatura/conestruct/issues/128. (2) The opposing mainline direction is not signed (single-side undivided convention; the plate signs both directions). (3) The plate typifies rural sign placement; urban applications require block-based placement per Sheet 10 Note 1. The plate's Type III corner barricade (work lasting more than 3 days) encloses the corner work area and is not placed, per departure (1)."
    },
    "flagger": {
     "applicable": false,
@@ -283,30 +283,30 @@
    "site_adjustments": [
     {
      "flag": "adjacent_intersection",
-     "action": "No devices added \u2014 the cross-street approach layout is not generated; see the pending-verification disclosure.",
+     "action": "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
      "devices_added": 0,
-     "rule": "MUTCD \u00a76N.12 p. 848 \u2014 Work within the Traveled Way at an Intersection (11th Ed.)",
+     "rule": "MUTCD \u00a76N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.)",
      "citation": "MUTCD \u00a7 6N.12 p. 848"
     },
     {
      "flag": "adjacent_interchange",
-     "action": "No devices added \u2014 the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
+     "action": "No devices added: the per-ramp interchange layout isn't generated. See the pending-verification disclosure.",
      "devices_added": 0,
-     "rule": "MUTCD \u00a76N.16 p. 851 \u2014 Interchanges (11th Ed.)",
+     "rule": "MUTCD \u00a76N.16 p. 851: Interchanges (11th Ed.)",
      "citation": "MUTCD \u00a7 6N.16 p. 851"
     },
     {
      "flag": "pedestrian_facility",
      "action": "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
      "devices_added": 6,
-     "rule": "MUTCD \u00a76C.02 \u2014 pedestrian considerations in work zones",
+     "rule": "MUTCD \u00a76C.02: pedestrian considerations in work zones",
      "citation": "MUTCD \u00a7 6C.02"
     },
     {
      "flag": "school_zone",
      "action": "Added 2 S1-1 SCHOOL signs upstream of the advance warning signs (station 3,412 ft, both sides).",
      "devices_added": 2,
-     "rule": "MUTCD \u00a77B.08 \u2014 school zone signing in proximity to work zones",
+     "rule": "MUTCD \u00a77B.08: school zone signing in proximity to work zones",
      "citation": "MUTCD \u00a7 7B.08"
     }
    ]
@@ -328,7 +328,7 @@
     },
     {
      "kind": "signal_operation_review_required",
-     "label": "Signalized approaches (north_leg, south_leg): Conestruct places cross-street advance signing only and does not evaluate traffic-signal operation. The signal-operation review \u2014 phasing, timing, and signal-head visibility per MUTCD \u00a76N.12 (items 04 and 05; 11th Ed. p. 848) and MUTCD Part 4 \u2014 remains with the traffic control supervisor and the operating agency.",
+     "label": "Signalized approaches (north_leg, south_leg): Conestruct places cross-street advance signing only and does not evaluate traffic-signal operation. The signal-operation review remains with the traffic control supervisor and the operating agency: phasing, timing, and signal-head visibility per MUTCD \u00a76N.12 (items 04 and 05; 11th Ed. p. 848) and MUTCD Part 4.",
      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
     }
    ]

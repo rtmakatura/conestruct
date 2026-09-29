@@ -99,7 +99,7 @@ def test_blocks_preserve_narrative_content() -> None:
     text = _block_plaintext(blocks)
 
     # Title + a section heading.
-    assert "Method of Handling Traffic — Crew Instructions" in text
+    assert "Method of Handling Traffic: Crew Instructions" in text
     assert "Sign Placement Schedule" in text
     # Bold body line (markup stripped).
     assert "Set up from downstream to upstream" in text

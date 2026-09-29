@@ -128,7 +128,7 @@
         "devices_added": 0,
         "devices_modified": 6,
         "flag": "limited_sight_distance",
-        "rule": "MUTCD §6B.04 — increased advance warning for limited sight distance"
+        "rule": "MUTCD §6B.04: increased advance warning for limited sight distance"
       }
     ],
     "site_scan": {

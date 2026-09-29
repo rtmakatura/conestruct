@@ -48,7 +48,7 @@
     },
     "case": {
       "case": "Case 11: Shoulder closure on undivided highway",
-      "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11 — the general shoulder-work typical (drawn for freeway/expressway) — applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
+      "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11, the general shoulder-work typical (drawn for freeway/expressway), applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
       "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
       "routing": "shoulder_no_reduction",
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"

@@ -103,7 +103,7 @@ def test_sheet_line_names_applied_corrections_only() -> None:
         ],
     }
     assert ss.corrections_disclosure(scan) == (
-        "SITE CONDITIONS CORRECTED BY OPERATOR — pedestrian sidewalks dismissed (fenced off); "
+        "SITE CONDITIONS CORRECTED BY OPERATOR: pedestrian sidewalks dismissed (fenced off); "
         "school zone asserted."
     )
     other = {
@@ -111,7 +111,7 @@ def test_sheet_line_names_applied_corrections_only() -> None:
         "corrections": [_corr("school_zone", "dismiss", "applied", "other", "x")],
     }
     assert ss.corrections_disclosure(other) == (
-        "SITE CONDITIONS CORRECTED BY OPERATOR — school zone dismissed (x)."
+        "SITE CONDITIONS CORRECTED BY OPERATOR: school zone dismissed (x)."
     )
     for scan in (None, {}, {"status": "ok", "corrections": []}, {"status": "ok"}):
         assert ss.corrections_disclosure(scan) is None, scan
@@ -232,7 +232,7 @@ def test_narrative_block_carries_both_not_checked_and_corrections(
     md = r.text
     assert md.count("## Site Conditions") == 1
     assert ss.NOT_CHECKED_DISCLOSURE in md
-    assert "Operator asserted school zone — the site scan did not complete." in md
+    assert "Operator asserted school zone; the site scan didn't complete." in md
 
 
 def test_narrative_prints_nothing_without_corrections(

@@ -31,7 +31,7 @@ def test_unavailable_reason_prints_unavailable_never_the_no_coords_claim() -> No
     )
     text = _texts(blocks)
     assert "unavailable" in text
-    assert "not evaluated" in text
+    assert "weren't evaluated" in text
     # The lie this replaces: asserting missing coordinates for a
     # network failure.
     assert "no site coordinates" not in text

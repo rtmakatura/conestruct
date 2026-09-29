@@ -153,7 +153,7 @@
         "downstream_r2_1_station_ft_opposing": 1960.0,
         "entrance_r2_1_label": "SPEED LIMIT 30",
         "entrance_r2_1_station_ft": 375.0,
-        "geometry_note": "CDOT Case 42 chain-insertion geometry: R2-10 sits 260 ft upstream of W20-4 in each approach chain (W20-1 moves to R2-10 + C); exit per Case 17 — 500 ft past the downstream taper end to R2-11, 500 ft further to the restoration R2-1. The Case-11 generic formula (wz_start + 500) is not used for flagger: it would collide with the flagger station and violate Sheet 12 note 4's 250 ft sign spacing.",
+        "geometry_note": "CDOT Case 42 chain-insertion geometry: R2-10 sits 260 ft upstream of W20-4 in each approach chain (W20-1 moves to R2-10 + C); exit per Case 17: 500 ft past the downstream taper end to R2-11, 500 ft further to the restoration R2-1. The Case-11 generic formula (wz_start + 500) is not used for flagger: it would collide with the flagger station and violate Sheet 12 note 4's 250 ft sign spacing.",
         "length_ft": 3370.0,
         "mirrored_per_direction": true,
         "n_assemblies": 2,

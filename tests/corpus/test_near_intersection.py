@@ -21,6 +21,7 @@ Network-guarded by the shared corpus conftest (meta.lat = lng = 0).
 
 from __future__ import annotations
 
+import inspect
 import json
 from dataclasses import asdict
 from typing import Any
@@ -29,6 +30,7 @@ import pytest
 from fastapi.testclient import TestClient
 from pydantic import TypeAdapter
 
+import src.api.render_api as render_api
 from src.api.schemas import Scenario, scenario_to_call
 from tests.corpus.manifest import snapshot_path
 
@@ -244,5 +246,9 @@ def test_valid_body_renders_200_post_enablement(
     # the gated-kind 400 is gone and the pipeline's own gate speaks.
     res = client.post("/render/audit", headers=auth_headers, json=_body("ni-gate-pin"))
     assert res.status_code == 400, res.text
-    assert "not yet available" not in res.text
+    # The gated-kind 400's wording, anchored to its source so a future copy
+    # change fails here loudly instead of leaving the absence check vacuous.
+    gated = "This scenario type isn't available yet"
+    assert gated in inspect.getsource(render_api._ensure_scenario_enabled)
+    assert gated not in res.text
     assert res.json()["detail"]["error"] == "geometry_validation_failed"

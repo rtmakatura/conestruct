@@ -137,25 +137,25 @@
       },
       "site_adjustments": [
         {
-          "action": "No devices added — the cross-street approach layout is not generated; see the pending-verification disclosure.",
+          "action": "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
           "citation": "MUTCD § 6N.12 p. 848",
           "devices_added": 0,
           "flag": "adjacent_intersection",
-          "rule": "MUTCD §6N.12 p. 848 — Work within the Traveled Way at an Intersection (11th Ed.)"
+          "rule": "MUTCD §6N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.)"
         },
         {
           "action": "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
           "citation": "MUTCD § 6C.02",
           "devices_added": 6,
           "flag": "pedestrian_facility",
-          "rule": "MUTCD §6C.02 — pedestrian considerations in work zones"
+          "rule": "MUTCD §6C.02: pedestrian considerations in work zones"
         },
         {
           "action": "Added 2 M4-9a BIKE DETOUR signs at the upstream and downstream ends.",
           "citation": "MUTCD § 9C.101",
           "devices_added": 2,
           "flag": "bicycle_facility",
-          "rule": "MUTCD §9C.101 — bicycle facility work zone signing"
+          "rule": "MUTCD §9C.101: bicycle facility work zone signing"
         }
       ],
       "site_scan": {

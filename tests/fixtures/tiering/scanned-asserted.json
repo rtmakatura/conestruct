@@ -178,30 +178,30 @@
       "site_adjustments": [
         {
           "flag": "adjacent_intersection",
-          "action": "No devices added — the cross-street approach layout is not generated; see the pending-verification disclosure.",
+          "action": "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
           "devices_added": 0,
-          "rule": "MUTCD §6N.12 p. 848 — Work within the Traveled Way at an Intersection (11th Ed.)",
+          "rule": "MUTCD §6N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.)",
           "citation": "MUTCD § 6N.12 p. 848"
         },
         {
           "flag": "pedestrian_facility",
           "action": "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
           "devices_added": 6,
-          "rule": "MUTCD §6C.02 — pedestrian considerations in work zones",
+          "rule": "MUTCD §6C.02: pedestrian considerations in work zones",
           "citation": "MUTCD § 6C.02"
         },
         {
           "flag": "bicycle_facility",
           "action": "Added 2 M4-9a BIKE DETOUR signs at the upstream and downstream ends.",
           "devices_added": 2,
-          "rule": "MUTCD §9C.101 — bicycle facility work zone signing",
+          "rule": "MUTCD §9C.101: bicycle facility work zone signing",
           "citation": "MUTCD § 9C.101"
         },
         {
           "flag": "school_zone",
           "action": "Added 2 S1-1 SCHOOL signs upstream of the advance warning signs (station 3,060 ft, both sides).",
           "devices_added": 2,
-          "rule": "MUTCD §7B.08 — school zone signing in proximity to work zones",
+          "rule": "MUTCD §7B.08: school zone signing in proximity to work zones",
           "citation": "MUTCD § 7B.08"
         }
       ],
@@ -460,11 +460,11 @@
             "recorded_at": "2026-09-04T12:00:00+00:00",
             "status": "applied",
             "scan_detected": false,
-            "disclosure": "Operator asserted school zone — the scan found none along the corridor. The plan is built to the correction — verify it in the field or on imagery before deploying.",
-            "record_clause": "Operator asserted school zone — the scan found none along the corridor."
+            "disclosure": "Operator asserted school zone; the scan found none along the corridor. The plan is built to the correction, so verify it in the field or on imagery before deploying.",
+            "record_clause": "Operator asserted school zone; the scan found none along the corridor."
           }
         ],
-        "corrections_advisory": "The plan is built to the correction — verify it in the field or on imagery before deploying."
+        "corrections_advisory": "The plan is built to the correction, so verify it in the field or on imagery before deploying."
       }
     },
     "pending_verification": {
@@ -479,7 +479,7 @@
         },
         {
           "kind": "site_condition_overridden",
-          "label": "Operator asserted school zone — the scan found none along the corridor. The plan is built to the correction — verify it in the field or on imagery before deploying.",
+          "label": "Operator asserted school zone; the scan found none along the corridor. The plan is built to the correction, so verify it in the field or on imagery before deploying.",
           "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/224"
         }
       ]

@@ -75,14 +75,14 @@ _DEVICE_LIST_HEADERS: tuple[str, ...] = (
 )
 
 _SIGN_GENERIC_NOTE: str = (
-    "Unit is EACH for V1; CDOT Spec 630 bills by SF — convert when sign sizes are known."
+    "Unit is EACH for V1; CDOT Spec 630 bills by SF. Convert when sign sizes are known."
 )
 _BARRICADE_TYPE_II_NOTE: str = (
     "Unit is EACH for V1; CDOT Spec 630 bills Type I/II under Construction "
-    "Traffic Sign (Special) by SF — convert when panel dimensions are known."
+    "Traffic Sign (Special) by SF. Convert when panel dimensions are known."
 )
 _CHANNELIZER_OPTIONAL_NOTE: str = (
-    "Optional — apply probability weight as appropriate per engineer discretion."
+    "Optional. Apply probability weight as appropriate per engineer discretion."
 )
 # Note for a fired jurisdiction count-delta whose device id has no single
 # CDOT pay item (e.g. ``advance_warning_signs`` — a set of W-series signs
@@ -92,11 +92,11 @@ _CHANNELIZER_OPTIONAL_NOTE: str = (
 # future unmapped device that fires must either join ``_DELTA_DEVICE_TYPE``
 # or have this wording checked against its own billing basis.
 _JURISDICTION_UNMAPPED_NOTE: str = (
-    "Jurisdiction-required — {doc}. Unit is EACH for V1; CDOT Spec 630 bills "
-    "these as individual W-series signs by SF — itemize per sign type; no "
+    "Jurisdiction-required: {doc}. Unit is EACH for V1; CDOT Spec 630 bills "
+    "these as individual W-series signs by SF, so itemize per sign type; no "
     "single pay item."
 )
-_JURISDICTION_MAPPED_NOTE: str = "Jurisdiction-required — {doc}."
+_JURISDICTION_MAPPED_NOTE: str = "Jurisdiction-required: {doc}."
 
 
 def _jurisdiction_doc(source: dict[str, Any] | None) -> str:

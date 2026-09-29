@@ -152,7 +152,7 @@
    "case": {
     "case": "Case 11: Shoulder closure on undivided highway",
     "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
-    "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11 \u2014 the general shoulder-work typical (drawn for freeway/expressway) \u2014 applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
+    "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11, the general shoulder-work typical (drawn for freeway/expressway), applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
     "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 35 mph.",
     "routing": "shoulder_no_reduction"
    },
@@ -190,7 +190,7 @@
      "flag": "pedestrian_facility",
      "action": "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
      "devices_added": 6,
-     "rule": "MUTCD \u00a76C.02 \u2014 pedestrian considerations in work zones",
+     "rule": "MUTCD \u00a76C.02: pedestrian considerations in work zones",
      "citation": "MUTCD \u00a7 6C.02"
     }
    ]

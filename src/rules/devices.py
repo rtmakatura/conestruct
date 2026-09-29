@@ -161,7 +161,7 @@ DEVICE_CATALOG: dict[DeviceType, DeviceSpec] = {
     # billing time once panel sizes are known.
     DeviceType.BARRICADE_TYPE_II: DeviceSpec(
         device_type=DeviceType.BARRICADE_TYPE_II,
-        description="Type II barricade — two horizontal striped rails, 36–42 in tall",
+        description="Type II barricade: two horizontal striped rails, 36–42 in tall",
         unit="SF",
         cdot_pay_item="Construction Traffic Sign (Special)",
         cdot_pay_item_number="630-80344",
@@ -185,7 +185,7 @@ DEVICE_CATALOG: dict[DeviceType, DeviceSpec] = {
     # full list of alternatives.
     DeviceType.BARRICADE_TYPE_III: DeviceSpec(
         device_type=DeviceType.BARRICADE_TYPE_III,
-        description="Type III barricade — three horizontal striped rails, full lane width",
+        description="Type III barricade: three horizontal striped rails, full lane width",
         unit="EACH",
         cdot_pay_item="Barricade (Type 3 F-B) (Temporary)",
         cdot_pay_item_number="630-80332",

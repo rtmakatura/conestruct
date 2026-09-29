@@ -66,7 +66,7 @@ def _adjust_limited_sight_distance(
         ),
         "devices_added": 0,
         "devices_modified": moved,
-        "rule": "MUTCD §6B.04 — increased advance warning for limited sight distance",
+        "rule": "MUTCD §6B.04: increased advance warning for limited sight distance",
     }
     return out, record
 
@@ -91,8 +91,8 @@ def _adjust_adjacent_intersection(
     record = {
         "flag": "adjacent_intersection",
         "action": (
-            "No devices added — the cross-street approach layout is not "
-            "generated; see the pending-verification disclosure."
+            "No devices added: the cross-street approach layout isn't "
+            "generated. See the pending-verification disclosure."
         ),
         "devices_added": 0,
         # Cited by real title + printed page (#16; subject-verified,
@@ -100,7 +100,7 @@ def _adjust_adjacent_intersection(
         # intersections but assigns no proximity distance — the
         # detection tolerances that decide when this flag auto-checks
         # are CHOSEN, recorded at site_detection._BUCKET_RELEVANCE_OVERRIDES.
-        "rule": "MUTCD §6N.12 p. 848 — Work within the Traveled Way at an Intersection (11th Ed.)",
+        "rule": "MUTCD §6N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.)",
     }
     return placements, record
 
@@ -125,15 +125,15 @@ def _adjust_adjacent_interchange(
     record = {
         "flag": "adjacent_interchange",
         "action": (
-            "No devices added — the per-ramp interchange layout is not "
-            "generated; see the pending-verification disclosure."
+            "No devices added: the per-ramp interchange layout isn't "
+            "generated. See the pending-verification disclosure."
         ),
         "devices_added": 0,
         # Cited by real title + printed page (#16; subject-verified,
         # 11th Ed.).  The former "+ Ch. 6H" rider is dropped: Ch. 6H is
         # "TTC Zone Warning Signs" generally, not an interchange-signing
         # chapter — §6N.16 carries the claim alone.
-        "rule": "MUTCD §6N.16 p. 851 — Interchanges (11th Ed.)",
+        "rule": "MUTCD §6N.16 p. 851: Interchanges (11th Ed.)",
     }
     return placements, record
 
@@ -143,12 +143,12 @@ def _adjust_driveways_present() -> dict[str, Any]:
     return {
         "flag": "driveways_present",
         "action": (
-            "Driveways present within work zone — maintain access gaps in "
+            "Driveways present within the work zone. Maintain access gaps in "
             "channelization. Do not place channelizing devices across "
             "driveway entrances."
         ),
         "devices_added": 0,
-        "rule": "MUTCD §6K.01 — access management in work zones",
+        "rule": "MUTCD §6K.01: access management in work zones",
     }
 
 
@@ -179,7 +179,7 @@ def _adjust_pedestrian_facility(
             "the work zone."
         ),
         "devices_added": 6,
-        "rule": "MUTCD §6C.02 — pedestrian considerations in work zones",
+        "rule": "MUTCD §6C.02: pedestrian considerations in work zones",
     }
     return placements + barricades + signs, record
 
@@ -200,7 +200,7 @@ def _adjust_bicycle_facility(
         "flag": "bicycle_facility",
         "action": "Added 2 M4-9a BIKE DETOUR signs at the upstream and downstream ends.",
         "devices_added": 2,
-        "rule": "MUTCD §9C.101 — bicycle facility work zone signing",
+        "rule": "MUTCD §9C.101: bicycle facility work zone signing",
     }
     return placements + new_signs, record
 
@@ -231,7 +231,7 @@ def _adjust_school_zone(
             f"(station {s1_station:,.0f} ft, both sides)."
         ),
         "devices_added": 2,
-        "rule": "MUTCD §7B.08 — school zone signing in proximity to work zones",
+        "rule": "MUTCD §7B.08: school zone signing in proximity to work zones",
     }
     return placements + new_signs, record
 

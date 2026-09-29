@@ -130,13 +130,13 @@
           "citation": "MUTCD § 6C.02",
           "devices_added": 6,
           "flag": "pedestrian_facility",
-          "rule": "MUTCD §6C.02 — pedestrian considerations in work zones"
+          "rule": "MUTCD §6C.02: pedestrian considerations in work zones"
         }
       ],
       "site_scan": {
         "buckets": {},
         "budget_s": 20.0,
-        "disclosure": "SITE CONDITIONS NOT CHECKED — service unavailable at generation.",
+        "disclosure": "SITE CONDITIONS NOT CHECKED: service unavailable at generation.",
         "duration_ms": 0,
         "error": "stub: mirrors down",
         "flags": {},

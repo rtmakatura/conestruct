@@ -1259,8 +1259,8 @@ def near_intersection_stations(
     along_values = {a.along_station_ft for a in approaches}
     if len(along_values) != 1:
         raise ValueError(
-            f"approaches disagree on along_station_ft ({sorted(along_values)!r}) "
-            f"— both legs of the one supported cross street must carry the "
+            f"approaches disagree on along_station_ft ({sorted(along_values)!r}). "
+            f"Both legs of the one supported cross street must carry the "
             f"same value; two values describe two cross streets (multi-road "
             f"scope, not supported)."
         )
@@ -1298,7 +1298,7 @@ def near_intersection_stations(
         # honesty here.
         raise ValueError(
             f"along_station_ft={along:g} lies inside the work zone "
-            f"(0..{wz_len:g}) — in-intersection work is not supported."
+            f"(0..{wz_len:g}). In-intersection work isn't supported."
         )
 
     speed = params.speed_mph

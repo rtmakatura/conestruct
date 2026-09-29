@@ -638,7 +638,7 @@ def build_narrative_context(
     if pilot_car:
         equipment_bullets += (
             '\n- 1× Pilot car with G20-4 "PILOT CAR/FOLLOW ME" sign '
-            "mounted on the rear of the vehicle (S-630-1 Sheet 26 — "
+            "mounted on the rear of the vehicle (S-630-1 Sheet 26: "
             "vehicle-mounted, not a roadside placement)"
         )
 
@@ -750,8 +750,8 @@ def build_narrative_context(
                     "existing conditions, plus the proposed pedestrian "
                     "accessible route, bike facilities, and a sidewalk/bike "
                     "closure detail. That existing-conditions inventory is "
-                    "site-survey content this generated draft does not "
-                    "carry — the TCS supplies it on the submitted TCP."
+                    "site-survey content this generated draft doesn't "
+                    "carry. The TCS supplies it on the submitted TCP."
                 ),
             }
         )
@@ -782,13 +782,13 @@ def build_narrative_context(
     # -----------------------------------------------------------------
     if params.closure_type == "shoulder":
         emergency_access_fact = (
-            "All travel lanes remain open — the closure occupies the "
+            "All travel lanes remain open; the closure occupies the "
             "shoulder only. Emergency vehicles pass through the work zone "
             "in the open lanes."
         )
     elif params.closure_type == "off_road":
         emergency_access_fact = (
-            "All travel lanes and shoulders remain open — the work is beyond the roadway."
+            "All travel lanes and shoulders remain open; the work is beyond the roadway."
         )
     elif params.closure_type == "mobile":
         emergency_access_fact = (

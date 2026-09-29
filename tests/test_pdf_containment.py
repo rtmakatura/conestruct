@@ -277,5 +277,5 @@ def test_scanned_fixtures_really_scan(
         assert prov["flags"], "the recorded payload detects flags at the Lakewood control"
     else:
         assert (
-            prov["disclosure"] == "SITE CONDITIONS NOT CHECKED — service unavailable at generation."
+            prov["disclosure"] == "SITE CONDITIONS NOT CHECKED: service unavailable at generation."
         )

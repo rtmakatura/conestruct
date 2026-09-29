@@ -142,7 +142,7 @@ def _fetch_fields(buckets: Mapping[str, Any]) -> dict[str, Any]:
 
 # The one NOT-CHECKED sentence every surface will print in phase 2
 # (sheet, narrative, audit).  Authored once, backend-side.
-NOT_CHECKED_DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation."
+NOT_CHECKED_DISCLOSURE = "SITE CONDITIONS NOT CHECKED: service unavailable at generation."
 
 # ---------------------------------------------------------------------------
 # #224 phase 4 (s2-arc18) — operator corrections of the scanned keys
@@ -183,7 +183,8 @@ DISMISS_REASON_TEXT: dict[str, str] = {
 
 SITE_CONDITION_OVERRIDE_ERROR = "site_condition_override_invalid"
 _VERIFY = (
-    " The plan is built to the correction — verify it in the field or on imagery before deploying."
+    " The plan is built to the correction, so verify it in the field or on imagery "
+    "before deploying."
 )
 
 
@@ -216,7 +217,7 @@ def override_violation(overrides: list[Any]) -> str | None:
                 return f"Dismissing {label}: a note goes only with the reason 'other'."
         elif action == "assert":
             if reason is not None or note:
-                return f"Asserting {label} takes no reason — the assertion is the fact."
+                return f"Asserting {label} takes no reason; the assertion is the fact."
     return None
 
 
@@ -265,20 +266,20 @@ def _apply_corrections(
             elif detected is False:
                 status, text = (
                     "moot",
-                    f"Operator dismissal of {label} is moot — the scan found none along "
-                    "the corridor; nothing to dismiss.",
+                    f"Operator dismissal of {label} is moot: the scan found none along "
+                    "the corridor, so there's nothing to dismiss.",
                 )
             else:
                 status, text = (
                     "moot",
-                    f"Operator dismissal of {label} could not apply — the site scan did "
-                    "not complete; nothing was detected to dismiss.",
+                    f"Operator dismissal of {label} couldn't apply: the site scan didn't "
+                    "complete, so nothing was detected to dismiss.",
                 )
         else:  # assert
             if detected is True:
                 status, text = (
                     "moot",
-                    f"Operator assertion of {label} is moot — the scan detected it; the "
+                    f"Operator assertion of {label} is moot: the scan detected it, so the "
                     "assertion changes nothing.",
                 )
             else:
@@ -286,9 +287,9 @@ def _apply_corrections(
                 found = (
                     "the scan found none along the corridor"
                     if detected is False
-                    else "the site scan did not complete"
+                    else "the site scan didn't complete"
                 )
-                status, text = ("applied", f"Operator asserted {label} — {found}.{_VERIFY}")
+                status, text = ("applied", f"Operator asserted {label}; {found}.{_VERIFY}")
         records.append(
             SiteScanCorrection(
                 flag=flag,
@@ -330,8 +331,8 @@ def corrections_advisory(records: list[SiteScanCorrection]) -> str | None:
 # clause "the plan will carry a NOT-CHECKED disclosure" promised what
 # the server may not do; the plan's own provenance says what happened.
 SITE_SCAN_UNAVAILABLE_MESSAGE = (
-    "Site scan unavailable — the plan can't verify school zones, sidewalks, "
-    "or signals right now. Retry, or generate anyway — the plan says whether "
+    "Site scan unavailable. The plan can't verify school zones, sidewalks, "
+    "or signals right now. Retry, or generate anyway; the plan says whether "
     "the scan ran."
 )
 
@@ -507,7 +508,7 @@ def not_checked_disclosure(scan: Mapping[str, Any] | None) -> str | None:
     return str(disclosure) if disclosure else None
 
 
-CORRECTIONS_SHEET_PREFIX = "SITE CONDITIONS CORRECTED BY OPERATOR — "
+CORRECTIONS_SHEET_PREFIX = "SITE CONDITIONS CORRECTED BY OPERATOR: "
 
 
 def correction_sentences(scan: Mapping[str, Any] | None) -> list[str]:

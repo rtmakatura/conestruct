@@ -130,11 +130,11 @@
     },
     "site_adjustments": [
       {
-        "action": "No devices added — the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
+        "action": "No devices added: the per-ramp interchange layout isn't generated. See the pending-verification disclosure.",
         "citation": "MUTCD § 6N.16 p. 851",
         "devices_added": 0,
         "flag": "adjacent_interchange",
-        "rule": "MUTCD §6N.16 p. 851 — Interchanges (11th Ed.)"
+        "rule": "MUTCD §6N.16 p. 851: Interchanges (11th Ed.)"
       }
     ],
     "site_scan": {

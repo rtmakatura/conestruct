@@ -239,7 +239,7 @@ class WorkSchedule(BaseModel):
         ):
             raise ValueError(
                 f"schedule end_time ({self.end_time}) must differ from start_time "
-                f"({self.start_time}) — a zero-length shift is ambiguous; an "
+                f"({self.start_time}). A zero-length shift is ambiguous; an "
                 f"end_time before start_time means the shift wraps past midnight."
             )
         return self
@@ -481,7 +481,7 @@ class ShoulderScenario(
             raise ValueError(
                 f"{self.lanes} lanes x {self.laneWidth} ft + {shoulder_ft:.0f} ft shoulder "
                 f"= {half_road:.1f} ft exceeds the plan sheet's drawable half-road "
-                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft) — use a lane width of "
+                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft). Use a lane width of "
                 f"{max_width:.1f} ft or less, or reduce the lane count."
             )
         return self
@@ -653,7 +653,7 @@ class IntersectionApproach(BaseModel):
         if self.id == "mainline":
             raise ValueError(
                 'approach id "mainline" is reserved for the scenario\'s '
-                "primary road — pick another id for the cross street."
+                "primary road. Pick another id for the cross street."
             )
         return self
 
@@ -762,7 +762,7 @@ class NearIntersectionScenario(
     def _check_not_divided(self) -> Self:
         if self.divided:
             raise ValueError(
-                "divided intersections are not supported yet — Cases 18/19 "
+                "divided intersections aren't supported yet. Cases 18/19 "
                 "are undivided/arterial plates; a divided mainline adds the "
                 "median-opening question (deferred)."
             )
@@ -828,7 +828,7 @@ class NearIntersectionScenario(
             raise ValueError(
                 f"{self.lanes} lanes x {self.laneWidth} ft + {shoulder_ft:.0f} ft shoulder "
                 f"= {half_road:.1f} ft exceeds the plan sheet's drawable half-road "
-                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft) — use a lane width of "
+                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft). Use a lane width of "
                 f"{max_width:.1f} ft or less, or reduce the lane count."
             )
         return self
@@ -1139,7 +1139,7 @@ def work_start_cross_station(scenario: NearIntersectionScenario, params: Scenari
         )
     if abs(station) > WORK_LEN_MAX_FT:
         raise CrossStreetStationError(
-            f"the marked cross street is {abs(station):,.0f} ft from the work along the road — "
+            f"the marked cross street is {abs(station):,.0f} ft from the work along the road, "
             "too far for a near-intersection plan."
         )
     return float(station)
