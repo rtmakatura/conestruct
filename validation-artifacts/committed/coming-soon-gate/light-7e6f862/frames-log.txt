@@ -1,0 +1,7 @@
+R42 frames · http://localhost:3100/ · 2026-09-29T18:34:14.697Z
+1440: CLS 0.0012 (live, load + 3.5 s) · 39 animations on the page
+1440: 11 frames at a tenth of speed, target->clock read (ms): 0->13 250->250 500->500 750->751 1000->1000 1250->1251 1500->1501 1750->1750 2000->2001 2250->2250 2500->2500
+1440: reduced motion · running animations 0 · stamp {"opacity":"1","transform":"matrix(0.994522, -0.104528, 0.104528, 0.994522, 0, 0)","color":"rgb(255, 138, 46)"}
+390: CLS 0.0023 (live, load + 3.5 s) · 36 animations on the page
+390: 11 frames at a tenth of speed, target->clock read (ms): 0->12 250->251 500->500 750->751 1000->1001 1250->1252 1500->1500 1750->1750 2000->2001 2250->2251 2500->2501
+390: reduced motion · running animations 0 · stamp {"opacity":"1","transform":"matrix(0.994522, -0.104528, 0.104528, 0.994522, 0, 0)","color":"rgb(255, 138, 46)"}

@@ -1,0 +1,7 @@
+R42 frames · http://localhost:3100/ · 2026-09-29T18:19:52.539Z
+1440: CLS 0.0012 (live, load + 3.5 s) · 10 animations on the page
+1440: 11 frames, 0..2500 ms
+1440: reduced motion · running animations 0 · stamp null
+390: CLS 0.0023 (live, load + 3.5 s) · 10 animations on the page
+390: 11 frames, 0..2500 ms
+390: reduced motion · running animations 0 · stamp null
