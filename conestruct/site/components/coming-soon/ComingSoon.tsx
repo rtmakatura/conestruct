@@ -26,6 +26,7 @@ import { MilepostRoad } from "./MilepostRoad";
 import { PaperStack } from "./PaperStack";
 import { STACK_MOVES } from "./stack-moves";
 import { PlanDrawing } from "./PlanDrawing";
+import { JumpLink } from "./JumpLink";
 
 // The coming-soon page, B+ "The Plan Sheet" (coming-soon-gate R5a).
 // Authority: design/PlanSheet.dc.html (1440) and PlanSheetPhone.dc.html
@@ -95,12 +96,8 @@ function Sheet() {
           </p>
           <p className="cs-body cs-measure">{HERO.line}</p>
           <div className="cs-intro-links">
-            <a className="cs-body cs-link" href="#how">
-              {HERO.howLink}
-            </a>
-            <a className="cs-body cs-link" href="#sources">
-              {HERO.sourcesLink}
-            </a>
+            <JumpLink to="how">{HERO.howLink}</JumpLink>
+            <JumpLink to="sources">{HERO.sourcesLink}</JumpLink>
           </div>
         </div>
         <div id="notify" className="cs-notify-col">
@@ -148,7 +145,7 @@ export function ComingSoon() {
       <Sheet />
 
       <MilepostRoad>
-        <section id="how" className="cs-section" data-milepost="0" aria-labelledby="cs-how">
+        <section id="how" className="cs-section" data-milepost="0" aria-labelledby="cs-how" tabIndex={-1}>
           <SectionHead id="cs-how" n={HOW.n} title={HOW.title} prov={HOW.prov} />
           <p className="sr-only">{HOW.strip}</p>
           <div className="cs-strip3">
@@ -182,7 +179,7 @@ export function ComingSoon() {
           </div>
         </section>
 
-        <section id="sources" className="cs-section" data-milepost="2" aria-labelledby="cs-sources">
+        <section id="sources" className="cs-section" data-milepost="2" aria-labelledby="cs-sources" tabIndex={-1}>
           <SectionHead id="cs-sources" n={SOURCES.n} title={SOURCES.title} />
           <div className="cs-sources">
             <div className="cs-sources-text">

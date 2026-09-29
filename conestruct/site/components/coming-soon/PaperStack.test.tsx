@@ -101,8 +101,10 @@ describe("the server / client boundary (found in R21's browser leg)", () => {
         !/\.test\./.test(f) &&
         /^\s*["']use client["']/.test(readFileSync(join(dir, f), "utf-8")),
     );
-    expect(client.sort()).toEqual(["MilepostRoad.tsx", "PaperStack.tsx"]);
+    // R49 adds JumpLink.tsx (the two jump links' focus hand-off).
+    expect(client.sort()).toEqual(["JumpLink.tsx", "MilepostRoad.tsx", "PaperStack.tsx"]);
     const mods: Record<string, Record<string, unknown>> = {
+      "JumpLink.tsx": await import("./JumpLink"),
       "MilepostRoad.tsx": await import("./MilepostRoad"),
       "PaperStack.tsx": await import("./PaperStack"),
     };

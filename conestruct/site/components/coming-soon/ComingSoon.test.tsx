@@ -7,6 +7,8 @@
 // matching the product's lane closure (A2-Q5).  Layout, targets and
 // contrast are the browser leg (happy-dom lays nothing out).
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import Page from "@/app/page";
@@ -484,5 +486,76 @@ describe("R33 / R34 / R35 — the unslop pass", () => {
     for (const joined of ["mark the work ·", "illustration · a real plan"]) {
       expect(text.toLowerCase(), joined).not.toContain(joined);
     }
+  });
+});
+
+describe("R49 — the two jump links scroll smoothly, then focus lands on the section", () => {
+  const css = readFileSync(join(__dirname, "..", "..", "app", "globals.css"), "utf-8").replace(
+    /\/\*[\s\S]*?\*\//g,
+    "",
+  );
+
+  function blockAt(at: number): string {
+    const open = css.indexOf("{", at);
+    let depth = 0;
+    for (let i = open; i < css.length; i++) {
+      if (css[i] === "{") depth++;
+      else if (css[i] === "}" && --depth === 0) return css.slice(at, i + 1);
+    }
+    throw new Error("unbalanced");
+  }
+
+  const link = (c: HTMLElement, name: string) =>
+    [...c.querySelectorAll("a.cs-link")].find((e) => e.textContent === name)!;
+
+  it("each link is a plain #hash link to a focusable section (tabIndex -1)", () => {
+    const c = mount();
+    for (const [name, id] of [
+      ["How a plan is made ↓", "how"],
+      ["What it cites ↓", "sources"],
+    ]) {
+      expect(link(c, name).getAttribute("href")).toBe(`#${id}`);
+      expect(c.querySelector(`section#${id}`)?.getAttribute("tabindex")).toBe("-1");
+    }
+  });
+
+  it("focus moves to the section when the scroll ends, not before, and doesn't scroll itself", () => {
+    const c = mount();
+    const section = c.querySelector<HTMLElement>("section#sources")!;
+    const focus = vi.spyOn(section, "focus");
+    fireEvent.click(link(c, "What it cites ↓"));
+    expect(focus).not.toHaveBeenCalled();
+    window.dispatchEvent(new Event("scrollend"));
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+  });
+
+  it("with no scrollend (already there, or no support), focus still lands after a second, once", () => {
+    vi.useFakeTimers();
+    try {
+      const c = mount();
+      const section = c.querySelector<HTMLElement>("section#how")!;
+      const focus = vi.spyOn(section, "focus");
+      fireEvent.click(link(c, "How a plan is made ↓"));
+      vi.advanceTimersByTime(999);
+      expect(focus).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1);
+      window.dispatchEvent(new Event("scrollend"));
+      expect(focus).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("smooth scrolling is on html, only on this page, only under no-preference (reduced motion jumps)", () => {
+    const noPref = blockAt(css.indexOf("@media (prefers-reduced-motion: no-preference)"));
+    expect(noPref).toMatch(/html:has\(\.cs-page\)\s*\{\s*scroll-behavior:\s*smooth;\s*\}/);
+    expect(css.replace(noPref, "")).not.toMatch(/scroll-behavior\s*:\s*smooth/);
+  });
+
+  it("where the milepost marker shows (980px and up), a section lands below it (top 24 + 40 high + 16)", () => {
+    const wide = blockAt(css.search(/@media \(min-width: 980px\) \{\s*\.workbench \.cs-road-wrap/));
+    expect(wide).toMatch(/\.workbench \.cs-mp \{[^}]*top: 24px;[^}]*height: 40px;/);
+    expect(wide).toMatch(/\.workbench \.cs-section\[id\] \{\s*scroll-margin-top: 80px;\s*\}/);
   });
 });

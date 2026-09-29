@@ -5772,6 +5772,12 @@ input[type="number"] {
   .workbench .cs-mp[hidden] {
     display: none;
   }
+  /* R49: a jump lands the section's head below the marker (top 24 +
+     height 40, plus 16), not under it: at 24 px the marker covered 01's
+     "pin · job · plan" and the head's rule. */
+  .workbench .cs-section[id] {
+    scroll-margin-top: 80px;
+  }
 }
 /* Ahead of the highlight the road is faint (and masked to nothing). */
 .workbench .cs-road-ahead {
@@ -6370,6 +6376,13 @@ input[type="number"] {
   .workbench .cs-stack.is-fanned .cs-seq {
     animation: cs-k 0.35s ease-out both;
     animation-delay: calc(var(--i) * 40ms);
+  }
+  /* R49 — "How a plan is made ↓" and "What it cites ↓" scroll to their
+     sections; with reduced motion they jump.  On html, as the ruling says,
+     but only while the coming-soon page is in it (:has), so /sandbox's
+     own scrollIntoView calls keep the browser's default. */
+  html:has(.cs-page) {
+    scroll-behavior: smooth;
   }
 }
 @keyframes cs-draw {
