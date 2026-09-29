@@ -122,7 +122,7 @@ describe("strip error honesty (#184)", () => {
       auditCalls,
       0,
       translated400(
-        "4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.",
+        "4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft). Use a lane width of 11.0 ft or less, or reduce the lane count.",
       ),
     );
 

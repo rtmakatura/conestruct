@@ -346,14 +346,14 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     await settle();
     await user.click(screen.getByText("Generate package"));
     await settle();
-    // S4, rule 117: "No package yet — the plan is being built."  The
+    // S4, rule 117: "No package yet. The plan is being built."  The
     // pre-Generate answer was never presented, so it is not a previous
     // answer (#192's carry applies to one the person saw).
     expect(screen.queryByText("Generating…")).toBeNull();
     const ph = document.querySelector('[data-testid="results-placeholder"]');
     expect(ph).not.toBeNull();
     expect(ph!.textContent).toContain("02 · RESULTS");
-    expect(ph!.textContent).toContain("No package yet — the plan is being built.");
+    expect(ph!.textContent).toContain("No package yet. The plan is being built.");
     expect(document.body.textContent).not.toContain("Previous answer");
     expect(document.querySelector(".hero")).toBeNull();
     expect(document.body.textContent).not.toContain("Recomputing");

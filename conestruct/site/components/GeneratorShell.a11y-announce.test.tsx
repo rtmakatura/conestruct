@@ -63,7 +63,7 @@ const REFUSAL = {
   detail: {
     error: "site_scan_unavailable",
     message:
-      "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.",
+      "Site scan unavailable. The plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway; the plan says whether the scan ran.",
     site_scan: {
       status: "unavailable",
       error: "scan budget exceeded (20 s)",
@@ -201,7 +201,7 @@ describe("generation announcements (#193)", () => {
     await release(breakdownCalls.length - 1, okBreakdown());
     await flushDebounce();
     expect(statusRegion().textContent).toBe(
-      "Plan generated — 42 devices, 6 types.",
+      "Plan generated: 42 devices, 6 types.",
     );
     // Same source as the visuals: the hero shows the same counts.
     expect(screen.getAllByText("42").length).toBeGreaterThan(0);
@@ -232,7 +232,7 @@ describe("generation announcements (#193)", () => {
     await flushDebounce();
     await release(breakdownCalls.length - 1, okBreakdown());
     expect(statusRegion().textContent).toBe(
-      "Plan generated — 42 devices, 6 types.",
+      "Plan generated: 42 devices, 6 types.",
     );
 
     const writes: string[] = [];
@@ -267,9 +267,9 @@ describe("generation announcements (#193)", () => {
 
     // Cleared at the write — what makes an identical announcement
     // announce again — then written back.
-    expect(writes).toEqual(["", "Plan generated — 42 devices, 6 types."]);
+    expect(writes).toEqual(["", "Plan generated: 42 devices, 6 types."]);
     expect(statusRegion().textContent).toBe(
-      "Plan generated — 42 devices, 6 types.",
+      "Plan generated: 42 devices, 6 types.",
     );
   });
 
@@ -351,7 +351,7 @@ describe("generation announcements (#193)", () => {
     await release(breakdownCalls.length - 1, okBreakdown());
     await flushDebounce();
     expect(statusRegion().textContent).toBe(
-      "Plan generated — 42 devices, 6 types.",
+      "Plan generated: 42 devices, 6 types.",
     );
     expect(document.querySelector(".hero")).not.toBeNull();
   });

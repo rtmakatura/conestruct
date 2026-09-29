@@ -14,6 +14,8 @@
 //   * a manual collapse of an auto-opened tier is respected.
 // Mounted-flow tests over the real regenerated fixture data.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -35,6 +37,13 @@ const SCHEDULE = {
   end_time: 15.0,
 };
 
+// The #187 cue, in the words the results stack renders it
+// (GeneratorShell.tsx; mounted and counted once in
+// AuditTrail.declined-stale.test.tsx).  The zero-count below is only a
+// claim if this string is one the product can render, so that test
+// first pins it to the shell's source.
+const REFRESH_CUE = "◌ previous answer, refreshing…";
+
 afterEach(cleanup);
 
 describe("Zone 3 density contract — tiers", () => {
@@ -50,20 +59,20 @@ describe("Zone 3 density contract — tiers", () => {
   });
 
   // #235-C (P5): one heading per zone — the zone's h2 is the shell's; the
-  // inner "<name> — jurisdiction rules" is the tr-section role, not a
+  // inner "<name> jurisdiction rules" is the tr-section role, not a
   // heading (F-S3-2: it was a 20px h2, larger than the 17px zone title).
   it("the section label is a tr-section div, not a heading; the informational line is tr-prov", () => {
     const { container } = mountTiered(jur("greeley"), SCHEDULE);
     expect(container.querySelectorAll("h1, h2, h3, h4, h5, h6")).toHaveLength(0);
     const section = container.querySelector(".tr-section")!;
     expect(section.tagName).toBe("DIV");
-    expect(section.textContent).toBe("Greeley — jurisdiction rules");
+    expect(section.textContent).toBe("Greeley jurisdiction rules");
     const prov = container.querySelector("p.tr-prov")!;
     expect(prov.textContent).toBe("informational · sourced corpus · never blocks generation");
   });
 
   // #187 survives the ledger's deletion as ONE tr-prov cue in a slot of
-  // reserved height (P1): "◌ previous answer — refreshing…" while a
+  // reserved height (P1): "◌ previous answer, refreshing…" while a
   // same-jurisdiction refetch is open; the slot stays, empty, when not.
   //
   // #288 clause 4 MOVED that slot out of this component and into the
@@ -74,8 +83,12 @@ describe("Zone 3 density contract — tiers", () => {
   // asserts only that the component no longer carries a second copy.
   it("the #187 cue is NOT duplicated here — the stack owns the one copy", () => {
     const { container } = mountTiered(jur("greeley"), SCHEDULE, "arterial", { revalidating: true });
+    expect(
+      readFileSync(join(__dirname, "GeneratorShell.tsx"), "utf-8"),
+      "the cue text is the shell's own",
+    ).toContain(REFRESH_CUE);
     expect(container.querySelector(".tier-cue")).toBeNull();
-    expect(screen.queryAllByText("◌ previous answer — refreshing…")).toHaveLength(0);
+    expect(screen.queryAllByText(REFRESH_CUE)).toHaveLength(0);
     expect(document.body.textContent).not.toContain("checking against");
     cleanup();
     const settled = mountTiered(jur("greeley"), SCHEDULE);
@@ -96,29 +109,36 @@ describe("Zone 3 density contract — tiers", () => {
     mountTiered(jur("greeley"), SCHEDULE);
     const head = screen.getByRole("button", { name: /reference/i });
     expect(head.getAttribute("aria-expanded")).toBe("false");
-    expect(screen.queryByRole("button", { name: /permit — greeley/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /permit: greeley/i })).toBeNull();
 
     await userEvent.click(head);
     expect(head.getAttribute("aria-expanded")).toBe("true");
-    expect(screen.getByRole("button", { name: /permit — greeley/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /permit: greeley/i })).toBeTruthy();
 
     await userEvent.click(head);
     expect(head.getAttribute("aria-expanded")).toBe("false");
-    expect(screen.queryByRole("button", { name: /permit — greeley/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /permit: greeley/i })).toBeNull();
   });
 
   it("empty families render nothing — Greeley has no device mandates, so no obligations group for them", () => {
     const g = jur("greeley");
     expect(g.chips.device).toHaveLength(0);
     mountTiered(g, SCHEDULE);
-    expect(screen.queryByText(/device mandates — obligations/i)).toBeNull();
+    expect(screen.queryByText(/device mandates: obligations/i)).toBeNull();
+    // The group does render where the family is non-empty (Englewood
+    // carries two device mandates), so the null above is not vacuous.
+    cleanup();
+    const e = jur("englewood");
+    expect(e.chips.device.length).toBeGreaterThan(0);
+    mountTiered(e, SCHEDULE);
+    expect(screen.getByText(/device mandates: obligations/i)).toBeTruthy();
   });
 
   it("obligations surface in ⚠ (ruled flag b): Greeley's 2 personnel gates, auto-open", () => {
     mountTiered(jur("greeley"), SCHEDULE);
     const head = screen.getByRole("button", { name: /needs attention/i });
     expect(head.getAttribute("aria-expanded")).toBe("true");
-    expect(screen.getByText(/personnel gates — obligations/i)).toBeTruthy();
+    expect(screen.getByText(/personnel gates: obligations/i)).toBeTruthy();
     // Full rule text now reads in place — obligations are decisions owed.
     expect(
       screen.getByText(/Traffic Control Review Form signer/i),
@@ -165,7 +185,7 @@ describe("hours verdict placement — plan-invalidating states only auto-open", 
     expect(chip.className).not.toContain("auto-expand");
     await userEvent.click(head);
     expect(
-      screen.getByText(/Schedule marked .Not set. — the windows above are/i),
+      screen.getByText(/Schedule marked .Not set., so the windows above are/i),
     ).toBeTruthy();
   });
 

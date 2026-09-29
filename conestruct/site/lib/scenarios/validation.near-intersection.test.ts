@@ -222,7 +222,7 @@ describe("validateApproaches — the work-start model (#290)", () => {
     const v = validateApproaches({ ...DEFAULT_NEAR_INTERSECTION, meta: located });
     expect(v).toEqual({
       ok: false,
-      message: "Mark the cross street on the map — the plan places it from there.",
+      message: "Mark the cross street on the map. The plan places it from there.",
     });
   });
 

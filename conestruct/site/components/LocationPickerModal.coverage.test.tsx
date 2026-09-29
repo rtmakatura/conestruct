@@ -262,12 +262,12 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
     expect(geometryBodies()).toEqual([]);
   });
 
-  it("manual mode (no road): 'none — straight projection along the heading'", async () => {
+  it("manual mode (no road): 'none: straight projection along the heading'", async () => {
     stubFetches(detection([]), laidOut(null));
     mountModal({ ...SIDED, meta: { ...SIDED.meta, confirmedRoad: null, work: { side: "right", heading: "E" } } } as Scenario);
     typeCoords();
     expect(
-      await screen.findByText(/none — straight projection along the heading/i, undefined, {
+      await screen.findByText(/none: straight projection along the heading/i, undefined, {
         timeout: 3000,
       }),
     ).toBeTruthy();

@@ -259,7 +259,7 @@ export function TieredReference({
       <CheckRow
         key={`scan-corr-${c.flag}`}
         label={SITE_ADJUSTMENT_DETAIL[c.flag as SiteConditionFlag]?.label ?? c.flag}
-        detail="operator correction — moot"
+        detail="operator correction: moot"
         tone="info"
         tag="OPERATOR"
         evidence={c.disclosure}
@@ -309,7 +309,7 @@ export function TieredReference({
         <CheckRow
           key={`scan-ref-${bucketName}`}
           label={SCAN_REFERENCE_LABELS[bucketName] ?? bucketName}
-          detail={b.detected === true ? "detected — no rule applies" : "none along the corridor"}
+          detail={b.detected === true ? "detected, no rule applies" : "none along the corridor"}
           tone="info"
           tag="REFERENCE"
           evidence={scanEvidence(b) || undefined}
@@ -323,7 +323,7 @@ export function TieredReference({
   if (deltasChanged.length > 0) {
     changedBody.push(
       <div key="deltas">
-        <GroupLabel>{jur?.name} deltas — fired</GroupLabel>
+        <GroupLabel>{jur?.name} deltas: fired</GroupLabel>
         {deltasChanged.map((d) => (
           <DeltaRowView key={d.rule} d={d} />
         ))}
@@ -333,7 +333,7 @@ export function TieredReference({
   if (siteChanged.length > 0) {
     changedBody.push(
       <div key="site">
-        <GroupLabel>Site adjustments — devices added or moved</GroupLabel>
+        <GroupLabel>Site adjustments: devices added or moved</GroupLabel>
         <div className="check-list">{siteChanged.map(siteRow)}</div>
       </div>,
     );
@@ -351,7 +351,7 @@ export function TieredReference({
           className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]"
         >
           <span>
-            Audit trail unavailable while generation is declined — see the
+            Audit trail unavailable while generation is declined. See the
             notice above.
           </span>
         </div>
@@ -362,7 +362,7 @@ export function TieredReference({
         >
           <span>
             {throttled
-              ? "Audit trail paused: too many updates in the last minute — retry in a moment."
+              ? "Audit trail paused: too many updates in the last minute. Retry in a moment."
               : `Audit trail failed: ${audit.state === "error" ? audit.message : ""}`}
           </span>
           <button
@@ -381,7 +381,7 @@ export function TieredReference({
   if (jur && hoursStatus === "outside") {
     attentionBody.push(
       <div key="hours">
-        <GroupLabel>Work hours — {jur.name}</GroupLabel>
+        <GroupLabel>Work hours: {jur.name}</GroupLabel>
         <HoursVerdictBlock jurisdiction={jur} schedule={schedule} verifying={revalidating} />
       </div>,
     );
@@ -389,7 +389,7 @@ export function TieredReference({
   if (deltasAttention.length > 0) {
     attentionBody.push(
       <div key="deltas">
-        <GroupLabel>{jur?.name} deltas — conditional / needs input</GroupLabel>
+        <GroupLabel>{jur?.name} deltas: conditional / needs input</GroupLabel>
         {deltasAttention.map((d) => (
           <DeltaRowView key={d.rule} d={d} />
         ))}
@@ -399,7 +399,7 @@ export function TieredReference({
   if (jur && jur.chips.personnel.length > 0) {
     attentionBody.push(
       <div key="personnel">
-        <GroupLabel>Personnel gates — obligations</GroupLabel>
+        <GroupLabel>Personnel gates: obligations</GroupLabel>
         <FactRows
           chips={jur.chips.personnel}
           icon="◈"
@@ -412,7 +412,7 @@ export function TieredReference({
   if (jur && jur.chips.device.length > 0) {
     attentionBody.push(
       <div key="mandates">
-        <GroupLabel>Device mandates — obligations</GroupLabel>
+        <GroupLabel>Device mandates: obligations</GroupLabel>
         <FactRows
           chips={jur.chips.device}
           icon="▮"
@@ -485,7 +485,7 @@ export function TieredReference({
       <CheckRow
         key="corridor"
         label="Site corridor validation"
-        detail="checked against OSM — no warnings"
+        detail="checked against OSM, no warnings"
         tone="pass"
         tag="OPENSTREETMAP"
       />,
@@ -510,7 +510,7 @@ export function TieredReference({
   if (jur && hoursStatus === "inside") {
     checkedBody.push(
       <div key="hours" className="mt-2">
-        <GroupLabel>Work hours — {jur.name}</GroupLabel>
+        <GroupLabel>Work hours: {jur.name}</GroupLabel>
         <HoursVerdictBlock jurisdiction={jur} schedule={schedule} verifying={revalidating} />
       </div>,
     );
@@ -530,7 +530,7 @@ export function TieredReference({
   if (jur && hoursStatus === "unknown") {
     pendingBody.push(
       <div key="hours" className="mt-2">
-        <GroupLabel>Work hours — {jur.name}</GroupLabel>
+        <GroupLabel>Work hours: {jur.name}</GroupLabel>
         <HoursVerdictBlock jurisdiction={jur} schedule={schedule} verifying={revalidating} />
       </div>,
     );
@@ -543,7 +543,7 @@ export function TieredReference({
         <HazardChip jurisdiction={jur} />
         {deltasAdmin.length > 0 && (
           <div>
-            <GroupLabel>{jur.name} deltas — administrative</GroupLabel>
+            <GroupLabel>{jur.name} deltas: administrative</GroupLabel>
             {deltasAdmin.map((d) => (
               <DeltaRowView key={d.rule} d={d} />
             ))}
@@ -568,7 +568,7 @@ export function TieredReference({
   if (scanReferenceRows.length > 0) {
     referenceBody.push(
       <div key="scan-ref" className={jur ? "mt-2" : undefined}>
-        <GroupLabel>Site scan — measured, no rule applies</GroupLabel>
+        <GroupLabel>Site scan: measured, no rule applies</GroupLabel>
         <div className="check-list">{scanReferenceRows}</div>
       </div>,
     );
@@ -605,7 +605,7 @@ export function TieredReference({
           (F-S3-2: it was a 20px h2, larger than the 17px zone title). */}
       <div className="flex items-baseline justify-between mb-1 pb-3 border-b border-[color:var(--rule)]">
         <div className="tr-section">
-          {jur ? `${jur.name} — jurisdiction rules` : "Plan reference"}
+          {jur ? `${jur.name} jurisdiction rules` : "Plan reference"}
         </div>
         {jur?.provisional && <ProvisionalBadge label="Contains provisional facts" />}
       </div>

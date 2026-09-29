@@ -63,7 +63,7 @@ export function isManualStaged(s: StagedCorrection): s is StagedManualCondition 
 export const MANUAL_FLAG_LABELS: Record<ManualSiteFlag, { label: string; desc: string }> = {
   limited_sight_distance: {
     label: "Limited sight distance",
-    desc: "Curve, hill crest — moves advance signs 50% farther upstream.",
+    desc: "Curve or hill crest. Moves advance signs 50% farther upstream.",
   },
   driveways_present: {
     label: "Driveways present",

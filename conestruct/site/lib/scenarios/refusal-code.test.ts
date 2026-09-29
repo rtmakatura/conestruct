@@ -20,7 +20,7 @@ describe("matchRefusalCode (#224 phase 2)", () => {
     expect(matchRefusalCode(undefined)).toBeNull();
     expect(matchRefusalCode(null)).toBeNull();
     expect(matchRefusalCode("")).toBeNull();
-    expect(matchRefusalCode("Site scan unavailable — the plan can't verify")).toBeNull();
+    expect(matchRefusalCode("Site scan unavailable. The plan can't verify")).toBeNull();
     expect(matchRefusalCode("flagger_multilane")).toBeNull();
   });
 

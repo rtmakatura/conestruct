@@ -263,8 +263,8 @@ export function NearIntersectionForm({
             <LabelRow>Where is the intersection?</LabelRow>
             <span className="tr-prov" data-testid="ni-placed-by-plan">
               {scenario.meta.intersection
-                ? `${scenario.meta.intersection.name ?? "the marked intersection"} · marked on the map — the plan places it along the road from the work start`
-                : "not marked — mark the cross street on the map"}
+                ? `${scenario.meta.intersection.name ?? "the marked intersection"} · marked on the map. The plan places it along the road from the work start`
+                : "not marked. Mark the cross street on the map"}
             </span>
             {!approachesValidation.ok && (
               <FieldErrorLine>{approachesValidation.message}</FieldErrorLine>
@@ -375,8 +375,8 @@ export function NearIntersectionForm({
               {legCount === 1
                 ? "Cross-street lanes (each direction)"
                 : i === 0
-                  ? "Cross-street lanes — direction A"
-                  : "Cross-street lanes — direction B"}
+                  ? "Cross-street lanes: direction A"
+                  : "Cross-street lanes: direction B"}
             </LabelRow>
             <ChipRow
               options={[1, 2, 3, 4].map((n) => ({ v: n, l: String(n) }))}
@@ -399,7 +399,7 @@ export function NearIntersectionForm({
               {approachConfirm.reason ??
                 "The cross-street lane count was filled from map data. Map " +
                   "lane counts near intersections often include turn " +
-                  "pockets — check the through-lane count before generating."}
+                  "pockets. Check the through-lane count before generating."}
             </p>
             <button
               type="button"
@@ -417,7 +417,7 @@ export function NearIntersectionForm({
         {!approachConfirm.pending && approachConfirmMarker !== null && (
           <div className="mt-1 border border-[color:var(--line-soft)] px-3 py-2">
             <p className="text-[11px] text-[color:var(--ink-on-dark-faint)] m-0">
-              ✓ Cross-street lane count confirmed — map data reported{" "}
+              ✓ Cross-street lane count confirmed; map data reported{" "}
               {overrideDetectedClause(approachConfirmMarker)}.
             </p>
             <button
@@ -425,7 +425,7 @@ export function NearIntersectionForm({
               onClick={undoConfirmLaneCounts}
               className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
             >
-              Undo — restore detected lane data
+              Undo: restore detected lane data
             </button>
           </div>
         )}

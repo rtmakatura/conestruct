@@ -66,9 +66,9 @@ import {
 // line, then the WHAT grid's own cell: `editAfterGenerate` in
 // components/__fixtures__/band-helpers.ts is those two steps.
 
-const DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation.";
+const DISCLOSURE = "SITE CONDITIONS NOT CHECKED: service unavailable at generation.";
 const MESSAGE =
-  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.";
+  "Site scan unavailable. The plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway; the plan says whether the scan ran.";
 const SCAN_UNAVAILABLE = {
   status: "unavailable",
   reason: null,

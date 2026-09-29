@@ -79,10 +79,10 @@ export function blindApplySentence(
   enumeration: string,
 ): string | null {
   if (state.kind === "loading") {
-    return `${enumeration} staged · preview still computing — Apply re-generates the full plan either way`;
+    return `${enumeration} staged · preview still computing. Apply re-generates the full plan either way`;
   }
   if (state.kind === "error") {
-    return `${enumeration} staged · preview failed — Apply re-generates the full plan without a preview`;
+    return `${enumeration} staged · preview failed. Apply re-generates the full plan without a preview`;
   }
   return null;
 }

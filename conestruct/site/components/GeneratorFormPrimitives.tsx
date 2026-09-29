@@ -59,7 +59,7 @@ export function FieldGroup({
           className="step-pending-summary"
           onClick={() => jumpToAnchor("rail-step-location")}
         >
-          <span aria-hidden>◌</span> Pending — set a location first
+          <span aria-hidden>◌</span> Pending: set a location first
         </button>
       )}
       <div

@@ -40,8 +40,8 @@ import {
 } from "@/lib/scenarios/handoff-summary";
 
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
-  rural_undivided: "Rural — undivided",
-  rural_divided: "Rural — divided",
+  rural_undivided: "Rural, undivided",
+  rural_divided: "Rural, divided",
   urban_arterial: "Urban arterial",
   freeway: "Freeway / interstate",
 };
@@ -57,16 +57,16 @@ export function handoffNoteText(
       switch (event.kind) {
         case "clamped": {
           const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
-          return `Speed ${event.toMph} mph (clamped from ${event.fromMph} mph ${srcLabel} — ${scenarioNoun(kind)} plans cap at ${event.toMph} mph per ${scenarioTa(kind)}).`;
+          return `Speed ${event.toMph} mph (clamped from ${event.fromMph} mph ${srcLabel}; ${scenarioNoun(kind)} plans cap at ${event.toMph} mph per ${scenarioTa(kind)}).`;
         }
         case "snapped": {
           const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
           return `Speed ${event.toMph} mph (snapped from ${event.fromMph} mph ${srcLabel} to the 5-mph grid).`;
         }
         case "accepted_low_confidence":
-          return `Speed ${event.valueMph} mph — accepted low-confidence fallback (${event.sourceLabel}).`;
+          return `Speed ${event.valueMph} mph: accepted low-confidence fallback (${event.sourceLabel}).`;
         case "skipped_low_confidence":
-          return `Speed fallback ${event.detectedMph} mph not applied — plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Accept it in the picker to use it.`;
+          return `Speed fallback ${event.detectedMph} mph not applied. The plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Accept it in the picker to use it.`;
       }
       break;
     case "roadType": {
@@ -74,26 +74,26 @@ export function handoffNoteText(
         const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
         return `Road type set to ${ROAD_TYPE_LABELS[event.to]} (from detected ${ROAD_TYPE_LABELS[event.from]}, ${srcLabel}).`;
       }
-      return `Detected ${ROAD_TYPE_LABELS[event.detected]} not valid for ${scenarioNoun(kind)} plans — kept ${ROAD_TYPE_LABELS[event.inEffect]}. Switch scenario kind to use it.`;
+      return `Detected ${ROAD_TYPE_LABELS[event.detected]} isn't valid for ${scenarioNoun(kind)} plans, so ${ROAD_TYPE_LABELS[event.inEffect]} was kept. Switch scenario kind to use it.`;
     }
     // #198 families 1-3: lanes / divided / laneWidth cross the seam.
     case "lanes": {
       if (event.kind === "clamped") {
         const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
-        return `Lanes ${event.to}/direction (clamped from ${event.from} ${srcLabel} — plans draw at most ${MAX_LANES_PER_DIRECTION} lanes per direction).`;
+        return `Lanes ${event.to}/direction (clamped from ${event.from} ${srcLabel}; plans draw at most ${MAX_LANES_PER_DIRECTION} lanes per direction).`;
       }
       if (event.kind === "applied") {
         const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
-        return `Lanes set to ${event.to}/direction (${srcLabel} — was ${event.from}).`;
+        return `Lanes set to ${event.to}/direction (${srcLabel}, was ${event.from}).`;
       }
-      return `Lanes setting ${event.value}/direction from the picker not applied — ${scenarioNoun(kind)} plans don't take a lane count.`;
+      return `Lanes setting ${event.value}/direction from the picker not applied: ${scenarioNoun(kind)} plans don't take a lane count.`;
     }
     case "divided": {
       if (event.kind === "applied") {
         const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
-        return `Road set to ${event.to ? "divided" : "undivided"} (${srcLabel} — was ${event.from ? "divided" : "undivided"}).`;
+        return `Road set to ${event.to ? "divided" : "undivided"} (${srcLabel}, was ${event.from ? "divided" : "undivided"}).`;
       }
-      return `Divided setting from the picker not applied — ${scenarioNoun(kind)} plans don't take a divided toggle.`;
+      return `Divided setting from the picker not applied: ${scenarioNoun(kind)} plans don't take a divided toggle.`;
     }
     case "laneWidth":
       if (event.kind === "narrowed_to_fit") {
@@ -101,12 +101,12 @@ export function handoffNoteText(
         // arithmetic the backend would have refused with, in the same
         // order, so the operator can check it: lanes x width + shoulder
         // against the sheet's 52 ft.
-        return `Lane width ${event.toFt} ft (narrowed from ${event.fromFt} ft — ${event.lanes} lanes × ${event.fromFt} ft + ${event.shoulderFt} ft shoulder is wider than the plan sheet can draw at ${MAX_DRAWABLE_HALF_ROAD_FT} ft per direction).`;
+        return `Lane width ${event.toFt} ft (narrowed from ${event.fromFt} ft because ${event.lanes} lanes × ${event.fromFt} ft + ${event.shoulderFt} ft shoulder is wider than the plan sheet can draw at ${MAX_DRAWABLE_HALF_ROAD_FT} ft per direction).`;
       }
-      return `Lane width set to ${event.toFt} ft (OSM detection — was ${event.fromFt} ft).`;
+      return `Lane width set to ${event.toFt} ft (OSM detection, was ${event.fromFt} ft).`;
     // #198 family 4: the reduction cleared by a lowered posted speed.
     case "workZoneSpeed":
-      return `Work-zone speed reduction removed (was ${event.wasMph} mph — the posted speed is now ${event.postedMph} mph, at or below it).`;
+      return `Work-zone speed reduction removed (was ${event.wasMph} mph; the posted speed is now ${event.postedMph} mph, at or below it).`;
   }
   // Exhaustive above; TS needs the terminator for the nested switch.
   return "";

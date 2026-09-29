@@ -80,11 +80,11 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
       <>loading…</>
     ) : state.state === "error" ? (
       declined ? (
-        <span className="verdict-bad">unavailable — generation declined</span>
+        <span className="verdict-bad">unavailable: generation declined</span>
       ) : throttled ? (
-        <span className="verdict-bad">paused — retry inside</span>
+        <span className="verdict-bad">paused: retry inside</span>
       ) : (
-        <span className="verdict-bad">unavailable — retry inside</span>
+        <span className="verdict-bad">unavailable: retry inside</span>
       )
     ) : (
       <>
@@ -101,7 +101,7 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
   return (
     <ReferenceChip
       glyph="▤"
-      label="Plan details — device schedule"
+      label="Plan details: device schedule"
       sev={state.state === "error" ? "warn" : "info"}
       autoExpand={state.state === "error"}
       summary={summary}
@@ -116,7 +116,7 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
         (declined ? (
           <div className="flex items-baseline gap-3 py-4">
             <div className="font-mono text-[12px] text-[color:var(--fail)]">
-              Device schedule unavailable while generation is declined — see
+              Device schedule unavailable while generation is declined. See
               the notice above.
             </div>
           </div>
@@ -124,7 +124,7 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
           <div className="flex items-baseline gap-3 py-4">
             <div className="font-mono text-[12px] text-[color:var(--fail)]">
               {throttled
-                ? "Device schedule paused: too many updates in the last minute — retry in a moment."
+                ? "Device schedule paused: too many updates in the last minute. Retry in a moment."
                 : `Device breakdown failed: ${state.message}`}
             </div>
             <button
@@ -143,8 +143,8 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
         <>
           {jrCount > 0 && jurName && (
             <p className="text-[12px] text-[color:var(--ink-on-dark)] mt-1 mb-3 pl-3 border-l-2 border-[color:var(--dim)]">
-              Highlighted rows are jurisdiction-required — added by{" "}
-              {jurName}&apos;s published rules on top of the MUTCD baseline.
+              Highlighted rows are jurisdiction-required:{" "}
+              {jurName}&apos;s published rules add them on top of the MUTCD baseline.
             </p>
           )}
           <table className="device-table">

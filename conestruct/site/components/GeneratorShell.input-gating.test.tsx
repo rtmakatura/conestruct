@@ -167,7 +167,7 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
     expect(generateButton().disabled).toBe(true);
     // The disabled CTA points at the strip instead of re-quoting the 400.
     expect(screen.getAllByRole("alert").some((el) =>
-      (el.textContent ?? "").includes("Generation declined — see the notice below."),
+      (el.textContent ?? "").includes("Generation declined. See the notice below."),
     )).toBe(true);
     // One voice: the verbatim 400 renders exactly once on the screen.
     const occurrences = (document.body.textContent ?? "").split(

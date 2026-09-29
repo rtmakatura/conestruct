@@ -258,7 +258,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await openWhat();
 
     expect(
-      screen.getByText(/Lanes set to 1\/direction \(OSM detection — was 3\)\./),
+      screen.getByText(/Lanes set to 1\/direction \(OSM detection, was 3\)\./),
     ).toBeTruthy();
   });
 
@@ -279,10 +279,10 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await openWhat();
 
     expect(
-      screen.getByText(/Lanes setting 2\/direction from the picker not applied — flagger plans don't take a lane count\./),
+      screen.getByText(/Lanes setting 2\/direction from the picker not applied: flagger plans don't take a lane count\./),
     ).toBeTruthy();
     expect(
-      screen.getByText(/Divided setting from the picker not applied — flagger plans don't take a divided toggle\./),
+      screen.getByText(/Divided setting from the picker not applied: flagger plans don't take a divided toggle\./),
     ).toBeTruthy();
   });
 
@@ -303,7 +303,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await openWhat();
 
     expect(
-      screen.getByText(/Lanes 4\/direction \(clamped from 5 OSM detection — plans draw at most 4 lanes per direction\)\./),
+      screen.getByText(/Lanes 4\/direction \(clamped from 5 OSM detection; plans draw at most 4 lanes per direction\)\./),
     ).toBeTruthy();
   });
 
@@ -337,7 +337,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     // it (#198's sixth family).
     expect(
       screen.getByText(
-        /Lane width 10\.5 ft \(narrowed from 12 ft — 4 lanes × 12 ft \+ 10 ft shoulder is wider than the plan sheet can draw at 52 ft per direction\)\./,
+        /Lane width 10\.5 ft \(narrowed from 12 ft because 4 lanes × 12 ft \+ 10 ft shoulder is wider than the plan sheet can draw at 52 ft per direction\)\./,
       ),
     ).toBeTruthy();
 
@@ -369,7 +369,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await openWhat();
 
     expect(
-      screen.getByText(/Work-zone speed reduction removed \(was 55 mph — the posted speed is now 35 mph, at or below it\)\./),
+      screen.getByText(/Work-zone speed reduction removed \(was 55 mph; the posted speed is now 35 mph, at or below it\)\./),
     ).toBeTruthy();
 
     await user.click(screen.getByText("Generate plan"));

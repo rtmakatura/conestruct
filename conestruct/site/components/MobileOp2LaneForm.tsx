@@ -14,7 +14,7 @@ import {
 } from "./GeneratorFormPrimitives";
 
 const ROAD_TYPES: Array<{ v: MobileRoadType2Lane; l: string }> = [
-  { v: "rural_undivided", l: "Rural — 2-lane 2-way" },
+  { v: "rural_undivided", l: "Rural, 2-lane 2-way" },
   { v: "urban_arterial", l: "Urban arterial" },
 ];
 
@@ -48,7 +48,7 @@ export function MobileOp2LaneForm({ scenario, setScenario }: Props) {
             ))}
           </select>
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            TA-35 — slow-moving op, no static taper
+            TA-35: slow-moving op, no static taper
           </div>
         </Field>
 

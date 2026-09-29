@@ -179,7 +179,7 @@ describe("NI approach confirm: confirmed note + undo (#179, gated kind)", () => 
       screen.getByText(/Cross-street lane count confirmed/).textContent,
     ).toMatch(/map data reported 2 total lanes \(1 forward, 2 backward\)/);
     fireEvent.click(
-      screen.getByRole("button", { name: /Undo — restore detected lane data/ }),
+      screen.getByRole("button", { name: /Undo: restore detected lane data/ }),
     );
     expect(payload()).toBe(preTick);
     expect(screen.queryByText(/Cross-street lane count confirmed/)).toBeNull();
@@ -194,7 +194,7 @@ describe("NI approach confirm: confirmed note + undo (#179, gated kind)", () => 
     fireEvent.click(screen.getByRole("button", { name: "Lane count is right" }));
     expect(screen.queryByText(/Cross-street lane count confirmed/)).toBeNull();
     expect(
-      screen.queryByRole("button", { name: /Undo — restore detected lane data/ }),
+      screen.queryByRole("button", { name: /Undo: restore detected lane data/ }),
     ).toBeNull();
   });
 
@@ -204,7 +204,7 @@ describe("NI approach confirm: confirmed note + undo (#179, gated kind)", () => 
     // Manual lane edit after the confirm (capture F's hazard).
     fireEvent.click(screen.getAllByRole("button", { name: "3" }).at(-1)!);
     fireEvent.click(
-      screen.getByRole("button", { name: /Undo — restore detected lane data/ }),
+      screen.getByRole("button", { name: /Undo: restore detected lane data/ }),
     );
     const s = JSON.parse(payload()) as NearIntersectionScenario;
     expect(s.approaches[0].lanesPerDirection).toBe(3); // the edit survives

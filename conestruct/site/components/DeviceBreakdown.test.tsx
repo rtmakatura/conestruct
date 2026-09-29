@@ -33,7 +33,7 @@ describe("DeviceBreakdown error honesty (#184)", () => {
       ),
     ).toBeTruthy();
     expect(
-      screen.getByText(/unavailable — generation declined/),
+      screen.getByText(/unavailable: generation declined/),
     ).toBeTruthy();
     // The chip neither re-quotes the refusal (StatusBar's single voice)
     // nor offers a Retry.
@@ -62,7 +62,7 @@ describe("DeviceBreakdown error honesty (#184)", () => {
         onRetry={() => {}}
       />,
     );
-    expect(screen.getByText(/paused — retry inside/)).toBeTruthy();
+    expect(screen.getByText(/paused: retry inside/)).toBeTruthy();
     expect(
       screen.getByText(/Device schedule paused: too many updates/),
     ).toBeTruthy();

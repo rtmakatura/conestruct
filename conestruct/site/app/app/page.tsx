@@ -94,7 +94,7 @@ export default async function AppPage() {
         {rows.length === 0 ? (
           <div className="border border-[color:var(--rule)] p-12 text-center">
             <p className="text-[color:var(--ink-on-dark-faint)] mb-4">
-              No plans yet — start one in the workbench.
+              No plans yet. Start one in the workbench.
             </p>
             <Link
               href="/app/plans/new"

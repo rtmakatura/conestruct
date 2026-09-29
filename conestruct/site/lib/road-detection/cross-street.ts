@@ -144,7 +144,7 @@ export function lanesSuspicion(tags: RoadCandidate["tags"]): {
     return {
       suspect: true,
       reason:
-        "The map data shows marked turn lanes here — its lane count " +
+        "The map data shows marked turn lanes here, so its lane count " +
         "usually includes turn pockets, so the through-lane count is " +
         "often lower.",
     };
@@ -162,7 +162,7 @@ export function lanesSuspicion(tags: RoadCandidate["tags"]): {
       suspect: true,
       reason:
         "The map data's total lane count doesn't match its per-direction " +
-        "counts — a marker for turn pockets or a center turn lane.",
+        "counts, which points to turn pockets or a center turn lane.",
     };
   }
   return { suspect: false, reason: null };

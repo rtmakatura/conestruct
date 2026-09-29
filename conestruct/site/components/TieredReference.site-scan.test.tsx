@@ -30,7 +30,7 @@ const control: Recorded = JSON.parse(
 const expectations: Record<string, { ledger: Record<string, number> }> = JSON.parse(
   readFileSync(join(FIXTURE_DIR, "tiering-expectations.json"), "utf-8"),
 );
-const DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation.";
+const DISCLOSURE = "SITE CONDITIONS NOT CHECKED: service unavailable at generation.";
 
 function withScan(audit: AuditResponse, scan: Record<string, unknown>): AuditResponse {
   return { ...audit, sections: { ...audit.sections, site_scan: scan } } as AuditResponse;

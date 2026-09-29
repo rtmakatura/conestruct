@@ -246,7 +246,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     fireEvent.click(screen.getByRole("button", { name: "Search" }));
 
     await screen.findByText(
-      "Area located — drop a pin on the road to detect roads.",
+      "Area located. Drop a pin on the road to detect roads.",
     );
     expect(pendingDetects).toHaveLength(0);
     // No pin was placed either — Save stays gated on a pin.
@@ -269,7 +269,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     expect(pendingDetects).toHaveLength(1);
     expect(
       screen.queryByText(
-        "Area located — drop a pin on the road to detect roads.",
+        "Area located. Drop a pin on the road to detect roads.",
       ),
     ).toBeNull();
   });

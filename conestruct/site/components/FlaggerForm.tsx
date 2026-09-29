@@ -90,7 +90,7 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
   // Confirmed-row description: built ONLY from the marker's recorded
   // fields — never a value detection didn't report.
   const confirmedDesc = (m: NonNullable<typeof singleLaneMarker>) =>
-    `Map data reported ${overrideDetectedClause(m)} — untick to restore detection`;
+    `Map data reported ${overrideDetectedClause(m)}; untick to restore detection`;
 
   return (
     <>
@@ -119,7 +119,7 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
             label="Road has one lane in each direction"
             desc={
               singleLaneArmed || singleLaneMarker === null
-                ? "Detection saw a single-lane road — confirm to enable this plan"
+                ? "Detection saw a single-lane road. Confirm to enable this plan"
                 : confirmedDesc(singleLaneMarker)
             }
             onToggle={() => {
@@ -168,7 +168,7 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
             label="Road has one through lane in each direction"
             desc={
               multilaneArmed || multilaneMarker === null
-                ? "Detection saw a multi-lane road — confirm to enable this plan"
+                ? "Detection saw a multi-lane road. Confirm to enable this plan"
                 : confirmedDesc(multilaneMarker)
             }
             onToggle={() => {
@@ -227,7 +227,7 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
             label="Road carries two-way traffic"
             desc={
               twowayArmed || twowayMarker === null
-                ? "Detection saw a one-way street — confirm to enable this plan"
+                ? "Detection saw a one-way street. Confirm to enable this plan"
                 : confirmedDesc(twowayMarker)
             }
             onToggle={() => {
@@ -277,7 +277,7 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
             label="Lane count is right"
             desc={
               laneCountArmed || laneCountMarker === null
-                ? "The map's lane counts contradict each other beside a signalized intersection — confirm to enable this plan"
+                ? "The map's lane counts contradict each other beside a signalized intersection. Confirm to enable this plan"
                 : confirmedDesc(laneCountMarker)
             }
             onToggle={() => {

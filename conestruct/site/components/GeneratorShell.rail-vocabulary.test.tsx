@@ -88,7 +88,7 @@ afterEach(() => {
 function locationEntry(): HTMLElement {
   const btn = Array.from(
     document.querySelectorAll(".progress-rail .rail-entry"),
-  ).find((b) => b.getAttribute("aria-label")?.startsWith("Location — "));
+  ).find((b) => b.getAttribute("aria-label")?.startsWith("Location: "));
   if (!btn) throw new Error("no Location rail entry on screen");
   return btn as HTMLElement;
 }

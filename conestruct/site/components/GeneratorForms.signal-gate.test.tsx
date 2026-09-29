@@ -156,7 +156,7 @@ describe("#173 mirror — matchRefusalAffordance", () => {
       "shoulder_lane_confidence",
     );
     expect(matchRefusalAffordance(armed)?.pointer).toMatch(
-      /set Lanes per direction in the Road section/,
+      /Set Lanes per direction in the Road section/,
     );
     expect(
       matchRefusalAffordance({ ...DEFAULT_SHOULDER, ...MISMATCH }),
@@ -190,7 +190,7 @@ describe("#173 mirror — matchRefusalAffordance", () => {
       "flagger_lane_confidence",
     );
     expect(matchRefusalAffordance(laneOnly)?.pointer).toMatch(
-      /confirm “Lane count is right” in the Road section/,
+      /Confirm “Lane count is right” in the Road section/,
     );
   });
 });

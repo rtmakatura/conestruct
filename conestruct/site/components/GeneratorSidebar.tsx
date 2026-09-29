@@ -375,8 +375,8 @@ export function GeneratorSidebar({
           reason:
             r.crossStreet.lanesPerDirection !== null
               ? r.crossStreet.lanesSuspectReason
-              : "The map data carries no lane tag for the cross street — " +
-                "the lane count was assumed 1 per direction, not detected. " +
+              : "The map data carries no lane tag for the cross street, so " +
+                "the lane count was assumed at 1 per direction, not detected. " +
                 "Confirm it or set the real count.",
         });
       }

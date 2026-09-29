@@ -48,7 +48,7 @@ export function shoulderWidthFt(kind: Scenario["kind"], divided: boolean): numbe
  * at 52 ft (e.g. 3 lanes x 14 ft + 10 ft shoulder) the sheet renders
  * cleanly; beyond it the road collides with the title block and
  * dimension callouts" (src/api/schemas.py:50-57).  The backend publishes
- * the same arithmetic in its own refusal — "use a lane width of
+ * the same arithmetic in its own refusal — "Use a lane width of
  * {max_width:.1f} ft or less" — so this is a mirror of a stated bound,
  * not a second rule (Rule 3).
  *
@@ -95,7 +95,7 @@ export function validateLanes(scenario: Scenario): LanesValidation {
   ) {
     const flaggerHint =
       scenario.kind === "near_intersection" && scenario.lanes < 2
-        ? " With one lane each way, traffic can't merge around the closure — that's a flagger job, not this plan type."
+        ? " With one lane each way, traffic can't merge around the closure. That's a flagger job, not this plan type."
         : "";
     return {
       ok: false,
@@ -185,7 +185,7 @@ export function validateApproaches(scenario: Scenario): ApproachesValidation {
     return {
       ok: false,
       message:
-        "Describe 1 or 2 cross-street directions — one for a T-intersection, " +
+        "Describe 1 or 2 cross-street directions: one for a T-intersection, " +
         "two when the cross street continues on both sides.",
     };
   }
@@ -234,7 +234,7 @@ export function validateApproaches(scenario: Scenario): ApproachesValidation {
     if (located && !scenario.meta.intersection) {
       return {
         ok: false,
-        message: "Mark the cross street on the map — the plan places it from there.",
+        message: "Mark the cross street on the map. The plan places it from there.",
       };
     }
     return { ok: true, message: null };
@@ -249,7 +249,7 @@ export function validateApproaches(scenario: Scenario): ApproachesValidation {
       ok: false,
       message:
         "Both cross-street directions must use the same distance to the " +
-        "intersection — two different distances would describe two separate " +
+        "intersection. Two different distances would describe two separate " +
         "cross streets, which needs two plans.",
     };
   }
@@ -266,7 +266,7 @@ export function validateApproaches(scenario: Scenario): ApproachesValidation {
     return {
       ok: false,
       message:
-        "The cross street can't be inside the work zone — Conestruct supports " +
+        "The cross street can't be inside the work zone. Conestruct supports " +
         "work near an intersection, not in it. Move the work zone or the " +
         "intersection distance so they don't overlap.",
     };
@@ -284,7 +284,7 @@ export function validateApproaches(scenario: Scenario): ApproachesValidation {
       message:
         `The cross street's pavement (about ${Math.round(halfCrossFt)} ft each ` +
         `way from its centerline) reaches into the work zone. Work inside the ` +
-        `intersection itself isn't supported — shorten the work zone or ` +
+        `intersection itself isn't supported. Shorten the work zone or ` +
         `increase the distance to the intersection.`,
     };
   }

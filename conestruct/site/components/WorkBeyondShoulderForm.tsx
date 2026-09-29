@@ -16,8 +16,8 @@ import {
 } from "./GeneratorFormPrimitives";
 
 const ROAD_TYPES: Array<{ v: WorkBeyondShoulderRoadType; l: string }> = [
-  { v: "rural_undivided", l: "Rural — undivided" },
-  { v: "rural_divided", l: "Rural — divided hwy" },
+  { v: "rural_undivided", l: "Rural, undivided" },
+  { v: "rural_divided", l: "Rural, divided hwy" },
   { v: "urban_arterial", l: "Urban arterial" },
   { v: "freeway", l: "Freeway / interstate" },
 ];
@@ -57,7 +57,7 @@ export function WorkBeyondShoulderForm({ scenario, setScenario }: Props) {
             ))}
           </select>
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            TA-1 — work entirely off the roadway
+            TA-1: work entirely off the roadway
           </div>
         </Field>
 

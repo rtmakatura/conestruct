@@ -54,13 +54,13 @@ const LEGEND_ORDER: readonly CorridorZone[] = [
 ];
 
 export const AERIAL_WAIT = "Drawing the corridor…";
-export const AERIAL_FAILED = "The aerial didn't load — Edit on map shows the corridor.";
+export const AERIAL_FAILED = "The aerial didn't load. Edit on map shows the corridor.";
 export const AERIAL_KIND_OWED = "Approaches lay out after you confirm the kind";
 
 const ALT: Record<AerialStage, string> = {
-  pin: "Aerial at the pin — nothing is laid out until the side is chosen",
+  pin: "Aerial at the pin. Nothing is laid out until the side is chosen",
   work: "Aerial: the work segment at the pin",
-  laid_out: "Aerial: the laid-out corridor — the work and its approaches",
+  laid_out: "Aerial: the laid-out corridor, with the work and its approaches",
 };
 
 // The frame's measured box, in whole CSS px.  Before layout (and in a DOM
@@ -134,12 +134,12 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
 
   const refusal = refusalReason(g);
   let note: string | null = null;
-  if (refusal) note = `Can't lay the corridor out here — ${refusal}`;
+  if (refusal) note = `Can't lay the corridor out here: ${refusal}`;
   else if (geometry.state === "error") note = AERIAL_FAILED;
   else if (aerial.state === "refused") {
     note =
       aerial.status === "corridor_unbuildable" && aerial.message
-        ? `Can't lay the corridor out here — ${aerial.message.replace(/^\w+Error:\s*/, "")}`
+        ? `Can't lay the corridor out here: ${aerial.message.replace(/^\w+Error:\s*/, "")}`
         : AERIAL_FAILED;
   } else if (aerial.state === "error") note = AERIAL_FAILED;
   else if (aerial.state !== "ready" && !holding) note = AERIAL_WAIT;

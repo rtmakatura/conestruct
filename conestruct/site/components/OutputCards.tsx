@@ -442,7 +442,7 @@ function DlCard({
       ) : null
     ) : mode.planId && mode.dirty ? (
       <div className="text-[12px] leading-snug text-[color:var(--ink-faint)] font-sans">
-        Unsaved edits — Save to download the plan on screen. The saved copy
+        Unsaved edits. Save to download the plan on screen. The saved copy
         no longer matches it.
       </div>
     ) : null;

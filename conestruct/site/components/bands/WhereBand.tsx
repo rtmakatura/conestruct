@@ -197,7 +197,7 @@ function SideControl({
           {/* P8: one honest line while the road's sides are read; a
               failure says so rather than offering a guessed choice. */}
           {fetchState.state === "error"
-            ? "the road's sides are unavailable — reopen the map to retry"
+            ? "the road's sides are unavailable. Reopen the map to retry"
             : "reading the road's sides…"}
         </div>
       ) : (
@@ -296,8 +296,8 @@ function KindChips({
       </div>
       {gated > 0 && (
         <div className="tr-prov mt-2" data-testid="kind-gate-note">
-          {gated} more kinds are not enabled — each waits on its typical
-          sheet being validated against the generator.
+          {gated} more kinds aren&apos;t enabled yet. Each waits until its typical
+          sheet is validated against the generator.
         </div>
       )}
     </div>
@@ -429,7 +429,7 @@ export function WhereBand({
       questionProvenance={
         located
           ? "The segment below is what the plan is built from. Change what is wrong; the map is in the picker."
-          : "An address, or a cross-street pair — the way an 811 ticket describes it. You can also drop a pin."
+          : "An address or a cross-street pair, the way an 811 ticket describes it. You can also drop a pin."
       }
     >
       {/* Rule 114's producer row: the field and its 132 px button, both
@@ -479,7 +479,7 @@ export function WhereBand({
           predicate; this reads it (band-facts.roadIsStale). */}
       {stale && (
         <div className="tr-prov mt-2" style={{ color: "var(--warn)" }}>
-          ⚠ detection stale — the confirmed road was picked at a different
+          ⚠ detection stale: the confirmed road was picked at a different
           pin
         </div>
       )}
@@ -492,7 +492,7 @@ export function WhereBand({
           style={{ color: "var(--warn)" }}
           data-testid="pin-model-converted"
         >
-          ⚠ saved before the pin marked the work start — say which side is
+          ⚠ saved before the pin marked the work start. Say which side is
           occupied to lay the work out from this pin
         </div>
       )}
@@ -649,7 +649,7 @@ export function WhereBand({
                     : // Rule 3 / rule 10: an audit response without the
                       // lengths degrades to an honest note, never a
                       // locally-computed extent.
-                      "corridor extent unavailable — awaiting verification"}
+                      "corridor extent unavailable, awaiting verification"}
               </span>
             )}
           </div>
@@ -682,7 +682,7 @@ export function WhereBand({
             data-testid="where-confirm"
           >
             {kindPicked
-              ? `Confirm — ${kindLabel(scenario.kind).toLowerCase()}`
+              ? `Confirm ${kindLabel(scenario.kind).toLowerCase()}`
               : "Confirm"}
           </button>
           {!kindPicked && (

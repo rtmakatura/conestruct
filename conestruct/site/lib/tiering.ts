@@ -281,7 +281,7 @@ export function assignTiers({ jurisdiction, audit, auditFailed = false }: Tierin
         fact(
           "audit:approaches",
           anySignal ? "attention" : "checked",
-          anySignal ? "signalized — signal operation review required" : "approaches",
+          anySignal ? "signalized: signal operation review required" : "approaches",
         ),
       );
     }
@@ -310,7 +310,7 @@ export function assignTiers({ jurisdiction, audit, auditFailed = false }: Tierin
     for (const c of scan?.corrections ?? []) {
       if (c.status === "moot") {
         facts.push(
-          fact(`audit:scan:correction:${c.flag}`, "reference", "operator correction — moot"),
+          fact(`audit:scan:correction:${c.flag}`, "reference", "operator correction: moot"),
         );
       } else if (c.action === "dismiss") {
         dismissed.add(c.flag);
@@ -327,7 +327,7 @@ export function assignTiers({ jurisdiction, audit, auditFailed = false }: Tierin
         } else if (asserted.has(flag)) {
           continue;
         } else if (b && b.detected !== true) {
-          facts.push(fact(`audit:scan:${flag}`, "checked", "scanned — none along the corridor"));
+          facts.push(fact(`audit:scan:${flag}`, "checked", "scanned, none along the corridor"));
         }
       }
       for (const bucket of Object.keys(buckets)) {

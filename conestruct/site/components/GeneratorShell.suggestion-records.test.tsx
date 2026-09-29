@@ -78,7 +78,7 @@ vi.mock("./GeneratorSidebar", () => ({
           } as Scenario)
         }
       >
-        <option value="">Not set — MUTCD + CDOT only</option>
+        <option value="">Not set: MUTCD + CDOT only</option>
         <option value="denver">Denver</option>
         <option value="parker">Parker</option>
         <option value="aurora">Aurora</option>
@@ -186,7 +186,7 @@ describe("#227 resolved-state records — confirm, then undo", () => {
       screen.getByText(/Confirmed/, { selector: "span" }),
     ).toBeTruthy();
     // #260: the unset jurisdiction is "Not set" everywhere (the #257 fold).
-    expect(screen.getByText(/was Not set\./)).toBeTruthy();
+    expect(screen.getByText(/\(was Not set\)\./)).toBeTruthy();
     expect(screen.getByText(/Pin agrees with your selection/)).toBeTruthy();
     expect(screen.getByText(/Boundary data is approximate/)).toBeTruthy();
     const select = document.querySelector(

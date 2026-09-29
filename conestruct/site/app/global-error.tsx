@@ -16,7 +16,7 @@ export default function GlobalError({
     <html>
       <body style={{ fontFamily: "system-ui", padding: 32 }}>
         <h1>Something went wrong</h1>
-        <p>An unexpected error occurred. The error has been reported.</p>
+        <p>Something broke on our side. We&apos;ve logged the error.</p>
       </body>
     </html>
   );

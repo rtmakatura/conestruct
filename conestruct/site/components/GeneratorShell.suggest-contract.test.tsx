@@ -92,7 +92,7 @@ vi.mock("./GeneratorSidebar", () => ({
           } as Scenario)
         }
       >
-        <option value="">Not set — MUTCD + CDOT only</option>
+        <option value="">Not set: MUTCD + CDOT only</option>
         <option value="denver">Denver</option>
         <option value="parker">Parker</option>
         <option value="aurora">Aurora</option>
@@ -249,7 +249,7 @@ describe("pin suggestion contract: suggest never sets", () => {
     expect(screen.queryByText(/Pin suggests:/)).toBeNull();
     expect(
       // #260: the unset jurisdiction is "Not set" everywhere (the #257 fold).
-      screen.getByText(/Dismissed the Denver suggestion — Not set stands\./),
+      screen.getByText(/Dismissed the Denver suggestion\. Not set stands\./),
     ).toBeTruthy();
     expect(screen.getByText(/Boundary data is approximate/)).toBeTruthy();
     // A dismiss writes nothing — every payload stays jurisdiction-free.
@@ -289,7 +289,7 @@ describe("pin suggestion contract: suggest never sets", () => {
     await waitFor(
       () =>
         expect(
-          screen.getByText(/Pin appears to be in Denver — you have Parker/),
+          screen.getByText(/Pin appears to be in Denver, but you have Parker/),
         ).toBeTruthy(),
       { timeout: 3000 },
     );

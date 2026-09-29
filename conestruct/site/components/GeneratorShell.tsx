@@ -1361,8 +1361,8 @@ export function GeneratorShell({
     const d = deviceBreakdown.state === "ready" ? deviceBreakdown.data : null;
     setGenAnnouncement(
       d && d.total_devices != null && d.unique_types != null
-        ? `Plan generated — ${d.total_devices} devices, ${d.unique_types} types.`
-        : "Plan generated — MHT package ready.",
+        ? `Plan generated: ${d.total_devices} devices, ${d.unique_types} types.`
+        : "Plan generated. MHT package ready.",
     );
   }, [genState, auditSettled, auditDeclined, deviceBreakdown, clickArm]);
 
@@ -1756,7 +1756,7 @@ export function GeneratorShell({
               removal from the SCREEN, not from the page's outline. */}
           <div>
             <h1 className="sr-only">
-              Method of Handling Traffic — plan generator
+              Method of Handling Traffic plan generator
             </h1>
             {/* #260 (1): the intro sentence, the draft notice and the
                 read-only jurisdiction bar moved below the Results zone
@@ -1933,7 +1933,7 @@ export function GeneratorShell({
                         >
                           {/* Rule 94's label: the write re-generates the
                               whole plan, and the button says so. */}
-                          APPLY — RE-GENERATE
+                          APPLY AND RE-GENERATE
                         </button>
                       </div>
                     }
@@ -2166,7 +2166,7 @@ export function GeneratorShell({
               <div className="results-placeholder" data-testid="results-placeholder">
                 <span className="tr-section">02 · RESULTS</span>
                 <div className="rp-line">
-                  No package yet — the plan is being built.
+                  No package yet. The plan is being built.
                 </div>
               </div>
             )}
@@ -2222,7 +2222,7 @@ export function GeneratorShell({
                 hides; the refusal container is the voice. */}
             {genState === "error" && !planDeclined && (
               <div role="alert" className="stale-ribbon">
-                ⚠ Device breakdown failed — values below may be stale. Fix
+                ⚠ Device breakdown failed. Values below may be stale. Fix
                 the input or retry from the plan details panel.
               </div>
             )}
@@ -2234,7 +2234,7 @@ export function GeneratorShell({
                 band's sentence, spoken once. */}
             {regenerating && !planDeclined && (
               <div className="stale-ribbon">
-                Previous answer — values below predate the request in flight.
+                Previous answer. These values predate the request in flight.
               </div>
             )}
             {/* #254: the text channel of the staged dim (rule 13) —
@@ -2245,7 +2245,7 @@ export function GeneratorShell({
                 {/* #289 finding 2: what is staged, in ruling 191's
                     words, from the one list — "1 field", "1 correction",
                     "1 field · 1 correction". */}
-                Previous answer — {stagedEnumeration(staged)} staged, not yet applied.
+                Previous answer: {stagedEnumeration(staged)} staged, not yet applied.
               </div>
             )}
             {
@@ -2306,7 +2306,7 @@ export function GeneratorShell({
                 {resultsVisible && (
                   <div className="tier-cue">
                     {tiersRefreshing && (
-                      <span className="tr-prov">◌ previous answer — refreshing…</span>
+                      <span className="tr-prov">◌ previous answer, refreshing…</span>
                     )}
                   </div>
                 )}
@@ -2405,7 +2405,7 @@ export function GeneratorShell({
               not draw.  The PDF's draft lines are their own strings
               (src/rendering/plan_sheet.py), untouched by this. */}
           <p className="tr-prov draft-notice mb-6" data-testid="draft-notice">
-            Draft — not a sealed plan. Output is engineering reference;
+            Draft: not a sealed plan. Output is engineering reference;
             requires review and seal by a licensed PE prior to field use.
           </p>
         </main>

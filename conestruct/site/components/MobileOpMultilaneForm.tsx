@@ -15,7 +15,7 @@ import {
 
 const ROAD_TYPES: Array<{ v: MobileRoadTypeMultilane; l: string }> = [
   { v: "freeway", l: "Freeway / interstate" },
-  { v: "rural_divided", l: "Rural — divided hwy" },
+  { v: "rural_divided", l: "Rural, divided hwy" },
 ];
 
 interface Props {
@@ -48,7 +48,7 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
             ))}
           </select>
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            TA-26 — multi-lane mobile op, TMA + arrow board
+            TA-26: multi-lane mobile op, TMA + arrow board
           </div>
         </Field>
 

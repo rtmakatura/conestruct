@@ -121,7 +121,7 @@ vi.mock("./GeneratorSidebar", () => ({
           } as Scenario)
         }
       >
-        <option value="">Not set — MUTCD + CDOT only</option>
+        <option value="">Not set: MUTCD + CDOT only</option>
         <option value="denver">Denver</option>
         <option value="parker">Parker</option>
         <option value="aurora">Aurora</option>
@@ -300,7 +300,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
     );
     await user.click(screen.getByRole("button", { name: "Local" }));
     expect(
-      screen.getByText(/Detected road tier suggests Arterial — you have Local/),
+      screen.getByText(/Detected road tier suggests Arterial, but you have Local/),
     ).toBeTruthy();
     expect(screen.queryByText("Confirm Arterial")).toBeNull();
   });
@@ -323,7 +323,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
       screen.queryByText(/Detected road suggests street class:/),
     ).toBeNull();
     expect(
-      screen.getByText(/Dismissed the Arterial suggestion — Not set stands\./),
+      screen.getByText(/Dismissed the Arterial suggestion\. Not set stands\./),
     ).toBeTruthy();
     for (const c of wireClasses()) {
       expect(c ?? null).toBeNull();

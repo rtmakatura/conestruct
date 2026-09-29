@@ -105,7 +105,7 @@ describe("section 03 scan rows (#224 phase 3) — scanned-lakewood", () => {
     mount(fx);
     await user.click(screen.getByText("Reference"));
     const ref = chipOf("Reference");
-    expect(within(ref).getByText("Site scan — measured, no rule applies")).toBeTruthy();
+    expect(within(ref).getByText("Site scan: measured, no rule applies")).toBeTruthy();
     for (const label of ["Railroad crossings", "Hospitals", "Road curvature"]) {
       const row = within(ref).getByText(label).closest(".check-list-item") as HTMLElement;
       expect(within(row).getByText("REFERENCE")).toBeTruthy();
@@ -136,7 +136,7 @@ describe("section 03 scan rows (#224 phase 3) — scanned-not-checked", () => {
     expect(within(warn).getByText("▲ NOT CHECKED")).toBeTruthy();
     await user.click(within(warn).getByText("Site conditions"));
     expect(
-      within(warn).getByText("SITE CONDITIONS NOT CHECKED — service unavailable at generation."),
+      within(warn).getByText("SITE CONDITIONS NOT CHECKED: service unavailable at generation."),
     ).toBeTruthy();
     // The five scanned keys collapse into that one item (ruling d): no
     // absent-rows, no evidence lines anywhere.

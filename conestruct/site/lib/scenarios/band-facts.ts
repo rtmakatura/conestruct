@@ -93,8 +93,8 @@ export function kindCitation(kind: ScenarioKind): string {
 }
 
 const ROAD_TYPE_LABEL: Record<string, string> = {
-  rural_undivided: "Rural — undivided",
-  rural_divided: "Rural — divided",
+  rural_undivided: "Rural, undivided",
+  rural_divided: "Rural, divided",
   urban_arterial: "Urban arterial",
   freeway: "Freeway / interstate",
 };
@@ -188,7 +188,7 @@ export function whereValue(
  * and they belong here rather than nowhere.
  */
 export function whereProvenance(scenario: Scenario): string {
-  if (!hasLocation(scenario.meta)) return "the work — not the first sign";
+  if (!hasLocation(scenario.meta)) return "the work, not the first sign";
   const road = scenario.meta.confirmedRoad;
   const coords = `${scenario.meta.lat.toFixed(5)}, ${scenario.meta.lng.toFixed(5)}`;
   if (!road) return `pin at ${coords}`;
@@ -307,7 +307,7 @@ export function setupSegments(
   const seg = (key: SetupSegmentKey, field: string, text: string) => ({
     key,
     text,
-    label: `${field}: ${text} — change`,
+    label: `Change ${field}: ${text}`,
   });
   const out: SetupSegment[] = [seg("kind", "Kind of work", kindLabel(scenario.kind))];
   const road = confirmedRoadLabel(scenario);
@@ -429,7 +429,7 @@ export function deriveBands({
       label: "Where",
       value: where,
       verb: located ? "CHANGE" : null,
-      pending: located ? null : "pending — find the work first",
+      pending: located ? null : "pending: find the work first",
       glyph: located ? "✓" : "◌",
     },
     {
@@ -445,11 +445,11 @@ export function deriveBands({
             // kind of work not chosen'" — a STATE, not the instruction.
             // The instruction ("choose the kind of work") lives only on
             // the disabled primaries (the strip-wording ruling, a04bd73).
-            "pending — kind of work not chosen"
+            "pending: kind of work not chosen"
           : // Part 1 §2.2's own string once a road exists; §2.1's before.
             scenario.meta.confirmedRoad
             ? `road facts prefill from ${confirmedRoadLabel(scenario)}`
-            : "kind of work, extent, side · pending — find the work first",
+            : "kind of work, extent, side · pending: find the work first",
       glyph: whatReady ? "✓" : "◌",
     },
     {

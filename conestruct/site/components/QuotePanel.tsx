@@ -584,7 +584,7 @@ export function QuotePanel({
           </BreakdownGroup>
 
           <BreakdownGroup
-            title={`Markup — overhead ${(breakdown.overhead_pct * 100).toFixed(0)}%, profit ${(breakdown.profit_pct * 100).toFixed(0)}%`}
+            title={`Markup: overhead ${(breakdown.overhead_pct * 100).toFixed(0)}%, profit ${(breakdown.profit_pct * 100).toFixed(0)}%`}
             subtotal={breakdown.overhead + breakdown.profit}
           >
             <table className="w-full text-[12px]">
@@ -712,7 +712,7 @@ function deliveryCaption(
     case "auto":
       return { text: `Auto · ${s.miles} mi from HQ`, tone: "accent" };
     case "error":
-      return { text: "Auto-detect failed — enter manually", tone: "muted" };
+      return { text: "Auto-detect failed. Enter manually", tone: "muted" };
     case "manual":
     case "idle":
       return undefined;

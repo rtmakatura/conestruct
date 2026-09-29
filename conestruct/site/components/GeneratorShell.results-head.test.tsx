@@ -103,7 +103,7 @@ const auditWithScan = (site_scan: unknown) => ({
   sections: { ...SECTIONS, site_scan },
   ...TAIL,
 });
-const DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation.";
+const DISCLOSURE = "SITE CONDITIONS NOT CHECKED: service unavailable at generation.";
 const SCAN_UNAVAILABLE = {
   status: "unavailable",
   reason: null,
@@ -120,7 +120,7 @@ const SCAN_UNAVAILABLE = {
   corrections: [],
 };
 const REFUSAL_MESSAGE =
-  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.";
+  "Site scan unavailable. The plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway; the plan says whether the scan ran.";
 const REFUSAL = {
   detail: {
     error: "site_scan_unavailable",

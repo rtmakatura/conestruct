@@ -160,7 +160,7 @@ describe("#288 clause 5 — §8.30: the intro is dropped, the draft notice kept"
     const draft = screen.getByTestId("draft-notice");
     expect(draft.classList.contains("tr-prov")).toBe(true);
     expect(draft.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
+      "Draft: not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
     );
     expect(document.body.textContent).not.toContain("licensed Professional Engineer prior to field use");
   });

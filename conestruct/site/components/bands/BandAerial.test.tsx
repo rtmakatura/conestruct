@@ -158,7 +158,7 @@ describe("the band's aerial, state by state", () => {
     );
     await settle();
     expect(requests).toEqual([]);
-    expect(q("band-aerial-note")?.textContent).toBe("Can't lay the corridor out here — the road ends here");
+    expect(q("band-aerial-note")?.textContent).toBe("Can't lay the corridor out here: the road ends here");
     expect(q("band-aerial-img")).toBeNull();
   });
 

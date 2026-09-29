@@ -174,7 +174,7 @@ describe("no location, no certification (#186)", () => {
     }) as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
     expect(text).toContain(
-      "Set a location first — pick on map or enter manually.",
+      "Set a location first: pick it on the map or enter it manually.",
     );
 
     // A click on the gated CTA must not flip the stage: no results hero

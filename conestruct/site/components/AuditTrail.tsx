@@ -81,7 +81,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // backend derives from site_adjustments.py's rule string.
     rule: "MUTCD § 6N.12 p. 848",
     action:
-      "No devices added — the cross-street approach layout is not generated; see the pending-verification disclosure.",
+      "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
   },
   adjacent_interchange: {
     label: "Adjacent interchange (highway ramps)",
@@ -90,7 +90,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // generally, not interchange signing).
     rule: "MUTCD § 6N.16 p. 851",
     action:
-      "No devices added — the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
+      "No devices added: the per-ramp interchange layout isn't generated. See the pending-verification disclosure.",
   },
   driveways_present: {
     label: "Driveways present",
@@ -159,7 +159,7 @@ function placeholderBody(audit: AuditState) {
   return (
     <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
       {audit.state === "error"
-        ? "Values unavailable — the audit for this input did not succeed. See the notice above."
+        ? "Values unavailable. The audit for this input didn't succeed. See the notice above."
         : "Computing…"}
     </p>
   );
@@ -397,7 +397,7 @@ function buildLaneClosureItems(
                 : "Not deployed"}
             </strong>
             {!scenario.truckMountedAttenuator && scenario.speed >= 45 && (
-              <> — CDOT M-630 strongly recommends a TMA at this speed.</>
+              <>. CDOT M-630 strongly recommends a TMA at this speed.</>
             )}
           </p>
           <div className="citation">
@@ -430,7 +430,7 @@ function buildWorkBeyondShoulderItems(
           <p>
             Work beyond the shoulder occurs entirely outside the travelway
             and roadway shoulder. Per MUTCD § 6G.04, only minimal advance
-            signing is required — no taper, no buffer, no channelizing
+            signing is required: no taper, no buffer, and no channelizing
             devices on the road itself.
           </p>
           <table>
@@ -550,7 +550,7 @@ function buildMobileOp2LaneItems(
               <strong>
                 High-speed two-lane ({scenario.speed} mph):
               </strong>{" "}
-              shoulder use for evasive maneuvers may be limited — keep
+              shoulder use for evasive maneuvers may be limited. Keep
               shadow-to-truck spacing tight (≤ 200 ft) and brief drivers
               on emergency-stop coordination.
             </p>
@@ -592,8 +592,8 @@ function buildMobileOpMultilaneItems(
           {scenario.secondTMA && (
             <p>
               Second TMA deployed approximately <strong>1000 ft</strong>{" "}
-              upstream of the shadow for additional protection — recommended
-              at speeds ≥ 55 mph (CDOT M-630).
+              upstream of the shadow for additional protection, as CDOT M-630
+              recommends at speeds ≥ 55 mph.
             </p>
           )}
           <div className="citation">
@@ -612,7 +612,7 @@ function buildMobileOpMultilaneItems(
           <p>
             Shadow vehicle with NCHRP 350 / MASH-rated TMA provides
             crash-cushion protection. Arrow board (Type C) on the shadow
-            indicates merge direction at posted distance —{" "}
+            indicates merge direction at posted distance:{" "}
             <strong>LEFT</strong> arrow for the right-lane operation.
           </p>
           {scenario.speed >= 55 && !scenario.secondTMA && (
@@ -1073,12 +1073,11 @@ export function approachesItem(
         {rows.map((ap) => (
           <div key={ap.id}>
             <p>
-              Approach &lsquo;{ap.id}&rsquo; — {ap.speed_mph} mph,{" "}
+              Approach &lsquo;{ap.id}&rsquo;: {ap.speed_mph} mph,{" "}
               {ap.road_type}
               {ap.signalized && (
                 <span className="text-[color:var(--warn)]">
-                  {" "}
-                  — SIGNALIZED (signal operation review required)
+                  , SIGNALIZED (signal operation review required)
                 </span>
               )}
               . {ap.key_text}.
@@ -1204,7 +1203,7 @@ export function finesDoubleItem(
     body: (
       <>
         <p>
-          Work-zone posted speed is reduced — Fines Double signing
+          Work-zone posted speed is reduced, so Fines Double signing
           applies per CDOT S-630-1 Sheet 12, Fines Double Signing Notes.
           The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P
           assemblies at 2,640 ft intervals; the entrance R2-1 posts the
@@ -1307,8 +1306,8 @@ export function corridorValidationItem(
       body: (
         <>
           <p>
-            OpenStreetMap could not be reached at generation —
-            road-network warnings were not evaluated.
+            OpenStreetMap couldn&apos;t be reached at generation, so
+            road-network warnings weren&apos;t evaluated.
           </p>
           <div className="check-list">
             <CheckRow
@@ -1328,7 +1327,7 @@ export function corridorValidationItem(
     cite: "OpenStreetMap",
     body: (
       <>
-        <p>Soft check against OSM — warnings do not block plan generation.</p>
+        <p>Soft check against OSM. Warnings don&apos;t block plan generation.</p>
         <div className="check-list">
           {warnings.map((w, i) => (
             <CheckRow
@@ -1377,7 +1376,7 @@ export function siteScanNotCheckedItem(
         <p>{disclosure}</p>
         <div className="check-list">
           <CheckRow
-            label="School zones, sidewalks, bicycle facilities, intersections and interchanges along the corridor were not verified — site adjustments reflect operator-set flags only. Re-generate to retry the scan."
+            label="School zones, sidewalks, bicycle facilities, intersections and interchanges along the corridor weren't verified. Site adjustments reflect operator-set flags only. Re-generate to retry the scan."
             tone="warn"
             tag="NOT CHECKED"
           />
@@ -1561,7 +1560,7 @@ export function CheckRow({
       <span className="check-list-lbl">
         {detail ? (
           <>
-            <strong>{label}</strong> — {detail}
+            <strong>{label}</strong>: {detail}
           </>
         ) : (
           label

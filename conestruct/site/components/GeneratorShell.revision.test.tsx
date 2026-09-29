@@ -173,11 +173,11 @@ describe("7d's RETRY PREVIEW re-asks the same read; APPLY names the write", () =
     expect(screen.queryByTestId("panel-retry")).toBeNull();
   });
 
-  it("rule 94: the write is labelled APPLY — RE-GENERATE", async () => {
+  it("rule 94: the write is labelled APPLY AND RE-GENERATE", async () => {
     await generated();
     await stageRevision("35");
     await settle();
-    expect(screen.getByTestId("revise-apply").textContent?.trim()).toBe("APPLY — RE-GENERATE");
+    expect(screen.getByTestId("revise-apply").textContent?.trim()).toBe("APPLY AND RE-GENERATE");
   });
 });
 

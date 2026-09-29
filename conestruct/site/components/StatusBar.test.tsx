@@ -213,13 +213,13 @@ describe("StatusBar (UX-21/22 derived states)", () => {
           message:
             "This road appears to carry more lanes than a flagger operation covers…",
           pointer:
-            "Detection saw a multi-lane road — confirm the lane count in the Road section to proceed.",
+            "Detection saw a multi-lane road. Confirm the lane count in the Road section to proceed.",
         }}
         audit={{ state: "error", message: "…", httpStatus: 400, lastReady: null }}
       />,
     );
     expect(html).toContain("PLAN DECLINED");
-    expect(html).toContain("confirm the lane count in the Road section");
+    expect(html).toContain("Confirm the lane count in the Road section");
     expect(html).toContain("NEEDS REVIEW");
     // The verbatim 400 must not render here — the row note is the voice.
     expect(html).not.toContain("more lanes than a flagger operation covers");

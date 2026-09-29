@@ -53,7 +53,7 @@ function crossStreet(over: Partial<CrossStreetCandidate>): CrossStreetCandidate 
     lanesPerDirection: 2,
     lanesSuspect: true,
     lanesSuspectReason:
-      "The map data shows marked turn lanes here — its lane count " +
+      "The map data shows marked turn lanes here, so its lane count " +
       "usually includes turn pockets, so the through-lane count is " +
       "often lower.",
     roadType: "urban_arterial",
@@ -239,7 +239,7 @@ describe("near_intersection picker → form → payload", () => {
     // The detection-filled lane count needs confirmation; a manual
     // edit IS the confirmation (direction A → 1 through lane).
     await openWhat();
-    await user.click(chipIn("Cross-street lanes — direction A", "1"));
+    await user.click(chipIn("Cross-street lanes: direction A", "1"));
 
     // Re-apply the same pin: the unchanged candidate must NOT clobber
     // the edit (#112's failure class at the approaches seam).
@@ -247,7 +247,7 @@ describe("near_intersection picker → form → payload", () => {
     await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await openWhat();
-    expect(chipIn("Cross-street lanes — direction A", "1").className).toContain(
+    expect(chipIn("Cross-street lanes: direction A", "1").className).toContain(
       "on",
     );
 
@@ -325,12 +325,12 @@ describe("near_intersection picker → form → payload", () => {
     // confirmation too, with a reason naming the assumption — a
     // substituted value must not render identically to a detected one.
     await openWhat();
-    expect(screen.getByText(/assumed 1 per direction, not detected/i)).toBeTruthy();
+    expect(screen.getByText(/assumed at 1 per direction, not detected/i)).toBeTruthy();
     expect(generateButton().hasAttribute("disabled")).toBe(true);
 
     // A manual edit IS the confirmation (existing convention): setting
     // the count clears the hold without ticking the confirm.
-    await user.click(chipIn("Cross-street lanes — direction A", "2"));
+    await user.click(chipIn("Cross-street lanes: direction A", "2"));
     expect(generateButton().hasAttribute("disabled")).toBe(false);
 
     await generate(user);
@@ -347,7 +347,7 @@ describe("near_intersection picker → form → payload", () => {
     await user.click(screen.getByText("APPLY_PIN_A"));
     await answerSide();
     await openWhat();
-    await user.click(chipIn("Cross-street lanes — direction A", "1"));
+    await user.click(chipIn("Cross-street lanes: direction A", "1"));
 
     await openWhere();
 
@@ -400,7 +400,7 @@ describe("near_intersection picker → form → payload", () => {
     await openWhat();
     await user.click(chipIn("Cross-street directions", "Both"));
     await openWhat();
-    await user.click(chipIn("Cross-street lanes — direction B", "2"));
+    await user.click(chipIn("Cross-street lanes: direction B", "2"));
 
     await generate(user);
     expect(bundleBody?.scenario.approaches).toHaveLength(2);

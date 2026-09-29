@@ -193,7 +193,7 @@ export function PlanDetails({
     <div className="a-subgroup" data-testid="plan-details">
       <span className="tr-section">The rest of this plan</span>
       <span className="tr-prov">
-        inputs the grid has no cell for — every one of them changes the plan
+        inputs the grid has no cell for. Each one changes the plan
       </span>
 
       <div className="a-grid">

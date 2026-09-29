@@ -110,7 +110,7 @@ const REFUSAL = {
   detail: {
     error: "site_scan_unavailable",
     message:
-      "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.",
+      "Site scan unavailable. The plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway; the plan says whether the scan ran.",
     site_scan: { status: "unavailable", error: "scan budget exceeded (20 s)", mode: "corridor", budget_s: 20.0, flags: {}, corrections: [] },
     recovery: { retry: true, proceed_field: "site_scan.proceed_if_unavailable" },
   },
@@ -250,7 +250,7 @@ describe("#252 — the working band is present iff a request for the generated s
       action: "assert",
       status: "applied",
       scan_detected: false,
-      disclosure: "Operator asserted school zone — the scan found none along the corridor.",
+      disclosure: "Operator asserted school zone; the scan found none along the corridor.",
     };
     served = audit([asserted]);
     let held = holdAudit();

@@ -217,7 +217,7 @@ describe("each field shows the control, ONE provenance line and its one action l
     expect(p.hasAttribute("hidden")).toBe(true);
     expect(p.querySelector(".sugg-reason")!.textContent).toBe(SUGGEST.reason);
     expect(p.querySelector(".honesty")!.textContent).toBe(
-      "Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025) — confirm jurisdiction with the permitting authority.",
+      "Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
     );
   });
 

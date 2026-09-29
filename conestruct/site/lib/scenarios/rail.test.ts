@@ -64,14 +64,14 @@ function entryById(rail: ReturnType<typeof deriveRail>, id: string) {
 describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
   it("pins the four moved literals byte-identically", () => {
     expect(HOLD_BLOCKER).toBe(
-      "Confirm the cross-street lane count first — it was filled from map data.",
+      "Confirm the cross-street lane count first. It was filled from map data.",
     );
-    expect(REFUSAL_BLOCKER).toBe("Generation declined — see the notice below.");
+    expect(REFUSAL_BLOCKER).toBe("Generation declined. See the notice below.");
     expect(RECHECK_BLOCKER).toBe(
-      "Re-checking the declined input — Generate re-enables when the verdict settles.",
+      "Re-checking the declined input. Generate comes back when the verdict settles.",
     );
     expect(LOCATION_BLOCKER).toBe(
-      "Set a location first — pick on map or enter manually.",
+      "Set a location first: pick it on the map or enter it manually.",
     );
   });
 
@@ -129,7 +129,7 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
     const rail = deriveRail(input(s));
     expect(rail.blocker?.entryId).toBe("extra");
     expect(rail.blocker?.message).toBe(
-      "Mark the cross street on the map — the plan places it from there.",
+      "Mark the cross street on the map. The plan places it from there.",
     );
   });
 
@@ -218,7 +218,7 @@ describe("entries — every simultaneous blocker visible (rule 10)", () => {
       })),
     };
     const pointer =
-      "The map's lane counts for the cross street contradict each other — confirm “Lane count is right” in the Cross street section to proceed.";
+      "The map's lane counts for the cross street contradict each other. Confirm “Lane count is right” in the Cross street section to proceed.";
     const rail = deriveRail(
       input(s, {
         approachConfirm: { pending: true, reason: "suspect" },
@@ -247,7 +247,7 @@ describe("entries — every simultaneous blocker visible (rule 10)", () => {
       detectedLanesBackward: 2,
     } as Scenario;
     const pointer =
-      "The map's lane counts contradict each other beside a signalized intersection — set Lanes per direction in the Road section to proceed.";
+      "The map's lane counts contradict each other beside a signalized intersection. Set Lanes per direction in the Road section to proceed.";
     const rail = deriveRail(input(s, { refusal: { message: "400", pointer } }));
     expect(entryById(rail, "road").issues).toEqual([{ text: pointer }]);
     expect(rail.blocker).toEqual({ message: REFUSAL_BLOCKER, entryId: "road" });
@@ -344,14 +344,14 @@ describe("#228 vocabulary — fields on the derivation, purity", () => {
   it("aria strings are the pre-arc component strings, byte-identical", () => {
     const pre = deriveRail(input(DEFAULT_SHOULDER));
     expect(entryById(pre, "location").aria).toBe(
-      "Location — needs attention: Set a location first — pick on map or enter manually. (current blocker)",
+      "Location: needs attention. Set a location first: pick it on the map or enter it manually. (current blocker)",
     );
     expect(entryById(pre, "road").aria).toBe(
-      "Road — pending — set a location first",
+      "Road: pending, set a location first",
     );
     const post = deriveRail(input(pinned(DEFAULT_SHOULDER)));
-    expect(entryById(post, "location").aria).toBe("Location — done");
-    expect(entryById(post, "schedule").aria).toBe("Schedule — not set");
+    expect(entryById(post, "location").aria).toBe("Location: done");
+    expect(entryById(post, "schedule").aria).toBe("Schedule: not set");
   });
 });
 
@@ -366,7 +366,7 @@ describe("#228 stale — the flagged fourth state (PDF p.5)", () => {
     expect(road.state).toBe("stale");
     expect(road.glyph).toBe("▲");
     expect(road.word).toBe("detection stale");
-    expect(road.aria).toBe("Road — detection stale");
+    expect(road.aria).toBe("Road: detection stale");
   });
 
   it("a fresh confirmed road stays done (the DetectedVsApplied key)", () => {
@@ -419,7 +419,7 @@ describe("#228 pending-suggestion count — informational only (ruling 1)", () =
     );
     expect(entryById(two, "location").info).toBe("2 to confirm");
     expect(entryById(two, "location").aria).toBe(
-      "Location — done · 2 to confirm",
+      "Location: done · 2 to confirm",
     );
     const one = deriveRail(
       input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 1 }),
@@ -430,7 +430,7 @@ describe("#228 pending-suggestion count — informational only (ruling 1)", () =
   it("zero pending: no info line, aria byte-identical to pre-arc", () => {
     const rail = deriveRail(input(pinned(DEFAULT_SHOULDER)));
     expect(entryById(rail, "location").info).toBeNull();
-    expect(entryById(rail, "location").aria).toBe("Location — done");
+    expect(entryById(rail, "location").aria).toBe("Location: done");
   });
 
   it("the count never changes state or blocker (suggestions never gate)", () => {
@@ -473,7 +473,7 @@ describe("#228 duration — display-only date arithmetic (ruling 5)", () => {
     const sched = entryById(deriveRail(input(s)), "schedule");
     expect(sched.state).toBe("done");
     expect(sched.info).toBe("4 days");
-    expect(sched.aria).toBe("Schedule — done · 4 days");
+    expect(sched.aria).toBe("Schedule: done · 4 days");
   });
 
   it("a single date reads '1 day'", () => {

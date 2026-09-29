@@ -100,7 +100,7 @@ import {
 // the sentence as of #258 commit 1 (67bf9a0): it names the input, not
 // an outcome the server may not produce.
 const MESSAGE =
-  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.";
+  "Site scan unavailable. The plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway; the plan says whether the scan ran.";
 const REFUSAL = {
   detail: {
     error: "site_scan_unavailable",
@@ -151,7 +151,7 @@ const AUDIT_PROCEEDED = {
     site_scan: {
       ...REFUSAL.detail.site_scan,
       proceeded_anyway: true,
-      disclosure: "SITE CONDITIONS NOT CHECKED — service unavailable at generation.",
+      disclosure: "SITE CONDITIONS NOT CHECKED: service unavailable at generation.",
     },
   },
 };
@@ -455,9 +455,9 @@ describe("#258 — a declined plan shows no plan (rule 10)", () => {
     expect(document.querySelector(".empty-state")).toBeNull();
     expect(document.querySelector(".hero")).not.toBeNull();
     expect(downloadButtons().length).toBeGreaterThan(0);
-    expect(srStatus()).toBe("Plan generated — 4 devices, 2 types.");
+    expect(srStatus()).toBe("Plan generated: 4 devices, 2 types.");
     // Once: a further settle for the same input writes nothing new.
     await settle();
-    expect(srStatus()).toBe("Plan generated — 4 devices, 2 types.");
+    expect(srStatus()).toBe("Plan generated: 4 devices, 2 types.");
   });
 });

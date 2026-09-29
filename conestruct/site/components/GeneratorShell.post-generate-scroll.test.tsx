@@ -61,7 +61,7 @@ const REFUSAL = {
   detail: {
     error: "site_scan_unavailable",
     message:
-      "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.",
+      "Site scan unavailable. The plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway; the plan says whether the scan ran.",
     site_scan: {
       status: "unavailable",
       error: "scan budget exceeded (20 s)",

@@ -100,7 +100,7 @@ describe("#227 schedule window reference block", () => {
     expect(document.querySelectorAll(".sched-window-row").length).toBe(1);
   });
 
-  it("unevaluated: real rows, class-scoped first, all ◌ '— set dates to check'", () => {
+  it("unevaluated: real rows, class-scoped first, all ◌ 'set dates to check'", () => {
     render(
       <ScheduleWindows
         scenario={scenarioWith({
@@ -116,7 +116,7 @@ describe("#227 schedule window reference block", () => {
     expect(rows[1].label).toMatch(/All streets/);
     for (const r of rows) {
       expect(r.glyph.trim()).toBe("◌");
-      expect(r.value).toBe("— set dates to check");
+      expect(r.value).toBe("set dates to check");
     }
   });
 

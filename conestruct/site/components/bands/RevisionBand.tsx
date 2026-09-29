@@ -91,7 +91,7 @@ function fieldOptions(
     case "jurisdiction_key":
       // #260 / #257: "Not set" is the one word for an unset jurisdiction.
       return [
-        { v: "", l: "Not set — MUTCD + CDOT only" },
+        { v: "", l: "Not set: MUTCD + CDOT only" },
         ...JURISDICTION_OPTIONS.map((o) => ({ v: o.key, l: o.label })),
       ];
   }

@@ -345,7 +345,7 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(pressed()).toEqual(["kind-chip-shoulder"]);
     const confirm = screen.getByTestId("where-confirm");
     expect(confirm.getAttribute("aria-disabled")).toBeNull();
-    expect(confirm.textContent).toBe("Confirm — shoulder work");
+    expect(confirm.textContent).toBe("Confirm shoulder work");
     expect(document.querySelector('[data-testid="where-confirm-reason"]')).toBeNull();
 
     // Selected is not confirmed: WHAT stays pending and Generate blocked
@@ -373,7 +373,7 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(side().textContent).toContain("needs you");
     expect(side().textContent).toContain("Say which side is occupied to lay out the work");
     expect(kind().getAttribute("data-move-state")).toBe("attention");
-    expect(kind().textContent).toContain("Kind of work — confirm below");
+    expect(kind().textContent).toContain("Kind of work: confirm below");
 
     await answerSide();
     await settle();
@@ -385,7 +385,7 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(side().textContent).not.toContain("Choose the kind of work");
     // The kind is still owed, on its own row.
     expect(kind().getAttribute("data-move-state")).toBe("attention");
-    expect(kind().textContent).toContain("Kind of work — confirm below");
+    expect(kind().textContent).toContain("Kind of work: confirm below");
     expect(kind().textContent).toContain("needs you");
 
     await user.click(chip("shoulder"));

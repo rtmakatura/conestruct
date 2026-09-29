@@ -197,7 +197,7 @@ export function matchRefusalAffordance(
       ? {
           code: "ni_lane_confidence",
           pointer:
-            "The map's lane counts for the cross street contradict each other — confirm “Lane count is right” in the Cross street section to proceed.",
+            "The map's lane counts for the cross street contradict each other. Confirm “Lane count is right” in the Cross street section to proceed.",
         }
       : null;
   }
@@ -209,7 +209,7 @@ export function matchRefusalAffordance(
       ? {
           code: "shoulder_lane_confidence",
           pointer:
-            "The map's lane counts contradict each other beside a signalized intersection — set Lanes per direction in the Road section to proceed.",
+            "The map's lane counts contradict each other beside a signalized intersection. Set Lanes per direction in the Road section to proceed.",
         }
       : null;
   }
@@ -225,21 +225,21 @@ export function matchRefusalAffordance(
     return {
       code: "flagger_multilane",
       pointer:
-        "Detection saw a multi-lane road — confirm the lane count in the Road section to proceed.",
+        "Detection saw a multi-lane road. Confirm the lane count in the Road section to proceed.",
     };
   }
   if (scenario.detectedLanesTotal === 1) {
     return {
       code: "flagger_single_lane",
       pointer:
-        "Detection saw a single-lane road — confirm the lane count in the Road section to proceed.",
+        "Detection saw a single-lane road. Confirm the lane count in the Road section to proceed.",
     };
   }
   if (scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway)) {
     return {
       code: "flagger_oneway",
       pointer:
-        "Detection saw a one-way street — confirm two-way traffic in the Road section to proceed.",
+        "Detection saw a one-way street. Confirm two-way traffic in the Road section to proceed.",
     };
   }
   // #173: after the #86/#136/#158 rows, matching the backend gate order
@@ -249,7 +249,7 @@ export function matchRefusalAffordance(
     return {
       code: "flagger_lane_confidence",
       pointer:
-        "The map's lane counts contradict each other beside a signalized intersection — confirm “Lane count is right” in the Road section to proceed.",
+        "The map's lane counts contradict each other beside a signalized intersection. Confirm “Lane count is right” in the Road section to proceed.",
     };
   }
   return null;

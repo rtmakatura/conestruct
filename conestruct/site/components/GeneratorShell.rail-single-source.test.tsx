@@ -85,7 +85,7 @@ function blockerOccurrences(text: string): number {
 describe("rail blocker === CTA disabled-reason (one export)", () => {
   it("pre-pin: the missing-location reason renders once, on the CTA", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-    const REASON = "Set a location first — pick on map or enter manually.";
+    const REASON = "Set a location first: pick it on the map or enter it manually.";
     expect(ctaReason()).toBe(REASON);
     // Once.  The rail used to be the sanctioned second surface; with the
     // rail gone, a second occurrence is a second voice.
@@ -107,9 +107,9 @@ describe("rail blocker === CTA disabled-reason (one export)", () => {
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(ctaReason()).toBe("Generation declined — see the notice below.");
+    expect(ctaReason()).toBe("Generation declined. See the notice below.");
     expect(
-      blockerOccurrences("Generation declined — see the notice below."),
+      blockerOccurrences("Generation declined. See the notice below."),
     ).toBe(1);
     // #180 one voice intact: the verbatim 400 renders exactly once
     // (the strip), never beside the button.

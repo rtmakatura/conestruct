@@ -201,14 +201,14 @@ function rowVerdict(
   if (verifying) {
     return {
       glyph: "◌",
-      text: "— checking these inputs",
+      text: "checking these inputs",
       tone: "text-[color:var(--none)]",
     };
   }
   if (!scheduleChecked || hoursEval.status === "unknown") {
     return {
       glyph: "◌",
-      text: "— set dates to check",
+      text: "set dates to check",
       tone: "text-[color:var(--none)]",
     };
   }
@@ -217,7 +217,7 @@ function rowVerdict(
     // rows stay reference (a fact about scope, not a verdict).
     return {
       glyph: "◌",
-      text: "— reference (other street class)",
+      text: "reference (other street class)",
       tone: "text-[color:var(--none)]",
     };
   }
@@ -299,8 +299,8 @@ function ScheduleWindowsBlock({
             ◌
           </span>
           <span className="tr-prov">
-            {jurisdiction.name} publishes no work-hour windows — none on
-            record, not none existing
+            {jurisdiction.name} publishes no work-hour windows. None on
+            record, which isn&apos;t the same as none existing.
           </span>
         </div>
       </div>

@@ -25,7 +25,7 @@
 //     no '✓ proposed'".  The row asks the question; it proposes nothing.
 //     Since #290 the question is "Which side is occupied?" again, answered
 //     by the side control (the backend's worded choices, ruling 8).  The
-//     kind is its own row, "Kind of work — confirm below" (#290 hand-check,
+//     kind is its own row, "Kind of work: confirm below" (#290 hand-check,
 //     Ryan 2026-09-25): one question per row, each ticking on its own
 //     answer.
 //   · Move 5, "See the plan grow", is laid out once move 4 is answered —
@@ -193,13 +193,13 @@ export function deriveMoveLedger(
     },
     {
       // The kind's own row — the same hand-check ruling, in its words:
-      // "Kind of work — confirm below" while it is owed (the #289 interim's
+      // "Kind of work: confirm below" while it is owed (the #289 interim's
       // shape, "choose below" then, restored with the ruled verb), "Kind of
       // work" with the kind as its value once a person confirmed it
       // (suggest-never-set: a picked-but-unconfirmed chip is still needs
       // you).  No subline: the label is the instruction (P2, one voice).
       id: "kind",
-      label: located && kindConfirmed ? "Kind of work" : "Kind of work — confirm below",
+      label: located && kindConfirmed ? "Kind of work" : "Kind of work: confirm below",
       state: !located ? "pending" : kindConfirmed ? "done" : "attention",
       glyph: GLYPH[!located ? "pending" : kindConfirmed ? "done" : "attention"],
       value: located && kindConfirmed ? kindLabel(scenario.kind) : null,

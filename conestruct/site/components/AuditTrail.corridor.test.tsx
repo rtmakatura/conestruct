@@ -29,7 +29,7 @@ describe("corridorValidationItem reason split (#213 V5)", () => {
     // reconciled set; the words carry the verdict.
     expect(item?.result).toBe("▲ CHECK UNAVAILABLE");
     render(<>{item?.body}</>);
-    screen.getByText(/road-network warnings were not evaluated/i);
+    screen.getByText(/road-network warnings weren't evaluated/i);
     screen.getByText(/NOT CHECKED/);
   });
 

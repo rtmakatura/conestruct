@@ -98,7 +98,7 @@ const TAIL = {
   pending_verification: { count: 0, note: "", tracking_issue: null },
   plan_flags: { validation_warnings: 0, compliance_fails: 0, v1_limitations: 0, is_clean: true },
 };
-const ADVISORY = "The plan is built to the correction — verify it in the field or on imagery before deploying.";
+const ADVISORY = "The plan is built to the correction, so verify it in the field or on imagery before deploying.";
 const audit = (corrections: unknown[] = []) => ({
   summary: {},
   sections: {
@@ -217,7 +217,7 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     // Disclose, don't lock (P7 / #252): the results dim behind the ribbon,
     // the download control stays live.
     expect(stale()).not.toBeNull();
-    expect(ribbon()!.textContent).toBe("Previous answer — 2 corrections staged, not yet applied.");
+    expect(ribbon()!.textContent).toBe("Previous answer: 2 corrections staged, not yet applied.");
     expect(download().disabled).toBe(false);
     expect(download().closest(".results-stale")).not.toBeNull();
   });
@@ -231,7 +231,7 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     expect(row("School zone").classList.contains("sc-staged")).toBe(false);
     expect(within(row("School zone")).getByRole("button", { name: "Assert" })).toBeTruthy();
     expect(within(block()).getByText("1 correction staged · not yet applied")).toBeTruthy();
-    expect(ribbon()!.textContent).toBe("Previous answer — 1 correction staged, not yet applied.");
+    expect(ribbon()!.textContent).toBe("Previous answer: 1 correction staged, not yet applied.");
     await user.click(within(row("Pedestrian sidewalks")).getByRole("button", { name: "Undo" }));
     await settle();
     expect(within(block()).getByText(ZERO_STANDING)).toBeTruthy();
@@ -251,8 +251,8 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
       action: "assert",
       status: "applied",
       scan_detected: false,
-      disclosure: "Operator asserted school zone — the scan found none along the corridor. " + ADVISORY,
-      record_clause: "Operator asserted school zone — the scan found none along the corridor.",
+      disclosure: "Operator asserted school zone; the scan found none along the corridor. " + ADVISORY,
+      record_clause: "Operator asserted school zone; the scan found none along the corridor.",
     };
     const dismissed = {
       flag: "pedestrian_facility",
@@ -343,7 +343,7 @@ describe("#289 finding 2 — the staged sentence says what is staged, from the o
     // a site correction.
     expect(within(block()).getByText("1 field staged · not yet applied")).toBeTruthy();
     expect(apply("Apply 1 field").disabled).toBe(false);
-    expect(ribbon()!.textContent).toBe("Previous answer — 1 field staged, not yet applied.");
+    expect(ribbon()!.textContent).toBe("Previous answer: 1 field staged, not yet applied.");
   });
 
   it("a field and a correction read '1 field · 1 correction' everywhere the set is named", async () => {
@@ -357,7 +357,7 @@ describe("#289 finding 2 — the staged sentence says what is staged, from the o
     ).toBeTruthy();
     expect(apply("Apply 1 field · 1 correction").disabled).toBe(false);
     expect(ribbon()!.textContent).toBe(
-      "Previous answer — 1 field · 1 correction staged, not yet applied.",
+      "Previous answer: 1 field · 1 correction staged, not yet applied.",
     );
     // The S7 panel's own sentence is the same producer's.
     expect(screen.getByTestId("revise-sentence").textContent).toBe(

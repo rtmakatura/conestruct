@@ -104,9 +104,9 @@ describe("move 4 is the occupied side; the kind is its own row (#290)", () => {
     return found;
   };
 
-  it("the kind's own row: 'Kind of work — confirm below', needs you, until a person confirms", () => {
+  it("the kind's own row: 'Kind of work: confirm below', needs you, until a person confirms", () => {
     const r = kind(SIDED, false);
-    expect(r.label).toBe("Kind of work — confirm below");
+    expect(r.label).toBe("Kind of work: confirm below");
     expect(r.state).toBe("attention");
     expect(r.glyph).toBe("⚠");
     expect(r.word).toBe("needs you");

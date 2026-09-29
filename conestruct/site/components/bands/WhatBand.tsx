@@ -331,8 +331,8 @@ export function WhatBand({
       : jState === "evaluated"
         ? `evaluated · ${(jurisdictionBlock as JurisdictionBlock).authority.replace("_", " & ")} · calls this plan a ${(jurisdictionBlock as JurisdictionBlock).tcp_term}`
         : jState === "evaluating"
-          ? "evaluating — the option you picked, not yet confirmed for this plan"
-          : "not evaluated — the check did not answer; the option you picked stands";
+          ? "evaluating: the option you picked, not yet confirmed for this plan"
+          : "not evaluated: the check didn't answer, so the option you picked stands";
 
   const schedule = scenario.schedule ?? null;
   // Fix 1: the dates ARE the mode, so the cell reads them directly.
@@ -350,7 +350,7 @@ export function WhatBand({
       provenance={
         detected
           ? "prefilled from the road · guesses marked"
-          : "nothing detected — every value here is yours"
+          : "nothing detected; every value here is yours"
       }
       question="Anything we got wrong?"
       questionProvenance={
@@ -543,7 +543,7 @@ export function WhatBand({
           >
             {/* #260 / #257: "Not set" is the one word every surface uses
                 for an unset jurisdiction. */}
-            <option value="">Not set — MUTCD + CDOT only</option>
+            <option value="">Not set: MUTCD + CDOT only</option>
             {JURISDICTION_OPTIONS.map((o) => (
               <option key={o.key} value={o.key}>
                 {o.label}

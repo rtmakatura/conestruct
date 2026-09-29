@@ -31,7 +31,7 @@ const fmtTotal = (n: number) =>
   });
 
 /** §8.11's framing, kept verbatim — the summary line's standing half. */
-const FYI = "FYI · contractor estimate — not a permit fee";
+const FYI = "FYI: contractor estimate, not a permit fee";
 
 type QuotePanelProps = Omit<
   ComponentProps<typeof QuotePanel>,

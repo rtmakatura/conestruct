@@ -368,10 +368,10 @@ function StatusBarState({
         <div className="status-bar idle unavail">
           <Sym g="◌" />
           <span>
-            VERIFICATION PAUSED · too many updates in the last minute —
+            VERIFICATION PAUSED: too many updates in the last minute.
             {preGenerate
               ? " Generate in a moment to check again"
-              : " retry from the audit trail panel in a moment"}
+              : " Retry from the audit trail panel in a moment"}
           </span>
         </div>
       );
@@ -406,7 +406,7 @@ function StatusBarState({
         <Sym g="◌" />
         <span>
           {verifySlow
-            ? "VERIFYING · waking the verification server — the first check can take a few extra seconds"
+            ? "VERIFYING: waking the verification server; the first check can take a few extra seconds"
             : "VERIFYING · taper · buffer · spacing · sign placement"}
         </span>
       </div>
@@ -430,8 +430,8 @@ function StatusBarState({
       <div className="status-bar idle unavail">
         <Sym g="◌" />
         <span>
-          VERIFICATION UNAVAILABLE · this response carries no plan verdict —
-          retry from the audit trail panel below
+          VERIFICATION UNAVAILABLE: this response carries no plan verdict.
+          Retry from the audit trail panel below
         </span>
       </div>
     );

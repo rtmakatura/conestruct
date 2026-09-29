@@ -17,7 +17,7 @@ import {
 
 const ROAD_TYPES: Array<{ v: LaneClosureRoadType; l: string }> = [
   { v: "freeway", l: "Freeway / interstate" },
-  { v: "rural_divided", l: "Rural — divided hwy" },
+  { v: "rural_divided", l: "Rural, divided hwy" },
 ];
 
 const DURATIONS: Array<{ v: Duration; l: string }> = [
@@ -55,7 +55,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
             ))}
           </select>
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            TA-19 — divided highway, right lane closed
+            TA-19: divided highway, right lane closed
           </div>
         </Field>
 

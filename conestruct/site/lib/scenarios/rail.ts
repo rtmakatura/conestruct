@@ -139,12 +139,12 @@ export interface RailInput {
 // single-source extraction).  These exist NOWHERE else — the sidebar
 // and the rail both read deriveRail().
 export const HOLD_BLOCKER =
-  "Confirm the cross-street lane count first — it was filled from map data.";
-export const REFUSAL_BLOCKER = "Generation declined — see the notice below.";
+  "Confirm the cross-street lane count first. It was filled from map data.";
+export const REFUSAL_BLOCKER = "Generation declined. See the notice below.";
 export const RECHECK_BLOCKER =
-  "Re-checking the declined input — Generate re-enables when the verdict settles.";
+  "Re-checking the declined input. Generate comes back when the verdict settles.";
 export const LOCATION_BLOCKER =
-  "Set a location first — pick on map or enter manually.";
+  "Set a location first: pick it on the map or enter it manually.";
 /** #289 hand-check, 2026-09-23, defect 1 — Ryan's words for the reason.
  *  One string on the WHERE primary, the WHAT pending line and the
  *  Generate frame (rule 139: one derivation, every surface). */
@@ -208,10 +208,10 @@ function ariaPhrase(state: RailEntryState, issues: RailIssue[]): string {
     : state === "notset"
       ? "not set"
       : state === "pending"
-        ? "pending — set a location first"
+        ? "pending, set a location first"
         : state === "stale"
           ? "detection stale"
-          : `needs attention: ${issues.map((i) => i.text).join(" Also: ")}`;
+          : `needs attention. ${issues.map((i) => i.text).join(" Also: ")}`;
 }
 
 /** #228 ruling 5: a set schedule's duration subline.  Display-only
@@ -379,7 +379,7 @@ export function deriveRail({
       // The "(current blocker)" suffix moved here from the component —
       // ``blocker`` is this module's own value, so the whole accessible
       // name derives in one place.
-      aria: `${label} — ${ariaPhrase(st, issues[id])}${
+      aria: `${label}: ${ariaPhrase(st, issues[id])}${
         info ? ` · ${info}` : ""
       }${ownsBlocker(id) ? " (current blocker)" : ""}`,
     };

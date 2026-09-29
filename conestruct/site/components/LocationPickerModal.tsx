@@ -208,15 +208,15 @@ const CORRIDOR_LAYER_ID = "corridor-layer";
 const CORRIDOR_LABEL_LAYER_ID = "corridor-labels";
 
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
-  rural_undivided: "Rural — undivided",
-  rural_divided: "Rural — divided",
+  rural_undivided: "Rural, undivided",
+  rural_divided: "Rural, divided",
   urban_arterial: "Urban arterial",
   freeway: "Freeway / interstate",
 };
 
 const ROAD_TYPE_OPTIONS: Array<{ v: RoadType; l: string }> = [
-  { v: "rural_undivided", l: "Rural — undivided" },
-  { v: "rural_divided", l: "Rural — divided" },
+  { v: "rural_undivided", l: "Rural, undivided" },
+  { v: "rural_divided", l: "Rural, divided" },
   { v: "urban_arterial", l: "Urban arterial" },
   { v: "freeway", l: "Freeway / interstate" },
 ];
@@ -837,7 +837,7 @@ export function LocationPickerModal({
           // for a completed scan below).  The ↻ Re-detect roads control
           // is the retry affordance.
           setBearingWarning(
-            "Road detection is unavailable right now — use ↻ Re-detect roads to retry.",
+            "Road detection is unavailable right now. Use ↻ Re-detect roads to retry.",
           );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
@@ -851,7 +851,7 @@ export function LocationPickerModal({
         setDetectionContext({ isUrban: j.isUrban, placeName: j.placeName });
         if (cands.length === 0) {
           setBearingWarning(
-            "No road detected within 30 m. Verify the location — with no road, the band asks which way traffic heads.",
+            "No road detected within 30 m. Verify the location. With no road, the band asks which way traffic heads.",
           );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
@@ -1333,7 +1333,7 @@ export function LocationPickerModal({
                 // only.  No pin, no detection: a road detected at a
                 // centroid is a confidently wrong road.
                 setCoarseNotice(
-                  "Area located — drop a pin on the road to detect roads.",
+                  "Area located. Drop a pin on the road to detect roads.",
                 );
                 mapRef.current?.flyTo({
                   center: [j.lng, j.lat],
@@ -1546,7 +1546,7 @@ export function LocationPickerModal({
           // for address/intersection-precision results or a real pin
           // drop — never for a town centroid.
           setCoarseNotice(
-            "Area located — drop a pin on the road to detect roads.",
+            "Area located. Drop a pin on the road to detect roads.",
           );
           mapRef.current?.flyTo({
             center: [j.lng, j.lat],
@@ -1909,8 +1909,8 @@ export function LocationPickerModal({
                   <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2">
                     Map unavailable
                   </div>
-                  NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
-                  map can&apos;t load — please enter coordinates manually below.
+                  NEXT_PUBLIC_MAPBOX_TOKEN is not configured, so the interactive
+                  map can&apos;t load. Enter coordinates manually below.
                 </div>
               </div>
             )}
@@ -2006,7 +2006,7 @@ export function LocationPickerModal({
           )}
           {classify.state === "resolving" && (
             <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-              Detecting road… — Save enables when detection settles
+              Detecting road… Save turns on once detection settles
             </span>
           )}
           <button
@@ -2118,13 +2118,13 @@ function CrossStreetPanel({
         <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0" data-testid="cross-restored">
           {/* #234: the saved crossing, named by the one producer the WHERE
               fact line reads — no detection fires on open. */}
-          {crossStreetLabel(restoredName)} — marked at your last save. Move
+          {crossStreetLabel(restoredName)}: marked at your last save. Move
           the intersection pin to look it up again.
         </p>
       )}
       {crossStatus === "detected" && crossStreet && (
         <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0">
-          {crossStreetLabel(crossStreet.name)} —{" "}
+          {crossStreetLabel(crossStreet.name)}:{" "}
           {crossStreet.legCount === 1 ? "one-way" : "two-way"}
           {crossStreet.signalized ? ", signal detected" : ""}. The plan
           places it along the road from where the work starts. You&apos;ll
@@ -2211,14 +2211,14 @@ function RoadPropertiesPanel({
         )}
         {classify.state === "awaiting_pick" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] py-3">
-            Multiple roads detected — pick a road above to load road
+            Multiple roads detected. Pick one above to load its
             properties.
           </div>
         )}
         {classify.state === "error" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] py-3">
             {classify.message}. Fields default to the scenario&apos;s existing
-            values — verify manually below.
+            values. Check them below.
           </div>
         )}
         {classify.state === "detected" && (
@@ -2272,7 +2272,7 @@ function DetectedRows({
   ) {
     const boundClamp = Math.round(speedValue / 5) * 5 !== speedClampedTo;
     speedNote = boundClamp
-      ? `${speedValue} mph ${speedSourceWord} — ${scenarioNoun(scenarioKind)} plans cap at ${speedClampedTo} mph (${scenarioTa(scenarioKind)} speed domain). Plan will use ${speedClampedTo}.`
+      ? `${speedValue} mph ${speedSourceWord}, but ${scenarioNoun(scenarioKind)} plans cap at ${speedClampedTo} mph (${scenarioTa(scenarioKind)} speed domain). Plan will use ${speedClampedTo}.`
       : `${speedValue} mph ${speedSourceWord} snaps to the ${speedClampedTo} mph grid. Plan will use ${speedClampedTo}.`;
   }
 
@@ -2287,7 +2287,7 @@ function DetectedRows({
   if (scenarioKind === "shoulder" && lanesValue != null) {
     const lanesClampedTo = clampLanesToDomain(lanesValue);
     if (lanesClampedTo !== lanesValue) {
-      lanesNote = `${lanesValue} lanes/direction ${lanesSourceWord} — plans draw at most ${MAX_LANES_PER_DIRECTION} lanes per direction. Plan will use ${lanesClampedTo}.`;
+      lanesNote = `${lanesValue} lanes/direction ${lanesSourceWord}, but plans draw at most ${MAX_LANES_PER_DIRECTION} lanes per direction. Plan will use ${lanesClampedTo}.`;
     }
   }
 
@@ -2335,7 +2335,7 @@ function DetectedRows({
       {showAcceptSpeed && (
         <div className="flex items-center justify-between gap-3 py-2 -mt-1 border-b border-[color:var(--rule)]/40">
           <span className="font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--warn)]">
-            Low-confidence fallback — won&apos;t apply unless you accept it.
+            Low-confidence fallback. It won&apos;t apply unless you accept it.
           </span>
           <button
             type="button"
@@ -2481,7 +2481,7 @@ function RoadFieldRow<T>({
   // (:2568), so this still reads "OSM · MEASURED" / "OPERATOR-SET".
   const provenanceText = modified ? OPERATOR_SET : sourceToken(field.method);
   const provenanceTitle = modified
-    ? `Operator-set — overrides the detected ${field.source}`
+    ? `Operator-set: overrides the detected ${field.source}`
     : [field.source, `${field.confidence} confidence`, field.rawData]
         .filter(Boolean)
         .join(" · ");
@@ -2945,7 +2945,7 @@ function CorridorPreviewPanel({
         )}
         {hasPin && status === "error" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1">
-            Corridor preview unavailable — couldn&apos;t reach the layout
+            Corridor preview unavailable. Couldn&apos;t reach the layout
             service. You can still save; the plan is validated when
             generated.
           </div>
@@ -2955,7 +2955,7 @@ function CorridorPreviewPanel({
             className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1"
             data-testid="picker-corridor-refused"
           >
-            Can&apos;t lay the corridor out here — {refusal}
+            Can&apos;t lay the corridor out here: {refusal}
           </div>
         )}
         {hasPin && (status === "side" || status === "kind" || status === "idle") && (
@@ -2974,7 +2974,7 @@ function CorridorPreviewPanel({
             {status === "side"
               ? `${SIDE_SENTENCE}.`
               : status === "kind"
-                ? "Corridor lengths wait on the kind of work — choose it after you save."
+                ? "Corridor lengths wait on the kind of work. Choose it after you save."
                 : "Save the pin; the corridor lays out on the band."}
           </div>
         )}
@@ -3011,7 +3011,7 @@ function CorridorPreviewPanel({
                       end) — the row names both ends, never "0" for a
                       station the road does not reach. */}
                   {corridor.coverageFt === null
-                    ? "none — straight projection along the heading"
+                    ? "none: straight projection along the heading"
                     : coverageStart <= 0 && corridor.coverageFt >= corridor.totalLengthFt
                       ? "OSM, full corridor"
                       : `covers ${fmtFt(Math.max(0, coverageStart))}–${fmtFt(Math.min(corridor.coverageFt, corridor.totalLengthFt))} ft, bearing beyond`}

@@ -90,7 +90,7 @@ describe("pre-pin quiet band meets the AA floor (arc16 coda)", () => {
 });
 
 // #263 P9 (F-S1-7): the `.honesty` caveat — "Boundary data is
-// approximate … confirm jurisdiction with the permitting authority" —
+// approximate … Confirm the jurisdiction with the permitting authority" —
 // measured 4.47:1 on prod: --ink-on-dark-faint (#93a0b0) through the
 // rule's 0.85 opacity over the .jbar's --canvas-tint (#1b2838).  It is
 // the one sentence that tells the operator to verify.  Same two halves
@@ -152,7 +152,7 @@ describe("the .honesty caveat meets the AA floor on --canvas-tint (#263)", () =>
     expect(caveat).not.toBeNull();
     expect(caveat!.textContent).toContain("Boundary data is approximate");
     expect(caveat!.textContent).toContain(
-      "confirm jurisdiction with the permitting authority",
+      "Confirm the jurisdiction with the permitting authority",
     );
   });
 });

@@ -15,7 +15,7 @@
 // WHAT CHANGED, and why (Rule 5 — the churn predicted, not explained
 // after):
 //   · the block is `.needs-you`, not `.site-corrections`, and its header
-//     is NEEDS YOU's — so the "Site conditions — scanned" header
+//     is NEEDS YOU's — so the "Site conditions: scanned" header
 //     assertion is gone with the header it read;
 //   · rows are rule 74 item rows (`.ny-item`: 20 px glyph / body / auto
 //     action), so `.sc-row` → `.ny-item`, `.sc-glyph` → `.ny-glyph`,
@@ -112,7 +112,7 @@ const block = () => {
 };
 // #255: the backend's advisory (src/api/site_scan.py _VERIFY.strip()) —
 // on the provenance once, never per record.
-const ADVISORY = "The plan is built to the correction — verify it in the field or on imagery before deploying.";
+const ADVISORY = "The plan is built to the correction, so verify it in the field or on imagery before deploying.";
 // Rule 78's standing sentence at zero, in FULL.  #288 clause 1 appended
 // the second clause the strip never printed, so these assertions read a
 // longer string — by exact match, as they always did.
@@ -227,7 +227,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     const stagedRow = within(block()!).getByText("School zone").closest(".ny-item") as HTMLElement;
     expect(stagedRow.classList.contains("sc-staged")).toBe(true);
     expect(stagedRow.querySelector(".ny-glyph")?.textContent).toBe("◌");
-    expect(within(stagedRow).getByText("staged — not yet applied")).toBeTruthy();
+    expect(within(stagedRow).getByText("staged, not yet applied")).toBeTruthy();
     expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("assert");
     expect(within(stagedRow).getByRole("button", { name: "Undo" })).toBeTruthy();
     expect(within(block()!).getByText("1 correction staged · not yet applied")).toBeTruthy();
@@ -274,7 +274,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     expect(setScenario).not.toHaveBeenCalled();
     const noteEl = within(picker).getByLabelText("Say what") as HTMLInputElement;
     expect(noteEl.getAttribute("aria-invalid")).toBe("true");
-    expect(noteEl.placeholder).toBe("say what — required");
+    expect(noteEl.placeholder).toBe("say what (required)");
     expect(document.activeElement).toBe(noteEl);
     await user.type(noteEl, "construction fence");
     expect(noteEl.getAttribute("aria-invalid")).toBeNull();
@@ -286,7 +286,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     expect(block()!.querySelector(".site-correction-picker")).toBeNull();
     const stagedRow = within(block()!).getByText("Pedestrian sidewalks").closest(".ny-item") as HTMLElement;
     expect(stagedRow.classList.contains("sc-staged")).toBe(true);
-    expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("dismiss · other — construction fence");
+    expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("dismiss: other (construction fence)");
     await user.click(applyBtn("Apply 1 correction"));
     expect(setScenario).toHaveBeenCalledTimes(1);
     const next = setScenario.mock.calls[0][0] as Scenario;
@@ -364,8 +364,8 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
       action: "assert" as const,
       status: "applied" as const,
       scan_detected: false,
-      disclosure: "Operator asserted school zone — the scan found none along the corridor. " + ADVISORY,
-      record_clause: "Operator asserted school zone — the scan found none along the corridor.",
+      disclosure: "Operator asserted school zone; the scan found none along the corridor. " + ADVISORY,
+      record_clause: "Operator asserted school zone; the scan found none along the corridor.",
     };
     const scenario: Scenario = {
       ...DEFAULT_SCENARIO,
@@ -431,8 +431,8 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
       reason: "removed",
       status: "moot" as const,
       scan_detected: false,
-      disclosure: "Operator dismissal of school zone is moot — the scan found none along the corridor; nothing to dismiss.",
-      record_clause: "Operator dismissal of school zone is moot — the scan found none along the corridor; nothing to dismiss.",
+      disclosure: "Operator dismissal of school zone is moot: the scan found none along the corridor, so there's nothing to dismiss.",
+      record_clause: "Operator dismissal of school zone is moot: the scan found none along the corridor, so there's nothing to dismiss.",
     };
     const scenario: Scenario = {
       ...DEFAULT_SCENARIO,
@@ -492,7 +492,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     // the rows the block's count is NOT about (§8.5's own words).
     const head = block()!.querySelector(".ny-subhead");
     expect(head, "the condition rows are grouped under a name").not.toBeNull();
-    expect(head!.textContent).toContain("Site conditions — scanned");
+    expect(head!.textContent).toContain("Site conditions: scanned");
     expect(head!.querySelector("button"), "a label is not a control").toBeNull();
     // The Apply row is the LAST data line (rule 78), after every
     // condition row and before the scan's provenance.
@@ -544,7 +544,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     // The record row keeps the sentence as ONE text node after the inline
     // symbol (#198 / spec 48–49); Undo alone in the action track.
     cleanup();
-    const disclosure = "Operator asserted school zone — the scan found none along the corridor.";
+    const disclosure = "Operator asserted school zone; the scan found none along the corridor.";
     mount(
       ok({
         corrections: [
@@ -565,14 +565,14 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
       action: "assert" as const,
       status: "applied" as const,
       scan_detected: null,
-      disclosure: "Operator asserted school zone — the site scan did not complete. " + ADVISORY,
-      record_clause: "Operator asserted school zone — the site scan did not complete.",
+      disclosure: "Operator asserted school zone; the site scan didn't complete. " + ADVISORY,
+      record_clause: "Operator asserted school zone; the site scan didn't complete.",
     };
     mount({
       status: "unavailable",
       error: "scan budget exceeded (20 s)",
       proceeded_anyway: true,
-      disclosure: "SITE CONDITIONS NOT CHECKED — service unavailable at generation.",
+      disclosure: "SITE CONDITIONS NOT CHECKED: service unavailable at generation.",
       corrections: [asserted],
       corrections_advisory: ADVISORY,
     });
@@ -598,7 +598,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
       action: "assert" as const,
       status: "applied" as const,
       scan_detected: false,
-      disclosure: "Operator asserted school zone — the scan found none along the corridor.",
+      disclosure: "Operator asserted school zone; the scan found none along the corridor.",
     };
     const setScenario = mount(ok({ corrections: [asserted] }), DEFAULT_SCENARIO, true);
     const b = block();
@@ -633,7 +633,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     expect(sight.querySelector(".ny-glyph")?.textContent).toBe("◌");
     expect(within(sight).getByText("not asserted")).toBeTruthy();
     expect(sight.querySelector(".sc-evidence")?.textContent).toBe(
-      "Curve, hill crest — moves advance signs 50% farther upstream.",
+      "Curve or hill crest. Moves advance signs 50% farther upstream.",
     );
     expect(sight.querySelector(".ny-cite")?.textContent).toBe("OPERATOR");
     // Rule 78: it stages — nothing writes until Apply.

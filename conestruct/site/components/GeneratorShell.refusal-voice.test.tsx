@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
 
+
 // #180 — one refusal, one voice (mounted-flow, the layer-11 wiring test).
 // A backend gate 400 used to render verbatim on three surfaces at once
 // (under-Generate red text, the INVALID INPUT banner, the audit trail
@@ -31,13 +32,14 @@ import { PINNED_SHOULDER } from "./test-fixtures";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
 import type { FlaggerLaneClosureScenario } from "@/lib/scenarios";
 import { openWhat } from "./__fixtures__/band-helpers";
+import { TieredReference } from "./TieredReference";
 
 // The backend's #86 gate message, verbatim (render_api.py
 // _ensure_lane_eligible) — the text that must NOT render when the
 // multilane confirm row is on screen.
 const MULTILANE_400 =
-  "This road appears to carry more lanes than a flagger operation covers " +
-  "— TA-10 applies where one through lane runs in each direction. If " +
+  "This road appears to carry more lanes than a flagger operation covers. " +
+  "TA-10 applies where one through lane runs in each direction. If " +
   "detection is wrong, confirm 'Road has one through lane in each " +
   "direction' in the form and regenerate.";
 
@@ -47,6 +49,12 @@ const FLOOR_400 =
   "Work zone length (50 ft) is shorter than the required shoulder taper " +
   "(L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, " +
   "or reduce the speed limit.";
+
+// The audit trail panel's own declined line (TieredReference).  Asserted
+// ONCE where the panel renders it (the last test below), so the zero-count
+// pins in the two refusal tests test a string the product can render.
+const DECLINED_LINE =
+  "Audit trail unavailable while generation is declined. See the notice above.";
 
 // #289 Phase 2: the recovery confirms live in the WHAT band's kind row,
 // and the column opens WHAT once there is a pin.  The fixture takes a pin
@@ -140,14 +148,14 @@ describe("one refusal, one voice (#180)", () => {
     // action (FlaggerForm #86 row).
     expect(
       occurrences(
-        "Detection saw a multi-lane road — confirm to enable this plan",
+        "Detection saw a multi-lane road. Confirm to enable this plan",
       ),
     ).toBeGreaterThan(0);
 
     // The banner shortens to a pointer with declined vocabulary.
     expect(strip()).toContain("PLAN DECLINED");
     expect(strip()).toContain(
-      "Detection saw a multi-lane road — confirm the lane count in the Road section to proceed.",
+      "Detection saw a multi-lane road. Confirm the lane count in the Road section to proceed.",
     );
     expect(strip()).toContain("NEEDS REVIEW");
     expect(strip()).not.toContain("INVALID INPUT");
@@ -161,7 +169,7 @@ describe("one refusal, one voice (#180)", () => {
         .getAllByRole("alert")
         .some((el) =>
           (el.textContent ?? "").includes(
-            "Generation declined — see the notice below.",
+            "Generation declined. See the notice below.",
           ),
         ),
     ).toBe(true);
@@ -176,7 +184,7 @@ describe("one refusal, one voice (#180)", () => {
     // AuditTrail.declined-stale.test.tsx.
     expect(
       occurrences(
-        "Audit trail unavailable while generation is declined — see the notice above.",
+        DECLINED_LINE,
       ),
     ).toBe(0);
     expect(document.querySelector("section.zone.results")?.textContent).toBe("");
@@ -207,7 +215,7 @@ describe("one refusal, one voice (#180)", () => {
     // AuditTrail.declined-stale.test.tsx.
     expect(
       occurrences(
-        "Audit trail unavailable while generation is declined — see the notice above.",
+        DECLINED_LINE,
       ),
     ).toBe(0);
     expect(document.querySelector("section.zone.results")?.textContent).toBe("");
@@ -226,6 +234,29 @@ describe("one refusal, one voice (#180)", () => {
     // (rule 10: a pointer must land on something that exists).
     expect(occurrences("Audit trail failed")).toBe(0);
     expect(strip()).toContain("Generate to check again");
+    expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
+  });
+
+  it("the audit trail panel, mounted on a declined audit, renders its declined line exactly once and no Retry", () => {
+    // The positive half of the two zero-count pins above: where the panel
+    // IS on screen (post-generate, the refusal 400), its declined line is
+    // the pointer, once, and it never quotes the refusal or offers Retry.
+    render(
+      <TieredReference
+        jurisdiction={null}
+        jurisdictionLoading={false}
+        streetClass={null}
+        schedule={null}
+        scenario={PINNED_SHOULDER}
+        audit={{ state: "error", message: FLOOR_400, httpStatus: 400, lastReady: null }}
+        onRetry={() => {}}
+        generated={true}
+        showAudit={true}
+        breakdown={{ state: "loading" }}
+      />,
+    );
+    expect(occurrences(DECLINED_LINE)).toBe(1);
+    expect(occurrences(FLOOR_400)).toBe(0);
     expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
   });
 });

@@ -85,7 +85,7 @@ describe("Zone 3 tiers — real-data rendering (#219-migrated)", () => {
       await userEvent.click(hoursHead);
     }
     expect(
-      screen.getByText(/two adopted sources disagree — conservative value rendered/i),
+      screen.getByText(/two adopted sources disagree\. Showing the conservative value\./i),
     ).toBeTruthy();
     expect(screen.getByText("Town TC Manual + RDCCM (Jan 2026)")).toBeTruthy();
     expect(screen.getByText("9:00–3:30")).toBeTruthy();
@@ -102,7 +102,7 @@ describe("Zone 3 tiers — real-data rendering (#219-migrated)", () => {
     // collapsed, then the permit chip inside it.
     await userEvent.click(screen.getByRole("button", { name: /reference/i }));
     await userEvent.click(
-      screen.getByRole("button", { name: /permit — el paso/i }),
+      screen.getByRole("button", { name: /permit: el paso/i }),
     );
     expect(
       screen.getByText(/fee = f\(lanes_closed, zone_length_ft, days\)/i),
@@ -184,7 +184,7 @@ describe("JurisdictionControls", () => {
     );
     expect(container.querySelector(".jbar-skel-line, [class*='skel'], .animate-pulse")).toBeNull();
     expect(container.querySelector(".jbar-auth")!.textContent).toBe(
-      "evaluating — the option you picked, not yet confirmed for this plan",
+      "evaluating: the option you picked, not yet confirmed for this plan",
     );
   });
 

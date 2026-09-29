@@ -121,10 +121,10 @@ describe("the preview's words", () => {
 
   it("ruling 202's two blind-apply sentences, verbatim, and only in 7b / 7d", () => {
     expect(blindApplySentence({ kind: "loading" }, "1 field")).toBe(
-      "1 field staged · preview still computing — Apply re-generates the full plan either way",
+      "1 field staged · preview still computing. Apply re-generates the full plan either way",
     );
     expect(blindApplySentence({ kind: "error" }, "1 field")).toBe(
-      "1 field staged · preview failed — Apply re-generates the full plan without a preview",
+      "1 field staged · preview failed. Apply re-generates the full plan without a preview",
     );
     expect(blindApplySentence({ kind: "idle" }, "1 field")).toBeNull();
     expect(

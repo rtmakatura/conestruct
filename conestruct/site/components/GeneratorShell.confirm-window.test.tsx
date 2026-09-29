@@ -32,8 +32,8 @@ import { pinned } from "./test-fixtures";
 // A road whose relays refuse: the #86 multilane gate message, with the
 // matching confirm affordance on the flagger form.
 const MULTILANE_400 =
-  "This road appears to carry more lanes than a flagger operation covers " +
-  "— TA-10 applies where one through lane runs in each direction. If " +
+  "This road appears to carry more lanes than a flagger operation covers. " +
+  "TA-10 applies where one through lane runs in each direction. If " +
   "detection is wrong, confirm 'Road has one through lane in each " +
   "direction' in the form and regenerate.";
 

@@ -37,8 +37,8 @@ import {
 } from "./provenance";
 
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
-  rural_undivided: "Rural — undivided",
-  rural_divided: "Rural — divided",
+  rural_undivided: "Rural, undivided",
+  rural_divided: "Rural, divided",
   urban_arterial: "Urban arterial",
   freeway: "Freeway / interstate",
 };

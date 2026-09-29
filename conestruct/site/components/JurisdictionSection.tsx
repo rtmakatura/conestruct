@@ -81,7 +81,7 @@ export function ConflictFootnote({
   return (
     <div className="mt-4 pl-3 border-l-2 border-[color:var(--warn)]">
       <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--warn)] mb-1.5">
-        † Two adopted sources disagree — conservative value rendered
+        † Two adopted sources disagree. Showing the conservative value.
       </div>
       {conflict.sources.map((s) => (
         <div
@@ -118,7 +118,7 @@ export interface SuggestionResolution<V extends string = string> {
 
 const STATUS_LABEL: Record<TriggerStatus, string | null> = {
   fires: null,
-  conditional: "conditional — surfaced, not auto-applied",
+  conditional: "conditional: shown here, not applied automatically",
   unknown: "needs input (set the street class)",
 };
 
@@ -327,7 +327,7 @@ export function JurisdictionControls({
         >
           {/* #260: "Not set" — the #257 fold's one word for an unset
               jurisdiction, on every surface. */}
-          <option value="">Not set — MUTCD + CDOT only</option>
+          <option value="">Not set: MUTCD + CDOT only</option>
           {JURISDICTION_OPTIONS.map((o) => (
             <option key={o.key} value={o.key}>
               {o.label}
@@ -346,9 +346,9 @@ export function JurisdictionControls({
             // #276 / ruling 196 / rule 14: no skeleton — the state in
             // words, the same words the WHAT cell's "evaluating" state
             // uses (a grey bar said nothing a reader could act on).
-            <>evaluating — the option you picked, not yet confirmed for this plan</>
+            <>evaluating: the option you picked, not yet confirmed for this plan</>
           ) : (
-            <>Statewide baseline — MUTCD + Colorado Supplement only.</>
+            <>Statewide baseline: MUTCD + Colorado Supplement only.</>
           )}
         </div>
         {/* Endeavor-B slot, live: pin-based jurisdiction suggestion +
@@ -404,8 +404,8 @@ export function JurisdictionControls({
               </>
             ) : (
               <>
-                ◎ {jurisdiction.name} classifies via its published map — look
-                the street up before submitting
+                ◎ {jurisdiction.name} classifies streets on its published map. Look
+                the street up before you submit.
               </>
             )
           ) : (
@@ -543,8 +543,8 @@ function ClassSuggestSlot({
         rel="noreferrer"
       >
         {jurisdiction.name}&apos;s functional-classification map
-      </a>{" "}
-      — the road tier is a proxy, the adopted map governs.
+      </a>
+      . The road tier is a proxy; the adopted map governs.
     </div>
   ) : null;
 
@@ -565,11 +565,11 @@ function ClassSuggestSlot({
                   <b className="sugg-name">
                     {classLabel(resolution.suggested)}
                   </b>{" "}
-                  — was {priorLabel}.
+                  (was {priorLabel}).
                 </>
               ) : (
                 <>
-                  Dismissed the {classLabel(resolution.suggested)} suggestion —{" "}
+                  Dismissed the {classLabel(resolution.suggested)} suggestion.{" "}
                   {priorLabel} stands.
                 </>
               )}
@@ -590,7 +590,7 @@ function ClassSuggestSlot({
           )}
           {differs && (
             <div className="sugg-row passive">
-              Detected road tier suggests {classLabel(classSuggest)} — you
+              Detected road tier suggests {classLabel(classSuggest)}, but you
               have {classLabel(streetClass as StreetClass)} selected.
             </div>
           )}
@@ -665,7 +665,7 @@ function ClassSuggestSlot({
       )}
       {differs && (
         <div className="sugg-row passive">
-          Detected road tier suggests {classLabel(classSuggest)} — you have{" "}
+          Detected road tier suggests {classLabel(classSuggest)}, but you have{" "}
           {classLabel(streetClass as StreetClass)} selected.
         </div>
       )}
@@ -766,7 +766,7 @@ function SuggestSlot({
       ))}
       <div className="honesty">
         Boundary data is approximate ({suggest.boundary_source.source},{" "}
-        {suggest.boundary_source.vintage.split(" ")[0]}) — confirm jurisdiction
+        {suggest.boundary_source.vintage.split(" ")[0]}). Confirm the jurisdiction
         with the permitting authority.
       </div>
     </>
@@ -790,12 +790,12 @@ function SuggestSlot({
                   <b className="sugg-name">
                     {jurisdictionLabel(resolution.suggested)}
                   </b>{" "}
-                  — was {priorLabel}.
+                  (was {priorLabel}).
                 </>
               ) : (
                 <>
                   Dismissed the {jurisdictionLabel(resolution.suggested)}{" "}
-                  suggestion — {priorLabel} stands.
+                  suggestion. {priorLabel} stands.
                 </>
               )}
             </span>
@@ -814,7 +814,7 @@ function SuggestSlot({
           )}
           {manualDiffers && (
             <div className="sugg-row passive">
-              Pin appears to be in {jurisdictionLabel(key)} — you have{" "}
+              Pin appears to be in {jurisdictionLabel(key)}, but you have{" "}
               {jurisdictionLabel(jurisdictionKey as string)} selected.
             </div>
           )}
@@ -879,7 +879,7 @@ function SuggestSlot({
     <>
       {key && manualDiffers && (
         <div className="sugg-row passive">
-          Pin appears to be in {jurisdictionLabel(key)} — you have{" "}
+          Pin appears to be in {jurisdictionLabel(key)}, but you have{" "}
           {jurisdictionLabel(jurisdictionKey as string)} selected.
         </div>
       )}
@@ -1034,13 +1034,13 @@ export function HoursVerdictBlock({
         hoursEval.status === "unknown" &&
         (scheduleTbd ? (
           <div className="text-[12px] text-[color:var(--none)]">
-            ◌ Schedule marked &ldquo;Not set&rdquo; — the windows above are
+            ◌ Schedule marked &ldquo;Not set&rdquo;, so the windows above are
             reference only. Choose a date mode in Setup to check a
             schedule against {jurisdiction.name}&apos;s windows.
           </div>
         ) : (
           <div className="text-[12px] text-[color:var(--none)]">
-            ◌ {hoursEval.note ?? "Schedule not checked yet"} — enter the
+            ◌ {hoursEval.note ?? "Schedule not checked yet"}. Enter the
             work date and start/end times in the Setup panel&apos;s
             Schedule step to check them against {jurisdiction.name}&apos;s
             windows.
@@ -1070,7 +1070,7 @@ export function HoursVerdictBlock({
             <div className="text-[12px] text-[color:var(--warn)] mt-1">
               Metered exposure estimate ≈{" "}
               <span className="font-mono">{dollars(hoursEval.exposure_estimate_cents)}</span>
-              {jurisdiction.provisional ? " (provisional schedule)" : ""} — trim the
+              {jurisdiction.provisional ? " (provisional schedule)" : ""}. Trim the
               schedule to avoid it.
             </div>
           )}
@@ -1164,7 +1164,7 @@ export function WorkHoursCard({
   return (
     <ReferenceChip
       glyph="◷"
-      label={`Work hours — ${jurisdiction.name}`}
+      label={`Work hours: ${jurisdiction.name}`}
       sev={!verifying && status === "outside" ? "warn" : "info"}
       autoExpand={!verifying && status === "outside"}
       summary={summary}
@@ -1206,8 +1206,8 @@ export function WorkHoursCard({
 
       {hours.shape === "none" || rows.length === 0 ? (
         <div className="text-[12px] text-[color:var(--none)] py-2">
-          ◌ {jurisdiction.name} publishes no work-hour windows — no restriction
-          shown because none is on record, not because none exists.
+          ◌ {jurisdiction.name} publishes no work-hour windows. None is on
+          record, which doesn&apos;t mean none exists.
         </div>
       ) : (
         <div>
@@ -1367,7 +1367,7 @@ export function PermitFYI({
   return (
     <ReferenceChip
       glyph="i"
-      label={`Permit — ${jurisdiction.name}`}
+      label={`Permit: ${jurisdiction.name}`}
       summary={
         <>
           {p.tiers.length > 0 ? (
@@ -1384,7 +1384,7 @@ export function PermitFYI({
       badge={anyProvisionalFee ? <ProvisionalBadge /> : undefined}
     >
       <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mb-2">
-        Courtesy reference — <b>FYI</b> · fees are never quote line items
+        <b>FYI</b>: courtesy reference. Fees are never quote line items.
       </div>
       <div>
         <Section title="Permit type / tier">
@@ -1411,8 +1411,8 @@ export function PermitFYI({
                   </>
                 ) : (
                   <span className="text-[color:var(--none)]">◌ no tier suggested</span>
-                )}{" "}
-                — {p.tier_reason}
+                )}
+                {" "}({p.tier_reason})
               </div>
             </>
           ) : (
@@ -1609,8 +1609,7 @@ export function HazardChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }
           <b>{chips.length}</b> hazard{chips.length === 1 ? "" : "s"}
           {worst.meter && (
             <>
-              {" "}
-              — worst:{" "}
+              , worst:{" "}
               <span className="font-mono text-[color:var(--fail)]">
                 {meterRateLabel(worst.meter)}
               </span>

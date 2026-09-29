@@ -238,9 +238,9 @@ export function SiteConditionRows({
     if (isManualStaged(s)) return s.on ? "assert" : "undo";
     if (s.marker === null) return "undo";
     if (s.marker.action === "assert") return "assert";
-    if (s.marker.reason === "other") return `dismiss · other — ${s.marker.note ?? ""}`;
+    if (s.marker.reason === "other") return `dismiss: other (${s.marker.note ?? ""})`;
     const r = DISMISS_REASONS.find((x) => x.v === s.marker!.reason);
-    return `dismiss · ${(r?.l ?? s.marker.reason ?? "").toLowerCase()}`;
+    return `dismiss: ${(r?.l ?? s.marker.reason ?? "").toLowerCase()}`;
   };
 
   // Rule 74's item row, with the condition's words in rule 75's order:
@@ -340,7 +340,7 @@ export function SiteConditionRows({
       isManualStaged(s)
         ? MANUAL_FLAG_LABELS[s.flag].label
         : SCANNED_FLAG_LABELS[s.flag],
-      "staged — not yet applied",
+      "staged, not yet applied",
       intentText(s),
       "OPERATOR",
       actBtn("Undo", () => setStaged(unstage(staged, s.flag))),
@@ -384,7 +384,7 @@ export function SiteConditionRows({
     <li key="cond-head" className="ny-item ny-subhead">
       <span className="ny-glyph" aria-hidden />
       <div className="ny-mid">
-        <span className="tr-section">Site conditions — scanned</span>
+        <span className="tr-section">Site conditions: scanned</span>
       </div>
     </li>,
   );
@@ -493,7 +493,7 @@ export function SiteConditionRows({
                     setNote(e.target.value);
                     setNoteInvalid(false);
                   }}
-                  placeholder={noteInvalid ? "say what — required" : "say what"}
+                  placeholder={noteInvalid ? "say what (required)" : "say what"}
                 />
               </div>
             </div>

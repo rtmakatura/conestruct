@@ -206,7 +206,7 @@ describe("audit rows never present a prior input's numbers under a declined bann
     // the one #187 cue (#235-C: a tr-prov line in the reserved slot; the
     // ledger's "(refreshing…)" suffix is gone with the ledger).
     expect((await screen.findAllByText(/183/)).length).toBeGreaterThan(0);
-    expect(screen.getAllByText("◌ previous answer — refreshing…")).toHaveLength(1);
+    expect(screen.getAllByText("◌ previous answer, refreshing…")).toHaveLength(1);
     expect(document.body.textContent).not.toContain("(refreshing…)");
   });
 

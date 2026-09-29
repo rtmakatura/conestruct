@@ -172,7 +172,7 @@ export function RevisionPanel({
     state.kind === "loading"
       ? "computing…"
       : state.kind === "error"
-        ? "preview unavailable — the plan on screen is unchanged"
+        ? "preview unavailable; the plan on screen is unchanged"
         : state.kind === "ready"
           ? previewStatusLine(stagedValue)
           : "change the value to see what it does";

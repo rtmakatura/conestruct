@@ -33,7 +33,7 @@ const LIVE_422_DRAWABLE_WIDTH = JSON.stringify({
       loc: ["body", "shoulder"],
       msg:
         "Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds " +
-        "the plan sheet's drawable half-road (52 ft) — use a lane width of " +
+        "the plan sheet's drawable half-road (52 ft). Use a lane width of " +
         "11.0 ft or less, or reduce the lane count.",
       input: {},
       ctx: { error: {} },
@@ -84,7 +84,7 @@ describe("validationPassthrough (#184)", () => {
     // "Value error, " prefix stripped; the actionable message survives.
     expect(body.detail).toBe(
       "4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan " +
-        "sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft " +
+        "sheet's drawable half-road (52 ft). Use a lane width of 11.0 ft " +
         "or less, or reduce the lane count.",
     );
   });

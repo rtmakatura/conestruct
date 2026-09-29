@@ -117,8 +117,8 @@ export interface WhatCellTable {
 // one enum value.  The strip's is kept: it is the one the deliverables carry,
 // and #198's discipline is that a name crossing a seam has one spelling.
 const LABEL: Record<RoadType, string> = {
-  rural_undivided: "Rural — undivided",
-  rural_divided: "Rural — divided",
+  rural_undivided: "Rural, undivided",
+  rural_divided: "Rural, divided",
   urban_arterial: "Urban arterial",
   freeway: "Freeway / interstate",
 };
@@ -154,7 +154,7 @@ export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
     // definition rather than an omission — so the cell states the count
     // the plan uses and why, instead of vanishing (rule 10).
     lanesReason:
-      "1 each direction · TA-10's definition — the flagger alternates two opposing directions",
+      "1 each direction · TA-10's definition: the flagger alternates two opposing directions",
     laneWidthMin: 9,
     laneWidthMax: 14,
     laneWidthStep: 0.5,

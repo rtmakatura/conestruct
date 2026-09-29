@@ -24,7 +24,7 @@ afterEach(cleanup);
 const unknownEval = {
   status: "unknown" as const,
   violations: [],
-  note: "schedule marked Not set — hours not evaluated",
+  note: "schedule marked Not set: hours not evaluated",
 };
 
 describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
@@ -35,7 +35,7 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
       screen.getByRole("button", { name: /pending \/ not verified/i }),
     );
     expect(
-      screen.getByText(/Schedule marked .Not set. — the windows above are/i),
+      screen.getByText(/Schedule marked .Not set., so the windows above are/i),
     ).toBeTruthy();
     expect(screen.queryByText(/enter the\s+work date and start\/end times/i)).toBeNull();
   });
@@ -47,7 +47,7 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
       screen.getByRole("button", { name: /pending \/ not verified/i }),
     );
     expect(
-      screen.getByText(/Schedule marked .Not set. — the windows above are/i),
+      screen.getByText(/Schedule marked .Not set., so the windows above are/i),
     ).toBeTruthy();
     expect(screen.queryByText(/outside window/i)).toBeNull();
   });
@@ -58,7 +58,7 @@ describe("PermitFYI — residual work date under 'Not set' (#199)", () => {
     mountTiered(jur("el_paso"), { date_mode: "tbd", work_date: "2026-07-22" });
     await userEvent.click(screen.getByRole("button", { name: /reference/i }));
     await userEvent.click(
-      screen.getByRole("button", { name: /permit — el paso/i }),
+      screen.getByRole("button", { name: /permit: el paso/i }),
     );
     // The sibling test in JurisdictionSection.test.tsx pins the positive
     // arm ("≈ Wed, Jul 8" for date_mode single, same work date).

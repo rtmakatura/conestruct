@@ -8,7 +8,7 @@
 //
 // It also inherits one claim from another suite, deliberately and by
 // name: JurisdictionSection.density.test.tsx used to assert #187's
-// "◌ previous answer — refreshing…" cue in section 03's reserved slot.
+// "◌ previous answer, refreshing…" cue in section 03's reserved slot.
 // Clause 4 moved that slot into the stack — a cue inside a closed
 // disclosure cannot say the counts above it are stale — so the claim
 // moved here rather than being dropped.
@@ -171,7 +171,7 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     expect(all.indexOf(draft)).toBeGreaterThan(all.indexOf(group));
     // #289 fidelity F6 (ruled Q6, 2026-09-23): rule 29's words, verbatim.
     expect(draft.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
+      "Draft: not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
     );
   });
 
@@ -243,7 +243,7 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
   });
 
   // ── the claim inherited from JurisdictionSection.density.test.tsx ──
-  it("#187: ONE '◌ previous answer — refreshing…' cue, in the stack, in a reserved slot", async () => {
+  it("#187: ONE '◌ previous answer, refreshing…' cue, in the stack, in a reserved slot", async () => {
     await generate();
     // Settled: the slot is in the flow at its reserved height (P1) and
     // empty — not absent, or the stack would shift when it appears.
@@ -262,7 +262,7 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     await stageRevision("35");
     await applyRevision();
     await settle(60);
-    const cues = screen.queryAllByText("◌ previous answer — refreshing…");
+    const cues = screen.queryAllByText("◌ previous answer, refreshing…");
     expect(cues.length, "at most one cue, ever").toBeLessThanOrEqual(1);
   });
 
