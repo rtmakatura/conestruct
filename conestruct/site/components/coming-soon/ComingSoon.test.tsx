@@ -403,3 +403,20 @@ describe("R22 — the map, 01's words and the close band", () => {
     ]);
   });
 });
+
+describe("R33 / R34 / R35 — the unslop pass", () => {
+  it("R34: the callout is Ryan's two sentences; R35: 03's heading", () => {
+    const c = mount();
+    expect(c.textContent).toContain("You mark the work. The rest is laid out around it.");
+    expect(c.querySelector("#cs-sources")?.textContent).toBe("Every number shows where it came from");
+  });
+
+  it("R33: no em dash on the page; R34: the captions no longer join two sentences with a middle dot", () => {
+    const text = mount().textContent ?? "";
+    expect(text).not.toContain("—");
+    expect(text).toContain("Illustration. A real plan is drawn on the road you pick.");
+    for (const joined of ["you mark the work ·", "illustration · a real plan"]) {
+      expect(text.toLowerCase(), joined).not.toContain(joined);
+    }
+  });
+});

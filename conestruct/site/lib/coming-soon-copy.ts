@@ -32,8 +32,8 @@ export const SHEET = {
 export const DRAWING = {
   label: "ILLUSTRATION · RIGHT LANE CLOSED",
   scale: "not to scale",
-  callout: "you mark the work · the rest is laid out around it",
-  note: "illustration · a real plan is drawn on the road you pick",
+  callout: "You mark the work. The rest is laid out around it.",
+  note: "Illustration. A real plan is drawn on the road you pick.",
   work: "WORK",
   aria:
     "Illustration of a plan drawing: the right lane of a one-direction road closed for work. Advance warning signs, a merging taper and an empty buffer lead up to the work; devices line the closed lane through the work area, and a downstream taper follows. Not to scale.",
@@ -127,7 +127,7 @@ export const HAND_OVER = {
 
 export const SOURCES = {
   n: "03",
-  title: "Every dimension has a source",
+  title: "Every number shows where it came from",
   question: "Where did that number come from?",
   body: "Every taper, buffer and spacing in the plan's audit carries its citation: the MUTCD 2023 section, table or figure, or the CDOT S-630-1 sheet it came from. The person who reviews the plan can check it in one step. Where a value needs a person, the plan flags it.",
   prov: "some of the references it cites",
@@ -235,7 +235,7 @@ export const NOT_FOUND = {
   sign: ["ROAD", "CLOSED"],
   detour: "DETOUR",
   detourTo: "to conestruct.com",
-  note: "this page isn't here · the way home is open",
+  note: "This page isn't here. The way home is open.",
   aria: "A road closed with a barricade and a Road Closed sign. A dashed detour line leaves the road before the barricade and leads back to the Conestruct home page.",
   heading: "This road is closed.",
   body: "The page you were looking for isn't here. The detour takes you home.",

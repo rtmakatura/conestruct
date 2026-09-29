@@ -21,6 +21,8 @@ describe("R19 — the Road closed page", () => {
     expect(pri[0].getAttribute("href")).toBe("/");
     expect(pri[0].textContent).toBe("Back to conestruct.com");
     expect(metadata.title).toBe("Road closed · Conestruct");
+    // R34: the middle dot is a title separator only, never between two sentences.
+    expect(c.textContent).toContain("This page isn't here. The way home is open.");
   });
 
   it("draws the closure: barricade, ROAD CLOSED sign, the detour home — one named drawing", () => {

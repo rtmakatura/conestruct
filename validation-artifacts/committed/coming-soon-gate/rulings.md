@@ -166,3 +166,21 @@ Nothing else changes: same copy, same graphic, same styling, same spacing tokens
 
 **R33 (Ryan, 2026-09-29)** — light lane (Part A: `/`, `/404`, `/terms`, `/privacy`):
 Ruling 2026-09-29 (Ryan), R33: all written content on the landing page and the platform follows the unslop rules, now and going forward.
+
+**R34–R37 (Ryan, 2026-09-29)**, verbatim:
+
+Rulings, 2026-09-29 (Ryan). Quote verbatim in coming-soon-gate/rulings.md.
+
+R34. Part A approved with one change: the drawing callout becomes two sentences, "You mark the work. The rest is laid out around it." Middle dot is a title separator only, never inside a sentence.
+
+R35. Section 03 heading becomes "Every number shows where it came from."
+
+R36. Footer vs Terms: HOLD. Don't change either yet. Ryan is taking this wording to a lawyer for both surfaces: "Every plan is a draft. A qualified reviewer (a certified Traffic Control Supervisor or a licensed Professional Engineer, as the permitting agency requires) must review it before use." Also check 02-JURISDICTION-DATA (main checkout, if present) and data/jurisdictions/*.json for any jurisdiction that states who must prepare or seal a TCP; list each with its citation in the report. Don't invent any.
+
+R37. Part B approved as its own arc with a checkpoint (it touches backend string helpers):
+- Separator rule: ": " between a label and its value, " · " between two names. No em dashes in user-facing copy.
+- audit.py:1709 and validators.py:392 split on the new separator; change code and strings together, with a test that the split yields the same parts.
+- The three "em-dash never appears" tests are rewritten to assert the new strings.
+- data/jurisdictions/*.json stays verbatim (cited).
+- PDF: regenerate one plan sheet and one crew sheet before and after; attach both.
+Stack on copy/unslop-public; checkpoint before building.
