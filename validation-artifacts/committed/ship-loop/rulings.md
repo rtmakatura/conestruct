@@ -137,3 +137,13 @@ Ruled on `checkpoint-1.md` (`aec9a45`), pasted 2026-09-28:
 > R22. handoff.md edits (the preview: line and the R7 smoke) are drafted by CC as before/after text in the report; the chat applies them. The throwaway test branch is deleted by Ryan.
 >
 > Before building: paste Ryan's 12 dashboard steps here, in full, so he can follow them.
+
+## R26–R27, verbatim
+
+Ruled on the `light-sheet-flip` report (`5a966c2`: its `frontend-only: no` flag and the ship-push credential investigation), pasted 2026-09-28. The numbers carry on from `coming-soon-gate/rulings.md` (which ends at R25), not from this file's R22; there is no ship-loop R23–R25.
+
+> Rulings, 2026-09-28 (Ryan). Quote verbatim in rulings.md. One branch for both, stacked after light-sheet-flip.
+>
+> R26. validation-artifacts/committed/** doesn't count against frontend-only in Get-FrontendOnly: those files never reach the build. Everything else stays as is. Red-prove: a branch with only site files + validation-artifacts reads "yes"; add one script file and it reads "no".
+>
+> R27. Recommended credential fix approved: ship.ps1's push uses gh only (git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin HEAD:main), and a gh auth status check runs before the merge so a bad login stops the ship before anything moves.
