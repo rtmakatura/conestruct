@@ -1,8 +1,10 @@
 name: Python tests
 
 on:
+  # Every branch, not only main (R50): the ship checks CI on the tip it
+  # merges, so the tip needs runs of its own before the go.
   push:
-    branches: [main]
+    branches: ["**"]
   workflow_dispatch:
 
 permissions:
@@ -33,4 +35,5 @@ jobs:
         run: uv run ruff check .
 
       - name: Pytest (full suite)
-        run: uv run pytest
+        # -rs: every skip prints its reason (R50: Windows-only tests say so).
+        run: uv run pytest -rs

@@ -193,6 +193,20 @@ Write-Host "Checking Vercel Production has every variable the site needs (R29)..
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\vercel-env-check.ps1") -Required $envList
 if ($LASTEXITCODE -ne 0) { Fail "Vercel Production is missing a variable the site needs, or the Vercel CLI is not logged in (the check's output is above). Fix it, then ship again. Nothing was merged or pushed." }
 
+# --- 1d. CI green on the commit being shipped (R50) --------------------------
+# Both workflows' newest runs on the exact tip the fast-forward makes main must
+# be green; red, missing or still running stops here.  From 55c9054/467ffaf CI
+# was red on main for five ships because nothing read it.  The workflows run on
+# every branch push, so the tip has its runs by the time of the go.
+$ciSha = "$(git rev-parse --verify -q ($listRef + '^{commit}'))".Trim()
+if ($LASTEXITCODE -ne 0 -or $ciSha -eq "") { Fail "Could not resolve $listRef to check its CI. Push the branch, then ship again. Nothing was merged or pushed." }
+# (-Ref only for a branch: an empty argument can vanish on its way through -File.)
+$ciRef = if ($Branch -ne "") { @("-Ref", $Branch) } else { @() }
+$ciOut = & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\ci-check.ps1") -Sha $ciSha @ciRef 2>&1 | ForEach-Object { "$_" }
+$ciOut | ForEach-Object { Write-Host "  $_" }
+$ciFailed = (($ciOut | Where-Object { $_ -like "CI CHECK FAILED:*" } | Select-Object -Last 1) -replace '^CI CHECK FAILED:\s*', '')
+if ($LASTEXITCODE -ne 0) { Fail "CI is not green on the commit being shipped: $ciFailed. Fix it (or wait for the run), then ship again. Nothing was merged or pushed." }
+
 # --- 2. Merge the pushed branch (fast-forward only) ---------------------------
 if ($Branch -ne "") {
     git rev-parse --verify -q "origin/$Branch" | Out-Null

@@ -37,7 +37,14 @@ function Stop-Check($msg) {
 # fail this check closed, never open.
 function Invoke-Vercel([string[]]$cliArgs) {
     if ($Vercel -ne "") {
-        return & $Vercel @cliArgs 2>&1 | ForEach-Object { "$_" }
+        # A stand-in that can't run is a statement-terminating error, and under
+        # "Continue" the function would go on to the real CLI below (R50: CI's
+        # Linux runner, handed a .cmd stand-in, ran the real `npx vercel`).
+        try {
+            return & $Vercel @cliArgs 2>&1 | ForEach-Object { "$_" }
+        } catch {
+            Stop-Check "could not run the Vercel CLI stand-in ${Vercel}: $($_.Exception.Message)"
+        }
     }
     if (-not (Get-Command npx -ErrorAction SilentlyContinue)) { Stop-Check "npx is not on PATH, so the Vercel CLI can't run." }
     return & npx --yes vercel@61.0.0 @cliArgs --non-interactive --cwd $SiteDir 2>&1 | ForEach-Object { "$_" }

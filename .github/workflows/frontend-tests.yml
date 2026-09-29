@@ -1,8 +1,10 @@
 name: Frontend tests
 
 on:
+  # Every branch, not only main (R50): the ship checks CI on the tip it
+  # merges, so the tip needs runs of its own before the go.
   push:
-    branches: [main]
+    branches: ["**"]
   workflow_dispatch:
 
 permissions:
@@ -20,6 +22,12 @@ jobs:
         working-directory: conestruct/site
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          # Full history: tests/vercel-ignore.test.ts runs the ignore script over
+          # real ranges of this repo's history (71cc403, a7225ff, aab8caa,
+          # d6e00a7..0ddc85e).  A depth-1 clone lacks them, the cause of CI's
+          # red from 55c9054 on (R50).
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v7.0.0
