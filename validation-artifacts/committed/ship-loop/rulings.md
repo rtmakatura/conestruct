@@ -147,3 +147,23 @@ Ruled on the `light-sheet-flip` report (`5a966c2`: its `frontend-only: no` flag 
 > R26. validation-artifacts/committed/** doesn't count against frontend-only in Get-FrontendOnly: those files never reach the build. Everything else stays as is. Red-prove: a branch with only site files + validation-artifacts reads "yes"; add one script file and it reads "no".
 >
 > R27. Recommended credential fix approved: ship.ps1's push uses gh only (git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin HEAD:main), and a gh auth status check runs before the merge so a bad login stops the ship before anything moves.
+
+## R28, verbatim (the outage ruling)
+
+Given in the `light-sheet-flip` session at 2026-09-29T04:31:58Z (2026-09-28, 22:31 MDT), during the production outage that followed the `ship-creds-frontend-only` ship (7ea649d): every route on www.conestruct.com returned 500 (`MIDDLEWARE_INVOCATION_FAILED`) because `CLERK_SECRET_KEY` had no Production row. Recorded here as the outage ruling (R29–R30 paste, below). It was scoped to that outage and is not a standing permission.
+
+>    Ruling R28 (Ryan): Vercel CLI is logged in and linked. For this outage you may, without asking: roll production back to 55c9054, run `vercel env ls`, add the missing Production Clerk variable(s) with the live values from Clerk if you can read them (otherwise tell me exactly which row to add), redeploy 7ea649d, and promote it once it returns 200. Never remove or change an existing Production variable. Report each step's output.
+
+**Its deviation, recorded as ruled:** R28 said promote 7ea649d only once it returns 200. `vercel redeploy https://conestruct-2hui456yk-rtmakaturas-projects.vercel.app --target production` aliased www.conestruct.com itself as soon as the build finished ("Aliased https://www.conestruct.com", then "Ready in 4m"; deployment `conestruct-2pknt2zfd-rtmakaturas-projects.vercel.app`, GitHub deployment status `success` at 2026-09-29T04:40:53Z), before the 200 check ran. It came up 200, so nothing broke. Had the build still been failing, www would have gone down again until 55c9054 was promoted back. The other steps ran as ruled: the rollback went through `vercel promote` (`vercel rollback` answered 402 on the Hobby plan), `vercel env ls` confirmed the cause, and Ryan added the Production `CLERK_SECRET_KEY` row (CC could not read the live key). No existing Production variable was removed or changed.
+
+## R29–R30, verbatim
+
+Pasted 2026-09-28. The "R28 as given tonight" it names is the ruling above.
+
+> Rulings, 2026-09-28 (Ryan). Quote verbatim in ship-loop/rulings.md. One small branch.
+>
+> R28 as given tonight, recorded as the outage ruling, plus its deviation: the redeploy auto-promoted before the 200 check.
+>
+> R29. Before the merge, ship.ps1 checks `vercel env ls production` lists every variable the site needs at runtime (at least NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, GATE_ALLOWED_EMAILS, GATE_BYPASS_TOKEN, MODAL_RENDER_URL, MODAL_RENDER_SECRET, MAPBOX_TOKEN, NEXT_PUBLIC_MAPBOX_TOKEN, DATABASE_URL — derive the full list from the code, cite file:line). Any missing, or the CLI not logged in, stops the ship with "Nothing was merged or pushed." Red-prove with a fixture listing one name short.
+>
+> R30. Draft a GitHub issue for tonight's outage (cause, 18-minute window, fix, R29 as the prevention) for me to post.
