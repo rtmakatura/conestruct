@@ -1,0 +1,14 @@
+title probe · http://localhost:3100 · 2026-09-29T15:32:29.364Z
+/: title "Conestruct · coming soon" · em dashes in text 0, in svg text 0
+  description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.
+  og:description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.
+  mail: mailto:ryan@conestruct.com?subject=Conestruct: let me know when it opens
+/404: title "Road closed · Conestruct" · em dashes in text 0, in svg text 0
+  description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.
+  og:description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.
+/terms: title "Terms of Service · Conestruct" · em dashes in text 0, in svg text 0
+  description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.
+  og:description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.
+/privacy: title "Privacy Policy · Conestruct" · em dashes in text 0, in svg text 0
+  description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.
+  og:description: Traffic control plans for Colorado work zones. Mark where the work is and Conestruct lays out the rest. Every taper, buffer and spacing is cited to MUTCD 2023 or CDOT, and every plan is a draft for a licensed professional to review.

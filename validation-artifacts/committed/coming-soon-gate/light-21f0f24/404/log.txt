@@ -1,0 +1,3 @@
+light check · http://localhost:3100/404 · 2026-09-29T15:32:19.346Z
+1440: status 404 · scroll 1440/1440 ok · axe 0 · targets under 32: none · contrast lowest 6, below AA: none · page errors none
+390: status 404 · scroll 390/390 ok · axe 0 · targets under 44: none · contrast lowest 6, below AA: none · page errors none
