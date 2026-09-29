@@ -27,6 +27,28 @@ TIP = "7dee3db7716ce3c106345368b971117f3edd6eb8"
 OLD = "fee2f775be3d79bba368571bba216fcd5efaa9fd"
 URL = "https://conestruct-aidgatzw7-rtmakaturas-projects.vercel.app"
 SITE_FILE = ["conestruct/site/lib/gate.ts"]
+# The files light-sheet-flip (5a966c2) changed: three site files plus its R25
+# ruling and light-check evidence -- the branch that read "no" before R26.
+LIGHT_SHEET_FLIP = [
+    "conestruct/site/app/globals.css",
+    "conestruct/site/components/coming-soon/ComingSoon.test.tsx",
+    "conestruct/site/components/coming-soon/ComingSoon.tsx",
+    *(
+        f"validation-artifacts/committed/coming-soon-gate/light-f1548ed/{f}"
+        for f in (
+            "axe-1440.json",
+            "axe-390.json",
+            "log.txt",
+            "sheet-1440-1x.png",
+            "sheet-390-1x.png",
+            "sheet-full-after-1440.png",
+            "sheet-full-after-390.png",
+            "sheet-full-before-1440.png",
+            "sheet-full-before-390.png",
+        )
+    ),
+    "validation-artifacts/committed/coming-soon-gate/rulings.md",
+]
 
 
 def deployed(state: str = "success", url: str | None = URL) -> list[dict]:
@@ -125,7 +147,14 @@ def test_a_failed_build_is_not_verified(tmp_path: Path) -> None:
         (["tests/fixtures/centerline/bayaud_colorado_pool.json"], "yes"),
         (["conestruct/site/lib/gate.ts", "src/api/render_api.py"], "no"),
         (["modal_app.py"], "no"),
+        # R26: committed evidence never reaches the build, so it doesn't count
+        # against frontend-only -- but it isn't a site change either: a branch
+        # of evidence alone has nothing left to decide on and stays "no".
         (["validation-artifacts/committed/ship-loop/checkpoint-1.md"], "no"),
+        (LIGHT_SHEET_FLIP, "yes"),
+        ([*LIGHT_SHEET_FLIP, "scripts/preview-url.ps1"], "no"),
+        (["conestruct/site/app/page.tsx", "validation-artifacts/probe/out.png"], "no"),
+        (["conestruct/site/app/page.tsx", "validation-artifacts/committed-notes.md"], "no"),
         (["scripts/preview-url.ps1"], "no"),
         (["conestruct/sitemap.txt"], "no"),
         ([], "no"),
