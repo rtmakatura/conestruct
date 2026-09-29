@@ -193,3 +193,7 @@ Replace the notify line "Email us and we'll write back once, when Conestruct ope
 "Want a heads-up? Email us and we'll tell you the day it opens."
 
 Light lane. If copy/unslop-public hasn't shipped, add this to it as one more commit and re-run the preview; otherwise do it as its own light-lane branch off main. Update any test that pins the old line. Standard report: before/after at 1440 and 390, verifier verdict, preview: line, the go.
+
+**R41 (Ryan, 2026-09-29)**, verbatim; supersedes R40's line:
+
+R41 (Ryan). The notify line becomes "Email us and we'll tell you the day it opens." (the heading keeps the question). Add to copy/unslop-public, same checks, then I'll ship.
