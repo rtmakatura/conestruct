@@ -1,0 +1,14 @@
+w1440 1-fresh: em dashes in prose 0, lone missing-value "—" 0
+w1440 2-picker-pinned: em dashes in prose 0, lone missing-value "—" 0
+w1440 3-located-side-owed: em dashes in prose 0, lone missing-value "—" 0
+w1440 4-laid-out: em dashes in prose 0, lone missing-value "—" 0
+w1440 5-generated: em dashes in prose 0, lone missing-value "—" 0
+w1440 citation-like text after generate: ["MUTCD § 6C.02"]
+w1440 page errors: none
+w390 1-fresh: em dashes in prose 0, lone missing-value "—" 0
+w390 2-picker-pinned: em dashes in prose 0, lone missing-value "—" 0
+w390 3-located-side-owed: em dashes in prose 0, lone missing-value "—" 0
+w390 4-laid-out: em dashes in prose 0, lone missing-value "—" 0
+w390 5-generated: em dashes in prose 0, lone missing-value "—" 0
+w390 citation-like text after generate: ["MUTCD § 6C.02"]
+w390 page errors: none

@@ -1,0 +1,65 @@
+conestruct.
+DEMO
+/
+MUTCD PLAN GENERATOR
+MUTCD 2023 · CDOT
+Method of Handling Traffic plan generator
+◌
+AWAITING LOCATION · NO SITE CHOSEN
+STEP 1 OF 4
+WHERE
+the work, not the first sign
+
+Where is the work?
+
+An address or a cross-street pair, the way an 811 ticket describes it. You can also drop a pin.
+
+Pick on map
+◌
+What's the job?
+kind of work, extent, side · pending: find the work first
+Generate plan
+Set a location first: pick it on the map or enter it manually.
+Output requires TCS review · every dimension cited to MUTCD or CDOT
+WORK ZONE · DEFINE
+Define Work Zone
+
+Drop a pin where the work starts, and review the detected road properties.
+
+SEARCH
+− HIDE COORDINATE ENTRY
+LAT / LNG DECIMAL DEGREES
+STREETS
+© Mapbox © OpenStreetMap Improve this map © Maxar
+SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK
+⚠ WHICH ROAD? · 3 DETECTED
+DETECTED FROM OSM: 180° (NORTH BROADWAY SOUTHBOUND, PRIMARY) · WAY 131232822
+CHANGE
+ROAD PROPERTIES
+↻ RE-DETECT ROADS
+Speed limit (mph)
+OSM · MEASURED
+Lanes per direction
+OSM · MEASURED
+5 lanes/direction detected (OSM), but plans draw at most 4 lanes per direction. Plan will use 4.
+Road type
+OSM · INFERRED
+Rural, undivided
+Rural, divided
+Urban arterial
+Freeway / interstate
+Divided
+OSM · INFERRED
+DIVIDED
+UNDIVIDED
+CORRIDOR EXTENT
+SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK.
+Cancel
+Save & Close
+
+Draft: not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.
+
+© 2026 CONESTRUCT · BUILT IN COLORADO
+TERMS
+PRIVACY
+OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT
