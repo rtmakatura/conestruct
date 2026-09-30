@@ -7,6 +7,11 @@
 #   .\scripts\ship.ps1 -FrontendCheckOnly -SiteUrl <url> -Sha <sha>
 #       (step 7 alone, read-only: is <url> serving a frontend current for <sha>?
 #        No merge, no push, no deploy.)
+#   .\scripts\ship.ps1 -Resume -Sha <sha>
+#       (R52: finish a ship whose frontend wait timed out.  Only while main is
+#        still <sha>: re-checks the backend, waits for the frontend again, then
+#        prints SHIP VERIFIED and runs the cleanup.  No merge, no push, no
+#        deploy.  A timeout prints this exact command; CC runs it itself.)
 #
 # Where it works (ship-loop ruling R4, validation-artifacts/committed/ship-loop/):
 # a dedicated ship worktree, .claude\worktrees\_ship, detached at origin/main and
@@ -29,7 +34,11 @@ param(
     [switch]$FrontendCheckOnly,
     [string]$SiteUrl = "https://www.conestruct.com",
     [string]$Sha = "",
-    [int]$FrontendTimeoutMin = 10,
+    # R52: 20, was 10.  On 2026-09-30 Vercel's production build of 2f27be3
+    # landed seconds after a 10-minute wait gave up, and the ship stopped
+    # before its cleanup.
+    [int]$FrontendTimeoutMin = 20,
+    [switch]$Resume,
     [switch]$Handoff
 )
 
@@ -112,11 +121,31 @@ function Test-Frontend($url, $head, $root, $timeoutMin) {
             Write-Host "  HEAD is $head"
             Write-Host "  Last seen: $note"
             Write-Host "  The frontend was not current within $timeoutMin minutes. Do NOT close the issue. Paste this output into the chat."
+            if (-not $FrontendCheckOnly) { Write-Host "  Resume (R52; re-checks, then finishes the ship and its cleanup): powershell -NoProfile -ExecutionPolicy Bypass -File $(Join-Path $ShipDir 'scripts\ship.ps1') -Resume -Sha $head" -ForegroundColor Yellow }
             exit 1
         }
         Write-Host "  $note - retrying in 20 s..."
         Start-Sleep -Seconds 20
     }
+}
+
+# --- The verdict and step 8, shared by a full ship and -Resume (R52) ---------
+# Only reached with the backend verified and $frontend a FRONTEND CURRENT line:
+# both NOT VERIFIED verdicts exit before any call to this.
+function Complete-Ship($head, $frontend) {
+    $short = $head.Substring(0, 7)
+    Write-Host ""
+    Write-Host "SHIP VERIFIED" -ForegroundColor Green
+    Write-Host "  Backend live at $short (healthz sha matches HEAD)."
+    Write-Host "  $frontend"
+    Write-Host "  Next: Ryan's browser check, then the close comment."
+
+    # --- 8. Branch cleanup (R31, R32) ----------------------------------------
+    # Only here, after SHIP VERIFIED.  Deletes every origin branch already in
+    # the new main, with its local branch and clean worktree; prints each sha;
+    # lists what it left for Ryan.  A failure here does not un-verify the ship.
+    & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\branch-cleanup.ps1") -Main $head -RepoDir $RepoDir
+    if ($LASTEXITCODE -ne 0) { Write-Host "CLEANUP INCOMPLETE: a deletion above failed. The ship itself is verified. Paste this output into the chat." -ForegroundColor Yellow }
 }
 
 if ($FrontendCheckOnly) {
@@ -167,8 +196,28 @@ if (-not $Handoff -and ((Get-FileHash $PSCommandPath).Hash -ne (Get-FileHash $ma
                   "-SiteUrl", $SiteUrl, "-FrontendTimeoutMin", $FrontendTimeoutMin)
     if ($Branch -ne "") { $handArgs += @("-Branch", $Branch) }
     if ($DryRun) { $handArgs += "-DryRun" }
+    if ($Resume) { $handArgs += @("-Resume", "-Sha", $Sha) }
     & powershell @handArgs
     exit $LASTEXITCODE
+}
+
+# --- R52. -Resume: finish a ship whose frontend wait timed out ---------------
+# Nothing is merged, pushed or deployed here.  The ship worktree is at the
+# freshly fetched origin/main, which must still be the sha the ship pushed: a
+# later push means a later ship owns the verdict and the cleanup.
+if ($Resume) {
+    if ($Sha -eq "") { Fail "-Resume needs -Sha, the sha the ship pushed." }
+    $head = (git rev-parse HEAD).Trim()
+    $want = "$(git rev-parse --verify -q ($Sha + '^{commit}'))".Trim()
+    if ($want -ne $head) { Fail "main is $($head.Substring(0, 7)), not ${Sha}: something was pushed after that ship. Nothing was verified or cleaned up. Paste this output into the chat." }
+    $headShort = $head.Substring(0, 7)
+    Write-Host "Resuming the ship of $headShort (R52): backend, frontend, then the cleanup." -ForegroundColor Cyan
+    $liveSha = ""
+    try { $liveSha = (Invoke-RestMethod -Uri $HealthUrl -TimeoutSec 15).sha } catch { $liveSha = "(healthz unreachable)" }
+    if ($liveSha -ne $head) { Fail "the backend reports $liveSha, not $headShort. Nothing was cleaned up. Paste this output into the chat." }
+    Write-Host "  Backend live at $headShort (healthz sha matches HEAD)." -ForegroundColor Green
+    Complete-Ship $head (Test-Frontend $SiteUrl $head $ShipDir $FrontendTimeoutMin)
+    exit 0
 }
 
 # --- 1b. gh login (R27) ------------------------------------------------------
@@ -278,16 +327,5 @@ Write-Host "  Backend live at $headShort (healthz sha matches HEAD)." -Foregroun
 # --- 7. Frontend verdict (exits 1 on a timeout) -------------------------------
 $frontend = Test-Frontend $SiteUrl $head $ShipDir $FrontendTimeoutMin
 
-Write-Host ""
-Write-Host "SHIP VERIFIED" -ForegroundColor Green
-Write-Host "  Backend live at $headShort (healthz sha matches HEAD)."
-Write-Host "  $frontend"
-Write-Host "  Next: Ryan's browser check, then the close comment."
-
-# --- 8. Branch cleanup (R31, R32) --------------------------------------------
-# Only here, after SHIP VERIFIED: both NOT VERIFIED verdicts exit above.  Deletes
-# every origin branch already in the new main, with its local branch and clean
-# worktree; prints each sha; lists what it left for Ryan.  A failure here does
-# not un-verify the ship.
-& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\branch-cleanup.ps1") -Main $head -RepoDir $RepoDir
-if ($LASTEXITCODE -ne 0) { Write-Host "CLEANUP INCOMPLETE: a deletion above failed. The ship itself is verified. Paste this output into the chat." -ForegroundColor Yellow }
+# --- 8. SHIP VERIFIED, then the branch cleanup (Complete-Ship, above) --------
+Complete-Ship $head $frontend

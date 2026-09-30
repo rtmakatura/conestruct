@@ -227,3 +227,11 @@ From `cc-prompt-r48-r50.md` (Ryan, 2026-09-29). R48 and R49 are quoted in `comin
 > ## Report
 >
 > One stacked branch (snapshot + R50 + R48 + R49), usual report: verifier verdict verbatim, before/after screenshots for R48, the scroll check for R49, CI green on the tip, `preview:` line, and the go.
+
+## R52, verbatim
+
+Ryan, 2026-09-30, on the `ship/r51` ship report (after "Browser check PASS. Leave the cleanup for the next ship."):
+
+> R52 (Ryan): a slow Vercel shouldn't leave a ship half-done. Raise the frontend wait from 10 to 20 minutes. If it still times out, ship.ps1 keeps checking in the background-safe way you choose, or prints one resume command that re-checks the frontend and then runs the cleanup; CC runs that itself without asking me. Stack R52 as the first commit of the notes arc.
+
+*CC's choice: the resume command. `ship.ps1 -Resume -Sha <sha>` runs only while main is still that sha; it re-checks the backend, waits for the frontend again (20 minutes), then prints SHIP VERIFIED and runs the cleanup. It merges, pushes and deploys nothing.*
