@@ -128,10 +128,12 @@ out center tags;
 
 
 def _element_coord(el: dict[str, Any]) -> tuple[float, float] | None:
-    if "lat" in el and "lon" in el:
+    # #304 (c): a key that is present but null (or not a number) is no
+    # coordinate -- the same predicate the road geometry uses.
+    if _has_coords(el):
         return float(el["lat"]), float(el["lon"])
     center = el.get("center")
-    if center and "lat" in center and "lon" in center:
+    if _has_coords(center):
         return float(center["lat"]), float(center["lon"])
     return None
 

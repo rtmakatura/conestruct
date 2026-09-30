@@ -217,3 +217,27 @@ def test_generate_anyway_after_a_scan_fault_renders_with_the_disclosure(
     assert scan["status"] == "unavailable"
     assert scan["proceeded_anyway"] is True
     assert scan["disclosure"] == ss.NOT_CHECKED_DISCLOSURE
+
+
+# --------------------------------------------------------------------------- #
+# (c) the scan half's coordinate reader: present-but-null is no coordinate
+# --------------------------------------------------------------------------- #
+
+
+@pytest.mark.parametrize(
+    "el",
+    [
+        {"type": "node", "lat": None, "lon": None},
+        {"type": "node", "lat": 39.7, "lon": None},
+        {"type": "way", "center": {"lat": None, "lon": -105.0}},
+        {"type": "way", "center": None},
+        {"type": "way", "lat": "39.7", "lon": "-105.0"},
+    ],
+)
+def test_element_coord_reads_no_coordinate_as_none(el: dict[str, Any]) -> None:
+    assert sd._element_coord(el) is None
+
+
+def test_element_coord_still_reads_real_coordinates() -> None:
+    assert sd._element_coord({"lat": 39.7, "lon": -105.0}) == (39.7, -105.0)
+    assert sd._element_coord({"center": {"lat": 39.7, "lon": -105.0}}) == (39.7, -105.0)
