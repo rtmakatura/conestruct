@@ -284,8 +284,14 @@ Write-Host "Pushing $headShort to main..." -ForegroundColor Cyan
 # gh only (R27): the empty helper first clears the Git Credential Manager, which
 # otherwise runs first, finds two github.com accounts and fails trying to ask
 # which (r26-r27-redproof.md).  -c appends, so the clear is load-bearing.
-git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin HEAD:main
-if ($LASTEXITCODE -ne 0) { Fail "git push failed. Paste the output into the chat." }
+# R56: git writes even a good push ("To https://...", "a..b HEAD -> main") to
+# stderr.  Run with its output captured (as CC runs it), raw native stderr came
+# back as a red NativeCommandError block on every successful push, so a real
+# failure looked like every other push.  Captured as plain lines instead; the
+# exit code alone says whether it worked.
+$pushOut = git -c credential.helper= -c "credential.helper=!gh auth git-credential" push origin HEAD:main 2>&1 | ForEach-Object { "$_" }
+$pushOut | ForEach-Object { Write-Host "  $_" }
+if ($LASTEXITCODE -ne 0) { Fail "The push to main failed (its output is above). Paste the output into the chat." }
 Write-Host "main is now $headShort. Frontend: Vercel builds it, or skips it when nothing in the site changed (step 7 checks which)." -ForegroundColor Green
 
 # --- 4. Backend deploy ------------------------------------------------------
