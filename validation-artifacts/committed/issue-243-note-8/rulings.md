@@ -82,3 +82,7 @@ Labels: bug, priority-medium, audit-trail, backend, p2. Opened 2026-09-04.
 > Build, verify, and give me the go.
 >
 > After #243 ships: investigate #304 (the Federal site-scan crash), with a checkpoint first.
+
+## R57, verbatim (Ryan, 2026-09-30, on the build report at `1a7ac59`)
+
+> R57 (Ryan): fix the PDF median note on this branch before shipping. On shoulder closures, plan_sheet.py:2507 must not cite Note 8 as the reason for left-side signs. Match what the generator comments now say: our choice beyond the minimum, citing Sheet 2 Note 28 (verify the Note 28 text by subject and page before citing it). On plans where Note 8 does apply, the note keeps its Note 8 citation. Add it to the churn table, re-run the verifier, and give me the go again.
