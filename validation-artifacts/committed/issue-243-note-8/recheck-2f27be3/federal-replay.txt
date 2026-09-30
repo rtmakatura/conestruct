@@ -1,0 +1,6 @@
+status 500 in 19.9 s
+body: {"detail":"render failed: 'NoneType' object is not subscriptable"}
+---
+status 500 in 17.6 s
+body: {"detail":"render failed: 'NoneType' object is not subscriptable"}
+---

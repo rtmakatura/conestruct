@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-243-note-8\src\api\render_api.py", line 1712, in render_audit
+    projection = _audit_projection_for(scenario)
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-243-note-8\src\api\render_api.py", line 1621, in _audit_projection_for
+    return _audit_projection_and_params_for(scenario)[0]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-243-note-8\src\api\render_api.py", line 1631, in _audit_projection_and_params_for
+    placements, params, site_records, _night, approaches, site_scan = _placements_for(scenario)
+                                                                      ~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-243-note-8\src\api\render_api.py", line 763, in _placements_for
+    site_scan = run_site_scan(scenario, params)
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-243-note-8\src\api\site_scan.py", line 792, in run_site_scan
+    buckets = detect_along_corridor(
+        corridor,
+    ...<5 lines>...
+        distance_origin=(inputs.lat, inputs.lng) if work_start else None,
+    )
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-243-note-8\src\rules\site_detection.py", line 794, in detect_along_corridor
+    buckets["road_bearing"] = _bearing_from_elements(road_elements, anchor_lat, anchor_lng)
+                              ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-243-note-8\src\rules\site_detection.py", line 981, in _bearing_from_elements
+    mid_lat = (a["lat"] + b["lat"]) / 2.0
+                          ~^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+500 {"detail":"render failed: 'NoneType' object is not subscriptable"}

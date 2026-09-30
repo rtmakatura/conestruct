@@ -8,6 +8,34 @@ checked 2026-09-26 (`rulings.md`).
 **Evidence:** `probes/` (every number below is printed by a committed probe; the file names are given
 where each number is used).
 
+## Re-checked at `2f27be3`, 2026-09-30 (`recheck-2f27be3/README.md`)
+
+Still unruled. Nothing below this section moved. The probes were re-run at `2f27be3` = `main` = prod
+`healthz`, wired through the coming-soon gate:
+- `note8-probe.txt` (prod counts, replay lists, option scores, negative case) is byte-identical to
+  the 09-26 run apart from its healthz line.
+- `churn-predict.txt` is byte-identical.
+- `tiering-expectations.json` is unchanged.
+- Every `file:line` cited below still holds. The Note 8 quote was re-read off
+  `s630-1-2026.pdf` p. 150, "Standard Sheet No. 2 of 26".
+
+**The repro on prod today (`recheck-2f27be3/prod/`):**
+- **N Broadway SB,** 39.73370, −104.98753 (way 131232822, primary, `oneway=yes`, divided, side
+  west). The scan finds a sidewalk.
+  - Strip: `VERIFIED · 2 PLAN FLAGS`.
+  - NEEDS YOU row: ⚠ `Signs on both sides of divided highway` /
+    `needs attention · Required: True. Signs placed: 6 left, 8 right.`
+  - Audit entry: `{"pass": false, "label": "Signs on both sides of divided highway", "citation":
+    "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: True. Signs placed: 6
+    left, 8 right."}`, `plan_flags.compliance_fails = 1`, `is_clean = false`.
+- **The Denver demo pin,** 39.7269, −104.9873, the same road. Sidewalk and bike lane: `6 left,
+  10 right`, 3 plan flags.
+
+**New since 09-26:** #243's own pin (N Federal Blvd) now 502s on prod, 3 of 3. The cause is a
+crash in the site scan (`site_detection.py:981`, a `None` geometry node), unrelated to Note 8. When
+the scan answers, the same body gives `7 left, 11 right`, #243's original numbers. **Acceptance
+therefore runs on Broadway and the demo pin**, with Federal added once that crash has its own fix.
+
 ## The answer, in brief
 
 1. **What Note 8 governs** (quoted in §1): "All warning and regulatory signs", on divided highways,
