@@ -2361,7 +2361,9 @@ def _draw_legend(
 
     On divided highways an extra ROAD GEOMETRY section calls out the
     median band symbol and notes that left-side advance warning signs
-    are placed in the median (S-630-1 Sheet 2 General Note 8)."""
+    are placed in the median, and why: S-630-1 Sheet 2 General Note 8
+    where it applies; on a shoulder closure, which the note exempts, the
+    house choice beyond Sheet 2 Note 28's minimum (#243, R57)."""
     device_types_used = sorted(
         {p.device_type for p in placements if p.device_type != DeviceType.SIGN_GENERIC},
         key=lambda dt: dt.value,
@@ -2501,10 +2503,23 @@ def _draw_legend(
         c.setFillColor(colors.HexColor("#404040"))
         c.drawString(box_x + 8, yy, "Left-side advance signs sit in the median")
 
+    # R57 (#243): on a shoulder closure Note 8 doesn't require the left-side
+    # signs -- it exempts "only one shoulder is closed" (ruling R54) -- so
+    # they are the generator's house choice beyond the typicals' minimum:
+    # S-630-1 Sheet 2 Note 28, "The typical cases depicted in this standard
+    # reflect the minimum requirements" (PDF p. 150).  Elsewhere Note 8
+    # requires them.  Both strings fit the narrowest legend (184.4 pt vs
+    # 228.8 pt inside the four-box footer).
+    median_reason = (
+        "by choice, beyond the minimum (S-630-1 Sheet 2 Note 28)."
+        if params.closure_type == "shoulder"
+        else "per S-630-1 Sheet 2 General Note 8."
+    )
+
     def _median_note_2(yy: float) -> None:
         c.setFont("Helvetica-Oblique", 7)
         c.setFillColor(colors.HexColor("#404040"))
-        c.drawString(box_x + 8, yy, "per S-630-1 Sheet 2 General Note 8.")
+        c.drawString(box_x + 8, yy, median_reason)
 
     # (pre_gap, advance_after, draw, counts_as_row).  The walk below
     # glues a header to the unit that follows, so a header never renders

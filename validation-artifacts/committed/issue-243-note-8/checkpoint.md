@@ -424,6 +424,7 @@ reads the exception.
 | Axe baselines | none exist (axe runs only in live-check scripts, with no baseline file) | none |
 | `.sys-event` / #198 | none | none |
 | Wire | **no request payload changes** (senders: `GeneratorShell.tsx:472, 530, 650, 1084`; `OutputCards.tsx:351`; `QuotePanel.tsx:250, 276`; `lib/render-proxy.ts`). The response keeps its shape; only the values of `pass` / `detail` / the counts change | same |
+| **Plan-sheet PDF legend, ROAD GEOMETRY note line 2** *(added by R57, 2026-09-30, after the build; predicted before its diff)* | — | Every divided **shoulder** plan: `per S-630-1 Sheet 2 General Note 8.` → `by choice, beyond the minimum (S-630-1 Sheet 2 Note 28).` (`plan_sheet.py` `_draw_legend`). Divided lane closure and every other divided kind: unchanged. Undivided: no ROAD GEOMETRY section, unchanged. Same two lines, same 9 pt / row-height advances, so no layout moves (184.4 pt vs the narrowest legend's 228.8 pt inner width). **Recorded baselines: 0** (`git grep` finds the old string in no test baseline or committed evidence; full suite unchanged, 2420 passed). New: two rendered-PDF tests, red on the old line for the shoulder case |
 
 ---
 

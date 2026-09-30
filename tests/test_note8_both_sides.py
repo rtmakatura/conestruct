@@ -200,3 +200,39 @@ def test_shoulder_missing_left_sign_is_not_a_note8_fail() -> None:
     assert any(
         v.rule_id == "CO_SIGN_BOTH_SIDES" for v in validate_co_signs_both_sides(broken, params)
     )
+
+
+# --------------------------------------------------------------------------- #
+# R57: the plan sheet's median note gives the same reason as the audit row.
+# Rendered output, read back (Rule 11).
+# --------------------------------------------------------------------------- #
+
+
+def _legend_text(params: ScenarioParams, plan, tmp_path) -> str:
+    import pypdfium2 as pdfium
+
+    from src.rendering.plan_sheet import render_plan_sheet
+
+    path = tmp_path / f"{params.closure_type}.pdf"
+    render_plan_sheet(plan, params, output_path=str(path))
+    pdf = pdfium.PdfDocument(str(path))
+    try:
+        return pdf[0].get_textpage().get_text_range()
+    finally:
+        pdf.close()
+
+
+def test_shoulder_plan_median_note_cites_note_28(tmp_path) -> None:
+    params = _shoulder_divided()
+    text = _legend_text(params, _shoulder_plan(params), tmp_path)
+    assert "Left-side advance signs sit in the median" in text
+    assert "by choice, beyond the minimum (S-630-1 Sheet 2 Note 28)." in text
+    assert "per S-630-1 Sheet 2 General Note 8." not in text
+
+
+def test_divided_lane_closure_median_note_keeps_note_8(tmp_path) -> None:
+    params = _lane_divided()
+    text = _legend_text(params, _plan(params), tmp_path)
+    assert "Left-side advance signs sit in the median" in text
+    assert "per S-630-1 Sheet 2 General Note 8." in text
+    assert "Note 28" not in text
