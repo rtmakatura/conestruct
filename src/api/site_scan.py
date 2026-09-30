@@ -124,7 +124,9 @@ DETECTION_TO_FLAG: dict[str, str] = {
 # returns its result beside the buckets.  Excluded BY NAME, like the
 # others — it is a measurement about the road at the anchor, not a
 # detection bucket, and must never appear in ``provenance.buckets``.
-_NON_BUCKET_KEYS: frozenset[str] = frozenset({"error", "overpass", "road_bearing"})
+# ``dropped`` (#304, R60/R61): how many scan elements fell outside the
+# scan's own boxes -- an internal count, never on the wire.
+_NON_BUCKET_KEYS: frozenset[str] = frozenset({"error", "overpass", "road_bearing", "dropped"})
 
 
 def _fetch_fields(buckets: Mapping[str, Any]) -> dict[str, Any]:

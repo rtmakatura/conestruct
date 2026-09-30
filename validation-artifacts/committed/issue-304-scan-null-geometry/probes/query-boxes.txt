@@ -1,0 +1,44 @@
+federal query: scan boxes [(39.72642, -105.026214, 39.73865, -105.023875)]; around radius 50.0 m at 39.7342642691076,-105.02504468168067
+
+== federal-primary: scan 257 elements; outside the scan box: 25; largest 227 m
+          227 m  way 346568290 footway None center
+          173 m  way 701321617 footway None center
+          156 m  way 578585055 footway None center
+          135 m  way 646094947 footway None center
+          104 m  way 324135171 footway None center
+           81 m  way 348175079 footway None center
+   road 8 ways; bounds not meeting the around-circle's box: 0
+              0 m  way 781946491 residential 'West 11th Avenue'
+              0 m  way 1043682774 primary 'North Federal Boulevard'
+              0 m  way 1043682775 primary 'North Federal Boulevard'
+              0 m  way 1043682776 primary 'North Federal Boulevard'
+              0 m  way 1043682778 primary 'North Federal Boulevard'
+              0 m  way 1043682779 primary 'North Federal Boulevard'
+              0 m  way 1043682783 primary_link None
+              0 m  way 1043682784 primary_link None
+
+== federal-fallback: scan 257 elements; outside the scan box: 25; largest 227 m
+          227 m  way 346568290 footway None center
+          173 m  way 701321617 footway None center
+          156 m  way 578585055 footway None center
+          135 m  way 646094947 footway None center
+          104 m  way 324135171 footway None center
+           81 m  way 348175079 footway None center
+   road 9 ways; bounds not meeting the around-circle's box: 1
+     14,137,304 m  way 42125193 secondary 'Лермонтов көшесі'
+              0 m  way 781946491 residential 'West 11th Avenue'
+              0 m  way 1043682774 primary 'North Federal Boulevard'
+              0 m  way 1043682775 primary 'North Federal Boulevard'
+              0 m  way 1043682776 primary 'North Federal Boulevard'
+              0 m  way 1043682778 primary 'North Federal Boulevard'
+              0 m  way 1043682779 primary 'North Federal Boulevard'
+              0 m  way 1043682783 primary_link None
+              0 m  way 1043682784 primary_link None
+
+== lakewood (recorded fixture): scan 146 elements; outside the scan box: 6; largest 34 m
+           34 m  way 119742396 footway None center
+           17 m  way 132688496 cycleway 'Belmar Park Trail' center
+           12 m  way 119725429 cycleway 'Alameda Avenue Multi-Use Path' center
+           10 m  way 141891798 cycleway None center
+            6 m  way 1049439698 cycleway None center
+            4 m  way 119758546 footway None center

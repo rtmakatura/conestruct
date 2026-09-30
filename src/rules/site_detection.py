@@ -791,8 +791,14 @@ def detect_along_corridor(
         # set is the geometry-carrying half; the scan half is what the
         # buckets are built from, exactly as before the fold.
         elements, road_elements = split_folded_elements(elements)
-        buckets["road_bearing"] = _bearing_from_elements(road_elements, anchor_lat, anchor_lng)
+        buckets["road_bearing"] = _bearing_from_elements(
+            road_elements, anchor_lat, anchor_lng, radius_m=road_radius_m
+        )
         buckets["road_bearing"]["element_count"] = len(road_elements)
+    # #304 (R60, R61): scan elements outside the scan's own boxes are
+    # dropped before anything is built from them; the count is internal.
+    elements, scan_dropped = _within_scan_boxes(elements, [bbox, *extra])
+    buckets["dropped"] = {"scan_elements": scan_dropped}
     if "overpass" in buckets:
         # The scan half's count, so this figure keeps meaning what it meant
         # before the fold — the number of elements the BUCKETS were built
@@ -945,7 +951,7 @@ def detect_road_bearing(
         out["error"] = error or "Overpass request failed"
         return out
 
-    return _bearing_from_elements(payload.get("elements", []), lat, lng, out)
+    return _bearing_from_elements(payload.get("elements", []), lat, lng, out, radius_m=radius_m)
 
 
 def _has_coords(point: Any) -> bool:
@@ -957,11 +963,71 @@ def _has_coords(point: Any) -> bool:
     )
 
 
+# #304 (R60): an element must fall inside the box its own half of the query
+# asked for -- a Denver scan never uses a road in Kazakhstan.
+#
+# Road ways come back with ``out geom`` and carry ``bounds``, so the test is
+# exact: the way's bounds must meet the around-circle's bounding box.
+#
+# Scan elements come back with ``out center``: a node's point, or a way's
+# centre, and a way that meets the box can have its centre outside it by up
+# to its own half-extent.  CHOSEN (Rule 12): 5 km.  Measured on the real
+# answers (validation-artifacts/committed/issue-304-scan-null-geometry/
+# probes/query-boxes.txt): the largest legitimate gap is 227 m (Federal)
+# and 34 m (the Lakewood fixture); the stray way that crashed the scan sat
+# 14,137 km away.
+_SCAN_ELEMENT_MARGIN_M: float = 5000.0
+_M_PER_DEG_LAT: float = 111_320.0
+
+
+def _gap_to_box_m(lat: float, lon: float, box: tuple[float, float, float, float]) -> float:
+    """Metres from a point to ``box`` = (south, west, north, east); 0 inside."""
+    s, w, n, e = box
+    clat, clon = min(max(lat, s), n), min(max(lon, w), e)
+    dlat = (lat - clat) * _M_PER_DEG_LAT
+    dlon = (lon - clon) * _M_PER_DEG_LAT * math.cos(math.radians(clat))
+    return math.hypot(dlat, dlon)
+
+
+def _within_scan_boxes(
+    elements: list[dict[str, Any]], boxes: list[tuple[float, float, float, float]]
+) -> tuple[list[dict[str, Any]], int]:
+    """(kept, dropped): scan elements whose point or centre is more than
+    ``_SCAN_ELEMENT_MARGIN_M`` outside every scan box are dropped.  An element
+    with no coordinate is kept -- it is already recorded as unclassifiable."""
+    kept: list[dict[str, Any]] = []
+    for el in elements:
+        coord = _element_coord(el)
+        if coord is None or min(_gap_to_box_m(*coord, b) for b in boxes) <= _SCAN_ELEMENT_MARGIN_M:
+            kept.append(el)
+    return kept, len(elements) - len(kept)
+
+
+def _way_meets_circle(way: dict[str, Any], lat: float, lng: float, radius_m: float) -> bool:
+    """A road way's bounds (else its resolvable points' box) meet the box of
+    the ``around:radius_m`` circle at (lat, lng).  No resolvable extent: no."""
+    b = way.get("bounds")
+    if isinstance(b, dict) and all(
+        isinstance(b.get(k), (int, float)) for k in ("minlat", "minlon", "maxlat", "maxlon")
+    ):
+        s, w, n, e = b["minlat"], b["minlon"], b["maxlat"], b["maxlon"]
+    else:
+        pts = [p for p in way.get("geometry") or [] if _has_coords(p)]
+        if not pts:
+            return False
+        s, n = min(p["lat"] for p in pts), max(p["lat"] for p in pts)
+        w, e = min(p["lon"] for p in pts), max(p["lon"] for p in pts)
+    dlat = radius_m / _M_PER_DEG_LAT
+    dlng = radius_m / (_M_PER_DEG_LAT * math.cos(math.radians(lat)))
+    return not (n < lat - dlat or s > lat + dlat or e < lng - dlng or w > lng + dlng)
+
+
 def _bearing_from_elements(
     elements: list[dict[str, Any]],
     lat: float,
     lng: float,
     out: dict[str, Any] | None = None,
+    radius_m: float | None = None,
 ) -> dict[str, Any]:
     """The bearing derivation, with no transport of its own (#256 ruling c).
 
@@ -976,7 +1042,14 @@ def _bearing_from_elements(
     # #304 (R60, R61): internal only, never on the wire -- how many geometry
     # points carried no coordinates and were skipped.
     out["points_skipped"] = 0
+    out["elements_dropped"] = 0
     ways = [el for el in elements if el.get("type") == "way"]
+    if radius_m is not None:
+        # #304 (R60): the query asked for ways around (lat, lng); a way whose
+        # extent doesn't meet that circle's box is not an answer to it.
+        inside = [w for w in ways if _way_meets_circle(w, lat, lng, radius_m)]
+        out["elements_dropped"] = len(ways) - len(inside)
+        ways = inside
     if not ways:
         return out
 

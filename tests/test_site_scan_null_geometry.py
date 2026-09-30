@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -114,3 +115,67 @@ def test_the_fallback_answer_renders_a_plan(
     r = _audit(client, monkeypatch, FALLBACK)
     assert r.status_code == 200, r.text[:300]
     assert r.json()["sections"]["site_scan"]["status"] == "ok"
+
+
+# --------------------------------------------------------------------------- #
+# (d) an element outside its own query box is dropped (R60)
+# --------------------------------------------------------------------------- #
+
+_VOLATILE = {"measured_at", "duration_ms"}
+
+
+def _scan_view(audit: dict[str, Any]) -> dict[str, Any]:
+    scan = {k: v for k, v in audit["sections"]["site_scan"].items() if k not in _VOLATILE}
+    return {**audit, "sections": {**audit["sections"], "site_scan": scan}}
+
+
+def test_the_stray_way_is_dropped_and_the_plan_matches_the_primary(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """R60's proof, on the real fallback capture: the Kazakh way is dropped,
+    and the whole audit equals the primary mirror's (clock fields aside)."""
+    fallback = _audit(client, monkeypatch, FALLBACK)
+    ss.clear_memo()
+    primary = _audit(client, monkeypatch, PRIMARY)
+    assert fallback.status_code == primary.status_code == 200
+    assert _scan_view(fallback.json()) == _scan_view(primary.json())
+
+
+def test_road_ways_outside_the_around_circle_are_dropped_and_counted() -> None:
+    lat, lng, r = *PIN, 50.0
+    road = [e for e in FALLBACK["elements"] if e.get("geometry")]
+    out = sd._bearing_from_elements(road, lat, lng, radius_m=r)
+    assert out["elements_dropped"] == 1  # 42125193, 14,137 km away
+    ref = sd._bearing_from_elements(
+        [e for e in PRIMARY["elements"] if e.get("geometry")], lat, lng, radius_m=r
+    )
+    assert ref["elements_dropped"] == 0
+    for key in ("bearing_deg", "oneway", "way_id", "highway"):
+        assert out[key] == ref[key]
+
+
+def test_scan_elements_far_outside_the_box_are_dropped_and_counted() -> None:
+    box = (39.726, -105.027, 39.739, -105.023)
+    near = {"type": "way", "id": 1, "center": {"lat": 39.7405, "lon": -105.025}}  # ~170 m out
+    node_in = {"type": "node", "id": 2, "lat": 39.73, "lon": -105.025}
+    far = {"type": "way", "id": 3, "center": {"lat": 52.29, "lon": 76.95}}
+    no_coord = {"type": "way", "id": 4}
+    kept, dropped = sd._within_scan_boxes([near, node_in, far, no_coord], [box])
+    assert [e["id"] for e in kept] == [1, 2, 4]
+    assert dropped == 1
+
+
+def test_the_measured_answers_lose_no_scan_element() -> None:
+    """Every scan element of both real Federal answers is kept (the largest
+    legitimate gap measured is 227 m; probes/query-boxes.txt)."""
+    probes = (
+        Path(__file__).parents[1] / "validation-artifacts/committed/issue-304-scan-null-geometry"
+    )
+    q = (probes / "probes/out/federal-folded-query.txt").read_text("utf-8")
+    m = re.search(r"node\(([-\d.,]+)\)", q)
+    assert m is not None
+    box = tuple(float(x) for x in m.group(1).split(","))
+    for payload in (PRIMARY, FALLBACK):
+        scan = [e for e in payload["elements"] if not e.get("geometry")]
+        kept, dropped = sd._within_scan_boxes(scan, [box])
+        assert dropped == 0 and len(kept) == 257
