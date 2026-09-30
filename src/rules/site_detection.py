@@ -948,6 +948,15 @@ def detect_road_bearing(
     return _bearing_from_elements(payload.get("elements", []), lat, lng, out)
 
 
+def _has_coords(point: Any) -> bool:
+    """A geometry point with a numeric ``lat`` and ``lon`` (#304)."""
+    return (
+        isinstance(point, dict)
+        and isinstance(point.get("lat"), (int, float))
+        and isinstance(point.get("lon"), (int, float))
+    )
+
+
 def _bearing_from_elements(
     elements: list[dict[str, Any]],
     lat: float,
@@ -964,6 +973,9 @@ def _bearing_from_elements(
     """
     if out is None:
         out = {"bearing_deg": None, "oneway": None, "way_id": None, "highway": None}
+    # #304 (R60, R61): internal only, never on the wire -- how many geometry
+    # points carried no coordinates and were skipped.
+    out["points_skipped"] = 0
     ways = [el for el in elements if el.get("type") == "way"]
     if not ways:
         return out
@@ -975,9 +987,16 @@ def _bearing_from_elements(
 
     for way in ways:
         geometry = way.get("geometry") or []
+        # #304: a mirror can list a node it can't resolve as ``null`` (seen:
+        # overpass.openstreetmap.fr, way 42125193).  A point without both
+        # coordinates is not a point, so a segment touching one is not a
+        # segment: skip it, never read it.
+        out["points_skipped"] += sum(1 for p in geometry if not _has_coords(p))
         if len(geometry) < 2:
             continue
         for a, b in zip(geometry, geometry[1:], strict=False):
+            if not (_has_coords(a) and _has_coords(b)):
+                continue
             mid_lat = (a["lat"] + b["lat"]) / 2.0
             mid_lng = (a["lon"] + b["lon"]) / 2.0
             d = _haversine(lat, lng, mid_lat, mid_lng)

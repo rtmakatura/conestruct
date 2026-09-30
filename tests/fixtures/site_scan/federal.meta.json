@@ -1,0 +1,9 @@
+{
+  "issue": "#304",
+  "captured_at_utc": "2026-09-30T17:52Z",
+  "query": "validation-artifacts/committed/issue-304-scan-null-geometry/probes/out/federal-folded-query.txt (the folded scan + road query the backend sent for the Federal request, 3fe27c3)",
+  "federal_primary.json": "that query POSTed to https://overpass-api.de/api/interpreter (osm_base 2026-09-30T17:52:53Z): 257 scan elements, 8 road ways, no null points",
+  "federal_fallback_null_points.json": "the same query POSTed to https://overpass.openstreetmap.fr/api/interpreter (same osm_base): the same 257 scan elements, plus way 42125193 (Pavlodar, KZ) with null geometry points at 15 and 39",
+  "federal_request.json": "the /api/render/audit body the site sent for #243's Federal pin on prod, 2026-09-30 (validation-artifacts/committed/issue-243-note-8/recheck-2f27be3/prod/federal-audit-request.json)",
+  "source": "validation-artifacts/committed/issue-304-scan-null-geometry/probes/compare_mirrors.py (compare.txt)"
+}
