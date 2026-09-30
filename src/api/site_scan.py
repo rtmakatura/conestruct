@@ -791,15 +791,23 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         # validate_corridor_against_osm would have sent on its own trip
         # (_VALIDATION_SEARCH_RADIUS_M), so the bearing's candidate pool is
         # unchanged — only the number of round trips is.
-        buckets = detect_along_corridor(
-            corridor,
-            budget_s=SCAN_BUDGET_S,
-            bearing_anchor=(inputs.lat, inputs.lng, _VALIDATION_SEARCH_RADIUS_M),
-            # #290: the flagger's opposing approach, and distances measured
-            # from the pin the operator marked, never the moved anchor.
-            approaches=[("opposing", opposing)] if opposing is not None else None,
-            distance_origin=(inputs.lat, inputs.lng) if work_start else None,
-        )
+        try:
+            buckets = detect_along_corridor(
+                corridor,
+                budget_s=SCAN_BUDGET_S,
+                bearing_anchor=(inputs.lat, inputs.lng, _VALIDATION_SEARCH_RADIUS_M),
+                # #290: the flagger's opposing approach, and distances measured
+                # from the pin the operator marked, never the moved anchor.
+                approaches=[("opposing", opposing)] if opposing is not None else None,
+                distance_origin=(inputs.lat, inputs.lng) if work_start else None,
+            )
+        except Exception as exc:  # noqa: BLE001
+            # #304 (b): "Never raises" holds.  A fault inside the scan -- a
+            # third-party answer the parser didn't expect -- is the scan's
+            # own "unavailable" state, named, and never memoised; the plan
+            # takes the ruled no-answer path, never a 500.  (#256's fold put
+            # the bearing here; its standalone trip was always guarded.)
+            buckets = {"error": f"scan failed: {type(exc).__name__}: {exc}"}
         duration_ms = int(round((time.monotonic() - t0) * 1000))
 
     error = buckets.get("error")

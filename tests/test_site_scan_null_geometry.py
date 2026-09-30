@@ -179,3 +179,41 @@ def test_the_measured_answers_lose_no_scan_element() -> None:
         scan = [e for e in payload["elements"] if not e.get("geometry")]
         kept, dropped = sd._within_scan_boxes(scan, [box])
         assert dropped == 0 and len(kept) == 257
+
+
+# --------------------------------------------------------------------------- #
+# (b) the scan never raises: any fault is its own "unavailable" state
+# --------------------------------------------------------------------------- #
+
+
+def _boom(*_a: Any, **_k: Any) -> Any:
+    raise RuntimeError("a parse fault nobody foresaw")
+
+
+def test_a_scan_fault_is_the_honest_refusal_not_a_500(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(ss, "detect_along_corridor", _boom)
+    r = client.post(
+        "/render/audit", json=REQUEST, headers={"Authorization": f"Bearer {_TEST_SECRET}"}
+    )
+    assert r.status_code == 400, r.text[:300]
+    detail = r.json()["detail"]
+    assert detail["error"] == "site_scan_unavailable"
+    assert detail["site_scan"]["status"] == "unavailable"
+    assert "RuntimeError: a parse fault nobody foresaw" in detail["site_scan"]["error"]
+    assert detail["recovery"]["proceed_field"] == "site_scan.proceed_if_unavailable"
+    assert ss._MEMO == {}  # a fault is never memoised
+
+
+def test_generate_anyway_after_a_scan_fault_renders_with_the_disclosure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(ss, "detect_along_corridor", _boom)
+    body = {**REQUEST, "site_scan": {"proceed_if_unavailable": True}}
+    r = client.post("/render/audit", json=body, headers={"Authorization": f"Bearer {_TEST_SECRET}"})
+    assert r.status_code == 200, r.text[:300]
+    scan = r.json()["sections"]["site_scan"]
+    assert scan["status"] == "unavailable"
+    assert scan["proceeded_anyway"] is True
+    assert scan["disclosure"] == ss.NOT_CHECKED_DISCLOSURE
