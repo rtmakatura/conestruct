@@ -12,3 +12,4 @@ copy/unslop-platform-inventory 99b159faccc083be9699907d48b5669029067fef -- carri
 ship-cleanup-superseded c1658529940978701e311797b400edceff04064c -- carried by ship/r42-r45 (R44, 7577897)
 sheet-flair 5bc9a252ddc271728cacce50bdff138aa70b7a48 -- carried by ship/r42-r45 (R42, 7fdd6ff e9c01f1)
 copy/leftovers c41e0097d15af35c9581beabac481eb1f8ba7f57 -- carried by ship/r42-r45 (R43, d6d7971 f2a9f0b; d6d7971 differs from 4012524 only by the rulings.md conflict resolution)
+issue-243-note-8 336784f190cca7ba9dd62d727a5a4b77d0111bc0 -- carried by issue-243-note-8-r2 (rulings.md e3875cd, checkpoint.md d09f932, rebased; R55: no force push)
