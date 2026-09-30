@@ -1,0 +1,3 @@
+# road_bearing_null_points.ts, run 2026-09-30 from the main checkout's conestruct/site at c055262 (npx vite-node --config vitest.config.ts)
+primary (overpass-api.de): HTTP 200 {"scan_status":"ok","candidates":[{"way_id":"1043682774","highway_class":"primary","name":"North Federal Boulevard",... (truncated at 160 chars by the probe)
+fallback (overpass.openstreetmap.fr): THREW TypeError: Cannot read properties of null (reading 'lat')
