@@ -73,6 +73,12 @@ Labels: bug, priority-medium, audit-trail, backend, p2. Opened 2026-09-04.
 
 ---
 
-## The ruling, verbatim
+## The ruling, verbatim (Ryan, 2026-09-30, on `checkpoint.md` as re-checked at `2f27be3`)
 
-*(Not yet ruled. Appended when Ryan rules on `checkpoint.md`.)*
+> R53. Option (a′) approved, with the "Not counted: …" line as proposed. R9-9's exclusion stays marked CHOSEN.
+> R54. The shoulder exception goes in as the second commit. Note 8 says "except where only one shoulder is closed", and a shoulder closure is exactly that case. The 53 detail-string changes are accepted as predicted.
+> R55. Push as issue-243-note-8-r2 and list the old issue-243-note-8 in superseded.txt (R46). No force push.
+> R56. Small, ride along on the #243 branch: ship.ps1's push prints a PowerShell "NativeCommandError" block even when the push succeeds (git writes progress to stderr). Make a successful push print cleanly, so a real error stands out.
+> Build, verify, and give me the go.
+>
+> After #243 ships: investigate #304 (the Federal site-scan crash), with a checkpoint first.
