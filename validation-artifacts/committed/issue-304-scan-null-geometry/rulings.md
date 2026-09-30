@@ -58,6 +58,12 @@ Labels: bug, priority-high, backend. Opened 2026-09-30.
 
 ---
 
-## The ruling on the checkpoint, verbatim
+## The ruling on the checkpoint, verbatim (Ryan, 2026-09-30, on `checkpoint.md` at `b62e1bf`)
 
-*(Not yet ruled. Appended when Ryan rules on `checkpoint.md`.)*
+> Rulings on #304 (quote verbatim in rulings.md):
+> R60. Q1: (a) approved, plus (d): the scan drops any element whose geometry falls outside its own query box (a Denver scan never uses a road in Kazakhstan). Count dropped elements and skipped points internally. Prove (d) with the real fallback capture: the stray way is dropped, and the result matches the primary's.
+> R61. Q2: yes, internal only, no wire change.
+> R62. Q3: commit the two .gitignore lines on this branch. After the ship, restore the main checkout's .gitignore so it's clean. You have my word for that one restore.
+> R63. Q4: missing CI run stops at once. Q5: order (a), (d), (b), (c), R58, R59, each red-first.
+> Artifacts are never deleted until the re-run that replaces them is proven (standing caution); note it in the report, no further action.
+> Build, verify, give me the go.
