@@ -82,3 +82,5 @@ validation-artifacts/*
 
 # Design-tool export artifact (never committed)
 design-bundle*
+.vercel
+.env*
