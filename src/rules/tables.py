@@ -301,9 +301,37 @@ class ColoradoOverrides:
         "one_way_street",
     )
 
+    # The signs Note 8's per-side count leaves out (#243, ruling R53).
+    # Note 8 governs "All warning and regulatory signs".
+    # Source: MUTCD 11th Ed. §6I.02 ¶10, p. 812 -- M4-9a is a TTC guide
+    # sign (Chapter 6I): "The Pedestrian/Bicyclist Detour (M4-9a) sign
+    # ... should be used where a pedestrian/bicyclist detour route has
+    # been established because of the closing of a pedestrian/bicycle
+    # facility to through traffic."  Outside the note's words.
+    note8_guide_signs_not_counted: tuple[str, ...] = ("M4-9a",)
+    # CHOSEN (Rule 12, ruling R53): the SIDEWALK CLOSED family is
+    # regulatory (MUTCD 11th Ed. §6G.10, p. 797, "SIDEWALK CLOSED Signs
+    # (R9-9, R9-10, R9-11, and R9-11a)"), so Note 8's words reach it.  It
+    # is left out on its placement rule, §6G.10 ¶02: "The SIDEWALK CLOSED
+    # (R9-9) sign should be installed at the beginning of the closed
+    # sidewalk" -- at the sidewalk, for pedestrians, not on both sides of
+    # the roadway for traffic.  A reading, not a quote.
+    note8_pedestrian_signs_not_counted: tuple[str, ...] = ("R9-9", "R9-10", "R9-11", "R9-11a")
+
 
 # Singleton instance for import convenience.
 COLORADO_OVERRIDES: ColoradoOverrides = ColoradoOverrides()
+
+
+def note8_counts_sign(label: str | None) -> bool:
+    """Whether Note 8's both-sides count includes a sign with this label.
+
+    One predicate for the audit row and the layout validator (#243).
+    """
+    return label not in (
+        COLORADO_OVERRIDES.note8_guide_signs_not_counted
+        + COLORADO_OVERRIDES.note8_pedestrian_signs_not_counted
+    )
 
 
 @dataclass(frozen=True)

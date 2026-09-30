@@ -51,7 +51,7 @@
     }
   },
   "scanned-lakewood": {
-    "ledger": { "changed": 2, "attention": 5, "checked": 12, "pending": 2 },
+    "ledger": { "changed": 2, "attention": 4, "checked": 13, "pending": 2 },
     "facts": {
       "jur:delta:0": "attention",
       "jur:delta:1": "attention",
@@ -62,7 +62,7 @@
       "audit:spacing": "checked",
       "audit:advance": "checked",
       "audit:case": "checked",
-      "audit:colorado:check:0": "attention",
+      "audit:colorado:check:0": "checked",
       "audit:colorado:check:1": "checked",
       "audit:colorado:check:2": "checked",
       "audit:colorado:check:3": "checked",
@@ -80,7 +80,7 @@
     }
   },
   "scanned-not-checked": {
-    "ledger": { "changed": 1, "attention": 5, "checked": 9, "pending": 1 },
+    "ledger": { "changed": 1, "attention": 4, "checked": 10, "pending": 1 },
     "facts": {
       "jur:delta:0": "attention",
       "jur:delta:1": "attention",
@@ -91,7 +91,7 @@
       "audit:spacing": "checked",
       "audit:advance": "checked",
       "audit:case": "checked",
-      "audit:colorado:check:0": "attention",
+      "audit:colorado:check:0": "checked",
       "audit:colorado:check:1": "checked",
       "audit:colorado:check:2": "checked",
       "audit:colorado:check:3": "checked",
@@ -101,7 +101,7 @@
     }
   },
   "scanned-dismissed": {
-    "ledger": { "changed": 1, "attention": 5, "checked": 13, "pending": 3 },
+    "ledger": { "changed": 1, "attention": 4, "checked": 14, "pending": 3 },
     "facts": {
       "jur:delta:0": "attention",
       "jur:delta:1": "attention",
@@ -112,7 +112,7 @@
       "audit:spacing": "checked",
       "audit:advance": "checked",
       "audit:case": "checked",
-      "audit:colorado:check:0": "attention",
+      "audit:colorado:check:0": "checked",
       "audit:colorado:check:1": "checked",
       "audit:colorado:check:2": "checked",
       "audit:colorado:check:3": "checked",
@@ -131,7 +131,7 @@
     }
   },
   "scanned-asserted": {
-    "ledger": { "changed": 3, "attention": 5, "checked": 11, "pending": 3 },
+    "ledger": { "changed": 3, "attention": 4, "checked": 12, "pending": 3 },
     "facts": {
       "jur:delta:0": "attention",
       "jur:delta:1": "attention",
@@ -142,7 +142,7 @@
       "audit:spacing": "checked",
       "audit:advance": "checked",
       "audit:case": "checked",
-      "audit:colorado:check:0": "attention",
+      "audit:colorado:check:0": "checked",
       "audit:colorado:check:1": "checked",
       "audit:colorado:check:2": "checked",
       "audit:colorado:check:3": "checked",

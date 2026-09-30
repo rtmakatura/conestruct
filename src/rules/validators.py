@@ -27,6 +27,7 @@ from src.rules.spacing import (
     shoulder_taper_length,
     taper_length,
 )
+from src.rules.tables import note8_counts_sign
 
 # ---------------------------------------------------------------------------
 # Tolerances and thresholds
@@ -939,6 +940,10 @@ def validate_co_signs_both_sides(
         if p.offset_ft == 0:
             # Centerline-mounted signs (e.g. flagger PCMS) are inherently
             # visible to both directions and don't need a mirror.
+            continue
+        if not note8_counts_sign(p.label):
+            # Facility signs Note 8 doesn't count (#243) -- the audit
+            # row's predicate, so the two checks agree.
             continue
         has_mirror = any(
             j != i

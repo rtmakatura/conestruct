@@ -1,0 +1,59 @@
+
+== grid_site_pedestrian_facility
+  NOTE8 plan_flags.compliance_fails: 1 -> 0
+  NOTE8 plan_flags.is_clean: False -> True
+  NOTE8 sections.colorado.all_pass: False -> True
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 9 right.' -> 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9 (sidewalk signs, posted at the sidewalk).'
+  NOTE8 sections.colorado.checks[0].pass: False -> True
+  NOTE8 sections.colorado.fail_count: 1 -> 0
+
+== grid_site_bicycle_facility
+  NOTE8 plan_flags.compliance_fails: 1 -> 0
+  NOTE8 plan_flags.is_clean: False -> True
+  NOTE8 sections.colorado.all_pass: False -> True
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 9 right.' -> 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 M4-9a (bike-lane signs, posted at the facility).'
+  NOTE8 sections.colorado.checks[0].pass: False -> True
+  NOTE8 sections.colorado.fail_count: 1 -> 0
+
+== scanned-lakewood
+  NOTE8 plan_flags.compliance_fails: 1 -> 0
+  NOTE8 sections.colorado.all_pass: False -> True
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 6 left, 10 right.' -> 'Required: True. Signs counted: 6 left, 6 right. Not counted: 2 R9-9, 2 M4-9a (sidewalk and bike-lane signs, posted at the facility).'
+  NOTE8 sections.colorado.checks[0].pass: False -> True
+  NOTE8 sections.colorado.fail_count: 1 -> 0
+
+== scanned-not-checked
+  NOTE8 plan_flags.compliance_fails: 1 -> 0
+  NOTE8 plan_flags.is_clean: False -> True
+  NOTE8 sections.colorado.all_pass: False -> True
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 9 right.' -> 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9 (sidewalk signs, posted at the sidewalk).'
+  NOTE8 sections.colorado.checks[0].pass: False -> True
+  NOTE8 sections.colorado.fail_count: 1 -> 0
+
+== scanned-dismissed
+  NOTE8 plan_flags.compliance_fails: 1 -> 0
+  NOTE8 sections.colorado.all_pass: False -> True
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 6 left, 8 right.' -> 'Required: True. Signs counted: 6 left, 6 right. Not counted: 2 M4-9a (bike-lane signs, posted at the facility).'
+  NOTE8 sections.colorado.checks[0].pass: False -> True
+  NOTE8 sections.colorado.fail_count: 1 -> 0
+
+== scanned-asserted
+  NOTE8 plan_flags.compliance_fails: 1 -> 0
+  NOTE8 sections.colorado.all_pass: False -> True
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 11 right.' -> 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9, 2 M4-9a (sidewalk and bike-lane signs, posted at the facility).'
+  NOTE8 sections.colorado.checks[0].pass: False -> True
+  NOTE8 sections.colorado.fail_count: 1 -> 0
+
+== control-lakewood
+  (no Note 8 leaf moved)
+
+== adv-ni-denver
+  (no Note 8 leaf moved)
+
+== audit-shoulder-full.json (re-derived from its adjustment records)
+  {'pass': False, 'label': 'Signs on both sides of divided highway', 'citation': 'CDOT S-630-1 (July 2026) Sheet 2, General Note 8', 'detail': 'Required: True. Signs placed: 7 left, 11 right.'}
+  -> {'pass': True, 'label': 'Signs on both sides of divided highway', 'citation': 'CDOT S-630-1 (July 2026) Sheet 2, General Note 8', 'detail': 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9, 2 M4-9a (sidewalk and bike-lane signs, posted at the facility).'}
+  colorado fail_count 0, all_pass True; plan_flags {'validation_warnings': 0, 'compliance_fails': 0, 'v1_limitations': 2, 'is_clean': False}
+
+== result
+only Note 8 leaves moved; written

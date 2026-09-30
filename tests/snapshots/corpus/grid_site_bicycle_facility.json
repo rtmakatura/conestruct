@@ -5,8 +5,8 @@
     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
   },
   "plan_flags": {
-    "compliance_fails": 1,
-    "is_clean": false,
+    "compliance_fails": 0,
+    "is_clean": true,
     "v1_limitations": 0,
     "validation_warnings": 0
   },
@@ -54,13 +54,13 @@
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
     },
     "colorado": {
-      "all_pass": false,
+      "all_pass": true,
       "checks": [
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
-          "detail": "Required: True. Signs placed: 7 left, 9 right.",
+          "detail": "Required: True. Signs counted: 7 left, 7 right. Not counted: 2 M4-9a (bike-lane signs, posted at the facility).",
           "label": "Signs on both sides of divided highway",
-          "pass": false
+          "pass": true
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
@@ -81,7 +81,7 @@
           "pass": true
         }
       ],
-      "fail_count": 1,
+      "fail_count": 0,
       "info_items": [
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",

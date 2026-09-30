@@ -44,6 +44,7 @@ from src.rules.tables import (
     CO_CITATIONS,
     COLORADO_OVERRIDES,
     TAPER_LENGTH_FORMULA_THRESHOLD_MPH,
+    note8_counts_sign,
 )
 from src.rules.validators import (
     ApproachParams,
@@ -172,6 +173,29 @@ def _ft(value: float) -> int:
     precision — only the rendered number rounds.
     """
     return round(value)
+
+
+def _note8_not_counted_text(signs: list[DevicePlacement]) -> str:
+    """The Note 8 detail's "Not counted" sentence (#243, ruling R53).
+
+    Labels in order of first appearance, each with its count.  The reason
+    names the facility: the sidewalk family, the bike-lane detour sign, or
+    both.  The bike-only wording is CHOSEN (R53 ruled the two proposed
+    strings; a plan with the bike sign and no sidewalk sign needs a third).
+    """
+    counts: dict[str, int] = {}
+    for p in signs:
+        counts[p.label or ""] = counts.get(p.label or "", 0) + 1
+    listed = ", ".join(f"{n} {label}" for label, n in counts.items())
+    ped = any(label in COLORADO_OVERRIDES.note8_pedestrian_signs_not_counted for label in counts)
+    bike = any(label in COLORADO_OVERRIDES.note8_guide_signs_not_counted for label in counts)
+    if ped and bike:
+        why = "sidewalk and bike-lane signs, posted at the facility"
+    elif ped:
+        why = "sidewalk signs, posted at the sidewalk"
+    else:
+        why = "bike-lane signs, posted at the facility"
+    return f"Not counted: {listed} ({why})."
 
 
 def build_audit_trail(
@@ -853,23 +877,28 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     # 5. Colorado (CDOT S-630-1) requirements
     # ------------------------------------------------------------------
-    sign_left = sum(
-        1
-        for p in mainline_placements
-        if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft < 0
-    )
-    sign_right = sum(
-        1
-        for p in mainline_placements
-        if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft > 0
-    )
-    both_sides_pass = sign_left == sign_right and sign_left > 0 if params.is_divided else True
+    # Note 8 counts "All warning and regulatory signs" (#243): where it
+    # applies, the facility signs it doesn't govern are left out of the
+    # count and named in the detail (Rule 10).  Where it doesn't apply the
+    # count is every sign, as before.
+    mainline_signs = [p for p in mainline_placements if p.device_type == DeviceType.SIGN_GENERIC]
+    both_sides_required = params.is_divided
+    counts = [not both_sides_required or note8_counts_sign(p.label) for p in mainline_signs]
+    counted = [p for p, c in zip(mainline_signs, counts, strict=True) if c]
+    not_counted = [p for p, c in zip(mainline_signs, counts, strict=True) if not c]
+    sign_left = sum(1 for p in counted if p.offset_ft < 0)
+    sign_right = sum(1 for p in counted if p.offset_ft > 0)
+    both_sides_pass = sign_left == sign_right and sign_left > 0 if both_sides_required else True
     both_sides = {
         "pass": both_sides_pass,
         "label": "Signs on both sides of divided highway",
         "citation": CO_CITATIONS.signs_both_sides,
         "detail": (
-            f"Required: {params.is_divided}. Signs placed: {sign_left} left, {sign_right} right."
+            f"Required: {both_sides_required}. Signs counted: {sign_left} left, "
+            f"{sign_right} right. {_note8_not_counted_text(not_counted)}"
+            if not_counted
+            else f"Required: {both_sides_required}. Signs placed: {sign_left} left, "
+            f"{sign_right} right."
         ),
     }
 
