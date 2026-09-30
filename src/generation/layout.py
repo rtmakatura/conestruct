@@ -222,7 +222,12 @@ def generate_shoulder_closure_divided(
     placements: list[DevicePlacement] = []
 
     # 1. Advance warning signs — mirrored on both sides of the divided
-    # roadway per S-630-1 Sheet 2 General Note 8.  Each W-series sign is placed
+    # roadway.  House choice, CHOSEN (#243, ruling R54): S-630-1 Sheet 2
+    # General Note 8 does NOT require it here -- the note exempts a plan
+    # "where only one shoulder is closed (ex: Case 11 on Sheet 7)", and this
+    # is that plan.  Mirroring goes beyond the note's minimum (Sheet 2 Note
+    # 28: the typicals "reflect the minimum requirements").  Every "mirrored"
+    # below in this function is this choice.  Each W-series sign is placed
     # on the right shoulder (+offset) and the median side (-offset) at
     # the same station so drivers in either lane see the same advance
     # cues regardless of where they are in the carriageway.
@@ -253,8 +258,8 @@ def generate_shoulder_closure_divided(
     # position 7 — emitted 500 ft upstream of taper start on freeway
     # no-reduction shoulder closures.  Sheet 14 Cases 26/27 (reduced
     # work-zone speed) omit W5-1 per case_specific_notes; gate is the
-    # inverse of the Fines Double / G4 / G5 predicate.  Mirrored per CDOT
-    # S-630-1 Sheet 2, General Note 8.
+    # inverse of the Fines Double / G4 / G5 predicate.  Mirrored:
+    # the house mirroring (step 1).
     is_reduced = params.work_zone_speed_mph is not None and params.work_zone_speed_mph < speed
     if params.road_type == "freeway" and not is_reduced:
         w5_1_station = taper_start_station + 500.0
@@ -287,7 +292,7 @@ def generate_shoulder_closure_divided(
     # plan_sheet._deoverlap_signs_pairwise spreads them vertically at
     # render time.
     #
-    # Mirrored per S-630-1 Sheet 2 General Note 8.
+    # Mirrored: the house mirroring (step 1).
     if params.road_type == "freeway" and params.closure_type == "shoulder":
         w21_5aR_upstream_station = sign_a_station  # first W21-5aR (already placed above)
         w5_1_would_be_station = taper_start_station + 500.0
@@ -383,7 +388,7 @@ def generate_shoulder_closure_divided(
     # signed length, but the plaques themselves stay inside the work zone
     # so they do not interleave with the advance-warning A/B/C cluster
     # checked in ``validate_advance_warning_signs``.  Mirrored on both
-    # sides of the divided roadway per S-630-1 Sheet 2 General Note 8.
+    # sides of the divided roadway: the house mirroring (step 1).
     total_zone_length = sign_c_station
     n_plaques = co_construction_plaques(total_zone_length)
     for k in range(n_plaques):
@@ -446,7 +451,7 @@ def generate_shoulder_closure_divided(
         )
 
     # 8. END ROAD WORK sign (G20-2) past the downstream taper, mirrored
-    # on both sides per S-630-1 Sheet 2 General Note 8.
+    # on both sides: the house mirroring (step 1).
     end_sign_station = (wz_end_station - ds_taper_len) - 100.0
     placements.append(
         DevicePlacement(
@@ -467,7 +472,7 @@ def generate_shoulder_closure_divided(
 
     # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
     # zone, just past the buffer.  Pairs with G20-2 as bookends per
-    # MUTCD §6H.35/§6H.36.  Mirrored on both sides per S-630-1 Sheet 2 General Note 8.
+    # MUTCD §6H.35/§6H.36.  Mirrored on both sides: the house mirroring (step 1).
     begin_sign_station = wz_start_station + 100.0
     placements.append(
         DevicePlacement(
@@ -491,8 +496,8 @@ def generate_shoulder_closure_divided(
     # reduced below the nominal posted speed.  Envelope spans
     # wz_start+500 (R2-10) to wz_end-500 (R2-11), with G20-5P/R2-6P
     # assemblies at 2640 ft intervals.  Downstream R2-1 restores posted
-    # speed 500 ft past R2-11.  Mirrored on both sides per S-630-1 Sheet 2
-    # General Note 8.  Case 11 generic 500 ft offsets used uniformly across
+    # speed 500 ft past R2-11.  Mirrored on both sides: the house mirroring (step 1).
+    # Case 11 generic 500 ft offsets used uniformly across
     # speeds; Sheet 12 explicitly permits engineer adjustment.
     if params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph:
         r2_10_station = wz_start_station + 500.0
@@ -553,7 +558,7 @@ def generate_shoulder_closure_divided(
         # the W3-5 advisory + Fines Double envelope.  Anchored to the
         # upstream-most Note-4 (G20-5P) plaque (the first G20-5P
         # drivers encounter); reuses an existing convention rather than
-        # inventing a new station constant.  Mirrored per S-630-1 Sheet 2 Note 8.
+        # inventing a new station constant.  Mirrored: the house mirroring (step 1).
         entrance_r2_1_station = (n_plaques - 0.5) * wz_len / n_plaques
         placements.append(
             DevicePlacement(
@@ -578,7 +583,7 @@ def generate_shoulder_closure_divided(
         # prior sign 530 ft further upstream steps the advisory 15 mph
         # closer to posted, rounded down to the nearest 5 mph, floored
         # at the target.  Anchored 530 ft upstream of R2-10 per Sheet 14
-        # Cases 26/27 fixture geometry.  Mirrored per S-630-1 Sheet 2 Note 8.
+        # Cases 26/27 fixture geometry.  Mirrored: the house mirroring (step 1).
         n_w3_5 = co_speed_reduction_signs(speed, params.work_zone_speed_mph)
         for k in range(n_w3_5):
             w3_5_speed = max(

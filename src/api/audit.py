@@ -881,8 +881,14 @@ def build_audit_trail(
     # applies, the facility signs it doesn't govern are left out of the
     # count and named in the detail (Rule 10).  Where it doesn't apply the
     # count is every sign, as before.
+    #
+    # It applies on a divided road "except where only one shoulder is
+    # closed (ex: Case 11 on Sheet 7)" (ruling R54): a shoulder closure is
+    # that case.  Its row says so rather than "Required: False", which
+    # stays the undivided road's wording.
     mainline_signs = [p for p in mainline_placements if p.device_type == DeviceType.SIGN_GENERIC]
-    both_sides_required = params.is_divided
+    one_shoulder_closed = params.is_divided and params.closure_type == "shoulder"
+    both_sides_required = params.is_divided and not one_shoulder_closed
     counts = [not both_sides_required or note8_counts_sign(p.label) for p in mainline_signs]
     counted = [p for p, c in zip(mainline_signs, counts, strict=True) if c]
     not_counted = [p for p, c in zip(mainline_signs, counts, strict=True) if not c]
@@ -894,7 +900,10 @@ def build_audit_trail(
         "label": "Signs on both sides of divided highway",
         "citation": CO_CITATIONS.signs_both_sides,
         "detail": (
-            f"Required: {both_sides_required}. Signs counted: {sign_left} left, "
+            f"Not required: one shoulder closed (Note 8's Case 11 exception). "
+            f"Signs placed: {sign_left} left, {sign_right} right."
+            if one_shoulder_closed
+            else f"Required: {both_sides_required}. Signs counted: {sign_left} left, "
             f"{sign_right} right. {_note8_not_counted_text(not_counted)}"
             if not_counted
             else f"Required: {both_sides_required}. Signs placed: {sign_left} left, "

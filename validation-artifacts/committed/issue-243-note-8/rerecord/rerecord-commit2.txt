@@ -1,0 +1,176 @@
+
+== grid_duration_long
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_lanewidth_10
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_lanewidth_11
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_lanewidth_13
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_lanewidth_14
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_lanewidth_8
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_lanewidth_9
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_night
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_reduced_55_45
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 16 left, 16 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 16 left, 16 right."
+
+== grid_reduced_55_50
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 16 left, 16 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 16 left, 16 right."
+
+== grid_reduced_65_60
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 16 left, 16 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 16 left, 16 right."
+
+== grid_reduced_75_65
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 16 left, 16 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 16 left, 16 right."
+
+== grid_reduced_75_70
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 16 left, 16 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 16 left, 16 right."
+
+== grid_road_freeway
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 12 left, 12 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 12 left, 12 right."
+
+== grid_road_rural_undivided
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_road_urban_arterial
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_site_adjacent_interchange
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_site_adjacent_intersection
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_site_bicycle_facility
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 M4-9a (bike-lane signs, posted at the facility).' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 9 right."
+
+== grid_site_driveways_present
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_site_limited_sight_distance
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_site_pedestrian_facility
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9 (sidewalk signs, posted at the sidewalk).' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 9 right."
+
+== grid_site_school_zone
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 8 left, 8 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 8 left, 8 right."
+
+== grid_speed_20
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_25
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_30
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_35
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_40
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_45
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_50
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_60
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_65
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_70
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_speed_75
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_undivided
+  (no Note 8 leaf moved)
+
+== grid_worklen_1000
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_worklen_10560
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 10 left, 10 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 10 left, 10 right."
+
+== grid_worklen_500
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_worklen_5000
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 8 left, 8 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 8 left, 8 right."
+
+== grid_worktype_guardrail
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_worktype_other
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_worktype_signal_cabinet
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== grid_worktype_survey
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== scanned-lakewood
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs counted: 6 left, 6 right. Not counted: 2 R9-9, 2 M4-9a (sidewalk and bike-lane signs, posted at the facility).' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 6 left, 10 right."
+
+== scanned-not-checked
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9 (sidewalk signs, posted at the sidewalk).' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 9 right."
+
+== scanned-dismissed
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs counted: 6 left, 6 right. Not counted: 2 M4-9a (bike-lane signs, posted at the facility).' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 6 left, 8 right."
+
+== scanned-asserted
+  NOTE8 sections.colorado.checks[0].detail: 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9, 2 M4-9a (sidewalk and bike-lane signs, posted at the facility).' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 11 right."
+
+== control-lakewood
+  (no Note 8 leaf moved)
+
+== adv-ni-denver
+  (no Note 8 leaf moved)
+
+== audit-shoulder-full.json (re-derived from its adjustment records)
+  {'pass': True, 'label': 'Signs on both sides of divided highway', 'citation': 'CDOT S-630-1 (July 2026) Sheet 2, General Note 8', 'detail': 'Required: True. Signs counted: 7 left, 7 right. Not counted: 2 R9-9, 2 M4-9a (sidewalk and bike-lane signs, posted at the facility).'}
+  -> {'pass': True, 'label': 'Signs on both sides of divided highway', 'citation': 'CDOT S-630-1 (July 2026) Sheet 2, General Note 8', 'detail': "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 11 right."}
+
+== audit_flagger_reduction_fines_double_required.json: unchanged
+
+== audit_shoulder_65mph.json
+  NOTE8 detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== audit_shoulder_75mph.json
+  NOTE8 detail: 'Required: True. Signs placed: 12 left, 12 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 12 left, 12 right."
+
+== audit_shoulder_no_reduction.json
+  NOTE8 detail: 'Required: True. Signs placed: 7 left, 7 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 7 left, 7 right."
+
+== audit_shoulder_reduction_10.json
+  NOTE8 detail: 'Required: True. Signs placed: 14 left, 14 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 14 left, 14 right."
+
+== audit_shoulder_reduction_25.json
+  NOTE8 detail: 'Required: True. Signs placed: 15 left, 15 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 15 left, 15 right."
+
+== audit_shoulder_reduction_65mph_envelope.json
+  NOTE8 detail: 'Required: True. Signs placed: 17 left, 17 right.' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 17 left, 17 right."
+
+== audit_shoulder_urban25_quadratic.json: unchanged
+
+== result
+only Note 8 leaves moved; written

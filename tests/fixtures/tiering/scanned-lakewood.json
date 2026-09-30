@@ -67,7 +67,7 @@
         "checks": [
           {
             "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
-            "detail": "Required: True. Signs counted: 6 left, 6 right. Not counted: 2 R9-9, 2 M4-9a (sidewalk and bike-lane signs, posted at the facility).",
+            "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 6 left, 10 right.",
             "label": "Signs on both sides of divided highway",
             "pass": true
           },

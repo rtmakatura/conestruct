@@ -140,3 +140,63 @@ def test_validator_agrees_with_the_row() -> None:
     broken = [p for p in plan if p is not w20]
     (v,) = validate_co_signs_both_sides(broken, params)
     assert "W20-1" in v.message
+
+
+# --------------------------------------------------------------------------- #
+# The exception (ruling R54): "except where only one shoulder is closed (ex:
+# Case 11 on Sheet 7)".  A shoulder closure on a divided road is that case.
+# --------------------------------------------------------------------------- #
+
+
+def _shoulder_divided() -> ScenarioParams:
+    """The N Broadway SB shape: shoulder, 30 mph urban, 4 lanes, divided."""
+    return ScenarioParams(
+        speed_mph=30,
+        num_lanes=4,
+        closure_type="shoulder",
+        road_type="urban_low",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=10.5,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+
+
+def _shoulder_plan(params, **flags):
+    from src.generation.layout import generate_shoulder_closure_divided
+
+    placements, _records = apply_site_adjustments(
+        generate_shoulder_closure_divided(params), params, flags
+    )
+    return placements
+
+
+def test_shoulder_closure_is_the_exception() -> None:
+    """Broadway's plan: 6 left, 8 right with the sidewalk signs; not required."""
+    params = _shoulder_divided()
+    plan = _shoulder_plan(params, pedestrian_facility=True)
+    left, right = len(_signs(plan, "left")), len(_signs(plan, "right"))
+    assert (left, right) == (6, 8)
+    row = _note8(plan, params)
+    assert row["pass"] is True
+    assert row["detail"] == (
+        "Not required: one shoulder closed (Note 8's Case 11 exception). "
+        "Signs placed: 6 left, 8 right."
+    )
+
+
+def test_shoulder_missing_left_sign_is_not_a_note8_fail() -> None:
+    """The note's words: one closed shoulder needs no second side.
+
+    The generator still mirrors (house choice, CHOSEN), and the layout
+    validator still holds it to that; only the Note 8 row stands down.
+    """
+    params = _shoulder_divided()
+    plan = _shoulder_plan(params)
+    w20 = next(p for p in _signs(plan, "left") if p.label == "W20-1")
+    broken = [p for p in plan if p is not w20]
+    assert _note8(broken, params)["pass"] is True
+    assert any(
+        v.rule_id == "CO_SIGN_BOTH_SIDES" for v in validate_co_signs_both_sides(broken, params)
+    )

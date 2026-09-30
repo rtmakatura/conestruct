@@ -295,7 +295,9 @@ class ColoradoOverrides:
     # and as directed by the Engineer, except where only one shoulder
     # is closed (ex: Case 11 on Sheet 7)."
     # Divided highways are covered separately by ``ScenarioParams.is_divided``
-    # and are not listed here (divided-ness is not a road_type).
+    # and are not listed here (divided-ness is not a road_type).  The
+    # "only one shoulder is closed" exception is read in the audit row
+    # (``closure_type == "shoulder"``, #243 ruling R54).
     both_sides_signage_required_on: tuple[str, ...] = (
         "multi_lane_ramp",
         "one_way_street",

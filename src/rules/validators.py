@@ -922,6 +922,11 @@ def validate_co_signs_both_sides(
     right shoulder is non-compliant and the UI must surface that
     failure rather than passing the layout silently.
 
+    On a shoulder closure it guards the generator's house mirroring, not
+    Note 8: the note exempts "only one shoulder is closed" (#243, ruling
+    R54; the audit row reads "Not required").  It runs on the raw
+    generator output only, so it holds the generator to its own choice.
+
     NOTE: General Note 8 also extends to one-way streets and multi-lane
     ramps, but those facilities are not currently expressible through
     ``ScenarioParams`` (they are not Table 6B-1 road categories).

@@ -64,7 +64,7 @@
       "checks": [
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
-          "detail": "Required: True. Signs placed: 14 left, 14 right.",
+          "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 14 left, 14 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },

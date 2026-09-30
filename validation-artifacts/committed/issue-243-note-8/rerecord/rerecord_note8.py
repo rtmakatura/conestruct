@@ -8,12 +8,17 @@ the code BEFORE the change and AFTER it, through the real API path
 
   dump  <dir>   recompute every fixture on the code at RERECORD_ROOT (default
                 this checkout) and write <dir>/<name>.json
-  apply <before> <after> [--check]
+  apply <before> <after> [--check] [--exception]
                 list every leaf that differs between before and after; fail
                 if any is outside the Note 8 leaves; otherwise write those
-                leaves (after's values) into the recordings, and nothing else
+                leaves (after's values) into the recordings, and nothing else.
+                --exception (commit 2, ruling R54): also re-word the
+                scenario-less files below for the one-shoulder exception.
 
-The site's audit-shoulder-full.json has no scenario, so its row is
+Scenario-less files.  The top-level tests/snapshots/audit_*.json baselines
+are rebuilt inline by their tests, which then compare, so a derived edit
+there is checked by the test that reads it.  The site's
+audit-shoulder-full.json has no scenario either, so its row is
 re-derived from its own site-adjustment records: 2 R9-9 per pedestrian
 record and 2 M4-9a per bicycle record, all on the right
 (site_adjustments.py:171-172, :195/:197), the same derivation the churn
@@ -48,7 +53,15 @@ TIERING_STUB = {
     "control-lakewood": "down",
     "adv-ni-denver": "down",
 }
-CORPUS = ("grid_site_pedestrian_facility", "grid_site_bicycle_facility")
+# Every locked grid snapshot (commit 1 moved two of them; the exception moves
+# every divided shoulder row).
+CORPUS = tuple(sorted(p.stem for p in (TARGET / "tests/snapshots/corpus").glob("grid_*.json")))
+# The top-level audit baselines the tests read.  The _pre_ files are inactive
+# archives (tests/test_snapshot_encoding.py:26) and are never edited.
+TOP_LEVEL = tuple(
+    sorted(p for p in (TARGET / "tests/snapshots").glob("audit_*.json") if "_pre_" not in p.name)
+)
+EXCEPTION_TEXT = "Not required: one shoulder closed (Note 8's Case 11 exception). "
 
 ALLOWED = (
     re.compile(r"^sections\.colorado\.checks\[\d+\]\.(pass|detail)$"),
@@ -159,7 +172,7 @@ def recording(name: str) -> tuple[Path, dict, dict]:
     return p, d, d["audit"]
 
 
-def apply(before: Path, after: Path, write: bool) -> int:
+def apply(before: Path, after: Path, write: bool, exception: bool) -> int:
     bad: list[str] = []
     for name in (*CORPUS, *TIERING_STUB):
         b = leaves(json.loads((before / f"{name}.json").read_text("utf-8")))
@@ -196,7 +209,17 @@ def apply(before: Path, after: Path, write: bool) -> int:
     flags = [x["flag"] for x in fx["sections"].get("site_adjustments") or []]
     m = re.fullmatch(r"Required: True\. Signs placed: (\d+) left, (\d+) right\.", row["detail"])
     dropped = [s for f, s in (("pedestrian_facility", "2 R9-9"), ("bicycle_facility", "2 M4-9a")) if f in flags]
-    if m and dropped:
+    counted = re.match(r"Required: True\. Signs counted: (\d+) left, (\d+) right\. ", row["detail"])
+    shoulder = fx["sections"]["taper"]["closure_type"] == "shoulder"
+    if exception and shoulder and counted:
+        # Commit 1's row back to the raw counts: the dropped signs sit right.
+        left, right = int(counted.group(1)), int(counted.group(2)) + 2 * len(dropped)
+        new = {**row, "pass": True, "detail": f"{EXCEPTION_TEXT}Signs placed: {left} left, {right} right."}
+        print(f"  {row}\n  -> {new}")
+        checks[i] = new
+        if write:
+            write_snapshot(SITE_FIXTURE, fx)
+    elif m and dropped:
         left, right = int(m.group(1)), int(m.group(2)) - 2 * len(dropped)
         why = (
             "sidewalk and bike-lane signs, posted at the facility" if len(dropped) == 2
@@ -220,6 +243,25 @@ def apply(before: Path, after: Path, write: bool) -> int:
     else:
         print(f"  unchanged: {row}")
 
+    if exception:
+        for path in TOP_LEVEL:
+            doc = json.loads(path.read_text("utf-8"))
+            checks = doc["sections"]["colorado"]["checks"]
+            k = next((j for j, c in enumerate(checks) if c["label"] == LABEL), None)
+            row = checks[k] if k is not None else {"detail": ""}
+            mm = re.fullmatch(r"Required: True\. (Signs placed: \d+ left, \d+ right\.)", row["detail"])
+            if doc["sections"]["taper"]["closure_type"] != "shoulder" or not mm:
+                print(f"\n== {path.name}: unchanged")
+                continue
+            if row["pass"] is not True:
+                bad.append(f"{path.name}: a failing shoulder row; the derivation assumes pass")
+                continue
+            new = f"{EXCEPTION_TEXT}{mm.group(1)}"
+            print(f"\n== {path.name}\n  NOTE8 detail: {row['detail']!r} -> {new!r}")
+            if write:
+                checks[k] = {**row, "detail": new}
+                write_snapshot(path, doc)
+
     print("\n== result")
     for x in bad:
         print(f"  FAIL {x}")
@@ -232,4 +274,11 @@ if __name__ == "__main__":
     if cmd == "dump":
         dump(Path(sys.argv[2]))
     else:
-        raise SystemExit(apply(Path(sys.argv[2]), Path(sys.argv[3]), "--check" not in sys.argv))
+        raise SystemExit(
+            apply(
+                Path(sys.argv[2]),
+                Path(sys.argv[3]),
+                "--check" not in sys.argv,
+                "--exception" in sys.argv,
+            )
+        )
