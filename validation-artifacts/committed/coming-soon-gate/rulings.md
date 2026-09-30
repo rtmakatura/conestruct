@@ -269,3 +269,7 @@ Then stack all three (ship-cleanup-superseded, sheet-flair, copy/leftovers) onto
 > - Headings don't hide under anything fixed at the top (`scroll-margin-top` if needed).
 > - Focus moves to the target section after the scroll, so keyboard and screen-reader users land there too.
 > - Test in the browser at 1440 and 390, with and without reduced motion.
+
+**R51 (Ryan, 2026-09-29)**, verbatim, on the `ship/r48-r50` ship report (after "Browser check PASS."):
+
+> R51 (Ryan): yes, show "How a plan is made ↓" and "What it cites ↓" on phones too. Give the nav's "How it works" link the same focus move. Light lane, one go.

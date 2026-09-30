@@ -5663,9 +5663,6 @@ input[type="number"] {
     gap: 12px;
     padding: 24px 12px;
   }
-  .workbench .cs-intro-links {
-    display: none;
-  }
   .workbench .cs-tb-row {
     grid-template-columns: 104px minmax(0, 1fr);
   }

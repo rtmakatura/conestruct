@@ -558,4 +558,32 @@ describe("R49 — the two jump links scroll smoothly, then focus lands on the se
     expect(wide).toMatch(/\.workbench \.cs-mp \{[^}]*top: 24px;[^}]*height: 40px;/);
     expect(wide).toMatch(/\.workbench \.cs-section\[id\] \{\s*scroll-margin-top: 80px;\s*\}/);
   });
+
+  it("R51: the two links show on phones too (no rule hides .cs-intro-links)", () => {
+    const hides = [...css.matchAll(/([^{}]*)\{([^{}]*)\}/g)].filter(
+      ([, sel, body]) => /\.cs-intro-links\b/.test(sel) && /display:\s*none/.test(body),
+    );
+    expect(hides.map(([, sel]) => sel.trim())).toEqual([]);
+    const c = mount();
+    for (const name of ["How a plan is made ↓", "What it cites ↓"]) {
+      expect(link(c, name).classList.contains("cs-only-wide"), name).toBe(false);
+    }
+  });
+
+  it("R51: the nav's in-page links hand focus to their section the same way", () => {
+    const c = mount();
+    for (const [name, id] of [
+      ["How it works", "how"],
+      ["Sources", "sources"],
+    ]) {
+      const a = [...c.querySelectorAll("nav a")].find((e) => e.textContent === name)!;
+      expect(a.getAttribute("href")).toBe(`#${id}`);
+      expect(a.className).toBe("tr-step cs-navlink cs-only-wide");
+      const focus = vi.spyOn(c.querySelector<HTMLElement>(`section#${id}`)!, "focus");
+      fireEvent.click(a);
+      expect(focus).not.toHaveBeenCalled();
+      window.dispatchEvent(new Event("scrollend"));
+      expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+    }
+  });
 });

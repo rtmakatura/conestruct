@@ -1,5 +1,6 @@
 import { NAV, NOTIFY_HREF } from "@/lib/coming-soon-copy";
 import { AppFooter } from "./AppFooter";
+import { JumpLink } from "./coming-soon/JumpLink";
 import { Wordmark } from "./Wordmark";
 
 // The chrome of every public page (coming-soon-gate R1.2, C-Q8): `/`,
@@ -32,12 +33,13 @@ export function PublicChrome({
         <Wordmark />
         {sheet && (
           <>
-            <a className="tr-step cs-navlink cs-only-wide" href="#how">
+            {/* R51: the same scroll and focus hand-off as the sheet's links. */}
+            <JumpLink to="how" className="tr-step cs-navlink cs-only-wide">
               {NAV.how}
-            </a>
-            <a className="tr-step cs-navlink cs-only-wide" href="#sources">
+            </JumpLink>
+            <JumpLink to="sources" className="tr-step cs-navlink cs-only-wide">
               {NAV.sources}
-            </a>
+            </JumpLink>
             <a className="tr-step cs-navlink cs-navlink-act" href={NOTIFY_HREF}>
               {NAV.notify}
             </a>

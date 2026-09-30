@@ -7,10 +7,19 @@
 // reader users land where the page did: on `scrollend`, or after a second
 // if no scroll happens (already there) or the browser lacks the event.
 // preventScroll: the focus never moves the page itself.
-export function JumpLink({ to, children }: { to: string; children: React.ReactNode }) {
+// R51: the nav's two in-page anchors use it too, with their own class.
+export function JumpLink({
+  to,
+  className = "cs-body cs-link",
+  children,
+}: {
+  to: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
     <a
-      className="cs-body cs-link"
+      className={className}
       href={`#${to}`}
       onClick={() => {
         const target = document.getElementById(to);
