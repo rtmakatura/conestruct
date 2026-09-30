@@ -146,6 +146,11 @@ function Complete-Ship($head, $frontend) {
     # lists what it left for Ryan.  A failure here does not un-verify the ship.
     & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\branch-cleanup.ps1") -Main $head -RepoDir $RepoDir
     if ($LASTEXITCODE -ne 0) { Write-Host "CLEANUP INCOMPLETE: a deletion above failed. The ship itself is verified. Paste this output into the chat." -ForegroundColor Yellow }
+
+    # --- 9. The main checkout's local main (R59) ------------------------------
+    # Fast-forward only, only when that checkout is on main and clean; else one
+    # line and a skip.  Never un-verifies the ship (it always exits 0).
+    & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\sync-main-checkout.ps1") -RepoDir $RepoDir
 }
 
 if ($FrontendCheckOnly) {
