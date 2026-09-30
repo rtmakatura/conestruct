@@ -36,6 +36,8 @@ SHA = "884081c87e7c699dc4cea61c46e6bd8acd5b2af4"
 
 # The stand-in gh: logs its arguments; `run list --workflow <file>` prints the
 # fixture named for that workflow (FAKE_PYTHON / FAKE_FRONTEND, "" = no runs).
+# R58: a comma-separated list answers one fixture per call, in order, the last
+# repeating -- a run that is still going, then done.
 FAKE_GH = r"""
 import os, sys
 args = sys.argv[1:]
@@ -47,24 +49,39 @@ if os.environ.get("FAKE_GH_EXIT", "0") != "0":
 if args[:2] != ["run", "list"]:
     sys.exit(2)
 wf = args[args.index("--workflow") + 1]
-fixture = os.environ["FAKE_PYTHON" if wf == "python-tests.yml" else "FAKE_FRONTEND"]
+seq = os.environ["FAKE_PYTHON" if wf == "python-tests.yml" else "FAKE_FRONTEND"].split(",")
+counter = os.environ["FAKE_LOG"] + "." + wf
+n = int(open(counter).read()) if os.path.exists(counter) else 0
+open(counter, "w").write(str(n + 1))
+fixture = seq[min(n, len(seq) - 1)]
 sys.stdout.write(open(fixture, encoding="utf-8").read() if fixture else "[]\n")
 """
 
 
-def run_check(tmp_path: Path, python: str | None, frontend: str | None, gh_exit: int = 0):
+def _fixtures(names: str | None) -> str:
+    return ",".join(str(FIXTURES / n) for n in names.split(",")) if names else ""
+
+
+def run_check(
+    tmp_path: Path,
+    python: str | None,
+    frontend: str | None,
+    gh_exit: int = 0,
+    wait: list[str] | None = None,
+):
     fake = write_fake_cli(tmp_path, "gh", FAKE_GH)
     log = tmp_path / "calls.log"
     env = dict(os.environ)
     env.update(
         FAKE_LOG=str(log),
         FAKE_GH_EXIT=str(gh_exit),
-        FAKE_PYTHON=str(FIXTURES / python) if python else "",
-        FAKE_FRONTEND=str(FIXTURES / frontend) if frontend else "",
+        FAKE_PYTHON=_fixtures(python),
+        FAKE_FRONTEND=_fixtures(frontend),
     )
     r = subprocess.run(
         [SHELL, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(CHECK)]
-        + ["-Sha", SHA, "-Ref", "ship/some-branch", "-Gh", str(fake)],
+        + ["-Sha", SHA, "-Ref", "ship/some-branch", "-Gh", str(fake)]
+        + (wait or []),
         capture_output=True,
         text=True,
         timeout=120,
@@ -220,3 +237,72 @@ def test_ci_runs_on_every_branch_push() -> None:
         push = re.search(r"push:\s*\n\s*branches:\s*\[([^\]]*)\]", text)
         assert push and push.group(1).strip() in {'"**"', "'**'"}, (wf, push and push.group(0))
         assert "workflow_dispatch:" in text, wf
+
+
+# --------------------------------------------------------------------------- #
+# R58: a CI that is still running is waited for (the ship passes 15 min);
+# red, or a missing run (R63), still stops on the first read.
+# --------------------------------------------------------------------------- #
+
+QUICK = ["-WaitMin", "1", "-PollSec", "0"]
+
+
+@needs_ps
+def test_a_running_ci_is_waited_for_until_green(tmp_path: Path) -> None:
+    code, out, calls = run_check(
+        tmp_path,
+        "python-running.json,python-running.json,python-green.json",
+        "frontend-green.json",
+        wait=QUICK,
+    )
+    assert code == 0, out
+    assert out.count("CI still running on 884081c (Python tests); waiting") == 2, out
+    assert "CI green on 884081c" in out, out
+    assert len(calls) == 6, calls  # three reads of both workflows
+
+
+@needs_ps
+def test_a_running_ci_that_turns_red_stops_and_names_it(tmp_path: Path) -> None:
+    code, out, calls = run_check(
+        tmp_path, "python-running.json,python-red.json", "frontend-green.json", wait=QUICK
+    )
+    assert code == 1, out
+    assert "CI CHECK FAILED: Python tests failed on 884081c (failure)" in out, out
+    assert len(calls) == 4, calls
+
+
+@needs_ps
+def test_red_on_the_first_read_stops_without_waiting(tmp_path: Path) -> None:
+    code, out, calls = run_check(tmp_path, "python-red.json", "frontend-green.json", wait=QUICK)
+    assert code == 1, out
+    assert "waiting" not in out, out
+    assert len(calls) == 2, calls
+
+
+@needs_ps
+def test_a_missing_run_stops_at_once_even_when_waiting(tmp_path: Path) -> None:
+    code, out, calls = run_check(tmp_path, "python-green.json", None, wait=QUICK)
+    assert code == 1, out
+    assert "CI CHECK FAILED: Frontend tests has no run on 884081c" in out, out
+    assert "waiting" not in out, out
+    assert len(calls) == 2, calls
+
+
+@needs_ps
+def test_still_running_at_the_limit_stops_and_says_how_long(tmp_path: Path) -> None:
+    # 0.02 min = 1.2 s of waiting, one read a second.
+    code, out, _ = run_check(
+        tmp_path,
+        "python-running.json",
+        "frontend-green.json",
+        wait=["-WaitMin", "0.02", "-PollSec", "1"],
+    )
+    assert code == 1, out
+    assert "waiting" in out, out
+    assert "CI CHECK FAILED: Python tests is still running on 884081c (waited 0.02 min)" in out, out
+
+
+def test_the_ship_waits_up_to_15_minutes_for_a_running_ci() -> None:
+    text = SHIP.read_text(encoding="utf-8")
+    (line,) = [ln for ln in text.splitlines() if "ci-check.ps1" in ln and "-Sha" in ln]
+    assert "-WaitMin 15" in line, line
