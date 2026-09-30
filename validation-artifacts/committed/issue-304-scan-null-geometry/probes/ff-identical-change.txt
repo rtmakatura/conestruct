@@ -1,0 +1,23 @@
+# R59 / Q3: does git fast-forward over a local change identical to the incoming one?
+# Run 2026-09-30 in throwaway scratch repos (scratchpad/ffprobe; not this repository).
+# Setup: repo "up" commits .gitignore = "a"; clone "co"; "up" commits .gitignore = "a\n.vercel";
+# "co" writes the same two lines locally (uncommitted), fetches, and tries the fast-forward.
+# Output, verbatim (CRLF warnings trimmed):
+
+$ git status --porcelain
+ M .gitignore
+$ git fetch -q && git merge --ff-only origin/main
+error: Your local changes to the following files would be overwritten by merge:
+	.gitignore
+Please commit your changes or stash them before you merge.
+Updating 2e76676..835fbb1
+Aborting
+exit=1
+$ git log --oneline -1
+2e76676 one
+$ git status --porcelain
+ M .gitignore
+$ git --version
+git version 2.47.1.windows.2
+
+# Reading: git refuses even when the local edit equals the incoming commit's content.

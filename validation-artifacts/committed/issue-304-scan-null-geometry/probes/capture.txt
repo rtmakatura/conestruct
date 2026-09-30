@@ -1,0 +1,31 @@
+request: federal-audit-request.json; confirmedRoad None; lat,lng 39.7342642691076,-105.02504468168067
+
+== run 1: HTTP 200 in 5.9 s
+   scan ok mirror https://overpass-api.de/api/interpreter
+   fetch 0: mirror https://overpass-api.de/api/interpreter 5.9 s 56622 B folded=True error=None elements=265 ways-with-geometry=8 remark=None
+
+== run 2: HTTP 200 in 4.2 s
+   scan ok mirror https://overpass-api.de/api/interpreter
+   fetch 0: mirror https://overpass-api.de/api/interpreter 4.2 s 56622 B folded=True error=None elements=265 ways-with-geometry=8 remark=None
+
+== run 3: HTTP 500 in 21.5 s
+   body: {"detail":"render failed: 'NoneType' object is not subscriptable"}
+   fetch 0: mirror https://overpass.openstreetmap.fr/api/interpreter 21.5 s 58874 B folded=True error=None elements=266 ways-with-geometry=9 remark=None
+     way 42125193 secondary 'Лермонтов көшесі': 2 bad of 41 points, first at 15 = None; nodes listed 0
+     saved answer-3-0-overpass.openstreetmap.fr.json
+
+== run 4: HTTP 500 in 18.1 s
+   body: {"detail":"render failed: 'NoneType' object is not subscriptable"}
+   fetch 0: mirror https://overpass.openstreetmap.fr/api/interpreter 18.1 s 58874 B folded=True error=None elements=266 ways-with-geometry=9 remark=None
+     way 42125193 secondary 'Лермонтов көшесі': 2 bad of 41 points, first at 15 = None; nodes listed 0
+     saved answer-4-0-overpass.openstreetmap.fr.json
+
+== run 5: HTTP 200 in 4.1 s
+   scan ok mirror https://overpass-api.de/api/interpreter
+   fetch 0: mirror https://overpass-api.de/api/interpreter 4.1 s 56622 B folded=True error=None elements=265 ways-with-geometry=8 remark=None
+
+== run 6: HTTP 500 in 18.4 s
+   body: {"detail":"render failed: 'NoneType' object is not subscriptable"}
+   fetch 0: mirror https://overpass.openstreetmap.fr/api/interpreter 18.4 s 58874 B folded=True error=None elements=266 ways-with-geometry=9 remark=None
+     way 42125193 secondary 'Лермонтов көшесі': 2 bad of 41 points, first at 15 = None; nodes listed 0
+     saved answer-6-0-overpass.openstreetmap.fr.json

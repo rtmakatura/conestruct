@@ -1,0 +1,7 @@
+https://overpass-api.de/api/interpreter: HTTP 200 6.3 s; osm_base 2026-09-30T17:52:53Z; scan 257; road 8; ways with null points {}
+https://overpass.openstreetmap.fr/api/interpreter: HTTP 200 2.4 s; osm_base 2026-09-30T17:52:53Z; scan 257; road 9; ways with null points {42125193: [15, 39]}
+
+scan half: only on primary []; only on fallback []
+scan half: 257 of 257 shared elements identical
+road half: only on primary []; only on fallback [42125193]
+  fallback-only way 42125193: secondary 'Лермонтов көшесі' bounds {'minlat': 52.290395, 'minlon': 76.9404898, 'maxlat': 52.2913896, 'maxlon': 76.9659786}
