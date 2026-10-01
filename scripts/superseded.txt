@@ -13,3 +13,4 @@ ship-cleanup-superseded c1658529940978701e311797b400edceff04064c -- carried by s
 sheet-flair 5bc9a252ddc271728cacce50bdff138aa70b7a48 -- carried by ship/r42-r45 (R42, 7fdd6ff e9c01f1)
 copy/leftovers c41e0097d15af35c9581beabac481eb1f8ba7f57 -- carried by ship/r42-r45 (R43, d6d7971 f2a9f0b; d6d7971 differs from 4012524 only by the rulings.md conflict resolution)
 issue-243-note-8 336784f190cca7ba9dd62d727a5a4b77d0111bc0 -- carried by issue-243-note-8-r2 (rulings.md e3875cd, checkpoint.md d09f932, rebased; R55: no force push)
+scan-refusal-rate 85be5befce929462ec0772194cbdd559c3928228 -- carried by issue-306-double-scan (4a03ee7, cherry-picked; the ship_gate blocked its rebase from a main-checkout session, fixed by R68)
