@@ -63,6 +63,16 @@ Labels: bug, priority-medium, frontend, backend, p2. Opened 2026-10-01.
 
 ---
 
-## The ruling on the checkpoint, verbatim
+## The ruling on the checkpoint, verbatim (Ryan, 2026-10-01, on `checkpoint.md` at `133e0b5`)
 
-*(Not yet ruled. Appended when Ryan rules on `checkpoint.md`.)*
+> #305 closed.
+>
+> Rulings on #306 (quote verbatim):
+> R64. Q1: (c). One scan per Generate by design.
+> R65. Q2: the opt-in on /render/audit; no recorded churn.
+> R66. Q3: separate issue. Draft it for the chat to repost (a download that re-scans can fail on its own; same one-voice problem).
+> R67. Q4: yes, post this morning's numbers on #292.
+> R68. Hook fix, ride along on #306: ship_gate must judge rebase/cherry-pick by the branch being changed, not the session's working directory. It still blocks anything that moves main. Red-prove both directions.
+> Build #306, verify, give me the go.
+>
+> Then #292 becomes the top priority: investigate with a checkpoint. Measure at three times of day (morning, midday, evening). Options to evaluate include dropping kumi if it's dead, asking mirrors in parallel and taking the first answer instead of waiting 7 s each in turn, and the budget. No code until I rule.
