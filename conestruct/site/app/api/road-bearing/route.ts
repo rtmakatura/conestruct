@@ -21,6 +21,7 @@ import {
   trimChain,
   truncateAtReversal,
 } from "@/lib/road-detection/stitch";
+import { hasCoords, usableWays, validRuns } from "@/lib/road-detection/usable-ways";
 import type {
   RoadCandidate,
   RoadDetectOk,
@@ -120,7 +121,10 @@ interface OverpassNode {
 interface OverpassWay {
   type: "way";
   id: number;
-  geometry?: OverpassNode[];
+  // #305: a mirror can send `null` for a node it can't resolve, so a point
+  // is only trusted after `hasCoords` (lib/road-detection/usable-ways.ts).
+  geometry?: (OverpassNode | null)[];
+  bounds?: { minlat?: number; minlon?: number; maxlat?: number; maxlon?: number };
   tags?: Record<string, string>;
 }
 
@@ -373,30 +377,43 @@ function buildResponse(
     signalNodes.push({ lat: node.lat, lon: node.lon });
   }
 
-  const ways: OverpassWay[] = elements.filter(
-    (el): el is OverpassWay =>
-      el.type === "way" &&
-      Array.isArray((el as OverpassWay).geometry) &&
-      ((el as OverpassWay).geometry?.length ?? 0) >= 2,
-  );
+  // #305 (d): only ways that answer this query -- extent meeting the
+  // `around:SEARCH_RADIUS_M` circle -- with at least one run of real points.
+  const ways: OverpassWay[] = usableWays(
+    elements.filter(
+      (el): el is OverpassWay =>
+        el.type === "way" &&
+        Array.isArray((el as OverpassWay).geometry) &&
+        ((el as OverpassWay).geometry?.length ?? 0) >= 2,
+    ),
+    lat,
+    lng,
+    SEARCH_RADIUS_M,
+  ).ways;
   if (ways.length === 0) return emptyResponse(isUrban, placeName);
 
   const candidates: RoadCandidate[] = [];
   for (const way of ways) {
-    const geom = way.geometry ?? [];
+    // #305 (a): segments are read only inside runs of real points; the
+    // candidate's geometry is the run that holds the snap, never a bridge
+    // across a point the mirror couldn't resolve.
+    let geom: OverpassNode[] = [];
     let bestA: OverpassNode | null = null;
     let bestB: OverpassNode | null = null;
     let bestProj: { lat: number; lng: number; distM: number } | null = null;
     let bestDistance = Infinity;
-    for (let i = 0; i < geom.length - 1; i++) {
-      const a = geom[i];
-      const b = geom[i + 1];
-      const proj = projectOnSegment(lat, lng, a.lat, a.lon, b.lat, b.lon);
-      if (proj.distM < bestDistance) {
-        bestDistance = proj.distM;
-        bestA = a;
-        bestB = b;
-        bestProj = proj;
+    for (const run of validRuns(way.geometry)) {
+      for (let i = 0; i < run.length - 1; i++) {
+        const a = run[i];
+        const b = run[i + 1];
+        const proj = projectOnSegment(lat, lng, a.lat, a.lon, b.lat, b.lon);
+        if (proj.distM < bestDistance) {
+          bestDistance = proj.distM;
+          bestA = a;
+          bestB = b;
+          bestProj = proj;
+          geom = run;
+        }
       }
     }
     if (!bestA || !bestB || !bestProj) continue;
@@ -492,12 +509,22 @@ async function extendCandidateGeometry(
     )
     .join("");
   const payload = await overpassPost(`[out:json][timeout:10];(${parts});out geom tags;`, signal);
-  const ways = (payload?.elements ?? []).filter(
-    (el): el is OverpassWay =>
-      el.type === "way" &&
-      Array.isArray((el as OverpassWay).geometry) &&
-      ((el as OverpassWay).geometry?.length ?? 0) >= 2,
-  );
+  // #305: (d) as above at GEOMETRY_RADIUS_M; and the stitcher reads each
+  // way as one polyline, so a way with any unresolved point stays out of
+  // the pool (its candidate keeps own-way geometry, the best-effort path).
+  const ways = usableWays(
+    (payload?.elements ?? []).filter(
+      (el): el is OverpassWay =>
+        el.type === "way" &&
+        Array.isArray((el as OverpassWay).geometry) &&
+        ((el as OverpassWay).geometry?.length ?? 0) >= 2,
+    ),
+    lat,
+    lng,
+    GEOMETRY_RADIUS_M,
+  ).ways.filter((w) => (w.geometry ?? []).every(hasCoords)) as Array<
+    OverpassWay & { geometry: OverpassNode[] }
+  >;
   if (ways.length === 0) return;
 
   for (const c of candidates) {

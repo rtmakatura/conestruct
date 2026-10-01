@@ -21,6 +21,7 @@ SITE_INPUTS=(
   "."
   "../../tests/fixtures/tiering"
   "../../tests/fixtures/centerline"
+  "../../tests/fixtures/site_scan"
   "../../scripts/gate.cjs"
   "../../scripts/modal-healthz-probe.mjs"
 )
