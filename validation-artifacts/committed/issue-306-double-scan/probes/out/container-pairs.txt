@@ -1,0 +1,40 @@
+window start 2026-10-01T14:44:46+00:00
+{"pin": "colorado-blvd", "at": "2026-10-01T14:44:51+00:00", "calls": [{"endpoint": "device-breakdown", "http": 400, "seconds": 28.3, "scan_status": "unavailable", "mirror": null, "duration_ms": 20200, "memo_hit": false, "error": "https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out"}, {"endpoint": "audit", "http": 200, "seconds": 19.1, "scan_status": "ok", "mirror": "https://overpass.openstreetmap.fr/api/interpreter", "duration_ms": 17289, "memo_hit": false, "error": null}]}
+{"pin": "s-university", "at": "2026-10-01T14:45:19+00:00", "calls": [{"endpoint": "device-breakdown", "http": 200, "seconds": 20.4}, {"endpoint": "audit", "http": 200, "seconds": 21.6, "scan_status": "ok", "mirror": "https://overpass.openstreetmap.fr/api/interpreter", "duration_ms": 19824, "memo_hit": false, "error": null}]}
+{"pin": "w-alameda", "at": "2026-10-01T14:45:40+00:00", "calls": [{"endpoint": "device-breakdown", "http": 400, "seconds": 21.1, "scan_status": "unavailable", "mirror": null, "duration_ms": 20188, "memo_hit": false, "error": "https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out"}, {"endpoint": "audit", "http": 200, "seconds": 7.1, "scan_status": "ok", "mirror": "https://overpass-api.de/api/interpreter", "duration_ms": 6080, "memo_hit": false, "error": null}]}
+{"pin": "downing", "at": "2026-10-01T14:46:02+00:00", "calls": [{"endpoint": "device-breakdown", "http": 400, "seconds": 21.1, "scan_status": "unavailable", "mirror": "https://overpass-api.de/api/interpreter", "duration_ms": 20034, "memo_hit": false, "error": "https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out"}, {"endpoint": "audit", "http": 400, "seconds": 21.1, "scan_status": "unavailable", "mirror": null, "duration_ms": 20190, "memo_hit": false, "error": "https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out"}]}
+{"pin": "santa-fe", "at": "2026-10-01T14:46:23+00:00", "calls": [{"endpoint": "device-breakdown", "http": 400, "seconds": 21.1, "scan_status": "unavailable", "mirror": "https://overpass-api.de/api/interpreter", "duration_ms": 20187, "memo_hit": false, "error": "https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out"}, {"endpoint": "audit", "http": 400, "seconds": 21.1, "scan_status": "unavailable", "mirror": null, "duration_ms": 20035, "memo_hit": false, "error": "https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out"}]}
+Traceback (most recent call last):
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-306\validation-artifacts\committed\issue-306-double-scan\probes\container_pairs.py", line 65, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-306\validation-artifacts\committed\issue-306-double-scan\probes\container_pairs.py", line 53, in main
+    out = subprocess.run(
+        [str(MODAL), "app", "logs", "conestruct-render", "--since", since,
+         "--timestamps", "--show-container-id", "--search", "POST /render/"],
+        capture_output=True, text=True, timeout=120, encoding="utf-8", errors="replace",
+    )
+  File "C:\Python\Python313\Lib\subprocess.py", line 554, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Python313\Lib\subprocess.py", line 1036, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Python313\Lib\subprocess.py", line 1548, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
