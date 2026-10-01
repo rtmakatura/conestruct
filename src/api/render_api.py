@@ -175,7 +175,9 @@ async def _validation_error_handler(request: Request, exc: RequestValidationErro
     )
 
 
-def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False) -> None:
+def _ensure_scenario_enabled(
+    scenario: Scenario, *, allow_preview: bool = False, allow_include_breakdown: bool = False
+) -> None:
     """Reject scenario kinds we have temporarily gated off in v1.
 
     Raised as 400 so the Next.js proxy can surface a clean message rather
@@ -190,6 +192,18 @@ def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False)
     # refuses the flag by default rather than silently honouring it.
     if not allow_preview:
         _ensure_preview_allowed(scenario)
+    # #306: the same opt-IN shape for ``include_breakdown`` -- only
+    # /render/audit honours it, and every other path refuses it in the
+    # caller's words rather than dropping it silently (Rule 10).
+    if not allow_include_breakdown and getattr(scenario, "include_breakdown", False):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "include_breakdown is accepted only on /render/audit, which returns "
+                "the device breakdown beside the audit from one scan. Drop "
+                "`include_breakdown` here."
+            ),
+        )
     if scenario.kind not in ENABLED_SCENARIOS:
         enabled = ", ".join(sorted(ENABLED_SCENARIOS))
         # Grammar rider (Arc 11 flip): the old string appended a bare
@@ -1583,7 +1597,15 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
         raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+    return JSONResponse(_breakdown_payload(scenario, placements, params))
 
+
+def _breakdown_payload(scenario: Scenario, placements: list[Any], params: Any) -> dict[str, Any]:
+    """The device-breakdown object, from placements already built.
+
+    One builder for /render/device-breakdown and the audit's opt-in
+    ``breakdown`` (#306), so the two can never be two answers.
+    """
     # Count-affecting deltas modify quantities through the shared row
     # pipeline (spec §3.2, issue #151) — the same aggregation the XLSX and
     # on-sheet summary render, never a frontend computation.
@@ -1607,7 +1629,7 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
         # byte-identical to before this arc — no new key for every caller.
         payload["preview"] = True
 
-    return JSONResponse(payload)
+    return payload
 
 
 def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
@@ -1624,6 +1646,14 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
 def _audit_projection_and_params_for(
     scenario: Scenario,
 ) -> tuple[dict[str, Any], Any]:
+    """The projection and the params (see :func:`_audit_build`)."""
+    projection, params, _placements = _audit_build(scenario)
+    return projection, params
+
+
+def _audit_build(
+    scenario: Scenario,
+) -> tuple[dict[str, Any], Any, list[Any]]:
     """The projection plus the params it was built from — the PDF path
     needs the params once more for the #220 jurisdiction evaluation
     (same single ``_jurisdiction_eval`` the breakdown endpoint uses),
@@ -1686,7 +1716,7 @@ def _audit_projection_and_params_for(
     # (Rule 10), and every coordinate-less audit stays byte-identical.
     if scenario.meta.lat or scenario.meta.lng:
         projection["pin"] = {"model": scenario.meta.pinModel}
-    return projection, params
+    return projection, params, placements
 
 
 @app.post("/render/audit")
@@ -1707,9 +1737,15 @@ def render_audit(scenario: Scenario) -> JSONResponse:
         references and the tracking-issue URL.  Keeps the existence of
         pending case-# work transparent without exposing partial data.
     """
-    _ensure_scenario_enabled(scenario)
+    _ensure_scenario_enabled(scenario, allow_include_breakdown=True)
     try:
-        projection = _audit_projection_for(scenario)
+        projection, params, placements = _audit_build(scenario)
+        if getattr(scenario, "include_breakdown", False):
+            # #306 (R64): one Generate, one scan -- the breakdown comes from
+            # the placements this request already built, never a second
+            # request that would scan on another container.  Opt-in only
+            # (R65): without it the response is byte-identical to before.
+            projection["breakdown"] = _breakdown_payload(scenario, placements, params)
     except HTTPException:
         raise
     except Exception as exc:  # noqa: BLE001

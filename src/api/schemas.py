@@ -286,9 +286,16 @@ class PreviewScenarioFields(BaseModel):
     WITHOUT the site adjustments an Apply would add.  Preview != applied
     (#198's family).  The ``preview: true`` echo on the response is the
     mechanism that stops a consumer presenting one as the other.
+
+    ``include_breakdown`` (#306, rulings R64/R65) rides the same mixin: an
+    opt-in accepted only on /render/audit.  True => the audit response also
+    carries ``breakdown``, the exact object /render/device-breakdown returns,
+    built from the placements the audit already holds -- one scan per
+    Generate by construction.  Absent or False => byte-identical to before.
     """
 
     preview: bool = False
+    include_breakdown: bool = False
 
 
 class JurisdictionScenarioFields(BaseModel):
