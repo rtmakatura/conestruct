@@ -90,7 +90,9 @@ describe("fetch debounce (#182)", () => {
   it("a 12-step burst collapses to leading + one trailing pair carrying the final value", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_FLAGGER} />);
     expect(auditCalls.length).toBe(1); // mount
-    expect(bdCalls.length).toBe(1);
+    // #306: one request per check; the audit carries the breakdown.
+    expect(bdCalls.length).toBe(0);
+    expect(auditCalls[0].body).toContain('"include_breakdown":true');
 
     // Idle past the window so the burst's first step earns a leading fire.
     await advance(400);
@@ -106,7 +108,8 @@ describe("fetch debounce (#182)", () => {
     // The burst pauses: exactly one trailing pair, carrying the FINAL value.
     await advance(350);
     expect(auditCalls.length).toBe(3);
-    expect(bdCalls.length).toBe(3);
+    expect(bdCalls.length).toBe(0);
+    expect(auditCalls[2].body).toContain('"include_breakdown":true');
     expect(auditCalls[2].body).toContain('"speed":30');
 
     // Quiet afterwards: nothing else fires.
@@ -147,12 +150,11 @@ describe("fetch debounce (#182)", () => {
       auditCalls[0].resolve({
         ok: true,
         status: 200,
-        json: async () => auditFull,
-      } as unknown as Response);
-      bdCalls[0].resolve({
-        ok: true,
-        status: 200,
-        json: async () => ({ devices: [], total_devices: 0, unique_types: 0 }),
+        // #306: the audit answers its own breakdown.
+        json: async () => ({
+          ...auditFull,
+          breakdown: { devices: [], total_devices: 0, unique_types: 0 },
+        }),
       } as unknown as Response);
       await Promise.resolve();
       await Promise.resolve();
@@ -172,13 +174,9 @@ describe("fetch debounce (#182)", () => {
           throw new Error("consumed");
         },
       } as unknown as Response);
-      // The pair's other half has to land too: Retry is a write control
-      // and stays disabled while a request is open (#252).
-      bdCalls[bdCalls.length - 1].resolve({
-        ok: true,
-        status: 200,
-        json: async () => ({ devices: [], total_devices: 0, unique_types: 0 }),
-      } as unknown as Response);
+      // #306: the refusal settles the breakdown too (one request), so
+      // Retry -- a write control, disabled while a request is open (#252)
+      // -- is live once this lands.
       await Promise.resolve();
       await Promise.resolve();
     });

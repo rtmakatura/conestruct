@@ -186,26 +186,34 @@ function jsonResponse(status: number, body: unknown): Response {
   } as unknown as Response;
 }
 
+const breakdown = () => ({
+  devices: [],
+  total_devices: 0,
+  unique_types: 0,
+  zone_geometry: {
+    taper_l_ft: 1,
+    buffer_b_ft: 1,
+    device_spacing_ft: 1,
+    work_len_ft: 1,
+  },
+  ...(jurisdictionInResponse ? { jurisdiction: jurisdictionInResponse } : {}),
+});
+
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
+  // #306: the check is ONE audit request carrying `include_breakdown`;
+  // its answer holds the breakdown.  Those are the payloads the
+  // suggest-never-set assertions read.
+  if (url.includes("/api/render/audit")) {
+    const body = JSON.parse(String(init?.body ?? "{}"));
+    if (body?.scenario?.include_breakdown) {
+      breakdownBodies.push(body);
+      return Promise.resolve(jsonResponse(200, { breakdown: breakdown() }));
+    }
+  }
   if (url.includes("/api/render/device-breakdown")) {
     breakdownBodies.push(JSON.parse(String(init?.body ?? "{}")));
-    return Promise.resolve(
-      jsonResponse(200, {
-        devices: [],
-        total_devices: 0,
-        unique_types: 0,
-        zone_geometry: {
-          taper_l_ft: 1,
-          buffer_b_ft: 1,
-          device_spacing_ft: 1,
-          work_len_ft: 1,
-        },
-        ...(jurisdictionInResponse
-          ? { jurisdiction: jurisdictionInResponse }
-          : {}),
-      }),
-    );
+    return Promise.resolve(jsonResponse(200, breakdown()));
   }
   // Jurisdiction-suggest endpoint fails quietly — irrelevant here, and
   // the class row must not depend on it.

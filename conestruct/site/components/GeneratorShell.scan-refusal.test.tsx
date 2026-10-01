@@ -169,13 +169,18 @@ let scanMode: "refuse" | "ok" = "refuse";
 // #258: the breakdown-ready refusal path (audit F-S5-1, refusal #1) —
 // the two requests race the scan budget independently, so "ok" lets
 // the breakdown succeed while the audit refuses.
+// #306 (R64): there is no separate breakdown request on Generate any
+// more -- the audit carries it (`include_breakdown`) -- so "ok" now
+// means the refused audit's 400 body ALSO carries the `breakdown` key,
+// the nearest the one request can come to "the breakdown answered".
 let breakdownScan: "follow" | "ok" = "follow";
 
 function ok(data: unknown): Response {
   return { ok: true, status: 200, json: async () => data } as unknown as Response;
 }
-function refused(): Response {
-  return { ok: false, status: 400, json: async () => REFUSAL } as unknown as Response;
+function refused(withBreakdown = false): Response {
+  const body = withBreakdown ? { ...REFUSAL, breakdown: BREAKDOWN } : REFUSAL;
+  return { ok: false, status: 400, json: async () => body } as unknown as Response;
 }
 
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
@@ -187,15 +192,17 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const isAudit = url.includes("/api/render/audit");
   const isBreakdown = url.includes("/api/render/device-breakdown");
   if (!isAudit && !isBreakdown) return Promise.resolve(ok({}));
-  if (!scan) return Promise.resolve(ok(isAudit ? AUDIT_OK : BREAKDOWN));
+  // #306 (R64): a Generate's audit answers its breakdown too.
+  const carried = scenario.include_breakdown ? { breakdown: BREAKDOWN } : {};
+  if (!scan) return Promise.resolve(ok(isAudit ? { ...AUDIT_OK, ...carried } : BREAKDOWN));
   if (scanMode === "refuse" && !scan.proceed_if_unavailable) {
     if (isBreakdown && breakdownScan === "ok") return Promise.resolve(ok(BREAKDOWN));
-    return Promise.resolve(refused());
+    return Promise.resolve(refused(isAudit && breakdownScan === "ok"));
   }
   if (scan.proceed_if_unavailable && scanMode === "refuse") {
-    return Promise.resolve(ok(isAudit ? AUDIT_PROCEEDED : BREAKDOWN));
+    return Promise.resolve(ok(isAudit ? { ...AUDIT_PROCEEDED, ...carried } : BREAKDOWN));
   }
-  return Promise.resolve(ok(isAudit ? AUDIT_OK : BREAKDOWN));
+  return Promise.resolve(ok(isAudit ? { ...AUDIT_OK, ...carried } : BREAKDOWN));
 });
 
 beforeEach(() => {
@@ -331,9 +338,9 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     await user.click(within(container()).getByRole("button", { name: /Retry scan/ }));
     await settle();
     expect(scanned("/api/render/audit")).toEqual([{ proceed_if_unavailable: false }]);
-    expect(scanned("/api/render/device-breakdown")).toEqual([
-      { proceed_if_unavailable: false },
-    ]);
+    // #306 (R64): one scanned fetch now -- the audit carries the breakdown.
+    expect(scanned("/api/render/device-breakdown")).toEqual([]);
+    expect(calls.filter((c) => c.url.includes("/api/render/audit"))[0].scenario.include_breakdown).toBe(true);
     // Still refused → still the container.
     expect(container()).toBeTruthy();
   });
@@ -346,9 +353,9 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     );
     await settle();
     expect(scanned("/api/render/audit")).toEqual([{ proceed_if_unavailable: true }]);
-    expect(scanned("/api/render/device-breakdown")).toEqual([
-      { proceed_if_unavailable: true },
-    ]);
+    // #306 (R64): one scanned fetch now -- the audit carries the breakdown.
+    expect(scanned("/api/render/device-breakdown")).toEqual([]);
+    expect(calls.filter((c) => c.url.includes("/api/render/audit"))[0].scenario.include_breakdown).toBe(true);
     expect(document.querySelector(".sys-event.scan-refusal")).toBeNull();
     expect(strip()).not.toContain("PLAN DECLINED");
   });
@@ -438,8 +445,10 @@ describe("#258 — a declined plan shows no plan (rule 10)", () => {
     await generateRefused();
     expect(container()).toBeTruthy();
     expect(strip()).toContain("PLAN DECLINED");
-    // The breakdown DID answer (the held answer)…
-    expect(scanned("/api/render/device-breakdown").length).toBeGreaterThan(0);
+    // The breakdown DID answer (the held answer)…  #306 (R64): inside the
+    // refused audit's own body, the one request that carries it.
+    expect(scanned("/api/render/device-breakdown")).toEqual([]);
+    expect(calls.some((c) => c.url.includes("/api/render/audit") && c.scenario.include_breakdown)).toBe(true);
     // …and nothing of it renders under the verdict.
     expectNoPlan();
   });

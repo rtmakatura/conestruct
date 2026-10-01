@@ -111,8 +111,14 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
   } as unknown as Response);
 });
 
+// #306 (R64): a Generate's audit carries its breakdown (`include_breakdown`);
+// /api/render/device-breakdown above is the S7 preview's alone.
 const okAudit = () =>
-  ({ ok: true, status: 200, json: async () => READY_AUDIT }) as unknown as Response;
+  ({
+    ok: true,
+    status: 200,
+    json: async () => ({ ...READY_AUDIT, breakdown: BREAKDOWN }),
+  }) as unknown as Response;
 const declined400 = () =>
   ({
     ok: false,
@@ -214,8 +220,10 @@ describe("audit rows never present a prior input's numbers under a declined bann
     await generateThenEdit();
     await releaseAudit(2, declined400());
 
+    // #306: the device schedule shares the refusal and says so too; this
+    // test's claim is the audit trail's own line.
     expect(
-      screen.getByText(/unavailable while generation is declined/i),
+      screen.getByText(/Audit trail unavailable while generation is declined/i),
     ).toBeTruthy();
     // No cited number from the previous input renders as current.
     expect(screen.queryAllByText(/183/)).toHaveLength(0);
@@ -238,10 +246,13 @@ describe("audit rows never present a prior input's numbers under a declined bann
     expect(screen.getByText(/Audit trail failed/)).toBeTruthy();
     expect(screen.getByRole("button", { name: /Retry/ })).toBeTruthy();
     expect(screen.queryAllByText(/183/)).toHaveLength(0);
-    // The cards stand (a 5xx audit is not a declined plan) but the audit
-    // card has no count and no live button: no settled audit, no PDF.
+    // #306 (a stated behaviour change): the device list rides the audit's
+    // one answer, so a failed audit is a failed package -- the cards read
+    // "not generated" instead of standing on a breakdown that used to
+    // answer separately.  Still no settled audit, so no live PDF and no
+    // count.
     expect(pdfButton().disabled).toBe(true);
-    expect(auditCard().querySelector(".desc .qty")!.textContent).toBe("");
+    expect(auditCard().querySelector(".desc .qty")!.textContent).toBe("not generated");
     expect(auditCard().textContent).not.toContain("checks");
   });
 });

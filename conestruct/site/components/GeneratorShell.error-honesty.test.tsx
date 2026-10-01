@@ -47,6 +47,10 @@ const FOUR_BY_FOURTEEN: ShoulderScenario = {
 const TRANSLATED_422_MSG =
   "workZoneSpeed (55) must be <= posted speed (45).";
 
+// #306 (R64): the breakdown rides the audit (`include_breakdown`), so a
+// check is ONE deferred audit request; `bdCalls` holds only S7 previews,
+// which this suite never opens.  Every audit released here is a refusal,
+// which the shell gives to both states, so no `breakdown` is served.
 type Deferred = { resolve: (r: Response) => void };
 let auditCalls: Deferred[] = [];
 let bdCalls: Deferred[] = [];
@@ -65,23 +69,6 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
     json: async () => ({}),
   } as unknown as Response);
 });
-
-const okBd = () =>
-  ({
-    ok: true,
-    status: 200,
-    json: async () => ({
-      devices: [],
-      total_devices: 12,
-      unique_types: 4,
-      zone_geometry: {
-        taper_l_ft: 100,
-        buffer_b_ft: 200,
-        device_spacing_ft: 40,
-        work_len_ft: 500,
-      },
-    }),
-  }) as unknown as Response;
 
 const translated400 = (msg: string) =>
   ({
@@ -115,7 +102,6 @@ describe("strip error honesty (#184)", () => {
     render(
       <GeneratorShell mode="sandbox" initialScenario={FOUR_BY_FOURTEEN} />,
     );
-    await release(bdCalls, 0, okBd());
     // Whatever the wire says (here: the proxy's translated 400), the
     // client already knows this input is invalid.
     await release(
@@ -143,7 +129,9 @@ describe("strip error honesty (#184)", () => {
     render(
       <GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />,
     );
-    await release(bdCalls, 0, okBd());
+    // #306 (R64): one request per check -- the audit, carrying the breakdown.
+    expect(bdCalls).toHaveLength(0);
+    expect(auditCalls).toHaveLength(1);
     await release(auditCalls, 0, translated400(TRANSLATED_422_MSG));
 
     expect(document.body.textContent).toContain("PLAN DECLINED");
@@ -170,7 +158,6 @@ describe("strip error honesty (#184)", () => {
     render(
       <GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />,
     );
-    await release(bdCalls, 0, okBd());
     await release(auditCalls, 0, {
       ok: false,
       status: 429,
@@ -204,7 +191,6 @@ describe("strip error honesty (#184)", () => {
     render(
       <GeneratorShell mode="sandbox" initialScenario={FOUR_BY_FOURTEEN} />,
     );
-    await release(bdCalls, 0, okBd());
     expect(document.body.textContent).toContain("INVALID INPUT");
 
     // Drop lane width back into the drawable domain (10.5 ft fits 4 lanes

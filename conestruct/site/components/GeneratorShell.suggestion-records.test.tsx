@@ -122,23 +122,34 @@ function jsonResponse(status: number, body: unknown): Response {
   } as unknown as Response;
 }
 
+const BREAKDOWN = {
+  devices: [],
+  total_devices: 0,
+  unique_types: 0,
+  zone_geometry: {
+    taper_l_ft: 1,
+    buffer_b_ft: 1,
+    device_spacing_ft: 1,
+    work_len_ft: 1,
+  },
+};
+
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
+  // #306 (R64): a Generate's breakdown rides its audit request
+  // (`include_breakdown`), so that is the breakdown's wire now;
+  // /api/render/device-breakdown is the S7 preview's alone.
+  if (url.includes("/api/render/audit")) {
+    const body = JSON.parse(String(init?.body ?? "{}"));
+    if (body?.scenario?.include_breakdown) {
+      breakdownBodies.push(body);
+      return Promise.resolve(jsonResponse(200, { breakdown: BREAKDOWN }));
+    }
+    return Promise.resolve(jsonResponse(200, {}));
+  }
   if (url.includes("/api/render/device-breakdown")) {
     breakdownBodies.push(JSON.parse(String(init?.body ?? "{}")));
-    return Promise.resolve(
-      jsonResponse(200, {
-        devices: [],
-        total_devices: 0,
-        unique_types: 0,
-        zone_geometry: {
-          taper_l_ft: 1,
-          buffer_b_ft: 1,
-          device_spacing_ft: 1,
-          work_len_ft: 1,
-        },
-      }),
-    );
+    return Promise.resolve(jsonResponse(200, BREAKDOWN));
   }
   if (url.includes("/api/jurisdiction/suggest")) {
     return Promise.resolve(jsonResponse(200, SUGGEST_DENVER));

@@ -128,13 +128,20 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     unknown
   >;
   calls.push({ url, body });
-  const data = url.includes("/api/render/audit")
-    ? AUDIT
-    : url.includes("/api/render/device-breakdown")
-      ? BREAKDOWN
-      : {};
-  return Promise.resolve(okResponse(data));
+  return Promise.resolve(okResponse(answerFor(url, body)));
 });
+
+// #306 (R64): a Generate's audit carries its breakdown (`include_breakdown`);
+// /api/render/device-breakdown is the S7 preview's alone.
+function answerFor(url: string, body: Record<string, unknown>): unknown {
+  if (url.includes("/api/render/audit")) {
+    const wantsBreakdown = Boolean(
+      (body.scenario as { include_breakdown?: unknown } | undefined)?.include_breakdown,
+    );
+    return wantsBreakdown ? { ...AUDIT, breakdown: BREAKDOWN } : AUDIT;
+  }
+  return url.includes("/api/render/device-breakdown") ? BREAKDOWN : {};
+}
 
 beforeEach(() => {
   calls = [];
@@ -146,12 +153,7 @@ beforeEach(() => {
       unknown
     >;
     calls.push({ url, body });
-    const data = url.includes("/api/render/audit")
-      ? AUDIT
-      : url.includes("/api/render/device-breakdown")
-        ? BREAKDOWN
-        : {};
-    return Promise.resolve(okResponse(data));
+    return Promise.resolve(okResponse(answerFor(url, body)));
   });
   vi.stubGlobal("fetch", fetchMock);
   // happy-dom implements neither; the bundle path calls both.
@@ -187,7 +189,7 @@ function strip(): string {
 }
 
 describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
-  it("pre-generate requests are scan-free; the click refetches both with the flag", async () => {
+  it("pre-generate requests are scan-free; the click refetches with the flag", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
@@ -201,12 +203,13 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     calls = [];
     await user.click(screen.getByText("Generate package"));
     await settle();
+    // #306 (R64): one request, one scan -- the audit carries the breakdown.
     const audits = bodiesFor("/api/render/audit");
     const breakdowns = bodiesFor("/api/render/device-breakdown");
     expect(audits.length).toBe(1);
-    expect(breakdowns.length).toBe(1);
+    expect(breakdowns.length).toBe(0);
     expect(audits[0].site_scan).toEqual({ proceed_if_unavailable: false });
-    expect(breakdowns[0].site_scan).toEqual({ proceed_if_unavailable: false });
+    expect(audits[0].include_breakdown).toBe(true);
     // The rest of the scenario is the user's, untouched.
     expect(audits[0].kind).toBe("shoulder");
     expect((audits[0].meta as { lat: number }).lat).toBe(
@@ -312,26 +315,23 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
       const scanned = Boolean(
         (body.scenario as { site_scan?: unknown } | undefined)?.site_scan,
       );
-      if (url.includes("/api/render/device-breakdown")) {
+      // #306 (R64): the breakdown rides the audit, so the held request is
+      // the scanned audit, and a failed pre-generate breakdown is an
+      // audit that answered without one.
+      if (url.includes("/api/render/audit")) {
         if (scanned) {
           return new Promise<Response>((resolve) => {
-            release = () => resolve(okResponse(BREAKDOWN));
+            release = () => resolve(okResponse(answerFor(url, body)));
           });
         }
         if (preGenerate === "fail") {
-          return Promise.resolve({
-            ok: false,
-            status: 500,
-            json: async () => ({}),
-            text: async () => "boom",
-          } as unknown as Response);
+          return Promise.resolve(okResponse(AUDIT));
         }
       }
-      const data = url.includes("/api/render/audit") ? AUDIT : BREAKDOWN;
-      return Promise.resolve(okResponse(data));
+      return Promise.resolve(okResponse(answerFor(url, body)));
     });
     return () => {
-      if (!release) throw new Error("scanned breakdown never requested");
+      if (!release) throw new Error("scanned audit never requested");
       release();
     };
   }

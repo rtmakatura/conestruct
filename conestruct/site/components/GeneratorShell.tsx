@@ -451,9 +451,20 @@ export function GeneratorShell({
     checksArmed &&
     (!hasLocation(fetchScenario.meta) || hasConfirmedSide(fetchScenario.meta));
 
+  // #306 (R64): one Generate, one request, one scan.  The audit carries the
+  // device breakdown (`include_breakdown`), built by the backend from the
+  // same placements in the same request.  The two used to go out at once,
+  // and Modal serves one request per container, so they ran two scans on
+  // two containers and either could refuse alone -- a plan beside "Device
+  // breakdown failed".  The S7 preview still asks
+  // /api/render/device-breakdown with `preview: true` (below); a preview
+  // never scans.
   useEffect(() => {
+    // Finding 1 — see `checksArmed` (and `fetchArmed`, #290).
     if (!fetchArmed) return;
     const controller = new AbortController();
+    setVerifySlow(false);
+    const slowTimer = setTimeout(() => setVerifySlow(true), SLOW_VERIFY_MS);
     // #192: carry the previous breakdown through the refetch so the
     // results zone dims in place instead of unmounting (presented only
     // under the recomputing ribbon).  An error drops the carry — after a
@@ -467,56 +478,6 @@ export function GeneratorShell({
             ? (prev.lastReady ?? null)
             : null,
     }));
-    (async () => {
-      try {
-        const res = await fetch("/api/render/device-breakdown", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ scenario: fetchScenario }),
-          signal: controller.signal,
-        });
-        if (!res.ok) {
-          let detail = "";
-          let code: string | undefined;
-          try {
-            const body = await res.json();
-            detail =
-              typeof body?.detail?.message === "string"
-                ? body.detail.message
-                : typeof body?.detail === "string"
-                  ? body.detail
-                  : "";
-            // #224 phase 2: the machine-readable code, when sent.
-            if (typeof body?.detail?.error === "string") code = body.detail.error;
-          } catch {
-            detail = await res.text().catch(() => "");
-          }
-          setDeviceBreakdown({
-            state: "error",
-            message: detail || `HTTP ${res.status}`,
-            // #184: 400 = declined — the chip renders its declined line
-            // and offers no Retry (see DeviceBreakdownState).
-            httpStatus: res.status,
-            code,
-          });
-          return;
-        }
-        const data = (await res.json()) as DeviceBreakdownData;
-        setDeviceBreakdown({ state: "ready", data });
-      } catch (e) {
-        if ((e as Error).name === "AbortError") return;
-        setDeviceBreakdown({ state: "error", message: "Network error" });
-      }
-    })();
-    return () => controller.abort();
-  }, [fetchScenario, retryNonce, fetchArmed]);
-
-  useEffect(() => {
-    // Finding 1 — see `checksArmed` (and `fetchArmed`, #290).
-    if (!fetchArmed) return;
-    const controller = new AbortController();
-    setVerifySlow(false);
-    const slowTimer = setTimeout(() => setVerifySlow(true), SLOW_VERIFY_MS);
     setAuditState((prev) => ({
       state: "loading",
       lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
@@ -530,7 +491,7 @@ export function GeneratorShell({
         const res = await fetch("/api/render/audit", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ scenario: fetchScenario }),
+          body: JSON.stringify({ scenario: { ...fetchScenario, include_breakdown: true } }),
           signal: controller.signal,
         });
         clearTimeout(slowTimer);
@@ -569,15 +530,33 @@ export function GeneratorShell({
             forScenario: fetchScenario,
             lastSettledFor: prev.lastSettledFor,
           }));
+          // #306: the breakdown is part of the same answer, so it says the
+          // same thing.  #184: 400 = declined — the chip renders its
+          // declined line and offers no Retry (see DeviceBreakdownState).
+          setDeviceBreakdown({
+            state: "error",
+            message: detail || `HTTP ${res.status}`,
+            httpStatus: res.status,
+            code,
+            fromAudit: true,
+          });
           return;
         }
-        const data = (await res.json()) as AuditResponse;
+        const { breakdown, ...data } = (await res.json()) as AuditResponse & {
+          breakdown?: DeviceBreakdownData;
+        };
         setAuditState((prev) => ({
           state: "ready",
-          data,
+          data: data as AuditResponse,
           forScenario: fetchScenario,
           lastSettledFor: prev.lastSettledFor,
         }));
+        // Rule 10: an answer without its breakdown is said, never filled.
+        setDeviceBreakdown(
+          breakdown
+            ? { state: "ready", data: breakdown }
+            : { state: "error", message: "The plan answered without its device list." },
+        );
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
         clearTimeout(slowTimer);
@@ -589,6 +568,7 @@ export function GeneratorShell({
           forScenario: fetchScenario,
           lastSettledFor: prev.lastSettledFor,
         }));
+        setDeviceBreakdown({ state: "error", message: "Network error", fromAudit: true });
       }
     })();
     return () => {

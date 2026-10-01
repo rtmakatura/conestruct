@@ -127,10 +127,10 @@ const refused = (data: unknown): Response =>
   ({ ok: false, status: 400, json: async () => data }) as unknown as Response;
 
 type Gate = { promise: Promise<Response>; release: () => void } | null;
-function gate(data: unknown): NonNullable<Gate> {
+function gate(data: unknown, answer: (d: unknown) => Response = ok): NonNullable<Gate> {
   let release!: () => void;
   const promise = new Promise<Response>((r) => {
-    release = () => r(ok(data));
+    release = () => r(answer(data));
   });
   return { promise, release };
 }
@@ -138,11 +138,13 @@ let served: unknown = audit();
 let auditRefuses = false;
 let auditGate: Gate = null;
 let breakdownGate: Gate = null;
+// #306: an ok audit answers its own breakdown (one request per check).
+const withBreakdown = (a: unknown) => ({ ...(a as object), breakdown: BREAKDOWN });
 const fetchMock = vi.fn((input: RequestInfo | URL) => {
   const url = String(input);
   if (url.includes("/api/render/audit")) {
     if (auditGate) return auditGate.promise;
-    return Promise.resolve(auditRefuses ? refused(REFUSAL) : ok(served));
+    return Promise.resolve(auditRefuses ? refused(REFUSAL) : ok(withBreakdown(served)));
   }
   if (url.includes("/api/render/device-breakdown"))
     return breakdownGate ? breakdownGate.promise : Promise.resolve(ok(BREAKDOWN));
@@ -182,7 +184,7 @@ const named = () => band()?.querySelector(".wb-named")?.textContent ?? null;
 const locked = () => document.querySelector(".workbench")!.classList.contains("ws-locked");
 const refusalContainer = () => document.querySelector(".scan-refusal");
 const holdAudit = () => {
-  const held = gate(served);
+  const held = gate(withBreakdown(served));
   auditGate = held;
   return held;
 };
@@ -298,19 +300,20 @@ describe("#252 — the working band is present iff a request for the generated s
     expect(object()).toBe("after an edit to speed");
   });
 
-  it("spec 31: the refusal container never shares a frame with the band — it renders once the pair has settled; Retry says 'retrying the site scan', proceed-anyway 'without the site check'", async () => {
-    auditRefuses = true;
-    const heldBreakdown = gate(BREAKDOWN);
-    breakdownGate = heldBreakdown;
+  it("spec 31: the refusal container never shares a frame with the band — it renders once the answer has settled; Retry says 'retrying the site scan', proceed-anyway 'without the site check'", async () => {
+    // #306: one request answers the audit and the breakdown together, so
+    // the frame "refused, but the breakdown still open" no longer exists.
+    // The claim is checked across the frames that do: the refusal in
+    // flight (band up, no container), then landed (container up, no band).
+    const heldRefusal = gate(REFUSAL, refused);
+    auditGate = heldRefusal;
     const user = await generate();
-    // The audit refused; the breakdown is still open: band up, no container.
     expect(band()).not.toBeNull();
     expect(refusalContainer()).toBeNull();
-    // The strip's verdict is unchanged and unmasked (#192).
-    expect(document.querySelector(".status-bar")!.textContent).toContain("PLAN DECLINED");
     await act(async () => {
-      heldBreakdown.release();
+      heldRefusal.release();
     });
+    auditGate = null;
     await settle();
     expect(band()).toBeNull();
     expect(refusalContainer()).not.toBeNull();

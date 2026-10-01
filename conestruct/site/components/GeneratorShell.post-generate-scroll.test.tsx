@@ -81,8 +81,32 @@ function refusedBreakdown(): Response {
   } as unknown as Response;
 }
 
-const fetchMock = vi.fn((input: RequestInfo | URL) => {
+// #306 (R64): a Generate's breakdown rides the audit (`include_breakdown`).
+// The suite's deferred breakdown is still what each test releases; for
+// the audit it is wrapped -- an ok breakdown answers the audit with it,
+// a failed one fails the audit (the one request) with the same status.
+function auditFromBreakdown(r: Response): Response {
+  if (!r.ok) return r;
+  return {
+    ok: true,
+    status: 200,
+    json: async () => ({ ...MIN_AUDIT, breakdown: await r.json() }),
+  } as unknown as Response;
+}
+
+const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
+  // The Generate's audit is held like the breakdown it carries, so a
+  // refusal lands when the test releases it (`refusedBreakdown`, the
+  // same 400 body), not before.
+  if (
+    url.includes("/api/render/audit") &&
+    JSON.parse(String(init?.body ?? "{}"))?.scenario?.include_breakdown
+  ) {
+    return new Promise<Response>((resolve) => {
+      breakdownCalls.push({ resolve: (r) => resolve(auditFromBreakdown(r)) });
+    });
+  }
   if (url.includes("/api/render/audit") && auditRefuses) {
     return Promise.resolve({
       ok: false,

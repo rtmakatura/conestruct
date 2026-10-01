@@ -135,7 +135,13 @@ let served: unknown = audit();
 let auditGate: Gate | null = null;
 const fetchMock = vi.fn((input: RequestInfo | URL, _init?: RequestInit) => {
   const url = String(input);
-  if (url.includes("/api/render/audit")) return auditGate ? auditGate.promise : Promise.resolve(ok(served));
+  if (url.includes("/api/render/audit")) {
+    const answer = auditGate ? auditGate.promise : Promise.resolve(ok(served));
+    // #306 (R64): a Generate's audit carries the breakdown it used to
+    // fetch separately (`include_breakdown`).
+    if (!JSON.parse(String(_init?.body ?? "{}"))?.scenario?.include_breakdown) return answer;
+    return answer.then(async (r) => ok({ ...((await r.json()) as object), breakdown: BREAKDOWN }));
+  }
   if (url.includes("/api/render/device-breakdown")) return Promise.resolve(ok(BREAKDOWN));
   return Promise.resolve(ok({}));
 });
@@ -268,10 +274,12 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     auditGate = held;
     await user.click(apply("Apply 2 corrections"));
     await settle();
-    // One request each — not one per correction.
+    // One request — not one per correction.  #306 (R64): and not one
+    // per surface either: the audit carries the breakdown.
     expect(calls("audit").length).toBe(audits + 1);
-    expect(calls("device-breakdown").length).toBe(breakdowns + 1);
-    for (const kind of ["audit", "device-breakdown"] as const) {
+    expect(calls("device-breakdown").length).toBe(breakdowns);
+    expect((lastBody("audit") as unknown as { include_breakdown?: boolean }).include_breakdown).toBe(true);
+    for (const kind of ["audit"] as const) {
       const sent = lastBody(kind).meta.siteConditionOverrides!;
       expect(sent.map((m) => (m as { flag: string }).flag)).toEqual(["school_zone", "pedestrian_facility"]);
       expect(sent[0]).toMatchObject({ flag: "school_zone", action: "assert" });

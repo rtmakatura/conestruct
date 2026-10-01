@@ -83,3 +83,40 @@ describe("DeviceBreakdown error honesty (#184)", () => {
     expect(screen.getByRole("button", { name: /^Retry$/ })).toBeTruthy();
   });
 });
+
+describe("DeviceBreakdown shares the audit's failure (#306)", () => {
+  afterEach(cleanup);
+
+  it("names the failure, offers no second Retry, and points at the audit trail", () => {
+    render(
+      <DeviceBreakdown
+        state={{ state: "error", message: "HTTP 502", httpStatus: 502, fromAudit: true }}
+        onRetry={vi.fn()}
+      />,
+    );
+    expect(screen.queryByRole("button", { name: /^Retry$/ })).toBeNull();
+    expect(
+      screen.getByText("Device breakdown failed: HTTP 502. Retry from the audit trail."),
+    ).toBeTruthy();
+    expect(screen.getByText("unavailable: retry from the audit trail")).toBeTruthy();
+  });
+
+  it("does not double a message's own full stop", () => {
+    render(
+      <DeviceBreakdown
+        state={{ state: "error", message: "Network error.", fromAudit: true }}
+        onRetry={vi.fn()}
+      />,
+    );
+    expect(
+      screen.getByText("Device breakdown failed: Network error. Retry from the audit trail."),
+    ).toBeTruthy();
+  });
+
+  it("a breakdown failing on its own keeps its Retry", () => {
+    render(
+      <DeviceBreakdown state={{ state: "error", message: "HTTP 502", httpStatus: 502 }} onRetry={vi.fn()} />,
+    );
+    expect(screen.getByRole("button", { name: /^Retry$/ })).toBeTruthy();
+  });
+});

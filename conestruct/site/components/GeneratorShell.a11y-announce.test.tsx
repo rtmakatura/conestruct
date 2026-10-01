@@ -76,7 +76,20 @@ const REFUSAL = {
   },
 };
 
-const fetchMock = vi.fn((input: RequestInfo | URL) => {
+// #306 (R64): a Generate's breakdown rides the audit (`include_breakdown`).
+// The suite's deferred breakdown is still what each test releases; for
+// the audit it is wrapped -- an ok breakdown answers the audit with it,
+// a failed one fails the audit (the one request) with the same status.
+function auditFromBreakdown(r: Response): Response {
+  if (!r.ok) return r;
+  return {
+    ok: true,
+    status: 200,
+    json: async () => ({ ...MIN_AUDIT, breakdown: await r.json() }),
+  } as unknown as Response;
+}
+
+const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
   if (url.includes("/api/render/audit") && auditRefuses) {
     return Promise.resolve({
@@ -84,6 +97,14 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
       status: 400,
       json: async () => REFUSAL,
     } as unknown as Response);
+  }
+  if (
+    url.includes("/api/render/audit") &&
+    JSON.parse(String(init?.body ?? "{}"))?.scenario?.include_breakdown
+  ) {
+    return new Promise<Response>((resolve) => {
+      breakdownCalls.push({ resolve: (r) => resolve(auditFromBreakdown(r)) });
+    });
   }
   if (url.includes("/api/render/device-breakdown")) {
     return new Promise<Response>((resolve) => {
@@ -323,6 +344,8 @@ describe("generation announcements (#193)", () => {
     await release(0, okBreakdown());
     // The generated wire's audit refuses; the breakdown succeeds (the
     // two race the scan budget independently — audit F-S5-1 #1).
+    // #306 (R64): no longer reachable -- the breakdown rides the refused
+    // audit and shares its refusal; the release below answers nothing new.
     auditRefuses = true;
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await flushDebounce();

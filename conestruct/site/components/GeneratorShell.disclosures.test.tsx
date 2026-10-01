@@ -98,7 +98,12 @@ let auditDelay = 0;
 const fetchMock = vi.fn(async (url: string) => {
   if (String(url).includes("/audit")) {
     if (auditDelay) await new Promise((r) => setTimeout(r, auditDelay));
-    return { ok: true, status: 200, json: async () => AUDIT } as unknown as Response;
+    // #306: the audit answers its own breakdown.
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ ...AUDIT, breakdown: BREAKDOWN }),
+    } as unknown as Response;
   }
   return { ok: true, status: 200, json: async () => BREAKDOWN } as unknown as Response;
 });

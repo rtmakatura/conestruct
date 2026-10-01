@@ -52,6 +52,10 @@ export type DeviceBreakdownState =
       httpStatus?: number;
       // #224 phase 2: the 400's ``detail.error`` when the backend sent one.
       code?: string;
+      // #306: the failure is the audit's (the breakdown rides the audit's
+      // one answer), so the audit trail owns the Retry -- one control per
+      // fact; this chip names the failure and points there.
+      fromAudit?: boolean;
     };
 
 interface Props {
@@ -75,6 +79,7 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
   const declined = state.state === "error" && state.httpStatus === 400;
   // #182 — a 429 is the app's own rate limiter: say so.  Retry stays.
   const throttled = state.state === "error" && state.httpStatus === 429;
+  const fromAudit = state.state === "error" && state.fromAudit === true;
   const summary =
     state.state === "loading" ? (
       <>loading…</>
@@ -83,6 +88,8 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
         <span className="verdict-bad">unavailable: generation declined</span>
       ) : throttled ? (
         <span className="verdict-bad">paused: retry inside</span>
+      ) : fromAudit ? (
+        <span className="verdict-bad">unavailable: retry from the audit trail</span>
       ) : (
         <span className="verdict-bad">unavailable: retry inside</span>
       )
@@ -125,17 +132,21 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
             <div className="font-mono text-[12px] text-[color:var(--fail)]">
               {throttled
                 ? "Device schedule paused: too many updates in the last minute. Retry in a moment."
-                : `Device breakdown failed: ${state.message}`}
+                : fromAudit
+                  ? `Device breakdown failed: ${state.message.replace(/\.$/, "")}. Retry from the audit trail.`
+                  : `Device breakdown failed: ${state.message}`}
             </div>
-            <button
-              type="button"
-              data-write=""
-              disabled={locked}
-              onClick={onRetry}
-              className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
-            >
-              Retry
-            </button>
+            {!fromAudit && (
+              <button
+                type="button"
+                data-write=""
+                disabled={locked}
+                onClick={onRetry}
+                className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
+              >
+                Retry
+              </button>
+            )}
           </div>
         ))}
 

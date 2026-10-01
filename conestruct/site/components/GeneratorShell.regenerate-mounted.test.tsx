@@ -78,6 +78,8 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
 
 const okBd = () =>
   ({ ok: true, status: 200, json: async () => BREAKDOWN }) as unknown as Response;
+// #306 (R64): a Generate is one request -- the audit, carrying the
+// breakdown.  `bdCalls` now holds only the S7 previews.
 const okAudit = () =>
   ({
     ok: true,
@@ -87,6 +89,7 @@ const okAudit = () =>
       sections: {},
       pending_verification: { count: 0, note: "", tracking_issue: null },
       plan_flags: { validation_warnings: 0, compliance_fails: 0, v1_limitations: 0, is_clean: true },
+      breakdown: BREAKDOWN,
     }),
   }) as unknown as Response;
 const refusal400 = () =>
@@ -122,7 +125,7 @@ function stripText(): string {
 async function generateThenEdit() {
   const user = userEvent.setup();
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-  await release(bdCalls, 0, okBd());
+  await release(auditCalls, 0, okAudit());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
   // S4 (s4-prod/): a first Generate shows rule 117's placeholder until
   // its own answer lands — the pre-Generate answer is not presented.
@@ -130,7 +133,6 @@ async function generateThenEdit() {
   expect(document.querySelector('[data-testid="results-placeholder"]')).not.toBeNull();
   // #252: settle the generated pair — the strip is locked while it is open.
   await flushDebounce();
-  await release(bdCalls, 1, okBd());
   await release(auditCalls, 1, okAudit());
   expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
   // #289 S7: the post-generate edit stages and APPLY writes — one
@@ -138,7 +140,7 @@ async function generateThenEdit() {
   // fired by the staged value is a read on the same route and is
   // answered first so the page is not left holding it.
   await editAfterGenerate("what-speed", "35");
-  for (let i = 2; i < bdCalls.length - 1; i += 1) {
+  for (let i = 0; i < bdCalls.length; i += 1) {
     await release(bdCalls, i, okBd());
   }
   await flushDebounce();
@@ -170,7 +172,7 @@ describe("results stay mounted through regeneration (#192)", () => {
     expect(screen.getByText(/183 ft/)).toBeTruthy();
 
     // Settling clears the ribbon and the dim.
-    await release(bdCalls, bdCalls.length - 1, okBd());
+    await release(auditCalls, auditCalls.length - 1, okAudit());
     expect(screen.queryByText(/Previous answer/)).toBeNull();
     expect(document.querySelector(".results-stale")).toBeNull();
     expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
@@ -188,30 +190,23 @@ describe("results stay mounted through regeneration (#192)", () => {
     // The mount fetch settling is not the wire scenario's answer (the
     // Generate click changed it): the band holds through the deferred
     // debounce window until the pair for the generated scenario settles.
-    await release(bdCalls, 0, okBd());
+    await release(auditCalls, 0, okAudit());
     expect(document.querySelector(".working-band")).not.toBeNull();
     await flushDebounce();
-    await release(bdCalls, 1, okBd());
-    expect(document.querySelector(".working-band")).not.toBeNull();
     await release(auditCalls, 1, okAudit());
     expect(document.querySelector(".working-band")).toBeNull();
   });
 
-  it("#252: a refusal settling mid-regeneration is never masked — the strip says PLAN DECLINED while the band stays up for the open breakdown", async () => {
+  it("#252: a refusal settling mid-regeneration is never masked — the strip says PLAN DECLINED and the band leaves with it", async () => {
     await generateThenEdit();
-    // Audit answers 400 for the CURRENT scenario while the breakdown is
-    // still in flight — the verdict shows; the band stays (a request
-    // IS open) and leaves in the frame the breakdown settles.
+    // #306: the breakdown rides the audit's one answer, so a refusal for
+    // the CURRENT scenario settles everything at once: no request is left
+    // open (the "band up for the open breakdown" frame no longer exists),
+    // the verdict shows, and the band leaves in the same frame.
     await release(auditCalls, 2, refusal400());
     expect(stripText()).toContain("PLAN DECLINED");
     expect(stripText()).not.toContain("COMPUTING");
-    expect(document.querySelector(".working-band")).not.toBeNull();
-    // #289 S7: the breakdown still open is APPLY's generate — the
-    // staged edit's preview was answered in `generateThenEdit`.  The
-    // band leaves in the frame that request settles, which is the claim.
-    await release(bdCalls, bdCalls.length - 1, okBd());
     expect(document.querySelector(".working-band")).toBeNull();
-    expect(stripText()).toContain("PLAN DECLINED");
   });
 });
 

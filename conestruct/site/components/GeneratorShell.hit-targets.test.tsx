@@ -101,7 +101,9 @@ const fetchMock = vi.fn(async (url: string) =>
   ({
     ok: true,
     status: 200,
-    json: async () => (String(url).includes("/audit") ? AUDIT : BREAKDOWN),
+    // #306: the audit answers its own breakdown.
+    json: async () =>
+      String(url).includes("/audit") ? { ...AUDIT, breakdown: BREAKDOWN } : BREAKDOWN,
   }) as unknown as Response,
 );
 

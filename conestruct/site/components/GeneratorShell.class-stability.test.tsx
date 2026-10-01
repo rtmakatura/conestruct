@@ -92,8 +92,29 @@ type Deferred = { resolve: (r: Response) => void; body: unknown };
 
 let breakdownCalls: Deferred[] = [];
 
+// #306 (R64): a Generate's breakdown rides the audit (`include_breakdown`).
+// The suite's deferred breakdown is still what each test releases; for
+// the audit it is wrapped -- an ok breakdown answers the audit with it,
+// a failed one fails the audit (the one request) with the same status.
+function auditFromBreakdown(r: Response): Response {
+  if (!r.ok) return r;
+  return {
+    ok: true,
+    status: 200,
+    json: async () => ({ ...auditFull, breakdown: await r.json() }),
+  } as unknown as Response;
+}
+
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
+  if (url.includes("/api/render/audit")) {
+    const body = JSON.parse(String(init?.body ?? "{}"));
+    if (body?.scenario?.include_breakdown) {
+      return new Promise<Response>((resolve) => {
+        breakdownCalls.push({ resolve: (r) => resolve(auditFromBreakdown(r)), body });
+      });
+    }
+  }
   if (url.includes("/api/render/device-breakdown")) {
     const body = JSON.parse(String(init?.body ?? "{}"));
     return new Promise<Response>((resolve) => {

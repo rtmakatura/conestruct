@@ -70,8 +70,6 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   } as unknown as Response);
 });
 
-const okBd = () =>
-  ({ ok: true, status: 200, json: async () => BREAKDOWN }) as unknown as Response;
 const refusal400 = () =>
   ({
     ok: false,
@@ -112,6 +110,8 @@ const okAudit = () =>
         v1_limitations: 0,
         is_clean: true,
       },
+      // #306: the audit answers its own breakdown.
+      breakdown: BREAKDOWN,
     }),
   }) as unknown as Response;
 
@@ -153,7 +153,7 @@ afterEach(() => {
 describe("tick → clean → untick → re-refusal, CTA gated through both windows (#179)", () => {
   it("runs the full loop with focus retained and a byte-identical restored payload", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER_COLFAX} />);
-    await release(bdCalls, 0, okBd());
+    // #306: one request per check; the breakdown rides the audit.
     await release(auditCalls, 0, refusal400());
 
     // Settled refusal: armed row, gated CTA, declined strip.
@@ -170,7 +170,6 @@ describe("tick → clean → untick → re-refusal, CTA gated through both windo
     expect(row.getAttribute("aria-checked")).toBe("true");
     expect(document.activeElement).toBe(row);
     await flushDebounce();
-    await release(bdCalls, 1, okBd());
     expect(generate().disabled).toBe(true); // tick window: gated
     await release(auditCalls, 1, okAudit());
 
@@ -188,7 +187,6 @@ describe("tick → clean → untick → re-refusal, CTA gated through both windo
     expect(row.getAttribute("aria-checked")).toBe("false");
     expect(document.activeElement).toBe(row);
     await flushDebounce();
-    await release(bdCalls, 2, okBd());
     expect(generate().disabled).toBe(true); // untick window: gated (#179)
     expect(
       document.body.textContent,
@@ -203,6 +201,9 @@ describe("tick → clean → untick → re-refusal, CTA gated through both windo
     // Acceptance: the POST body after tick-then-untick is byte-identical
     // to the never-confirmed body.
     expect(auditBodies.length).toBe(3);
+    // #306: no breakdown request of its own; every audit asks for it.
+    expect(bdCalls.length).toBe(0);
+    for (const b of auditBodies) expect(b).toContain('"include_breakdown":true');
     expect(auditBodies[2]).toBe(auditBodies[0]);
     // And the ticked body differed (the override rode the wire).
     expect(auditBodies[1]).toContain("flagger_multilane_confirm");

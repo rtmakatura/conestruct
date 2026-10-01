@@ -107,7 +107,8 @@ function okAudit(): Response {
   return {
     ok: true,
     status: 200,
-    json: async () => CLEAN_AUDIT,
+    // #306: the audit answers its own breakdown (the catch-all's `{}`).
+    json: async () => ({ ...CLEAN_AUDIT, breakdown: {} }),
   } as unknown as Response;
 }
 
@@ -217,7 +218,8 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
     expect(auditBodies.length).toBe(1);
     const sent = JSON.parse(auditBodies[0]) as { scenario: unknown };
     // #186: the mount is the pinned default — the body must carry it
-    // verbatim, coordinates included.
-    expect(sent.scenario).toEqual(PINNED_SHOULDER);
+    // verbatim, coordinates included.  #306: plus the one flag that asks
+    // the audit for its device breakdown.
+    expect(sent.scenario).toEqual({ ...PINNED_SHOULDER, include_breakdown: true });
   });
 });

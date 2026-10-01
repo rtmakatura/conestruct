@@ -56,8 +56,33 @@ type Deferred = { resolve: (r: Response) => void };
 
 let breakdownCalls: Deferred[] = [];
 
+// #306 (R64): a Generate's breakdown rides the audit (`include_breakdown`).
+// The suite's deferred breakdown is still what each test releases; for
+// the audit it is wrapped -- an ok breakdown answers the audit with it,
+// a failed one fails the audit (the one request) with the same status.
+function auditFromBreakdown(r: Response): Response {
+  if (!r.ok) return r;
+  return {
+    ok: true,
+    status: 200,
+    json: async () => ({ ...MIN_AUDIT, breakdown: await r.json() }),
+  } as unknown as Response;
+}
+
+function isGenerateAudit(u: unknown, init?: RequestInit): boolean {
+  return (
+    String(u).includes("/api/render/audit") &&
+    Boolean(JSON.parse(String(init?.body ?? "{}"))?.scenario?.include_breakdown)
+  );
+}
+
 const fetchMock = vi.fn((input: RequestInfo | URL, _init?: RequestInit) => {
   const url = String(input);
+  if (isGenerateAudit(url, _init)) {
+    return new Promise<Response>((resolve) => {
+      breakdownCalls.push({ resolve: (r) => resolve(auditFromBreakdown(r)) });
+    });
+  }
   if (url.includes("/api/render/device-breakdown")) {
     return new Promise<Response>((resolve) => {
       breakdownCalls.push({ resolve });
@@ -279,7 +304,7 @@ describe("zone staging lifecycle", () => {
     await release(1, okBreakdown());
 
     let bodies = fetchMock.mock.calls
-      .filter(([u]) => String(u).includes("device-breakdown"))
+      .filter(([u, init]) => isGenerateAudit(u, init as RequestInit))
       .map(([, init]) => JSON.parse(String((init as RequestInit).body)));
     let last = bodies[bodies.length - 1] as {
       scenario: { schedule?: { date_mode: string; work_date?: string } };
@@ -291,7 +316,7 @@ describe("zone staging lifecycle", () => {
     fireEvent.change(dateInput, { target: { value: "" } });
     await flushDebounce();
     bodies = fetchMock.mock.calls
-      .filter(([u]) => String(u).includes("device-breakdown"))
+      .filter(([u, init]) => isGenerateAudit(u, init as RequestInit))
       .map(([, init]) => JSON.parse(String((init as RequestInit).body)));
     last = bodies[bodies.length - 1] as {
       scenario: { schedule?: { date_mode: string } };
@@ -312,11 +337,16 @@ describe("zone staging lifecycle", () => {
 
     // The refetch carries the edited speed in the POSTed scenario.
     const bodies = fetchMock.mock.calls
-      .filter(([u]) => String(u).includes("device-breakdown"))
+      .filter(([u, init]) => isGenerateAudit(u, init as RequestInit))
       .map(([, init]) => JSON.parse(String((init as RequestInit).body)));
     const last = bodies[bodies.length - 1] as {
       scenario: { speed: number };
     };
     expect(last.scenario.speed).toBe(35);
+    // #306 (R64): the breakdown route is the preview's alone now.
+    const breakdownBodies = fetchMock.mock.calls
+      .filter(([u]) => String(u).includes("device-breakdown"))
+      .map(([, init]) => JSON.parse(String((init as RequestInit).body)));
+    for (const b of breakdownBodies) expect(b.scenario.preview).toBe(true);
   });
 });

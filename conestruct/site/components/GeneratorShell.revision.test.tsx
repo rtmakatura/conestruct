@@ -54,12 +54,17 @@ let calls: Call[] = [];
 
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
-  calls.push({ url, body: JSON.parse(String(init?.body ?? "{}")) });
+  const body = JSON.parse(String(init?.body ?? "{}"));
+  calls.push({ url, body });
   if (url.includes("/api/render/audit")) {
+    // #306 (R64): a Generate's audit carries its breakdown.
+    const data = body?.scenario?.include_breakdown
+      ? { ...auditFull, breakdown: BREAKDOWN }
+      : auditFull;
     return Promise.resolve({
       ok: true,
       status: 200,
-      json: async () => auditFull,
+      json: async () => data,
     } as unknown as Response);
   }
   if (url.includes("/api/render/device-breakdown")) {
@@ -314,10 +319,13 @@ describe("a preview writes nothing — no band, no lock, no memo (#289 acceptanc
     expect(document.querySelector(".hero .hero-cell .num")?.textContent).toBe(settledTotal);
 
     // APPLY does not reuse the preview's answer: a fresh, unflagged request.
+    // #306 (R64): the generate's breakdown rides its audit.
     calls = [];
     await applyRevision();
     await settle();
-    const applied = breakdowns().map(scenarioOf);
+    expect(breakdowns()).toHaveLength(0);
+    const applied = audits().map(scenarioOf);
+    expect(applied.every((s) => s.include_breakdown === true)).toBe(true);
     expect(applied.length).toBeGreaterThan(0);
     expect(applied.every((s) => s.preview !== true)).toBe(true);
   });
@@ -363,8 +371,11 @@ describe("APPLY is the one write and the one generate (ruling e)", () => {
 
     // The generate asks the full question again: the audit is back, and
     // the request is NOT a preview.
+    // #306 (R64): one request -- the audit, carrying the breakdown.
     expect(audits().length).toBeGreaterThan(0);
-    const applied = breakdowns().at(-1)!;
+    expect(breakdowns()).toHaveLength(0);
+    const applied = audits().at(-1)!;
+    expect(scenarioOf(applied).include_breakdown).toBe(true);
     expect(scenarioOf(applied).speed).toBe(35);
     expect(scenarioOf(applied).preview).toBeFalsy();
     // And the plan on screen is the applied one now.

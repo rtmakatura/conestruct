@@ -211,6 +211,11 @@ export function GenerateButton({
         // this control by identity — never by a name the rail's entry once
         // shared (#237's false "0 checked").
         data-testid="generate-plan"
+        // #306: a write, declared (#252's lock contract).  It already sat
+        // disabled while generating; with one request per Generate the
+        // pre-generate column can be on screen under the lock, so the
+        // control says what it is.
+        data-write=""
         onClick={onGenerate}
         disabled={generating || disabled}
         title={!generating && disabled ? disabledReason : undefined}

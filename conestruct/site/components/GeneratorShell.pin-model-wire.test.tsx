@@ -86,8 +86,11 @@ beforeEach(() => {
       const url = String(input);
       const body = JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>;
       calls.push({ url, body });
+      // #306: the audit answers its own breakdown when asked for it.
       const data = url.includes("/api/render/audit")
-        ? AUDIT
+        ? (body.scenario as { include_breakdown?: boolean } | undefined)?.include_breakdown
+          ? { ...AUDIT, breakdown: BREAKDOWN }
+          : AUDIT
         : url.includes("/api/render/device-breakdown")
           ? BREAKDOWN
           : {};
@@ -129,7 +132,11 @@ describe("every render sender carries meta.pinModel (#290)", () => {
     const bodies = renderBodies();
     const urls = new Set(bodies.map((b) => b.url.replace(/\?.*$/, "")));
     expect([...urls].some((u) => u.includes("/api/render/audit"))).toBe(true);
-    expect([...urls].some((u) => u.includes("/api/render/device-breakdown"))).toBe(true);
+    // #306: the breakdown rides the audit request; none of its own on Generate.
+    expect([...urls].some((u) => u.includes("/api/render/device-breakdown"))).toBe(false);
+    for (const c of calls.filter((c) => c.url.includes("/api/render/audit"))) {
+      expect((c.body.scenario as { include_breakdown?: boolean }).include_breakdown).toBe(true);
+    }
     expect([...urls].some((u) => u.includes("/api/render/bundle"))).toBe(true);
     // #290 (RULE 5, stated): since the visible ship every sender sends the
     // work-start model — the first ship's "corridor_end" pin is what moved.

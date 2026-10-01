@@ -74,8 +74,8 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
   } as unknown as Response);
 });
 
-const okBd = () =>
-  ({ ok: true, status: 200, json: async () => BREAKDOWN }) as unknown as Response;
+// #306 (R64): a Generate is one request -- the audit, carrying the
+// breakdown.  No preview fires in this suite, so `bdCalls` stays empty.
 const refusal400 = () =>
   ({
     ok: false,
@@ -116,6 +116,7 @@ const okAudit = () =>
         v1_limitations: 0,
         is_clean: true,
       },
+      breakdown: BREAKDOWN,
     }),
   }) as unknown as Response;
 
@@ -140,7 +141,6 @@ const generate = () =>
 
 async function settleRefusalThenEdit() {
   render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER_MULTILANE} />);
-  await release(bdCalls, 0, okBd());
   await release(auditCalls, 0, refusal400());
   expect(generate().disabled).toBe(true); // settled refusal gates
   // Any edit starts the re-fetch window.
@@ -151,8 +151,8 @@ async function settleRefusalThenEdit() {
     });
   });
   await flushDebounce();
-  await release(bdCalls, 1, okBd());
   expect(auditCalls.length).toBe(2); // audit re-fetch in flight
+  expect(bdCalls.length).toBe(0); // #306: the breakdown rides the audit
 }
 
 beforeEach(() => {
@@ -195,7 +195,6 @@ describe("confirm-tick window: CTA stays gated after a refusal (#196)", () => {
       });
     });
     await flushDebounce();
-    await release(bdCalls, 2, okBd());
     expect(generate().disabled).toBe(true); // armed affordance: gated (#179)
     await release(auditCalls, 2, refusal400());
     expect(generate().disabled).toBe(true);

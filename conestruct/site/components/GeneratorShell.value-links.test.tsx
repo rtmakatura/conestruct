@@ -52,12 +52,17 @@ let calls: Call[] = [];
 
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
-  calls.push({ url, body: JSON.parse(String(init?.body ?? "{}")) });
+  const body = JSON.parse(String(init?.body ?? "{}"));
+  calls.push({ url, body });
   if (url.includes("/api/render/audit")) {
+    // #306 (R64): a Generate's audit carries its breakdown.
+    const data = body?.scenario?.include_breakdown
+      ? { ...auditFull, breakdown: BREAKDOWN }
+      : auditFull;
     return Promise.resolve({
       ok: true,
       status: 200,
-      json: async () => auditFull,
+      json: async () => data,
     } as unknown as Response);
   }
   if (url.includes("/api/render/device-breakdown")) {
@@ -82,6 +87,8 @@ async function settle() {
 }
 
 const breakdowns = () => calls.filter((c) => c.url.includes("device-breakdown"));
+// #306 (R64): the apply's generate is one audit request carrying the breakdown.
+const audits = () => calls.filter((c) => c.url.includes("/api/render/audit"));
 // #290 (RULE 5, stated): the WHERE band's side control reads the road's
 // geometry when the band opens (POST /render/corridor-geometry — a read:
 // no check, no write, no plan).  "Opening a band asks nothing" now means
@@ -199,8 +206,10 @@ describe("defect 2 — a staged field opens S7 on THAT field", () => {
     calls = [];
     await applyRevision();
     await settle();
-    const applied = breakdowns().map(scenarioOf).filter((s) => !s.preview);
+    expect(breakdowns()).toHaveLength(0);
+    const applied = audits().map(scenarioOf).filter((s) => !s.preview);
     expect(applied.length).toBeGreaterThan(0);
+    expect(applied.at(-1)!.include_breakdown).toBe(true);
     expect(applied.at(-1)!.lanes).toBe(3);
     expect(applied.at(-1)!.speed).toBe(65);
   });
@@ -245,7 +254,9 @@ describe("defect 2 — a staged field opens S7 on THAT field", () => {
     calls = [];
     await applyRevision();
     await settle();
-    const applied = breakdowns().map(scenarioOf).filter((s) => !s.preview).at(-1)!;
+    expect(breakdowns()).toHaveLength(0);
+    const applied = audits().map(scenarioOf).filter((s) => !s.preview).at(-1)!;
+    expect(applied.include_breakdown).toBe(true);
     expect(applied.speed).toBe(55);
     expect(applied.lanes).toBe(3);
   });

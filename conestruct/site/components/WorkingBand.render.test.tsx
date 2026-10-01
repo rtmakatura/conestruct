@@ -114,13 +114,19 @@ function hold(data: unknown = {}, good = true): Held {
 // Every file render is held until the test releases it.
 let renders: Record<string, Held> = {};
 let auditHeld: Held | null = null;
-const fetchMock = vi.fn((input: RequestInfo | URL) => {
+const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
   if (url.includes("/api/render/audit-pdf")) return (renders["audit-pdf"] ??= hold()).promise;
   // The preview's answer shape is the quote panel's business: a failed
   // preview closes the request just the same, which is all this suite asks.
   if (url.includes("/api/render/quote-breakdown")) return (renders["quote-breakdown"] ??= hold({}, false)).promise;
-  if (url.includes("/api/render/audit")) return auditHeld ? auditHeld.promise : Promise.resolve(ok(AUDIT));
+  if (url.includes("/api/render/audit")) {
+    const answer = auditHeld ? auditHeld.promise : Promise.resolve(ok(AUDIT));
+    // #306 (R64): a Generate's audit carries the breakdown it used to
+    // fetch separately (`include_breakdown`).
+    if (!JSON.parse(String(init?.body ?? "{}"))?.scenario?.include_breakdown) return answer;
+    return answer.then(async (r) => ok({ ...((await r.json()) as object), breakdown: BREAKDOWN }));
+  }
   if (url.includes("/api/render/device-breakdown")) return Promise.resolve(ok(BREAKDOWN));
   const m = url.match(/\/api\/render\/([a-z-]+)/);
   if (m) return (renders[m[1]] ??= hold()).promise;

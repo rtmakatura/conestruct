@@ -8,8 +8,11 @@
 // a new control cannot ship without declaring what it is (rule 11 —
 // the test lives where the bug would).  The real shell, strip, cards,
 // pricing panel, tiered reference, nav and footer are mounted; only the
-// pre-generate sidebar and the picker are stubs (they unmount on
-// Generate and never face the lock).
+// pre-generate sidebar and the picker are stubs.  #306: the sidebar CAN
+// face the lock (it shows while the one Generate request is open), so its
+// stub mirrors the real Generate button -- a declared write, disabled
+// while generating (GeneratorFormPrimitives.tsx GenerateButton).  The
+// real sidebar's other controls are not mounted here.
 import fs from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -18,8 +21,8 @@ import userEvent from "@testing-library/user-event";
 
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
-    <button type="button" onClick={onGenerate}>
+  GeneratorSidebar: ({ onGenerate, generating }: { onGenerate: () => void; generating: boolean }) => (
+    <button type="button" data-write="" disabled={generating} onClick={onGenerate}>
       Generate package
     </button>
   ),
@@ -65,6 +68,9 @@ const BREAKDOWN = {
   unique_types: 2,
   zone_geometry: { taper_l_ft: 1, buffer_b_ft: 1, device_spacing_ft: 1, work_len_ft: 1 },
 };
+// #306 (R64): a Generate's audit carries its breakdown (`include_breakdown`);
+// /api/render/device-breakdown is the S7 preview's alone.
+const AUDIT_WITH_BREAKDOWN = { ...AUDIT, breakdown: BREAKDOWN };
 const ok = (data: unknown): Response =>
   ({ ok: true, status: 200, json: async () => data, text: async () => "" }) as unknown as Response;
 type Gate = { promise: Promise<Response>; release: () => void } | null;
@@ -78,7 +84,7 @@ function gate(data: unknown): NonNullable<Gate> {
 let auditGate: Gate = null;
 const fetchMock = vi.fn((input: RequestInfo | URL) => {
   const url = String(input);
-  if (url.includes("/api/render/audit")) return auditGate ? auditGate.promise : Promise.resolve(ok(AUDIT));
+  if (url.includes("/api/render/audit")) return auditGate ? auditGate.promise : Promise.resolve(ok(AUDIT_WITH_BREAKDOWN));
   if (url.includes("/api/render/device-breakdown")) return Promise.resolve(ok(BREAKDOWN));
   return Promise.resolve(ok({}));
 });
@@ -146,7 +152,7 @@ async function generateHeld() {
   expect(document.querySelector(".working-band")).toBeNull();
   // Open every disclosure so their controls are in the DOM to enumerate.
   await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
-  const held = gate(AUDIT);
+  const held = gate(AUDIT_WITH_BREAKDOWN);
   auditGate = held;
   const block = document.getElementById("site-corrections")!;
   const school = within(block).getByText("School zone").closest(".site-correction-row") as HTMLElement;

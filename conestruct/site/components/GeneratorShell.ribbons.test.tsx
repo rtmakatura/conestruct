@@ -63,7 +63,10 @@ let breakdownFails = false;
 const fetchMock = vi.fn(async (url: string) => {
   const u = String(url);
   if (u.includes("/audit")) {
-    return { ok: true, status: 200, json: async () => AUDIT } as unknown as Response;
+    // #306: the audit answers its own breakdown.  A failed breakdown
+    // beside a plan is now an ok audit that came back without one.
+    const data = breakdownFails ? AUDIT : { ...AUDIT, breakdown: BREAKDOWN };
+    return { ok: true, status: 200, json: async () => data } as unknown as Response;
   }
   if (breakdownFails && u.includes("device-breakdown")) {
     return { ok: false, status: 500, json: async () => ({}) } as unknown as Response;
