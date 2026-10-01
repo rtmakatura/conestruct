@@ -169,19 +169,39 @@ def segments(command: str) -> list[list[str]]:
     return out
 
 
-def git_call(toks: list[str]) -> tuple[str, list[str]] | None:
-    """(subcommand, args) when this segment runs git; skips `-c k=v`, `-C dir`."""
+def git_call(toks: list[str]) -> tuple[str, list[str], str | None] | None:
+    """(subcommand, args, the -C dir or None) when this segment runs git;
+    skips `-c k=v`."""
     for i, t in enumerate(toks):
         base = t.replace("\\", "/").rsplit("/", 1)[-1].lower().lstrip("&")
         if base in ("git", "git.exe"):
             rest = toks[i + 1 :]
             j = 0
+            cdir: str | None = None
             while j < len(rest) and rest[j].startswith("-"):
+                if rest[j] == "-C" and j + 1 < len(rest):
+                    cdir = rest[j + 1] if cdir is None else os.path.join(cdir, rest[j + 1])
                 j += 2 if rest[j] in ("-c", "-C") else 1
             if j < len(rest):
-                return rest[j], rest[j + 1 :]
+                return rest[j], rest[j + 1 :], cdir
             return None
     return None
+
+
+CD_COMMANDS = ("cd", "set-location", "sl", "chdir", "pushd")
+
+
+def _as_path(path: str) -> str:
+    """A Git Bash path (/c/Users/...) as the Windows path it names (C:/Users/...)."""
+    m = re.match(r"^/([a-zA-Z])(/.*)?$", path)
+    if m and os.name == "nt":
+        return f"{m.group(1).upper()}:{m.group(2) or '/'}"
+    return os.path.expanduser(path)
+
+
+def _resolve(base: str | None, path: str) -> str:
+    p = _as_path(path)
+    return p if os.path.isabs(p) or base is None else os.path.join(base, p)
 
 
 def current_branch(cwd: str | None) -> str:
@@ -227,8 +247,13 @@ def check_git(sub: str, args: list[str], cwd: str | None) -> None:
             raise Block("a bare git push from main (or an unknown branch) is blocked")
         return
     if sub in ("merge", "pull", "rebase", "reset", "cherry-pick", "revert", "am"):
-        if current_branch(cwd) == "main":
+        # R68: `cwd` is the directory this git call runs in (see decide),
+        # so the branch judged is the branch being changed.
+        branch = current_branch(cwd)
+        if branch == "main":
             raise Block(f"git {sub} on main is blocked; only ship.ps1 moves main")
+        if branch == "":
+            raise Block(f"git {sub}: cannot read the branch at {cwd}; blocked (fail closed)")
         return
     if (
         sub == "branch"
@@ -284,10 +309,20 @@ def decide(payload: dict) -> None:
             raise Block(f'the go names "{branch}" but the command ships "{arg}"')
         consume(uuid, branch)
         return
+    # R68: each git call is judged in the directory it runs in -- the
+    # session's cwd, moved by any earlier `cd` / `Set-Location` in the same
+    # command, then by the call's own `-C` -- so a rebase in an arc's
+    # worktree isn't refused because the session sits in the main checkout,
+    # and a `-C <main checkout>` isn't let through because it doesn't.
+    here = cwd
     for toks in segments(command):
+        if toks[0].lower() in CD_COMMANDS and len(toks) > 1:
+            here = _resolve(here, toks[1])
+            continue
         call = git_call(toks)
         if call:
-            check_git(call[0], call[1], cwd)
+            sub, args, cdir = call
+            check_git(sub, args, _resolve(here, cdir) if cdir else here)
         check_gh(toks)
 
 

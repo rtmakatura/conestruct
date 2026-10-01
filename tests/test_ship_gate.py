@@ -251,3 +251,80 @@ ALLOWED = [
 def test_ordinary_work_is_allowed(tmp_path, repo, command):
     code, err = hook(tmp_path, command, cwd=repo)
     assert code == 0, f"{command!r} was blocked: {err}"
+
+
+# --------------------------------------------------------------------------- #
+# R68 (#306): rebase / cherry-pick are judged by the branch being CHANGED --
+# the directory the git call runs in (`git -C <dir>`, or an earlier
+# `cd <dir>` / `Set-Location <dir>` in the same command) -- never by the
+# session's working directory.  Anything that moves main is still blocked.
+# --------------------------------------------------------------------------- #
+
+
+@pytest.fixture
+def two_checkouts(tmp_path: Path) -> tuple[Path, Path]:
+    """A main checkout on `main` and a worktree on `feature`, as the real repo
+    has (the session sits in the first; arcs run in the second)."""
+    main = tmp_path / "main-checkout"
+    main.mkdir()
+    run = lambda *a, cwd=main: subprocess.run(  # noqa: E731
+        ["git", *a], cwd=cwd, check=True, capture_output=True
+    )
+    run("init", "-q", "-b", "main")
+    run("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "init")
+    wt = tmp_path / "wt-feature"
+    run("worktree", "add", "-q", "-b", "feature", str(wt))
+    return main, wt
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        'git -C "{wt}" rebase 0123abc',
+        'git -C "{wt}" cherry-pick 0123abc',
+        'cd "{wt}" && git rebase 0123abc',
+        'cd "{wt}" && git cherry-pick 0123abc',
+        'Set-Location "{wt}"; git cherry-pick 0123abc',
+    ],
+)
+def test_a_feature_branch_changed_from_a_session_on_main_is_allowed(
+    tmp_path, two_checkouts, template
+):
+    main, wt = two_checkouts
+    code, err = hook(tmp_path, template.format(wt=wt.as_posix()), cwd=main)
+    assert code == 0, err
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        'git -C "{main}" rebase 0123abc',
+        'git -C "{main}" cherry-pick 0123abc',
+        'cd "{main}" && git rebase 0123abc',
+        'cd "{main}" && git merge feature',
+        'Set-Location "{main}"; git cherry-pick 0123abc',
+    ],
+)
+def test_main_changed_from_a_session_on_a_feature_branch_is_blocked(
+    tmp_path, two_checkouts, template
+):
+    main, wt = two_checkouts
+    code, err = hook(tmp_path, template.format(main=main.as_posix()), cwd=wt)
+    assert code == 2, err
+    assert "on main is blocked" in err
+
+
+def test_a_git_bash_path_is_read_as_the_windows_path(tmp_path, two_checkouts):
+    """`cd /c/Users/...` (Git Bash) names the same directory as C:/Users/..."""
+    main, wt = two_checkouts
+    posix = wt.as_posix()
+    if len(posix) > 2 and posix[1] == ":":
+        posix = "/" + posix[0].lower() + posix[2:]
+    code, err = hook(tmp_path, f'cd "{posix}" && git rebase 0123abc', cwd=main)
+    assert code == 0, err
+
+
+def test_an_unreadable_target_fails_closed(tmp_path, two_checkouts):
+    main, _wt = two_checkouts
+    code, err = hook(tmp_path, f'git -C "{(tmp_path / "nowhere").as_posix()}" rebase x', cwd=main)
+    assert code == 2, err
