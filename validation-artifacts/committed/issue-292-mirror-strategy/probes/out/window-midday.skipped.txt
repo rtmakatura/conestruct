@@ -1,0 +1,1 @@
+﻿2026-10-01T12:09:26.3689361-06:00 skipped by rtmak pid 26720: C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-292\validation-artifacts\committed\issue-292-mirror-strategy\probes\out\window-midday.jsonl already exists (the other trigger ran this window)
