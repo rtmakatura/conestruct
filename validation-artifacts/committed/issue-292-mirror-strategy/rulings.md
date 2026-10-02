@@ -91,6 +91,13 @@ This file is the arc's authority; every commit on this branch cites it.
 
 ---
 
-## The ruling on the checkpoint, verbatim
+## The ruling on the checkpoint, verbatim (Ryan, 2026-10-02, on `checkpoint.md` at `88eea3c`)
 
-*(Not yet ruled.)*
+> Rulings on #292 (quote verbatim):
+> R69. Q1: ask both live mirrors at once; take the first VALID answer (it must pass #304's checks: no null points, nothing outside the query box). Cancel the other request as soon as one wins.
+> R70. Q2: drop kumi.
+> R71. Q3: keep 20 s as a hard deadline; a slow read can't run past it.
+> R72. Q4: no pre-measure. Instead, acceptance is measured on prod after the ship: the same 9 pins at three times of day, reporting refusal rate and median scan time.
+> R73. Be a good citizen of the free mirrors: send a User-Agent naming Conestruct with a contact address, honor 429 / rate limits from either mirror, and don't retry a mirror that just refused.
+> Delete both Conestruct-292 scheduled tasks.
+> Build, verify, give me the go.
