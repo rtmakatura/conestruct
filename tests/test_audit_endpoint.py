@@ -2706,18 +2706,24 @@ def test_no_intersection_flags_pending_unchanged(client: TestClient) -> None:
 def test_audit_completes_with_check_unavailable_when_overpass_stalls(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    import asyncio
+
     from src.rules import site_detection as sd
 
-    clock = {"t": 9000.0}
-    budgets: list[float | None] = []
+    cancelled: list[str] = []
 
-    def fake_post(url: str, **kw: Any) -> Any:
-        budgets.append(kw.get("timeout"))
-        clock["t"] += 21.0
-        raise sd.httpx.ConnectTimeout("hung", request=sd.httpx.Request("POST", url))
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        try:
+            await asyncio.sleep(30)
+        except asyncio.CancelledError:
+            cancelled.append(url)
+            raise
+        raise AssertionError("unreachable")
 
-    monkeypatch.setattr(sd.time, "monotonic", lambda: clock["t"])
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    monkeypatch.setattr(sd, "_mirror_post", mirror_post)
+    # The audit reads CORRIDOR_CHECK_BUDGET_S at call time; a short budget
+    # keeps this test fast and proves the deadline, not the number.
+    monkeypatch.setattr(sd, "CORRIDOR_CHECK_BUDGET_S", 1.0)
     scenario = _shoulder_scenario()
     scenario["meta"] = {**scenario["meta"], "lat": 39.7113, "lng": -105.0815, "bearingDeg": 180}
     res = client.post("/render/audit", headers=_auth_headers(), json=scenario)
@@ -2725,10 +2731,6 @@ def test_audit_completes_with_check_unavailable_when_overpass_stalls(
     corridor = res.json()["sections"]["corridor_validation"]
     assert corridor["checked"] is False
     assert corridor["reason"] == "check_unavailable"
-    assert corridor["error"] == "scan budget exceeded (20 s)"
-    # #256 ruling a (revised): the audit caller still passes
-    # CORRIDOR_CHECK_BUDGET_S, but the per-mirror cap — not the whole budget —
-    # is what reaches httpx.  Before: budgets == [20.0].
-    assert len(budgets) == 1
-    assert budgets[0].read == sd.PER_MIRROR_READ_S
-    assert budgets[0].connect == sd.PER_MIRROR_CONNECT_S
+    assert corridor["error"] == "scan budget exceeded (1 s)"
+    # #292 (R71): the deadline cut off both mirrors' requests.
+    assert sorted(cancelled) == sorted(sd.OVERPASS_MIRRORS)

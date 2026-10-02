@@ -18,10 +18,16 @@ Two detection modes are supported:
 
 from __future__ import annotations
 
+import asyncio
+import functools
 import math
+import ssl
 import time
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from typing import TYPE_CHECKING, Any
 
+import certifi
 import httpx
 
 if TYPE_CHECKING:
@@ -33,26 +39,13 @@ if TYPE_CHECKING:
 # the corridor bbox instead.
 DEFAULT_RADIUS_M = 500.0
 HTTP_TIMEOUT_S = 25.0
-# Per-mirror cap for a BUDGETED chain (#256 ruling a, revised 2026-09-16).
-# Before this, a budgeted mirror got ``min(HTTP_TIMEOUT_S, remaining)`` —
-# with SCAN_BUDGET_S = 20 that is ``min(25, 20)`` = the whole budget, so a
-# stalled mirror 1 consumed it and mirror 3 was never tried.  s2-arc31
-# measured mirror 3 answering the full Denver scan 3/3 clean in 2.8-4.4 s
-# while mirror reads ``overpass-api.de`` on 80 of 80 prod rows.  Capping
-# per mirror reaches it inside the budget that already exists; no budget
-# is raised.
+# The per-mirror READ cap (#256 ruling a: 7 s, so one stalled mirror could
+# not eat a SEQUENTIAL chain) is RETIRED by #292 (R69/R71): the mirrors are
+# asked at once, each gets the whole remaining deadline, and the race -- not
+# a cap -- keeps a slow mirror from costing the scan its answer.
 #
-# READ 7 s — TRACED, two ways: it clears the folded query's one clean
-# measurement (6.83 s, ``out-levers2-60098ae/log.txt`` L5-folded-1trip), so
-# the #256 fold lands without the cap cutting it off; and it is the arc-31
-# README's own lever-table recommendation ("a 7 s cap on mirror 2 leaves
-# 7+ s for mirror 3, which needs 1.5-4.4 s").  Two stalls cost 14 s and
-# still leave 6 s for a mirror that needs 1.5-4.4.
-#
-# CONNECT 3 s — CHOSEN, not traced.  No connect timeout existed before
-# this commit (``timeout=`` was a scalar httpx applied to every phase), so
-# there is no prior value it was derived from.
-PER_MIRROR_READ_S = 7.0
+# CONNECT 3 s — CHOSEN, not traced (#256): a mirror that can't even accept
+# the connection in 3 s is not going to win the race.
 PER_MIRROR_CONNECT_S = 3.0
 # #241 (s2-arc16 rider): wall-clock budget for the corridor-validation
 # trip (``validate_corridor_against_osm`` → ``detect_road_bearing``).
@@ -79,15 +72,24 @@ CORRIDOR_CHECK_BUDGET_S = 20.0
 # Overpass returns 406 to clients without an identifying User-Agent.
 USER_AGENT = "conestruct-traffic-control-tool/0.2 (+https://conestruct.com; hello@conestruct.com)"
 
-# Public Overpass mirrors, tried in order.  The official endpoint at
-# overpass-api.de regularly returns 504 Gateway Timeout under load, so
-# we fall back to community mirrors.  Each mirror is independently
-# rate-limited and operated; ordering puts the most-reliable first.
+# Public Overpass mirrors, asked AT ONCE (#292, ruling R69): the first
+# valid answer wins and the other request is cancelled, so no mirror's
+# place in a list costs the scan time.  Measured 2026-10-01, morning,
+# midday and evening (validation-artifacts/committed/
+# issue-292-mirror-strategy/): overpass.openstreetmap.fr answered 27 of 27
+# (median 3.0 s), overpass-api.de 16 of 27 (median 6.5 s).
+# overpass.kumi.systems is DROPPED (R70): it answered 1 of 27, in 20.7 s.
 OVERPASS_MIRRORS: tuple[str, ...] = (
     "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter",
     "https://overpass.openstreetmap.fr/api/interpreter",
 )
+
+# R73: a mirror that answered 429 is left alone until its cool-down ends --
+# its own Retry-After when it sends one, else RATE_LIMIT_COOLDOWN_S.
+# CHOSEN (Rule 12): 60 s.  Neither mirror documents a value; a minute is the
+# shortest pause that is plainly not a retry loop from one container.
+RATE_LIMIT_COOLDOWN_S = 60.0
+_RATE_LIMITED_UNTIL: dict[str, float] = {}
 
 
 def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -169,108 +171,166 @@ def _junction_ref(el: dict[str, Any]) -> str | None:
     return str(ref) if ref else None
 
 
+async def _mirror_post(
+    client: httpx.AsyncClient, url: str, query: str, timeout: httpx.Timeout
+) -> httpx.Response:
+    """One mirror request -- the seam tests stub and the corpus network
+    guard blocks.  Above it is the race; below it is the wire."""
+    return await client.post(
+        url, data={"data": query}, headers={"User-Agent": USER_AGENT}, timeout=timeout
+    )
+
+
+def _retry_after_s(resp: Any) -> float:
+    headers = getattr(resp, "headers", None) or {}
+    raw = headers.get("Retry-After")
+    try:
+        return max(0.0, float(raw)) if raw is not None else RATE_LIMIT_COOLDOWN_S
+    except (TypeError, ValueError):
+        return RATE_LIMIT_COOLDOWN_S
+
+
+async def _ask_mirror(
+    client: httpx.AsyncClient,
+    url: str,
+    query: str,
+    deadline: float,
+    validate: Callable[[dict[str, Any]], str | None] | None,
+) -> tuple[str, dict[str, Any] | None, str | None, int | None, str | None]:
+    """``(url, payload or None, error or None, response bytes, remark)``."""
+    remaining = max(0.001, deadline - time.monotonic())
+    timeout = httpx.Timeout(remaining, connect=min(PER_MIRROR_CONNECT_S, remaining))
+    try:
+        resp = await _mirror_post(client, url, query, timeout)
+    except httpx.HTTPError as exc:
+        return url, None, f"{url}: {type(exc).__name__}: {exc}", None, None
+    size = len(resp.content)
+    if resp.status_code == 429:
+        # R73: honour the rate limit.  This mirror is left alone until its
+        # cool-down ends (later scans skip it) and is never retried.
+        pause = _retry_after_s(resp)
+        _RATE_LIMITED_UNTIL[url] = time.monotonic() + pause
+        return url, None, f"{url}: 429 rate-limited (left alone {pause:g} s)", size, None
+    if resp.status_code >= 400:
+        return url, None, f"{url}: {resp.status_code} {resp.reason_phrase}", size, None
+    try:
+        payload = resp.json()
+    except ValueError as exc:
+        return url, None, f"{url}: invalid JSON: {exc}", size, None
+    remark = _overpass_remark(payload)
+    if remark is not None:
+        # #251: a 200 whose body carries ``remark`` did NOT complete -- a
+        # mirror failure, never a payload (Rule 10).
+        return url, None, f"{url}: overpass remark: {remark}", size, remark
+    problem = validate(payload) if validate is not None else None
+    if problem is not None:
+        # R69: the first VALID answer wins.  One that fails #304's checks is
+        # this mirror's failure, and the other mirror's answer stays in play.
+        return url, None, f"{url}: invalid answer: {problem}", size, None
+    return url, payload, None, size, None
+
+
+@functools.cache
+def _tls_context() -> ssl.SSLContext:
+    """Built once per container.  Loading the CA bundle took 0.25 s per
+    client on the dev PC (httpx 0.28.1), and a fresh one per scan would
+    spend that out of the scan's own deadline (R71)."""
+    return ssl.create_default_context(cafile=certifi.where())
+
+
+async def _race(
+    query: str,
+    total_s: float,
+    meta: dict[str, Any] | None,
+    validate: Callable[[dict[str, Any]], str | None] | None,
+) -> tuple[dict[str, Any] | None, str | None]:
+    deadline = time.monotonic() + total_s
+    now = time.monotonic()
+    live = [u for u in OVERPASS_MIRRORS if _RATE_LIMITED_UNTIL.get(u, 0.0) <= now]
+    errors = [
+        f"{u}: rate-limited, left alone {(_RATE_LIMITED_UNTIL[u] - now):.0f} s more"
+        for u in OVERPASS_MIRRORS
+        if u not in live
+    ]
+    if not live:
+        return None, "; ".join(errors) or "no mirrors configured"
+    async with httpx.AsyncClient(verify=_tls_context()) as client:
+        tasks = [
+            asyncio.ensure_future(_ask_mirror(client, u, query, deadline, validate)) for u in live
+        ]
+        pending: set[asyncio.Future[Any]] = set(tasks)
+        try:
+            while pending:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    break
+                done, pending = await asyncio.wait(
+                    pending, timeout=remaining, return_when=asyncio.FIRST_COMPLETED
+                )
+                # Answers that land together are read in mirror order, so the
+                # winner and the refusal text never depend on set order.
+                for task in sorted(done, key=tasks.index):
+                    url, payload, error, size, remark = task.result()
+                    if meta is not None:
+                        meta.update(mirror=url, response_bytes=size, remark=remark)
+                    if payload is not None:
+                        return payload, None
+                    errors.append(error or f"{url}: no answer")
+        finally:
+            # R69: cancel the other request as soon as one wins.  R71: and
+            # every request still open when the deadline passes.
+            for task in tasks:
+                task.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+    if pending:
+        return None, "; ".join([f"scan budget exceeded ({total_s:g} s)", *errors])
+    return None, "; ".join(errors)
+
+
+def _run_coroutine(coro: Any) -> Any:
+    """Run the race from synchronous code (every caller today is sync)."""
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    with ThreadPoolExecutor(1) as ex:  # inside a running loop: a private one
+        return ex.submit(asyncio.run, coro).result()
+
+
 def _overpass_request_with_fallback(
     query: str,
     budget_s: float | None = None,
     meta: dict[str, Any] | None = None,
+    validate: Callable[[dict[str, Any]], str | None] | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
-    """POST the Overpass query to each mirror until one returns a valid payload.
+    """Ask every live mirror AT ONCE; the first valid answer wins (#292).
 
-    Retries on 5xx, connection errors, **429** (#256 ruling j: a rate limit
-    is that mirror's answer, not the chain's — mirrors are independently
-    rate-limited) and a 200 whose body carries a ``remark`` (#251: the
-    query did not complete — mirror is overloaded).  Stops on any OTHER
-    4xx (the query itself is malformed; trying another mirror will produce
-    the same error).  Returns ``(payload, None)`` on success or
-    ``(None, error_message)`` after exhausting mirrors.
+    R69: the live mirrors get the query at the same moment.  The first
+    answer that is HTTP 200, JSON, without a ``remark`` (#251) and that
+    passes ``validate`` (the caller's #304 checks: no point without
+    coordinates, nothing outside the query's own box) wins, and the other
+    request is cancelled.  A 4xx, 429, 5xx, remark or invalid answer from
+    one mirror is that mirror's failure; the other's answer stays in play.
 
-    ``budget_s`` (#224 phase 1, ruling 4) is a wall-clock deadline for the
-    whole fallback chain.  Each budgeted mirror is capped at
-    ``PER_MIRROR_READ_S`` / ``PER_MIRROR_CONNECT_S``, still bounded by
-    ``remaining`` (#256 ruling a) — so one stalled mirror can no longer
-    consume the chain — and once the budget is spent no further mirror is
-    tried —
-    the caller gets ``(None, "scan budget exceeded (N s)")``, an honest
-    ``unavailable``.  ``None`` (every pre-phase-1 caller) keeps the
-    unbounded three-mirror chain exactly as before.
+    R71: ``budget_s`` is a HARD deadline for the whole ask.  Every request
+    still open when it passes is cancelled, so a slow read can't run past
+    it, and the caller gets ``(None, "scan budget exceeded (N s); ...")``,
+    an honest ``unavailable``.  ``None`` (unbudgeted callers) uses
+    ``HTTP_TIMEOUT_S`` the same way.
 
-    ``meta`` (#251, s2-arc22) is an out-param: when a dict is passed it
-    is filled with ``mirror`` (the URL that answered — the clean answer,
-    or the last one tried), ``response_bytes`` (that answer's body size)
-    and ``remark`` (the remark that made the last mirror fail, ``None``
-    on a clean answer), so the scan's provenance can say which server
-    said what.  The 2-tuple return is unchanged for every stub.
+    R73: a 429 puts that mirror in a cool-down (its Retry-After, else
+    ``RATE_LIMIT_COOLDOWN_S``); while it lasts the mirror isn't asked.
+    Nothing is retried.
+
+    ``meta`` (#251) is filled with ``mirror`` (the URL that answered: the
+    winner, or the last mirror heard from), ``response_bytes`` and
+    ``remark``.  Returns ``(payload, None)``, or ``(None, every mirror's
+    reason, joined)``.
     """
-    last_error = "no mirrors configured"
     if meta is not None:
         meta.update(mirror=None, response_bytes=None, remark=None)
-    deadline = time.monotonic() + budget_s if budget_s is not None else None
-    for url in OVERPASS_MIRRORS:
-        timeout: float | httpx.Timeout = HTTP_TIMEOUT_S
-        if deadline is not None:
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
-                return None, f"scan budget exceeded ({budget_s:g} s)"
-            # #256 ruling a: cap each mirror so a stall cannot eat the chain.
-            # Still bounded by ``remaining`` — the budget, not the cap count,
-            # ends the chain.  Unbudgeted callers keep the scalar
-            # HTTP_TIMEOUT_S exactly as before (ruling: fast path unchanged).
-            timeout = httpx.Timeout(
-                min(PER_MIRROR_READ_S, remaining),
-                connect=min(PER_MIRROR_CONNECT_S, remaining),
-            )
-        try:
-            resp = httpx.post(
-                url,
-                data={"data": query},
-                headers={"User-Agent": USER_AGENT},
-                timeout=timeout,
-            )
-        except httpx.HTTPError as exc:
-            last_error = f"{url}: {type(exc).__name__}: {exc}"
-            continue
-        if meta is not None:
-            meta.update(mirror=url, response_bytes=len(resp.content), remark=None)
-        if resp.status_code == 429:
-            # #256 ruling j (2026-09-16): a 429 is THAT MIRROR's answer, not
-            # the chain's.  Each mirror is independently rate-limited (see
-            # OVERPASS_MIRRORS above), so being throttled by one says nothing
-            # about the next — it is a mirror failure like a 5xx, and the
-            # chain continues inside the budget.  Before this, a single 429
-            # ended the chain, which made "reach mirror 3" unachievable:
-            # s2-arc31's first decomposition run rate-limited itself and
-            # invalidated its own L3/L4/L5 legs.  CHOSEN behaviour.
-            last_error = f"{url}: {resp.status_code} {resp.reason_phrase}"
-            continue
-        if 400 <= resp.status_code < 500:
-            # A genuine 4xx means the QUERY is malformed; the next mirror will
-            # say the same thing.  Still a hard stop (ruling j narrows this to
-            # everything except 429, it does not remove it).
-            return None, f"{url}: {resp.status_code} {resp.reason_phrase}"
-        if resp.status_code >= 500:
-            last_error = f"{url}: {resp.status_code} {resp.reason_phrase}"
-            continue
-        try:
-            payload = resp.json()
-        except ValueError as exc:
-            last_error = f"{url}: invalid JSON: {exc}"
-            continue
-        remark = _overpass_remark(payload)
-        if remark is not None:
-            if meta is not None:
-                meta["remark"] = remark
-            # #251 (s2-arc22): a 200 whose body carries ``remark`` is
-            # Overpass saying the query did NOT complete ("runtime error:
-            # Query timed out ...", "... ran out of memory") — the
-            # element list is truncated or empty.  Measured 2026-09-07:
-            # HTTP 200, remark, ``elements: []``.  It is a mirror failure
-            # like a 5xx (next mirror inside the budget), never a payload;
-            # scoring it complete made an empty corridor out of a loaded
-            # server (Rule 10).
-            last_error = f"{url}: overpass remark: {remark}"
-            continue
-        return payload, None
-    return None, last_error
+    total = budget_s if budget_s is not None else HTTP_TIMEOUT_S
+    return _run_coroutine(_race(query, total, meta, validate))
 
 
 def _overpass_remark(payload: Any) -> str | None:
@@ -697,7 +757,7 @@ def detect_along_corridor(
 
     On any network/parse failure, returns all-buckets-empty plus an
     ``error`` key carrying the failure message.  ``budget_s`` bounds the
-    Overpass mirror chain (see ``_overpass_request_with_fallback``); the
+    Overpass mirror race (see ``_overpass_request_with_fallback``); the
     in-generate scan passes its CHOSEN budget, the manual endpoint none.
 
     #251 (s2-arc22): the budgeted call also returns an ``overpass`` key —
@@ -776,7 +836,15 @@ def detect_along_corridor(
         payload, error = _overpass_request_with_fallback(query)
     else:
         fetch: dict[str, Any] = {}
-        payload, error = _overpass_request_with_fallback(query, budget_s=budget_s, meta=fetch)
+        # #292 (R69): an answer that fails #304's checks loses the race.
+        boxes = [bbox, *extra]
+        circle = (anchor_lat, anchor_lng, road_radius_m) if folded else None
+        payload, error = _overpass_request_with_fallback(
+            query,
+            budget_s=budget_s,
+            meta=fetch,
+            validate=lambda p: _answer_problem(p, boxes, circle),
+        )
         buckets["overpass"] = {
             "mirror": fetch.get("mirror"),
             "response_bytes": fetch.get("response_bytes"),
@@ -947,7 +1015,12 @@ def detect_road_bearing(
     payload, error = (
         _overpass_request_with_fallback(query)
         if budget_s is None
-        else _overpass_request_with_fallback(query, budget_s=budget_s)
+        else _overpass_request_with_fallback(
+            query,
+            budget_s=budget_s,
+            # #292 (R69): the road query's own circle decides validity.
+            validate=lambda p: _answer_problem(p, None, (lat, lng, radius_m)),
+        )
     )
     if payload is None:
         out["error"] = error or "Overpass request failed"
@@ -1022,6 +1095,40 @@ def _way_meets_circle(way: dict[str, Any], lat: float, lng: float, radius_m: flo
     dlat = radius_m / _M_PER_DEG_LAT
     dlng = radius_m / (_M_PER_DEG_LAT * math.cos(math.radians(lat)))
     return not (n < lat - dlat or s > lat + dlat or e < lng - dlng or w > lng + dlng)
+
+
+def _answer_problem(
+    payload: dict[str, Any],
+    scan_boxes: list[tuple[float, float, float, float]] | None,
+    road_circle: tuple[float, float, float] | None,
+) -> str | None:
+    """Why a whole Overpass answer fails #304's checks, or ``None``.
+
+    #292 (R69): the race takes the first VALID answer, so these checks
+    judge an answer before it can win -- a geometry point without
+    coordinates (#304 a), a road way whose extent misses the query's
+    ``around:`` circle, or a scan element beyond the scan boxes' margin
+    (#304 d).  The per-element sanitising downstream stays as a second
+    line.
+    """
+    for el in payload.get("elements") or []:
+        geometry = el.get("geometry")
+        if geometry is not None:
+            if any(not _has_coords(pt) for pt in geometry):
+                return f"{el.get('type')} {el.get('id')} has points without coordinates"
+            if (
+                road_circle is not None
+                and el.get("type") == "way"
+                and not _way_meets_circle(el, *road_circle)
+            ):
+                return f"way {el.get('id')} lies outside the query circle"
+        elif scan_boxes:
+            coord = _element_coord(el)
+            if coord is not None and (
+                min(_gap_to_box_m(*coord, b) for b in scan_boxes) > _SCAN_ELEMENT_MARGIN_M
+            ):
+                return f"{el.get('type')} {el.get('id')} lies outside the query box"
+    return None
 
 
 def _bearing_from_elements(

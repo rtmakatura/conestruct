@@ -51,12 +51,21 @@ def _blocked(*_args: Any, **_kwargs: Any) -> Any:
 
 @pytest.fixture(autouse=True)
 def _no_network(monkeypatch: pytest.MonkeyPatch) -> None:
-    # Module-level convenience functions only. site_detection calls
-    # ``httpx.post(...)``; geocoding helpers use the same surface. TestClient
+    # Module-level convenience functions; geocoding helpers use this
+    # surface. TestClient
     # uses ``httpx.Client(transport=ASGITransport(...))`` whose instance
     # methods are deliberately left untouched.
     for name in ("get", "post", "put", "patch", "delete", "head", "request", "stream"):
         monkeypatch.setattr(httpx, name, _blocked, raising=False)
+    # #292: the Overpass race posts through an ``httpx.AsyncClient``, whose
+    # instance methods the loop above leaves alone.  Its one wire call is
+    # ``site_detection._mirror_post``, so that seam is blocked too.
+    from src.rules import site_detection
+
+    async def _blocked_mirror(*args: Any, **kwargs: Any) -> Any:
+        return _blocked(*args, **kwargs)
+
+    monkeypatch.setattr(site_detection, "_mirror_post", _blocked_mirror)
 
     try:
         import requests

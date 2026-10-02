@@ -14,7 +14,10 @@ they run offline and deterministically.
 
 from __future__ import annotations
 
+import asyncio
 import copy
+import json
+import time
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import patch
@@ -26,20 +29,38 @@ from src.rules import site_detection
 
 class _FakeResponse:
     """Minimal stand-in for ``httpx.Response`` — ``site_detection`` only
-    reads ``status_code``, ``reason_phrase``, and ``json()``."""
+    reads ``status_code``, ``reason_phrase``, ``content``, ``headers`` and
+    ``json()``."""
 
-    def __init__(self, payload: dict[str, Any], status_code: int = 200) -> None:
+    def __init__(
+        self,
+        payload: dict[str, Any],
+        status_code: int = 200,
+        headers: dict[str, str] | None = None,
+    ) -> None:
         self._payload = payload
         self.status_code = status_code
         self.reason_phrase = "OK" if status_code == 200 else "ERR"
+        self.content = json.dumps(payload).encode()
+        self.headers = headers or {}
 
     def json(self) -> dict[str, Any]:
         return self._payload
 
 
+def _as_mirror_post(fake: Any) -> Any:
+    """Wrap a synchronous ``fake(url, **kw)`` as the async
+    ``_mirror_post`` seam the #292 race calls once per mirror."""
+
+    async def mirror_post(_client: Any, url: str, query: str, timeout: Any) -> Any:
+        return fake(url, data={"data": query}, timeout=timeout)
+
+    return mirror_post
+
+
 @pytest.fixture
 def stub_overpass() -> Iterator[list[dict[str, Any]]]:
-    """Replace ``httpx.post`` with a stub that returns elements from a list.
+    """Replace the mirror post with a stub that returns elements from a list.
 
     Yields the ``elements`` list — tests append OSM-shaped dicts to it
     and call the public ``detect_site_conditions`` to exercise the
@@ -50,7 +71,7 @@ def stub_overpass() -> Iterator[list[dict[str, Any]]]:
     def fake_post(*_args: Any, **_kwargs: Any) -> _FakeResponse:
         return _FakeResponse({"elements": list(elements)})
 
-    with patch.object(site_detection.httpx, "post", side_effect=fake_post):
+    with patch.object(site_detection, "_mirror_post", _as_mirror_post(fake_post)):
         yield elements
 
 
@@ -488,20 +509,20 @@ def stub_overpass_down() -> Iterator[list[Any]]:
         calls.append(url)
         raise site_detection.httpx.ConnectError("connection refused")
 
-    with patch.object(site_detection.httpx, "post", side_effect=fake_post):
+    with patch.object(site_detection, "_mirror_post", _as_mirror_post(fake_post)):
         yield calls
 
 
 @pytest.fixture
 def stub_overpass_4xx() -> Iterator[list[Any]]:
-    """First mirror answers 400 — the query itself is rejected."""
+    """Every mirror answers 400 — the query itself is rejected."""
     calls: list[Any] = []
 
     def fake_post(url: str, **_kwargs: Any) -> _FakeResponse:
         calls.append(url)
         return _FakeResponse({}, status_code=400)
 
-    with patch.object(site_detection.httpx, "post", side_effect=fake_post):
+    with patch.object(site_detection, "_mirror_post", _as_mirror_post(fake_post)):
         yield calls
 
 
@@ -527,18 +548,38 @@ def test_point_scan_failure_tries_every_mirror(
     assert len(stub_overpass_down) == len(site_detection.OVERPASS_MIRRORS)
 
 
-def test_point_scan_4xx_hard_stops_the_mirror_list(
+def test_point_scan_4xx_from_every_mirror_is_an_honest_refusal(
     stub_overpass_4xx: list[Any],
 ) -> None:
-    """A 4xx means the query is malformed — retrying another mirror would
-    repeat it, so exactly one request fires and the error names the status.
+    """#292 (R69): both mirrors are asked at once, so a 400 can no longer
+    "hard-stop the rest of the list" -- there is no rest to stop.  Each
+    mirror's 400 is that mirror's refusal, neither is retried (R73), and
+    both refusing is the honest error naming the status (Rule 10).
 
-    #256 ruling j narrows this to a genuine 400: a 429 is the MIRROR's
-    answer, not the query's, and is handled by the test below."""
+    Before #292: the first mirror's 400 ended the chain after one request."""
     result = site_detection.detect_site_conditions(39.71466, -104.94071, radius_m=500.0)
     assert "error" in result
     assert "400" in result["error"]
-    assert len(stub_overpass_4xx) == 1
+    assert sorted(stub_overpass_4xx) == sorted(site_detection.OVERPASS_MIRRORS)
+
+
+def test_a_400_from_one_mirror_leaves_the_others_answer_in_play(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    first, second = site_detection.OVERPASS_MIRRORS
+
+    def fake_post(url: str, **_kw: Any) -> _FakeResponse:
+        if url == first:
+            return _FakeResponse({}, status_code=400)
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection, "_mirror_post", _as_mirror_post(fake_post))
+    meta: dict[str, Any] = {}
+    payload, error = site_detection._overpass_request_with_fallback(
+        "[out:json];", budget_s=20.0, meta=meta
+    )
+    assert (payload, error) == ({"elements": []}, None)
+    assert meta["mirror"] == second
 
 
 @pytest.fixture
@@ -550,7 +591,7 @@ def stub_overpass_429() -> Iterator[list[Any]]:
         calls.append(url)
         return _FakeResponse({}, status_code=429)
 
-    with patch.object(site_detection.httpx, "post", side_effect=fake_post):
+    with patch.object(site_detection, "_mirror_post", _as_mirror_post(fake_post)):
         yield calls
 
 
@@ -578,20 +619,321 @@ def test_429_on_the_first_mirror_still_reaches_a_later_clean_one(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """The point of ruling j, stated as the behaviour that pays for it: a
-    rate-limited first mirror must not cost the answer a later mirror has."""
+    rate-limited mirror must not cost the answer the other mirror has.
+    #292: both are asked at once, one request each."""
+    first = site_detection.OVERPASS_MIRRORS[0]
     calls: list[str] = []
 
     def fake_post(url: str, **_kw: Any) -> _FakeResponse:
         calls.append(url)
-        if len(calls) == 1:
+        if url == first:
             return _FakeResponse({}, status_code=429)
         return _FakeResponse({"elements": []})
 
-    monkeypatch.setattr(site_detection.httpx, "post", fake_post)
+    monkeypatch.setattr(site_detection, "_mirror_post", _as_mirror_post(fake_post))
     payload, error = site_detection._overpass_request_with_fallback("[out:json];")
     assert error is None
     assert payload == {"elements": []}
-    assert len(calls) == 2  # mirror 1 rate-limited, mirror 2 answered
+    assert sorted(calls) == sorted(site_detection.OVERPASS_MIRRORS)
+
+
+# ---------------------------------------------------------------------------
+# #292 -- the two live mirrors asked at once (R69, R70), a hard deadline
+# (R71), and a good citizen of the free mirrors (R73).
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("stalled_index", [0, 1])
+def test_a_stalled_mirror_never_costs_the_other_mirrors_answer(
+    monkeypatch: pytest.MonkeyPatch, stalled_index: int
+) -> None:
+    """R69: the first valid answer wins whichever mirror it comes from, and
+    the other request is cancelled at once.  Before #292 a stalled first
+    mirror cost its 7 s cap before the next was asked."""
+    stalled = site_detection.OVERPASS_MIRRORS[stalled_index]
+    answering = site_detection.OVERPASS_MIRRORS[1 - stalled_index]
+    cancelled: list[str] = []
+
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        if url == stalled:
+            try:
+                await asyncio.sleep(30)
+            except asyncio.CancelledError:
+                cancelled.append(url)
+                raise
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
+    meta: dict[str, Any] = {}
+    started = time.monotonic()
+    payload, error = site_detection._overpass_request_with_fallback(
+        "[out:json];", budget_s=20.0, meta=meta
+    )
+    assert time.monotonic() - started < 2.0
+    assert (payload, error) == ({"elements": []}, None)
+    assert meta["mirror"] == answering
+    assert cancelled == [stalled]  # the loser's request did not run on
+
+
+def test_the_deadline_is_hard_a_trickling_read_cannot_run_past_it(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """R71: the budget is a deadline for the whole ask.  Before #292 a read
+    still trickling bytes could run past it (prod measured 21.4 s against
+    20 s); now every request still open at the deadline is cancelled and
+    the answer is the honest ``scan budget exceeded``."""
+    cancelled: list[str] = []
+
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        try:
+            while True:  # a server sending a byte now and then, forever
+                await asyncio.sleep(0.02)
+        except asyncio.CancelledError:
+            cancelled.append(url)
+            raise
+
+    monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
+    started = time.monotonic()
+    payload, error = site_detection._overpass_request_with_fallback("[out:json];", budget_s=1.0)
+    elapsed = time.monotonic() - started
+    assert payload is None
+    assert error == "scan budget exceeded (1 s)"
+    assert 0.9 <= elapsed < 2.5
+    assert sorted(cancelled) == sorted(site_detection.OVERPASS_MIRRORS)
+
+
+def test_the_deadline_refusal_still_names_a_mirror_that_failed_first(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    first, second = site_detection.OVERPASS_MIRRORS
+
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        if url == first:
+            return _FakeResponse({}, status_code=504)
+        await asyncio.sleep(30)
+        raise AssertionError("unreachable")
+
+    monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
+    payload, error = site_detection._overpass_request_with_fallback("[out:json];", budget_s=1.0)
+    assert payload is None
+    assert error == f"scan budget exceeded (1 s); {first}: 504 ERR"
+
+
+def test_both_mirrors_failing_is_an_honest_refusal_naming_both(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    first, second = site_detection.OVERPASS_MIRRORS
+    calls: list[str] = []
+
+    def fake_post(url: str, **_kw: Any) -> _FakeResponse:
+        calls.append(url)
+        return _FakeResponse({}, status_code=504 if url == first else 502)
+
+    monkeypatch.setattr(site_detection, "_mirror_post", _as_mirror_post(fake_post))
+    payload, error = site_detection._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    assert payload is None
+    assert error == f"{first}: 504 ERR; {second}: 502 ERR"
+    assert sorted(calls) == sorted([first, second])  # R73: one request each, no retry
+
+
+def test_an_invalid_answer_loses_to_the_other_mirrors_valid_one(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """R69: the first VALID answer wins.  The faster mirror's answer carries
+    the corrupt way #304 found (points without coordinates); it is that
+    mirror's failure, and the slower mirror's clean answer wins."""
+    fast, slow = site_detection.OVERPASS_MIRRORS[1], site_detection.OVERPASS_MIRRORS[0]
+    lat, lng = 39.71466, -104.94071
+    corrupt = {
+        "elements": [
+            {
+                "type": "way",
+                "id": 42125193,
+                "tags": {"highway": "primary"},
+                "geometry": [{"lat": lat, "lon": lng}, {"lat": None, "lon": None}],
+            }
+        ]
+    }
+    clean = {
+        "elements": [
+            {
+                "type": "way",
+                "id": 1,
+                "tags": {"highway": "primary"},
+                "geometry": [{"lat": lat, "lon": lng}, {"lat": lat + 0.0005, "lon": lng}],
+            }
+        ]
+    }
+
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        if url == fast:
+            return _FakeResponse(corrupt)
+        await asyncio.sleep(0.05)
+        return _FakeResponse(clean)
+
+    monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
+    meta: dict[str, Any] = {}
+    payload, error = site_detection._overpass_request_with_fallback(
+        "[out:json];",
+        budget_s=20.0,
+        meta=meta,
+        validate=lambda p: site_detection._answer_problem(p, None, (lat, lng, 30.0)),
+    )
+    assert (payload, error) == (clean, None)
+    assert meta["mirror"] == slow
+
+
+def test_invalid_answers_from_both_mirrors_are_an_honest_refusal(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    lat, lng = 39.71466, -104.94071
+    far_way = {
+        "elements": [
+            {
+                "type": "way",
+                "id": 7,
+                "tags": {"highway": "primary"},
+                "geometry": [{"lat": lat + 1.0, "lon": lng}, {"lat": lat + 1.001, "lon": lng}],
+            }
+        ]
+    }
+    monkeypatch.setattr(
+        site_detection, "_mirror_post", _as_mirror_post(lambda _u, **_k: _FakeResponse(far_way))
+    )
+    payload, error = site_detection._overpass_request_with_fallback(
+        "[out:json];",
+        budget_s=20.0,
+        validate=lambda p: site_detection._answer_problem(p, None, (lat, lng, 30.0)),
+    )
+    assert payload is None
+    first, second = site_detection.OVERPASS_MIRRORS
+    reason = "invalid answer: way 7 lies outside the query circle"
+    assert error == f"{first}: {reason}; {second}: {reason}"
+
+
+def test_answer_problem_names_each_of_the_304_checks() -> None:
+    lat, lng = 39.71466, -104.94071
+    box = (lat - 0.01, lng - 0.01, lat + 0.01, lng + 0.01)
+    null_point = {
+        "type": "way",
+        "id": 3,
+        "geometry": [{"lat": lat, "lon": lng}, {"lat": None, "lon": None}],
+    }
+    far_node = {"type": "node", "id": 4, "lat": lat + 1.0, "lon": lng, "tags": {}}
+    near_node = {"type": "node", "id": 5, "lat": lat, "lon": lng, "tags": {}}
+    problem = site_detection._answer_problem
+    assert problem({"elements": [null_point]}, [box], None) == (
+        "way 3 has points without coordinates"
+    )
+    assert problem({"elements": [far_node]}, [box], None) == "node 4 lies outside the query box"
+    assert problem({"elements": [near_node]}, [box], None) is None
+    assert problem({"elements": []}, [box], (lat, lng, 30.0)) is None
+
+
+def test_a_corridor_scan_takes_the_valid_answer_over_an_out_of_box_one(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """End to end through the budgeted corridor scan: the validate the race
+    is handed is the #304 box check, so a mirror whose answer reaches far
+    outside the corridor loses to the other mirror's."""
+    corridor = _test_corridor()
+    lat, lng = corridor.anchor_lat, corridor.anchor_lng
+    far = {"elements": [{"type": "node", "id": 9, "lat": lat + 1.0, "lon": lng, "tags": {}}]}
+    first, second = site_detection.OVERPASS_MIRRORS
+
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        if url == first:
+            return _FakeResponse(far)
+        await asyncio.sleep(0.05)
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
+    result = site_detection.detect_along_corridor(corridor, budget_s=20.0)
+    assert "error" not in result
+
+
+def test_a_429_leaves_the_mirror_alone_for_its_retry_after(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """R73: honour 429.  A mirror that answered 429 is not asked again until
+    its Retry-After has passed (RATE_LIMIT_COOLDOWN_S when it sends none);
+    the other mirror carries the scans meanwhile."""
+    first, second = site_detection.OVERPASS_MIRRORS
+    calls: list[str] = []
+
+    def fake_post(url: str, **_kw: Any) -> _FakeResponse:
+        calls.append(url)
+        if url == first:
+            return _FakeResponse({}, status_code=429, headers={"Retry-After": "120"})
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection, "_mirror_post", _as_mirror_post(fake_post))
+    site_detection._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    left_alone = site_detection._RATE_LIMITED_UNTIL[first] - time.monotonic()
+    assert 115.0 < left_alone <= 120.0
+    calls.clear()
+    payload, error = site_detection._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    assert (payload, error) == ({"elements": []}, None)
+    assert calls == [second]  # the rate-limited mirror was not asked
+
+
+def test_a_429_without_retry_after_uses_the_chosen_cooldown(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    first = site_detection.OVERPASS_MIRRORS[0]
+
+    def fake_post(url: str, **_kw: Any) -> _FakeResponse:
+        if url == first:
+            return _FakeResponse({}, status_code=429)
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection, "_mirror_post", _as_mirror_post(fake_post))
+    site_detection._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    left_alone = site_detection._RATE_LIMITED_UNTIL[first] - time.monotonic()
+    assert left_alone > site_detection.RATE_LIMIT_COOLDOWN_S - 5
+    assert left_alone <= site_detection.RATE_LIMIT_COOLDOWN_S
+
+
+def test_every_mirror_cooling_down_is_an_honest_refusal_without_a_request(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[str] = []
+
+    def fake_post(url: str, **_kw: Any) -> _FakeResponse:
+        calls.append(url)
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection, "_mirror_post", _as_mirror_post(fake_post))
+    for url in site_detection.OVERPASS_MIRRORS:
+        site_detection._RATE_LIMITED_UNTIL[url] = time.monotonic() + 30.0
+    payload, error = site_detection._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    assert payload is None
+    assert error is not None and error.count("rate-limited") == 2
+    assert calls == []
+
+
+def test_every_mirror_request_names_conestruct_and_a_contact() -> None:
+    """R73: the User-Agent names Conestruct with a contact address, on the
+    one call that reaches the wire."""
+    seen: dict[str, Any] = {}
+
+    class _Client:
+        async def post(self, url: str, **kw: Any) -> Any:
+            seen.update(kw, url=url)
+            return _FakeResponse({"elements": []})
+
+    asyncio.run(
+        site_detection._mirror_post(
+            _Client(),  # type: ignore[arg-type]
+            site_detection.OVERPASS_MIRRORS[0],
+            "[out:json];",
+            site_detection.httpx.Timeout(1.0),
+        )
+    )
+    agent = seen["headers"]["User-Agent"]
+    assert "conestruct" in agent.lower()
+    assert "hello@conestruct.com" in agent
+    assert seen["data"] == {"data": "[out:json];"}
 
 
 def _folded_payload() -> dict[str, Any]:
@@ -756,51 +1098,20 @@ def test_check_unavailable_string_is_byte_identical(
     assert out["reason"] == "check_unavailable"
 
 
-def test_per_mirror_cap_constants_are_the_ruled_values() -> None:
-    """#256 ruling a (revised 2026-09-16): 7 s read, 3 s connect.
-
-    7 s is traced — it clears the folded query's one clean measurement
-    (6.83 s, s2-arc31 out-levers2 L5-folded-1trip) and is the arc-31 README's
-    own lever-table recommendation.  3 s connect is CHOSEN outright.  Both
-    are separate from HTTP_TIMEOUT_S, which still governs unbudgeted
-    callers."""
-    assert site_detection.PER_MIRROR_READ_S == 7.0
+def test_mirror_constants_are_the_ruled_values() -> None:
+    """#292: R70 drops kumi (1 of 27 answers, at 20.7 s); R69 asks the two
+    live mirrors at once, so the 7 s per-mirror read cap (#256 ruling a) is
+    retired -- the deadline is the only clock (R71).  3 s connect stays
+    CHOSEN; RATE_LIMIT_COOLDOWN_S is CHOSEN (R73).  HTTP_TIMEOUT_S still
+    governs unbudgeted callers."""
+    assert site_detection.OVERPASS_MIRRORS == (
+        "https://overpass-api.de/api/interpreter",
+        "https://overpass.openstreetmap.fr/api/interpreter",
+    )
+    assert not hasattr(site_detection, "PER_MIRROR_READ_S")
     assert site_detection.PER_MIRROR_CONNECT_S == 3.0
+    assert site_detection.RATE_LIMIT_COOLDOWN_S == 60.0
     assert site_detection.HTTP_TIMEOUT_S == 25.0
-
-
-def test_budgeted_chain_reaches_the_third_mirror(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """The defect this arc exists to fix, as a test.
-
-    Before the cap, mirror 1 received min(HTTP_TIMEOUT_S, remaining) = the
-    whole 20 s budget, so a stall consumed it and mirror 3 — measured clean at
-    2.8-4.4 s — was never tried.  With the cap each stalled mirror costs 7 s,
-    so the third is still reachable inside the same budget.  No budget is
-    raised."""
-    clock = {"t": 4000.0}
-    calls: list[str] = []
-
-    def fake_post(url: str, **kw: Any) -> _FakeResponse:
-        calls.append(url)
-        if len(calls) < 3:
-            # A stalled mirror burns exactly the timeout it was handed — which
-            # is the whole point.  Advancing by a FIXED amount here would make
-            # this test pass before the fix too, and prove nothing.
-            given = kw["timeout"]
-            clock["t"] += given.read if hasattr(given, "read") else given
-            raise site_detection.httpx.ReadTimeout(
-                "stalled", request=site_detection.httpx.Request("POST", url)
-            )
-        return _FakeResponse({"elements": []})
-
-    monkeypatch.setattr(site_detection.time, "monotonic", lambda: clock["t"])
-    monkeypatch.setattr(site_detection.httpx, "post", fake_post)
-    payload, error = site_detection._overpass_request_with_fallback("[out:json];", budget_s=20.0)
-    assert error is None
-    assert payload == {"elements": []}
-    assert len(calls) == 3  # the mirror that was never reached, reached
 
 
 def test_corridor_scan_failure_is_error_plus_empty(
@@ -883,29 +1194,23 @@ def test_corridor_check_budget_is_the_chosen_value() -> None:
 def test_validate_budget_exceeded_reports_check_unavailable(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    clock = {"t": 5000.0}
-    posts: list[float | None] = []
+    cancelled: list[str] = []
 
-    def fake_post(url: str, **_kw: Any) -> Any:
-        posts.append(_kw.get("timeout"))
-        clock["t"] += 21.0  # the first mirror hangs past the whole budget
-        raise site_detection.httpx.ConnectTimeout(
-            "hung", request=site_detection.httpx.Request("POST", url)
-        )
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        try:
+            await asyncio.sleep(30)  # both mirrors hang past the whole budget
+        except asyncio.CancelledError:
+            cancelled.append(url)
+            raise
+        raise AssertionError("unreachable")
 
-    monkeypatch.setattr(site_detection.time, "monotonic", lambda: clock["t"])
-    monkeypatch.setattr(site_detection.httpx, "post", fake_post)
-    out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0, budget_s=20.0)
+    monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
+    out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0, budget_s=1.0)
     assert out["checked"] is False
     assert out["reason"] == "check_unavailable"
-    assert out["error"] == "scan budget exceeded (20 s)"
-    # #256 ruling a (revised): the per-mirror cap, not the whole budget.  The
-    # outcome is unchanged — one mirror tried, then the budget is spent — but
-    # the first mirror no longer gets all 20 s, which is the defect this arc
-    # fixes.  Before: [20.0].
-    assert len(posts) == 1  # no second mirror: the stub burns 21 s
-    assert posts[0].read == site_detection.PER_MIRROR_READ_S
-    assert posts[0].connect == site_detection.PER_MIRROR_CONNECT_S
+    assert out["error"] == "scan budget exceeded (1 s)"
+    # #292 (R71): both requests were cut off at the deadline.
+    assert sorted(cancelled) == sorted(site_detection.OVERPASS_MIRRORS)
 
 
 def test_validate_fast_path_passes_budget_through_positionally_when_none(

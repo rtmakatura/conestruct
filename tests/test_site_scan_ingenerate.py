@@ -33,9 +33,11 @@ s2-arc15 README, ruling 3).  Path A keeps exactly those inputs.
 
 from __future__ import annotations
 
+import asyncio
 import copy
 import json
 import os
+import time
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -397,29 +399,29 @@ def test_proceed_anyway_builds_with_manual_flags_and_the_disclosure(
     assert fired == ["driveways_present", "school_zone"]
 
 
-def test_budget_exceeded_is_unavailable_and_stops_trying_mirrors(
+def test_budget_exceeded_is_unavailable_and_cuts_off_every_mirror(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    clock = {"t": 1000.0}
-    posts: list[float] = []
+    """#292 (R71): the budget is a hard deadline for the whole ask -- every
+    request still open when it passes is cancelled, and the answer is the
+    honest ``scan budget exceeded``."""
+    cancelled: list[str] = []
 
-    def fake_post(url: str, **_kw: Any) -> httpx.Response:
-        posts.append(_kw.get("timeout"))
-        clock["t"] += 21.0  # the first mirror hangs past the whole budget
-        raise httpx.ConnectTimeout("hung", request=httpx.Request("POST", url))
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        try:
+            await asyncio.sleep(30)
+        except asyncio.CancelledError:
+            cancelled.append(url)
+            raise
+        raise AssertionError("unreachable")
 
-    monkeypatch.setattr(sd.time, "monotonic", lambda: clock["t"])
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
-    payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    monkeypatch.setattr(sd, "_mirror_post", mirror_post)
+    started = time.monotonic()
+    payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=1.0)
     assert payload is None
-    assert error == "scan budget exceeded (20 s)"
-    assert len(posts) == 1  # the second and third mirrors were never tried
-    # #256 ruling a (revised): the per-mirror cap, not the whole budget.
-    # Before: posts[0] == 20.0, i.e. min(HTTP_TIMEOUT_S, remaining) — which is
-    # exactly why mirror 1 could consume the budget and mirror 3 was never
-    # reached.  The stub here burns 21 s, so one mirror is still all that fits.
-    assert posts[0].read == sd.PER_MIRROR_READ_S
-    assert posts[0].connect == sd.PER_MIRROR_CONNECT_S
+    assert error == "scan budget exceeded (1 s)"
+    assert time.monotonic() - started < 2.5
+    assert sorted(cancelled) == sorted(sd.OVERPASS_MIRRORS)
 
 
 def test_budget_constants_are_the_ruled_values() -> None:
@@ -537,11 +539,11 @@ _REMARK = 'runtime error: Query timed out in "query" at line 3 after 10 seconds.
 def _fake_overpass(
     answers: dict[str, dict[str, Any]],
 ) -> tuple[Any, list[str]]:
-    """``httpx.post`` stand-in: ``answers`` maps a mirror URL to the JSON
-    body it returns with HTTP 200; unmapped mirrors 504."""
+    """``_mirror_post`` stand-in (#292): ``answers`` maps a mirror URL to
+    the JSON body it returns with HTTP 200; unmapped mirrors 504."""
     posts: list[str] = []
 
-    def fake_post(url: str, **_kw: Any) -> httpx.Response:
+    async def fake_post(_client: Any, url: str, _query: str, _timeout: Any) -> httpx.Response:
         posts.append(url)
         req = httpx.Request("POST", url)
         if url in answers:
@@ -555,11 +557,11 @@ def test_remark_on_the_first_mirror_tries_the_next(monkeypatch: pytest.MonkeyPat
     first, second = sd.OVERPASS_MIRRORS[0], sd.OVERPASS_MIRRORS[1]
     clean = {"elements": [{"type": "node", "id": 1, "lat": LAT, "lon": LNG, "tags": {}}]}
     fake_post, posts = _fake_overpass({first: {"elements": [], "remark": _REMARK}, second: clean})
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    monkeypatch.setattr(sd, "_mirror_post", fake_post)
     payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=20.0)
     assert error is None
     assert payload == clean
-    assert posts == [first, second]
+    assert posts == [first, second]  # #292: both asked at once, in mirror order
 
 
 def test_remark_on_every_mirror_is_unavailable_with_the_remark_text(
@@ -567,10 +569,11 @@ def test_remark_on_every_mirror_is_unavailable_with_the_remark_text(
 ) -> None:
     body = {"elements": [], "remark": _REMARK + "\nsecond line the wire never carries"}
     fake_post, posts = _fake_overpass({url: body for url in sd.OVERPASS_MIRRORS})
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    monkeypatch.setattr(sd, "_mirror_post", fake_post)
     payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=20.0)
     assert payload is None
-    assert error == f"{sd.OVERPASS_MIRRORS[-1]}: overpass remark: {_REMARK}"
+    # #292: both mirrors answered, so the refusal names both remarks.
+    assert error == "; ".join(f"{url}: overpass remark: {_REMARK}" for url in sd.OVERPASS_MIRRORS)
     assert posts == list(sd.OVERPASS_MIRRORS)
 
 
@@ -579,10 +582,11 @@ def test_clean_empty_body_without_remark_is_a_complete_answer(
 ) -> None:
     """Rule 10 both ways: an empty corridor is a measurement."""
     fake_post, posts = _fake_overpass({sd.OVERPASS_MIRRORS[0]: {"elements": []}})
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    monkeypatch.setattr(sd, "_mirror_post", fake_post)
     payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=20.0)
     assert (payload, error) == ({"elements": []}, None)
-    assert posts == [sd.OVERPASS_MIRRORS[0]]
+    # #292: both mirrors were asked at once; the first one's answer won.
+    assert posts == list(sd.OVERPASS_MIRRORS)
 
 
 def test_remark_never_scores_ok_end_to_end_and_is_never_memoised(
@@ -590,7 +594,7 @@ def test_remark_never_scores_ok_end_to_end_and_is_never_memoised(
 ) -> None:
     body = {"elements": [], "remark": _REMARK}
     fake_post, _posts = _fake_overpass({url: body for url in sd.OVERPASS_MIRRORS})
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    monkeypatch.setattr(sd, "_mirror_post", fake_post)
     res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
     assert res.status_code == 400, res.text
     detail = res.json()["detail"]
@@ -637,7 +641,7 @@ def test_ok_scan_carries_the_fetch_provenance_and_never_a_ninth_bucket(
         ]
     }
     fake_post, _posts = _fake_overpass({first: clean})
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    monkeypatch.setattr(sd, "_mirror_post", fake_post)
     res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
     assert res.status_code == 200, res.text
     prov = res.json()["sections"]["site_scan"]
@@ -660,7 +664,7 @@ def test_refused_scan_names_the_mirror_and_the_remark(
 ) -> None:
     body = {"elements": [], "remark": _REMARK}
     fake_post, _posts = _fake_overpass({url: body for url in sd.OVERPASS_MIRRORS})
-    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    monkeypatch.setattr(sd, "_mirror_post", fake_post)
     res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
     assert res.status_code == 400, res.text
     prov = res.json()["detail"]["site_scan"]
