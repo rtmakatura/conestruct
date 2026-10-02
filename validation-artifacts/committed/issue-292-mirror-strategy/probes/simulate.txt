@@ -1,0 +1,19 @@
+27 pin-windows (morning, midday, evening), 9 Denver pins each
+
+Per mirror, asked directly:
+  overpass-api.de              answered 16/27; median 6.5 s, max 13.5 s
+  overpass.kumi.systems        answered  1/27; median 20.7 s, max 20.7 s
+  overpass.openstreetmap.fr    answered 27/27; median 3.0 s, max 5.2 s
+
+Prod as measured (its own chain, from Modal):
+  answered 27/27; scan median 17.0 s, over 15 s: 16, over 20 s: 1
+
+Replayed on the direct times:
+  strategy                                 refused  median    p90    max  per window (refused)
+  today: de, kumi, fr; 7 s caps; 20 s            0   16.9s  17.3s  19.1s  morning 0, midday 0, evening 0
+  today, 25 s budget                             0   16.9s  17.3s  19.1s  morning 0, midday 0, evening 0
+  today, 30 s budget                             0   16.9s  17.3s  19.1s  morning 0, midday 0, evening 0
+  no kumi: de, fr; 7 s; 20 s                     0    9.9s  10.3s  12.2s  morning 0, midday 0, evening 0
+  fr first: fr, de, kumi; 7 s; 20 s              0    3.0s   3.4s   5.2s  morning 0, midday 0, evening 0
+  fr first, no kumi: fr, de; 7 s; 20 s           0    3.0s   3.4s   5.2s  morning 0, midday 0, evening 0
+  all at once, first answer; 20 s                0    3.0s   3.3s   5.2s  morning 0, midday 0, evening 0
