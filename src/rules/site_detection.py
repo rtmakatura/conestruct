@@ -72,8 +72,8 @@ CORRIDOR_CHECK_BUDGET_S = 20.0
 # Overpass returns 406 to clients without an identifying User-Agent.
 USER_AGENT = "conestruct-traffic-control-tool/0.2 (+https://conestruct.com; hello@conestruct.com)"
 
-# Public Overpass mirrors, asked AT ONCE (#292, ruling R69): the first
-# valid answer wins and the other request is cancelled, so no mirror's
+# Public Overpass mirrors, asked AT ONCE (#292, rulings R69/R74): the first
+# valid answer with content wins and the other request is cancelled, so no mirror's
 # place in a list costs the scan time.  Measured 2026-10-01, morning,
 # midday and evening (validation-artifacts/committed/
 # issue-292-mirror-strategy/): overpass.openstreetmap.fr answered 27 of 27
@@ -224,9 +224,9 @@ async def _ask_mirror(
         return url, None, f"{url}: overpass remark: {remark}", size, remark
     problem = validate(payload) if validate is not None else None
     if problem is not None:
-        # R69: the first VALID answer wins.  One that fails #304's checks is
-        # this mirror's failure, and the other mirror's answer stays in play.
-        return url, None, f"{url}: invalid answer: {problem}", size, None
+        # R74: an answer #304's cleaning empties is this mirror's failure,
+        # and the other mirror's answer stays in play.
+        return url, None, f"{url}: {problem}", size, None
     return url, payload, None, size, None
 
 
@@ -305,12 +305,13 @@ def _overpass_request_with_fallback(
 ) -> tuple[dict[str, Any] | None, str | None]:
     """Ask every live mirror AT ONCE; the first valid answer wins (#292).
 
-    R69: the live mirrors get the query at the same moment.  The first
-    answer that is HTTP 200, JSON, without a ``remark`` (#251) and that
-    passes ``validate`` (the caller's #304 checks: no point without
-    coordinates, nothing outside the query's own box) wins, and the other
-    request is cancelled.  A 4xx, 429, 5xx, remark or invalid answer from
-    one mirror is that mirror's failure; the other's answer stays in play.
+    R69 as corrected by R74: the live mirrors get the query at the same
+    moment.  The first answer that is valid -- HTTP 200, JSON, without a
+    ``remark`` (#251) -- and that ``validate`` passes wins, and the other
+    request is cancelled.  ``validate`` is the caller's "still has content
+    after #304's cleaning" (``_emptied_by_cleaning``); the cleaning itself
+    stays downstream.  A 4xx, 429, 5xx, remark or emptied answer from one
+    mirror is that mirror's failure; the other's answer stays in play.
 
     R71: ``budget_s`` is a HARD deadline for the whole ask.  Every request
     still open when it passes is cancelled, so a slow read can't run past
@@ -836,14 +837,14 @@ def detect_along_corridor(
         payload, error = _overpass_request_with_fallback(query)
     else:
         fetch: dict[str, Any] = {}
-        # #292 (R69): an answer that fails #304's checks loses the race.
+        # #292 (R74): an answer #304's cleaning would empty loses the race.
         boxes = [bbox, *extra]
         circle = (anchor_lat, anchor_lng, road_radius_m) if folded else None
         payload, error = _overpass_request_with_fallback(
             query,
             budget_s=budget_s,
             meta=fetch,
-            validate=lambda p: _answer_problem(p, boxes, circle),
+            validate=lambda p: _emptied_by_cleaning(p, boxes, circle),
         )
         buckets["overpass"] = {
             "mirror": fetch.get("mirror"),
@@ -1018,8 +1019,8 @@ def detect_road_bearing(
         else _overpass_request_with_fallback(
             query,
             budget_s=budget_s,
-            # #292 (R69): the road query's own circle decides validity.
-            validate=lambda p: _answer_problem(p, None, (lat, lng, radius_m)),
+            # #292 (R74): cleaned against the road query's own circle.
+            validate=lambda p: _emptied_by_cleaning(p, None, (lat, lng, radius_m)),
         )
     )
     if payload is None:
@@ -1097,38 +1098,58 @@ def _way_meets_circle(way: dict[str, Any], lat: float, lng: float, radius_m: flo
     return not (n < lat - dlat or s > lat + dlat or e < lng - dlng or w > lng + dlng)
 
 
-def _answer_problem(
+def _survives_cleaning(
+    el: dict[str, Any],
+    scan_boxes: list[tuple[float, float, float, float]] | None,
+    road_circle: tuple[float, float, float] | None,
+) -> bool:
+    """Whether #304's downstream cleaning keeps anything of ``el``.
+
+    The same predicates the cleaning applies, read here only to judge the
+    whole answer (#292, R74), never to change it: a geometry element keeps
+    its points with coordinates (``_bearing_from_elements`` skips the rest)
+    and a road way must meet the query's ``around:`` circle; a scan element
+    must sit within ``_SCAN_ELEMENT_MARGIN_M`` of a scan box
+    (``_within_scan_boxes``, which also keeps an element with no
+    coordinate).
+    """
+    geometry = el.get("geometry")
+    if geometry is not None:
+        if not any(_has_coords(pt) for pt in geometry):
+            return False
+        return not (
+            road_circle is not None
+            and el.get("type") == "way"
+            and not _way_meets_circle(el, *road_circle)
+        )
+    if scan_boxes:
+        coord = _element_coord(el)
+        return coord is None or (
+            min(_gap_to_box_m(*coord, b) for b in scan_boxes) <= _SCAN_ELEMENT_MARGIN_M
+        )
+    return True
+
+
+def _emptied_by_cleaning(
     payload: dict[str, Any],
     scan_boxes: list[tuple[float, float, float, float]] | None,
     road_circle: tuple[float, float, float] | None,
 ) -> str | None:
-    """Why a whole Overpass answer fails #304's checks, or ``None``.
+    """Why an answer has no content left after #304's cleaning, or ``None``.
 
-    #292 (R69): the race takes the first VALID answer, so these checks
-    judge an answer before it can win -- a geometry point without
-    coordinates (#304 a), a road way whose extent misses the query's
-    ``around:`` circle, or a scan element beyond the scan boxes' margin
-    (#304 d).  The per-element sanitising downstream stays as a second
-    line.
+    #292, R74 (correcting R69): #304's checks CLEAN an answer -- null points
+    skipped, anything outside the query box or search circle dropped --
+    they don't disqualify it.  The first valid answer that still has
+    content after cleaning wins.  A genuinely empty answer counts (an empty
+    corridor is a measurement, Rule 10); only an answer that had elements
+    and is cleaned down to nothing loses.
     """
-    for el in payload.get("elements") or []:
-        geometry = el.get("geometry")
-        if geometry is not None:
-            if any(not _has_coords(pt) for pt in geometry):
-                return f"{el.get('type')} {el.get('id')} has points without coordinates"
-            if (
-                road_circle is not None
-                and el.get("type") == "way"
-                and not _way_meets_circle(el, *road_circle)
-            ):
-                return f"way {el.get('id')} lies outside the query circle"
-        elif scan_boxes:
-            coord = _element_coord(el)
-            if coord is not None and (
-                min(_gap_to_box_m(*coord, b) for b in scan_boxes) > _SCAN_ELEMENT_MARGIN_M
-            ):
-                return f"{el.get('type')} {el.get('id')} lies outside the query box"
-    return None
+    elements = payload.get("elements") or []
+    if not elements:
+        return None
+    if any(_survives_cleaning(el, scan_boxes, road_circle) for el in elements):
+        return None
+    return f"cleaned to nothing: all {len(elements)} elements dropped by #304's checks"
 
 
 def _bearing_from_elements(

@@ -3,7 +3,7 @@
 Read-only.  For each pin in out/queries.json (the exact scan query prod
 sends, build_queries.py):
 
-  1. the query goes to all three Overpass mirrors AT ONCE, the backend's own
+  1. the query goes to every mirror in OVERPASS_MIRRORS AT ONCE, the backend's own
      request (POST data=query, its User-Agent), each with a 30 s read cap --
      long enough to see how late a slow mirror really answers.  Recorded
      per mirror: HTTP status, seconds to the full answer, bytes, the
@@ -17,6 +17,10 @@ Strategies (today's chain, without kumi, all at once, other budgets) are
 then simulated on these numbers by simulate.py.
 
   python measure_window.py <label> > out/window-<label>.jsonl
+
+R72/R76 acceptance windows (after the #292 ship) add the Federal pin, sent
+as its captured body, and are sha-gated: if prod still serves the pre-#292
+sha the window records that and measures nothing.
 """
 
 from __future__ import annotations
@@ -38,6 +42,7 @@ sys.path.insert(0, str(EVID))
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.stdout.reconfigure(encoding="utf-8")
 from gate import gate_headers  # noqa: E402
+from build_queries import extra_bodies  # noqa: E402
 from measure_refusals import PINS, SITE, TEMPLATE, body_for  # noqa: E402
 
 from src.rules.site_detection import OVERPASS_MIRRORS, USER_AGENT  # noqa: E402
@@ -80,20 +85,28 @@ def prod_audit(body: dict, h: dict) -> dict:
     return out
 
 
+PRE_292_SHA = "ccb5042"  # prod before the #292 ship (rulings.md)
+
+
 def main() -> None:
     label = sys.argv[1]
     queries = json.loads((HERE / "out" / "queries.json").read_text("utf-8"))
     template = json.loads(TEMPLATE.read_text("utf-8"))["scenario"]
     resolved = json.loads((EVID / "out" / "pins-resolved.json").read_text("utf-8"))
+    extras = extra_bodies()
     h = gate_headers(SITE)
+    healthz = httpx.get("https://rtmakatura--conestruct-render-fastapi-app.modal.run/healthz", timeout=30).json()
     print(json.dumps({"window": label, "start": datetime.now(UTC).isoformat(timespec="seconds"),
-                      "healthz": httpx.get("https://rtmakatura--conestruct-render-fastapi-app.modal.run/healthz",
-                                           timeout=30).json()}), flush=True)
+                      "healthz": healthz}), flush=True)
+    if label.startswith("accept-") and str(healthz.get("sha", "")).startswith(PRE_292_SHA):
+        print(json.dumps({"window": label, "skipped": f"prod still serves {PRE_292_SHA}, pre-#292"}), flush=True)
+        return
     for pin, query in queries.items():
         at = datetime.now(UTC).isoformat(timespec="seconds")
         with ThreadPoolExecutor(len(OVERPASS_MIRRORS)) as ex:
             mirrors = list(ex.map(lambda u: ask(u, query), OVERPASS_MIRRORS))
-        prod = prod_audit(body_for(template, *PINS[pin], resolved[pin]), h)
+        body = extras[pin] if pin in extras else body_for(template, *PINS[pin], resolved[pin])
+        prod = prod_audit(body, h)
         print(json.dumps({"window": label, "pin": pin, "at": at, "mirrors": mirrors, "prod": prod},
                          ensure_ascii=False), flush=True)
 

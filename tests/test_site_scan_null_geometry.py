@@ -12,6 +12,7 @@ Every test here replays the real captures in tests/fixtures/site_scan/
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import re
@@ -19,6 +20,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
+import httpx
 import pytest
 from fastapi.testclient import TestClient
 
@@ -139,6 +141,75 @@ def test_the_stray_way_is_dropped_and_the_plan_matches_the_primary(
     primary = _audit(client, monkeypatch, PRIMARY)
     assert fallback.status_code == primary.status_code == 200
     assert _scan_view(fallback.json()) == _scan_view(primary.json())
+
+
+# --------------------------------------------------------------------------- #
+# #292 (R74): the race takes the first valid answer with content, and #304's
+# checks clean it, so the real fallback capture wins when it answers first.
+# --------------------------------------------------------------------------- #
+
+_FETCH_SPECIFIC = {"mirror", "response_bytes"}  # which server answered, and its byte count
+
+
+def _race_audit(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, fast: str, answers: dict[str, Any]
+) -> Any:
+    """The audit with ``_mirror_post`` replaying ``answers`` per mirror URL:
+    ``fast`` answers at once, every other mirror 0.3 s later."""
+
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> httpx.Response:
+        if url != fast:
+            await asyncio.sleep(0.3)
+        return httpx.Response(200, json=answers[url], request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(sd, "_mirror_post", mirror_post)
+    return client.post(
+        "/render/audit", json=REQUEST, headers={"Authorization": f"Bearer {_TEST_SECRET}"}
+    )
+
+
+def _without_fetch_specifics(audit: dict[str, Any]) -> dict[str, Any]:
+    view = _scan_view(audit)
+    scan = {k: v for k, v in view["sections"]["site_scan"].items() if k not in _FETCH_SPECIFIC}
+    return {**view, "sections": {**view["sections"], "site_scan": scan}}
+
+
+def test_the_real_fallback_capture_wins_the_race_and_matches_the_primary(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """R74's proof on the real Federal captures (#304).  The fallback
+    mirror's answer, with the Kazakh way and its null points, answers first.
+    It is valid (200, JSON, no remark) and has content after cleaning, so it
+    wins; cleaning drops way 42125193; and the audit equals the one the
+    primary's capture gives when the primary wins, except for which server
+    answered and its byte count."""
+    de, fr = sd.OVERPASS_MIRRORS
+    answers = {de: PRIMARY, fr: FALLBACK}
+    dropped: list[int] = []
+    real_bearing = sd._bearing_from_elements
+
+    def spy(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        out = real_bearing(*args, **kwargs)
+        dropped.append(out.get("elements_dropped", 0))
+        return out
+
+    monkeypatch.setattr(sd, "_bearing_from_elements", spy)
+
+    fallback_won = _race_audit(client, monkeypatch, fr, answers)
+    assert fallback_won.status_code == 200, fallback_won.text[:300]
+    assert fallback_won.json()["sections"]["site_scan"]["mirror"] == fr
+    assert dropped == [1]  # 42125193, the one road way outside the circle
+
+    ss.clear_memo()
+    dropped.clear()
+    primary_won = _race_audit(client, monkeypatch, de, answers)
+    assert primary_won.status_code == 200, primary_won.text[:300]
+    assert primary_won.json()["sections"]["site_scan"]["mirror"] == de
+    assert dropped == [0]
+
+    assert _without_fetch_specifics(fallback_won.json()) == _without_fetch_specifics(
+        primary_won.json()
+    )
 
 
 def test_road_ways_outside_the_around_circle_are_dropped_and_counted() -> None:

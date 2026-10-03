@@ -8,6 +8,10 @@ then run through the backend at this checkout with the Overpass fetch
 replaced by a recorder: the query is captured and the scan told the mirrors
 are down.  Writes out/queries.json {pin: query}.
 
+R76 (2026-10-02) adds the Federal pin: its body is the site's own request
+as #304 captured it (tests/fixtures/site_scan/federal_request.json; no
+confirmed road, so the relay leaves it as it is).
+
   python build_queries.py
 """
 
@@ -35,6 +39,13 @@ from measure_refusals import PINS, TEMPLATE, body_for  # noqa: E402
 sys.path.insert(0, str(ROOT / "validation-artifacts/committed/issue-243-note-8/recheck-2f27be3"))
 from note8_probe import relayed  # noqa: E402
 
+FEDERAL = ROOT / "tests/fixtures/site_scan/federal_request.json"
+
+
+def extra_bodies() -> dict[str, dict]:
+    """R76: pins measured from a captured body rather than built from PINS."""
+    return {"federal": json.loads(FEDERAL.read_text("utf-8"))["scenario"]}
+
 
 def main() -> None:
     template = json.loads(TEMPLATE.read_text("utf-8"))["scenario"]
@@ -55,6 +66,11 @@ def main() -> None:
         current["pin"] = name
         body = relayed(body_for(template, *PINS[name], resolved[name]))
         r = client.post("/render/audit", json=body, headers={"Authorization": "Bearer probe"})
+        print(f"{name}: HTTP {r.status_code}; query {len(captured.get(name, ''))} chars")
+    for name, body in extra_bodies().items():
+        ss.clear_memo()
+        current["pin"] = name
+        r = client.post("/render/audit", json=relayed(body), headers={"Authorization": "Bearer probe"})
         print(f"{name}: HTTP {r.status_code}; query {len(captured.get(name, ''))} chars")
     (HERE / "out" / "queries.json").write_text(json.dumps(captured, indent=1), "utf-8")
 

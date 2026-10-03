@@ -736,21 +736,63 @@ def test_both_mirrors_failing_is_an_honest_refusal_naming_both(
     assert sorted(calls) == sorted([first, second])  # R73: one request each, no retry
 
 
-def test_an_invalid_answer_loses_to_the_other_mirrors_valid_one(
+def test_an_answer_with_null_points_still_wins_when_it_has_content(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """R69: the first VALID answer wins.  The faster mirror's answer carries
-    the corrupt way #304 found (points without coordinates); it is that
-    mirror's failure, and the slower mirror's clean answer wins."""
-    fast, slow = site_detection.OVERPASS_MIRRORS[1], site_detection.OVERPASS_MIRRORS[0]
+    """R74 (correcting R69): #304's checks CLEAN an answer, they don't
+    disqualify it.  The faster mirror's answer carries a way with a null
+    point but also a usable one; it is valid and has content, so it wins."""
+    fast = site_detection.OVERPASS_MIRRORS[1]
     lat, lng = 39.71466, -104.94071
-    corrupt = {
+    with_nulls = {
         "elements": [
             {
                 "type": "way",
-                "id": 42125193,
+                "id": 1,
                 "tags": {"highway": "primary"},
-                "geometry": [{"lat": lat, "lon": lng}, {"lat": None, "lon": None}],
+                "geometry": [
+                    {"lat": lat, "lon": lng},
+                    None,
+                    {"lat": lat + 0.0005, "lon": lng},
+                    {"lat": lat + 0.0010, "lon": lng},
+                ],
+            }
+        ]
+    }
+
+    async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
+        if url == fast:
+            return _FakeResponse(with_nulls)
+        await asyncio.sleep(0.2)
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
+    meta: dict[str, Any] = {}
+    payload, error = site_detection._overpass_request_with_fallback(
+        "[out:json];",
+        budget_s=20.0,
+        meta=meta,
+        validate=lambda p: site_detection._emptied_by_cleaning(p, None, (lat, lng, 30.0)),
+    )
+    assert (payload, error) == (with_nulls, None)
+    assert meta["mirror"] == fast
+
+
+def test_an_answer_cleaned_to_nothing_loses_to_the_other_mirrors(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """R74: the first valid answer that STILL HAS CONTENT after cleaning
+    wins.  The faster mirror's only road way lies a degree away from the
+    search circle, so cleaning drops it and the slower mirror's answer wins."""
+    fast, slow = site_detection.OVERPASS_MIRRORS[1], site_detection.OVERPASS_MIRRORS[0]
+    lat, lng = 39.71466, -104.94071
+    far_only = {
+        "elements": [
+            {
+                "type": "way",
+                "id": 7,
+                "tags": {"highway": "primary"},
+                "geometry": [{"lat": lat + 1.0, "lon": lng}, {"lat": lat + 1.001, "lon": lng}],
             }
         ]
     }
@@ -767,7 +809,7 @@ def test_an_invalid_answer_loses_to_the_other_mirrors_valid_one(
 
     async def mirror_post(_client: Any, url: str, _query: str, _timeout: Any) -> Any:
         if url == fast:
-            return _FakeResponse(corrupt)
+            return _FakeResponse(far_only)
         await asyncio.sleep(0.05)
         return _FakeResponse(clean)
 
@@ -777,13 +819,13 @@ def test_an_invalid_answer_loses_to_the_other_mirrors_valid_one(
         "[out:json];",
         budget_s=20.0,
         meta=meta,
-        validate=lambda p: site_detection._answer_problem(p, None, (lat, lng, 30.0)),
+        validate=lambda p: site_detection._emptied_by_cleaning(p, None, (lat, lng, 30.0)),
     )
     assert (payload, error) == (clean, None)
     assert meta["mirror"] == slow
 
 
-def test_invalid_answers_from_both_mirrors_are_an_honest_refusal(
+def test_answers_cleaned_to_nothing_by_both_mirrors_are_an_honest_refusal(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     lat, lng = 39.71466, -104.94071
@@ -803,39 +845,53 @@ def test_invalid_answers_from_both_mirrors_are_an_honest_refusal(
     payload, error = site_detection._overpass_request_with_fallback(
         "[out:json];",
         budget_s=20.0,
-        validate=lambda p: site_detection._answer_problem(p, None, (lat, lng, 30.0)),
+        validate=lambda p: site_detection._emptied_by_cleaning(p, None, (lat, lng, 30.0)),
     )
     assert payload is None
     first, second = site_detection.OVERPASS_MIRRORS
-    reason = "invalid answer: way 7 lies outside the query circle"
+    reason = "cleaned to nothing: all 1 elements dropped by #304's checks"
     assert error == f"{first}: {reason}; {second}: {reason}"
 
 
-def test_answer_problem_names_each_of_the_304_checks() -> None:
+def test_emptied_by_cleaning_judges_what_the_cleaning_keeps() -> None:
+    """R74: only an answer that had elements and keeps none loses; a
+    genuinely empty answer is a measurement (Rule 10)."""
     lat, lng = 39.71466, -104.94071
     box = (lat - 0.01, lng - 0.01, lat + 0.01, lng + 0.01)
-    null_point = {
+    circle = (lat, lng, 30.0)
+    some_nulls = {
         "type": "way",
         "id": 3,
-        "geometry": [{"lat": lat, "lon": lng}, {"lat": None, "lon": None}],
+        "geometry": [{"lat": lat, "lon": lng}, None, {"lat": lat + 0.0001, "lon": lng}],
+    }
+    all_nulls = {"type": "way", "id": 6, "geometry": [None, {"lat": None, "lon": None}]}
+    far_way = {
+        "type": "way",
+        "id": 8,
+        "geometry": [{"lat": lat + 1.0, "lon": lng}, {"lat": lat + 1.001, "lon": lng}],
     }
     far_node = {"type": "node", "id": 4, "lat": lat + 1.0, "lon": lng, "tags": {}}
     near_node = {"type": "node", "id": 5, "lat": lat, "lon": lng, "tags": {}}
-    problem = site_detection._answer_problem
-    assert problem({"elements": [null_point]}, [box], None) == (
-        "way 3 has points without coordinates"
+    emptied = site_detection._emptied_by_cleaning
+
+    assert emptied({"elements": []}, [box], circle) is None  # empty is an answer
+    assert emptied({"elements": [some_nulls]}, None, circle) is None  # points skipped, way kept
+    assert emptied({"elements": [far_node, near_node]}, [box], None) is None  # one kept
+    assert emptied({"elements": [some_nulls, far_way]}, None, circle) is None
+    assert emptied({"elements": [all_nulls]}, None, circle) == (
+        "cleaned to nothing: all 1 elements dropped by #304's checks"
     )
-    assert problem({"elements": [far_node]}, [box], None) == "node 4 lies outside the query box"
-    assert problem({"elements": [near_node]}, [box], None) is None
-    assert problem({"elements": []}, [box], (lat, lng, 30.0)) is None
+    assert emptied({"elements": [far_way]}, None, circle) is not None
+    assert emptied({"elements": [far_node]}, [box], None) is not None
 
 
-def test_a_corridor_scan_takes_the_valid_answer_over_an_out_of_box_one(
+def test_a_corridor_scan_takes_an_answer_with_content_over_one_cleaned_to_nothing(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """End to end through the budgeted corridor scan: the validate the race
-    is handed is the #304 box check, so a mirror whose answer reaches far
-    outside the corridor loses to the other mirror's."""
+    """End to end through the budgeted corridor scan: the first mirror's
+    only element lies a degree outside the scan box, so cleaning empties
+    it; the second mirror's genuinely empty corridor is a measurement and
+    wins."""
     corridor = _test_corridor()
     lat, lng = corridor.anchor_lat, corridor.anchor_lng
     far = {"elements": [{"type": "node", "id": 9, "lat": lat + 1.0, "lon": lng, "tags": {}}]}
@@ -850,6 +906,7 @@ def test_a_corridor_scan_takes_the_valid_answer_over_an_out_of_box_one(
     monkeypatch.setattr(site_detection, "_mirror_post", mirror_post)
     result = site_detection.detect_along_corridor(corridor, budget_s=20.0)
     assert "error" not in result
+    assert result["overpass"]["mirror"] == second
 
 
 def test_a_429_leaves_the_mirror_alone_for_its_retry_after(

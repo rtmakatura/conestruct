@@ -1,14 +1,20 @@
 # issue-292-mirror-strategy — churn, predicted against actual (Rule 5)
 
 The prediction is `checkpoint.md` §4, written at `88eea3c` before Ryan ruled. R69's validity
-clause and R73's cool-down came after it, so the tests they add are new claims, not churn.
+clause (as corrected by R74) and R73's cool-down came after it, so the tests they add are new
+claims, not churn.
 
 ## What the build changes (behaviour, deliberately)
 
-- **Both live mirrors are asked at once** (R69). The first answer that is HTTP 200, JSON, has no
-  `remark` and passes the #304 checks (`_answer_problem`: no geometry point without coordinates,
-  no road way outside the `around:` circle, no scan element beyond the boxes' margin) wins. The
-  other request is cancelled.
+- **Both live mirrors are asked at once** (R69, as corrected by R74). The first answer that is
+  valid (HTTP 200, JSON, no `remark`) and still has content after #304's cleaning wins, and the
+  other request is cancelled. #304's checks clean; they don't disqualify. `_emptied_by_cleaning`
+  reads the cleaning's own predicates (null points skipped, road ways outside the `around:` circle
+  and scan elements beyond the boxes' margin dropped) and changes nothing. The cleaning itself
+  stays downstream. A genuinely empty answer counts; only one cleaned down to nothing loses.
+- **The first build (`17f7276`) had R69 as first worded:** any null point or out-of-box element
+  disqualified the answer. On the Federal pin that made fr's answer always lose. R74 corrected
+  it; this rebuild replaces that check.
 - **Kumi is gone** (R70). `OVERPASS_MIRRORS` is `overpass-api.de`, `overpass.openstreetmap.fr`.
 - **The budget is a hard deadline** (R71). Every request still open when it passes is cancelled.
   `PER_MIRROR_READ_S` (7 s) is retired; `PER_MIRROR_CONNECT_S` (3 s) stays.
@@ -48,18 +54,36 @@ clause and R73's cool-down came after it, so the tests they add are new claims, 
 **Misses:** three test sites and two conftests, all from one blind spot. The checkpoint counted
 the tests that stub the function whole but not the ones that stub the transport under it.
 
-**New tests (R69/R71/R73 claims, not churn):** 13 in `test_site_detection.py`. They cover:
+**New tests (R69/R71/R73/R74 claims, not churn):** 14 in `test_site_detection.py` and 1 in
+`test_site_scan_null_geometry.py`. They cover:
+- a stalled mirror never costs the other's answer, whichever one stalls;
 - the deadline is hard, against a trickling read;
 - a deadline refusal still names a mirror that failed first;
 - both failing names both;
-- an invalid answer loses to the other mirror's valid one (#304's way 42125193 shape);
-- invalid answers from both are an honest refusal;
-- each `_answer_problem` check;
-- a corridor scan takes the valid answer over an out-of-box one;
+- an answer with null points still wins when it has content (R74);
+- an answer cleaned to nothing loses to the other mirror's (R74);
+- answers cleaned to nothing by both are an honest refusal;
+- `_emptied_by_cleaning` against each kind of element, and an empty answer counts;
+- a corridor scan takes a genuinely empty answer over one cleaned to nothing;
 - `Retry-After` honoured, then the mirror skipped;
-- the 60 s default;
+- the 60 s default (R75);
 - every mirror cooling down refuses without a request;
 - the User-Agent names Conestruct and a contact;
-- a 400 from one mirror leaves the other in play.
+- a 400 from one mirror leaves the other in play;
+- **R74's Federal proof** (`test_the_real_fallback_capture_wins_the_race_and_matches_the_primary`):
+  - the real #304 captures go through the real race;
+  - fr's answer, with way 42125193 and its null points, arrives first and wins;
+  - cleaning drops exactly that one road way;
+  - the audit equals the one where the primary's capture wins, apart from `mirror` and
+    `response_bytes`.
+  Proven red against the first build's check: `17f7276`'s `_answer_problem` swapped in for
+  `_emptied_by_cleaning` fails the test at `mirror == fr`, because the primary won.
 
-**Full suite:** 2481 passed, 2 skipped (the two V1.1 TA-10 deferrals).
+**Probes (R76):**
+- `build_queries.py` and `measure_window.py` add the Federal pin, sent as its captured body.
+  - The regenerated `out/queries.json` keeps the 9 pins' queries byte-identical.
+  - Its Federal query equals #304's `federal-folded-query.txt`.
+- `measure_window.py` refuses an `accept-*` window while prod still serves `ccb5042`.
+- `summarize_accept.py` prints the refusal rate and median scan time per window.
+
+**Full suite:** 2483 passed, 2 skipped (the two V1.1 TA-10 deferrals).
