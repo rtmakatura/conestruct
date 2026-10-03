@@ -101,3 +101,20 @@ This file is the arc's authority; every commit on this branch cites it.
 > R73. Be a good citizen of the free mirrors: send a User-Agent naming Conestruct with a contact address, honor 429 / rate limits from either mirror, and don't retry a mirror that just refused.
 > Delete both Conestruct-292 scheduled tasks.
 > Build, verify, give me the go.
+
+---
+
+## The correction after the first build, verbatim (Ryan, 2026-10-02, on `17f7276`)
+
+> R74 (Ryan): correction to R69, my wording was wrong. "Valid" means: HTTP 200, readable JSON, no Overpass remark. #304's checks CLEAN the answer (skip null points, drop anything outside the query box / search circle); they don't disqualify it. The first answer that is valid and still has content after cleaning wins. Add a test with the real Federal fallback capture: it wins the race, the Kazakh way is dropped, and the result matches the primary capture.
+> R75: the 60 s cool-down stays as CHOSEN.
+> R76: add the Federal pin to R72's measurement. Windows: tonight 19:07, then Monday morning (~08:45) and midday (12:07) via the same Windows-task wrapper (weekday mornings were the bad ones). Register them and show schtasks.
+> Rebuild, verify, give me the go.
+
+On CC's reading of "still has content" (a genuinely empty answer counts; only an answer that had
+elements and is cleaned down to nothing loses), verbatim:
+
+> Go. Your reading of "still has content" is right: a genuinely empty answer counts; only an answer cleaned down to nothing loses.
+
+*(R76's "tonight 19:07" had already passed when the build reached it: 22:07 MDT. The report
+says what was registered in its place.)*
