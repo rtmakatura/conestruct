@@ -43,5 +43,43 @@ With the guard as built, all 71 pass (`71 passed in 31.32s`).
 A refusal doesn't spend the go. The first test is refused from inside the worktree, then runs the same go from the main
 checkout and is allowed.
 
+## The extension: anywhere under `.claude/worktrees/` except `_ship`
+
+Ryan, 2026-10-04: refuse by path too, even where git can't read the branch. The guard now refuses when
+`arc_worktree_of(cwd)` names a folder under `.claude/worktrees/` other than `_ship`, or when the cwd is a checkout of
+the branch.
+
+**Churn, predicted before the diff and matched:** `test_a_ship_from_outside_the_branch_worktree_is_allowed[other-arc]`
+flips to refused. It is replaced by:
+- `test_a_ship_from_anywhere_under_the_worktrees_folder_is_refused`, with cases `other-arc`, `stale-folder` and
+  `stale-subdir`. A stale folder like the empty `issue-292` folder the #292 ship left reads to git as the main
+  checkout's `main`.
+- `test_a_ship_from_the_main_checkout_or_the_ship_worktree_is_allowed`, with cases `main`, `_ship` and `main-subdir`.
+
+**Block direction:** red against the first build's guard (`a07c1c7`):
+
+```
+FAILED tests/test_ship_gate.py::test_a_ship_from_anywhere_under_the_worktrees_folder_is_refused[other-arc]
+FAILED tests/test_ship_gate.py::test_a_ship_from_anywhere_under_the_worktrees_folder_is_refused[stale-folder]
+FAILED tests/test_ship_gate.py::test_a_ship_from_anywhere_under_the_worktrees_folder_is_refused[stale-subdir]
+3 failed, 5 passed, 67 deselected in 7.01s
+```
+
+**Allow direction:** red against two over-broad variants, then restored.
+- Variant A, no `_ship` exception:
+  ```
+  FAILED tests/test_ship_gate.py::test_a_ship_from_the_main_checkout_or_the_ship_worktree_is_allowed[_ship]
+  1 failed, 2 passed, 72 deselected in 2.78s
+  ```
+- Variant B, `if cwd:` (always refuse):
+  ```
+  FAILED tests/test_ship_gate.py::test_a_ship_from_the_main_checkout_or_the_ship_worktree_is_allowed[main]
+  FAILED tests/test_ship_gate.py::test_a_ship_from_the_main_checkout_or_the_ship_worktree_is_allowed[_ship]
+  FAILED tests/test_ship_gate.py::test_a_ship_from_the_main_checkout_or_the_ship_worktree_is_allowed[main-subdir]
+  3 failed, 72 deselected in 2.38s
+  ```
+
+**Green:** `75 passed in 32.68s`.
+
 **When it takes effect:** the hook runs from `.claude/worktrees/_ship/scripts/hooks/`, which the ship script resets to
 `main` on every ship. The guard therefore applies from the ship after the one that carries it.

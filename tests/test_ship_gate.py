@@ -383,9 +383,29 @@ def test_a_set_location_inside_the_command_does_not_move_the_session(tmp_path, a
     assert code == 2, err
 
 
-@pytest.mark.parametrize("where", ["main", "other-arc"])
-def test_a_ship_from_outside_the_branch_worktree_is_allowed(tmp_path, arc_worktrees, where):
+@pytest.mark.parametrize("where", ["other-arc", "stale-folder", "stale-subdir"])
+def test_a_ship_from_anywhere_under_the_worktrees_folder_is_refused(tmp_path, arc_worktrees, where):
+    """R77, extended (2026-10-04): anywhere under .claude/worktrees/ except
+    _ship is refused, whichever branch it holds, and even where git can't
+    read the branch: a stale folder like the empty one the #292 ship left
+    reads as the main checkout's `main`."""
     main, _shipped, other = arc_worktrees
-    cwd = main if where == "main" else other
+    stale = main / ".claude" / "worktrees" / "issue-292"
+    (stale / "deep").mkdir(parents=True)
+    cwd = {"other-arc": other, "stale-folder": stale, "stale-subdir": stale / "deep"}[where]
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3", _go(tmp_path), cwd=cwd)
+    assert code == 2, err
+    assert ".claude/worktrees" in err and "main checkout" in err
+
+
+@pytest.mark.parametrize("where", ["main", "_ship", "main-subdir"])
+def test_a_ship_from_the_main_checkout_or_the_ship_worktree_is_allowed(
+    tmp_path, arc_worktrees, where
+):
+    main, _shipped, _other = arc_worktrees
+    ship_wt = main / ".claude" / "worktrees" / "_ship"
+    ship_wt.mkdir(parents=True)
+    (main / "scripts").mkdir()
+    cwd = {"main": main, "_ship": ship_wt, "main-subdir": main / "scripts"}[where]
     code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3", _go(tmp_path), cwd=cwd)
     assert code == 0, err

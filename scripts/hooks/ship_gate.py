@@ -15,9 +15,10 @@ Exit 0 = allow.  Exit 2 = block; the reason goes to stderr, which CC sees.
      - that go has not been used (a ledger records each go's message uuid on
        its first use: one go = one branch = one run; -DryRun counts);
      - R77: the session's own working directory is not inside <branch>'s
-       checkout.  The cleanup after the ship removes that worktree, and
-       Windows can't delete a folder a live session sits in.  A refusal
-       here doesn't spend the go.
+       checkout, nor anywhere under .claude/worktrees/ except _ship (by
+       path, so a folder git can't read is covered too).  The cleanup after
+       the ship removes worktrees, and Windows can't delete a folder a live
+       session sits in.  A refusal here doesn't spend the go.
 2. Anything else that moves main, force-pushes any branch, or deletes a
    remote branch is blocked, whatever the go (R10):
      - git push to main (main, HEAD:main, x:refs/heads/main, --all, --mirror),
@@ -218,6 +219,17 @@ def current_branch(cwd: str | None) -> str:
     return r.stdout.strip() if r.returncode == 0 else ""
 
 
+def arc_worktree_of(path: str) -> str | None:
+    """R77: the <name> when ``path`` lies under ``.claude/worktrees/<name>``
+    and <name> isn't ``_ship``; else None.  By path alone, so it holds where
+    git can't read a branch (a stale folder reads as the main checkout)."""
+    parts = [x.lower() for x in re.split(r"[\\/]+", _as_path(path)) if x]
+    for i in range(len(parts) - 2):
+        if parts[i] == ".claude" and parts[i + 1] == "worktrees" and parts[i + 2] != "_ship":
+            return parts[i + 2]
+    return None
+
+
 def _is_main_ref(ref: str) -> bool:
     return ref in ("main", "refs/heads/main")
 
@@ -314,12 +326,12 @@ def decide(payload: dict) -> None:
         # R77: the SESSION's cwd, never one moved by a cd inside the command:
         # a `Set-Location` there moves only that command's shell, and the
         # #292 ship (2026-10-04) failed its worktree removal exactly so.
-        if cwd and current_branch(cwd) == branch:
+        if cwd and (arc_worktree_of(cwd) is not None or current_branch(cwd) == branch):
             raise Block(
-                f"this session's working directory ({cwd}) is inside the worktree of {branch!r}, "
-                "which the cleanup after the ship removes; Windows can't delete a folder a live "
-                "session sits in.  Move the session to the main checkout first (cd there), then "
-                "run the ship again.  The go is not spent."
+                f"this session's working directory ({cwd}) is inside {branch!r}'s worktree or "
+                "under .claude/worktrees/, which the cleanup after the ship removes from; Windows "
+                "can't delete a folder a live session sits in.  Move the session to the main "
+                "checkout first (cd there), then run the ship again.  The go is not spent."
             )
         consume(uuid, branch)
         return
