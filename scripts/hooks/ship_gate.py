@@ -13,7 +13,11 @@ Exit 0 = allow.  Exit 2 = block; the reason goes to stderr, which CC sees.
        and <branch> appears in that result: line as a whole token;
      - the command's -Branch is <branch>;
      - that go has not been used (a ledger records each go's message uuid on
-       its first use: one go = one branch = one run; -DryRun counts).
+       its first use: one go = one branch = one run; -DryRun counts);
+     - R77: the session's own working directory is not inside <branch>'s
+       checkout.  The cleanup after the ship removes that worktree, and
+       Windows can't delete a folder a live session sits in.  A refusal
+       here doesn't spend the go.
 2. Anything else that moves main, force-pushes any branch, or deletes a
    remote branch is blocked, whatever the go (R10):
      - git push to main (main, HEAD:main, x:refs/heads/main, --all, --mirror),
@@ -307,6 +311,16 @@ def decide(payload: dict) -> None:
         arg = ship_branch_arg(command)
         if arg != branch:
             raise Block(f'the go names "{branch}" but the command ships "{arg}"')
+        # R77: the SESSION's cwd, never one moved by a cd inside the command:
+        # a `Set-Location` there moves only that command's shell, and the
+        # #292 ship (2026-10-04) failed its worktree removal exactly so.
+        if cwd and current_branch(cwd) == branch:
+            raise Block(
+                f"this session's working directory ({cwd}) is inside the worktree of {branch!r}, "
+                "which the cleanup after the ship removes; Windows can't delete a folder a live "
+                "session sits in.  Move the session to the main checkout first (cd there), then "
+                "run the ship again.  The go is not spent."
+            )
         consume(uuid, branch)
         return
     # R68: each git call is judged in the directory it runs in -- the

@@ -235,3 +235,29 @@ Ryan, 2026-09-30, on the `ship/r51` ship report (after "Browser check PASS. Leav
 > R52 (Ryan): a slow Vercel shouldn't leave a ship half-done. Raise the frontend wait from 10 to 20 minutes. If it still times out, ship.ps1 keeps checking in the background-safe way you choose, or prints one resume command that re-checks the frontend and then runs the cleanup; CC runs that itself without asking me. Stack R52 as the first commit of the notes arc.
 
 *CC's choice: the resume command. `ship.ps1 -Resume -Sha <sha>` runs only while main is still that sha; it re-checks the backend, waits for the frontend again (20 minutes), then prints SHIP VERIFIED and runs the cleanup. It merges, pushes and deploys nothing.*
+
+## R77, verbatim
+
+Ryan, 2026-10-04, after the `issue-292-mirror-strategy` ship ("Browser check PASS."), on its "CLEANUP INCOMPLETE" (the `issue-292` worktree: Permission denied):
+
+> R77 (Ryan), ride along on the next branch: ship.ps1 moves its own shell to the main checkout before the cleanup step, so a session sitting in the branch's worktree can't block the removal. Also: check whether the session holding the unslop-public-copy lock (notes-arc) is still running. If it isn't, remove the stale lock so the next cleanup takes it. If it is, tell me which window it is so I can close it.
+
+*CC stopped before building it:*
+- *ship.ps1 already runs from the `_ship` worktree (`Set-Location $ShipDir`).*
+- *`branch-cleanup.ps1` removes worktrees with `git -C $RepoDir`.*
+- *The folder was held by the CC session itself, whose working directory was the branch's worktree. ship.ps1 can't move another process's directory.*
+
+*CC proposed the `ship_gate` guard instead.*
+
+Revised, verbatim:
+
+> R77 (revised): build the ship_gate guard. Refuse the ship command while the session's working directory is inside .claude/worktrees/<branch>, with a message to move to the main checkout first. Red-prove both directions. Ride along on the next branch.
+>
+> You have my go to stop the background session cc-prompt-unslop-copy (pid 25788). Its work shipped on 9/29. Then remove the stale lock so the next cleanup takes the unslop-public-copy worktree and notes-arc.
+
+*Built in `ship_gate.py`. The ship command is refused when the hook's `cwd`, the session's own, is a checkout of the branch the go names:*
+- *any subdirectory of that worktree counts;*
+- *a `cd` or `Set-Location` inside the command doesn't;*
+- *the refusal comes before the ledger, so the go isn't spent.*
+
+*Red-proof: `r77-redproof.md`.*

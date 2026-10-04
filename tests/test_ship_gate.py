@@ -328,3 +328,64 @@ def test_an_unreadable_target_fails_closed(tmp_path, two_checkouts):
     main, _wt = two_checkouts
     code, err = hook(tmp_path, f'git -C "{(tmp_path / "nowhere").as_posix()}" rebase x', cwd=main)
     assert code == 2, err
+
+
+# --------------------------------------------------------------------------- #
+# R77: never ship from inside the branch's own worktree.  The cleanup after
+# the ship can't remove a folder this session sits in (the #292 ship,
+# 2026-10-04: "Permission denied"), and a `Set-Location` inside the command
+# doesn't move the session, so the hook judges the session's own cwd.
+# --------------------------------------------------------------------------- #
+
+
+@pytest.fixture
+def arc_worktrees(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """The main checkout on `main`, the shipped branch's worktree and another
+    arc's, under .claude/worktrees/ as the real repo lays them out."""
+    main = tmp_path / "main-checkout"
+    main.mkdir()
+    run = lambda *a: subprocess.run(["git", *a], cwd=main, check=True, capture_output=True)  # noqa: E731
+    run("init", "-q", "-b", "main")
+    run("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "init")
+    shipped = main / ".claude" / "worktrees" / "ship-loop-3"
+    other = main / ".claude" / "worktrees" / "other-arc"
+    run("worktree", "add", "-q", "-b", "ship-loop-3", str(shipped))
+    run("worktree", "add", "-q", "-b", "other-arc", str(other))
+    (shipped / "sub" / "dir").mkdir(parents=True)
+    return main, shipped, other
+
+
+def _go(tmp_path: Path) -> str:
+    return write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
+
+
+@pytest.mark.parametrize("where", ["top", "subdir"])
+def test_a_ship_from_inside_the_branch_worktree_is_refused_and_keeps_the_go(
+    tmp_path, arc_worktrees, where
+):
+    main, shipped, _other = arc_worktrees
+    t = _go(tmp_path)
+    cwd = shipped if where == "top" else shipped / "sub" / "dir"
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3", t, cwd=cwd)
+    assert code == 2, err
+    assert "worktree" in err and "main checkout" in err
+    # The refusal didn't spend the go: from the main checkout it runs.
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3", t, cwd=main)
+    assert code == 0, err
+
+
+def test_a_set_location_inside_the_command_does_not_move_the_session(tmp_path, arc_worktrees):
+    """The #292 shape: the command moved its own shell to the main checkout,
+    the session stayed in the worktree, and the removal failed."""
+    main, shipped, _other = arc_worktrees
+    command = f'Set-Location "{main.as_posix()}"; {SHIP} -Branch ship-loop-3'
+    code, err = hook(tmp_path, command, _go(tmp_path), cwd=shipped)
+    assert code == 2, err
+
+
+@pytest.mark.parametrize("where", ["main", "other-arc"])
+def test_a_ship_from_outside_the_branch_worktree_is_allowed(tmp_path, arc_worktrees, where):
+    main, _shipped, other = arc_worktrees
+    cwd = main if where == "main" else other
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3", _go(tmp_path), cwd=cwd)
+    assert code == 0, err
