@@ -258,3 +258,96 @@ Same search: **no rule on sign side or one-way streets.**
 
 - **The near-intersection Note 8 gap is #309** ("Lane closure near an intersection on a one-way street signs one side only; S-630-1 Note 8 requires both sides"), split out by R87. #308 changes no near-intersection device.
 - **R90 is checked against the figure:** MUTCD 11th Ed., Notes for Fig 6P-3, Note 1, p. 864 (`sources/mutcd11-pdf100-printed864.txt`): "A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected." That agrees with R90 (sign the side of the closed shoulder), so no stop. In #308 only right-shoulder plans exist; the left-shoulder case arrives with #300 (`work_side`, R82).
+
+---
+
+## Build plan and Rule 5 prediction (written 2026-10-05, before any product code)
+
+Rulings applied: R83–R92, the R80 confirmation, and R89's rename. **Scope:** the shoulder kind only. Near-intersection is #309. The flagger already refuses one-way roads. `lane_closure_divided` is gated.
+
+### One interpretation, flagged
+
+R83 says "If the test can't decide, the operator confirms." The twin evidence comes from the picker's **second** Overpass round trip, `extendCandidateGeometry` (`app/api/road-bearing/route.ts`). It fetches every same-name or same-ref way within `GEOMETRY_RADIUS_M` = 1,700 m to stitch the centerline. It's best-effort: when it fails, the candidate keeps its own-way geometry and the twin is unknown. That's the "can't decide" state. It also covers a one-way way with neither name nor ref, since there's nothing to match a twin on. In both cases the backend refuses with a 400, using the relay-fact pattern (#136/#158/#86/#177), and the WHAT band shows a confirm row whose answer is relayed back. Nothing is guessed.
+
+### The wire (relay raw facts; the backend owns the predicate)
+
+`ShoulderScenario.carriageway: CarriagewayFacts | None` (absent ⇒ today's behaviour, byte-identical):
+- `oneway: str | None`: the raw OSM tag.
+- `highwayClass: str`: raw. The predicate applies only to street classes: primary, secondary, tertiary, unclassified, residential. Motorway, trunk and every `*_link` keep today's class rule; a ramp is not a one-way street (Note 8 names multi-lane ramps separately).
+- `twinDistanceM: float | None`: metres from the snapped point to the nearest same-name (or same-ref) `oneway` way whose travel bearing runs opposite (Δ ≥ 150°). `None` = none in the pool.
+- `twinSearched: bool`: whether the same-name pool answered.
+- `confirmed: "one_way_street" | "divided" | None`: the operator's answer.
+
+### The predicate (`src/rules/carriageway.py`, the one producer)
+
+`TWIN_RADIUS_M = 100.0`, CHOSEN, citing the R86 table. Rules are applied in order:
+1. `confirmed` set → that answer.
+2. Not a street class, or the oneway tag isn't `yes`/`-1` → `not_applicable` (today's path).
+3. `twinDistanceM ≤ TWIN_RADIUS_M` → `divided`.
+4. Not `twinSearched` → `undecided`.
+5. Otherwise → `one_way_street`.
+
+The frontend's copy in `classify.ts` is a mirror, commented as a mirror; the backend is authoritative (Rule 3). The mirror only decides the auto-applied `divided`, the lane-width fit, the provenance line, and when the confirm row arms.
+
+### The layers
+
+| Layer | Change |
+|---|---|
+| `schemas.py` | `CarriagewayFacts`. The drawable-width validator reads the shoulder from the same predicate |
+| `validators.py` | `ScenarioParams.one_way_street: bool = False` (appended with a default, so every constructor is untouched). Title "Shoulder Closure · One-Way Street". Note 8 trigger `is_divided or one_way_street`, minus the single-shoulder exception |
+| bridge `schemas.py:1170-1198` | one-way street → `is_divided=False`, `one_way_street=True`, the undivided generator (single side, right shoulder, R90), shoulder `ONE_WAY_STREET_SHOULDER_WIDTH_FT = 8.0` **CHOSEN** (R88). Divided → the divided generator, 10 ft |
+| `render_api.py` | `_ensure_carriageway_decided`: undecided → 400 `carriageway_undecided` with the recovery sentence. Single-lane gate (`:372-374`): a one-way street is exempt (its `lanes` tag counts every lane, all in one direction) |
+| `audit.py` | Case 11 wording for a one-way street. Note 8 row: label "Signs on both sides of one-way street", detail citing Note 8's single-shoulder exception and MUTCD Fig 6P-3 Note 1 (p. 864, R90), plus the Denver sentence on Denver plans (R91: "PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to MUTCD; DOTI standards and details not read"). One `pending_verification` item on one-way plans: the 8 ft shoulder and the lane-width ceiling are CHOSEN (R88) |
+| `plan_sheet.py` | A one-way branch in `_draw_road`: `num_lanes` lanes in one direction, white dashed separators, no centerline, no median, the left curb's shoulder strip above, two right-pointing arrows. The left edge is drawn white like the outer edge, **CHOSEN**: MUTCD Part 3's edge-line colour rule isn't in the repo, so I don't cite it |
+| `classify.ts` | The `primary + oneway ⇒ divided` rule is replaced by the twin rule, for every street class (R85), as a mirror. "couplet" is retired (R89). Provenance: "OSM oneway=yes; same-name carriageway N m away → divided" / "…none within 100 m → one-way street" / "…the same-name search didn't run → confirm" |
+| `route.ts` + `lib/road-detection/twin.ts` | `twin_distance_m` / `twin_searched` per candidate, computed from the stitch pool (pure function, unit-tested) |
+| `auto-apply.ts` | Shoulder relays `carriageway` **only when the candidate is one-way**, so two-way payloads are byte-identical. `divided` comes from the mirror |
+| `PlanDetails.tsx` | The confirm row, armed only when the mirror says undecided: "One-way street" / "One side of a divided road" writes `carriageway.confirmed` (and `divided`). The Divided toggle on a one-way road writes `confirmed` too, so the operator stays the authority. `matchRefusalAffordance` gains `shoulder_carriageway` |
+| R89 | "couplet" leaves code, tests and comments: `classify.ts`, `classify.test.ts`, `dedup.ts`, `dedup.test.ts`, `stitch.ts`, `stitch.test.ts`, and the script `scripts/test_dedup_couplet.mjs` (renamed) |
+
+**The one new visible surface** is the confirm row, in the WHAT band's PlanDetails, for the field rep at FLOW.md step 2 (WHAT).
+- **P18:** one question, asked only when the test can't decide.
+- **P1:** it mounts only in the refused state, like its #136/#158 siblings.
+- **P13:** no hue-only signal; it uses the ⚠ glyph and text.
+- **P21:** the words are the rep's own: "One-way street" / "One side of a divided road".
+
+### Rule 5: churn predicted before the diff
+
+**Behaviour changes in prod, deliberate:**
+1. **Primary one-way, no twin** (Broadway, Lincoln, 8th Ave):
+   - page 1 is drawn one-way;
+   - the title is "Shoulder Closure · One-Way Street";
+   - the generator moves from divided to undivided. Measured on Broadway (`probes/r92_lane_clamp.txt`): **36 → 31 generator devices, signs 12 → 6, drums 3 → 4**, cones 20 and arrow board 1 unchanged. Site-adjustment devices are unchanged;
+   - shoulder 10 → 8 ft (CHOSEN), lane width 10.5 → 11 ft (fit);
+   - audit: the Case 11 wording, the Note 8 row label, a Denver sentence, and **+1 pending item**, so the verdict strip gains a pending count.
+2. **Secondary, tertiary and unclassified one-way, no twin** (Stout, 15th, 13th/14th…): today drawn as a two-way road with a yellow centerline and titled "{2×lanes}-Lane Undivided". Now: the one-way drawing and title, the same generator and device count, the audit wording, and +1 pending item.
+3. **Secondary one-way with a twin** (MLK 17.2 m, Brighton 9.6 m): today `divided: false`; now divided (the R83 definition). That brings the divided generator with its mirrored signs, a 10 ft shoulder and the median drawing.
+4. **Primary one-way with a twin** (Colorado, Federal, Speer): unchanged.
+5. **A one-way road whose twin search didn't run:** a 400 plus the confirm row (new).
+6. **Single-lane gate:** a one-way street with `lanes=1` is no longer refused on shoulder plans. Today a secondary one-way with `lanes=1` is refused as "single-lane".
+7. **Two-way roads, motorways, trunks and links:** unchanged.
+
+**Assertions predicted to change:**
+- `lib/road-detection/classify.test.ts:183-196` (Stout primary + oneway → divided) flips. With no twin data the candidate is undecided, so divided is `false` with the confirm source.
+- `classify.test.ts:482-486` (the couplet source string) is rewritten.
+- `classify.test.ts:503-518` (the invariant) is rewritten for the twin rule.
+- `dedup.test.ts`, `stitch.test.ts`: test names and comments only (R89).
+- `tests/test_note8_both_sides.py:151-186`: the docstring's "N Broadway SB shape… divided" is corrected. Its numbers don't change, because it builds `ScenarioParams` directly.
+
+**Predicted byte-identical:**
+- all 90 JSON files under `tests/snapshots/`;
+- the 7 tiering fixtures, the 12 `pdf_worst_case`, the 4 `cdot_s630_typicals` and the 2 `corridor` fixtures;
+- the `tests/s630` harness;
+- `components/__fixtures__/audit-shoulder-full.json`;
+- every committed evidence directory.
+
+No existing request or fixture carries `carriageway`, and the field is absent unless the road is one-way. `route.test.ts` deep-compares only `[]` and `geometry`, not whole candidates, so the two new candidate fields move nothing.
+
+**Standing predictor check:** `carriageway` is optional and absent on two-way roads; `one_way_street` defaults `False` and nothing serializes it. If either turns out to appear on every payload or audit, every baseline above moves, and this row is wrong. The verifier's diff is checked for exactly that.
+
+**New tests** (Rule 11), one regression fixture per gate:
+- the predicate's five rules;
+- the payload level through TestClient: Broadway one-way → title, no negative-offset signs, 8 ft; Colorado twin → divided as today; undecided → 400 `carriageway_undecided`; confirmed → plans; absent → byte-identical; single-lane exemption;
+- the audit rows: one-way Note 8 row, Case 11, the Denver sentence on a Denver plan, and the pending item;
+- rendered output: page 1 one-way draws no centerline or median (recorded canvas calls);
+- frontend: `twin.ts` units, route twin fields, classify mirror cases, the auto-apply relay (present on one-way, absent on two-way), and the PlanDetails confirm row mounted.
