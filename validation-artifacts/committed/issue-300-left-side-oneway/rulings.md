@@ -18,3 +18,13 @@ This file is the arc's authority; every commit on this branch cites it.
 > - Don't ship anything today; prod must stay at a5b4e12 until tonight's #292 evening window is done.
 > - Keep any prod requests out of 12:00–12:20 and 19:00–19:20 so they don't skew the #292 measurements.
 > - Checkpoint should cover: where the layout assumes right-side work (file:line), what MUTCD and S-630-1 say about left-side closures on one-way streets (quoted with page cites), a real Denver one-way pin to reproduce on, options with tradeoffs, and the Rule 5 churn prediction.
+
+## Ryan, 2026-10-05 — rulings on the checkpoint (`0c4628f`), verbatim
+
+> Rulings on #300 (quote verbatim):
+> R78. Order: C first (one-way read as divided), as its own issue. Draft the issue for the chat to repost; investigate it next, checkpoint first. Then A.
+> R79. Scope of A: left-side SHOULDER work only. Near-intersection (Case 18) left side and left lane closures are split out and wait for Rule 8 evidence.
+> R80. The left edge is offered only on confirmed one-way roads.
+> R81. Page 1 mirroring: take your recommendation; note it in the checkpoint as CHOSEN against P1/P21.
+> R82. Field name: work_side, default "right".
+> No ships until after tonight's 19:07 #292 window has finished.

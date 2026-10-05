@@ -260,3 +260,19 @@ The tiering pin needs no new fixture unless the ruling adds one.
 5. **Field name** `work_side` (CHOSEN) and the default `"right"`.
 
 If you rule C first, its issue draft goes to the chat in house style. I haven't filed or drafted anything on gh.
+
+---
+
+## Addendum after the rulings (R78–R82, 2026-10-05; `rulings.md`)
+
+Everything above this line is the checkpoint as ruled on (`0c4628f`). It is left as written.
+
+- **R78:** C goes first as its own issue (drafted in chat for the repost). Its investigation runs next, checkpoint first. A follows on top of C.
+- **R79:** A is left-side shoulder work only. Near-intersection left side and left lane closures wait for Rule 8 evidence.
+- **R80, and how I read it:** the left edge is offered only on confirmed one-way roads. In OSM each carriageway of a true divided road is also tagged `oneway=yes`. So I read R80 through C's predicate: the left edge goes to a confirmed one-way *street*, not to one carriageway of a divided road, which would be its median side (#300 scoped that out). If R80 means every `oneway=yes` way, C's checkpoint flags it and §6's row for `test_corridor_geometry.py:252-261` flips.
+- **R81, page 1 mirroring for left work: CHOSEN.** A left-side plan draws the work band at the **top** of page 1, with traffic still flowing left to right, so the drawing puts the work on the left of traffic.
+  - **Against P1** ("Nothing moves that the user did not ask to move"): the work band changes position between a right plan and a left plan. That move is the visible result of the user's own side choice, on a printed sheet rather than a live layout shift, so P1's concern (content displaced by late arrivals) doesn't apply.
+  - **For P21** ("The model matches the mental model"): a rep who says "the left curb" sees the work on the left of the travel arrow.
+  - **The alternative not taken:** keep the work at the bottom and reverse the arrow. That means mirroring the whole page horizontally, which moves every station.
+  - This is a choice, not a manual requirement. Neither MUTCD nor S-630-1 says how a generated sheet is oriented.
+- **R82:** `ScenarioParams.work_side: Literal["right", "left"] = "right"`.
