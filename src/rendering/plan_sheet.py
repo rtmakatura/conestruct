@@ -95,6 +95,10 @@ def _road_y_extent(params: ScenarioParams, shoulder_width_ft: float) -> tuple[fl
     lane_h = params.lane_width_ft * PTS_PER_OFFSET_FT
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
     half_road = params.num_lanes * lane_h + shoulder_h
+    if params.one_way_street:
+        # #308: one carriageway — the left curb strip above center, every
+        # lane and the work shoulder below (``_draw_one_way_street``).
+        return PLAN_Y_CENTER + shoulder_h, PLAN_Y_CENTER - half_road
     if params.is_divided:
         half_road += MEDIAN_PTS / 2.0
     return PLAN_Y_CENTER + half_road, PLAN_Y_CENTER - half_road
@@ -256,6 +260,78 @@ def _y_of(offset_ft: float, is_divided: bool = False) -> float:
 # ---------------------------------------------------------------------------
 
 
+def _draw_one_way_street(
+    c: canvas.Canvas,
+    lane_width_ft: float,
+    shoulder_width_ft: float,
+    closure_type: str,
+    num_lanes: int,
+) -> None:
+    """#308 — a one-way street: ``num_lanes`` lanes, every one the same
+    direction, a curb strip on each side, no centerline and no median.
+
+    Offset 0 is the left lane edge (the undivided generators already place
+    every device at positive offsets measured from it), so the lanes run
+    from ``PLAN_Y_CENTER`` down to the work-side shoulder at the page
+    bottom, and the left curb's strip sits above ``PLAN_Y_CENTER``.  The
+    left edge line is drawn white like the outer one — CHOSEN: MUTCD
+    Part 3's edge-line colour rule is not in the repo, so no colour claim
+    is cited for it.
+    """
+    x_left = PLAN_LEFT
+    width = PLAN_RIGHT - PLAN_LEFT
+    lane_h = lane_width_ft * PTS_PER_OFFSET_FT
+    shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
+    y_left_edge = PLAN_Y_CENTER
+    y_right_edge = PLAN_Y_CENTER - num_lanes * lane_h
+    y_work_shoulder_outer = y_right_edge - shoulder_h
+    y_left_strip_outer = y_left_edge + shoulder_h
+
+    # Shoulders: the work side closed (pink) for a shoulder closure, the
+    # left curb's strip open.
+    c.setFillColor(SHOULDER_CLOSED_FILL if closure_type != "lane" else SHOULDER_OPEN_FILL)
+    c.rect(x_left, y_work_shoulder_outer, width, shoulder_h, fill=1, stroke=0)
+    c.setFillColor(SHOULDER_OPEN_FILL)
+    c.rect(x_left, y_left_edge, width, shoulder_h, fill=1, stroke=0)
+
+    # Lanes.  A lane closure paints the work-side lane, as elsewhere.
+    c.setFillColor(LANE_FILL)
+    c.rect(x_left, y_right_edge, width, num_lanes * lane_h, fill=1, stroke=0)
+    if closure_type == "lane":
+        c.setFillColor(SHOULDER_CLOSED_FILL)
+        c.rect(x_left, y_right_edge, width, lane_h, fill=1, stroke=0)
+
+    # Lane lines between same-direction lanes (white dashed, 2 pt).
+    if num_lanes > 1:
+        c.setStrokeColor(EDGE_LINE)
+        c.setLineWidth(2.0)
+        c.setDash(12, 8)
+        for i in range(1, num_lanes):
+            y = y_left_edge - i * lane_h
+            c.line(x_left, y, PLAN_RIGHT, y)
+        c.setDash()
+
+    # Lane edges (white solid) and curb-strip outer edges (white thin).
+    c.setStrokeColor(EDGE_LINE)
+    c.setLineWidth(2.0)
+    c.line(x_left, y_left_edge, PLAN_RIGHT, y_left_edge)
+    c.line(x_left, y_right_edge, PLAN_RIGHT, y_right_edge)
+    c.setLineWidth(1.0)
+    c.line(x_left, y_work_shoulder_outer, PLAN_RIGHT, y_work_shoulder_outer)
+    c.line(x_left, y_left_strip_outer, PLAN_RIGHT, y_left_strip_outer)
+
+    c.setStrokeColor(ROAD_BORDER)
+    c.setLineWidth(0.5)
+    c.rect(
+        x_left,
+        y_work_shoulder_outer,
+        width,
+        y_left_strip_outer - y_work_shoulder_outer,
+        fill=0,
+        stroke=1,
+    )
+
+
 def _draw_road(
     c: canvas.Canvas,
     lane_width_ft: float,
@@ -263,10 +339,15 @@ def _draw_road(
     closure_type: str = "shoulder",
     is_divided: bool = True,
     num_lanes: int = 2,
+    one_way_street: bool = False,
 ) -> None:
     x_left = PLAN_LEFT
     x_right = PLAN_RIGHT
     width = x_right - x_left
+
+    if one_way_street:
+        _draw_one_way_street(c, lane_width_ft, shoulder_width_ft, closure_type, num_lanes)
+        return
 
     lane_h = lane_width_ft * PTS_PER_OFFSET_FT
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
@@ -4318,6 +4399,7 @@ def _render_schematic_page(
         closure_type=params.closure_type,
         is_divided=params.is_divided,
         num_lanes=params.num_lanes,
+        one_way_street=params.one_way_street,
     )
     _draw_site_context(c, params, x_of, shoulder_width_ft, site_flags)
     _draw_landmarks(c, params, x_of, shoulder_width_ft)
@@ -4332,7 +4414,12 @@ def _render_schematic_page(
     arrow_x_left = PLAN_LEFT + 30.0
     arrow_x_right = PLAN_LEFT + 130.0
     _draw_lane_arrow(c, arrow_x_left, arrow_x_right, arrow_y_work_side, pointing_right=True)
-    if params.is_divided:
+    if params.one_way_street:
+        # #308: above the left curb strip, the same direction — every lane
+        # on a one-way street runs one way.
+        arrow_y_left_curb = _y_of(-shoulder_width_ft, False) + 14.0
+        _draw_lane_arrow(c, arrow_x_left, arrow_x_right, arrow_y_left_curb, pointing_right=True)
+    elif params.is_divided:
         _draw_lane_arrow(
             c,
             arrow_x_left,

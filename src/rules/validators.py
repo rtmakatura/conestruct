@@ -369,6 +369,11 @@ def scenario_display_name(params: ScenarioParams) -> str:
         return "Flagger Alternating Traffic · 2-Lane Undivided"
     if ct == "lane":
         return "Right-Lane Closure · Divided Highway"
+    if params.one_way_street:
+        # #308: a one-way street is neither divided nor "N-Lane Undivided"
+        # (that count assumes lanes in each direction).  No count, like the
+        # divided branch: it never asserted one.
+        return "Shoulder Closure · One-Way Street"
     if divided:
         return "Shoulder Closure · Divided Highway"
     return f"Shoulder Closure · {2 * params.num_lanes}-Lane Undivided"
@@ -923,7 +928,8 @@ def validate_co_signs_both_sides(
     """Colorado: signs required on both sides of the roadway.
 
     Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8.
-    Triggered when the road is divided.  Each sign on one side must have a mirror at approximately
+    Triggered when the road is divided, or a one-way street (below).
+    Each sign on one side must have a mirror at approximately
     the same station on the opposite side (matching label), within
     ``CO_BOTH_SIDES_STATION_TOLERANCE_FT``.
 
@@ -936,13 +942,14 @@ def validate_co_signs_both_sides(
     R54; the audit row reads "Not required").  It runs on the raw
     generator output only, so it holds the generator to its own choice.
 
-    NOTE: General Note 8 also extends to one-way streets and multi-lane
-    ramps, but those facilities are not currently expressible through
-    ``ScenarioParams`` (they are not Table 6B-1 road categories).
-    Re-introduce them as separate ``ScenarioParams`` flags before
-    extending the trigger.
+    One-way streets (#308): Note 8 names them, and ``one_way_street``
+    carries the fact.  A one-way street's shoulder closure is the note's
+    single-shoulder exception and its generator signs one side (ruling
+    R90), so only its other closures are held to both sides.  Multi-lane
+    ramps are still not expressible through ``ScenarioParams``.
     """
-    if not params.is_divided:
+    one_way_owes_both = params.one_way_street and params.closure_type != "shoulder"
+    if not (params.is_divided or one_way_owes_both):
         return []
 
     sign_idx = _sign_indices(placements)

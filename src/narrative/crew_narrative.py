@@ -848,6 +848,12 @@ def build_narrative_context(
         "advance_spacing_abc": spacing_abc,
         "is_night": params.is_night,
         "is_divided": params.is_divided,
+        # #308: a one-way street has no centerline — its offsets are
+        # measured from the left lane edge (``plan_sheet._draw_one_way_street``).
+        "one_way_street": params.one_way_street,
+        "offset_origin": (
+            "the left edge of the roadway" if params.one_way_street else "centerline"
+        ),
         # #176's visible right-side note (ruled 2026-08-03): fires only
         # where a lane CHOICE exists, per the single-sourced
         # ``rightmost_lane_assumption_active`` predicate (num_lanes >= 2

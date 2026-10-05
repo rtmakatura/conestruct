@@ -149,7 +149,9 @@ def test_validator_agrees_with_the_row() -> None:
 
 
 def _shoulder_divided() -> ScenarioParams:
-    """The N Broadway SB shape: shoulder, 30 mph urban, 4 lanes, divided."""
+    """A divided shoulder plan: 30 mph urban, 4 lanes.  (This was "the N
+    Broadway SB shape" before #308; Broadway is a one-way street, and its
+    plan no longer runs the divided generator.)"""
     return ScenarioParams(
         speed_mph=30,
         num_lanes=4,
@@ -173,7 +175,7 @@ def _shoulder_plan(params, **flags):
 
 
 def test_shoulder_closure_is_the_exception() -> None:
-    """Broadway's plan: 6 left, 8 right with the sidewalk signs; not required."""
+    """A divided shoulder plan: 6 left, 8 right with the sidewalk signs; not required."""
     params = _shoulder_divided()
     plan = _shoulder_plan(params, pedestrian_facility=True)
     left, right = len(_signs(plan, "left")), len(_signs(plan, "right"))

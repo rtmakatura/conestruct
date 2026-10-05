@@ -15,6 +15,7 @@ from __future__ import annotations
 import math
 from typing import Any
 
+from src.api.schemas import MAX_DRAWABLE_HALF_ROAD_FT
 from src.api.site_scan import not_run_provenance
 from src.generation.layout import (
     device_count_floors,
@@ -196,6 +197,47 @@ def _note8_not_counted_text(signs: list[DevicePlacement]) -> str:
     else:
         why = "bike-lane signs, posted at the facility"
     return f"Not counted: {listed} ({why})."
+
+
+def _road_noun(params: ScenarioParams) -> str:
+    """The road a not-divided shoulder plan is applied to (#308): a one-way
+    street is its own fact, never "undivided highway"."""
+    return "one-way street" if params.one_way_street else "undivided highway"
+
+
+def _applied_signing(params: ScenarioParams) -> str:
+    """Case 11's "applied to …" clause for a not-divided shoulder plan.  The
+    undivided wording is byte-identical to before #308; a one-way street
+    names the single-shoulder exception and the figure note (R90)."""
+    if params.one_way_street:
+        return (
+            "a one-way street with signs on the closed shoulder's side only, "
+            "under CDOT S-630-1 Sheet 2 General Note 8's single-shoulder "
+            "exception and MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864)"
+        )
+    return "an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8"
+
+
+# #308 ruling R90: the figure note that says which side a one-way street's
+# shoulder closure signs.  Quoted from sources/mutcd11-pdf100-printed864.txt
+# (validation-artifacts/committed/issue-308-oneway-read-as-divided/).
+FIG_6P3_NOTE1_SENTENCE = (
+    "MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should "
+    "be placed on the left-hand side of the roadway for a divided or one-way "
+    "street only if the left-hand shoulder is affected.”"
+)
+
+# #308 ruling R91: every audit row that leans on Denver deferring to the
+# MUTCD names what was read and what was not.  The two documents' text is
+# committed in sources/denver-pt-116.1-2022-pNN.txt and
+# sources/denver-rule-22.3-2022-pNN.txt; "DOTI standards and details"
+# (Rule 22.3's standard (a)) has no copy and is parked as a missing
+# authority file.
+DENVER_DEFERS_TO_MUTCD_SENTENCE = (
+    "Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign "
+    "placement to the MUTCD and set no sign-side rule. DOTI standards and "
+    "details not read."
+)
 
 
 def build_audit_trail(
@@ -384,14 +426,17 @@ def build_audit_trail(
                 if params.is_divided
                 else (
                     "CDOT S-630-1 Case 11 (right-shoulder closure, applied to "
-                    "undivided highway, reduced work-zone speed)"
+                    f"{_road_noun(params)}, reduced work-zone speed)"
                 )
             )
         else:
             cdot_reference = (
                 "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
                 if params.is_divided
-                else ("CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway)")
+                else (
+                    "CDOT S-630-1 Case 11 (right-shoulder closure, applied to "
+                    f"{_road_noun(params)})"
+                )
             )
 
     taper_section = {
@@ -886,29 +931,44 @@ def build_audit_trail(
     # closed (ex: Case 11 on Sheet 7)" (ruling R54): a shoulder closure is
     # that case.  Its row says so rather than "Required: False", which
     # stays the undivided road's wording.
+    #
+    # #308: Note 8 names one-way streets too ("…on divided highways,
+    # multi-lane ramps, one-way streets…").  A one-way street's shoulder
+    # closure is the same single-shoulder exception; its row names the
+    # one-way street, cites the figure note that says which side (R90), and
+    # on a Denver plan what the city's documents say and don't (R91).
     mainline_signs = [p for p in mainline_placements if p.device_type == DeviceType.SIGN_GENERIC]
-    one_shoulder_closed = params.is_divided and params.closure_type == "shoulder"
-    both_sides_required = params.is_divided and not one_shoulder_closed
+    note8_road = params.is_divided or params.one_way_street
+    one_shoulder_closed = note8_road and params.closure_type == "shoulder"
+    both_sides_required = note8_road and not one_shoulder_closed
     counts = [not both_sides_required or note8_counts_sign(p.label) for p in mainline_signs]
     counted = [p for p, c in zip(mainline_signs, counts, strict=True) if c]
     not_counted = [p for p, c in zip(mainline_signs, counts, strict=True) if not c]
     sign_left = sum(1 for p in counted if p.offset_ft < 0)
     sign_right = sum(1 for p in counted if p.offset_ft > 0)
     both_sides_pass = sign_left == sign_right and sign_left > 0 if both_sides_required else True
+    both_sides_detail = (
+        f"Not required: one shoulder closed (Note 8's Case 11 exception). "
+        f"Signs placed: {sign_left} left, {sign_right} right."
+        if one_shoulder_closed
+        else f"Required: {both_sides_required}. Signs counted: {sign_left} left, "
+        f"{sign_right} right. {_note8_not_counted_text(not_counted)}"
+        if not_counted
+        else f"Required: {both_sides_required}. Signs placed: {sign_left} left, {sign_right} right."
+    )
+    if params.one_way_street:
+        both_sides_detail += " " + FIG_6P3_NOTE1_SENTENCE
+        if params.jurisdiction_name == "Denver":
+            both_sides_detail += " " + DENVER_DEFERS_TO_MUTCD_SENTENCE
     both_sides = {
         "pass": both_sides_pass,
-        "label": "Signs on both sides of divided highway",
-        "citation": CO_CITATIONS.signs_both_sides,
-        "detail": (
-            f"Not required: one shoulder closed (Note 8's Case 11 exception). "
-            f"Signs placed: {sign_left} left, {sign_right} right."
-            if one_shoulder_closed
-            else f"Required: {both_sides_required}. Signs counted: {sign_left} left, "
-            f"{sign_right} right. {_note8_not_counted_text(not_counted)}"
-            if not_counted
-            else f"Required: {both_sides_required}. Signs placed: {sign_left} left, "
-            f"{sign_right} right."
+        "label": (
+            "Signs on both sides of one-way street"
+            if params.one_way_street
+            else "Signs on both sides of divided highway"
         ),
+        "citation": CO_CITATIONS.signs_both_sides,
+        "detail": both_sides_detail,
     }
 
     plaques_right = sum(
@@ -1266,14 +1326,16 @@ def build_audit_trail(
         else:
             # Case 11 is CDOT's general shoulder-work typical, drawn for
             # freeway/expressway; Conestruct applies its device chain to
-            # undivided roads with single-side signing (Refs #103).
-            case_label = "Case 11 (reduced work-zone speed): Shoulder closure on undivided highway"
+            # undivided roads with single-side signing (Refs #103), and
+            # to one-way streets the same way (#308, R90).
+            case_label = (
+                f"Case 11 (reduced work-zone speed): Shoulder closure on {_road_noun(params)}"
+            )
             case_narrative = (
                 f"This scenario follows CDOT Standard Plan S-630-1, Case 11, "
                 f"the general shoulder-work typical (drawn for "
-                f"freeway/expressway), applied to an undivided highway with "
-                f"single-side signing per CDOT S-630-1 Sheet 2 General "
-                f"Note 8, with a reduced work-zone posted speed ({speed} → "
+                f"freeway/expressway), applied to {_applied_signing(params)}, "
+                f"with a reduced work-zone posted speed ({speed} → "
                 f"{wz_speed} mph) that does not match the Case 26/27 "
                 f"mandated step-down. Fines Double envelope applies per "
                 f"S-630-1 Sheet 12, Fines Double Signing Notes."
@@ -1287,12 +1349,11 @@ def build_audit_trail(
                 "shoulder closure on a divided highway."
             )
         else:
-            case_label = "Case 11: Shoulder closure on undivided highway"
+            case_label = f"Case 11: Shoulder closure on {_road_noun(params)}"
             case_narrative = (
                 "This scenario follows CDOT Standard Plan S-630-1, Case 11, "
                 "the general shoulder-work typical (drawn for "
-                "freeway/expressway), applied to an undivided highway with "
-                "single-side signing per CDOT S-630-1 Sheet 2 General Note 8."
+                f"freeway/expressway), applied to {_applied_signing(params)}."
             )
     case_section: dict[str, Any] = {
         "case": case_label,
@@ -1317,6 +1378,15 @@ def build_audit_trail(
         case_section["routing"] = case_routing
     if trigger_condition is not None:
         case_section["trigger_condition"] = trigger_condition
+    # #308 R88: a one-way street's plan builds widths no source sets.  The
+    # values ride the case section so ``audit_projection`` (which has no
+    # params) can disclose them; present on one-way-street plans only, so
+    # every other plan's sections stay byte-identical.
+    if params.one_way_street:
+        case_section["one_way_street_widths"] = {
+            "shoulder_ft": params.shoulder_width_ft,
+            "lane_ft": params.lane_width_ft,
+        }
 
     # ------------------------------------------------------------------
     # 8. Flagger placement (only meaningful when flaggers are present)
@@ -1599,6 +1669,10 @@ AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/co
 # signal-operation review are not generated.
 INTERSECTION_SUPPORT_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/117"
 
+# #308 ruling R88: a one-way street's shoulder width and lane-width ceiling
+# have no published source; the pending item keyed to this URL says so.
+ONE_WAY_STREET_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/308"
+
 # Tracking issue for lane-count trust (#120): when detection relays OSM
 # lane tags that contradict each other (lanes != lanes:forward +
 # lanes:backward + lanes:both_ways), the pending item keyed to this URL
@@ -1855,6 +1929,28 @@ def audit_projection(
                     "26-sheet typical-application set (S-630-1, issued July 1, 2026)."
                 ),
                 "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
+            }
+        )
+
+    # #308 R88: on a one-way street the plan's shoulder width and the
+    # lane-width ceiling are CHOSEN — no MUTCD, S-630-1, Colorado
+    # Supplement or Denver text found sets them.  Disclosed, not passed off
+    # as sourced (Rule 12); keyed off the case section's marker, so every
+    # other plan's pending list is byte-identical.
+    widths = case.pop("one_way_street_widths", None)
+    if widths is not None:
+        shoulder_ft = float(widths["shoulder_ft"])
+        items.append(
+            {
+                "kind": "one_way_street_widths_chosen",
+                "label": (
+                    f"On a one-way street the plan builds an {shoulder_ft:g} ft "
+                    f"shoulder and fits lanes under a {MAX_DRAWABLE_HALF_ROAD_FT:g} ft "
+                    f"half-road less that shoulder. Both values are CHOSEN: no "
+                    f"MUTCD, S-630-1, Colorado Supplement or Denver text found "
+                    f"sets them. Verify against the site (#308)."
+                ),
+                "tracking_issue": ONE_WAY_STREET_ISSUE,
             }
         )
 
