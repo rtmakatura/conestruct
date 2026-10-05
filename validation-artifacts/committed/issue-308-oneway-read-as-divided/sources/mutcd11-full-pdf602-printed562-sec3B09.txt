@@ -1,0 +1,65 @@
+Page 562              MUTCD 11th Edition
+
+06 For entrance ramps with tapered acceleration lanes, channelizing lines shall be placed along both sides
+  of the neutral area to a point at least one-half of the distance to the theoretical gore (see Drawing C in
+  Figure 3B-10).
+
+07 Channelizing lines shall be placed on both sides of the neutral area for bifurcations created from open-
+  road tolling lanes that bypass a conventional toll plaza.
+
+08 Where neutral areas are formed at access and egress points to and from a managed-lane facility,
+  channelizing lines shall be placed on both sides of the neutral area (see Figures 2G-8, 2G-10, 2G-13, 2G-16,
+  2G-22, 2G-23, 2G-27, and 2G-28).
+  Option:
+
+09 For entrance ramps with tapered acceleration lanes, the channelizing lines may extend to the theoretical gore
+  as shown in Drawing B in Figure 3B-10.
+  Standard:
+
+10 Other pavement markings in the neutral area shall be white.
+  Support:
+
+11 Pavement markings within the neutral area include chevron markings (see Section 3B.25), retroreflective raised
+  pavement markers (see Section 3B.16), and internally illuminated raised pavement markers (see Section 3B.16).
+
+Section 3B.09 Edge Line Pavement Markings
+  Standard:
+
+01 If used, edge line pavement markings shall delineate the right or left edges of a roadway.
+02 Except as provided in Section 3E.04, right edge line pavement markings, if used, shall consist of a
+
+  normal width solid white line to delineate the right-hand edge of the roadway.
+03 If used on the roadways of divided highways or one-way streets, or on any ramp in the direction of
+
+  travel, left edge line pavement markings shall consist of a normal width solid yellow line to delineate the
+  left-hand edge of a roadway or to indicate driving or passing restrictions left of these markings, except as
+  provided in Section 3E.04.
+  Support:
+04 Edge line markings provide visual references to guide road users during adverse weather and visibility
+  conditions.
+  Option:
+05 Wide solid edge line markings may be used for greater emphasis.
+  Support:
+06 Increasing edge line width from 4 inches to at least 6 inches can be a beneficial countermeasure on all facility
+  types in both urban and rural areas.
+  Guidance:
+07 Edge line markings should not be continued through intersections, except for the following situations:
+
+       A. Dotted edge line extensions (see Section 3B.11), or
+       B. Through that part of an intersection with no intersection approach (such as the far side of a
+
+            T-intersection).
+  Support:
+08 Section 3B.11 contains information on the use and application of edge lines through intersections,
+  interchanges, and driveways.
+
+Section 3B.10 Warrants for Use of Edge Lines
+  Standard:
+
+01 Edge line markings shall be placed on paved streets or highways with the following characteristics:
+       A. Freeways,
+       B. Expressways, and
+       C. Rural arterials with a traveled way of 20 feet or more in width and an ADT of 6,000 vehicles per
+            day or greater.
+
+Sect. 3B.08 to 3B.10  December 2023

@@ -274,9 +274,13 @@ def _draw_one_way_street(
     every device at positive offsets measured from it), so the lanes run
     from ``PLAN_Y_CENTER`` down to the work-side shoulder at the page
     bottom, and the left curb's strip sits above ``PLAN_Y_CENTER``.  The
-    left edge line is drawn white like the outer one — CHOSEN: MUTCD
-    Part 3's edge-line colour rule is not in the repo, so no colour claim
-    is cited for it.
+    left edge line is solid yellow: MUTCD 11th Ed. §3B.09 ¶03 (Standard),
+    p. 562 — "If used on the roadways of divided highways or one-way
+    streets, or on any ramp in the direction of travel, left edge line
+    pavement markings shall consist of a normal width solid yellow line"
+    (#308 R93; text in validation-artifacts/committed/issue-308-oneway-
+    read-as-divided/sources/mutcd11-full-pdf602-printed562-sec3B09.txt).
+    The right edge stays white (¶02).
     """
     x_left = PLAN_LEFT
     width = PLAN_RIGHT - PLAN_LEFT
@@ -311,10 +315,12 @@ def _draw_one_way_street(
             c.line(x_left, y, PLAN_RIGHT, y)
         c.setDash()
 
-    # Lane edges (white solid) and curb-strip outer edges (white thin).
-    c.setStrokeColor(EDGE_LINE)
+    # Lane edges: left solid yellow (§3B.09 ¶03), right solid white
+    # (¶02); curb-strip outer edges white thin.
     c.setLineWidth(2.0)
+    c.setStrokeColor(MEDIAN_EDGE)
     c.line(x_left, y_left_edge, PLAN_RIGHT, y_left_edge)
+    c.setStrokeColor(EDGE_LINE)
     c.line(x_left, y_right_edge, PLAN_RIGHT, y_right_edge)
     c.setLineWidth(1.0)
     c.line(x_left, y_work_shoulder_outer, PLAN_RIGHT, y_work_shoulder_outer)

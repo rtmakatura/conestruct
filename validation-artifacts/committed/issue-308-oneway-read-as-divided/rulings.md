@@ -61,3 +61,15 @@ This file is the arc's authority; every commit on this branch cites it.
 > Start the #308 build. No ship before the 19:07 #292 window finishes.
 
 **Filled from gh (2026-10-05 21:54Z):** the near-intersection issue is **#309**, "Lane closure near an intersection on a one-way street signs one side only; S-630-1 Note 8 requires both sides", filed 21:53:35Z.
+
+## Ryan, 2026-10-05 — the fix before ship (after `d49a3e2`), verbatim
+
+> #308 fix before ship (Ryan, 2026-10-05). Quote verbatim as R93 in rulings.md on issue-308-oneway-read-as-divided.
+>
+> R93: The left edge line on a one-way street is yellow. MUTCD: left edge lines on one-way streets and divided highways are yellow (Section 3B.06 in the 2009 edition). Find the matching 11th Edition Part 3 section, commit its text to the repo, cite it with the page, and drop the CHOSEN mark. If the 11th Edition text says otherwise, stop and report. Re-run the checks and the verifier, then give me the result: line.
+>
+> R83 reading approved: the "One-way street or divided road?" cell, refusing with a 400 when the twin search can't decide, and replacing the Divided toggle on one-way roads.
+>
+> The R92 issue is #310. Link it from #308's checkpoint.
+>
+> execution-sequence.md is already updated (DOTI line under Parked; #308 → #309 → #300 in the order). Don't redo it.

@@ -376,3 +376,17 @@ No existing request or fixture carries `carriageway`, and the field is absent un
 - **`TwoWay` takes `value: boolean | null`** for the undecided state.
 
 **Not verified in a browser.** Nothing here has run against prod, and no local dev server was started this session. The prod browser check comes after the ship (memory: the production browser is the verification gate).
+
+---
+
+## After R93 (2026-10-05): the left edge line is yellow, cited
+
+- **R93 applied.** The left edge line on a one-way street's page 1 is now solid yellow (the sheet's existing yellow, `MEDIAN_EDGE`), normal width (2 pt, like the other edge lines). The right edge stays white. The CHOSEN mark is gone from `plan_sheet._draw_one_way_street`. The "white, CHOSEN" lines in the build plan and the build outcome above are superseded by this.
+- **The source, matched by subject, not number.** MUTCD 11th Edition (December 2023), **Section 3B.09 Edge Line Pavement Markings, ¶03 (Standard), printed p. 562** (PDF p. 602 of `mutcd11theditionhl.pdf`, 1,162 pages, sha256 `ea935e42…6f88`). The page text is committed as `sources/mutcd11-full-pdf602-printed562-sec3B09.txt`:
+
+  > "If used on the roadways of divided highways or one-way streets, or on any ramp in the direction of travel, left edge line pavement markings shall consist of a normal width solid yellow line to delineate the left-hand edge of a roadway or to indicate driving or passing restrictions left of these markings, except as provided in Section 3E.04."
+
+  ¶02 on the same page gives the right edge: "a normal width solid white line". This matches R93's 2009-edition §3B.06. The 11th Edition renumbered it §3B.09 and doesn't say otherwise, so there's no stop.
+- **Test:** `tests/test_plan_sheet_one_way.py::test_the_left_edge_line_is_solid_yellow` (red before the change, green after). The no-centerline test now asserts no *dashed* yellow line, because the solid yellow left edge is the one yellow line.
+- **R83's reading is approved** (Ryan, R93's message): the "One-way street or divided road?" cell, the 400 when the twin search can't decide, and the cell replacing the Divided toggle on one-way roads.
+- **The R92 issue is #310** ("A 5-lane road is planned as 4 lanes; the per-direction clamp also sets the lane width, which moves every device 1.5–2 ft").
