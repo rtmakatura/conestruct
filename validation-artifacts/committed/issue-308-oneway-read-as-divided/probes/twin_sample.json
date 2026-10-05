@@ -1,0 +1,462 @@
+[
+ {
+  "name": "North Broadway",
+  "expected": "one_way_street",
+  "basis": "#290 pin; couplet with Lincoln St",
+  "way": 1491844986,
+  "highway": "primary",
+  "lanes": "5",
+  "ref": null,
+  "osm_name": "North Broadway",
+  "pin": [
+   39.73281,
+   -104.987407
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "North Lincoln Street",
+  "expected": "one_way_street",
+  "basis": "couplet with Broadway",
+  "way": 1464304835,
+  "highway": "primary",
+  "lanes": "3",
+  "ref": null,
+  "osm_name": "North Lincoln Street",
+  "pin": [
+   39.722453,
+   -104.986239
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "Stout Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid; classify.test.ts:183 case",
+  "way": 88625482,
+  "highway": "secondary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "Stout Street",
+  "pin": [
+   39.757557,
+   -104.977938
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "California Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid",
+  "way": 608365242,
+  "highway": "tertiary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "California Street",
+  "pin": [
+   39.749929,
+   -104.986071
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "Champa Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid",
+  "way": 278139935,
+  "highway": "secondary",
+  "lanes": "1",
+  "ref": null,
+  "osm_name": "Champa Street",
+  "pin": [
+   39.756732,
+   -104.980736
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "Curtis Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid",
+  "way": 27829270,
+  "highway": "tertiary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "Curtis Street",
+  "pin": [
+   39.745776,
+   -104.996654
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "Welton Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid",
+  "way": 325698648,
+  "highway": "tertiary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "Welton Street",
+  "pin": [
+   39.751932,
+   -104.981763
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "15th Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid",
+  "way": 589226182,
+  "highway": "secondary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "15th Street",
+  "pin": [
+   39.75329,
+   -105.005064
+  ],
+  "twin_m": 10.0,
+  "twin_way": 1434403942
+ },
+ {
+  "name": "17th Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid",
+  "way": 130885095,
+  "highway": "secondary",
+  "lanes": "3",
+  "ref": null,
+  "osm_name": "17th Street",
+  "pin": [
+   39.746862,
+   -104.991933
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "18th Street",
+  "expected": "one_way_street",
+  "basis": "downtown one-way grid",
+  "way": 16986014,
+  "highway": "secondary",
+  "lanes": "3",
+  "ref": null,
+  "osm_name": "18th Street",
+  "pin": [
+   39.746052,
+   -104.988479
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "East 13th Avenue",
+  "expected": "one_way_street",
+  "basis": "13th/14th Ave one-way pair",
+  "way": 807905114,
+  "highway": "secondary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "East 13th Avenue",
+  "pin": [
+   39.737269,
+   -104.912145
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "East 14th Avenue",
+  "expected": "one_way_street",
+  "basis": "13th/14th Ave one-way pair",
+  "way": 223788839,
+  "highway": "secondary",
+  "lanes": "3",
+  "ref": null,
+  "osm_name": "East 14th Avenue",
+  "pin": [
+   39.738357,
+   -104.95063
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "East 6th Avenue",
+  "expected": "one_way_street",
+  "basis": "6th/8th Ave one-way pair east of Broadway",
+  "way": 129899459,
+  "highway": "secondary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "East 6th Avenue Parkway",
+  "pin": [
+   39.725628,
+   -104.923903
+  ],
+  "twin_m": 32.5,
+  "twin_way": 770794974
+ },
+ {
+  "name": "East 8th Avenue",
+  "expected": "one_way_street",
+  "basis": "6th/8th Ave one-way pair east of Broadway",
+  "way": 849772834,
+  "highway": "primary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "East 8th Avenue",
+  "pin": [
+   39.729132,
+   -104.948914
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "Logan Street",
+  "expected": "one_way_street",
+  "basis": "secondary one-way (twin_probe.txt)",
+  "way": 156135169,
+  "highway": "secondary",
+  "lanes": "1",
+  "ref": null,
+  "osm_name": "Logan Street",
+  "pin": [
+   39.719352,
+   -104.982676
+  ],
+  "twin_m": 8.6,
+  "twin_way": 156135168
+ },
+ {
+  "name": "Grant Street",
+  "expected": "one_way_street",
+  "basis": "Grant/Logan one-way pair",
+  "way": 337133285,
+  "highway": "secondary",
+  "lanes": "3",
+  "ref": null,
+  "osm_name": "Grant Street",
+  "pin": [
+   39.728988,
+   -104.983607
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "Pennsylvania Street",
+  "expected": "one_way_street",
+  "basis": "Pennsylvania/Pearl one-way pair",
+  "result": "no one-way way found"
+ },
+ {
+  "name": "Downing Street",
+  "expected": "one_way_street",
+  "basis": "Downing/Corona one-way pair (south of Colfax)",
+  "way": 337148294,
+  "highway": "secondary",
+  "lanes": "1",
+  "ref": null,
+  "osm_name": "North Downing Street",
+  "pin": [
+   39.735256,
+   -104.973005
+  ],
+  "twin_m": null,
+  "twin_way": null
+ },
+ {
+  "name": "South Colorado Boulevard",
+  "expected": "divided",
+  "basis": "twin_probe.txt 14.8 m",
+  "way": 939794106,
+  "highway": "primary",
+  "lanes": "4",
+  "ref": "CO 2",
+  "osm_name": "South Colorado Boulevard",
+  "pin": [
+   39.683633,
+   -104.940675
+  ],
+  "twin_m": 21.7,
+  "twin_way": 427676287
+ },
+ {
+  "name": "North Federal Boulevard",
+  "expected": "divided",
+  "basis": "twin_probe.txt 21.8 m",
+  "way": 499512464,
+  "highway": "primary",
+  "lanes": "3",
+  "ref": "CO 88",
+  "osm_name": "North Federal Boulevard",
+  "pin": [
+   39.735746,
+   -105.025317
+  ],
+  "twin_m": 13.0,
+  "twin_way": 499512465
+ },
+ {
+  "name": "North Speer Boulevard",
+  "expected": "divided",
+  "basis": "carriageways either side of Cherry Creek; twin_probe.txt 55.0 m",
+  "way": 132706724,
+  "highway": "primary",
+  "lanes": "4",
+  "ref": null,
+  "osm_name": "North Speer Boulevard",
+  "pin": [
+   39.739444,
+   -104.998364
+  ],
+  "twin_m": 55.4,
+  "twin_way": 628677828
+ },
+ {
+  "name": "East Hampden Avenue",
+  "expected": "divided",
+  "basis": "US 285, a median arterial",
+  "way": 1059459641,
+  "highway": "trunk",
+  "lanes": "3",
+  "ref": "US 285",
+  "osm_name": "East Hampden Avenue",
+  "pin": [
+   39.6531,
+   -104.954801
+  ],
+  "twin_m": 15.0,
+  "twin_way": 628690900
+ },
+ {
+  "name": "Leetsdale Drive",
+  "expected": "divided",
+  "basis": "median arterial",
+  "way": 1123887674,
+  "highway": "primary",
+  "lanes": "2",
+  "ref": "CO 83",
+  "osm_name": "East Leetsdale Drive",
+  "pin": [
+   39.70119,
+   -104.91083
+  ],
+  "twin_m": 12.2,
+  "twin_way": 972889995
+ },
+ {
+  "name": "Martin Luther King Junior Boulevard",
+  "expected": "divided",
+  "basis": "median boulevard",
+  "way": 130921929,
+  "highway": "secondary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "East Martin Luther King Junior Boulevard",
+  "pin": [
+   39.761857,
+   -104.922436
+  ],
+  "twin_m": 17.2,
+  "twin_way": 1055021557
+ },
+ {
+  "name": "Monaco Street Parkway",
+  "expected": "divided",
+  "basis": "parkway with a wide median",
+  "way": 807861687,
+  "highway": "primary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "North Monaco Street Parkway",
+  "pin": [
+   39.752206,
+   -104.912439
+  ],
+  "twin_m": 29.4,
+  "twin_way": 508027641
+ },
+ {
+  "name": "Montview Boulevard",
+  "expected": "divided",
+  "basis": "boulevard with a median",
+  "result": "no one-way way found"
+ },
+ {
+  "name": "Brighton Boulevard",
+  "expected": "divided",
+  "basis": "rebuilt with a median",
+  "way": 600319214,
+  "highway": "secondary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "North Brighton Boulevard",
+  "pin": [
+   39.768617,
+   -104.980985
+  ],
+  "twin_m": 9.6,
+  "twin_way": 706212608
+ },
+ {
+  "name": "South University Boulevard",
+  "expected": "divided",
+  "basis": "median arterial south of I-25",
+  "way": 427693800,
+  "highway": "primary",
+  "lanes": "2",
+  "ref": null,
+  "osm_name": "South University Boulevard",
+  "pin": [
+   39.686681,
+   -104.959495
+  ],
+  "twin_m": 11.8,
+  "twin_way": 1456222634
+ },
+ {
+  "name": "Sheridan Boulevard",
+  "expected": "divided",
+  "basis": "median arterial (Denver/Lakewood line)",
+  "way": 358568988,
+  "highway": "primary",
+  "lanes": "2",
+  "ref": "CO 95",
+  "osm_name": "Sheridan Boulevard",
+  "pin": [
+   39.791323,
+   -105.053202
+  ],
+  "twin_m": 7.3,
+  "twin_way": 358572804
+ },
+ {
+  "name": "East Evans Avenue",
+  "expected": "divided",
+  "basis": "median sections",
+  "way": 337740743,
+  "highway": "primary",
+  "lanes": "3",
+  "ref": null,
+  "osm_name": "East Evans Avenue",
+  "pin": [
+   39.67797,
+   -104.905183
+  ],
+  "twin_m": 14.1,
+  "twin_way": 619023645
+ }
+]

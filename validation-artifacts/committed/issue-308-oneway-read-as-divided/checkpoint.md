@@ -161,3 +161,95 @@ This holds because `one_way_street` defaults to `False` and no existing request 
 - No product code. No prod request. No Overpass.
 - The twin probe covers 5 roads; a ruling-4 sample would extend it.
 - The #300 branch's evidence (its PDF render, cited source pages) stays on `issue-300-left-side-oneway`. This arc links to it rather than copying it.
+
+---
+
+## Addendum after the rulings (R83–R89 and the R80 confirmation, 2026-10-05; `rulings.md`)
+
+Everything above this line is the checkpoint as ruled on (`fd662dc`). It is left as written. This addendum covers the three rulings that call for evidence before any code: R86, R84 and R88. No product code has been written.
+
+### R86: the twin-radius sample (30 roads asked, 28 measured)
+
+`probes/twin_sample.py` → `twin_sample.txt` / `twin_sample.json`; the three surprises are checked in `probes/twin_sample_inspect.txt`. Method:
+1. Nominatim, inside Denver's bounding box, lists candidate OSM ways for each road name.
+2. The OSM API keeps the first one tagged `oneway=yes`.
+3. From that way's middle node, the OSM API map call (±0.0035°: about ±390 m N–S and ±300 m E–W) gives the nearest **same-name (or same-ref) one-way way at the opposite bearing (Δ ≥ 150°)**, measured from the pin way.
+
+No Overpass, no prod. "Expected" is the label I wrote before measuring, with its basis in the probe's source.
+
+| Road (OSM name) | Class | Expected | Twin | Note |
+|---|---|---|---|---|
+| North Broadway | primary | one-way street | none | |
+| North Lincoln Street | primary | one-way street | none | |
+| East 8th Avenue | primary | one-way street | none | |
+| Stout Street | secondary | one-way street | none | |
+| Champa Street | secondary | one-way street | none | |
+| 17th Street | secondary | one-way street | none | |
+| 18th Street | secondary | one-way street | none | |
+| East 13th Avenue | secondary | one-way street | none | |
+| East 14th Avenue | secondary | one-way street | none | |
+| Grant Street | secondary | one-way street | none | |
+| North Downing Street | secondary | one-way street | none | |
+| California Street | tertiary | one-way street | none | |
+| Curtis Street | tertiary | one-way street | none | |
+| Welton Street | tertiary | one-way street | none | |
+| 15th Street | secondary | one-way street | **10.0 m** | At this pin (39.75329, −105.00506) a 103 m same-name twin branches back from the pin way's own end node. Locally two carriageways. The test is right here, and my street-level label wasn't |
+| Logan Street | secondary | one-way street | **8.6 m** | At this pin (39.71935, −104.98268) two one-lane `oneway=yes` ways run between the same two nodes for 228 m, a local split. The test is right here, and my label wasn't |
+| East 6th Avenue **Parkway** | secondary | ~~one-way street~~ **divided** | **32.5 m** | **My label error.** Nominatim matched 6th Avenue *Parkway*, a different road from the 6th Avenue one-way, and it has two carriageways (2,584 m and 1,895 m long) |
+| Pennsylvania Street | — | one-way street | — | no one-way way found by Nominatim; not substituted |
+| North Sheridan Boulevard | primary | divided | 7.3 m | |
+| North Brighton Boulevard | secondary | divided | 9.6 m | |
+| South University Boulevard | primary | divided | 11.8 m | |
+| East Leetsdale Drive | primary | divided | 12.2 m | |
+| North Federal Boulevard | primary | divided | 13.0 m | |
+| East Evans Avenue | primary | divided | 14.1 m | |
+| East Hampden Avenue | trunk | divided | 15.0 m | |
+| East Martin Luther King Jr Boulevard | secondary | divided | 17.2 m | |
+| South Colorado Boulevard | primary | divided | 21.7 m | |
+| North Monaco Street Parkway | primary | divided | 29.4 m | |
+| North Speer Boulevard | primary | divided | **55.4 m** | the widest; Cherry Creek between |
+| Montview Boulevard | — | divided | — | no one-way way found; not substituted |
+
+**What it shows:**
+- **Divided, 12 roads** (the 11 labelled plus 6th Avenue Parkway): every one has a twin, at **7.3–55.4 m**.
+- **One-way streets, 14 pins:** none has a twin anywhere in the box (about ±300 m across the road).
+- **Locally split one-way segments, 2 pins** (15th St, Logan): twins at 8.6 m and 10.0 m. There the test says *divided* for that segment, which matches what OSM maps there. That's the R80 confirmation working as ruled ("each carriageway of a truly divided road stays divided").
+
+**Twin radius = 100 m — CHOSEN.** The reason:
+- The sample's widest twin is Speer's 55.4 m, so 100 m covers it with about 1.8× margin for medians wider than any sampled.
+- In the same sample, no one-way street had a same-name opposite way anywhere within the box. So nothing measured sits between 55.4 m and the box edge for 100 m to misclassify.
+- Couplet partners have different names (Broadway/Lincoln, 13th/14th, Grant/Logan), so the name match, not the distance, keeps them apart.
+- A larger radius gains nothing measured and costs payload on the road lookup.
+- **The known limit:** a divided road with a median wider than 100 m would read as a one-way street, and none was found in this sample. Per R83, the operator confirms when the lookup can't decide (no twin search ran).
+
+### R84: the quotes, before any device is removed
+
+**CDOT S-630-1 (July 2026), Sheet 2, General Note 8** (PDF p. 150; text committed beside this file as `sources/s630-1-2026-pdf150.txt`, copied from `issue-300-left-side-oneway`, verified word for word 2026-10-05):
+
+> "All warning and regulatory signs shall be posted on both sides of the roadway on divided highways, multi-lane ramps, one-way streets, and as directed by the Engineer, except where only one shoulder is closed (ex: Case 11 on Sheet 7)."
+
+**Denver: DOTI PT-116.1, General Traffic Control Procedures (April 2022)** (7 pages, sha256 `5a7bc4971d57ba97b75b5c2161553567ad1df30f3cc1442609d11ca3bb8d97c0`; every page extracted to `sources/denver-pt-116.1-2022-pNN.txt`). Its authority list, p. 1:
+
+> "U.S. Department of Transportation, Federal Highway Administration: 2009 Edition of MUTCD, Revision 2, May 2012"
+
+Its sign rules cover sidewalk closures (p. 3), bike lanes and parking lanes (p. 4), and detours (p. 6). **It has no rule on sign side, one-way streets or multi-lane roads.** I searched all 7 pages (every page has extractable text) for: one-way, both sides, left-hand, left side, each side, sides of the road/street, sign placement, signs shall be placed/posted/installed/located, duplicate, multi-lane, median, divided.
+
+**Denver: DOTI Rule 22.3, Issuance of Permits by the City Traffic Engineer (2022)** (12 PDF pages, sha256 `c3b11fa1653809ccb1adf700decaa8843f0378120e6f0a1f8bc65a8c2637d181`; pages in `sources/denver-rule-22.3-2022-pNN.txt`), PDF pp. 10–11 (printed "Page 9 of 11" on PDF p. 10):
+
+> "All barricades and signage as specified on any permit will be the responsibility of the applicant and will be in accordance with the following standards: a. DOTI standards and details, current editions … b. MUTCD, as revised by the Colorado Supplement, current edition c. ADAAG, current edition"
+
+Same search: **no rule on sign side or one-way streets.**
+
+**Not consulted:** "DOTI standards and details, current editions", which Rule 22.3 names as standard (a). There's no copy in the repo or in Downloads. It's the one Denver source not read, and the one place a Denver left-side rule could still live.
+
+**How the quotes bear on R84's condition:**
+- **Note 8 does call for both-sides signing on one-way streets,** for every closure except "where only one shoulder is closed". By R84's own words ("If either calls for left-side signing on multi-lane one-ways, keep it and report back") that's the trigger. **So no device is removed, and this is the report back.**
+- For **#308's affected plans, shoulder closures on one-way streets,** Note 8's exception applies by its own text: one shoulder is closed. Right-curb-only signing is what the note prescribes there, and MUTCD 11th Ed. TA-3 Note 1 (p. 864) agrees (`sources/mutcd11-pdf100-printed864.txt`): the left SHOULDER WORK sign goes "for a divided or one-way street only if the left-hand shoulder is affected".
+- For **every other closure on a one-way street** (lane closures, near-intersection), Note 8 requires both sides. That's #308's split-out issue (R87), and nothing in #308 removes a device from those plans.
+- **Denver adds nothing either way** in the two documents read. The third (DOTI standards and details) is unread.
+
+### R88: the widths with no source (to be marked CHOSEN in code and in the audit at build time)
+
+- **Shoulder width on a one-way street:** `plan_shoulder_width_ft` (`src/api/schemas.py:1086-1087`) returns 10 ft divided and 8 ft undivided. A one-way street takes one of them, or a value of its own, and none is sourced.
+- **Lane-width ceiling:** `fitLaneWidth` → `laneWidthCeilingFt` (`conestruct/site/lib/scenarios/auto-apply.ts:408-416`) caps the lane width from the drawable width, and the cap depends on `divided` through the shoulder. Broadway today is 10.5 ft; undivided would be 11 ft.
+- **Related, but not a width (listed so it isn't lost):** `MAX_LANES_PER_DIRECTION = 4` (`conestruct/site/lib/scenarios/validation.ts:27`) clamps Broadway's OSM `lanes=5` to 4. It's a schema domain limit, not a #308 change.

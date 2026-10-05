@@ -1,0 +1,9 @@
+15th Street 589226182 len=225m {'highway': 'secondary', 'name': '15th Street', 'oneway': 'yes', 'lanes': '2', 'bridge': None, 'dual_carriageway': None} ends [(39.75249, -105.00412), (39.75391, -105.00596)]
+15th Street 1434403942 len=103m {'highway': 'secondary', 'name': '15th Street', 'oneway': 'yes', 'lanes': '2', 'bridge': None, 'dual_carriageway': None} ends [(39.75391, -105.00596), (39.75323, -105.00515)]
+
+East 6th Avenue 129899459 len=2584m {'highway': 'secondary', 'name': 'East 6th Avenue Parkway', 'oneway': 'yes', 'lanes': '2', 'bridge': None, 'dual_carriageway': None} ends [(39.72565, -104.90816), (39.72561, -104.93833)]
+East 6th Avenue 770794974 len=1895m {'highway': 'secondary', 'name': 'East 6th Avenue Parkway', 'oneway': 'yes', 'lanes': '2', 'bridge': None, 'dual_carriageway': None} ends [(39.7253, -104.93828), (39.72534, -104.91615)]
+
+Logan Street 156135169 len=228m {'highway': 'secondary', 'name': 'Logan Street', 'oneway': 'yes', 'lanes': '1', 'bridge': None, 'dual_carriageway': None} ends [(39.72071, -104.98263), (39.71867, -104.98261)]
+Logan Street 156135168 len=227m {'highway': 'secondary', 'name': 'Logan Street', 'oneway': 'yes', 'lanes': '1', 'bridge': None, 'dual_carriageway': None} ends [(39.71867, -104.98261), (39.72071, -104.98263)]
+

@@ -1,0 +1,31 @@
+road                                     expected        class              way      twin  pin
+North Broadway                           one_way_street  primary     1491844986      none  39.73281, -104.987407
+North Lincoln Street                     one_way_street  primary     1464304835      none  39.722453, -104.986239
+Stout Street                             one_way_street  secondary     88625482      none  39.757557, -104.977938
+California Street                        one_way_street  tertiary     608365242      none  39.749929, -104.986071
+Champa Street                            one_way_street  secondary    278139935      none  39.756732, -104.980736
+Curtis Street                            one_way_street  tertiary      27829270      none  39.745776, -104.996654
+Welton Street                            one_way_street  tertiary     325698648      none  39.751932, -104.981763
+15th Street                              one_way_street  secondary    589226182    10.0 m  39.75329, -105.005064
+17th Street                              one_way_street  secondary    130885095      none  39.746862, -104.991933
+18th Street                              one_way_street  secondary     16986014      none  39.746052, -104.988479
+East 13th Avenue                         one_way_street  secondary    807905114      none  39.737269, -104.912145
+East 14th Avenue                         one_way_street  secondary    223788839      none  39.738357, -104.95063
+East 6th Avenue Parkway                  one_way_street  secondary    129899459    32.5 m  39.725628, -104.923903
+East 8th Avenue                          one_way_street  primary      849772834      none  39.729132, -104.948914
+Logan Street                             one_way_street  secondary    156135169     8.6 m  39.719352, -104.982676
+Grant Street                             one_way_street  secondary    337133285      none  39.728988, -104.983607
+Pennsylvania Street                      one_way_street  -- no one-way way found
+North Downing Street                     one_way_street  secondary    337148294      none  39.735256, -104.973005
+South Colorado Boulevard                 divided         primary      939794106    21.7 m  39.683633, -104.940675
+North Federal Boulevard                  divided         primary      499512464    13.0 m  39.735746, -105.025317
+North Speer Boulevard                    divided         primary      132706724    55.4 m  39.739444, -104.998364
+East Hampden Avenue                      divided         trunk       1059459641    15.0 m  39.6531, -104.954801
+East Leetsdale Drive                     divided         primary     1123887674    12.2 m  39.70119, -104.91083
+East Martin Luther King Junior Boulevard divided         secondary    130921929    17.2 m  39.761857, -104.922436
+North Monaco Street Parkway              divided         primary      807861687    29.4 m  39.752206, -104.912439
+Montview Boulevard                       divided         -- no one-way way found
+North Brighton Boulevard                 divided         secondary    600319214     9.6 m  39.768617, -104.980985
+South University Boulevard               divided         primary      427693800    11.8 m  39.686681, -104.959495
+Sheridan Boulevard                       divided         primary      358568988     7.3 m  39.791323, -105.053202
+East Evans Avenue                        divided         primary      337740743    14.1 m  39.67797, -104.905183
