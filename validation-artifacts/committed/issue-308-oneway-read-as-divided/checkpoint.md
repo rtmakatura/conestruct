@@ -351,3 +351,28 @@ No existing request or fixture carries `carriageway`, and the field is absent un
 - the audit rows: one-way Note 8 row, Case 11, the Denver sentence on a Denver plan, and the pending item;
 - rendered output: page 1 one-way draws no centerline or median (recorded canvas calls);
 - frontend: `twin.ts` units, route twin fields, classify mirror cases, the auto-apply relay (present on one-way, absent on two-way), and the PlanDetails confirm row mounted.
+
+---
+
+## Build outcome against the Rule 5 prediction (2026-10-05, after the diff)
+
+**Commits:** `02ac980` (predicate, wire, bridge, gate), `4bd7c99` (title, page 1, audit, crew sheet), `c875ea4` (picker twin evidence, mirror, relay, confirm cell), `7e06136` (R89).
+
+**Suites:** backend 2541 passed, 2 skipped (2523 before plus 18 new; no existing test changed outcome). Frontend 1938 passed in 187 files. `tsc` is clean, and ESLint and ruff pass in the pre-commit hook.
+
+**Predicted and held:**
+- Every recorded baseline is byte-identical: 90 snapshot JSONs, the tiering, `pdf_worst_case`, `cdot_s630_typicals` and `corridor` fixtures, `tests/s630`, and `audit-shoulder-full.json`. No existing request carries `carriageway`.
+- The `classify.test.ts` Stout case, the old source-string case and the invariant were rewritten.
+- The `dedup`/`stitch` test names and comments changed (R89).
+- The `test_note8_both_sides.py` docstrings were corrected.
+
+**Missed, recorded honestly:**
+1. **`classify.test.ts`, the `it.each` over secondary/tertiary/unclassified one-ways,** asserted the provenance string `inferred from class=…`. With no twin evidence those roads now read "the same-name search didn't run → confirm …". `divided` stays `false`; the sentence changed. It's a fourth classify assertion the table didn't list.
+2. **`tests/fixtures/centerline/bayaud_colorado_pool.json`:** R89 reached its `_provenance.purpose` sentence ("couplet" → "carriageway pair"). The recorded geometry is untouched. The table had called every fixture byte-identical.
+3. **The table's R89 row named `scripts/test_dedup_couplet.mjs` as renamed.** The script doesn't exist; `dedup.ts` cited a missing file. The comment now cites `d83470d` instead.
+
+**Built differently from the plan, stated:**
+- **The confirm surface is one cell that is always present on a one-way road**, not a row that appears only when undecided. It shows the current answer with its provenance, says ⚠ needs you when the test couldn't decide, and replaces the Divided toggle on those roads (one control per fact, P2). That also gives the operator an override for a wide median the twin test misses.
+- **`TwoWay` takes `value: boolean | null`** for the undecided state.
+
+**Not verified in a browser.** Nothing here has run against prod, and no local dev server was started this session. The prod browser check comes after the ship (memory: the production browser is the verification gate).
