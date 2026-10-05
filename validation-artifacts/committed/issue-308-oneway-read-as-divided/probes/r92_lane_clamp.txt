@@ -1,0 +1,36 @@
+== today: divided, 10 ft shoulder
+   lanes=4 lane_width=10.5 ft  devices=36  by type={'ARROW_BOARD': 1, 'CONE': 20, 'DRUM': 3, 'SIGN_GENERIC': 12}
+   lanes=5 lane_width=8.0 ft  devices=36  by type={'ARROW_BOARD': 1, 'CONE': 20, 'DRUM': 3, 'SIGN_GENERIC': 12}
+   same devices, labels and stations at 4 vs 5 lanes: True
+   devices whose lateral offset moves: 36
+      ARROW_BOARD            RIGHT_ARROW    station   1250.0  offset +47.0 ft -> +45.0 ft
+      CONE                                  station    -50.0  offset +52.0 ft -> +50.0 ft
+      CONE                                  station    -25.0  offset +47.0 ft -> +45.0 ft
+      CONE                                  station      0.0  offset +42.0 ft -> +40.0 ft
+      CONE                                  station     58.8  offset +42.0 ft -> +40.0 ft
+      CONE                                  station    117.6  offset +42.0 ft -> +40.0 ft
+      CONE                                  station    176.5  offset +42.0 ft -> +40.0 ft
+      CONE                                  station    235.3  offset +42.0 ft -> +40.0 ft
+      CONE                                  station    294.1  offset +42.0 ft -> +40.0 ft
+      CONE                                  station    352.9  offset +42.0 ft -> +40.0 ft
+      CONE                                  station    411.8  offset +42.0 ft -> +40.0 ft
+      CONE                                  station    470.6  offset +42.0 ft -> +40.0 ft
+      ... 24 more
+== #308: one-way street (undivided generator), 8 ft shoulder
+   lanes=4 lane_width=11.0 ft  devices=31  by type={'ARROW_BOARD': 1, 'CONE': 20, 'DRUM': 4, 'SIGN_GENERIC': 6}
+   lanes=5 lane_width=8.5 ft  devices=31  by type={'ARROW_BOARD': 1, 'CONE': 20, 'DRUM': 4, 'SIGN_GENERIC': 6}
+   same devices, labels and stations at 4 vs 5 lanes: True
+   devices whose lateral offset moves: 31
+      ARROW_BOARD            RIGHT_ARROW    station   1240.0  offset +48.0 ft -> +46.5 ft
+      CONE                                  station    -50.0  offset +52.0 ft -> +50.5 ft
+      CONE                                  station    -25.0  offset +48.0 ft -> +46.5 ft
+      CONE                                  station      0.0  offset +44.0 ft -> +42.5 ft
+      CONE                                  station     58.8  offset +44.0 ft -> +42.5 ft
+      CONE                                  station    117.6  offset +44.0 ft -> +42.5 ft
+      CONE                                  station    176.5  offset +44.0 ft -> +42.5 ft
+      CONE                                  station    235.3  offset +44.0 ft -> +42.5 ft
+      CONE                                  station    294.1  offset +44.0 ft -> +42.5 ft
+      CONE                                  station    352.9  offset +44.0 ft -> +42.5 ft
+      CONE                                  station    411.8  offset +44.0 ft -> +42.5 ft
+      CONE                                  station    470.6  offset +44.0 ft -> +42.5 ft
+      ... 19 more

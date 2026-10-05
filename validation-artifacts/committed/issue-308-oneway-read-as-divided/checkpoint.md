@@ -253,3 +253,8 @@ Same search: **no rule on sign side or one-way streets.**
 - **Shoulder width on a one-way street:** `plan_shoulder_width_ft` (`src/api/schemas.py:1086-1087`) returns 10 ft divided and 8 ft undivided. A one-way street takes one of them, or a value of its own, and none is sourced.
 - **Lane-width ceiling:** `fitLaneWidth` → `laneWidthCeilingFt` (`conestruct/site/lib/scenarios/auto-apply.ts:408-416`) caps the lane width from the drawable width, and the cap depends on `divided` through the shoulder. Broadway today is 10.5 ft; undivided would be 11 ft.
 - **Related, but not a width (listed so it isn't lost):** `MAX_LANES_PER_DIRECTION = 4` (`conestruct/site/lib/scenarios/validation.ts:27`) clamps Broadway's OSM `lanes=5` to 4. It's a schema domain limit, not a #308 change.
+
+### After R90–R92 (2026-10-05)
+
+- **The near-intersection Note 8 gap is #309** ("Lane closure near an intersection on a one-way street signs one side only; S-630-1 Note 8 requires both sides"), split out by R87. #308 changes no near-intersection device.
+- **R90 is checked against the figure:** MUTCD 11th Ed., Notes for Fig 6P-3, Note 1, p. 864 (`sources/mutcd11-pdf100-printed864.txt`): "A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected." That agrees with R90 (sign the side of the closed shoulder), so no stop. In #308 only right-shoulder plans exist; the left-shoulder case arrives with #300 (`work_side`, R82).

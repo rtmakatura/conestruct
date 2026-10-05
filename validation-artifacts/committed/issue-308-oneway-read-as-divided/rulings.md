@@ -45,3 +45,19 @@ This file is the arc's authority; every commit on this branch cites it.
 > R80 reading confirmed: C's test applies to one-way streets. Each carriageway of a truly divided road stays divided.
 >
 > No ships until after the 19:07 #292 window.
+
+## Ryan, 2026-10-05 — answers on the R84 report-back (`e70069c`), verbatim
+
+> Answers on #308 (Ryan, 2026-10-05). Quote verbatim in rulings.md on issue-308-oneway-read-as-divided.
+>
+> R90: Shoulder plans on one-way streets sign one side under Note 8's single-shoulder exception. Use the side of the closed shoulder, which isn't always the right curb: a left-shoulder closure on a one-way signs the left. Quote MUTCD Fig 6P-3 Note 1 (p. 864) in the build. If the figure says otherwise, stop and report.
+>
+> R91: Don't block #308 on the DOTI standards and details. Record it in execution-sequence.md as a missing authority file, parked with 02-JURISDICTION-DATA.md and MUTCD-SELECTION.md. Each audit row that leans on Denver-defers-to-MUTCD names PT-116.1 and Rule 22.3 as read, and DOTI standards as not read.
+>
+> R92: The 4-lanes-per-direction clamp (validation.ts:27) turning Broadway's 5 lanes into 4: report whether it changes any device on Broadway plans. If it does, draft an issue for me to repost. Don't fix it inside #308.
+>
+> The near-intersection issue is #___. Link it from #308's checkpoint.
+>
+> Start the #308 build. No ship before the 19:07 #292 window finishes.
+
+**Filled from gh (2026-10-05 21:54Z):** the near-intersection issue is **#309**, "Lane closure near an intersection on a one-way street signs one side only; S-630-1 Note 8 requires both sides", filed 21:53:35Z.
