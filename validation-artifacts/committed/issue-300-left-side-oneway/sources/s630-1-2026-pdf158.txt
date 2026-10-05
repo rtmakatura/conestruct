@@ -1,0 +1,121 @@
+                                                                                                                                                            *C                                                                 R2-11                                                    Legend
+                                                                                                                                                               ½ C*
+                                                                                                                                                    W20-1                                                                                                             Channelizing device: for type of device
+                                                                                                                                                                                                                                                                      to be used, see schedule of traffic
+                                      *C                                                                                                                                                                                                                              control devices included in the plans.
+
+                                                                                                                                          R2-10                                                                                                                       Drums or vertical panels shall be used to
+                                                                                                                                                                                                                                                                      delineate merging tapers, shifting tapers,
+                                                                                                                                                            *B                                                                                                        and one lane, two-way traffic tapers.
+                                                                                                                                                                                                                                                                      Type III Barricade
+                      W20-1
+                                                                                                                                                                                                                                                                      Concrete Barrier (Temporary)
+                                      *
+                                         C                                                                                                                                                                                                                            Flagger Station
+                                                                                                                                                                                                                                                                      Direction Of Travel
+                                                                                                                                                    W20-4   *
+                                                                                                                                                               A                                                                                                      Work Area
+
+                                                                                                                                                                                                     W20-7     W20-4           R2-10         W20-1
+
+                                                                                                                                          W20-7      50' MIN.                   10'
+                                                                                                                                                    100' MAX.                   MIN.
+                      W20-5(R)        *                                                                                         R2-11
+                                                                                                                                                              100'
+                                        B                                                                                                           10' MIN.                           *                    *                  *
+                                                                                                                                                                                                  A         B                  C
+
+                                                                                                                                                                                                                               *½ C
+
+                                                *A                       R2-11
+                      R2-10
+            R2-11                                                                                                                                                                                                                                             L       Transition Taper Length:
+                                                   L
+                                                                                                                                                                                       TYPE III                                                                       L = Minimum Length Of Taper
+                                                                                                                                    *½ C                                              BARRICADE
+                                                                                                                                *C        *      *  VARIES                                                                                                            Speed 45 Mph or More: L = S X W
+                                                                                                                                             B                                            10'                                                                         Speed 40 Mph or Less: L = WS2
+                                                                                                                                                 A                                       MIN.
+                                                                                                                                                                                                                                                                                                                 60
+                                                                         R2-10  W20-1
+                                                                                                                                                                                                                                                                      S = Numerical Value of Speed Limit
+                                      100'                        10'                                                                                50' MIN.       100'                                                                                                   or 85 Percentile Speed
+                                                                  MIN.                                                                              100' MAX.
+                      W4-2(R)
+                                                             TYPE III
+                                                            BARRICADE                                                                                                                 *
+                                                                                                                                                                                        A
+
+                                                                                                                                                                    500'
+
+                                                                                                                                                                                                     W20-7
+
+                                                                                                                                                                                                                                                                      W = Width of Offset
+
+                                                                                                                                                                                      *                                                                               Shoulder Taper = 1/3 L
+                                                                                                                                                                                        B
+                              10' MIN.
+                                                                                                                                                                                                                                      R2-11
+                                                                                                               W20-1 R2-10      W20-4     W20-7     R2-11
+                                                                                                                                                                                                                                                                      Advance Warning Flashing or Sequencing
+                                                                                                                                                                                                                                                                      Arrow Panel
+
+      *½ C  *      *          VARIES                                                                                                                                                  ½C             W20-4                                                    CZ      Clear Zone (see General Note 17 on Sheet 2).
+*C            B                                                                                                                                                                             *                           R2-10
+                   A                                                                                                                                                                           C
+
+                              L                              10'
+                                                            MIN.
+                                                      100'                                                                                                                                                                                                            These devices are optional. Their need shall be
+                                                                                                                                                                                                                                                                      determined by detour design and/or scope of
+                                        500'                                                                                                    Case No. 19                                                                                                           construction activity and are required when they
+                                                                                                                                                                                                                                                                      are included in the schedule of consturction control
+                                                                                                                   Typical Application of Traffic Control                                            W20-1                                                            devices.
+
+                              R2-11                                             R2-11                                                                                                                                                                         VARIES  Buffer Space (see General Note 23 on Sheet 2).
+
+                                                                         R2-10                                     Around a Work Area Near an Intersection                                                                                                            Required when work occupies the location
+                                                                                                                                                                                                                                                                      for more than 3 days.
+W20-1 R2-10 W20-5(R) W4-2(R)            500'
+
+                                                                                                                                                                                                                                                    XX                Mobile Attenuator
+
+                                                                                                                                                     TYPE III                          TYPE III                                W20-3       W20-3       R11-3
+                                                                                                                                                    BARRICADE                         BARRICADE                                                          OR
+
+                                                                                                                                                                                                                                                       R11-4
+
+                                                                         W20-1                                                                                                                                                                                        Flashing Beacon
+
+                                                                                                                                                                                                               500'                  500'
+
+                                                                                                                                                                                                                                                                      See Fines Double Signing Notes On Sheet 12.
+
+                                        Case No. 18                                                                                                                       500'  500'
+
+                          Typical Application                                                                                                                                                                                                                 * Key to Advance Signing Distances
+           Traffic Control Around a Work Area
+       Near an Intersection, One Lane Closed                                                                                                                                                                                                                                             DISTANCE BETWEEN SIGNS
+
+      Notes:                                                                                                                                     XX                                                                                                                   ROAD TYPE          A      B                    C
+
+1. Sign placement shown on cases 18 and 19 typifies rural                                                      OR           OR                      R11-3                                                                             Case No. 20             URBAN (< = 40 MPH)         100    100                  100
+       applications. Urban applications require the signs to be                                                                                       OR                                                                                                      URBAN (> = 45 MPH)
+       placed within one, or perhaps two, blocks.                                                                                                                                                    R11-2                       Typical Signing              RURAL                      350    350                  350
+                                                                                                                                                    R11-4                                                                      For Road Closure               EXPRESSWAY/FREEWAY
+2. Truck-mounted attenuators (TMA) optional for                                                         W20-2      W20-2        W20-3                               W20-3       W20-3                                                                                                    500    500                  500
+       all cases as determined by the Engineer.
+                                                                                                                                                                                                                                                                                         1000   1500                 2640
+
+                                                                                                                                                    M4-10
+
+                 Computer File Information                               Sheet Revisions                       Colorado Department of Transportation                                       Traffic Controls for                                                              Standard Plan No.
+                                                                                                                                                                                        Highway Construction                                                                            S-630-1
+Creation Date: 07/04/12                                           Date:                       Comments
+Created By: KEN                                                                                                                                                                       Issued by the Traffic Safety & Engineering Services: July 01, 2026              Standard Sheet No. 10 of 26
+Last Modification Date: 07/01/26                                                                                                                     Traffic Safety &
+Last Modified By: NRR                                                                                                                            Engineering Services                                                                                                     Project Sheet Number:
+CAD Ver.:ORD 10.12 Scale:Not to Scale Units:English
+                                                                                                                                                 2829 West Howard Place         EB
+                                                                                                                                                      Denver, CO 80204
+

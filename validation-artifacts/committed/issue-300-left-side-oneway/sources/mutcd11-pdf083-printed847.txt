@@ -1,0 +1,74 @@
+MUTCD 11th Edition  Page 847
+
+Section 6N.10 Work within the Traveled Way of an Urban Street
+
+  Support:
+01 Chapter 6C and Sections 6M.04 and 6N.04 contain additional information regarding the steps to follow when
+
+  pedestrian or bicycle facilities are affected by the worksite.
+02 In urban TTC zones, decisions are needed on how to control vehicular traffic, such as how many lanes
+
+  are required, whether any turns need to be prohibited at intersections, and how to maintain access to business,
+  industrial, and residential areas.
+03 Pedestrian traffic needs separate attention. Chapter 6C contains information regarding pedestrian movements
+  near TTC zones.
+  Standard:
+
+04 If the TTC zone affects the movement of bicyclists, adequate access to the roadway or shared-use paths
+  shall be provided (see Part 9).
+
+05 Where transit stops are affected or relocated because of work activity, both pedestrian and vehicular
+  access to the affected or relocated transit stops shall be provided.
+
+  Guidance:
+
+06 If a designated bicycle route is closed because of the work being done, a signed alternate route should be
+  provided. Bicyclists should not be directed onto the path used by pedestrians.
+
+07 Worksites within the intersection should be protected against inadvertent pedestrian incursion by providing
+  detectable channelizing devices.
+  Support:
+
+08 Utility work takes place both within and outside the roadway to construct and maintain services such as power,
+  gas, light, water, or telecommunications. Operations often involve intersections, since that is where many of the
+  network junctions occur. The work force is usually small, only a few vehicles are involved, and the number and
+  types of TTC devices placed in the TTC zone is usually minimal.
+  Guidance:
+
+09 As discussed under short-duration projects, however, the reduced number of devices in utility TTC zones
+  should be offset by the use of high-visibility devices, such as high-intensity rotating, flashing, oscillating, or strobe
+  lights on work vehicles or high-level warning devices.
+  Support:
+
+10 Figures 6P-6, 6P-10, 6P-15, 6P-18, 6P-21, 6P-22, 6P-23, 6P-26, and 6P-33 are examples of typical applications
+  for utility operations. Other typical applications might apply as well.
+
+Section 6N.11 Work within the Traveled Way of a Multi-Lane, Non-Access Controlled Highway
+
+  Support:
+01 Chapter 6C and Sections 6M.04 and 6N.04 contain additional information regarding the steps to follow
+
+  when pedestrian or bicycle facilities are affected by the worksite.
+02 Work on multi-lane (two or more lanes of moving motor vehicle traffic in one direction) highways is
+
+  divided into right-lane closures, left-lane closures, interior-lane closures, multiple-lane closures, and closures
+  on five-lane roadways.
+  Standard:
+
+03 When a lane is closed on a multi-lane road for other than a mobile operation, a transition area
+  containing a merging taper shall be used.
+
+  Guidance:
+
+04 When justified by an engineering study, temporary traffic barriers (see Section 6K.09) should be used
+  to prevent incursions of errant vehicles into hazardous areas or work space.
+  Support:
+
+05 Figure 6P-34 illustrates a lane closure in which temporary traffic barriers are used.
+  Option:
+
+06 When the right-hand lane is closed, TTC similar to that shown in Figure 6P-33 may be used for undivided
+  or divided four-lane roads.
+
+December 2023       Sect. 6N.10 to 6N.11
+

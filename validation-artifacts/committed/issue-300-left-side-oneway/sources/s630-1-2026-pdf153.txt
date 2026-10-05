@@ -1,0 +1,94 @@
+                                                                            WORK  BARRICADE                                                      CONCRETE BARRIER                                                                                                        Legend
+                                                      G20-5P                                                                                     (TEMP)
+                                                                                  TEMPORARY DOUBLE             W1-8                 CZ                                                                                                                 Channelizing device: for type of device
+                                                                            ZONE  YELLOW CENTERLINE                        CZ                                                                          W1-8                                            to be used, see schedule of traffic
+                                                                                                                                                                             CZ                                                                        control devices included in the plans.
+                                                     R2-1(XX)                     TEMPORARY WHITE
+                                                                                  EDGE LINE                                                                                                                         W1-8                               Drums or vertical panels shall be used to
+                                                              XX                                                                                                                CZ                                                                     delineate merging tapers, shifting tapers,
+                                                                                                                                                                                                                                                       and one lane, two-way traffic tapers.
+
+                                                                                                                                                                                                                                                       Type III Barricade
+
+                                                                                                                                                                                                                                                       Concrete Barrier (Temporary)
+
+                                                                                                                     100'                                                                                                                              Flagger Station
+                                                                                                                                                                                                                                                       Direction Of Travel
+                                          250' 250' 250' 250'                     500'                      L         VARIES                                                                                              500'   500'                  Work Area
+                                                                  1500'Î TYP.
+                                                                                                                                                         BARRICADES
+
+                                                                                                                                        R11-2    Sign sequence is the same
+                                                                                                                                        W1-6(L)  for the opposite direction.
+
+                                                                                                                                                                                                                                 XX            L       Transition Taper Length:
+
+                                                                                                                                                                              R2-11                                              R2-1(XX)              L = Minimum Length Of Taper
+
+                       R2-10                                                                W24-1(L)                                                                                                                                                   Speed 45 Mph or More: L = S X W
+                                                                                  XX W13-1P(XX)                                                                                                                                                                                                  WS2
+                                                     W20-1                                                                 Case No. 4
+                                                                                                                                                                                                                                                       Speed 40 Mph or Less: L =
+                                                                                                                                                                                                                                                                                                  60
+
+                W20-1                                                                                         Typical Application                                                                                                                      S = Numerical Value of Speed Limit
+                                                                                            Road Closure, Bypass Detour Provided                                                                                                                                or 85 Percentile Speed
+
+                                                                                                                                                                                                                                                       W = Width of Offset
+
+                                                                                                                                                                                                                                                       Shoulder Taper = 1/3 L
+
+                                                                                                                                                                                                                                                       Advance Warning Flashing or SequencingArrow Panel
+
+                                                                                                                              TEMPORARY YELLOW
+                                                                                                                              EDGE LINE
+
+                                                                                                                                                                                                                                               CZ      Clear Zone (see General Note 17 on Sheet 2).
+
+                                                                                                                                                 BARRICADES
+
+                                                                                                                                                                                                                          100'                         These devices are optional. Their need shall be
+                                                                                                                                                                                                                                                       determined by detour design and/or scope of
+       LANE #1                                                                                                                                                                                                                                         construction activity and are required when they
+       LANE #2                                                                                                                                                                                                                                         are included in the schedule of consturction control
+       LANE #3                                                                                                                                                                                                                                         devices.
+       LANE #4
+                                                                                                                                                                                                                                                       These devices are not optional if the posted speed limit
+                                                                                                                                                                                                                                                       in the work zone is reduced.
+
+                                  500'               VAR.                                             500'                                                                                                                                     VARIES  Buffer Space (see General Note 23 on Sheet 2).
+                       2640'                          500'
+                                                                                                                                                                                                                                                       Required when work occupies the location
+                                                                                  1500'                        1000'                    L        VARIES                                                                   500'   500'                  for more than 3 days.
+
+                                    WORK                                                    G20-5P    WORK                                                                                                                                             Mobile Attenuator
+                G20-5P ZONE                                                                           ZONE                                                                                                                                             Flashing Beacon
+                                                     WORK                                                                                                                                                                                              See Fines Double Signing Notes On Sheet 12.
+                                                     ZONE   G20-5P                                                                  ARROW PANEL                                                                                  XX
+                                                                                                                           W4-2(L)
+W20-1  R2-10    R2-1(XX)                              FINES                                 R2-1(XX)                                                                                                                      R2-11  R2-1(XX)
+                                                                     R2-6P
+                         XX                                                                          XX
+                                                     DOUBLE
+
+                                                                                  W20-5(L)
+
+                                                     TO BE PROVIDED EVERY 2640' OR THE                                        Case No. 5
+
+                                                     SPACING OF THE SIGNS MAY BE CHANGED
+
+                                                     AS DIRECTED BY THE ENGINEER BETWEEN                             Typical Application
+                                                     R2-10 AND R2-11 SIGNS
+
+                                                                                                      Lane #1 Closure, Multi-Lane Freeway
+
+                 Computer File Information                                        Sheet Revisions                                       Colorado Department of Transportation                                                                       Traffic Controls for                                                 Standard Plan No.
+                                                                                                                                                                                                                                                 Highway Construction                                                               S-630-1
+Creation Date: 07/04/12                                     Date:                                      Comments
+Created By: KEN                                                                                                                                                                                                                                Issued by the Traffic Safety & Engineering Services: July 01, 2026  Standard Sheet No. 5 of 26
+Last Modification Date: 07/01/26                                                                                                                                 Traffic Safety &
+Last Modified By: NRR                                                                                                                                        Engineering Services                                                                                                                                    Project Sheet Number:
+CAD Ver.:ORD 10.12 Scale:Not to Scale Units:English
+                                                                                                                                                                              2829 West Howard Place                                       EB
+                                                                                                                                                                                   Denver, CO 80204
+

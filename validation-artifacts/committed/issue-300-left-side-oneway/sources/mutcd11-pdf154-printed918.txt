@@ -1,0 +1,21 @@
+Page 918     MUTCD 11th Edition
+
+                                Notes for Figure 6P-30—Typical Application 30
+
+                                 Interior Lane Closure on a Multi-Lane Street
+
+Guidance:
+
+    1. This information applies to low-speed, low-volume urban streets. Where speed or volume is higher,
+         additional signing such as LEFT LANE CLOSED XX FT should be used between the signs shown.
+
+Option:
+    2. Positive protection devices may be used per Section 6M.02.
+    3. Shadow vehicles with a truck-mounted attenuator may be used.
+
+Support:
+    4. The closure of the adjacent interior lane in the opposing direction might not be necessary, depending upon
+         the activity being performed and the work space needed for the operation.
+
+Sect. 6P.01  December 2023
+

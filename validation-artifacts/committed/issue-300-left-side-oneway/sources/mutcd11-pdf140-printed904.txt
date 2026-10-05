@@ -1,0 +1,26 @@
+Page 904     MUTCD 11th Edition
+
+                                Notes for Figure 6P-23—Typical Application 23
+                        Left-Hand Lane Closure on the Far Side of an Intersection
+
+Guidance:
+
+    1. If the work space extends across a crosswalk, the crosswalk should be closed using the information and
+         devices shown in Figure 6P-29.
+
+Option:
+    2. Positive protection devices may be used per Section 6M.02.
+    3. Flashing warning lights and/or flags may be used to call attention to the advance warning signs.
+    4. When the normal procedure of closing on the near side of the intersection any lane that is not carried
+         through the intersection results in the closure of a left-hand lane having significant left-turn movements,
+         then the left-hand lane may be reopened as a turn bay for left turns only, as shown.
+
+Support:
+    5. By first closing off the left-hand lane and then reopening it as a turn bay, the left-turn bay allows storage of
+         turning vehicles so that the movement of through traffic is not impeded. A left-turn bay that is long enough
+         to accommodate all turning vehicles during a traffic signal cycle will provide the maximum benefit for
+         through traffic. Also, an island is created with channelizing devices that allows the LEFT LANE MUST
+         TURN LEFT sign to be repeated on the left adjacent to the lane that it controls.
+
+Sect. 6P.01  December 2023
+

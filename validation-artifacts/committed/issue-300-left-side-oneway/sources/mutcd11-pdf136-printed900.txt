@@ -1,0 +1,34 @@
+Page 900     MUTCD 11th Edition
+
+                                Notes for Figure 6P-21—Typical Application 21
+                               Lane Closure on the Near Side of an Intersection
+
+Standard:
+
+    1. The merging taper shall direct vehicular traffic into either the right-hand or left-hand lane,
+         but not both.
+
+Guidance:
+
+    2. In this typical application, a left taper should be used so that right-turn movements will not impede
+         through motor vehicle traffic. However, the reverse should be true for left-turn movements.
+
+    3. If the work space extends across a crosswalk, the crosswalk should be closed using the information and
+         devices shown in Figure 6P-29.
+
+Option:
+    4. Positive protection devices may be used per Section 6M.02.
+    5. Flashing warning lights and/or flags may be used to call attention to the advance warning signs.
+    6. A shadow vehicle with a truck-mounted attenuator may be used.
+    7. A work vehicle with high-intensity rotating, flashing, oscillating, or strobe lights may be used with the
+         high-level warning device.
+    8. Vehicle hazard warning signals may be used to supplement high-intensity rotating, flashing, oscillating, or
+         strobe lights.
+
+Standard:
+
+    9. Vehicle hazard warning signals shall not be used instead of the vehicle’s high-intensity rotating,
+         flashing, oscillating, or strobe lights.
+
+Sect. 6P.01  December 2023
+

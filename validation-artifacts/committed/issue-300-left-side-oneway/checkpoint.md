@@ -1,0 +1,262 @@
+# issue-300-left-side-oneway — 📋 checkpoint (written before Ryan rules)
+
+**Issue:** #300 — left-side work on one-way streets can't be planned. `rulings.md` is beside this file.
+**Base:** `a5b4e12` = `main` = prod `healthz` (checked 2026-10-05 10:59 MDT). Investigation only: no product code.
+**Prod requests made: one** (the `/healthz` read at 10:59 MDT). No request touched 12:00–12:20 or 19:00–19:20. Nothing shipped.
+**Evidence:** `probes/` (the repro and its output), `sources/` (the cited MUTCD and S-630-1 pages as extracted text, plus renders of the figures whose claims come from the drawing).
+
+## The answer, in brief
+
+1. **Reproduced on N Broadway southbound** (39.7337, −104.98753; OSM way 131232822, `oneway=yes`, `lanes=5`, 30 mph). On `a5b4e12` the side control offers one option, "West side · southbound traffic". `side: "left"` on the legal direction gets a 400 from both `/render/corridor-geometry` and `/render/pdf`: "meta.work.side 'left' is not built yet: only right-side work is laid out." (`probes/repro_broadway.txt`)
+2. **The drawn corridor is already side-agnostic.** Picker, band aerial and page 2 all build along the centerline with no lateral offset. On a one-way road both curbs share one direction of travel, so the geometry for a left option is the same as for the right.
+3. **The side stops at the corridor.** `ScenarioParams` has no side field. Every generator, the audit, the crew narrative and page 1 read "positive offset = the work side = the right".
+4. **Neither standard has a left-lane typical for a one-way street.** MUTCD §6N.11 names "left-lane closures" as a category, but the figures that draw one are on two-way, divided or freeway roads. For one-way streets specifically, the two rules that apply are:
+   - **MUTCD TA-3 Note 1:** a left-hand SHOULDER WORK sign goes up "for a divided or one-way street only if the left-hand shoulder is affected".
+   - **S-630-1 General Note 8:** every warning and regulatory sign goes on both sides of a one-way street, unless only one shoulder is closed.
+5. **Broadway, the motivating example, is not a one-way street to the backend. It's a divided highway.** Detection marks every primary one-way as `divided: true` ("couplet → divided"), and nothing on the wire tells a couplet from a true median carriageway. The prod PDF for this very pin (2026-09-25) draws a median and an **opposing carriageway with a left-pointing traffic arrow**: 4 lanes each way on a 5-lane one-way street (`probes/broadway-prod-2026-09-25-page1.png`). That's a defect in today's right-side plans, upstream of #300.
+6. **Of the three live kinds, only shoulder can take left-side work on a one-way road today.**
+   - The flagger is refused on one-way roads.
+   - Near-intersection forces `is_divided=False` and is Case 18, which is right-side only and has no left variant.
+   - A mid-block lane closure that keeps the divided flag routes to `lane_closure_divided`, which is gated.
+
+   So "close the left curb lane" (#300's own example) can't be planned on either side today.
+7. **Recommendation, in order:**
+   - **(C) File the couplet defect as its own issue and fix it first.**
+   - **Then build #300 as option (A): left-side shoulder work on confirmed one-way roads.** The side reaches the generators as a new field that defaults to `"right"`. Labels and words flip. Page 1 mirrors vertically.
+   - **Hold near-intersection left-lane work (B) behind a Rule 8 evidence bar.**
+
+   Under (A), every right-side output stays byte-identical. The test churn is 3–4 named assertions plus new tests.
+
+---
+
+## 1. Reproduction
+
+**The pin.** It's the #290 evidence sweep's shoulder pin (`validation-artifacts/committed/issue-290-evidence-sweep/README.md:9`), captured as `tests/fixtures/corridor/broadway-sb.json`. I read OSM way 131232822 today from the OSM API (v43, edited 2026-03-23), not from Overpass:
+- `highway=primary`, `name=North Broadway`, `oneway=yes`, `lanes=5`, `maxspeed=30 mph`
+- `turn:lanes=||||right`, `sidewalk:both=separate`
+
+The rightmost lane is a turn lane, so closing the left curb lane is a realistic job here.
+
+**The probe.** `probes/repro_broadway.py` sends the fixture, with the confirmed road relayed the way the site proxy relays it, through FastAPI's TestClient on this checkout. Overpass is stubbed and nothing touches the network. Output (`probes/repro_broadway.txt`):
+
+```
+HEAD a5b4e1227023cf649d1e382e3750ee6bb5893a04
+pin 39.7337, -104.98753  way 131232822  oneway=yes  divided=True  kind=shoulder  lanes=4  speed=30
+1. corridor-geometry, no side -> 200 status=side_not_confirmed
+   offered: 'West side · southbound traffic'  work={'side': 'right', 'travel': 'with_geometry'}  built=True
+2. /render/corridor-geometry side=left travel=with_geometry -> 400  {"detail":{"error":"pin_model_input","message":"meta.work.side 'left' is not built yet: only right-side work is laid out."}}
+3. /render/pdf side=left travel=with_geometry -> 400  (same message)
+4. /render/corridor-geometry side=right travel=with_geometry -> 200  status=laid_out approaches=1
+```
+
+**Why not on prod.** Local HEAD is the sha prod's `/healthz` serves, so this is the code prod runs. The backend needs the render secret and prod's `/sandbox` sits behind the coming-soon gate. The #290 sweep already captured prod's UI for this pin (`issue-290-evidence-sweep/prod/shoulder-1440-04-side-chosen-kind-owed.json`: "West side · southbound traffic"). If you want a fresh prod Playwright run, it fits between 12:20 and 18:55 today.
+
+**The prod PDF for this pin** (`issue-290-evidence-sweep/prod/shoulder-1440-plan.pdf`, page 1, rendered to `probes/broadway-prod-2026-09-25-page1.png`) shows:
+- the title "SHOULDER CLOSURE — DIVIDED HIGHWAY";
+- a hatched MEDIAN between yellow lines;
+- 4 lanes on each side of it;
+- a left-pointing traffic arrow above the far shoulder (`plan_sheet.py:4335-4342`: "when divided", the opposing arrow).
+
+North Broadway carries no opposing traffic. That's finding 5.
+
+## 2. Where the code assumes right-side work (all at `a5b4e12`)
+
+**Wire and API**
+
+| file:line | What it assumes | What left-side work needs |
+|---|---|---|
+| `src/api/schemas.py:104-117` | `side: Literal["right","left","median"]`; the docstring says only `"right"` is built | Nothing. `"left"` is already on the wire |
+| `src/api/render_api.py:262-265` | 400 for any `side != "right"` | Allow `"left"` on a confirmed one-way road. Keep the 400 for left on a two-way road, left with no road, and median |
+| `src/api/render_api.py:286-295` | 400 when the travel runs against the legal direction | Nothing (it's side-agnostic) |
+| `src/api/render_api.py:1044-1052` | Docstring: "A confirmed one-way road: only the legal direction's right edge" | Becomes both edges |
+| `src/api/render_api.py:1069-1076` | `right_side = _cardinal(bearing + 90.0)`; writes `{"side": "right", "travel": ...}` only | On one-way roads, a second option: `_cardinal(bearing - 90.0)`, `"side": "left"`, same `travel` |
+| `src/api/schemas.py:1047` | `if work is None or work.side != "right" ...: return None` (no bearing) | Left gets the same `travel_bearing_at` call. One-way means the same bearing for both curbs |
+| `src/rules/validators.py:167-239` (`ScenarioParams`) | No side field | A new field, `work_side: Literal["right","left"] = "right"` (name CHOSEN, for the ruling) |
+| `src/api/render_api.py:113-115` | Live kinds: shoulder, flagger, near_intersection | (scope, §4) |
+
+**Corridor and layout math.** No change needed:
+- `src/rules/corridor.py:944-979` (`travel_bearing_at`), `:982-1002` (`against_legal_direction`) and `:1064-1155` (`_corridor_from_work_start`) don't depend on the side.
+- `src/rules/corridor_layout.py:62-70` and `:118-230` don't either. Its opposing approach is for the flagger only.
+- The ±90° in `corridor.py:597-618` is a symmetric bbox widening.
+- No code anywhere computes a left-of-travel vector.
+
+**Device placement**
+
+| file:line | What it assumes | What left-side work needs |
+|---|---|---|
+| `src/generation/layout.py:120-134` | "The closed lane is the RIGHTMOST … CHOSEN … This tool models right-side work only"; "Offsets are positive right of the centerline (the work side)" | Keep "positive = the work side" as the model, and state that it no longer means right |
+| `layout.py:200-201, :235, :381` (shoulder, divided) | Signs at ±offset (both sides, a house choice per #243 R54); `"W21-5aR"`; `label="RIGHT_ARROW"` | `W21-5aL`; the arrow-board label mirrors (today `RIGHT_ARROW` for the right shoulder). Which mode a left-shoulder board shows is **not sourced here**. TA-38 Note 6 ("an arrow pointing to the right … on the left-hand shoulder") is a different TA, so the build checkpoint needs to cite it before the choice is made |
+| `layout.py:662, :671ff, :746` (shoulder, undivided) | `W21-5aR`, signs at `sign_offset_right`, `RIGHT_ARROW` | Same flip. Signs on the left go with the work side (TA-3 Note 1) |
+| `layout.py:957-958, :1004` (lane_closure_divided, gated) and `:1455-1456, :1491` (near_intersection, live) | `W4-2R` / `W20-5R`, `LEFT_ARROW` | `W4-2L` / `W20-5L` (§6H.07 ¶02, TA-33 Note 1), but see §4 and option B |
+| `src/rules/site_adjustments.py:160, :192-197` | R9-9 at `+_ped_offset`, M4-9a at `+sign_offset` (the right) | Fine as long as + still means the work side (`issue-243-note-8/checkpoint.md:156-159` already noted these) |
+| `src/rules/sign_codes.py:41` | `W21-5aL` is the only L entry | Add `W20-5L` and `W4-2L` if B is built |
+
+**PDF and narrative**
+
+| file:line | What it assumes | What left-side work needs |
+|---|---|---|
+| `src/rendering/plan_sheet.py:8-16, :236-251` (`_y_of`) | The work side is drawn at the BOTTOM, with traffic flowing left to right | **A vertical mirror for left work.** With traffic drawn left to right, the bottom is the *right* of traffic, so drawing left work at the bottom would put it on the wrong side. The data model stays the same and `_y_of` flips. (The code sweep suggested keeping the bottom. That would draw a mirror image, so I don't adopt it.) |
+| `plan_sheet.py:4329-4342` | The work-side arrow, plus an opposing arrow when divided | Left work moves both with the flip. The couplet case is finding 5 |
+| `plan_sheet.py:2955-2960` | Hard-coded `("W4-2R","RIGHT LANE ENDS")`, `("W20-5R","RIGHT LANE CLOSED AHEAD")` | Derive both from the side (B only) |
+| `plan_sheet.py:3282` | "CLOSED LANE DRAWN AS THE RIGHTMOST LANE…" (#176) | The wording follows the side |
+| `plan_sheet.py:1604` | The arrow glyph direction follows the label | Flips with the label |
+| `src/narrative/crew_narrative.py:195, :218-239, :399` and `templates/base.md.j2:43, 46, 56, 61, 69, 123` | "right side", "RIGHT ARROW mode (for right shoulder closure)", "Place matching sign on left side", "closing the right lane" | The words follow the side. The `offset_ft > 0` filters still hold if + means the work side |
+| `src/rendering/static_aerial.py` | No side logic | Nothing |
+
+**Audit and checks**
+
+| file:line | What it assumes | Notes |
+|---|---|---|
+| `src/api/audit.py:895-900` | Counts by the sign of the offset; the row reads "Signs on both sides of divided highway" | Symmetric. The label is a separate matter |
+| `audit.py:914-918, :958-964`; `validators.py:1803`; `audit.py:1332` | `offset_ft > 0` means the work or approach side | **These break if left work negates offsets.** That's why option D is rejected |
+| `audit.py:1181-1188` | The near-intersection narrative claims "single-side mainline signing (both-sides posting applies to … one-way streets …)" | That's false for a near-intersection plan on a one-way road. It's an existing gap on the right side too |
+| `src/rules/tables.py:292-304`; `validators.py:930-934` | Note 8's "one-way streets" is quoted, but "not currently expressible through `ScenarioParams`" | The both-sides check never runs on one-way streets. It's an existing gap (shoulder is exempt anyway) |
+
+**Frontend**
+- `conestruct/site/lib/scenarios/index.ts:478-481`: `hasConfirmedSide` returns `meta.work?.side === "right"`. This is a frontend copy of a backend decision; the rail blocker, the check gate, ledger row 4 and the verdict strip all read it. It has to accept `"left"`, and the backend stays authoritative (Rule 3).
+- `components/bands/WhereBand.tsx:177-230` (`SideControl`) renders the backend's `side_options` filtered by `built` and builds no direction itself. A left option shows up without any change.
+- `lib/corridor-geometry.ts:47-57, :83-96` already tells options apart by side plus travel, and `lib/scenarios/types.ts:340-342` already types `"left"`. The picker and aerial draw the backend's centerline with no side.
+- `lib/road-detection/classify.ts:130-137` is the couplet rule: `primary` + `oneway` gives `divided: true, dividedFromOneway: true`. `dividedFromOneway` only reaches a provenance string (`:373`). It is **not** on the wire, and the backend never reads `confirmedRoad`.
+
+**History.** The #290 commits are `2c1ba25`, `c11aeb2`, `659d800` and `0e1528c` (greyed option removed, right-hand side only), with the rulings in `df71086`. No code comment cites #300.
+
+## 3. What the standards say
+
+Sources are MUTCD 11th Ed. Part 6 (`validation-artifacts/ta10_flagger/mutcd_part6.pdf`, sha256 `d8ead248…c9b0`; printed page = PDF index + 764) and CDOT S-630-1, July 1, 2026 (`validation-artifacts/s630-1-2026.pdf`, sha256 `e6cc37b1…2971`; S-630-1 is PDF pp. 149–174). **Both PDFs are untracked** (#160), so the quoted pages are committed as text under `sources/`. I re-extracted every quote marked ✔ from the PDF and matched it word for word. Claims read from drawings are marked *(drawing)*, with the render in `sources/`.
+
+**MUTCD 11th Ed.**
+- ✔ **§6N.11 ¶02, p. 847:** "Work on multi-lane (two or more lanes of moving motor vehicle traffic in one direction) highways is divided into right-lane closures, left-lane closures, interior-lane closures, multiple-lane closures, and closures on five-lane roadways."
+- **§6N.11 ¶09 (Option), p. 848:** "When closing a left-hand lane on a multi-lane undivided road, as vehicular traffic flow permits, the two interior lanes may be closed, as shown in Figure 6P-30…"
+- ✔ **§6N.11 ¶10 (Standard), p. 848:** "When only the left-hand lane is closed on undivided roads, channelizing devices shall be placed along the center line as well as along the adjacent lane." This is about two-way roads, where the center line separates the directions. On a one-way street the left curb takes that role, so whether ¶10 applies is a reading, not a quote.
+- ✔ **§6F.02 ¶01 (Guidance), p. 789:** "Signs should be located on the right-hand side of the roadway unless otherwise provided in this Manual." **¶02 (Option):** "Where special emphasis is needed, signs may be placed on both the left-hand and right-hand sides of the roadway."
+- ✔ **§6H.07 ¶02 (Standard), p. 805:** "For a single lane closure, the Lane Closed (W20-5) sign (see Figure 6H-1) shall use the legend RIGHT (LEFT) LANE CLOSED."
+- ✔ **Notes for Fig 6P-3 (TA-3, Work on the Shoulders), Note 1 (Guidance), p. 864:** "A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected." **This is the only Part 6 note that names one-way streets for sign side, and it covers the live kind (A) builds on.**
+- **Notes for Fig 6P-1 (TA-1), Note 1, p. 860:** "If the work space is in the median of a divided highway, an advance warning sign should also be placed on the left-hand side of the directional roadway." **Fig 6P-2 (TA-2) Note 5, p. 862:** "On a divided highway, the signs should be mounted on both sides of the directional roadways."
+- **Notes for Fig 6P-21 (TA-21), Note 1 (Standard), p. 900:** "The merging taper shall direct vehicular traffic into either the right-hand or left-hand lane, but not both."
+- **Fig 6P-23, "Left-Hand Lane Closure on the Far Side of an Intersection (TA-23)",** notes p. 904, figure p. 905 *(drawing)*. It's a two-way street. W20-1, W20-5L and W4-2L stand on the right only, and R3-7L appears on both sides.
+- **Fig 6P-30, "Interior Lane Closure on a Multi-Lane Street (TA-30)",** p. 918–919 *(drawing)*. A two-way four-lane street, with W20-5L and W4-2L on the right for each direction.
+- ✔ **Notes for Fig 6P-33 (TA-33, Stationary Lane Closure on a Divided Highway), Note 1 (Standard), p. 924:** "This information also shall be used when work is being performed in the lane adjacent to the median on a divided highway. In this case, the LEFT LANE CLOSED signs and the corresponding Lane Ends signs shall be substituted." *(drawing, p. 925)*: every sign is posted on both edges.
+- **Notes for Fig 6P-38 (TA-38), Note 8, p. 934:** "…The Interior Lane Shift Ahead symbol sign may be mirrored to indicate a right lane shift." This is the only "mirrored" wording in Part 6.
+
+**S-630-1 (July 2026)**
+- ✔ **Sheet 2, General Note 8 (PDF p. 150):** "All warning and regulatory signs shall be posted on both sides of the roadway on divided highways, multi-lane ramps, one-way streets, and as directed by the Engineer, except where only one shoulder is closed (ex: Case 11 on Sheet 7)."
+- **Sheet 2, under Note 7:** "W20-5 warning signs shall be furnished with exchangeable plaques reading "Right", "Left", "Center", "Right 2", etc. at no additional cost."
+- **Sheet 5, Case 5, "Lane #1 Closure, Multi-Lane Freeway" (PDF p. 153)** *(drawing, which I viewed)*. Lane #1 is the leftmost. W20-5(L) "LEFT LANE CLOSED ½ MILE" and W4-2(L) are posted on both edges. The taper comes off the left with a "TEMPORARY YELLOW EDGE LINE", and the arrow panel is on the left.
+- **Sheet 7 (PDF p. 155)** *(drawing)*. Case 10 is the right lane closed on a divided highway: W20-5(R) and W4-2(R) on both sides, with a temporary white edge line. Case 11 is right shoulder work, signed on the right only (Note 8's exception).
+- **Sheet 10, Case 18 (PDF p. 158):** a right-lane closure near an intersection on a two-way street. **There is no left variant.**
+- **Sheet 22, Case 36 (PDF p. 170):** "…vehicle/sign sequence is the same for the left side of highway, while taper is mirrored about the center lane, when mobile work zone is located on the left side of highway." This is the only mirror note in S-630-1, and it covers mobile striping.
+
+**Colorado Supplement (Jan 2026):** nothing found. Its Part 6 revises only §6D.03, §6D.04, §6J.01 and §6J.03. I searched: one-way, one way, left lane, left side, left-hand, both sides, 6N.11, 6F.02, Figure 6P, lane closure.
+
+**Looked for and not found, in either manual:**
+- a figure titled for a one-way street;
+- any "may be adapted for a left lane" or "signs reversed" note;
+- an S-630-1 one-way case;
+- a buffer or shoulder-taper length difference for left closures.
+
+**What this means:**
+- Left-side work on a one-way street is never drawn as its own typical application.
+- The left layouts that do exist (Case 5, TA-33 Note 1, TA-23) show what changes. L codes replace R codes. The taper and arrow panel move left. The temporary edge line is yellow on the left. The lengths stay the same.
+- Every Colorado one-way-street plan except single-shoulder work needs signs on both sides (Note 8), whichever side the work is on.
+
+## 4. Scope as it stands
+
+| Kind | Live? | On a confirmed one-way road today | Left side under the standards |
+|---|---|---|---|
+| shoulder | yes | Plans the right shoulder. Broadway runs it through the *divided* generator | TA-3 Note 1, a direct quote. Note 8 exempts a single shoulder |
+| near_intersection | yes | Forced undivided, with single-side signing. That breaks Note 8 for one-way streets on the right side too | Case 18 has no left variant. TA-23 is far side on a two-way street. No near-side left figure |
+| flagger_lane_closure | yes | Refused (`render_api.py:396, :441-455`) | n/a |
+| lane_closure_divided | gated | Gated (Rule 8) | TA-33 Note 1 and Case 5 cover it on directional roadways |
+
+**The couplet problem.** Detection marks every primary one-way as divided. The backend only sees `divided` + `roadDirection.oneway`, so Broadway and a true divided carriageway look identical to it. That makes "offer left only on one-way, non-divided roads" a wrong rule: Broadway would still get West only. Two rules would be correct:
+- **(i) For shoulder only:** offer left on any one-way carriageway, divided or not. TA-3 Note 1 treats "a divided or one-way street" the same for the left shoulder. On a true divided road this is the median-side shoulder, which #300 scoped out, so it needs a ruling.
+- **(ii) Relay the raw OSM facts** (`highway_class` is already on the picker's candidate) so the backend owns a "one-way street versus divided carriageway" predicate. This is the relay-fact pattern (#136/#158/#86/#177), and it's also what fixes finding 5.
+
+## 5. Options
+
+**A. Left-side shoulder work on confirmed one-way roads, with labels flipping and page 1 mirroring.** *(Recommended, after C.)*
+- **Backend:**
+  - `_side_options` adds the left edge on a confirmed one-way road.
+  - `render_api.py:262` allows `"left"` there and keeps the 400 everywhere else. Left with a non-shoulder kind gets an honest 400 that names the recovery (pick the right side, or the kind).
+  - `ScenarioParams.work_side` defaults to `"right"`, and the model keeps "positive offset = work side".
+  - The shoulder generators emit `W21-5aL` and the mirrored arrow-board label.
+  - Page 1 flips `_y_of` vertically for left work. The narrative and PDF words follow the side.
+- **Frontend:** `hasConfirmedSide` accepts `"left"`, as a mirror commented as a mirror. Nothing else; the control already renders whatever the backend offers.
+- **Pros:**
+  - It covers the one live kind with a direct MUTCD quote (TA-3 Note 1).
+  - Right-side output stays byte-identical.
+  - The `offset_ft > 0` checks stay valid.
+  - It's the smallest diff that delivers a usable left option.
+- **Cons:**
+  - It doesn't deliver #300's own example, closing the left curb *lane*, because no live lane kind runs on one-way roads (§4).
+  - Until C lands, Broadway's left plan is drawn on the phantom divided layout, the same defect its right plan has today.
+
+**B. A, plus left-lane closures for near_intersection.**
+- **Pros:** it's the lane case #300 names.
+- **Cons:**
+  - No source draws it: Case 18 is right-only, TA-23 is far side on a two-way street, and there is no near-side left figure.
+  - It needs W20-5L / W4-2L in `sign_codes.py`, and the hard-coded R legends in `plan_sheet.py:2955-2960` derived from the side.
+  - The §6N.11 ¶10 centerline-device question needs a reading.
+  - Rule 8 says no enabling on faith, so this is an enablement arc with its own evidence bar, not a mirror.
+  - Its right-side twin already violates Note 8 on one-way streets (`audit.py:1181-1188`), so that should be fixed first.
+
+**C. Fix the couplet first, as a separate issue.**
+- **What:**
+  - Relay the road class (or a carriageway fact) and let the backend decide "one-way street" versus "divided".
+  - Page 1 stops drawing a median and opposing traffic on one-way streets.
+  - Note 8's both-sides check runs on one-way streets, which `ScenarioParams` gains a flag for, as `validators.py:930-934` already asks.
+- **Pros:**
+  - It fixes a wrong drawing in today's right-side plans on every primary one-way. That's the larger honesty defect (Rule 10, P21).
+  - After it, (A)'s offering rule is a clean predicate instead of a shoulder-only special case.
+- **Cons:**
+  - It changes right-side output on primary one-ways: the title, page 1, the device counts, and possibly sign posting through Note 8. So it gets its own checkpoint and Rule 5 table.
+  - It delays #300.
+
+**D. A true geometric mirror (negate offsets for left work).** *(Not recommended.)* It breaks every `offset_ft > 0` check (`audit.py:917, :963, :1332`; `validators.py:1803`; `crew_narrative.py:239, :399`) for left plans, and it changes signatures across 53 call sites in 17 files (the code sweep's count, not recounted), for no visible gain over A's page-1 flip.
+
+**E. Status quo, documented.** Keep right-only and say so. #290's hand-check ruling already removed the greyed left option as noise (P13, P18), so this changes nothing and leaves #300 open.
+
+## 6. Rule 5: the churn prediction (for A, built on `a5b4e12`)
+
+**Behavior changes, deliberate and stated:**
+1. The side control on every confirmed one-way road offers **two** rows instead of one. Broadway will show "West side · southbound traffic" and "East side · southbound traffic", with labels from the existing producer. Two-way roads and the no-road headings don't change.
+2. `side: "left"` on a confirmed one-way road with the shoulder kind lays out and generates, where it used to 400. Left on a two-way road, left with no road, median, and left with any other kind still 400.
+3. A left-shoulder plan prints `W21-5aL`, the mirrored arrow-board label (its mode is cited at build time), words that say left, and page 1 mirrored vertically. These are new outputs; nothing existing changes.
+
+**Assertions predicted to change** (each stated in its commit):
+- `tests/test_corridor_geometry.py:235-249`: one-way offers `[right]` → `[right, left]`.
+- `tests/test_corridor_geometry.py:252-261`: divided one-way offers `[right]` → `[right, left]` **under rule (i).** It doesn't change under rule (ii) with C landed, because a true divided road still offers right only.
+- `conestruct/site/lib/scenarios/pin-model.test.ts:142`: `side: "left"` → `true`.
+- `conestruct/site/lib/scenarios/rail.test.ts:146-149`: left no longer holds the side blocker.
+
+**Predicted unchanged:**
+- `tests/test_work_start_wire.py:100-103`, because its left case has no road (`heading: "N"`) and stays refused.
+- `WhereBand.side-control.test.tsx`; `test_corridor_geometry.py:227-232, :264-273`.
+- **Every recorded baseline:**
+  - the 90 JSON files under `tests/snapshots/`;
+  - the 7 tiering fixtures, including `tiering-expectations.json`;
+  - the 12 `pdf_worst_case` fixtures;
+  - the 4 `cdot_s630_typicals`;
+  - the 2 `corridor` fixtures;
+  - the `tests/s630` harness.
+
+  All of them carry `side: "right"` or no side, and `work_side` defaults to `"right"`. **Standing predictor check:** `work_side` is a new field that is always present, so if it is serialized into any snapshot or wire payload, every baseline above moves. To prevent that, A keeps it off the wire response and out of the snapshot serializers. If it can't, this row flips to "all baselines move" before the diff.
+
+**New tests** (Rule 11, where the bug lives):
+- payload level: Broadway left shoulder → `W21-5aL` and the arrow label;
+- rendered output: page 1 with the work at the top for left work;
+- mounted flow: the side control with two options on a one-way road, plus the left-with-near-intersection 400 with its recovery.
+
+The tiering pin needs no new fixture unless the ruling adds one.
+
+**For C, roughly, until its own checkpoint:** primary one-way plans move off divided. Expect `broadway-sb` fixture consumers, `classify` tests, `test_note8_both_sides.py` and any snapshot recorded on a primary one-way to change. I haven't counted these; C's checkpoint counts them.
+
+## 7. Rulings needed
+
+1. **Order:** C (the couplet) first as its own issue, then A? Or A alone now under rule (i)? *Recommended: C, then A.*
+2. **Scope of #300:** shoulder only (A), with near-intersection left lanes split to an enablement issue (B)? *Recommended: yes.*
+3. **Rule (i) versus (ii)** for which roads offer the left edge. Under (i), left would also appear on true divided carriageways for shoulder work (the median side, which #300 scoped out). *Recommended: (ii), via C.*
+4. **Page 1 for left work:** a vertical mirror (work at the top, traffic still flowing left to right). *Recommended,* because drawing it at the bottom would show the work on the right of traffic.
+5. **Field name** `work_side` (CHOSEN) and the default `"right"`.
+
+If you rule C first, its issue draft goes to the chat in house style. I haven't filed or drafted anything on gh.

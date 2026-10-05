@@ -1,0 +1,73 @@
+Page 848              MUTCD 11th Edition
+
+  Guidance:
+
+07 If morning and evening peak hour vehicular traffic volumes in the two directions are uneven and the greater
+  volume is on the side where the work is being done in the right-hand lane, consideration should be given to
+  closing the inside lane for opposing vehicular traffic and making the lane available to the side with heavier
+  vehicular traffic, as shown in Figure 6P-31.
+
+08 If the larger vehicular traffic volume changes to the opposite direction at a different time of the day, the TTC
+  should be changed to allow two lanes for opposing vehicular traffic by moving the devices from the opposing lane
+  to the center line. When it is necessary to create a temporary center line that is not consistent with the pavement
+  markings, channelizing devices should be used and closely spaced.
+  Option:
+
+09 When closing a left-hand lane on a multi-lane undivided road, as vehicular traffic flow permits, the two interior
+  lanes may be closed, as shown in Figure 6P-30, to provide drivers and workers additional lateral clearance and to
+  provide access to the work space.
+  Standard:
+
+10 When only the left-hand lane is closed on undivided roads, channelizing devices shall be placed along
+  the center line as well as along the adjacent lane.
+
+  Guidance:
+
+11 When an interior lane is closed, an adjacent lane should also be considered for closure to provide additional
+  space for vehicles and materials and to facilitate the movement of equipment within the work space.
+
+12 When multiple lanes in one direction are closed, a capacity analysis should be made to determine the number
+  of lanes needed to accommodate motor vehicle traffic needs. Vehicular traffic should be moved over one lane at
+  a time. As shown in Figure 6P-37, the tapers should be separated by a distance of 2L, with L being determined by
+  the formulas in Tables 6B-3 and 6B-4.
+  Option:
+
+13 If operating speeds are 40 mph or less and the space approaching the work area does not permit moving traffic
+  over one lane at a time, a single continuous taper may be used.
+  Standard:
+
+14 When a directional roadway is closed, inapplicable WRONG WAY signs and markings, and other
+  existing traffic control devices at intersections within the temporary two-lane, two-way operations section
+  shall be covered, removed, or obliterated.
+
+  Option:
+15 When half the road is closed on an undivided highway, both directions of vehicular traffic may be
+
+  accommodated as shown in Figure 6P-32. When both interior lanes are closed, temporary traffic controls may be
+  used as provided in Figure 6P-30. When a roadway must be closed on a divided highway, a median crossover may
+  be used (see Section 6N.15).
+  Support:
+16 TTC for lane closures on five-lane roads is similar to other multi-lane undivided roads. Figure 6P-32 can be
+  adapted for use on five-lane roads. Figure 6P-35 can be used on a five-lane road for short-duration and mobile
+  operations.
+
+Section 6N.12 Work within the Traveled Way at an Intersection
+  Support:
+
+01 Chapter 6C and Sections 6M.04 and 6N.04 contain additional information regarding the steps to follow when
+  pedestrian or bicycle facilities are affected by the worksite.
+
+02 The typical applications for intersections are classified according to the location of the work space with respect
+  to the intersection area (as defined by the extension of the curb or edge lines). The three classifications are near
+  side, far side, and in-the-intersection. Work spaces often extend into more than one portion of the intersection.
+  For example, work in one quadrant often creates a near-side work space on one street and a far-side work space
+  on the cross street. In such instances, an appropriate TTC plan is obtained by combining features shown in two or
+  more of the intersection and pedestrian typical applications.
+
+03 TTC zones in the vicinity of intersections might block movements and interfere with normal road user flows.
+  Such conflicts frequently occur at more complex signalized intersections having such features as traffic signal
+  heads over particular lanes, lanes allocated to specific movements, multiple signal phases, signal detectors for
+  actuated control, and accessible pedestrian signals and detectors.
+
+Sect. 6N.11 to 6N.12  December 2023
+

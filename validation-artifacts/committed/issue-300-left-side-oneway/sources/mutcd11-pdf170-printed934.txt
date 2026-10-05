@@ -1,0 +1,53 @@
+Page 934     MUTCD 11th Edition
+
+                                Notes for Figure 6P-38—Typical Application 38
+
+                                       Interior Lane Closure on a Freeway
+
+Standard:
+
+    1. An arrow board shall be used when a freeway lane is closed. When more than one freeway lane is
+         closed, a separate arrow board shall be used for each closed lane.
+
+    2. If temporary traffic barriers are installed, they shall comply with the provisions and requirements
+         in Section 6M.02.
+
+    3. The barrier shall not be placed along the shifting taper. The lane shall first be shifted using
+         channelizing devices and pavement markings.
+
+    4. For long-term stationary work, existing conflicting pavement markings shall be removed and
+         temporary markings shall be installed before traffic patterns are changed.
+
+Guidance:
+
+    5. For a long-term closure, a barrier should be used to provide additional safety to the operation in the
+         closed interior lane. A buffer space should be used at the upstream end of the closed interior lane.
+
+    6. An arrow board displaying an arrow pointing to the right should be placed on the left-hand shoulder at
+         the beginning of the taper.
+
+    7. For long-term use, the broken lane lines should be made solid white in the two-lane section.
+Option:
+
+    8. As an alternative to initially closing the left-hand lane, as shown in the typical application, the right-hand
+         lane may be closed in advance of the interior lane closure with appropriate channelization and signs. The
+         Interior Lane Shift Ahead symbol sign may be mirrored to indicate a right lane shift.
+
+    9. A short, single row of channelizing devices in advance of the vehicular traffic split to restrict vehicular
+         traffic to their respective lanes may be added.
+
+    10. DO NOT PASS signs may be used.
+    11. If a paved shoulder having a minimum width of 10 feet and sufficient strength is available, the left-hand
+
+         and center lanes may be closed and motor vehicle traffic carried around the work space on the right-hand
+         lane and a right-hand shoulder.
+    12. A work vehicle with a truck-mounted attenuator may be used within the closed interior lane between the
+         buffer space and the work area.
+    13. Positive protection devices may be used per Section 6M.02.
+Guidance:
+
+    14. When a shoulder lane is used that cannot adequately accommodate trucks, trucks should be directed to
+         use the normal travel lanes.
+
+Sect. 6P.01  December 2023
+

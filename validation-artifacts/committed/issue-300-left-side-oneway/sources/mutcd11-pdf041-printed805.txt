@@ -1,0 +1,71 @@
+MUTCD 11th Edition  Page 805
+
+Section 6H.05 ROAD (STREET) CLOSED Sign (W20-3)
+  Guidance:
+
+01 The ROAD (STREET) CLOSED (W20-3) sign (see Figure 6H-1) should be used in advance of the point
+  where a highway is closed to all road users, or to all but local road users.
+  Option:
+
+02 The legend STREET may be substituted for ROAD and the distance legend may be either XX FEET,
+  XX MILES, or AHEAD.
+
+Section 6H.06 ONE LANE ROAD Sign (W20-4)
+  Standard:
+
+01 The ONE LANE ROAD (W20-4) sign (see Figure 6H-1) shall be used only in advance of that point
+  where motor vehicle traffic in both directions must use a common single lane (see Section 6E.01).
+  Option:
+
+02 The distance legend may be either XX FEET, XX MILES, or AHEAD.
+
+Section 6H.07 Lane(s) Closed Signs (W20-5, W20-5a, and W9-3)
+  Standard:
+
+01 The Lane(s) Closed sign (see Figure 6H-1) shall be used in advance of that point where one or more
+  through lanes of a multi-lane roadway are closed.
+
+02 For a single lane closure, the Lane Closed (W20-5) sign (see Figure 6H-1) shall use the legend RIGHT
+  (LEFT) LANE CLOSED. Where two or more adjacent lanes are closed, the W20-5a sign (see Figure 6H-1)
+  shall use the legend XX RIGHT (LEFT) LANES CLOSED.
+  Option:
+
+03 The distance legend may be either XX FEET, XX MILES, or AHEAD.
+  Guidance:
+
+04 The Interior Lane Shift (W9-3) sign (see Figure 6H-1) should be used in advance of that point where work
+  occupies an interior lane(s) and approaching motor vehicle traffic is directed to the right or left of the work zone
+  in the lane(s) by using a shifting taper to route traffic around the closed interior lane(s).
+
+Section 6H.08 Lane Ends Signs (W4-2 and W9-2a)
+  Option:
+
+01 The Lane Ends (W4-2) sign (see Figure 6H-1) may be used to warn drivers of the reduction in the number of
+  lanes for moving motor vehicle traffic in the direction of travel on a multi-lane roadway.
+  Guidance:
+
+02 The MERGE HERE TAKE TURNS (W9-2a) sign (see Figure 6H-1) should be used to identify the merge point
+  at which vehicles from alternate lanes take turns merging during Late Merge applications (see Section 6N.19).
+
+Section 6H.09 ON RAMP Plaque (W13-4P)
+  Guidance:
+
+01 When work is being done on a ramp, but the ramp remains open, the ON RAMP (W13-4P) plaque (see Figure 6H-1)
+  should be used to supplement the advance ROAD WORK sign.
+
+Section 6H.10 RAMP NARROWS Sign (W5-4)
+  Guidance:
+
+01 The RAMP NARROWS (W5-4) sign (see Figure 6H-1) should be used in advance of the point where work on a
+  ramp reduces the normal width of the ramp along a part or all of the ramp.
+
+Section 6H.11 SLOW TRAFFIC AHEAD Sign (W23-1)
+  Option:
+
+01 The SLOW TRAFFIC AHEAD (W23-1) sign (see Figure 6H-1) may be used on a shadow vehicle, usually
+  mounted on the rear of the most upstream shadow vehicle, along with other appropriate signs for mobile operations
+  to warn of slow moving work vehicles. A ROAD WORK (W20-1) sign may also be used with the SLOW
+  TRAFFIC AHEAD sign.
+
+December 2023       Sect. 6H.05 to 6H.11
+

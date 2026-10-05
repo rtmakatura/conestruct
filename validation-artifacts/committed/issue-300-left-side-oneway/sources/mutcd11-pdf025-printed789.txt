@@ -1,0 +1,73 @@
+MUTCD 11th Edition  Page 789
+
+          CHAPTER 6F. TEMPORARY TRAFFIC CONTROL ZONE SIGNS – GENERAL
+
+Section 6F.01 General Characteristics of TTC Zone Signs
+  Support:
+
+01 TTC zone signs convey both general and specific messages by means of words, symbols, and/or arrows and
+  have the same three categories as all road user signs: regulatory, warning, and guide.
+  Option:
+
+02 Where the color orange is required, the fluorescent orange color may also be used.
+  Support:
+
+03 The fluorescent version of orange provides higher conspicuity than standard orange, especially during twilight.
+  Option:
+
+04 Standard orange flags, flashing beacons, and/or flashing warning lights may be used in conjunction with signs.
+  Standard:
+
+05 When standard orange flags, flashing beacons, and/or flashing warning lights are used in conjunction
+  with a sign, they shall not block the sign face.
+
+06 Except as provided in Section 2A.07, the sizes for TTC signs and plaques shall be as shown in Tables
+  6G-1, 6H-1, and 6I-1. The sizes in the minimum column shall only be used on low-volume rural roads, local
+  streets, or roadways where the operating speed is 30 mph or less.
+
+  Option:
+07 The dimensions of signs and plaques shown in Tables 6G-1, 6H-1, and 6I-1 may be increased wherever
+
+  necessary for greater legibility or emphasis.
+  Guidance:
+
+08 Deviations from standard sizes as prescribed in this Manual should be in 6-inch increments.
+  Support:
+
+09 Sign design details are contained in the “Standard Highway Signs” publication (see Section 1A.05).
+10 Section 2A.04 contains additional information regarding the design of signs, including an Option allowing the
+
+  development of special word message signs if a standard word message or symbol sign is not available to convey
+  the necessary regulatory, warning, or guidance information.
+  Standard:
+
+11 All signs used at night shall be either retroreflective or illuminated to show the same shape and similar
+  color both day and night.
+
+12 The requirement for sign illumination shall not be considered to be satisfied by street, highway, or
+  strobe lighting.
+
+  Option:
+13 Sign illumination may be either internal or external.
+14 Signs may be made of rigid or flexible material.
+
+Section 6F.02 Sign Placement
+  Guidance:
+
+01 Signs should be located on the right-hand side of the roadway unless otherwise provided in this Manual.
+  Option:
+
+02 Where special emphasis is needed, signs may be placed on both the left-hand and right-hand sides of the
+  roadway. Signs mounted on portable supports may be placed within the roadway itself. Signs may also be mounted
+  on or above barricades.
+  Support:
+
+03 The provisions of this Section regarding mounting height apply unless otherwise provided for a particular sign
+  elsewhere in this Manual.
+  Standard:
+
+04 The minimum height, measured vertically from the bottom of the sign to the elevation of the near edge
+  of the pavement, of signs installed at the side of the road in rural areas shall be 5 feet (see Figure 6F-1).
+
+December 2023       Sect. 6F.01 to 6F.02
+
