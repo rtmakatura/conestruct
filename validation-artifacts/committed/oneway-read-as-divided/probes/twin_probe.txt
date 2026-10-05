@@ -1,0 +1,80 @@
+== broadway-sb  (39.7337, -104.98753)  #290/#300 pin, a downtown couplet street
+   pin way 131232822: highway=primary oneway=yes lanes=5 name='North Broadway' ref=None dual_carriageway=None bearing=180 dist_from_pin=11.0 m
+   same-name way 1491844986: oneway=yes lanes=5 bearing=180 (delta 0; same/other) dist_from_pin_way=5.5 m
+   same-name way 1491844987: oneway=yes lanes=5 bearing=180 (delta 0; same/other) dist_from_pin_way=16.5 m
+   same-name way 130912252: oneway=yes lanes=5 bearing=180 (delta 0; same/other) dist_from_pin_way=37.7 m
+   same-name way 130911270: oneway=yes lanes=5 bearing=180 (delta 0; same/other) dist_from_pin_way=175.7 m
+   same-name way 1148504695: oneway=yes lanes=5 bearing=180 (delta 0; same/other) dist_from_pin_way=183.1 m
+   (other) way 589281710 tertiary oneway=no name='West 11th Avenue' dist=16.4 m
+   (other) way 332563208 tertiary oneway=no name='East 11th Avenue' dist=19.7 m
+== lincoln-nb  (39.7337, -104.98593)  Broadway's couplet partner, one block east
+   pin way 131232817: highway=primary oneway=yes lanes=4 name='North Lincoln Street' ref=None dual_carriageway=None bearing=359 dist_from_pin=17.9 m
+   same-name way 1122659187: oneway=yes lanes=4 bearing=0 (delta 1; same/other) dist_from_pin_way=16.7 m
+   same-name way 645821549: oneway=yes lanes=4 bearing=0 (delta 1; same/other) dist_from_pin_way=175.2 m
+   same-name way 130894343: oneway=yes lanes=4 bearing=0 (delta 1; same/other) dist_from_pin_way=183.3 m
+   (other) way 628677791 tertiary oneway=no name='East 11th Avenue' dist=16.6 m
+   (other) way 589337001 tertiary oneway=no name='East 11th Avenue' dist=24.2 m
+   (other) way 589337002 tertiary oneway=no name='East 11th Avenue' dist=31.7 m
+== speer-blvd  (39.72926, -104.99009)  Speer Blvd near Broadway (Nominatim way 1121174298); carriageways either side of Cherry Creek
+   pin way 1121174298: highway=primary oneway=yes lanes=4 name='North Speer Boulevard' ref=None dual_carriageway=None bearing=325 dist_from_pin=0.5 m
+   same-name way 1121174297: oneway=yes lanes=5 bearing=329 (delta 3; same/other) dist_from_pin_way=28.9 m
+   same-name way 132741923: oneway=yes lanes=5 bearing=322 (delta 3; same/other) dist_from_pin_way=29.1 m
+   same-name way 646140569: oneway=yes lanes=4 bearing=332 (delta 7; same/other) dist_from_pin_way=47.8 m
+   same-name way 628677787: oneway=yes lanes=4 bearing=143 (delta 178; OPPOSITE) dist_from_pin_way=55.0 m
+   same-name way 132741921: oneway=yes lanes=4 bearing=145 (delta 180; OPPOSITE) dist_from_pin_way=55.1 m
+   same-name way 1121174299: oneway=yes lanes=4 bearing=322 (delta 3; same/other) dist_from_pin_way=75.4 m
+   same-name way 16985221: oneway=yes lanes=4 bearing=317 (delta 8; same/other) dist_from_pin_way=87.7 m
+   same-name way 132741915: oneway=yes lanes=4 bearing=330 (delta 5; same/other) dist_from_pin_way=93.7 m
+   same-name way 16989271: oneway=yes lanes=3 bearing=142 (delta 177; OPPOSITE) dist_from_pin_way=106.9 m
+   same-name way 16989042: oneway=yes lanes=4 bearing=151 (delta 174; OPPOSITE) dist_from_pin_way=110.3 m
+   same-name way 1395896518: oneway=yes lanes=3 bearing=124 (delta 159; OPPOSITE) dist_from_pin_way=335.3 m
+   (other) way 427704889 primary oneway=yes name='West 8th Avenue' dist=27.0 m
+   (other) way 32971319 primary oneway=yes name='West 8th Avenue' dist=27.0 m
+   (other) way 462699113 primary oneway=yes name='West 8th Avenue' dist=27.1 m
+== federal-blvd  (39.725, -105.0253)  Federal Blvd (CO 88) at ~W 4th Ave
+   pin way 334268752: highway=primary oneway=yes lanes=3 name='North Federal Boulevard' ref='CO 88' dual_carriageway=None bearing=180 dist_from_pin=7.0 m
+   same-name way 628707462: oneway=yes lanes=5 bearing=186 (delta 6; same/other) dist_from_pin_way=15.8 m
+   same-name way 37586007: oneway=yes lanes=5 bearing=180 (delta 0; same/other) dist_from_pin_way=20.7 m
+   same-name way 984207557: oneway=yes lanes=5 bearing=2 (delta 178; OPPOSITE) dist_from_pin_way=21.8 m
+   same-name way 701424181: oneway=yes lanes=5 bearing=1 (delta 179; OPPOSITE) dist_from_pin_way=21.8 m
+   same-name way 333740855: oneway=yes lanes=5 bearing=1 (delta 179; OPPOSITE) dist_from_pin_way=30.3 m
+   same-name way 334268754: oneway=yes lanes=3 bearing=177 (delta 3; same/other) dist_from_pin_way=50.9 m
+   same-name way 1055289495: oneway=yes lanes=4 bearing=2 (delta 178; OPPOSITE) dist_from_pin_way=55.7 m
+   same-name way 333740881: oneway=yes lanes=3 bearing=2 (delta 178; OPPOSITE) dist_from_pin_way=67.3 m
+   same-name way 628707464: oneway=yes lanes=5 bearing=176 (delta 3; same/other) dist_from_pin_way=75.7 m
+   same-name way 333740853: oneway=yes lanes=5 bearing=9 (delta 171; OPPOSITE) dist_from_pin_way=78.7 m
+   same-name way 334268749: oneway=yes lanes=5 bearing=176 (delta 3; same/other) dist_from_pin_way=81.7 m
+   same-name way 628707461: oneway=yes lanes=3 bearing=9 (delta 171; OPPOSITE) dist_from_pin_way=84.9 m
+   same-name way 628707459: oneway=yes lanes=3 bearing=1 (delta 178; OPPOSITE) dist_from_pin_way=86.1 m
+   same-name way 334268753: oneway=yes lanes=6 bearing=176 (delta 3; same/other) dist_from_pin_way=91.3 m
+   same-name way 333740862: oneway=yes lanes=3 bearing=9 (delta 171; OPPOSITE) dist_from_pin_way=95.3 m
+   same-name way 427878888: oneway=yes lanes=4 bearing=182 (delta 2; same/other) dist_from_pin_way=114.5 m
+   same-name way 628707463: oneway=yes lanes=6 bearing=179 (delta 1; same/other) dist_from_pin_way=117.9 m
+   same-name way 320465223: oneway=yes lanes=3 bearing=359 (delta 179; OPPOSITE) dist_from_pin_way=120.6 m
+   same-name way 628707460: oneway=yes lanes=3 bearing=2 (delta 178; OPPOSITE) dist_from_pin_way=130.5 m
+   same-name way 1368046026: oneway=yes lanes=4 bearing=182 (delta 2; same/other) dist_from_pin_way=154.8 m
+   same-name way 37586008: oneway=yes lanes=5 bearing=179 (delta 1; same/other) dist_from_pin_way=163.0 m
+   same-name way 427878886: oneway=yes lanes=3 bearing=181 (delta 1; same/other) dist_from_pin_way=179.5 m
+   same-name way 427878885: oneway=yes lanes=3 bearing=3 (delta 177; OPPOSITE) dist_from_pin_way=179.3 m
+   same-name way 1078447176: oneway=yes lanes=3 bearing=182 (delta 2; same/other) dist_from_pin_way=199.3 m
+   same-name way 427878887: oneway=yes lanes=3 bearing=2 (delta 177; OPPOSITE) dist_from_pin_way=222.5 m
+   same-name way 355204296: oneway=yes lanes=3 bearing=182 (delta 2; same/other) dist_from_pin_way=229.8 m
+   same-name way 427878889: oneway=yes lanes=3 bearing=1 (delta 178; OPPOSITE) dist_from_pin_way=234.2 m
+   same-name way 1078447158: oneway=yes lanes=3 bearing=357 (delta 177; OPPOSITE) dist_from_pin_way=262.5 m
+== colorado-blvd  (39.709, -104.9407)  Colorado Blvd (CO 2) at ~E Exposition Ave
+   pin way 16991616: highway=primary oneway=yes lanes=3 name='South Colorado Boulevard' ref='CO 2' dual_carriageway=None bearing=0 dist_from_pin=2.9 m
+   same-name way 42241079: oneway=yes lanes=3 bearing=180 (delta 180; OPPOSITE) dist_from_pin_way=14.8 m
+   same-name way 427673326: oneway=yes lanes=5 bearing=1 (delta 1; same/other) dist_from_pin_way=182.6 m
+   same-name way 945372181: oneway=yes lanes=3 bearing=180 (delta 180; OPPOSITE) dist_from_pin_way=184.2 m
+   same-name way 427846682: oneway=yes lanes=4 bearing=0 (delta 0; same/other) dist_from_pin_way=201.4 m
+   same-name way 1001463249: oneway=yes lanes=5 bearing=1 (delta 1; same/other) dist_from_pin_way=213.5 m
+   same-name way 427669083: oneway=yes lanes=5 bearing=1 (delta 1; same/other) dist_from_pin_way=221.5 m
+   same-name way 427883903: oneway=yes lanes=4 bearing=1 (delta 1; same/other) dist_from_pin_way=223.6 m
+   same-name way 131657781: oneway=yes lanes=3 bearing=1 (delta 1; same/other) dist_from_pin_way=232.2 m
+   same-name way 427669085: oneway=yes lanes=3 bearing=180 (delta 180; OPPOSITE) dist_from_pin_way=236.0 m
+   same-name way 427883898: oneway=yes lanes=5 bearing=180 (delta 180; OPPOSITE) dist_from_pin_way=267.1 m
+   same-name way 33068681: oneway=yes lanes=3 bearing=0 (delta 0; same/other) dist_from_pin_way=267.0 m
+   same-name way 42241864: oneway=yes lanes=3 bearing=2 (delta 2; same/other) dist_from_pin_way=269.6 m
+   (other) way 848783673 primary_link oneway=yes name=None dist=3.5 m
+   (other) way 876089553 primary_link oneway=yes name=None dist=80.4 m
+   (other) way 317930372 tertiary oneway=no name='East Virginia Avenue' dist=182.6 m
