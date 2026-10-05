@@ -31,6 +31,7 @@ from src.generation.layout import (
     generate_shoulder_closure_undivided,
     generate_work_beyond_shoulder,
 )
+from src.rules.carriageway import CarriagewayVerdict, carriageway_verdict
 from src.rules.validators import ApproachParams, DevicePlacement, ScenarioParams
 
 # ---------------------------------------------------------------------------
@@ -128,6 +129,40 @@ class RoadDirection(BaseModel):
 
     osmBearingDeg: float = Field(ge=0.0, lt=360.0)
     oneway: str | None = Field(default=None, max_length=8)
+
+
+class CarriagewayFacts(BaseModel):
+    """#308 — the confirmed road's raw carriageway facts, relayed from
+    detection so the backend can tell a one-way STREET from one side of a
+    divided road (``src/rules/carriageway.py`` is the one producer of the
+    verdict; rulings R83-R90).
+
+    * ``oneway`` / ``highwayClass`` — the OSM tag and class, verbatim.
+    * ``twinDistanceM`` — metres from the snapped point to the nearest way
+      with the same name (or ref), tagged one-way, whose travel runs the
+      opposite direction; None = no such way in the searched pool.
+    * ``twinSearched`` — whether that same-name pool answered (the
+      picker's best-effort second round trip).  False with no distance is
+      the "can't decide" case: the operator confirms (R83).
+    * ``confirmed`` — the operator's answer, when given.
+
+    Absent on the scenario ⇒ no carriageway signal: the scenario's own
+    ``divided`` stands, byte-identical to every plan before #308."""
+
+    oneway: str | None = Field(default=None, max_length=16)
+    highwayClass: str | None = Field(default=None, max_length=32)
+    twinDistanceM: float | None = Field(default=None, ge=0.0)
+    twinSearched: bool = False
+    confirmed: Literal["one_way_street", "divided"] | None = None
+
+    def verdict(self) -> CarriagewayVerdict:
+        return carriageway_verdict(
+            oneway=self.oneway,
+            highway_class=self.highwayClass,
+            twin_distance_m=self.twinDistanceM,
+            twin_searched=self.twinSearched,
+            confirmed=self.confirmed,
+        )
 
 
 class IntersectionPin(BaseModel):
@@ -469,6 +504,23 @@ class ShoulderScenario(
     signalDistanceM: float | None = Field(default=None, ge=0)
     # Override provenance (issue #177) — see ``DetectionOverride``.
     detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
+    # #308 — see ``CarriagewayFacts``.  None ⇒ ``divided`` stands as sent.
+    carriageway: CarriagewayFacts | None = None
+
+    def carriageway_verdict(self) -> CarriagewayVerdict:
+        """The backend's verdict on the road (``src/rules/carriageway.py``);
+        ``not_applicable`` when no facts were relayed."""
+        return self.carriageway.verdict() if self.carriageway else "not_applicable"
+
+    def plans_divided(self) -> bool:
+        """Whether the plan is built divided: the verdict when it decides,
+        the scenario's own ``divided`` otherwise.  ``undecided`` never
+        reaches a generator (``render_api._ensure_carriageway_decided``);
+        it reads as not divided here so validation stays total."""
+        verdict = self.carriageway_verdict()
+        if verdict == "not_applicable":
+            return self.divided
+        return verdict == "divided"
 
     @model_validator(mode="after")
     def _check_work_zone_speed(self) -> Self:
@@ -480,8 +532,15 @@ class ShoulderScenario(
 
     @model_validator(mode="after")
     def _check_drawable_road_width(self) -> Self:
-        # Mirrored in conestruct/site/lib/scenarios/validation.ts.
-        shoulder_ft = 10.0 if self.divided else 8.0
+        # Mirrored in conestruct/site/lib/scenarios/validation.ts.  #308:
+        # the shoulder follows the plan's carriageway verdict, the same
+        # value the bridge builds (``plan_shoulder_width_ft``).
+        shoulder_ft = plan_shoulder_width_ft(
+            "shoulder",
+            self.plans_divided(),
+            self.roadType,
+            one_way_street=self.carriageway_verdict() == "one_way_street",
+        )
         half_road = self.lanes * self.laneWidth + shoulder_ft
         if half_road > MAX_DRAWABLE_HALF_ROAD_FT:
             max_width = (MAX_DRAWABLE_HALF_ROAD_FT - shoulder_ft) / self.lanes
@@ -1072,7 +1131,22 @@ def _jurisdiction_name(scenario: Scenario) -> str | None:
     return str(load_jurisdiction(key)["name"])
 
 
-def plan_shoulder_width_ft(kind: str, divided: bool | None, road_type: str | None) -> float:
+# CHOSEN (#308 ruling R88, 2026-10-05): the shoulder a one-way street's plan
+# builds.  No source: no MUTCD, S-630-1, Colorado Supplement or Denver
+# (PT-116.1, Rule 22.3) text found sets a shoulder width for a one-way
+# street.  8 ft is the value the undivided branch already builds, so a
+# one-way street's plan keeps the undivided geometry it is drawn from.
+# The audit discloses it as CHOSEN on every one-way-street plan.
+ONE_WAY_STREET_SHOULDER_WIDTH_FT = 8.0
+
+
+def plan_shoulder_width_ft(
+    kind: str,
+    divided: bool | None,
+    road_type: str | None,
+    *,
+    one_way_street: bool = False,
+) -> float:
     """The shoulder width the PLAN builds for a scenario kind — one producer.
 
     Every ``scenario_to_call`` branch reads it.  (#267 made the picker's
@@ -1084,6 +1158,8 @@ def plan_shoulder_width_ft(kind: str, divided: bool | None, road_type: str | Non
     kinds (shoulder, work_beyond_shoulder) feed it to a taper.
     """
     if kind == "shoulder":
+        if one_way_street:
+            return ONE_WAY_STREET_SHOULDER_WIDTH_FT
         return 10.0 if divided else 8.0
     if kind == "work_beyond_shoulder":
         return 10.0 if road_type in ("rural_divided", "freeway") else 8.0
@@ -1175,6 +1251,10 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             if scenario.workZoneSpeed is not None and scenario.workZoneSpeed < scenario.speed
             else None
         )
+        # #308: the carriageway verdict decides divided-ness when the road
+        # is one-way (``CarriagewayFacts``); otherwise ``divided`` stands.
+        divided = scenario.plans_divided()
+        one_way_street = scenario.carriageway_verdict() == "one_way_street"
         params = ScenarioParams(
             speed_mph=scenario.speed,
             num_lanes=scenario.lanes,
@@ -1183,18 +1263,20 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
             shoulder_width_ft=plan_shoulder_width_ft(
-                "shoulder", scenario.divided, scenario.roadType
+                "shoulder", divided, scenario.roadType, one_way_street=one_way_street
             ),
             is_night=scenario.night,
-            is_divided=scenario.divided,
+            is_divided=divided,
             jurisdiction="CDOT",
             work_zone_speed_mph=wz_speed,
+            one_way_street=one_way_street,
             **meta_kw,
         )
+        # A one-way street signs one side, the closed shoulder's (R90:
+        # Note 8's single-shoulder exception; MUTCD 11th Ed. Fig 6P-3
+        # Note 1, p. 864) — the undivided generator's single-side chain.
         generator = (
-            generate_shoulder_closure_divided
-            if scenario.divided
-            else generate_shoulder_closure_undivided
+            generate_shoulder_closure_divided if divided else generate_shoulder_closure_undivided
         )
         return _validated(params), generator, {}
 

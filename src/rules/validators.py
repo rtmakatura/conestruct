@@ -237,6 +237,15 @@ class ScenarioParams:
     # ``build_corridor``.  Appended with a default so every existing
     # constructor is untouched.
     pin_model: str = "corridor_end"
+    # #308 — the road is a one-way STREET (``src/rules/carriageway.py``'s
+    # verdict, bridged by ``scenario_to_call``): every lane runs one way,
+    # with a curb on each side and no median.  A different fact from
+    # ``is_divided`` — S-630-1 Sheet 2 General Note 8 names "divided
+    # highways" and "one-way streets" separately — so it is its own field,
+    # never folded into ``is_divided`` (the conflation #308 fixed).  When
+    # True, ``is_divided`` is False and ``num_lanes`` counts every lane.
+    # Appended with a default so every existing constructor is untouched.
+    one_way_street: bool = False
 
 
 @dataclass(frozen=True)

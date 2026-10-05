@@ -38,6 +38,7 @@ from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
     CrossStreetStationError,
     Scenario,
+    ShoulderScenario,
     flagger_lane_ineligible_high,
     lanes_arithmetic_mismatch,
     scenario_to_call,
@@ -320,6 +321,31 @@ def _ensure_preview_allowed(scenario: Scenario) -> None:
         )
 
 
+# #308 — the refusal's recovery names the confirm row's two answers in the
+# WHAT band, word for word (lib/scenarios/auto-apply.ts mirrors the
+# predicate to arm that row; the backend owns it).
+CARRIAGEWAY_UNDECIDED_MESSAGE = (
+    "This road is one-way, and the map couldn't tell whether it's a one-way "
+    "street or one side of a divided road. Choose “One-way street” or “One "
+    "side of a divided road” in the plan details, then generate again."
+)
+
+
+def _ensure_carriageway_decided(scenario: Scenario) -> None:
+    """Refuse a shoulder plan on a one-way road the twin test could not
+    decide (#308, ruling R83: "If the test can't decide, the operator
+    confirms; the plan doesn't guess").  Honest 400 + the recovery the
+    WHAT band's confirm row answers (the relay-fact pattern)."""
+    if not isinstance(scenario, ShoulderScenario):
+        return
+    if scenario.carriageway_verdict() != "undecided":
+        return
+    raise HTTPException(
+        status_code=400,
+        detail={"error": "carriageway_undecided", "message": CARRIAGEWAY_UNDECIDED_MESSAGE},
+    )
+
+
 def _ensure_lane_eligible(scenario: Scenario) -> None:
     """Refuse a road outside the lane-eligibility window (issues #136/#86).
 
@@ -370,7 +396,12 @@ def _ensure_lane_eligible(scenario: Scenario) -> None:
     if getattr(scenario, "detectedLanesTotal", None) != 1:
         return
     # Divided carriageways tag ``lanes`` per-carriageway — 1 is normal there.
-    if getattr(scenario, "divided", False):
+    # A one-way street (#308) tags every lane, all one direction — 1 is a
+    # real one-lane one-way street, which the model represents honestly.
+    if isinstance(scenario, ShoulderScenario):
+        if scenario.plans_divided() or scenario.carriageway_verdict() == "one_way_street":
+            return
+    elif getattr(scenario, "divided", False):
         return
     if scenario.kind == "flagger_lane_closure":
         remedy = (
@@ -630,6 +661,11 @@ def _placements_for(
     # render/quote/audit/breakdown path funnels through, so a genuinely
     # single-lane road is refused uniformly across every surface, including
     # the audit/breakdown that drives the StatusBar "GENERATION BLOCKED".
+    # Carriageway gate (#308) — a one-way road whose same-name search did
+    # not run can't be called a one-way street or a divided road; the
+    # operator answers before anything is drawn (ruling R83).  First, so
+    # the single-lane gate below reads a decided carriageway.
+    _ensure_carriageway_decided(scenario)
     _ensure_lane_eligible(scenario)
     # Directionality eligibility gate (issue #158) — refuse a flagger plan on
     # a one-way road at the same chokepoint, for the same uniform coverage.
