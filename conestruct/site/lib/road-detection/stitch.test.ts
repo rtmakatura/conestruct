@@ -4,7 +4,7 @@
 //
 // The fixture's pre_fix_served_geometry is production's pre-fix output
 // at the E Bayaud pin (2026-08-19, sha 118b3e5): a 26-vertex chain that
-// hairpins through the 1480386062-67 couplet and ends 20 ft east of the
+// hairpins through the 1480386062-67 carriageway pair and ends 20 ft east of the
 // pin.  These tests were red against that algorithm (the extraction
 // commit) — the red run is recorded in the arc's evidence directory.
 
@@ -87,9 +87,9 @@ describe("stitchChainDetailed on the recorded E Bayaud pool", () => {
     expect(maxLon).toBeGreaterThan(-104.93);
   });
 
-  it("never doubles back — one couplet half only, the direction-agreeing one", () => {
+  it("never doubles back — one carriageway-pair half only, the direction-agreeing one", () => {
     expect(maxAdjacentReversal(result.chain)).toBeLessThan(STITCH_REVERSAL_DEG);
-    // The 1480386062-67 couplet: the chain may ride ONE half, never
+    // The 1480386062-67 carriageway pair: the chain may ride ONE half, never
     // both (the old walk consumed both and hairpinned).  Distinctive
     // interior vertices: south/eastbound half (way 1480386062) vs
     // north/westbound half (way 1480386063).
@@ -171,8 +171,8 @@ describe("stitchChainDetailed on synthetic pools", () => {
     expect(r.usedWayIds).toEqual([1]);
   });
 
-  it("takes one thread through a oneway couplet loop, preferring the agreeing half", () => {
-    // Own two-way stub, then a couplet: two parallel oneway halves that
+  it("takes one thread through a one-way carriageway-pair loop, preferring the agreeing half", () => {
+    // Own two-way stub, then a carriageway pair: two parallel oneway halves that
     // share both end nodes (the loop the old stitcher walked all the
     // way around).
     const own = mkWay(1, [[39.7, -105.001], [39.7, -105.0]]);

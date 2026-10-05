@@ -9,12 +9,12 @@
 //      chain stopped at the near curb and the station frame drew the
 //      remaining corridor as a straight tangent ray (20 ft of 3,110 ft
 //      covered at the reproduction pin).
-//   2. Oneway couplets: both halves join by endpoints, so the walk
+//   2. One-way carriageway pairs: both halves join by endpoints, so the walk
 //      consumed the return half and the chain doubled back on itself
 //      (a hairpin — adjacent segment headings reversing 179°),
 //      corrupting every arc-length station behind it.
 // The rebuilt stitcher: progress-constrained joins (a joined way must
-// continue roughly the chain's end heading — couplet returns ~180° and
+// continue roughly the chain's end heading — a pair's return half ~180° and
 // perpendicular branches ~90° are refused), bounded-gap bridging across
 // divided crossings, a oneway tie-break so the chain prefers one
 // consistent travel thread, and a post-stitch reversal invariant that
@@ -59,7 +59,7 @@ export const STITCH_GAP_MAX_M = 60;
 // CHOSEN (#210, 2026-08-19): a joined way's initial heading (and a
 // bridge connector's heading) must lie within this many degrees of the
 // chain's end heading.  Accepts urban curvature and skewed crossings;
-// refuses couplet return halves (~180°) and perpendicular same-name
+// refuses a carriageway pair's return half (~180°) and perpendicular same-name
 // branches (~90°).  Known recorded cost: a true switchback AT A WAY
 // BOUNDARY truncates the chain there — honest disclosed coverage
 // (#211) instead of a followed switchback.  Lookout Mountain Road's
@@ -70,7 +70,7 @@ export const STITCH_HEADING_TOL_DEG = 60;
 // post-stitch invariant treats as a hairpin.  Real stitched chains
 // measured max 44° adjacent delta post-fix (six-site table in the arc
 // evidence); the recorded defect chain reverses 179°.  Roads do not
-// reverse direction between adjacent polyline segments; couplet
+// reverse direction between adjacent polyline segments; carriageway-pair
 // double-backs do.
 export const STITCH_REVERSAL_DEG = 150;
 
@@ -203,7 +203,7 @@ export interface StitchResult {
  * candidate's own way.  Joins prefer exact shared endpoints, then
  * bounded-gap bridges (≤ STITCH_GAP_MAX_M); every join must continue
  * the chain's end heading within STITCH_HEADING_TOL_DEG, which refuses
- * couplet return halves and perpendicular branches.  Ties prefer the
+ * carriageway-pair return halves and perpendicular branches.  Ties prefer the
  * way whose oneway travel direction runs along the chain's thread, then
  * the smaller gap, then the smaller way id (determinism).  Failure mode
  * is refusal: the chain simply stops growing — reduced coverage the

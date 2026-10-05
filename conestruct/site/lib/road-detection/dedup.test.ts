@@ -89,8 +89,8 @@ describe("dedupCandidates", () => {
     expect(result[0].way_id).toBe("missing-oneway");
   });
 
-  it("keeps different-name one-way couplet streets distinct", () => {
-    // Downtown Denver: Stout St (NE) and Champa St (SW) are a couplet
+  it("keeps differently named paired one-way streets distinct", () => {
+    // Downtown Denver: Stout St (NE) and Champa St (SW) are a one-way
     // pair with different names — trivially distinct by name key.
     const result = dedupCandidates([
       mkCandidate({ way_id: "stout", name: "Stout Street", bearing: 45, snap_distance_m: 5 }),

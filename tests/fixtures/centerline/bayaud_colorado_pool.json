@@ -3,7 +3,7 @@
   "source": "Overpass API (OpenStreetMap), query way(around:1700,39.71466,-104.94071)[highway][name='East Bayaud Avenue']; out geom tags",
   "fetched": "2026-08-19",
   "license": "ODbL (OpenStreetMap contributors)",
-  "purpose": "Recorded same-name way pool at the E Bayaud Ave / S Colorado Blvd pin for #210 regression tests. The pre-fix stitcher (endpoint-identity joins only) produced a 26-vertex chain that hairpins through the 1480386062-67 couplet and ends 20 ft east of the pin, so the 3,110 ft corridor drew as a straight 85.3-degree tangent ray. pre_fix_served_geometry is that chain exactly as production served it (2026-08-19, sha 118b3e5) - the red baseline."
+  "purpose": "Recorded same-name way pool at the E Bayaud Ave / S Colorado Blvd pin for #210 regression tests. The pre-fix stitcher (endpoint-identity joins only) produced a 26-vertex chain that hairpins through the 1480386062-67 carriageway pair and ends 20 ft east of the pin, so the 3,110 ft corridor drew as a straight 85.3-degree tangent ray. pre_fix_served_geometry is that chain exactly as production served it (2026-08-19, sha 118b3e5) - the red baseline."
  },
  "pin": [
   39.71466,

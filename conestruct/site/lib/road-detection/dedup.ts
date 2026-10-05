@@ -5,7 +5,7 @@ import type { RoadCandidate } from "./types";
 // 180°-opposed carriageways always fall in opposite octants because
 // 180° rotation is well past the 45° bin width, so divided same-name
 // roads stay distinct without needing the OSM `oneway` tag (which is
-// inconsistently applied in real data — see scripts/test_dedup_couplet.mjs).
+// inconsistently applied in real data at downtown Denver, d83470d).
 export function bearingOctant(deg: number): string {
   const n = ((deg % 360) + 360) % 360;
   if (n < 22.5 || n >= 337.5) return "N";
