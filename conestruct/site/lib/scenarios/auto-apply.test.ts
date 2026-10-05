@@ -399,3 +399,63 @@ describe("applyClassification workZoneSpeed normalization (#198 family 4)", () =
     expect(next.kind === "shoulder" && next.workZoneSpeed).toBe(45);
   });
 });
+
+describe("applyClassification relays the carriageway facts (#308)", () => {
+  const ONE_WAY_FACTS = {
+    oneway: "yes",
+    highwayClass: "primary",
+    twinDistanceM: null,
+    twinSearched: true,
+  };
+  const oneWayStreet: RoadClassification = {
+    ...classification(30),
+    roadType: "urban_arterial",
+    divided: false,
+    carriageway: ONE_WAY_FACTS,
+  };
+
+  it("writes the facts and the mirror's divided on a shoulder plan", () => {
+    const { scenario } = applyClassification(SHOULDER, oneWayStreet);
+    if (scenario.kind !== "shoulder") throw new Error("kind");
+    expect(scenario.carriageway).toEqual(ONE_WAY_FACTS);
+    expect(scenario.divided).toBe(false);
+  });
+
+  it("a fresh detection drops an earlier operator answer", () => {
+    const answered: ShoulderScenario = {
+      ...SHOULDER,
+      carriageway: { ...ONE_WAY_FACTS, twinSearched: false, confirmed: "divided" },
+    };
+    const { scenario } = applyClassification(answered, oneWayStreet);
+    if (scenario.kind !== "shoulder") throw new Error("kind");
+    expect(scenario.carriageway?.confirmed).toBeUndefined();
+  });
+
+  it("a two-way road clears stale facts, so its payload carries none", () => {
+    const stale: ShoulderScenario = { ...SHOULDER, carriageway: ONE_WAY_FACTS };
+    const { scenario } = applyClassification(stale, classification(55));
+    expect(JSON.parse(JSON.stringify(scenario)).carriageway).toBeUndefined();
+  });
+});
+
+describe("matchRefusalAffordance — the carriageway gate (#308)", () => {
+  const facts = { oneway: "yes", highwayClass: "primary", twinDistanceM: null };
+
+  it("points at the confirm row when the same-name search didn't run", () => {
+    const s: ShoulderScenario = { ...SHOULDER, carriageway: { ...facts, twinSearched: false } };
+    expect(matchRefusalAffordance(s)?.code).toBe("shoulder_carriageway");
+  });
+
+  it("is quiet once the operator answers", () => {
+    const s: ShoulderScenario = {
+      ...SHOULDER,
+      carriageway: { ...facts, twinSearched: false, confirmed: "one_way_street" },
+    };
+    expect(matchRefusalAffordance(s)).toBeNull();
+  });
+
+  it("is quiet when the test decided", () => {
+    const s: ShoulderScenario = { ...SHOULDER, carriageway: { ...facts, twinSearched: true } };
+    expect(matchRefusalAffordance(s)).toBeNull();
+  });
+});

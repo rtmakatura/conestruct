@@ -1,3 +1,4 @@
+import type { CarriagewayFacts } from "../road-detection/carriageway";
 import type { ConfirmedRoad } from "../road-detection/types";
 
 export type RoadType =
@@ -448,6 +449,12 @@ export interface ShoulderScenario extends JurisdictionPlanFields {
   lanes: number;
   laneWidth: number;
   divided: boolean;
+  /** #308 — the confirmed road's raw carriageway facts (street-class
+   *  one-ways only), relayed for the backend's one-way street / divided
+   *  verdict (src/rules/carriageway.py).  `confirmed` is the operator's
+   *  answer from the WHAT band's confirm row.  Absent on every other road,
+   *  so its payload is unchanged. */
+  carriageway?: CarriagewayFacts;
 
   workType: ShoulderWorkType;
   duration: Duration;

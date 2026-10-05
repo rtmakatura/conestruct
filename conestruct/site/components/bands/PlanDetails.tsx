@@ -36,20 +36,47 @@
 // (rule 3).
 
 import type { ReactNode } from "react";
-import type { Scenario, ScenarioKind } from "@/lib/scenarios";
+import type { Scenario, ScenarioKind, ShoulderScenario } from "@/lib/scenarios";
 import { PLAN_DETAILS } from "@/lib/scenarios/what-cells";
+import { laneWidthCeilingFt } from "@/lib/scenarios/validation";
+import {
+  carriagewayApplies,
+  carriagewayVerdict,
+  TWIN_RADIUS_M,
+  type CarriagewayFacts,
+} from "@/lib/road-detection/carriageway";
 import { useWriteLock } from "../WriteLock";
 import { CellAction, FieldCell } from "./FieldCell";
 import type { SectionSlot } from "../JurisdictionSection";
 
+/** #308 — the carriageway facts when the road is a street-class one-way
+ *  (the only roads the question applies to); null otherwise. */
+function oneWayFacts(scenario: Scenario): CarriagewayFacts | null {
+  if (scenario.kind !== "shoulder" || !scenario.carriageway) return null;
+  const f = scenario.carriageway;
+  return carriagewayApplies(f.oneway, f.highwayClass) ? f : null;
+}
+
 /** Does this scenario show the explicit divided toggle?  #85: every road
  *  type but `urban_arterial` derives `divided` from itself, so the
- *  toggle is a cell only where the value is genuinely the operator's. */
+ *  toggle is a cell only where the value is genuinely the operator's.
+ *  #308: on a one-way road the carriageway cell carries the same fact,
+ *  so the toggle steps aside — one control per fact (P2). */
 export function showsDividedToggle(scenario: Scenario): boolean {
   return (
     PLAN_DETAILS[scenario.kind]?.dividedToggle === true &&
-    scenario.roadType === "urban_arterial"
+    scenario.roadType === "urban_arterial" &&
+    oneWayFacts(scenario) === null
   );
+}
+
+/** #308 — the carriageway cell's provenance: whose answer it shows. */
+function carriagewayProvenance(f: CarriagewayFacts): string {
+  if (f.confirmed) return "your answer · operator-set from here on";
+  const verdict = carriagewayVerdict(f);
+  if (verdict === "undecided") return "⚠ needs you · the map couldn't tell";
+  if (verdict === "divided") return `detected · a same-name carriageway ${f.twinDistanceM} m away`;
+  return `detected · no same-name carriageway within ${TWIN_RADIUS_M} m`;
 }
 
 /** One cell, in the band's register — the WHAT grid's `Cell` in every
@@ -124,7 +151,8 @@ function TwoWay({
   id: string;
   on: string;
   off: string;
-  value: boolean;
+  /** null = neither answer yet (#308's undecided carriageway). */
+  value: boolean | null;
   onChange: (next: boolean) => void;
   locked: boolean;
 }) {
@@ -188,6 +216,7 @@ export function PlanDetails({
 
   const wz = "workZoneSpeed" in scenario ? scenario.workZoneSpeed : undefined;
   const delta = wz !== undefined ? scenario.speed - wz : 0;
+  const carriageway = oneWayFacts(scenario);
 
   return (
     <div className="a-subgroup" data-testid="plan-details">
@@ -317,6 +346,42 @@ export function PlanDetails({
                   lanes: v ? 2 : 1,
                 } as Scenario)
               }
+              locked={locked}
+            />
+          </Cell>
+        )}
+
+        {carriageway && (
+          <Cell
+            label="One-way street or divided road?"
+            provenance={carriagewayProvenance(carriageway)}
+            testid="carriageway"
+          >
+            <TwoWay
+              id="One-way street or divided road?"
+              off="One-way street"
+              on="One side of a divided road"
+              value={
+                carriagewayVerdict(carriageway) === "undecided"
+                  ? null
+                  : carriagewayVerdict(carriageway) === "divided"
+                    ? true
+                    : false
+              }
+              onChange={(v) => {
+                // #308 (R83): the operator's answer rides the facts to the
+                // backend, which builds from it; divided-ness follows, and
+                // the lanes refit if divided's wider shoulder would overrun
+                // the sheet (the same ceiling auto-apply fits to).
+                const s = scenario as ShoulderScenario;
+                const ceiling = laneWidthCeilingFt("shoulder", s.lanes, v);
+                setScenario({
+                  ...s,
+                  divided: v,
+                  laneWidth: Math.min(s.laneWidth, ceiling),
+                  carriageway: { ...carriageway, confirmed: v ? "divided" : "one_way_street" },
+                });
+              }}
               locked={locked}
             />
           </Cell>

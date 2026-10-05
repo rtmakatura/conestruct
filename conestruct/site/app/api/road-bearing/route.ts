@@ -21,6 +21,7 @@ import {
   trimChain,
   truncateAtReversal,
 } from "@/lib/road-detection/stitch";
+import { nearestOppositeTwinM } from "@/lib/road-detection/twin";
 import { hasCoords, usableWays, validRuns } from "@/lib/road-detection/usable-ways";
 import type {
   RoadCandidate,
@@ -481,27 +482,36 @@ function buildResponse(
 // endpointKey / stitchChain / trimChain moved verbatim to
 // lib/road-detection/stitch.ts (#210 extraction).
 
+// Quotes/backslashes in a name would need Overpass escaping; such names
+// are vanishingly rare — those candidates keep own-way geometry, and
+// (#308) their same-name search is reported as not run.
+function sameNameSearchable(c: RoadCandidate): boolean {
+  return Boolean(
+    (c.name && !/["\\]/.test(c.name)) || (!c.name && c.ref && !/["\\]/.test(c.ref)),
+  );
+}
+
 // Second Overpass round trip: same-name/ref ways within
 // GEOMETRY_RADIUS_M, stitched per candidate.  Best-effort — on any
 // failure candidates keep their own-way geometry from buildResponse.
+// #308: returns the same-name pool it read (the twin evidence's source),
+// or null when the round trip didn't answer or wasn't sent.
 async function extendCandidateGeometry(
   candidates: RoadCandidate[],
   lat: number,
   lng: number,
   signal: AbortSignal | undefined,
-): Promise<void> {
+): Promise<OverpassWay[] | null> {
   const filters = new Map<string, string>();
   for (const c of candidates) {
-    // Quotes/backslashes in a name would need Overpass escaping; such
-    // names are vanishingly rare — those candidates keep own-way
-    // geometry.
-    if (c.name && !/["\\]/.test(c.name)) {
+    if (!sameNameSearchable(c)) continue;
+    if (c.name) {
       filters.set(`name:${c.name}`, `["name"="${c.name}"]`);
-    } else if (!c.name && c.ref && !/["\\]/.test(c.ref)) {
+    } else if (c.ref) {
       filters.set(`ref:${c.ref}`, `["ref"="${c.ref}"]`);
     }
   }
-  if (filters.size === 0) return;
+  if (filters.size === 0) return null;
   const parts = [...filters.values()]
     .map(
       (f) =>
@@ -509,11 +519,12 @@ async function extendCandidateGeometry(
     )
     .join("");
   const payload = await overpassPost(`[out:json][timeout:10];(${parts});out geom tags;`, signal);
+  if (payload === null) return null;
   // #305: (d) as above at GEOMETRY_RADIUS_M; and the stitcher reads each
   // way as one polyline, so a way with any unresolved point stays out of
   // the pool (its candidate keeps own-way geometry, the best-effort path).
-  const ways = usableWays(
-    (payload?.elements ?? []).filter(
+  const answered = usableWays(
+    (payload.elements ?? []).filter(
       (el): el is OverpassWay =>
         el.type === "way" &&
         Array.isArray((el as OverpassWay).geometry) &&
@@ -522,10 +533,11 @@ async function extendCandidateGeometry(
     lat,
     lng,
     GEOMETRY_RADIUS_M,
-  ).ways.filter((w) => (w.geometry ?? []).every(hasCoords)) as Array<
+  ).ways;
+  const ways = answered.filter((w) => (w.geometry ?? []).every(hasCoords)) as Array<
     OverpassWay & { geometry: OverpassNode[] }
   >;
-  if (ways.length === 0) return;
+  if (ways.length === 0) return answered;
 
   for (const c of candidates) {
     const pool = ways.filter((w) =>
@@ -544,6 +556,20 @@ async function extendCandidateGeometry(
     if (chain.length >= 2) {
       c.geometry = trimChain(chain, c.snapped_lat, c.snapped_lng);
     }
+  }
+  return answered;
+}
+
+// #308: each one-way candidate's twin evidence, from the same-name pool
+// (null = that round trip didn't answer).  Two-way candidates gain no
+// field, so their wire shape is unchanged.  A raw fact only: the backend
+// decides one-way street vs divided (src/rules/carriageway.py).
+function attachTwinEvidence(candidates: RoadCandidate[], pool: OverpassWay[] | null): void {
+  for (const c of candidates) {
+    if (c.tags.oneway !== "yes" && c.tags.oneway !== "-1") continue;
+    const searched = pool !== null && sameNameSearchable(c);
+    c.twin_searched = searched;
+    c.twin_distance_m = searched ? nearestOppositeTwinM(c, pool) : null;
   }
 }
 
@@ -597,8 +623,9 @@ export async function POST(req: NextRequest) {
 
   const response = buildResponse(payload, lat, lng);
   if (response.candidates.length > 0) {
+    let pool: OverpassWay[] | null = null;
     try {
-      await extendCandidateGeometry(response.candidates, lat, lng, req.signal);
+      pool = await extendCandidateGeometry(response.candidates, lat, lng, req.signal);
     } catch (err) {
       if ((err as Error).name === "AbortError") {
         return new Response("Aborted", { status: 499 });
@@ -607,8 +634,9 @@ export async function POST(req: NextRequest) {
       // degradation (the s2-arc5 "Colfax transient": a 17-pt own-way
       // chain served where re-probes served 191 pts) is pinned by
       // route.test.ts; surfacing it on the wire is #224 phase-1+
-      // scope, not #213's.
+      // scope, not #213's.  #308: the twin search reads as not run.
     }
+    attachTwinEvidence(response.candidates, pool);
   }
   return Response.json(response);
 }

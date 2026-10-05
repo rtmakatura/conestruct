@@ -1,4 +1,11 @@
 import type { RoadType } from "../scenarios";
+import {
+  carriagewayApplies,
+  carriagewayVerdict,
+  TWIN_RADIUS_M,
+  type CarriagewayFacts,
+  type TwinEvidence,
+} from "./carriageway";
 import type { StreetClass } from "../jurisdiction";
 import type {
   Confidence,
@@ -102,12 +109,12 @@ function roadTypeAndDivided(
   roadType: RoadType;
   divided: boolean;
   topLevelConf: Confidence;
-  // #123: true ONLY on the branch where the oneway tag genuinely drove
-  // divided (the primary couplet inference).  The rationale string keys
-  // on this instead of re-deriving the branch: a trunk's divided: true
-  // comes from its class regardless of oneway, and secondary/tertiary/
-  // unclassified one-ways return divided: false — neither may claim the
-  // couplet → divided inference.
+  // #123: true ONLY on the branch where the oneway tag itself drove
+  // divided — since #308, a one-way primary_link (a ramp or slip lane,
+  // outside the twin rule).  The rationale string keys on this instead of
+  // re-deriving the branch: a trunk's divided: true comes from its class
+  // regardless of oneway, and a street-class one-way is decided by the
+  // twin rule (lib/road-detection/carriageway.ts), not by this table.
   dividedFromOneway: boolean;
 } {
   const cls = highwayClass;
@@ -128,7 +135,11 @@ function roadTypeAndDivided(
     };
   }
   if (cls === "primary" || cls === "primary_link") {
-    if (oneway) {
+    // #308: only the link keeps the oneway → divided reading (a ramp is
+    // not a one-way street; Note 8 names multi-lane ramps on their own).
+    // A one-way primary street is decided by the twin rule in
+    // classifyFromOsmTags, from the two-way row below.
+    if (oneway && cls === "primary_link") {
       return {
         roadType: isUrban ? "urban_arterial" : "rural_divided",
         divided: true,
@@ -186,6 +197,10 @@ export interface ClassifyInput {
   /** Meters to the nearest detected traffic-signal node (issue #173);
    *  undefined when the route reported none. */
   signalDistanceM?: number;
+  /** #308 — the candidate's twin evidence (one-way candidates only);
+   *  undefined = no evidence, which a street-class one-way reads as an
+   *  undecided carriageway. */
+  twin?: TwinEvidence;
 }
 
 // Pure: tags + place context → full RoadClassification.  Used both by
@@ -201,8 +216,27 @@ export function classifyFromOsmTags(
   const { highwayClass, name, ref, tags } = input;
   const oneway = tags.oneway === "yes" || tags.oneway === "-1";
 
-  const { roadType, divided, topLevelConf, dividedFromOneway } =
-    roadTypeAndDivided(highwayClass, oneway, isUrban);
+  const classRow = roadTypeAndDivided(highwayClass, oneway, isUrban);
+  const { topLevelConf, dividedFromOneway } = classRow;
+  let { roadType, divided } = classRow;
+
+  // #308: a street-class one-way is a one-way street or one side of a
+  // divided road, decided by its same-name twin (the mirror of the
+  // backend's predicate; R83).  The raw facts ride the scenario so the
+  // backend decides for itself.
+  const carriageway: CarriagewayFacts | undefined = carriagewayApplies(tags.oneway, highwayClass)
+    ? {
+        oneway: tags.oneway,
+        highwayClass,
+        twinDistanceM: input.twin?.distanceM ?? null,
+        twinSearched: input.twin?.searched ?? false,
+      }
+    : undefined;
+  const verdict = carriagewayVerdict(carriageway);
+  if (carriageway) {
+    divided = verdict === "divided";
+    if (!isUrban) roadType = divided ? "rural_divided" : "rural_undivided";
+  }
 
   const speedFromOsm = parseMaxspeedToMph(tags.maxspeed);
   const lanesFromOsm = lanesPerDirectionFromTags(tags);
@@ -223,7 +257,9 @@ export function classifyFromOsmTags(
       ? "high"
       : highwayClass === "trunk" ||
           highwayClass === "trunk_link" ||
-          (highwayClass.startsWith("primary") && oneway)
+          (highwayClass === "primary_link" && oneway) ||
+          verdict === "divided" ||
+          verdict === "one_way_street"
         ? "medium"
         : "low";
 
@@ -325,6 +361,9 @@ export function classifyFromOsmTags(
     // lane-confidence gate.  Undefined when the route reported no signal,
     // so a signal-free site never trips a false block.
     signalDistanceM: input.signalDistanceM,
+    // #308: the raw carriageway facts, street-class one-ways only — the
+    // backend decides one-way street vs divided from them.
+    ...(carriageway ? { carriageway } : {}),
     speedLimitMph: speedFromOsm ?? undefined,
     confidence: topLevelConf,
     source: "osm-tags",
@@ -361,20 +400,24 @@ export function classifyFromOsmTags(
       divided: {
         value: divided,
         confidence: fieldDividedConf,
-        // #123: the couplet claim is emitted ONLY on the branch where
-        // the oneway tag actually drove divided: true (primary).  A
-        // trunk one-way's divided comes from its class; a secondary/
-        // tertiary/unclassified one-way returns divided: false — the
-        // rationale must describe the value that was returned, never a
-        // decision that wasn't made.
+        // #123: the rationale must describe the value that was returned,
+        // never a decision that wasn't made.  #308: a street-class
+        // one-way names the twin evidence that decided it; only a
+        // one-way primary_link still reads divided from the tag.
         source:
           fieldDividedConf === "high"
             ? `OSM class=${highwayClass} (always divided)`
-            : dividedFromOneway
-              ? `OSM oneway=yes (couplet → divided)`
-              : `inferred from class=${highwayClass}`,
-        // A motorway is definitively divided; a couplet or class guess
-        // is an inference.
+            : verdict === "divided"
+              ? `OSM oneway=yes; same-name carriageway ${carriageway?.twinDistanceM} m away → divided`
+              : verdict === "one_way_street"
+                ? `OSM oneway=yes; no same-name carriageway within ${TWIN_RADIUS_M} m → one-way street`
+                : verdict === "undecided"
+                  ? `OSM oneway=yes; the same-name search didn't run → confirm one-way street or divided`
+                  : dividedFromOneway
+                    ? `OSM oneway=yes on a ${highwayClass} (a ramp or slip lane) → divided`
+                    : `inferred from class=${highwayClass}`,
+        // A motorway is definitively divided; the twin reading or a class
+        // guess is an inference.
         method: fieldDividedConf === "high" ? "measured" : "inferred",
         rawData: `class=${highwayClass}, oneway=${oneway}`,
       },
@@ -427,6 +470,11 @@ export function classifyFromCandidate(
       ref: candidate.ref,
       tags: candidate.tags,
       signalDistanceM: candidate.signal_distance_m ?? undefined,
+      // #308: the route's twin evidence, when it measured one.
+      twin:
+        candidate.twin_searched === undefined
+          ? undefined
+          : { distanceM: candidate.twin_distance_m ?? null, searched: candidate.twin_searched },
     },
     isUrban,
     placeName,

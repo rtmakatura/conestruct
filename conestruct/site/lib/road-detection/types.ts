@@ -6,6 +6,7 @@
 
 import type { RoadType } from "../scenarios";
 import type { RoadFieldOverrides } from "../scenarios/overrides";
+import type { CarriagewayFacts } from "./carriageway";
 
 export type Confidence = "high" | "medium" | "low";
 
@@ -85,6 +86,17 @@ export interface RoadCandidate {
    * their corridors simply stay on the straight frame).
    */
   geometry?: Array<[number, number]> | null;
+  /**
+   * #308 — the twin evidence, present on one-way candidates only: metres
+   * to the nearest way with the same name (or ref), tagged one-way,
+   * running the opposite direction (null = none in the searched pool),
+   * and whether that same-name search ran (it rides the best-effort
+   * centerline round trip).  Raw facts; the backend decides one-way
+   * street vs divided (src/rules/carriageway.py).  Optional, so two-way
+   * and pre-#308 candidates are unchanged.
+   */
+  twin_distance_m?: number | null;
+  twin_searched?: boolean;
 }
 
 // Full response from /api/road-bearing.  `isUrban` and `placeName`
@@ -185,6 +197,10 @@ export interface RoadClassification {
    *  signal-proximity lane-confidence gate.  Undefined when the
    *  detection route reported no signal near the candidate. */
   signalDistanceM?: number;
+  /** #308 — the raw carriageway facts (street-class one-ways only),
+   *  relayed on the shoulder scenario for the backend's one-way street /
+   *  divided verdict.  Undefined on every other road. */
+  carriageway?: CarriagewayFacts;
   speedLimitMph?: number;
   confidence: Confidence;
   source: "osm-tags";

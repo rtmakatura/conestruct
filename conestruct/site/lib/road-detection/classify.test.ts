@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  classifyFromCandidate,
   classifyFromOsmTags,
   lanesPerDirectionFromTags,
   parseMaxspeedToMph,
 } from "@/lib/road-detection/classify";
+import type { RoadCandidate } from "@/lib/road-detection/types";
 
 // These tests pin classifyFromOsmTags's output for the field/tag
 // combinations the existing tool relies on.  Output shape and values
@@ -180,7 +182,11 @@ describe("classifyFromOsmTags", () => {
     expect(r.divided).toBe(true);
   });
 
-  it("classifies primary + oneway as divided (couplet)", () => {
+  // #308 (RULE 5, stated in the checkpoint's churn table): primary + oneway
+  // was divided by the tag alone.  Now the same-name twin decides; with no
+  // twin evidence the road is undecided, which reads as not divided until
+  // the operator confirms (ruling R83).
+  it("classifies primary + oneway with no twin evidence as undecided, not divided", () => {
     const r = classifyFromOsmTags(
       {
         highwayClass: "primary",
@@ -192,7 +198,13 @@ describe("classifyFromOsmTags", () => {
       "Denver",
     );
     expect(r.roadType).toBe("urban_arterial");
-    expect(r.divided).toBe(true);
+    expect(r.divided).toBe(false);
+    expect(r.carriageway).toEqual({
+      oneway: "yes",
+      highwayClass: "primary",
+      twinDistanceM: null,
+      twinSearched: false,
+    });
   });
 
   it("uses OSM maxspeed at high confidence when present", () => {
@@ -458,11 +470,10 @@ describe("classifyFromOsmTags", () => {
 });
 
 // #123: the divided rationale must describe the value that was actually
-// returned.  The couplet → divided claim is emitted only on the primary
-// branch, where the oneway tag genuinely drives divided: true; a trunk
-// one-way's divided attributes to its class (the GO's tightening); the
-// secondary/tertiary/unclassified one-ways return divided: false and
-// must not claim the inference.
+// returned; a trunk one-way's divided attributes to its class (the GO's
+// tightening).  #308: a street-class one-way is decided by its same-name
+// twin, and its rationale names that evidence (R89 retired the old word
+// for the oneway → divided reading).
 describe("divided rationale/value agreement (#123)", () => {
   const onewayTags = {
     oneway: "yes",
@@ -479,42 +490,113 @@ describe("divided rationale/value agreement (#123)", () => {
       "Denver",
     );
 
-  it("primary one-way: divided true, couplet rationale (the branch that earns it)", () => {
-    const r = classify("primary");
-    expect(r.divided).toBe(true);
-    expect(r.fields.divided.source).toBe("OSM oneway=yes (couplet → divided)");
+  // #308: the twin rule (a mirror of src/rules/carriageway.py, display
+  // only) decides every street-class one-way; R89 retired the old word.
+  const withTwin = (highwayClass: string, distanceM: number | null, searched = true) =>
+    classifyFromOsmTags(
+      {
+        highwayClass,
+        name: "One Way St",
+        ref: null,
+        tags: onewayTags,
+        twin: { distanceM, searched },
+      },
+      true,
+      "Denver",
+    );
+
+  it("primary one-way, no same-name twin: a one-way street, not divided", () => {
+    const r = withTwin("primary", null);
+    expect(r.divided).toBe(false);
+    expect(r.fields.divided.source).toBe(
+      "OSM oneway=yes; no same-name carriageway within 100 m → one-way street",
+    );
   });
 
-  it("trunk one-way: divided true attributes to the class, not the couplet", () => {
-    const r = classify("trunk");
+  it("primary one-way with a same-name twin inside 100 m: divided", () => {
+    const r = withTwin("primary", 21.7);
     expect(r.divided).toBe(true);
-    expect(r.fields.divided.source).toBe("inferred from class=trunk");
+    expect(r.fields.divided.source).toBe(
+      "OSM oneway=yes; same-name carriageway 21.7 m away → divided",
+    );
   });
 
-  it.each(["secondary", "tertiary", "unclassified"])(
-    "%s one-way: divided false, no couplet claim",
+  it("a twin beyond 100 m does not make it divided", () => {
+    expect(withTwin("primary", 100.1).divided).toBe(false);
+  });
+
+  it.each(["secondary", "tertiary", "unclassified", "residential"])(
+    "%s one-way takes the twin rule too (R85)",
     (hc) => {
-      const r = classify(hc);
-      expect(r.divided).toBe(false);
-      expect(r.fields.divided.source).toBe(`inferred from class=${hc}`);
+      expect(withTwin(hc, null).divided).toBe(false);
+      expect(withTwin(hc, 17.2).divided).toBe(true);
     },
   );
 
-  it("invariant: the couplet claim never accompanies divided: false (all one-way classes)", () => {
+  it.each(["primary", "secondary", "tertiary", "unclassified"])(
+    "%s one-way whose same-name search didn't run says so",
+    (hc) => {
+      const r = classify(hc);
+      expect(r.divided).toBe(false);
+      expect(r.fields.divided.source).toBe(
+        "OSM oneway=yes; the same-name search didn't run → confirm one-way street or divided",
+      );
+    },
+  );
+
+  it("rural: a one-way street is rural_undivided, a twinned one rural_divided", () => {
+    const rural = (d: number | null) =>
+      classifyFromOsmTags(
+        {
+          highwayClass: "primary",
+          name: "One Way St",
+          ref: null,
+          tags: onewayTags,
+          twin: { distanceM: d, searched: true },
+        },
+        false,
+        null,
+      );
+    expect(rural(null).roadType).toBe("rural_undivided");
+    expect(rural(13).roadType).toBe("rural_divided");
+  });
+
+  it("trunk one-way: divided by class, no carriageway facts relayed", () => {
+    const r = classify("trunk");
+    expect(r.divided).toBe(true);
+    expect(r.fields.divided.source).toBe("inferred from class=trunk");
+    expect(r.carriageway).toBeUndefined();
+  });
+
+  it("primary_link one-way keeps its class rule (a ramp is not a one-way street)", () => {
+    const r = classify("primary_link");
+    expect(r.divided).toBe(true);
+    expect(r.carriageway).toBeUndefined();
+  });
+
+  it("R89: no rationale anywhere says couplet", () => {
     for (const hc of [
       "motorway",
       "trunk",
       "primary",
+      "primary_link",
       "secondary",
       "tertiary",
       "unclassified",
       "residential",
     ]) {
-      const r = classify(hc);
-      if (r.fields.divided.source.includes("couplet")) {
-        expect(r.divided).toBe(true);
-      }
+      expect(classify(hc).fields.divided.source).not.toMatch(/couplet/i);
+      expect(withTwin(hc, 20).fields.divided.source).not.toMatch(/couplet/i);
     }
+  });
+
+  it("relays the carriageway facts for the backend on a street-class one-way", () => {
+    expect(withTwin("primary", 21.7).carriageway).toEqual({
+      oneway: "yes",
+      highwayClass: "primary",
+      twinDistanceM: 21.7,
+      twinSearched: true,
+    });
   });
 
   it("two-way roads keep their existing rationale (no churn off the oneway path)", () => {
@@ -530,5 +612,61 @@ describe("divided rationale/value agreement (#123)", () => {
     );
     expect(r.divided).toBe(false);
     expect(r.fields.divided.source).toBe("inferred from class=secondary");
+  });
+});
+
+describe("classifyFromCandidate carries the route's twin evidence (#308)", () => {
+  const candidate = (twin: Partial<RoadCandidate>): RoadCandidate => ({
+    way_id: "131232822",
+    highway_class: "primary",
+    name: "North Broadway",
+    ref: null,
+    bearing: 180,
+    snap_distance_m: 11,
+    snapped_lat: 39.7337,
+    snapped_lng: -104.98753,
+    tags: {
+      oneway: "yes",
+      maxspeed: "30 mph",
+      lanes: "5",
+      lanes_forward: null,
+      lanes_backward: null,
+      lanes_both_ways: null,
+      turn_lanes: "||||right",
+      turn_lanes_forward: null,
+      turn_lanes_backward: null,
+    },
+    signal_distance_m: null,
+    ...twin,
+  });
+
+  it("North Broadway, no same-name twin: a one-way street", () => {
+    const r = classifyFromCandidate(
+      candidate({ twin_distance_m: null, twin_searched: true }),
+      true,
+      "Denver",
+    );
+    expect(r.divided).toBe(false);
+    expect(r.carriageway).toEqual({
+      oneway: "yes",
+      highwayClass: "primary",
+      twinDistanceM: null,
+      twinSearched: true,
+    });
+  });
+
+  it("a twin 21.7 m away: divided", () => {
+    const r = classifyFromCandidate(
+      candidate({ twin_distance_m: 21.7, twin_searched: true }),
+      true,
+      "Denver",
+    );
+    expect(r.divided).toBe(true);
+  });
+
+  it("a pre-#308 candidate with no twin fields: undecided", () => {
+    const r = classifyFromCandidate(candidate({}), true, "Denver");
+    expect(r.divided).toBe(false);
+    expect(r.carriageway?.twinSearched).toBe(false);
   });
 });

@@ -10,6 +10,7 @@
 // — it's an operator decision based on work conditions, not a detectable
 // road property. Q6 of V1-Wide Item 1 review (2026-06-06).
 
+import { carriagewayVerdict } from "../road-detection/carriageway";
 import type { RoadClassification } from "../road-detection/types";
 import { clampLanesToDomain, laneWidthCeilingFt } from "./validation";
 import type {
@@ -113,6 +114,7 @@ export interface RefusalAffordance {
     | "flagger_single_lane"
     | "flagger_oneway"
     | "flagger_lane_confidence"
+    | "shoulder_carriageway"
     | "shoulder_lane_confidence"
     | "ni_lane_confidence"
     | "site_scan_unavailable";
@@ -201,9 +203,21 @@ export function matchRefusalAffordance(
         }
       : null;
   }
-  // shoulder (#173): the signal-proximity lane-confidence gate is the
-  // kind's only refusal; the remedy is the Road section's lane edit,
-  // which clears all four lane relays (shoulder_lane_edit).
+  // shoulder (#308): the carriageway gate runs first at the backend
+  // chokepoint (render_api._ensure_carriageway_decided), so it is matched
+  // first here — the mirror of the backend predicate
+  // (lib/road-detection/carriageway.ts).  The remedy is the WHAT band's
+  // confirm row ("One-way street" / "One side of a divided road").
+  if (scenario.kind === "shoulder" && carriagewayVerdict(scenario.carriageway) === "undecided") {
+    return {
+      code: "shoulder_carriageway",
+      pointer:
+        "The map couldn't tell whether this one-way road is a one-way street or one side of a divided road. Choose one in the plan details to proceed.",
+    };
+  }
+  // shoulder (#173): the signal-proximity lane-confidence gate; the
+  // remedy is the Road section's lane edit, which clears all four lane
+  // relays (shoulder_lane_edit).
   if (scenario.kind === "shoulder") {
     return signalProximityLaneConfidence(scenario)
       ? {
@@ -505,6 +519,11 @@ export function applyClassification(
           // signal-proximity lane-confidence gate (issue #173).  Pure
           // fact; drives no geometry here.
           signalDistanceM: c.signalDistanceM,
+          // #308: the raw carriageway facts for the backend's one-way
+          // street / divided verdict.  Undefined on every other road —
+          // which also clears a previous road's facts and any operator
+          // answer about them (a fresh detection is a fresh question).
+          carriageway: c.carriageway,
           // Fresh detection supersedes any recorded override (#177):
           // the old dispute was about relays this patch just replaced.
           detectionOverrides: undefined,
