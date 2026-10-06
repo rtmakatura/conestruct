@@ -294,3 +294,28 @@ Built as mocked up, under R98, R100 and R101.
    - `type-census.test.ts` caught ad-hoc font sizes in my first CSS. The marker takes the `tr-prov` role instead.
 4. **An honesty gap, carried over:** a field's ⚠ handoff note (e.g. "snapped from 62 mph OSM detection") sits in the popover, as it sat behind the details toggle before. The marker shows the line's word ("✓ measured"), not the note's ⚠. This is no change from #289, but a ⚠ in the marker when a note exists is worth a ruling.
 5. **#276's reserve:** the jurisdiction line's height reserve now applies inside the popover. Only the rare "not evaluated" error shows inline and grows that row (P1), where today the reserve held it.
+
+
+---
+
+## Build B (the Setup line), branch `declutter-b-setup` (stacked on A): outcome against the prediction
+
+Built as mocked up (R101).
+
+**What changed:**
+- `ResultsHead.tsx` renders `setupSegments()`, unchanged, as label / value pairs: Work, Road, Length, Speed, Lanes, Road type, City, Dates. The grid is 4 × 2 here and 2 × 4 at ≤600. Labels and values sit on shared edges, and a long road name wraps inside its cell.
+- **Every value keeps its button,** with its `setup-link-*` test id, its "Change <field>: <value>" name and its target (P22):
+  - Lanes is two buttons, "2 × 12 ft".
+  - Unset City and Dates read "◌ not set".
+  - A pair with no segment (a kind with no lane count) isn't drawn (Rule 10).
+- The leader is hidden beside the grid, and the hint "pick a value to change it" drops under the values.
+
+**Browser leg** (local, the same capture rig): `build-b/setup-{1440,390}.png`. The line is about 165 px at 1440 and 300 px at 390, against today's 92 and 204. That's the height cost the checkpoint predicted.
+
+**Tests:**
+- `ResultsHead.grid.test.tsx` (4): 3 red before the build. The 4th (the hint stays) is today's behaviour.
+- Frontend total: 191 files, 1982 passed; `tsc` clean.
+
+**Churn:** as predicted, one assertion. `GeneratorShell.value-links.test.tsx` read the " · 65 mph · " sentence; it now reads Speed / 65 mph as a pair. The ids, names and targets are unchanged, so no other suite moved.
+
+**Flagged for Ryan:** "City" is the mocked-up label, and it's what was built. Some jurisdictions aren't cities, though, such as the counties and the E-470 toll authority (#276's longest line reads "toll & authority"). "Jurisdiction" would be the accurate word.

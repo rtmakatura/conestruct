@@ -161,8 +161,11 @@ describe("defect 2 — the setup line's values are the links", () => {
     expect(narrow).toMatch(
       /\.workbench \.a-fact \.a-lk,\s*\.workbench \.a-fact \.a-fact-prov \{\s*grid-column: 2;/,
     );
-    // The line still reads as one sentence.
-    expect(screen.getByTestId("setup-values").textContent).toContain(" · 65 mph · ");
+    // R96 B: the line is a grid of label / value pairs now, not one
+    // sentence — the speed reads under its own label.
+    const speedPair = screen.getByTestId("setup-link-speed").closest(".a-setup-pair")!;
+    expect(speedPair.querySelector(".a-setup-k")!.textContent).toBe("Speed");
+    expect(speedPair.querySelector(".a-setup-v")!.textContent).toBe("65 mph");
   });
 
   it("each link says which field it is, not just its value", async () => {

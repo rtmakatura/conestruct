@@ -66,9 +66,40 @@
 import type { Scenario } from "@/lib/scenarios";
 import {
   setupSegments,
+  type SetupSegment,
   type SetupSegmentKey,
 } from "@/lib/scenarios/band-facts";
 import { useWriteLock } from "./WriteLock";
+
+/** R96 B (declutter-three-surfaces, R101 "as mocked up",
+ *  mockups/setup.html) — the Setup line as a grid of label / value pairs,
+ *  4 × 2 at 1440 and 2 × 4 at ≤600, labels and values on shared edges
+ *  (P4).  The segments are `setupSegments()`'s, unchanged: each value is
+ *  the button it was, with its test id, its accessible name and its
+ *  target (P22).  Where the label now names the field, the value drops
+ *  the word ("2", "12 ft" under LANES), and an unset value reads with
+ *  ◌ + "not set" (P9).  A pair whose segments are all absent (rule 10:
+ *  a kind with no lane count) is not drawn. */
+const SETUP_GRID: ReadonlyArray<{ label: string; keys: readonly SetupSegmentKey[] }> = [
+  { label: "Work", keys: ["kind"] },
+  { label: "Road", keys: ["location"] },
+  { label: "Length", keys: ["extent"] },
+  { label: "Speed", keys: ["speed"] },
+  { label: "Lanes", keys: ["lanes", "laneWidth"] },
+  { label: "Road type", keys: ["roadType"] },
+  // Ryan's word (R96's direction, R101).  Flagged in the checkpoint: some
+  // jurisdictions are counties or authorities, not cities.
+  { label: "City", keys: ["jurisdiction"] },
+  { label: "Dates", keys: ["dates"] },
+];
+
+function gridText(s: SetupSegment, scenario: Scenario): string {
+  if (s.key === "lanes") return String((scenario as { lanes: number }).lanes);
+  if (s.key === "laneWidth") return `${(scenario as { laneWidth: number }).laneWidth} ft`;
+  if (s.key === "jurisdiction" && !scenario.jurisdiction_key) return "◌ not set";
+  if (s.key === "dates" && !scenario.schedule?.work_date) return "◌ not set";
+  return s.text;
+}
 
 export function ResultsHead({
   reserve = false,
@@ -119,34 +150,51 @@ export function ResultsHead({
           <div className="a-mid">
             <span className="tr-field">Setup</span>
             <span className="a-lead" aria-hidden />
-            <span className="a-val" data-testid="setup-values">
-              {setupSegments(scenario, jurisdictionName).map((s, i) => (
-                <span key={s.key}>
-                  {i > 0 && " · "}
-                  {onChangeValue ? (
-                    // #252 (ruling b) / rule 118: each link leads to a
-                    // write, so it declares itself and goes quiet under
-                    // the lock — `aria-disabled`, not `disabled`, so it
-                    // stays focusable while the working band is up.
-                    <button
-                      type="button"
-                      className="a-val-lk"
-                      data-write=""
-                      aria-disabled={locked || undefined}
-                      aria-label={s.label}
-                      onClick={() => {
-                        if (!locked) onChangeValue(s.key);
-                      }}
-                      data-testid={`setup-link-${s.key}`}
-                    >
-                      {s.text}
-                    </button>
-                  ) : (
-                    s.text
-                  )}
-                </span>
-              ))}
-            </span>
+            <div className="a-val a-setup-grid" data-testid="setup-values">
+              {(() => {
+                const segs = setupSegments(scenario, jurisdictionName);
+                const byKey = new Map(segs.map((x) => [x.key, x] as const));
+                return SETUP_GRID.map((pair) => {
+                  const present = pair.keys
+                    .map((k) => byKey.get(k))
+                    .filter((x): x is SetupSegment => x !== undefined);
+                  if (present.length === 0) return null;
+                  return (
+                    <div key={pair.label} className="a-setup-pair">
+                      <span className="a-setup-k tr-step">{pair.label}</span>
+                      <span className="a-setup-v">
+                        {present.map((seg, i) => (
+                          <span key={seg.key}>
+                            {i > 0 && " × "}
+                            {onChangeValue ? (
+                              // #252 (ruling b) / rule 118: each link leads to a
+                              // write, so it declares itself and goes quiet under
+                              // the lock — `aria-disabled`, not `disabled`, so it
+                              // stays focusable while the working band is up.
+                              <button
+                                type="button"
+                                className="a-val-lk"
+                                data-write=""
+                                aria-disabled={locked || undefined}
+                                aria-label={seg.label}
+                                onClick={() => {
+                                  if (!locked) onChangeValue(seg.key);
+                                }}
+                                data-testid={`setup-link-${seg.key}`}
+                              >
+                                {gridText(seg, scenario)}
+                              </button>
+                            ) : (
+                              gridText(seg, scenario)
+                            )}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
           </div>
           {onChangeValue && (
             // Rule 134: a link OR a provenance word.  The links are the

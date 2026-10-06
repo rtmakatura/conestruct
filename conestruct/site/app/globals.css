@@ -4079,6 +4079,49 @@ input[type="number"] {
   line-height: 1.45;
   color: var(--ink-on-dark);
 }
+/* R96 B (declutter-three-surfaces, R101, mockups/setup.html) — the Setup
+   line as label / value pairs: 4 × 2 here, 2 × 4 at ≤600, every label and
+   value on its column's edge (P4); a long road name wraps inside its
+   cell, never widening it (P6).  The leader has nothing to lead to beside
+   a grid, and the hint drops under the values. */
+.workbench .a-setup-grid {
+  flex: 1 1 0;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px 16px;
+}
+.workbench .a-setup-pair {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  min-width: 0;
+}
+.workbench .a-setup-k {
+  color: var(--ink-faint);
+}
+.workbench .a-setup-v {
+  overflow-wrap: anywhere;
+}
+.workbench .a-fact .a-mid:has(> .a-setup-grid) > .a-lead {
+  display: none;
+}
+.workbench .a-fact:has(.a-setup-grid) {
+  grid-template-columns: 20px minmax(0, 1fr);
+  row-gap: 8px;
+}
+.workbench .a-fact:has(.a-setup-grid) .a-fact-prov {
+  grid-column: 2;
+}
+@media (max-width: 600px) {
+  .workbench .a-setup-grid {
+    flex-basis: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .workbench .a-fact .a-mid:has(> .a-setup-grid) {
+    flex-wrap: wrap;
+  }
+}
 
 /* Rule 134 — the fact link.  Rule 15 puts its hit box at 32 px at 1440
    and 44 px at 380; #264 died with the rail, and this is the rule that
