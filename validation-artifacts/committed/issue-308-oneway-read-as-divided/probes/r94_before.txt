@@ -1,0 +1,22 @@
+HEAD a748a7b1aa0840cf4d14fecf76cb559f901208ad  tag before
+
+== broadway: POST /render/pdf -> 200
+   verdict=one_way_street  is_divided=False  one_way_street=True  lanes=4  lane_w=10.5  shoulder_w=8.0  devices=37
+   drawn road y: top 513.0  bottom 310.0  (PLAN_Y_CENTER 485.0)
+   BARRICADE_TYPE_III          station  1000.0  offset   52.0 ft  page y  303.0  near road
+   BARRICADE_TYPE_III          station  1000.0  offset  -52.0 ft  page y  667.0  OFF THE DRAWN ROAD
+   BARRICADE_TYPE_III          station     0.0  offset   52.0 ft  page y  303.0  near road
+   BARRICADE_TYPE_III          station     0.0  offset  -52.0 ft  page y  667.0  OFF THE DRAWN ROAD
+   SIGN_GENERIC         R9-9   station  1000.0  offset   52.0 ft  page y  303.0  near road
+   SIGN_GENERIC         R9-9   station     0.0  offset   52.0 ft  page y  303.0  near road
+
+== colorado: POST /render/pdf -> 200
+   verdict=divided  is_divided=True  one_way_street=False  lanes=3  lane_w=11.0  shoulder_w=10.0  devices=40
+   drawn road y: top 644.5  bottom 325.5  (PLAN_Y_CENTER 485.0)
+   BARRICADE_TYPE_III          station  1000.0  offset   45.0 ft  page y  318.5  near road
+   BARRICADE_TYPE_III          station  1000.0  offset  -45.0 ft  page y  651.5  OFF THE DRAWN ROAD
+   BARRICADE_TYPE_III          station     0.0  offset   45.0 ft  page y  318.5  near road
+   BARRICADE_TYPE_III          station     0.0  offset  -45.0 ft  page y  651.5  OFF THE DRAWN ROAD
+   SIGN_GENERIC         R9-9   station  1000.0  offset   45.0 ft  page y  318.5  near road
+   SIGN_GENERIC         R9-9   station     0.0  offset   45.0 ft  page y  318.5  near road
+

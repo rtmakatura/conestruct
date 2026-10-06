@@ -390,3 +390,55 @@ No existing request or fixture carries `carriageway`, and the field is absent un
 - **Test:** `tests/test_plan_sheet_one_way.py::test_the_left_edge_line_is_solid_yellow` (red before the change, green after). The no-centerline test now asserts no *dashed* yellow line, because the solid yellow left edge is the one yellow line.
 - **R83's reading is approved** (Ryan, R93's message): the "One-way street or divided road?" cell, the 400 when the twin search can't decide, and the cell replacing the Divided toggle on one-way roads.
 - **The R92 issue is #310** ("A 5-lane road is planned as 4 lanes; the per-direction clamp also sets the lane width, which moves every device 1.5–2 ft").
+
+
+---
+
+## R94 (2026-10-06): three page-1 defects from Ryan's browser check, investigated before code
+
+Reproduced on this checkout (`a748a7b`, no prod request) by `probes/r94_page1_render.py before` → `probes/r94_before.txt`, `probes/r94_broadway_before.png`, `probes/r94_colorado_before.png`. Broadway: verdict `one_way_street`, 4 lanes × 10.5 ft, 8 ft shoulder, **37 devices**, the same count Ryan saw on prod.
+
+### 1. Two Type III barricades float above the road
+
+- **Which devices:** the `pedestrian_facility` adjustment's mirrored pair. `src/rules/site_adjustments.py:164-169` adds four Type III barricades at `±_ped_offset` (`:34-42`, `lanes × lane width + shoulder + 2 ft` = 52 ft here) at stations 1000 and 0, and both R9-9s at `+offset` only. The four at `+52 ft` and `-52 ft` are the "4 Type III barricades" in the device summary. Ryan's guess was right: they're the 6 devices "Pedestrian sidewalks present" added.
+- **Why their y is off the road:** on a one-way street, offset 0 is the left lane edge (`plan_sheet._draw_one_way_street`, `:263-282`), and `_y_of` (`:240-257`) maps `-52 ft` to page y 667. The drawn road's top edge (the left curb strip) is y 513 (`_road_y_extent`, `:98-101`), so the pair sits 154 pt above it, in the blank band over the dimension lines. On a two-way road `-offset` is the far curb, and on a divided road it's the opposing carriageway's sidewalk, which is drawn (`_draw_site_context`, `:1208`, `sides = (1, -1)` when divided). A one-way street has no far carriageway, so it has nowhere to land.
+- **The left-sidewalk call: no left sidewalk is closed, so the two devices don't belong in the plan.** Source: the plan's own inputs and model. The flag is a bare boolean, `meta.siteConditions: dict[str, bool]` (`src/api/schemas.py:234`). The scan's `sidewalks` class (`src/rules/site_detection.py:389-390`, 150 ft lateral acceptance at `:486-506`) carries no side. And everything else the plan says about the closure puts it at the work-side sidewalk only:
+  - both R9-9 SIDEWALK CLOSED signs at `+offset` (`site_adjustments.py:171-172`);
+  - the hatch, which marks only side `+1` as closed (`plan_sheet.py:1220-1221`);
+  - the audit wording "sidewalk signs, posted at the sidewalk" (`src/api/audit.py:196`).
+  
+  The work is right-shoulder work (Fig 6P-3). Nothing in the plan says the left curb's sidewalk, five lanes away, is touched. The mirror dates from `aa40c4f` (2026-04-30, "site awareness"), whose docstring cites "the spec formula… mirrored on each side" and no MUTCD text. I read no MUTCD text for this call, and it doesn't rest on one.
+- **Fix:** on a one-way street, the adjustment adds only the work-side pair: 2 Type III barricades + 2 R9-9, `devices_added` 4. The record's action string is computed from what was added, never hardcoded. Two-way and divided plans keep the mirrored pair (see "Out of scope" below).
+
+### 2. The two direction arrows sit outside the travel lanes
+
+- **Cause:** `plan_sheet.py:4412-4427` puts the arrows "in the page margin just outside the asphalt" on purpose. The work-side arrow is 14 pt below the work shoulder's outer edge, which on this plan is inside the sidewalk band. #308's second arrow is 14 pt above the left curb strip, in the blank band. `_draw_lane_arrow`'s own docstring (`:1776-1779`) says the arrow is "drawn inside an open lane… rather than floating in white space outside the road".
+- **Fix (one-way street only):** two arrows, both pointing the direction of travel (page right), centred in the leftmost lane and in the rightmost open lane. That is lane `num_lanes` for a shoulder closure, and `num_lanes - 1` for a lane closure, whose work-side lane is closed. With one open lane there's one arrow. The x span (`PLAN_LEFT + 30 … + 130`) is unchanged.
+
+### 3. "METHOD OF HANDLING TRAFFIC · 30 MPH" touches the top of its box
+
+- **Cause:** `_draw_title_block` puts the baseline at `y = PAGE_H - 30` (`plan_sheet.py:1964`). The box's top rule is at `PAGE_H - MARGIN` = 774 (`:1960`). Helvetica-Bold 14 pt caps are 10.05 pt tall (cap height 718/1000), so they top out at about 772, 2 pt under the line.
+- **Fix:** an 8 pt gap above the caps, matching the banner's own 8 pt left inset (`x = MARGIN + 8`, `:1965`) and the `pad = 8.0` the corridor-details box uses (`:3823`). Baseline `PAGE_H - MARGIN - 8 - 10` = `PAGE_H - 36`, so the title, project and speed segments all move down 6 pt. The banner is 54 pt tall, so there's room.
+
+### Rule 5 churn prediction (written before the diff)
+
+| Surface | Predicted change |
+|---|---|
+| One-way street + `pedestrian_facility`: placements | −2 Type III barricades (the `-offset` pair). Broadway 37 → **35**. The summary's Type III QTY goes 4 → 2. |
+| …the same plan's site-adjustment record (audit `sections.site_adjustments`, crew sheet, PDF audit page, XLSX) | Action reads "Added 2 Type III barricades (sidewalk closure points)…"; `devices_added` 6 → 4. |
+| …quote and device breakdown | 2 fewer Type III barricades, priced from the same placements. |
+| One-way street page 1: arrows | Both move into the lanes, as above. |
+| Every page-1 and page-2 banner, every plan type (Colorado included) | Moves down 6 pt. This is the **only** change on the divided control. |
+| Two-way and divided plans: placements, records, arrows | Unchanged. Colorado stays at 40 devices with the mirrored pair. |
+| Existing tests | None break. `tests/test_verification.py:640-665` pins +6 on the **divided** generator; `test_tier_ledger.py:179` is a literal fixture; nothing pins the banner or arrow y; no corpus grid case carries a one-way carriageway. |
+| Frontend | None. NEEDS YOU and render-types read `devices_added` from the wire; no copy hardcodes the barricade count. |
+
+**New tests (red first):**
+- one-way + pedestrian: two barricades, both at `+offset`, on the drawn sidewalk band, with `devices_added == 4` and an action string that says 2;
+- divided + pedestrian still adds 6;
+- the one-way arrows' y lies inside the lane band;
+- the banner's cap top sits ≥ 8 pt under the box line.
+
+### Out of scope, noted
+
+On two-way and divided roads the mirrored pair still barricades the far sidewalk. It's drawn but unhatched, and has no R9-9 (visible in `r94_colorado_before.png`). The arrows there still sit in the sidewalk bands. Ryan ruled divided "unchanged", so neither moves here. Both are a draft-issue candidate, reposted through the chat (R97).

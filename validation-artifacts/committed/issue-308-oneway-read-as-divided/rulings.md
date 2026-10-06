@@ -73,3 +73,23 @@ This file is the arc's authority; every commit on this branch cites it.
 > The R92 issue is #310. Link it from #308's checkpoint.
 >
 > execution-sequence.md is already updated (DOTI line under Parked; #308 → #309 → #300 in the order). Don't redo it.
+
+## R94 and R95, verbatim (Ryan, 2026-10-06, cc-prompt-308-followups.md)
+
+> # #308 follow-ups and a declutter pass (Ryan, 2026-10-06)
+>
+> Quote R94–R97 verbatim in the matching rulings.md (R94/R95: issue-308-oneway-read-as-divided; R96: a new folder for the declutter arc; R97: ship-loop). Report after each part. Delete this file once all three parts have shipped.
+>
+> ## Part 1. R94: #308 page-1 bugs (fix before #308 closes)
+>
+> Ryan's browser check on prod `a748a7b` (N Broadway SB, 39.73370, -104.98753, Shoulder work, Utility locate, 37 devices). The yellow left edge, the title block ("SHOULDER CLOSURE · ONE-WAY STREET"), no median, and right-only signs all pass. Three defects on page 1:
+>
+> 1. **Two Type III barricades float above the road,** in the blank area over the dimension lines, at the stations of the two sidewalk-closure markers (about the work-zone start and end). The device summary counts 4 Type III barricades. The two drawn at the right sidewalk look right. Find which devices these are (likely the left-side sidewalk closure from "Pedestrian sidewalks present", which added 6 devices), and why their y lands outside the drawn road. If a left sidewalk really is closed, page 1 draws that sidewalk band on the left. If it isn't, the devices don't belong in the plan. Say which, with the source for the left-sidewalk call.
+> 2. **The two traffic-direction arrows sit outside the travel lanes:** one in the blank area above the road, one in the right sidewalk band. They belong inside the travel lanes, pointing the direction of travel.
+> 3. **"METHOD OF HANDLING TRAFFIC · 30 MPH" touches the top of its box.** Give it padding consistent with the other title-block text.
+>
+> Investigate first: cause and `file:line` for each, the Rule 5 churn prediction, then fix on `issue-308-page1-fixes`. Prove it with a before/after render of the same Broadway plan, plus one divided road (Colorado Blvd, 39.70900, -104.94070) to show it's unchanged. Don't post the #308 close comment until this ships and Ryan re-checks.
+>
+> ## Part 2. R95: worktree cleanup failed again
+>
+> The #308 ship's cleanup failed with "Permission denied" because this session's shell was inside the worktree. R77 was meant to stop exactly that. Find why it didn't fire (Windows holds a folder open while any process has it as its working directory, so the guard may need to check the session, not only the git command). Fix it so the session leaves the worktree before it starts `ship.ps1`, and red-prove it. Ryan never removes worktrees by hand.
