@@ -1,0 +1,6 @@
+window-accept-evening    refused 0/10   median scan 2.2 s    mirrors {'overpass.openstreetmap.fr': 10}  (prod a5b4e12, 2026-10-06T01:07:05+00:00)
+window-accept-midday     refused 1/10   median scan 8.1 s    mirrors {'overpass-api.de': 8, 'overpass.openstreetmap.fr': 2}  (prod a5b4e12, 2026-10-05T18:07:04+00:00)
+    refused: federal: scan budget exceeded (20 s); https://overpass-api.de/api/interpreter: 504 Gateway Timeout
+window-accept-morning    refused 1/10   median scan 11.6 s   mirrors {'overpass.openstreetmap.fr': 8, 'overpass-api.de': 2}  (prod a5b4e12, 2026-10-05T15:15:01+00:00)
+    refused: colorado-blvd: scan budget exceeded (20 s); https://overpass-api.de/api/interpreter: 504 Gateway Timeout
+overall                  refused 2/30   median scan 5.9 s    mirrors {'overpass.openstreetmap.fr': 20, 'overpass-api.de': 10}

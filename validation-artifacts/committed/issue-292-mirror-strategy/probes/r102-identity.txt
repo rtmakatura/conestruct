@@ -1,0 +1,2 @@
+a748a7b site_detection.py: 52 passed in 3.79s
+issue-292-overspan site_detection.py: 52 passed in 3.79s
