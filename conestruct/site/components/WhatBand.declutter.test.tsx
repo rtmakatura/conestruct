@@ -83,7 +83,7 @@ const SUGGEST: JurisdictionSuggestion = {
   boundary_source: { source: "US Census TIGER/Line Place boundaries", vintage: "2025 vintage" },
 };
 
-function mount(opts: { confirmed?: boolean; classConfirmed?: boolean } = {}) {
+function mount(opts: { confirmed?: boolean; classConfirmed?: boolean; errored?: boolean } = {}) {
   const s = opts.confirmed ? ({ ...SCENARIO, jurisdiction_key: "denver" } as Scenario) : SCENARIO;
   // As GeneratorShell builds them: no record until a suggestion is answered.
   const suggest = (section: SuggestSection = "all") =>
@@ -126,7 +126,7 @@ function mount(opts: { confirmed?: boolean; classConfirmed?: boolean } = {}) {
       setMeta={() => {}}
       jurisdictionBlock={null}
       jurisdictionLoading={false}
-      jurisdictionErrored={false}
+      jurisdictionErrored={opts.errored ?? false}
       stepIndex="STEP 2 OF 4"
       jurisdictionSuggest={suggest}
       classificationFields={classFields}
@@ -219,6 +219,20 @@ describe("an answered suggestion collapses into its field (R100)", () => {
     expect(document.querySelectorAll(".classpick")).toHaveLength(1);
     // The evidence (the tier line) is detail, in the closed popover.
     expect(sc.querySelector(".a-cell-foot")!.textContent).not.toContain("detected road tier");
+  });
+
+  it("an error line stays on show beside a record (Rule 10, P3)", () => {
+    // Verifier REPAIR on d3fddde: with a record in the third row, an error
+    // line (marker null) was rendered nowhere.  The two checks are
+    // independent: the suggestion answered, the evaluation failed.
+    mount({ confirmed: true, errored: true });
+    const j = cell("jurisdiction");
+    expect(j.querySelector(".a-cell-record")).not.toBeNull();
+    const line = j.querySelector('[data-testid="prov-jurisdiction"]')!;
+    expect(line.textContent).toBe(
+      "not evaluated: the check didn't answer; the option you picked stands",
+    );
+    expect(line.closest(".a-info")).toBeNull();
   });
 
   it("an unanswered suggestion keeps its full row with real buttons (P10)", () => {

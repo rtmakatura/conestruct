@@ -125,7 +125,12 @@ export function FieldCell({
       {children}
       <div className="a-cell-foot">
         {hasRecord ? (
-          record
+          <>
+            {record}
+            {/* A line that needs the operator stays on show beside the
+                record (Rule 10, P3): the two checks are independent. */}
+            {inlineLine && provenance}
+          </>
         ) : inlineLine ? (
           provenance
         ) : (

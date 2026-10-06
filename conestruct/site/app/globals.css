@@ -4780,7 +4780,9 @@ input[type="number"] {
 .workbench .a-cell-foot {
   min-height: 18px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 4px;
   min-width: 0;
 }
 .workbench .a-mark {
