@@ -330,8 +330,10 @@ def decide(payload: dict) -> None:
             raise Block(
                 f"this session's working directory ({cwd}) is inside {branch!r}'s worktree or "
                 "under .claude/worktrees/, which the cleanup after the ship removes from; Windows "
-                "can't delete a folder a live session sits in.  Move the session to the main "
-                "checkout first (cd there), then run the ship again.  The go is not spent."
+                "can't delete a folder a live session sits in.  Leave it first: a session that "
+                "entered the worktree with EnterWorktree runs ExitWorktree (action keep), which "
+                "returns it to where it started; any other session moves to the main checkout "
+                "(cd there).  Then run the ship again.  The go is not spent (R95)."
             )
         consume(uuid, branch)
         return

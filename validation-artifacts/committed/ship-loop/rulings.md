@@ -267,3 +267,13 @@ The extension, verbatim (Ryan, 2026-10-04, on the verifier's note that a cwd git
 > Yes, close the gap: also refuse when the working directory is anywhere under .claude/worktrees/ (except _ship), even if git can't read the branch there. Same red-proof.
 
 *Built as `arc_worktree_of(cwd)`, a check on the path alone. This changes one earlier test: a ship from another arc's worktree was allowed under the first build and is now refused. The extension's red-proof is in `r77-redproof.md`.*
+
+## R97, verbatim (Ryan, 2026-10-06, cc-prompt-308-followups.md)
+
+> # #308 follow-ups and a declutter pass (Ryan, 2026-10-06)
+>
+> Quote R94–R97 verbatim in the matching rulings.md (R94/R95: issue-308-oneway-read-as-divided; R96: a new folder for the declutter arc; R97: ship-loop). Report after each part. Delete this file once all three parts have shipped.
+>
+> ## R97: issue drafts
+>
+> Any issue you draft from this gets reposted here by the chat before Ryan posts it, as usual.

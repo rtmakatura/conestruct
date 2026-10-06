@@ -409,3 +409,29 @@ def test_a_ship_from_the_main_checkout_or_the_ship_worktree_is_allowed(
     cwd = {"main": main, "_ship": ship_wt, "main-subdir": main / "scripts"}[where]
     code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3", _go(tmp_path), cwd=cwd)
     assert code == 0, err
+
+
+# R95 (2026-10-06): the #308 ship's cleanup hit "Permission denied" again.
+# R77 was never live -- the hook runs from the _ship worktree, which
+# ship.ps1 resets to main, and R77 sat on an unshipped branch -- and its
+# message said to cd, which a worktree-isolated session can't do.
+
+
+def test_the_308_shape_is_refused_and_says_how_to_leave(tmp_path, arc_worktrees):
+    """The session sat in .claude/worktrees/oneway-read-as-divided, a folder
+    named unlike the branch it held and shipped."""
+    main, _shipped, _other = arc_worktrees
+    folder = main / ".claude" / "worktrees" / "oneway-read-as-divided"
+    subprocess.run(
+        ["git", "worktree", "add", "-q", "-b", "issue-308-oneway-read-as-divided", str(folder)],
+        cwd=main,
+        check=True,
+        capture_output=True,
+    )
+    report = REPORT.replace("ship-loop-3", "issue-308-oneway-read-as-divided")
+    t = write_transcript(
+        tmp_path, [assistant(report, "a1"), human("ship issue-308-oneway-read-as-divided", "g1")]
+    )
+    code, err = hook(tmp_path, f"{SHIP} -Branch issue-308-oneway-read-as-divided", t, cwd=folder)
+    assert code == 2, err
+    assert "ExitWorktree" in err
