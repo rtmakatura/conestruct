@@ -87,9 +87,8 @@ const SETUP_GRID: ReadonlyArray<{ label: string; keys: readonly SetupSegmentKey[
   { label: "Speed", keys: ["speed"] },
   { label: "Lanes", keys: ["lanes", "laneWidth"] },
   { label: "Road type", keys: ["roadType"] },
-  // Ryan's word (R96's direction, R101).  Flagged in the checkpoint: some
-  // jurisdictions are counties or authorities, not cities.
-  { label: "City", keys: ["jurisdiction"] },
+  // R104: "Jurisdiction", not "City" — some are counties or authorities.
+  { label: "Jurisdiction", keys: ["jurisdiction"] },
   { label: "Dates", keys: ["dates"] },
 ];
 

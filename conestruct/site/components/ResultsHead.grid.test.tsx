@@ -2,7 +2,7 @@
 //
 // R96 B (declutter-three-surfaces) — the post-Generate Setup line as a
 // grid of label / value pairs, as mocked up (mockups/setup.html, R101):
-// Work, Road, Length, Speed, Lanes, Road type, City, Dates.  Every value
+// Work, Road, Length, Speed, Lanes, Road type, Jurisdiction (R104), Dates.  Every value
 // stays the button it was (P22: each opens what it opened), with the same
 // test id and the same accessible name; only the shape changes (P4).
 
@@ -54,7 +54,7 @@ describe("the Setup grid", () => {
       ["Speed", "30 mph"],
       ["Lanes", "2 × 12 ft"],
       ["Road type", "Urban arterial"],
-      ["City", "◌ not set"],
+      ["Jurisdiction", "◌ not set"],
       ["Dates", "◌ not set"],
     ]);
     expect(screen.getByTestId("setup-values").textContent).not.toContain(" · ");
@@ -80,7 +80,7 @@ describe("the Setup grid", () => {
       "Denver",
     );
     const v = Object.fromEntries(pairs());
-    expect(v.City).toBe("Denver");
+    expect(v.Jurisdiction).toBe("Denver");
     expect(v.Dates).toBe("2026-10-12");
   });
 

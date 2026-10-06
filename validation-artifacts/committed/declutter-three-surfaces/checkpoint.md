@@ -319,3 +319,9 @@ Built as mocked up (R101).
 **Churn:** as predicted, one assertion. `GeneratorShell.value-links.test.tsx` read the " · 65 mph · " sentence; it now reads Speed / 65 mph as a pair. The ids, names and targets are unchanged, so no other suite moved.
 
 **Flagged for Ryan:** "City" is the mocked-up label, and it's what was built. Some jurisdictions aren't cities, though, such as the counties and the E-470 toll authority (#276's longest line reads "toll & authority"). "Jurisdiction" would be the accurate word.
+
+---
+
+## R104 on B: the label is "Jurisdiction"
+
+`ResultsHead.tsx` SETUP_GRID labels the jurisdiction pair "Jurisdiction", not "City". This settles build B's flag. `ResultsHead.grid.test.tsx` was red on "City" (2 failed) before the change. On the restacked B (C with R103, then A, then B): 191 files, 1988 passed; `tsc` clean.
