@@ -152,6 +152,10 @@ async function generateHeld() {
   expect(document.querySelector(".working-band")).toBeNull();
   // Open every disclosure so their controls are in the DOM to enumerate.
   await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+  // R96 C: open NEEDS YOU's fold, so its none-found / not-asserted rows
+  // are in the DOM for the staging this suite drives.
+  const fold = document.querySelector(".ny-fold-toggle");
+  if (fold) await user.click(fold);
   const held = gate(AUDIT_WITH_BREAKDOWN);
   auditGate = held;
   const block = document.getElementById("site-corrections")!;

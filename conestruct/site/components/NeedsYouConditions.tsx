@@ -81,7 +81,19 @@ import { useRef, useState, type ReactNode } from "react";
 
 import type { StagedFieldEdit } from "@/lib/scenarios/types";
 import type { Scenario } from "@/lib/scenarios";
-import type { SiteScanCorrection, SiteScanProvenance } from "@/lib/render-types";
+import type {
+  SiteAdjustmentRecord,
+  SiteScanCorrection,
+  SiteScanProvenance,
+} from "@/lib/render-types";
+import { TIER_WORDS } from "@/lib/needs-you";
+import { siteAdjustmentCounts } from "@/lib/needs-you-items";
+import {
+  conditionRows,
+  conditionSummary,
+  isListed,
+  type ConditionRow,
+} from "@/lib/needs-you-conditions";
 import { SCAN_BUCKET_TO_FLAG, scanEvidence, type ScanBucketWire } from "@/lib/tiering";
 import {
   DISMISS_REASONS,
@@ -132,6 +144,10 @@ export interface SiteConditionRowsProps {
    *  owner while the markup emitted the class unconditionally, and a
    *  page-wide count of filled controls read 2 in a state that shows 1). */
   ownsPrimary?: boolean;
+  /** R99: the plan's site adjustments (the audit's
+   *  `sections.site_adjustments`), merged into the listed row of the
+   *  same flag. */
+  adjustments?: SiteAdjustmentRecord[];
 }
 
 /** Does this scan give the block anything to render?  The same predicate
@@ -158,6 +174,7 @@ export function SiteConditionRows({
   staged,
   setStaged,
   ownsPrimary = true,
+  adjustments,
 }: SiteConditionRowsProps) {
   // Which flag's dismiss reason picker is open, and its draft.
   const [dismissing, setDismissing] = useState<ScannedSiteFlag | null>(null);
@@ -168,6 +185,8 @@ export function SiteConditionRows({
   // the required placeholder) — the button never moves, never dead.
   const [noteInvalid, setNoteInvalid] = useState(false);
   const noteRef = useRef<HTMLInputElement | null>(null);
+  // R96 C: the fold over none-found / not-asserted rows; closed by default.
+  const [foldOpen, setFoldOpen] = useState(false);
 
   const buckets =
     siteScan.status === "ok"
@@ -248,6 +267,20 @@ export function SiteConditionRows({
   // wire carried on the provenance line.  Rule 76: the citation sits
   // above the action, and every action shares the auto track's right
   // edge (rule 77).
+  // R99: a listed condition carries the site adjustment it caused — the
+  // record's own counts and citation, never re-derived (Rule 3).
+  const adjFor = new Map((adjustments ?? []).map((r) => [r.flag, r] as const));
+  const adjLine = (flag: string): string | undefined => {
+    const rec = adjFor.get(flag);
+    if (!rec) return undefined;
+    const counts = siteAdjustmentCounts(rec);
+    return counts ? `${TIER_WORDS.changed} · ${counts}` : "no devices added";
+  };
+  const adjCite = (flag: string, base: string): string => {
+    const cite = adjFor.get(flag)?.citation;
+    return cite ? `${cite} · ${base}` : base;
+  };
+
   const row = (
     key: string,
     cls: string,
@@ -258,6 +291,7 @@ export function SiteConditionRows({
     evidence: string,
     cite: string,
     action: ReactNode,
+    extra?: string,
   ) => (
     <li key={key} className={`ny-item ny-cond ${cls}`}>
       <span className={`ny-glyph tr-field ${tone}`} aria-hidden>
@@ -274,6 +308,9 @@ export function SiteConditionRows({
           {evidence ? " · " : ""}
           <span className="sc-evidence">{evidence}</span>
         </p>
+        {/* R99: the site adjustment this condition caused, in the row
+            (the same fact, one voice — P2). */}
+        {extra ? <p className="ny-prov tr-prov sc-adjustment">{extra}</p> : null}
       </div>
       <div className="ny-right">
         <span className="ny-cite">{cite}</span>
@@ -320,9 +357,10 @@ export function SiteConditionRows({
           <span className="ny-body sc-disclosure">
             {c.record_clause ?? c.disclosure}
           </span>
+          {adjLine(flag) ? <p className="ny-prov tr-prov sc-adjustment">{adjLine(flag)}</p> : null}
         </div>
         <div className="ny-right">
-          <span className="ny-cite">OPERATOR</span>
+          <span className="ny-cite">{adjCite(flag, "OPERATOR")}</span>
           <span className="ny-acts">{actBtn("Undo", () => undo(flag))}</span>
         </div>
       </li>
@@ -342,8 +380,9 @@ export function SiteConditionRows({
         : SCANNED_FLAG_LABELS[s.flag],
       "staged, not yet applied",
       intentText(s),
-      "OPERATOR",
+      adjCite(s.flag, "OPERATOR"),
       actBtn("Undo", () => setStaged(unstage(staged, s.flag))),
+      adjLine(s.flag),
     );
 
   // Spec 46: only a detected row may enter the reason state.  Guarded
@@ -357,208 +396,210 @@ export function SiteConditionRows({
     setNoteInvalid(false);
   };
 
-  const rows: ReactNode[] = [];
-  // ─── THE SUB-HEADER (Ryan's hand-check at f44377e, fix 4) ───
-  //
-  // The block's header count is ruling 185's SUM of ▲ + ⚠ — three, on the
-  // pin the legs use.  Below it the block showed ten rows, because the
-  // corrections block moved in whole (clause 1) and brought seven
-  // condition rows with it.  A header reading "3" above ten rows is a
-  // count that does not describe what is under it.
-  //
-  // Two ways to reconcile that were on the table.  This is the second,
-  // and the reasoning is in rulings.md: a second numeral in the header
-  // ("3 · 7 site conditions") is exactly what ruling 185 declined — "the
-  // sum is the count, the decomposition is provenance" — and it would
-  // put a number on the header that the header's own numeral does not
-  // include.  A sub-header instead GROUPS the rows the count is not
-  // about, so the count stays true of everything above the sub-header
-  // and the condition rows keep the name they arrived with.
-  //
-  // The name is the corrections block's own, from §8.5 ("Site conditions
-  // — scanned"): clause 1 dropped it when the block moved, and the ported
-  // suite recorded that as churn at the time.  It comes back here, which
-  // is where it belongs — a label for the rows it labels, not a header
-  // for a block it no longer owns.
-  rows.push(
-    <li key="cond-head" className="ny-item ny-subhead">
+  // The dismiss reason picker, the detected row's sub-row while open.
+  const picker = (flag: ScannedSiteFlag, label: string): ReactNode => (
+    <li key={`dismiss-${flag}`} className="ny-item ny-sub site-correction-picker">
+      {/* #245: the reason is an in-DOM radio-chip group, never a
+          native <select> — the UA's white field under the
+          inherited light ink measured 1.54:1 and its popup renders
+          outside the DOM where nothing measures it.  The chosen
+          state is border + wash + ink + a ✓ glyph + the native
+          :checked state (rule 13, never hue alone); no aria-pressed
+          (a radio carries its own checked semantics).  The legend
+          keeps the accessible name. */}
       <span className="ny-glyph" aria-hidden />
       <div className="ny-mid">
-        <span className="tr-section">Site conditions: scanned</span>
+        <div className="sc-picker">
+          <fieldset className="site-correction-reasons" role="radiogroup">
+            <legend>
+              Reason for dismissing <b className="sugg-name">{label}</b>
+            </legend>
+            {DISMISS_REASONS.map((r) => {
+              const chosen = reason === r.v;
+              return (
+                <label key={r.v} className={`reason-chip${chosen ? " chosen" : ""}`}>
+                  <input
+                    type="radio"
+                    name={`dismiss-reason-${flag}`}
+                    data-write=""
+                    disabled={inFlight}
+                    value={r.v}
+                    checked={chosen}
+                    onChange={() => {
+                      setReason(r.v);
+                      setNoteInvalid(false);
+                    }}
+                  />
+                  <span className="reason-glyph" aria-hidden>
+                    {chosen ? "✓" : ""}
+                  </span>
+                  <span className="reason-text">{r.l}</span>
+                </label>
+              );
+            })}
+          </fieldset>
+          {/* #255 (P1): the note slot is ALWAYS mounted — a fixed
+              reservation in the flex line, void (hidden, disabled,
+              out of the tree and the Tab order) until the reason is
+              Other — so choosing Other never moves Confirm.
+              Validated on the Confirm click, not by disabling. */}
+          <input
+            ref={noteRef}
+            type="text"
+            className={`site-correction-note${reason === "other" ? "" : " is-void"}`}
+            data-write=""
+            disabled={inFlight || reason !== "other"}
+            aria-hidden={reason === "other" ? undefined : true}
+            tabIndex={reason === "other" ? undefined : -1}
+            aria-label="Say what"
+            aria-invalid={noteInvalid || undefined}
+            maxLength={200}
+            value={note}
+            onChange={(e) => {
+              setNote(e.target.value);
+              setNoteInvalid(false);
+            }}
+            placeholder={noteInvalid ? "say what (required)" : "say what"}
+          />
+        </div>
       </div>
-    </li>,
+      {/* #270: Confirm is the sub-row's ACTION cell — the right
+          edge every Dismiss / Assert / Undo / Apply shares — never
+          an item of the wrapping line above, so its place and the
+          row's height do not depend on the legend's length. */}
+      <div className="ny-right">
+        <span className="ny-acts">
+          <button
+            type="button"
+            className={`act tr-step${ownsPrimary ? " is-on" : ""}`}
+            data-write=""
+            disabled={inFlight || reason === null}
+            title={reason === null ? "choose a reason" : undefined}
+            onClick={() => confirmDismiss(flag)}
+          >
+            Confirm dismiss
+          </button>
+        </span>
+      </div>
+    </li>
   );
-  if (buckets !== null) {
-    for (const [bucketName, flagName] of SCAN_BUCKET_TO_FLAG) {
-      const b = buckets[bucketName];
-      // A bucket missing from the wire renders nothing (rule 10).
-      if (!b || !isScannedFlag(flagName)) continue;
-      const flag: ScannedSiteFlag = flagName;
-      const st = stagedFor.get(flag);
-      if (st) {
-        rows.push(stagedRow(st));
-        continue;
-      }
-      const c = byFlag.get(flag);
-      if (c) {
-        rows.push(record(c));
-        continue;
-      }
-      const detected = b.detected === true;
-      const label = SCANNED_FLAG_LABELS[flag];
-      // Count + nearest only: details[0] leaves this surface (arc-20
-      // ruling b); section 03 and the audit PDF keep the full string.
-      // An absent row's evidence cell is EMPTY (GO ruling b: the wire
-      // carries no scan radius, and the relevance thresholds are three
-      // different tests — nothing is printed as one).
-      const evidence = detected ? scanEvidence(b, { details: false, anchorSuffix: false }) : "";
-      const open = dismissing === flag;
-      rows.push(
-        row(
-          `row-${flag}`,
-          "site-correction-row",
-          detected ? "▲" : "✓",
-          detected ? "sc-detected" : "sc-absent",
-          label,
-          detected ? "detected" : "none along the corridor",
-          evidence,
-          "OPENSTREETMAP",
-          open
-            ? actBtn("Cancel", closePicker)
-            : detected
-              ? actBtn("Dismiss", () => openPicker(flag))
-              : actBtn("Assert", () => assertFlag(flag)),
-        ),
-      );
-      if (open) {
-        rows.push(
-          <li key={`dismiss-${flag}`} className="ny-item ny-sub site-correction-picker">
-            {/* #245: the reason is an in-DOM radio-chip group, never a
-                native <select> — the UA's white field under the
-                inherited light ink measured 1.54:1 and its popup renders
-                outside the DOM where nothing measures it.  The chosen
-                state is border + wash + ink + a ✓ glyph + the native
-                :checked state (rule 13, never hue alone); no aria-pressed
-                (a radio carries its own checked semantics).  The legend
-                keeps the accessible name. */}
-            <span className="ny-glyph" aria-hidden />
-            <div className="ny-mid">
-              <div className="sc-picker">
-                <fieldset className="site-correction-reasons" role="radiogroup">
-                  <legend>
-                    Reason for dismissing <b className="sugg-name">{label}</b>
-                  </legend>
-                  {DISMISS_REASONS.map((r) => {
-                    const chosen = reason === r.v;
-                    return (
-                      <label key={r.v} className={`reason-chip${chosen ? " chosen" : ""}`}>
-                        <input
-                          type="radio"
-                          name={`dismiss-reason-${flag}`}
-                          data-write=""
-                          disabled={inFlight}
-                          value={r.v}
-                          checked={chosen}
-                          onChange={() => {
-                            setReason(r.v);
-                            setNoteInvalid(false);
-                          }}
-                        />
-                        <span className="reason-glyph" aria-hidden>
-                          {chosen ? "✓" : ""}
-                        </span>
-                        <span className="reason-text">{r.l}</span>
-                      </label>
-                    );
-                  })}
-                </fieldset>
-                {/* #255 (P1): the note slot is ALWAYS mounted — a fixed
-                    reservation in the flex line, void (hidden, disabled,
-                    out of the tree and the Tab order) until the reason is
-                    Other — so choosing Other never moves Confirm.
-                    Validated on the Confirm click, not by disabling. */}
-                <input
-                  ref={noteRef}
-                  type="text"
-                  className={`site-correction-note${reason === "other" ? "" : " is-void"}`}
-                  data-write=""
-                  disabled={inFlight || reason !== "other"}
-                  aria-hidden={reason === "other" ? undefined : true}
-                  tabIndex={reason === "other" ? undefined : -1}
-                  aria-label="Say what"
-                  aria-invalid={noteInvalid || undefined}
-                  maxLength={200}
-                  value={note}
-                  onChange={(e) => {
-                    setNote(e.target.value);
-                    setNoteInvalid(false);
-                  }}
-                  placeholder={noteInvalid ? "say what (required)" : "say what"}
-                />
-              </div>
-            </div>
-            {/* #270: Confirm is the sub-row's ACTION cell — the right
-                edge every Dismiss / Assert / Undo / Apply shares — never
-                an item of the wrapping line above, so its place and the
-                row's height do not depend on the legend's length. */}
-            <div className="ny-right">
-              <span className="ny-acts">
-                <button
-                  type="button"
-                  className={`act tr-step${ownsPrimary ? " is-on" : ""}`}
-                  data-write=""
-                  disabled={inFlight || reason === null}
-                  title={reason === null ? "choose a reason" : undefined}
-                  onClick={() => confirmDismiss(flag)}
-                >
-                  Confirm dismiss
-                </button>
-              </span>
-            </div>
-          </li>,
-        );
-      }
-    }
-  } else {
-    // No ok scan (a proceeded outage): only the records, with undo.
-    for (const c of corrections) {
-      const st = stagedFor.get(c.flag);
-      rows.push(st ? stagedRow(st) : record(c));
-    }
-  }
-  if (rows.length === 0) return null;
+
+  // R96 C / R99 — the rows, from the ONE classification the header count
+  // also reads (lib/needs-you-conditions.ts), so the numeral and the rows
+  // cannot disagree.  LISTED rows (detected, applied records, staged
+  // intents, asserted manual keys) render first and count; the rest
+  // (none found, not asserted) fold behind a labelled count with their
+  // rows and Assert actions unchanged inside (P13, P19).  The retired
+  // "Site conditions: scanned" sub-header grouped the rows the count was
+  // NOT about; under R99 the listed rows are counted, so it has nothing
+  // left to separate.
+  const all = conditionRows(siteScan, staged, scenario.meta.siteConditions ?? {});
+  const listed = all.filter(isListed);
+  const folded = all.filter((r) => !isListed(r));
+  const summary = conditionSummary(all);
+
+  const scannedRow = (r: Extract<ConditionRow, { kind: "detected" | "absent" }>): ReactNode[] => {
+    const flag = r.flag as ScannedSiteFlag;
+    const detected = r.kind === "detected";
+    const label = SCANNED_FLAG_LABELS[flag];
+    // Count + nearest only: details[0] leaves this surface (arc-20
+    // ruling b); section 03 and the audit PDF keep the full string.
+    // An absent row's evidence cell is EMPTY (GO ruling b: the wire
+    // carries no scan radius, and the relevance thresholds are three
+    // different tests — nothing is printed as one).
+    const evidence = detected ? scanEvidence(r.bucket, { details: false, anchorSuffix: false }) : "";
+    const open = dismissing === flag;
+    const out: ReactNode[] = [
+      row(
+        `row-${flag}`,
+        "site-correction-row",
+        detected ? "▲" : "✓",
+        detected ? "sc-detected" : "sc-absent",
+        label,
+        detected ? "detected" : "none along the corridor",
+        evidence,
+        adjCite(flag, "OPENSTREETMAP"),
+        open
+          ? actBtn("Cancel", closePicker)
+          : detected
+            ? actBtn("Dismiss", () => openPicker(flag))
+            : actBtn("Assert", () => assertFlag(flag)),
+        adjLine(flag),
+      ),
+    ];
+    if (open) out.push(picker(flag, label));
+    return out;
+  };
 
   // Part 1 §8.25 — the two keys no scan can see, as rows with an ASSERT
   // action.  Their standing description is the provenance line (it is
   // what the retired checkbox printed under the label), and the wire
   // carries no evidence for them, so none is invented (rule 10).
-  const manualFlags = scenario.meta.siteConditions ?? {};
-  for (const flag of MANUAL_FLAGS) {
-    const st = stagedFor.get(flag);
-    if (st) {
-      rows.push(stagedRow(st));
-      continue;
-    }
-    const on = manualFlags[flag] === true;
-    rows.push(
-      row(
-        `manual-${flag}`,
-        "site-condition-manual",
-        on ? "✓" : "◌",
-        // A distinct tone class, not the staged one: `.sc-staged` is the
-        // STAGED-row marker every staging assertion counts, and reusing
-        // it for an unasserted manual key made four of them where there
-        // were none.  Caught by the shell's own staging suite.
-        on ? "sc-absent" : "sc-unset",
-        MANUAL_FLAG_LABELS[flag].label,
-        on ? "asserted by you" : "not asserted",
-        MANUAL_FLAG_LABELS[flag].desc,
-        "OPERATOR",
-        on
-          ? actBtn("Undo", () => stageIntent({ flag, on: false } as StagedCorrection))
-          : actBtn("Assert", () => stageIntent({ flag, on: true } as StagedCorrection)),
-      ),
+  const manualRow = (flag: ManualSiteFlag, on: boolean): ReactNode =>
+    row(
+      `manual-${flag}`,
+      "site-condition-manual",
+      on ? "✓" : "◌",
+      // A distinct tone class, not the staged one: `.sc-staged` is the
+      // STAGED-row marker every staging assertion counts, and reusing
+      // it for an unasserted manual key made four of them where there
+      // were none.  Caught by the shell's own staging suite.
+      on ? "sc-absent" : "sc-unset",
+      MANUAL_FLAG_LABELS[flag].label,
+      on ? "asserted by you" : "not asserted",
+      MANUAL_FLAG_LABELS[flag].desc,
+      adjCite(flag, "OPERATOR"),
+      on
+        ? actBtn("Undo", () => stageIntent({ flag, on: false } as StagedCorrection))
+        : actBtn("Assert", () => stageIntent({ flag, on: true } as StagedCorrection)),
+      adjLine(flag),
     );
+
+  const render = (r: ConditionRow): ReactNode[] => {
+    switch (r.kind) {
+      case "staged":
+        return [stagedRow(r.staged)];
+      case "record":
+        return [record(r.correction)];
+      case "manual-on":
+      case "manual-off":
+        return [manualRow(r.flag as ManualSiteFlag, r.kind === "manual-on")];
+      default:
+        return scannedRow(r);
+    }
+  };
+
+  const rows: ReactNode[] = listed.flatMap(render);
+  if (folded.length > 0) {
+    // The fold: what passed, as a labelled count (P19), symbol + word for
+    // each part (P9).  The toggle is a READ — it stays live under the
+    // write lock (P13's measure), so it carries data-read, not data-write.
+    const parts = [
+      summary.noneFound > 0 ? `✓ ${summary.noneFound} none found` : null,
+      summary.notAsserted > 0 ? `◌ ${summary.notAsserted} not asserted` : null,
+    ].filter(Boolean);
+    rows.push(
+      <li key="fold" className="ny-item ny-fold">
+        <span className="ny-glyph" aria-hidden />
+        <div className="ny-mid">
+          <span className="ny-fold-text tr-prov">{parts.join(" · ")}</span>
+        </div>
+        <div className="ny-right">
+          <span className="ny-acts">
+            <button
+              type="button"
+              className="act tr-step ny-fold-toggle"
+              data-read=""
+              aria-expanded={foldOpen}
+              onClick={() => setFoldOpen(!foldOpen)}
+            >
+              {foldOpen ? "Hide" : `Show ${folded.length}`}
+            </button>
+          </span>
+        </div>
+      </li>,
+    );
+    if (foldOpen) rows.push(...folded.flatMap(render));
   }
 
   // Rule 78 — the Apply row, ALWAYS present post-scan, as the last data

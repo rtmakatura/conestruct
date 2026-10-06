@@ -239,6 +239,10 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     expect(b.id).toBe("site-corrections");
     // The rows are this block's item rows, in its own list.
     const list = b.querySelector(".ny-items")!;
+    // R96 C: the detected row is listed; the none-found row waits in the
+    // fold until it is opened.
+    expect(list.querySelectorAll(".site-correction-row").length).toBe(1);
+    await userEvent.setup().click(within(b as HTMLElement).getByRole("button", { name: "Show 3" }));
     expect(list.querySelectorAll(".site-correction-row").length).toBe(2);
     expect(list.querySelector(".ny-apply")).not.toBeNull();
     // Rule 78's one write, and the tier rows still carry no button
@@ -248,11 +252,11 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     expect(b.getAttribute("aria-busy")).toBeNull();
   });
 
-  it("fix 4: the header count describes everything ABOVE the sub-header, and nothing below it", async () => {
-    // Ryan's hand-check at f44377e: the header read "3" above ten rows.
-    // The count is ruling 185's ▲ + ⚠ sum and was never about the site
-    // conditions clause 1 moved in — so the conditions are grouped under
-    // their own name, and the count is true of exactly what precedes it.
+  it("R99: the header count equals the rows listed; what passed folds behind a labelled count", async () => {
+    // Ruling 185 amended (R99, 2026-10-06): detected conditions count, so
+    // the numeral is true of every row above the fold.  Replaces fix 4's
+    // sub-header test: the sub-header named the rows the count was NOT
+    // about, and the listed rows are now counted.
     served = {
       ...AUDIT_WITH_ITEMS,
       sections: {
@@ -272,20 +276,57 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     };
     await generate();
     const b = block()!;
+    expect(b.querySelector(".ny-subhead")).toBeNull();
     const rows = Array.from(b.querySelectorAll(".ny-item"));
-    const headIdx = rows.findIndex((r) => r.classList.contains("ny-subhead"));
-    expect(headIdx, "the sub-header exists and is not first").toBeGreaterThan(0);
-    // Everything ABOVE the sub-header is a counted tier row, and there
-    // are exactly as many as the header says.
-    const above = rows.slice(0, headIdx);
-    expect(above.every((r) => /is-(changed|attention)/.test(r.className))).toBe(true);
+    const foldIdx = rows.findIndex((r) => r.classList.contains("ny-fold"));
+    expect(foldIdx, "the fold exists and is not first").toBeGreaterThan(0);
+    // Everything ABOVE the fold is counted: tier rows and listed conditions.
+    const above = rows.slice(0, foldIdx);
+    expect(above.every((r) => /is-(changed|attention)|ny-cond/.test(r.className))).toBe(true);
     expect(String(above.length)).toBe(count());
-    // Everything BELOW is a condition row, the Apply row or the scan's
-    // provenance — none of them counted, none of them claiming to be.
-    const below = rows.slice(headIdx + 1);
-    expect(below.length).toBeGreaterThan(0);
-    expect(below.every((r) => /ny-cond|ny-apply|ny-foot|ny-sub/.test(r.className))).toBe(true);
-    expect(below.some((r) => /is-changed|is-attention/.test(r.className))).toBe(false);
+    // The fold names what it holds, symbol + word, and is closed.
+    const fold = rows[foldIdx] as HTMLElement;
+    expect(fold.querySelector(".ny-fold-text")!.textContent).toBe("✓ 1 none found · ◌ 2 not asserted");
+    const toggle = within(fold).getByRole("button", { name: "Show 3" });
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(within(b as HTMLElement).queryByText("School zone")).toBeNull();
+  });
+
+  it("R99: a detected condition and the adjustment it caused are ONE row (P2)", async () => {
+    // AUDIT_WITH_ITEMS carries the intersection adjustment (+2 devices)
+    // and a school-zone one (1 modified).  The scan detects intersections
+    // and finds no school: the intersection adjustment renders inside its
+    // detected row; the school one has no listed row and stays an item.
+    served = {
+      ...AUDIT_WITH_ITEMS,
+      sections: {
+        ...AUDIT_WITH_ITEMS.sections,
+        site_scan: {
+          status: "ok",
+          mode: "corridor",
+          measured_at: "2026-09-04T12:00:00+00:00",
+          buckets: {
+            intersections: { detected: true, count: 26, nearest_distance_ft: 34.1 },
+            schools: { detected: false, count: 0 },
+          },
+          flags: {},
+          corrections: [],
+        },
+      },
+    };
+    await generate();
+    const b = block()! as HTMLElement;
+    const row = b.querySelector(".site-correction-row") as HTMLElement;
+    expect(row.querySelector(".sc-name")!.textContent).toBe("Adjacent at-grade intersection");
+    expect(row.querySelector(".sc-adjustment")!.textContent).toBe("changed this plan · 2 devices added");
+    expect(row.querySelector(".ny-cite")!.textContent).toBe("MUTCD § 6C.02 · OPENSTREETMAP");
+    // No second voice for the intersection: no tier item names it.
+    const tierTitles = Array.from(b.querySelectorAll(".ny-item.is-changed .ny-body")).map((x) => x.textContent);
+    expect(tierTitles.some((t) => /intersection/i.test(t ?? ""))).toBe(false);
+    // The school adjustment has no listed row of its own, so it stays.
+    expect(tierTitles.some((t) => /school/i.test(t ?? ""))).toBe(true);
+    // ▲ school + ⚠ Colorado FAIL + the listed intersection row.
+    expect(count()).toBe("3");
   });
 
   it("ruling 186 on a real mount: always expanded — every item is on screen, no caret in the header", async () => {

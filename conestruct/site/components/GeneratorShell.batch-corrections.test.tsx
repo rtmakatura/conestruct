@@ -175,6 +175,10 @@ async function generate() {
   const user = userEvent.setup();
   await user.click(screen.getByRole("button", { name: "Generate package" }));
   await settle();
+  // R96 C: open NEEDS YOU's fold, so its none-found / not-asserted rows
+  // are in the DOM for the staging this suite drives.
+  const fold = document.querySelector(".ny-fold-toggle");
+  if (fold) await user.click(fold);
   return user;
 }
 const block = () => document.getElementById("site-corrections") as HTMLElement;

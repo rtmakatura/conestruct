@@ -210,3 +210,32 @@ Every fact on each surface today is kept. Each one is moved, grouped or put behi
 3. **NEEDS YOU:** the merged rows, the count read under ruling 185, and the fold.
 
 Each builds on its own branch after the ruling, in the order Ryan picks. Suggested order: C (NEEDS YOU: the P2 fix is an honesty rule) → A → B.
+
+
+---
+
+## Build C (NEEDS YOU), branch `declutter-c-needs-you`: outcome against the prediction
+
+Built as mocked up, under R99 and R101.
+
+**What changed:**
+- `lib/needs-you-conditions.ts` (new) classifies the condition rows once. The block renders exactly those rows, and the shell counts exactly the listed ones.
+- `mergeConditions` folds a site adjustment into the listed row of its flag. Its counts ("changed this plan · 6 devices added", or "no devices added") and its citation come from the record.
+- `SiteConditionRows` renders listed rows, then the fold ("✓ 3 none found · ◌ 2 not asserted", with a Show N / Hide toggle, `data-read`, live under the lock), then Apply and the scan line, unchanged. The "Site conditions: scanned" sub-header is retired.
+
+**Browser leg** (local dev server on this branch against the prod backend, same capture rig, E Colfax): `build-c/needsyou-{1440,390}.png` (default) and `-open.png`.
+- The header reads **2** with "· 2 site conditions".
+- The intersection row reads "detected · 39 found · nearest 56.1 ft / no devices added", cited "MUTCD § 6N.12 p. 848 · OPENSTREETMAP".
+- The sidewalk row reads "changed this plan · 6 devices added", cited "MUTCD § 6C.02 · OPENSTREETMAP".
+- There is no separate "Pedestrian sidewalks present" item.
+
+**Tests:**
+- New: `lib/needs-you-conditions.test.ts` (6, red first: the module didn't exist).
+- New in `GeneratorShell.needs-you.test.tsx`: "R99: the header count equals the rows listed…" and "R99: a detected condition and the adjustment it caused are ONE row". Both are red against the pre-change components (`2 failed`) and green after.
+- Frontend total: 188 files, 1945 passed; `tsc` clean.
+
+**Churn as predicted:** the condition-row tests in `NeedsYouConditions.test.tsx`, `GeneratorShell.needs-you.test.tsx` and `GeneratorShell.batch-corrections.test.tsx`, plus the "none along the corridor" lookups. Those suites now open the fold first, in their mount/generate helper. The sub-header test is replaced by the R99 count test.
+
+**Misses** (not named in the prediction):
+1. `WorkingBand.test.tsx` and `WriteLock.test.tsx` reach "School zone", a none-found row, so they open the fold too. The in-flight test's button list gains "Hide", which is a live read: every write is still disabled under the lock.
+2. **A behaviour change I didn't predict.** `derivePrimaryOwner` (`GeneratorShell.tsx`) reads this count. A plan whose only listed thing is an advisory detection (no devices added, no ▲/⚠ item) counted 0 before, so the downloads owned the page's one primary action. It now counts 1, so NEEDS YOU's Apply/actions own it. This follows from R99's count, but it's a change in which button is primary. **Flagged for Ryan.**

@@ -37,6 +37,7 @@ import { SITE_ADJUSTMENT_DETAIL } from "./AuditTrail";
 import { deriveTierSources } from "@/lib/tier-sources";
 import { buildNeedsYouItems } from "@/lib/needs-you-items";
 import { deriveNeedsYou } from "@/lib/needs-you";
+import { conditionRows, mergeConditions } from "@/lib/needs-you-conditions";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { StatusBar } from "./StatusBar";
 import { WorkingBand } from "./WorkingBand";
@@ -1269,7 +1270,7 @@ export function GeneratorShell({
   // reads (lib/tier-sources.ts, step 1) with the SAME inputs the
   // TieredReference mount below passes, so the two surfaces cannot drift:
   // one derivation, two readers (P2).  The mapping to rows is step 2's.
-  const needsYouModel = deriveNeedsYou(
+  const needsYouBase = deriveNeedsYou(
     buildNeedsYouItems({
       sources: deriveTierSources({
         jurisdiction: jurisdictionBlock,
@@ -1440,6 +1441,25 @@ export function GeneratorShell({
   // by both surfaces (lib/results-primary.ts).  Ruling 185's sum is the
   // input; acceptance line 2 ("one primary per state at both widths") is
   // what the single owner buys.
+  // Clause 1: the scan NEEDS YOU's condition rows read.  Spec 34's rule,
+  // moved with the block from the strip: the stamped view when settled,
+  // the held (last ready) scan while a re-generation is in flight.
+  const stampedScan =
+    stripAudit.state === "ready" ? (stripAudit.data.sections?.site_scan ?? null) : null;
+  const needsYouScan = stampedScan ?? (scanInFlight ? scanHeld : null);
+  // R96 C / R99: the condition rows NEEDS YOU lists, classified once
+  // (lib/needs-you-conditions.ts) and merged into the model, so the header
+  // count equals the rows listed and a site adjustment renders inside its
+  // condition's row.  Same gate as the block's mount below.
+  const needsYouRows =
+    needsYouScan && hasConditionRows(needsYouScan)
+      ? conditionRows(needsYouScan, staged, scenario.meta.siteConditions ?? {})
+      : [];
+  const needsYouModel = mergeConditions(needsYouBase, needsYouRows);
+  // The adjustments those rows carry: the same audit the scan came from.
+  const needsYouAdjustments =
+    (stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections
+      ?.site_adjustments ?? [];
   const primaryOwner = derivePrimaryOwner(needsYouModel.count);
   // #288 clause 4 — the inputs EVERY tier reader takes.  Assembled once so
   // the reference disclosure and the two promoted tier rows cannot be
@@ -1489,12 +1509,6 @@ export function GeneratorShell({
     showAudit: showResults || auditState.state === "error",
     breakdown: deviceBreakdown,
   };
-  // Clause 1: the scan NEEDS YOU's condition rows read.  Spec 34's rule,
-  // moved with the block from the strip: the stamped view when settled,
-  // the held (last ready) scan while a re-generation is in flight.
-  const stampedScan =
-    stripAudit.state === "ready" ? (stripAudit.data.sections?.site_scan ?? null) : null;
-  const needsYouScan = stampedScan ?? (scanInFlight ? scanHeld : null);
   // The band's sentence, from the two wire objects (lib/working-band.ts):
   // ``prev`` is the answer settled BEFORE this flight — the stamped
   // audit's own ``forScenario`` when that answer predates the wire on
@@ -2176,6 +2190,7 @@ export function GeneratorShell({
                       staged={staged}
                       setStaged={setStaged}
                       ownsPrimary={primaryOwner === "needs-you"}
+                      adjustments={needsYouAdjustments}
                     />
                   ) : null
                 }

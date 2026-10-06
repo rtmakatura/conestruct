@@ -61,15 +61,23 @@ function fromDelta(d: AppliedDelta, i: number, tier: NeedsYouTier): NeedsYouItem
   };
 }
 
-function fromSiteAdjustment(rec: SiteAdjustmentRecord, label: string): NeedsYouItem {
+/** A site adjustment's device counts, as the record carried them ("6
+ *  devices added", "3 modified"), or "" when it added and modified none.
+ *  Shared with the merged condition row (NeedsYouConditions.tsx, R99) so
+ *  the fact reads the same wherever it renders (P2). */
+export function siteAdjustmentCounts(rec: SiteAdjustmentRecord): string {
   const added = rec.devices_added;
   const modified = rec.devices_modified ?? 0;
   // Counts come from the record; the sentence is assembled from them and
   // never rounded, inferred or summed across records.
-  const counts = [
+  return [
     added > 0 ? `${added} device${added === 1 ? "" : "s"} added` : null,
     modified > 0 ? `${modified} modified` : null,
   ].filter(Boolean).join(" · ");
+}
+
+function fromSiteAdjustment(rec: SiteAdjustmentRecord, label: string): NeedsYouItem {
+  const counts = siteAdjustmentCounts(rec);
   return {
     id: `audit:site:${rec.flag}`,
     tier: "changed",

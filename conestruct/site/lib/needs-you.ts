@@ -13,6 +13,9 @@
 //
 // Ruling 185: the header count is the SUM; the decomposition (how many
 // changed, how many need attention) is provenance, not a second number.
+// R99 (2026-10-06) amends it: detected conditions count too, so the
+// header equals the rows listed — lib/needs-you-conditions.ts merges the
+// listed site-condition rows into the model (`conditions`).
 // Ruling 186: the block is always expanded — there is no collapsed state
 // to derive.
 //
@@ -73,6 +76,9 @@ export interface NeedsYouModel {
   /** Ruling 185: the decomposition, for the provenance line only. */
   changed: number;
   attention: number;
+  /** R99: listed site-condition rows (lib/needs-you-conditions.ts); 0
+   *  until `mergeConditions` adds them. */
+  conditions: number;
 }
 
 /** Rule 75's provenance line for one item: the tier in words, then the
@@ -90,6 +96,9 @@ export function countProvenance(model: NeedsYouModel): string | null {
   const parts: string[] = [];
   if (model.changed > 0) parts.push(`${model.changed} ${TIER_WORDS.changed}`);
   if (model.attention > 0) parts.push(`${model.attention} ${TIER_WORDS.attention}`);
+  if (model.conditions > 0) {
+    parts.push(`${model.conditions} site condition${model.conditions === 1 ? "" : "s"}`);
+  }
   return parts.length > 0 ? parts.join(" · ") : null;
 }
 
@@ -103,5 +112,5 @@ export function deriveNeedsYou(items: readonly NeedsYouItem[]): NeedsYouModel {
   const ordered = NEEDS_YOU_TIERS.flatMap((t) => items.filter((i) => i.tier === t));
   const changed = ordered.filter((i) => i.tier === "changed").length;
   const attention = ordered.length - changed;
-  return { items: ordered, count: ordered.length, changed, attention };
+  return { items: ordered, count: ordered.length, changed, attention, conditions: 0 };
 }

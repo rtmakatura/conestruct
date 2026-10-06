@@ -38,7 +38,7 @@
 
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 import type { StagedCorrection } from "@/lib/scenarios/types";
@@ -100,6 +100,11 @@ function mount(
   render(
     <Host siteScan={siteScan} scenario={scenario} inFlight={inFlight} setScenario={setScenario} />,
   );
+  // R96 C: none-found and not-asserted rows sit behind the fold.  These
+  // tests are about every row's content, so they open it first; the
+  // fold's own behaviour is NeedsYouConditions.fold.test.tsx's.
+  const toggle = document.querySelector(".ny-fold-toggle");
+  if (toggle) fireEvent.click(toggle);
   return setScenario;
 }
 const applyBtn = (name: string | RegExp = /^Apply \d+ corrections?$/) =>
@@ -123,7 +128,7 @@ const condRows = () =>
     // `.ny-subhead` joins the exclusions with fix 4: it is a LABEL for
     // the condition rows, not one of them, so it has no glyph, no
     // provenance and no action track to assert.
-    ".ny-item:not(.ny-apply):not(.ny-foot):not(.ny-sub):not(.ny-subhead)",
+    ".ny-item:not(.ny-apply):not(.ny-foot):not(.ny-sub):not(.ny-subhead):not(.ny-fold)",
   );
 
 describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)", () => {
@@ -488,12 +493,10 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
       expect(row.querySelector(".ny-glyph")?.getAttribute("aria-hidden")).toBe("true");
       expect(row.querySelector(".sc-result")!.textContent!.trim().length).toBeGreaterThan(0);
     }
-    // Fix 4: the group is introduced by its own sub-header, which names
-    // the rows the block's count is NOT about (§8.5's own words).
-    const head = block()!.querySelector(".ny-subhead");
-    expect(head, "the condition rows are grouped under a name").not.toBeNull();
-    expect(head!.textContent).toContain("Site conditions: scanned");
-    expect(head!.querySelector("button"), "a label is not a control").toBeNull();
+    // R99 retires fix 4's sub-header: it named the rows the count was NOT
+    // about, and the listed rows now count (the rest sit in the fold).
+    expect(block()!.querySelector(".ny-subhead")).toBeNull();
+    expect(block()!.textContent).not.toContain("Site conditions: scanned");
     // The Apply row is the LAST data line (rule 78), after every
     // condition row and before the scan's provenance.
     const all = Array.from(block()!.querySelectorAll(".ny-item"));
@@ -604,17 +607,25 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     const b = block();
     expect(b, "block mounted on the held scan").not.toBeNull();
     const buttons = Array.from(b!.querySelectorAll("button")) as HTMLButtonElement[];
+    // R96 C: the listed rows (two detected, the school record), the fold's
+    // toggle (open — mount opened it), the folded rows, then Apply.
     expect(buttons.map((x) => x.textContent)).toEqual([
       "Dismiss",
-      "Assert",
       "Dismiss",
-      "Assert",
       "Undo",
+      "Hide",
+      "Assert",
+      "Assert",
       "Assert",
       "Assert",
       "Apply 0 corrections",
     ]);
-    expect(buttons.every((x) => x.disabled)).toBe(true);
+    // Every WRITE is disabled; the fold's toggle is a read and stays live
+    // under the lock (P13's measure).
+    const writes = buttons.filter((x) => x.hasAttribute("data-write"));
+    expect(writes).toHaveLength(8);
+    expect(writes.every((x) => x.disabled)).toBe(true);
+    expect(b!.querySelector<HTMLButtonElement>(".ny-fold-toggle")!.disabled).toBe(false);
     await user.click(within(b!).getAllByRole("button", { name: "Assert" })[0]);
     await user.click(within(b!).getByRole("button", { name: "Undo" }));
     expect(setScenario).not.toHaveBeenCalled();
