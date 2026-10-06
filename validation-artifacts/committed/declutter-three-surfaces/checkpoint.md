@@ -139,11 +139,11 @@ Every fact on each surface today is kept. Each one is moved, grouped or put behi
 
 **Today** (`today/needsyou-1440.png`):
 - **The header count is 1:** `deriveNeedsYou` sets `count = items.length`, ▲ + ⚠ only (`lib/needs-you.ts:102-107`, ruling 185: "the header count is the sum, the decomposition is provenance").
-- **Below it, seven condition rows** under "Site conditions: scanned" (`NeedsYouConditions.tsx:153`; the sub-header exists to keep the count true, `:363-375`):
+- **Below it, seven condition rows** under "Site conditions: scanned" (`NeedsYouConditions.tsx:387`, rendered by `SiteConditionRows` at `:153`; the sub-header exists to keep the count true, `:363-375`):
   - 2 ▲ detected (Dismiss);
   - 3 ✓ "none along the corridor" (Assert);
   - 2 ◌ "not asserted" (Assert).
-- **P2 finding:** sidewalks are stated twice. They appear once as the counted ▲ item "Pedestrian sidewalks present · changed this plan · 6 devices added" (from `site_adjustments`, `lib/needs-you-items.ts:102`), and again as the uncounted ▲ row "Pedestrian sidewalks · detected · 58 found" (from the scan). A count of 1 above three ▲ glyphs reads as disagreeing (P2).
+- **P2 finding:** sidewalks are stated twice. They appear once as the counted ▲ item "Pedestrian sidewalks present · changed this plan · 6 devices added" (from `site_adjustments`, `lib/needs-you-items.ts:64`, pushed at `:121`), and again as the uncounted ▲ row "Pedestrian sidewalks · detected · 58 found" (from the scan). A count of 1 above three ▲ glyphs reads as disagreeing (P2).
 - **P19:** five rows that need nothing render by default.
 
 **Proposed** (`mockups/needsyou-1440.png`, `needsyou-390.png`):

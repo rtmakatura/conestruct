@@ -102,7 +102,8 @@ function mount(
   );
   // R96 C: none-found and not-asserted rows sit behind the fold.  These
   // tests are about every row's content, so they open it first; the
-  // fold's own behaviour is NeedsYouConditions.fold.test.tsx's.
+  // fold's own behaviour is tested in GeneratorShell.needs-you.test.tsx
+  // ("R99: the header count equals the rows listed…").
   const toggle = document.querySelector(".ny-fold-toggle");
   if (toggle) fireEvent.click(toggle);
   return setScenario;
