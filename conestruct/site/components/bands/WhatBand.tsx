@@ -32,7 +32,7 @@
 // them (lane width, work dates) carry an operator-set or optional clause
 // because detection reports neither.
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Scenario, ScenarioMeta, RoadType } from "@/lib/scenarios";
 import { JURISDICTION_OPTIONS, type JurisdictionBlock } from "@/lib/jurisdiction";
 import { validateLanes } from "@/lib/scenarios/validation";
@@ -56,10 +56,11 @@ import {
 } from "@/lib/road-detection/detected-rows";
 import { provenanceClause } from "@/lib/road-detection/provenance";
 import { handoffNotesByCell } from "./HandoffNotes";
-import { PlanDetails, showsDividedToggle } from "./PlanDetails";
+import { PlanDetailCells, showsDividedToggle } from "./PlanDetails";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
 import { CellAction, FieldCell } from "./FieldCell";
+import { markerOf } from "@/lib/scenarios/provenance-marker";
 import type { SectionSlot } from "../JurisdictionSection";
 import { useWriteLock } from "../WriteLock";
 
@@ -103,12 +104,15 @@ function Cell({
   notes = [],
   lines = [],
   detail = null,
+  record = null,
   children,
   testid,
 }: {
   label: string;
   htmlFor?: string;
   provenance: string;
+  /** R100: an answered suggestion's record, collapsed into the cell. */
+  record?: ReactNode;
   amber?: boolean;
   error?: boolean;
   /** #289 hand-check, correction 3: the picker's handoff sentences for
@@ -144,6 +148,10 @@ function Cell({
           {amber ? `⚠ ${provenance}` : provenance}
         </span>
       }
+      // R98: the line as one quiet marker, the line itself one click
+      // away; an error keeps its line in the cell (P3).
+      marker={markerOf(provenance, { amber, error })}
+      record={record}
       info={
         hasDetail ? (
           <>
@@ -199,6 +207,42 @@ function clauseFor(
     }),
     amber: clauseIsAmber(row),
   };
+}
+
+/** R96 A — the two optional title-block fields behind one labelled
+ *  disclosure: closed by default, saying what is inside and how many are
+ *  not set (P13, P19).  A read, live under the write lock. */
+function FileDetails({
+  project,
+  location,
+  children,
+}: {
+  project: string;
+  location?: string;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const unset = [project, location ?? ""].filter((v) => !v).length;
+  return (
+    <div className="a-filedetails" data-testid="what-file-details">
+      <div className="a-filedetails-head">
+        <span className="tr-prov">
+          File details · Project name, Location description ·{" "}
+          {unset > 0 ? `◌ ${unset} not set` : "✓ both set"}
+        </span>
+        <button
+          type="button"
+          className="a-lk"
+          data-read=""
+          aria-expanded={open}
+          onClick={() => setOpen((o) => !o)}
+        >
+          {open ? "close ‹" : "open ›"}
+        </button>
+      </div>
+      {open && children}
+    </div>
+  );
 }
 
 export function WhatBand({
@@ -359,7 +403,12 @@ export function WhatBand({
           : "No confirmed road at this pin, so nothing was prefilled. Set what the plan needs."
       }
     >
-      {/* Rule 116's first row: speed / lanes / lane width. */}
+      {/* R96 A (R101, mockups/what.html) — TWO GROUPS named for the
+          user's question (P20): the road, then the job.  Each is one
+          fixed 3-track grid (P4, P6); PlanDetailCells puts the rest of
+          each group's inputs into the same grid. */}
+      <div className="a-group" data-testid="what-group-road">
+      <span className="tr-section a-group-head">The road</span>
       <div className="a-grid">
         <Cell
           label="Speed limit"
@@ -465,10 +514,6 @@ export function WhatBand({
             ))}
           </select>
         </Cell>
-      </div>
-
-      {/* Rule 116's second row: road type / jurisdiction / work dates. */}
-      <div className="a-grid">
         <Cell
           label="Road type"
           htmlFor="what-road-type"
@@ -504,12 +549,27 @@ export function WhatBand({
             ))}
           </select>
         </Cell>
+        <PlanDetailCells
+          group="road"
+          scenario={scenario}
+          setScenario={setScenario}
+          dividedLine={showsDivided ? dividedLine : null}
+          streetClass={classificationFields}
+        />
+      </div>
+      </div>
+
+      <div className="a-group" data-testid="what-group-job">
+      <span className="tr-section a-group-head">The job</span>
+      <div className="a-grid">
+        <PlanDetailCells group="job" scenario={scenario} setScenario={setScenario} />
 
         <Cell
           label="Jurisdiction"
           htmlFor="what-jurisdiction"
           provenance={jurisdictionProv}
           error={jState === "not-evaluated"}
+          record={jurisdictionSuggest?.("record")}
           detail={
             jurisdictionSuggest ||
             (jState === "evaluated" && jurisdictionValue !== pickedLabel) ? (
@@ -599,33 +659,28 @@ export function WhatBand({
             />
           )}
         </Cell>
-        {/* The jurisdiction suggestion's one line, spanning the band under
-            this row — the last item of the row in the DOM as on screen
-            (rulings.md, "The suggestion row spans the band"). */}
+        {/* The dates' time cells (ScheduleField), once a date stands. */}
+        {scheduleCells}
+        {/* The jurisdiction suggestion still WAITING, spanning the band
+            under the row (rulings.md, "The suggestion row spans the
+            band"); answered, it is the cell's record (R100). */}
         {jurisdictionSuggest && (
           <CellAction label="Jurisdiction" testid="jurisdiction">
             {jurisdictionSuggest("action")}
           </CellAction>
         )}
       </div>
+      {/* #227's window reference block: a table, not a field, so it sits
+          under the group's grid rather than in it (a cell would grow one
+          row per window and break the shared row height, P6). */}
+      {scheduleWindows}
+      </div>
 
-      {/* THE TITLE-BLOCK ROW.
-          #289 hand-check, 2026-09-22, correction 2: "PROJECT DETAILS /
-          ENTER MANUALLY is removed from WHERE; if the project field
-          survives it is a WHAT-grid field with a provenance line,
-          otherwise it goes."
-
-          It survives, because it is not decoration: `meta.project` names
-          the PDF file and fills the title block's project name
-          (render_api.py:485, :754, :1042; schemas.py:916), and
-          `meta.locationDescription` is the title block's LOCATION row
-          (schemas.py:917).  Both ride the wire.  Dropping them would
-          delete two fields operators fill and two lines the deliverables
-          print.
-
-          `meta.address` does NOT get a cell: it is the WHERE band's
-          search field, and a second writer for one value is the thing
-          this arc keeps removing.  The old disclosure held all three. */}
+      {/* THE TITLE-BLOCK FIELDS (#289 correction 2: they survive because
+          the deliverables print them) — R96 A: behind "File details", a
+          disclosure that says what it holds and how many are unset
+          (P13).  Optional, so not in the way of the job. */}
+      <FileDetails project={scenario.meta.project} location={scenario.meta.locationDescription}>
       <div className="a-grid">
         <Cell
           label="Project name"
@@ -673,6 +728,7 @@ export function WhatBand({
           />
         </Cell>
       </div>
+      </FileDetails>
 
       {/* #289 hand-check, 2026-09-23, fix 3: §8.23's remainder — the
           loose detection block — is GONE.  Every line it carried is now
@@ -682,20 +738,6 @@ export function WhatBand({
           the Divided control when there is one.  "The separate block is
           gone; nothing it said is gone" — this is the second half of
           that sentence finally landing. */}
-      {/* Correction 1 — THE SECOND GROUP: the inputs the 3 × 2 grid does
-          not hold, as grid cells under one sub-header.  It replaces the
-          old SCHEDULE / ROAD / WORK sections, which carried the setup
-          panel's palette and its own section headers into a column that
-          counts to four. */}
-      <PlanDetails
-        scenario={scenario}
-        setScenario={setScenario}
-        dividedLine={showsDivided ? dividedLine : null}
-        streetClass={classificationFields}
-        scheduleCells={scheduleCells}
-        windows={scheduleWindows}
-      />
-
       {/* R1 — the kind's own fields.  Never behind a disclosure: the
           near-intersection hold is a rail blocker and rule 139 keeps the
           chain visible. */}

@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario, ShoulderScenario } from "@/lib/scenarios";
-import { PlanDetails } from "./PlanDetails";
+import { PlanDetailCells } from "./PlanDetails";
 
 afterEach(cleanup);
 
@@ -32,7 +32,12 @@ function oneWay(carriageway: ShoulderScenario["carriageway"]): ShoulderScenario 
 
 function mount(scenario: Scenario) {
   const setScenario = vi.fn();
-  render(<PlanDetails scenario={scenario} setScenario={setScenario} />);
+  // R96 A: the carriageway cell is a cell of the WHAT band's "The road" group.
+  render(
+    <div className="a-grid">
+      <PlanDetailCells group="road" scenario={scenario} setScenario={setScenario} />
+    </div>,
+  );
   return setScenario;
 }
 

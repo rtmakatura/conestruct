@@ -4757,6 +4757,107 @@ input[type="number"] {
   color: var(--fail);
 }
 
+/* ─── R96 A (declutter-three-surfaces, R98/R100/R101) · the WHAT band ───
+   Two groups named for the user's question (P20), each one fixed 3-track
+   `.a-grid`; every cell is label / field / ONE marker row (P6); the marker
+   is symbol + word (P9) and opens a popover that overlays the page, so
+   nothing below it moves (P1).  The popover closes on click-away or Esc
+   (FieldCell.tsx). */
+.workbench .a-group + .a-group {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--rule);
+}
+.workbench .a-group-head {
+  display: block;
+}
+.workbench .a-group > .a-grid {
+  margin-top: 10px;
+}
+.workbench .a-cell {
+  position: relative;
+}
+.workbench .a-cell-foot {
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.workbench .a-mark {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  /* Type: the `tr-prov` role on the element (P5, #263's census). */
+  color: var(--ink-faint);
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  /* Rule 15's hit box without a taller row: the box overhangs downward
+     into the grid gap, which holds nothing interactive. */
+  min-height: 32px;
+  margin-bottom: -14px;
+  display: inline-flex;
+  align-items: flex-start;
+}
+.workbench .a-mark.is-guess {
+  color: var(--warn);
+}
+.workbench .a-mark:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+@media (max-width: 480px) {
+  .workbench .a-mark {
+    min-height: 44px;
+    margin-bottom: -26px;
+  }
+}
+.workbench .a-info.a-pop {
+  position: absolute;
+  z-index: 5;
+  top: 100%;
+  left: 0;
+  width: max(100%, 280px);
+  max-width: min(360px, calc(100vw - 32px));
+  margin-top: 4px;
+  padding: 10px 12px;
+  background: var(--raise);
+  border: 1px solid var(--act);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.4);
+}
+/* The record in its field: the #227 decision line, compact — glyph,
+   sentence, Undo on one row, wrapping inside the cell (P6). */
+.workbench .a-cell-foot .a-cell-record {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  width: 100%;
+}
+.workbench .a-cell-foot .a-cell-record .sugg-row {
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 0;
+}
+.workbench .a-cell-foot .a-cell-record .sys-event {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.workbench .a-filedetails {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+}
+.workbench .a-filedetails-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 /* #289 fidelity F4 (ruled Q3): the corridor's zone rows are the extent
    field's own provenance lines — a plain stack inside the cell.  The
    .a-detect block that held them (16 px margin, a dotted top rule, its

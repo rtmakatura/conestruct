@@ -271,7 +271,10 @@ export function JurisdictionSuggestSlot({
  *              (#227); null when nothing asks for action
  *    detail  — the rest: passive agree / differ rows, evidence, caveats
  *    control — JurisdictionControls only: the class chips alone */
-export type SuggestSection = "all" | "action" | "detail" | "control";
+/** R96 A / R100: "record" is an ANSWERED suggestion's decision line and
+ *  Undo, rendered inside the field it answered; "action" is then empty,
+ *  so the band-wide row only ever holds a suggestion still waiting. */
+export type SuggestSection = "all" | "action" | "detail" | "control" | "record";
 /** A slot the shell builds and a cell asks for in parts. */
 export type SectionSlot = (section?: SuggestSection) => ReactNode;
 
@@ -447,6 +450,9 @@ export function JurisdictionControls({
     // The label is the cell's own.
     if (section === "control") return classPick;
     if (section === "action") return classSlot("action");
+    // R96 A / R100: the answered suggestion's record, for the cell's own
+    // footer row — the slot's decision line and Undo, nothing else.
+    if (section === "record") return classSlot("record");
     if (section === "detail") {
       const detail = classSlot("detail");
       // The map chip says something only where the jurisdiction
@@ -601,13 +607,17 @@ function ClassSuggestSlot({
       </>
     );
     // WHAT density: decision + Undo is the one line; the rest is detail.
-    if (section === "action") {
+    // R100: an answered suggestion collapses into its field.  The SAME
+    // decision node (#198 byte-identity) renders in the field's footer
+    // row; the band-wide action row is empty and takes no track.
+    if (section === "record") {
       return (
-        <div className="jbar-suggest live" aria-live="polite">
+        <div className="jbar-suggest a-cell-record live" aria-live="polite">
           <div className={`sys-event ${resolution.resolution}`}>{decision}</div>
         </div>
       );
     }
+    if (section === "action") return null;
     if (section === "detail") {
       return agrees || differs || tier || mapCaveat ? (
         <div className="jbar-suggest">
@@ -671,6 +681,7 @@ function ClassSuggestSlot({
       )}
     </>
   );
+  if (section === "record") return null;
   if (section === "action") {
     return proposal ? (
       <div className="jbar-suggest live" aria-live="polite">
@@ -824,13 +835,17 @@ function SuggestSlot({
     // WHAT density (rulings.md, "After the S4 prod run"): the record's
     // decision line and its Undo are the field's one suggestion line; the
     // rest rides the field's details panel.  Same nodes, split in two.
-    if (section === "action") {
+    // R100: an answered suggestion collapses into its field.  The SAME
+    // decision node (#198 byte-identity) renders in the field's footer
+    // row; the band-wide action row is empty and takes no track.
+    if (section === "record") {
       return (
-        <div className="jbar-suggest live" aria-live="polite">
+        <div className="jbar-suggest a-cell-record live" aria-live="polite">
           <div className={`sys-event ${resolution.resolution}`}>{decision}</div>
         </div>
       );
     }
+    if (section === "action") return null;
     if (section === "detail") {
       return (
         <div className="jbar-suggest">
@@ -891,6 +906,7 @@ function SuggestSlot({
       )}
     </>
   );
+  if (section === "record") return null;
   if (section === "action") {
     return proposal ? (
       <div className="jbar-suggest live" aria-live="polite">

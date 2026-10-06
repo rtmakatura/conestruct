@@ -256,3 +256,41 @@ Built as mocked up, under R99 and R101.
   - `GeneratorShell.primary.test.tsx` gains "R103: an advisory-only detection is listed and counted, but the zip keeps the primary". It was red before the wiring, because NEEDS YOU owned the primary.
   - Frontend on C: 188 files, 1951 passed.
 - This resolves build C's flagged miss 2.
+
+---
+
+## Build A (Step 2, WHAT), branch `declutter-a-what` (stacked on C): outcome against the prediction
+
+Built as mocked up, under R98, R100 and R101.
+
+**What changed:**
+- **Two groups, "The road" and "The job",** each one fixed 3-track grid:
+  - road: speed, lanes, lane width / road type, street classification, Divided (or #308's one-way question), then street class's waiting suggestion row;
+  - job: work type, night, reduction (and its limit) / jurisdiction, work dates (and its time cells), then the jurisdiction's waiting suggestion row, with the windows block under the grid.
+  
+  "The rest of this plan" is retired. `PlanDetails` became `PlanDetailCells({group})`, a fragment that renders into the band's own grids.
+- **One marker per field** (`lib/scenarios/provenance-marker.ts`): symbol and word in the cell's third row. It opens a popover holding the full line and the field's details, closing on click-away and Esc (focus returns to the marker). An error and "⚠ needs you" stay full lines (P3).
+- **The answered suggestion** (R100): a new `"record"` section renders #227's decision node (same text and Undo) in the field's own row, and the band-wide row empties. `GeneratorShell` hands `null` for `"record"` until something is answered. The field's details then open from the label row's "i details".
+- **Project name and Location description** sit behind "File details · Project name, Location description · ◌ N not set".
+
+**Browser leg** (local dev server on this branch, prod backend, the same capture rig, E Colfax): `build-a/what-{1440,390}.png` (Denver and Arterial confirmed) and `-suggested.png` (before).
+- The band is **about 840 px tall at 1440** (today's capture: 1070).
+- The answered records sit in their cells. The waiting suggestions keep their full rows with real buttons.
+
+**Tests:**
+- New: `provenance-marker.test.ts` (25 cases; red by a missing module before green; I wrote the module before the first run and corrected the order by moving it aside).
+- New: `WhatBand.declutter.test.tsx` (7). Before the build 5 of the first 6 failed; the 6th (a waiting suggestion keeps its row) is today's behaviour. The street-class record test was red before its fix (below).
+- Frontend total: 190 files, 1977 passed; `tsc` clean.
+
+**Churn as predicted:**
+- the provenance-line texts and the record bars (`WhatBand.density.test.tsx`, rewritten to R98/R101 with #289's intent kept);
+- "The rest of this plan" and `plan-details` (`PlanDetails.test.tsx`, `PlanDetails.carriageway.test.tsx`, `GeneratorSidebar.jurisdiction-band.test.tsx`, `GeneratorForms.a11y.test.tsx`, now mounting `PlanDetailCells`).
+
+**Misses and deviations:**
+1. **Caught in the browser leg, not by a test first:** the bare street-class control had no `"record"` branch, so the record rendered the whole field a second time (chips included). Fixed in `JurisdictionSection.tsx`; the red test is "a confirmed street class: only its record in the footer row, one set of chips".
+2. **Deviation from the mockup:** the Denver windows stay a block under "The job" grid, not a cell. A cell would grow one row per window and break the shared row height (P6).
+3. **Not predicted:**
+   - `GeneratorShell.disclosure-container.test.tsx` read "the cell's first `tr-prov`", which is now the marker (it carries the `tr-prov` type role). It now reads inside the popover.
+   - `type-census.test.ts` caught ad-hoc font sizes in my first CSS. The marker takes the `tr-prov` role instead.
+4. **An honesty gap, carried over:** a field's ⚠ handoff note (e.g. "snapped from 62 mph OSM detection") sits in the popover, as it sat behind the details toggle before. The marker shows the line's word ("✓ measured"), not the note's ⚠. This is no change from #289, but a ⚠ in the marker when a note exists is worth a ruling.
+5. **#276's reserve:** the jurisdiction line's height reserve now applies inside the popover. Only the rare "not evaluated" error shows inline and grows that row (P1), where today the reserve held it.

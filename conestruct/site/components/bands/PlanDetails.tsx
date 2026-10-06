@@ -1,5 +1,10 @@
 "use client";
 
+// R96 A (2026-10-06, declutter-three-surfaces): the second group's
+// sub-header ("The rest of this plan") is retired.  Its cells now render
+// into the WHAT band's two groups, "The road" and "The job"
+// (PlanDetailCells, below); everything else here stands.
+//
 // #289 hand-check, 2026-09-23, correction 1 — THE SECOND GROUP.
 //
 // Ryan's words: "WHAT is the 3×2 grid (rules 116, 136–138) plus a second
@@ -45,6 +50,7 @@ import {
   TWIN_RADIUS_M,
   type CarriagewayFacts,
 } from "@/lib/road-detection/carriageway";
+import { markerOf } from "@/lib/scenarios/provenance-marker";
 import { useWriteLock } from "../WriteLock";
 import { CellAction, FieldCell } from "./FieldCell";
 import type { SectionSlot } from "../JurisdictionSection";
@@ -89,12 +95,15 @@ function Cell({
   provenance,
   line = null,
   detail = null,
+  record = null,
   children,
   testid,
 }: {
   label: string;
   htmlFor?: string;
   provenance: string;
+  /** R100: an answered suggestion's record, collapsed into the cell. */
+  record?: ReactNode;
   /** A detection fact about THIS field (fix 3).  #289 WHAT density: it
    *  is detail, behind the field's toggle — "the divided clause". */
   line?: { key: string; text: string; amber: boolean } | null;
@@ -115,6 +124,9 @@ function Cell({
           {provenance}
         </span>
       }
+      // R98: the line as one quiet marker; "⚠ needs you" stays a line.
+      marker={markerOf(provenance)}
+      record={record}
       info={
         hasDetail ? (
           <>
@@ -180,14 +192,26 @@ function TwoWay({
   );
 }
 
-export function PlanDetails({
+/** R96 A (declutter-three-surfaces, R101 "as mocked up") — the inputs the
+ *  first three rows don't hold, as cells of the band's two groups rather
+ *  than a third section ("The rest of this plan" is retired).  The WHAT
+ *  band renders them INSIDE its own grids, so a group's cells share one
+ *  set of tracks (P4, P6):
+ *
+ *    road  street classification, then the Divided toggle or #308's
+ *          one-way/divided question, then street class's waiting
+ *          suggestion row (last, under the row that holds the field);
+ *    job   work type, night, the speed reduction and its limit.
+ *
+ *  A fragment, never a wrapper: the grid is the band's. */
+export function PlanDetailCells({
+  group,
   scenario,
   setScenario,
-  scheduleCells,
-  windows,
   dividedLine = null,
   streetClass,
 }: {
+  group: "road" | "job";
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
   /** #289 hand-check, 2026-09-23, fix 3: "divided under the Divided
@@ -196,15 +220,9 @@ export function PlanDetails({
    *  about.  Null when detection has nothing to say, or when there is no
    *  Divided control to sit under — the road-type cell takes it then. */
   dividedLine?: { key: string; text: string; amber: boolean } | null;
-  /** The dates control's own cells — ScheduleField's, rendered into this
-   *  grid rather than pasted below it as a section. */
-  scheduleCells?: ReactNode;
-  /** #227's window reference block, which is a reference table and not a
-   *  field, so it sits under the grid rather than in it. */
-  windows?: ReactNode;
   /** #289 WHAT density (Ryan, 2026-09-24): "Street classification
-   *  becomes its own cell in the second group, out of the road-type
-   *  cell."  The shell's slot, asked for in parts. */
+   *  becomes its own cell", asked for in parts.  R100: its "record" is
+   *  the answered suggestion, collapsed into the cell. */
   streetClass?: SectionSlot;
 }): ReactNode {
   const locked = useWriteLock();
@@ -218,14 +236,9 @@ export function PlanDetails({
   const delta = wz !== undefined ? scenario.speed - wz : 0;
   const carriageway = oneWayFacts(scenario);
 
-  return (
-    <div className="a-subgroup" data-testid="plan-details">
-      <span className="tr-section">The rest of this plan</span>
-      <span className="tr-prov">
-        inputs the grid has no cell for. Each one changes the plan
-      </span>
-
-      <div className="a-grid">
+  if (group === "job") {
+    return (
+      <>
         <Cell
           label="Work type"
           htmlFor="pd-work-type"
@@ -277,10 +290,6 @@ export function PlanDetails({
               on="Reduced"
               value={wz !== undefined}
               onChange={(v) =>
-                // The deleted ShoulderForm's own default, carried whole:
-                // the first reduction is 10 mph below the posted speed,
-                // with 25 as the floor (components/ShoulderForm.tsx:104
-                // at ccef2ee, the commit before it was deleted).
                 set(
                   "workZoneSpeed" as keyof Scenario,
                   (v ? Math.max(25, scenario.speed - 10) : undefined) as never,
@@ -295,11 +304,6 @@ export function PlanDetails({
           <Cell
             label="Work-zone speed limit"
             htmlFor="pd-wz-speed"
-            // The deleted ShoulderForm's sentence, carried verbatim
-            // (components/ShoulderForm.tsx:132-133 at ccef2ee): the
-            // stepped-installation count is S-630-1 Sheet 2 Note 3's,
-            // and it is the one number on this surface that cites a
-            // sheet, so it keeps its wording exactly.
             provenance={
               delta > 15
                 ? `Δ${delta} mph · S-630-1 Sheet 2 Note 3: ${Math.ceil(delta / 15)} stepped sign installations`
@@ -322,103 +326,104 @@ export function PlanDetails({
             />
           </Cell>
         )}
+      </>
+    );
+  }
 
-        {showsDividedToggle(scenario) && (
-          <Cell
-            label="Divided highway"
-            provenance="median present · every other road type sets this itself (#85)"
-            line={dividedLine}
-            testid="divided"
-          >
-            <TwoWay
-              id="Divided highway"
-              off="Undivided"
-              on="Divided"
-              value={Boolean((scenario as { divided?: boolean }).divided)}
-              onChange={(v) =>
-                // The deleted ShoulderForm's flip, carried whole
-                // (components/ShoulderForm.tsx:56-63 at ccef2ee): the
-                // divided-ness change drags the lane default with it,
-                // exactly as `setRoadType` does.
-                setScenario({
-                  ...scenario,
-                  divided: v,
-                  lanes: v ? 2 : 1,
-                } as Scenario)
-              }
-              locked={locked}
-            />
-          </Cell>
-        )}
+  return (
+    <>
+      {streetClass && (
+        <Cell
+          label="Street classification"
+          // Rule 137: a line always.  The chips are the operator's —
+          // the suggestion's Confirm is the operator's click too — so
+          // a picked class is rule 137's own operator-set clause.
+          provenance={
+            scenario.street_class
+              ? "your change · operator-set from here on"
+              : "not set · operator-set when picked"
+          }
+          detail={streetClass("detail")}
+          record={streetClass("record")}
+          testid="street-class"
+        >
+          {streetClass("control")}
+        </Cell>
+      )}
 
-        {carriageway && (
-          <Cell
-            label="One-way street or divided road?"
-            provenance={carriagewayProvenance(carriageway)}
-            testid="carriageway"
-          >
-            <TwoWay
-              id="One-way street or divided road?"
-              off="One-way street"
-              on="One side of a divided road"
-              value={
-                carriagewayVerdict(carriageway) === "undecided"
-                  ? null
-                  : carriagewayVerdict(carriageway) === "divided"
-                    ? true
-                    : false
-              }
-              onChange={(v) => {
-                // #308 (R83): the operator's answer rides the facts to the
-                // backend, which builds from it; divided-ness follows, and
-                // the lanes refit if divided's wider shoulder would overrun
-                // the sheet (the same ceiling auto-apply fits to).
-                const s = scenario as ShoulderScenario;
-                const ceiling = laneWidthCeilingFt("shoulder", s.lanes, v);
-                setScenario({
-                  ...s,
-                  divided: v,
-                  laneWidth: Math.min(s.laneWidth, ceiling),
-                  carriageway: { ...carriageway, confirmed: v ? "divided" : "one_way_street" },
-                });
-              }}
-              locked={locked}
-            />
-          </Cell>
-        )}
-
-        {scheduleCells}
-
-        {/* Street classification is the group's LAST cell, so its
-            suggestion row — a full-width row under the grid row holding
-            the field (rulings.md, "The suggestion row spans the band") —
-            is the last item in the DOM as on screen: no cell after it for
-            focus to jump back up to. */}
-        {streetClass && (
-          <Cell
-            label="Street classification"
-            // Rule 137: a line always.  The chips are the operator's —
-            // the suggestion's Confirm is the operator's click too — so
-            // a picked class is rule 137's own operator-set clause.
-            provenance={
-              scenario.street_class
-                ? "your change · operator-set from here on"
-                : "not set · operator-set when picked"
+      {showsDividedToggle(scenario) && (
+        <Cell
+          label="Divided highway"
+          provenance="median present · every other road type sets this itself (#85)"
+          line={dividedLine}
+          testid="divided"
+        >
+          <TwoWay
+            id="Divided highway"
+            off="Undivided"
+            on="Divided"
+            value={Boolean((scenario as { divided?: boolean }).divided)}
+            onChange={(v) =>
+              // The deleted ShoulderForm's flip, carried whole
+              // (components/ShoulderForm.tsx:56-63 at ccef2ee): the
+              // divided-ness change drags the lane default with it,
+              // exactly as `setRoadType` does.
+              setScenario({
+                ...scenario,
+                divided: v,
+                lanes: v ? 2 : 1,
+              } as Scenario)
             }
-            detail={streetClass("detail")}
-            testid="street-class"
-          >
-            {streetClass("control")}
-          </Cell>
-        )}
-        {streetClass && (
-          <CellAction label="Street classification" testid="street-class">
-            {streetClass("action")}
-          </CellAction>
-        )}
-      </div>
+            locked={locked}
+          />
+        </Cell>
+      )}
 
-      {windows}
-    </div>
+      {carriageway && (
+        <Cell
+          label="One-way street or divided road?"
+          provenance={carriagewayProvenance(carriageway)}
+          testid="carriageway"
+        >
+          <TwoWay
+            id="One-way street or divided road?"
+            off="One-way street"
+            on="One side of a divided road"
+            value={
+              carriagewayVerdict(carriageway) === "undecided"
+                ? null
+                : carriagewayVerdict(carriageway) === "divided"
+                  ? true
+                  : false
+            }
+            onChange={(v) => {
+              // #308 (R83): the operator's answer rides the facts to the
+              // backend, which builds from it; divided-ness follows, and
+              // the lanes refit if divided's wider shoulder would overrun
+              // the sheet (the same ceiling auto-apply fits to).
+              const s = scenario as ShoulderScenario;
+              const ceiling = laneWidthCeilingFt("shoulder", s.lanes, v);
+              setScenario({
+                ...s,
+                divided: v,
+                laneWidth: Math.min(s.laneWidth, ceiling),
+                carriageway: { ...carriageway, confirmed: v ? "divided" : "one_way_street" },
+              });
+            }}
+            locked={locked}
+          />
+        </Cell>
+      )}
+
+      {/* Street class's WAITING suggestion: the group's last item, under
+          the row that holds the field (rulings.md, "The suggestion row
+          spans the band").  Answered, it is the cell's record (R100) and
+          this row is empty. */}
+      {streetClass && (
+        <CellAction label="Street classification" testid="street-class">
+          {streetClass("action")}
+        </CellAction>
+      )}
+    </>
   );
 }

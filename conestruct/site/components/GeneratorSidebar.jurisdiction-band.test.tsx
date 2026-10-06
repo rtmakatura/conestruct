@@ -120,7 +120,8 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     expect(document.querySelector(".jctl")).toBeNull();
     const classCell = document.querySelector('[data-testid="cell-street-class"]')!;
     expect(classCell.querySelector(".classpick")).not.toBeNull();
-    expect(document.querySelector('[data-testid="plan-details"]')!.contains(classCell)).toBe(true);
+    // R96 A: its cell sits in "The road" group (the second group is retired).
+    expect(document.querySelector('[data-testid="what-group-road"]')!.contains(classCell)).toBe(true);
     expect(
       document.querySelector('[data-testid="cell-road-type"]')!.querySelector(".classpick"),
     ).toBeNull();

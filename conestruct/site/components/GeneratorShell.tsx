@@ -1625,7 +1625,12 @@ export function GeneratorShell({
   // are render functions of a `SuggestSection`, so the WHAT cell can put
   // the actionable line under its field and the rest behind its details
   // toggle — the same component, the same nodes, asked for in parts.
-  const jurisdictionSuggestSlot = (section: SuggestSection = "all") => (
+  // R96 A / R100: "record" is the ANSWERED suggestion, collapsed into its
+  // field; with nothing answered there is no record, and the cell shows
+  // its marker.  Decided here, where the resolution lives, so the cell is
+  // handed null rather than an element that renders nothing.
+  const jurisdictionSuggestSlot = (section: SuggestSection = "all") =>
+    section === "record" && !suggestResolution ? null : (
     <JurisdictionSuggestSlot
       section={section}
       suggest={suggestState.status !== "ready" ? null : suggestState.data}
@@ -1638,7 +1643,8 @@ export function GeneratorShell({
     />
   );
 
-  const jurisdictionControls = (section: SuggestSection = "all") => (
+  const jurisdictionControls = (section: SuggestSection = "all") =>
+    section === "record" && !classResolution ? null : (
     <JurisdictionControls
       section={section}
       jurisdiction={jurisdictionBlock}

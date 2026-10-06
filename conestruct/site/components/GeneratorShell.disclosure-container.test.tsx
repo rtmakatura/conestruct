@@ -172,7 +172,9 @@ describe("#227 → #289 correction 3 — the #198 notes' new clothes", () => {
     // where its value came from, then the handoff says what happened to
     // it on the way in.
     const cell = note.closest('[data-testid="cell-speed"]')!;
-    const lines = Array.from(cell.querySelectorAll(".tr-prov"));
+    // R96 A: both live in the field's popover (the marker, at rest, is
+    // the line's one-click handle — R98).
+    const lines = Array.from(cell.querySelectorAll(".a-info .tr-prov"));
     expect(lines[0]).toBe(cell.querySelector('[data-testid="prov-speed"]'));
     expect(lines).toContain(note);
   });

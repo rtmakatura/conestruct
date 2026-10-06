@@ -24,13 +24,26 @@ import {
   DEFAULT_SHOULDER,
 } from "@/lib/scenarios";
 import type { Scenario, ShoulderScenario } from "@/lib/scenarios";
-import { PlanDetails, showsDividedToggle } from "./PlanDetails";
+import { PlanDetailCells, showsDividedToggle } from "./PlanDetails";
 
 afterEach(cleanup);
 
-function mount(scenario: Scenario) {
+// R96 A: the cells render into the WHAT band's own two grids
+// (PlanDetailCells, group "road" / "job"); this harness stands in for the
+// band's grid so the cells' behaviour is tested as before.
+function mount(scenario: Scenario, streetClass?: Parameters<typeof PlanDetailCells>[0]["streetClass"]) {
   const setScenario = vi.fn();
-  render(<PlanDetails scenario={scenario} setScenario={setScenario} />);
+  render(
+    <div className="a-grid" data-testid="plan-details">
+      <PlanDetailCells group="job" scenario={scenario} setScenario={setScenario} />
+      <PlanDetailCells
+        group="road"
+        scenario={scenario}
+        setScenario={setScenario}
+        streetClass={streetClass}
+      />
+    </div>,
+  );
   return setScenario;
 }
 
@@ -38,14 +51,13 @@ const cells = () =>
   Array.from(document.querySelectorAll('[data-testid^="cell-"]'));
 
 describe("the group's shape", () => {
-  it("is one sub-header over one grid — not three sections", () => {
+  it("declares no section of its own: its cells join the band's two groups (R96 A)", () => {
     mount(DEFAULT_SHOULDER);
     const group = screen.getByTestId("plan-details");
-    expect(group.querySelectorAll(".tr-section")).toHaveLength(1);
-    expect(group.querySelector(".tr-section")?.textContent).toBe(
-      "The rest of this plan",
-    );
-    expect(group.querySelectorAll(".a-grid")).toHaveLength(1);
+    // "The rest of this plan" is retired (R101, mockups/what.html): the
+    // cells are a fragment in the WHAT band's "The road" / "The job" grids.
+    expect(group.querySelectorAll(".tr-section")).toHaveLength(0);
+    expect(group.querySelectorAll(".a-grid")).toHaveLength(0);
     // The panel's own section names are gone from this surface.
     for (const word of ["Road", "Work", "Schedule"]) {
       expect(
@@ -114,9 +126,9 @@ describe("which cells a kind gets", () => {
     expect(screen.getByTestId("cell-divided")).toBeTruthy();
   });
 
-  it("a gated kind renders no group at all (rule 8)", () => {
+  it("a gated kind renders no cells at all (rule 8)", () => {
     mount({ ...DEFAULT_SHOULDER, kind: "mobile_op_2lane" } as unknown as Scenario);
-    expect(screen.queryByTestId("plan-details")).toBeNull();
+    expect(cells()).toHaveLength(0);
   });
 });
 
@@ -200,13 +212,17 @@ describe("street classification is its own cell in the second group", () => {
         jurisdictionLoading={false}
         jurisdictionErrored={false}
         stepIndex="STEP 2 OF 4"
-        classificationFields={(section) => (
-          <div data-testid={`class-${section}`}>Street classification</div>
-        )}
+        // As GeneratorShell builds it: no record until a suggestion is answered.
+        classificationFields={(section) =>
+          section === "record" ? null : (
+            <div data-testid={`class-${section}`}>Street classification</div>
+          )
+        }
       />,
     );
     const cell = screen.getByTestId("cell-street-class");
-    expect(screen.getByTestId("plan-details").contains(cell)).toBe(true);
+    // R96 A: in "The road" group.
+    expect(screen.getByTestId("what-group-road").contains(cell)).toBe(true);
     expect(cell.querySelector(".tr-field")!.textContent).toBe("Street classification");
     // Out of the road-type cell.
     expect(
@@ -280,7 +296,8 @@ describe("fix 1 — work dates is ONE control", () => {
 describe("fix 3 — divided's detection line sits under its control", () => {
   it("renders the line the WHAT band hands it, in the divided cell", () => {
     render(
-      <PlanDetails
+      <PlanDetailCells
+        group="road"
         scenario={
           { ...DEFAULT_SHOULDER, roadType: "urban_arterial" } as Scenario
         }
@@ -296,7 +313,8 @@ describe("fix 3 — divided's detection line sits under its control", () => {
 
   it("an amber clause keeps rule 13's second channel", () => {
     render(
-      <PlanDetails
+      <PlanDetailCells
+        group="road"
         scenario={
           { ...DEFAULT_SHOULDER, roadType: "urban_arterial" } as Scenario
         }

@@ -11,6 +11,14 @@
 //   and inspectable behind the toggle, text byte-identical (#198).
 //   Street classification becomes its own cell in the second group."
 //
+// R96 A (2026-10-06) AMENDS this suite under R98 (rule 137: a symbol +
+// word marker with the full line one click away counts as the provenance
+// line), R100 (an answered suggestion collapses into its field) and R101
+// (the details open as a popover that closes on click-away and Esc).  The
+// cases below keep #289's intent — one thing at rest per field, details
+// on click or tap and never hover, the suggestion row spanning the band —
+// with the marker in place of the sentence.
+//
 // Mounted with a confirmed road (detection speaks), a picker handoff
 // sentence, the REAL pin-suggestion slot and the REAL street-class slot,
 // so every kind of "everything else" the ruling names is on the page.
@@ -121,10 +129,13 @@ const SUGGEST: JurisdictionSuggestion = {
 };
 
 function mount(s: Scenario = scenario()) {
-  const suggest = (section: SuggestSection = "all") => (
-    <JurisdictionSuggestSlot suggest={SUGGEST} jurisdictionKey={null} section={section} />
-  );
-  const classFields = (section: SuggestSection = "all") => (
+  // As GeneratorShell builds them (R100): no record until answered.
+  const suggest = (section: SuggestSection = "all") =>
+    section === "record" ? null : (
+      <JurisdictionSuggestSlot suggest={SUGGEST} jurisdictionKey={null} section={section} />
+    );
+  const classFields = (section: SuggestSection = "all") =>
+    section === "record" ? null : (
     <JurisdictionControls
       jurisdiction={null}
       jurisdictionKey={null}
@@ -166,15 +177,20 @@ function atRest(el: HTMLElement): Element[] {
 }
 
 describe("each field shows the control, ONE provenance line and its one action line", () => {
-  it("every WHAT cell has exactly one provenance line at rest", () => {
+  it("every WHAT cell shows exactly one thing in its marker row at rest (R98)", () => {
     mount();
     const cells = [...document.querySelectorAll('[data-testid="band-what"] [data-testid^="cell-"]')];
     expect(cells.length).toBeGreaterThan(8);
     for (const c of cells) {
+      const id = c.getAttribute("data-testid")!;
+      const foot = c.querySelector(":scope > .a-cell-foot")!;
+      expect(foot.children, id).toHaveLength(1);
+      // At rest nothing else in the cell speaks: every other line is in
+      // its closed popover.
       const provs = [...c.querySelectorAll(".tr-prov")].filter(
         (n) => !n.closest(".a-info") && !n.closest(".jbar-suggest"),
       );
-      expect(provs, c.getAttribute("data-testid")!).toHaveLength(1);
+      expect(provs, id).toHaveLength(1);
     }
   });
 
@@ -182,21 +198,20 @@ describe("each field shows the control, ONE provenance line and its one action l
     mount();
     const rt = cell("road-type");
     expect(rt.querySelector("#what-road-type")).not.toBeNull();
-    expect(atRest(rt).map((n) => n.textContent)).toEqual([
-      document.querySelector('[data-testid="prov-road-type"]')!.textContent,
-    ]);
-    // #290: its details were the typed-bearing line and #214's caveat,
-    // both retired with the typed bearing (FLOW.md §5a).  On a shoulder
-    // plan there is nothing more to say, so there is no panel — rule
-    // "a field with nothing more to say has no toggle", below.
-    expect(panel("road-type")).toBeNull();
+    // R98: at rest, the marker; the line itself is one click away.
+    expect(atRest(rt).map((n) => n.textContent)).toEqual(["⚠ inferred"]);
+    const p = panel("road-type")!;
+    expect(p.hasAttribute("hidden")).toBe(true);
+    expect(p.querySelector('[data-testid="prov-road-type"]')!.textContent).toBe(
+      "⚠ OSM · Urban arterial · inferred",
+    );
     expect(document.querySelector('[data-testid="detect-bearing"]')).toBeNull();
   });
 
   it("jurisdiction at rest: the select and its line; the suggestion's one line spans the band under the row", () => {
     mount();
     const j = cell("jurisdiction");
-    expect(atRest(j).map((n) => n.className)).toEqual(["tr-prov"]);
+    expect(atRest(j).map((n) => n.textContent)).toEqual(["◌ not set"]);
     // rulings.md, "The suggestion row spans the band": the action row is
     // a grid item of the same grid, AFTER the row's last cell (work
     // dates) — last in the DOM as on screen — named for its field.
@@ -224,13 +239,17 @@ describe("each field shows the control, ONE provenance line and its one action l
   it("street classification is its own cell in the second group — chips, line, and the suggestion's one line", () => {
     mount();
     const sc = cell("street-class");
-    expect(screen.getByTestId("plan-details").contains(sc)).toBe(true);
+    // R96 A: in "The road" group (the second group is retired).
+    expect(screen.getByTestId("what-group-road").contains(sc)).toBe(true);
     expect(cell("road-type").querySelector(".classpick")).toBeNull();
     expect(sc.querySelector(".classpick")).not.toBeNull();
-    expect(atRest(sc).map((n) => n.className)).toEqual(["tr-prov"]);
-    // The group's last cell, then its action row — the grid's last item.
+    expect(atRest(sc).map((n) => n.textContent)).toEqual(["◌ not set"]);
+    // R96 A: street class shares its row with the Divided control, so its
+    // action row follows that row's last cell — still under the row that
+    // holds its field ("The suggestion row spans the band"), and still the
+    // group's last item.
     const action = document.querySelector('[data-testid="action-street-class"]')!;
-    expect(action.previousElementSibling).toBe(sc);
+    expect(action.previousElementSibling).toBe(cell("divided"));
     expect(action.nextElementSibling).toBeNull();
     const row = action.querySelector(".sugg-row")!;
     expect(row.textContent).toContain("Detected road suggests street class: Arterial (OSM primary)");
@@ -266,7 +285,7 @@ describe("each field shows the control, ONE provenance line and its one action l
 });
 
 describe("the details toggle — click / tap, never hover (rules 141, 142)", () => {
-  it("opens and closes inline, and says which it is", async () => {
+  it("opens and closes on click, and says which it is (R101: a popover)", async () => {
     // #290: exercised on the jurisdiction cell — the road-type cell has no
     // details left on a shoulder plan (its typed-bearing lines retired).
     mount();
@@ -276,12 +295,12 @@ describe("the details toggle — click / tap, never hover (rules 141, 142)", () 
     expect(t.getAttribute("aria-expanded")).toBe("false");
     expect(t.getAttribute("aria-controls")).toBe(panel("jurisdiction")!.id);
     expect(t.getAttribute("aria-label")).toMatch(/^Details for /);
-    // Rule 17's info symbol beside rule 18's word.
-    expect(t.textContent).toBe("idetails");
+    // R98: the marker is the trigger — symbol + word.
+    expect(t.textContent).toBe("◌ not set");
     await user.click(t);
     expect(t.getAttribute("aria-expanded")).toBe("true");
     expect(panel("jurisdiction")!.hasAttribute("hidden")).toBe(false);
-    // Inline: the panel is inside the cell it is about.
+    // The popover belongs to the cell it is about (and overlays the page).
     expect(cell("jurisdiction").contains(panel("jurisdiction"))).toBe(true);
     await user.click(t);
     expect(panel("jurisdiction")!.hasAttribute("hidden")).toBe(true);
@@ -325,10 +344,12 @@ describe("the details toggle — click / tap, never hover (rules 141, 142)", () 
     expect(block(".workbench .a-info-toggle", narrow)).toMatch(/margin-top:\s*-28px/);
   });
 
-  it("a field with nothing more to say has no toggle", () => {
+  it("every field's line is one click away (R98): each cell has one trigger", () => {
     mount();
-    expect(toggle("project")).toBeNull();
-    expect(toggle("work-dates")).toBeNull();
+    for (const c of document.querySelectorAll('[data-testid="band-what"] [data-testid^="cell-"]')) {
+      expect(c.querySelectorAll('[data-testid^="info-toggle-"]'), c.getAttribute("data-testid")!).toHaveLength(1);
+    }
+    expect(toggle("work-dates")!.textContent).toBe("◌ not set");
   });
 });
 
