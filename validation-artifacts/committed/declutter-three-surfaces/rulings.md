@@ -25,3 +25,16 @@
 >   - **Direction:** NEEDS YOU shows only what needs Ryan. Passed and nothing-found conditions collapse into a labelled count ("4 checked, none found ›"). The Assert/Dismiss actions and staging (P7) are unchanged.
 >
 > Name the FLOW.md step and user each surface serves. Ryan rules from the mockups; then it builds as one branch per surface.
+
+## R98-R101 (and R102, filed in issue-292-mirror-strategy), verbatim (Ryan, 2026-10-06)
+
+> Rulings (Ryan, 2026-10-06). Quote verbatim in the matching rulings.md (R98-R101: declutter-three-surfaces; R102: issue-292-mirror-strategy).
+>
+> R98: Rule 137 amended. A field's provenance line may be a symbol-and-word marker with the full line one click away; that counts as the provenance line. A field with neither is still a defect.
+> R99: Ruling 185 amended. Detected conditions count in NEEDS YOU, so the header count equals the rows listed (2 on the E Colfax pin).
+> R100: An answered suggestion may collapse into its field. That's a move the operator asked for, so P1 holds. Nothing above it moves.
+> R101: Build order C (NEEDS YOU), then A (WHAT), then B (Setup grid), one branch each, as mocked up. The Step 2 details popover closes on click-away and Esc. Yes, draft the far-sidewalk barricades issue for the chat to repost.
+>
+> R102: Overspan is earmarked, not live (Linear CON-39; revisit every two weeks). Build the framework now, on its own branch: Overspan as an optional first-choice mirror, used only when an OVERSPAN_API_KEY Modal secret exists. With no key, behaviour is byte-identical to today (prove it). The free mirrors stay as the fallback. Add the key to the R29 env check as optional, not required. Then draft the #292 comment (the three windows: 2 of 30 refused, which misses 1 in 20; the decision is CON-39) for the chat to repost. #292 stays open.
+>
+> Ship order: ship-loop-r95 first, then issue-308-page1-fixes. One at a time.
