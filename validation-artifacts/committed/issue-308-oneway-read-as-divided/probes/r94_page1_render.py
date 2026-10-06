@@ -112,15 +112,34 @@ for name, body in (("broadway", broadway()), ("colorado", colorado())):
         f"lane_w={params.lane_width_ft}  shoulder_w={sw}  devices={len(placements)}"
     )
     lines.append(f"   drawn road y: top {top:.1f}  bottom {bottom:.1f}  (PLAN_Y_CENTER {ps.PLAN_Y_CENTER:.1f})")
+    # The sidewalk bands page 1 draws (_draw_site_context): the work side,
+    # plus the opposing side on a divided road.
+    inner, outer = ps._sidewalk_strip_ft(params, sw)
+    bands = [ps._strip_y_range(inner, outer, s, params.is_divided) for s in ((1, -1) if params.is_divided else (1,))]
+    lines.append("   drawn sidewalk bands y: " + ", ".join(f"{lo:.1f}..{hi:.1f}" for lo, hi in bands))
     for p in placements:
         if p.device_type.name == "BARRICADE_TYPE_III" or (p.label or "") == "R9-9":
             y = ps._y_of(p.offset_ft, params.is_divided)
-            inside = bottom - 40 <= y <= top
+            on_band = any(lo <= y <= hi for lo, hi in bands)
             lines.append(
                 f"   {p.device_type.name:<20} {p.label or '':<6} station {p.station_ft:7.1f}  "
-                f"offset {p.offset_ft:6.1f} ft  page y {y:6.1f}  {'near road' if inside else 'OFF THE DRAWN ROAD'}"
+                f"offset {p.offset_ft:6.1f} ft  page y {y:6.1f}  "
+                f"{'on a drawn sidewalk band' if on_band else 'ON NO DRAWN BAND (floats)'}"
             )
     lines.append("")
+
+if TAG == "after":
+    # Where page 1 changed: the bounding box of every differing pixel
+    # between the committed "before" render (a748a7b) and this one.
+    from PIL import Image, ImageChops
+
+    for name in ("broadway", "colorado"):
+        before, after = (HERE / f"r94_{name}_{t}.png" for t in ("before", "after"))
+        if before.exists() and after.exists():
+            box = ImageChops.difference(
+                Image.open(before).convert("RGB"), Image.open(after).convert("RGB")
+            ).getbbox()
+            lines.append(f"pixel diff before -> after, {name}: changed bbox (x0, y0, x1, y1 px at 100 dpi) {box}")
 
 out = HERE / f"r94_{TAG}.txt"
 out.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\r\n")

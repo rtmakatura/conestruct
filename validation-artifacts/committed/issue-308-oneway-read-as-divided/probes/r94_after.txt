@@ -1,13 +1,11 @@
-HEAD a748a7b1aa0840cf4d14fecf76cb559f901208ad  tag before
+HEAD 5458b2b64693dd724e4f996777a39abfbdd1e298  tag after
 
 == broadway: POST /render/pdf -> 200
-   verdict=one_way_street  is_divided=False  one_way_street=True  lanes=4  lane_w=10.5  shoulder_w=8.0  devices=37
+   verdict=one_way_street  is_divided=False  one_way_street=True  lanes=4  lane_w=10.5  shoulder_w=8.0  devices=35
    drawn road y: top 513.0  bottom 310.0  (PLAN_Y_CENTER 485.0)
    drawn sidewalk bands y: 292.5..313.5
    BARRICADE_TYPE_III          station  1000.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
-   BARRICADE_TYPE_III          station  1000.0  offset  -52.0 ft  page y  667.0  ON NO DRAWN BAND (floats)
    BARRICADE_TYPE_III          station     0.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
-   BARRICADE_TYPE_III          station     0.0  offset  -52.0 ft  page y  667.0  ON NO DRAWN BAND (floats)
    SIGN_GENERIC         R9-9   station  1000.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
    SIGN_GENERIC         R9-9   station     0.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
 
@@ -22,3 +20,5 @@ HEAD a748a7b1aa0840cf4d14fecf76cb559f901208ad  tag before
    SIGN_GENERIC         R9-9   station  1000.0  offset   45.0 ft  page y  318.5  on a drawn sidewalk band
    SIGN_GENERIC         R9-9   station     0.0  offset   45.0 ft  page y  318.5  on a drawn sidewalk band
 
+pixel diff before -> after, broadway: changed bbox (x0, y0, x1, y1 px at 100 dpi) (36, 27, 1455, 961)
+pixel diff before -> after, colorado: changed bbox (x0, y0, x1, y1 px at 100 dpi) (36, 27, 431, 51)

@@ -442,3 +442,18 @@ Reproduced on this checkout (`a748a7b`, no prod request) by `probes/r94_page1_re
 ### Out of scope, noted
 
 On two-way and divided roads the mirrored pair still barricades the far sidewalk. It's drawn but unhatched, and has no R9-9 (visible in `r94_colorado_before.png`). The arrows there still sit in the sidewalk bands. Ryan ruled divided "unchanged", so neither moves here. Both are a draft-issue candidate, reposted through the chat (R97).
+
+### R94 build outcome against the prediction
+
+- **Placements, records, arrows, banner: as predicted.**
+  - Broadway goes 37 → **35** devices, and its two Type III barricades both sit at `+52 ft` on the drawn sidewalk band.
+  - The record reads "Added 2 Type III barricades…" with `devices_added` 4.
+  - Both arrows sit in lanes 1 and 4.
+  - The banner caps clear the line by 8 pt (they cleared it by 1.8 pt before, as measured by the red test).
+  - Colorado stays at 40 devices with its mirrored pair. Its page 1 differs from `a748a7b` only inside the banner text, pixel box (36, 27)–(431, 51) at 100 dpi (`probes/r94_after.txt`, `r94_*_before.png` / `r94_*_after.png`).
+- **Miss 1, predicted "Frontend: none"; wrong.** `conestruct/site/components/AuditTrail.tsx:103-108` hardcoded the panel copy "4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs added…". `TieredReference.tsx:240` prints it ahead of the backend's sentence (`detail?.action ?? rec.action`). On a one-way street the panel would have said 4 while page 1 says 2 (Rule 10, P2). Fix: the table drops `action` for `pedestrian_facility` (the field is now optional), so the panel prints the backend's sentence. Red-proven by `TieredReference.site-action.test.tsx` against the old file.
+- **Miss 2, its consequence.** Every sidewalk plan's panel row now reads the backend's wording: "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone." The old wording was "4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs added at the upstream and downstream ends." It's the same facts and the same count on two-way and divided roads. It's a platform-UI change on every sidewalk plan, though, which the table didn't predict. No PDF changes from it.
+- **Tests:**
+  - backend 2548 passed, 2 skipped (2542 + the 6 in `tests/test_r94_one_way_page1.py`; 5 red first, the divided control green throughout);
+  - frontend 188 files and 1939 tests passed;
+  - `tsc` clean.
