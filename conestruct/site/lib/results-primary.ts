@@ -35,6 +35,12 @@
 export type PrimaryOwner = "needs-you" | "download-all";
 
 /**
+ * R103 (2026-10-06): the shell now passes `primaryCount()`
+ * (lib/needs-you-conditions.ts) — the items that changed the plan or wait
+ * on a decision that would — not NEEDS YOU's header count, so an
+ * all-advisory block leaves the primary with the downloads.  The text
+ * below is the pre-R99 reasoning, kept as the record.
+ *
  * The derivation.  `needsYouCount` is ruling 185's SUM — the ▲ changed
  * and ⚠ attention tiers — which is the number NEEDS YOU's header shows.
  * Deliberately not the block's row count: the site-condition rows are

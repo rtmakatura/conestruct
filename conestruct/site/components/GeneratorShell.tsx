@@ -37,7 +37,7 @@ import { SITE_ADJUSTMENT_DETAIL } from "./AuditTrail";
 import { deriveTierSources } from "@/lib/tier-sources";
 import { buildNeedsYouItems } from "@/lib/needs-you-items";
 import { deriveNeedsYou } from "@/lib/needs-you";
-import { conditionRows, mergeConditions } from "@/lib/needs-you-conditions";
+import { conditionRows, mergeConditions, primaryCount } from "@/lib/needs-you-conditions";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { StatusBar } from "./StatusBar";
 import { WorkingBand } from "./WorkingBand";
@@ -1460,7 +1460,12 @@ export function GeneratorShell({
   const needsYouAdjustments =
     (stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections
       ?.site_adjustments ?? [];
-  const primaryOwner = derivePrimaryOwner(needsYouModel.count);
+  // R103: the primary goes to NEEDS YOU only when an item changed the plan
+  // or waits on a decision that would; an all-advisory block leaves it
+  // with the downloads (lib/needs-you-conditions.ts `primaryCount`).
+  const primaryOwner = derivePrimaryOwner(
+    primaryCount(needsYouModel, needsYouRows, needsYouAdjustments),
+  );
   // #288 clause 4 — the inputs EVERY tier reader takes.  Assembled once so
   // the reference disclosure and the two promoted tier rows cannot be
   // handed different facts (P2); each reads the same producer with these.

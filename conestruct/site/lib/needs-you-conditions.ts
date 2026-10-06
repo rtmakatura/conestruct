@@ -31,7 +31,11 @@
 // Pure: a re-grouping of wire facts, no value computed (Rule 3).
 
 import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "./tiering";
-import type { SiteScanCorrection, SiteScanProvenance } from "./render-types";
+import type {
+  SiteAdjustmentRecord,
+  SiteScanCorrection,
+  SiteScanProvenance,
+} from "./render-types";
 import type { NeedsYouModel } from "./needs-you";
 import { MANUAL_FLAGS, isFieldStaged, isScannedFlag } from "./scenarios/site-corrections";
 import type { StagedCorrection, StagedFieldEdit } from "./scenarios/types";
@@ -132,4 +136,36 @@ export function mergeConditions(model: NeedsYouModel, rows: readonly ConditionRo
     attention: items.length - changed,
     conditions,
   };
+}
+
+/** R103 (2026-10-06): "NEEDS YOU takes the primary button only when an
+ *  item changed the plan or waits on a decision that would.  If every item
+ *  is advisory, the downloads keep it."  The header still counts every
+ *  listed row (R99); this is the count the primary owner reads
+ *  (lib/results-primary.ts).
+ *
+ *  Counted: every ▲ / ⚠ item (it changed the plan, or is an obligation
+ *  waiting on the operator); a staged intent (Apply would change the
+ *  plan); a listed condition whose own adjustment record added or modified
+ *  devices; an applied dismissal (the operator's correction re-generated
+ *  the plan; the wire no longer carries what the dismissed condition had
+ *  added, so it is counted rather than guessed advisory).  Advisory: a
+ *  detected or asserted condition whose record changed no device. */
+export function primaryCount(
+  model: NeedsYouModel,
+  rows: readonly ConditionRow[],
+  adjustments: readonly SiteAdjustmentRecord[],
+): number {
+  const changes = new Set(
+    adjustments
+      .filter((a) => a.devices_added > 0 || (a.devices_modified ?? 0) > 0)
+      .map((a) => a.flag),
+  );
+  const consequential = rows.filter((r) => {
+    if (!isListed(r)) return false;
+    if (r.kind === "staged") return true;
+    if (r.kind === "record" && r.correction.action === "dismiss") return true;
+    return changes.has(r.flag);
+  });
+  return model.items.length + consequential.length;
 }

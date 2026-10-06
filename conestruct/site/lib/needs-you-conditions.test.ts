@@ -11,8 +11,9 @@ import {
   conditionRows,
   conditionSummary,
   mergeConditions,
+  primaryCount,
 } from "./needs-you-conditions";
-import type { SiteScanProvenance } from "./render-types";
+import type { SiteAdjustmentRecord, SiteScanProvenance } from "./render-types";
 
 const SCAN: SiteScanProvenance = {
   status: "ok",
@@ -98,5 +99,53 @@ describe("mergeConditions — R99: the count equals the rows listed", () => {
     expect(model.items.map((i) => i.id)).toEqual(["audit:colorado:fail:0"]);
     expect(model.count).toBe(3);
     expect(countProvenance(model)).toBe("1 needs attention · 2 site conditions");
+  });
+});
+
+// R103 (2026-10-06): "NEEDS YOU takes the primary button only when an item
+// changed the plan or waits on a decision that would.  If every item is
+// advisory, the downloads keep it."
+const ADJ = (flag: string, added: number, modified = 0): SiteAdjustmentRecord =>
+  ({ flag, action: "", rule: "", citation: "MUTCD", devices_added: added, devices_modified: modified }) as SiteAdjustmentRecord;
+
+describe("primaryCount — R103", () => {
+  it("E Colfax: the sidewalk row changed the plan; the intersection is advisory", () => {
+    const rows = conditionRows(SCAN, [], {});
+    const model = mergeConditions(deriveNeedsYou([SIDEWALK_ITEM]), rows);
+    const adj = [ADJ("pedestrian_facility", 6), ADJ("adjacent_intersection", 0)];
+    expect(model.count).toBe(2);
+    expect(primaryCount(model, rows, adj)).toBe(1);
+  });
+
+  it("every listed item advisory: 0, so the downloads keep the primary", () => {
+    const scan: SiteScanProvenance = {
+      status: "ok",
+      buckets: { intersections: { detected: true, count: 39 }, sidewalks: { detected: false, count: 0 } },
+    };
+    const rows = conditionRows(scan, [], {});
+    const model = mergeConditions(deriveNeedsYou([]), rows);
+    expect(model.count).toBe(1);
+    expect(primaryCount(model, rows, [ADJ("adjacent_intersection", 0)])).toBe(0);
+  });
+
+  it("a staged intent waits on a decision that would change the plan", () => {
+    const rows = conditionRows(SCAN, [{ flag: "school_zone", marker: { action: "assert" } } as never], {});
+    const model = mergeConditions(deriveNeedsYou([]), rows);
+    expect(primaryCount(model, rows, [ADJ("adjacent_intersection", 0)])).toBe(1);
+  });
+
+  it("an asserted manual key counts only when its adjustment changes devices", () => {
+    const scan: SiteScanProvenance = { status: "ok", buckets: { schools: { detected: false, count: 0 } } };
+    const on = { driveways_present: true, limited_sight_distance: true };
+    const rows = conditionRows(scan, [], on);
+    const model = mergeConditions(deriveNeedsYou([]), rows);
+    const adj = [ADJ("driveways_present", 0), ADJ("limited_sight_distance", 0, 3)];
+    expect(primaryCount(model, rows, adj)).toBe(1);
+  });
+
+  it("every ▲ / ⚠ item still counts (they changed the plan or need attention)", () => {
+    const fail: NeedsYouItem = { ...SIDEWALK_ITEM, id: "audit:colorado:fail:0", tier: "attention" };
+    const model = mergeConditions(deriveNeedsYou([fail]), []);
+    expect(primaryCount(model, [], [])).toBe(1);
   });
 });

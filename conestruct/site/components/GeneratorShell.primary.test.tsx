@@ -197,6 +197,31 @@ describe("#288 clause 3 — acceptance line 2: ONE primary per state", () => {
     expect(block!.querySelector(".ny-apply")).not.toBeNull();
   });
 
+  it("R103: an advisory-only detection is listed and counted, but the zip keeps the primary", async () => {
+    // R99 counts the detected intersection in the header; R103: "If every
+    // item is advisory, the downloads keep it."  Its adjustment added no
+    // device, so nothing changed the plan and no decision would.
+    served = {
+      ...AUDIT_CLEAN_SCANNED,
+      sections: {
+        ...AUDIT_CLEAN_SCANNED.sections,
+        site_adjustments: [
+          { flag: "adjacent_intersection", action: "Advisory", rule: "MUTCD", citation: "MUTCD § 6N.12 p. 848", devices_added: 0 },
+        ],
+        site_scan: {
+          ...AUDIT_CLEAN_SCANNED.sections.site_scan,
+          buckets: { intersections: { detected: true, count: 39, nearest_distance_ft: 56.1 }, schools: { detected: false, count: 0 } },
+        },
+      },
+    };
+    await generate();
+    const block = document.querySelector(".needs-you")!;
+    expect(block.querySelector(".ny-count")!.textContent).toBe("1");
+    expect(block.classList.contains("owns-primary")).toBe(false);
+    expect(zip()!.className).toContain("pri");
+    expect(primaries()).toHaveLength(1);
+  });
+
   it("the filled action treatment is SCOPED to the primary's owner in the sheet", () => {
     // The DOM cannot answer this (happy-dom applies no stylesheet), so
     // the claim is made against the CSS contract instead of asserted by

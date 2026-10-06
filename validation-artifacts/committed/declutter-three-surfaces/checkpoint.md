@@ -239,3 +239,20 @@ Built as mocked up, under R99 and R101.
 **Misses** (not named in the prediction):
 1. `WorkingBand.test.tsx` and `WriteLock.test.tsx` reach "School zone", a none-found row, so they open the fold too. The in-flight test's button list gains "Hide", which is a live read: every write is still disabled under the lock.
 2. **A behaviour change I didn't predict.** `derivePrimaryOwner` (`GeneratorShell.tsx`) reads this count. A plan whose only listed thing is an advisory detection (no devices added, no ▲/⚠ item) counted 0 before, so the downloads owned the page's one primary action. It now counts 1, so NEEDS YOU's Apply/actions own it. This follows from R99's count, but it's a change in which button is primary. **Flagged for Ryan.**
+
+---
+
+## R103 on C: the primary follows consequence, not the header count
+
+- `lib/needs-you-conditions.ts` `primaryCount()` feeds `derivePrimaryOwner`. It counts:
+  - every ▲ / ⚠ item;
+  - a staged intent;
+  - a listed condition whose adjustment record added or modified devices;
+  - an applied dismissal.
+- An all-advisory block leaves the primary with the downloads. The header still counts every listed row (R99).
+- **Assumption, flagged:** an applied dismissal counts. The wire no longer carries what the dismissed condition had added, so it isn't guessed advisory.
+- **Tests:**
+  - `needs-you-conditions.test.ts` gains 5 primaryCount cases (red: the function didn't exist).
+  - `GeneratorShell.primary.test.tsx` gains "R103: an advisory-only detection is listed and counted, but the zip keeps the primary". It was red before the wiring, because NEEDS YOU owned the primary.
+  - Frontend on C: 188 files, 1951 passed.
+- This resolves build C's flagged miss 2.

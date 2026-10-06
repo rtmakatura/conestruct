@@ -38,3 +38,9 @@
 > R102: Overspan is earmarked, not live (Linear CON-39; revisit every two weeks). Build the framework now, on its own branch: Overspan as an optional first-choice mirror, used only when an OVERSPAN_API_KEY Modal secret exists. With no key, behaviour is byte-identical to today (prove it). The free mirrors stay as the fallback. Add the key to the R29 env check as optional, not required. Then draft the #292 comment (the three windows: 2 of 30 refused, which misses 1 in 20; the decision is CON-39) for the chat to repost. #292 stays open.
 >
 > Ship order: ship-loop-r95 first, then issue-308-page1-fixes. One at a time.
+
+## R103, R104 and the ship order, verbatim (Ryan, 2026-10-06)
+
+> R103: NEEDS YOU takes the primary button only when an item changed the plan or waits on a decision that would. If every item is advisory, the downloads keep it. Apply on declutter-c-needs-you, re-verify, restack A and B.
+> R104: Setup grid label is "Jurisdiction", not "City". Apply on declutter-b-setup.
+> Ship order: ship-loop-r95, issue-308-page1-fixes, issue-292-overspan, then declutter C, A, B. One at a time.
