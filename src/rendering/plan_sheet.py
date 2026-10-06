@@ -1961,7 +1961,10 @@ def _draw_title_block(
 
     show_project = bool(project_name) and project_name != "Untitled Project"
 
-    y = PAGE_H - 30
+    # #308 R94: the caps (Helvetica-Bold 14 pt, cap height 10 pt) clear the
+    # box's top rule by 8 pt, the same as the 8 pt left inset; at
+    # ``PAGE_H - 30`` they sat 2 pt under it.
+    y = PAGE_H - MARGIN - 8 - 10
     x = MARGIN + 8
 
     # Title — bold 14pt
@@ -4414,18 +4417,23 @@ def _render_schematic_page(
     # the opposing shoulder.  Keeps the arrow from fighting taper drums
     # or tangent cones for screen real estate, while staying close enough
     # to the carriageway it describes that the semantics are unambiguous.
+    # A one-way street's arrows sit in its lanes instead (#308 R94).
     shoulder_outer_offset = params.num_lanes * params.lane_width_ft + shoulder_width_ft
     arrow_y_work_side = _y_of(shoulder_outer_offset, params.is_divided) - 14.0
     arrow_y_open_side = _y_of(-shoulder_outer_offset, params.is_divided) + 14.0
     arrow_x_left = PLAN_LEFT + 30.0
     arrow_x_right = PLAN_LEFT + 130.0
-    _draw_lane_arrow(c, arrow_x_left, arrow_x_right, arrow_y_work_side, pointing_right=True)
     if params.one_way_street:
-        # #308: above the left curb strip, the same direction — every lane
-        # on a one-way street runs one way.
-        arrow_y_left_curb = _y_of(-shoulder_width_ft, False) + 14.0
-        _draw_lane_arrow(c, arrow_x_left, arrow_x_right, arrow_y_left_curb, pointing_right=True)
-    elif params.is_divided:
+        # #308 R94: inside the travel lanes, every one the same direction —
+        # the leftmost lane and the rightmost open one (a lane closure's
+        # work-side lane is painted closed).  Offset 0 is the left lane edge.
+        open_lanes = params.num_lanes - (1 if params.closure_type == "lane" else 0)
+        for lane in sorted({1, open_lanes}):
+            y = _y_of((lane - 0.5) * params.lane_width_ft, False)
+            _draw_lane_arrow(c, arrow_x_left, arrow_x_right, y, pointing_right=True)
+    else:
+        _draw_lane_arrow(c, arrow_x_left, arrow_x_right, arrow_y_work_side, pointing_right=True)
+    if params.is_divided:
         _draw_lane_arrow(
             c,
             arrow_x_left,

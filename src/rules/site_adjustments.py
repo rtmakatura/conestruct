@@ -156,16 +156,23 @@ def _adjust_pedestrian_facility(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> tuple[list[DevicePlacement], dict[str, Any]]:
-    """Type III barricades + R9-9 SIDEWALK CLOSED signs at each end."""
+    """Type III barricades + R9-9 SIDEWALK CLOSED signs at each end.
+
+    A one-way street gets the work-side pair only (#308 R94): its offset 0
+    is the left lane edge, so ``-offset`` has no far carriageway to land
+    on, and nothing in the plan says the left curb's sidewalk is closed.
+    The flag carries no side; the R9-9s, the page-1 hatch and the audit all
+    put the closure at the work-side sidewalk.
+    """
     offset = _ped_offset(params)
     upstream = params.work_zone_length_ft
     downstream = 0.0
+    sides = (offset,) if getattr(params, "one_way_street", False) else (offset, -offset)
 
     barricades = [
-        DevicePlacement(DeviceType.BARRICADE_TYPE_III, upstream, offset),
-        DevicePlacement(DeviceType.BARRICADE_TYPE_III, upstream, -offset),
-        DevicePlacement(DeviceType.BARRICADE_TYPE_III, downstream, offset),
-        DevicePlacement(DeviceType.BARRICADE_TYPE_III, downstream, -offset),
+        DevicePlacement(DeviceType.BARRICADE_TYPE_III, station, side)
+        for station in (upstream, downstream)
+        for side in sides
     ]
     signs = [
         DevicePlacement(DeviceType.SIGN_GENERIC, upstream, offset, label="R9-9"),
@@ -174,11 +181,11 @@ def _adjust_pedestrian_facility(
     record = {
         "flag": "pedestrian_facility",
         "action": (
-            "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 "
-            "SIDEWALK CLOSED signs at the upstream and downstream ends of "
-            "the work zone."
+            f"Added {len(barricades)} Type III barricades (sidewalk closure points) "
+            f"and {len(signs)} R9-9 SIDEWALK CLOSED signs at the upstream and "
+            "downstream ends of the work zone."
         ),
-        "devices_added": 6,
+        "devices_added": len(barricades) + len(signs),
         "rule": "MUTCD §6C.02: pedestrian considerations in work zones",
     }
     return placements + barricades + signs, record

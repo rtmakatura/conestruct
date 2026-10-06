@@ -63,10 +63,13 @@ function sectionCitation(
 // same chip regardless of deploy order. ``label`` and ``action`` remain
 // panel copy (the backend's ``action`` prose is worded differently, and
 // converting it would visibly change the panel — a value change kept out
-// of the #104 structural migration).
+// of the #104 structural migration).  A flag whose device count depends on
+// the road carries no ``action`` here, and the panel prints the backend's
+// sentence: pedestrian_facility adds 2 Type III barricades on a one-way
+// street and 4 elsewhere (#308 R94).
 export const SITE_ADJUSTMENT_DETAIL: Record<
   SiteConditionFlag,
-  { label: string; rule: string; action: string }
+  { label: string; rule: string; action?: string }
 > = {
   limited_sight_distance: {
     label: "Limited sight distance",
@@ -103,8 +106,6 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
   pedestrian_facility: {
     label: "Pedestrian sidewalks present",
     rule: "MUTCD § 6C.02",
-    action:
-      "4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs added at the upstream and downstream ends.",
   },
   bicycle_facility: {
     label: "Bike lane / cycleway present",
