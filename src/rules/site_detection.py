@@ -21,6 +21,7 @@ from __future__ import annotations
 import asyncio
 import functools
 import math
+import os
 import ssl
 import time
 from collections.abc import Callable
@@ -90,6 +91,28 @@ OVERPASS_MIRRORS: tuple[str, ...] = (
 # shortest pause that is plainly not a retry loop from one container.
 RATE_LIMIT_COOLDOWN_S = 60.0
 _RATE_LIMITED_UNTIL: dict[str, float] = {}
+
+# R102 (#292): Overspan (https://overspan.dev), a hosted, keyed Overpass,
+# as an OPTIONAL first-choice mirror.  Earmarked, not live (Linear CON-39):
+# it is asked only when the ``OVERSPAN_API_KEY`` Modal secret exists.  With
+# no key every scan runs ``_race`` exactly as before -- the same mirrors,
+# requests and headers.  The key rides an ``Authorization: Bearer`` header
+# (Overspan's docs accept it there and recommend headers over a key in the
+# URL); the URL holds no key, so refusal text and the audit's ``mirror``
+# never print it.
+OVERSPAN_URL = "https://api.overspan.dev/api/interpreter"
+OVERSPAN_KEY_ENV = "OVERSPAN_API_KEY"
+# CHOSEN (Rule 12): 4 s.  How long Overspan is asked alone before the free
+# mirrors join the race.  #292's windows put a healthy free answer at a
+# 2.2-11.6 s median scan, so 4 s lets a working Overspan answer first
+# without spending much of SCAN_BUDGET_S (20 s) when it is slow; an
+# Overspan FAILURE ends the head start at once.
+OVERSPAN_HEAD_START_S = 4.0
+
+
+def _overspan_key() -> str | None:
+    key = os.environ.get(OVERSPAN_KEY_ENV, "").strip()
+    return key or None
 
 
 def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -176,9 +199,13 @@ async def _mirror_post(
 ) -> httpx.Response:
     """One mirror request -- the seam tests stub and the corpus network
     guard blocks.  Above it is the race; below it is the wire."""
-    return await client.post(
-        url, data={"data": query}, headers={"User-Agent": USER_AGENT}, timeout=timeout
-    )
+    headers = {"User-Agent": USER_AGENT}
+    if url == OVERSPAN_URL:
+        # R102: only Overspan sees the key; the free mirrors never do.
+        key = _overspan_key()
+        if key is not None:
+            headers["Authorization"] = f"Bearer {key}"
+    return await client.post(url, data={"data": query}, headers=headers, timeout=timeout)
 
 
 def _retry_after_s(resp: Any) -> float:
@@ -244,6 +271,11 @@ async def _race(
     meta: dict[str, Any] | None,
     validate: Callable[[dict[str, Any]], str | None] | None,
 ) -> tuple[dict[str, Any] | None, str | None]:
+    if (
+        _overspan_key() is not None
+        and _RATE_LIMITED_UNTIL.get(OVERSPAN_URL, 0.0) <= time.monotonic()
+    ):
+        return await _race_overspan_first(query, total_s, meta, validate)
     deadline = time.monotonic() + total_s
     now = time.monotonic()
     live = [u for u in OVERPASS_MIRRORS if _RATE_LIMITED_UNTIL.get(u, 0.0) <= now]
@@ -285,6 +317,72 @@ async def _race(
     if pending:
         return None, "; ".join([f"scan budget exceeded ({total_s:g} s)", *errors])
     return None, "; ".join(errors)
+
+
+async def _race_overspan_first(
+    query: str,
+    total_s: float,
+    meta: dict[str, Any] | None,
+    validate: Callable[[dict[str, Any]], str | None] | None,
+) -> tuple[dict[str, Any] | None, str | None]:
+    """R102: Overspan first, the free mirrors as the fallback, one deadline.
+
+    Overspan is asked alone for ``OVERSPAN_HEAD_START_S``.  Its valid answer
+    wins outright.  If it fails (any status, remark, invalid or emptied
+    answer -- ``_ask_mirror``'s rules, a 429 included) the free mirrors are
+    asked at once; if it is still out when the head start ends they join
+    the race beside it, and the first valid answer from any of them wins.
+    Everything else -- the hard deadline, cancellation, the refusal text --
+    is ``_race``'s.
+    """
+    deadline = time.monotonic() + total_s
+    errors: list[str] = []
+    async with httpx.AsyncClient(verify=_tls_context()) as client:
+        tasks = [
+            asyncio.ensure_future(_ask_mirror(client, OVERSPAN_URL, query, deadline, validate))
+        ]
+        pending: set[asyncio.Future[Any]] = set(tasks)
+        try:
+            head = min(OVERSPAN_HEAD_START_S, max(0.0, deadline - time.monotonic()))
+            done, pending = await asyncio.wait(pending, timeout=head)
+            for task in done:
+                url, payload, error, size, remark = task.result()
+                if meta is not None:
+                    meta.update(mirror=url, response_bytes=size, remark=remark)
+                if payload is not None:
+                    return payload, None
+                errors.append(error or f"{url}: no answer")
+            now = time.monotonic()
+            for u in OVERPASS_MIRRORS:
+                if _RATE_LIMITED_UNTIL.get(u, 0.0) > now:
+                    errors.append(
+                        f"{u}: rate-limited, left alone {(_RATE_LIMITED_UNTIL[u] - now):.0f} s more"
+                    )
+                else:
+                    task = asyncio.ensure_future(_ask_mirror(client, u, query, deadline, validate))
+                    tasks.append(task)
+                    pending.add(task)
+            while pending:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    break
+                done, pending = await asyncio.wait(
+                    pending, timeout=remaining, return_when=asyncio.FIRST_COMPLETED
+                )
+                for task in sorted(done, key=tasks.index):
+                    url, payload, error, size, remark = task.result()
+                    if meta is not None:
+                        meta.update(mirror=url, response_bytes=size, remark=remark)
+                    if payload is not None:
+                        return payload, None
+                    errors.append(error or f"{url}: no answer")
+        finally:
+            for task in tasks:
+                task.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+    if pending:
+        return None, "; ".join([f"scan budget exceeded ({total_s:g} s)", *errors])
+    return None, "; ".join(errors) or "no mirrors configured"
 
 
 def _run_coroutine(coro: Any) -> Any:

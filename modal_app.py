@@ -23,6 +23,7 @@ side as ``MODAL_RENDER_URL`` along with the matching
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -98,6 +99,28 @@ image = (
 
 app = modal.App("conestruct-render")
 
+# R102 (#292): Overspan's key is OPTIONAL (earmarked, not live: Linear
+# CON-39).  The ``overspan-api-key`` Modal secret (one key,
+# OVERSPAN_API_KEY) rides the function only when it exists; with none the
+# deploy carries exactly the three secrets below and every scan uses the
+# free mirrors (src/rules/site_detection.py).  The lookup runs only when
+# ship.ps1 deploys (it sets CONESTRUCT_SHIP_DEPLOY=1), so importing this
+# module anywhere else -- tests, CI, the container itself -- makes no Modal
+# call.  A deploy outside ship.ps1 attaches no Overspan secret: the safe
+# side, today's behaviour.
+OVERSPAN_SECRET_NAME = "overspan-api-key"
+
+
+def _optional_secrets() -> list[modal.Secret]:
+    if os.environ.get("CONESTRUCT_SHIP_DEPLOY") != "1":
+        return []
+    secret = modal.Secret.from_name(OVERSPAN_SECRET_NAME)
+    try:
+        secret.hydrate()
+    except modal.exception.NotFoundError:
+        return []
+    return [secret]
+
 
 @app.function(
     image=image,
@@ -105,6 +128,7 @@ app = modal.App("conestruct-render")
         modal.Secret.from_name("conestruct-render-secret"),
         modal.Secret.from_name("mapbox-token"),
         modal.Secret.from_name("sentry-dsn"),
+        *_optional_secrets(),
     ],
     timeout=120,
     # Cold-start fix (#122): one container stays up around the clock so

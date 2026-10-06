@@ -246,6 +246,22 @@ if ($LASTEXITCODE -ne 0) { Fail "Could not read scripts/production-env.txt at $l
 Write-Host "Checking Vercel Production has every variable the site needs (R29)..." -ForegroundColor Cyan
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $ShipDir "scripts\vercel-env-check.ps1") -Required $envList
 if ($LASTEXITCODE -ne 0) { Fail "Vercel Production is missing a variable the site needs, or the Vercel CLI is not logged in (the check's output is above). Fix it, then ship again. Nothing was merged or pushed." }
+# R102 (#292): one OPTIONAL secret, reported and never required.  The
+# overspan-api-key Modal secret (OVERSPAN_API_KEY) makes Overspan the scan's
+# first-choice mirror; without it the scan uses the free mirrors, as today.
+# It lives in Modal, not Vercel, so it is read from `modal secret list`.
+$modalExe = Join-Path $RepoDir ".venv\Scripts\modal.exe"
+$secretNames = @()
+if (Test-Path $modalExe) {
+    try { $secretNames = @((& $modalExe secret list --json 2>$null | Out-String | ConvertFrom-Json) | ForEach-Object { $_.Name }) } catch { $secretNames = $null }
+} else { $secretNames = $null }
+if ($null -eq $secretNames) {
+    Write-Host "Optional (R102): could not read Modal secrets; the overspan-api-key check is skipped. Not required." -ForegroundColor Yellow
+} elseif ($secretNames -contains "overspan-api-key") {
+    Write-Host "Optional (R102): Modal secret overspan-api-key present -- scans ask Overspan first, the free mirrors as the fallback." -ForegroundColor Green
+} else {
+    Write-Host "Optional (R102): Modal secret overspan-api-key absent -- scans use the free mirrors only (as before). Not required." -ForegroundColor Green
+}
 
 # --- 1d. CI green on the commit being shipped (R50) --------------------------
 # Both workflows' newest runs on the exact tip the fast-forward makes main must
@@ -306,8 +322,13 @@ $modal = Join-Path $RepoDir ".venv\Scripts\modal.exe"
 if (-not (Test-Path $modal)) { Fail "Can't find modal at $modal - is the venv set up?" }
 
 Write-Host "Deploying backend to Modal..." -ForegroundColor Cyan
+# R102: tells modal_app.py this is a ship deploy, so it looks up the
+# optional overspan-api-key secret (and attaches it only if it exists).
+$env:CONESTRUCT_SHIP_DEPLOY = "1"
 & $modal deploy modal_app.py
-if ($LASTEXITCODE -ne 0) { Fail "modal deploy failed. Paste the output into the chat." }
+$deployExit = $LASTEXITCODE
+Remove-Item Env:CONESTRUCT_SHIP_DEPLOY -ErrorAction SilentlyContinue
+if ($deployExit -ne 0) { Fail "modal deploy failed. Paste the output into the chat." }
 
 # --- 5. Health check with retry (handles the warm-server echo) --------------
 Write-Host "Waiting for the live server to report the new version..." -ForegroundColor Cyan
