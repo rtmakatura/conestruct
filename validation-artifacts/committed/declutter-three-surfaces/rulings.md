@@ -1,0 +1,27 @@
+## R96, verbatim (Ryan, 2026-10-06, cc-prompt-308-followups.md)
+
+> # #308 follow-ups and a declutter pass (Ryan, 2026-10-06)
+>
+> Quote R94–R97 verbatim in the matching rulings.md (R94/R95: issue-308-oneway-read-as-divided; R96: a new folder for the declutter arc; R97: ship-loop). Report after each part. Delete this file once all three parts have shipped.
+>
+> ## Part 3. R96: declutter three surfaces (investigate and mock up, no code before Ryan rules)
+>
+> Ryan: Step 2 (WHAT) "is WAY too disorganized and busy"; the post-generate Setup line "looks disorganized and ugly"; NEEDS YOU "feels pretty long on the page".
+>
+> For each surface: a 📋 checkpoint with today's screenshot, a proposed layout as a screenshot or HTML mockup at 1440 and 390, what moves where, the Principles section (P1–P22, per the standing check), and Rule 5 churn. Keep every fact. Nothing gets deleted, only moved, grouped or disclosed (P13, P19). The P15 records stay visible.
+>
+> What reads as noise today, as starting points (propose better ones if you have them):
+>
+> - **Step 2 (WHAT):**
+>   - Every field carries a mono provenance line ("OSM · 30 mph · measured", "your change · operator-set from here on"). That's about twelve small sentences competing with the fields.
+>   - The two full-width "✓ Confirmed Denver (was Not set). UNDO" bars break the grid.
+>   - There are two sections ("Anything we got wrong?" and "The rest of this plan"), plus Project name and Location description (both optional) and the Denver windows line.
+>   - **Direction:** one quiet provenance marker per field (symbol + word, P9), with the full line one click away. Confirmations shown inside the field they confirm, with Undo kept. Optional fields grouped or moved to where the files are named. A fixed grid (P4, P6).
+> - **Setup line (after Generate):**
+>   - Today it's one run-on sentence of underlined values that wraps to a second line.
+>   - **Direction:** a two-row grid of label and value pairs (Work, Road, Length, Speed, Lanes, Road type, City, Dates), each value tappable to change (P22), with labels and values on shared edges (P4).
+> - **NEEDS YOU:**
+>   - The header count says 1, but the block lists seven site conditions. Four of them are ✓ "none along the corridor" or ◌ not asserted, so passed items render by default (P19), and the count and the ▲ rows can read as disagreeing (P2).
+>   - **Direction:** NEEDS YOU shows only what needs Ryan. Passed and nothing-found conditions collapse into a labelled count ("4 checked, none found ›"). The Assert/Dismiss actions and staging (P7) are unchanged.
+>
+> Name the FLOW.md step and user each surface serves. Ryan rules from the mockups; then it builds as one branch per surface.

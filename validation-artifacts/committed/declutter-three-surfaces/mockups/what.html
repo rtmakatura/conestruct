@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>R96 WHAT mockup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<div class="col">
+<p class="note">R96 mockup A: Step 2 (WHAT), proposed. Same plan as today/what-1440.png (E Colfax Ave WB, Denver and Arterial confirmed). Static; nothing ships.</p>
+<section class="band">
+  <div class="head"><span>Step 2 of 4</span><b>What</b><span class="r">prefilled from the road · guesses marked ⚠</span></div>
+  <div class="body">
+    <h2>Anything we got wrong?</h2>
+    <p class="lead">Everything here came off the road you confirmed. Change what is wrong; ignore what is right.</p>
+
+    <div class="group">The road</div>
+    <div class="grid">
+      <div class="cell"><span class="lbl">Speed limit</span><div class="fld">30 mph <span class="caret">⌄</span></div><span class="mk"><button><span class="g">✓</span> measured</button></span></div>
+      <div class="cell"><span class="lbl">Lanes per direction</span><div class="fld">2 <span class="caret">⌄</span></div><span class="mk"><button><span class="g">✓</span> measured</button></span></div>
+      <div class="cell"><span class="lbl">Lane width</span><div class="fld">12 ft <span class="caret">⌄</span></div><span class="mk"><button><span class="g">✓</span> yours</button></span></div>
+      <div class="cell"><span class="lbl">Road type</span><div class="fld">Urban arterial <span class="caret">⌄</span></div><span class="mk"><button><span class="a">⚠ inferred</span></button></span>
+        <div class="pop"><b>OSM · Urban arterial · inferred</b><br>OSM highway=primary in an urban area. Road type sets taper, buffer and sign spacing; check it against the street.<br><span style="color:var(--accent)">details ›</span></div></div>
+      <div class="cell"><span class="lbl">Street classification</span><div class="seg"><span>Local</span><span>Collector</span><span class="on">Arterial</span></div><span class="mk"><span class="g">✓</span> confirmed Arterial · was Not set<button class="undo">Undo</button></span></div>
+      <div class="cell"><span class="lbl">One-way or divided?</span><div class="seg"><span>One-way street</span><span class="on">Divided road</span></div><span class="mk"><button><span class="g">✓</span> detected</button></span></div>
+    </div>
+
+    <div class="group">The job</div>
+    <div class="grid">
+      <div class="cell"><span class="lbl">Work type</span><div class="fld">Utility locate <span class="caret">⌄</span></div><span class="mk"><button><span class="g">✓</span> yours</button></span></div>
+      <div class="cell"><span class="lbl">Night operation</span><div class="seg"><span class="on">Daytime</span><span>Night</span></div><span class="mk"><button><span class="g">✓</span> default</button></span></div>
+      <div class="cell"><span class="lbl">Work-zone speed reduction</span><div class="seg"><span class="on">No reduction</span><span>Reduced</span></div><span class="mk"><button><span class="g">✓</span> default</button></span></div>
+      <div class="cell"><span class="lbl">Jurisdiction</span><div class="fld">Denver <span class="caret">⌄</span></div><span class="mk"><span class="g">✓</span> confirmed Denver · was Not set<button class="undo">Undo</button></span></div>
+      <div class="cell"><span class="lbl">Work dates</span><div class="fld unset">mm/dd/yyyy <span class="caret">▦</span></div><span class="mk"><button><span class="p">◌</span> not set</button></span></div>
+      <div class="cell"><span class="lbl">Denver windows</span><div class="fld unset" style="font-size:13px">◌ Arterial / Collector · Weekday</div><span class="mk"><span class="p">◌</span> set dates to check</span></div>
+    </div>
+
+    <div class="disc"><span>File details · Project name, Location description · <span class="p">◌</span> 2 not set</span><span class="open">open ›</span></div>
+  </div>
+</section>
+
+<p class="cap">The same band with "File details" open</p>
+<section class="band"><div class="body">
+  <div class="disc" style="margin-top:0;border-top:0;padding-top:0"><span>File details · optional</span><span class="open">close ‹</span></div>
+  <div class="grid" style="margin-top:12px">
+    <div class="cell"><span class="lbl">Project name</span><div class="fld unset">Not set</div><span class="mk"><button><span class="p">◌</span> names the file and the title block</button></span></div>
+    <div class="cell"><span class="lbl">Location description</span><div class="fld unset">Not set</div><span class="mk"><button><span class="p">◌</span> the address stands in</button></span></div>
+  </div>
+</div></section>
+
+<p class="cap">Before a suggestion is answered: today's row, unchanged (real 32/44 px buttons, P10). On Confirm or Dismiss it collapses into the field's footer, as above.</p>
+<section class="band"><div class="body">
+  <div style="display:flex;align-items:center;gap:12px;font:11px var(--mono);color:var(--ink-faint);border-top:1px dashed var(--rule);border-bottom:1px dashed var(--rule);padding:10px 0">
+    <span>⌁ Pin suggests: <b style="color:var(--ink)">Denver</b></span><span style="margin-left:auto" class="btn">Confirm Denver</span><span class="btn">Dismiss</span>
+  </div>
+</div></section>
+</div>
+</body>
+</html>
