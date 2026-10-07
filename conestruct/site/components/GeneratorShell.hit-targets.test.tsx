@@ -159,6 +159,11 @@ const FLOORED = [
   // #289 hand-check, 2026-09-23, defect 2 — the setup line's value links:
   // 32 px on the class, 44 px in the ≤480 block (asserted below).
   "a-val-lk",
+  // R106 — the Setup box's cells ARE the links: 64 px on the cell and on
+  // each half of the Lanes cell, over rule 15's 44 at every width
+  // (asserted below).
+  "a-setupcell",
+  "a-setupcell-part",
 ];
 /** Tailwind-floored controls (the footer's links). */
 const TW_FLOOR = /min-h-\[(32|44)px\]/;
@@ -310,6 +315,16 @@ describe("#288 clause 7 — §8.14's 'unchanged' footer is not exempt", () => {
     const src = readFileSync(join(__dirname, "AppFooter.tsx"), "utf-8");
     const footerTag = src.slice(src.indexOf("<footer"), src.indexOf(">", src.indexOf("<footer")));
     expect(footerTag).not.toMatch(/min-h-/);
+  });
+});
+
+describe("R106 — the Setup box's cells clear rule 15 at every width", () => {
+  it("each cell, and each half of the Lanes cell, is at least 64 px tall", () => {
+    for (const sel of [".workbench .a-setupcell {", ".workbench .a-setupcell-part {"]) {
+      const i = css.indexOf(sel);
+      expect(i, sel).toBeGreaterThan(-1);
+      expect(css.slice(i, css.indexOf("}", i)), sel).toMatch(/min-height:\s*64px/);
+    }
   });
 });
 

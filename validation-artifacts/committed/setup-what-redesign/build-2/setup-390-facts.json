@@ -1,0 +1,57 @@
+{
+  "settledSlotH": 359,
+  "boxH": 358.75,
+  "cells": [
+    {
+      "label": "Road",
+      "value": "East Colfax Avenue Westbound",
+      "h": 64,
+      "button": true
+    },
+    {
+      "label": "Work",
+      "value": "Shoulder work",
+      "h": 64,
+      "button": true
+    },
+    {
+      "label": "Length",
+      "value": "1,000 ft",
+      "h": 64,
+      "button": true
+    },
+    {
+      "label": "Speed",
+      "value": "30 mph",
+      "h": 65,
+      "button": true
+    },
+    {
+      "label": "Lanes",
+      "value": "2 × 12 ft",
+      "h": 65,
+      "button": 2
+    },
+    {
+      "label": "Road type",
+      "value": "Urban arterial",
+      "h": 64,
+      "button": true
+    },
+    {
+      "label": "Jurisdiction",
+      "value": "Denver",
+      "h": 64,
+      "button": true
+    },
+    {
+      "label": "Dates",
+      "value": "◌ not set",
+      "h": 64,
+      "button": true
+    }
+  ],
+  "hint": "pick a cell to change it",
+  "warnGlyphs": false,
+  "inFlightSlotH": 359
+}

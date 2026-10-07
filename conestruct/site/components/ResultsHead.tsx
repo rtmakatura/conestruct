@@ -71,32 +71,42 @@ import {
 } from "@/lib/scenarios/band-facts";
 import { useWriteLock } from "./WriteLock";
 
-/** R96 B (declutter-three-surfaces, R101 "as mocked up",
- *  mockups/setup.html) — the Setup line as a grid of label / value pairs,
- *  4 × 2 at 1440 and 2 × 4 at ≤600, labels and values on shared edges
- *  (P4).  The segments are `setupSegments()`'s, unchanged: each value is
- *  the button it was, with its test id, its accessible name and its
- *  target (P22).  Where the label now names the field, the value drops
- *  the word ("2", "12 ft" under LANES), and an unset value reads with
- *  ◌ + "not set" (P9).  A pair whose segments are all absent (rule 10:
- *  a kind with no lane count) is not drawn. */
-const SETUP_GRID: ReadonlyArray<{ label: string; keys: readonly SetupSegmentKey[] }> = [
+/** R106 (setup-what-redesign, design-refs/SetupB.dc.html) — the Setup
+ *  box as a title block: "a boxed grid of label/value cells with mono caps
+ *  labels, and Road spans two cells so it doesn't wrap.  Every cell is a
+ *  button with the target it has today.  Unset values read '◌ not set'."
+ *
+ *  Five tracks at 1440 (Road and Dates take two each, so two rows close
+ *  flush), two at ≤600.  The segments are `setupSegments()`'s, unchanged:
+ *  each target, test id and accessible name is the one it had (P22).
+ *  R110 Q9: the Lanes cell holds TWO full-height buttons, because it has
+ *  two targets today (lanes, lane width — S7 on each); a kind with no
+ *  lane count states the count it uses as text beside the width's button
+ *  (rule 10: the cell is drawn, its grid keeps its shape).  "No ⚠ on the
+ *  Setup box": the WHAT band owns the guess markers (P2). */
+const SETUP_GRID: ReadonlyArray<{
+  label: string;
+  keys: readonly SetupSegmentKey[];
+  span2?: boolean;
+}> = [
+  { label: "Road", keys: ["location"], span2: true },
   { label: "Work", keys: ["kind"] },
-  { label: "Road", keys: ["location"] },
   { label: "Length", keys: ["extent"] },
   { label: "Speed", keys: ["speed"] },
   { label: "Lanes", keys: ["lanes", "laneWidth"] },
   { label: "Road type", keys: ["roadType"] },
   // R104: "Jurisdiction", not "City" — some are counties or authorities.
   { label: "Jurisdiction", keys: ["jurisdiction"] },
-  { label: "Dates", keys: ["dates"] },
+  { label: "Dates", keys: ["dates"], span2: true },
 ];
 
-function gridText(s: SetupSegment, scenario: Scenario): string {
-  if (s.key === "lanes") return String((scenario as { lanes: number }).lanes);
+const UNSET = "◌ not set";
+
+function cellText(s: SetupSegment, scenario: Scenario): string {
+  if (s.key === "lanes") return `${(scenario as { lanes: number }).lanes} ×`;
   if (s.key === "laneWidth") return `${(scenario as { laneWidth: number }).laneWidth} ft`;
-  if (s.key === "jurisdiction" && !scenario.jurisdiction_key) return "◌ not set";
-  if (s.key === "dates" && !scenario.schedule?.work_date) return "◌ not set";
+  if (s.key === "jurisdiction" && !scenario.jurisdiction_key) return UNSET;
+  if (s.key === "dates" && !scenario.schedule?.work_date) return UNSET;
   return s.text;
 }
 
@@ -116,97 +126,130 @@ export function ResultsHead({
   jurisdictionName?: string | null;
   /** Has the answer landed?  The slot is reserved from the click; its
    *  OCCUPANT forms at the settle, which is the movement rule 28 is
-   *  about.  In flight the row is empty and holds its floor. */
+   *  about.  In flight the row is empty and holds the box's height. */
   settled?: boolean;
   /** Rule 120: "Setup fact line unchanged and still changeable."  A
    *  decline RELEASES the reserve — rule 28's own word, and there is no
-   *  answer forming below to reserve room for — but the line itself
+   *  answer forming below to reserve room for — but the box itself
    *  stays, because the operator's way back into the input is the only
    *  recovery a refusal leaves them. */
   declined?: boolean;
-  /** Defect 2: a value on the line was pressed.  The shell decides what
-   *  it opens (S7 on that field, or the band that owns it). */
+  /** Defect 2: a value was pressed.  The shell decides what it opens (S7
+   *  on that field, or the band that owns it). */
   onChangeValue?: (key: SetupSegmentKey) => void;
 }) {
-  // #252 (ruling b) / rule 118: the link is a write control — it leads
-  // to one — so it declares itself and goes quiet under the lock.
-  // `aria-disabled`, not `disabled`, so it stays focusable while the
-  // working band is up.
+  // #252 (ruling b) / rule 118: each cell leads to a write, so it
+  // declares itself and goes quiet under the lock — `aria-disabled`, not
+  // `disabled`, so it stays focusable while the working band is up.
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const locked = useWriteLock();
   if (!reserve) return null;
   const occupied = (settled || declined) && scenario !== undefined;
+  if (!occupied) {
+    return (
+      <div
+        className={`results-head-slot${declined ? " is-released" : ""}`}
+        data-testid="results-head-slot"
+      />
+    );
+  }
+  const segs = setupSegments(scenario, jurisdictionName);
+  const byKey = new Map(segs.map((x) => [x.key, x] as const));
+
+  /** One value, as its own button when the shell can open it. */
+  const part = (seg: SetupSegment, label: string | null, className: string) => {
+    const text = cellText(seg, scenario);
+    const body = (
+      <>
+        {label !== null ? (
+          <span className="a-setup-k tr-step">{label}</span>
+        ) : (
+          // The second half of a pair: the label row's height, empty, so
+          // the two values share a baseline.
+          <span className="a-setup-k tr-step" aria-hidden>
+            {"\u00a0"}
+          </span>
+        )}
+        <span className={`a-setup-v${text === UNSET ? " is-unset" : ""}`}>{text}</span>
+      </>
+    );
+    if (!onChangeValue) {
+      return (
+        <div key={seg.key} className={className}>
+          {body}
+        </div>
+      );
+    }
+    return (
+      <button
+        key={seg.key}
+        type="button"
+        className={className}
+        data-write=""
+        aria-disabled={locked || undefined}
+        aria-label={seg.label}
+        onClick={() => {
+          if (!locked) onChangeValue(seg.key);
+        }}
+        data-testid={`setup-link-${seg.key}`}
+      >
+        {body}
+      </button>
+    );
+  };
+
   return (
     <div
       className={`results-head-slot${declined ? " is-released" : ""}`}
       data-testid="results-head-slot"
     >
-      {occupied && (
-        <div className="a-fact" data-testid="fact-setup" data-fact-state="done">
+      <section className="a-setupbox" data-testid="fact-setup" data-fact-state="done">
+        <header className="a-setupbox-head">
           <span className="a-sym" aria-hidden>
             {"✓"}
           </span>
-          <div className="a-mid">
-            <span className="tr-field">Setup</span>
-            <span className="a-lead" aria-hidden />
-            <div className="a-val a-setup-grid" data-testid="setup-values">
-              {(() => {
-                const segs = setupSegments(scenario, jurisdictionName);
-                const byKey = new Map(segs.map((x) => [x.key, x] as const));
-                return SETUP_GRID.map((pair) => {
-                  const present = pair.keys
-                    .map((k) => byKey.get(k))
-                    .filter((x): x is SetupSegment => x !== undefined);
-                  if (present.length === 0) return null;
-                  return (
-                    <div key={pair.label} className="a-setup-pair">
-                      <span className="a-setup-k tr-step">{pair.label}</span>
-                      <span className="a-setup-v">
-                        {present.map((seg, i) => (
-                          <span key={seg.key}>
-                            {i > 0 && " × "}
-                            {onChangeValue ? (
-                              // #252 (ruling b) / rule 118: each link leads to a
-                              // write, so it declares itself and goes quiet under
-                              // the lock — `aria-disabled`, not `disabled`, so it
-                              // stays focusable while the working band is up.
-                              <button
-                                type="button"
-                                className="a-val-lk"
-                                data-write=""
-                                aria-disabled={locked || undefined}
-                                aria-label={seg.label}
-                                onClick={() => {
-                                  if (!locked) onChangeValue(seg.key);
-                                }}
-                                data-testid={`setup-link-${seg.key}`}
-                              >
-                                {gridText(seg, scenario)}
-                              </button>
-                            ) : (
-                              gridText(seg, scenario)
-                            )}
-                          </span>
-                        ))}
-                      </span>
-                    </div>
-                  );
-                });
-              })()}
-            </div>
-          </div>
+          <span className="tr-section">Setup</span>
+          <span className="a-setupbox-fill" aria-hidden />
           {onChangeValue && (
-            // Rule 134: a link OR a provenance word.  The links are the
-            // values; the word says so.  `a-fact-prov` is every fact
-            // line's provenance word: at ≤480 rule 166 puts it in column
-            // 2 under the value.  Without it the 2-track grid auto-placed
-            // it into the 18 px symbol track, one word per line.
-            <span className="tr-prov a-fact-prov" data-testid="setup-links-hint">
-              pick a value to change it
+            // Rule 134: a link OR a provenance word.  The cells are the
+            // links; the word says so.
+            <span className="tr-prov" data-testid="setup-links-hint">
+              pick a cell to change it
             </span>
           )}
+        </header>
+        <div className="a-setupbox-grid" data-testid="setup-values">
+          {SETUP_GRID.map((cell) => {
+            const span = cell.span2 ? " is-span2" : "";
+            if (cell.label === "Lanes") {
+              const lanes = byKey.get("lanes");
+              const width = byKey.get("laneWidth");
+              if (!lanes && !width) return null;
+              return (
+                <div key="lanes" className={`a-setupcell is-pair${span}`}>
+                  {lanes ? (
+                    part(lanes, cell.label, "a-setupcell-part")
+                  ) : (
+                    // The kind fixes the count (#209's read-only-with-
+                    // reason): stated, not a button.
+                    <div className="a-setupcell-part is-fixed">
+                      <span className="a-setup-k tr-step">{cell.label}</span>
+                      <span className="a-setup-v" aria-label="1 lane per direction, fixed by this kind">
+                        1 ×
+                      </span>
+                    </div>
+                  )}
+                  {width && part(width, null, "a-setupcell-part")}
+                </div>
+              );
+            }
+            const seg = byKey.get(cell.keys[0]);
+            // Rule 10: a pair whose segment is absent is not drawn.
+            if (!seg) return null;
+            return part(seg, cell.label, `a-setupcell${span}`);
+          })}
         </div>
-      )}
+      </section>
     </div>
   );
 }

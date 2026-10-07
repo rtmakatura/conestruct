@@ -42,8 +42,10 @@ describe("#288 rule 28 — the reserved first row's CSS contract", () => {
     // widths with #281's own example (#289 R9).
     const code = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(code).toContain(".results-head-slot");
+    // R106: the occupant is the Setup box now, so the floor is the
+    // box's measured height (--setup-box-h), not a fact line's.
     expect(code).toMatch(
-      /\.results-head-slot \{[^}]*min-height: var\(--fact-min-h\)/,
+      /\.results-head-slot \{[^}]*min-height: var\(--setup-box-h\)/,
     );
     expect(code).not.toMatch(/\.results-head-slot \{[^}]*[^-]height:\s*var/);
   });
@@ -67,9 +69,19 @@ describe("#288 rule 28 — the reserved first row's CSS contract", () => {
     // it — the fact line's own floor, and the row that reserves room for
     // one.  A third consumer would be a third opinion about how tall a
     // fact line is.
+    // R106: the reserve reads --setup-box-h now (the Setup box is not a
+    // fact line), so the fact line's floor is the token's one consumer.
     const consumers = (code.match(/var\(--fact-min-h\)/g) ?? []).length;
-    expect(consumers, "the fact line's floor and the reserve").toBe(2);
+    expect(consumers, "the fact line's floor").toBe(1);
     expect(code).toMatch(/\.a-fact \{[^}]*min-height: var\(--fact-min-h\)/);
+  });
+
+  it("R106: --setup-box-h is the Setup box's measured height at each width", () => {
+    // build-2/setup-<w>-facts.json: 166.75 px at 1440, 358.75 px at 390.
+    expect(CSS).toMatch(/--setup-box-h:\s*167px/);
+    expect(CSS).toMatch(
+      /@media \(max-width: 600px\) \{\s*\.workbench \{\s*--setup-box-h:\s*359px;/,
+    );
   });
 
   it("--strip-h is retired: no declaration and no consumer survives", () => {

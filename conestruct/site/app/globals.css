@@ -796,6 +796,14 @@ body {
      Measured in validation-artifacts/committed/issue-289-band-stack/
      prototype/band-stack-landing.md. */
   --fact-min-h: 48px;
+  /* R106 (setup-what-redesign): rule 28's reserve is the SETUP BOX's
+     height now.  The box is a title block of fixed-floor cells (64 px),
+     so its height is known before it forms: MEASURED on a local build of
+     the branch (build-2/setup-<w>-facts.json), 166.75 px at 1440 (two
+     rows of five tracks) and 358.75 px at 390 (five rows of two).  With
+     the old 48 px floor the results below jumped 119 / 311 px at the
+     settle (P1).  Still a floor: a road name that wraps grows the box. */
+  --setup-box-h: 167px;
   /* #252: the chrome stack, one place.  Sticky strip chrome (the rail;
      #253's step strip) < nav < frame < the working band — the band is
      the topmost chrome so the frame's corner ticks never draw over it
@@ -4079,47 +4087,113 @@ input[type="number"] {
   line-height: 1.45;
   color: var(--ink-on-dark);
 }
-/* R96 B (declutter-three-surfaces, R101, mockups/setup.html) — the Setup
-   line as label / value pairs: 4 × 2 here, 2 × 4 at ≤600, every label and
-   value on its column's edge (P4); a long road name wraps inside its
-   cell, never widening it (P6).  The leader has nothing to lead to beside
-   a grid, and the hint drops under the values. */
-.workbench .a-setup-grid {
-  flex: 1 1 0;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px 16px;
+/* R106 (setup-what-redesign, design-refs/SetupB.dc.html) — the Setup box
+   as a title block: a head (✓ SETUP · how it works) over a boxed grid of
+   label / value cells, every cell its own button.  SetupB's numbers on the
+   house tokens: 1 px --rule hairlines, cells at least 64 px tall with a
+   10 / 12 px inset, the label over the value at a 6 px gap.  Five tracks
+   at 1440 (Road and Dates take two each, so both rows close flush), two at
+   ≤600; a long road name wraps inside its cell, never widening it (P6).
+   The cell grid pulls its last hairlines under the box's own border. */
+.workbench .a-setupbox {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
 }
-.workbench .a-setup-pair {
-  display: grid;
-  gap: 2px;
-  align-content: start;
-  min-width: 0;
+.workbench .a-setupbox-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rule);
 }
+.workbench .a-setupbox-head .a-sym {
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: var(--pass);
+}
+.workbench .a-setupbox-fill {
+  flex: 1 1 auto;
+}
+.workbench .a-setupbox-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-right: -1px;
+  margin-bottom: -1px;
+}
+.workbench .a-setupcell,
+.workbench .a-setupcell-part {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px 12px;
+  background: none;
+  border: 0;
+  text-align: left;
+  color: var(--ink);
+  min-height: 64px;
+}
+.workbench .a-setupcell {
+  min-height: 64px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .a-setupcell.is-span2 {
+  grid-column: span 2;
+}
+/* R110 Q9: the Lanes cell is two full-height buttons side by side. */
+.workbench .a-setupcell.is-pair {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+}
+.workbench .a-setupcell-part {
+  flex: 0 1 auto;
+}
+.workbench .a-setupcell-part:first-child {
+  padding-right: 4px;
+}
+.workbench .a-setupcell-part + .a-setupcell-part {
+  padding-left: 0;
+  flex: 1 1 auto;
+}
+.workbench button.a-setupcell,
+.workbench button.a-setupcell-part {
+  cursor: pointer;
+}
+.workbench button.a-setupcell:hover,
+.workbench button.a-setupcell-part:hover {
+  background: var(--raise);
+}
+.workbench button.a-setupcell:focus-visible,
+.workbench button.a-setupcell-part:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: -2px;
+}
+.workbench button.a-setupcell[aria-disabled="true"],
+.workbench button.a-setupcell-part[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+/* R106: "mono caps labels" — the label role's mono, set in capitals
+   (SetupB's ROAD / WORK / LENGTH); the words stay the words in the DOM. */
 .workbench .a-setup-k {
   color: var(--ink-faint);
+  text-transform: uppercase;
 }
 .workbench .a-setup-v {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  line-height: 1.45;
   overflow-wrap: anywhere;
 }
-.workbench .a-fact .a-mid:has(> .a-setup-grid) > .a-lead {
-  display: none;
-}
-.workbench .a-fact:has(.a-setup-grid) {
-  grid-template-columns: 20px minmax(0, 1fr);
-  row-gap: 8px;
-}
-.workbench .a-fact:has(.a-setup-grid) .a-fact-prov {
-  grid-column: 2;
+.workbench .a-setup-v.is-unset {
+  color: var(--ink-faint);
 }
 @media (max-width: 600px) {
-  .workbench .a-setup-grid {
-    flex-basis: 100%;
+  .workbench .a-setupbox-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .workbench .a-fact .a-mid:has(> .a-setup-grid) {
-    flex-wrap: wrap;
   }
 }
 
@@ -5205,8 +5279,13 @@ input[type="number"] {
    #281's own example.  The gap below it is rule 27's "setup fact line ->
    NEEDS YOU 16 px". */
 .workbench .results-head-slot {
-  min-height: var(--fact-min-h);
+  min-height: var(--setup-box-h);
   margin-bottom: 16px;
+}
+@media (max-width: 600px) {
+  .workbench {
+    --setup-box-h: 359px;
+  }
 }
 
 /* Rule 117 — S4's results placeholder.  The one surviving use of the

@@ -149,23 +149,18 @@ describe("defect 2 — the setup line's values are the links", () => {
     expect(document.querySelector('[data-testid="fact-link-setup"]')).toBeNull();
     expect(document.body.textContent).not.toContain("CHANGE ONE THING");
     // Rule 134: the row's right track is a word, not a second link.
+    // R106 (SetupB.dc.html): the cells are the links, and the word says so.
     expect(screen.getByTestId("setup-links-hint").textContent).toBe(
-      "pick a value to change it",
+      "pick a cell to change it",
     );
-    // s4-prod/ at 380: the hint broke one word per line.  At ≤480 the
-    // fact line is 2-track (rule 166) and only `.a-fact-prov` / `.a-lk`
-    // are placed in column 2; a bare `.tr-prov` auto-placed into the
-    // 18 px symbol track.  The hint is every fact line's provenance word.
-    expect(screen.getByTestId("setup-links-hint").classList.contains("a-fact-prov")).toBe(true);
-    const narrow = css.slice(css.indexOf("Rule 166 — fact lines become 2-track"));
-    expect(narrow).toMatch(
-      /\.workbench \.a-fact \.a-lk,\s*\.workbench \.a-fact \.a-fact-prov \{\s*grid-column: 2;/,
-    );
-    // R96 B: the line is a grid of label / value pairs now, not one
-    // sentence — the speed reads under its own label.
-    const speedPair = screen.getByTestId("setup-link-speed").closest(".a-setup-pair")!;
-    expect(speedPair.querySelector(".a-setup-k")!.textContent).toBe("Speed");
-    expect(speedPair.querySelector(".a-setup-v")!.textContent).toBe("65 mph");
+    // R106: the hint sits in the box's own head, beside ✓ SETUP — no
+    // longer in a fact line's track (s4-prod's one-word-per-line defect
+    // at 380 cannot recur: the head is a flex row, not rule 166's grid).
+    expect(screen.getByTestId("setup-links-hint").closest(".a-setupbox-head")).not.toBeNull();
+    // The speed reads under its own label, in a cell that IS the link.
+    const speed = screen.getByTestId("setup-link-speed");
+    expect(speed.querySelector(".a-setup-k")!.textContent).toBe("Speed");
+    expect(speed.querySelector(".a-setup-v")!.textContent).toBe("65 mph");
   });
 
   it("each link says which field it is, not just its value", async () => {
