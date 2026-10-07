@@ -188,6 +188,9 @@ def _ensure_scenario_enabled(
     # #290: the pin model is read FIRST, before any gate or reader touches
     # the pin — its meaning decides what every later step computes.
     _ensure_pin_model_complete(scenario)
+    # R108 / R110 Q1: a guess the plan claims is recomputed here, at the
+    # one chokepoint, so no deliverable can print a stale one.
+    _ensure_guesses_current(scenario)
     # #282: one chokepoint, because every endpoint already funnels through
     # here.  ``allow_preview`` is opt-IN, so a new endpoint added later
     # refuses the flag by default rather than silently honouring it.
@@ -321,14 +324,103 @@ def _ensure_preview_allowed(scenario: Scenario) -> None:
         )
 
 
-# #308 — the refusal's recovery names the confirm row's two answers in the
+# #308 — the refusal's recovery names the row and its two answers in the
 # WHAT band, word for word (lib/scenarios/auto-apply.ts mirrors the
-# predicate to arm that row; the backend owns it).
+# predicate to arm that row; the backend owns it).  R107 renamed them:
+# "Carriageway (One-way / Divided)".
 CARRIAGEWAY_UNDECIDED_MESSAGE = (
     "This road is one-way, and the map couldn't tell whether it's a one-way "
-    "street or one side of a divided road. Choose “One-way street” or “One "
-    "side of a divided road” in the plan details, then generate again."
+    "street or one side of a divided road. Under Carriageway in Step 2, "
+    "choose “One-way” or “Divided”, then generate again."
 )
+
+
+def _guess_refusal(field_label: str, why: str) -> HTTPException:
+    return HTTPException(
+        status_code=400,
+        detail={
+            "error": "guess_stale",
+            "message": (
+                f"{field_label} is marked as guessed, but {why}. Set "
+                f"{field_label.lower()} in Step 2, then generate again."
+            ),
+        },
+    )
+
+
+def input_guesses(scenario: Scenario) -> list[dict[str, Any]]:
+    """R108 / R110 Q1 — every guess the scenario claims, recomputed from
+    its raw fact and checked against the field it claims to have filled.
+
+    The relay-fact pattern (#136/#158/#308): the frontend relays the fact
+    each prefill came from (the road's OSM tag, the pin) and the backend
+    owns the guess.  A claim that no longer holds is an honest 400
+    ``guess_stale`` (Rule 10: a stale claim is never printed as current).
+    Returns the audit records, one per verified guess, in a fixed order;
+    no ``guesses`` returns ``[]`` and every output stays byte-identical.
+    """
+    from src.rules.boundaries import suggest
+    from src.rules.street_class import STREET_CLASS_LABEL, street_class_from_highway
+
+    guesses = getattr(scenario, "guesses", None)
+    if guesses is None:
+        return []
+    records: list[dict[str, Any]] = []
+
+    sc = guesses.street_class
+    if sc is not None:
+        guessed = street_class_from_highway(sc.highwayClass)
+        if guessed is None:
+            raise _guess_refusal(
+                "Street class", f"the road tag highway={sc.highwayClass} guesses no class"
+            )
+        if scenario.street_class != guessed:
+            raise _guess_refusal(
+                "Street class",
+                f"the road (highway={sc.highwayClass}) guesses "
+                f"{STREET_CLASS_LABEL[guessed]}, not the class this plan carries",
+            )
+        records.append(
+            {
+                "field": "street_class",
+                "value": guessed,
+                "label": STREET_CLASS_LABEL[guessed],
+                "source": "road",
+                "evidence": f"OSM highway={sc.highwayClass}",
+                "operator_confirmed": False,
+            }
+        )
+
+    jk = guesses.jurisdiction_key
+    if jk is not None:
+        if (jk.lat, jk.lng) != (scenario.meta.lat, scenario.meta.lng):
+            raise _guess_refusal("Jurisdiction", "it was guessed at a pin this plan no longer has")
+        answer = suggest(jk.lat, jk.lng)
+        if not scenario.jurisdiction_key or answer["suggestion"] != scenario.jurisdiction_key:
+            raise _guess_refusal(
+                "Jurisdiction",
+                "the pin's boundary lookup doesn't give the jurisdiction this plan carries",
+            )
+        from src.rules.jurisdiction import load_jurisdiction
+
+        records.append(
+            {
+                "field": "jurisdiction_key",
+                "value": scenario.jurisdiction_key,
+                "label": str(load_jurisdiction(scenario.jurisdiction_key)["name"]),
+                "source": "pin",
+                # The lookup's own reason: the polygon and the TIGER vintage.
+                "evidence": answer["reason"],
+                "operator_confirmed": False,
+            }
+        )
+    return records
+
+
+def _ensure_guesses_current(scenario: Scenario) -> None:
+    """The chokepoint's half of :func:`input_guesses`: refuse a stale
+    guess before anything is built from it."""
+    input_guesses(scenario)
 
 
 def _ensure_carriageway_decided(scenario: Scenario) -> None:
@@ -1752,6 +1844,13 @@ def _audit_build(
     # (Rule 10), and every coordinate-less audit stays byte-identical.
     if scenario.meta.lat or scenario.meta.lng:
         projection["pin"] = {"model": scenario.meta.pinModel}
+    # R108 / R110 Q1-Q2 — each untouched guess, its source and that the
+    # operator did not confirm it.  Its own key, never a
+    # ``pending_verification`` item (Q2: a guessed plan reads as clean as
+    # an operator-set one).  No guess, no key: byte-identical.
+    guessed = input_guesses(scenario)
+    if guessed:
+        projection["input_guesses"] = guessed
     return projection, params, placements
 
 

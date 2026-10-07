@@ -4,10 +4,9 @@
 // about the rendered rail agreeing with real shell state, so both
 // live suites' subjects mount for real).  Two cases the unit suite
 // can't carry alone:
-//   * dismiss-honesty (PDF p.4 corollary): dismissing a live
-//     suggestion without choosing removes the "N to confirm" line and
-//     flips no rail state — the count derives from the resolution
-//     record, not from whether the row is gone;
+//   * R108 (which retired #228's "N to confirm" with the confirm step):
+//     a saved plan opens as it was saved — its pin's lookup lands as
+//     evidence and writes nothing, with no Confirm or Dismiss to press;
 //   * stale, end to end: a confirmed road whose staleness key no
 //     longer matches the pin renders ▲ + "detection stale" on the
 //     Road entry, from scenario state alone.
@@ -93,45 +92,22 @@ function locationEntry(): HTMLElement {
   return btn as HTMLElement;
 }
 
-describe("#228 mounted — dismiss-honesty on the live count", () => {
-  it("a live proposal reads '1 to confirm'; Dismiss removes the line and flips no state", async () => {
-    // #289 Phase 2 — the RAIL is gone (§8.17) and its Location entry with
-    // it, so the `1 to confirm` subline has no row to sit on.  What the
-    // case is about survives whole: a live proposal is offered, dismissing
-    // it writes NOTHING, and no ✓ is manufactured anywhere — which is the
-    // suggest-never-set contract and the part worth keeping.
-    //
-    // `deriveRail()` still emits the subline; `lib/scenarios/rail.test.ts`
-    // covers that directly, which is why the derivation half does not need
-    // a mounted assertion here.
+describe("R108 mounted — a saved plan's pin is evidence, never a write", () => {
+  it("the lookup lands, the key stays unset, and nothing asks to be confirmed", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await openWhat();
     await waitFor(
       () => {
-        expect(screen.getByText(/Pin suggests:/)).toBeTruthy();
+        expect(screen.getByText(/The pin is in Denver/)).toBeTruthy();
       },
       { timeout: 3000 },
     );
-    const keyBefore = (
-      document.querySelector("#what-jurisdiction") as HTMLSelectElement
-    ).value;
-
-    await userEvent.click(screen.getByRole("button", { name: "Dismiss" }));
-
-    // …and dismissing without choosing removes ONLY the count line:
-    // aria byte-identical to the no-suggestion state, every entry's
-    // state class unchanged, no ✓ manufactured anywhere (p.4: never a
-    // false ✓ — jurisdiction_key is still unset).
-    // …and dismissing without choosing writes nothing: the key is
-    // untouched, no ✓ is manufactured (p.4: never a false ✓ —
-    // jurisdiction_key is still unset), and the slot keeps the ×-record
-    // rather than going blank (#227).
-    await waitFor(() => {
-      expect(screen.queryByText(/Pin suggests:/)).toBeNull();
-    });
     expect(
       (document.querySelector("#what-jurisdiction") as HTMLSelectElement).value,
-    ).toBe(keyBefore);
+    ).toBe("");
+    for (const name of [/^Confirm/, /^Dismiss$/]) {
+      expect(screen.queryByRole("button", { name })).toBeNull();
+    }
   });
 });
 

@@ -1,49 +1,38 @@
 "use client";
 
-// R96 A (2026-10-06, declutter-three-surfaces): the second group's
-// sub-header ("The rest of this plan") is retired.  Its cells now render
-// into the WHAT band's two groups, "The road" and "The job"
-// (PlanDetailCells, below); everything else here stands.
+// R107 (setup-what-redesign, 2026-10-07): the WHAT band's rows beyond its
+// first three — street class, the carriageway or the Divided toggle in
+// "The road"; work type, hours and the speed reduction in "The job" — as
+// rows of the band's two columns (WhatC5.dc.html).  R107's labels: "Street
+// class, Carriageway (One-way / Divided), Hours and Speed reduction", each
+// a segmented control split evenly (R107: "this fixes the empty gap after
+// 'Arterial'").  R108: the street class is prefilled from the road and
+// marked as a guess; there is no Confirm.  R110 Q8: Hours and Speed
+// reduction read "✓ default" until changed, then "✓ yours"; the
+// reduction's off option reads "None".
 //
-// #289 hand-check, 2026-09-23, correction 1 — THE SECOND GROUP.
-//
-// Ryan's words: "WHAT is the 3×2 grid (rules 116, 136–138) plus a second
-// group for the inputs the plan needs that the grid does not hold — work
-// type, night operation, speed reduction, divided, and the dates control
-// — laid out as grid fields with provenance lines, under one sub-header,
-// not the old SCHEDULE / ROAD / WORK sections pasted inside the band."
-//
-// WHAT WAS WRONG, and it was more than layout.  Phase 2 mounted the
-// per-kind forms and the schedule inside the band in the shape they
-// already had, and recorded that as a deliberate deferral.  The shape
-// they already had is the PANEL's register: `.field-input` is
-// paper-on-navy with an orange focus ring, `.chip` is orange-on-paper,
-// and the band's own register is dark, `--act` cyan, 44 px.  So the
-// sections did not merely sit oddly in the column — they were a
-// different palette, a different type scale and a different hit-target
-// rule inside one band.  They also carried their own section headers
-// ("Road", "Work", "Schedule"), which is the panel's vocabulary inside a
-// column that counts to four.
-//
-// WHAT DID NOT MOVE, and why.  The flagger's four recovery confirms
-// (#136 single lane, #86 multi-lane, #158 one-way, #173 lane confidence
-// — each with its #177 disputed-override record and its #179 untick) and
-// the near-intersection's approach set stay in their own components.
-// They are BACKEND GATES and their recovery affordances, not plan
-// inputs; Ryan's list does not name them; and moving a recovery path is
-// how a redesign loses one.  They render below this group, unchanged.
-//
-// THE WRITES ARE NOT NEW.  Work type and night are plain field sets, as
-// they were.  The reduction keeps ShoulderForm's own rule (a reduction
-// at or above the posted speed means "no reduction"), and the divided
-// toggle keeps its lanes default — the same flip `setRoadType` performs,
-// #85's single-sourcing.  Nothing here computes a compliance value
-// (rule 3).
+// Earlier rulings this keeps (each still stands):
+//   #289 hand-check, correction 1 — the flagger's four recovery confirms
+//   (#136, #86, #158, #173, each with its #177 record and #179 untick) and
+//   the near-intersection's approach set are BACKEND GATES and their
+//   recovery affordances, not plan inputs: they render below the band,
+//   unchanged.
+//   The reduction keeps ShoulderForm's rule (a reduction at or above the
+//   posted speed means "no reduction"); the Divided toggle keeps its lanes
+//   default — the same flip `setRoadType` performs, #85's single-sourcing.
+//   Nothing here computes a compliance value (rule 3).
 
 import type { ReactNode } from "react";
 import type { Scenario, ScenarioKind, ShoulderScenario } from "@/lib/scenarios";
+import type { JurisdictionBlock, StreetClass } from "@/lib/jurisdiction";
 import { PLAN_DETAILS } from "@/lib/scenarios/what-cells";
 import { laneWidthCeilingFt } from "@/lib/scenarios/validation";
+import { setNight, setWorkZoneSpeed } from "@/lib/scenarios/what-writes";
+import {
+  isGuessed,
+  isOperatorSet,
+  setStreetClassByOperator,
+} from "@/lib/scenarios/guesses";
 import {
   carriagewayApplies,
   carriagewayVerdict,
@@ -52,8 +41,8 @@ import {
 } from "@/lib/road-detection/carriageway";
 import { markerOf } from "@/lib/scenarios/provenance-marker";
 import { useWriteLock } from "../WriteLock";
-import { CellAction, FieldCell } from "./FieldCell";
-import type { SectionSlot } from "../JurisdictionSection";
+import { FieldCell, Segmented } from "./FieldCell";
+import { STREET_CLASSES, StreetClassEvidence } from "../JurisdictionSection";
 
 /** #308 — the carriageway facts when the road is a street-class one-way
  *  (the only roads the question applies to); null otherwise. */
@@ -65,8 +54,8 @@ function oneWayFacts(scenario: Scenario): CarriagewayFacts | null {
 
 /** Does this scenario show the explicit divided toggle?  #85: every road
  *  type but `urban_arterial` derives `divided` from itself, so the
- *  toggle is a cell only where the value is genuinely the operator's.
- *  #308: on a one-way road the carriageway cell carries the same fact,
+ *  toggle is a row only where the value is genuinely the operator's.
+ *  #308: on a one-way road the carriageway row carries the same fact,
  *  so the toggle steps aside — one control per fact (P2). */
 export function showsDividedToggle(scenario: Scenario): boolean {
   return (
@@ -76,7 +65,7 @@ export function showsDividedToggle(scenario: Scenario): boolean {
   );
 }
 
-/** #308 — the carriageway cell's provenance: whose answer it shows. */
+/** #308 — the carriageway row's provenance: whose answer it shows. */
 function carriagewayProvenance(f: CarriagewayFacts): string {
   if (f.confirmed) return "your answer · operator-set from here on";
   const verdict = carriagewayVerdict(f);
@@ -85,30 +74,48 @@ function carriagewayProvenance(f: CarriagewayFacts): string {
   return `detected · no same-name carriageway within ${TWIN_RADIUS_M} m`;
 }
 
-/** One cell, in the band's register — the WHAT grid's `Cell` in every
- *  respect that matters (label, control, rule 137's provenance line),
- *  kept local rather than exported across files because the grid's owns
- *  an amber clause and a detection model this group has no use for. */
+/** R108 — the street class's provenance: a guess off the road (its tag
+ *  named), the operator's pick, or not set. */
+export function streetClassProvenance(scenario: Scenario): { text: string; amber: boolean } {
+  const guess = scenario.guesses?.street_class;
+  if (guess && isGuessed(scenario, "street_class")) {
+    return {
+      text: `guessed, not confirmed · OSM highway=${guess.highwayClass} · from the road`,
+      amber: true,
+    };
+  }
+  return scenario.street_class
+    ? { text: "your change · operator-set from here on", amber: false }
+    : { text: "not set · operator-set when picked", amber: false };
+}
+
+/** R110 Q8 — "✓ default" until changed, then "✓ yours".  A value away
+ *  from the default is the operator's even on a plan saved before the
+ *  record existed. */
+function defaultOrYours(mine: boolean, defaultLine: string): string {
+  return mine ? "your change · operator-set from here on" : defaultLine;
+}
+
+/** One row, in the band's register — WhatBand's `Cell` in every respect
+ *  that matters (label, control, rule 137's line as a marker), kept local
+ *  because the WHAT rows own a detection model this group has no use for. */
 function Cell({
   label,
   htmlFor,
   provenance,
+  amber = false,
   line = null,
   detail = null,
-  record = null,
   children,
   testid,
 }: {
   label: string;
   htmlFor?: string;
   provenance: string;
-  /** R100: an answered suggestion's record, collapsed into the cell. */
-  record?: ReactNode;
-  /** A detection fact about THIS field (fix 3).  #289 WHAT density: it
-   *  is detail, behind the field's toggle — "the divided clause". */
+  amber?: boolean;
+  /** A detection fact about THIS field (fix 3), behind its marker. */
   line?: { key: string; text: string; amber: boolean } | null;
-  /** Anything else about the field (street classification's map chip
-   *  and its suggestion's evidence). */
+  /** Anything else about the field (street class's evidence). */
   detail?: ReactNode;
   children: ReactNode;
   testid: string;
@@ -120,13 +127,15 @@ function Cell({
       htmlFor={htmlFor}
       testid={testid}
       provenance={
-        <span className="tr-prov" data-testid={`prov-${testid}`}>
-          {provenance}
+        <span
+          className={`tr-prov${amber ? " is-amber" : ""}`}
+          data-testid={`prov-${testid}`}
+        >
+          {amber ? `⚠ ${provenance}` : provenance}
         </span>
       }
       // R98: the line as one quiet marker; "⚠ needs you" stays a line.
-      marker={markerOf(provenance)}
-      record={record}
+      marker={markerOf(provenance, { amber })}
       info={
         hasDetail ? (
           <>
@@ -148,89 +157,33 @@ function Cell({
   );
 }
 
-/** A two-state answer, as chips in the band's own register (rule 135's
- *  control, which is already 44 px and already declares its pressed
- *  state with `aria-pressed`).  A checkbox row would have been the
- *  panel's shape; the column asks questions and offers answers. */
-function TwoWay({
-  id,
-  on,
-  off,
-  value,
-  onChange,
-  locked,
-}: {
-  id: string;
-  on: string;
-  off: string;
-  /** null = neither answer yet (#308's undecided carriageway). */
-  value: boolean | null;
-  onChange: (next: boolean) => void;
-  locked: boolean;
-}) {
-  return (
-    <div className="a-chips a-chips-inline" role="group" aria-label={id}>
-      {[
-        { v: false, l: off },
-        { v: true, l: on },
-      ].map((o) => (
-        <button
-          key={String(o.v)}
-          type="button"
-          className="a-chip a-chip-flat"
-          data-write=""
-          aria-pressed={value === o.v}
-          aria-disabled={locked || undefined}
-          onClick={() => {
-            if (!locked && value !== o.v) onChange(o.v);
-          }}
-        >
-          {o.l}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-/** R96 A (declutter-three-surfaces, R101 "as mocked up") — the inputs the
- *  first three rows don't hold, as cells of the band's two groups rather
- *  than a third section ("The rest of this plan" is retired).  The WHAT
- *  band renders them INSIDE its own grids, so a group's cells share one
- *  set of tracks (P4, P6):
+/** R107 — the rows the first three don't hold, rendered INSIDE the WHAT
+ *  band's two columns (a fragment, never a wrapper: the column is the
+ *  band's):
  *
- *    road  street classification, then the Divided toggle or #308's
- *          one-way/divided question, then street class's waiting
- *          suggestion row (last, under the row that holds the field);
- *    job   work type, night, the speed reduction and its limit.
- *
- *  A fragment, never a wrapper: the grid is the band's. */
+ *    road  street class, then the Divided toggle or #308's carriageway;
+ *    job   work type, hours, the speed reduction and its limit. */
 export function PlanDetailCells({
   group,
   scenario,
   setScenario,
   dividedLine = null,
-  streetClass,
+  jurisdictionBlock = null,
 }: {
   group: "road" | "job";
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
   /** #289 hand-check, 2026-09-23, fix 3: "divided under the Divided
-   *  control."  Detection's own row for the field, derived by the WHAT
-   *  band (one producer) and rendered here, under the control it is
-   *  about.  Null when detection has nothing to say, or when there is no
-   *  Divided control to sit under — the road-type cell takes it then. */
+   *  control."  Null when detection has nothing to say, or when there is
+   *  no Divided control to sit under — the road-type row takes it then. */
   dividedLine?: { key: string; text: string; amber: boolean } | null;
-  /** #289 WHAT density (Ryan, 2026-09-24): "Street classification
-   *  becomes its own cell", asked for in parts.  R100: its "record" is
-   *  the answered suggestion, collapsed into the cell. */
-  streetClass?: SectionSlot;
+  /** For the street class's map caveat (the jurisdiction's adopted
+   *  classification map governs, not the road tier). */
+  jurisdictionBlock?: JurisdictionBlock | null;
 }): ReactNode {
   const locked = useWriteLock();
   const table = PLAN_DETAILS[scenario.kind as ScenarioKind];
   if (!table) return null;
-
-  const set = <K extends keyof Scenario>(key: K, value: Scenario[K]) =>
-    setScenario({ ...scenario, [key]: value } as Scenario);
 
   const wz = "workZoneSpeed" in scenario ? scenario.workZoneSpeed : undefined;
   const delta = wz !== undefined ? scenario.speed - wz : 0;
@@ -252,7 +205,7 @@ export function PlanDetailCells({
             disabled={locked}
             value={(scenario as { workType: string }).workType}
             onChange={(e) =>
-              set("workType" as keyof Scenario, e.target.value as never)
+              setScenario({ ...scenario, workType: e.target.value } as Scenario)
             }
           >
             {table.workTypes.map((w) => (
@@ -264,35 +217,47 @@ export function PlanDetailCells({
         </Cell>
 
         <Cell
-          label="Night operation"
-          provenance="night work adds retroreflective devices"
+          label="Hours"
+          provenance={defaultOrYours(
+            isOperatorSet(scenario, "night") || scenario.night,
+            "default · daytime; night work adds retroreflective devices",
+          )}
           testid="night"
         >
-          <TwoWay
-            id="Night operation"
-            off="Daytime"
-            on="Night"
+          <Segmented
+            name="Hours"
+            options={[
+              { v: false, l: "Daytime" },
+              { v: true, l: "Night" },
+            ]}
             value={scenario.night}
-            onChange={(v) => set("night" as keyof Scenario, v as never)}
+            onChange={(v) => setScenario(setNight(scenario, v))}
             locked={locked}
           />
         </Cell>
 
         {table.speedReduction && (
           <Cell
-            label="Work-zone speed reduction"
-            provenance="a lower limit through the zone"
+            label="Speed reduction"
+            provenance={defaultOrYours(
+              isOperatorSet(scenario, "workZoneSpeed") || wz !== undefined,
+              "default · no lower limit through the zone",
+            )}
             testid="reduction"
           >
-            <TwoWay
-              id="Work-zone speed reduction"
-              off="No reduction"
-              on="Reduced"
+            <Segmented
+              name="Speed reduction"
+              options={[
+                { v: false, l: "None" },
+                { v: true, l: "Reduced" },
+              ]}
               value={wz !== undefined}
               onChange={(v) =>
-                set(
-                  "workZoneSpeed" as keyof Scenario,
-                  (v ? Math.max(25, scenario.speed - 10) : undefined) as never,
+                setScenario(
+                  setWorkZoneSpeed(
+                    scenario,
+                    v ? Math.max(25, scenario.speed - 10) : undefined,
+                  ),
                 )
               }
               locked={locked}
@@ -321,7 +286,7 @@ export function PlanDetailCells({
               max={scenario.speed}
               value={wz}
               onChange={(e) =>
-                set("workZoneSpeed" as keyof Scenario, (+e.target.value || 0) as never)
+                setScenario(setWorkZoneSpeed(scenario, +e.target.value || 0))
               }
             />
           </Cell>
@@ -330,26 +295,35 @@ export function PlanDetailCells({
     );
   }
 
+  const classProv = streetClassProvenance(scenario);
+  const tier =
+    scenario.guesses?.street_class?.highwayClass ??
+    (scenario.meta.confirmedRoad &&
+    scenario.meta.confirmedRoad.pinLat === scenario.meta.lat &&
+    scenario.meta.confirmedRoad.pinLng === scenario.meta.lng
+      ? scenario.meta.confirmedRoad.candidate.highway_class
+      : null);
+  const classEvidence = (
+    <StreetClassEvidence tier={tier} jurisdiction={jurisdictionBlock} />
+  );
+
   return (
     <>
-      {streetClass && (
-        <Cell
-          label="Street classification"
-          // Rule 137: a line always.  The chips are the operator's —
-          // the suggestion's Confirm is the operator's click too — so
-          // a picked class is rule 137's own operator-set clause.
-          provenance={
-            scenario.street_class
-              ? "your change · operator-set from here on"
-              : "not set · operator-set when picked"
-          }
-          detail={streetClass("detail")}
-          record={streetClass("record")}
-          testid="street-class"
-        >
-          {streetClass("control")}
-        </Cell>
-      )}
+      <Cell
+        label="Street class"
+        provenance={classProv.text}
+        amber={classProv.amber}
+        detail={classEvidence}
+        testid="street-class"
+      >
+        <Segmented<StreetClass>
+          name="Street class"
+          options={STREET_CLASSES.map(([v, l]) => ({ v, l }))}
+          value={scenario.street_class ?? null}
+          onChange={(c) => setScenario(setStreetClassByOperator(scenario, c))}
+          locked={locked}
+        />
+      </Cell>
 
       {showsDividedToggle(scenario) && (
         <Cell
@@ -358,10 +332,12 @@ export function PlanDetailCells({
           line={dividedLine}
           testid="divided"
         >
-          <TwoWay
-            id="Divided highway"
-            off="Undivided"
-            on="Divided"
+          <Segmented
+            name="Divided highway"
+            options={[
+              { v: false, l: "Undivided" },
+              { v: true, l: "Divided" },
+            ]}
             value={Boolean((scenario as { divided?: boolean }).divided)}
             onChange={(v) =>
               // The deleted ShoulderForm's flip, carried whole
@@ -381,20 +357,20 @@ export function PlanDetailCells({
 
       {carriageway && (
         <Cell
-          label="One-way street or divided road?"
+          label="Carriageway"
           provenance={carriagewayProvenance(carriageway)}
           testid="carriageway"
         >
-          <TwoWay
-            id="One-way street or divided road?"
-            off="One-way street"
-            on="One side of a divided road"
+          <Segmented
+            name="Carriageway"
+            options={[
+              { v: false, l: "One-way" },
+              { v: true, l: "Divided" },
+            ]}
             value={
               carriagewayVerdict(carriageway) === "undecided"
                 ? null
                 : carriagewayVerdict(carriageway) === "divided"
-                  ? true
-                  : false
             }
             onChange={(v) => {
               // #308 (R83): the operator's answer rides the facts to the
@@ -413,16 +389,6 @@ export function PlanDetailCells({
             locked={locked}
           />
         </Cell>
-      )}
-
-      {/* Street class's WAITING suggestion: the group's last item, under
-          the row that holds the field (rulings.md, "The suggestion row
-          spans the band").  Answered, it is the cell's record (R100) and
-          this row is empty. */}
-      {streetClass && (
-        <CellAction label="Street classification" testid="street-class">
-          {streetClass("action")}
-        </CellAction>
       )}
     </>
   );

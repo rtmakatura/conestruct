@@ -1,22 +1,28 @@
 // @vitest-environment happy-dom
 //
-// Endeavor B contract tests (spec §4): a pin can SUGGEST, never SET.
-// Payload-level, mounted-flow assertions — the suggestion round-trip
-// must never place a jurisdiction_key on the wire; the user's Confirm
-// click is the single writer.  And the endpoint failing must leave the
-// picker exactly as it works today (B is additive, never load-bearing).
+// R108 / R110 — the pin GUESSES the jurisdiction; it never asks to be
+// confirmed.  Payload-level, mounted-flow assertions (Rule 11).
+//
+// Authority: validation-artifacts/committed/setup-what-redesign/rulings.md.
+// R108: "Street class (from the road) and jurisdiction (from the pin) are
+// prefilled ... and the operator changes them if they're wrong ... If the
+// pin has no jurisdiction guess, the field stays '◌ not set', as today."
+// R110 Q1: the wire carries the raw fact of each untouched guess (the pin
+// it was guessed at), which the backend re-derives; Q4: "Never overwrite
+// a value the operator set."
+//
+// This suite replaces Endeavor B's "suggest never sets / Confirm is the
+// only writer" contract, which R108 supersedes (checkpoint §3, rows 3, 5,
+// 6, 7, 11).  What carries over whole: the lookup failing leaves the
+// picker exactly as it works without it, and no pin means no lookup.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
 import type { Scenario } from "@/lib/scenarios";
-// #289 finding 1: no live check fires until a person confirms the kind,
-// and this suite stubs the whole column — so no chip exists to confirm
-// one.  It mounts as a saved plan does (`initialScenario` starts
-// confirmed) with the same unpinned default the fresh mount used.  The
-// kind's own contract is GeneratorShell.kind-confirm's.
 import { DEFAULT_SCENARIO } from "@/lib/scenarios";
+import { setJurisdictionByOperator } from "@/lib/scenarios/guesses";
+import { JurisdictionEvidence, type JurisdictionLookup } from "./JurisdictionSection";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -25,92 +31,63 @@ vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
 vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
-// The sidebar stub exposes pin-drop buttons wired to the REAL setScenario
-// — the same write path the map picker uses.  Surface B (#152) moved the
-// jurisdiction controls (dropdown + suggestion rows) into the sidebar's
-// Location step via the ``jurisdictionControls`` slot, so the stub must
-// render that slot for the suggestion UI to appear under test.
-// #289 §8.21 — the sidebar's stub renders BOTH halves of what §8.21
-// split: `jurisdictionControls` is the street-class field and its own
-// suggestion slot, `jurisdictionSuggest` is the pin suggestion, which now
-// rides the WHAT band's jurisdiction cell (#201 — a confirm sits beside
-// the control it applies to).  The stub stands in for the column, so it
-// renders both in one place; the contract these cases assert — suggest
-// never sets, Confirm is the only writer — is unchanged by where they
-// render.
+
+const DENVER_PIN = { lat: 39.7392, lng: -104.9903 };
+const PARKER_PIN = { lat: 39.5186, lng: -104.7614 };
+
+// The sidebar stub stands in for the column: pin drops through the REAL
+// setScenario (the picker's write path), the jurisdiction select through
+// the REAL operator writer the WHAT band uses, and the lookup's evidence
+// as the band renders it.
 vi.mock("./GeneratorSidebar", () => ({
   GeneratorSidebar: ({
     scenario,
     setScenario,
-    jurisdictionControls,
-    jurisdictionSuggest,
+    jurisdictionLookup,
   }: {
     scenario: Scenario;
     setScenario: (s: Scenario) => void;
-    jurisdictionControls?: (section?: string) => ReactNode;
-    jurisdictionSuggest?: (section?: string) => ReactNode;
+    jurisdictionLookup?: JurisdictionLookup;
   }) => (
     <div>
-      <button
-        type="button"
-        onClick={() =>
-          setScenario({
-            ...scenario,
-            meta: { ...scenario.meta, lat: 39.7392, lng: -104.9903, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
-          })
-        }
-      >
-        stub-drop-pin-denver
-      </button>
-      <button
-        type="button"
-        onClick={() =>
-          setScenario({
-            ...scenario,
-            meta: { ...scenario.meta, lat: 39.5186, lng: -104.7614, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
-          })
-        }
-      >
-        stub-drop-pin-parker
-      </button>
-      {/* #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band
-          now, and the band is not mounted here: this stub replaces the
-          whole column.  So the field is stubbed too, exactly as the pin
-          drops above are — same id, same single writer, so the cases
-          below still exercise "what reaches the wire" and nothing about
-          where the control sits.  The cell's own three states (ruling
-          196) are asserted in WhatBand.jurisdiction.test.tsx, against
-          the real one. */}
+      {(
+        [
+          ["stub-drop-pin-denver", DENVER_PIN],
+          ["stub-drop-pin-parker", PARKER_PIN],
+        ] as const
+      ).map(([label, pin]) => (
+        <button
+          key={label}
+          type="button"
+          onClick={() =>
+            setScenario({
+              ...scenario,
+              // #290: the side a located plan carries.
+              meta: { ...scenario.meta, ...pin, work: { side: "right", heading: "N" } },
+            })
+          }
+        >
+          {label}
+        </button>
+      ))}
       <label htmlFor="what-jurisdiction">Jurisdiction</label>
       <select
         id="what-jurisdiction"
         value={scenario.jurisdiction_key ?? ""}
         onChange={(e) =>
-          setScenario({
-            ...scenario,
-            jurisdiction_key: e.target.value || null,
-          } as Scenario)
+          setScenario(setJurisdictionByOperator(scenario, e.target.value || null))
         }
       >
         <option value="">Not set: MUTCD + CDOT only</option>
         <option value="denver">Denver</option>
         <option value="parker">Parker</option>
-        <option value="aurora">Aurora</option>
       </select>
-      {jurisdictionControls?.()}
-      {jurisdictionSuggest?.()}
+      {jurisdictionLookup && <JurisdictionEvidence lookup={jurisdictionLookup} />}
     </div>
   ),
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-
-// #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band's grid
-// now, with ruling 196's three states and no skeleton (rule 14).  Its id
-// moved with it: `#jl-jurisdiction` -> `#what-jurisdiction`.  The pin
-// SUGGESTION rides the same cell (#201: a confirm sits beside the control
-// it applies to), and the street-class field keeps its own slot below the
-// grid, so the suggest-never-set contract still has exactly one writer.
 
 const SUGGEST_DENVER = {
   suggestion: "denver",
@@ -125,7 +102,13 @@ const SUGGEST_DENVER = {
   },
 };
 
-let breakdownBodies: unknown[] = [];
+type Wire = {
+  jurisdiction_key?: string | null;
+  guesses?: { jurisdiction_key?: { lat: number; lng: number } } | null;
+  meta: { lat: number; lng: number };
+};
+
+let bodies: Wire[] = [];
 let suggestCalls = 0;
 let suggestResponse: () => Response;
 
@@ -138,44 +121,21 @@ function jsonResponse(status: number, body: unknown): Response {
   } as unknown as Response;
 }
 
-const BREAKDOWN = {
-  devices: [],
-  total_devices: 0,
-  unique_types: 0,
-  zone_geometry: {
-    taper_l_ft: 1,
-    buffer_b_ft: 1,
-    device_spacing_ft: 1,
-    work_len_ft: 1,
-  },
-};
-
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
-  // #306 (R64): a Generate's breakdown rides its audit request
-  // (`include_breakdown`), so that is the breakdown's wire now;
-  // /api/render/device-breakdown is the S7 preview's alone.
-  if (url.includes("/api/render/audit")) {
-    const body = JSON.parse(String(init?.body ?? "{}"));
-    if (body?.scenario?.include_breakdown) {
-      breakdownBodies.push(body);
-      return Promise.resolve(jsonResponse(200, { breakdown: BREAKDOWN }));
-    }
-    return Promise.resolve(jsonResponse(200, {}));
-  }
-  if (url.includes("/api/render/device-breakdown")) {
-    breakdownBodies.push(JSON.parse(String(init?.body ?? "{}")));
-    return Promise.resolve(jsonResponse(200, BREAKDOWN));
-  }
   if (url.includes("/api/jurisdiction/suggest")) {
     suggestCalls += 1;
     return Promise.resolve(suggestResponse());
+  }
+  if (url.includes("/api/render/")) {
+    const body = JSON.parse(String(init?.body ?? "{}"));
+    if (body?.scenario) bodies.push(body.scenario as Wire);
   }
   return Promise.resolve(jsonResponse(200, {}));
 });
 
 beforeEach(() => {
-  breakdownBodies = [];
+  bodies = [];
   suggestCalls = 0;
   suggestResponse = () => jsonResponse(200, SUGGEST_DENVER);
   fetchMock.mockClear();
@@ -183,169 +143,107 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // THE INVARIANT, over every payload any case sent: a pin guess on the
+  // wire names that payload's own pin and a filled field — never a stale
+  // one (the backend would refuse it with guess_stale).
+  for (const b of bodies) {
+    const g = b.guesses?.jurisdiction_key;
+    if (!g) continue;
+    expect(g).toEqual({ lat: b.meta.lat, lng: b.meta.lng });
+    expect(b.jurisdiction_key).toBeTruthy();
+  }
   cleanup();
   vi.unstubAllGlobals();
 });
 
-function wireKeys(): (string | null | undefined)[] {
-  return breakdownBodies.map(
-    (b) => (b as { scenario?: { jurisdiction_key?: string | null } }).scenario
-      ?.jurisdiction_key,
-  );
-}
+const select = () => document.querySelector("#what-jurisdiction") as HTMLSelectElement;
+const last = () => bodies[bodies.length - 1];
 
-describe("pin suggestion contract: suggest never sets", () => {
-  it("a suggestion round-trip never places jurisdiction_key on the wire", async () => {
+describe("the pin guesses the jurisdiction (R108)", () => {
+  it("a pin dropped in this session fills an empty field and relays the pin it came from", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
     await user.click(screen.getByText("stub-drop-pin-denver"));
-    await waitFor(
-      () => expect(screen.getByText(/Pin suggests:/)).toBeTruthy(),
-      { timeout: 3000 },
-    );
-
-    // The suggestion is rendered — and every payload the backend has
-    // seen (initial mount + the pin-move refetch) is jurisdiction-free.
+    await waitFor(() => expect(select().value).toBe("denver"), { timeout: 3000 });
+    await waitFor(() => expect(last()?.jurisdiction_key).toBe("denver"));
+    expect(last().guesses?.jurisdiction_key).toEqual(DENVER_PIN);
     expect(suggestCalls).toBe(1);
-    expect(screen.getByText("Denver", { selector: "b" })).toBeTruthy();
-    for (const key of wireKeys()) {
-      expect(key ?? null).toBeNull();
-    }
-    // The honesty line rides the suggestion (spec §6).
+    // No confirm step anywhere.
+    expect(screen.queryByRole("button", { name: /^Confirm/ })).toBeNull();
+    // The evidence and the TIGER caveat still ride along (Rule 10).
     expect(screen.getByText(/Boundary data is approximate/)).toBeTruthy();
   });
 
-  it("Confirm is the only writer — clicking it sets jurisdiction_key", async () => {
+  it("never overwrites the operator's jurisdiction (R110 Q4)", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
+    await user.selectOptions(select(), "parker");
     await user.click(screen.getByText("stub-drop-pin-denver"));
-    await waitFor(
-      () => expect(screen.getByText(/Confirm Denver/)).toBeTruthy(),
-      { timeout: 3000 },
-    );
-    const before = breakdownBodies.length;
-    await user.click(screen.getByText(/Confirm Denver/));
-
-    await waitFor(() => expect(breakdownBodies.length).toBeGreaterThan(before));
-    expect(wireKeys().slice(before)).toContain("denver");
-    // The picker reflects the confirmed key; the slot demotes to a
-    // passive agreement line.
-    const select = document.querySelector(
-      "#what-jurisdiction",
-    ) as HTMLSelectElement;
-    expect(select.value).toBe("denver");
-    await waitFor(() =>
-      expect(screen.getByText(/Pin agrees with your selection/)).toBeTruthy(),
-    );
+    await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 100));
+    });
+    expect(select().value).toBe("parker");
+    await waitFor(() => expect(last()?.jurisdiction_key).toBe("parker"));
+    expect(last().guesses?.jurisdiction_key).toBeUndefined();
   });
 
-  it("Dismiss leaves a ×-record with undo — never a cleared slot (#227)", async () => {
-    // Reshaped for #227 (GO 2026-08-27): resolving a suggestion no
-    // longer erases the decision.  Dismiss re-renders the same
-    // container as a dismissed record (× + evidence + undo); undo
-    // re-arms the live proposal; only a pin move clears everything.
+  it("the operator's change replaces the guess and drops its record", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
     await user.click(screen.getByText("stub-drop-pin-denver"));
-    await waitFor(
-      () => expect(screen.getByText(/Pin suggests:/)).toBeTruthy(),
-      { timeout: 3000 },
-    );
-    await user.click(screen.getByText("Dismiss"));
-    // The proposal row is gone; the record stands in its place with
-    // the evidence it carried.
-    expect(screen.queryByText(/Pin suggests:/)).toBeNull();
-    expect(
-      // #260: the unset jurisdiction is "Not set" everywhere (the #257 fold).
-      screen.getByText(/Dismissed the Denver suggestion\. Not set stands\./),
-    ).toBeTruthy();
-    expect(screen.getByText(/Boundary data is approximate/)).toBeTruthy();
-    // A dismiss writes nothing — every payload stays jurisdiction-free.
-    for (const key of wireKeys()) {
-      expect(key ?? null).toBeNull();
-    }
+    await waitFor(() => expect(select().value).toBe("denver"), { timeout: 3000 });
+    await user.selectOptions(select(), "parker");
+    await waitFor(() => expect(last()?.jurisdiction_key).toBe("parker"));
+    expect(last().guesses ?? null).toBeNull();
+  });
 
-    // Undo re-arms the live proposal (the suggestion data never left).
-    await user.click(screen.getByText("Undo"));
-    expect(screen.getByText(/Pin suggests:/)).toBeTruthy();
-    expect(screen.queryByText(/Dismissed the Denver suggestion/)).toBeNull();
-
-    // Dismiss again; a pin move clears the record and re-suggests fresh.
-    await user.click(screen.getByText("Dismiss"));
-    suggestResponse = () =>
-      jsonResponse(200, { ...SUGGEST_DENVER, suggestion: "parker" });
+  it("a moved pin drops the old guess in the same write, then guesses again", async () => {
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    await user.click(screen.getByText("stub-drop-pin-denver"));
+    await waitFor(() => expect(select().value).toBe("denver"), { timeout: 3000 });
+    suggestResponse = () => jsonResponse(200, { ...SUGGEST_DENVER, suggestion: "parker" });
     await user.click(screen.getByText("stub-drop-pin-parker"));
-    await waitFor(
-      () =>
-        expect(screen.getByText("Parker", { selector: "b" })).toBeTruthy(),
-      { timeout: 3000 },
-    );
-    expect(screen.getByText(/Pin suggests:/)).toBeTruthy();
-    expect(screen.queryByText(/Dismissed the/)).toBeNull();
+    await waitFor(() => expect(select().value).toBe("parker"), { timeout: 3000 });
+    await waitFor(() => expect(last()?.guesses?.jurisdiction_key).toEqual(PARKER_PIN));
+    // The afterEach invariant holds over the whole sequence: no payload
+    // carried Denver's pin with Parker's coordinates.
   });
 
-  it("a differing manual pick demotes the suggestion to a passive notice", async () => {
+  it("no answer for the pin leaves the field not set", async () => {
+    suggestResponse = () =>
+      jsonResponse(200, { ...SUGGEST_DENVER, suggestion: null, confidence: "outside" });
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
-    const select = document.querySelector(
-      "#what-jurisdiction",
-    ) as HTMLSelectElement;
-    await user.selectOptions(select, "parker");
     await user.click(screen.getByText("stub-drop-pin-denver"));
-
-    await waitFor(
-      () =>
-        expect(
-          screen.getByText(/Pin appears to be in Denver, but you have Parker/),
-        ).toBeTruthy(),
-      { timeout: 3000 },
-    );
-    // Never a prompt to switch: no Confirm button in this state.
-    expect(screen.queryByText(/Confirm Denver/)).toBeNull();
-    // And still nothing wrote over the manual pick.
-    expect(select.value).toBe("parker");
+    await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 100));
+    });
+    expect(select().value).toBe("");
+    for (const b of bodies) expect(b.jurisdiction_key ?? null).toBeNull();
   });
 
-  it("endpoint failure: slot goes quiet, picker works exactly as today", async () => {
+  it("lookup failure: nothing is filled in, and the picker works as it does without it", async () => {
     suggestResponse = () => jsonResponse(500, { detail: "boom" });
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
-    await waitFor(() =>
-      expect(screen.queryByText(/Checking boundary data/)).toBeNull(),
-    );
-
-    // Quiet slot, no error surface, no suggestion.
-    expect(screen.queryByText(/Pin suggests:/)).toBeNull();
-    expect(
-      screen.getByText(/Drop a site pin for a jurisdiction suggestion/),
-    ).toBeTruthy();
-
-    // Manual picking is untouched.
-    const select = document.querySelector(
-      "#what-jurisdiction",
-    ) as HTMLSelectElement;
-    const before = breakdownBodies.length;
-    await user.selectOptions(select, "parker");
-    await waitFor(() => expect(breakdownBodies.length).toBeGreaterThan(before));
-    expect(wireKeys().slice(before)).toContain("parker");
+    await waitFor(() => expect(screen.queryByText(/Checking boundary data/)).toBeNull());
+    expect(screen.getByText(/The boundary lookup didn't answer/)).toBeTruthy();
+    expect(select().value).toBe("");
+    await user.selectOptions(select(), "parker");
+    await waitFor(() => expect(last()?.jurisdiction_key).toBe("parker"));
   });
 
-  it("no pin (default 0/0): no suggest call ever fires", async () => {
+  it("no pin (default 0/0): no lookup ever fires", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-    // Give the debounce window ample time to (not) fire.
     await act(async () => {
       await new Promise((r) => setTimeout(r, 600));
     });
     expect(suggestCalls).toBe(0);
-    expect(
-      screen.getByText(/Drop a site pin for a jurisdiction suggestion/),
-    ).toBeTruthy();
+    expect(screen.getByText(/Drop a site pin to look up the jurisdiction/)).toBeTruthy();
   });
 });

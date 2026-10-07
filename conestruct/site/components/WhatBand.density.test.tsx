@@ -13,15 +13,17 @@
 //
 // R96 A (2026-10-06) AMENDS this suite under R98 (rule 137: a symbol +
 // word marker with the full line one click away counts as the provenance
-// line), R100 (an answered suggestion collapses into its field) and R101
-// (the details open as a popover that closes on click-away and Esc).  The
-// cases below keep #289's intent — one thing at rest per field, details
-// on click or tap and never hover, the suggestion row spanning the band —
-// with the marker in place of the sentence.
+// line) and R101 (the details open as a popover that closes on click-away
+// and Esc).  R108 (setup-what-redesign, 2026-10-07) removes its third
+// clause — there is no suggestion "needing action" left, so no action
+// line and no suggestion row — and R107 lays the rows out in two columns
+// (R110 Q7 gives the Lanes row two markers).  The cases keep #289's
+// intent: one thing at rest per field, details on click or tap and never
+// hover.
 //
-// Mounted with a confirmed road (detection speaks), a picker handoff
-// sentence, the REAL pin-suggestion slot and the REAL street-class slot,
-// so every kind of "everything else" the ruling names is on the page.
+// Mounted with a confirmed road (detection speaks) and the pin lookup's
+// answer, so every kind of "everything else" the ruling names is on the
+// page.
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -33,11 +35,6 @@ import type { Scenario } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import type { JurisdictionSuggestion } from "@/lib/jurisdiction";
 import { WhatBand } from "./bands/WhatBand";
-import {
-  JurisdictionControls,
-  JurisdictionSuggestSlot,
-  type SuggestSection,
-} from "./JurisdictionSection";
 
 afterEach(cleanup);
 
@@ -129,26 +126,6 @@ const SUGGEST: JurisdictionSuggestion = {
 };
 
 function mount(s: Scenario = scenario()) {
-  // As GeneratorShell builds them (R100): no record until answered.
-  const suggest = (section: SuggestSection = "all") =>
-    section === "record" ? null : (
-      <JurisdictionSuggestSlot suggest={SUGGEST} jurisdictionKey={null} section={section} />
-    );
-  const classFields = (section: SuggestSection = "all") =>
-    section === "record" ? null : (
-    <JurisdictionControls
-      jurisdiction={null}
-      jurisdictionKey={null}
-      setJurisdictionKey={() => {}}
-      streetClass={null}
-      setStreetClass={() => {}}
-      omitJurisdictionField
-      bare
-      section={section}
-      classSuggest="arterial"
-      classSuggestTier="primary"
-    />
-  );
   return render(
     <WhatBand
       scenario={s}
@@ -157,13 +134,16 @@ function mount(s: Scenario = scenario()) {
       jurisdictionBlock={null}
       jurisdictionLoading={false}
       jurisdictionErrored={false}
+      jurisdictionLookup={{ status: "ready", data: SUGGEST }}
       stepIndex="STEP 2 OF 4"
-      jurisdictionSuggest={suggest}
-      classificationFields={classFields}
       handoff={[]}
     />,
   );
 }
+
+/** R110 Q7: the Lanes row carries two markers — the count's and the
+ *  width's.  Every other row carries one. */
+const markersIn = (id: string) => (id === "cell-lanes" ? 2 : 1);
 
 const cell = (id: string) => document.querySelector(`[data-testid="cell-${id}"]`) as HTMLElement;
 const panel = (id: string) => document.querySelector(`[data-testid="info-${id}"]`) as HTMLElement | null;
@@ -176,21 +156,20 @@ function atRest(el: HTMLElement): Element[] {
   );
 }
 
-describe("each field shows the control, ONE provenance line and its one action line", () => {
-  it("every WHAT cell shows exactly one thing in its marker row at rest (R98)", () => {
+describe("each field shows the control and ONE provenance marker (R108: no action line)", () => {
+  it("every WHAT row shows exactly its marker(s) at rest (R98)", () => {
     mount();
     const cells = [...document.querySelectorAll('[data-testid="band-what"] [data-testid^="cell-"]')];
     expect(cells.length).toBeGreaterThan(8);
     for (const c of cells) {
       const id = c.getAttribute("data-testid")!;
-      const foot = c.querySelector(":scope > .a-cell-foot")!;
-      expect(foot.children, id).toHaveLength(1);
-      // At rest nothing else in the cell speaks: every other line is in
+      // At rest nothing else in the row speaks: every other line is in
       // its closed popover.
       const provs = [...c.querySelectorAll(".tr-prov")].filter(
         (n) => !n.closest(".a-info") && !n.closest(".jbar-suggest"),
       );
-      expect(provs, id).toHaveLength(1);
+      expect(provs, id).toHaveLength(markersIn(id));
+      expect(provs.every((n) => n.classList.contains("a-mark")), id).toBe(true);
     }
   });
 
@@ -199,7 +178,8 @@ describe("each field shows the control, ONE provenance line and its one action l
     const rt = cell("road-type");
     expect(rt.querySelector("#what-road-type")).not.toBeNull();
     // R98: at rest, the marker; the line itself is one click away.
-    expect(atRest(rt).map((n) => n.textContent)).toEqual(["⚠ inferred"]);
+    // R108 / WhatC5: an inferred road type reads as a guess "from the road".
+    expect(atRest(rt).map((n) => n.textContent)).toEqual(["⚠ from the road"]);
     const p = panel("road-type")!;
     expect(p.hasAttribute("hidden")).toBe(true);
     expect(p.querySelector('[data-testid="prov-road-type"]')!.textContent).toBe(
@@ -208,70 +188,50 @@ describe("each field shows the control, ONE provenance line and its one action l
     expect(document.querySelector('[data-testid="detect-bearing"]')).toBeNull();
   });
 
-  it("jurisdiction at rest: the select and its line; the suggestion's one line spans the band under the row", () => {
+  it("jurisdiction at rest: the select and its marker; the pin's evidence is detail, with no row of its own", () => {
     mount();
     const j = cell("jurisdiction");
     expect(atRest(j).map((n) => n.textContent)).toEqual(["◌ not set"]);
-    // rulings.md, "The suggestion row spans the band": the action row is
-    // a grid item of the same grid, AFTER the row's last cell (work
-    // dates) — last in the DOM as on screen — named for its field.
-    const action = document.querySelector('[data-testid="action-jurisdiction"]')!;
-    expect(action.parentElement).toBe(j.parentElement);
-    expect(action.previousElementSibling).toBe(cell("work-dates"));
-    expect(action.nextElementSibling).toBeNull();
-    expect(action.getAttribute("role")).toBe("group");
-    expect(action.getAttribute("aria-label")).toBe("Suggestion for Jurisdiction");
-    const rows = [...action.querySelectorAll(".sugg-row")];
-    expect(rows).toHaveLength(1);
-    const row = rows[0];
-    expect(row.textContent).toContain("Pin suggests: Denver");
-    expect(row.querySelector("button.confirm")!.textContent).toBe("Confirm Denver");
-    expect(row.querySelector("button.ghost")!.textContent).toBe("Dismiss");
+    // R108: no suggestion row, no Confirm, no Dismiss.
+    expect(document.querySelector('[data-testid="action-jurisdiction"]')).toBeNull();
+    expect(j.querySelector("button.confirm, button.ghost")).toBeNull();
     // The explanatory paragraphs and the TIGER caveat are detail.
     const p = panel("jurisdiction")!;
     expect(p.hasAttribute("hidden")).toBe(true);
-    expect(p.querySelector(".sugg-reason")!.textContent).toBe(SUGGEST.reason);
+    expect(
+      [...p.querySelectorAll(".sugg-reason")].map((n) => n.textContent),
+    ).toContain(SUGGEST.reason);
     expect(p.querySelector(".honesty")!.textContent).toBe(
       "Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
     );
   });
 
-  it("street classification is its own cell in the second group — chips, line, and the suggestion's one line", () => {
+  it("street class is its own row of The road — the segmented control and its marker, nothing else", () => {
     mount();
     const sc = cell("street-class");
-    // R96 A: in "The road" group (the second group is retired).
     expect(screen.getByTestId("what-group-road").contains(sc)).toBe(true);
-    expect(cell("road-type").querySelector(".classpick")).toBeNull();
-    expect(sc.querySelector(".classpick")).not.toBeNull();
+    expect(cell("road-type").querySelector(".a-seg")).toBeNull();
+    expect(sc.querySelector('.a-seg[aria-label="Street class"]')).not.toBeNull();
     expect(atRest(sc).map((n) => n.textContent)).toEqual(["◌ not set"]);
-    // R96 A: street class shares its row with the Divided control, so its
-    // action row follows that row's last cell — still under the row that
-    // holds its field ("The suggestion row spans the band"), and still the
-    // group's last item.
-    const action = document.querySelector('[data-testid="action-street-class"]')!;
-    expect(action.previousElementSibling).toBe(cell("divided"));
-    expect(action.nextElementSibling).toBeNull();
-    const row = action.querySelector(".sugg-row")!;
-    expect(row.textContent).toContain("Detected road suggests street class: Arterial (OSM primary)");
-    expect(row.querySelector("button.confirm")!.textContent).toBe("Confirm Arterial");
+    expect(document.querySelector('[data-testid="action-street-class"]')).toBeNull();
   });
 
-  it("the suggestion row spans the grid, one line at ≥520 px, wrapping below; an empty one takes no track", () => {
+  it("R107's grid: two columns while each has 340 px, a 132 px label track, every control 44 px", () => {
     const block = (sel: string, from = 0) => {
       const i = css.indexOf(`${sel} {`, from);
       expect(i, sel).toBeGreaterThan(-1);
       return css.slice(i, css.indexOf("}", i));
     };
-    expect(block(".workbench .a-grid > .a-cell-action")).toMatch(/grid-column:\s*1 \/ -1/);
-    expect(block(".workbench .a-cell-action:empty")).toMatch(/display:\s*none/);
-    const wide = css.indexOf("@media (min-width: 520px) {\n  .workbench .a-cell-action .sugg-row {");
-    expect(wide).toBeGreaterThan(-1);
-    const row = block(".workbench .a-cell-action .sugg-row", wide);
-    expect(row).toMatch(/flex-wrap:\s*nowrap/);
-    expect(row).toMatch(/align-self:\s*stretch/);
-    expect(block(".workbench .a-cell-action .sugg-row > button", wide)).toMatch(/flex:\s*none/);
-    // Below 520 nothing overrides the row's own `flex-wrap: wrap`.
-    expect(block(".workbench .jbar-suggest .sugg-row")).toMatch(/flex-wrap:\s*wrap/);
+    expect(block(".workbench .a-cols")).toMatch(
+      /grid-template-columns:\s*repeat\(auto-fit, minmax\(340px, 1fr\)\)/,
+    );
+    expect(block(".workbench .a-col > .a-cell")).toMatch(
+      /grid-template-columns:\s*132px minmax\(0, 1fr\)/,
+    );
+    expect(block(".workbench .a-fld")).toMatch(/height:\s*44px/);
+    expect(block(".workbench .a-seg")).toMatch(/height:\s*44px/);
+    // The suggestion row's rules are gone with the row (R108).
+    expect(css).not.toContain(".a-cell-action");
   });
 
   it("the kind's case note is detail, not a second clause on the provenance line", () => {
@@ -344,10 +304,11 @@ describe("the details toggle — click / tap, never hover (rules 141, 142)", () 
     expect(block(".workbench .a-info-toggle", narrow)).toMatch(/margin-top:\s*-28px/);
   });
 
-  it("every field's line is one click away (R98): each cell has one trigger", () => {
+  it("every field's line is one click away (R98): one trigger per marker", () => {
     mount();
     for (const c of document.querySelectorAll('[data-testid="band-what"] [data-testid^="cell-"]')) {
-      expect(c.querySelectorAll('[data-testid^="info-toggle-"]'), c.getAttribute("data-testid")!).toHaveLength(1);
+      const id = c.getAttribute("data-testid")!;
+      expect(c.querySelectorAll('[data-testid^="info-toggle-"]'), id).toHaveLength(markersIn(id));
     }
     expect(toggle("work-dates")!.textContent).toBe("◌ not set");
   });

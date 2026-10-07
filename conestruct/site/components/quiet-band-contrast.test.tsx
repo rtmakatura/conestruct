@@ -18,7 +18,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
-import { JurisdictionControls } from "./JurisdictionSection";
+import { JurisdictionEvidence } from "./JurisdictionSection";
 
 afterEach(cleanup);
 
@@ -71,21 +71,15 @@ describe("pre-pin quiet band meets the AA floor (arc16 coda)", () => {
     expect(contrast(effective, canvas)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("`.jbar-suggest.quiet` binds to the real pre-pin band in JurisdictionControls", () => {
+  it("`.jbar-suggest.quiet` binds to the real pre-pin line in the jurisdiction evidence", () => {
+    // R108: the evidence is the jurisdiction row's details now; its
+    // pre-pin line keeps the quiet band's class.
     const { container } = render(
-      <JurisdictionControls
-        jurisdiction={null}
-        jurisdictionKey={null}
-        setJurisdictionKey={() => {}}
-        streetClass={null}
-        setStreetClass={() => {}}
-      />,
+      <JurisdictionEvidence lookup={{ status: "idle", data: null }} />,
     );
     const band = container.querySelector(".jbar-suggest.quiet");
     expect(band).not.toBeNull();
-    expect(band!.textContent).toContain(
-      "Drop a site pin for a jurisdiction suggestion",
-    );
+    expect(band!.textContent).toContain("Drop a site pin to look up the jurisdiction.");
   });
 });
 
@@ -126,24 +120,34 @@ describe("the .honesty caveat meets the AA floor on --canvas-tint (#263)", () =>
     expect(ratio).toBeCloseTo(6.0, 1);
   });
 
-  it("`.honesty` binds to the boundary caveat in the mounted suggestion slot", () => {
+  // R108 (and R96 A before it): the caveat is drawn in the jurisdiction
+  // row's details popover, on `--raise`, not on the bar's --canvas-tint.
+  // Measured where it sits: #93a0b0 on #22344a = 4.76:1.
+  it("…and on --raise, the popover it is drawn in, it still clears the floor", () => {
+    expect(css).toMatch(/\.workbench \.a-info\.a-pop \{[^}]*background: var\(--raise\)/);
+    const ink = channels(token("--ink-on-dark-faint"));
+    const surface = channels(token("--raise"));
+    const ratio = contrast(ink, surface);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+    expect(ratio).toBeCloseTo(4.76, 1);
+  });
+
+  it("`.honesty` binds to the boundary caveat in the jurisdiction evidence", () => {
     const { container } = render(
-      <JurisdictionControls
-        jurisdiction={null}
-        jurisdictionKey={null}
-        setJurisdictionKey={() => {}}
-        streetClass={null}
-        setStreetClass={() => {}}
-        suggest={{
-          suggestion: "denver",
-          reason:
-            "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
-          confidence: "inside",
-          distance_to_boundary_ft: 17288.2,
-          warnings: [],
-          boundary_source: {
-            source: "US Census TIGER/Line Place boundaries",
-            vintage: "2025",
+      <JurisdictionEvidence
+        lookup={{
+          status: "ready",
+          data: {
+            suggestion: "denver",
+            reason:
+              "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+            confidence: "inside",
+            distance_to_boundary_ft: 17288.2,
+            warnings: [],
+            boundary_source: {
+              source: "US Census TIGER/Line Place boundaries",
+              vintage: "2025",
+            },
           },
         }}
       />,

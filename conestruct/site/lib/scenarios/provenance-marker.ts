@@ -27,7 +27,9 @@ export interface ProvenanceMarker {
 
 const OSM_WORDS: Record<string, { word: string; glyph: ProvenanceMarker["glyph"] }> = {
   measured: { word: "measured", glyph: "✓" },
-  inferred: { word: "inferred", glyph: "⚠" },
+  // R108 / WhatC5.dc.html: a value inferred off the road is a guess "from
+  // the road", the words the street class's guess uses too.
+  inferred: { word: "from the road", glyph: "⚠" },
   overridden: { word: "overridden", glyph: "✓" },
   "operator-set": { word: "yours", glyph: "✓" },
   "changed in plan": { word: "changed", glyph: "✓" },
@@ -60,10 +62,14 @@ export function markerOf(
   }
   if (opts.amber) return mk("⚠", line.split(" · ").pop() ?? line);
   if (/^(your change|your answer|operator-set)\b/.test(line)) return mk("✓", "yours");
+  // R110 Q7 / Q8: the value the plan started from, until changed.
+  if (/^default\b/.test(line)) return mk("✓", "default");
   if (/^(not set|optional)\b/.test(line) || line === "MUTCD + Colorado Supplement only") {
     return mk("◌", "not set");
   }
   if (line.startsWith("evaluating")) return mk("◌", "evaluating");
+  // R108: the pin's lookup in flight, for an empty jurisdiction.
+  if (line.startsWith("checking")) return mk("◌", "checking");
   if (line.startsWith("evaluated")) return mk("✓", "evaluated");
   if (line.startsWith("detected")) return mk("✓", "detected");
   return mk("i", "about");

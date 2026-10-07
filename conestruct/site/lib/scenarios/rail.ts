@@ -80,12 +80,11 @@ export interface RailEntry {
    *  The entry that owns the current blocker renders the blocker
    *  string in its place, exactly as before. */
   word: string | null;
-  /** #228: informational subline — Location's pending-proposal count
-   *  ("2 to confirm") or a set schedule's duration ("4 days").
-   *  Never a state, never a blocker: suggestions never gate (#227
-   *  product rule) and the duration is display-only date arithmetic
-   *  (rule 3 — the backend's hours_eval stays the only schedule
-   *  verdict). */
+  /** #228: informational subline — a set schedule's duration ("4
+   *  days").  Never a state, never a blocker: the duration is
+   *  display-only date arithmetic (rule 3 — the backend's hours_eval
+   *  stays the only schedule verdict).  R108 retired Location's
+   *  pending-proposal count ("2 to confirm") with the confirm step. */
   info: string | null;
   /** #228: the entry's full accessible name.  Byte-identical to the
    *  pre-arc component strings for the pre-existing states; the new
@@ -118,14 +117,6 @@ export interface RailInput {
   refusal: Refusal | null;
   /** #196/#179: a declined input's re-check is still in flight. */
   refusalPending: boolean;
-  /** #228: how many suggestion proposals are awaiting Confirm/Dismiss
-   *  (0–2).  Computed by GeneratorShell from the SAME expressions the
-   *  two slots branch on (JurisdictionSection's SuggestSlot and
-   *  ClassSuggestSlot proposal rows — rule 3 mirror comments on both
-   *  sides name each other).  Informational only: it feeds Location's
-   *  ``info`` subline and nothing else — never a state, never the
-   *  blocker (suggestions never gate). */
-  pendingSuggestions: number;
   /** #289 hand-check, 2026-09-23, defect 1: has a PERSON chosen the
    *  kind?  `scenario.kind` cannot answer that — it is a discriminant and
    *  always holds a value, the default's included.  The shell owns the
@@ -240,7 +231,6 @@ export function deriveRail({
   approachConfirm,
   refusal,
   refusalPending,
-  pendingSuggestions,
   kindConfirmed = true,
 }: RailInput): Rail {
   const wz = validateWorkZone(scenario);
@@ -350,12 +340,10 @@ export function deriveRail({
         : 5
       : { location: 2, road: 3, work: 4, extra: 5 }[id];
 
-  // Location's informational count / Schedule's duration — the only
-  // two ``info`` producers (ruling 1/5); neither touches state or
+  // Schedule's duration — the one ``info`` producer (ruling 1/5; R108
+  // retired Location's "N to confirm"); it touches neither state nor
   // blocker.
   const infoOf = (id: RailEntryId, st: RailEntryState): string | null => {
-    if (id === "location" && pendingSuggestions > 0)
-      return `${pendingSuggestions} to confirm`;
     if (id === "schedule" && st === "done") return scheduleDuration(scenario);
     return null;
   };

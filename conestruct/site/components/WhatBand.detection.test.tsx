@@ -179,8 +179,11 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     expect(prov("road-type")).toMatch(/OSM · Urban arterial ·/);
     // rule 137: a field with no provenance line is a defect — and the
     // two the ledger never had a row for say so in words rather than
-    // being left blank.
-    expect(prov("lane-width")).toBe("your change · operator-set from here on");
+    // being left blank.  R110 Q7: lane width says its own source, the
+    // plan's standard lane, until the operator picks one.
+    expect(prov("lane-width")).toBe(
+      "default · the plan's standard lane; detection doesn't measure width",
+    );
     // Fix 1: the dates are ONE control and the mode derives from them,
     // so an unset date says so in its own line rather than calling
     // itself optional under a caption that promises lead times.
@@ -225,52 +228,8 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
   });
 });
 
-// #289 hand-check, 2026-09-23, fix 2 — the street-class record takes the
-// jurisdiction field's shape, with no boxed panel.
-describe("fix 2 — the street-class record, bare", () => {
-  it("renders the record's own shape and none of the panel's framing", async () => {
-    const { JurisdictionControls } = await import("./JurisdictionSection");
-    render(
-      <JurisdictionControls
-        jurisdiction={null}
-        jurisdictionKey={null}
-        setJurisdictionKey={() => {}}
-        streetClass={null}
-        setStreetClass={() => {}}
-        classSuggest="arterial"
-        classSuggestTier="secondary"
-        omitJurisdictionField
-        bare
-      />,
-    );
-    // The panel's framing: `.jctl` is a 1 px rule on `--canvas`,
-    // `.jctl-field` an inset and a divider.  Neither belongs in a cell.
-    expect(document.querySelector(".jctl")).toBeNull();
-    expect(document.querySelector(".jctl-field")).toBeNull();
-    // The RECORD is untouched — the same container, glyph and pair the
-    // jurisdiction field's suggestion uses (#198: byte-identical).
-    const slot = document.querySelector(".jbar-suggest")!;
-    expect(slot).not.toBeNull();
-    expect(slot.textContent).toMatch(/Detected road suggests street class:/);
-    expect(slot.textContent).toMatch(/⌁/);
-    expect(screen.getByRole("button", { name: /^Confirm Arterial$/ })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Dismiss" })).toBeTruthy();
-  });
-
-  it("without `bare` the box is still there — nothing else changed", async () => {
-    const { JurisdictionControls } = await import("./JurisdictionSection");
-    render(
-      <JurisdictionControls
-        jurisdiction={null}
-        jurisdictionKey={null}
-        setJurisdictionKey={() => {}}
-        streetClass={null}
-        setStreetClass={() => {}}
-        classSuggest="arterial"
-        classSuggestTier="secondary"
-      />,
-    );
-    expect(document.querySelector(".jctl")).not.toBeNull();
-    expect(document.querySelectorAll(".jctl-field").length).toBe(2);
-  });
-});
+// #289 hand-check, 2026-09-23, fix 2 ("the street-class record takes the
+// jurisdiction field's shape, with no boxed panel") retires with the
+// record: R108 removed the confirm step, and JurisdictionControls with it.
+// The street class is R107's segmented control in the WHAT band
+// (PlanDetails.test.tsx); its evidence is JurisdictionSection.test.tsx's.

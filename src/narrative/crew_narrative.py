@@ -52,6 +52,7 @@ from src.rules.validators import (
     ScenarioParams,
     _is_flagger_scenario,
     generated_stamp,
+    jurisdiction_display,
     road_type_display,
     scenario_display_name,
 )
@@ -816,8 +817,9 @@ def build_narrative_context(
         # from ``jurisdiction_key`` (the same field the XLSX Summary
         # prints); "Not set" when the scenario names none (Rule 10).
         # ``params.jurisdiction`` is the engine's buffer-table switch and
-        # is never displayed as a jurisdiction.
-        "jurisdiction_display": params.jurisdiction_name or "Not set",
+        # is never displayed as a jurisdiction.  R110 Q3: the shared
+        # producer adds the not-confirmed clause to an untouched pin guess.
+        "jurisdiction_display": jurisdiction_display(params),
         # #257: the shared producer — the quote header prints the same words.
         "road_type_human": road_type_display(params),
         # UX-11: display name, not the raw "lane" / "shoulder" enum.

@@ -1,0 +1,25 @@
+{
+  "header": "STEP 2 OF 4WHAT3 guesses marked ⚠ · change any that are wrong",
+  "streetClass": "⚠ from the road",
+  "jurisdiction": "⚠ from the pin",
+  "jurisdictionValue": "denver",
+  "roadType": "⚠ from the road",
+  "lanes": "✓ measured",
+  "laneWidth": "✓ default",
+  "hours": "✓ default",
+  "reduction": "✓ default",
+  "controlHeights": [
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44
+  ],
+  "confirmButtons": 0
+}

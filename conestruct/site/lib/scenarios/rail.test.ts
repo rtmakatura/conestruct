@@ -34,7 +34,6 @@ function input(scenario: Scenario, over: Partial<RailInput> = {}): RailInput {
     approachConfirm: NO_HOLD,
     refusal: null,
     refusalPending: false,
-    pendingSuggestions: 0,
     ...over,
   };
 }
@@ -313,9 +312,7 @@ function confirmedRoadAt(pinLat: number, pinLng: number) {
 
 describe("#228 vocabulary — fields on the derivation, purity", () => {
   it("derives deterministically: two calls on one input are deep-equal", () => {
-    const i = input(pinned(DEFAULT_NEAR_INTERSECTION), {
-      pendingSuggestions: 2,
-    });
+    const i = input(pinned(DEFAULT_NEAR_INTERSECTION));
     expect(deriveRail(i)).toEqual(deriveRail(i));
   });
 
@@ -412,51 +409,18 @@ describe("#228 stale — the flagged fourth state (PDF p.5)", () => {
   });
 });
 
-describe("#228 pending-suggestion count — informational only (ruling 1)", () => {
-  it("2 pending proposals read '2 to confirm' on Location, 1 reads '1 to confirm'", () => {
-    const two = deriveRail(
-      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 2 }),
-    );
-    expect(entryById(two, "location").info).toBe("2 to confirm");
-    expect(entryById(two, "location").aria).toBe(
-      "Location: done · 2 to confirm",
-    );
-    const one = deriveRail(
-      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 1 }),
-    );
-    expect(entryById(one, "location").info).toBe("1 to confirm");
-  });
-
-  it("zero pending: no info line, aria byte-identical to pre-arc", () => {
+// R108 retired Location's "N to confirm" with the confirm step: there is
+// no proposal left to count.  Location carries no info line at all, and
+// its accessible name is byte-identical to the pre-#228 one.
+describe("R108 — Location has no pending-proposal count", () => {
+  it("no info line, aria byte-identical to pre-arc", () => {
     const rail = deriveRail(input(pinned(DEFAULT_SHOULDER)));
     expect(entryById(rail, "location").info).toBeNull();
     expect(entryById(rail, "location").aria).toBe("Location: done");
   });
 
-  it("the count never changes state or blocker (suggestions never gate)", () => {
-    const rail = deriveRail(
-      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 2 }),
-    );
-    expect(entryById(rail, "location").state).toBe("done");
-    expect(rail.blocker).toBeNull();
-  });
-
-  it("dismiss-honesty (PDF p.4 corollary): the count dropping to 0 removes the line and flips nothing to ✓ that wasn't", () => {
-    const before = deriveRail(
-      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 1 }),
-    );
-    const after = deriveRail(
-      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 0 }),
-    );
-    expect(entryById(after, "location").info).toBeNull();
-    // Every state and glyph is unchanged by the resolution — the count
-    // is the ONLY thing that moved.
-    expect(after.entries.map((e) => e.state)).toEqual(
-      before.entries.map((e) => e.state),
-    );
-    expect(after.entries.map((e) => e.glyph)).toEqual(
-      before.entries.map((e) => e.glyph),
-    );
+  it("the input no longer takes a count", () => {
+    expect("pendingSuggestions" in input(pinned(DEFAULT_SHOULDER))).toBe(false);
   });
 });
 

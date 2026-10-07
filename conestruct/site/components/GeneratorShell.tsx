@@ -102,17 +102,11 @@ import {
   DebugSnapshotButton,
   type SnapshotDetection,
 } from "./DebugSnapshotButton";
-import { suggestStreetClass } from "@/lib/road-detection/classify";
-import {
-  JurisdictionControls,
-  JurisdictionSuggestSlot,
-  type SuggestSection,
-  type SuggestionResolution,
-} from "./JurisdictionSection";
+import type { JurisdictionLookup } from "./JurisdictionSection";
+import { applyJurisdictionGuess, withCurrentGuesses } from "@/lib/scenarios/guesses";
 import type {
   JurisdictionBlock,
   JurisdictionSuggestion,
-  StreetClass,
 } from "@/lib/jurisdiction";
 
 type Mode = "sandbox" | "workbench";
@@ -199,8 +193,24 @@ export function GeneratorShell({
   initialPlanId = null,
   initialPlanName = null,
 }: Props = {}) {
-  const [scenario, setScenario] = useState<Scenario>(
+  const [scenario, setScenarioRaw] = useState<Scenario>(
     initialScenario ?? DEFAULT_SCENARIO,
+  );
+  // R108 / R110 — EVERY scenario write goes through the guess bookkeeping
+  // (lib/scenarios/guesses.ts `withCurrentGuesses`): a moved pin drops its
+  // jurisdiction guess, a newly confirmed road guesses its street class,
+  // and a write over a guessed field makes it the operator's — all in the
+  // same write, so no stale guess ever reaches the wire.  It reads the
+  // previous scenario to tell a NEW road from an unrelated edit: a saved
+  // plan's fields are never filled in by an edit that did not touch its
+  // road.  Functional updates are supported (the pin lookup's answer
+  // lands through one).
+  const setScenario = useCallback(
+    (next: Scenario | ((prev: Scenario) => Scenario)) =>
+      setScenarioRaw((prev) =>
+        withCurrentGuesses(typeof next === "function" ? next(prev) : next, prev),
+      ),
+    [],
   );
   // #289 hand-check, 2026-09-23, defect 1 — "the kind is confirmed, never
   // inferred" (FLOW.md §5a, #281 §4.4, P21).  `scenario.kind` cannot
@@ -766,34 +776,27 @@ export function GeneratorShell({
     status: "idle" | "loading" | "ready" | "error";
     data: JurisdictionSuggestion | null;
   }>({ status: "idle", data: null });
-  // #227: resolving a suggestion leaves a RECORD, not a cleared slot —
-  // confirm/dismiss re-render the same container with ✓/× + evidence +
-  // undo (the #179 semantics copied to this seam: the record carries
-  // exactly what undo needs — the value in effect at click, null
-  // included — and undo restores it / re-arms the live proposal).
-  // Shell state only, cleared on pin move, NEVER written to scenario
-  // state or the payload (GO ruling 3; the handoff-summary.ts:12-16
-  // precedent) — a reload drops the record but re-derives the
-  // suggestion, so nothing is lost silently.
-  const [suggestResolution, setSuggestResolution] =
-    useState<SuggestionResolution<string> | null>(null);
-  // #152 C: street-class suggestion, same record lifecycle.
-  const [classResolution, setClassResolution] =
-    useState<SuggestionResolution<StreetClass> | null>(null);
+  // R108: the pin's answer is no longer a proposal waiting for Confirm.
+  // It lands as the field's value when the field is empty (marked
+  // "⚠ from the pin", recorded on the wire as a guess), and never over a
+  // value the operator set (R110 Q4) — `applyJurisdictionGuess`.  The
+  // #227 confirm / dismiss records and their Undo are gone with the
+  // confirm step; the lookup's evidence rides the field's details.
   const pinLat = scenario.meta.lat;
   const pinLng = scenario.meta.lng;
+  // A saved plan opens as it was saved: the lookup for the pin it was
+  // saved at is evidence only.  A pin placed or moved in this session is
+  // guessed from (P1: a reopened plan's numbers never move on their own).
+  const savedPin = initialScenario
+    ? { lat: initialScenario.meta.lat, lng: initialScenario.meta.lng }
+    : null;
+  const savedPinRef = useRef(savedPin);
   useEffect(() => {
-    // lat=lng=0 is the "no pin yet" default — nothing to suggest.
+    // lat=lng=0 is the "no pin yet" default — nothing to look up.
     if (!pinLat && !pinLng) {
       setSuggestState({ status: "idle", data: null });
-      setSuggestResolution(null);
-      setClassResolution(null);
       return;
     }
-    // A moved pin clears a prior resolution record (spec §3 / #227:
-    // the record's subject — this pin's suggestion — no longer exists).
-    setSuggestResolution(null);
-    setClassResolution(null);
     let cancelled = false;
     const t = setTimeout(async () => {
       setSuggestState((s) => ({ ...s, status: "loading" }));
@@ -814,7 +817,15 @@ export function GeneratorShell({
         ) {
           throw new Error("suggest: malformed response");
         }
-        if (!cancelled) setSuggestState({ status: "ready", data });
+        if (!cancelled) {
+          setSuggestState({ status: "ready", data });
+          const saved = savedPinRef.current;
+          if (!(saved && saved.lat === pinLat && saved.lng === pinLng)) {
+            setScenario((prev) =>
+              applyJurisdictionGuess(prev, { lat: pinLat, lng: pinLng }, data.suggestion),
+            );
+          }
+        }
       } catch {
         if (!cancelled) setSuggestState({ status: "error", data: null });
       }
@@ -823,47 +834,13 @@ export function GeneratorShell({
       cancelled = true;
       clearTimeout(t);
     };
-  }, [pinLat, pinLng]);
+  }, [pinLat, pinLng, setScenario]);
 
-  // #152 C — street-class suggestion off the confirmed road's OSM tier.
-  // Advice only, exactly like the jurisdiction suggestion: the single
-  // writer of street_class from this feature is the user's Confirm
-  // click.  The confirmed road is the picker's committed choice
-  // (scenario.meta.confirmedRoad), keyed to the pin it was made at — a
-  // pin that no longer matches makes the suggestion vanish rather than
-  // ever suggesting from a stale road (#149's failure class).  Pure
-  // presentation derivation from the persisted OSM highway tier; no
-  // MUTCD math (rule 3).
-  const confirmedRoadMeta = scenario.meta.confirmedRoad ?? null;
-  const roadForPin =
-    confirmedRoadMeta &&
-    confirmedRoadMeta.pinLat === pinLat &&
-    confirmedRoadMeta.pinLng === pinLng
-      ? confirmedRoadMeta
-      : null;
-  const classSuggestion = roadForPin
-    ? suggestStreetClass(roadForPin.candidate.highway_class)
-    : null;
-
-  // #228 (ruling 7): the rail's Location info line counts the
-  // proposals awaiting Confirm/Dismiss — computed from the SAME
-  // expressions the two slots branch on (rule 3 mirror:
-  // JurisdictionSection's SuggestSlot proposal row renders iff a
-  // suggestion exists with no jurisdiction_key and no resolution;
-  // ClassSuggestSlot's iff classSuggest with no street_class and no
-  // resolution — mirror comments there name this count).
-  // Informational only: deriveRail renders it on Location's ``info``
-  // subline and nothing else — never a state, never the blocker
-  // (suggestions never gate).
-  const suggestionKey =
-    suggestState.status === "ready"
-      ? (suggestState.data?.suggestion ?? null)
-      : null;
-  const pendingSuggestions =
-    (suggestionKey && !scenario.jurisdiction_key && !suggestResolution
-      ? 1
-      : 0) +
-    (classSuggestion && !scenario.street_class && !classResolution ? 1 : 0);
+  // R108 — what the WHAT band's jurisdiction cell reads of the lookup.
+  const jurisdictionLookup = useMemo<JurisdictionLookup>(
+    () => ({ status: suggestState.status, data: suggestState.data }),
+    [suggestState],
+  );
 
   // The evaluated jurisdiction block rides the device-breakdown response
   // (spec §3.2) — present only when the scenario names a jurisdiction_key.
@@ -1566,146 +1543,6 @@ export function GeneratorShell({
     ? (currentAudit?.sections?.corridor_spec ?? null)
     : null;
 
-  // Surface B (#152): the interactive jurisdiction + street-class
-  // controls, built once here (so the suggestion state and the single
-  // setScenario writer stay owned by the shell) and rendered inside the
-  // Location step of the setup flow.  The persistent top strip is now a
-  // read-only summary of the same choices.
-  // #289 Phase 2 — the pin suggestion's three handlers, named once.
-  //
-  // The WHAT grid's jurisdiction cell hosts the suggestion now (#201:
-  // proximity is how a user knows which control a confirm applies to), and
-  // the street-class field keeps its own.  Both read these, so there is
-  // still exactly ONE writer of `jurisdiction_key` through this path —
-  // which is the suggest-never-set contract, and it would have been the
-  // first thing to break if the handlers had been re-typed at the new
-  // call site.
-  const onConfirmJurisdictionSuggestion = (k: string) => {
-    // #227: the record carries the value in effect at click (null and
-    // ABSENT distinguished) — exactly what undo restores (#179
-    // semantics: byte-identical after confirm-then-undo).
-    setSuggestResolution({
-      resolution: "confirmed",
-      prior: scenario.jurisdiction_key ?? null,
-      priorPresent: scenario.jurisdiction_key !== undefined,
-      suggested: k,
-    });
-    setScenario({ ...scenario, jurisdiction_key: k });
-  };
-  const onDismissJurisdictionSuggestion = () => {
-    const k = suggestState.data?.suggestion;
-    if (k)
-      setSuggestResolution({
-        resolution: "dismissed",
-        prior: scenario.jurisdiction_key ?? null,
-        priorPresent: scenario.jurisdiction_key !== undefined,
-        suggested: k,
-      });
-  };
-  const onUndoJurisdictionSuggestion = () => {
-    if (suggestResolution?.resolution === "confirmed") {
-      if (suggestResolution.priorPresent) {
-        setScenario({
-          ...scenario,
-          jurisdiction_key: suggestResolution.prior,
-        });
-      } else {
-        // Absence restores as absence (rule 10) — an explicit null
-        // would serialize where no key ever was.
-        const next = { ...scenario } as Record<string, unknown>;
-        delete next.jurisdiction_key;
-        setScenario(next as unknown as Scenario);
-      }
-    }
-    setSuggestResolution(null);
-  };
-
-  // #201 — the slot itself, for the WHAT grid's jurisdiction cell.
-  // #289 WHAT density (rulings.md, "After the S4 prod run"): both slots
-  // are render functions of a `SuggestSection`, so the WHAT cell can put
-  // the actionable line under its field and the rest behind its details
-  // toggle — the same component, the same nodes, asked for in parts.
-  // R96 A / R100: "record" is the ANSWERED suggestion, collapsed into its
-  // field; with nothing answered there is no record, and the cell shows
-  // its marker.  Decided here, where the resolution lives, so the cell is
-  // handed null rather than an element that renders nothing.
-  const jurisdictionSuggestSlot = (section: SuggestSection = "all") =>
-    section === "record" && !suggestResolution ? null : (
-    <JurisdictionSuggestSlot
-      section={section}
-      suggest={suggestState.status !== "ready" ? null : suggestState.data}
-      loading={suggestState.status === "loading"}
-      jurisdictionKey={scenario.jurisdiction_key ?? null}
-      resolution={suggestResolution}
-      onConfirm={onConfirmJurisdictionSuggestion}
-      onDismiss={onDismissJurisdictionSuggestion}
-      onUndo={onUndoJurisdictionSuggestion}
-    />
-  );
-
-  const jurisdictionControls = (section: SuggestSection = "all") =>
-    section === "record" && !classResolution ? null : (
-    <JurisdictionControls
-      section={section}
-      jurisdiction={jurisdictionBlock}
-      jurisdictionKey={scenario.jurisdiction_key ?? null}
-      setJurisdictionKey={(k) =>
-        setScenario({ ...scenario, jurisdiction_key: k })
-      }
-      streetClass={scenario.street_class ?? null}
-      setStreetClass={(c: StreetClass) =>
-        setScenario({ ...scenario, street_class: c })
-      }
-      loading={jurisdictionLoading}
-      // #289 §8.21 — the jurisdiction FIELD is the WHAT grid's cell now,
-      // where ruling 196 gives it three states and rule 14 takes its
-      // skeleton away.  What is left here is the street-class half.
-      omitJurisdictionField
-      // #289 hand-check, 2026-09-23, fix 2: no boxed panel inside the
-      // road-type cell — the record keeps its shape, the box goes.
-      bare
-      suggest={suggestState.status !== "ready" ? null : suggestState.data}
-      suggestLoading={suggestState.status === "loading"}
-      suggestResolution={suggestResolution}
-      onConfirmSuggestion={onConfirmJurisdictionSuggestion}
-      onDismissSuggestion={onDismissJurisdictionSuggestion}
-      onUndoSuggestion={onUndoJurisdictionSuggestion}
-      classSuggest={classSuggestion}
-      classSuggestTier={roadForPin?.candidate.highway_class ?? null}
-      classResolution={classResolution}
-      onConfirmClassSuggestion={(c: StreetClass) => {
-        setClassResolution({
-          resolution: "confirmed",
-          prior: scenario.street_class ?? null,
-          priorPresent: scenario.street_class !== undefined,
-          suggested: c,
-        });
-        setScenario({ ...scenario, street_class: c });
-      }}
-      onDismissClassSuggestion={() => {
-        if (classSuggestion)
-          setClassResolution({
-            resolution: "dismissed",
-            prior: scenario.street_class ?? null,
-            priorPresent: scenario.street_class !== undefined,
-            suggested: classSuggestion,
-          });
-      }}
-      onUndoClassSuggestion={() => {
-        if (classResolution?.resolution === "confirmed") {
-          if (classResolution.priorPresent) {
-            setScenario({ ...scenario, street_class: classResolution.prior });
-          } else {
-            const next = { ...scenario } as Record<string, unknown>;
-            delete next.street_class;
-            setScenario(next as unknown as Scenario);
-          }
-        }
-        setClassResolution(null);
-      }}
-    />
-  );
-
   return (
     // #252 (ruling b): the root carries the lock class the one dim rule
     // keys on, and the context every write control reads (WriteLock.tsx).
@@ -1954,7 +1791,6 @@ export function GeneratorShell({
                 refusal={refusal}
                 refusalPending={refusalPending}
                 corridorSpecLengths={corridorSpecLengths}
-                jurisdictionControls={jurisdictionControls}
                 jurisdictionName={jurisdictionBlock?.name ?? null}
                 jurisdictionBlock={jurisdictionBlock}
                 // #289 ruling 196 / #276: only the shell can tell "not yet"
@@ -1967,8 +1803,10 @@ export function GeneratorShell({
                 // band the only pre-generate home for that verdict.
                 jurisdictionRevalidating={jurisdictionRevalidating}
                 jurisdictionErrored={deviceBreakdown.state === "error"}
-                jurisdictionSuggest={jurisdictionSuggestSlot}
-                pendingSuggestions={pendingSuggestions}
+                // R108: the pin lookup, for the jurisdiction cell's
+                // evidence and its warnings (the guess itself is already
+                // the scenario's value).
+                jurisdictionLookup={jurisdictionLookup}
                 onClassification={(c, at) =>
                   setLastDetection(c ? { classification: c, ...at } : null)
                 }

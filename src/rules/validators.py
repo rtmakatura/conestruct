@@ -228,6 +228,10 @@ class ScenarioParams:
     # A None prints "Not set" (Rule 10), never the switch.  Appended with
     # a default so every existing constructor is untouched.
     jurisdiction_name: str | None = None
+    # R108 / R110 Q3 — True when ``jurisdiction_name`` is an untouched pin
+    # guess the operator never confirmed (``scenario.guesses``, proved
+    # current at the API chokepoint).  ``jurisdiction_display`` prints it.
+    jurisdiction_guessed: bool = False
     # #290 — what the pin means (``ScenarioMeta.pinModel``), bridged by
     # ``scenario_to_call``.  It decides how ``bearing_deg`` reads: under
     # "corridor_end" it points from the pin toward the first sign; under
@@ -322,6 +326,25 @@ def generated_stamp(now: datetime | None = None) -> str:
 def road_type_display(params: ScenarioParams) -> str:
     """Human-readable Table 6B-1 road category for ``params.road_type``."""
     return ROAD_TYPE_DISPLAY.get(params.road_type, params.road_type)
+
+
+# R110 Q3 (Ryan, 2026-10-07), verbatim: the words beside a jurisdiction the
+# pin guessed and the operator never confirmed.
+JURISDICTION_GUESSED_CLAUSE = "(guessed from the pin, not confirmed)"
+
+
+def jurisdiction_display(params: ScenarioParams) -> str:
+    """The jurisdiction line every deliverable prints (#257; R110 Q3).
+
+    The one producer for the XLSX Summary and the crew header: the
+    resolved record's name, "Not set" when the plan names none (Rule 10),
+    and the name with R110's clause while it is an untouched pin guess.
+    """
+    if not params.jurisdiction_name:
+        return "Not set"
+    if params.jurisdiction_guessed:
+        return f"{params.jurisdiction_name} {JURISDICTION_GUESSED_CLAUSE}"
+    return params.jurisdiction_name
 
 
 def scenario_display_name(params: ScenarioParams) -> str:

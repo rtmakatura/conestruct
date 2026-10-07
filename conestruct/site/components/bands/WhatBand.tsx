@@ -1,42 +1,40 @@
 "use client";
 
-// #289 Phase 2 — the WHAT band: the 3 × 2 field grid with per-field
-// provenance, and the kind's own fields beneath it.
+// #289 Phase 2 → R107 (setup-what-redesign, 2026-10-07) — the WHAT band.
 //
-// Authority: validation-artifacts/committed/issue-289-band-stack/rulings.md
-// (d) and R1 · #281 Part 1 §2.3, §8.21-§8.24 · Part 2 rules 61-66, 116,
-// 136-138.
+// Authority: validation-artifacts/committed/setup-what-redesign/rulings.md
+// and design-refs/WhatC5.dc.html (the layout Ryan picked).
+//   R107: "Step 2 (WHAT) becomes the two-column layout in WhatC5.dc.html:
+//         The road on the left, The job on the right, and the label (with
+//         its marker under it) beside each control.  Every control is
+//         44 px tall."
+//   R108: "No confirm step for guesses.  Street class (from the road) and
+//         jurisdiction (from the pin) are prefilled like Road type already
+//         is, each marked '⚠ from the road' / '⚠ from the pin' ... The
+//         header reads 'N guesses marked ⚠ · change any that are wrong',
+//         with N counted from the actual guesses."
+//   R110 Q5: "Nothing guessed: the header reads 'prefilled from the road'."
+//   R110 Q7: "Two markers in the Lanes row (lanes measured; lane width its
+//         own source)."
 //
-// WHAT THIS BAND ABSORBS, and where each piece went:
-//   §8.21 jurisdiction & classification band → the jurisdiction cell
-//   §8.22 per-kind form                      → the grid + the kind row
-//   §8.23 detected-vs-applied block          → the provenance lines
-//   §8.24 schedule section                   → the work-dates cell, with
-//         the hours and the permit windows (#215, #206, #227) mounting
-//         below the grid in their existing shape
+// What stands from #289 and R96 A, unchanged: rule 137 as amended by R98
+// (every field's provenance line, as a marker with the full line one
+// click away), #198's byte-identical handoff sentences under the fields
+// they describe, ruling 196's jurisdiction states, the kind's own fields
+// below the band (rule 139's chain stays visible), and FileDetails (R96 A).
 //
-// THE PART THAT IS DEFERRED, AND SAID SO.  The six standard cells are
-// rebuilt to rule 116.  The kind's own sections, the schedule body and
-// the site conditions mount INSIDE the bands in the shape they already
-// have — a `FieldGroup` with its section header — rather than being
-// restyled into the band's own register in this ship.  Restyling them is
-// presentation with real behaviour underneath it (the flagger's four
-// recovery confirms and their #177/#179 override bookkeeping, the
-// near-intersection legs, #215's window rows), and moving that behaviour
-// and its shape in one commit is how a redesign loses a recovery path.
-// They move; they do not change; the restyle is its own commit.
-//
-// Rule 137 is absolute here: "Every field carries a provenance line under
-// it, always, even when the value is operator-set. A field with no
-// provenance line is a defect."  Every one of the six has one, and two of
-// them (lane width, work dates) carry an operator-set or optional clause
-// because detection reports neither.
+// THE COUNT.  N is the number of ⚠ markers the band actually shows — the
+// two guesses when untouched, and any road value detection only inferred
+// (road type, speed, lanes).  It is computed from the same lines the rows
+// render, through the same `markerOf`, so the header can never count a
+// marker the rows do not show (P2).
 
 import { useState, type ReactNode } from "react";
 import type { Scenario, ScenarioMeta, RoadType } from "@/lib/scenarios";
 import { JURISDICTION_OPTIONS, type JurisdictionBlock } from "@/lib/jurisdiction";
 import { validateLanes } from "@/lib/scenarios/validation";
 import {
+  setLaneWidth,
   setLanes,
   setRoadType,
   setSpeed,
@@ -55,13 +53,18 @@ import {
   type DetectedRowLabel,
 } from "@/lib/road-detection/detected-rows";
 import { provenanceClause } from "@/lib/road-detection/provenance";
+import { isGuessed, isOperatorSet, setJurisdictionByOperator } from "@/lib/scenarios/guesses";
 import { handoffNotesByCell } from "./HandoffNotes";
-import { PlanDetailCells, showsDividedToggle } from "./PlanDetails";
+import { PlanDetailCells, showsDividedToggle, streetClassProvenance } from "./PlanDetails";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
-import { CellAction, FieldCell } from "./FieldCell";
+import { FieldCell, type ExtraMarker } from "./FieldCell";
 import { markerOf } from "@/lib/scenarios/provenance-marker";
-import type { SectionSlot } from "../JurisdictionSection";
+import {
+  JurisdictionEvidence,
+  JurisdictionWarnings,
+  type JurisdictionLookup,
+} from "../JurisdictionSection";
 import { useWriteLock } from "../WriteLock";
 
 /** The three states ruling 196 gives the jurisdiction field, plus the
@@ -86,15 +89,17 @@ export function jurisdictionCellState(opts: {
   return opts.errored ? "not-evaluated" : "evaluating";
 }
 
-/** One cell: label, control, provenance.  The provenance slot is never
- *  empty (rule 137) — a caller with nothing to say is a defect, so the
- *  prop is required rather than optional.
- *
- *  #289 WHAT density (rulings.md, "After the S4 prod run"): ONE
- *  provenance line stays under the field (the suggestion's actionable
- *  line is a `CellAction` row under the grid row); the detection lines, the handoff sentences and anything
- *  else about the field (`detail`) move behind its details toggle
- *  (FieldCell).  Same nodes, same test ids — only the container moved. */
+/** A second field's line in the same row (R110 Q7). */
+interface ExtraLine {
+  label: string;
+  provenance: string;
+  amber?: boolean;
+  testid: string;
+}
+
+/** One row: label and marker, control, and the popover (FieldCell).  The
+ *  provenance slot is never empty (rule 137) — a caller with nothing to
+ *  say is a defect, so the prop is required rather than optional. */
 function Cell({
   label,
   htmlFor,
@@ -104,35 +109,39 @@ function Cell({
   notes = [],
   lines = [],
   detail = null,
-  record = null,
+  alert = null,
+  extra = null,
   children,
   testid,
 }: {
   label: string;
   htmlFor?: string;
   provenance: string;
-  /** R100: an answered suggestion's record, collapsed into the cell. */
-  record?: ReactNode;
   amber?: boolean;
   error?: boolean;
   /** #289 hand-check, correction 3: the picker's handoff sentences for
-   *  THIS field.  Each renders as its own ⚠ provenance line under the
-   *  field's own — one text node per sentence, which is #198's
-   *  byte-identity contract carried across the container change. */
+   *  THIS field.  Each renders as its own ⚠ line in the field's details —
+   *  one text node per sentence, #198's byte-identity contract. */
   notes?: string[];
-  /** #289 hand-check, 2026-09-23, fix 3: detection facts that describe
-   *  THIS field, which used to sit in a loose block under the grid
-   *  describing nothing in particular.  Plain provenance lines — a
-   *  detected bearing is a fact, not a warning, so it carries no glyph
-   *  unless its own clause is amber. */
+  /** #289 hand-check, fix 3: detection facts that describe THIS field. */
   lines?: Array<{ key: string; text: string; amber: boolean }>;
   /** Anything else about this field, ahead of its lines and notes. */
   detail?: ReactNode;
+  /** On show under the control whatever the marker says (P3). */
+  alert?: ReactNode;
+  /** R110 Q7: a second control's line and marker in the same row. */
+  extra?: ExtraLine | null;
   children: ReactNode;
   testid: string;
 }) {
+  const extraMarker = extra ? markerOf(extra.provenance, { amber: extra.amber }) : null;
+  const extraMarkers: ExtraMarker[] =
+    extra && extraMarker ? [{ marker: extraMarker, label: extra.label, testid: extra.testid }] : [];
   const hasDetail =
-    lines.length > 0 || notes.length > 0 || (detail !== null && detail !== undefined);
+    extra !== null ||
+    lines.length > 0 ||
+    notes.length > 0 ||
+    (detail !== null && detail !== undefined);
   return (
     <FieldCell
       label={label}
@@ -149,12 +158,21 @@ function Cell({
         </span>
       }
       // R98: the line as one quiet marker, the line itself one click
-      // away; an error keeps its line in the cell (P3).
+      // away; an error keeps its line under the control (P3).
       marker={markerOf(provenance, { amber, error })}
-      record={record}
+      extraMarkers={extraMarkers}
+      alert={alert}
       info={
         hasDetail ? (
           <>
+            {extra && (
+              <span
+                className={`tr-prov${extra.amber ? " is-amber" : ""}`}
+                data-testid={`prov-${extra.testid}`}
+              >
+                {extra.amber ? `⚠ ${extra.provenance}` : extra.provenance}
+              </span>
+            )}
             {detail}
             {lines.map((l) => (
               <span
@@ -209,6 +227,16 @@ function clauseFor(
   };
 }
 
+/** R108's header.  N > 0: "N guesses marked ⚠ · change any that are
+ *  wrong"; nothing guessed off a road: R110 Q5's "prefilled from the
+ *  road"; nothing detected at all: the band's own honest line. */
+export function whatHeader(guesses: number, detected: boolean): string {
+  if (guesses > 0) {
+    return `${guesses} ${guesses === 1 ? "guess" : "guesses"} marked ⚠ · change any that are wrong`;
+  }
+  return detected ? "prefilled from the road" : "nothing detected; every value here is yours";
+}
+
 /** R96 A — the two optional title-block fields behind one labelled
  *  disclosure: closed by default, saying what is inside and how many are
  *  not set (P13, P19).  A read, live under the write lock. */
@@ -251,12 +279,11 @@ export function WhatBand({
   jurisdictionBlock,
   jurisdictionLoading,
   jurisdictionErrored,
+  jurisdictionLookup = { status: "idle", data: null },
   stepIndex,
   kindFields,
   scheduleCells,
   scheduleWindows,
-  jurisdictionSuggest,
-  classificationFields,
   setMeta,
   handoff = [],
 }: {
@@ -265,71 +292,37 @@ export function WhatBand({
   jurisdictionBlock: JurisdictionBlock | null;
   jurisdictionLoading: boolean;
   jurisdictionErrored: boolean;
+  /** R108: the pin's boundary lookup — the jurisdiction row's evidence
+   *  and warnings.  The guess itself is already the scenario's value. */
+  jurisdictionLookup?: JurisdictionLookup;
   stepIndex: string;
-  /** R1 — the kind's own fields, as a third grid row.  Rendered only for
-   *  kinds that have one; `near_intersection`'s carries the
-   *  approach-confirm hold, which is a rail blocker, so it is never put
-   *  behind a disclosure (rule 139's chain has to stay visible). */
+  /** R1 — the kind's own fields, below the band.  `near_intersection`'s
+   *  carries the approach-confirm hold, which is a rail blocker, so it is
+   *  never put behind a disclosure (rule 139's chain has to stay
+   *  visible). */
   kindFields?: ReactNode;
-  /** Correction 1 — the dates control's cells, rendered INSIDE the
-   *  second group's grid (bands/PlanDetails), and its window block under
-   *  that grid.  §8.24's "schedule section" is retired: a section
-   *  pasted into a band was the thing the hand-check called out. */
+  /** Correction 1 — the dates control's time rows, in "The job" under
+   *  the work dates, and its window block under the columns. */
   scheduleCells?: ReactNode;
   scheduleWindows?: ReactNode;
-  /** #201 — the pin suggestion, inside the jurisdiction cell: proximity
-   *  is how a user knows which control a confirm applies to.  #289 WHAT
-   *  density: asked for in parts — the action line under the field, the
-   *  evidence and the TIGER caveat behind its details toggle. */
-  jurisdictionSuggest?: SectionSlot;
-  /** §8.21's other half — the street-class field and its own suggestion
-   *  slot.
-   *
-   *  #289 hand-check, 2026-09-23, correction 1: "The street-class
-   *  suggestion is the road-type field's own suggestion record (#198
-   *  strings byte-identical in the new container)."  So it rides the
-   *  ROAD-TYPE cell, exactly as the pin suggestion rides the
-   *  jurisdiction cell (#201: a confirm sits beside the control it
-   *  applies to) — rather than as a row of its own below the grid,
-   *  which is what a band with no cell for it had to do.
-   *
-   *  The component is unchanged, which is what keeps the strings
-   *  byte-identical: `JurisdictionControls` with `omitJurisdictionField`
-   *  renders the same chips, the same map chip and the same
-   *  `ClassSuggestSlot` it always did.  Only its container moved.
-   *
-   *  #289 WHAT density (Ryan, 2026-09-24) moves it again: "Street
-   *  classification becomes its own cell in the second group, out of the
-   *  road-type cell."  Passed on to PlanDetails, which asks for the chips,
-   *  the action line and the detail separately. */
-  classificationFields?: SectionSlot;
-  /** The title-block metadata, as grid cells (see the third row). */
+  /** The title-block metadata (FileDetails). */
   setMeta: (m: ScenarioMeta) => void;
-  /** The picker → form handoff events.  Correction 3 retires their box
-   *  in WHERE; the sentences ride the cells they describe. */
+  /** The picker → form handoff events; the sentences ride the rows they
+   *  describe (correction 3). */
   handoff?: HandoffEvent[];
 }): ReactNode {
   const locked = useWriteLock();
   const table = WHAT_CELLS[scenario.kind];
   const detected = deriveDetectedRows(scenario);
   const lanesValidation = validateLanes(scenario);
-  // Correction 3: which cell each surviving handoff sentence belongs
+  // Correction 3: which row each surviving handoff sentence belongs
   // under.  The producer is the one that used to feed the box, so the
   // strings are unchanged (#198).
   const notes = handoffNotesByCell(scenario, handoff);
 
-  // #289 hand-check, 2026-09-23, fix 3: "the four loose provenance lines
-  // move under the fields they describe … bearing and the #214 sentence
-  // under road type; divided under the Divided control."
-  //
-  // The rows are `deriveDetectedRows`' own and their clause is
-  // `provenanceClause`'s — the same producers the block used, so the
-  // words do not change with the container (the same discipline
-  // correction 3 applied to the picker's notes).  One-way rides the
-  // road-type cell with divided when there is no Divided control to sit
-  // under: it is the fact that MAKES a road divided or not in detection,
-  // and rule 10 says a fact with no home renders somewhere true rather
-  // than nowhere.
+  // #289 hand-check, fix 3: detection facts move under the fields they
+  // describe — one-way (and divided, when there is no Divided control)
+  // under road type; divided under the Divided control.
   const detectLine = (label: DetectedRowLabel) => {
     const r = detectedRow(detected, label);
     if (!r) return null;
@@ -345,8 +338,6 @@ export function WhatBand({
   };
   const dividedLine = detectLine("Divided");
   const showsDivided = showsDividedToggle(scenario);
-  // #290: the "Bearing" line and #214's caveat retire with the typed
-  // bearing (FLOW.md §5a) — the direction is the WHERE band's side now.
   const roadTypeLines = [
     detectLine("One-way"),
     showsDivided ? null : dividedLine,
@@ -358,44 +349,71 @@ export function WhatBand({
     loading: jurisdictionLoading,
     errored: jurisdictionErrored,
   });
-  // #276, ruled 196: the static option label is what the operator PICKED.
-  // It is a legitimate thing to show; what is forbidden is showing it as
-  // though the evaluation had returned it.  So the value falls back to
-  // the label and the provenance line says which of the two you are
-  // looking at.
+  // #276, ruled 196: the static option label is what the operator (or the
+  // pin) PICKED; the provenance line says which of the two you are looking
+  // at and whether the evaluation has answered.
   const pickedLabel = scenario.jurisdiction_key
     ? (JURISDICTION_OPTIONS.find((o) => o.key === scenario.jurisdiction_key)
         ?.label ?? scenario.jurisdiction_key)
     : "Not set";
   const jurisdictionValue =
     jState === "evaluated" ? (jurisdictionBlock as JurisdictionBlock).name : pickedLabel;
+  const evaluatedLine =
+    jState === "evaluated"
+      ? `evaluated · ${(jurisdictionBlock as JurisdictionBlock).authority.replace("_", " & ")} · calls this plan a ${(jurisdictionBlock as JurisdictionBlock).tcp_term}`
+      : null;
+  const jurisdictionGuessed = isGuessed(scenario, "jurisdiction_key");
+  // R108: an untouched pin guess reads as one — its own line, "⚠ from the
+  // pin" — unless the evaluation failed, which needs the operator now and
+  // keeps its error line (P3).  The evaluation's sentence moves to the
+  // row's details then, so nothing it said is lost.
   const jurisdictionProv =
-    jState === "unset"
-      ? "MUTCD + Colorado Supplement only"
-      : jState === "evaluated"
-        ? `evaluated · ${(jurisdictionBlock as JurisdictionBlock).authority.replace("_", " & ")} · calls this plan a ${(jurisdictionBlock as JurisdictionBlock).tcp_term}`
-        : jState === "evaluating"
-          ? "evaluating: the option you picked, not yet confirmed for this plan"
-          : "not evaluated: the check didn't answer; the option you picked stands";
+    jState === "not-evaluated"
+      ? "not evaluated: the check didn't answer; the option you picked stands"
+      : jurisdictionGuessed
+        ? "guessed, not confirmed · from the pin"
+        : jState === "unset"
+          ? jurisdictionLookup.status === "loading"
+            ? "checking the pin's boundary data"
+            : "MUTCD + Colorado Supplement only"
+          : jState === "evaluated"
+            ? (evaluatedLine as string)
+            : "evaluating: the option you picked, not yet confirmed for this plan";
+  const jurisdictionAmber = jurisdictionGuessed && jState !== "not-evaluated";
 
   const schedule = scenario.schedule ?? null;
-  // Fix 1: the dates ARE the mode, so the cell reads them directly.
+  // Fix 1: the dates ARE the mode, so the row reads them directly.
   const workDate = schedule?.work_date ?? "";
   const workDateEnd = schedule?.work_date_end ?? "";
 
   const speedClause = clauseFor(detected, "Speed limit");
   const lanesClause = clauseFor(detected, "Lanes per direction");
   const roadTypeClause = clauseFor(detected, "Road type");
+  // R110 Q7: lane width's own source.  Detection never measures a width
+  // (the classifier carries `laneWidthFt` as the kind's standard lane, not
+  // a measurement); the plan starts from that default until the operator
+  // picks one.
+  const laneWidthProv = isOperatorSet(scenario, "laneWidth")
+    ? "your change · operator-set from here on"
+    : "default · the plan's standard lane; detection doesn't measure width";
+  const classProv = streetClassProvenance(scenario);
+
+  // R108's N: the ⚠ markers on show, from the rows' own lines.
+  const warnMarkers = [
+    markerOf(speedClause.text, { amber: speedClause.amber }),
+    table.lanes && lanesValidation.ok
+      ? markerOf(lanesClause.text, { amber: lanesClause.amber })
+      : null,
+    markerOf(roadTypeClause.text, { amber: roadTypeClause.amber }),
+    markerOf(classProv.text, { amber: classProv.amber }),
+    markerOf(jurisdictionProv, { amber: jurisdictionAmber, error: jState === "not-evaluated" }),
+  ].filter((m) => m?.glyph === "⚠").length;
 
   return (
     <OpenBand
       stepIndex={stepIndex}
       head="WHAT"
-      provenance={
-        detected
-          ? "prefilled from the road · guesses marked"
-          : "nothing detected; every value here is yours"
-      }
+      provenance={whatHeader(warnMarkers, detected !== null)}
       question="Anything we got wrong?"
       questionProvenance={
         detected
@@ -403,341 +421,305 @@ export function WhatBand({
           : "No confirmed road at this pin, so nothing was prefilled. Set what the plan needs."
       }
     >
-      {/* R96 A (R101, mockups/what.html) — TWO GROUPS named for the
-          user's question (P20): the road, then the job.  Each is one
-          fixed 3-track grid (P4, P6); PlanDetailCells puts the rest of
-          each group's inputs into the same grid. */}
-      <div className="a-group" data-testid="what-group-road">
-      <span className="tr-section a-group-head">The road</span>
-      <div className="a-grid">
-        <Cell
-          label="Speed limit"
-          htmlFor="what-speed"
-          provenance={speedClause.text}
-          amber={speedClause.amber}
-          notes={notes["speed"]}
-          testid="speed"
-        >
-          <select
-            id="what-speed"
-            className="a-fld"
-            data-write=""
-            disabled={locked}
-            value={scenario.speed}
-            onChange={(e) => setScenario(setSpeed(scenario, +e.target.value))}
-          >
-            {speedOptions(scenario.kind).map((s) => (
-              <option key={s} value={s}>
-                {s} mph
-              </option>
-            ))}
-          </select>
-        </Cell>
-
-        {table.lanes ? (
+      {/* R107 (WhatC5.dc.html) — TWO COLUMNS named for the user's
+          question (P20): the road on the left, the job on the right; each
+          row is the label with its marker under it, beside a 44 px
+          control (P4, P6). */}
+      <div className="a-cols">
+        <div className="a-col" data-testid="what-group-road">
+          <span className="tr-section a-group-head">The road</span>
           <Cell
-            label="Lanes per direction"
-            htmlFor="what-lanes"
-            provenance={
-              lanesValidation.ok ? lanesClause.text : (lanesValidation.message ?? "")
-            }
-            amber={lanesValidation.ok && lanesClause.amber}
-            error={!lanesValidation.ok}
-            notes={notes["lanes"]}
-          testid="lanes"
+            label="Speed limit"
+            htmlFor="what-speed"
+            provenance={speedClause.text}
+            amber={speedClause.amber}
+            notes={notes["speed"]}
+            testid="speed"
           >
             <select
-              id="what-lanes"
+              id="what-speed"
               className="a-fld"
               data-write=""
               disabled={locked}
-              aria-invalid={!lanesValidation.ok || undefined}
-              value={(scenario as { lanes: number }).lanes}
-              onChange={(e) => setScenario(setLanes(scenario, +e.target.value))}
+              value={scenario.speed}
+              onChange={(e) => setScenario(setSpeed(scenario, +e.target.value))}
             >
-              {table.lanes.map((n) => (
-                <option key={n} value={n}>
-                  {n}
+              {speedOptions(scenario.kind).map((s) => (
+                <option key={s} value={s}>
+                  {s} mph
                 </option>
               ))}
             </select>
           </Cell>
-        ) : (
-          // #209's read-only-with-reason.  The kind has no lane count;
-          // the cell says which count the plan uses and why, rather than
-          // vanishing (rule 10, rule 136).
+
+          {/* R110 Q7: one row, two controls, two markers — the lane count
+              as detection reports it, the width from its own source. */}
           <Cell
-            label="Lanes per direction"
-            provenance={table.lanesReason ?? "not taken by this kind"}
-            notes={notes["lanes"]}
-          testid="lanes"
+            label="Lanes"
+            htmlFor={table.lanes ? "what-lanes" : "what-lane-width"}
+            provenance={
+              table.lanes
+                ? lanesValidation.ok
+                  ? lanesClause.text
+                  : (lanesValidation.message ?? "")
+                : (table.lanesReason ?? "not taken by this kind")
+            }
+            amber={Boolean(table.lanes) && lanesValidation.ok && lanesClause.amber}
+            error={Boolean(table.lanes) && !lanesValidation.ok}
+            notes={[...(notes["lanes"] ?? []), ...(notes["lane-width"] ?? [])]}
+            extra={{ label: "Lane width", provenance: laneWidthProv, testid: "lane-width" }}
+            testid="lanes"
           >
-            <input
-              className="a-fld"
-              readOnly
-              aria-readonly="true"
-              data-read=""
-              value="1"
-              aria-label="Lanes per direction (fixed by this plan kind)"
-            />
+            <div className="a-pair">
+              {table.lanes ? (
+                <select
+                  id="what-lanes"
+                  className="a-fld"
+                  data-write=""
+                  disabled={locked}
+                  aria-label="Lanes per direction"
+                  aria-invalid={!lanesValidation.ok || undefined}
+                  value={(scenario as { lanes: number }).lanes}
+                  onChange={(e) => setScenario(setLanes(scenario, +e.target.value))}
+                >
+                  {table.lanes.map((n) => (
+                    <option key={n} value={n}>
+                      {n} per side
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                // #209's read-only-with-reason: the kind has no lane
+                // count; the row says which count the plan uses and why,
+                // rather than vanishing (rule 10, rule 136).
+                <input
+                  className="a-fld"
+                  readOnly
+                  aria-readonly="true"
+                  data-read=""
+                  value="1 per side"
+                  aria-label="Lanes per direction (fixed by this plan kind)"
+                />
+              )}
+              <select
+                id="what-lane-width"
+                className="a-fld"
+                data-write=""
+                disabled={locked}
+                aria-label="Lane width"
+                value={(scenario as { laneWidth: number }).laneWidth}
+                onChange={(e) => setScenario(setLaneWidth(scenario, +e.target.value))}
+              >
+                {laneWidthOptions(scenario.kind).map((w) => (
+                  <option key={w} value={w}>
+                    {w} ft
+                  </option>
+                ))}
+              </select>
+            </div>
           </Cell>
-        )}
 
-        <Cell
-          label="Lane width"
-          htmlFor="what-lane-width"
-          // Detection never reports a lane WIDTH: the classifier carries
-          // `laneWidthFt` as a derived default, not a measurement, and the
-          // ledger never had a row for it.  Rule 137's own operator-set
-          // clause is the honest line here.
-          provenance="your change · operator-set from here on"
-          notes={notes["lane-width"]}
-          testid="lane-width"
-        >
-          <select
-            id="what-lane-width"
-            className="a-fld"
-            data-write=""
-            disabled={locked}
-            value={(scenario as { laneWidth: number }).laneWidth}
-            onChange={(e) =>
-              setScenario({
-                ...scenario,
-                laneWidth: +e.target.value,
-              } as Scenario)
+          <Cell
+            label="Road type"
+            htmlFor="what-road-type"
+            provenance={roadTypeClause.text}
+            amber={roadTypeClause.amber}
+            notes={notes["road-type"]}
+            lines={roadTypeLines}
+            detail={
+              table.roadTypeNote ? (
+                <span className="tr-prov" data-testid="road-type-note">
+                  {table.roadTypeNote}
+                </span>
+              ) : null
             }
+            testid="road-type"
           >
-            {laneWidthOptions(scenario.kind).map((w) => (
-              <option key={w} value={w}>
-                {w} ft
-              </option>
-            ))}
-          </select>
-        </Cell>
-        <Cell
-          label="Road type"
-          htmlFor="what-road-type"
-          // WHAT density: one provenance line — source · value · method.
-          // The kind's case note (e.g. "CDOT Cases 18/19 …") is detail.
-          provenance={roadTypeClause.text}
-          amber={roadTypeClause.amber}
-          notes={notes["road-type"]}
-          lines={roadTypeLines}
-          detail={
-            table.roadTypeNote ? (
-              <span className="tr-prov" data-testid="road-type-note">
-                {table.roadTypeNote}
-              </span>
-            ) : null
-          }
-          testid="road-type"
-        >
-          <select
-            id="what-road-type"
-            className="a-fld"
-            data-write=""
-            disabled={locked}
-            value={scenario.roadType as string}
-            onChange={(e) =>
-              setScenario(setRoadType(scenario, e.target.value as RoadType))
-            }
-          >
-            {table.roadTypes.map((r) => (
-              <option key={r.v} value={r.v}>
-                {r.l}
-              </option>
-            ))}
-          </select>
-        </Cell>
-        <PlanDetailCells
-          group="road"
-          scenario={scenario}
-          setScenario={setScenario}
-          dividedLine={showsDivided ? dividedLine : null}
-          streetClass={classificationFields}
-        />
-      </div>
-      </div>
+            <select
+              id="what-road-type"
+              className="a-fld"
+              data-write=""
+              disabled={locked}
+              value={scenario.roadType as string}
+              onChange={(e) =>
+                setScenario(setRoadType(scenario, e.target.value as RoadType))
+              }
+            >
+              {table.roadTypes.map((r) => (
+                <option key={r.v} value={r.v}>
+                  {r.l}
+                </option>
+              ))}
+            </select>
+          </Cell>
+          <PlanDetailCells
+            group="road"
+            scenario={scenario}
+            setScenario={setScenario}
+            dividedLine={showsDivided ? dividedLine : null}
+            jurisdictionBlock={jurisdictionBlock}
+          />
+        </div>
 
-      <div className="a-group" data-testid="what-group-job">
-      <span className="tr-section a-group-head">The job</span>
-      <div className="a-grid">
-        <PlanDetailCells group="job" scenario={scenario} setScenario={setScenario} />
+        <div className="a-col" data-testid="what-group-job">
+          <span className="tr-section a-group-head">The job</span>
+          <PlanDetailCells group="job" scenario={scenario} setScenario={setScenario} />
 
-        <Cell
-          label="Jurisdiction"
-          htmlFor="what-jurisdiction"
-          provenance={jurisdictionProv}
-          error={jState === "not-evaluated"}
-          record={jurisdictionSuggest?.("record")}
-          detail={
-            jurisdictionSuggest ||
-            (jState === "evaluated" && jurisdictionValue !== pickedLabel) ? (
+          <Cell
+            label="Jurisdiction"
+            htmlFor="what-jurisdiction"
+            provenance={jurisdictionProv}
+            amber={jurisdictionAmber}
+            error={jState === "not-evaluated"}
+            alert={<JurisdictionWarnings lookup={jurisdictionLookup} />}
+            detail={
               <>
-                {/* The evaluated name, when it differs from the option
-                    label — so a reader sees what the check actually
-                    returned and never has to infer it from the picker's
-                    wording. */}
+                {/* The evaluation's own sentence, when the row's line is
+                    the guess's; and the evaluated name, when it differs
+                    from the option label, so a reader sees what the check
+                    actually returned. */}
+                {jurisdictionGuessed && evaluatedLine && (
+                  <span className="tr-prov">{evaluatedLine}</span>
+                )}
                 {jState === "evaluated" && jurisdictionValue !== pickedLabel && (
                   <span className="tr-prov">evaluated as {jurisdictionValue}</span>
                 )}
-                {jurisdictionSuggest?.("detail")}
+                <JurisdictionEvidence lookup={jurisdictionLookup} />
               </>
-            ) : null
-          }
-          testid="jurisdiction"
-        >
-          <select
-            id="what-jurisdiction"
-            className={`a-fld${jState === "unset" ? " is-unset" : ""}`}
-            data-write=""
-            data-jurisdiction-state={jState}
-            disabled={locked}
-            value={scenario.jurisdiction_key ?? ""}
-            onChange={(e) =>
-              setScenario({
-                ...scenario,
-                jurisdiction_key: e.target.value || null,
-              } as Scenario)
             }
+            testid="jurisdiction"
           >
-            {/* #260 / #257: "Not set" is the one word every surface uses
-                for an unset jurisdiction. */}
-            <option value="">Not set: MUTCD + CDOT only</option>
-            {JURISDICTION_OPTIONS.map((o) => (
-              <option key={o.key} value={o.key}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </Cell>
+            <select
+              id="what-jurisdiction"
+              className={`a-fld${jState === "unset" ? " is-unset" : ""}`}
+              data-write=""
+              data-jurisdiction-state={jState}
+              disabled={locked}
+              value={scenario.jurisdiction_key ?? ""}
+              onChange={(e) =>
+                // R108: the operator's pick, a guess replaced included;
+                // never overwritten by a later pin answer (R110 Q4).
+                setScenario(setJurisdictionByOperator(scenario, e.target.value || null))
+              }
+            >
+              {/* #260 / #257: "Not set" is the one word every surface uses
+                  for an unset jurisdiction. */}
+              <option value="">Not set: MUTCD + CDOT only</option>
+              {JURISDICTION_OPTIONS.map((o) => (
+                <option key={o.key} value={o.key}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </Cell>
 
-        {/* #289 hand-check, 2026-09-23, fix 1: ONE control for one
-            answer.  The mode chips are gone and the mode is derived from
-            the dates (lib/scenarios/what-writes.ts:setWorkDates) — a
-            schedule nobody entered reads "Not set" because there is no
-            date, which is #199's point stated by the field itself rather
-            than by a chip beside it.  The end date appears once a start
-            stands, because a range with no beginning is not a range. */}
-        <Cell
-          label="Work dates"
-          htmlFor="what-date"
-          provenance={
-            workDate
-              ? workDateEnd
-                ? "operator-set · a range · permit lead times read this"
-                : "operator-set · one day · permit lead times read this"
-              : "not set · windows and permit lead times need a date"
-          }
-          testid="work-dates"
-        >
-          <input
-            id="what-date"
-            type="date"
-            className={`a-fld${workDate ? "" : " is-unset"}`}
-            data-write=""
-            disabled={locked}
-            aria-label="Work date, or the first day of a range"
-            value={workDate}
-            onChange={(e) =>
-              setScenario(setWorkDates(scenario, { start: e.target.value }))
+          {/* #289 hand-check, fix 1: ONE control for one answer — the mode
+              derives from the dates (what-writes.ts `setWorkDates`); the
+              end date appears once a start stands. */}
+          <Cell
+            label="Work dates"
+            htmlFor="what-date"
+            provenance={
+              workDate
+                ? workDateEnd
+                  ? "operator-set · a range · permit lead times read this"
+                  : "operator-set · one day · permit lead times read this"
+                : "not set · windows and permit lead times need a date"
             }
-          />
-          {workDate && (
+            testid="work-dates"
+          >
             <input
-              id="what-date-end"
+              id="what-date"
               type="date"
-              className={`a-fld${workDateEnd ? "" : " is-unset"}`}
+              className={`a-fld${workDate ? "" : " is-unset"}`}
               data-write=""
               disabled={locked}
-              aria-label="Last work day, for a range"
-              min={workDate}
-              value={workDateEnd}
+              aria-label="Work date, or the first day of a range"
+              value={workDate}
               onChange={(e) =>
-                setScenario(setWorkDates(scenario, { end: e.target.value }))
+                setScenario(setWorkDates(scenario, { start: e.target.value }))
               }
             />
-          )}
-        </Cell>
-        {/* The dates' time cells (ScheduleField), once a date stands. */}
-        {scheduleCells}
-        {/* The jurisdiction suggestion still WAITING, spanning the band
-            under the row (rulings.md, "The suggestion row spans the
-            band"); answered, it is the cell's record (R100). */}
-        {jurisdictionSuggest && (
-          <CellAction label="Jurisdiction" testid="jurisdiction">
-            {jurisdictionSuggest("action")}
-          </CellAction>
-        )}
+            {workDate && (
+              <input
+                id="what-date-end"
+                type="date"
+                className={`a-fld${workDateEnd ? "" : " is-unset"}`}
+                data-write=""
+                disabled={locked}
+                aria-label="Last work day, for a range"
+                min={workDate}
+                value={workDateEnd}
+                onChange={(e) =>
+                  setScenario(setWorkDates(scenario, { end: e.target.value }))
+                }
+              />
+            )}
+          </Cell>
+          {/* The dates' time rows (ScheduleField), once a date stands. */}
+          {scheduleCells}
+        </div>
       </div>
       {/* #227's window reference block: a table, not a field, so it sits
-          under the group's grid rather than in it (a cell would grow one
-          row per window and break the shared row height, P6). */}
+          under the columns rather than in one. */}
       {scheduleWindows}
-      </div>
 
       {/* THE TITLE-BLOCK FIELDS (#289 correction 2: they survive because
-          the deliverables print them) — R96 A: behind "File details", a
-          disclosure that says what it holds and how many are unset
-          (P13).  Optional, so not in the way of the job. */}
+          the deliverables print them) — R96 A: behind "File details". */}
       <FileDetails project={scenario.meta.project} location={scenario.meta.locationDescription}>
-      <div className="a-grid">
-        <Cell
-          label="Project name"
-          htmlFor="what-project"
-          provenance="operator-set · names the file and the title block"
-          testid="project"
-        >
-          <input
-            id="what-project"
-            className={`a-fld${scenario.meta.project ? "" : " is-unset"}`}
-            data-write=""
-            disabled={locked}
-            placeholder="Not set"
-            value={scenario.meta.project}
-            onChange={(e) =>
-              setMeta({ ...scenario.meta, project: e.target.value })
-            }
-          />
-        </Cell>
-        <Cell
-          label="Location description"
-          htmlFor="what-location-description"
-          provenance={
-            scenario.meta.locationDescription
-              ? "operator-set · the title block's LOCATION row"
-              : // Rule 10: the fallback is real and the surface says so
-                // rather than leaving an empty field to be read as a gap.
-                "optional · the address stands in when this is empty"
-          }
-          testid="location-description"
-        >
-          <input
-            id="what-location-description"
-            className={`a-fld${scenario.meta.locationDescription ? "" : " is-unset"}`}
-            data-write=""
-            disabled={locked}
-            placeholder="Not set"
-            value={scenario.meta.locationDescription ?? ""}
-            onChange={(e) =>
-              setMeta({
-                ...scenario.meta,
-                locationDescription: e.target.value,
-              })
-            }
-          />
-        </Cell>
-      </div>
+        <div className="a-cols">
+          <div className="a-col">
+            <Cell
+              label="Project name"
+              htmlFor="what-project"
+              provenance="operator-set · names the file and the title block"
+              testid="project"
+            >
+              <input
+                id="what-project"
+                className={`a-fld${scenario.meta.project ? "" : " is-unset"}`}
+                data-write=""
+                disabled={locked}
+                placeholder="Not set"
+                value={scenario.meta.project}
+                onChange={(e) =>
+                  setMeta({ ...scenario.meta, project: e.target.value })
+                }
+              />
+            </Cell>
+          </div>
+          <div className="a-col">
+            <Cell
+              label="Location description"
+              htmlFor="what-location-description"
+              provenance={
+                scenario.meta.locationDescription
+                  ? "operator-set · the title block's LOCATION row"
+                  : // Rule 10: the fallback is real and the surface says so
+                    // rather than leaving an empty field to be read as a gap.
+                    "optional · the address stands in when this is empty"
+              }
+              testid="location-description"
+            >
+              <input
+                id="what-location-description"
+                className={`a-fld${scenario.meta.locationDescription ? "" : " is-unset"}`}
+                data-write=""
+                disabled={locked}
+                placeholder="Not set"
+                value={scenario.meta.locationDescription ?? ""}
+                onChange={(e) =>
+                  setMeta({
+                    ...scenario.meta,
+                    locationDescription: e.target.value,
+                  })
+                }
+              />
+            </Cell>
+          </div>
+        </div>
       </FileDetails>
 
-      {/* #289 hand-check, 2026-09-23, fix 3: §8.23's remainder — the
-          loose detection block — is GONE.  Every line it carried is now
-          under the field it describes: the source and way id on the
-          WHERE band's provenance (lib/scenarios/band-facts.ts), bearing,
-          one-way and #214's caveat on the road-type cell, and divided on
-          the Divided control when there is one.  "The separate block is
-          gone; nothing it said is gone" — this is the second half of
-          that sentence finally landing. */}
       {/* R1 — the kind's own fields.  Never behind a disclosure: the
           near-intersection hold is a rail blocker and rule 139 keeps the
           chain visible. */}

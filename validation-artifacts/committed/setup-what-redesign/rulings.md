@@ -13,3 +13,17 @@ R108: No confirm step for guesses. Street class (from the road) and jurisdiction
 - This supersedes the confirm/dismiss parts of R100 and any earlier ruling that requires confirming a suggestion. List each ruling it overrides in the checkpoint.
 
 R109: Investigate first, with a 📋 checkpoint before code: what R108 changes in the backend (Rule 3: does the backend or the frontend decide that a suggestion becomes the value?), what it changes in the audit and the PDF, the Rule 5 churn prediction, and the P1–P22 principles check. Then one branch per surface, in the order R108 + R107 → R106. Each report gets screenshots at 1440 and 390.
+
+R110 (Ryan, 2026-10-07, rulings on the checkpoint):
+
+Q1: Yes, D1 as written. Optional guesses wire field with the raw fact, the backend recomputes, the tag table moves to the backend, a stale entry gets an honest 400, no entry is byte-identical.
+Q2: Keep guesses out of pending_verification.
+Q3: Yes, add "(guessed from the pin, not confirmed)" to the XLSX and crew-sheet jurisdiction line.
+Q4: Never overwrite a value the operator set, road type included.
+Q5: Nothing guessed: the header reads "prefilled from the road".
+Q6: Yes, R108 governs the #279 road-type classifier too.
+Q7: Two markers in the Lanes row (lanes measured; lane width its own source).
+Q8: Hours and Speed reduction get markers ("✓ default" until changed, then "✓ yours"). The off option reads "None".
+Q9: Two full-height buttons in the Setup Lanes cell. No ⚠ on the Setup box.
+
+CLAUDE.md's suggest-never-set line is already updated with the R108 exception. Build setup-what-r108, then setup-box-r106 stacked on it. Report with screenshots at 1440 and 390.

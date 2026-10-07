@@ -161,6 +161,16 @@ export interface JurisdictionPlanFields {
   site_scan?: { proceed_if_unavailable: boolean } | null;
   jurisdiction_key?: string | null;
   street_class?: "local" | "collector" | "arterial" | null;
+  /**
+   * R108 / R110 Q1 — which of the two fields above are untouched GUESSES,
+   * each with the raw fact it was guessed from (the relay-fact pattern:
+   * the backend re-derives each guess, records it in the audit as "not
+   * confirmed by the operator", and refuses a stale one with a 400).  An
+   * entry exists only while its field still holds the guess; the
+   * operator's own write drops it (lib/scenarios/guesses.ts).  Absent ⇒
+   * no guess, and the payload is byte-identical to before.
+   */
+  guesses?: ScenarioGuesses | null;
   schedule?: {
     date_mode: "single" | "range" | "tbd";
     work_date?: string;
@@ -356,6 +366,21 @@ export interface RoadDirection {
   oneway: string | null;
 }
 
+/** R108 — see `JurisdictionPlanFields.guesses`.  Mirrors
+ *  `src/api/schemas.py` `Guesses`. */
+export interface ScenarioGuesses {
+  /** The confirmed road's OSM `highway` tag the class was guessed from. */
+  street_class?: { highwayClass: string };
+  /** The pin the boundary lookup ran at. */
+  jurisdiction_key?: { lat: number; lng: number };
+}
+
+/** R110 Q4 / Q7 / Q8 — fields the OPERATOR has written, so a fresh
+ *  detection never overwrites them (Q4) and their marker reads "✓ yours"
+ *  rather than "✓ default" (Q7, Q8).  Frontend bookkeeping like
+ *  `confirmedRoad`: it rides the saved plan and the backend ignores it. */
+export type OperatorSetField = "roadType" | "laneWidth" | "night" | "workZoneSpeed";
+
 export interface ScenarioMeta {
   project: string;
   address: string;
@@ -418,6 +443,9 @@ export interface ScenarioMeta {
    * math reads it.
    */
   confirmedRoad?: ConfirmedRoad | null;
+  /** R110 — see `OperatorSetField`.  Absent ⇒ the operator has written
+   *  none of them. */
+  operatorSet?: OperatorSetField[];
   /**
    * #234 — the intersection the operator marked in the picker
    * (near_intersection only): the second pin and the cross street's name

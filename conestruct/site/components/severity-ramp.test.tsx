@@ -10,7 +10,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 
 import { ResultsHero } from "./ResultsHero";
-import { JurisdictionControls } from "./JurisdictionSection";
+import { PlanDetailCells } from "./bands/PlanDetails";
+import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import { referenceSummary } from "@/lib/reference-summary";
 import { PricingCard } from "./PricingCard";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
@@ -91,20 +92,17 @@ describe("severity-ramp role assignments", () => {
     expect(line).not.toMatch(/--dim|--orange|<[a-z]/i);
   });
 
-  it("street-class pills carry pressed state, not hue alone", () => {
-    // Pills live in the interactive controls now (Surface B), not the
-    // read-only top strip.
+  it("the street class carries pressed state, not hue alone", () => {
+    // R107: the street class is a segmented control in the WHAT band.
     const { container } = render(
-      <JurisdictionControls
-        jurisdiction={null}
-        jurisdictionKey={null}
-        setJurisdictionKey={noop}
-        streetClass="arterial"
-        setStreetClass={noop}
+      <PlanDetailCells
+        group="road"
+        scenario={{ ...DEFAULT_SHOULDER, street_class: "arterial" } as Scenario}
+        setScenario={noop}
       />,
     );
     const pressed = Array.from(
-      container.querySelectorAll('.classpick button[aria-pressed="true"]'),
+      container.querySelectorAll('.a-seg[aria-label="Street class"] button[aria-pressed="true"]'),
     );
     expect(pressed).toHaveLength(1);
     expect(pressed[0].textContent).toBe("Arterial");

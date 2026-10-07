@@ -28,20 +28,15 @@ import { PlanDetailCells, showsDividedToggle } from "./PlanDetails";
 
 afterEach(cleanup);
 
-// R96 A: the cells render into the WHAT band's own two grids
-// (PlanDetailCells, group "road" / "job"); this harness stands in for the
-// band's grid so the cells' behaviour is tested as before.
-function mount(scenario: Scenario, streetClass?: Parameters<typeof PlanDetailCells>[0]["streetClass"]) {
+// R107: the rows render into the WHAT band's two columns
+// (PlanDetailCells, group "road" / "job"); this harness stands in for a
+// column so the rows' behaviour is tested as before.
+function mount(scenario: Scenario) {
   const setScenario = vi.fn();
   render(
-    <div className="a-grid" data-testid="plan-details">
+    <div className="a-col" data-testid="plan-details">
       <PlanDetailCells group="job" scenario={scenario} setScenario={setScenario} />
-      <PlanDetailCells
-        group="road"
-        scenario={scenario}
-        setScenario={setScenario}
-        streetClass={streetClass}
-      />
+      <PlanDetailCells group="road" scenario={scenario} setScenario={setScenario} />
     </div>,
   );
   return setScenario;
@@ -82,13 +77,13 @@ describe("the group's shape", () => {
     const group = screen.getByTestId("plan-details");
     // The panel's classes: `.field-input` is paper-on-navy with an
     // orange focus ring; `.chip` is orange-on-paper.  Neither belongs in
-    // a band whose controls are `.a-fld` and `.a-chip`.
+    // a band whose controls are `.a-fld` and R107's `.a-seg`.
     expect(group.querySelectorAll(".field-input")).toHaveLength(0);
     expect(group.querySelectorAll(".chip")).toHaveLength(0);
     expect(group.querySelectorAll(".field-select")).toHaveLength(0);
     expect(group.querySelectorAll(".check-row")).toHaveLength(0);
     expect(group.querySelectorAll(".a-fld").length).toBeGreaterThan(0);
-    expect(group.querySelectorAll(".a-chip").length).toBeGreaterThan(0);
+    expect(group.querySelectorAll(".a-seg").length).toBeGreaterThan(0);
   });
 });
 
@@ -157,7 +152,8 @@ describe("the writes are the forms' own", () => {
       speed: 45,
       workZoneSpeed: 35,
     } as Scenario);
-    fireEvent.click(screen.getByRole("button", { name: "No reduction" }));
+    // R110 Q8: "The off option reads 'None'."
+    fireEvent.click(screen.getByRole("button", { name: "None" }));
     const next = setScenario.mock.calls[0][0] as ShoulderScenario;
     expect(next.workZoneSpeed).toBeUndefined();
   });
@@ -185,69 +181,93 @@ describe("the writes are the forms' own", () => {
   });
 });
 
-// #289 hand-check, 2026-09-23, correction 1, last clause: "The
-// street-class suggestion is the road-type field's own suggestion record
-// (#198 strings byte-identical in the new container)."
-//
-// The band had no cell for street classification, so §8.21's other half
-// rode a row of its own below the grid.  It belongs to the road-type
-// cell — the same arrangement #201 already gives the jurisdiction cell
-// and its pin suggestion: a confirm sits beside the control it applies
-// to.  The container is all that moves, which is what keeps the strings
-// identical, and that is what this case checks.
-//
-// #289 WHAT density (Ryan, 2026-09-24) moves it once more: "Street
-// classification becomes its own cell in the second group, out of the
-// road-type cell."  The slot is asked for in parts — the chips as the
-// control, the proposal as the action line, the rest as detail.
-describe("street classification is its own cell in the second group", () => {
-  it("the chips, the action line and the detail each land once, in their places", async () => {
+// R107 / R108 — street class is a row of "The road": a segmented control
+// split evenly, prefilled from the road and marked as a guess, with no
+// confirm, dismiss or suggestion row anywhere (R108).
+describe("street class is a row of The road, marked when guessed", () => {
+  const guessed = {
+    ...DEFAULT_SHOULDER,
+    street_class: "arterial",
+    guesses: { street_class: { highwayClass: "primary" } },
+  } as Scenario;
+
+  it("reads '⚠ from the road', and its full line names the tag", async () => {
     const { WhatBand } = await import("./WhatBand");
     render(
       <WhatBand
-        scenario={DEFAULT_SHOULDER}
+        scenario={guessed}
         setScenario={() => {}}
         setMeta={() => {}}
         jurisdictionBlock={null}
         jurisdictionLoading={false}
         jurisdictionErrored={false}
         stepIndex="STEP 2 OF 4"
-        // As GeneratorShell builds it: no record until a suggestion is answered.
-        classificationFields={(section) =>
-          section === "record" ? null : (
-            <div data-testid={`class-${section}`}>Street classification</div>
-          )
-        }
       />,
     );
     const cell = screen.getByTestId("cell-street-class");
-    // R96 A: in "The road" group.
     expect(screen.getByTestId("what-group-road").contains(cell)).toBe(true);
-    expect(cell.querySelector(".tr-field")!.textContent).toBe("Street classification");
-    // Out of the road-type cell.
-    expect(
-      screen.getByTestId("cell-road-type").querySelector('[data-testid^="class-"]'),
-    ).toBeNull();
-    // The control sits in the cell; the detail sits in the cell's details
-    // panel, closed; the action line is the row after the cell.
-    expect(cell.querySelector('[data-testid="class-control"]')).not.toBeNull();
-    // The action line spans the band under the cell's row (rulings.md,
-    // "The suggestion row spans the band"): the grid item after the cell.
-    const action = document.querySelector('[data-testid="class-action"]')!;
-    expect(action.closest('[data-testid="action-street-class"]')!.previousElementSibling).toBe(cell);
-    expect(action.closest(".a-info")).toBeNull();
-    const detail = cell.querySelector('[data-testid="class-detail"]')!;
-    expect(detail.closest('[data-testid="info-street-class"]')!.hasAttribute("hidden")).toBe(true);
-    // Rule 137: a provenance line, always.
+    // R107's label.
+    expect(cell.querySelector(".tr-field")!.textContent).toBe("Street class");
+    expect(screen.getByTestId("info-toggle-street-class").textContent).toBe("⚠ from the road");
     expect(screen.getByTestId("prov-street-class").textContent).toBe(
-      "not set · operator-set when picked",
+      "⚠ guessed, not confirmed · OSM highway=primary · from the road",
     );
-    // One home each: a second home for one control is the thing this
-    // arc keeps removing.
-    for (const s of ["control", "action", "detail"]) {
-      expect(screen.getAllByTestId(`class-${s}`), s).toHaveLength(1);
+    // R108: no confirm step, anywhere in the band.
+    for (const name of [/^Confirm/, /^Dismiss$/, /^Undo$/]) {
+      expect(screen.queryByRole("button", { name })).toBeNull();
     }
-    expect(screen.queryByTestId("class-all")).toBeNull();
+    // R107: three options, one track each.
+    const seg = cell.querySelector(".a-seg") as HTMLElement;
+    expect(seg.style.gridTemplateColumns).toBe("repeat(3, minmax(0, 1fr))");
+    expect(screen.getByRole("button", { name: "Arterial" }).getAttribute("aria-pressed")).toBe(
+      "true",
+    );
+  });
+
+  it("the operator's pick replaces the guess and drops its record", () => {
+    const setScenario = mount(guessed);
+    fireEvent.click(screen.getByRole("button", { name: "Local" }));
+    const next = setScenario.mock.calls[0][0] as Scenario;
+    expect(next.street_class).toBe("local");
+    expect(next.guesses ?? null).toBeNull();
+  });
+
+  it("the operator's own class reads '✓ yours'; none reads '◌ not set'", () => {
+    mount({ ...DEFAULT_SHOULDER, street_class: "collector" } as Scenario);
+    expect(screen.getByTestId("info-toggle-street-class").textContent).toBe("✓ yours");
+    cleanup();
+    mount(DEFAULT_SHOULDER);
+    expect(screen.getByTestId("info-toggle-street-class").textContent).toBe("◌ not set");
+  });
+});
+
+// R110 Q8 — Hours and Speed reduction: "✓ default" until changed, then
+// "✓ yours".
+describe("hours and the speed reduction say whose value they show", () => {
+  it("default until changed", () => {
+    mount(DEFAULT_SHOULDER);
+    expect(screen.getByTestId("cell-night").querySelector(".tr-field")!.textContent).toBe("Hours");
+    expect(screen.getByTestId("info-toggle-night").textContent).toBe("✓ default");
+    expect(
+      screen.getByTestId("cell-reduction").querySelector(".tr-field")!.textContent,
+    ).toBe("Speed reduction");
+    expect(screen.getByTestId("info-toggle-reduction").textContent).toBe("✓ default");
+  });
+
+  it("yours once the operator has written it, even back to the default", () => {
+    mount({
+      ...DEFAULT_SHOULDER,
+      night: false,
+      meta: { ...DEFAULT_SHOULDER.meta, operatorSet: ["night", "workZoneSpeed"] },
+    } as Scenario);
+    expect(screen.getByTestId("info-toggle-night").textContent).toBe("✓ yours");
+    expect(screen.getByTestId("info-toggle-reduction").textContent).toBe("✓ yours");
+  });
+
+  it("the writes record the operator", () => {
+    const setScenario = mount(DEFAULT_SHOULDER);
+    fireEvent.click(screen.getByRole("button", { name: "Night" }));
+    expect((setScenario.mock.calls[0][0] as Scenario).meta.operatorSet).toEqual(["night"]);
   });
 });
 

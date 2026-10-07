@@ -1,0 +1,90 @@
+{
+  "A_none": {
+    "total_devices": 31,
+    "unique_types": 9,
+    "jurisdiction_block": false,
+    "applied_deltas": 0,
+    "hours_eval_status": null,
+    "permit_tier": null,
+    "pending_verification_count": 0,
+    "plan_flags": {
+      "validation_warnings": 0,
+      "compliance_fails": 0,
+      "v1_limitations": 0,
+      "is_clean": true
+    },
+    "input_guesses": null,
+    "xlsx_jurisdiction": "Not set",
+    "crew_jurisdiction_line": "- **Jurisdiction:** Not set",
+    "audit_pdf_guess_block": false
+  },
+  "B_operator": {
+    "total_devices": 31,
+    "unique_types": 9,
+    "jurisdiction_block": true,
+    "applied_deltas": 0,
+    "hours_eval_status": "unknown",
+    "permit_tier": null,
+    "pending_verification_count": 0,
+    "plan_flags": {
+      "validation_warnings": 0,
+      "compliance_fails": 0,
+      "v1_limitations": 0,
+      "is_clean": true
+    },
+    "input_guesses": null,
+    "xlsx_jurisdiction": "Denver",
+    "crew_jurisdiction_line": "- **Jurisdiction:** Denver",
+    "audit_pdf_guess_block": false
+  },
+  "C_guessed": {
+    "total_devices": 31,
+    "unique_types": 9,
+    "jurisdiction_block": true,
+    "applied_deltas": 0,
+    "hours_eval_status": "unknown",
+    "permit_tier": null,
+    "pending_verification_count": 0,
+    "plan_flags": {
+      "validation_warnings": 0,
+      "compliance_fails": 0,
+      "v1_limitations": 0,
+      "is_clean": true
+    },
+    "input_guesses": [
+      {
+        "field": "street_class",
+        "value": "arterial",
+        "label": "Arterial",
+        "source": "road",
+        "evidence": "OSM highway=primary",
+        "operator_confirmed": false
+      },
+      {
+        "field": "jurisdiction_key",
+        "value": "denver",
+        "label": "Denver",
+        "source": "pin",
+        "evidence": "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+        "operator_confirmed": false
+      }
+    ],
+    "xlsx_jurisdiction": "Denver (guessed from the pin, not confirmed)",
+    "crew_jurisdiction_line": "- **Jurisdiction:** Denver (guessed from the pin, not confirmed)",
+    "audit_pdf_guess_block": true
+  }
+}
+
+B vs C -- what the guess RECORD adds (everything else must be equal):
+  input_guesses: B=None  C=[{'field': 'street_class', 'value': 'arterial', 'label': 'Arterial', 'source': 'road', 'evidence': 'OSM highway=primary', 'operator_confirmed': False}, {'field': 'jurisdiction_key', 'value': 'denver', 'label': 'Denver', 'source': 'pin', 'evidence': 'Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).', 'operator_confirmed': False}]
+  xlsx_jurisdiction: B='Denver'  C='Denver (guessed from the pin, not confirmed)'
+  crew_jurisdiction_line: B='- **Jurisdiction:** Denver'  C='- **Jurisdiction:** Denver (guessed from the pin, not confirmed)'
+  audit_pdf_guess_block: B=False  C=True
+
+A vs C -- what a guessed jurisdiction + class turns on (prediction 1):
+  jurisdiction_block: A=False  C=True
+  hours_eval_status: A=None  C='unknown'
+  input_guesses: A=None  C=[{'field': 'street_class', 'value': 'arterial', 'label': 'Arterial', 'source': 'road', 'evidence': 'OSM highway=primary', 'operator_confirmed': False}, {'field': 'jurisdiction_key', 'value': 'denver', 'label': 'Denver', 'source': 'pin', 'evidence': 'Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).', 'operator_confirmed': False}]
+  xlsx_jurisdiction: A='Not set'  C='Denver (guessed from the pin, not confirmed)'
+  crew_jurisdiction_line: A='- **Jurisdiction:** Not set'  C='- **Jurisdiction:** Denver (guessed from the pin, not confirmed)'
+  audit_pdf_guess_block: A=False  C=True

@@ -118,14 +118,15 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     // out of the road-type cell."  Present, not dropped: the chips are in
     // that cell, and in no other.
     expect(document.querySelector(".jctl")).toBeNull();
+    // R107: the street class is a row of "The road", its control R107's
+    // segmented control — in that row, and in no other.
     const classCell = document.querySelector('[data-testid="cell-street-class"]')!;
-    expect(classCell.querySelector(".classpick")).not.toBeNull();
-    // R96 A: its cell sits in "The road" group (the second group is retired).
+    const classSeg = classCell.querySelector('.a-seg[aria-label="Street class"]');
+    expect(classSeg).not.toBeNull();
     expect(document.querySelector('[data-testid="what-group-road"]')!.contains(classCell)).toBe(true);
-    expect(
-      document.querySelector('[data-testid="cell-road-type"]')!.querySelector(".classpick"),
-    ).toBeNull();
-    expect(document.querySelectorAll(".classpick")).toHaveLength(1);
+    expect(document.querySelectorAll('.a-seg[aria-label="Street class"]')).toHaveLength(1);
+    // The old chips are gone with the confirm step (R108).
+    expect(document.querySelector(".classpick")).toBeNull();
     // And the section that used to hold them is gone with the panel.
     expect(document.querySelector(".jctl-band")).toBeNull();
   });

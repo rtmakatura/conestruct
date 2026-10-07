@@ -14,6 +14,7 @@
 // the clamp exists to prevent).
 
 import { snapSpeedToDomain } from "./auto-apply";
+import { markOperatorSet } from "./guesses";
 import { clampLanesToDomain } from "./validation";
 import type {
   FlaggerRoadType,
@@ -125,7 +126,9 @@ export function applyOverridesToScenario(
     }
   }
   if (overrides.roadType !== undefined) {
-    next = applyRoadTypeOverride(next, overrides.roadType);
+    const narrowed = applyRoadTypeOverride(next, overrides.roadType);
+    // R110 Q4: the picker's road-type override is the operator's.
+    next = narrowed === next ? next : markOperatorSet(narrowed, "roadType");
   }
   if (overrides.divided !== undefined && next.kind === "shoulder") {
     next = { ...next, divided: overrides.divided };

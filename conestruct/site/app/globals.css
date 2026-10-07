@@ -4690,35 +4690,6 @@ input[type="number"] {
 .workbench .a-info[hidden] {
   display: none;
 }
-/* #289 — the suggestion row spans the band (Ryan, 2026-09-24; rulings.md,
-   "The suggestion row spans the band").  In a WHAT cell the row had
-   236.67 px at 1440 against ~374 px of parts, so it could not be one
-   line; as a full-width grid item under the row holding its field it has
-   the band.  At a ≥520 px viewport it is ONE line — symbol · sentence ·
-   Confirm · Dismiss — with the sentence the one part that may shrink;
-   below 520 it wraps as it always did.  An action slot that renders
-   nothing leaves the item empty, and an empty item takes no track (no
-   extra row, no extra gap). */
-.workbench .a-grid > .a-cell-action {
-  grid-column: 1 / -1;
-}
-.workbench .a-cell-action:empty {
-  display: none;
-}
-@media (min-width: 520px) {
-  .workbench .a-cell-action .sugg-row {
-    flex-wrap: nowrap;
-    align-self: stretch;
-  }
-  .workbench .a-cell-action .sugg-row > span:not(.sugg-glyph):not(.sys-glyph) {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  .workbench .a-cell-action .sugg-row > button {
-    flex: none;
-    white-space: nowrap;
-  }
-}
 /* A slot the shell builds can render nothing (street classification with
    no map on record and no suggestion evidence); an empty panel offers no
    toggle. */
@@ -4806,16 +4777,8 @@ input[type="number"] {
    is symbol + word (P9) and opens a popover that overlays the page, so
    nothing below it moves (P1).  The popover closes on click-away or Esc
    (FieldCell.tsx). */
-.workbench .a-group + .a-group {
-  margin-top: 22px;
-  padding-top: 14px;
-  border-top: 1px dashed var(--rule);
-}
 .workbench .a-group-head {
   display: block;
-}
-.workbench .a-group > .a-grid {
-  margin-top: 10px;
 }
 .workbench .a-cell {
   position: relative;
@@ -4872,25 +4835,6 @@ input[type="number"] {
   border: 1px solid var(--act);
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.4);
 }
-/* The record in its field: the #227 decision line, compact — glyph,
-   sentence, Undo on one row, wrapping inside the cell (P6). */
-.workbench .a-cell-foot .a-cell-record {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  width: 100%;
-}
-.workbench .a-cell-foot .a-cell-record .sugg-row {
-  gap: 6px;
-  flex-wrap: wrap;
-  padding: 0;
-}
-.workbench .a-cell-foot .a-cell-record .sys-event {
-  padding: 0;
-  border: 0;
-  background: none;
-}
 .workbench .a-filedetails {
   margin-top: 18px;
   padding-top: 12px;
@@ -4901,6 +4845,142 @@ input[type="number"] {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+/* ─── R107 (setup-what-redesign, design-refs/WhatC5.dc.html) · the WHAT
+   band's two columns ───
+   "The road on the left, The job on the right, and the label (with its
+   marker under it) beside each control.  Every control is 44 px tall."
+   The mockup's numbers, on the house tokens: columns 32 px apart; a row
+   is a 132 px label track and the control's track, 12 px apart, 10 px
+   above and below, a --da-hair rule between rows.  Two columns while each
+   has 340 px (132 + 12 + a 196 px control), one below — the columns
+   decide that from their own width, not the viewport's (P6). */
+.workbench .a-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  column-gap: 32px;
+  row-gap: 18px;
+  margin-top: 16px;
+}
+.workbench .a-col {
+  min-width: 0;
+}
+.workbench .a-col > .a-group-head {
+  margin: 0 0 4px;
+}
+/* R108: the guesses' evidence (JurisdictionSection) in a row's popover —
+   a stack, one sentence under the next, with the strip's row layout and
+   its inset dropped (they were the suggestion strip's, a row of parts). */
+.workbench .a-pop .jbar-suggest {
+  display: grid;
+  align-items: start;
+  gap: 6px;
+  padding: 8px 0 0;
+  min-height: 0;
+}
+.workbench .a-col > .a-cell {
+  grid-template-columns: 132px minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 6px;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--da-hair);
+}
+/* FieldCell's halves: label over marker(s), then the control. */
+.workbench .a-col > .a-cell > .a-cell-head {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+}
+.workbench .a-col > .a-cell > .a-cell-ctl {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+/* ScheduleField's plain cells take the same tracks: label left, the
+   control and its line right. */
+.workbench .a-col > .a-cell > .tr-field {
+  grid-column: 1;
+}
+.workbench .a-col > .a-cell > .a-fld,
+.workbench .a-col > .a-cell > .tr-prov {
+  grid-column: 2;
+}
+/* R110 Q7: the Lanes row's two markers, and its two controls. */
+.workbench .a-marks {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 10px;
+}
+.workbench .a-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+/* R107's segmented control: one 44 px track per option, split evenly
+   (the inline grid-template-columns), the pressed option in the kind
+   chip's own treatment (P11). */
+.workbench .a-seg {
+  display: grid;
+  height: 44px;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .a-seg > button {
+  appearance: none;
+  min-width: 0;
+  padding: 0 4px;
+  border: 0;
+  border-left: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  cursor: pointer;
+}
+.workbench .a-seg > button:first-child {
+  border-left: 0;
+}
+.workbench .a-seg > button:hover {
+  color: var(--ink);
+}
+.workbench .a-seg > button[aria-pressed="true"] {
+  background: rgba(52, 169, 232, 0.1);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--act);
+}
+.workbench .a-seg > button:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: -2px;
+}
+.workbench .a-seg > button[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+/* Below 520 the label sits ABOVE its control (checkpoint D7: 132 px and
+   two selects do not fit a 318 px row), and the label row is 44 px tall
+   so the marker's 44 px target never lies over the control (P10). */
+@media (max-width: 520px) {
+  .workbench .a-col > .a-cell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workbench .a-col > .a-cell > .tr-field,
+  .workbench .a-col > .a-cell > .a-fld,
+  .workbench .a-col > .a-cell > .tr-prov {
+    grid-column: 1;
+  }
+  .workbench .a-col > .a-cell > .a-cell-head {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+  }
+  .workbench .a-col > .a-cell .a-mark {
+    min-height: 44px;
+    margin-bottom: 0;
+    align-items: center;
+  }
 }
 
 /* #289 fidelity F4 (ruled Q3): the corridor's zone rows are the extent

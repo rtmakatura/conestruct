@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
-import type { SectionSlot } from "./JurisdictionSection";
+import type { JurisdictionLookup } from "./JurisdictionSection";
 import {
   applyClassification,
   carryAcrossKinds,
@@ -65,12 +65,6 @@ interface Props {
   // audit resolves or when the field is absent (deploy window) — the
   // preview then reads unavailable; it is never computed locally.
   corridorSpecLengths: CorridorSpecLengths | null;
-  // Surface B (#152), rehomed by #227: the interactive jurisdiction +
-  // street-class controls, rendered as the full-width band directly
-  // below the Location step so the causality still reads pin ->
-  // suggestions -> confirm.  Built by the shell (which owns the
-  // suggestion state); this component only places it.
-  jurisdictionControls?: SectionSlot;
   // #227 fact strip: the evaluated jurisdiction's display name (the
   // device-breakdown block's ``name``), null before it loads or when no
   // jurisdiction is named.  The strip falls back to the option label /
@@ -88,14 +82,10 @@ interface Props {
    *  current (rule 10).  Passed straight through to ScheduleField. */
   jurisdictionRevalidating?: boolean;
   jurisdictionErrored?: boolean;
-  // #201: the pin suggestion, rendered INSIDE the WHAT grid's
-  // jurisdiction cell so a confirm sits beside the control it applies to.
-  // #289 WHAT density: a render function of the section the cell asks for.
-  jurisdictionSuggest?: SectionSlot;
-  // #228: how many suggestion proposals await Confirm/Dismiss (0–2),
-  // computed by the shell from the slots' own render expressions —
-  // feeds the rail's Location info subline and nothing else.
-  pendingSuggestions?: number;
+  // R108: the pin's boundary lookup, for the WHAT band's jurisdiction
+  // cell (its evidence and warnings).  The guess itself is already the
+  // scenario's value; nothing here confirms anything.
+  jurisdictionLookup?: JurisdictionLookup;
   // Dev-only replication snapshot (Refs #102, TEMPORARY): surfaces the raw
   // picker classification (plus the pin it was captured at, so a later
   // location edit is detectable as staleness) up to the shell — it
@@ -149,14 +139,12 @@ export function GeneratorSidebar({
   refusal,
   refusalPending,
   corridorSpecLengths,
-  jurisdictionControls,
   jurisdictionName = null,
   jurisdictionBlock = null,
   jurisdictionLoading = false,
   jurisdictionRevalidating = false,
   jurisdictionErrored = false,
-  jurisdictionSuggest,
-  pendingSuggestions = 0,
+  jurisdictionLookup,
   onClassification,
   kindState = "confirmed",
   onKindPicked,
@@ -192,7 +180,6 @@ export function GeneratorSidebar({
     approachConfirm,
     refusal,
     refusalPending,
-    pendingSuggestions,
     // Defect 1: Generate waits on a person's confirmation of the kind.
     kindConfirmed: kindState === "confirmed",
   });
@@ -494,8 +481,7 @@ export function GeneratorSidebar({
         jurisdictionLoading={jurisdictionLoading}
         jurisdictionErrored={jurisdictionErrored}
         jurisdictionName={jurisdictionName}
-        jurisdictionSuggest={jurisdictionSuggest}
-        classificationFields={jurisdictionControls}
+        jurisdictionLookup={jurisdictionLookup}
         kindFields={kindFields}
         // #289 hand-check, 2026-09-23, correction 1: the schedule is no
         // longer a SECTION pasted into the band.  Its controls are cells

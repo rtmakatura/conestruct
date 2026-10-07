@@ -598,6 +598,37 @@ def _fines_double_blocks(fd: dict[str, Any]) -> list[Block]:
     return blocks
 
 
+# R108 / R110: the caveat each guess's source carries, printed with the
+# record so the evidence survives the suggestion rows that used to hold it
+# (Rule 10).  The jurisdiction sentence is the suggestion slot's own TIGER
+# caveat; the street-class one is its map caveat's last sentence, reworded
+# for a sheet with no link to click.
+_GUESS_CAVEAT = {
+    "pin": "Confirm the jurisdiction with the permitting authority.",
+    "road": "The jurisdiction's adopted classification map governs.",
+}
+_GUESS_FIELD = {"jurisdiction_key": "Jurisdiction", "street_class": "Street class"}
+_GUESS_SOURCE = {"pin": "the pin", "road": "the road"}
+
+
+def _input_guesses_blocks(guesses: list[dict[str, Any]]) -> list[Block]:
+    """One line per untouched guess (R108): the value, its source and that
+    the operator did not confirm it.  No guesses, no block."""
+    if not guesses:
+        return []
+    lines = [
+        f"{_GUESS_FIELD.get(g.get('field', ''), _str(g, 'field'))}: {_str(g, 'label')}. "
+        f"Guessed from {_GUESS_SOURCE.get(g.get('source', ''), _str(g, 'source'))} "
+        f"({_str(g, 'evidence')}). The operator did not confirm it. "
+        f"{_GUESS_CAVEAT.get(g.get('source', ''), '')}".rstrip()
+        for g in guesses
+    ]
+    return [
+        Heading(2, _cell("Guessed inputs")),
+        Bullets([ListItem(_cell(line)) for line in lines]),
+    ]
+
+
 def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
     if not pending:
         return []
@@ -653,6 +684,9 @@ def audit_to_blocks(
     blocks += _summary_blocks(
         summary, status_line=ledger_line(tier_ledger(projection, jurisdiction))
     )
+    # R108: the inputs the plan guessed, right after the summary that
+    # reads them.  Absent from every projection with no guess.
+    blocks += _input_guesses_blocks(projection.get("input_guesses", []))
     blocks += _taper_blocks(sections.get("taper", {}))
     blocks += _buffer_blocks(sections.get("buffer", {}))
     blocks += _spacing_blocks(sections.get("spacing", {}))

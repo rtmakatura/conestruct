@@ -144,6 +144,11 @@ without numbers (Rule 12):
   suggestions → confirm still reads top to bottom). Not a numbered
   step and not a rail entry (#228 owns rail vocabulary). Pre-pin it
   is pending like every downstream step (#222 mechanics).
+  *Superseded (R108, setup-what-redesign, 2026-10-07):* there is no
+  confirm step.  The pin's jurisdiction and the road's street class are
+  prefilled as guesses in the WHAT band's rows, marked "⚠ from the pin"
+  / "⚠ from the road", their evidence behind each row's marker; the
+  ⌁ proposal rows and #227's ✓/× records are gone for these two fields.
 - **The fact strip renders in the pinned state only** (GO ruling 1, a
   recorded deviation from the empty-state principle): pre-pin the
   Location step's job is the pick CTA + manual fallback (#222 gates

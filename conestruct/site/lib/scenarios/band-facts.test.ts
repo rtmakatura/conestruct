@@ -23,7 +23,6 @@ const rail = (scenario: Scenario, kindConfirmed?: boolean) =>
     approachConfirm: { pending: false, reason: null },
     refusal: null,
     refusalPending: false,
-    pendingSuggestions: 0,
     kindConfirmed,
   });
 

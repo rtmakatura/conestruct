@@ -11,7 +11,8 @@ describe("markerOf", () => {
   it.each([
     ["OSM · 30 mph · measured", false, "✓", "measured", "ok"],
     ["OSM · 2 · measured", false, "✓", "measured", "ok"],
-    ["OSM · Urban arterial · inferred", true, "⚠", "inferred", "guess"],
+    // R108: a value inferred off the road reads as the mockup marks it.
+    ["OSM · Urban arterial · inferred", true, "⚠", "from the road", "guess"],
     ["OSM · 3 · overridden", false, "✓", "overridden", "ok"],
     ["OSM · 30 mph · measured · operator-set", false, "✓", "yours", "ok"],
     ["OSM · 35 mph · measured · changed in plan", true, "⚠", "changed", "guess"],
@@ -29,8 +30,15 @@ describe("markerOf", () => {
     ["evaluated · city & county · calls this plan a TCP", false, "✓", "evaluated", "ok"],
     ["detected · a same-name carriageway 9.82 m away", false, "✓", "detected", "ok"],
     ["detected · no same-name carriageway within 100 m", false, "✓", "detected", "ok"],
-    ["night work adds retroreflective devices", false, "i", "about", "info"],
-    ["a lower limit through the zone", false, "i", "about", "info"],
+    // R108: the two guesses.
+    ["guessed, not confirmed · OSM highway=primary · from the road", true, "⚠", "from the road", "guess"],
+    ["guessed, not confirmed · from the pin", true, "⚠", "from the pin", "guess"],
+    // R110 Q7 / Q8: a value the plan started from, until the operator changes it.
+    ["default · the plan's standard lane; detection doesn't measure width", false, "✓", "default", "ok"],
+    ["default · daytime; night work adds retroreflective devices", false, "✓", "default", "ok"],
+    ["default · no lower limit through the zone", false, "✓", "default", "ok"],
+    // R108: the pin's lookup in flight, for an empty jurisdiction.
+    ["checking the pin's boundary data", false, "◌", "checking", "pending"],
     ["median present · every other road type sets this itself (#85)", false, "i", "about", "info"],
   ])("%s → %s %s", (text, amber, glyph, word, tone) => {
     expect(markerOf(text, { amber })).toEqual({ glyph, word, tone });

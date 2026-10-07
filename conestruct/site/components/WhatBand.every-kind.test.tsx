@@ -93,15 +93,22 @@ describe("#277 — the WHAT grid mounts for every live kind", () => {
       await openWhat();
       const band = document.querySelector('[data-testid="band-stack"]')!;
       expect(band.getAttribute("data-open-band"), kind).toBe("what");
-      expect(band.querySelector(".a-grid"), `${kind}: WHAT grid`).not.toBeNull();
-      // Rule 116's 3 × 2 — the six standard cells every live kind renders
-      // — each with its field and its provenance line (rule 137).
-      for (const cell of ["speed", "lanes", "lane-width", "road-type", "jurisdiction", "work-dates"]) {
-        const c = band.querySelector(`.a-grid [data-testid="cell-${cell}"]`);
+      expect(band.querySelector(".a-cols"), `${kind}: WHAT columns`).not.toBeNull();
+      // R107: the rows every live kind renders — each with its field and
+      // its provenance line (rule 137).  Lane width is the Lanes row's
+      // second control, with its own line (R110 Q7).
+      for (const cell of ["speed", "lanes", "road-type", "jurisdiction", "work-dates"]) {
+        const c = band.querySelector(`.a-cols [data-testid="cell-${cell}"]`);
         expect(c, `${kind}: cell-${cell}`).not.toBeNull();
         expect(c!.querySelector(".a-fld"), `${kind}: cell-${cell} field`).not.toBeNull();
         expect(c!.querySelector(".tr-prov")?.textContent?.trim(), `${kind}: cell-${cell} provenance`).toBeTruthy();
       }
+      const lanes = band.querySelector('[data-testid="cell-lanes"]')!;
+      expect(lanes.querySelector("#what-lane-width"), `${kind}: lane width`).not.toBeNull();
+      expect(
+        lanes.querySelector('[data-testid="prov-lane-width"]')?.textContent?.trim(),
+        `${kind}: lane width provenance`,
+      ).toBeTruthy();
     });
   }
 });

@@ -333,12 +333,47 @@ class PreviewScenarioFields(BaseModel):
     include_breakdown: bool = False
 
 
+class StreetClassGuess(BaseModel):
+    """The raw fact a prefilled ``street_class`` was guessed from (R108):
+    the confirmed road's OSM ``highway`` tag.  The backend maps it itself
+    (``src/rules/street_class.py``) rather than trusting the class."""
+
+    highwayClass: str = Field(min_length=1, max_length=40)
+
+
+class JurisdictionGuess(BaseModel):
+    """The raw fact a prefilled ``jurisdiction_key`` was guessed from
+    (R108): the pin the boundary lookup ran at.  The backend re-runs
+    ``boundaries.suggest`` on it rather than trusting the key."""
+
+    lat: float = Field(ge=-90, le=90, allow_inf_nan=False)
+    lng: float = Field(ge=-180, le=180, allow_inf_nan=False)
+
+
+class Guesses(BaseModel):
+    """R108 / R110 Q1 — which jurisdiction-layer values are untouched
+    guesses, each with the raw fact it came from (the relay-fact pattern).
+
+    An entry is present only while its field still holds the guess; the
+    operator changing the field drops it, and the value is operator-set
+    from then on.  The backend recomputes every entry at the chokepoint
+    (``render_api._ensure_guesses_current``): a match is recorded in the
+    audit as "guessed, not confirmed"; a mismatch is an honest 400.
+    Absent, every output is byte-identical to before.
+    """
+
+    street_class: StreetClassGuess | None = None
+    jurisdiction_key: JurisdictionGuess | None = None
+
+
 class JurisdictionScenarioFields(BaseModel):
     """Mixin adding the optional jurisdiction-layer fields to every kind."""
 
     jurisdiction_key: str | None = None
     street_class: Literal["local", "collector", "arterial"] | None = None
     schedule: WorkSchedule | None = None
+    # R108 / R110 Q1: the untouched guesses among the two fields above.
+    guesses: Guesses | None = None
 
 
 class DetectionOverride(BaseModel):
@@ -1131,6 +1166,17 @@ def _jurisdiction_name(scenario: Scenario) -> str | None:
     return str(load_jurisdiction(key)["name"])
 
 
+def _jurisdiction_guessed(scenario: Scenario) -> bool:
+    """True when the named jurisdiction is an untouched pin guess (R108):
+    the deliverables then say so beside the name (R110 Q3)."""
+    guesses = getattr(scenario, "guesses", None)
+    return bool(
+        getattr(scenario, "jurisdiction_key", None)
+        and guesses is not None
+        and guesses.jurisdiction_key is not None
+    )
+
+
 # CHOSEN (#308 ruling R88, 2026-10-05): the shoulder a one-way street's plan
 # builds.  No source: no MUTCD, S-630-1, Colorado Supplement or Denver
 # (PT-116.1, Rule 22.3) text found sets a shoulder width for a one-way
@@ -1241,7 +1287,14 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
     cannot be placed yet.  Its approaches then carry a 0.0 station that is
     never generated from.
     """
-    meta_kw = {**_meta_params(scenario.meta), "jurisdiction_name": _jurisdiction_name(scenario)}
+    meta_kw = {
+        **_meta_params(scenario.meta),
+        "jurisdiction_name": _jurisdiction_name(scenario),
+        # R110 Q3: the named jurisdiction is an untouched pin guess.  The
+        # chokepoint has already proved the entry current
+        # (render_api._ensure_guesses_current), so this reads presence only.
+        "jurisdiction_guessed": _jurisdiction_guessed(scenario),
+    }
 
     if isinstance(scenario, ShoulderScenario):
         # Normalize workZoneSpeed == speed (or unset) to None — both

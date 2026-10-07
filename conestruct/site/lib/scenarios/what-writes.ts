@@ -25,6 +25,7 @@ import {
   lanesArithmeticMismatch,
 } from "./auto-apply";
 import { applyRoadTypeOverride, dividedForShoulderRoadType } from "./overrides";
+import { markOperatorSet, setJurisdictionByOperator } from "./guesses";
 import { isFieldStaged } from "./site-corrections";
 import type {
   DetectionOverride,
@@ -83,17 +84,44 @@ export function setSpeed(scenario: Scenario, mph: number): Scenario {
  *    reset."
  */
 export function setRoadType(scenario: Scenario, rt: RoadType): Scenario {
+  // R110 Q4: the operator's road type — a fresh detection keeps it
+  // (auto-apply.ts `applyClassification`).  Recorded only when the kind
+  // could hold the type; a narrowed-away pick changed nothing.
   const narrowed = applyRoadTypeOverride(scenario, rt);
-  if (narrowed.kind !== "shoulder") return narrowed;
-  const nextDivided = dividedForShoulderRoadType(
-    narrowed.roadType,
-    narrowed.divided,
-  );
+  const mine = narrowed === scenario ? scenario : markOperatorSet(narrowed, "roadType");
+  if (mine.kind !== "shoulder") return mine;
+  const nextDivided = dividedForShoulderRoadType(mine.roadType, mine.divided);
   return {
-    ...narrowed,
+    ...mine,
     divided: nextDivided,
-    ...(nextDivided !== narrowed.divided ? { lanes: nextDivided ? 2 : 1 } : {}),
+    ...(nextDivided !== mine.divided ? { lanes: nextDivided ? 2 : 1 } : {}),
   };
+}
+
+/**
+ * Lane width (R110 Q7: "lane width its own source").  Detection never
+ * measures a width; the plan starts from the kind's standard lane, and
+ * this write makes it the operator's ("✓ yours").
+ */
+export function setLaneWidth(scenario: Scenario, ft: number): Scenario {
+  return markOperatorSet({ ...scenario, laneWidth: ft } as Scenario, "laneWidth");
+}
+
+/** Hours (R107's label; R110 Q8: "✓ default" until changed). */
+export function setNight(scenario: Scenario, night: boolean): Scenario {
+  return markOperatorSet({ ...scenario, night } as Scenario, "night");
+}
+
+/**
+ * Speed reduction (R110 Q8).  `undefined` is "None".  ShoulderForm's own
+ * rule carries: a reduction at or above the posted speed is no reduction
+ * (PlanDetails' toggle starts it 10 below, floored at 25).
+ */
+export function setWorkZoneSpeed(scenario: Scenario, mph: number | undefined): Scenario {
+  return markOperatorSet(
+    { ...scenario, workZoneSpeed: mph } as Scenario,
+    "workZoneSpeed",
+  );
 }
 
 /**
@@ -228,13 +256,12 @@ export function applyStagedFields(
         next = setRoadType(next, s.to as RoadType);
         break;
       case "laneWidth":
-        next = { ...next, laneWidth: Number(s.to) } as Scenario;
+        next = setLaneWidth(next, Number(s.to));
         break;
       case "jurisdiction_key":
-        next = {
-          ...next,
-          jurisdiction_key: (s.to as string) || null,
-        } as Scenario;
+        // R108: a staged jurisdiction is the operator's pick; any pin
+        // guess it replaces goes with it.
+        next = setJurisdictionByOperator(next, (s.to as string) || null);
         break;
     }
   }

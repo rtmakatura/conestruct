@@ -11,6 +11,8 @@
 // road property. Q6 of V1-Wide Item 1 review (2026-06-06).
 
 import { carriagewayVerdict } from "../road-detection/carriageway";
+import { isOperatorSet, withoutOperatorSet } from "./guesses";
+import { dividedForShoulderRoadType } from "./overrides";
 import type { RoadClassification } from "../road-detection/types";
 import { clampLanesToDomain, laneWidthCeilingFt } from "./validation";
 import type {
@@ -207,7 +209,7 @@ export function matchRefusalAffordance(
   // chokepoint (render_api._ensure_carriageway_decided), so it is matched
   // first here — the mirror of the backend predicate
   // (lib/road-detection/carriageway.ts).  The remedy is the WHAT band's
-  // confirm row ("One-way street" / "One side of a divided road").
+  // Carriageway row ("One-way" / "Divided", R107).
   if (scenario.kind === "shoulder" && carriagewayVerdict(scenario.carriageway) === "undecided") {
     return {
       code: "shoulder_carriageway",
@@ -446,7 +448,51 @@ export interface AutoApplyDelta {
   lanesApplicable: boolean;
 }
 
+/**
+ * Apply a fresh detection to the scenario — with R110's two exceptions,
+ * applied after the per-kind write so its seven branches stay as they
+ * were:
+ *
+ *  · Q4, "Never overwrite a value the operator set, road type included."
+ *    A road type in `meta.operatorSet` stands; on the shoulder kind the
+ *    #85 divided pairing follows the type that stands (the urban
+ *    arterial's explicit toggle keeps its value), and the lane width is
+ *    re-fitted to that pairing (Correction 4's ceiling).
+ *  · Q7: a detection re-fits the lane width to the kind's standard lane,
+ *    so the operator's record of the width goes with the old value.
+ */
 export function applyClassification(
+  scenario: Scenario,
+  c: RoadClassification,
+): { scenario: Scenario; delta: AutoApplyDelta } {
+  const out = applyDetected(scenario, c);
+  let next = out.scenario;
+  const delta = out.delta;
+  if (isOperatorSet(scenario, "roadType") && "roadType" in scenario) {
+    const rt = (scenario as { roadType: RoadType }).roadType;
+    if ((next as { roadType: RoadType }).roadType !== rt) {
+      next = { ...next, roadType: rt } as Scenario;
+      if (next.kind === "shoulder") {
+        const divided = dividedForShoulderRoadType(rt, (scenario as { divided: boolean }).divided);
+        next = {
+          ...next,
+          divided,
+          laneWidth: fitLaneWidth(next.kind, next.lanes as number, divided, next.laneWidth as number),
+        };
+      }
+    }
+    delta.roadTypeApplied = false;
+  }
+  if (
+    isOperatorSet(next, "laneWidth") &&
+    (next as { laneWidth?: number }).laneWidth !== (scenario as { laneWidth?: number }).laneWidth
+  ) {
+    next = withoutOperatorSet(next, "laneWidth");
+  }
+  return { scenario: next, delta };
+}
+
+function applyDetected(
   scenario: Scenario,
   c: RoadClassification,
 ): { scenario: Scenario; delta: AutoApplyDelta } {

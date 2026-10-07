@@ -50,13 +50,13 @@ describe("the carriageway cell", () => {
     expect(screen.getByTestId("prov-carriageway").textContent).toBe(
       "⚠ needs you · the map couldn't tell",
     );
-    expect(chip("One-way street").getAttribute("aria-pressed")).toBe("false");
-    expect(chip("One side of a divided road").getAttribute("aria-pressed")).toBe("false");
+    expect(chip("One-way").getAttribute("aria-pressed")).toBe("false");
+    expect(chip("Divided").getAttribute("aria-pressed")).toBe("false");
   });
 
   it("writes the operator's answer and the divided-ness it implies", () => {
     const set = mount(oneWay({ ...FACTS, twinSearched: false }));
-    fireEvent.click(chip("One-way street"));
+    fireEvent.click(chip("One-way"));
     const next = set.mock.calls[0][0] as ShoulderScenario;
     expect(next.carriageway?.confirmed).toBe("one_way_street");
     expect(next.divided).toBe(false);
@@ -64,7 +64,7 @@ describe("the carriageway cell", () => {
 
   it("shows a decided one-way street with its evidence", () => {
     mount(oneWay({ ...FACTS, twinSearched: true }));
-    expect(chip("One-way street").getAttribute("aria-pressed")).toBe("true");
+    expect(chip("One-way").getAttribute("aria-pressed")).toBe("true");
     expect(screen.getByTestId("prov-carriageway").textContent).toBe(
       "detected · no same-name carriageway within 100 m",
     );
@@ -72,11 +72,11 @@ describe("the carriageway cell", () => {
 
   it("shows a twinned road as divided, and the operator can overrule it", () => {
     const set = mount(oneWay({ ...FACTS, twinDistanceM: 21.7, twinSearched: true }));
-    expect(chip("One side of a divided road").getAttribute("aria-pressed")).toBe("true");
+    expect(chip("Divided").getAttribute("aria-pressed")).toBe("true");
     expect(screen.getByTestId("prov-carriageway").textContent).toBe(
       "detected · a same-name carriageway 21.7 m away",
     );
-    fireEvent.click(chip("One-way street"));
+    fireEvent.click(chip("One-way"));
     const next = set.mock.calls[0][0] as ShoulderScenario;
     expect(next.carriageway?.confirmed).toBe("one_way_street");
     expect(next.divided).toBe(false);
@@ -86,7 +86,7 @@ describe("the carriageway cell", () => {
     // 4 x 11 ft + an 8 ft shoulder = 52 ft; divided's 10 ft shoulder would
     // overrun the sheet, so the lanes narrow to the ceiling (42 / 4 = 10.5).
     const set = mount(oneWay({ ...FACTS, twinSearched: true }));
-    fireEvent.click(chip("One side of a divided road"));
+    fireEvent.click(chip("Divided"));
     const next = set.mock.calls[0][0] as ShoulderScenario;
     expect(next.divided).toBe(true);
     expect(next.laneWidth).toBe(10.5);
@@ -94,7 +94,7 @@ describe("the carriageway cell", () => {
 
   it("says the answer is the operator's once given", () => {
     mount(oneWay({ ...FACTS, twinSearched: false, confirmed: "divided" }));
-    expect(chip("One side of a divided road").getAttribute("aria-pressed")).toBe("true");
+    expect(chip("Divided").getAttribute("aria-pressed")).toBe("true");
     expect(screen.getByTestId("prov-carriageway").textContent).toBe(
       "your answer · operator-set from here on",
     );

@@ -1,27 +1,33 @@
 // @vitest-environment happy-dom
 //
-// #152 Surface C contract tests: the confirmed road's OSM tier can
-// SUGGEST a street class, never set one.  Same contract shape as the
-// jurisdiction suggest-never-set suite: payload-level assertions that
-// street_class never reaches the wire until the user's Confirm click,
-// the suggestion vanishes with a stale/absent road rather than
-// guessing, and the classification-map caveat rides where a map is on
-// record.
+// R108 / R110 — the confirmed road GUESSES the street class; nothing asks
+// to confirm it.  Payload-level, mounted-flow assertions (Rule 11).
+//
+// Authority: validation-artifacts/committed/setup-what-redesign/rulings.md.
+// R108: "Street class (from the road) ... prefilled like Road type already
+// is, ... marked '⚠ from the road', and the operator changes them if
+// they're wrong.  There are no confirm, dismiss or suggestion rows."
+// R110 Q1: the wire carries the tag the class was guessed from, which the
+// backend re-maps (src/rules/street_class.py); Q4: "Never overwrite a
+// value the operator set."
+//
+// This replaces #152 C's "suggest never sets / Confirm is the only writer"
+// contract, which R108 supersedes (checkpoint §3, row 4).  What carries
+// over: a stale road never guesses (#149's failure class), and the
+// classification-map caveat rides wherever a map is on record.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
 import type { Scenario } from "@/lib/scenarios";
-// #289 finding 1: no live check fires until a person confirms the kind,
-// and this suite stubs the whole column — so no chip exists to confirm
-// one.  It mounts as a saved plan does (`initialScenario` starts
-// confirmed) with the same unpinned default the fresh mount used.  The
-// kind's own contract is GeneratorShell.kind-confirm's.
+// #289 finding 1: this suite stubs the whole column, so it mounts as a
+// saved plan does (`initialScenario` starts the kind confirmed), with the
+// same unpinned default the fresh mount used.
 import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
-import { classifyFromOsmTags } from "@/lib/road-detection/classify";
+import { classifyFromOsmTags, suggestStreetClass } from "@/lib/road-detection/classify";
+import { setJurisdictionByOperator } from "@/lib/scenarios/guesses";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
@@ -36,7 +42,7 @@ const PIN = { lat: 39.5186, lng: -104.7614 };
 
 function confirmedRoad(highwayClass: string): ConfirmedRoad {
   const candidate = {
-    way_id: "111001",
+    way_id: `way-${highwayClass}`,
     highway_class: highwayClass,
     name: "Mainstreet",
     ref: null,
@@ -49,7 +55,8 @@ function confirmedRoad(highwayClass: string): ConfirmedRoad {
       maxspeed: "35 mph",
       lanes: "2",
       lanes_forward: null,
-      lanes_backward: null, lanes_both_ways: null,
+      lanes_backward: null,
+      lanes_both_ways: null,
       turn_lanes: null,
       turn_lanes_forward: null,
       turn_lanes_backward: null,
@@ -59,12 +66,7 @@ function confirmedRoad(highwayClass: string): ConfirmedRoad {
   return {
     candidate,
     classification: classifyFromOsmTags(
-      {
-        highwayClass,
-        name: candidate.name,
-        ref: candidate.ref,
-        tags: candidate.tags,
-      },
+      { highwayClass, name: candidate.name, ref: candidate.ref, tags: candidate.tags },
       true,
       "Parker",
     ),
@@ -77,104 +79,83 @@ function confirmedRoad(highwayClass: string): ConfirmedRoad {
   };
 }
 
-// The sidebar stub writes through the REAL setScenario — the same path
-// the map picker's Save uses.  Surface B (#152): the class controls +
-// suggestion row render via the ``jurisdictionControls`` slot, so the
-// stub renders it.
-// #289 §8.21 — the sidebar's stub renders BOTH halves of what §8.21
-// split: `jurisdictionControls` is the street-class field and its own
-// suggestion slot, `jurisdictionSuggest` is the pin suggestion, which now
-// rides the WHAT band's jurisdiction cell (#201 — a confirm sits beside
-// the control it applies to).  The stub stands in for the column, so it
-// renders both in one place; the contract these cases assert — suggest
-// never sets, Confirm is the only writer — is unchanged by where they
-// render.
-vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({
-    scenario,
-    setScenario,
-    jurisdictionControls,
-    jurisdictionSuggest,
-  }: {
-    scenario: Scenario;
-    setScenario: (s: Scenario) => void;
-    jurisdictionControls?: (section?: string) => ReactNode;
-    jurisdictionSuggest?: (section?: string) => ReactNode;
-  }) => (
-    <div>
-      {/* #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band
-          now, and the band is not mounted here: this stub replaces the
-          whole column.  So the field is stubbed too, exactly as the pin
-          drops above are — same id, same single writer, so the cases
-          below still exercise "what reaches the wire" and nothing about
-          where the control sits.  The cell's own three states (ruling
-          196) are asserted in WhatBand.jurisdiction.test.tsx, against
-          the real one. */}
-      <label htmlFor="what-jurisdiction">Jurisdiction</label>
-      <select
-        id="what-jurisdiction"
-        value={scenario.jurisdiction_key ?? ""}
-        onChange={(e) =>
-          setScenario({
-            ...scenario,
-            jurisdiction_key: e.target.value || null,
-          } as Scenario)
-        }
-      >
-        <option value="">Not set: MUTCD + CDOT only</option>
-        <option value="denver">Denver</option>
-        <option value="parker">Parker</option>
-        <option value="aurora">Aurora</option>
-      </select>
-      {jurisdictionControls?.()}
-      {jurisdictionSuggest?.()}
-      <button
-        type="button"
-        onClick={() =>
-          setScenario({
-            ...scenario,
-            meta: {
-              ...scenario.meta,
-              lat: 39.5186,
-              lng: -104.7614,
-              work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */,
-              confirmedRoad: (
-                globalThis as { __road?: ConfirmedRoad }
-              ).__road,
-            },
-          })
-        }
-      >
-        stub-confirm-road
-      </button>
-      <button
-        type="button"
-        onClick={() =>
-          setScenario({
-            ...scenario,
-            meta: { ...scenario.meta, lat: 40.0, lng: -105.0 },
-          })
-        }
-      >
-        stub-move-pin-only
-      </button>
-    </div>
-  ),
-}));
+// The sidebar stub stands in for the column: the road confirmation and
+// the pin move write through the REAL setScenario (the picker's path);
+// the street class is the REAL row of "The road" (PlanDetailCells), with
+// its real control, marker and evidence.
+vi.mock("./GeneratorSidebar", async () => {
+  const { PlanDetailCells } = await import("./bands/PlanDetails");
+  return {
+    GeneratorSidebar: ({
+      scenario,
+      setScenario,
+      jurisdictionBlock,
+    }: {
+      scenario: Scenario;
+      setScenario: (s: Scenario) => void;
+      jurisdictionBlock?: JurisdictionBlock | null;
+    }) => (
+      <div>
+        <label htmlFor="what-jurisdiction">Jurisdiction</label>
+        <select
+          id="what-jurisdiction"
+          value={scenario.jurisdiction_key ?? ""}
+          onChange={(e) =>
+            setScenario(setJurisdictionByOperator(scenario, e.target.value || null))
+          }
+        >
+          <option value="">Not set: MUTCD + CDOT only</option>
+          <option value="parker">Parker</option>
+        </select>
+        <div className="a-col">
+          <PlanDetailCells
+            group="road"
+            scenario={scenario}
+            setScenario={setScenario}
+            jurisdictionBlock={jurisdictionBlock ?? null}
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() =>
+            setScenario({
+              ...scenario,
+              meta: {
+                ...scenario.meta,
+                ...PIN,
+                // #290: the side a located plan carries.
+                work: { side: "right", heading: "N" },
+                confirmedRoad: (globalThis as { __road?: ConfirmedRoad }).__road,
+              },
+            })
+          }
+        >
+          stub-confirm-road
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            setScenario({ ...scenario, meta: { ...scenario.meta, lat: 40.0, lng: -105.0 } })
+          }
+        >
+          stub-move-pin-only
+        </button>
+      </div>
+    ),
+  };
+});
 
 import { GeneratorShell } from "./GeneratorShell";
 
-// #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band's grid
-// now, with ruling 196's three states and no skeleton (rule 14).  Its id
-// moved with it: `#jl-jurisdiction` -> `#what-jurisdiction`.  The pin
-// SUGGESTION rides the same cell (#201: a confirm sits beside the control
-// it applies to), and the street-class field keeps its own slot below the
-// grid, so the suggest-never-set contract still has exactly one writer.
+const parker = (demo as { jurisdictions: Record<string, unknown> }).jurisdictions
+  .parker as JurisdictionBlock;
 
-const parker = (demo as { jurisdictions: Record<string, unknown> })
-  .jurisdictions.parker as JurisdictionBlock;
+type Wire = {
+  street_class?: string | null;
+  guesses?: { street_class?: { highwayClass: string } } | null;
+};
 
-let breakdownBodies: unknown[] = [];
+let bodies: Wire[] = [];
 let jurisdictionInResponse: JurisdictionBlock | null = null;
 
 function jsonResponse(status: number, body: unknown): Response {
@@ -190,38 +171,27 @@ const breakdown = () => ({
   devices: [],
   total_devices: 0,
   unique_types: 0,
-  zone_geometry: {
-    taper_l_ft: 1,
-    buffer_b_ft: 1,
-    device_spacing_ft: 1,
-    work_len_ft: 1,
-  },
+  zone_geometry: { taper_l_ft: 1, buffer_b_ft: 1, device_spacing_ft: 1, work_len_ft: 1 },
   ...(jurisdictionInResponse ? { jurisdiction: jurisdictionInResponse } : {}),
 });
 
 const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   const url = String(input);
-  // #306: the check is ONE audit request carrying `include_breakdown`;
-  // its answer holds the breakdown.  Those are the payloads the
-  // suggest-never-set assertions read.
-  if (url.includes("/api/render/audit")) {
+  if (url.includes("/api/render/")) {
     const body = JSON.parse(String(init?.body ?? "{}"));
-    if (body?.scenario?.include_breakdown) {
-      breakdownBodies.push(body);
+    if (body?.scenario) bodies.push(body.scenario as Wire);
+    if (url.includes("/api/render/audit") && body?.scenario?.include_breakdown)
       return Promise.resolve(jsonResponse(200, { breakdown: breakdown() }));
-    }
+    if (url.includes("/api/render/device-breakdown"))
+      return Promise.resolve(jsonResponse(200, breakdown()));
+    return Promise.resolve(jsonResponse(200, {}));
   }
-  if (url.includes("/api/render/device-breakdown")) {
-    breakdownBodies.push(JSON.parse(String(init?.body ?? "{}")));
-    return Promise.resolve(jsonResponse(200, breakdown()));
-  }
-  // Jurisdiction-suggest endpoint fails quietly — irrelevant here, and
-  // the class row must not depend on it.
+  // The pin lookup fails quietly — the class guess must not depend on it.
   return Promise.resolve(jsonResponse(500, {}));
 });
 
 beforeEach(() => {
-  breakdownBodies = [];
+  bodies = [];
   jurisdictionInResponse = null;
   (globalThis as { __road?: ConfirmedRoad }).__road = confirmedRoad("primary");
   fetchMock.mockClear();
@@ -229,155 +199,99 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // THE INVARIANT, over every payload: a class guess on the wire is the
+  // class its own tag maps to — never a stale record over a changed value.
+  for (const b of bodies) {
+    const g = b.guesses?.street_class;
+    if (g) expect(b.street_class).toBe(suggestStreetClass(g.highwayClass));
+  }
   cleanup();
   vi.unstubAllGlobals();
   delete (globalThis as { __road?: ConfirmedRoad }).__road;
 });
 
-function wireClasses(): (string | null | undefined)[] {
-  return breakdownBodies.map(
-    (b) =>
-      (b as { scenario?: { street_class?: string | null } }).scenario
-        ?.street_class,
-  );
-}
+const last = () => bodies[bodies.length - 1];
+const marker = () => screen.getByTestId("info-toggle-street-class").textContent;
 
-describe("street-class suggestion contract (#152 C): suggest never sets", () => {
-  it("a confirmed primary road renders an Arterial suggestion; street_class never reaches the wire until Confirm", async () => {
+describe("the road guesses the street class (R108)", () => {
+  it("a confirmed primary road fills Arterial, marked, and relays its tag", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
     await user.click(screen.getByText("stub-confirm-road"));
     await waitFor(() =>
-      expect(
-        screen.getByText(/Detected road suggests street class:/),
-      ).toBeTruthy(),
+      expect(screen.getByRole("button", { name: "Arterial" }).getAttribute("aria-pressed")).toBe(
+        "true",
+      ),
     );
-    expect(screen.getByText("Arterial", { selector: "b" })).toBeTruthy();
-    expect(screen.getByText(/OSM primary/)).toBeTruthy();
-
-    // Every payload so far is class-free — the suggestion set nothing.
-    for (const c of wireClasses()) {
-      expect(c ?? null).toBeNull();
+    expect(marker()).toBe("⚠ from the road");
+    await waitFor(() => expect(last()?.street_class).toBe("arterial"));
+    expect(last().guesses?.street_class).toEqual({ highwayClass: "primary" });
+    // No confirm step anywhere.
+    for (const name of [/^Confirm/, /^Dismiss$/, /^Undo$/]) {
+      expect(screen.queryByRole("button", { name })).toBeNull();
     }
-
-    const before = breakdownBodies.length;
-    await user.click(screen.getByText("Confirm Arterial"));
-    await waitFor(() =>
-      expect(breakdownBodies.length).toBeGreaterThan(before),
-    );
-    expect(wireClasses().slice(before)).toContain("arterial");
-    // The classpick reflects it, and the row demotes to agreement.
-    expect(
-      screen.getByText(/Street class matches the detected road tier/),
-    ).toBeTruthy();
   });
 
-  it("absent when no road is confirmed", async () => {
+  it("no confirmed road: nothing is guessed", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-    expect(
-      screen.queryByText(/Detected road suggests street class:/),
-    ).toBeNull();
+    await waitFor(() => expect(bodies.length).toBeGreaterThan(0));
+    expect(marker()).toBe("◌ not set");
+    for (const b of bodies) expect(b.street_class ?? null).toBeNull();
   });
 
-  it("a pin move away from the confirmed road's pin removes the suggestion (stale road never suggests)", async () => {
+  it("a pin moved off the confirmed road drops the guess in the same write", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
     await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Detected road suggests street class:/),
-      ).toBeTruthy(),
-    );
+    await waitFor(() => expect(marker()).toBe("⚠ from the road"));
     await user.click(screen.getByText("stub-move-pin-only"));
-    expect(
-      screen.queryByText(/Detected road suggests street class:/),
-    ).toBeNull();
+    expect(marker()).toBe("◌ not set");
+    await waitFor(() => expect(last()?.street_class ?? null).toBeNull());
+    expect(last().guesses ?? null).toBeNull();
   });
 
-  it("a differing manual class demotes the suggestion to a passive notice — no Confirm offered", async () => {
+  it("the operator's pick replaces the guess, and a new road never overwrites it (R110 Q4)", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
     await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Detected road suggests street class:/),
-      ).toBeTruthy(),
-    );
+    await waitFor(() => expect(marker()).toBe("⚠ from the road"));
     await user.click(screen.getByRole("button", { name: "Local" }));
-    expect(
-      screen.getByText(/Detected road tier suggests Arterial, but you have Local/),
-    ).toBeTruthy();
-    expect(screen.queryByText("Confirm Arterial")).toBeNull();
+    expect(marker()).toBe("✓ yours");
+    await waitFor(() => expect(last()?.street_class).toBe("local"));
+    expect(last().guesses ?? null).toBeNull();
+    (globalThis as { __road?: ConfirmedRoad }).__road = confirmedRoad("tertiary");
+    await user.click(screen.getByText("stub-confirm-road"));
+    expect(marker()).toBe("✓ yours");
+    expect(screen.getByRole("button", { name: "Local" }).getAttribute("aria-pressed")).toBe("true");
   });
 
-  it("Dismiss leaves a ×-record with undo — never a cleared row (#227)", async () => {
-    // Reshaped for #227 (GO 2026-08-27): the dismissal stays on the
-    // record — same container, × + evidence + undo; undo re-arms the
-    // live proposal.  Nothing writes to the wire either way.
+  it("a tertiary road guesses Collector", async () => {
+    (globalThis as { __road?: ConfirmedRoad }).__road = confirmedRoad("tertiary");
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
     await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Detected road suggests street class:/),
-      ).toBeTruthy(),
-    );
-    await user.click(screen.getByText("Dismiss"));
-    expect(
-      screen.queryByText(/Detected road suggests street class:/),
-    ).toBeNull();
-    expect(
-      screen.getByText(/Dismissed the Arterial suggestion\. Not set stands\./),
-    ).toBeTruthy();
-    for (const c of wireClasses()) {
-      expect(c ?? null).toBeNull();
-    }
-
-    await user.click(screen.getByText("Undo"));
-    expect(
-      screen.getByText(/Detected road suggests street class:/),
-    ).toBeTruthy();
-    expect(screen.queryByText(/Dismissed the Arterial suggestion/)).toBeNull();
+    await waitFor(() => expect(last()?.street_class).toBe("collector"));
+    expect(last().guesses?.street_class).toEqual({ highwayClass: "tertiary" });
   });
 
-  it("a tertiary road suggests Collector", async () => {
-    (globalThis as { __road?: ConfirmedRoad }).__road =
-      confirmedRoad("tertiary");
-    const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
-    await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() =>
-      expect(screen.getByText("Confirm Collector")).toBeTruthy(),
-    );
-  });
-
-  it("the classification-map caveat rides the row when the jurisdiction publishes a map", async () => {
+  it("the classification-map caveat rides the field's details when the jurisdiction publishes a map", async () => {
     jurisdictionInResponse = {
       ...parker,
       classification_map_url: "https://example.gov/classification-map",
     };
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-
-    const select = document.querySelector(
-      "#what-jurisdiction",
-    ) as HTMLSelectElement;
-    await user.selectOptions(select, "parker");
-    await user.click(screen.getByText("stub-confirm-road"));
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(/functional-classification map/),
-      ).toBeTruthy(),
+    await user.selectOptions(
+      document.querySelector("#what-jurisdiction") as HTMLSelectElement,
+      "parker",
     );
+    await user.click(screen.getByText("stub-confirm-road"));
+    await waitFor(() => expect(screen.getByText(/The road tier is a proxy/)).toBeTruthy());
     const link = screen.getByRole("link", {
       name: /Parker's functional-classification map/,
+      hidden: true,
     }) as HTMLAnchorElement;
     expect(link.href).toContain("example.gov/classification-map");
+    expect(screen.getByText(/detected road tier: OSM primary/)).toBeTruthy();
   });
 });

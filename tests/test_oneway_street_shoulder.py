@@ -137,8 +137,9 @@ def test_an_undecided_road_is_refused_with_its_recovery(client: TestClient) -> N
     assert res.status_code == 400, res.text
     detail = res.json()["detail"]
     assert detail["error"] == "carriageway_undecided"
-    assert "One-way street" in detail["message"]
-    assert "One side of a divided road" in detail["message"]
+    # R107's row and answers, word for word.
+    assert "Under Carriageway in Step 2" in detail["message"]
+    assert "“One-way” or “Divided”" in detail["message"]
 
 
 def test_a_confirmed_road_plans(client: TestClient) -> None:

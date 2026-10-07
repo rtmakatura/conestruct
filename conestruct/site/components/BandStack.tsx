@@ -21,7 +21,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import type { SectionSlot } from "./JurisdictionSection";
+import type { JurisdictionLookup } from "./JurisdictionSection";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
@@ -69,8 +69,8 @@ export interface BandStackProps {
   scheduleCells?: ReactNode;
   /** #227's window reference block, under that group's grid. */
   scheduleWindows?: ReactNode;
-  jurisdictionSuggest?: SectionSlot;
-  classificationFields?: SectionSlot;
+  /** R108: the pin lookup, for the jurisdiction cell. */
+  jurisdictionLookup?: JurisdictionLookup;
   /** #289 hand-check, 2026-09-23, defect 1 — the shell's record of the
    *  kind choice.  Defaults to "confirmed" for a caller that does not
    *  track it. */
@@ -111,8 +111,7 @@ export function BandStack(props: BandStackProps) {
     kindFields,
     scheduleCells,
     scheduleWindows,
-    jurisdictionSuggest,
-    classificationFields,
+    jurisdictionLookup,
     kindState = "confirmed",
     onKindPicked,
     onKindConfirmed,
@@ -244,8 +243,7 @@ export function BandStack(props: BandStackProps) {
         kindFields={kindFields}
         scheduleCells={scheduleCells}
         scheduleWindows={scheduleWindows}
-        jurisdictionSuggest={jurisdictionSuggest}
-        classificationFields={classificationFields}
+        jurisdictionLookup={jurisdictionLookup}
       />
     );
   };

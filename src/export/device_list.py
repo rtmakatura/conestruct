@@ -25,6 +25,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     generated_at,
+    jurisdiction_display,
     scenario_display_name,
 )
 
@@ -251,7 +252,9 @@ def _populate_summary_sheet(
         # name, the same field the crew header prints), "Not set" when the
         # scenario names none — never ``params.jurisdiction``, which is the
         # engine's buffer-table switch and read "CDOT" on every Denver plan.
-        ("Jurisdiction", params.jurisdiction_name or "Not set"),
+        # R110 Q3: one producer, which adds the not-confirmed clause while
+        # the name is an untouched pin guess.
+        ("Jurisdiction", jurisdiction_display(params)),
         # #268: the one generated stamp — a real date cell on the UTC
         # instant, shown yyyy-mm-dd like every other deliverable (the
         # cell keeps the instant to the second; the format shows the date).

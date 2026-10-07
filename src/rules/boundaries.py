@@ -4,11 +4,16 @@ Point-in-polygon + distance against the bundled boundary layer built by
 ``scripts/build_boundaries.py`` (``data/boundaries/``).  No external
 geocoding: the pin's lat/lng comes from the existing map picker.
 
-Prime directive: a pin can *suggest*, never *set*.  This module returns
-an advisory payload; nothing here reads or writes a scenario, and the
-only writer of ``jurisdiction_key`` is the user's explicit Confirm in
-the frontend.  A wrong silent guess poisons every downstream number —
-suggest-and-confirm, with warnings, always.
+Prime directive, as amended by R108 / R110 (2026-10-07): this module
+returns an advisory payload and nothing here reads or writes a scenario.
+The frontend prefills an empty ``jurisdiction_key`` with the suggestion
+(never over a value the operator set, R110 Q4), marks it "⚠ from the pin",
+and relays the pin it was guessed at (``scenario.guesses``).  The render
+API re-runs :func:`suggest` on that pin (``render_api.input_guesses``):
+a guess that still holds is recorded in the audit as guessed and not
+confirmed by the operator; one that no longer holds is an honest 400.
+A wrong SILENT guess poisons every downstream number, so a guess is
+never silent: marked on screen, recorded in the audit, with warnings.
 
 Geometry note: layers are projected at load into a local equirectangular
 feet frame anchored at the Denver metro center, so all distances here

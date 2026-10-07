@@ -4,7 +4,10 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import {
-  JurisdictionControls,
+  JurisdictionEvidence,
+  JurisdictionWarnings,
+  StreetClassEvidence,
+  type JurisdictionLookup,
 } from "./JurisdictionSection";
 import { mountTiered } from "./tiered-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
@@ -145,66 +148,95 @@ describe("Zone 3 tiers — real-data rendering (#219-migrated)", () => {
   });
 });
 
-// Surface B (#152): the dropdown, pills, and auth line moved into the
-// interactive JurisdictionControls; the top bar is a read-only summary.
-describe("JurisdictionControls", () => {
-  it("offers the ship-list picker and echoes the local term (MHT for Parker)", async () => {
-    let picked: string | null = null;
-    render(
-      <JurisdictionControls
-        jurisdiction={jur("parker")}
-        jurisdictionKey="parker"
-        setJurisdictionKey={(k) => {
-          picked = k;
-        }}
-        streetClass={null}
-        setStreetClass={noop}
-      />,
-    );
-    const select = screen.getByLabelText<HTMLSelectElement>(/jurisdiction/i);
-    expect(select.value).toBe("parker");
-    // Terminology decision §1.2: surfaces echo the local term.
-    expect(screen.getByText(/calls this plan a/i).textContent).toMatch(/MHT/);
-    await userEvent.selectOptions(select, "englewood");
-    expect(picked).toBe("englewood");
+// R108 (setup-what-redesign): JurisdictionControls is DELETED with the
+// confirm step it hosted — its dropdown and auth line had been the WHAT
+// band's jurisdiction row since #289 §8.21 (WhatBand.jurisdiction.test),
+// its pills are R107's segmented control (PlanDetails.test).  What
+// survives here is the EVIDENCE behind the two guesses (Rule 10,
+// checkpoint D4): each sentence the slots carried, now the rows' details.
+const READY: JurisdictionLookup = {
+  status: "ready",
+  data: {
+    suggestion: "denver",
+    reason:
+      "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+    confidence: "near_boundary" as const,
+    distance_to_boundary_ft: 310.0,
+    warnings: [
+      {
+        kind: "near_boundary" as const,
+        message:
+          "Pin is 310 ft from the Glendale boundary. Jurisdiction lines here are jigsawed; verify which side the work zone falls on.",
+        source: { doc: "TIGER", date: "2025", status: "verified" as const },
+      },
+    ],
+    boundary_source: { source: "US Census TIGER/Line Place boundaries", vintage: "2025" },
+  },
+};
+
+describe("the jurisdiction guess's evidence (R108)", () => {
+  it("says where the pin is, why, and to confirm with the permitting authority", () => {
+    render(<JurisdictionEvidence lookup={READY} />);
+    expect(screen.getByText(/The pin is in Denver \(near a boundary\)\./)).toBeTruthy();
+    expect(screen.getByText(/Pin is inside Denver municipal limits/)).toBeTruthy();
+    expect(
+      screen.getByText(/Boundary data is approximate .* Confirm the jurisdiction with the permitting authority\./),
+    ).toBeTruthy();
   });
 
-  // #276 / ruling 196 / rule 14: the loading state is a word, never a
-  // skeleton.
-  it("#276: while the evaluation is in flight it says so in words — no skeleton", () => {
+  it("the lookup in flight says so in words: no skeleton (rule 14)", () => {
     const { container } = render(
-      <JurisdictionControls
-        jurisdiction={null}
-        jurisdictionKey="parker"
-        setJurisdictionKey={noop}
-        streetClass={null}
-        setStreetClass={noop}
-        loading
-      />,
+      <JurisdictionEvidence lookup={{ status: "loading", data: null }} />,
     );
-    expect(container.querySelector(".jbar-skel-line, [class*='skel'], .animate-pulse")).toBeNull();
-    expect(container.querySelector(".jbar-auth")!.textContent).toBe(
-      "evaluating: the option you picked, not yet confirmed for this plan",
-    );
+    expect(container.querySelector("[class*='skel'], .animate-pulse")).toBeNull();
+    expect(container.textContent).toContain("Checking boundary data…");
   });
 
-  it("street-class pills expose pressed state (no hue-alone signal)", async () => {
-    let cls: string | null = null;
+  it("a failed lookup says nothing was filled in from the pin", () => {
+    render(<JurisdictionEvidence lookup={{ status: "error", data: null }} />);
+    expect(
+      screen.getByText("The boundary lookup didn't answer, so nothing was filled in from the pin."),
+    ).toBeTruthy();
+  });
+
+  it("the boundary warnings stay on show, amber with ⚠ as their second channel", () => {
+    const { container } = render(<JurisdictionWarnings lookup={READY} />);
+    const w = container.querySelector('[data-testid="jurisdiction-warning"]')!;
+    expect(w.className).toContain("is-amber");
+    expect(w.textContent).toMatch(/^⚠ Pin is 310 ft from the Glendale boundary/);
+  });
+
+  it("no warnings, no line", () => {
+    const { container } = render(
+      <JurisdictionWarnings lookup={{ ...READY, data: { ...READY.data!, warnings: [] } }} />,
+    );
+    expect(container.textContent).toBe("");
+  });
+});
+
+describe("the street-class guess's evidence (R108)", () => {
+  it("names the tier, and points at the adopted map where one is on record", () => {
     render(
-      <JurisdictionControls
-        jurisdiction={null}
-        jurisdictionKey={null}
-        setJurisdictionKey={noop}
-        streetClass="collector"
-        setStreetClass={(c) => {
-          cls = c;
+      <StreetClassEvidence
+        tier="primary"
+        jurisdiction={{
+          ...jur("parker"),
+          class_required: true,
+          classification_map_url: "https://example.gov/map",
         }}
       />,
     );
-    const collector = screen.getByRole("button", { name: "Collector" });
-    expect(collector.getAttribute("aria-pressed")).toBe("true");
-    await userEvent.click(screen.getByRole("button", { name: "Arterial" }));
-    expect(cls).toBe("arterial");
+    expect(screen.getByText("detected road tier: OSM primary")).toBeTruthy();
+    expect(screen.getByText(/The road tier is a proxy; the adopted map governs\./)).toBeTruthy();
+    expect(
+      (screen.getByRole("link", { name: /Parker's functional-classification map/ }) as HTMLAnchorElement)
+        .href,
+    ).toContain("example.gov/map");
+  });
+
+  it("nothing to say, nothing rendered", () => {
+    const { container } = render(<StreetClassEvidence tier={null} jurisdiction={null} />);
+    expect(container.textContent).toBe("");
   });
 });
 

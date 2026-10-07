@@ -203,6 +203,9 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       },
       { selector: ".workbench .a-panel-foot .a-apply", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
+      // R107 (setup-what-redesign): the segmented control's options read
+      // the field's own value size (WhatC5.dc.html: 13.5, as `.a-fld`).
+      { selector: ".workbench .a-seg > button", size: "var(--fs-body-value)" },
       // Ryan, 2026-09-24: "'Pick on map' / 'Edit on map' text drops to
       // the body value size (rule 8, 13.5 px) — too large."  FIND's box
       // is rule 114's; its label reads rule 8's token again (rulings.md,
@@ -662,7 +665,9 @@ export const CENSUS_PINS = {
   // coming-soon-gate R24: the founders' placeholder initial at role 5's
   // --fs-step-question.  123 -> 124; sizes unchanged (tr-question already
   // carries the token).
-  cssDeclarations: 124,
+  // R107 (setup-what-redesign): the segmented control's options at the
+  // field's value token.  124 -> 125; sizes unchanged.
+  cssDeclarations: 125,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

@@ -19,6 +19,8 @@
 // TS-side heuristic — is deleted; the row reads
 // ``sections.flagger.sight_distance_ft``, cite §6D.06 → Table 6B-2).
 import { snapSpeedToDomain } from "./auto-apply";
+import { isOperatorSet, withoutOperatorSet } from "./guesses";
+import { applyRoadTypeOverride } from "./overrides";
 import type {
   DetectionOverride,
   FlaggerLaneClosureScenario,
@@ -406,7 +408,7 @@ export function carryMeta(prev: Scenario, next: Scenario): Scenario {
 // Speed snaps to the target kind's server schema domain (the B-04
 // clamp class — never hand the user a 422 for an app-moved value).
 export function carryAcrossKinds(prev: Scenario, next: Scenario): Scenario {
-  const carried = {
+  let carried = {
     ...next,
     meta: prev.meta,
     speed: snapSpeedToDomain(next.kind, prev.speed),
@@ -416,6 +418,22 @@ export function carryAcrossKinds(prev: Scenario, next: Scenario): Scenario {
     street_class: prev.street_class,
     schedule: prev.schedule,
   } as Scenario;
+  // R108: the guess records describe the two fields carried above, so
+  // they carry with them (key dropped when there are none).
+  if (prev.guesses) carried = { ...carried, guesses: prev.guesses } as Scenario;
+  // R110 Q4: the operator's road type carries where the new kind can hold
+  // it; where it cannot, its record goes and detection fills the field.
+  // Lane width and the speed reduction start from the new kind's
+  // defaults, so their records go too (Q7, Q8); night is carried, and
+  // its record with it.
+  if (isOperatorSet(carried, "roadType") && "roadType" in prev) {
+    const narrowed = applyRoadTypeOverride(carried, (prev as { roadType: RoadType }).roadType);
+    carried =
+      narrowed === carried || (narrowed as { roadType?: RoadType }).roadType !== (prev as { roadType: RoadType }).roadType
+        ? withoutOperatorSet(carried, "roadType")
+        : narrowed;
+  }
+  carried = withoutOperatorSet(withoutOperatorSet(carried, "laneWidth"), "workZoneSpeed");
   // Override provenance (#177) rides along only where the target kind
   // declares the field — attaching it to a kind whose schema (and TS
   // shape) lacks it would put an undeclared key on the wire.

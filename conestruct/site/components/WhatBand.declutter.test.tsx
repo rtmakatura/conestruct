@@ -1,135 +1,126 @@
 // @vitest-environment happy-dom
 //
-// R96 A (declutter-three-surfaces) — Step 2 (WHAT), as mocked up
-// (mockups/what.html), under R98 (a marker + one click counts as the
-// provenance line), R100 (an answered suggestion collapses into its field)
-// and R101 (the details popover closes on click-away and Esc).
+// R107 / R108 (setup-what-redesign) — Step 2 (WHAT) as WhatC5.dc.html
+// draws it: two columns, each row a label with its marker under it beside
+// its control; the guesses marked and never confirmed.  Still under R98
+// (a marker + one click counts as the provenance line) and R101 (the
+// popover closes on click-away and Esc).  R100's record and the
+// suggestion rows are gone with the confirm step (R108).
 //
-// Mounted on the E Colfax shape with the REAL suggestion slots, as the
-// #289 density suite is (Rule 11).
+// Mounted on the E Colfax shape (Rule 11).
 
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, fireEvent, render } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
-import type { JurisdictionSuggestion } from "@/lib/jurisdiction";
 import { WhatBand } from "./bands/WhatBand";
-import {
-  JurisdictionControls,
-  JurisdictionSuggestSlot,
-  type SuggestSection,
-} from "./JurisdictionSection";
+import type { JurisdictionLookup } from "./JurisdictionSection";
 
 afterEach(cleanup);
 
-const ROAD = {
-  candidate: {
-    way_id: "1042",
-    highway_class: "primary",
-    name: "E Colfax Ave",
-    ref: null,
-    bearing: 270,
-    snap_distance_m: 4,
-    snapped_lat: 39.7402,
-    snapped_lng: -104.956,
-    tags: { oneway: null, maxspeed: "30 mph", lanes: "4" },
-    signal_distance_m: null,
-    geometry: [
-      [39.7402, -104.955],
-      [39.7402, -104.957],
-    ],
-  },
-  classification: {
+const PIN = { lat: 39.7402, lng: -104.956 };
+
+function road(roadTypeMethod: "measured" | "inferred"): ConfirmedRoad {
+  return {
+    candidate: {
+      way_id: "1042",
+      highway_class: "primary",
+      name: "E Colfax Ave",
+      ref: null,
+      bearing: 270,
+      snap_distance_m: 4,
+      snapped_lat: PIN.lat,
+      snapped_lng: PIN.lng,
+      tags: { oneway: null, maxspeed: "30 mph", lanes: "4" },
+      signal_distance_m: null,
+      geometry: [
+        [39.7402, -104.955],
+        [39.7402, -104.957],
+      ],
+    },
+    classification: {
+      roadType: "urban_arterial",
+      divided: true,
+      laneWidthFt: 12,
+      lanesPerDirection: 2,
+      speedLimitMph: 30,
+      confidence: "high",
+      source: "osm-tags",
+      raw: { class: "primary", oneway: false, roadName: "E Colfax Ave", placeName: "Denver" },
+      fields: {
+        speed: { value: 30, confidence: "high", source: "OSM maxspeed tag", method: "measured" },
+        lanes: { value: 2, confidence: "high", source: "OSM lanes tag", method: "measured" },
+        roadType: { value: "urban_arterial", confidence: "medium", source: "class", method: roadTypeMethod },
+        divided: { value: true, confidence: "medium", source: "class", method: "inferred" },
+      },
+    },
+    method: "auto_single",
+    overrides: {},
+    isUrban: true,
+    placeName: "Denver",
+    pinLat: PIN.lat,
+    pinLng: PIN.lng,
+  } as unknown as ConfirmedRoad;
+}
+
+function scenario(opts: { guessed?: boolean; roadTypeMeasured?: boolean } = {}): Scenario {
+  return {
+    ...DEFAULT_SHOULDER,
+    speed: 30,
+    lanes: 2,
     roadType: "urban_arterial",
     divided: true,
-    laneWidthFt: 12,
-    lanesPerDirection: 2,
-    speedLimitMph: 30,
-    confidence: "high",
-    source: "osm-tags",
-    raw: { class: "primary", oneway: false, roadName: "E Colfax Ave", placeName: "Denver" },
-    fields: {
-      speed: { value: 30, confidence: "high", source: "OSM maxspeed tag", method: "measured" },
-      lanes: { value: 2, confidence: "high", source: "OSM lanes tag", method: "measured" },
-      roadType: { value: "urban_arterial", confidence: "medium", source: "class", method: "inferred" },
-      divided: { value: true, confidence: "medium", source: "class", method: "inferred" },
+    ...(opts.guessed
+      ? {
+          street_class: "arterial",
+          jurisdiction_key: "denver",
+          guesses: {
+            street_class: { highwayClass: "primary" },
+            jurisdiction_key: PIN,
+          },
+        }
+      : {}),
+    meta: {
+      ...DEFAULT_SHOULDER.meta,
+      ...PIN,
+      bearingDeg: 270,
+      confirmedRoad: road(opts.roadTypeMeasured ? "measured" : "inferred"),
     },
+  } as Scenario;
+}
+
+const READY: JurisdictionLookup = {
+  status: "ready",
+  data: {
+    suggestion: "denver",
+    reason: "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+    confidence: "inside",
+    distance_to_boundary_ft: 900,
+    warnings: [],
+    boundary_source: { source: "US Census TIGER/Line Place boundaries", vintage: "2025 vintage" },
   },
-  method: "auto_single",
-  overrides: {},
-  isUrban: true,
-  placeName: "Denver",
-  pinLat: 39.7402,
-  pinLng: -104.956,
-} as unknown as ConfirmedRoad;
-
-const SCENARIO = {
-  ...DEFAULT_SHOULDER,
-  speed: 30,
-  lanes: 2,
-  roadType: "urban_arterial",
-  divided: true,
-  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.7402, lng: -104.956, bearingDeg: 270, confirmedRoad: ROAD },
-} as Scenario;
-
-const SUGGEST: JurisdictionSuggestion = {
-  suggestion: "denver",
-  reason: "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
-  confidence: "inside",
-  distance_to_boundary_ft: 900,
-  warnings: [],
-  boundary_source: { source: "US Census TIGER/Line Place boundaries", vintage: "2025 vintage" },
 };
 
-function mount(opts: { confirmed?: boolean; classConfirmed?: boolean; errored?: boolean } = {}) {
-  const s = opts.confirmed ? ({ ...SCENARIO, jurisdiction_key: "denver" } as Scenario) : SCENARIO;
-  // As GeneratorShell builds them: no record until a suggestion is answered.
-  const suggest = (section: SuggestSection = "all") =>
-    section === "record" && !opts.confirmed ? null : (
-    <JurisdictionSuggestSlot
-      suggest={SUGGEST}
-      jurisdictionKey={opts.confirmed ? "denver" : null}
-      resolution={
-        opts.confirmed
-          ? { resolution: "confirmed", suggested: "denver", prior: null, priorPresent: false }
-          : null
-      }
-      section={section}
-    />
-  );
-  const classFields = (section: SuggestSection = "all") =>
-    section === "record" && !opts.classConfirmed ? null : (
-    <JurisdictionControls
-      jurisdiction={null}
-      jurisdictionKey={null}
-      setJurisdictionKey={() => {}}
-      streetClass={opts.classConfirmed ? "arterial" : null}
-      setStreetClass={() => {}}
-      omitJurisdictionField
-      bare
-      section={section}
-      classSuggest="arterial"
-      classSuggestTier="primary"
-      classResolution={
-        opts.classConfirmed
-          ? { resolution: "confirmed", suggested: "arterial", prior: null, priorPresent: false }
-          : null
-      }
-    />
-  );
+function mount(
+  opts: {
+    guessed?: boolean;
+    roadTypeMeasured?: boolean;
+    errored?: boolean;
+    lookup?: JurisdictionLookup;
+  } = {},
+) {
   return render(
     <WhatBand
-      scenario={s}
+      scenario={scenario(opts)}
       setScenario={() => {}}
       setMeta={() => {}}
       jurisdictionBlock={null}
       jurisdictionLoading={false}
       jurisdictionErrored={opts.errored ?? false}
+      jurisdictionLookup={opts.lookup ?? READY}
       stepIndex="STEP 2 OF 4"
-      jurisdictionSuggest={suggest}
-      classificationFields={classFields}
       handoff={[]}
     />,
   );
@@ -140,26 +131,33 @@ const cell = (id: string) => document.querySelector(`[data-testid="cell-${id}"]`
 const trigger = (id: string) =>
   document.querySelector(`[data-testid="info-toggle-${id}"]`) as HTMLButtonElement;
 const panel = (id: string) => document.querySelector(`[data-testid="info-${id}"]`) as HTMLElement;
-const groupCells = (name: string) => {
+const columnRows = (name: string) => {
   const g = document.querySelector(`[data-testid="what-group-${name}"]`) as HTMLElement;
-  return [...g.querySelectorAll(':scope > .a-grid > [data-testid^="cell-"]')].map((c) =>
+  return [...g.querySelectorAll(':scope > [data-testid^="cell-"]')].map((c) =>
     c.getAttribute("data-testid")!.slice("cell-".length),
   );
 };
 
-describe("two groups named for the user's question (P20)", () => {
-  it("THE ROAD and THE JOB, in the mocked-up order; no second section", () => {
+describe("two columns named for the user's question (R107, P20)", () => {
+  it("The road on the left, The job on the right, in WhatC5's order", () => {
     mount();
-    expect(groupCells("road")).toEqual([
-      "speed",
-      "lanes",
-      "lane-width",
-      "road-type",
-      "street-class",
-      "divided",
+    const cols = document.querySelector(".a-cols")!;
+    expect([...cols.children].map((c) => c.getAttribute("data-testid"))).toEqual([
+      "what-group-road",
+      "what-group-job",
     ]);
-    expect(groupCells("job")).toEqual(["work-type", "night", "reduction", "jurisdiction", "work-dates"]);
+    expect(columnRows("road")).toEqual(["speed", "lanes", "road-type", "street-class", "divided"]);
+    expect(columnRows("job")).toEqual(["work-type", "night", "reduction", "jurisdiction", "work-dates"]);
     expect(band().textContent).not.toContain("The rest of this plan");
+  });
+
+  it("each row is its label with the marker under it, beside the control", () => {
+    mount();
+    const row = cell("speed");
+    const head = row.querySelector(":scope > .a-cell-head")!;
+    expect(head.querySelector(".tr-field")!.textContent).toBe("Speed limit");
+    expect(head.contains(trigger("speed"))).toBe(true);
+    expect(row.querySelector(":scope > .a-cell-ctl > select#what-speed")).not.toBeNull();
   });
 });
 
@@ -168,15 +166,33 @@ describe("one quiet marker per field (R98, P9)", () => {
     mount();
     expect(trigger("speed").textContent).toBe("✓ measured");
     expect(trigger("lanes").textContent).toBe("✓ measured");
-    expect(trigger("lane-width").textContent).toBe("✓ yours");
-    expect(trigger("road-type").textContent).toBe("⚠ inferred");
+    // R110 Q7: lane width's own source, its own marker in the Lanes row.
+    expect(trigger("lane-width").textContent).toBe("✓ default");
+    expect(cell("lanes").contains(trigger("lane-width"))).toBe(true);
+    expect(trigger("road-type").textContent).toBe("⚠ from the road");
+    expect(trigger("street-class").textContent).toBe("◌ not set");
     expect(trigger("jurisdiction").textContent).toBe("◌ not set");
     expect(trigger("work-dates").textContent).toBe("◌ not set");
-    expect(trigger("night").textContent).toBe("i about");
+    // R110 Q8.
+    expect(trigger("night").textContent).toBe("✓ default");
+    expect(trigger("reduction").textContent).toBe("✓ default");
     // The full line is in the closed popover, one click away.
     expect(panel("speed").hasAttribute("hidden")).toBe(true);
     expect(panel("speed").querySelector('[data-testid="prov-speed"]')!.textContent).toBe(
       "OSM · 30 mph · measured",
+    );
+  });
+
+  it("both Lanes markers open the one popover, holding both lines", async () => {
+    mount();
+    const user = userEvent.setup();
+    await user.click(trigger("lane-width"));
+    expect(panel("lanes").hasAttribute("hidden")).toBe(false);
+    expect(panel("lanes").querySelector('[data-testid="prov-lanes"]')!.textContent).toBe(
+      "OSM · 2 · measured",
+    );
+    expect(panel("lanes").querySelector('[data-testid="prov-lane-width"]')!.textContent).toBe(
+      "default · the plan's standard lane; detection doesn't measure width",
     );
   });
 
@@ -196,49 +212,75 @@ describe("one quiet marker per field (R98, P9)", () => {
   });
 });
 
-describe("an answered suggestion collapses into its field (R100)", () => {
-  it("the Denver record and its Undo render inside the jurisdiction cell; no band-wide row", () => {
-    mount({ confirmed: true });
-    const j = cell("jurisdiction");
-    const record = j.querySelector(".a-cell-record")!;
-    expect(record.textContent).toContain("Confirmed Denver (was Not set).");
-    expect(record.querySelector("button")!.textContent).toBe("Undo");
-    const row = document.querySelector('[data-testid="action-jurisdiction"]');
-    expect(row === null || row.textContent === "").toBe(true);
-    // Its details are still one click away, from the label row.
-    expect(j.querySelector(".a-cell-head")!.contains(trigger("jurisdiction"))).toBe(true);
+describe("guesses are marked, never confirmed (R108)", () => {
+  it("street class '⚠ from the road', jurisdiction '⚠ from the pin', and the header counts them", () => {
+    mount({ guessed: true });
+    expect(trigger("street-class").textContent).toBe("⚠ from the road");
+    expect(trigger("jurisdiction").textContent).toBe("⚠ from the pin");
+    // Road type (inferred) + the two guesses.
+    expect(band().textContent).toContain("3 guesses marked ⚠ · change any that are wrong");
   });
 
-  it("a confirmed street class: only its record in the footer row, one set of chips", () => {
-    mount({ classConfirmed: true });
-    const sc = cell("street-class");
-    const record = sc.querySelector(".a-cell-foot .a-cell-record")!;
-    expect(record.textContent).toContain("Confirmed Arterial (was Not set).");
-    expect(record.querySelector("button")!.textContent).toBe("Undo");
-    expect(sc.querySelector(".a-cell-foot .classpick")).toBeNull();
-    expect(document.querySelectorAll(".classpick")).toHaveLength(1);
-    // The evidence (the tier line) is detail, in the closed popover.
-    expect(sc.querySelector(".a-cell-foot")!.textContent).not.toContain("detected road tier");
+  it("no confirm, dismiss, undo, record or suggestion row anywhere", () => {
+    mount({ guessed: true });
+    for (const name of [/^Confirm/, /^Dismiss$/, /^Undo$/]) {
+      expect(screen.queryByRole("button", { name })).toBeNull();
+    }
+    expect(document.querySelector(".a-cell-record, .a-cell-action, .classpick")).toBeNull();
   });
 
-  it("an error line stays on show beside a record (Rule 10, P3)", () => {
-    // Verifier REPAIR on d3fddde: with a record in the third row, an error
-    // line (marker null) was rendered nowhere.  The two checks are
-    // independent: the suggestion answered, the evaluation failed.
-    mount({ confirmed: true, errored: true });
-    const j = cell("jurisdiction");
-    expect(j.querySelector(".a-cell-record")).not.toBeNull();
-    const line = j.querySelector('[data-testid="prov-jurisdiction"]')!;
+  it("the pin's evidence rides the jurisdiction's details, the TIGER caveat with it", () => {
+    mount({ guessed: true });
+    const p = panel("jurisdiction");
+    expect(p.hasAttribute("hidden")).toBe(true);
+    expect(p.textContent).toContain("The pin is in Denver.");
+    expect(p.textContent).toContain("Confirm the jurisdiction with the permitting authority.");
+    expect(p.querySelector('[data-testid="prov-jurisdiction"]')!.textContent).toBe(
+      "⚠ guessed, not confirmed · from the pin",
+    );
+  });
+
+  it("a boundary warning stays on show in the row, outside the popover (P3)", () => {
+    mount({
+      guessed: true,
+      lookup: {
+        status: "ready",
+        data: {
+          ...(READY.data as NonNullable<JurisdictionLookup["data"]>),
+          confidence: "near_boundary",
+          warnings: [
+            {
+              kind: "near_boundary",
+              message: "Pin is 120 ft from the Glendale boundary. Jurisdiction lines here are jigsawed; verify which side the work zone falls on.",
+              source: { doc: "TIGER", date: "2025", status: "verified" },
+            },
+          ],
+        },
+      },
+    });
+    const w = cell("jurisdiction").querySelector('[data-testid="jurisdiction-warning"]')!;
+    expect(w).not.toBeNull();
+    expect(w.closest(".a-info")).toBeNull();
+  });
+
+  it("an evaluation that failed keeps its error line on show over the guess (P3)", () => {
+    mount({ guessed: true, errored: true });
+    const line = cell("jurisdiction").querySelector('[data-testid="prov-jurisdiction"]')!;
     expect(line.textContent).toBe(
       "not evaluated: the check didn't answer; the option you picked stands",
     );
     expect(line.closest(".a-info")).toBeNull();
   });
 
-  it("an unanswered suggestion keeps its full row with real buttons (P10)", () => {
+  it("nothing guessed off a road: the header reads 'prefilled from the road' (R110 Q5)", () => {
+    mount({ roadTypeMeasured: true });
+    expect(band().textContent).toContain("prefilled from the road");
+    expect(band().textContent).not.toContain("guesses marked");
+  });
+
+  it("one guess reads in the singular", () => {
     mount();
-    const row = document.querySelector('[data-testid="action-jurisdiction"]')!;
-    expect(row.querySelector("button.confirm")!.textContent).toBe("Confirm Denver");
+    expect(band().textContent).toContain("1 guess marked ⚠ · change any that are wrong");
   });
 });
 

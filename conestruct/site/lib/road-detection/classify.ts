@@ -425,14 +425,15 @@ export function classifyFromOsmTags(
   };
 }
 
-// #152 C: OSM highway tier → suggested street class for the
-// jurisdiction layer (hours verdicts, class-scoped deltas).  The
-// mapping follows the FHWA functional-class convention OSM's own wiki
-// documents: primary/secondary ≈ arterials, tertiary ≈ collector,
-// residential/unclassified ≈ local.  A SUGGESTION only — jurisdictions
-// classify streets by their own adopted maps, so this value never
-// auto-applies; the UI renders it confirm-only with the
-// verify-against-the-map caveat where a classification map exists.
+// #152 C → R108 / R110 Q1: OSM highway tier → the street class the road
+// GUESSES, for the jurisdiction layer (hours verdicts, class-scoped
+// deltas).  MIRROR of `src/rules/street_class.py`, which owns it: the
+// backend re-derives every guessed class from the relayed tag and refuses
+// a stale one, and tests/test_street_class_mirror.py holds the two tables
+// equal.  This copy only prefills the field before Generate
+// (lib/scenarios/guesses.ts), marked "⚠ from the road"; jurisdictions
+// classify streets by their own adopted maps, so the map caveat rides the
+// field's details and the audit says the operator did not confirm it.
 const STREET_CLASS_BY_HIGHWAY: Record<string, StreetClass> = {
   motorway: "arterial",
   motorway_link: "arterial",
