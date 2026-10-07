@@ -1961,10 +1961,13 @@ def _draw_title_block(
 
     show_project = bool(project_name) and project_name != "Untitled Project"
 
-    # #308 R94: the caps (Helvetica-Bold 14 pt, cap height 10 pt) clear the
-    # box's top rule by 8 pt, the same as the 8 pt left inset; at
-    # ``PAGE_H - 30`` they sat 2 pt under it.
-    y = PAGE_H - MARGIN - 8 - 10
+    # #308 R105: the title is centred vertically in its box, between the top
+    # rule (PAGE_H - MARGIN) and the bottom rule (y0).  The baseline sits
+    # half the caps' height (Helvetica-Bold cap height 718/1000 at 14 pt)
+    # below the box's middle.  R94's 8 pt top gap left the line "near the
+    # top edge of a tall empty box"; at ``PAGE_H - 30`` it touched the rule.
+    caps_h = 14 * 0.718
+    y = (PAGE_H - MARGIN + y0) / 2 - caps_h / 2
     x = MARGIN + 8
 
     # Title — bold 14pt

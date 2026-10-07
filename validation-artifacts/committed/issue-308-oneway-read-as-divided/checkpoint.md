@@ -457,3 +457,13 @@ On two-way and divided roads the mirrored pair still barricades the far sidewalk
   - backend 2548 passed, 2 skipped (2542 + the 6 in `tests/test_r94_one_way_page1.py`; 5 red first, the divided control green throughout);
   - frontend 188 files and 1939 tests passed;
   - `tsc` clean.
+
+---
+
+## R105 (2026-10-06): the banner title centred in its box
+
+- **Cause:** R94 set the caps 8 pt under the top rule (`y = PAGE_H - MARGIN - 8 - 10`). The banner box is 54 pt tall (top rule `PAGE_H - MARGIN` = 774, bottom rule `y0 = PAGE_H - TITLE_H` = 720), so that left about 36 pt empty below the line. Ryan read it as "near the top edge of a tall empty box".
+- **Fix:** `plan_sheet._draw_title_block` puts the baseline half the caps' height (Helvetica-Bold 14 pt, cap height 718/1000) below the box's middle: `y = (PAGE_H - MARGIN + y0) / 2 - caps_h / 2`. The project and speed segments keep their offsets from the same baseline.
+- **Test:** `tests/test_r94_one_way_page1.py::test_the_banner_title_is_centred_in_its_box` measures the rendered caps against both rules. It replaces R94's 8 pt test and was red first, off centre by 28.0 pt.
+- **Evidence:** `probes/r94_broadway_r105.png` and `probes/r94_r105.txt`. Broadway still has 35 devices and Colorado 40; only the banner moves.
+- **Rule 5 churn, predicted:** the banner title moves down about 14 pt on every page 1, and on page 2 (the same helper), for every plan type. Nothing else changes.

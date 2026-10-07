@@ -1,0 +1,22 @@
+HEAD 7d21e7dd4ba4e6ae6eb5c4396cd173fd4e8705c1  tag r105
+
+== broadway: POST /render/pdf -> 200
+   verdict=one_way_street  is_divided=False  one_way_street=True  lanes=4  lane_w=10.5  shoulder_w=8.0  devices=35
+   drawn road y: top 513.0  bottom 310.0  (PLAN_Y_CENTER 485.0)
+   drawn sidewalk bands y: 292.5..313.5
+   BARRICADE_TYPE_III          station  1000.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
+   BARRICADE_TYPE_III          station     0.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
+   SIGN_GENERIC         R9-9   station     0.0  offset   52.0 ft  page y  303.0  on a drawn sidewalk band
+
+== colorado: POST /render/pdf -> 200
+   verdict=divided  is_divided=True  one_way_street=False  lanes=3  lane_w=11.0  shoulder_w=10.0  devices=40
+   drawn road y: top 644.5  bottom 325.5  (PLAN_Y_CENTER 485.0)
+   drawn sidewalk bands y: 308.0..329.0, 641.0..662.0
+   BARRICADE_TYPE_III          station  1000.0  offset   45.0 ft  page y  318.5  on a drawn sidewalk band
+   BARRICADE_TYPE_III          station  1000.0  offset  -45.0 ft  page y  651.5  on a drawn sidewalk band
+   BARRICADE_TYPE_III          station     0.0  offset   45.0 ft  page y  318.5  on a drawn sidewalk band
+   BARRICADE_TYPE_III          station     0.0  offset  -45.0 ft  page y  651.5  on a drawn sidewalk band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   45.0 ft  page y  318.5  on a drawn sidewalk band
+   SIGN_GENERIC         R9-9   station     0.0  offset   45.0 ft  page y  318.5  on a drawn sidewalk band
+

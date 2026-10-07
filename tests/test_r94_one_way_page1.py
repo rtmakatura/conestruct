@@ -167,7 +167,10 @@ def test_a_lane_closure_keeps_its_arrows_out_of_the_closed_lane(
         assert lo < y < hi
 
 
-def test_the_banner_caps_clear_the_box_by_eight_points(tmp_path: Path) -> None:
+def test_the_banner_title_is_centred_in_its_box(tmp_path: Path) -> None:
+    """#308 R105 (Ryan's re-check on 73e7f4b): R94's 8 pt gap left the title
+    "near the top edge of a tall empty box".  Centred vertically: the caps'
+    gap to the top rule equals their gap to the bottom rule."""
     params = _params(one_way_street=False, num_lanes=2)
     out = tmp_path / "banner.pdf"
     ps.render_plan_sheet(
@@ -176,6 +179,9 @@ def test_the_banner_caps_clear_the_box_by_eight_points(tmp_path: Path) -> None:
     page = pdfium.PdfDocument(str(out))[0]
     text = page.get_textpage()
     i = text.get_text_range().index("METHOD OF HANDLING TRAFFIC")
-    caps_top = max(text.get_charbox(i + k)[3] for k in range(6))
+    boxes = [text.get_charbox(i + k) for k in range(6)]
+    caps_top = max(b[3] for b in boxes)
+    caps_bottom = min(b[1] for b in boxes)
     box_top = ps.PAGE_H - ps.MARGIN
-    assert box_top - caps_top >= 8.0 - 0.25
+    box_bottom = ps.PAGE_H - ps.TITLE_H
+    assert abs((box_top - caps_top) - (caps_bottom - box_bottom)) <= 0.5

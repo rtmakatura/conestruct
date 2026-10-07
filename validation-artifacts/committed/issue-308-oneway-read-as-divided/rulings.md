@@ -93,3 +93,7 @@ This file is the arc's authority; every commit on this branch cites it.
 > ## Part 2. R95: worktree cleanup failed again
 >
 > The #308 ship's cleanup failed with "Permission denied" because this session's shell was inside the worktree. R77 was meant to stop exactly that. Find why it didn't fire (Windows holds a folder open while any process has it as its working directory, so the guard may need to check the session, not only the git command). Fix it so the session leaves the worktree before it starts `ship.ps1`, and red-prove it. Ryan never removes worktrees by hand.
+
+## R105, verbatim (Ryan, 2026-10-06, the Broadway re-check on 73e7f4b)
+
+> R105: Broadway re-check on 73e7f4b: barricades and arrows pass. The title fix didn't land visibly. "METHOD OF HANDLING TRAFFIC · 30 MPH" still sits near the top edge of a tall empty box. Center it vertically in its box. Small branch, frontend-only no; ship it after the declutter branches. Then post the #308 close comment draft here for the chat to repost.
