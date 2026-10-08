@@ -27,3 +27,7 @@ Q8: Hours and Speed reduction get markers ("✓ default" until changed, then "�
 Q9: Two full-height buttons in the Setup Lanes cell. No ⚠ on the Setup box.
 
 CLAUDE.md's suggest-never-set line is already updated with the R108 exception. Build setup-what-r108, then setup-box-r106 stacked on it. Report with screenshots at 1440 and 390.
+
+R111 (Ryan, 2026-10-07, cc-prompt-next-batch.md Part 1, light lane):
+
+On prod `d6d2a49`, the Setup box's LANES cell reads "2 ×    12 ft" with a wide gap between the two buttons. Close it so it reads "2 × 12 ft" with normal spacing, keeping two buttons with their own targets (R110 Q9). Screenshot at 1440 and 390, `preview:` line, and the go.

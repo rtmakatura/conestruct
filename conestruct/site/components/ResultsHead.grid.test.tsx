@@ -7,6 +7,8 @@
 // Unset values read '◌ not set'."  R110 Q9: "Two full-height buttons in
 // the Setup Lanes cell.  No ⚠ on the Setup box."
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
@@ -128,5 +130,33 @@ describe("the Setup box (R106)", () => {
     expect(box.querySelector(".a-setupbox-head .a-sym")!.textContent).toBe("✓");
     expect(within(box).getByText("Setup")).toBeTruthy();
     expect(within(box).getByText("pick a cell to change it")).toBeTruthy();
+  });
+});
+
+describe("R111 — the Lanes cell reads \"2 × 12 ft\" (two buttons, no gap)", () => {
+  // Prod d6d2a49 read "2 ×    12 ft": the first button was as wide as
+  // its LANES label, so its value ended well short of the second button.
+  const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+  const block = (sel: string, from = 0) => {
+    const i = css.indexOf(sel, from);
+    expect(i, sel).toBeGreaterThan(-1);
+    return css.slice(i, css.indexOf("}", i));
+  };
+
+  it("the first half's label takes no width, so the value sizes the button", () => {
+    const b = block(".workbench .a-setupcell.is-pair .a-setupcell-part:first-child .a-setup-k {");
+    expect(b).toMatch(/width:\s*0;/);
+    expect(b).toMatch(/white-space:\s*nowrap;/);
+    // Drawn over the second half, so its hover fill can't cover the label.
+    expect(b).toMatch(/position:\s*relative;/);
+    expect(b).toMatch(/z-index:\s*1;/);
+  });
+
+  it("at ≤480 the first half keeps rule 15's 44 px width", () => {
+    const i = css.indexOf("R111: rule 15");
+    expect(i).toBeGreaterThan(-1);
+    const b = block(".workbench .a-setupcell.is-pair .a-setupcell-part:first-child {", i);
+    expect(css.slice(i, css.indexOf(b, i))).toMatch(/@media \(max-width: 480px\)/);
+    expect(b).toMatch(/min-width:\s*44px;/);
   });
 });

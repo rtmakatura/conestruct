@@ -4159,6 +4159,25 @@ input[type="number"] {
   padding-left: 0;
   flex: 1 1 auto;
 }
+/* R111: the pair reads "2 × 12 ft".  The first half's LANES label is
+   wider than its value, and it set the button's width, so the value
+   ended short of the second button (prod d6d2a49 read "2 ×    12 ft").
+   The label takes no width now, so the value sizes the button.  It still
+   draws, over the second half, and sits above it so that half's hover
+   fill can't paint over it; a click on it opens the lane count. */
+.workbench .a-setupcell.is-pair .a-setupcell-part:first-child .a-setup-k {
+  position: relative;
+  z-index: 1;
+  width: 0;
+  white-space: nowrap;
+}
+/* R111: rule 15 still holds at ≤480 (44 px), so there the first half
+   keeps that width even when its value is narrower. */
+@media (max-width: 480px) {
+  .workbench .a-setupcell.is-pair .a-setupcell-part:first-child {
+    min-width: 44px;
+  }
+}
 .workbench button.a-setupcell,
 .workbench button.a-setupcell-part {
   cursor: pointer;
