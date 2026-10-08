@@ -34,3 +34,12 @@ This file is the arc's authority; every commit on this branch cites it.
 > Next arc. First check gh: is #243 still open with its checkpoint unruled? If yes, bring me that checkpoint's open questions in plain words. If it's closed, start #300 (left-side shoulder work on one-way streets, R79–R82; branch issue-300-left-side-oneway, which another session started). Restack it onto main aa6dcaa without a force push, then investigate first and checkpoint before any code.
 
 #243 was CLOSED on gh (2026-09-30, fixed in `3fe27c3`). The branch was restacked as `issue-300-left-side-oneway-r2` (the three docs commits cherry-picked onto `aa6dcaa`; the old tip `eddf566` recorded in `scripts/superseded.txt`; R55: no force push). #308 (C, R78) is CLOSED and in main, so A is unblocked.
+
+## R119 (Ryan, 2026-10-08), rulings on the build checkpoint (`d2437f0`), verbatim
+
+> R119 (Ryan, 2026-10-08), rulings on the #300 checkpoint:
+> Q1: Separate issue, fixed first. Draft it for the chat to repost, then build it: every shoulder arrow board in caution mode, crew sheet and page 1 to match, quoting MUTCD 11th Ed. §6L.06 ¶18 (p. 833) and S-630-1 Note 26. #300 builds after it ships.
+> Q2: Yes, flip page 1 together, text upright, dimension labels to the open side, yellow line stays on the top lane edge. Marked CHOSEN under R81.
+> Q3: Yes, "Case 11 (right-shoulder closure, mirrored to the left shoulder of a one-way street)", mirror marked CHOSEN, plus a pending-verification note.
+> Q4: Yes, backend refuses with a message naming the fix; the side picker shows it; no frontend reset.
+> Q5: Yes, offer left only when the verdict is one-way street AND the road is tagged one-way.
