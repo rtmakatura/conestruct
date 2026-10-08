@@ -1,0 +1,48 @@
+===== with carriageway
+  parsed carriageway attr: <no such field>
+  is_divided=False one_way_street=False near_intersection=True devices=34
+    mainline  W4-2R   st    957.5  off  +46.0
+    mainline  W20-5R  st   1057.5  off  +46.0
+    mainline  W20-1   st   1157.5  off  +46.0
+    mainline  R2-10   st   1107.5  off  +46.0
+    mainline  G20-5P  st    250.0  off  +46.0
+    mainline  G20-1   st    600.0  off  +46.0
+    mainline  G20-2   st   -311.0  off  +46.0
+    mainline  R2-11   st   -211.0  off  +46.0
+    e11_wb    W20-1   st    200.0  off  +15.0
+    e11_wb    R2-10   st    100.0  off  +15.0
+    e11_wb    R2-11   st    100.0  off  -15.0
+    e11_eb    W20-1   st    200.0  off  +15.0
+    e11_eb    R2-10   st    100.0  off  +15.0
+    e11_eb    R2-11   st    100.0  off  -15.0
+  /render/audit 200
+  Note 8 row: {"pass": true, "label": "Signs on both sides of divided highway", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: False. Signs placed: 0 left, 8 right."}
+  case narrative: This scenario follows CDOT Standard Plan S-630-1, Case 18 (Sheet 10), "traffic control around a work area near an intersection, one lane closed", applied to an undivided highway with single-side mainline signing (both-sides posting applies to divided highways, multi-lane ramps, and one-way streets per CDOT S-630-1 Sheet 2 General Note 8), plus a cross-street advance-warning set on each approach le
+  /render/device-breakdown -> 200 (1072 bytes)
+MAPBOX_TOKEN not set — skipping aerial page
+  /render/pdf -> 200 (6599 bytes)
+  /render/xlsx -> 200 (6659 bytes)
+===== without
+  parsed carriageway attr: <no such field>
+  is_divided=False one_way_street=False near_intersection=True devices=34
+    mainline  W4-2R   st    957.5  off  +46.0
+    mainline  W20-5R  st   1057.5  off  +46.0
+    mainline  W20-1   st   1157.5  off  +46.0
+    mainline  R2-10   st   1107.5  off  +46.0
+    mainline  G20-5P  st    250.0  off  +46.0
+    mainline  G20-1   st    600.0  off  +46.0
+    mainline  G20-2   st   -311.0  off  +46.0
+    mainline  R2-11   st   -211.0  off  +46.0
+    e11_wb    W20-1   st    200.0  off  +15.0
+    e11_wb    R2-10   st    100.0  off  +15.0
+    e11_wb    R2-11   st    100.0  off  -15.0
+    e11_eb    W20-1   st    200.0  off  +15.0
+    e11_eb    R2-10   st    100.0  off  +15.0
+    e11_eb    R2-11   st    100.0  off  -15.0
+  /render/audit 200
+  Note 8 row: {"pass": true, "label": "Signs on both sides of divided highway", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: False. Signs placed: 0 left, 8 right."}
+  case narrative: This scenario follows CDOT Standard Plan S-630-1, Case 18 (Sheet 10), "traffic control around a work area near an intersection, one lane closed", applied to an undivided highway with single-side mainline signing (both-sides posting applies to divided highways, multi-lane ramps, and one-way streets per CDOT S-630-1 Sheet 2 General Note 8), plus a cross-street advance-warning set on each approach le
+  /render/device-breakdown -> 200 (1072 bytes)
+MAPBOX_TOKEN not set — skipping aerial page
+  /render/pdf -> 200 (6599 bytes)
+  /render/xlsx -> 200 (6659 bytes)
