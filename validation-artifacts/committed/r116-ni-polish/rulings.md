@@ -9,3 +9,16 @@
 > 3. On that plan's PDF page 1, the Notes & Sign Schedule box is overcrowded: "Speed limit" collides with PARAMETERS, and the advance-warning table prints its CODE/DESCRIPTION/DISTANCE headers twice on one line. Find the cause and propose the fix.
 >
 > Checkpoint with before/after screenshots for all three. No code until I rule.
+
+## R117 (Ryan, 2026-10-08), rulings on checkpoint.md
+
+> R117 (Ryan, 2026-10-08), rulings on the R116 checkpoint:
+> Q1a: Yes, "Arrow board required" when the layout already places it; "added" only when a count was raised.
+> Q1b: Yes, the backend records whether each rule raised a count; only then "changed this plan" or "+N jurisdiction-required".
+> Q1c: Yes, "{Jurisdiction} work-method rule".
+> Q1d: Yes, leave the sourced data as is; Needs You stops showing that sentence.
+> Q2: B, the WHAT-style row with the five lengths in its popover.
+> Q3a: The one line naming all 4 cut codes.
+> Q3b: Yes, fold into "PLATE DEPARTURES: SEE AUDIT".
+> Q3c: Yes, extra spacing only on one-column tables; Case 27 keeps its 4 rows.
+> Build 1, then 3, then 2, one branch each.
