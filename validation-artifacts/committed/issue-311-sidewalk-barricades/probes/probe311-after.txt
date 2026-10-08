@@ -1,0 +1,10 @@
+== corpus grid_site_pedestrian_facility: snapshot vs live
+== colorado: verdict=divided divided=True one_way=False lanes=3 devices=38 breakdown_status=200 TypeIII_qty=[2]
+   type III (station, offset): [(0.0, 45.0), (1000.0, 45.0)]
+   devices_added: 4 | Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.
+== lafayette: verdict=not_applicable divided=False one_way=False lanes=1 devices=38 breakdown_status=200 TypeIII_qty=[2]
+   type III (station, offset): [(0.0, 21.0), (1000.0, 21.0)]
+   devices_added: 4 | Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.
+== broadway: verdict=one_way_street divided=False one_way=True lanes=4 devices=35 breakdown_status=200 TypeIII_qty=[2]
+   type III (station, offset): [(0.0, 52.0), (1000.0, 52.0)]
+   devices_added: 4 | Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.

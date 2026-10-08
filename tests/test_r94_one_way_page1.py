@@ -33,6 +33,12 @@ from src.rules.validators import ScenarioParams
 
 ONE_WAY = {"oneway": "yes", "highwayClass": "primary", "twinDistanceM": None, "twinSearched": True}
 DIVIDED = {**ONE_WAY, "twinDistanceM": 14.8}
+TWO_WAY = {
+    "oneway": "no",
+    "highwayClass": "residential",
+    "twinDistanceM": None,
+    "twinSearched": True,
+}
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -95,14 +101,42 @@ def test_its_barricades_land_on_the_drawn_sidewalk_band() -> None:
         assert lo <= ps._y_of(p.offset_ft, params.is_divided) <= hi
 
 
-def test_a_divided_road_keeps_the_mirrored_pair() -> None:
-    """Out of R94's scope (Ryan: the divided control is unchanged)."""
-    placements, params, record = _plan(_body(DIVIDED, lanes=3, laneWidth=11.0))
-    assert params.is_divided is True
-    offsets = sorted(p.offset_ft for p in _barricades(placements))
-    assert len(offsets) == 4 and offsets[0] == -offsets[-1]
-    assert record["devices_added"] == 6
-    assert record["action"].startswith("Added 4 Type III barricades")
+# #311 R113: "Option (a): work-side pair only, on every road, same
+# reasoning as R94."  The divided control R94 left mirrored, and a two-way
+# road, now carry the work-side pair only, on the band page 1 hatches.
+_EVERY_ROAD = [
+    pytest.param(DIVIDED, {"lanes": 3, "laneWidth": 11.0}, True, id="divided"),
+    pytest.param(TWO_WAY, {"lanes": 1, "laneWidth": 11.0}, False, id="two-way"),
+]
+
+
+@pytest.mark.parametrize(("carriageway", "over", "divided"), _EVERY_ROAD)
+def test_every_road_barricades_only_the_work_side_sidewalk(
+    carriageway: dict[str, Any], over: dict[str, Any], divided: bool
+) -> None:
+    placements, params, record = _plan(_body(carriageway, **over))
+    assert params.is_divided is divided
+    assert params.one_way_street is False
+    barricades = _barricades(placements)
+    assert len(barricades) == 2
+    assert all(p.offset_ft > 0 for p in barricades)
+    assert record["devices_added"] == 4
+    assert record["action"].startswith("Added 2 Type III barricades")
+
+
+@pytest.mark.parametrize(("carriageway", "over", "divided"), _EVERY_ROAD)
+def test_every_road_s_barricades_land_on_the_hatched_band(
+    carriageway: dict[str, Any], over: dict[str, Any], divided: bool
+) -> None:
+    """Rule 11: the barricades sit on the band page 1 hatches closed
+    (``plan_sheet`` hatches side +1 only), not on the opposing band or
+    past the opposing shoulder."""
+    placements, params, _ = _plan(_body(carriageway, **over))
+    lo, hi = ps._strip_y_range(
+        *ps._sidewalk_strip_ft(params, params.shoulder_width_ft), 1, params.is_divided
+    )
+    for p in _barricades(placements):
+        assert lo <= ps._y_of(p.offset_ft, params.is_divided) <= hi
 
 
 def _params(**over: Any) -> ScenarioParams:

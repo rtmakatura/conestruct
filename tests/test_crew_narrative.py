@@ -524,9 +524,10 @@ def test_crew_narrative_r9_9_legend_is_plain_sidewalk_closed() -> None:
     markdown = _render_with_flags(_SITE_ADJ_PARAMS, {"pedestrian_facility": True})
     assert "R9-9 SIDEWALK CLOSED" in markdown
     assert "USE OTHER SIDE" not in markdown
-    # Legend-only fix: the note must still claim the unchanged device
-    # set — 4 barricades, 2 signs, both work-zone ends.
-    assert "4 Type III barricades" in markdown
+    # Legend-only fix: the note must still claim the device set — 2
+    # barricades (the work-side pair, #311 R113), 2 signs, both
+    # work-zone ends.
+    assert "2 Type III barricades" in markdown
     assert "2 R9-9" in markdown
     assert "upstream and downstream ends" in markdown
 

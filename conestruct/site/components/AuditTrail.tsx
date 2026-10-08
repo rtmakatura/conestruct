@@ -65,8 +65,9 @@ function sectionCitation(
 // converting it would visibly change the panel — a value change kept out
 // of the #104 structural migration).  A flag whose device count depends on
 // the road carries no ``action`` here, and the panel prints the backend's
-// sentence: pedestrian_facility adds 2 Type III barricades on a one-way
-// street and 4 elsewhere (#308 R94).
+// sentence: pedestrian_facility's barricade count is the backend's to
+// state (2, the work-side pair, on every road since #311 R113; #308 R94
+// had made it road-dependent).
 export const SITE_ADJUSTMENT_DETAIL: Record<
   SiteConditionFlag,
   { label: string; rule: string; action?: string }

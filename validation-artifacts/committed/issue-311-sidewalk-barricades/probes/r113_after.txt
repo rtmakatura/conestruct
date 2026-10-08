@@ -1,0 +1,29 @@
+HEAD 7b74a512d3d8cf713dddf7af9ef53ff33a9b198d  tag after  checkout issue-311-sidewalk-barricades
+
+== colorado: POST /render/pdf -> 200
+   verdict=divided  is_divided=True  one_way_street=False  lanes=3  devices=38  breakdown Type III qty=[2]
+   hatched (work-side) sidewalk band y: 308.0..329.0
+   BARRICADE_TYPE_III          station  1000.0  offset   45.0 ft  page y  318.5  on the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset   45.0 ft  page y  318.5  on the hatched band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   45.0 ft  page y  318.5  on the hatched band
+   SIGN_GENERIC         R9-9   station     0.0  offset   45.0 ft  page y  318.5  on the hatched band
+
+== lafayette: POST /render/pdf -> 200
+   verdict=not_applicable  is_divided=False  one_way_street=False  lanes=1  devices=38  breakdown Type III qty=[2]
+   hatched (work-side) sidewalk band y: 401.0..422.0
+   BARRICADE_TYPE_III          station  1000.0  offset   21.0 ft  page y  411.5  on the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset   21.0 ft  page y  411.5  on the hatched band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   21.0 ft  page y  411.5  on the hatched band
+   SIGN_GENERIC         R9-9   station     0.0  offset   21.0 ft  page y  411.5  on the hatched band
+
+== broadway: POST /render/pdf -> 200
+   verdict=one_way_street  is_divided=False  one_way_street=True  lanes=4  devices=35  breakdown Type III qty=[2]
+   hatched (work-side) sidewalk band y: 292.5..313.5
+   BARRICADE_TYPE_III          station  1000.0  offset   52.0 ft  page y  303.0  on the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset   52.0 ft  page y  303.0  on the hatched band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   52.0 ft  page y  303.0  on the hatched band
+   SIGN_GENERIC         R9-9   station     0.0  offset   52.0 ft  page y  303.0  on the hatched band
+
+pixel diff before -> after, colorado: changed bbox (x0, y0, x1, y1 px at 100 dpi) (296, 189, 1459, 961)
+pixel diff before -> after, lafayette: changed bbox (x0, y0, x1, y1 px at 100 dpi) (256, 318, 1453, 961)
+pixel diff before -> after, broadway: changed bbox (x0, y0, x1, y1 px at 100 dpi) None

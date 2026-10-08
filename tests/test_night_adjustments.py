@@ -226,8 +226,9 @@ def test_combined_site_and_night_adjustments() -> None:
         "school_zone": False,
     }
     after_site, site_records = apply_site_adjustments(baseline, params, flags)
-    # pedestrian_facility adds 4 Type III barricades + 2 R9-9 signs = 6 devices.
-    assert len(after_site) == len(baseline) + 6
+    # pedestrian_facility adds 2 Type III barricades + 2 R9-9 signs = 4 devices
+    # (the work-side pair only, #311 R113).
+    assert len(after_site) == len(baseline) + 4
     assert any(r["flag"] == "pedestrian_facility" for r in site_records)
 
     after_night, night_records = apply_night_adjustments(after_site, params)

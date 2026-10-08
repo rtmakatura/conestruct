@@ -639,18 +639,19 @@ def test_site_adjustments_baseline_unchanged() -> None:
     assert records == []
 
 
-def test_site_adjustments_pedestrian_facility_adds_six() -> None:
-    """pedestrian_facility=True adds 4 Type III barricades + 2 R9-9 signs.
+def test_site_adjustments_pedestrian_facility_adds_four() -> None:
+    """pedestrian_facility=True adds 2 Type III barricades + 2 R9-9 signs.
 
-    Per ``site_adjustments.py``: total +6 devices.
-    Total: 31 baseline + 6 = 37.
+    Per ``site_adjustments.py``: total +4 devices -- the work-side pair
+    only, on every road (#311 R113; was 4 barricades / +6 before).
+    Total: 31 baseline + 4 = 35.
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(
         placements, params, flags={"pedestrian_facility": True}
     )
-    assert len(adjusted) == 37
+    assert len(adjusted) == 35
     # Verify the add-types match the audit record claim.
     delta_barricades = _count_by_type(adjusted, DeviceType.BARRICADE_TYPE_III) - _count_by_type(
         placements, DeviceType.BARRICADE_TYPE_III
@@ -658,15 +659,15 @@ def test_site_adjustments_pedestrian_facility_adds_six() -> None:
     delta_signs = _count_by_type(adjusted, DeviceType.SIGN_GENERIC) - _count_by_type(
         placements, DeviceType.SIGN_GENERIC
     )
-    assert delta_barricades == 4
+    assert delta_barricades == 2
     assert delta_signs == 2
-    # Audit record carries devices_added=6.
+    # Audit record carries devices_added=4.
     rec = next(r for r in records if r["flag"] == "pedestrian_facility")
-    assert rec["devices_added"] == 6
+    assert rec["devices_added"] == 4
 
 
-def test_site_adjustments_all_flags_add_ten() -> None:
-    """All site flags True → total +10 devices over baseline.
+def test_site_adjustments_all_flags_add_eight() -> None:
+    """All site flags True → total +8 devices over baseline.
 
     Per ``site_adjustments.py`` adders (the legacy intersection /
     interchange stamps are retired, Refs #117 — those flags now add
@@ -675,12 +676,12 @@ def test_site_adjustments_all_flags_add_ten() -> None:
       adjacent_intersection:   0 (flag-and-disclose; stamp retired)
       adjacent_interchange:    0 (flag-and-disclose; stamp retired)
       driveways_present:       0 (advisory only)
-      pedestrian_facility:     6 (4 barricades + 2 R9-9)
+      pedestrian_facility:     4 (2 barricades + 2 R9-9; #311 R113)
       bicycle_facility:        2 (M4-9a pair)
       school_zone:             2 (S1-1 pair)
-      Total added: 10.
+      Total added: 8.
 
-    Baseline 31 + 10 = 41.
+    Baseline 31 + 8 = 39.
     """
     flags = {
         "limited_sight_distance": True,
@@ -694,7 +695,7 @@ def test_site_adjustments_all_flags_add_ten() -> None:
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(placements, params, flags=flags)
-    assert len(adjusted) == 41
+    assert len(adjusted) == 39
     # Seven audit records, one per checked flag (the no-device flags
     # included — their records drive the audit disclosures).
     flags_seen = {r["flag"] for r in records}

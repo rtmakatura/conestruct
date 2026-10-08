@@ -1,0 +1,30 @@
+HEAD d6d2a49f8e6d6d33ba6184529d93203696749317  tag before  checkout traffic-control-tool
+
+== colorado: POST /render/pdf -> 200
+   verdict=divided  is_divided=True  one_way_street=False  lanes=3  devices=40  breakdown Type III qty=[4]
+   hatched (work-side) sidewalk band y: 308.0..329.0
+   BARRICADE_TYPE_III          station  1000.0  offset   45.0 ft  page y  318.5  on the hatched band
+   BARRICADE_TYPE_III          station  1000.0  offset  -45.0 ft  page y  651.5  OFF the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset   45.0 ft  page y  318.5  on the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset  -45.0 ft  page y  651.5  OFF the hatched band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   45.0 ft  page y  318.5  on the hatched band
+   SIGN_GENERIC         R9-9   station     0.0  offset   45.0 ft  page y  318.5  on the hatched band
+
+== lafayette: POST /render/pdf -> 200
+   verdict=not_applicable  is_divided=False  one_way_street=False  lanes=1  devices=40  breakdown Type III qty=[4]
+   hatched (work-side) sidewalk band y: 401.0..422.0
+   BARRICADE_TYPE_III          station  1000.0  offset   21.0 ft  page y  411.5  on the hatched band
+   BARRICADE_TYPE_III          station  1000.0  offset  -21.0 ft  page y  558.5  OFF the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset   21.0 ft  page y  411.5  on the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset  -21.0 ft  page y  558.5  OFF the hatched band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   21.0 ft  page y  411.5  on the hatched band
+   SIGN_GENERIC         R9-9   station     0.0  offset   21.0 ft  page y  411.5  on the hatched band
+
+== broadway: POST /render/pdf -> 200
+   verdict=one_way_street  is_divided=False  one_way_street=True  lanes=4  devices=35  breakdown Type III qty=[2]
+   hatched (work-side) sidewalk band y: 292.5..313.5
+   BARRICADE_TYPE_III          station  1000.0  offset   52.0 ft  page y  303.0  on the hatched band
+   BARRICADE_TYPE_III          station     0.0  offset   52.0 ft  page y  303.0  on the hatched band
+   SIGN_GENERIC         R9-9   station  1000.0  offset   52.0 ft  page y  303.0  on the hatched band
+   SIGN_GENERIC         R9-9   station     0.0  offset   52.0 ft  page y  303.0  on the hatched band
+

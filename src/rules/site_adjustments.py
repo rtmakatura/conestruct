@@ -34,9 +34,10 @@ def _shoulder_width(params: ScenarioParams) -> float:
 def _ped_offset(params: ScenarioParams) -> float:
     """Lateral offset for sidewalk-closure barricades and R9-9 signs.
 
-    Outside the lanes + shoulder by 2 ft, mirrored on each side. Matches the
-    "lane_width + shoulder_width + 2 ft" formula in the spec, with the
-    project's sign-of-offset convention (positive = right of centerline).
+    Outside the lanes + shoulder by 2 ft, on the work side (positive
+    offset). Matches the "lane_width + shoulder_width + 2 ft" formula in
+    the spec, with the project's sign-of-offset convention (positive =
+    right of centerline).  Never mirrored (#311 R113).
     """
     lane_edge = params.num_lanes * params.lane_width_ft
     return lane_edge + _shoulder_width(params) + 2.0
@@ -158,16 +159,21 @@ def _adjust_pedestrian_facility(
 ) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """Type III barricades + R9-9 SIDEWALK CLOSED signs at each end.
 
-    A one-way street gets the work-side pair only (#308 R94): its offset 0
-    is the left lane edge, so ``-offset`` has no far carriageway to land
-    on, and nothing in the plan says the left curb's sidewalk is closed.
-    The flag carries no side; the R9-9s, the page-1 hatch and the audit all
-    put the closure at the work-side sidewalk.
+    The work-side pair only, on every road (#311 R113: "Option (a):
+    work-side pair only, on every road, same reasoning as R94").  The flag
+    carries no side, and the R9-9s, the page-1 hatch (side +1 only) and
+    the audit all put the closure at the work-side sidewalk, so a
+    ``-offset`` pair barricaded a sidewalk nothing in the plan closes: on a
+    one-way street it floated above the road (#308 R94), on a two-way road
+    it sat past the opposing shoulder where no band is drawn, and on a
+    divided road it stood on the opposing band with no hatch and no R9-9.
+    The mirrored pair (``aa40c4f``) rested on the spec formula, never on
+    MUTCD text.
     """
     offset = _ped_offset(params)
     upstream = params.work_zone_length_ft
     downstream = 0.0
-    sides = (offset,) if getattr(params, "one_way_street", False) else (offset, -offset)
+    sides = (offset,)
 
     barricades = [
         DevicePlacement(DeviceType.BARRICADE_TYPE_III, station, side)
