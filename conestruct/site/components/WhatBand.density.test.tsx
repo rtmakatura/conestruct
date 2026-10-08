@@ -222,8 +222,10 @@ describe("each field shows the control and ONE provenance marker (R108: no actio
       expect(i, sel).toBeGreaterThan(-1);
       return css.slice(i, css.indexOf("}", i));
     };
+    // Two columns while each has 340 px; R117's build (measured at 390)
+    // caps the one-column track at the band's width: min(340px, 100%).
     expect(block(".workbench .a-cols")).toMatch(
-      /grid-template-columns:\s*repeat\(auto-fit, minmax\(340px, 1fr\)\)/,
+      /grid-template-columns:\s*repeat\(auto-fit, minmax\(min\(340px, 100%\), 1fr\)\)/,
     );
     expect(block(".workbench .a-col > .a-cell")).toMatch(
       /grid-template-columns:\s*132px minmax\(0, 1fr\)/,

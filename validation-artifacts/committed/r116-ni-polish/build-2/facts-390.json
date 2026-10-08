@@ -1,0 +1,18 @@
+{
+  "marker": "✓ yours",
+  "markerBox": [
+    49,
+    44
+  ],
+  "popover": [
+    "your answer · the extent the plan is built for",
+    "Corridor at this length",
+    "Advance warning · 300 ft",
+    "Taper · 180 ft",
+    "Buffer · 200 ft",
+    "Work zone · 500 ft",
+    "Downstream · 50 ft",
+    "the cross-street approaches lay out separately"
+  ],
+  "oldLineVisible": false
+}

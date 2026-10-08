@@ -58,6 +58,7 @@ import { OpenBand } from "./BandPrimitives";
 import { BandAerial } from "./BandAerial";
 import { ManualFallback } from "./ManualFallback";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
+import { FieldCell } from "./FieldCell";
 import { useWriteLock } from "../WriteLock";
 
 /** The five zones, in the order the corridor lays them out — the same
@@ -91,6 +92,49 @@ function zoneFt(
     case "downstream":
       return spec.downstream_taper_ft;
   }
+}
+
+/** R117 Q2 — the extent row's popover lines: the five zone lengths (four
+ *  from the backend's `corridor_spec`, the work zone the operator's own
+ *  typed extent), or the one honest note when there are none.  On a
+ *  near-intersection plan the lengths are the mainline's only; the line
+ *  under them says the cross-street approaches lay out separately, so five
+ *  rows never read as the whole picture (Rule 10). */
+export function CorridorExtentLines({
+  lengths,
+  workLen,
+  kind,
+  note,
+}: {
+  lengths: CorridorSpecLengths | null;
+  workLen: number;
+  kind: ScenarioKind;
+  note: string | null;
+}) {
+  const shown = lengths !== null && workLen > 0;
+  return (
+    <div className="a-extent" data-testid="corridor-extent">
+      {shown ? (
+        <>
+          <span className="tr-prov a-extent-head">Corridor at this length</span>
+          {CORRIDOR_ROWS.map(([zone, label]) => (
+            <span key={zone} className="tr-prov" data-testid={`zone-${zone}`}>
+              {label} · {zoneFt(lengths, zone, workLen).toLocaleString("en-US")} ft
+            </span>
+          ))}
+          {kind === "near_intersection" && (
+            <span className="tr-prov" data-testid="corridor-extent-approaches">
+              the cross-street approaches lay out separately
+            </span>
+          )}
+        </>
+      ) : (
+        <span className="tr-prov" data-testid="corridor-extent-note">
+          {note}
+        </span>
+      )}
+    </div>
+  );
 }
 
 /** C5 — the move ledger (rules 67-70).  It renders `deriveMoveLedger()`'s
@@ -581,78 +625,72 @@ export function WhereBand({
             </div>
           )}
 
-          <div className="a-cell mt-4" style={{ maxWidth: 260 }}>
-            <label className="tr-field" htmlFor="band-worklen">
-              Work zone length (ft)
-            </label>
-            <input
-              id="band-worklen"
-              type="number"
-              step={10}
-              min={0}
-              className="a-fld"
-              data-write=""
-              disabled={locked}
-              value={wzDraft ?? (scenario.workLen || "")}
-              onChange={(e) => setWzDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") commitWorkLen();
-              }}
-              onBlur={commitWorkLen}
-            />
-            {wzTouched && !wz.ok ? (
-              <FieldErrorLine>{wz.message}</FieldErrorLine>
-            ) : (
-              <span className="tr-prov">typed · the extent the plan is built for</span>
-            )}
-
-          {/* The corridor's zone lengths — §8.19 folds them into the
-              aerial, and this phase has no aerial (see the deviation at
-              the top of this file).  They are real backend facts about
-              the extent the user just typed, so they stay, under the
-              field they describe, rather than disappearing with the
-              surface that used to draw them.
-
-              #289 fidelity F4 (ruled Q3): they ARE the field's provenance
-              now — lines in the extent cell's own stack (rule 137: a field
-              explains itself under itself).  The block that held them — a
-              "CORRIDOR EXTENT" section header and a dotted top rule, a
-              form inside a band — is gone; the rows, their words and their
-              honest notes are unchanged.
-
-              The BAR retires: it drew a proportion, which is a picture of
-              these numbers and not a fact of its own.  The rows are the
-              record — which is what the bar's own test said when it
-              called the bar aria-hidden. */}
-          <div className="a-extent" data-testid="corridor-extent">
-            {corridorSpecLengths && scenario.workLen > 0 ? (
-              CORRIDOR_ROWS.map(([zone, label]) => (
-                <span key={zone} className="tr-prov" data-testid={`zone-${zone}`}>
-                  {label} ·{" "}
-                  {zoneFt(corridorSpecLengths, zone, scenario.workLen).toLocaleString(
-                    "en-US",
-                  )}{" "}
-                  ft
-                </span>
-              ))
-            ) : (
-              <span className="tr-prov" data-testid="corridor-extent-note">
-                {scenario.workLen <= 0
-                  ? "set the work-zone length to compute"
-                  : !kindConfirmed
-                    ? // #289 finding 1: the lengths are the kind's, and
-                      // no check is fired for a kind nobody confirmed.
-                      "corridor lengths wait on the kind of work"
-                    : !sided
-                      ? // #290: nor for a side nobody gave.
-                        "corridor lengths wait on the occupied side"
-                    : // Rule 3 / rule 10: an audit response without the
-                      // lengths degrades to an honest note, never a
-                      // locally-computed extent.
-                      "corridor extent unavailable, awaiting verification"}
-              </span>
-            )}
-          </div>
+          {/* R117 Q2 (Ryan, 2026-10-08): "B, the WHAT-style row with the
+              five lengths in its popover."  The extent is a FieldCell in
+              the band's own columns -- label, marker, input, as the WHAT
+              band's rows are (P2, P4) -- and the corridor's zone lengths
+              are its details, one click away.  They stay the one place
+              the lengths show before Generate (#301 ruling 7); the loose
+              stack of six lines under the input (#289 F4) is gone. */}
+          <div className="a-cols mt-4">
+            <div className="a-col">
+              <FieldCell
+                label="Work zone length (ft)"
+                htmlFor="band-worklen"
+                testid="worklen"
+                provenance={
+                  <span className="tr-prov" data-testid="prov-worklen">
+                    {scenario.workLen > 0
+                      ? "your answer · the extent the plan is built for"
+                      : "not set · the extent the plan is built for"}
+                  </span>
+                }
+                marker={
+                  scenario.workLen > 0
+                    ? { glyph: "✓", word: "yours", tone: "ok" }
+                    : { glyph: "◌", word: "not set", tone: "pending" }
+                }
+                alert={wzTouched && !wz.ok ? <FieldErrorLine>{wz.message}</FieldErrorLine> : null}
+                info={
+                  <CorridorExtentLines
+                    lengths={corridorSpecLengths ?? null}
+                    workLen={scenario.workLen}
+                    kind={scenario.kind}
+                    note={
+                      scenario.workLen <= 0
+                        ? "set the work-zone length to compute"
+                        : !kindConfirmed
+                          ? // #289 finding 1: the lengths are the kind's, and
+                            // no check is fired for a kind nobody confirmed.
+                            "corridor lengths wait on the kind of work"
+                          : !sided
+                            ? // #290: nor for a side nobody gave.
+                              "corridor lengths wait on the occupied side"
+                            : // Rule 3 / rule 10: an audit response without
+                              // the lengths degrades to an honest note,
+                              // never a locally-computed extent.
+                              "corridor extent unavailable, awaiting verification"
+                    }
+                  />
+                }
+              >
+                <input
+                  id="band-worklen"
+                  type="number"
+                  step={10}
+                  min={0}
+                  className="a-fld"
+                  data-write=""
+                  disabled={locked}
+                  value={wzDraft ?? (scenario.workLen || "")}
+                  onChange={(e) => setWzDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") commitWorkLen();
+                  }}
+                  onBlur={commitWorkLen}
+                />
+              </FieldCell>
+            </div>
           </div>
 
           {/* #289 hand-check, 2026-09-23, correction 3: the "Applied

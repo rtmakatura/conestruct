@@ -179,6 +179,28 @@ describe("#227 corridor bar — proportion of backend lengths only", () => {
     for (const r of rows) expect(r.textContent).not.toContain("✓");
   });
 
+  // R117 Q2 (Ryan, 2026-10-08): "B, the WHAT-style row with the five
+  // lengths in its popover."  The extent is a FieldCell in the band's
+  // columns -- label, marker, input -- and the rows are its details.
+  it("R117 Q2: the extent is a WHAT-style row; the five lengths sit in its popover", async () => {
+    await mountPinned(DEFAULT_SHOULDER);
+    await openWhere();
+    const cell = screen.getByTestId("cell-worklen");
+    expect(cell.closest(".a-col")).not.toBeNull();
+    expect(cell.querySelector("#band-worklen")).not.toBeNull();
+    const marker = screen.getByTestId("info-toggle-worklen");
+    expect(marker.textContent).toBe("✓ yours");
+    const pop = screen.getByTestId("info-worklen");
+    expect(pop.hidden).toBe(true);
+    expect(pop.querySelector('[data-testid="zone-advance_warning"]')).not.toBeNull();
+    expect(pop.textContent).toContain("your answer · the extent the plan is built for");
+    expect(pop.textContent).toContain("Corridor at this length");
+    // The loose stack under the input is gone.
+    expect(cell.querySelector(".a-cell-ctl")!.textContent).not.toContain("the extent the plan");
+    await userEvent.setup().click(marker);
+    expect(pop.hidden).toBe(false);
+  });
+
   it("the bar itself is gone — a proportion with no aerial to sit in", async () => {
     await mountPinned(DEFAULT_SHOULDER);
     await openWhere();
