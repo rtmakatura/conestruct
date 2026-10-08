@@ -1,0 +1,16 @@
+[
+ {
+  "id": "heading-order",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": "#needs-you-h",
+    "summary": "Fix any of the following:\n  Heading order invalid",
+    "data": null
+   }
+  ]
+ }
+]

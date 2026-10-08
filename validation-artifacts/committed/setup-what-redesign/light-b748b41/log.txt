@@ -1,0 +1,5 @@
+R111 light check · http://localhost:3108/sandbox · 2026-10-08T03:51:05.698Z
+1440: status 200 · scroll 1440/1440 ok · axe heading-order(1) · targets under 32: none · contrast lowest 3.28, below AA: "Apply 0 corrections" 3.28 · page errors none
+1440 lanes: "2 × | 12 ft" · gap "2 ×"→"12 ft" 4 px (one space 3.8 px) · buttons 36.97x64 + 137.83x64 in a 175.8 px cell · label "Lanes" ink 36 px
+390: status 200 · scroll 390/390 ok · axe heading-order(1) · targets under 44: none · contrast lowest 3.28, below AA: "Apply 0 corrections" 3.28 · page errors none
+390 lanes: "2 × | 12 ft" · gap "2 ×"→"12 ft" 11.03 px (one space 3.8 px) · buttons 44x64 + 135.5x64 in a 180.5 px cell · label "Lanes" ink 36 px
