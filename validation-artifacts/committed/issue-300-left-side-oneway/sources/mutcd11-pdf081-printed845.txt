@@ -1,0 +1,70 @@
+MUTCD 11th Edition  Page 845
+
+  Guidance:
+
+02 Where the situations described in Paragraph 1 of this Section exist, a single warning sign, such as ROAD
+  WORK AHEAD (W20-1), should be used. If the equipment travels on the roadway, the equipment should be
+  equipped with appropriate flags, high-intensity rotating, flashing, oscillating, or strobe lights, and/or a SLOW
+  MOVING VEHICLE (W21-4) sign.
+
+03 If work vehicles are on the shoulder, a SHOULDER WORK (W21-5) sign should be used.
+04 A general warning sign like ROAD MACHINERY AHEAD (W21-3) should be used if workers and equipment
+
+  must occasionally move onto the shoulder.
+  Option:
+05 For mowing operations, the sign MOWING AHEAD (W21-8) may be used.
+06 Where the activity is spread out over a distance of more than 2 miles, the SHOULDER WORK (W21-5) sign
+  may be repeated every 1 mile.
+07 A supplementary plaque with the message NEXT XX MILES (W7-3aP) may be used.
+
+Section 6N.06 Work on the Shoulder with No Encroachment
+
+  Support:
+01 The provisions of this Section apply to short-term through long-term stationary operations.
+
+  Standard:
+
+02 When paved shoulders having a width of 8 feet or more are closed, at least one advance warning sign
+  shall be used. In addition, channelizing devices shall be used to close the shoulder in advance to delineate
+  the beginning of the work space and direct motor vehicle traffic to remain within the traveled way.
+  Guidance:
+
+03 When paved shoulders having a width of 8 feet or more are closed on freeways and expressways, road
+  users should be warned about potential disabled vehicles that cannot get off the traveled way. An initial
+  general warning sign, such as ROAD WORK AHEAD (W20-1), should be used, followed by a RIGHT or LEFT
+  SHOULDER CLOSED (W21-5a) sign. Where the downstream end of the shoulder closure extends beyond the
+  distance that can be perceived by road users, a supplementary plaque bearing the message NEXT XX FEET
+  (W16-4P) or MILES (W7-3aP) should be placed below the SHOULDER CLOSED (W21-5a) sign. On multi-lane,
+  divided highways, signs advising of shoulder work or the condition of the shoulder should be placed only on the
+  side of the affected shoulder.
+
+04 When an improved shoulder is closed on a high-speed roadway, it should be treated as a closure of a portion
+  of the road system because road users expect to be able to use it in emergencies. Road users should be given
+  ample advance warning that shoulders are closed for use as refuge areas throughout a specified length of the
+  approaching TTC zone. The sign(s) should read SHOULDER CLOSED (W21-5a) with distances indicated. The
+  work space on the shoulder should be closed off by a taper or channelizing devices with a length of ¹⁄3 L using the
+  formulas in Tables 6B-3 and 6B-4.
+
+05 When the shoulder is not occupied but work has adversely affected its condition, the LOW SHOULDER
+  (W8-9) or SOFT SHOULDER (W8-4) sign should be used, as appropriate.
+
+06 Where the condition extends over a distance in excess of 1 mile, the sign should be repeated at 1-mile intervals.
+  Option:
+
+07 In addition, a supplementary plaque bearing the message NEXT XX MILES (W7-3aP) may be used.
+  Support:
+
+08 Temporary traffic barriers might be needed to inhibit encroachment of errant vehicles into the work space and
+  to protect workers.
+  Standard:
+
+09 When used for shoulder work, arrow boards shall operate only in the caution mode.
+
+  Support:
+10 A typical application for stationary work operations on shoulders is shown in Figure 6P-3. A typical
+
+  application for short-duration or mobile work on shoulders is shown in Figure 6P-4. A typical application for
+  work on freeway shoulders is shown in Figure 6P-5.
+
+December 2023       Sect. 6N.05 to 6N.06
+

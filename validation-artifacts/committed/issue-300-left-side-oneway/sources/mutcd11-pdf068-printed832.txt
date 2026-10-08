@@ -1,0 +1,79 @@
+Page 832              MUTCD 11th Edition
+
+21 All messages should be designed with consideration given to the principles provided in this Section and also
+  taking into account the following:
+
+       A. The message should be as brief as possible and should contain three thoughts (with each thought
+            preferably shown on its own line) that convey:
+            1. The problem or situation that the road user will encounter ahead,
+            2. The location of or distance to the problem or situation, and
+            3. The recommended driver action.
+
+       B. If more than two phases are needed to display a message, additional portable changeable message signs
+            should be used. When multiple portable changeable message signs are needed, they should be placed
+            on the same side of the roadway and they should be separated from each other by a distance of at least
+            1,000 feet on freeways and expressways, and by a distance of at least 500 feet on other types of highways.
+
+  Standard:
+
+22 When the word messages shown in Tables 1D-1 or 1D-2 need to be abbreviated on a portable
+  changeable message sign, the provisions described in Section 1D.08 shall be followed.
+
+23 In order to maintain legibility, portable changeable message signs shall automatically adjust their
+  brightness under varying light conditions.
+
+24 The control system shall include a display screen upon which messages can be reviewed before being
+  displayed on the message sign. The control system shall be capable of maintaining memory when power
+  is unavailable.
+
+25 Portable changeable message signs shall be equipped with a power source and a battery back-up to
+  provide continuous operation when failure of the primary power source occurs.
+
+26 The mounting of portable changeable message signs on a trailer, a large truck, or a service patrol truck
+  shall be such that the bottom of the message sign shall be a minimum of 7 feet above the roadway in urban
+  areas and 5 feet above the roadway in rural areas when it is in the operating mode.
+
+  Guidance:
+
+27 Portable changeable message signs should be used as a supplement to and not as a substitute for
+  conventional signs and pavement markings.
+
+28 When portable changeable message signs are used for route diversion, they should be placed far enough in
+  advance of the diversion to allow road users ample opportunity to perform necessary lane changes, to adjust
+  their speed, or to exit the affected highway.
+
+29 Portable changeable message signs should be sited and aligned to provide maximum legibility and to allow
+  time for road users to respond appropriately to the portable changeable message sign message.
+
+30 Portable changeable message signs should be placed off the shoulder of the roadway and behind a traffic
+  barrier, if practicable. Where a traffic barrier is not available to shield the portable changeable message sign,
+  it should be placed off the shoulder and outside of the clear zone. If a portable changeable message sign has to
+  be placed on the shoulder of the roadway or within the clear zone, it should be delineated with retroreflective
+  TTC devices.
+
+31 When portable changeable message signs are used in TTC zones, they should display only TTC messages.
+32 When portable changeable message signs are not being used to display TTC messages, they should be
+
+  relocated such that they are outside of the clear zone or shielded behind a traffic barrier and turned away from
+  traffic. If relocation or shielding is impracticable, they should be delineated with retroreflective TTC devices.
+33 Portable changeable message sign trailers should be delineated on a permanent basis by affixing
+  retroreflective material, known as conspicuity material, in a continuous line on the face of the trailer as seen by
+  oncoming road users.
+
+Section 6L.06 Arrow Boards
+
+  Standard:
+
+01 An arrow board shall be a sign with a matrix of elements capable of either flashing or sequential
+  displays. This sign shall provide additional warning and directional information to assist in merging and
+  controlling road users through or around a TTC zone.
+
+  Guidance:
+
+02 An arrow board in the arrow or chevron mode should be used to advise approaching traffic of a lane closure
+  along major multi-lane roadways in situations involving heavy traffic volumes, high speeds, and/or limited
+  sight distances, or at other locations and under other conditions where road users are less likely to expect such
+  lane closures.
+
+Sect. 6L.05 to 6L.06  December 2023
+

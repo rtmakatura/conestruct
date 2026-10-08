@@ -28,3 +28,9 @@ This file is the arc's authority; every commit on this branch cites it.
 > R81. Page 1 mirroring: take your recommendation; note it in the checkpoint as CHOSEN against P1/P21.
 > R82. Field name: work_side, default "right".
 > No ships until after tonight's 19:07 #292 window has finished.
+
+## Ryan, 2026-10-08 (the session prompt, verbatim)
+
+> Next arc. First check gh: is #243 still open with its checkpoint unruled? If yes, bring me that checkpoint's open questions in plain words. If it's closed, start #300 (left-side shoulder work on one-way streets, R79–R82; branch issue-300-left-side-oneway, which another session started). Restack it onto main aa6dcaa without a force push, then investigate first and checkpoint before any code.
+
+#243 was CLOSED on gh (2026-09-30, fixed in `3fe27c3`). The branch was restacked as `issue-300-left-side-oneway-r2` (the three docs commits cherry-picked onto `aa6dcaa`; the old tip `eddf566` recorded in `scripts/superseded.txt`; R55: no force push). #308 (C, R78) is CLOSED and in main, so A is unblocked.

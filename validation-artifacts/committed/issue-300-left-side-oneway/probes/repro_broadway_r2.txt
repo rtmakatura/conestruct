@@ -1,0 +1,10 @@
+HEAD 21091b587375470636c3e2d0946f6740b4499b8e
+pin 39.7337, -104.98753  way 131232822  oneway=yes  carriageway={'oneway': 'yes', 'highwayClass': 'primary', 'twinDistanceM': None, 'twinSearched': True}  divided=False  kind=shoulder  lanes=4  speed=30
+
+1. corridor-geometry, no side -> 200 status=side_not_confirmed
+   offered: 'West side · southbound traffic'  work={'side': 'right', 'travel': 'with_geometry'}  built=True
+
+2. /render/corridor-geometry side=left travel=with_geometry -> 400  {"detail":{"error":"pin_model_input","message":"meta.work.side 'left' is not built yet: only right-side work is laid out."}}
+3. /render/pdf side=left travel=with_geometry -> 400  {"detail":{"error":"pin_model_input","message":"meta.work.side 'left' is not built yet: only right-side work is laid out."}}
+4. /render/corridor-geometry side=right travel=with_geometry -> 200  status=laid_out approaches=1
+5. /render/pdf side=right travel=with_geometry -> 200  PDF 5809 bytes, starts b'%PDF-'

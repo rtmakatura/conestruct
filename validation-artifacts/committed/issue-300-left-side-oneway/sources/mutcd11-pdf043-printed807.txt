@@ -1,0 +1,70 @@
+MUTCD 11th Edition  Page 807
+
+  Option:
+03 The WORKERS (W21-1a) word message sign may be used as an alternate to the Workers (W21-1)
+
+  symbol sign.
+
+Section 6H.19 FRESH OIL (TAR) Sign (W21-2)
+  Guidance:
+
+01 The FRESH OIL (TAR) (W21-2) sign (see Figure 6H-1) should be used to warn road users of the surface treatment.
+
+Section 6H.20 ROAD MACHINERY AHEAD Sign (W21-3)
+  Option:
+
+01 The ROAD MACHINERY AHEAD (W21-3) sign (see Figure 6H-1) may be used to warn of machinery
+  operating in or adjacent to the roadway.
+
+Section 6H.21 Motorized Traffic Signs (W8-6 and W11-10)
+  Option:
+
+01 Motorized Traffic (W8-6 and W11-10) signs may be used to alert road users to locations where unexpected
+  travel on the roadway or entries into or departures from the roadway by construction vehicles might occur. The
+  TRUCK CROSSING (W8-6) word message sign may be used as an alternate to the Truck (W11-10) symbol
+  sign (see Figure 6H-1) where there is an established construction vehicle crossing of the roadway.
+  Support:
+
+02 These locations might be relatively confined or might occur randomly over a segment of roadway.
+
+Section 6H.22 Shoulder Work Signs (W21-5, W21-5a, and W21-5b)
+  Support:
+
+01 Shoulder Work signs (see Figure 6H-1) warn of maintenance, reconstruction, or utility operations on the
+  highway shoulder where the roadway is unobstructed.
+  Standard:
+
+02 The Shoulder Work sign shall have the legend SHOULDER WORK (W21-5), RIGHT (LEFT)
+  SHOULDER CLOSED (W21-5a), or RIGHT (LEFT) SHOULDER CLOSED XX FT or AHEAD (W21-5b).
+  Option:
+
+03 The Shoulder Work sign may be used in advance of the point on a non-limited access highway where there
+  is shoulder work. It may be used singly or in combination with a ROAD WORK NEXT XX MILES or ROAD
+  WORK AHEAD sign.
+  Guidance:
+
+04 On freeways and expressways, the RIGHT (LEFT) SHOULDER CLOSED XX FT or AHEAD (W21-5b) sign
+  followed by RIGHT (LEFT) SHOULDER CLOSED (W21-5a) sign should be used in advance of the point where
+  the shoulder work occurs and should be preceded by a ROAD WORK AHEAD sign.
+
+Section 6H.23 SURVEY CREW Sign (W21-6)
+  Guidance:
+
+01 The SURVEY CREW (W21-6) sign (see Figure 6H-1) should be used to warn of surveying crews working in
+  or adjacent to the roadway.
+
+Section 6H.24 UTILITY WORK Sign (W21-7)
+  Option:
+
+01 The UTILITY WORK (W21-7) sign (see Figure 6H-1) may be used as an alternate to the ROAD (STREET)
+  WORK (W20-1) sign for utility operations on or adjacent to a highway.
+  Support:
+
+02 Typical examples of where the UTILITY WORK sign is used appear in Figures 6P-4, 6P-6, 6P-10, 6P-15,
+  6P-18, 6P-21, 6P-22, 6P-26, and 6P-33.
+  Option:
+
+03 The distance legend may be either XX FEET, XX MILES, or AHEAD.
+
+December 2023       Sect. 6H.18 to 6H.24
+

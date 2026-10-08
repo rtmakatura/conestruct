@@ -1,0 +1,56 @@
+                                                                                                         For Case No. 36, vehicle/sign sequence is the same for the left side of highway, while taper is      APPLICATION GROUP
+                                                                                                         mirrored about the center lane, when mobile work zone is located on the left side of highway.
+
+             Legend                                                                                                                                     CONE PICKUP                                       CONE PLACEMENT                                 PAVEMENT MARKING
+                                                                                                                                                  VEHICLE (OPTIONAL)                                       PICKUP VEHICLE                              APPLICATION VEHICLE
+                Mobile attenuator vehicle, two 360-degree yellow flashing beacons,
+                and yellow flashing vehicle lights or strobes.                                                     ADVANCED WARNING
+                Advance Warning Flashing or Sequencing Arrow Panel.                                                           VEHICLE
+
+                Variable Message Sign (VMS).                                                                                           FOLLOWING                                              VARIES                                                          BUFFER
+                                                                                                                                       DISTANCE                                                                                                                SPACE
+                Arrow Board
+                                                                                                                                                                              ARROW PANEL                 OR                                           OR
+                When the VMS is used, the "Shoulder Closed" W21-5a(R/L) and "Ramp Closed Ahead"
+                W5-40 signs become optional.                                                                       XX
+                If tracking of the wet paint is anticipated, the use of cones or stationary "wet paint"
+                signs shall be posted.                                                                   W21-20
+                The variable separation distance between the "Cone Placement Vehicle" and                      OR
+                "Cone Pickup Vehicle" shall be determined by the track drying time of the
+                pavement marking material.                                                               W21-20a                                                                                                     Case No. 36
+                Optional
+                                                                                                                                                                                                    Typical Application
+Notes                                                                                                                                                                                   Mobile Pavement Marking Zone
+                                                                                                                                                              Lane Line Striping Operations Multi-Lane Divided Highway
+1. The signing vehicles may encroach into the traffic lane when the
+     shoulder is too narrow to drive on.                                                                                               ADVANCED WARNING                                                   VEHI CCOLNEE(POIPCTKIU OP NAL)               CPOIC NE KUPPLVAECHEIM CL EE NT
+                                                                                                                                                  VEHICLE                                                                                      VARIES
+2. If the ramp cannot be reopened within 15 minutes, use Case No.
+     22 of the S-630-1 standard plan.                                                                                                                                              FOLLOWING
+                                                                                                                                                                                  DISTANCE
+                                                                                                                                                                                                                                                                                                      APPPALVIECMAE TNIOTNMVAERHKIICNLGE
+
+                                                                                                                   XX                                         VMS (PHASE I)                                                                                                             BUFFER SPACE
+                                                                                                                                                  AND
+Following Distance Chart For Warning Vehicle                                                             W21-20
+                   And Cone Pickup Vehicles                                                                    OR                                             VMS (PHASE II)
+
+POSTED WZ SPEED LIMIT (MPH)       FOLLOWING DISTANCE (FEET)    BUFFER SPACE (FEET)                       W21-20a         RAMP                             OR                                                            Case No. 37
+                          0 - 30                   250 - 550              100 - 120                                    CLOSED
+                                                    325 - 700             100 - 120                                     AHEAD                         RIGHT                                              Typical Application
+                        35 - 40                    600 - 900             120 - 140                                                                SHOULDER                                   Mobile Pavement Marking Zone
+                        45 - 50                    750 - 1200            120 - 140                                        W5-40                                               Mobile Ramp Work Zone - Expressway/Freeway
+                                                                         180 - 200                                                                  CLOSED
+                              55                 1000 - 1400
+                              60                                                                                                                     W21-5a
+
+                 Computer File Information                            Sheet Revisions                    Colorado Department of Transportation                                                     Traffic Controls for                                                                        Standard Plan No.
+                                                                                                                                                                                                Highway Construction                                                                                      S-630-1
+Creation Date: 07/04/12                                        Date:                       Comments
+Created By: KEN                                                                                                                                                                               Issued by the Traffic Safety & Engineering Services: July 01, 2026                        Standard Sheet No. 22 of 26
+Last Modification Date: 07/01/26                                                                                                           Traffic Safety &
+Last Modified By: NRR                                                                                                                  Engineering Services                                                                                                                                 Project Sheet Number:
+CAD Ver.:ORD 10.12 Scale:Not to Scale Units:English
+                                                                                                                                       2829 West Howard Place                 EB
+                                                                                                                                            Denver, CO 80204
+

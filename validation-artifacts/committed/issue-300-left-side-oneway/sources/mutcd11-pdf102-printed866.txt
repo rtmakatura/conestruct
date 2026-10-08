@@ -1,0 +1,36 @@
+Page 866     MUTCD 11th Edition
+
+                                 Notes for Figure 6P-4—Typical Application 4
+
+                             Short-Duration or Mobile Operation on a Shoulder
+
+Guidance:
+
+    1. In those situations where multiple work locations within a limited distance make it practicable to place
+         stationary signs, the distance between the advance warning sign and the work should not exceed 5 miles.
+
+    2. In those situations where the distance between the advance signs and the work is 2 miles to 5 miles, a
+         Supplemental Distance plaque should be used with the ROAD WORK AHEAD sign.
+
+Option:
+    3. Additional positive protection devices may be used per Section 6M.02.
+    4. The ROAD WORK NEXT XX MILES sign may be used instead of the ROAD WORK AHEAD sign if
+         the work locations occur over a distance of more than 2 miles.
+    5. Stationary warning signs may be omitted for short-duration or mobile operations if the work vehicle
+         displays high-intensity rotating, flashing, oscillating, or strobe lights.
+    6. Vehicle hazard warning signals may be used to supplement high-intensity rotating, flashing, oscillating,
+         or strobe lights.
+
+Standard:
+
+    7. Vehicle hazard warning signals shall not be used instead of the vehicle’s high-intensity rotating,
+         flashing, oscillating, or strobe lights.
+
+    8. If an arrow board is used for an operation on the shoulder, the caution mode shall be used.
+    9. Vehicle-mounted signs shall be mounted in a manner such that they are not obscured by equipment
+
+         or supplies. Sign legends on vehicle-mounted signs shall be covered or turned from view when work
+         is not in progress.
+
+Sect. 6P.01  December 2023
+

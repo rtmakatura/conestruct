@@ -1,0 +1,77 @@
+MUTCD 11th Edition  Page 833
+
+03 If used, an arrow board should be used in combination with appropriate signs, channelizing devices, or other
+  TTC devices.
+
+04 An arrow board should be placed on the shoulder of the roadway or, if practicable, farther from the traveled
+  lane. It should be delineated with retroreflective TTC devices. When an arrow board is not being used, it should
+  be removed; if not removed, it should be shielded; or if the previous two options are not feasible, it should be
+  delineated with retroreflective TTC devices.
+  Standard:
+
+05 Arrow boards shall meet the minimum size, legibility distance, number of elements, and other
+  specifications shown in Figure 6L-3.
+  Support:
+
+06 Type A arrow boards are appropriate for use on low-speed urban streets. Type B arrow boards are appropriate
+  for intermediate-speed facilities and for maintenance or mobile operations on high-speed roadways. Type C arrow
+  boards are intended to be used on high-speed, high-volume motor vehicle traffic control projects. Type D arrow
+  boards are intended for use on vehicles authorized by the State or local agency.
+  Standard:
+
+07 Type A, B, and C arrow boards shall have solid rectangular appearances. A Type D arrow board shall
+  conform to the shape of the arrow.
+
+08 All arrow boards shall be finished in non-reflective black. The arrow board shall be mounted on a
+  vehicle, a trailer, or other suitable support.
+
+  Guidance:
+
+09 The minimum mounting height, measured vertically from the bottom of the board to the roadway below it or
+  to the elevation of the near edge of the roadway, of an arrow board should be 7 feet, except on vehicle-mounted
+  arrow boards, which should be as high as practicable.
+
+10 A vehicle-mounted arrow board should be provided with remote controls.
+  Standard:
+
+11 Arrow board elements shall be capable of at least a 50 percent dimming from full brilliance. The
+  dimmed mode shall be used for nighttime operation of arrow boards.
+
+  Guidance:
+
+12 Full brilliance should be used for daytime operation of arrow boards.
+  Standard:
+
+13 The arrow board shall have suitable elements capable of the various operating modes. The color
+  presented by the elements shall be yellow.
+
+  Guidance:
+
+14 If an arrow board consisting of a bulb matrix is used, the elements should be recess-mounted or equipped
+  with an upper hood of not less than 180 degrees.
+  Standard:
+
+15 The minimum element on-time shall be 50 percent for the flashing mode, with equal intervals of 25
+  percent for each sequential phase. The flashing rate shall be not less than 25 or more than 40 flashes
+  per minute.
+
+16 An arrow board shall have the following three mode selections:
+
+       A. A Flashing Arrow, Sequential Arrow, or Sequential Chevron mode;
+       B. A flashing Double Arrow mode; and
+       C. A flashing Caution or Alternating Diamond mode.
+17 An arrow board in the arrow or chevron mode shall be used only for stationary or moving lane closures
+  on multi-lane roadways.
+
+18 For shoulder work, for blocking the shoulder, for roadside work near the shoulder, or for temporarily
+  closing one lane on a two-lane, two-way roadway, an arrow board shall be used only in the caution mode.
+
+  Guidance:
+
+19 For a stationary lane closure, the arrow board should be located on the shoulder at the beginning of the
+  merging taper.
+
+20 Where the shoulder is narrow, the arrow board should be located in the closed lane.
+
+December 2023       Sect. 6L.06
+
