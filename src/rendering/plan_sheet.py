@@ -871,10 +871,18 @@ def _draw_arrow_board(c: canvas.Canvas, x: float, y: float, direction: str = "ri
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.7)
     c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
-    # Black arrow inside; ``direction`` is one of {"right", "left"}.
+    # Black glyph inside; ``direction`` is one of {"right", "left",
+    # "caution"}.
     c.setFillColor(ARROW_GLYPH)
     c.setStrokeColor(ARROW_GLYPH)
     c.setLineWidth(0.5)
+    if direction == "caution":
+        # R119 Q1: MUTCD 11th Ed. Fig 6L-3 (p. 834), "Flashing Caution":
+        # one lamp in each corner of the panel, no arrow.
+        for dx in (-6.5, 6.5):
+            for dy in (-3.0, 3.0):
+                c.circle(x + dx, y + dy, 1.4, stroke=0, fill=1)
+        return
     p = c.beginPath()
     if direction == "left":
         p.moveTo(x + 6, y - 2)
@@ -894,6 +902,15 @@ def _draw_arrow_board(c: canvas.Canvas, x: float, y: float, direction: str = "ri
         p.lineTo(x - 6, y + 2)
     p.close()
     c.drawPath(p, stroke=0, fill=1)
+
+
+def _arrow_board_display(label: str | None) -> str:
+    """The display an arrow board's generator label asks for:
+    ``"CAUTION"`` → the caution display, ``"LEFT_ARROW"`` → left, anything
+    else → right (the pre-R119 fallback, unchanged)."""
+    if label == "CAUTION":
+        return "caution"
+    return "left" if label == "LEFT_ARROW" else "right"
 
 
 def _draw_pcms(c: canvas.Canvas, x: float, y: float) -> None:
@@ -1688,8 +1705,7 @@ def _draw_devices(
     # de-overlapped) screen position.
     for p, x, y in items:
         if p.device_type == DeviceType.ARROW_BOARD:
-            direction = "left" if p.label == "LEFT_ARROW" else "right"
-            _draw_arrow_board(c, x, y, direction=direction)
+            _draw_arrow_board(c, x, y, direction=_arrow_board_display(p.label))
         elif p.device_type == DeviceType.SIGN_GENERIC:
             _draw_sign(c, x, y, p.label or "")
         else:
@@ -2533,14 +2549,27 @@ def _draw_legend(
         for i, line in enumerate(footnote_lines):
             c.drawString(box_x + 8, note_y - i * 9, line)
 
+    # R119 Q1: when every arrow board on the plan is in caution mode (every
+    # shoulder plan), the legend row shows the caution display and says so,
+    # matching the plan view.  Any other mix keeps the pre-R119 row.
+    board_displays = {
+        _arrow_board_display(p.label) for p in placements if p.device_type == DeviceType.ARROW_BOARD
+    }
+    boards_in_caution = board_displays == {"caution"}
+
     def _device_row(dt: DeviceType) -> Callable[[float], None]:
         def draw(yy: float) -> None:
-            glyph = _DEVICE_LEGEND_GLYPHS.get(dt) or _DEVICE_GLYPHS.get(dt, _draw_sign)
-            glyph(c, glyph_x, yy + 3)
+            if dt == DeviceType.ARROW_BOARD and boards_in_caution:
+                _draw_arrow_board(c, glyph_x, yy + 3, direction="caution")
+            else:
+                glyph = _DEVICE_LEGEND_GLYPHS.get(dt) or _DEVICE_GLYPHS.get(dt, _draw_sign)
+                glyph(c, glyph_x, yy + 3)
             c.setFillColor(colors.black)
             label = (
                 cone_display_name(speed_mph)
                 if dt == DeviceType.CONE
+                else "Arrow Board (caution mode)"
+                if dt == DeviceType.ARROW_BOARD and boards_in_caution
                 else _DEVICE_DISPLAY_NAMES.get(dt, dt.value)
             )
             # #216 Family 2: row labels truncate at the box's inner

@@ -2007,7 +2007,7 @@ def test_sign_codes_cover_every_label_emitted_by_canonical_generators() -> None:
         + list(generate_flagger_alternating_2lane(_flagger_params()))
         + list(generate_mobile_op_2lane(_mobile_2lane_params()))
     )
-    # Skip the synthetic non-MUTCD labels (RIGHT_ARROW, WORK_TRUCK,
+    # Skip the synthetic non-MUTCD labels (CAUTION, WORK_TRUCK,
     # SHADOW_TMA, etc.) — they're internal glyph keys, not sign codes.
     sign_codes_emitted = {
         p.label

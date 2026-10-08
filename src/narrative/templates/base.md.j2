@@ -39,6 +39,8 @@
 1. Identify both {% if is_afad %}AFAD{% else %}flagger{% endif %} station positions (do not staff yet; stations are staffed after all devices are in place, step 7): Station #1 at station {{ "{:,.0f}".format(flagger_station_1_ft) }} ft (approach side, 100 ft upstream of the taper start, closed-lane side); Station #2 at station {{ "{:,.0f}".format(flagger_station_2_ft) }} ft (opposing approach, 300 ft past the work-area end per CDOT S-630-1 Case 17).
 {% elif is_near_intersection %}
 1. Position arrow board at the upstream start of the merging taper (station {{ "{:,.0f}".format(taper_start_station) }} ft), centered in the closed right lane. Set to LEFT ARROW mode (traffic merges left, out of the closed lane). Activate flashing.
+{% elif closure_type == "shoulder" %}
+1. Position arrow board at the upstream start of the shoulder taper (station {{ "{:,.0f}".format(taper_start_station) }} ft). Set it to caution mode (flashing caution or alternating diamond). Shoulder work takes caution mode only, never an arrow (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Activate flashing.
 {% else %}
 1. Position arrow board at the upstream start of the shoulder taper (station {{ "{:,.0f}".format(taper_start_station) }} ft). Set to RIGHT ARROW mode (for right shoulder closure). Activate flashing.
 {% endif %}

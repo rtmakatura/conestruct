@@ -168,6 +168,17 @@ def rightmost_lane_assumption_active(params: ScenarioParams) -> bool:
     return params.closure_type == "lane" and params.num_lanes >= 2
 
 
+# R119 Q1: a shoulder plan's arrow board shows caution mode, never an
+# arrow.  MUTCD 11th Ed. §6L.06 ¶18 (Standard), p. 833: "For shoulder
+# work, for blocking the shoulder, for roadside work near the shoulder,
+# or for temporarily closing one lane on a two-lane, two-way roadway, an
+# arrow board shall be used only in the caution mode."  CDOT S-630-1
+# Sheet 2 General Note 26 says the same.  ``"CAUTION"`` is the label the
+# mobile generator already uses; the plan sheet draws it as Fig 6L-3's
+# Flashing Caution display (p. 834) and the crew sheet says the mode.
+SHOULDER_ARROW_BOARD_LABEL: str = "CAUTION"
+
+
 def generate_shoulder_closure_divided(
     params: ScenarioParams,
     shoulder_width_ft: float | None = None,
@@ -370,15 +381,14 @@ def generate_shoulder_closure_divided(
             )
         )
 
-    # 3. Arrow board at the upstream start of the taper.
-    # Right-arrow mode for shoulder closure (caution/right-shift indication
-    # next to the closed shoulder); lane closures use LEFT_ARROW instead.
+    # 3. Arrow board at the upstream start of the taper, in caution mode
+    # (``SHOULDER_ARROW_BOARD_LABEL``: shoulder work never takes an arrow).
     placements.append(
         DevicePlacement(
             device_type=DeviceType.ARROW_BOARD,
             station_ft=taper_start_station,
             offset_ft=arrow_board_offset,
-            label="RIGHT_ARROW",
+            label=SHOULDER_ARROW_BOARD_LABEL,
         )
     )
 
@@ -737,13 +747,14 @@ def generate_shoulder_closure_undivided(
             )
         )
 
-    # 3. Arrow board at the upstream start of the taper (right-arrow).
+    # 3. Arrow board at the upstream start of the taper, in caution mode
+    # (``SHOULDER_ARROW_BOARD_LABEL``: shoulder work never takes an arrow).
     placements.append(
         DevicePlacement(
             device_type=DeviceType.ARROW_BOARD,
             station_ft=taper_start_station,
             offset_ft=arrow_board_offset,
-            label="RIGHT_ARROW",
+            label=SHOULDER_ARROW_BOARD_LABEL,
         )
     )
 
