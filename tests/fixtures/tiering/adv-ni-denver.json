@@ -624,7 +624,9 @@
      "date": "2022-04-01",
      "status": "verified"
     },
-    "status": "fires"
+    "status": "fires",
+    "raised": false,
+    "device_label": "Arrow board"
    }
   ],
   "chips": {
@@ -960,7 +962,8 @@
      "doc": "DOTI PT-116.1",
      "date": "2022-04-01",
      "status": "verified"
-    }
+    },
+    "jurisdiction_added": 0
    },
    {
     "device": "Portable Light Plant",

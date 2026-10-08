@@ -271,7 +271,10 @@ const SEV_BAR: Record<AppliedDelta["severity"], string> = {
 
 function deltaImpact(d: AppliedDelta): { main: string; unit?: string } {
   if (d.severity === "count") {
-    if (d.effect.op === "swap_device") return { main: "→ swap", unit: d.effect.device };
+    // R116: never a raw key -- the backend's label (or the id read as
+    // words on an older wire).
+    if (d.effect.op === "swap_device")
+      return { main: "→ swap", unit: d.device_label ?? d.effect.device?.replace(/_/g, " ") };
     const qty = d.effect.qty ?? 1;
     return { main: `+${qty}`, unit: qty === 1 ? "device" : "devices" };
   }

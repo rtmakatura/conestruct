@@ -53,6 +53,10 @@ def tier_facts(
                 facts[fid] = "attention"
             elif d.get("severity") == "admin":
                 facts[fid] = "reference"
+            elif d.get("raised") is False:
+                # R118: a rule the layout already meets raised no count --
+                # checked, not changed.  Absent ``raised`` keeps the tier.
+                facts[fid] = "checked"
             else:
                 facts[fid] = "changed"
         chips = jurisdiction.get("chips", {})

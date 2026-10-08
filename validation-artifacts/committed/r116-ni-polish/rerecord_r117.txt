@@ -1,0 +1,14 @@
+adv-ni-denver.json: 3 leaf(s)
+   jurisdiction.applied_deltas[0].raised = False
+   jurisdiction.applied_deltas[0].device_label = 'Arrow board'
+   breakdown.devices[14].jurisdiction_added = 0
+control-lakewood.json: 1 leaf(s)
+   jurisdiction.applied_deltas[0].device_label = 'Advance warning signs'
+scanned-asserted.json: 1 leaf(s)
+   jurisdiction.applied_deltas[0].device_label = 'Advance warning signs'
+scanned-dismissed.json: 1 leaf(s)
+   jurisdiction.applied_deltas[0].device_label = 'Advance warning signs'
+scanned-lakewood.json: 1 leaf(s)
+   jurisdiction.applied_deltas[0].device_label = 'Advance warning signs'
+scanned-not-checked.json: 1 leaf(s)
+   jurisdiction.applied_deltas[0].device_label = 'Advance warning signs'

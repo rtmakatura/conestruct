@@ -24,8 +24,8 @@ const { applyGate, gateHeaders } = require(`${REPO}/scripts/gate.cjs`);
 
 const SITE = process.env.AUDIT_SITE || "http://localhost:3108/sandbox";
 const OUT = process.env.AUDIT_OUT;
-if (!OUT) throw new Error("AUDIT_OUT is required");
-fs.mkdirSync(OUT, { recursive: true });
+if (!OUT && require.main === module) throw new Error("AUDIT_OUT is required");
+if (OUT) fs.mkdirSync(OUT, { recursive: true });
 gateHeaders(SITE);
 const PIN = { lat: 39.7337, lng: -104.98753 };
 const CROSS_LAT = 39.7351; // E 12th Ave at N Broadway (approximate)
@@ -207,12 +207,16 @@ async function run(browser, w, h) {
   await ctx.close();
 }
 
-(async () => {
-  const browser = await chromium.launch();
-  await run(browser, 1440, 1000);
-  await run(browser, 390, 844);
-  await browser.close();
-})().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+module.exports = { toPlan };
+
+if (require.main === module) {
+  (async () => {
+    const browser = await chromium.launch();
+    await run(browser, 1440, 1000);
+    await run(browser, 390, 844);
+    await browser.close();
+  })().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

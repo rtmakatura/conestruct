@@ -644,6 +644,20 @@ def _display_name(device_id: str) -> str:
     return _JURISDICTION_DEVICE_DISPLAY.get(device_id, device_id.replace("_", " ").title())
 
 
+def device_label(device_id: str) -> str:
+    """The device's name in a sentence ("Arrow board", "Arrow board (Type
+    C)") -- R116/R117: the UI never shows a raw key.  The display name with
+    every plain title-case word after the first lowered; codes and the
+    parenthetical keep their case."""
+    words = _display_name(device_id).split(" ")
+    out = [words[0]]
+    in_parens = False
+    for w in words[1:]:
+        in_parens = in_parens or w.startswith("(")
+        out.append(w if in_parens or not (w.isalpha() and w.istitle()) else w.lower())
+    return " ".join(out)
+
+
 # Jurisdiction ``effect.device`` id -> catalog DeviceType, so a fired
 # ``add_device`` delta tops up (or adds) the right aggregated row and the
 # XLSX bid line can source a real CDOT pay item + unit.  Corpus-backed and
@@ -662,7 +676,8 @@ _DELTA_DEVICE_TYPE: dict[str, DeviceType] = {
 
 
 def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
-    """Yield ``(device_id, qty, source)`` for every fired count add-device delta.
+    """Yield ``(index, device_id, qty, source)`` for every fired count
+    add-device delta (``index`` over ``applied_deltas``).
 
     The single gate for count-effect application (issue #151): only
     ``fires``-status ``count``-severity deltas whose effect is a concrete
@@ -670,7 +685,7 @@ def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
     unknown deltas surface elsewhere in the jurisdiction block but never
     touch device counts (rule 10 — no silently-guessed counts).
     """
-    for delta in applied_deltas:
+    for i, delta in enumerate(applied_deltas):
         if delta.get("severity") != "count" or delta.get("status") != FIRES:
             continue
         effect = delta.get("effect", {})
@@ -679,7 +694,7 @@ def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
         device_id = effect.get("device")
         if not device_id:
             continue
-        yield device_id, effect.get("qty", 1), delta["source"]
+        yield i, device_id, effect.get("qty", 1), delta["source"]
 
 
 def apply_count_deltas_structured(
@@ -702,9 +717,22 @@ def apply_count_deltas_structured(
 
     Matching is by ``DeviceType`` (not display string), so a delta and its
     baseline row can never miss each other on a naming mismatch.
+
+    R117 Q1b: each row records how many of its quantity the rules added
+    (``jurisdiction_added``); :func:`annotate_count_effects` reads the same
+    walk to say whether each rule raised a count.
     """
+    return _apply_count_deltas(rows, applied_deltas)[0]
+
+
+def _apply_count_deltas(
+    rows: list[AggregatedDeviceRow], applied_deltas: list[dict[str, Any]]
+) -> tuple[list[AggregatedDeviceRow], dict[int, int]]:
+    """The one walk: the rows after the fired count deltas, and how much
+    each delta (by index over ``applied_deltas``) added."""
     out = list(rows)
-    for device_id, qty, source in _iter_fired_count_adds(applied_deltas):
+    added_by: dict[int, int] = {}
+    for i, device_id, qty, source in _iter_fired_count_adds(applied_deltas):
         dt = _DELTA_DEVICE_TYPE.get(device_id)
         match_idx = None
         if dt is not None:
@@ -714,12 +742,15 @@ def apply_count_deltas_structured(
             )
         if match_idx is not None:
             r = out[match_idx]
+            added = max(0, qty - r.quantity)
             out[match_idx] = r._replace(
                 quantity=max(r.quantity, qty),
                 jurisdiction_required=True,
                 jurisdiction_source=source,
+                jurisdiction_added=r.jurisdiction_added + added,
             )
         else:
+            added = qty
             out.append(
                 AggregatedDeviceRow(
                     device_type=dt,
@@ -729,8 +760,36 @@ def apply_count_deltas_structured(
                     jurisdiction_required=True,
                     jurisdiction_source=source,
                     display_override=_display_name(device_id),
+                    jurisdiction_added=qty,
                 )
             )
+        added_by[i] = added
+    return out, added_by
+
+
+def annotate_count_effects(
+    applied_deltas: list[dict[str, Any]], placements: list
+) -> list[dict[str, Any]]:
+    """R117 Q1b / R118 -- the applied deltas, each fired count add-device
+    delta carrying ``raised`` (did it add to a count on THIS plan?), and each
+    delta naming a device carrying ``device_label``.
+
+    Computed by the same walk the device list, the XLSX and the on-sheet
+    summary apply (:func:`_apply_count_deltas`), so the words can never
+    disagree with the counts.  A rule the layout already meets raised
+    nothing: the board was there.  Returns new dicts; the input is not
+    mutated.  Deltas that change no count carry no ``raised``.
+    """
+    _, added_by = _apply_count_deltas(aggregate_device_rows(placements), applied_deltas)
+    out: list[dict[str, Any]] = []
+    for i, d in enumerate(applied_deltas):
+        a = dict(d)
+        device = (d.get("effect") or {}).get("device")
+        if device:
+            a["device_label"] = device_label(device)
+        if i in added_by:
+            a["raised"] = added_by[i] > 0
+        out.append(a)
     return out
 
 

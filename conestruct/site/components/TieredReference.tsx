@@ -71,6 +71,7 @@ import type { Scenario, SiteConditionFlag } from "@/lib/scenarios";
 import type { AuditState, SiteAdjustmentRecord } from "@/lib/render-types";
 import type { Tier } from "@/lib/tiering";
 import { deriveTierSources } from "@/lib/tier-sources";
+import { deltaCite, deltaDetail, deltaTitle } from "@/lib/delta-words";
 import { useWriteLock } from "./WriteLock";
 
 // #224 phase 3 (ruling e3): panel labels for the scanned buckets that
@@ -189,11 +190,11 @@ export function TieredReference({
   // derive.
   const {
     jur, settled, auditFailed, declined, throttled, isRefreshing, isFirstLoad,
-    model, r,
+    model, r, jurisdictionName,
     deltasChanged, siteChanged, finesItem, finesApplicable,
     deltasAttention, coloradoFails, corridorItem, siteScanItem, geometryItem,
     approachesSpec, approachesSignalized,
-    deltasAdmin, siteAdvisory, coloradoPasses, coloradoInfos, corridorClean,
+    deltasMet, deltasAdmin, siteAdvisory, coloradoPasses, coloradoInfos, corridorClean,
     pendingSpec, traceItems, hoursStatus,
     siteRecords, scan, scanBuckets, flagToBucket, corrections,
   } = deriveTierSources({
@@ -470,6 +471,19 @@ export function TieredReference({
     checkedBody.push(<ItemAccordion key="traces" items={traceItems} />);
   }
   const checkedRows: ReactNode[] = [];
+  // R118: a jurisdiction rule the layout already meets is a checked row,
+  // in the words NEEDS YOU would give it (lib/delta-words, P2).
+  deltasMet.forEach((d, i) =>
+    checkedRows.push(
+      <CheckRow
+        key={`met${i}`}
+        label={deltaTitle(d, jurisdictionName)}
+        detail={deltaDetail(d, jurisdictionName)}
+        tone="pass"
+        tag={deltaCite(d)}
+      />,
+    ),
+  );
   coloradoPasses.forEach((c, i) =>
     checkedRows.push(
       <CheckRow key={`p${i}`} label={c.label} detail={c.detail} tone="pass" tag={c.citation} />,

@@ -104,6 +104,9 @@ export interface TierSources {
    *  fact, and collides across groups. */
   deltas: JurisdictionBlock["applied_deltas"];
 
+  /** The jurisdiction's name, for a rule's words (lib/delta-words). */
+  jurisdictionName: string | null;
+
   // ── ▲ changed ──
   deltasChanged: JurisdictionBlock["applied_deltas"];
   siteChanged: SiteAdjustmentRecord[];
@@ -120,6 +123,8 @@ export interface TierSources {
   approachesSignalized: boolean;
 
   // ── ✓ checked · ◌ pending · i reference ──
+  /** R118: fired count rules the layout already met (raised nothing). */
+  deltasMet: JurisdictionBlock["applied_deltas"];
   deltasAdmin: JurisdictionBlock["applied_deltas"];
   siteAdvisory: SiteAdjustmentRecord[];
   coloradoPasses: ColoradoCheck[];
@@ -163,7 +168,10 @@ export function deriveTierSources({
   // ── fact groups (same predicates as lib/tiering.ts — single mapping) ──
   const deltas = jur?.applied_deltas ?? [];
   const deltasChanged = deltas.filter(
-    (d) => d.status === "fires" && d.severity !== "admin",
+    (d) => d.status === "fires" && d.severity !== "admin" && d.raised !== false,
+  );
+  const deltasMet = deltas.filter(
+    (d) => d.status === "fires" && d.severity !== "admin" && d.raised === false,
   );
   const deltasAttention = deltas.filter(
     (d) => d.status === "conditional" || d.status === "unknown",
@@ -268,10 +276,11 @@ export function deriveTierSources({
   return {
     jur, settled, auditFailed, declined, throttled, isRefreshing, isFirstLoad, refreshing,
     model, r, deltas,
+    jurisdictionName: jur?.name ?? null,
     deltasChanged, siteChanged, finesItem, finesApplicable,
     deltasAttention, coloradoFails, corridorItem, siteScanItem, geometryItem,
     approachesSpec, approachesSignalized,
-    deltasAdmin, siteAdvisory, coloradoPasses, coloradoInfos, corridorClean,
+    deltasMet, deltasAdmin, siteAdvisory, coloradoPasses, coloradoInfos, corridorClean,
     pendingSpec, hoursStatus,
     get traceItems() { return computeTraceItems(); },
     siteRecords, scan, scanBuckets, flagToBucket, corrections,

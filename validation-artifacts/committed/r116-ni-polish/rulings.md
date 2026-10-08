@@ -22,3 +22,7 @@
 > Q3b: Yes, fold into "PLATE DEPARTURES: SEE AUDIT".
 > Q3c: Yes, extra spacing only on one-column tables; Case 27 keeps its 4 rows.
 > Build 1, then 3, then 2, one branch each.
+
+## R118 (Ryan, 2026-10-08), where a met requirement goes
+
+> R118 (Ryan, 2026-10-08): (a). A jurisdiction rule that raised no count moves to ✓ Checked & passed, on screen and in the audit PDF's ledger. A rule that raised a count stays ▲ in Needs You ("Arrow board added").

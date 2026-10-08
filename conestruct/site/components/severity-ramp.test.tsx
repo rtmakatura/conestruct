@@ -31,6 +31,8 @@ const READY: DeviceBreakdownState = {
         function: "Jurisdiction-required",
         qty: 1,
         jurisdiction_required: true,
+        // R117 Q1b: a delta-only row, so the rule added it.
+        jurisdiction_added: 1,
         jurisdiction_source: { doc: "Greeley PS Reqs", status: "verified" },
       },
     ],

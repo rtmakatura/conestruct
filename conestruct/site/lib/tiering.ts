@@ -167,6 +167,10 @@ export function assignTiers({ jurisdiction, audit, auditFailed = false }: Tierin
         facts.push(fact(id, "attention", `delta ${d.status}`));
       } else if (d.severity === "admin") {
         facts.push(fact(id, "reference", "admin delta"));
+      } else if (d.raised === false) {
+        // R118: a rule the layout already meets raised no count -- checked,
+        // not changed (mirrored by src/rendering/tier_ledger.py).
+        facts.push(fact(id, "checked", "delta met by the layout"));
       } else {
         // fires, count or op — changed the plan (count) or its method (op).
         facts.push(fact(id, "changed", `delta fires (${d.severity})`));

@@ -45,7 +45,8 @@ const ready = (over: Record<string, unknown> = {}): DeviceBreakdownState =>
     data: {
       total_devices: 33,
       unique_types: 11,
-      devices: [{ jurisdiction_required: true }, { jurisdiction_required: false }],
+      // R117 Q1b: the wire says how many the rules added.
+      devices: [{ jurisdiction_required: true, jurisdiction_added: 1 }, { jurisdiction_required: false }],
       zone_geometry: GEOMETRY,
       ...over,
     },
@@ -184,5 +185,35 @@ describe("#288 clause 2 — rule 83's degradations are UNCHANGED (Part 1 §8.7 K
     } as unknown as DeviceBreakdownState;
     const { container: c2 } = render(<ResultsHero breakdown={held} jurisdiction={JUR} />);
     expect(c2.querySelector(".num")!.textContent).toBe("33");
+  });
+});
+
+describe("R117 Q1b — '+N jurisdiction-required' counts what the rules added", () => {
+  const JUR = { name: "Denver", tcp_term: "TCP" } as unknown as JurisdictionBlock;
+
+  it("a required device the layout already placed adds nothing to the line", () => {
+    const { container } = render(
+      <ResultsHero
+        breakdown={ready({
+          devices: [{ jurisdiction_required: true, jurisdiction_added: 0 }, { jurisdiction_required: false }],
+        })}
+        jurisdiction={JUR}
+      />,
+    );
+    expect(container.textContent).not.toContain("jurisdiction-required");
+    expect(container.textContent).not.toContain("from Denver");
+  });
+
+  it("a device the rules added is counted, by quantity", () => {
+    const { container } = render(
+      <ResultsHero
+        breakdown={ready({
+          devices: [{ jurisdiction_required: true, jurisdiction_added: 2 }, { jurisdiction_required: false }],
+        })}
+        jurisdiction={JUR}
+      />,
+    );
+    expect(container.textContent).toContain("+2 jurisdiction-required");
+    expect(container.textContent).toContain("1 from Denver");
   });
 });

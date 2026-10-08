@@ -10,6 +10,8 @@ export interface DeviceBreakdownRow {
   /** Present only on rows a jurisdiction count-delta added or topped up
    *  (backend apply_count_deltas — spec §3.2). */
   jurisdiction_required?: boolean;
+  /** R117 Q1b: how many of `qty` the jurisdiction's rules added. */
+  jurisdiction_added?: number;
   jurisdiction_source?: SourceRef;
 }
 

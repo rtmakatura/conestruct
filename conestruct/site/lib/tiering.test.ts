@@ -134,6 +134,19 @@ describe("the ruled status→tier grid", () => {
     });
     expect(tierOf({ jurisdiction: j, audit: null }, "jur:delta:0")).toBe("changed");
   });
+  it("R118: a count rule that raised nothing → checked (✓); one that raised → changed", () => {
+    const rule = (raised: boolean) => ({
+      severity: "count" as const,
+      rule: "r",
+      effect: { op: "add_device", qty: 1 },
+      status: "fires" as const,
+      source: SOURCE,
+      raised,
+    });
+    const j = jurWith({ applied_deltas: [rule(false), rule(true)] });
+    expect(tierOf({ jurisdiction: j, audit: null }, "jur:delta:0")).toBe("checked");
+    expect(tierOf({ jurisdiction: j, audit: null }, "jur:delta:1")).toBe("changed");
+  });
   it("delta fires/op → changed (flag a: method changes are plan changes)", () => {
     const j = jurWith({
       applied_deltas: [{ severity: "op", rule: "r", effect: { op: "x" }, status: "fires", source: SOURCE }],

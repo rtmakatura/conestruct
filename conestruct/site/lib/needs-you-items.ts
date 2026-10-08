@@ -31,32 +31,28 @@
 // them worth showing before their actions arrive.
 
 import type { AppliedDelta } from "./jurisdiction";
+import { deltaCite, deltaDetail, deltaTitle } from "./delta-words";
 import type { SiteAdjustmentRecord } from "./render-types";
 import type { NeedsYouItem, NeedsYouTier } from "./needs-you";
 import type { TierSources } from "./tier-sources";
 import type { ItemSpec } from "@/components/AuditTrail";
 
-/** A delta's one-line body: what it did, in the wire's own words. */
-function deltaTitle(d: AppliedDelta): string {
-  const { op, device, qty, note } = d.effect;
-  if (note) return note;
-  const parts = [op, qty != null ? String(qty) : null, device ?? null].filter(Boolean);
-  return parts.join(" ");
-}
-
-/** The evidence a delta carried, and nothing more (rule 75). */
-function deltaEvidence(d: AppliedDelta): string | undefined {
-  return d.baseline ? `baseline ${d.baseline}` : undefined;
-}
-
-function fromDelta(d: AppliedDelta, i: number, tier: NeedsYouTier): NeedsYouItem {
+/** R116 / R117: a rule's row, in the words lib/delta-words chooses --
+ *  a plain title, one detail line, the source as the citation.  Never a
+ *  raw key, never the rule's sentence (that stays in Plan reference). */
+function fromDelta(
+  d: AppliedDelta,
+  i: number,
+  tier: NeedsYouTier,
+  jurisdictionName: string | null,
+): NeedsYouItem {
   return {
     id: `jur:delta:${i}`,
     tier,
-    title: deltaTitle(d),
+    title: deltaTitle(d, jurisdictionName),
     result: d.status.toUpperCase(),
-    cite: d.rule,
-    evidence: deltaEvidence(d),
+    cite: deltaCite(d),
+    evidence: deltaDetail(d, jurisdictionName),
     action: null,
   };
 }
@@ -109,7 +105,7 @@ export interface NeedsYouItemsInput {
 
 export function buildNeedsYouItems({ sources, siteLabel }: NeedsYouItemsInput): NeedsYouItem[] {
   const {
-    deltas,
+    deltas, jurisdictionName,
     deltasChanged, siteChanged, finesItem, finesApplicable,
     deltasAttention, coloradoFails, siteScanItem, corridorItem, geometryItem,
     approachesSpec, approachesSignalized,
@@ -125,14 +121,18 @@ export function buildNeedsYouItems({ sources, siteLabel }: NeedsYouItemsInput): 
   const items: NeedsYouItem[] = [];
 
   // ── ▲ changed — this plan is different because of these ──
-  deltasChanged.forEach((d) => items.push(fromDelta(d, deltaIndex.get(d) ?? -1, "changed")));
+  deltasChanged.forEach((d) =>
+    items.push(fromDelta(d, deltaIndex.get(d) ?? -1, "changed", jurisdictionName)),
+  );
   siteChanged.forEach((rec) => items.push(fromSiteAdjustment(rec, siteLabel(rec.flag))));
   if (finesItem && finesApplicable) {
     items.push(fromItemSpec(finesItem, "audit:fines_double", "changed"));
   }
 
   // ── ⚠ attention — obligations the tool cannot discharge ──
-  deltasAttention.forEach((d) => items.push(fromDelta(d, deltaIndex.get(d) ?? -1, "attention")));
+  deltasAttention.forEach((d) =>
+    items.push(fromDelta(d, deltaIndex.get(d) ?? -1, "attention", jurisdictionName)),
+  );
   coloradoFails.forEach((c, i) =>
     items.push({
       id: `audit:colorado:fail:${i}`,

@@ -34,6 +34,10 @@ class AggregatedDeviceRow(NamedTuple):
     jurisdiction_required: bool = False
     jurisdiction_source: dict | None = None
     display_override: str | None = None
+    # R117 Q1b: how many of ``quantity`` the jurisdiction's rules added.
+    # 0 on a row the layout already carried enough of (the rule is met,
+    # nothing was raised).
+    jurisdiction_added: int = 0
 
 
 def row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:

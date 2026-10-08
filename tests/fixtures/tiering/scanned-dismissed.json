@@ -925,7 +925,8 @@
           "section": "note 6",
           "status": "provisional"
         },
-        "status": "conditional"
+        "status": "conditional",
+        "device_label": "Advance warning signs"
       },
       {
         "severity": "op",

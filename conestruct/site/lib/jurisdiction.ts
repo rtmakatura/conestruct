@@ -79,6 +79,12 @@ export interface AppliedDelta {
   status: TriggerStatus;
   source: SourceRef;
   conflict?: ConflictBlock;
+  /** R117: the device's sentence-case name (backend-owned words). */
+  device_label?: string;
+  /** R117 Q1b: on a fired count add, whether it added to a count on this
+   *  plan.  `false`: the layout already met it (R118: checked, not
+   *  changed).  Absent on every other rule, and on older wires. */
+  raised?: boolean;
 }
 
 export interface Meter {

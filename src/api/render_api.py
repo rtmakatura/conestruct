@@ -71,6 +71,7 @@ from src.rules.devices import DeviceType, cone_display_name
 from src.rules.jurisdiction import (
     UnknownJurisdictionError,
     aggregate_device_rows_with_deltas,
+    annotate_count_effects,
     collect_conflicts,
     context_for_closure_type,
     load_jurisdiction,
@@ -1606,6 +1607,9 @@ def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> d
     if row.jurisdiction_required:
         out["jurisdiction_required"] = True
         out["jurisdiction_source"] = row.jurisdiction_source
+        # R117 Q1b: how many the rules added (0 when the layout already
+        # carried enough) -- the results card counts these, not the flag.
+        out["jurisdiction_added"] = row.jurisdiction_added
     return out
 
 
@@ -1678,7 +1682,9 @@ def _jurisdiction_schedule(scenario: Scenario) -> JurisdictionWorkSchedule | Non
 
 
 def _jurisdiction_eval(
-    scenario: Scenario, params: ScenarioParams
+    scenario: Scenario,
+    params: ScenarioParams,
+    placements: list[DevicePlacement] | None = None,
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
     """Evaluate the scenario's jurisdiction once (issue #151).
 
@@ -1703,6 +1709,12 @@ def _jurisdiction_eval(
         schedule=_jurisdiction_schedule(scenario),
     )
     jurisdiction = evaluate_jurisdiction(record, ctx)
+    if placements is not None:
+        # R117 Q1b / R118: with the plan's placements, each fired count rule
+        # says whether it raised a count (the same row walk the counts use).
+        jurisdiction["applied_deltas"] = annotate_count_effects(
+            jurisdiction["applied_deltas"], placements
+        )
     return jurisdiction, jurisdiction["applied_deltas"]
 
 
@@ -1739,7 +1751,7 @@ def _breakdown_payload(scenario: Scenario, placements: list[Any], params: Any) -
     # Count-affecting deltas modify quantities through the shared row
     # pipeline (spec §3.2, issue #151) — the same aggregation the XLSX and
     # on-sheet summary render, never a frontend computation.
-    jurisdiction, applied_deltas = _jurisdiction_eval(scenario, params)
+    jurisdiction, applied_deltas = _jurisdiction_eval(scenario, params, placements)
     structured = aggregate_device_rows_with_deltas(placements, applied_deltas)
     rows = [_format_breakdown_row(row, params) for row in structured]
     payload: dict[str, Any] = {
@@ -1901,12 +1913,13 @@ def render_audit_pdf_endpoint(scenario: Scenario) -> Response:
     """
     _ensure_scenario_enabled(scenario)
     try:
-        projection, params = _audit_projection_and_params_for(scenario)
+        projection, params, placements = _audit_build(scenario)
         # #220 — the cover's triage line counts jurisdiction facts too
         # (deltas, obligations, the hours verdict) when the scenario
         # names a jurisdiction; same single evaluation the breakdown
-        # endpoint runs, derived at render time — no wire change.
-        jurisdiction = _jurisdiction_eval(scenario, params)[0]
+        # endpoint runs, derived at render time — no wire change.  R118:
+        # with the placements, so a met rule is counted as checked.
+        jurisdiction = _jurisdiction_eval(scenario, params, placements)[0]
         fd, raw_path = tempfile.mkstemp(suffix=".pdf")
         os.close(fd)
         path = Path(raw_path)

@@ -24,6 +24,7 @@ const EMPTY = {
   geometryItem: null,
   approachesSpec: null,
   approachesSignalized: false,
+  jurisdictionName: "Denver",
 } as unknown as TierSources;
 
 const src = (over: Partial<TierSources>): TierSources =>
@@ -34,13 +35,20 @@ const build = (over: Partial<TierSources>) =>
 
 const spec = (title: string) => ({ title, result: "RESULT", cite: "CITE", body: null });
 
+// R116 / R117: the REAL wire shape (data/jurisdictions/denver.json, as
+// the backend annotates it).  The old made-up fixture put a short cite in
+// `rule`, where the wire sends a sentence -- which is how the raw-key,
+// one-word-per-line row shipped.
 const delta = (over: Record<string, unknown> = {}) =>
   ({
     severity: "count",
-    rule: "MUTCD § 6C.02",
+    rule: "Arrow board required if closing one or more lanes — Denver's trigger is >=1 lane (vs. Colorado Springs' 4+-lane roadway rule).",
+    baseline: "arrow board optional per MUTCD for many single-lane closures",
     status: "fires",
-    effect: { op: "add", qty: 2, device: "cones" },
-    source: {},
+    effect: { op: "add_device", qty: 1, device: "arrow_board" },
+    source: { doc: "DOTI PT-116.1", date: "2022-04-01", status: "verified" },
+    device_label: "Arrow board",
+    raised: true,
     ...over,
   }) as never;
 
@@ -60,25 +68,29 @@ describe("buildNeedsYouItems", () => {
     ).toEqual([]);
   });
 
-  it("maps a fired delta to a ▲ row carrying its rule as the citation", () => {
+  it("a rule that raised a count is a ▲ row: '{Device} added', one detail line, its source cited", () => {
     const [item] = build({ deltasChanged: [delta()] });
     expect(item.tier).toBe("changed");
-    expect(item.title).toBe("add 2 cones");
-    expect(item.cite).toBe("MUTCD § 6C.02");
+    expect(item.title).toBe("Arrow board added");
+    expect(item.evidence).toBe("required by Denver · added to the plan");
+    expect(item.cite).toBe("DOTI PT-116.1");
     expect(item.result).toBe("FIRES");
     expect(item.action).toBeNull();
   });
 
-  it("a delta's note wins over the assembled effect — the wire's own words", () => {
-    const [item] = build({ deltasChanged: [delta({ effect: { op: "add", note: "Two extra cones per Lakewood" } })] });
+  it("a delta's note wins over the assembled title — the wire's own words", () => {
+    const [item] = build({
+      deltasChanged: [delta({ severity: "op", effect: { op: "method", note: "Two extra cones per Lakewood" } })],
+    });
     expect(item.title).toBe("Two extra cones per Lakewood");
   });
 
-  it("carries a baseline as evidence, and carries nothing when there is none", () => {
-    const [withBaseline] = build({ deltasChanged: [delta({ baseline: "MUTCD 6C.02" })] });
-    expect(withBaseline.evidence).toBe("baseline MUTCD 6C.02");
-    const [without] = build({ deltasChanged: [delta()] });
-    expect(without.evidence).toBeUndefined();
+  it("no raw key and no rule sentence reach the row (R116)", () => {
+    const [item] = build({ deltasChanged: [delta({ device_label: undefined })] });
+    for (const text of [item.title, item.evidence ?? "", item.cite]) {
+      expect(text).not.toMatch(/_|add_device|arrow_board/);
+      expect(text).not.toContain("—");
+    }
   });
 
   it("a site adjustment's counts come from the record and are never summed across records", () => {

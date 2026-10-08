@@ -48,9 +48,11 @@ export function ResultsHero({ breakdown, jurisdiction }: Props) {
   if (d === null) return null;
   // Defensive against a malformed/partial response: a hero that crashes
   // takes the whole results zone with it.
-  const jrCount = (d.devices ?? []).filter(
-    (r) => r.jurisdiction_required,
-  ).length;
+  // R117 Q1b: "+N jurisdiction-required" counts what the rules ADDED --
+  // a required device the layout already placed adds nothing.  The
+  // backend says how many (jurisdiction_added); no frontend count.
+  const jrRows = (d.devices ?? []).filter((r) => (r.jurisdiction_added ?? 0) > 0);
+  const jrCount = jrRows.reduce((n, r) => n + (r.jurisdiction_added ?? 0), 0);
   const g = d.zone_geometry ?? null;
   if (d.total_devices == null || d.unique_types == null) return null;
 
@@ -77,7 +79,7 @@ export function ResultsHero({ breakdown, jurisdiction }: Props) {
           {jrCount > 0 && jurisdiction && (
             <>
               {" "}
-              · <b>{jrCount}</b> from {jurisdiction.name}
+              · <b>{jrRows.length}</b> from {jurisdiction.name}
             </>
           )}
         </div>

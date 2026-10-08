@@ -557,7 +557,8 @@
           "closure": null,
           "condition": "state highway with a median (CDOT-permit territory)",
           "night": null
-        }
+        },
+        "device_label": "Advance warning signs"
       },
       {
         "effect": {
