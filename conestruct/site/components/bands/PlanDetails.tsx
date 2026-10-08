@@ -45,9 +45,11 @@ import { FieldCell, Segmented } from "./FieldCell";
 import { STREET_CLASSES, StreetClassEvidence } from "../JurisdictionSection";
 
 /** #308 — the carriageway facts when the road is a street-class one-way
- *  (the only roads the question applies to); null otherwise. */
+ *  (the only roads the question applies to); null otherwise.  #309: the
+ *  near-intersection kind relays them too (R114 Q4). */
 function oneWayFacts(scenario: Scenario): CarriagewayFacts | null {
-  if (scenario.kind !== "shoulder" || !scenario.carriageway) return null;
+  if (scenario.kind !== "shoulder" && scenario.kind !== "near_intersection") return null;
+  if (!scenario.carriageway) return null;
   const f = scenario.carriageway;
   return carriagewayApplies(f.oneway, f.highwayClass) ? f : null;
 }
@@ -373,6 +375,13 @@ export function PlanDetailCells({
                 : carriagewayVerdict(carriageway) === "divided"
             }
             onChange={(v) => {
+              const confirmed = v ? ("divided" as const) : ("one_way_street" as const);
+              if (scenario.kind === "near_intersection") {
+                // #309 R114: only the answer.  The kind rejects divided,
+                // and a divided verdict keeps today's plan (Q3 (a)).
+                setScenario({ ...scenario, carriageway: { ...carriageway, confirmed } });
+                return;
+              }
               // #308 (R83): the operator's answer rides the facts to the
               // backend, which builds from it; divided-ness follows, and
               // the lanes refit if divided's wider shoulder would overrun
@@ -383,7 +392,7 @@ export function PlanDetailCells({
                 ...s,
                 divided: v,
                 laneWidth: Math.min(s.laneWidth, ceiling),
-                carriageway: { ...carriageway, confirmed: v ? "divided" : "one_way_street" },
+                carriageway: { ...carriageway, confirmed },
               });
             }}
             locked={locked}

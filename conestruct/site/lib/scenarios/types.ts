@@ -143,6 +143,11 @@ export interface NearIntersectionScenario extends JurisdictionPlanFields {
    * so the erased detection is one fact, not one per leg.
    */
   detectionOverrides?: DetectionOverride[];
+  /** #309 (R112/R114) — #308's carriageway facts, relayed as the shoulder
+   *  kind relays them; the backend's verdict decides (src/rules/
+   *  carriageway.py).  A one-way street signs both curbs (S-630-1 Sheet 2
+   *  Note 8); `confirmed` is the operator's answer to an undecided road. */
+  carriageway?: CarriagewayFacts;
 }
 
 /**

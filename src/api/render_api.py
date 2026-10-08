@@ -37,6 +37,7 @@ from src.api.audit import _compute_step_count, audit_projection, build_audit_tra
 from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
     CrossStreetStationError,
+    NearIntersectionScenario,
     Scenario,
     ShoulderScenario,
     flagger_lane_ineligible_high,
@@ -427,8 +428,9 @@ def _ensure_carriageway_decided(scenario: Scenario) -> None:
     """Refuse a shoulder plan on a one-way road the twin test could not
     decide (#308, ruling R83: "If the test can't decide, the operator
     confirms; the plan doesn't guess").  Honest 400 + the recovery the
-    WHAT band's confirm row answers (the relay-fact pattern)."""
-    if not isinstance(scenario, ShoulderScenario):
+    WHAT band's confirm row answers (the relay-fact pattern).  #309 R114
+    Q4: a near-intersection plan gets the same treatment."""
+    if not isinstance(scenario, (ShoulderScenario, NearIntersectionScenario)):
         return
     if scenario.carriageway_verdict() != "undecided":
         return

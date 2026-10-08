@@ -858,6 +858,19 @@ class NearIntersectionScenario(
     # on the scenario, not the approach: both legs carry the same way's
     # tags, so the erased detection is one fact, not one per leg.
     detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
+    # #309 (R112/R114) — #308's carriageway facts, relayed as the shoulder
+    # kind relays them; the backend recomputes the verdict with the one
+    # producer (``src/rules/carriageway.py``).  ``one_way_street`` builds
+    # the S-630-1 Sheet 2 Note 8 both-sides signing; ``undecided`` is
+    # refused at the chokepoint (R114 Q4); ``divided`` keeps today's plan
+    # (R114 Q3 (a): divided near-intersection plans are a follow-up).
+    # None ⇒ no signal, byte-identical to every plan before #309.
+    carriageway: CarriagewayFacts | None = None
+
+    def carriageway_verdict(self) -> CarriagewayVerdict:
+        """The backend's verdict on the road; ``not_applicable`` when no
+        facts were relayed."""
+        return self.carriageway.verdict() if self.carriageway else "not_applicable"
 
     @model_validator(mode="after")
     def _check_not_divided(self) -> Self:
@@ -1470,6 +1483,9 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             is_divided=False,
             jurisdiction="CDOT",
             near_intersection=True,
+            # #309: Note 8 names one-way streets; the generator mirrors
+            # every mainline sign to the left curb on one (R114).
+            one_way_street=scenario.carriageway_verdict() == "one_way_street",
             **meta_kw,
         )
         station = (

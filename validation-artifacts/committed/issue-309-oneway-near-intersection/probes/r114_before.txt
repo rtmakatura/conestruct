@@ -1,0 +1,22 @@
+HEAD 28ac47ec6b78f5ec02eefbd5ff32087d76f5d8bd  tag before  checkout traffic-control-tool
+
+== broadway one-way: POST /render/pdf -> 200
+   one_way_street=False  devices=34  title='Lane Closure Near Intersection · Undivided'
+   mainline W4-2R   station    957.5  offset  +46.0 ft
+   mainline W20-5R  station   1057.5  offset  +46.0 ft
+   mainline W20-1   station   1157.5  offset  +46.0 ft
+   mainline R2-10   station   1107.5  offset  +46.0 ft
+   mainline G20-5P  station    250.0  offset  +46.0 ft
+   mainline G20-1   station    600.0  offset  +46.0 ft
+   mainline G20-2   station   -311.0  offset  +46.0 ft
+   mainline R2-11   station   -211.0  offset  +46.0 ft
+   Note 8 row: {"pass": true, "label": "Signs on both sides of divided highway", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: False. Signs placed: 0 left, 8 right."}
+   narrative: This scenario follows CDOT Standard Plan S-630-1, Case 18 (Sheet 10), "traffic control around a work area near an intersection, one lane closed", applied to an undivided highway with single-side mainline signing (both-sides posting applies to divided highways, multi-lane ramps, and one-way streets per CDOT S-630-1 Sheet 2 General Note 8), plus a cross-street advance-warning set on each approach leg per MUTCD §6N.12 and the Sheet 10 advance-signing key.
+   narrative_2: Three disclosed departures from the plate: (1) the Case 18 plate typifies corner-quadrant work with a full cross-street closure train; this plan confines the work space to the mainline and places cross-street advance signing only. Corner-quadrant support is tracked at https://github.com/rtmakatura/conestruct/issues/128. (2) The opposing mainline direction is not signed (single-side undivided convention; the plate signs both directions). (3) The plate typifies rural sign placement; urban applications require block-based placement per Sheet 10 Note 1. The plate's Type III corner barricade (work lasting more than 3 days) encloses the corner work area and is not placed, per departure (1).
+   breakdown: G20-1 1, G20-2 1, G20-5P 1, R2-10 3, R2-11 3, W20-1 3, W20-5R 1, W4-2R 1, — 7, — 12, — 1
+
+== two-way control (carriageway oneway=no): sha256 per surface
+   /render/audit              200 bytes   4819eb2e5e1dac278fd5e4747584170f5284bc00c374bdfd1ddaeade04ee926f
+   /render/device-breakdown   200 bytes   34dac747754e78f5e2f034f431b806406cac8fff29030d6b48c83f5635c0267c
+   /render/xlsx               200 content bd04829cfde90801eafe96354b349995080e243484de9000514528d3a03a0333
+   /render/pdf                200 content 7fbfa89a0952ec9ad619ce45f369cf33a1690556a2989bbce5f8bdcbbcb28280

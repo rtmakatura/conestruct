@@ -117,6 +117,7 @@ export interface RefusalAffordance {
     | "flagger_oneway"
     | "flagger_lane_confidence"
     | "shoulder_carriageway"
+    | "ni_carriageway"
     | "shoulder_lane_confidence"
     | "ni_lane_confidence"
     | "site_scan_unavailable";
@@ -189,6 +190,17 @@ export function matchRefusalAffordance(
   // and does not return after an untick — the relays and this predicate
   // do (#179).
   if (scenario.kind === "near_intersection") {
+    // #309 (R114 Q4): the carriageway gate runs first at the backend
+    // chokepoint (render_api._ensure_carriageway_decided), so it is
+    // matched first here, as the shoulder kind's is below.  The remedy is
+    // the WHAT band's Carriageway row.
+    if (carriagewayVerdict(scenario.carriageway) === "undecided") {
+      return {
+        code: "ni_carriageway",
+        pointer:
+          "The map couldn't tell whether this one-way road is a one-way street or one side of a divided road. Choose one in the plan details to proceed.",
+      };
+    }
     const disputed = scenario.approaches.some((a) =>
       lanesArithmeticMismatch(
         a.detectedLanesTotal,
@@ -678,6 +690,11 @@ function applyDetected(
           false,
           c.laneWidthFt,
         ),
+        // #309: the raw carriageway facts, as the shoulder branch relays
+        // them (a one-way street signs both curbs, S-630-1 Sheet 2 Note 8).
+        // Undefined on every other road, which also clears a previous
+        // road's facts and any answer about them.
+        carriageway: c.carriageway,
         ...speedPatch,
       };
       const delta = baseDelta(speedApplied, speedApplicable);

@@ -11,8 +11,8 @@
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { DEFAULT_SHOULDER } from "@/lib/scenarios";
-import type { Scenario, ShoulderScenario } from "@/lib/scenarios";
+import { DEFAULT_NEAR_INTERSECTION, DEFAULT_SHOULDER } from "@/lib/scenarios";
+import type { NearIntersectionScenario, Scenario, ShoulderScenario } from "@/lib/scenarios";
 import { PlanDetailCells } from "./PlanDetails";
 
 afterEach(cleanup);
@@ -109,5 +109,33 @@ describe("the carriageway cell", () => {
     mount({ ...(DEFAULT_SHOULDER as ShoulderScenario), roadType: "urban_arterial" });
     expect(screen.queryByTestId("cell-carriageway")).toBeNull();
     expect(screen.getByTestId("cell-divided")).toBeTruthy();
+  });
+});
+
+describe("the carriageway cell on a near-intersection plan (#309 R114 Q4)", () => {
+  function ni(carriageway: NearIntersectionScenario["carriageway"]): NearIntersectionScenario {
+    return { ...DEFAULT_NEAR_INTERSECTION, carriageway };
+  }
+
+  it("asks when the test couldn't decide", () => {
+    mount(ni({ ...FACTS, twinSearched: false }));
+    expect(screen.getByTestId("cell-carriageway")).toBeTruthy();
+    expect(screen.getByTestId("prov-carriageway").textContent).toBe(
+      "⚠ needs you · the map couldn't tell",
+    );
+  });
+
+  it("writes only the answer: divided and the lane width stay (R114 Q3 (a))", () => {
+    const set = mount(ni({ ...FACTS, twinSearched: false }));
+    fireEvent.click(chip("Divided"));
+    const next = set.mock.calls[0][0] as NearIntersectionScenario;
+    expect(next.carriageway?.confirmed).toBe("divided");
+    expect(next.divided).toBe(false);
+    expect(next.laneWidth).toBe(DEFAULT_NEAR_INTERSECTION.laneWidth);
+  });
+
+  it("is absent on a road with no carriageway facts", () => {
+    mount(DEFAULT_NEAR_INTERSECTION);
+    expect(screen.queryByTestId("cell-carriageway")).toBeNull();
   });
 });

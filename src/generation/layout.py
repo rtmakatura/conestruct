@@ -1404,6 +1404,15 @@ def near_intersection_stations(
     }
 
 
+# #309 R114 Q1, CHOSEN: the left-curb sign's offset on a one-way street.
+# Offset 0 is the left lane edge there (``plan_sheet._draw_one_way_street``),
+# so -4.0 ft is 4 ft beyond it, inside the drawn left curb strip: the right
+# side's ``lane_edge + 4.0`` mirrored about the carriageway.  No source sets
+# a lateral sign offset; the divided generator's ``-sign_offset`` would land
+# beyond the drawn road (#308 R94's floating-barricade failure).
+ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT: float = 4.0
+
+
 def generate_near_intersection(
     params: ScenarioParams,
     shoulder_width_ft: float | None = None,
@@ -1415,10 +1424,13 @@ def generate_near_intersection(
     S-630-1 Sheet 10 Case 18's shape: a right-lane closure on an
     undivided mainline near a cross street, plus a per-approach advance
     warning set on every cross-street leg (§6N.12.06).  Adapted from
-    ``generate_lane_closure_divided`` with the S-630-1 Sheet 2 Note 8 median-side
-    mirroring dropped (undivided → single-side signing, matching the
-    undivided shoulder generator) and the lateral geometry generalized
-    to ``params.num_lanes`` lanes per direction.
+    ``generate_lane_closure_divided`` and the lateral geometry generalized
+    to ``params.num_lanes`` lanes per direction.  On a two-way road the
+    S-630-1 Sheet 2 Note 8 both-sides signing is dropped (single-side
+    signing, matching the undivided shoulder generator).  On a one-way
+    street (#309) it is kept: Note 8 names "one-way streets", and a lane
+    closure is not its single-shoulder exception, so every mainline sign
+    is mirrored to the left curb (``ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT``).
 
     Scope (increment 2, Refs #117): cross-street legs receive advance
     sets only — Case 18's plate typifies corner-quadrant work whose
@@ -1597,6 +1609,26 @@ def generate_near_intersection(
                 offset_ft=sign_offset,
                 label=label,
             )
+        )
+
+    # 9a. #309 (R112, R114 Q1/Q2): on a one-way street, S-630-1 Sheet 2
+    # General Note 8 ("All warning and regulatory signs shall be posted on
+    # both sides of the roadway on … one-way streets … except where only
+    # one shoulder is closed") owes every mainline sign on the left curb
+    # too.  Same label, same station: the pairing
+    # ``generate_lane_closure_divided`` uses, G20s included (the house
+    # choice there, and ``note8_counts_sign`` counts them).  The cross-
+    # street sets below are untouched.
+    if params.one_way_street:
+        placements.extend(
+            DevicePlacement(
+                device_type=p.device_type,
+                station_ft=p.station_ft,
+                offset_ft=-ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT,
+                label=p.label,
+            )
+            for p in list(placements)
+            if p.device_type == DeviceType.SIGN_GENERIC and p.approach_id == "mainline"
         )
 
     # 10. Cross-street advance sets, one per approach (§6N.12.06 /

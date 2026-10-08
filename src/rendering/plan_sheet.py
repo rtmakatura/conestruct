@@ -3339,8 +3339,12 @@ def _draw_notes(
                     "closure train; this plan places advance sets only (corner "
                     "work tracked at issue #128)."
                 ),
+                # #309 R114 Q5: the audit's departure (2), the same way.
                 (
-                    "Opposing mainline direction not signed (undivided "
+                    "A one-way street has no opposing mainline direction; the "
+                    "plate's opposing-direction signing does not apply."
+                    if params.one_way_street
+                    else "Opposing mainline direction not signed (undivided "
                     "single-side convention; the plate signs both directions)."
                 ),
                 (

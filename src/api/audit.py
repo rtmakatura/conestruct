@@ -957,7 +957,11 @@ def build_audit_trail(
         else f"Required: {both_sides_required}. Signs placed: {sign_left} left, {sign_right} right."
     )
     if params.one_way_street:
-        both_sides_detail += " " + FIG_6P3_NOTE1_SENTENCE
+        # R90's figure note says which side a SHOULDER closure signs; a
+        # lane closure on a one-way street (#309) signs both, so it isn't
+        # appended there.
+        if params.closure_type == "shoulder":
+            both_sides_detail += " " + FIG_6P3_NOTE1_SENTENCE
         if params.jurisdiction_name == "Denver":
             both_sides_detail += " " + DENVER_DEFERS_TO_MUTCD_SENTENCE
     both_sides = {
@@ -1237,15 +1241,33 @@ def build_audit_trail(
         case_label = (
             "Case 18: Traffic control around a work area near an intersection, one lane closed"
         )
+        # #309 R114 Q5: on a one-way street the clause states the
+        # both-sides signing the plan does; the two-way wording is
+        # byte-identical.
+        applied_to = (
+            "applied to a one-way street with every mainline warning and "
+            "regulatory sign posted on both sides of the roadway per CDOT "
+            "S-630-1 Sheet 2 General Note 8"
+            if params.one_way_street
+            else "applied to an undivided "
+            "highway with single-side mainline signing (both-sides "
+            "posting applies to divided highways, multi-lane ramps, and "
+            "one-way streets per CDOT S-630-1 Sheet 2 General Note 8)"
+        )
         case_narrative = (
             "This scenario follows CDOT Standard Plan S-630-1, Case 18 "
             '(Sheet 10), "traffic control around a work area near an '
-            'intersection, one lane closed", applied to an undivided '
-            "highway with single-side mainline signing (both-sides "
-            "posting applies to divided highways, multi-lane ramps, and "
-            "one-way streets per CDOT S-630-1 Sheet 2 General Note 8), "
+            f'intersection, one lane closed", {applied_to}, '
             "plus a cross-street advance-warning set on each approach "
             "leg per MUTCD §6N.12 and the Sheet 10 advance-signing key."
+        )
+        departure_2 = (
+            "(2) A one-way street has no opposing mainline direction; the "
+            "plate's opposing-direction signing does not apply. "
+            if params.one_way_street
+            else "(2) The opposing mainline direction is not signed "
+            "(single-side undivided convention; the plate signs both "
+            "directions). "
         )
         case_narrative_2 = (
             "Three disclosed departures from the plate: (1) the Case 18 "
@@ -1254,9 +1276,7 @@ def build_audit_trail(
             "mainline and places cross-street advance signing only. "
             "Corner-quadrant support is tracked at "
             "https://github.com/rtmakatura/conestruct/issues/128. "
-            "(2) The opposing mainline direction is not signed "
-            "(single-side undivided convention; the plate signs both "
-            "directions). (3) The plate typifies rural sign placement; "
+            f"{departure_2}(3) The plate typifies rural sign placement; "
             "urban applications require block-based placement per Sheet "
             "10 Note 1. The plate's Type III corner barricade (work "
             "lasting more than 3 days) encloses the corner work area and "

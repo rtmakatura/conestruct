@@ -26,6 +26,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from src.api.site_scan import correction_sentences, not_checked_disclosure
 from src.generation.layout import (
+    ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT,
     device_count_floors,
     near_intersection_stations,
     rightmost_lane_assumption_active,
@@ -850,6 +851,13 @@ def build_narrative_context(
         "advance_spacing_abc": spacing_abc,
         "is_night": params.is_night,
         "is_divided": params.is_divided,
+        # #309: the one-way safety line differs by closure (a shoulder
+        # closure signs one side, a lane closure both).
+        "closure_type": params.closure_type,
+        # #309 (R114): a lane closure on a one-way street mirrors every
+        # mainline sign to the left curb; the steps that place them say so.
+        "left_curb_mirror": params.one_way_street and params.closure_type == "lane",
+        "left_curb_offset_ft": ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT,
         # #308: a one-way street has no centerline — its offsets are
         # measured from the left lane edge (``plan_sheet._draw_one_way_street``).
         "one_way_street": params.one_way_street,

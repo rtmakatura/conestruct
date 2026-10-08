@@ -384,6 +384,10 @@ def scenario_display_name(params: ScenarioParams) -> str:
     if ct == "off_road":
         return "Work Beyond the Shoulder"
     if ct == "lane" and not divided and params.near_intersection:
+        # #309: a one-way street is neither divided nor "Undivided"
+        # (#308's shoulder title, same no-count convention).
+        if params.one_way_street:
+            return "Lane Closure Near Intersection · One-Way Street"
         return "Lane Closure Near Intersection · Undivided"
     if ct == "lane" and not divided:
         # Literal, not 2 * num_lanes: the flagger generator draws a

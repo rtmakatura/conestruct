@@ -12,6 +12,7 @@ import { describe, expect, it } from "vitest";
 import type { RoadClassification } from "../road-detection/types";
 import type {
   FlaggerLaneClosureScenario,
+  NearIntersectionScenario,
   Scenario,
   ShoulderScenario,
 } from "./types";
@@ -457,5 +458,75 @@ describe("matchRefusalAffordance — the carriageway gate (#308)", () => {
   it("is quiet when the test decided", () => {
     const s: ShoulderScenario = { ...SHOULDER, carriageway: { ...facts, twinSearched: true } };
     expect(matchRefusalAffordance(s)).toBeNull();
+  });
+});
+
+describe("near_intersection relays the carriageway facts (#309, R114)", () => {
+  const ONE_WAY_FACTS = {
+    oneway: "yes",
+    highwayClass: "primary",
+    twinDistanceM: null,
+    twinSearched: true,
+  };
+  const oneWayStreet: RoadClassification = {
+    ...classification(30),
+    roadType: "urban_arterial",
+    divided: false,
+    carriageway: ONE_WAY_FACTS,
+  };
+
+  it("writes the facts; divided stays false (the kind rejects divided)", () => {
+    const { scenario } = applyClassification(DEFAULT_NEAR_INTERSECTION, oneWayStreet);
+    if (scenario.kind !== "near_intersection") throw new Error("kind");
+    expect(scenario.carriageway).toEqual(ONE_WAY_FACTS);
+    expect(scenario.divided).toBe(false);
+  });
+
+  it("a two-way road clears stale facts, so its payload carries none", () => {
+    const stale: NearIntersectionScenario = {
+      ...DEFAULT_NEAR_INTERSECTION,
+      carriageway: ONE_WAY_FACTS,
+    };
+    const { scenario } = applyClassification(stale, classification(55));
+    expect(JSON.parse(JSON.stringify(scenario)).carriageway).toBeUndefined();
+  });
+});
+
+describe("matchRefusalAffordance — the near_intersection carriageway gate (#309 R114 Q4)", () => {
+  const facts = { oneway: "yes", highwayClass: "primary", twinDistanceM: null };
+
+  it("points at the carriageway row when the same-name search didn't run", () => {
+    const s: NearIntersectionScenario = {
+      ...DEFAULT_NEAR_INTERSECTION,
+      carriageway: { ...facts, twinSearched: false },
+    };
+    expect(matchRefusalAffordance(s)?.code).toBe("ni_carriageway");
+  });
+
+  it("is matched before the cross-street lane gate, as the backend gates first", () => {
+    const s: NearIntersectionScenario = {
+      ...DEFAULT_NEAR_INTERSECTION,
+      carriageway: { ...facts, twinSearched: false },
+      approaches: [
+        {
+          ...DEFAULT_NEAR_INTERSECTION.approaches[0],
+          detectedLanesTotal: 5,
+          detectedLanesForward: 1,
+          detectedLanesBackward: 1,
+        },
+      ],
+    };
+    expect(matchRefusalAffordance(s)?.code).toBe("ni_carriageway");
+  });
+
+  it("is quiet once the operator answers, and on a decided road", () => {
+    for (const carriageway of [
+      { ...facts, twinSearched: false, confirmed: "one_way_street" as const },
+      { ...facts, twinSearched: true },
+    ]) {
+      expect(
+        matchRefusalAffordance({ ...DEFAULT_NEAR_INTERSECTION, carriageway }),
+      ).toBeNull();
+    }
   });
 });
