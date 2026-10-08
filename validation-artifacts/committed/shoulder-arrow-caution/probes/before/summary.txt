@@ -1,0 +1,10 @@
+HEAD aa6dcaa3ac3e673674716e057a2ddd06382c814e
+
+[broadway] generator=generate_shoulder_closure_undivided arrow boards=['RIGHT_ARROW']
+[broadway] crew sheet: 1. Position arrow board at the upstream start of the shoulder taper (station 1,240 ft). Set to RIGHT ARROW mode (for right shoulder closure). Activate flashing.
+[broadway] page 1 legend rows: ['Arrow Board']
+
+[adv-shoulder] generator=generate_shoulder_closure_divided arrow boards=['RIGHT_ARROW']
+[adv-shoulder] crew sheet: 1. Position arrow board at the upstream start of the shoulder taper (station 5,510 ft). Set to RIGHT ARROW mode (for right shoulder closure). Activate flashing.
+[adv-shoulder] page 1 legend rows: ['Arrow Board']
+
