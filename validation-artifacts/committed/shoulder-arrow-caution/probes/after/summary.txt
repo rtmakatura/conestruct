@@ -1,0 +1,10 @@
+HEAD e31470f699ebd201ea0a96e2178b290a2441c89e
+
+[broadway] generator=generate_shoulder_closure_undivided arrow boards=['CAUTION']
+[broadway] crew sheet: 1. Position arrow board at the upstream start of the shoulder taper (station 1,240 ft). Set it to caution mode (flashing caution or alternating diamond). Shoulder work takes caution mode only, never an arrow (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Activate flashing.
+[broadway] page 1 legend rows: ['Arrow Board (caution mode)']
+
+[adv-shoulder] generator=generate_shoulder_closure_divided arrow boards=['CAUTION']
+[adv-shoulder] crew sheet: 1. Position arrow board at the upstream start of the shoulder taper (station 5,510 ft). Set it to caution mode (flashing caution or alternating diamond). Shoulder work takes caution mode only, never an arrow (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Activate flashing.
+[adv-shoulder] page 1 legend rows: ['Arrow Board (caution mode)']
+

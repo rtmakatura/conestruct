@@ -100,3 +100,20 @@ The crew sheet's new step 1 for shoulder plans (unslop rules; no em dashes):
 - **Payload:** both shoulder generators through `scenario_to_call` (Broadway one-way and a divided shoulder): exactly one `ARROW_BOARD`, labelled `CAUTION`, at the same station and offset as before; no `RIGHT_ARROW` anywhere in the plan.
 - **Rendered output:** a shoulder `/render/pdf` page 1 has "Arrow Board (caution mode)" in its text, and its board glyph is the caution display (`_draw_arrow_board(..., "caution")` draws four lamps and no arrow path, recorded on a canvas spy). A near-intersection PDF's legend row still reads "Arrow Board".
 - **Crew sheet:** a shoulder `/render/markdown` step 1 contains "caution mode" and "§6L.06 ¶18" and no "RIGHT ARROW". A near-intersection one still says "LEFT ARROW mode".
+
+---
+
+## 4. Build outcome against the prediction (build `e31470f`)
+
+**Evidence:** `probes/capture.py after` on `e31470f` → `probes/after/` (summary, both page 1s), with `broadway-board-legend-crop.png` in `before/` and `after/` (the same region: the board at the taper start and the legend's first rows).
+
+| Prediction (§3) | Outcome |
+|---|---|
+| 1. Both shoulder generators: `RIGHT_ARROW` → `CAUTION`; count, station, offset unchanged | ✔ Broadway (undivided) and `adv-shoulder` (divided) each place one board, `['CAUTION']`; same taper-start station (1,240 ft and 5,510 ft in the crew sheet, unchanged from `before/`) |
+| 2. Page 1: the caution display; legend "Arrow Board (caution mode)" | ✔ Both plans' legend rows read `['Arrow Board (caution mode)']`; the crop shows four corner lamps on the plan view and in the legend |
+| 3. Crew sheet step 1 | ✔ Word for word the sentence in §2, on both plans |
+| 4. Gated mobile two-lane page 1 draws caution | Not captured (gated kind, not served); follows from `_arrow_board_display("CAUTION")`, which the new test pins |
+| No existing assertion changes | ✔ The diff touches one existing test file, `tests/test_rules.py`, in a comment only |
+| No recorded baseline moves; the 10 shoulder `pdf_worst_case` fixtures' containment counts unchanged (the riskiest row) | ✔ The affected-file run passed unchanged: 1,352 passed, 2 skipped, including `test_pdf_containment.py`, `tests/corpus` and `tests/s630`. The verifier's full-suite run is the one that counts |
+
+**Misses:** none found. **Not done here:** a prod check. That waits for Ryan's go and the ship, then the light browser run and a Broadway plan on prod.
