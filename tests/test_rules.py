@@ -1057,14 +1057,25 @@ def test_notes_layout_tier_selection() -> None:
     # 9 pt baseline pitch keeps a 1 pt gap between lines).
     t1 = _notes_layout(3, 7)  # Case 11 — 10 rows
     assert t1.row_pitch == 9.0 and not t1.two_col_advance
-    assert t1.section_header_pad == (3.0, 10.0)
+    # R116 item 3 / R117 Q3c: one-column tables get the 8 pt
+    # title-to-next-line gap (pad 12 - 4) and a 7 pt footer pitch.
+    assert t1.section_header_pad == (3.0, 12.0)
+    assert t1.footer_pads == (3.0, 7.0)
     assert _notes_layout(3, 8).row_pitch == 9.0  # 11 rows still tier 1
 
-    # Tier 2 — pitch drops to 8 + 2-column advance kicks in at 12 rows.
+    # Tier 2 — pitch drops to 8; 2-column advance only when the advance
+    # table itself is long (> 6 rows), with the tighter 10 / 6 it needs
+    # (Q3c: "extra spacing only on one-column tables").
     t2 = _notes_layout(4, 8)  # 12 total
     assert t2.row_pitch == 8.0 and t2.two_col_advance
+    assert t2.section_header_pad == (3.0, 10.0) and t2.footer_pads == (3.0, 6.0)
     assert _notes_layout(5, 8).two_col_advance  # Case 26 (15) — Tier 2
     assert _notes_layout(5, 10).two_col_advance  # Case 27 stepped
+    # A short advance table in tier 2 stays one column (it used to split
+    # and print its column headers twice, R116).
+    short = _notes_layout(8, 4)
+    assert not short.two_col_advance
+    assert short.section_header_pad == (3.0, 12.0) and short.footer_pads == (3.0, 7.0)
 
 
 def test_notes_layout_cursor_budget_fits_all_validation_cases() -> None:

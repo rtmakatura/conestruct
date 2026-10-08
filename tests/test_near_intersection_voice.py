@@ -337,9 +337,12 @@ def test_plan_sheet_carries_citation_note_and_side_aware_ta(tmp_path) -> None:
     # break — the copy itself is intact, only wrap positions moved.
     flat = " ".join(text.split())
     assert "CROSS-STREET CONTROL PER CDOT S-630-1 SHEET 10, CASES" in flat
-    assert "corner work tracked at issue #128" in flat
-    assert "Opposing mainline direction not signed" in flat
-    assert "Sheet 10 Note 1" in flat
+    # R117 Q3b: the plate departures are pointed to, not printed; the
+    # audit's case narrative carries all three (test_audit_case_section_
+    # carries_the_three_part_disclosure).
+    assert "PLATE DEPARTURES: SEE AUDIT" in flat
+    assert "corner work tracked at issue #128" not in flat
+    assert "Opposing mainline direction not signed" not in flat
     assert "TA-21" in text
     assert "TA-10" not in text  # the flagger TA the branch order used to hit
     # The unconditional mainline R2-10 must surface in the off-page

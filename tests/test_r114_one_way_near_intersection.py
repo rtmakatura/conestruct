@@ -259,10 +259,13 @@ def test_a_two_way_crew_sheet_is_unchanged() -> None:
 
 
 def test_the_plan_sheet_s_fine_print_states_departure_2_the_same_way() -> None:
-    """Q5's departure (2) on page 1's notes, as in the audit."""
+    """Q5's departure (2) is the audit's; page 1 points to it.  R117 Q3b
+    (2026-10-08) folded the three plate-departure lines into "PLATE
+    DEPARTURES: SEE AUDIT", so page 1 states no departure in either
+    wording, and the one-way and two-way sheets carry the same note."""
     page1 = " ".join(_pdf_pages(_body(ONE_WAY))[0].split())
-    assert "A one-way street has no opposing mainline direction" in page1
-    assert "Opposing mainline direction not signed" not in page1
+    assert "PLATE DEPARTURES: SEE AUDIT" in page1
+    assert "opposing mainline direction" not in page1.lower()
 
 
 def test_the_device_breakdown_counts_both_curbs() -> None:
