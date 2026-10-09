@@ -75,8 +75,9 @@ acceptance asks for right-side and built-left responses to be byte-identical, so
 - **Every key but `side_refused`** is what the same scenario answers today with `meta.work`
   removed, verified by the probe.
 - **`side_refused.side`** is always `"left"` (see median, below).
-- **`side_refused.cause`** is one of six values, checked in this order. They mirror
-  `left_side_built`'s conjuncts (`schemas.py:1186-1196`), so exactly one applies:
+- **`side_refused.cause`** is one of seven values, checked in this order. They mirror
+  `left_side_built`'s conjuncts (`schemas.py:1186-1196`), and the verdict's `not_applicable` is split
+  by whether carriageway facts were relayed (`schemas.py:549`), so exactly one applies:
 
   | `cause` | When | Message (Q1 (b), draft, unslop-checked) |
   |---|---|---|
@@ -85,7 +86,8 @@ acceptance asks for right-side and built-left responses to be byte-identical, so
   | `two_way` | `roadDirection.oneway` isn't a one-way tag (covers R119 Q5's operator-answered "one-way" on an untagged road) | "Left-side shoulder work needs a one-way street, and the map shows this road as two-way. Pick a right-side curb." |
   | `divided` | carriageway verdict `divided` (answered, or a same-name twin found) | "Left-side shoulder work needs a one-way street, and this road reads as divided. Pick a right-side curb, or change Carriageway." |
   | `undecided` | carriageway verdict `undecided` | "Left-side shoulder work needs a one-way street, and this road's carriageway is still open. Answer Carriageway, or pick a right-side curb." |
-  | `highway` | verdict `not_applicable` with a one-way tag (a one-way road outside the street classes, e.g. a ramp) | "Left-side shoulder work is laid out on one-way streets, and this road is a highway. Pick a right-side curb." |
+  | `no_facts` | verdict `not_applicable` because no carriageway facts were relayed (`scenario.carriageway` absent) | "Left-side shoulder work needs a one-way street confirmed from the map. Reopen the map and pick the road again, or pick a right-side curb." |
+  | `highway` | verdict `not_applicable` with facts relayed and a one-way tag (a one-way road outside the street classes, e.g. a ramp) | "Left-side shoulder work is laid out on one-way streets, and this road is a highway. Pick a right-side curb." |
 
 - **`side_refused.message`** is the line the side control renders, verbatim. The frontend composes
   nothing (Rule 3; one voice, P2).
@@ -104,9 +106,10 @@ frontend change.
 
 ### Every other endpoint
 
-**Unchanged:** `_ensure_pin_model_complete` still refuses a stale left with R120's 400 at
-`/render/audit`, `/pdf`, `/xlsx`, `/markdown`, `/crew-pdf`, `/quote`, `/device-breakdown`,
-`/quote-breakdown`, `/replication-snapshot` and the site's bundle.
+**Unchanged:** `_ensure_pin_model_complete` still refuses a stale left with R120's 400 at every
+other scenario endpoint: `/render/audit`, `/audit-pdf`, `/pdf`, `/xlsx`, `/markdown`, `/crew-pdf`,
+`/quote`, `/device-breakdown`, `/quote-breakdown` and `/replication-snapshot`. The site's bundle
+route (`conestruct/site/app/api/render/bundle/route.ts`) calls those, so it refuses too.
 
 ### Where it lives (the build)
 
@@ -143,7 +146,7 @@ frontend change.
 - **(a)** Move R120's picker line to the backend unchanged: "Left-side shoulder work needs a
   one-way street. Pick a right-side curb, or plan shoulder work on a one-way street." It can't say
   why, and for a kind change "plan shoulder work on a one-way street" is the wrong fix.
-- **(b)** The six lines in §1. R120's own example named the cause ("This road is set as divided,
+- **(b)** The seven lines in §1. R120's own example named the cause ("This road is set as divided,
   so pick a right-side curb or change Carriageway"). The frontend couldn't, because it can't tell
   the causes apart. The backend can.
 - `cause` stays on the wire under either answer, so tests assert the reason without matching copy.
@@ -185,7 +188,7 @@ line has none; the band's other needs-you lines lead with ⚠.
 - `tests/test_left_side_oneway.py::test_a_left_side_the_gate_refuses_names_the_fix` (4 cases)
   posts to `/render/corridor-geometry` and expects 400. **Rewritten:** the gate cases move to
   `/render/audit`, where the 400 stays, with the same three substring assertions.
-- New geometry tests assert, for the same four shapes plus `not_shoulder`, `no_road` and `highway`:
+- New geometry tests assert, for the same four shapes plus `not_shoulder`, `no_road`, `no_facts` and `highway`:
   200, `side_not_confirmed`, the built options, `side_refused.cause`.
 - `test_median_is_still_named_and_refused` shares the `_refusal` helper. It stays on
   corridor-geometry: median still refuses there.
@@ -247,6 +250,6 @@ The surfaces are the WHERE band's side control and aerial, and the modal's overl
 
 ## 6. What I need from you
 
-Q1–Q3. With (b) / pin picture / yes, I build on this branch: backend and frontend in one commit
+Q1, Q2 and Q3. With (b) / pin picture / yes, I build on this branch: backend and frontend in one commit
 with their tests, the verifier, the push, then a report with the ship line. Ship order per R124:
 after `issue-301-modal-cleanup`.
