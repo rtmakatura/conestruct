@@ -473,3 +473,23 @@ Rulings: R78-R82, R90 (via #308), R119 Q2-Q5. #313 (the arrow board) shipped in 
 - **Payload:** Broadway left: the two side options; the gate's refusals (two-way, divided carriageway, undecided, no oneway tag, near-intersection, median); the left plan's devices at the right plan's offsets with `W21-5aL`; the Note 8 row, Case 11 words and `pending_verification` item; the crew sheet's left words and origin.
 - **Rendered:** a left plan's page 1 has the closed shoulder above the lanes and the yellow line on the top lane edge (read from the drawing calls); dimension labels below the road. A new `pdf_worst_case` fixture, `broadway-left.json`, runs through `test_pdf_containment.py` with zero edge / box-cross / collisions. It adds a fixture and moves none.
 - **Mounted flow:** the side control renders two rows from a two-option geometry; a stored left that isn't offered shows the line; the rail's `work_side` pointer.
+
+### Build outcome against the prediction (build `3ae4925`)
+
+**Evidence:** `probes/capture_left.py after` on `3ae4925` → `probes/after/` (summary, both page 1s, Broadway right and left).
+
+| Prediction | Outcome |
+|---|---|
+| 1. Two side rows on a confirmed one-way street; everything else unchanged | ✔ Broadway: "West side · southbound traffic", "East side · southbound traffic". `tests/test_left_side_oneway.py` pins right-only for no facts, a divided carriageway and undecided |
+| 2. Left passes the gate and generates; elsewhere a 400 naming the fix | ✔ The left plan lays out and generates. Divided, untagged-with-answer, near-intersection and no-facts cases are each a 400 `pin_model_input` with `'left'` and the fix; `median` is still refused |
+| 3. A left plan: `W21-5aL`, the right plan's offsets, Note 8 "6 left, 0 right", the Case 11 words and pending item, crew sheet left words from the right edge, page 1 mirrored | ✔ All seven, in `after/summary.txt` and the tests. Page 1 (`after/left-page1.png`): the closed shoulder and signs above the lanes, yellow on the top lane edge, arrows pointing right, the dimension band and its labels under the road |
+| 4. Frontend: left counts as a side; a stale left's pointer at WHERE; the side-control line | ✔ `left-side.test.ts`, `rail.test.ts` (new case), `WhereBand.left-side.test.tsx` |
+| Changed assertions: `pin-model.test.ts`, `rail.test.ts` only | ✔ The verifier found no other existing assertion changed |
+| No recorded baseline moves; `work_side` serialized nowhere | ✔ No snapshot, tiering fixture or existing `pdf_worst_case` count changed; `work_side` appears in no serialized dict |
+| A new `broadway-left` fixture at zero edge / box-cross / collisions | ✔ Plan sheet, audit PDF and crew PDF all at zero |
+
+**Suites:** backend 2660 passed, 2 skipped; frontend 2072 passed; `tsc` clean. Verifier: PASS.
+
+**Misses:** none found. **Recorded, not a miss:** with every site condition on, the right plan fans signs 4 and 5 sideways at the page floor, while the mirrored left plan stacks them upward into its taller top margin (the frame clamp is symmetric; the space above and below the road isn't). Neither collides.
+
+**Not done here:** a prod check. That waits for Ryan's go and the ship, then a Broadway left plan on prod and Ryan's browser check (frontend-only: no).

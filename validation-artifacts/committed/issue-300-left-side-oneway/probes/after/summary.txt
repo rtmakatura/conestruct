@@ -1,0 +1,35 @@
+HEAD 3ae492583a4aa18412e10d362cd73df5f23e5ead
+
+side options (200):
+  'West side · southbound traffic'  work={'side': 'right', 'travel': 'with_geometry'}
+  'East side · southbound traffic'  work={'side': 'left', 'travel': 'with_geometry'}
+
+[right] work_side=right generator=generate_shoulder_closure_undivided
+[right] signs (label, offset_ft): [('G20-1', 46.0), ('G20-2', 46.0), ('G20-5P', 46.0), ('W20-1', 46.0), ('W20-2', 46.0), ('W21-5aR', 46.0)]
+[right] all offsets: [42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 44.67, 46.0, 46.0, 46.0, 46.0, 46.0, 46.0, 46.0, 46.0, 47.33, 50.0, 50.0]
+[right] Note 8 row: 'Signs on both sides of one-way street' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 6 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.”"
+[right] taper cdot_reference: 'CDOT S-630-1 Case 11 (right-shoulder closure, applied to one-way street)'
+[right] pending: one_way_street_widths_chosen: On a one-way street the plan builds an 8 ft shoulder and fits lanes under a 52 ft half-road less that shoulder. Both values are CHOSEN: no MUTCD, S-630-1, Colorado Supplement or Denver text found sets them. Verify against the site (#308).
+[right] crew: 2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station -150 ft), right side of road 46 ft from the left edge of the roadway.
+[right] crew: 3. Place 2 traffic cones in the downstream taper, between station -50 ft (shoulder edge) and station 0 (lane edge) at 25 ft spacing. This taper returns traffic from the lane edge back to the shoulder edge past the work zone (MUTCD §6B.08 downstream taper). Then place 18 traffic cones along the right
+[right] crew: - W21-5aR at 100 ft upstream of taper start (station 1,340 ft), right side.
+[right] crew: - W20-2 at 200 ft upstream of taper start (station 1,440 ft), right side.
+[right] crew: - W20-1 at 300 ft upstream of taper start (station 1,540 ft), right side.
+[right] crew: - One-way street: signs go on the closed shoulder's side only, under the single-shoulder exception in CDOT S-630-1 Sheet 2 General Note 8 (and MUTCD 11th Ed. Fig. 6P-3 Note 1, p. 864). Offsets are measured from the left edge of the roadway.
+[right] pdf -> 200
+
+[left] work_side=left generator=generate_shoulder_closure_undivided
+[left] signs (label, offset_ft): [('G20-1', 46.0), ('G20-2', 46.0), ('G20-5P', 46.0), ('W20-1', 46.0), ('W20-2', 46.0), ('W21-5aL', 46.0)]
+[left] all offsets: [42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 42.0, 44.67, 46.0, 46.0, 46.0, 46.0, 46.0, 46.0, 46.0, 46.0, 47.33, 50.0, 50.0]
+[left] Note 8 row: 'Signs on both sides of one-way street' -> "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 6 left, 0 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.”"
+[left] taper cdot_reference: 'CDOT S-630-1 Case 11 (right-shoulder closure, mirrored to the left shoulder of a one-way street)'
+[left] pending: one_way_street_widths_chosen: On a one-way street the plan builds an 8 ft shoulder and fits lanes under a 52 ft half-road less that shoulder. Both values are CHOSEN: no MUTCD, S-630-1, Colorado Supplement or Denver text found sets them. Verify against the site (#308).
+[left] pending: left_shoulder_mirrored: S-630-1 draws Case 11 for the right shoulder only. This plan mirrors it to the left shoulder of a one-way street: the same devices and distances, the LEFT SHOULDER CLOSED sign (MUTCD 11th Ed. §6H.22 ¶02, p. 807) and signs on the closed shoulder's side (Fig. 6P-3 Note 1, p. 864). The mirror is CHOSEN. Verify against the site (#300).
+[left] crew: 2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station -150 ft), left side of road 46 ft from the right edge of the roadway.
+[left] crew: 3. Place 2 traffic cones in the downstream taper, between station -50 ft (shoulder edge) and station 0 (lane edge) at 25 ft spacing. This taper returns traffic from the lane edge back to the shoulder edge past the work zone (MUTCD §6B.08 downstream taper). Then place 18 traffic cones along the left 
+[left] crew: - W21-5aL at 100 ft upstream of taper start (station 1,340 ft), left side.
+[left] crew: - W20-2 at 200 ft upstream of taper start (station 1,440 ft), left side.
+[left] crew: - W20-1 at 300 ft upstream of taper start (station 1,540 ft), left side.
+[left] crew: - One-way street: signs go on the closed shoulder's side only, under the single-shoulder exception in CDOT S-630-1 Sheet 2 General Note 8 (and MUTCD 11th Ed. Fig. 6P-3 Note 1, p. 864). Offsets are measured from the right edge of the roadway.
+[left] pdf -> 200
+
