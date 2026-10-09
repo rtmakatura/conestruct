@@ -1,0 +1,22 @@
+[
+ {
+  "id": "target-size",
+  "impact": "serious",
+  "tags": [
+   "wcag22aa",
+   "wcag258"
+  ],
+  "nodes": [
+   {
+    "target": "button[data-testid=\"info-toggle-lanes\"]",
+    "summary": "Fix any of the following:\n  Target has insufficient size because it is partially obscured (smallest space is 62px by 18px, should be at least 24px by 24px)\n  Target has insufficient space to its close",
+    "data": {
+     "messageKey": "partiallyObscured",
+     "minSize": 24,
+     "width": 62,
+     "height": 18
+    }
+   }
+  ]
+ }
+]
