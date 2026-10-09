@@ -1,0 +1,27 @@
+== built left (Broadway shoulder)
+  today: 200 status=laid_out side_options=[('right', 'West side · southbound traffic'), ('left', 'East side · southbound traffic')]
+    corridor-map stage=pin: 200 image/png 
+    corridor-map stage=work: 200 image/png 
+  side unset (proposed read): 200 status=side_not_confirmed side_options=[('right', 'West side · southbound traffic'), ('left', 'East side · southbound traffic')]
+    corridor-map stage=pin: 200 image/png 
+    corridor-map stage=work: 409 application/json {"status":"side_not_confirmed","message":null}
+== kind changed to flagger
+  today: 400 {"detail": {"error": "pin_model_input", "message": "meta.work.side 'left' needs shoulder work on a one-way street: a road tagged one-way and confirmed as a one-way street. Choose the right side, or pl
+  side unset (proposed read): 200 status=side_not_confirmed side_options=[('right', 'West side · southbound traffic')]
+    corridor-map stage=pin: 200 image/png 
+    corridor-map stage=work: 409 application/json {"status":"side_not_confirmed","message":null}
+== answered divided
+  today: 400 {"detail": {"error": "pin_model_input", "message": "meta.work.side 'left' needs shoulder work on a one-way street: a road tagged one-way and confirmed as a one-way street. Choose the right side, or pl
+  side unset (proposed read): 200 status=side_not_confirmed side_options=[('right', 'West side · southbound traffic')]
+    corridor-map stage=pin: 200 image/png 
+    corridor-map stage=work: 409 application/json {"status":"side_not_confirmed","message":null}
+== undecided
+  today: 400 {"detail": {"error": "pin_model_input", "message": "meta.work.side 'left' needs shoulder work on a one-way street: a road tagged one-way and confirmed as a one-way street. Choose the right side, or pl
+  side unset (proposed read): 200 status=side_not_confirmed side_options=[('right', 'West side · southbound traffic')]
+    corridor-map stage=pin: 200 image/png 
+    corridor-map stage=work: 409 application/json {"status":"side_not_confirmed","message":null}
+== two-way tag
+  today: 400 {"detail": {"error": "pin_model_input", "message": "meta.work.side 'left' needs shoulder work on a one-way street: a road tagged one-way and confirmed as a one-way street. Choose the right side, or pl
+  side unset (proposed read): 200 status=side_not_confirmed side_options=[('right', 'West side · southbound traffic'), ('right', 'East side · northbound traffic')]
+    corridor-map stage=pin: 200 image/png 
+    corridor-map stage=work: 409 application/json {"status":"side_not_confirmed","message":null}
