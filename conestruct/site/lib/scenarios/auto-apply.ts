@@ -112,6 +112,7 @@ export function lanesArithmeticMismatch(
 //
 export interface RefusalAffordance {
   code:
+    | "work_side"
     | "flagger_multilane"
     | "flagger_single_lane"
     | "flagger_oneway"
@@ -178,9 +179,42 @@ export function signalProximityLaneConfidence(s: {
   );
 }
 
+// #300 — MIRROR of `schemas.left_side_built` (the backend is authoritative,
+// Rule 3): left-side work is laid out only for shoulder work on a road the
+// carriageway verdict calls a one-way street AND that is tagged one-way
+// (R79, R80, R119 Q5).  The confirmed centerline the backend also needs is
+// wire-only here; its stand-in is the relayed roadDirection, which only a
+// confirmed road carries.  Display-only: it decides the pointer, never a
+// value.
+const ONE_WAY_TAGS = new Set(["yes", "-1"]);
+
+export function leftSideBuilt(scenario: Scenario): boolean {
+  return (
+    scenario.kind === "shoulder" &&
+    carriagewayVerdict(scenario.carriageway) === "one_way_street" &&
+    ONE_WAY_TAGS.has(scenario.meta.roadDirection?.oneway ?? "")
+  );
+}
+
 export function matchRefusalAffordance(
   scenario: Scenario,
 ): RefusalAffordance | null {
+  // #300 (R119 Q4): a stored left side the backend won't lay out (the kind
+  // changed, or the operator answered "divided").  The pin-model gate runs
+  // first at the backend chokepoint (render_api._ensure_pin_model_complete),
+  // so this row is matched first.  No reset: the operator re-chooses at the
+  // side control, which says why.
+  if (
+    scenario.meta.pinModel === "work_start" &&
+    scenario.meta.work?.side === "left" &&
+    !leftSideBuilt(scenario)
+  ) {
+    return {
+      code: "work_side",
+      pointer:
+        "Left-side work is laid out only for shoulder work on a one-way street. Choose a side under Occupied side to proceed.",
+    };
+  }
   // near_intersection (#117 enablement, #120's gate): exact mirror of
   // render_api._ensure_lane_confidence — the backend refuses when ANY
   // approach's relayed lane tags dispute themselves.  The remedy is the

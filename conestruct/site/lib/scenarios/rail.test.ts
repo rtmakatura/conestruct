@@ -143,9 +143,14 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
     expect(deriveRail(input(unsided, { kindConfirmed: false })).blocker?.message).toBe(
       "Choose the kind of work",
     );
-    // A greyed (not built) side never counts as confirmed.
+    // RULE 5, stated (#300): a left side no longer holds the side
+    // blocker (it did).  Where the backend won't lay it out, its 400
+    // and the work_side pointer say so (see the stale-left case).
     const left = { ...base, meta: { ...base.meta, work: { side: "left" as const, heading: "N" as const } } };
-    expect(deriveRail(input(left)).blocker?.message).toBe(SIDE_BLOCKER);
+    expect(deriveRail(input(left)).blocker?.message).not.toBe(SIDE_BLOCKER);
+    // A never-built side still holds it.
+    const median = { ...base, meta: { ...base.meta, work: { side: "median" as const, heading: "N" as const } } };
+    expect(deriveRail(input(median)).blocker?.message).toBe(SIDE_BLOCKER);
     expect(SIDE_BLOCKER).toBe("Say which side is occupied to lay out the work");
   });
 
@@ -250,6 +255,21 @@ describe("entries — every simultaneous blocker visible (rule 10)", () => {
     const rail = deriveRail(input(s, { refusal: { message: "400", pointer } }));
     expect(entryById(rail, "road").issues).toEqual([{ text: pointer }]);
     expect(rail.blocker).toEqual({ message: REFUSAL_BLOCKER, entryId: "road" });
+  });
+
+  it("#300 (R119 Q4): a stale left side's refusal points at the side control's band", () => {
+    // A left side on a road with no one-way-street facts: the backend
+    // refuses it; the work_side mirror row points at WHERE (Location).
+    const base = pinned(DEFAULT_SHOULDER);
+    const s = {
+      ...base,
+      meta: { ...base.meta, pinModel: "work_start", work: { side: "left", travel: "with_geometry" } },
+    } as Scenario;
+    const pointer =
+      "Left-side work is laid out only for shoulder work on a one-way street. Choose a side under Occupied side to proceed.";
+    const rail = deriveRail(input(s, { refusal: { message: "400", pointer } }));
+    expect(entryById(rail, "location").issues).toEqual([{ text: pointer }]);
+    expect(rail.blocker).toEqual({ message: REFUSAL_BLOCKER, entryId: "location" });
   });
 });
 

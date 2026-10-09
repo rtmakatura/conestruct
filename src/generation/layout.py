@@ -33,7 +33,12 @@ from src.rules.spacing import (
     shoulder_taper_length,
     taper_length,
 )
-from src.rules.validators import ApproachParams, DevicePlacement, ScenarioParams
+from src.rules.validators import (
+    ApproachParams,
+    DevicePlacement,
+    ScenarioParams,
+    shoulder_closed_sign_code,
+)
 
 
 def _dedupe_placements(placements: list[DevicePlacement]) -> list[DevicePlacement]:
@@ -635,6 +640,12 @@ def generate_shoulder_closure_undivided(
     downstream end of the work zone, increasing upstream against
     traffic; ``offset_ft = 0`` at the road centerline, positive values
     to the right when facing upstream in the work direction.
+
+    #300: a one-way street (#308) also runs here, and there its work may
+    be on the LEFT curb (``params.work_side``).  Offset 0 is then the lane
+    edge opposite the work and positive points toward the work, so every
+    offset below is the same for either curb; only the SHOULDER CLOSED
+    sign's code follows the side (``shoulder_closed_sign_code``).
     """
     if shoulder_width_ft is None:
         shoulder_width_ft = params.shoulder_width_ft
@@ -642,7 +653,7 @@ def generate_shoulder_closure_undivided(
     wz_len = params.work_zone_length_ft
 
     # Lateral landmarks — ``num_lanes`` lanes in the work direction
-    lane_edge_offset = params.num_lanes * params.lane_width_ft  # right edge of outer lane
+    lane_edge_offset = params.num_lanes * params.lane_width_ft  # work-side edge of outer lane
     shoulder_edge_offset = lane_edge_offset + shoulder_width_ft
     arrow_board_offset = lane_edge_offset + shoulder_width_ft / 2.0
     sign_offset_right = lane_edge_offset + 4.0
@@ -667,9 +678,12 @@ def generate_shoulder_closure_undivided(
 
     placements: list[DevicePlacement] = []
 
-    # 1. Advance warning signs (work-direction approach only)
+    # 1. Advance warning signs (work-direction approach only).  #300: the
+    # SHOULDER CLOSED sign names the work side (W21-5aR, or W21-5aL on a
+    # left-shoulder plan on a one-way street).
+    shoulder_code = shoulder_closed_sign_code(params)
     advance_signs = (
-        ("W21-5aR", sign_a_station),  # RIGHT SHOULDER CLOSED AHEAD
+        (shoulder_code, sign_a_station),  # RIGHT (LEFT) SHOULDER CLOSED AHEAD
         ("W20-2", sign_b_station),  # ROAD WORK xxx FT
         ("W20-1", sign_c_station),  # ROAD WORK AHEAD
     )
@@ -706,7 +720,7 @@ def generate_shoulder_closure_undivided(
                 DeviceType.SIGN_GENERIC,
                 w21_5aR_downstream_station,
                 sign_offset_right,
-                label="W21-5aR",
+                label=shoulder_code,
             )
         )
         placements.append(

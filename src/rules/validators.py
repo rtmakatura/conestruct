@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
+from typing import Literal
 from zoneinfo import ZoneInfo
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
@@ -251,6 +252,14 @@ class ScenarioParams:
     # True, ``is_divided`` is False and ``num_lanes`` counts every lane.
     # Appended with a default so every existing constructor is untouched.
     one_way_street: bool = False
+    # #300 (R82) — which curb the work is on.  ``"left"`` is laid out only
+    # for shoulder work on a one-way street (R79, R80, R119 Q5; the gate is
+    # ``schemas.left_side_built``).  Offsets keep their model: positive is
+    # toward the work side, measured on a one-way street from the lane
+    # edge opposite the work, so a left plan's offsets are the right
+    # plan's.  Only the sign codes, the words and page 1 follow the side.
+    # Appended with a default so every existing constructor is untouched.
+    work_side: Literal["right", "left"] = "right"
 
 
 @dataclass(frozen=True)
@@ -332,6 +341,18 @@ def generated_stamp(now: datetime | None = None) -> str:
     (``test_replication_snapshot``) would flake once a minute.
     """
     return generated_at(now).strftime("%Y-%m-%d")
+
+
+def shoulder_closed_sign_code(params: ScenarioParams) -> str:
+    """The SHOULDER CLOSED sign's code for this plan's work side (#300).
+
+    MUTCD 11th Ed. §6H.22 ¶02 (Standard), p. 807: "The Shoulder Work sign
+    shall have the legend SHOULDER WORK (W21-5), RIGHT (LEFT) SHOULDER
+    CLOSED (W21-5a), …".  The one producer every reader of the code
+    shares (the generator, the audit's sign table, the freeway pair
+    check), so a right plan reads ``W21-5aR`` byte for byte as before.
+    """
+    return "W21-5aL" if params.work_side == "left" else "W21-5aR"
 
 
 def road_type_display(params: ScenarioParams) -> str:
@@ -1723,10 +1744,13 @@ def validate_shoulder_warning_pair(
     if params.road_type != "freeway" or params.closure_type != "shoulder":
         return []
 
+    # #300: the work side's code (``W21-5aR`` on every right plan).
+    shoulder_code = shoulder_closed_sign_code(params)
     w21_5aR_count = sum(
         1
         for p in placements
-        if p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "W21-5AR"
+        if p.device_type == DeviceType.SIGN_GENERIC
+        and (p.label or "").upper() == shoulder_code.upper()
     )
     has_w16_2a = any(
         p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "W16-2A"
@@ -1751,7 +1775,7 @@ def validate_shoulder_warning_pair(
                 rule_id="MISSING_SECOND_W21_5aR",
                 severity="warning",
                 message=(
-                    f"Found {w21_5aR_count} W21-5aR placement(s); "
+                    f"Found {w21_5aR_count} {shoulder_code} placement(s); "
                     f"{required_w21_5aR} required for a freeway shoulder "
                     "closure per CDOT S-630-1 Sheet 7 Case 11 (positions "
                     "5/6) and Sheet 14 Cases 26/27 (positions 4/6). Two "

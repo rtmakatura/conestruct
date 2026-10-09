@@ -233,6 +233,11 @@ function SideControl({
     (o) => o.built,
   );
   const selected = selectedSideOption(options, scenario.meta.work);
+  // #300 (R119 Q4): a stored left side the backend no longer offers (the
+  // kind changed, or the road was answered "divided").  Derived from the
+  // backend's own options, not a frontend predicate; nothing is reset.
+  const staleLeft =
+    options.length > 0 && selected === null && scenario.meta.work?.side === "left";
   return (
     <div className="mt-4" data-testid="side-control">
       <div className="tr-field">Occupied side</div>
@@ -280,6 +285,11 @@ function SideControl({
               </button>
             );
           })}
+        </div>
+      )}
+      {staleLeft && (
+        <div className="tr-prov mt-1" data-testid="side-control-stale">
+          The left curb is offered only for shoulder work on a one-way street. Choose a side.
         </div>
       )}
     </div>

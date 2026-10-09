@@ -164,6 +164,9 @@ const FIFTH_STEP_LABEL: Record<ScenarioKind, string | null> = {
  *  read off the pointer texts themselves ("…in the Cross street
  *  section" / "…in the Road section"). */
 function affordanceEntry(code: string): RailEntryId {
+  // #300: a stale left side's remedy is the side control, a WHERE-band
+  // answer (the "location" entry, like SIDE_BLOCKER).
+  if (code === "work_side") return "location";
   return code === "ni_lane_confidence" ? "extra" : "road";
 }
 

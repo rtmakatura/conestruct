@@ -76,6 +76,10 @@ BASELINE = {
     "scanned-not-checked-work-start": {"edge": 0, "box_cross": 0, "collisions": 0},
     "scanned-dismissed-work-start": {"edge": 0, "box_cross": 0, "collisions": 0},
     "scanned-asserted-work-start": {"edge": 0, "box_cross": 0, "collisions": 0},
+    # #300: a left-shoulder plan on a one-way street, page 1 mirrored (R81,
+    # R119 Q2) with every site condition on, so the mirrored sign stacks,
+    # callouts, dimension band and SCHOOL box all draw.  Same bar.
+    "broadway-left": {"edge": 0, "box_cross": 0, "collisions": 0},
 }
 
 SCAN_PAYLOAD = Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json"

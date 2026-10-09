@@ -42,6 +42,7 @@ from src.api.schemas import (
     ShoulderScenario,
     flagger_lane_ineligible_high,
     lanes_arithmetic_mismatch,
+    left_side_built,
     scenario_to_call,
 )
 from src.api.site_scan import (
@@ -236,8 +237,10 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
     * ``corridor_end`` never carries the work-start inputs.
     * ``work_start`` never carries ``bearingDeg`` — the direction is
       derived from the road and the side, never typed (ruling 8).
-    * ``side`` ``left`` / ``median`` are named and not built (Rule 8; the
-      open-points ruling 2).
+    * ``side`` ``median`` is named and not built (Rule 8; the open-points
+      ruling 2); ``left`` is built only where ``schemas.left_side_built``
+      holds (#300: shoulder work on a confirmed one-way street), and is
+      refused elsewhere with the fix named (R119 Q4).
     * With a pin and the right side, the input that decides the direction
       must be the right one: ``travel`` against a confirmed road's
       geometry, ``heading`` without one — never both, never neither.
@@ -265,9 +268,19 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
         )
     if work is None or work.side is None:
         return
-    if work.side != "right":
+    if work.side == "left" and not left_side_built(scenario):
+        # #300 (R119 Q4): the backend refuses and names the fix; the side
+        # control shows it.  No frontend reset.
         raise _pin_model_refusal(
-            f"meta.work.side {work.side!r} is not built yet: only right-side work is laid out."
+            "meta.work.side 'left' is laid out only for shoulder work on a one-way "
+            "street: a road tagged one-way and confirmed as a one-way street, not one "
+            "side of a divided road. Choose the right side, or plan shoulder work on a "
+            "one-way street."
+        )
+    if work.side not in ("right", "left"):
+        raise _pin_model_refusal(
+            f"meta.work.side {work.side!r} is not built yet: right-side work is laid out, "
+            "and left-side shoulder work on a one-way street."
         )
     if not (meta.lat and meta.lng):
         return
@@ -1175,12 +1188,13 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
 
     * A confirmed two-way road: its two edges, each the RIGHT side of the
       traffic beside it.
-    * A confirmed one-way road: only the legal direction's right edge.
-      Its left edge (the median on a divided road) is NOT offered — the #290
-      hand-check ruling superseding the open-points ruling 2: "an option
-      the user can't choose, named in jargon, is noise (P13, P18)".  Every
-      option is ``built: True``; the field stays on the wire for the day a
-      left-side layout is built.
+    * A confirmed one-way road: the legal direction's right edge, and —
+      #300, where ``schemas.left_side_built`` holds (shoulder work on a
+      one-way STREET) — its left edge too, after the right.  One
+      carriageway of a divided road keeps its left (median) edge
+      unoffered: the #290 hand-check ruling superseding the open-points
+      ruling 2, "an option the user can't choose, named in jargon, is
+      noise (P13, P18)".  Every option is ``built: True``.
     * No confirmed road: the four headings (the open-points ruling 1),
       "traffic heads N / E / S / W", each with its right edge.
     """
@@ -1190,6 +1204,7 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
     options: list[dict[str, Any]] = []
     if params.centerline and len(params.centerline) >= 2:
         road = meta.roadDirection
+        left_built = left_side_built(scenario)
         for travel in ("with_geometry", "against_geometry"):
             bearing = travel_bearing_at(
                 meta.lat, meta.lng, centerline=params.centerline, travel=travel, heading=None
@@ -1206,6 +1221,16 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
                     "built": True,
                 }
             )
+            if left_built:
+                # #300: the same traffic's left curb, same travel direction.
+                left_side = _cardinal(bearing - 90.0)[0]
+                options.append(
+                    {
+                        "work": {"side": "left", "travel": travel},
+                        "label": f"{left_side} side · {bound} traffic",
+                        "built": True,
+                    }
+                )
         return options
     for heading, bearing in HEADING_DEG.items():
         right_side, bound = _cardinal(bearing + 90.0)[0], _cardinal(bearing)[1]

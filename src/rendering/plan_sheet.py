@@ -22,6 +22,7 @@ Authoritative sources:
 
 from __future__ import annotations
 
+import contextvars
 import io
 import os
 import tempfile
@@ -96,9 +97,12 @@ def _road_y_extent(params: ScenarioParams, shoulder_width_ft: float) -> tuple[fl
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
     half_road = params.num_lanes * lane_h + shoulder_h
     if params.one_way_street:
-        # #308: one carriageway — the left curb strip above center, every
+        # #308: one carriageway — the open curb strip above center, every
         # lane and the work shoulder below (``_draw_one_way_street``).
-        return PLAN_Y_CENTER + shoulder_h, PLAN_Y_CENTER - half_road
+        # #300: a left plan is that mirrored (``_ry``), so the extent's top
+        # and bottom swap.
+        top, bottom = PLAN_Y_CENTER + shoulder_h, PLAN_Y_CENTER - half_road
+        return max(_ry(top), _ry(bottom)), min(_ry(top), _ry(bottom))
     if params.is_divided:
         half_road += MEDIAN_PTS / 2.0
     return PLAN_Y_CENTER + half_road, PLAN_Y_CENTER - half_road
@@ -237,6 +241,36 @@ def _make_x_mapping(
     }
 
 
+# #300 (R81, R119 Q2), CHOSEN: a left-shoulder plan's schematic is page 1
+# mirrored top-to-bottom, so the work sits on the LEFT of the left-to-right
+# traffic arrows (the page top).  Text stays upright, so the mirror is not
+# a canvas flip: every plan-area y goes through ``_ry``, and every rule
+# that pushes toward "the device's side" asks ``_side_is_down``.  Set only
+# while ``_render_schematic_page`` draws a left plan (``render_plan_sheet``).
+_PAGE_MIRRORED: contextvars.ContextVar[bool] = contextvars.ContextVar(
+    "plan_sheet_page_mirrored", default=False
+)
+
+
+def _ry(y: float) -> float:
+    """A plan-area y, mirrored about ``PLAN_Y_CENTER`` on a left plan.
+
+    ``PLAN_Y_CENTER`` is the plan frame's exact midpoint, so the mirror
+    maps the frame onto itself.  Identity on every other plan.
+    """
+    return 2.0 * PLAN_Y_CENTER - y if _PAGE_MIRRORED.get() else y
+
+
+def _side_is_down(offset_ft: float) -> bool:
+    """Does a device at ``offset_ft`` sit below the road centre on the page?
+
+    Positive offsets (the work side) are drawn below on a right plan and
+    above on a mirrored left plan (#300); a zero offset goes with the
+    positives, as every pre-#300 rule here had it.
+    """
+    return (offset_ft >= 0) != _PAGE_MIRRORED.get()
+
+
 def _y_of(offset_ft: float, is_divided: bool = False) -> float:
     """Map road offset to page y.  Positive offset (work side) → BOTTOM of
     page; negative offset (opposing side) → TOP of page (CDOT S-630-1).
@@ -248,11 +282,14 @@ def _y_of(offset_ft: float, is_divided: bool = False) -> float:
     centerline on the page.  ``offset_ft = 0`` always renders at
     ``PLAN_Y_CENTER`` regardless of divided-ness so the call is safe for
     median-axis features (centerline labels, dimension band tics).
+
+    #300: on a left-shoulder plan the result is mirrored (``_ry``), so the
+    work side renders at the page TOP.
     """
     if is_divided and offset_ft != 0.0:
         sign = 1.0 if offset_ft > 0 else -1.0
-        return PLAN_Y_CENTER - offset_ft * PTS_PER_OFFSET_FT - sign * MEDIAN_PTS / 2.0
-    return PLAN_Y_CENTER - offset_ft * PTS_PER_OFFSET_FT
+        return _ry(PLAN_Y_CENTER - offset_ft * PTS_PER_OFFSET_FT - sign * MEDIAN_PTS / 2.0)
+    return _ry(PLAN_Y_CENTER - offset_ft * PTS_PER_OFFSET_FT)
 
 
 # ---------------------------------------------------------------------------
@@ -281,29 +318,46 @@ def _draw_one_way_street(
     (#308 R93; text in validation-artifacts/committed/issue-308-oneway-
     read-as-divided/sources/mutcd11-full-pdf602-printed562-sec3B09.txt).
     The right edge stays white (¶02).
+
+    #300 (R119 Q2): a left-shoulder plan mirrors this drawing (``_ry``):
+    the work shoulder goes to the page top and offset 0 becomes the RIGHT
+    lane edge.  Traffic still flows left to right, so the page-top lane
+    edge is always the left of traffic: the yellow line is drawn on
+    whichever lane edge ends up on top, never mirrored with the rest.
     """
     x_left = PLAN_LEFT
     width = PLAN_RIGHT - PLAN_LEFT
     lane_h = lane_width_ft * PTS_PER_OFFSET_FT
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
-    y_left_edge = PLAN_Y_CENTER
-    y_right_edge = PLAN_Y_CENTER - num_lanes * lane_h
-    y_work_shoulder_outer = y_right_edge - shoulder_h
-    y_left_strip_outer = y_left_edge + shoulder_h
+    # Edges in the right plan's frame: offset 0 at ``PLAN_Y_CENTER``, the
+    # lanes and the work shoulder below it, the open curb strip above.
+    y_origin_edge = PLAN_Y_CENTER
+    y_work_lane_edge = PLAN_Y_CENTER - num_lanes * lane_h
+    y_work_shoulder_outer = y_work_lane_edge - shoulder_h
+    y_open_strip_outer = y_origin_edge + shoulder_h
+
+    def band(y_a: float, y_b: float) -> tuple[float, float]:
+        """(bottom, height) of the page band between two frame y's."""
+        lo, hi = sorted((_ry(y_a), _ry(y_b)))
+        return lo, hi - lo
 
     # Shoulders: the work side closed (pink) for a shoulder closure, the
-    # left curb's strip open.
+    # open curb's strip open.
     c.setFillColor(SHOULDER_CLOSED_FILL if closure_type != "lane" else SHOULDER_OPEN_FILL)
-    c.rect(x_left, y_work_shoulder_outer, width, shoulder_h, fill=1, stroke=0)
+    y0, h = band(y_work_shoulder_outer, y_work_lane_edge)
+    c.rect(x_left, y0, width, h, fill=1, stroke=0)
     c.setFillColor(SHOULDER_OPEN_FILL)
-    c.rect(x_left, y_left_edge, width, shoulder_h, fill=1, stroke=0)
+    y0, h = band(y_origin_edge, y_open_strip_outer)
+    c.rect(x_left, y0, width, h, fill=1, stroke=0)
 
     # Lanes.  A lane closure paints the work-side lane, as elsewhere.
     c.setFillColor(LANE_FILL)
-    c.rect(x_left, y_right_edge, width, num_lanes * lane_h, fill=1, stroke=0)
+    y0, h = band(y_work_lane_edge, y_origin_edge)
+    c.rect(x_left, y0, width, h, fill=1, stroke=0)
     if closure_type == "lane":
         c.setFillColor(SHOULDER_CLOSED_FILL)
-        c.rect(x_left, y_right_edge, width, lane_h, fill=1, stroke=0)
+        y0, h = band(y_work_lane_edge, y_work_lane_edge + lane_h)
+        c.rect(x_left, y0, width, h, fill=1, stroke=0)
 
     # Lane lines between same-direction lanes (white dashed, 2 pt).
     if num_lanes > 1:
@@ -311,31 +365,28 @@ def _draw_one_way_street(
         c.setLineWidth(2.0)
         c.setDash(12, 8)
         for i in range(1, num_lanes):
-            y = y_left_edge - i * lane_h
+            y = _ry(y_origin_edge - i * lane_h)
             c.line(x_left, y, PLAN_RIGHT, y)
         c.setDash()
 
-    # Lane edges: left solid yellow (§3B.09 ¶03), right solid white
-    # (¶02); curb-strip outer edges white thin.
+    # Lane edges: the left of traffic (the page-top lane edge) solid
+    # yellow (§3B.09 ¶03), the right solid white (¶02); curb-strip outer
+    # edges white thin.
+    y_top_lane_edge = max(_ry(y_origin_edge), _ry(y_work_lane_edge))
+    y_bottom_lane_edge = min(_ry(y_origin_edge), _ry(y_work_lane_edge))
     c.setLineWidth(2.0)
     c.setStrokeColor(MEDIAN_EDGE)
-    c.line(x_left, y_left_edge, PLAN_RIGHT, y_left_edge)
+    c.line(x_left, y_top_lane_edge, PLAN_RIGHT, y_top_lane_edge)
     c.setStrokeColor(EDGE_LINE)
-    c.line(x_left, y_right_edge, PLAN_RIGHT, y_right_edge)
+    c.line(x_left, y_bottom_lane_edge, PLAN_RIGHT, y_bottom_lane_edge)
     c.setLineWidth(1.0)
-    c.line(x_left, y_work_shoulder_outer, PLAN_RIGHT, y_work_shoulder_outer)
-    c.line(x_left, y_left_strip_outer, PLAN_RIGHT, y_left_strip_outer)
+    c.line(x_left, _ry(y_work_shoulder_outer), PLAN_RIGHT, _ry(y_work_shoulder_outer))
+    c.line(x_left, _ry(y_open_strip_outer), PLAN_RIGHT, _ry(y_open_strip_outer))
 
     c.setStrokeColor(ROAD_BORDER)
     c.setLineWidth(0.5)
-    c.rect(
-        x_left,
-        y_work_shoulder_outer,
-        width,
-        y_left_strip_outer - y_work_shoulder_outer,
-        fill=0,
-        stroke=1,
-    )
+    y0, h = band(y_work_shoulder_outer, y_open_strip_outer)
+    c.rect(x_left, y0, width, h, fill=0, stroke=1)
 
 
 def _draw_road(
@@ -1277,8 +1328,12 @@ def _draw_site_context(
         # (PLAN_TOP - 26 baseline + up to two raised tiers) so the two
         # ceilings cannot invert their normal vertical order.
         x_school = min(max(x_of(school_station), PLAN_LEFT + 22.0), PLAN_RIGHT - 22.0)
-        y_road_top, _ = _road_y_extent(params, shoulder_width_ft)
+        y_road_top, y_road_bottom = _road_y_extent(params, shoulder_width_ft)
         y_school = min(y_road_top + 35.0, PLAN_TOP - 60.0)
+        if _PAGE_MIRRORED.get():
+            # #300: the open side is under the road on a mirrored left plan,
+            # beside the dimension band there (its floor clamp mirrored).
+            y_school = max(y_road_bottom - 35.0, PLAN_BOTTOM + 60.0)
         c.setFillColor(SCHOOL_FILL)
         c.setStrokeColor(colors.black)
         c.setLineWidth(0.5)
@@ -1387,7 +1442,9 @@ def _deoverlap_items(
         indices.sort(key=lambda i: 0 if items[i][0].device_type == DeviceType.SIGN_GENERIC else 1)
         for j, idx in enumerate(indices):
             p, x, y = items[idx]
-            new_y = y - j * push_dy if p.offset_ft >= 0 else y + j * push_dy
+            # #300: toward the device's own side (down on a right plan's
+            # work side, up on a mirrored left plan's).
+            new_y = y - j * push_dy if _side_is_down(p.offset_ft) else y + j * push_dy
             out[idx] = (p, x, new_y)
     return out
 
@@ -1445,8 +1502,9 @@ def _deoverlap_signs_pairwise(
                 # Push pb away from the road centerline.  Direction
                 # follows the sign of its offset_ft; signs on the work
                 # side (offset >= 0) move to lower y, signs on the
-                # opposing/median side move to higher y.
-                push = -push_dy if pb.offset_ft >= 0 else push_dy
+                # opposing/median side move to higher y — mirrored on a
+                # left plan (#300, ``_side_is_down``).
+                push = -push_dy if _side_is_down(pb.offset_ft) else push_dy
                 out[ib] = (pb, bx, by + push)
                 moved_any = True
         if not moved_any:
@@ -1624,7 +1682,14 @@ def _layout_device_positions(
             # floating in margin white space.
             overage = abs(p.offset_ft) - on_road_max
             clamp_dist = 7.0 + min(overage, 20.0) * 0.5
-            y = y_road_bottom - clamp_dist if p.offset_ft > 0 else y_road_top + clamp_dist
+            # #300: the device's own road edge (the work side's is the top
+            # one on a mirrored left plan).  ``abs(offset) > on_road_max``
+            # here, so the offset is never 0.
+            y = (
+                y_road_bottom - clamp_dist
+                if _side_is_down(p.offset_ft)
+                else y_road_top + clamp_dist
+            )
         else:
             y = _y_of(p.offset_ft, params.is_divided)
         if p.device_type in lighting_types:
@@ -1728,7 +1793,8 @@ def _draw_devices(
         n = code_to_num.get(_schedule_key(p))
         if n is None:
             continue
-        cy = y - inline_offset if p.offset_ft >= 0 else y + inline_offset
+        # #300: outside the glyph, on the device's own side.
+        cy = y - inline_offset if _side_is_down(p.offset_ft) else y + inline_offset
         _draw_callout_circle(c, x, cy, n)
 
     # Pass 3: lighting decorations on top of everything else.  Each
@@ -1752,6 +1818,7 @@ def _draw_dim(
     y: float,
     label: str,
     raise_tier: int | None = None,
+    below: bool = False,
 ) -> None:
     """Dimension line with a centered label.
 
@@ -1759,7 +1826,32 @@ def _draw_dim(
     to a second tier above the dim line and connected by a short leader
     so it cannot collide with adjacent dim labels (e.g. a short taper
     next to a short buffer next to a long work zone).
+
+    ``below`` (#300, R119 Q2): the band sits under the road on a mirrored
+    left plan, so its label and tiers hang below the line, the mirror of
+    the default.  Text stays upright.
     """
+    if below:
+        c.setStrokeColor(DIM_LINE)
+        c.setLineWidth(0.5)
+        c.line(x1, y, x2, y)
+        c.line(x1, y - 4, x1, y + 4)
+        c.line(x2, y - 4, x2, y + 4)
+        c.setFillColor(DIM_LINE)
+        c.setFont("Helvetica", 7)
+        text_width = c.stringWidth(label, "Helvetica", 7)
+        x_center = (x1 + x2) / 2.0
+        if raise_tier is None:
+            raise_tier = 1 if text_width > abs(x2 - x1) - 4.0 else 0
+        # 7 pt Helvetica cap height ~5 pt: a baseline 5 + 5 pt under the
+        # line mirrors the default's 5 pt gap above it.
+        if raise_tier > 0:
+            y_label = y - 2.0 - 10.0 * raise_tier - 5.0
+            c.line(x_center, y - 1.0, x_center, y_label + 6.5)
+            c.drawCentredString(x_center, y_label, label)
+        else:
+            c.drawCentredString(x_center, y - 10.0, label)
+        return
     c.setStrokeColor(DIM_LINE)
     c.setLineWidth(0.5)
     c.line(x1, y, x2, y)
@@ -1858,6 +1950,12 @@ def _draw_landmarks(
     # clamped so a tall road stack (4 narrowed lanes divided) cannot walk
     # the band — or its raised tier (up to +22 pt) — into the top banner.
     y_top = min(y_road_top + 18 * PTS_PER_OFFSET_FT, PLAN_TOP - 26.0)
+    # #300 (R119 Q2): on a mirrored left plan the work side is on top, so
+    # the band moves to the open side under the road, floor-clamped the
+    # way the ceiling clamps it above, with its labels hanging below.
+    below = _PAGE_MIRRORED.get()
+    if below:
+        y_top = max(y_road_bottom - 18 * PTS_PER_OFFSET_FT, PLAN_BOTTOM + 26.0)
 
     # Greedy raised-tier assignment (#216 Family 3): a label wider than
     # its segment raises off the baseline; when two raised labels' text
@@ -1874,7 +1972,7 @@ def _draw_landmarks(
     for x1, x2, label in segs:
         tw = c.stringWidth(label, "Helvetica", 7)
         if tw <= abs(x2 - x1) - 4.0:
-            _draw_dim(c, x1, x2, y_top, label, raise_tier=0)
+            _draw_dim(c, x1, x2, y_top, label, raise_tier=0, below=below)
             continue
         xc = (x1 + x2) / 2.0
         lo, hi = xc - tw / 2.0 - 2.0, xc + tw / 2.0 + 2.0
@@ -1882,7 +1980,7 @@ def _draw_landmarks(
         while any(t == tier and lo < ohi and olo < hi for t, olo, ohi in occupied):
             tier += 1
         occupied.append((tier, lo, hi))
-        _draw_dim(c, x1, x2, y_top, label, raise_tier=tier)
+        _draw_dim(c, x1, x2, y_top, label, raise_tier=tier, below=below)
 
     # Scale-break marks across the road in the (compressed) buffer region.
     buffer_mid_x = x_of(wz_len + buf_len / 2.0)
@@ -4402,6 +4500,26 @@ def render_plan_sheet(
 
 
 def _render_schematic_page(
+    c: canvas.Canvas,
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+    *args: Any,
+    **kwargs: Any,
+) -> None:
+    """Render the schematic page (page 1), mirrored for a left plan.
+
+    #300 (R81, R119 Q2): a left-shoulder plan draws page 1 top-to-bottom
+    mirrored (``_PAGE_MIRRORED``), reset afterwards so page 2 and every
+    later render read the default.
+    """
+    token = _PAGE_MIRRORED.set(params.work_side == "left")
+    try:
+        _draw_schematic_page(c, placements, params, *args, **kwargs)
+    finally:
+        _PAGE_MIRRORED.reset(token)
+
+
+def _draw_schematic_page(
     c: canvas.Canvas,
     placements: list[DevicePlacement],
     params: ScenarioParams,

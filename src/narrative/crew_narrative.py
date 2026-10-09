@@ -188,13 +188,19 @@ def _format_equipment_bullets(rows: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def _format_advance_signs_bullets(advance_signs_setup_order: list[dict[str, Any]]) -> str:
-    """Render the setup step-6 sub-bullets (one line per advance sign)."""
+def _format_advance_signs_bullets(
+    advance_signs_setup_order: list[dict[str, Any]], side_word: str = "right"
+) -> str:
+    """Render the setup step-6 sub-bullets (one line per advance sign).
+
+    ``side_word`` is the work side's curb (#300: "left" on a left-shoulder
+    plan on a one-way street; "right" everywhere else, as before).
+    """
     lines: list[str] = []
     for s in advance_signs_setup_order:
         lines.append(
             f"   - {s['code']} at {s['distance_ft']:,.0f} ft upstream of "
-            f"taper start (station {s['station_ft']:,.0f} ft), right side."
+            f"taper start (station {s['station_ft']:,.0f} ft), {side_word} side."
         )
     return "\n".join(lines)
 
@@ -830,7 +836,12 @@ def build_narrative_context(
         "sign_schedule": sign_schedule,
         "advance_signs_setup_order": setup_order,
         "advance_signs_takedown_order": takedown_order,
-        "advance_signs_setup_bullets": _format_advance_signs_bullets(setup_order),
+        "advance_signs_setup_bullets": _format_advance_signs_bullets(
+            setup_order, side_word=params.work_side
+        ),
+        # #300: the work side's curb in the steps that name it ("right" on
+        # every plan but a left-shoulder plan on a one-way street).
+        "work_side_word": params.work_side,
         "takedown_sign_sequence": _format_takedown_sign_sequence(takedown_order),
         "taper_start_station": taper_start_station,
         "taper_end_station": taper_end_station,
@@ -861,8 +872,12 @@ def build_narrative_context(
         # #308: a one-way street has no centerline — its offsets are
         # measured from the left lane edge (``plan_sheet._draw_one_way_street``).
         "one_way_street": params.one_way_street,
+        # #300: on a left-shoulder plan offset 0 is the RIGHT lane edge (the
+        # edge opposite the work), so the origin names it.
         "offset_origin": (
-            "the left edge of the roadway" if params.one_way_street else "centerline"
+            f"the {'right' if params.work_side == 'left' else 'left'} edge of the roadway"
+            if params.one_way_street
+            else "centerline"
         ),
         # #176's visible right-side note (ruled 2026-08-03): fires only
         # where a lane CHOICE exists, per the single-sourced

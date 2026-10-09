@@ -489,13 +489,18 @@ export function hasLocation(meta: ScenarioMeta): boolean {
 // is needs-you).  Under the work-start model the direction every corridor
 // surface needs comes from the side, so nothing checks, draws or
 // generates without one: the rail's blocker, the shell's check gate, the
-// ledger's row 4 and the verdict strip all read THIS.  Only the built
-// side counts ("right"); left / median are named and greyed, never
-// written (the open-points ruling 2).  A corridor_end scenario carries its
-// direction in bearingDeg and has no side to confirm.
+// ledger's row 4 and the verdict strip all read THIS.  The built sides
+// count: "right", and (#300) "left", which the backend offers only for
+// shoulder work on a one-way street.  MIRROR, display-only: the backend
+// decides where left is built (render_api._ensure_pin_model_complete,
+// schemas.left_side_built) and refuses a stale left with the fix named;
+// matchRefusalAffordance's work_side row points at the side control
+// (R119 Q4).  "median" is never written (the open-points ruling 2).  A
+// corridor_end scenario carries its direction in bearingDeg and has no
+// side to confirm.
 export function hasConfirmedSide(meta: ScenarioMeta): boolean {
   if (meta.pinModel !== "work_start") return true;
-  return meta.work?.side === "right";
+  return meta.work?.side === "right" || meta.work?.side === "left";
 }
 
 // Narrow helpers — useful in form components so each sub-form receives

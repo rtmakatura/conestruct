@@ -104,11 +104,12 @@ class WorkPlacement(BaseModel):
     one choice worded in compass terms ("East side · northbound traffic",
     ruling 8); the backend derives the direction from it (Rule 3).
 
-    * ``side`` — the occupied edge relative to that traffic.  Only
-      ``"right"`` is built; ``"left"`` and ``"median"`` are named so the
-      control can show them greyed out, and are refused (Rule 8; the
-      open-points ruling 2).  Absent ⇒ not yet confirmed (ruling 10:
-      needs-you) — nothing directional is computed.
+    * ``side`` — the occupied edge relative to that traffic.  ``"right"``
+      is built everywhere; ``"left"`` only for shoulder work on a
+      confirmed one-way street (#300, ``left_side_built``); ``"median"``
+      is named and refused (Rule 8; the open-points ruling 2).  Absent ⇒
+      not yet confirmed (ruling 10: needs-you) — nothing directional is
+      computed.
     * ``travel`` — with a confirmed road (``meta.centerline``): the
       traffic runs with or against the relayed polyline's vertex order.
     * ``heading`` — with no confirmed road: the ruled four-way choice,
@@ -1151,12 +1152,47 @@ def _corridor_bearing(
     if meta.pinModel != "work_start":
         return meta.bearingDeg
     work = meta.work
-    if work is None or work.side != "right" or not (meta.lat and meta.lng):
+    # #300: the left curb of a one-way street has the same travel
+    # direction as the right; the gate (``left_side_built``) has already
+    # refused a left side anywhere else.
+    if work is None or work.side not in ("right", "left") or not (meta.lat and meta.lng):
         return None
     from src.rules.corridor import travel_bearing_at
 
     return travel_bearing_at(
         meta.lat, meta.lng, centerline=centerline, travel=work.travel, heading=work.heading
+    )
+
+
+def left_side_built(scenario: Scenario) -> bool:
+    """Is left-side work laid out for this scenario? (#300)
+
+    The one predicate the side options and the request gate share
+    (``render_api._side_options``, ``render_api._ensure_pin_model_complete``):
+
+    * shoulder work only (R79: near-intersection left and left lane
+      closures wait for Rule 8 evidence);
+    * #308's carriageway verdict is a one-way STREET (R80, read through
+      #308's predicate: one carriageway of a divided road keeps its
+      median side unoffered);
+    * AND the relayed road is tagged one-way (R119 Q5: an operator's
+      "one-way street" answer returns from the verdict before the tag is
+      read, so the tag is checked here too);
+    * with a confirmed road (``meta.centerline``), which sets the travel
+      direction both curbs share.
+    """
+    from src.rules.carriageway import ONE_WAY_TAGS
+
+    if not isinstance(scenario, ShoulderScenario):
+        return False
+    meta = scenario.meta
+    road = meta.roadDirection
+    return (
+        scenario.carriageway_verdict() == "one_way_street"
+        and road is not None
+        and road.oneway in ONE_WAY_TAGS
+        and bool(meta.centerline)
+        and len(meta.centerline or []) >= 2
     )
 
 
@@ -1336,6 +1372,13 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             jurisdiction="CDOT",
             work_zone_speed_mph=wz_speed,
             one_way_street=one_way_street,
+            # #300 (R82): the curb the work is on.  The request gate has
+            # already refused "left" unless ``left_side_built`` holds.
+            work_side=(
+                "left"
+                if scenario.meta.work is not None and scenario.meta.work.side == "left"
+                else "right"
+            ),
             **meta_kw,
         )
         # A one-way street signs one side, the closed shoulder's (R90:

@@ -135,11 +135,15 @@ describe("the load gate: a pre-change plan opens with its side unset (ruling 10)
 });
 
 describe("the side: confirmed only when built, cleared when the pin moves", () => {
-  it("only the right side counts; a corridor_end scenario has no side to confirm", () => {
+  it("the built sides count; a corridor_end scenario has no side to confirm", () => {
     const base = { ...DEFAULT_SHOULDER.meta, ...PIN };
     expect(hasConfirmedSide(base)).toBe(false);
     expect(hasConfirmedSide({ ...base, work: { side: "right", heading: "N" } })).toBe(true);
-    expect(hasConfirmedSide({ ...base, work: { side: "left", heading: "N" } })).toBe(false);
+    // RULE 5, stated (#300): a left side counts as confirmed now (it was
+    // false).  The backend decides where left is built and refuses a
+    // stale one; this mirror only says a side was chosen.
+    expect(hasConfirmedSide({ ...base, work: { side: "left", heading: "N" } })).toBe(true);
+    expect(hasConfirmedSide({ ...base, work: { side: "median", heading: "N" } })).toBe(false);
     expect(hasConfirmedSide({ ...base, pinModel: "corridor_end" })).toBe(true);
   });
 

@@ -52,6 +52,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
+    shoulder_closed_sign_code,
     shoulder_ta_reference,
     validate_corridor_geometry,
 )
@@ -419,6 +420,15 @@ def build_audit_trail(
                 "CDOT S-630-1 Case 27 (shoulder closure on freeway/expressway, "
                 "75 mph posted with reduced work-zone speed; Sheet 14)"
             )
+        elif params.work_side == "left":
+            # #300 (R119 Q3), CHOSEN: S-630-1 draws Case 11 for the right
+            # shoulder only; a left-shoulder plan on a one-way street is that
+            # case mirrored (the pending_verification item says so).
+            cdot_reference = (
+                "CDOT S-630-1 Case 11 (right-shoulder closure, mirrored to the left "
+                "shoulder of a one-way street"
+                + (", reduced work-zone speed)" if is_reduced else ")")
+            )
         elif is_reduced:
             cdot_reference = (
                 "CDOT S-630-1 Case 11 (right-shoulder closure on divided "
@@ -709,6 +719,8 @@ def build_audit_trail(
     # Flagger W3-4 anchor — only meaningful on the flagger series; kept
     # outside the branch so _position_label can reference it untyped.
     sign_w3_4_station = 0.0
+    # #300: the SHOULDER CLOSED sign's code (W21-5aR on every right plan).
+    sc = shoulder_closed_sign_code(params)
 
     if is_flagger:
         # Flagger-controlled alternating-traffic series (MUTCD Fig.
@@ -730,7 +742,7 @@ def build_audit_trail(
     elif is_lane:
         sign_codes = {"A": "W4-2R", "B": "W20-5R", "C": "W20-1"}
     else:
-        sign_codes = {"A": "W21-5aR", "B": "W20-2", "C": "W20-1"}
+        sign_codes = {"A": sc, "B": "W20-2", "C": "W20-1"}
 
     # Sign table — derived from the placement list (audit honesty, B-02).
     #
@@ -764,8 +776,8 @@ def build_audit_trail(
             return "between A and B (TA-10 note 8)"
         if label == "W16-2a" and abs(station_ft - sign_a_station) <= 0.5:
             return "A plaque"
-        if label == "W21-5aR" and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
-            return "A2 (second W21-5aR)"
+        if label == sc and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
+            return f"A2 (second {sc})"
         if label == "W7-3a" and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
             return "A2 plaque"
         if label == "W5-1":
@@ -812,7 +824,7 @@ def build_audit_trail(
                 _, plaque_value = substitute_sign_description(
                     label, p.station_ft, params, taper_start_station=taper_start_station
                 )
-                host = "W21-5aR at A" if label == "W16-2a" else "second W21-5aR"
+                host = f"{sc} at A" if label == "W16-2a" else f"second {sc}"
                 distance_text = f"{plaque_value} (under {host})"
             else:
                 distance_text = f"{p.station_ft - taper_start_station:,.0f} upstream"
@@ -890,11 +902,11 @@ def build_audit_trail(
                         "Position": "A plaque",
                         "Code": "W16-2a",
                         "Station (ft)": f"{sign_a_station:,.0f}",
-                        "Distance from Taper (ft)": (f"{w16_2a_value} (under W21-5aR at A)"),
+                        "Distance from Taper (ft)": (f"{w16_2a_value} (under {sc} at A)"),
                     },
                     {
-                        "Position": "A2 (second W21-5aR)",
-                        "Code": "W21-5aR",
+                        "Position": f"A2 (second {sc})",
+                        "Code": sc,
                         "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
                         "Distance from Taper (ft)": (
                             f"{w21_5aR_downstream_st - taper_start_station:,.0f} upstream"
@@ -904,7 +916,7 @@ def build_audit_trail(
                         "Position": "A2 plaque",
                         "Code": "W7-3a",
                         "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
-                        "Distance from Taper (ft)": (f"{w7_3a_value} (under second W21-5aR)"),
+                        "Distance from Taper (ft)": (f"{w7_3a_value} (under second {sc})"),
                     },
                 ]
             )
@@ -946,6 +958,10 @@ def build_audit_trail(
     not_counted = [p for p, c in zip(mainline_signs, counts, strict=True) if not c]
     sign_left = sum(1 for p in counted if p.offset_ft < 0)
     sign_right = sum(1 for p in counted if p.offset_ft > 0)
+    if params.work_side == "left":
+        # #300: positive offsets point toward the work, which is the LEFT
+        # curb on a left plan; the row names the physical side.
+        sign_left, sign_right = sign_right, sign_left
     both_sides_pass = sign_left == sign_right and sign_left > 0 if both_sides_required else True
     both_sides_detail = (
         f"Not required: one shoulder closed (Note 8's Case 11 exception). "
@@ -1407,6 +1423,11 @@ def build_audit_trail(
             "shoulder_ft": params.shoulder_width_ft,
             "lane_ft": params.lane_width_ft,
         }
+    # #300 (R119 Q3): a left-shoulder plan is Case 11 mirrored, CHOSEN.  The
+    # marker rides the case section to ``audit_projection`` like R88's; left
+    # plans only, so every other plan's sections stay byte-identical.
+    if params.work_side == "left":
+        case_section["left_shoulder_mirrored"] = True
 
     # ------------------------------------------------------------------
     # 8. Flagger placement (only meaningful when flaggers are present)
@@ -1693,6 +1714,11 @@ INTERSECTION_SUPPORT_ISSUE: str | None = "https://github.com/rtmakatura/conestru
 # have no published source; the pending item keyed to this URL says so.
 ONE_WAY_STREET_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/308"
 
+# #300 (R119 Q3): S-630-1 draws no left-shoulder case; a left-shoulder plan
+# on a one-way street is Case 11 mirrored, and the pending item keyed to
+# this URL says so.
+LEFT_SHOULDER_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/300"
+
 # Tracking issue for lane-count trust (#120): when detection relays OSM
 # lane tags that contradict each other (lanes != lanes:forward +
 # lanes:backward + lanes:both_ways), the pending item keyed to this URL
@@ -1971,6 +1997,24 @@ def audit_projection(
                     f"sets them. Verify against the site (#308)."
                 ),
                 "tracking_issue": ONE_WAY_STREET_ISSUE,
+            }
+        )
+
+    # #300 (R119 Q3): the left-shoulder mirror is CHOSEN, not drawn by any
+    # source; disclosed (Rule 12).  Keyed off the case section's marker.
+    if case.pop("left_shoulder_mirrored", False):
+        items.append(
+            {
+                "kind": "left_shoulder_mirrored",
+                "label": (
+                    "S-630-1 draws Case 11 for the right shoulder only. This plan "
+                    "mirrors it to the left shoulder of a one-way street: the same "
+                    "devices and distances, the LEFT SHOULDER CLOSED sign (MUTCD 11th "
+                    "Ed. §6H.22 ¶02, p. 807) and signs on the closed shoulder's side "
+                    "(Fig. 6P-3 Note 1, p. 864). The mirror is CHOSEN. Verify against "
+                    "the site (#300)."
+                ),
+                "tracking_issue": LEFT_SHOULDER_ISSUE,
             }
         )
 
