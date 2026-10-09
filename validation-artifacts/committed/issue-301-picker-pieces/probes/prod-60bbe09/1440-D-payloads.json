@@ -1,0 +1,61 @@
+[
+ {
+  "url": "corridor-geometry",
+  "divided": true,
+  "roadType": "rural_divided",
+  "side": null,
+  "kind": "shoulder"
+ },
+ {
+  "url": "corridor-geometry",
+  "divided": true,
+  "roadType": "urban_arterial",
+  "carriageway": {
+   "oneway": "yes",
+   "highwayClass": "primary",
+   "twinDistanceM": null,
+   "twinSearched": true
+  },
+  "side": null,
+  "kind": "shoulder"
+ },
+ {
+  "url": "corridor-geometry",
+  "divided": true,
+  "roadType": "urban_arterial",
+  "carriageway": {
+   "oneway": "yes",
+   "highwayClass": "primary",
+   "twinDistanceM": null,
+   "twinSearched": true
+  },
+  "side": null,
+  "kind": "shoulder"
+ },
+ {
+  "url": "corridor-geometry",
+  "divided": true,
+  "roadType": "urban_arterial",
+  "carriageway": {
+   "oneway": "yes",
+   "highwayClass": "primary",
+   "twinDistanceM": null,
+   "twinSearched": true
+  },
+  "side": "right",
+  "kind": "shoulder"
+ },
+ {
+  "url": "audit",
+  "divided": true,
+  "roadType": "urban_arterial",
+  "carriageway": {
+   "oneway": "yes",
+   "highwayClass": "primary",
+   "twinDistanceM": null,
+   "twinSearched": true
+  },
+  "side": "right",
+  "kind": "shoulder"
+ }
+]
