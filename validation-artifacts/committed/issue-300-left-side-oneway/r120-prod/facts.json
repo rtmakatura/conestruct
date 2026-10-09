@@ -1,0 +1,109 @@
+{
+  "s1": {
+    "options": [
+      [
+        "West side · southbound traffic",
+        "false"
+      ],
+      [
+        "East side · southbound traffic",
+        "false"
+      ]
+    ],
+    "stale": null,
+    "note": null,
+    "kinds": [
+      [
+        "kind-chip-shoulder",
+        "true"
+      ],
+      [
+        "kind-chip-flagger_lane_closure",
+        "false"
+      ],
+      [
+        "kind-chip-near_intersection",
+        "false"
+      ]
+    ]
+  },
+  "s2": {
+    "options": [
+      [
+        "West side · southbound traffic",
+        "false"
+      ],
+      [
+        "✓ East side · southbound traffic",
+        "true"
+      ]
+    ],
+    "stale": null,
+    "note": null,
+    "kinds": [
+      [
+        "kind-chip-shoulder",
+        "true"
+      ],
+      [
+        "kind-chip-flagger_lane_closure",
+        "false"
+      ],
+      [
+        "kind-chip-near_intersection",
+        "false"
+      ]
+    ]
+  },
+  "s3": {
+    "options": [],
+    "stale": null,
+    "note": "the road's sides are unavailable. Reopen the map to retry",
+    "kinds": [
+      [
+        "kind-chip-shoulder",
+        "false"
+      ],
+      [
+        "kind-chip-flagger_lane_closure",
+        "true"
+      ],
+      [
+        "kind-chip-near_intersection",
+        "false"
+      ]
+    ]
+  },
+  "geo": [
+    {
+      "t": 1791552440241,
+      "status": 200,
+      "side": null,
+      "body": "{\"status\":\"side_not_confirmed\",\"pin_model\":\"work_start\",\"pin\":[39.7337,-104.98753],\"travel_bearing_deg\":null,\"work\":null,\"approaches\":[],\"coverage_ft\":null,\"coverage_start_ft\":null,\"message\":null,\"side_options\":[{\"work\":{\"side\":\"right\",\"travel\":\"with_geometry\"},\"label\":\"West side · southbound traffic\",\"built\":true}]}"
+    },
+    {
+      "t": 1791552442840,
+      "status": 200,
+      "side": null,
+      "body": "{\"status\":\"side_not_confirmed\",\"pin_model\":\"work_start\",\"pin\":[39.7337,-104.98753],\"travel_bearing_deg\":null,\"work\":null,\"approaches\":[],\"coverage_ft\":null,\"coverage_start_ft\":null,\"message\":null,\"side_options\":[{\"work\":{\"side\":\"right\",\"travel\":\"with_geometry\"},\"label\":\"West side · southbound traffic\",\"built\":true},{\"work\":{\"side\":\"left\",\"travel\":\"with_geometry\"},\"label\":\"East side · southbound tr"
+    },
+    {
+      "t": 1791552443682,
+      "status": 200,
+      "side": null,
+      "body": "{\"status\":\"side_not_confirmed\",\"pin_model\":\"work_start\",\"pin\":[39.7337,-104.98753],\"travel_bearing_deg\":null,\"work\":null,\"approaches\":[],\"coverage_ft\":null,\"coverage_start_ft\":null,\"message\":null,\"side_options\":[{\"work\":{\"side\":\"right\",\"travel\":\"with_geometry\"},\"label\":\"West side · southbound traffic\",\"built\":true},{\"work\":{\"side\":\"left\",\"travel\":\"with_geometry\"},\"label\":\"East side · southbound tr"
+    },
+    {
+      "t": 1791552452874,
+      "status": 200,
+      "side": "left",
+      "body": "{\"status\":\"laid_out\",\"pin_model\":\"work_start\",\"pin\":[39.7337,-104.98753],\"travel_bearing_deg\":180.49,\"work\":{\"length_ft\":1000.0,\"points\":[[39.730958,-104.9874187],[39.7311772,-104.9874174],[39.7312208,-104.9874171],[39.7316826,-104.9874143],[39.7318295,-104.9874134],[39.7318531,-104.9874132],[39.7319624,-104.987412],[39.7320545,-104.987412],[39.7321479,-104.987411],[39.7324437,-104.9874096],[39.73"
+    },
+    {
+      "t": 1791552456976,
+      "status": 400,
+      "side": "left",
+      "body": "{\"detail\":{\"error\":\"pin_model_input\",\"message\":\"meta.work.side 'left' needs shoulder work on a one-way street: a road tagged one-way and confirmed as a one-way street. Choose the right side, or plan shoulder work on a one-way street.\"}}"
+    }
+  ]
+}

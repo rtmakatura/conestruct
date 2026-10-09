@@ -1,0 +1,2 @@
+divided-answer 400 {"detail":{"error":"pin_model_input","message":"meta.work.side 'left' needs shoulder work on a one-way street: a road tagged one-way and confirmed as a one-way street. Choose the right side, or plan shoulder work on a one-way street."}}
+untagged-two-way 400 {"detail":{"error":"pin_model_input","message":"meta.work.side 'left' needs shoulder work on a one-way street: a road tagged one-way and confirmed as a one-way street. Choose the right side, or plan shoulder work on a one-way street."}}
