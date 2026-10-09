@@ -72,7 +72,7 @@ Step 2 (What) owns "anything the system guessed wrong".
 **The one fact that lives only in the modal: a class-fallback speed.**
 - With no `maxspeed` tag, the classifier infers a speed from the highway class (`confidence: "low"`, `lib/road-detection/classify.ts:286-297`).
 - That speed is never applied: `speedLimitMph` comes only from the tag (`:367`).
-- WHAT has a Speed detection row only when the tag exists (`lib/road-detection/detected-rows.ts:174`).
+- WHAT has a Speed detection row only when the tag exists (`lib/road-detection/detected-rows.ts:175`).
 - The modal shows the fallback with "Low-confidence fallback. It won't apply unless you accept it." and a **Use N mph** button (UX-02, `LocationPickerModal.tsx:2335-2352`).
 - So removing the panel removes the only place an operator sees it. See Q2.
 

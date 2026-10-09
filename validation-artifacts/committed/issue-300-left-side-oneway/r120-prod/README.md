@@ -22,7 +22,7 @@ kind switched to Flagger lane closure:
 | East chosen | West, ✓ East | absent | absent |
 | flagger | none | **absent** | "the road's sides are unavailable. Reopen the map to retry" |
 
-The last `/api/render/corridor-geometry` response (`facts.json` `geo[3]`): **400** with the R120
+The last `/api/render/corridor-geometry` response (`facts.json` `geo[4]`, the last of five): **400** with the R120
 refusal. The side options come from that read, which sends the scenario with the stored left side
 (`lib/corridor-geometry.ts:230-234`). `render_corridor_geometry` runs `_ensure_scenario_enabled` first
 (`src/api/render_api.py:1275`), which runs `_ensure_pin_model_complete`, so the read refuses before it
