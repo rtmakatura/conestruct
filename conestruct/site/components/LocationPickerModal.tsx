@@ -26,11 +26,7 @@ import {
   deriveCrossStreet,
   type CrossStreetCandidate,
 } from "@/lib/road-detection/cross-street";
-import {
-  bearingToDirectionLabel as bearingToDirectionLabelImpl,
-  candidateLabel,
-  crossStreetLabel,
-} from "@/lib/road-detection/labels";
+import { candidateLabel, crossStreetLabel } from "@/lib/road-detection/labels";
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
 import { snapSpeedToDomain } from "@/lib/scenarios";
 import {
@@ -89,19 +85,6 @@ export interface LocationPickerInitial {
    * for callers that do not track it.
    */
   kindConfirmed?: boolean;
-  // Speed limit fallback for advance-warning / buffer / taper math
-  // before the in-modal classify resolves.  Mirrors whatever the
-  // scenario currently carries.
-  speedMph: number;
-  /**
-   * #267 — the scenario's raw width facts (relayed once to the
-   * corridor-spec preview, deleted by #301; "preview must equal applied").
-   * The backend derives the shoulder width from kind + divided + road
-   * type with the plan's own producer; this side never computes it.
-   * Absent on kinds that carry no such field.
-   */
-  laneWidth?: number;
-  divided?: boolean;
   /**
    * #234 — the intersection marked at the last Save & Close, from
    * ``scenario.meta.intersection`` (near_intersection only).  The picker
@@ -207,13 +190,6 @@ const CORRIDOR_SOURCE_ID = "corridor-source";
 const CORRIDOR_LAYER_ID = "corridor-layer";
 const CORRIDOR_LABEL_LAYER_ID = "corridor-labels";
 
-const ROAD_TYPE_LABELS: Record<RoadType, string> = {
-  rural_undivided: "Rural, undivided",
-  rural_divided: "Rural, divided",
-  urban_arterial: "Urban arterial",
-  freeway: "Freeway / interstate",
-};
-
 const ROAD_TYPE_OPTIONS: Array<{ v: RoadType; l: string }> = [
   { v: "rural_undivided", l: "Rural, undivided" },
   { v: "rural_divided", l: "Rural, divided" },
@@ -267,11 +243,6 @@ function fmtFt(n: number): string {
   if (!Number.isFinite(n)) return "0";
   return Math.round(n).toLocaleString("en-US");
 }
-
-// Re-export the shared label helper under the original local name so
-// the modal's render code keeps reading naturally.  The single source
-// of truth lives in lib/road-detection/labels.ts.
-const bearingToDirectionLabel = bearingToDirectionLabelImpl;
 
 // fix-spec-02 P1·04 — confidence speaks its own achromatic language:
 // filled pips (3/2/1 of 3) plus the word in the caption beneath the row
@@ -425,11 +396,6 @@ export function LocationPickerModal({
   const [hasPin, setHasPin] = useState(initialHasPin);
   const [lat, setLat] = useState(initialHasPin ? initial.lat! : 0);
   const [lng, setLng] = useState(initialHasPin ? initial.lng! : 0);
-  // #290: the picked candidate's raw OSM bearing — a road fact, read by
-  // the cross-street parallel filter only.  Not a direction of travel.
-  const [bearing, setBearing] = useState(
-    restoredRoad ? normaliseBearing(restoredRoad.candidate.bearing) : 0,
-  );
   // All candidate ways returned by /api/road-bearing within snap range,
   // already deduplicated server-side by (name||ref, class, octant).
   // Length 0 → no road found; 1 → unambiguous (auto-fill behaviour);
@@ -536,47 +502,15 @@ export function LocationPickerModal({
   // #290: the backend's derived direction of travel at the pin, or null.
   const markerTravelRef = useRef<number | null>(null);
   const mapboxRef = useRef<MapboxNamespace | null>(null);
-  const corridorReadyRef = useRef(false);
   // Mirrors the latest computed corridor so the deferred ``installCorridor``
   // handler can push current data when the map's ``load`` fires *after*
   // the corridor was computed.  Without this, opening the modal with an
   // already-set work-zone length would race and never paint the line.
   const corridorDataRef = useRef<CorridorPolyline | null>(null);
-  // Guards to avoid feedback loops between marker drag and coord state.
-  const suppressFlyToRef = useRef(false);
-  const suppressDragHandlerRef = useRef(false);
   // Each detect call gets a token; only the latest call's result is
   // allowed to mutate state, so a fast drag doesn't get a stale snap
   // from an earlier request.  One pipeline now → one token.
   const bearingTokenRef = useRef(0);
-
-  // ---- Effective values (override > detected > current) -----------------
-  const effectiveRoadType: RoadType | null =
-    overrides.roadType ??
-    (classify.state === "detected" ? classify.result.roadType : null);
-  const effectiveDivided: boolean | null =
-    overrides.divided ??
-    (classify.state === "detected" ? classify.result.divided : null);
-  // UX-02: only an override (an explicit accept/edit) or a high-confidence
-  // OSM speed feeds the corridor preview.  A low-confidence highway-class
-  // fallback is shown in the field but does NOT auto-apply on Save, so it
-  // must not drive the preview either — otherwise the corridor computes a
-  // value Save won't keep (the same divergence UX-01 fixes for the clamp).
-  // Until the operator accepts it (which makes it an override), the preview
-  // falls back to initial.speedMph — the scenario's current speed, which is
-  // exactly what Save will keep.
-  const effectiveSpeed: number | null =
-    overrides.speedMph ??
-    (classify.state === "detected"
-      ? (classify.result.speedLimitMph ?? null)
-      : null);
-  const effectiveLanes: number | null =
-    overrides.lanesPerDirection ??
-    (classify.state === "detected"
-      ? (classify.result.lanesPerDirection ??
-        classify.result.fields.lanes.value ??
-        null)
-      : null);
 
   // ---- The corridor: the BACKEND's geometry (#290, ruling 7) -------------
   // The overlay used to fetch zone lengths (/api/render/corridor-spec) and
@@ -801,15 +735,6 @@ export function LocationPickerModal({
       setSelectedCandidateIdx(null);
       setBearingWarning(null);
       confirmedMethodRef.current = null;
-      // #149 contract: a moved (or re-analyzed) pin invalidates
-      // everything from the previous pin — including the direction of
-      // travel, which was derived from the now-stale road.  Clear it so
-      // an unresolved detection never shows a bearing left over from the
-      // old location; a single-candidate result re-applies its own
-      // bearing below (the empty field passes the auto-adopt guard), and
-      // an operator re-picks or re-types otherwise.  The ref is cleared
-      // in step so the single-candidate guard reads the cleared value.
-      setBearing(0);
       setClassify({ state: "resolving" });
       try {
         const r = await fetch("/api/road-bearing", {
@@ -865,18 +790,16 @@ export function LocationPickerModal({
         setBearingCandidates(cands);
         if (cands.length === 1) {
           // Unambiguous — select it and synthesize properties from the
-          // candidate's OSM tags.  (#290: its bearing is kept as a road
-          // fact only; no direction of travel is adopted from it.)
+          // candidate's OSM tags.  (#290: no direction of travel is
+          // adopted from its bearing.)
           const only = cands[0];
           setSelectedCandidateIdx(0);
-          setBearing(normaliseBearing(only.bearing));
           setClassify({
             state: "detected",
             result: classifyFromCandidate(only, j.isUrban, j.placeName),
           });
         } else {
-          // Multi-candidate: leave bearing alone and hold the property
-          // panel in awaiting_pick until the operator commits to a
+          // Multi-candidate: hold the property panel in awaiting_pick until the operator commits to a
           // road.  The rail-top card renders itself off the candidate
           // data — no toggle to raise here.
           setSelectedCandidateIdx(null);
@@ -900,21 +823,10 @@ export function LocationPickerModal({
   // ---- Cross-street detection (near_intersection kind, #117) ------------
   // Everything the second-pin derivation needs, mirrored into a ref:
   // the map click handler that arms it is created once at map init.
-  const crossDetectCtxRef = useRef<{
-    lat: number;
-    lng: number;
-    bearing: number;
-    mainline: RoadCandidate | null;
-  }>({
-    lat: 0,
-    lng: 0,
-    bearing: 0,
+  const crossDetectCtxRef = useRef<{ mainline: RoadCandidate | null }>({
     mainline: null,
   });
   crossDetectCtxRef.current = {
-    lat,
-    lng,
-    bearing,
     mainline:
       selectedCandidateIdx !== null
         ? (bearingCandidates[selectedCandidateIdx] ?? null)
@@ -1013,7 +925,6 @@ export function LocationPickerModal({
           .setLngLat([mlng, mlat])
           .addTo(map);
         marker.on("dragend", () => {
-          if (suppressDragHandlerRef.current) return;
           const ll = marker.getLngLat();
           applyPinPosition(ll.lat, ll.lng, { detect: true, fly: false });
         });
@@ -1065,7 +976,7 @@ export function LocationPickerModal({
       ensureMarker(newLat, newLng, markerTravelRef.current);
 
       const map = mapRef.current;
-      if (map && opts.fly && !suppressFlyToRef.current) {
+      if (map && opts.fly) {
         const z = map.getZoom();
         const targetZ =
           opts.targetZoom !== undefined && z < opts.targetZoom
@@ -1274,7 +1185,6 @@ export function LocationPickerModal({
             },
           });
         }
-        corridorReadyRef.current = true;
         const current = corridorDataRef.current;
         const source = map.getSource(CORRIDOR_SOURCE_ID) as
           | MapboxGL.GeoJSONSource
@@ -1376,7 +1286,6 @@ export function LocationPickerModal({
       mapRef.current = null;
       markerRef.current = null;
       setMarkerBearingRef.current = null;
-      corridorReadyRef.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, tokenAvailable, token]);
@@ -1387,7 +1296,6 @@ export function LocationPickerModal({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    corridorReadyRef.current = false;
     map.setStyle(MAPBOX_STYLES[style]);
   }, [style]);
 
@@ -1478,15 +1386,13 @@ export function LocationPickerModal({
 
   // Apply a specific candidate: select it and synthesize the road
   // properties from its OSM tags.  Used by the picker buttons.  (#290:
-  // the candidate's bearing is kept as a road fact; the direction of
-  // travel is derived by the backend from the road and the side.)
+  // the direction of travel is derived by the backend from the road and
+  // the side.)
   const applyCandidate = useCallback(
     (idx: number) => {
       if (idx < 0 || idx >= bearingCandidates.length) return;
       const c = bearingCandidates[idx];
-      const b = normaliseBearing(c.bearing);
       setSelectedCandidateIdx(idx);
-      setBearing(b);
       setClassify({
         state: "detected",
         result: classifyFromCandidate(
@@ -2798,7 +2704,7 @@ function WhichRoadCard({
           picked && (
             <div className="mt-1.5 flex items-center justify-between gap-3">
               <span className="min-w-0 truncate font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark)]">
-                <CandidateCaption candidate={picked} multi={false} />
+                <CandidateCaption candidate={picked} />
               </span>
               {/* act-bright, not act: on the amber-tinted card bg the
                   base cyan measures 4.09:1 — under the 4.5 AA text
@@ -2821,22 +2727,13 @@ function WhichRoadCard({
 // One-line caption summarising the selected candidate.  Used both in
 // the unambiguous case (single road found) and after the operator picks
 // one in the multi-candidate case.
-function CandidateCaption({
-  candidate,
-  multi,
-}: {
-  candidate: RoadCandidate;
-  multi: boolean;
-}) {
+function CandidateCaption({ candidate }: { candidate: RoadCandidate }) {
   const lbl = candidateLabel(candidate);
   const brg = normaliseBearing(candidate.bearing);
   return (
     <>
       Detected from OSM: {brg}° ({lbl.primary} {lbl.direction.toLowerCase()},{" "}
       {lbl.sub.toLowerCase()}) · way {candidate.way_id}
-      {/* inc-5: the hint used to read "tap Pick Road to change" — that
-          button is gone; the change affordance is the rail-top card. */}
-      {multi && <span className="opacity-70"> · change it above</span>}
     </>
   );
 }

@@ -48,7 +48,7 @@ function mount() {
   render(
     <LocationPickerModal
       open
-      initial={{ scenarioKind: "shoulder", speedMph: 65 }}
+      initial={{ scenarioKind: "shoulder" }}
       onCancel={() => {}}
       onSave={vi.fn()}
     />,

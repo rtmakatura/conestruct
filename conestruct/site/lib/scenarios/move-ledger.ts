@@ -167,8 +167,9 @@ export function deriveMoveLedger(
       value: extent ? `${scenario.workLen.toLocaleString("en-US")} ft · typed` : null,
       // Rule 68's invariant, caught by this arc's own sentinel: a row
       // offers a link OR a word, never neither.  A set extent offers
-      // CHANGE — the picker carries `workZoneFt`, so the same control
-      // that set it is the one that changes it (Part 1 §4.3's own verb).
+      // CHANGE (Part 1 §4.3's own verb).  It opens the picker like every
+      // ledger verb; the length itself is the band's "Work zone length"
+      // field, since the picker has had no length control since #290.
       verb: extent ? "CHANGE" : null,
       word: extent ? null : located ? "needs you" : "pending",
       subline: null,

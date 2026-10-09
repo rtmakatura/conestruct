@@ -74,7 +74,6 @@ function mount(intersection: typeof X | null) {
       open
       initial={{
         scenarioKind: "near_intersection",
-        speedMph: 35,
         // #290: no bearing, no length — the picker takes neither now.
         address: "Lafayette, CO",
         lat: PIN.lat,

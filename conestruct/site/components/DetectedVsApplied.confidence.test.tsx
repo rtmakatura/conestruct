@@ -29,7 +29,7 @@
 // still says `no source tag`, because it genuinely has no method.
 //
 // The marker reuses the picker's producer and vocabulary verbatim —
-// `OSM · measured` / `OSM · inferred` (LocationPickerModal.tsx:2543-2546)
+// `OSM · measured` / `OSM · inferred` (LocationPickerModal.tsx, `RoadFieldRow`)
 // — so one string and one tone describe this fact on both surfaces.  No
 // glyph: `◌` is ruled out (DESIGN-SPACING.md:98-115, "unevaluated / not
 // set / pending — never a verdict"; the prior double-duty ruling at

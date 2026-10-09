@@ -150,7 +150,7 @@ function mountModal(scenario: Scenario = SIDED, kindConfirmed = true) {
   return render(
     <LocationPickerModal
       open
-      initial={{ scenarioKind: "shoulder", speedMph: 65, scenario, kindConfirmed }}
+      initial={{ scenarioKind: "shoulder", scenario, kindConfirmed }}
       onCancel={() => {}}
       onSave={vi.fn()}
     />,

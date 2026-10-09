@@ -38,7 +38,7 @@ function mountModal() {
   return render(
     <LocationPickerModal
       open
-      initial={{ scenarioKind: "shoulder", speedMph: 65 }}
+      initial={{ scenarioKind: "shoulder" }}
       onCancel={() => {}}
       onSave={() => {}}
     />,
@@ -65,7 +65,7 @@ describe("LocationPickerModal focus containment", () => {
     const { unmount } = render(
       <LocationPickerModal
         open
-        initial={{ scenarioKind: "shoulder", speedMph: 65 }}
+        initial={{ scenarioKind: "shoulder" }}
         onCancel={() => {}}
         onSave={() => {}}
         restoreFallbackRef={fallbackRef}
@@ -86,7 +86,7 @@ describe("LocationPickerModal focus containment", () => {
     const { unmount } = render(
       <LocationPickerModal
         open
-        initial={{ scenarioKind: "shoulder", speedMph: 65 }}
+        initial={{ scenarioKind: "shoulder" }}
         onCancel={() => {}}
         onSave={() => {}}
         restoreFallbackRef={fallbackRef}

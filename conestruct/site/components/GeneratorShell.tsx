@@ -766,12 +766,11 @@ export function GeneratorShell({
     auditState.state === "ready" ? auditState.data : auditState.lastReady;
   const summary = currentAudit?.summary ?? null;
 
-  // --- Pin-based jurisdiction suggestion (Endeavor B) -----------------
-  // Advice only: this fetch NEVER writes to the scenario.  The single
-  // writer of jurisdiction_key from this feature is the user's Confirm
-  // click (onConfirmSuggestion below).  Endpoint absent or failing ⇒
-  // the slot goes quiet and the picker works exactly as today — B is
-  // additive, never load-bearing.
+  // --- Pin-based jurisdiction guess (Endeavor B, R108) -----------------
+  // The lookup feeds `applyJurisdictionGuess` below, the one writer of
+  // jurisdiction_key from this feature.  Endpoint absent or failing ⇒
+  // the slot goes quiet and the field stays as it was — B is additive,
+  // never load-bearing.
   const [suggestState, setSuggestState] = useState<{
     status: "idle" | "loading" | "ready" | "error";
     data: JurisdictionSuggestion | null;

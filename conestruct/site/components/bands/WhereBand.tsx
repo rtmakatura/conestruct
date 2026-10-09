@@ -18,9 +18,12 @@
 // a read-only picture of the corridor drawn by the backend
 // (POST /render/corridor-map — #302's one layout call, page 2's own
 // overlay), so the side and the kind are confirmed with their consequence
-// in view.  The modal keeps the decision work (detection, candidates, the
-// cross street, suggestions) and stays one button away.
-// Authority: validation-artifacts/committed/issue-301-band-aerial/rulings.md.
+// in view.  The modal keeps the decision work and stays one button away.
+// R123 (#301's end state): "the modal is the map": the pin, the road
+// pick (detection and candidates) and the cross-street pin.  The guesses
+// R108 prefills live on WHAT, never in the modal.
+// Authority: validation-artifacts/committed/issue-301-band-aerial/rulings.md,
+// validation-artifacts/committed/issue-301-picker-pieces/rulings.md.
 // ─────────────────────────────────────────────────────────────────────
 
 import { useState } from "react";

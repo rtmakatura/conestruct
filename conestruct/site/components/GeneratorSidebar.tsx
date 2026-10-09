@@ -520,10 +520,6 @@ export function GeneratorSidebar({
             // #289 finding 1: the approaches draw only for a confirmed
             // kind, like every other live answer.
             kindConfirmed: kindState === "confirmed",
-            speedMph: scenario.speed,
-            // #267: the plan's own width facts, for the preview's taper.
-            laneWidth: "laneWidth" in scenario ? (scenario.laneWidth as number) : undefined,
-            divided: "divided" in scenario ? (scenario.divided as boolean) : undefined,
             confirmedRoad: scenario.meta.confirmedRoad ?? null,
             // #234: handed back so the picker restores the marker.
             intersection: scenario.meta.intersection ?? null,

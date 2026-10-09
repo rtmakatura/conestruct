@@ -85,7 +85,7 @@ function mountModal() {
   return render(
     <LocationPickerModal
       open
-      initial={{ scenarioKind: "shoulder", speedMph: 65 }}
+      initial={{ scenarioKind: "shoulder" }}
       onCancel={() => {}}
       onSave={onSave}
     />,

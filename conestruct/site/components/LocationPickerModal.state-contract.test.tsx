@@ -147,7 +147,7 @@ function mountModal(initialExtra: Record<string, unknown> = {}) {
   return render(
     <LocationPickerModal
       open
-      initial={{ scenarioKind: "shoulder", speedMph: 65, ...initialExtra }}
+      initial={{ scenarioKind: "shoulder", ...initialExtra }}
       onCancel={() => {}}
       onSave={onSave}
     />,
