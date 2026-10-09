@@ -289,7 +289,8 @@ function SideControl({
       )}
       {staleLeft && (
         <div className="tr-prov mt-1" data-testid="side-control-stale">
-          The left curb is offered only for shoulder work on a one-way street. Choose a side.
+          Left-side shoulder work needs a one-way street. Pick a right-side curb, or plan
+          shoulder work on a one-way street.
         </div>
       )}
     </div>

@@ -120,7 +120,7 @@ describe("#300: the side control on a one-way street", () => {
     expect(options.map((o) => o.getAttribute("aria-checked"))).toEqual(["false"]);
     const line = document.querySelector('[data-testid="side-control-stale"]');
     expect(line?.textContent).toBe(
-      "The left curb is offered only for shoulder work on a one-way street. Choose a side.",
+      "Left-side shoulder work needs a one-way street. Pick a right-side curb, or plan shoulder work on a one-way street.",
     );
   });
 });

@@ -270,12 +270,12 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
         return
     if work.side == "left" and not left_side_built(scenario):
         # #300 (R119 Q4): the backend refuses and names the fix; the side
-        # control shows it.  No frontend reset.
+        # control shows it.  No frontend reset.  R120: worded positively
+        # (no "not X" contrast; unslop rules apply to UI strings).
         raise _pin_model_refusal(
-            "meta.work.side 'left' is laid out only for shoulder work on a one-way "
-            "street: a road tagged one-way and confirmed as a one-way street, not one "
-            "side of a divided road. Choose the right side, or plan shoulder work on a "
-            "one-way street."
+            "meta.work.side 'left' needs shoulder work on a one-way street: a road "
+            "tagged one-way and confirmed as a one-way street. Choose the right side, "
+            "or plan shoulder work on a one-way street."
         )
     if work.side not in ("right", "left"):
         raise _pin_model_refusal(
