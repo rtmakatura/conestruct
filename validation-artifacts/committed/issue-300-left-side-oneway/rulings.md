@@ -43,3 +43,15 @@ This file is the arc's authority; every commit on this branch cites it.
 > Q3: Yes, "Case 11 (right-shoulder closure, mirrored to the left shoulder of a one-way street)", mirror marked CHOSEN, plus a pending-verification note.
 > Q4: Yes, backend refuses with a message naming the fix; the side picker shows it; no frontend reset.
 > Q5: Yes, offer left only when the verdict is one-way street AND the road is tagged one-way.
+
+## R120 and R121 (Ryan, 2026-10-08, after the #300 ship `da8fce7`), verbatim
+
+> The #300 browser check passed. I'm posting the close comment from the chat, so skip your draft.
+>
+> R120: one small branch off main (Refs #300). Reword #300's refusal message and the side picker's "why" line so neither uses a "not X" contrast (unslop rules apply to UI strings). Phrase it positively, e.g. "Left-side shoulder work needs a one-way street. This road is set as divided, so pick a right-side curb or change Carriageway." Keep the meaning and the named fix. Copy only: no logic, wire field or gate change. Update any test that pins the old string, run the diff-verifier, and give me the result: line and the go. No checkpoint needed.
+>
+> R121 (investigate only, no code): on prod plan-44 (N Broadway SB, east curb, left shoulder), the last cone of the downstream taper on page 1 sits on the sidewalk band, past the shoulder's outer edge. Check whether a right-side shoulder plan does the same, and whether it's only the page-1 drawing or the device positions too. Report what you find, and draft an issue for the chat to repost. Fold in the known arrow-board/drum overlap at the taper start if it's the same drawing code.
+>
+> Also: if this is a foreground session, record tonight's three ships (#313, plan-date-denver, #300) in handoff.md and execution-sequence.md, and do the Part 0 cleanup from cc-prompt-next-batch.md. If it's a background job, say "needs a foreground session" and skip both.
+
+R120's example names one cause ("This road is set as divided"). The side control can't tell which cause made a stored left side stale (a kind change, a "divided" answer, an undecided road), so its line states the need and the fix without naming a cause.
