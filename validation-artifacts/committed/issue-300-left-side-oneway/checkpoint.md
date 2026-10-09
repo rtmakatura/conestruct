@@ -390,3 +390,86 @@ Page numbering: printed page = 1-based PDF page + 764 (filenames `mutcd11-pdfNNN
 3. **The audit's Case 11 words for a left plan.** *Recommended:* "CDOT S-630-1 Case 11 (right-shoulder closure, mirrored to the left shoulder of a one-way street)", with the mirror marked CHOSEN (S-630-1 draws no left shoulder case; the left legend is MUTCD §6H.22 ¶02). Plus one `pending_verification` item on left plans saying so (Rule 12).
 4. **A stale left side.** *Recommended:* the backend refuses with a 400 that names the fix, and the frontend shows its affordance at the side control. No frontend reset (Rule 3; the relay-fact pattern).
 5. **The gate.** *Recommended:* R80 through #308's verdict plus the one-way tag (the belt-and-braces check above). The alternative, the verdict alone, would let an operator's "One-way street" answer on an untagged road offer a left edge.
+
+---
+
+## Build plan and Rule 5 prediction for A (2026-10-08, on main `11c81b4`; written before any product code)
+
+Rulings: R78-R82, R90 (via #308), R119 Q2-Q5. #313 (the arrow board) shipped in `11c81b4`. Every shoulder board is now `CAUTION`, so a left plan has no arrow to mirror. Line numbers below are at `11c81b4`.
+
+### Backend
+
+- **The gate, one producer** (`src/api/schemas.py`): `left_side_built(scenario) -> bool`. True only when all of these hold:
+  - the scenario is a `ShoulderScenario`;
+  - `carriageway_verdict() == "one_way_street"`;
+  - `meta.roadDirection.oneway` is a one-way tag (`yes` / `-1`);
+  - `meta.centerline` has two or more points (R79, R80, R119 Q5).
+- **Gate readers:**
+  - `render_api._ensure_pin_model_complete` (`:268-271`): `"left"` passes when the gate holds. Otherwise it's a 400 `pin_model_input` that keeps `'left'` in its message and names the fix (R119 Q4).
+  - `"median"` keeps today's refusal.
+  - `_side_options` (`:1167-1219`) adds the left edge, `_cardinal(bearing - 90.0)`, same `travel`, when the gate holds. Its docstring is restated.
+- **Bearing:** `schemas._corridor_bearing` (`:1154`) derives the bearing for `"left"` too. Both curbs of a one-way street share one travel direction.
+- **The field:** `ScenarioParams.work_side: Literal["right", "left"] = "right"` (R82), appended with its default. The shoulder bridge (`schemas.py:1322-1346`) sets it from `meta.work.side`. Still the undivided generator.
+- **One sign-code producer:** `shoulder_closed_sign_code(params)` → `"W21-5aL"` on a left plan, otherwise `"W21-5aR"`. Read by:
+  - `generate_shoulder_closure_undivided` (`layout.py:672`, `:709`);
+  - the audit's sign codes and position labels (`audit.py:733`, `:767-768`, `:815`, `:893-907`);
+  - `validate_shoulder_warning_pair` (`validators.py:1718`).
+
+  Every existing right plan gets `"W21-5aR"` from it, byte for byte.
+- **Offsets: unchanged.** On a one-way street, offset 0 is the lane edge opposite the work, and positive points toward the work. That's the model's existing "positive = work side".
+- **Audit:**
+  - The Note 8 row counts by physical side: a left plan's positive offsets are its left signs (`audit.py:947-957`).
+  - The Case 11 reference on a left plan reads "CDOT S-630-1 Case 11 (right-shoulder closure, mirrored to the left shoulder of a one-way street)" (R119 Q3), with the mirror marked CHOSEN.
+  - One `pending_verification` item on left plans says so (R119 Q3; Rule 12).
+- **Crew sheet:**
+  - `crew_narrative.py:197` "right side." follows the side.
+  - `offset_origin` on a left plan is "the right edge of the roadway".
+  - `base.md.j2:48` ("right side of road") and `:55` ("along the right lane edge") read a `work_side_word` that is "right" unless the plan is left.
+  - `:128` ("Offsets are measured from the left edge of the roadway") prints `offset_origin`.
+
+### Page 1 (R81, R119 Q2: CHOSEN)
+
+- **The switch:** one context switch, set for the schematic page only when `work_side == "left"`. `_y_of` and a new `_ry(y)` (y mirrored about `PLAN_Y_CENTER`, the plan frame's exact midpoint, so the frame maps onto itself) read it. Text stays upright, so there's no canvas flip.
+- **Sites placed by position or direction rather than `_y_of`** (lines at `11c81b4`):
+  - `_road_y_extent` `:98-101`: reflected and swapped.
+  - `_draw_one_way_street` `:263-338`: every y reflected. **The yellow line goes on the TOP lane edge** (the left of traffic, R119 Q2). In a right plan that's offset 0; in a left plan it's the work-side lane edge.
+  - `_deoverlap_items` `:1390`, `_deoverlap_signs_pairwise` `:1449`, the off-road clamp `:1627`, the callout circle `:1731`: "offset ≥ 0 pushes down" becomes "pushes toward the device's own side". Right plans are unchanged.
+  - The dimension band `:1860` moves to the open side, below the road on a left plan (R119 Q2). `_draw_dim` gains `below=True`, which hangs the label and raised tiers under the line, mirrored. Its floor is `PLAN_BOTTOM + 26`, the mirror of today's ceiling.
+  - The school marker `:1281` goes to the open side as well.
+- **Unchanged:** the lane arrows (through `_y_of`, still pointing right), the scale break (reads the reflected extent), the site strips (through `_strip_y_range` → `_y_of`), the frame clamp (symmetric), the legend, notes and title block.
+
+### Frontend
+
+- `lib/scenarios/index.ts:496-499` `hasConfirmedSide` accepts `"left"`. It's a mirror, commented as one; the backend stays authoritative (Rule 3).
+- `lib/scenarios/auto-apply.ts` `matchRefusalAffordance`: a `work_side` row mirrors the gate. A stored `"left"` without the gate's facts points at the side control (R119 Q4).
+- `components/bands/WhereBand.tsx` `SideControl`: when the stored side is none of the backend's offered options, one line under the control says why. It's derived from the backend's options, not a frontend predicate. No reset (R119 Q4).
+
+### Rule 5: the churn prediction
+
+**Behavior changes, deliberate and stated:**
+1. On a confirmed one-way street with shoulder work, the side control offers two rows. On Broadway: "West side · southbound traffic" and "East side · southbound traffic". Every other road, kind and state (two-way, divided carriageway, undecided, no road) is unchanged.
+2. `side: "left"` passes the gate, then lays out and generates. Left anywhere else is still a 400 `pin_model_input` with `'left'` in it, now naming the fix.
+3. A left plan (all new output):
+   - `W21-5aL` wherever a right plan prints `W21-5aR`;
+   - every device at the right plan's offsets;
+   - the Note 8 row "6 left, 0 right";
+   - the Case 11 words, plus the `pending_verification` item;
+   - the crew sheet in left words, measured from the right edge;
+   - page 1 mirrored.
+4. The frontend lets a left side count as confirmed, and a stale left side shows its pointer at the side control.
+
+**Assertions predicted to change:**
+- `conestruct/site/lib/scenarios/pin-model.test.ts:142`: `side: "left"` → `true`.
+- `conestruct/site/lib/scenarios/rail.test.ts:146-148`: a left side no longer holds the side blocker.
+
+**Predicted unchanged:**
+- `tests/test_corridor_geometry.py:226-273`: none of these send carriageway facts, so the verdict is `not_applicable` and they stay right-only.
+- `tests/test_work_start_wire.py:100-103`: no road, still refused, `'left'` still in the message.
+- `WhereBand.side-control.test.tsx`.
+- `tests/test_oneway_street_shoulder.py`, `test_oneway_street_audit.py`, `test_r94_one_way_page1.py`, `test_shoulder_arrow_caution.py`: all right plans.
+- **Every recorded baseline:** the 90 snapshot files, the tiering fixtures, the 12 `pdf_worst_case` fixtures and their containment counts, and the S-630 typicals. **Predictor check:** `work_side` is always present, and no snapshot or wire dict serializes `ScenarioParams` wholesale. If the build adds it to one, this row flips before the commit.
+
+**New tests (Rule 11):**
+- **Payload:** Broadway left: the two side options; the gate's refusals (two-way, divided carriageway, undecided, no oneway tag, near-intersection, median); the left plan's devices at the right plan's offsets with `W21-5aL`; the Note 8 row, Case 11 words and `pending_verification` item; the crew sheet's left words and origin.
+- **Rendered:** a left plan's page 1 has the closed shoulder above the lanes and the yellow line on the top lane edge (read from the drawing calls); dimension labels below the road. A new `pdf_worst_case` fixture, `broadway-left.json`, runs through `test_pdf_containment.py` with zero edge / box-cross / collisions. It adds a fixture and moves none.
+- **Mounted flow:** the side control renders two rows from a two-option geometry; a stored left that isn't offered shows the line; the rail's `work_side` pointer.
