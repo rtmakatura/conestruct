@@ -25,6 +25,7 @@ dependencies = [
     "sentry-sdk[fastapi]>=2.0",
     "jsonschema>=4.21",
     "shapely>=2.0",
+    "tzdata>=2024.1",
 ]
 
 [project.optional-dependencies]

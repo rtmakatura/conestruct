@@ -11,7 +11,8 @@ out of each produced file:
   crew PDF      the same line, through the document renderer
   plan sheet    the title block's "DATE:" row on page 1
 
-All five print the same UTC date.  The pinned instant is 2026-09-08
+All five print the same date, Denver's (Ryan, 2026-10-08; it was the
+UTC date under #268).  The pinned instant is 2026-09-08
 16:07:35 UTC — a date the pre-#268 code (three server-local clocks that
 never read the seam) cannot produce on any day after it, so the proof
 is red before the surfaces switch and cannot pass by coincidence.
@@ -85,7 +86,7 @@ def test_xlsx_summary_generated_is_a_date_cell_on_the_pinned_instant(client: Tes
     assert isinstance(cell.value, datetime), (
         f"Generated is {type(cell.value).__name__}, not a date cell"
     )
-    assert cell.value == datetime(2026, 9, 8, 16, 7, 35)
+    assert cell.value == datetime(2026, 9, 8, 10, 7, 35)  # RULE 5: Denver; was 16:07:35 UTC
     assert cell.number_format == DATE_FORMAT
     assert cell.value.strftime("%Y-%m-%d") == STAMP
 
@@ -96,7 +97,7 @@ def test_quote_row_3_is_a_generated_label_and_a_date_cell(client: TestClient) ->
     ws = load_workbook(io.BytesIO(res.content))["Quote Summary"]
     assert ws["A3"].value == "Generated"
     assert isinstance(ws["B3"].value, datetime), f"B3 is {type(ws['B3'].value).__name__}"
-    assert ws["B3"].value == datetime(2026, 9, 8, 16, 7, 35)
+    assert ws["B3"].value == datetime(2026, 9, 8, 10, 7, 35)  # RULE 5: Denver; was 16:07:35 UTC
     assert ws["B3"].number_format == DATE_FORMAT
 
 
@@ -126,7 +127,7 @@ def test_plan_sheet_date_prints_the_stamp(client: TestClient) -> None:
     assert m.group(1) == STAMP
 
 
-def test_all_five_surfaces_print_the_same_date(client: TestClient) -> None:
+def _all_five_stamps(client: TestClient) -> dict[str, object]:
     body = _shoulder_body()
     xlsx = load_workbook(
         io.BytesIO(client.post("/render/xlsx", headers=HEADERS, json=body).content)
@@ -152,4 +153,19 @@ def test_all_five_surfaces_print_the_same_date(client: TestClient) -> None:
         "crew_pdf": re.search(r"Generated:\s*(\d{4}-\d{2}-\d{2})", crew_pdf).group(1),  # type: ignore[union-attr]
         "plan": re.search(r"DATE:\s*(\d{4}-\d{2}-\d{2})", plan).group(1),  # type: ignore[union-attr]
     }
+    return stamps
+
+
+def test_all_five_surfaces_print_the_same_date(client: TestClient) -> None:
+    stamps = _all_five_stamps(client)
     assert set(stamps.values()) == {STAMP}, stamps
+
+
+def test_a_late_evening_denver_plan_prints_denvers_date_everywhere(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Ryan, 2026-10-08: a plan generated at 22:30 MDT on the 8th printed
+    # 2026-10-09 (the UTC date).  04:30 UTC on the 9th is that instant.
+    monkeypatch.setattr(validators, "_utcnow", lambda: datetime(2026, 10, 9, 4, 30, tzinfo=UTC))
+    stamps = _all_five_stamps(client)
+    assert set(stamps.values()) == {"2026-10-08"}, stamps

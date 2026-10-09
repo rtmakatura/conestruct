@@ -3,12 +3,14 @@
 Four files printed four formats from three clocks (server-local
 ``datetime.now()`` in the XLSX / quote / crew paths, ``date.today()`` on
 the plan sheet).  The ruling: ONE format — the plan sheet's
-``YYYY-MM-DD`` — read from the UTC clock, zone omitted.  Two helpers in
+``YYYY-MM-DD`` — read from the UTC clock, zone omitted.  Ryan,
+2026-10-08: the printed date is Denver's (``DELIVERABLE_TZ``), not
+UTC's; the clock stays UTC.  Two helpers in
 ``src/rules/validators.py`` (the module every deliverable already
 imports for ``scenario_display_name``):
 
-* ``generated_at(now=None) -> datetime`` — the instant as a NAIVE UTC
-  datetime, the shape openpyxl writes as a real date cell.
+* ``generated_at(now=None) -> datetime`` — the instant as a NAIVE Denver
+  wall-clock datetime, the shape openpyxl writes as a real date cell.
 * ``generated_stamp(now=None) -> str`` — that instant as ``YYYY-MM-DD``.
 
 ``now`` is injected for tests; production reads ``_utcnow()`` (the one
@@ -30,27 +32,40 @@ _INSTANT = datetime(2026, 9, 8, 16, 7, 35, 123456, tzinfo=UTC)
 _STAMP_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
-def test_generated_stamp_is_the_utc_date_zone_omitted() -> None:
+def test_generated_stamp_is_the_denver_date_zone_omitted() -> None:
+    # 16:07 UTC is 10:07 MDT: the same calendar date either way.
     assert generated_stamp(_INSTANT) == "2026-09-08"
     assert _STAMP_RE.match(generated_stamp(_INSTANT))
 
 
-def test_generated_stamp_converts_a_non_utc_instant_to_the_utc_date() -> None:
-    # 23:30 on the 8th in Denver (UTC-6 in September) is 05:30 on the 9th UTC:
-    # the stamp names the UTC date, never the wall-clock date of a server.
+def test_generated_stamp_names_denvers_date_not_utcs() -> None:
+    # RULE 5, stated (Ryan, 2026-10-08; this case used to assert the UTC
+    # date "2026-09-09"): 23:30 on the 8th in Denver (UTC-6 in September)
+    # is 05:30 on the 9th UTC, and the stamp names Denver's date.
     denver = datetime(2026, 9, 8, 23, 30, tzinfo=timezone(timedelta(hours=-6)))
-    assert generated_stamp(denver) == "2026-09-09"
+    assert generated_stamp(denver) == "2026-09-08"
+    # The same instant given as UTC: still Denver's date.
+    assert generated_stamp(datetime(2026, 9, 9, 5, 30, tzinfo=UTC)) == "2026-09-08"
 
 
-def test_generated_at_is_naive_utc_to_the_second() -> None:
+def test_generated_stamp_follows_mountain_standard_time_in_winter() -> None:
+    # 06:30 UTC on 15 January is 23:30 MST (UTC-7) on the 14th.
+    assert generated_stamp(datetime(2026, 1, 15, 6, 30, tzinfo=UTC)) == "2026-01-14"
+    assert generated_stamp(datetime(2026, 1, 15, 7, 0, tzinfo=UTC)) == "2026-01-15"
+
+
+def test_generated_at_is_naive_denver_wall_clock_to_the_second() -> None:
+    # RULE 5, stated: was the UTC wall clock (16:07:35).
     at = generated_at(_INSTANT)
     assert at.tzinfo is None, "openpyxl date cells take naive datetimes"
-    assert at == datetime(2026, 9, 8, 16, 7, 35)
+    assert at == datetime(2026, 9, 8, 10, 7, 35)
 
 
 def test_generated_at_treats_a_naive_now_as_utc() -> None:
+    # RULE 5, stated: a naive ``now`` is still read as UTC, so it comes
+    # back converted to Denver (it used to come back unchanged).
     naive = datetime(2026, 9, 8, 16, 7, 35)
-    assert generated_at(naive) == naive
+    assert generated_at(naive) == datetime(2026, 9, 8, 10, 7, 35)
 
 
 def test_stamp_and_at_agree_on_the_same_instant() -> None:
@@ -60,7 +75,7 @@ def test_stamp_and_at_agree_on_the_same_instant() -> None:
 def test_default_now_reads_the_utc_clock_seam(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(validators, "_utcnow", lambda: _INSTANT)
     assert generated_stamp() == "2026-09-08"
-    assert generated_at() == datetime(2026, 9, 8, 16, 7, 35)
+    assert generated_at() == datetime(2026, 9, 8, 10, 7, 35)  # RULE 5: was 16:07:35
 
 
 def test_utcnow_is_zone_aware_utc() -> None:

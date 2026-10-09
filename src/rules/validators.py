@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.spacing import (
@@ -297,28 +298,38 @@ def _utcnow() -> datetime:
     return datetime.now(UTC)
 
 
+# The zone every deliverable's date is stamped in (Ryan, 2026-10-08:
+# "Stamp the date in America/Denver (or the jurisdiction's local time)").
+# CHOSEN: one zone, because every jurisdiction record is in Colorado
+# (validation-artifacts/committed/plan-date-denver/rulings.md).  The
+# clock stays UTC (``_utcnow``); only the printed date is Denver's.
+DELIVERABLE_TZ = ZoneInfo("America/Denver")
+
+
 def generated_at(now: datetime | None = None) -> datetime:
-    """The generation instant as a NAIVE UTC datetime, to the second.
+    """The generation instant as a NAIVE Denver wall-clock datetime, to the second.
 
     The shape openpyxl writes as a real date cell (an aware datetime is
-    refused by the writer).  A zone-aware ``now`` is converted to UTC; a
-    naive ``now`` is taken as already UTC.  Rule 3: formatting only.
+    refused by the writer).  A zone-aware ``now`` is converted to
+    ``DELIVERABLE_TZ``; a naive ``now`` is taken as UTC (the seam's
+    contract) and converted the same way.  Rule 3: formatting only.
     """
     instant = now if now is not None else _utcnow()
-    if instant.tzinfo is not None:
-        instant = instant.astimezone(UTC)
-    return instant.replace(tzinfo=None, microsecond=0)
+    if instant.tzinfo is None:
+        instant = instant.replace(tzinfo=UTC)
+    return instant.astimezone(DELIVERABLE_TZ).replace(tzinfo=None, microsecond=0)
 
 
 def generated_stamp(now: datetime | None = None) -> str:
-    """The one generated stamp for every deliverable: ``YYYY-MM-DD``, UTC.
+    """The one generated stamp for every deliverable: ``YYYY-MM-DD``, Denver's date.
 
-    #268 ruling: the plan sheet's format, the UTC date, zone omitted —
-    the XLSX Summary, the quote, the crew narrative (md + PDF) and the
-    plan sheet's DATE all print this string for the same instant.  The
-    time of day is deliberately absent: with it the crew-narrative
-    snapshot proof (``test_replication_snapshot``) would flake once a
-    minute; without it only the midnight-UTC edge remains.
+    #268 ruling: the plan sheet's format, zone omitted.  The XLSX
+    Summary, the quote, the crew narrative (md + PDF) and the plan
+    sheet's DATE all print this string for the same instant.  Ryan,
+    2026-10-08: the date is Denver's, not UTC's (a 22:30 MDT plan was
+    stamped the next day).  The time of day is deliberately absent:
+    with it the crew-narrative snapshot proof
+    (``test_replication_snapshot``) would flake once a minute.
     """
     return generated_at(now).strftime("%Y-%m-%d")
 

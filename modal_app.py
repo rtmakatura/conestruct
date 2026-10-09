@@ -74,6 +74,7 @@ RENDER_DEPS = [
     "sentry-sdk[fastapi]>=2.0",
     "jsonschema>=4.21",  # jurisdiction record validation (src/rules/jurisdiction.py)
     "shapely>=2.0",  # pin-based jurisdiction suggestion (src/rules/boundaries.py)
+    "tzdata>=2024.1",  # America/Denver for the deliverables' date (validators.DELIVERABLE_TZ)
 ]
 
 image = (

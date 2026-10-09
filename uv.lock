@@ -2568,6 +2568,7 @@ dependencies = [
     { name = "shapely" },
     { name = "streamlit" },
     { name = "svgwrite" },
+    { name = "tzdata" },
     { name = "uvicorn" },
 ]
 
@@ -2606,6 +2607,7 @@ requires-dist = [
     { name = "shapely", specifier = ">=2.0" },
     { name = "streamlit", specifier = ">=1.40" },
     { name = "svgwrite", specifier = ">=1.4" },
+    { name = "tzdata", specifier = ">=2024.1" },
     { name = "uvicorn", specifier = ">=0.32" },
 ]
 provides-extras = ["dev"]
