@@ -121,8 +121,11 @@ def test_left_is_not_offered_unless_the_road_is_a_one_way_street(
     assert [o["work"]["side"] for o in options(client, body)] == ["right"], label
 
 
-def _refusal(client: TestClient, body: dict[str, Any]) -> str:
-    r = client.post("/render/corridor-geometry", headers=AUTH, json=body)
+def _refusal(client: TestClient, body: dict[str, Any], endpoint: str = "/render/audit") -> str:
+    # #315: the gate is a deliverable's.  The two reads (corridor-geometry,
+    # corridor-map) answer a refused left as no side, with the reason beside
+    # it (tests/test_stale_left_side.py); every deliverable still refuses.
+    r = client.post(endpoint, headers=AUTH, json=body)
     assert r.status_code == 400, r.text
     detail = r.json()["detail"]
     assert detail["error"] == "pin_model_input"
@@ -167,7 +170,8 @@ def test_a_left_side_the_gate_refuses_names_the_fix(client: TestClient, label: s
 
 
 def test_median_is_still_named_and_refused(client: TestClient) -> None:
-    assert "'median'" in _refusal(client, broadway("median"))
+    # #315 leaves median alone: the UI never offers it, and the reads refuse it too.
+    assert "'median'" in _refusal(client, broadway("median"), "/render/corridor-geometry")
 
 
 def test_left_lays_out_and_generates_on_broadway(client: TestClient) -> None:

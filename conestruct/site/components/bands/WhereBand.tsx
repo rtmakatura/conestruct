@@ -236,11 +236,11 @@ function SideControl({
     (o) => o.built,
   );
   const selected = selectedSideOption(options, scenario.meta.work);
-  // #300 (R119 Q4): a stored left side the backend no longer offers (the
-  // kind changed, or the road was answered "divided").  Derived from the
-  // backend's own options, not a frontend predicate; nothing is reset.
-  const staleLeft =
-    options.length > 0 && selected === null && scenario.meta.work?.side === "left";
+  // #300 (R119 Q4), #315: a stored left side the backend no longer builds.
+  // The geometry read answers it as no side and says why (`side_refused`,
+  // one line per cause, R125 Q1); the line is the backend's, verbatim, and
+  // nothing is reset.
+  const refused = fetchState.geometry?.side_refused ?? null;
   return (
     <div className="mt-4" data-testid="side-control">
       <div className="tr-field">Occupied side</div>
@@ -290,10 +290,11 @@ function SideControl({
           })}
         </div>
       )}
-      {staleLeft && (
+      {refused && (
         <div className="tr-prov mt-1" data-testid="side-control-stale">
-          Left-side shoulder work needs a one-way street. Pick a right-side curb, or plan
-          shoulder work on a one-way street.
+          {/* R125 Q3 (P9): the needs-you glyph leads the line. */}
+          <span aria-hidden="true">⚠ </span>
+          {refused.message}
         </div>
       )}
     </div>

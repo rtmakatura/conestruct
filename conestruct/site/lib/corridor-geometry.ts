@@ -56,6 +56,21 @@ export interface SideOption {
   note?: string;
 }
 
+/** #315: why a stored side doesn't count — the backend's reason, one line
+ *  per cause (R125 Q1), rendered verbatim by the side control. */
+export interface SideRefusal {
+  side: "left";
+  cause:
+    | "not_shoulder"
+    | "no_road"
+    | "no_facts"
+    | "two_way"
+    | "divided"
+    | "undecided"
+    | "highway";
+  message: string;
+}
+
 export type GeometryStatus =
   | "laid_out"
   | "no_pin"
@@ -77,6 +92,9 @@ export interface CorridorGeometry {
   coverage_start_ft?: number | null;
   message: string | null;
   side_options: SideOption[];
+  /** #315: present only when the scenario's stored left side is one the
+   *  backend refuses; the read then answers as if no side were stored. */
+  side_refused?: SideRefusal | null;
 }
 
 /** The side choice currently on the scenario, if it is one of the options. */

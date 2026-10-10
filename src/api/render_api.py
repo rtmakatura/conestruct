@@ -314,6 +314,97 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
             )
 
 
+# #315 (R124 option (a), R125 Q1): the side control's line for a stored left
+# side the backend no longer builds, one per cause, written here so the
+# frontend composes nothing (Rule 3; one voice, P2).  Unslop-checked: no
+# "not X" contrast.  The deliverable endpoints keep R120's 400 above.
+SIDE_REFUSAL_MESSAGES: dict[str, str] = {
+    "not_shoulder": (
+        "Left-side work is laid out for shoulder work only. Pick a right-side curb, "
+        "or switch back to Shoulder work."
+    ),
+    "no_road": (
+        "Left-side shoulder work needs a confirmed road. Pick the road on the map, "
+        "or pick a right-side curb."
+    ),
+    "no_facts": (
+        "Left-side shoulder work needs a one-way street confirmed from the map. Reopen "
+        "the map and pick the road again, or pick a right-side curb."
+    ),
+    "two_way": (
+        "Left-side shoulder work needs a one-way street, and the map shows this road as "
+        "two-way. Pick a right-side curb."
+    ),
+    "divided": (
+        "Left-side shoulder work needs a one-way street, and this road reads as divided. "
+        "Pick a right-side curb, or change Carriageway."
+    ),
+    "undecided": (
+        "Left-side shoulder work needs a one-way street, and this road's carriageway is "
+        "still open. Answer Carriageway, or pick a right-side curb."
+    ),
+    "highway": (
+        "Left-side shoulder work is laid out on one-way streets, and this road is a "
+        "highway. Pick a right-side curb."
+    ),
+}
+
+
+def _side_refusal(scenario: Scenario) -> dict[str, str] | None:
+    """Why a stored left side doesn't count, or None when it does (#315).
+
+    None for every scenario but a work-start pin holding ``side: "left"``
+    that :func:`schemas.left_side_built` refuses.  The cause is named from
+    that predicate's own conjuncts, in order, so exactly one applies: the
+    kind, the confirmed road, the one-way tag (R119 Q5: an operator's
+    "one-way street" answer on an untagged road reads as two-way here), then
+    #308's verdict, whose ``not_applicable`` splits on whether carriageway
+    facts were relayed at all.
+    """
+    from src.rules.carriageway import ONE_WAY_TAGS
+
+    meta = scenario.meta
+    work = meta.work
+    if meta.pinModel != "work_start" or work is None or work.side != "left":
+        return None
+    if left_side_built(scenario):
+        return None
+    if not isinstance(scenario, ShoulderScenario):
+        cause = "not_shoulder"
+    elif not meta.centerline or len(meta.centerline) < 2:
+        cause = "no_road"
+    elif meta.roadDirection is None:
+        cause = "no_facts"
+    elif meta.roadDirection.oneway not in ONE_WAY_TAGS:
+        cause = "two_way"
+    else:
+        verdict = scenario.carriageway_verdict()
+        if verdict in ("divided", "undecided"):
+            cause = verdict
+        elif scenario.carriageway is None:
+            cause = "no_facts"
+        else:
+            cause = "highway"
+    return {"side": "left", "cause": cause, "message": SIDE_REFUSAL_MESSAGES[cause]}
+
+
+def _read_scenario(scenario: Scenario) -> tuple[Scenario, dict[str, str] | None]:
+    """The scenario the two READ endpoints answer for (#315, R124 option (a)).
+
+    /render/corridor-geometry and /render/corridor-map read a stored left side
+    the backend refuses as NO side, the needs-you state the pin-model check
+    already accepts ("``side`` absent is NOT refused"), so the side control
+    gets the curbs it can offer and the band's aerial the pin picture (R125
+    Q2) instead of a 400.  The refusal comes back beside the scenario for the
+    geometry read to state.  Every other endpoint still refuses (R120).
+    """
+    refusal = _side_refusal(scenario)
+    if refusal is None:
+        return scenario, None
+    meta = scenario.meta.model_copy(update={"work": None})
+    return scenario.model_copy(update={"meta": meta}), refusal
+
+
 def _ensure_preview_allowed(scenario: Scenario) -> None:
     """Refuse ``preview: true`` on every path but the breakdown (#282).
 
@@ -1271,7 +1362,13 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     Before the side is confirmed there is no direction, so there is no work
     segment and no approach: rule 112's "nothing upstream is drawn
     speculatively", and a typed length has no direction to run in.
+
+    #315: a stored left side the backend refuses reads as no side
+    (:func:`_read_scenario`), and the answer adds ``side_refused``
+    (``{"side", "cause", "message"}``) — the key is present only then, so
+    every other answer is byte-identical to before.
     """
+    scenario, side_refused = _read_scenario(scenario)
     _ensure_scenario_enabled(scenario)
     try:
         params, _generator, _kwargs = scenario_to_call(scenario, place_cross_street=False)
@@ -1295,6 +1392,8 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         "message": None,
         "side_options": [],
     }
+    if side_refused is not None:
+        out["side_refused"] = side_refused
     if not located:
         out["status"] = "no_pin"
         return JSONResponse(out)
@@ -1404,8 +1503,11 @@ def render_corridor_map(req: CorridorMapRequest) -> Response:
       (with the backend's ``message``) — the geometry read says the same;
     * 503 ``unavailable`` — no map token configured;
     * 502 ``unavailable`` — the image fetch failed.
+
+    #315 (R125 Q2): a stored left side the backend refuses reads as no side
+    (:func:`_read_scenario`), so the band shows the pin picture.
     """
-    scenario = req.scenario
+    scenario, _side_refused = _read_scenario(req.scenario)
     _ensure_scenario_enabled(scenario)
     try:
         params, _generator, _kwargs = scenario_to_call(scenario, place_cross_street=False)
