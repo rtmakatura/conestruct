@@ -89,6 +89,13 @@ acceptance asks for right-side and built-left responses to be byte-identical, so
   | `no_facts` | verdict `not_applicable` because no carriageway facts were relayed (`scenario.carriageway` absent) | "Left-side shoulder work needs a one-way street confirmed from the map. Reopen the map and pick the road again, or pick a right-side curb." |
   | `highway` | verdict `not_applicable` with facts relayed and a one-way tag (a one-way road outside the street classes, e.g. a ramp) | "Left-side shoulder work is laid out on one-way streets, and this road is a highway. Pick a right-side curb." |
 
+  **As built (`718c1c9`), one deviation from this table, recorded:** a road with a confirmed
+  centerline but no `meta.roadDirection` at all reads as `no_facts`, checked between `no_road` and
+  `two_way`. The table would have called it `two_way`, which would claim the map shows a two-way road
+  when the map relayed no direction. The order in `_side_refusal` is therefore `not_shoulder`,
+  `no_road`, `no_facts` (no road direction), `two_way`, `divided`, `undecided`, `no_facts` (no
+  carriageway facts), `highway`. Exactly one still applies, and the seven messages are unchanged.
+
 - **`side_refused.message`** is the line the side control renders, verbatim. The frontend composes
   nothing (Rule 3; one voice, P2).
 - **Median is unchanged:** a stored `median` still answers 400 on every endpoint, including the
