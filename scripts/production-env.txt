@@ -23,7 +23,7 @@ required      GATE_ALLOWED_EMAILS                              middleware.ts:82 
 required      MODAL_RENDER_URL                                 lib/render-proxy.ts:101, app/api/replication-snapshot/route.ts:41 -- every render/audit call to the backend
 required      MODAL_RENDER_SECRET                              lib/render-proxy.ts:102, app/api/replication-snapshot/route.ts:42 -- the shared secret on those calls
 required      MAPBOX_TOKEN                                     lib/geocode.ts:13 -- unset, address geocoding answers 503
-required      NEXT_PUBLIC_MAPBOX_TOKEN                         components/LocationPickerModal.tsx:396, components/bands/WhereBand.tsx:393 -- unset, the location map never loads
+required      NEXT_PUBLIC_MAPBOX_TOKEN                         components/LocationPickerModal.tsx:367, components/bands/WhereBand.tsx:451 -- unset, the location map never loads
 required      DATABASE_URL                                     db/index.ts:9 -- unset, every saved-plan route throws
 required      UPSTASH_REDIS_REST_URL                           lib/rate-limit.ts:80 -- unset, the rate limiter silently turns off (fail-open)
 required      UPSTASH_REDIS_REST_TOKEN                         lib/rate-limit.ts:81 -- same
