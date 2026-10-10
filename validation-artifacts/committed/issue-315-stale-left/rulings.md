@@ -66,6 +66,17 @@ issue-301-cross-street-entry). Prod is `60bbe09`.
 - **#290's pre-side ruling:** before the side is confirmed, the picture is the pin and "Say which
   side is occupied to lay out the work" (`issue-301-band-aerial/rulings.md:109-111`).
 
-## The ruling on the checkpoint
+## The ruling on the checkpoint: R125 (Ryan, 2026-10-10), verbatim
 
-Not yet given. Appended here verbatim when it lands; nothing is built before it.
+> ship issue-301-modal-cleanup
+>
+> After the ship, R125 (#315 rulings):
+> - Q1: One message per cause, written by the backend. List all seven in the build report so I can read the wording before ship (unslop rules, no "not X" contrasts).
+> - Q2: Yes. The aerial shows the pin picture when a stale left is refused.
+> - Q3: Yes. The line starts with "⚠".
+> Build issue-315-stale-left on the new main, run the verifier, and report with screenshots of the Broadway repro at 1440 and 390.
+
+**On the record:** the ship gate refused that message's ship line (`ship_gate.py`: "the latest
+message is not exactly 'ship <branch>'"), so `issue-301-modal-cleanup` waits for its own message.
+This branch already stacks on that branch's tip `469ebfb`, which is what main becomes at the ship,
+so the build sits on the new main without a restack.
