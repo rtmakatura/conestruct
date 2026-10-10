@@ -1,0 +1,160 @@
+{
+  "site": "http://localhost:3315/sandbox",
+  "width": 1440,
+  "before": {
+    "options": [
+      [
+        "West side · southbound traffic",
+        "false"
+      ],
+      [
+        "✓ East side · southbound traffic",
+        "true"
+      ]
+    ],
+    "stale": null,
+    "note": null,
+    "aerialImg": true,
+    "aerialStage": "work",
+    "aerialText": "+\n−\nWork zone\nApproaches lay out after you confirm the kind",
+    "scroll": [
+      1440,
+      1440
+    ]
+  },
+  "stale": {
+    "options": [
+      [
+        "West side · southbound traffic",
+        "false"
+      ]
+    ],
+    "stale": "⚠ Left-side work is laid out for shoulder work only. Pick a right-side curb, or switch back to Shoulder work.",
+    "note": null,
+    "aerialImg": true,
+    "aerialStage": "pin",
+    "aerialText": "+\n−\nSay which side is occupied to lay out the work",
+    "scroll": [
+      1440,
+      1440
+    ]
+  },
+  "picked": {
+    "options": [
+      [
+        "✓ West side · southbound traffic",
+        "true"
+      ]
+    ],
+    "stale": null,
+    "note": null,
+    "aerialImg": true,
+    "aerialStage": "work",
+    "aerialText": "+\n−\nWork zone\nApproaches lay out after you confirm the kind",
+    "scroll": [
+      1440,
+      1440
+    ]
+  },
+  "answers": [
+    {
+      "url": "corridor-geometry",
+      "http": 200,
+      "side": null,
+      "summary": {
+        "status": "side_not_confirmed",
+        "side_options": [
+          "West side · southbound traffic"
+        ]
+      }
+    },
+    {
+      "url": "corridor-geometry",
+      "http": 200,
+      "side": null,
+      "summary": {
+        "status": "side_not_confirmed",
+        "side_options": [
+          "West side · southbound traffic",
+          "East side · southbound traffic"
+        ]
+      }
+    },
+    {
+      "url": "corridor-geometry",
+      "http": 200,
+      "side": null,
+      "summary": {
+        "status": "side_not_confirmed",
+        "side_options": [
+          "West side · southbound traffic",
+          "East side · southbound traffic"
+        ]
+      }
+    },
+    {
+      "url": "corridor-map",
+      "http": 200,
+      "side": null,
+      "summary": "image/png"
+    },
+    {
+      "url": "corridor-geometry",
+      "http": 200,
+      "side": "left",
+      "summary": {
+        "status": "laid_out",
+        "side_options": [
+          "West side · southbound traffic",
+          "East side · southbound traffic"
+        ]
+      }
+    },
+    {
+      "url": "corridor-map",
+      "http": 200,
+      "side": "left",
+      "summary": "image/png"
+    },
+    {
+      "url": "corridor-geometry",
+      "http": 200,
+      "side": "left",
+      "summary": {
+        "status": "side_not_confirmed",
+        "side_options": [
+          "West side · southbound traffic"
+        ],
+        "side_refused": {
+          "side": "left",
+          "cause": "not_shoulder",
+          "message": "Left-side work is laid out for shoulder work only. Pick a right-side curb, or switch back to Shoulder work."
+        }
+      }
+    },
+    {
+      "url": "corridor-map",
+      "http": 200,
+      "side": "left",
+      "summary": "image/png"
+    },
+    {
+      "url": "corridor-geometry",
+      "http": 200,
+      "side": "right",
+      "summary": {
+        "status": "laid_out",
+        "side_options": [
+          "West side · southbound traffic"
+        ]
+      }
+    },
+    {
+      "url": "corridor-map",
+      "http": 200,
+      "side": "right",
+      "summary": "image/png"
+    }
+  ],
+  "errors": []
+}
