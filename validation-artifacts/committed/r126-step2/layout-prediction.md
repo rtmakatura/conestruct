@@ -70,3 +70,32 @@ no wire field, no backend. Authority: `rulings.md` (R126, R127), the mockup `des
 
 **Lane:** frontend-only; screenshots at 1440 and 390 on N Cherry St and N Broadway SB, laid beside
 D3.
+
+## Outcome (after the build, `5b19001`)
+
+| Predicted | Actual |
+|---|---|
+| About 61 assertions across about 17 files | **20 failures in 9 files** on the first full run (2064 passing). Fixed in the same 9; 13 new tests in `WhatBand.step2-layout.test.tsx`. Final: 200 files, 2098 tests, all green |
+| "Speed limit": about 15 in 9 files | 6 in 5 (`declutter`, `a11y` ×2, `value-links`, `ResultsHead.grid`, `band-facts.test`). `revision.test`, `site-corrections`, `spacing-scale`, `batch-corrections` and `disclosures` pin other surfaces' "Speed limit" (the legacy forms, the math section) or none |
+| "Urban arterial": about 10 | 4 (`DetectedVsApplied.lanes`, `ResultsHead.grid`, `density`, `detection`). The provenance tests use their own labels |
+| Lanes' second marker: about 10 | 5 (`declutter` ×2, `density` ×2, `detection` 1: the width line is now "Lane width · default · …") |
+| Windows block: about 13 | 2 (`class-stability`: one helper line opens the table from the footer). `ScheduleField.windows-block` was untouched: the table component is unchanged |
+| File details head: about 2 | 1 |
+| **Not predicted** | 3 header-count failures (`declutter`). The Carriageway row now shows detection's own clause, and on an inferred divided-ness that is "⚠ from the road", so the header counts it (R108's count covers "any road value detection only inferred"). Before, the row's "i about" marker hid the same amber line, which was already in the details. On prod roads: N Cherry St goes from 4 to 5 guesses; N Broadway SB is unchanged at 3 (its #308 Carriageway row is "✓ detected") |
+
+**Evidence:** `layout-5b19001/`, on a local stack of `5b19001` (backend :8127, next dev :3127).
+
+- **N Cherry St:**
+  - header "5 guesses marked ⚠";
+  - Speed "⚠ from the road" at 25 mph;
+  - Road type "Urban street";
+  - Carriageway "⚠ from the road" (Undivided).
+- **N Broadway SB:**
+  - header "3 guesses marked ⚠";
+  - Speed "✓ measured" at 30 mph;
+  - Carriageway (#308) "✓ detected" (One-way).
+- **Both, at 1440 and 390:**
+  - one marker in every row; none is "about";
+  - footer `["Denver windows · set dates to check", "File details · ◌ 2 not set", "", "open ›"]`;
+  - the table opens from the line;
+  - no horizontal scroll and no page errors.
