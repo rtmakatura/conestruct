@@ -240,7 +240,7 @@ async function generate(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe("#301 (R123 Q4): the form's Mark on map opens the picker armed", () => {
-  it("after a pin with no crossing marked, Mark on map opens the picker armed; Edit on map does not", async () => {
+  it("after a pin with no crossing marked, Mark on map opens the picker armed; Pick on map does not", async () => {
     const user = userEvent.setup();
     await mountSandbox();
     await openWhere();
