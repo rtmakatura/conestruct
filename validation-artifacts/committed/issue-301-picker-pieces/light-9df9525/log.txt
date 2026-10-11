@@ -1,0 +1,9 @@
+R123 Q4 light check (cleared crossing) · https://conestruct-f976m1f3x-rtmakaturas-projects.vercel.app/sandbox · 2026-10-11T04:22:13.483Z
+1440 reached the line after clearing the crossing: true
+1440 line: "not marked. Mark the cross street on the map" · button 101x32
+1440 what: scroll 1440/1440 ok · axe 0 · targets under 32: 30 798x2; 12 798x2 · below AA: "Generate plan" 3.34 · page errors none
+1440 picker opened armed: true
+390 reached the line after clearing the crossing: true
+390 line: "not marked. Mark the cross street on the map" · button 101x44
+390 what: scroll 390/390 ok · axe 0 · targets under 44: Local 109x42; Collector 109x42; Arterial 109x42; One-way 163x42; Divided 163x42; Daytime 163x42; Night 163x42; open › 42x44; Rural, undividedUrban arterial 280x43; 30 280x2; 12 280x2 · below AA: "Generate plan" 3.34 · page errors none
+390 picker opened armed: true
