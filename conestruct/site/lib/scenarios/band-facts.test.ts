@@ -118,7 +118,7 @@ describe("defect 2 — the setup line is its values, each one a target", () => {
 
   it("each link names its field for a screen reader", () => {
     const speed = setupSegments(PINNED_SHOULDER, null).find((s) => s.key === "speed")!;
-    expect(speed.label).toBe(`Change Speed limit: ${PINNED_SHOULDER.speed} mph`);
+    expect(speed.label).toBe(`Change Speed: ${PINNED_SHOULDER.speed} mph`);
   });
 
   it("setupValue is the segments joined — one producer, one sentence", () => {

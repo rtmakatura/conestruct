@@ -104,7 +104,7 @@ const NUMERIC: ReadonlySet<StagedFieldKey> = new Set(["speed", "lanes", "laneWid
  *  enumerating sentence, the panel's header note and the REVISING header
  *  all say the same words because they read the same table. */
 export const FIELD_LABEL: Record<StagedFieldKey, string> = {
-  speed: "Speed limit",
+  speed: "Speed",
   lanes: "Lanes per direction",
   laneWidth: "Lane width",
   roadType: "Road type",

@@ -181,6 +181,47 @@ export function ScheduleWindows({
   );
 }
 
+/** R126 / R127 Q5 — the windows check as one footer line, beside File
+ *  details: the active street class's verdict in the check's own words
+ *  (`rowVerdict`'s, for the row the backend evaluated).  The table above
+ *  opens from it, unchanged.  `glyph` is empty where D3 prints none
+ *  ("set dates to check"). */
+export function windowsSummary({
+  scenario,
+  jurisdiction = null,
+  verifying = false,
+}: {
+  scenario: Scenario;
+  jurisdiction?: JurisdictionBlock | null;
+  verifying?: boolean;
+}): { head: string; glyph: string; text: string; tone: string } {
+  const none = "text-[color:var(--none)]";
+  if (!scenario.jurisdiction_key) {
+    return { head: "Windows", glyph: "", text: "select a jurisdiction to check", tone: none };
+  }
+  if (!jurisdiction) {
+    return { head: "Windows", glyph: "◌", text: "loading", tone: none };
+  }
+  const head = `${jurisdiction.name} windows`;
+  const rows = deriveBandRows(jurisdiction.hours);
+  if (jurisdiction.hours.shape === "none" || rows.length === 0) {
+    return { head, glyph: "◌", text: "none published", tone: none };
+  }
+  if (verifying) {
+    return { head, glyph: "◌", text: "checking your dates", tone: none };
+  }
+  const scheduleChecked = (scenario.schedule?.date_mode ?? "tbd") !== "tbd";
+  if (!scheduleChecked || jurisdiction.hours_eval.status === "unknown") {
+    return { head, glyph: "", text: "set dates to check", tone: none };
+  }
+  if (jurisdiction.hours_eval.status === "inside") {
+    return { head, glyph: "✓", text: "fits your dates", tone: "text-[color:var(--pass)]" };
+  }
+  const active = activeBandRow(rows, scenario.street_class ?? null);
+  const v = rowVerdict(active as BandRow, active, jurisdiction.hours_eval, true, false);
+  return { head, ...v };
+}
+
 // One reference row's verdict — PRESENTATION OF ONE BACKEND VERDICT
 // (rule 3 mirror, GO ruling 6): ``hours_eval`` is the jurisdiction
 // block's evaluated answer; this join only attributes its violations to

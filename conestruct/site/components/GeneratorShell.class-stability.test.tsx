@@ -260,6 +260,8 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   // known renders as a word).  Ruling 196 named this state.
   expect(jurisdictionState()).toBe("evaluating");
   expect(jurisdictionProv()).toContain("not yet confirmed for this plan");
+  // R127 Q5: the window table opens from the footer's windows line.
+  await user.click(screen.getByTestId("what-windows-line"));
   await flushDebounce();
   await releaseNext(okBreakdown(true));
   // Settled: the cell carries the EVALUATED answer and says which of the
@@ -344,6 +346,17 @@ describe("class-switch stability (#152 D)", () => {
     expect(windowsBlock()).toContain(
       "1 h outside the permitted 9:00 AM–3:30 PM window",
     );
+  });
+
+  it("R127 Q5: the footer line says the same verdict in its own words, and checking while the refetch is in flight", async () => {
+    const user = await mountWithParker();
+    const line = () => screen.getByTestId("what-windows-line").textContent;
+    expect(line()).toBe("Parker windows · ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
+    await user.click(screen.getByRole("button", { name: "Arterial" }));
+    expect(line()).toBe("Parker windows · ◌ checking your dates");
+    await flushDebounce();
+    await releaseNext(okBreakdown(true));
+    expect(line()).toBe("Parker windows · ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
   });
 
   it("the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)", async () => {

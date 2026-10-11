@@ -141,9 +141,9 @@ function mount(s: Scenario = scenario()) {
   );
 }
 
-/** R110 Q7: the Lanes row carries two markers — the count's and the
- *  width's.  Every other row carries one. */
-const markersIn = (id: string) => (id === "cell-lanes" ? 2 : 1);
+/** R126 (superseding R110 Q7's second Lanes marker): one marker per
+ *  row, the Lanes row included. */
+const markersIn = (_id: string) => 1;
 
 const cell = (id: string) => document.querySelector(`[data-testid="cell-${id}"]`) as HTMLElement;
 const panel = (id: string) => document.querySelector(`[data-testid="info-${id}"]`) as HTMLElement | null;
@@ -183,7 +183,7 @@ describe("each field shows the control and ONE provenance marker (R108: no actio
     const p = panel("road-type")!;
     expect(p.hasAttribute("hidden")).toBe(true);
     expect(p.querySelector('[data-testid="prov-road-type"]')!.textContent).toBe(
-      "⚠ OSM · Urban arterial · inferred",
+      "⚠ OSM · Urban street · inferred",
     );
     expect(document.querySelector('[data-testid="detect-bearing"]')).toBeNull();
   });

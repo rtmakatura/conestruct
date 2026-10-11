@@ -170,6 +170,7 @@ export function PlanDetailCells({
   scenario,
   setScenario,
   dividedLine = null,
+  dividedClause = null,
   jurisdictionBlock = null,
 }: {
   group: "road" | "job";
@@ -179,6 +180,9 @@ export function PlanDetailCells({
    *  control."  Null when detection has nothing to say, or when there is
    *  no Divided control to sit under — the road-type row takes it then. */
   dividedLine?: { key: string; text: string; amber: boolean } | null;
+  /** R126: the same detection row's clause, as the Carriageway row's own
+   *  line and marker.  Null when detection did not report divided-ness. */
+  dividedClause?: { text: string; amber: boolean } | null;
   /** For the street class's map caveat (the jurisdiction's adopted
    *  classification map governs, not the road tier). */
   jurisdictionBlock?: JurisdictionBlock | null;
@@ -328,14 +332,24 @@ export function PlanDetailCells({
       </Cell>
 
       {showsDividedToggle(scenario) && (
+        // R126: "Carriageway", and the row's own line instead of the
+        // "about" note: detection's clause when it reported the
+        // divided-ness, otherwise R110 Q8's default-or-yours.
         <Cell
-          label="Divided highway"
-          provenance="median present · every other road type sets this itself (#85)"
+          label="Carriageway"
+          provenance={
+            dividedClause?.text ??
+            defaultOrYours(
+              Boolean((scenario as { divided?: boolean }).divided),
+              "default · undivided until you say otherwise",
+            )
+          }
+          amber={dividedClause?.amber ?? false}
           line={dividedLine}
           testid="divided"
         >
           <Segmented
-            name="Divided highway"
+            name="Carriageway"
             options={[
               { v: false, l: "Undivided" },
               { v: true, l: "Divided" },

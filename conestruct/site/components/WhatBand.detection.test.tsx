@@ -176,13 +176,14 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     mount(pinnedShoulder());
     expect(prov("speed")).toMatch(/^OSM · 30 mph ·/);
     expect(prov("lanes")).toMatch(/^OSM · 1 ·/);
-    expect(prov("road-type")).toMatch(/OSM · Urban arterial ·/);
+    expect(prov("road-type")).toMatch(/OSM · Urban street ·/);
     // rule 137: a field with no provenance line is a defect — and the
     // two the ledger never had a row for say so in words rather than
     // being left blank.  R110 Q7: lane width says its own source, the
-    // plan's standard lane, until the operator picks one.
+    // plan's standard lane, until the operator picks one; R126: as a line
+    // in the Lanes row's details, named, not a second marker.
     expect(prov("lane-width")).toBe(
-      "default · the plan's standard lane; detection doesn't measure width",
+      "Lane width · default · the plan's standard lane; detection doesn't measure width",
     );
     // Fix 1: the dates are ONE control and the mode derives from them,
     // so an unset date says so in its own line rather than calling

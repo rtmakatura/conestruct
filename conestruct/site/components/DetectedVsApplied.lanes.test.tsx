@@ -229,7 +229,7 @@ describe("#275 the detected lanes fact after a lanes edit", () => {
   it("the other rows are untouched by a lanes edit", () => {
     mount(scenario({ lanes: 3, detectedLanesTotal: undefined }));
     const road = ledgerRow("Road type");
-    expect(road.applied).toMatch(/Urban arterial/);
+    expect(road.applied).toMatch(/Urban street/);
     expect(clause("Road type")).not.toMatch(/withdrawn|overridden/i);
   });
 });

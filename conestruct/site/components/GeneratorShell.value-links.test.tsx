@@ -166,7 +166,7 @@ describe("defect 2 — the setup line's values are the links", () => {
   it("each link says which field it is, not just its value", async () => {
     await generated();
     expect(screen.getByTestId("setup-link-speed").getAttribute("aria-label")).toBe(
-      "Change Speed limit: 65 mph",
+      "Change Speed: 65 mph",
     );
   });
 

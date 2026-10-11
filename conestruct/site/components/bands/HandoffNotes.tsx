@@ -42,7 +42,7 @@ import {
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
   rural_undivided: "Rural, undivided",
   rural_divided: "Rural, divided",
-  urban_arterial: "Urban arterial",
+  urban_arterial: "Urban street",
   freeway: "Freeway / interstate",
 };
 

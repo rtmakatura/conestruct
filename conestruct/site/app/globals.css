@@ -4933,11 +4933,33 @@ input[type="number"] {
   padding-top: 12px;
   border-top: 1px dashed var(--rule);
 }
+/* R126 / R127 Q5 (design-refs/SpeedD3.dc.html): one footer line — the
+   windows check, File details, then the open link at the far end.  At 390
+   the line wraps; it never scrolls sideways. */
 .workbench .a-filedetails-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  column-gap: 16px;
+  row-gap: 4px;
+}
+.workbench .a-footgap {
+  flex-grow: 1;
+}
+/* The windows line is the table's control: a read (it opens a reference
+   table), quiet like the line it is, with rule 15's 32 px hit box and a
+   dashed underline for the shape channel (rule 13). */
+.workbench .a-footline {
+  background: none;
+  border: 0;
+  border-bottom: 1px dashed var(--rule);
+  padding: 0;
+  min-height: 32px;
+  text-align: left;
+  cursor: pointer;
+}
+.workbench .a-footline:hover {
+  border-bottom-color: var(--act);
 }
 
 /* ─── R107 (setup-what-redesign, design-refs/WhatC5.dc.html) · the WHAT

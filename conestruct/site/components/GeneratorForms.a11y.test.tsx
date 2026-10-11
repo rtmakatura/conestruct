@@ -36,7 +36,8 @@ import { WhereBand } from "./bands/WhereBand";
 afterEach(cleanup);
 
 // LabelRow renders the right-hand value ("65 mph") inside the label, so
-// the accessible name is "Speed limit65 mph" — match on the label text.
+// the accessible name is "Speed65 mph" — match on the label text (R126:
+// "Speed", no longer "Speed limit").
 const byLabel = (re: RegExp) => screen.getByLabelText(re) as HTMLElement;
 
 /** A pinned scenario: the WHERE band only mounts the extent field once
@@ -77,7 +78,7 @@ describe("the WHAT grid's cells carry their visible labels", () => {
   it("shoulder: every cell resolves from its label", () => {
     mountWhat(DEFAULT_SHOULDER);
     expect(byLabel(/^Road type/).tagName).toBe("SELECT");
-    expect(byLabel(/^Speed limit/).tagName).toBe("SELECT");
+    expect(byLabel(/^Speed(?! reduction)/).tagName).toBe("SELECT");
     expect(byLabel(/^Lane width/).tagName).toBe("SELECT");
     expect(byLabel(/^Lanes per direction/).tagName).toBe("SELECT");
     expect(byLabel(/^Jurisdiction/).tagName).toBe("SELECT");
@@ -87,7 +88,7 @@ describe("the WHAT grid's cells carry their visible labels", () => {
   it("flagger: the lanes cell is read-only with its reason, and still labelled", () => {
     mountWhat(DEFAULT_FLAGGER);
     expect(byLabel(/^Road type/).tagName).toBe("SELECT");
-    expect(byLabel(/^Speed limit/).tagName).toBe("SELECT");
+    expect(byLabel(/^Speed(?! reduction)/).tagName).toBe("SELECT");
     expect(byLabel(/^Lane width/).tagName).toBe("SELECT");
     // #209's read-only-with-reason: the kind has no lane count, so the
     // cell states the one the plan uses rather than vanishing.

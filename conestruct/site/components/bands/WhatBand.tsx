@@ -15,17 +15,19 @@
 //         with N counted from the actual guesses."
 //   R110 Q5: "Nothing guessed: the header reads 'prefilled from the road'."
 //   R110 Q7: "Two markers in the Lanes row (lanes measured; lane width its
-//         own source)."
+//         own source)."  R126 supersedes the second marker: one marker per
+//         row; the width's source is a line in the row's details.
 //
 // What stands from #289 and R96 A, unchanged: rule 137 as amended by R98
 // (every field's provenance line, as a marker with the full line one
 // click away), #198's byte-identical handoff sentences under the fields
 // they describe, ruling 196's jurisdiction states, the kind's own fields
-// below the band (rule 139's chain stays visible), and FileDetails (R96 A).
+// below the band (rule 139's chain stays visible), and File details (R96 A,
+// now on R127 Q5's footer line beside the windows check).
 //
 // THE COUNT.  N is the number of ⚠ markers the band actually shows — the
 // two guesses when untouched, and any road value detection only inferred
-// (road type, speed, lanes).  It is computed from the same lines the rows
+// (road type, speed, lanes, divided-ness).  It is computed from the same lines the rows
 // render, through the same `markerOf`, so the header can never count a
 // marker the rows do not show (P2).
 
@@ -63,7 +65,7 @@ import { handoffNotesByCell } from "./HandoffNotes";
 import { PlanDetailCells, showsDividedToggle, streetClassProvenance } from "./PlanDetails";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
-import { FieldCell, type ExtraMarker } from "./FieldCell";
+import { FieldCell } from "./FieldCell";
 import { markerOf } from "@/lib/scenarios/provenance-marker";
 import {
   JurisdictionEvidence,
@@ -94,14 +96,6 @@ export function jurisdictionCellState(opts: {
   return opts.errored ? "not-evaluated" : "evaluating";
 }
 
-/** A second field's line in the same row (R110 Q7). */
-interface ExtraLine {
-  label: string;
-  provenance: string;
-  amber?: boolean;
-  testid: string;
-}
-
 /** One row: label and marker, control, and the popover (FieldCell).  The
  *  provenance slot is never empty (rule 137) — a caller with nothing to
  *  say is a defect, so the prop is required rather than optional. */
@@ -115,7 +109,6 @@ function Cell({
   lines = [],
   detail = null,
   alert = null,
-  extra = null,
   children,
   testid,
 }: {
@@ -134,16 +127,10 @@ function Cell({
   detail?: ReactNode;
   /** On show under the control whatever the marker says (P3). */
   alert?: ReactNode;
-  /** R110 Q7: a second control's line and marker in the same row. */
-  extra?: ExtraLine | null;
   children: ReactNode;
   testid: string;
 }) {
-  const extraMarker = extra ? markerOf(extra.provenance, { amber: extra.amber }) : null;
-  const extraMarkers: ExtraMarker[] =
-    extra && extraMarker ? [{ marker: extraMarker, label: extra.label, testid: extra.testid }] : [];
   const hasDetail =
-    extra !== null ||
     lines.length > 0 ||
     notes.length > 0 ||
     (detail !== null && detail !== undefined);
@@ -165,19 +152,10 @@ function Cell({
       // R98: the line as one quiet marker, the line itself one click
       // away; an error keeps its line under the control (P3).
       marker={markerOf(provenance, { amber, error })}
-      extraMarkers={extraMarkers}
       alert={alert}
       info={
         hasDetail ? (
           <>
-            {extra && (
-              <span
-                className={`tr-prov${extra.amber ? " is-amber" : ""}`}
-                data-testid={`prov-${extra.testid}`}
-              >
-                {extra.amber ? `⚠ ${extra.provenance}` : extra.provenance}
-              </span>
-            )}
             {detail}
             {lines.map((l) => (
               <span
@@ -242,37 +220,71 @@ export function whatHeader(guesses: number, detected: boolean): string {
   return detected ? "prefilled from the road" : "nothing detected; every value here is yours";
 }
 
-/** R96 A — the two optional title-block fields behind one labelled
- *  disclosure: closed by default, saying what is inside and how many are
- *  not set (P13, P19).  A read, live under the write lock. */
-function FileDetails({
+/** The windows check's footer line (ScheduleField `windowsSummary`). */
+export interface WindowsLine {
+  head: string;
+  glyph: string;
+  text: string;
+  tone: string;
+}
+
+/** R126 / R127 Q5 (D3's footer) — one line under the columns: the
+ *  windows check in its own words, then R96 A's File details.  Each is a
+ *  read, live under the write lock, and each opens its own panel below
+ *  the line: the windows table (#227's block, unchanged) and the two
+ *  optional title-block fields (closed by default, saying how many are
+ *  not set — P13, P19). */
+function WhatFooter({
   project,
   location,
+  windowsLine,
+  windowsTable,
   children,
 }: {
   project: string;
   location?: string;
+  windowsLine?: WindowsLine;
+  windowsTable?: ReactNode;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [windowsOpen, setWindowsOpen] = useState(false);
   const unset = [project, location ?? ""].filter((v) => !v).length;
   return (
-    <div className="a-filedetails" data-testid="what-file-details">
+    <div className="a-filedetails" data-testid="what-footer">
       <div className="a-filedetails-head">
-        <span className="tr-prov">
-          File details · Project name, Location description ·{" "}
-          {unset > 0 ? `◌ ${unset} not set` : "✓ both set"}
+        {windowsLine && (
+          <button
+            type="button"
+            className="a-footline tr-prov"
+            data-read=""
+            data-testid="what-windows-line"
+            aria-expanded={windowsOpen}
+            onClick={() => setWindowsOpen((o) => !o)}
+          >
+            {windowsLine.head} ·{" "}
+            <span className={windowsLine.tone}>
+              {windowsLine.glyph ? `${windowsLine.glyph} ` : ""}
+              {windowsLine.text}
+            </span>
+          </button>
+        )}
+        <span className="tr-prov" data-testid="what-file-details">
+          File details · {unset > 0 ? `◌ ${unset} not set` : "✓ both set"}
         </span>
+        <span className="a-footgap" />
         <button
           type="button"
           className="a-lk"
           data-read=""
           aria-expanded={open}
+          aria-label={open ? "Close file details" : "Open file details"}
           onClick={() => setOpen((o) => !o)}
         >
           {open ? "close ‹" : "open ›"}
         </button>
       </div>
+      {windowsOpen && windowsTable}
       {open && children}
     </div>
   );
@@ -289,6 +301,7 @@ export function WhatBand({
   kindFields,
   scheduleCells,
   scheduleWindows,
+  windowsLine,
   setMeta,
   handoff = [],
 }: {
@@ -307,10 +320,12 @@ export function WhatBand({
    *  visible). */
   kindFields?: ReactNode;
   /** Correction 1 — the dates control's time rows, in "The job" under
-   *  the work dates, and its window block under the columns. */
+   *  the work dates, and its window table, behind the footer line. */
   scheduleCells?: ReactNode;
   scheduleWindows?: ReactNode;
-  /** The title-block metadata (FileDetails). */
+  /** R127 Q5: the window check's footer line; the table opens from it. */
+  windowsLine?: WindowsLine;
+  /** The title-block metadata (the footer's File details). */
   setMeta: (m: ScenarioMeta) => void;
   /** The picker → form handoff events; the sentences ride the rows they
    *  describe (correction 3). */
@@ -415,6 +430,10 @@ export function WhatBand({
     ? "your change · operator-set from here on"
     : "default · the plan's standard lane; detection doesn't measure width";
   const classProv = streetClassProvenance(scenario);
+  // R126: the Carriageway (divided) row's own line, when detection
+  // reported divided-ness; PlanDetails falls back to default-or-yours.
+  const dividedClause =
+    showsDivided && detectedRow(detected, "Divided") ? clauseFor(detected, "Divided") : null;
 
   // R108's N: the ⚠ markers on show, from the rows' own lines.
   const warnMarkers = [
@@ -424,6 +443,7 @@ export function WhatBand({
       : null,
     markerOf(roadTypeClause.text, { amber: roadTypeClause.amber }),
     markerOf(classProv.text, { amber: classProv.amber }),
+    dividedClause ? markerOf(dividedClause.text, { amber: dividedClause.amber }) : null,
     markerOf(jurisdictionProv, { amber: jurisdictionAmber, error: jState === "not-evaluated" }),
   ].filter((m) => m?.glyph === "⚠").length;
 
@@ -447,7 +467,7 @@ export function WhatBand({
         <div className="a-col" data-testid="what-group-road">
           <span className="tr-section a-group-head">The road</span>
           <Cell
-            label="Speed limit"
+            label="Speed"
             htmlFor="what-speed"
             provenance={speedClause.text}
             amber={speedClause.amber}
@@ -475,8 +495,9 @@ export function WhatBand({
             </select>
           </Cell>
 
-          {/* R110 Q7: one row, two controls, two markers — the lane count
-              as detection reports it, the width from its own source. */}
+          {/* R110 Q7 → R126: one row, two controls, ONE marker — the lane
+              count's, as detection reports it.  The width's own source is
+              still stated, as a line in the row's details. */}
           <Cell
             label="Lanes"
             htmlFor={table.lanes ? "what-lanes" : "what-lane-width"}
@@ -490,7 +511,11 @@ export function WhatBand({
             amber={Boolean(table.lanes) && lanesValidation.ok && lanesClause.amber}
             error={Boolean(table.lanes) && !lanesValidation.ok}
             notes={[...(notes["lanes"] ?? []), ...(notes["lane-width"] ?? [])]}
-            extra={{ label: "Lane width", provenance: laneWidthProv, testid: "lane-width" }}
+            detail={
+              <span className="tr-prov" data-testid="prov-lane-width">
+                Lane width · {laneWidthProv}
+              </span>
+            }
             testid="lanes"
           >
             <div className="a-pair">
@@ -580,6 +605,7 @@ export function WhatBand({
             scenario={scenario}
             setScenario={setScenario}
             dividedLine={showsDivided ? dividedLine : null}
+            dividedClause={dividedClause}
             jurisdictionBlock={jurisdictionBlock}
           />
         </div>
@@ -683,13 +709,16 @@ export function WhatBand({
           {scheduleCells}
         </div>
       </div>
-      {/* #227's window reference block: a table, not a field, so it sits
-          under the columns rather than in one. */}
-      {scheduleWindows}
-
-      {/* THE TITLE-BLOCK FIELDS (#289 correction 2: they survive because
-          the deliverables print them) — R96 A: behind "File details". */}
-      <FileDetails project={scenario.meta.project} location={scenario.meta.locationDescription}>
+      {/* THE FOOTER (R126 / R127 Q5): #227's window table opens from its
+          one-line verdict; the title-block fields (#289 correction 2: they
+          survive because the deliverables print them) stay behind "File
+          details" (R96 A). */}
+      <WhatFooter
+        project={scenario.meta.project}
+        location={scenario.meta.locationDescription}
+        windowsLine={windowsLine}
+        windowsTable={scheduleWindows}
+      >
         <div className="a-cols">
           <div className="a-col">
             <Cell
@@ -741,7 +770,7 @@ export function WhatBand({
             </Cell>
           </div>
         </div>
-      </FileDetails>
+      </WhatFooter>
 
       {/* R1 — the kind's own fields.  Never behind a disclosure: the
           near-intersection hold is a rail blocker and rule 139 keeps the

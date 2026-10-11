@@ -22,7 +22,10 @@ afterEach(cleanup);
 
 const PIN = { lat: 39.7402, lng: -104.956 };
 
-function road(roadTypeMethod: "measured" | "inferred"): ConfirmedRoad {
+function road(
+  roadTypeMethod: "measured" | "inferred",
+  dividedMethod: "measured" | "inferred" = "inferred",
+): ConfirmedRoad {
   return {
     candidate: {
       way_id: "1042",
@@ -53,7 +56,7 @@ function road(roadTypeMethod: "measured" | "inferred"): ConfirmedRoad {
         speed: { value: 30, confidence: "high", source: "OSM maxspeed tag", method: "measured" },
         lanes: { value: 2, confidence: "high", source: "OSM lanes tag", method: "measured" },
         roadType: { value: "urban_arterial", confidence: "medium", source: "class", method: roadTypeMethod },
-        divided: { value: true, confidence: "medium", source: "class", method: "inferred" },
+        divided: { value: true, confidence: "medium", source: "class", method: dividedMethod },
       },
     },
     method: "auto_single",
@@ -65,7 +68,9 @@ function road(roadTypeMethod: "measured" | "inferred"): ConfirmedRoad {
   } as unknown as ConfirmedRoad;
 }
 
-function scenario(opts: { guessed?: boolean; roadTypeMeasured?: boolean } = {}): Scenario {
+function scenario(
+  opts: { guessed?: boolean; roadTypeMeasured?: boolean; dividedMeasured?: boolean } = {},
+): Scenario {
   return {
     ...DEFAULT_SHOULDER,
     speed: 30,
@@ -86,7 +91,10 @@ function scenario(opts: { guessed?: boolean; roadTypeMeasured?: boolean } = {}):
       ...DEFAULT_SHOULDER.meta,
       ...PIN,
       bearingDeg: 270,
-      confirmedRoad: road(opts.roadTypeMeasured ? "measured" : "inferred"),
+      confirmedRoad: road(
+        opts.roadTypeMeasured ? "measured" : "inferred",
+        opts.dividedMeasured ? "measured" : "inferred",
+      ),
     },
   } as Scenario;
 }
@@ -107,6 +115,7 @@ function mount(
   opts: {
     guessed?: boolean;
     roadTypeMeasured?: boolean;
+    dividedMeasured?: boolean;
     errored?: boolean;
     lookup?: JurisdictionLookup;
   } = {},
@@ -155,7 +164,8 @@ describe("two columns named for the user's question (R107, P20)", () => {
     mount();
     const row = cell("speed");
     const head = row.querySelector(":scope > .a-cell-head")!;
-    expect(head.querySelector(".tr-field")!.textContent).toBe("Speed limit");
+    // R126: "Speed", no longer "Speed limit".
+    expect(head.querySelector(".tr-field")!.textContent).toBe("Speed");
     expect(head.contains(trigger("speed"))).toBe(true);
     expect(row.querySelector(":scope > .a-cell-ctl > select#what-speed")).not.toBeNull();
   });
@@ -166,10 +176,12 @@ describe("one quiet marker per field (R98, P9)", () => {
     mount();
     expect(trigger("speed").textContent).toBe("✓ measured");
     expect(trigger("lanes").textContent).toBe("✓ measured");
-    // R110 Q7: lane width's own source, its own marker in the Lanes row.
-    expect(trigger("lane-width").textContent).toBe("✓ default");
-    expect(cell("lanes").contains(trigger("lane-width"))).toBe(true);
+    // R126: one marker per row — lane width's has gone (its line stays in
+    // the row's details).
+    expect(trigger("lane-width")).toBeNull();
     expect(trigger("road-type").textContent).toBe("⚠ from the road");
+    // R126: Carriageway, detection's own clause (divided-ness inferred).
+    expect(trigger("divided").textContent).toBe("⚠ from the road");
     expect(trigger("street-class").textContent).toBe("◌ not set");
     expect(trigger("jurisdiction").textContent).toBe("◌ not set");
     expect(trigger("work-dates").textContent).toBe("◌ not set");
@@ -183,16 +195,21 @@ describe("one quiet marker per field (R98, P9)", () => {
     );
   });
 
-  it("both Lanes markers open the one popover, holding both lines", async () => {
+  it("R126: one marker per row — the Lanes marker opens the one popover, holding both lines", async () => {
     mount();
+    const markers = [...band().querySelectorAll('[data-testid^="info-toggle-"]')];
+    for (const c of band().querySelectorAll('[data-testid^="cell-"]')) {
+      const own = markers.filter((m) => c.contains(m) && m.closest('[data-testid^="cell-"]') === c);
+      expect(own.length, c.getAttribute("data-testid")!).toBeLessThanOrEqual(1);
+    }
     const user = userEvent.setup();
-    await user.click(trigger("lane-width"));
+    await user.click(trigger("lanes"));
     expect(panel("lanes").hasAttribute("hidden")).toBe(false);
     expect(panel("lanes").querySelector('[data-testid="prov-lanes"]')!.textContent).toBe(
       "OSM · 2 · measured",
     );
     expect(panel("lanes").querySelector('[data-testid="prov-lane-width"]')!.textContent).toBe(
-      "default · the plan's standard lane; detection doesn't measure width",
+      "Lane width · default · the plan's standard lane; detection doesn't measure width",
     );
   });
 
@@ -217,8 +234,8 @@ describe("guesses are marked, never confirmed (R108)", () => {
     mount({ guessed: true });
     expect(trigger("street-class").textContent).toBe("⚠ from the road");
     expect(trigger("jurisdiction").textContent).toBe("⚠ from the pin");
-    // Road type (inferred) + the two guesses.
-    expect(band().textContent).toContain("3 guesses marked ⚠ · change any that are wrong");
+    // Road type and divided-ness (both inferred) + the two guesses.
+    expect(band().textContent).toContain("4 guesses marked ⚠ · change any that are wrong");
   });
 
   it("no confirm, dismiss, undo, record or suggestion row anywhere", () => {
@@ -273,13 +290,13 @@ describe("guesses are marked, never confirmed (R108)", () => {
   });
 
   it("nothing guessed off a road: the header reads 'prefilled from the road' (R110 Q5)", () => {
-    mount({ roadTypeMeasured: true });
+    mount({ roadTypeMeasured: true, dividedMeasured: true });
     expect(band().textContent).toContain("prefilled from the road");
     expect(band().textContent).not.toContain("guesses marked");
   });
 
   it("one guess reads in the singular", () => {
-    mount();
+    mount({ dividedMeasured: true });
     expect(band().textContent).toContain("1 guess marked ⚠ · change any that are wrong");
   });
 });
@@ -289,8 +306,9 @@ describe("File details: the two optional fields behind a labelled count (P13)", 
     mount();
     expect(document.querySelector("#what-project")).toBeNull();
     const d = document.querySelector('[data-testid="what-file-details"]') as HTMLElement;
-    expect(d.textContent).toContain("File details · Project name, Location description · ◌ 2 not set");
-    await userEvent.setup().click(d.querySelector("button")!);
+    // R127 Q5 / D3: the head says the count; the field names are inside.
+    expect(d.textContent).toBe("File details · ◌ 2 not set");
+    await userEvent.setup().click(screen.getByRole("button", { name: "Open file details" }));
     expect(document.querySelector("#what-project")).not.toBeNull();
     expect(document.querySelector("#what-location-description")).not.toBeNull();
   });

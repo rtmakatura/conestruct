@@ -95,7 +95,7 @@ export function kindCitation(kind: ScenarioKind): string {
 const ROAD_TYPE_LABEL: Record<string, string> = {
   rural_undivided: "Rural, undivided",
   rural_divided: "Rural, divided",
-  urban_arterial: "Urban arterial",
+  urban_arterial: "Urban street",
   freeway: "Freeway / interstate",
 };
 
@@ -321,7 +321,7 @@ export function setupSegments(
     ),
   );
   if (scenario.workLen > 0) out.push(seg("extent", "Work zone length", ft(scenario.workLen)));
-  out.push(seg("speed", "Speed limit", `${scenario.speed} mph`));
+  out.push(seg("speed", "Speed", `${scenario.speed} mph`));
   if ("lanes" in scenario) {
     const n = scenario.lanes as number;
     out.push(seg("lanes", "Lanes per direction", `${n} lane${n === 1 ? "" : "s"}`));

@@ -57,7 +57,7 @@ describe("the Setup box (R106)", () => {
       ["Length", "1,000 ft"],
       ["Speed", "30 mph"],
       ["Lanes", "2 × 12 ft"],
-      ["Road type", "Urban arterial"],
+      ["Road type", "Urban street"],
       ["Jurisdiction", "◌ not set"],
       ["Dates", "◌ not set"],
     ]);
@@ -80,7 +80,7 @@ describe("the Setup box (R106)", () => {
       expect(b.classList.contains("a-setupcell"), k).toBe(true);
     }
     expect(screen.getByTestId("setup-link-speed").getAttribute("aria-label")).toBe(
-      "Change Speed limit: 30 mph",
+      "Change Speed: 30 mph",
     );
     fireEvent.click(screen.getByTestId("setup-link-location"));
     expect(onChange).toHaveBeenCalledWith("location");

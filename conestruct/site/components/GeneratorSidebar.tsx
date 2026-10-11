@@ -31,7 +31,7 @@ import { WorkBeyondShoulderForm } from "./WorkBeyondShoulderForm";
 import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
 import { NearIntersectionForm } from "./NearIntersectionForm";
-import { ScheduleField, ScheduleWindows } from "./ScheduleField";
+import { ScheduleField, ScheduleWindows, windowsSummary } from "./ScheduleField";
 import {
   LocationPickerModal,
   type LocationPickerResult,
@@ -490,6 +490,11 @@ export function GeneratorSidebar({
             verifying={jurisdictionRevalidating}
           />
         }
+        windowsLine={windowsSummary({
+          scenario,
+          jurisdiction: jurisdictionBlock ?? null,
+          verifying: jurisdictionRevalidating,
+        })}
       />
       {/* #193: the picker's close-restore fallback target.  The opener is
           a band control that survives every state, so this is belt and
