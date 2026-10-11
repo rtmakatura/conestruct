@@ -29,6 +29,7 @@ import {
 } from "@/lib/scenarios/auto-apply";
 import type { DetectionOverride } from "@/lib/scenarios";
 import { WHAT_CELLS } from "@/lib/scenarios/what-cells";
+import { useWriteLock } from "./WriteLock";
 import {
   CheckRow,
   ChipRow,
@@ -55,6 +56,9 @@ interface Props {
   /** #222: pre-pin, this kind's steps render pending (dim + inert +
    *  focusable summary) until a location exists. */
   stepsPending?: boolean;
+  /** #301 (R123 Q4): open the picker with "mark the intersection" armed —
+   *  the line below names the action, so the action sits beside it. */
+  onMarkIntersection?: () => void;
 }
 
 export function NearIntersectionForm({
@@ -63,7 +67,9 @@ export function NearIntersectionForm({
   approachConfirm,
   clearApproachConfirm,
   stepsPending = false,
+  onMarkIntersection,
 }: Props) {
+  const locked = useWriteLock();
   const set = <K extends keyof NearIntersectionScenario>(
     key: K,
     value: NearIntersectionScenario[K],
@@ -266,6 +272,22 @@ export function NearIntersectionForm({
                 ? `${scenario.meta.intersection.name ?? "the marked intersection"} · marked on the map. The plan places it along the road from the work start`
                 : "not marked. Mark the cross street on the map"}
             </span>
+            {!scenario.meta.intersection && onMarkIntersection && (
+              <div className="mt-2">
+                <button
+                  type="button"
+                  className="act-btn"
+                  data-write=""
+                  aria-disabled={locked || undefined}
+                  onClick={() => {
+                    if (!locked) onMarkIntersection();
+                  }}
+                  data-testid="ni-mark-on-map"
+                >
+                  Mark on map
+                </button>
+              </div>
+            )}
             {!approachesValidation.ok && (
               <FieldErrorLine>{approachesValidation.message}</FieldErrorLine>
             )}

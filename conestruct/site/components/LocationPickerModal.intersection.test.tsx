@@ -67,7 +67,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function mount(intersection: typeof X | null) {
+function mount(intersection: typeof X | null, armIntersection?: boolean) {
   const onSave = vi.fn<(r: LocationPickerResult) => void>();
   render(
     <LocationPickerModal
@@ -79,6 +79,7 @@ function mount(intersection: typeof X | null) {
         lat: PIN.lat,
         lng: PIN.lng,
         intersection,
+        armIntersection,
       }}
       onCancel={() => {}}
       onSave={onSave}
@@ -122,5 +123,19 @@ describe("#234 — the picker restores a saved intersection and hands it back", 
     mount(null);
     await screen.findByText(/Mark the intersection on the map/);
     expect(screen.queryByTestId("cross-restored")).toBeNull();
+  });
+});
+
+describe("#301 (R123 Q4) — opened from the form's Mark on map", () => {
+  it("armed: the picker opens waiting for the click that marks the crossing", async () => {
+    mount(null, true);
+    await screen.findByText(/Click the intersection on the map…/);
+    expect(screen.queryByText(/Mark the intersection on the map/)).toBeNull();
+  });
+
+  it("unarmed (every other opener): it opens as before", async () => {
+    mount(null, false);
+    await screen.findByText(/Mark the intersection on the map/);
+    expect(screen.queryByText(/Click the intersection on the map…/)).toBeNull();
   });
 });

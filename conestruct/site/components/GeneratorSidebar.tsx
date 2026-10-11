@@ -152,6 +152,13 @@ export function GeneratorSidebar({
   openRequest = null,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  // #301 (R123 Q4): the near-intersection form's "Mark on map" opens the
+  // picker with intersection mode armed; every other opener does not.
+  const [pickerArmsIntersection, setPickerArmsIntersection] = useState(false);
+  const openPicker = (armIntersection = false) => {
+    setPickerArmsIntersection(armIntersection);
+    setPickerOpen(true);
+  };
   // #193: focus target for the picker's close-restore when the opener
   // is gone (the first save swaps "Pick Location on Map" for the pin
   // summary).  Attached to the location block, which survives the swap.
@@ -414,6 +421,7 @@ export function GeneratorSidebar({
           clearApproachConfirm={() =>
             setApproachConfirm({ pending: false, reason: null })
           }
+          onMarkIntersection={() => openPicker(true)}
         />
       )}
     </>
@@ -442,7 +450,7 @@ export function GeneratorSidebar({
         scenario={scenario}
         setScenario={setScenario}
         setMeta={setMeta}
-        onOpenPicker={() => setPickerOpen(true)}
+        onOpenPicker={() => openPicker()}
         onKindChange={onKindChange}
         kindState={kindState}
         onKindPicked={onKindPicked}
@@ -507,6 +515,7 @@ export function GeneratorSidebar({
             confirmedRoad: scenario.meta.confirmedRoad ?? null,
             // #234: handed back so the picker restores the marker.
             intersection: scenario.meta.intersection ?? null,
+            armIntersection: pickerArmsIntersection,
           }}
           onCancel={() => setPickerOpen(false)}
           onSave={onPickerSave}

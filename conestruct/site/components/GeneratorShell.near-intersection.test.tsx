@@ -85,8 +85,16 @@ function result(cs: CrossStreetCandidate) {
 }
 
 vi.mock("./LocationPickerModal", () => ({
-  LocationPickerModal: ({ onSave }: { onSave: (r: unknown) => void }) => (
+  LocationPickerModal: ({
+    onSave,
+    initial,
+  }: {
+    onSave: (r: unknown) => void;
+    initial?: { armIntersection?: boolean };
+  }) => (
     <>
+      {/* #301 (R123 Q4): which opener the picker was opened from. */}
+      <span data-testid="picker-armed">{String(Boolean(initial?.armIntersection))}</span>
       <button
         type="button"
         onClick={() => onSave(result(crossStreet({})))}
@@ -116,6 +124,12 @@ vi.mock("./LocationPickerModal", () => ({
         }
       >
         APPLY_PIN_NOTAG
+      </button>
+      <button
+        type="button"
+        onClick={() => onSave({ ...result(crossStreet({})), crossStreet: null, intersection: null })}
+      >
+        APPLY_PIN_NOMARK
       </button>
     </>
   ),
@@ -224,6 +238,22 @@ async function generate(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByText("ALL_ZIP"));
   await waitFor(() => expect(bundleBody).not.toBeNull());
 }
+
+describe("#301 (R123 Q4): the form's Mark on map opens the picker armed", () => {
+  it("after a pin with no crossing marked, Mark on map opens the picker armed; Edit on map does not", async () => {
+    const user = userEvent.setup();
+    await mountSandbox();
+    await openWhere();
+    await user.click(screen.getByText("Pick on map"));
+    expect(screen.getByTestId("picker-armed").textContent).toBe("false");
+    // A save with no crossing: the form's line is the dead end Q4 fixes.
+    await user.click(screen.getByText("APPLY_PIN_NOMARK"));
+    await answerSide();
+    await openWhat();
+    await user.click(screen.getByRole("button", { name: "Mark on map" }));
+    expect(screen.getByTestId("picker-armed").textContent).toBe("true");
+  });
+});
 
 describe("near_intersection picker → form → payload", () => {
   it("ACCEPTANCE: prefill, edit, re-apply without losing the edit, submit the exact approaches array", async () => {

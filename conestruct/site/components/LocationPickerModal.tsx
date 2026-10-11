@@ -85,6 +85,12 @@ export interface LocationPickerInitial {
    */
   intersection?: { lat: number; lng: number; name: string | null } | null;
   /**
+   * #301 (R123 Q4): open with "mark the intersection" already armed (the
+   * near-intersection form's "Mark on map").  near_intersection only;
+   * absent or false, the picker opens as before.
+   */
+  armIntersection?: boolean;
+  /**
    * The road confirmed at the last Save & Close, from
    * ``scenario.meta.confirmedRoad``.  When present AND its pin matches
    * (lat, lng) exactly, the modal restores that selection as-is and
@@ -402,7 +408,11 @@ export function LocationPickerModal({
   // runs the same /api/road-bearing call at the intersection point and
   // deriveCrossStreet turns it into one proposed approach prefill.
   const isNearIntersectionKind = initial.scenarioKind === "near_intersection";
-  const [intersectionMode, setIntersectionMode] = useState(false);
+  // #301 (R123 Q4): opened from the near-intersection form's "Mark on
+  // map", the picker starts ready for the click that marks the crossing.
+  const [intersectionMode, setIntersectionMode] = useState(
+    Boolean(initial.armIntersection) && initial.scenarioKind === "near_intersection",
+  );
   const intersectionModeRef = useRef(false);
   intersectionModeRef.current = intersectionMode;
   // #234: a saved intersection restores the pin and its name — no
