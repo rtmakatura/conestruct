@@ -1784,7 +1784,7 @@ export function LocationPickerModal({
                   reopening the dialog never re-detects (a restored
                   confirmation stays put), so this is the one control that
                   re-runs detection at an unmoved pin. */}
-              {hasPin && classify.state !== "idle" && classify.state !== "resolving" && (
+              {hasPin && classify.state !== "resolving" && (
                 <div className="px-6 py-2 border-b border-[color:var(--rule)] flex justify-end">
                   <button
                     type="button"

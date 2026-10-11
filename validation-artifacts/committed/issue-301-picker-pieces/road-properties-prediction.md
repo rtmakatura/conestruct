@@ -120,6 +120,6 @@ keeps a "Use N mph" button and adds backend scope, so this file re-predicts the 
 | Type census moves | Moved: 4 rows, and `tsxUses` 268 → 252. |
 | Type-only fixtures (5) | 5, as named. |
 | New tests: WHAT row (3), reconcile (2), modal (1) | WHAT row 3; reconcile **8** (in a new `lib/scenarios/speed-estimate.test.ts`, covering the offer, the click, the snapped no-record case and the drop rules); modal 1. |
-| Not predicted | The Re-detect row is hidden at idle (no pin) and while detecting, as the panel's button was. It gained `data-testid="picker-redetect"`. |
+| Not predicted | The Re-detect row shows exactly where the panel's button did (a pin, and detection not in flight); the build first hid it at idle too, and the re-verify caught it (fixed). It gained `data-testid="picker-redetect"`. |
 
 **Frontend:** 2064 → 2076 passed (197 → 198 files). `tsc` clean.
