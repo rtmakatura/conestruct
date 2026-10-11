@@ -72,3 +72,28 @@ governs the #279 road-type classifier too (R110 Q6).
   ruling adds gets its own churn row).
 - **Branch 1 leaves the P16 pulse bar alone.** The checkpoint listed it as optional, and a visible
   change doesn't belong in a behaviour-preserving cleanup. It stays recorded in `checkpoint.md` §1.
+
+## R126 (Ryan, 2026-10-10, after the road-properties browser check), verbatim
+
+> Road-properties browser check passed: it works, but Step 2 looks bad. New ruling below. Hold the Rule 10 issue draft I asked for; R126 covers it.
+>
+> R126 (supersedes R123 Q2's "Use N mph" button): Step 2 matches the D3 mockup.
+> - Speed: on a road with no posted speed, prefill the road-class estimate like R108's guesses, marked "⚠ from the road" (one line). The audit and PDF record it as guessed from the road class, not confirmed by the operator. This replaces the scenario's default speed entirely: no more silent 65 mph shown as "✓ yours". If the road has no class either, Speed reads "◌ not set" and the plan can't be generated until it's set.
+> - Remove the ⚠ estimate line and the Use N mph button.
+> - One marker per row (Lanes shows one, not "✓ yours ✓ default").
+> - Rename the labels: "Speed limit" becomes "Speed", and "Divided highway" becomes "Carriageway" per R107. Drop "i about".
+> - Fold Denver windows into the footer line beside File details ("Denver windows · set dates to check").
+> - The header counts speed among the guesses: "N guesses marked ⚠ · change any that are wrong".
+> - Investigate: on N Cherry St (39.71740, -104.93380) Road type guesses "Urban arterial" while Street class guesses "Local". Find out which is wrong and why.
+>
+> Investigate first, with a 📋 checkpoint before code: backend vs frontend ownership (Rule 3), every work kind the old default reached, the audit and PDF wording, the Rule 5 churn, and the P1–P22 check. The estimate now drives tapers and sign spacing without a click, so show which roads get which speed.
+>
+> Meanwhile, build issue-301-cross-street-entry (R123 Q4, light lane) with the prod_rp evidence as its first commit, and report with the go.
+>
+> If this is a foreground session: in CLAUDE.md's suggest-never-set line, after the R108 exception, add "R126 (ruled 2026-10-10) adds speed: on a road with no posted speed, the road-class estimate is prefilled and marked "⚠ from the road", recorded the same way." If it's a background job, say "needs a foreground session".
+
+**On the record:**
+- **R126's build is its own arc** (a checkpoint first). This branch, `issue-301-cross-street-entry`,
+  builds R123 Q4 only.
+- **The CLAUDE.md line needs a foreground session.** This is a background job, so the edit is not
+  made here.
