@@ -1,0 +1,14 @@
+{
+  "value": "25",
+  "shown": "25 mph",
+  "marker": "⚠ from the road",
+  "line": "⚠ guessed, not confirmed · OSM highway=residential · from the road",
+  "header": "4 guesses marked ⚠ · change any that are wrong",
+  "cta": null,
+  "generateDisabled": false,
+  "scroll": [
+    1440,
+    1440
+  ],
+  "errors": []
+}

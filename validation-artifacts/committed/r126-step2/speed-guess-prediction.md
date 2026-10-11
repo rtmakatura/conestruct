@@ -109,3 +109,21 @@ estimate. Enumerated in the outcome table.
   road");
 - the audit, XLSX and crew clause;
 - the plan-sheet notes line.
+
+## Outcome (the build, `ba671fa`, and the cite fix after it)
+
+| Prediction | Outcome |
+|---|---|
+| Behaviour changes 1–8 | As predicted. Local stack (`speed-guess-ba671fa/`), at 1440 and 390, no sideways scroll, no page errors:<br>- **N Cherry St:** 25 mph, "⚠ from the road", header "4 guesses".<br>- **N Broadway SB:** 30, "✓ measured", header "3 guesses".<br>- **Ferril Lake (no road):** "Not set", "◌ not set", Generate blocked with "Set the speed in Step 2".<br>- **Plan sheet:** the notes box carries the line only when the speed is guessed (`notes-guessed.png` / `notes-not-guessed.png`). |
+| Not changing | Held: no backend test or baseline moved. Backend 2688 → 2703 passed; the new tests are all in `tests/test_speed_guess.py` (15). |
+| Backend churn: `test_speed_estimate.py` → `test_speed_guess.py` | As predicted (15 tests). |
+| Frontend: `speed-estimate.test.ts` → guess tests (about 10) | `lib/scenarios/speed-guess.test.ts`: 12 (adds the 20 mph option). |
+| `WhatBand.speed-estimate.test.tsx` → 3 | `components/WhatBand.speed-guess.test.tsx`: 3. |
+| `handoff-summary.test`: 3 UX-02 cases go | **2** went; the third (an out-of-domain clamp) still passes and stays. |
+| `HandoffNotes` note tests: about 1–2 | **None:** no test pinned those strings. |
+| **The speed hold: about 10 suites** | **Deviation, badly undercounted.** The first full run had **202 failing tests**. The mechanism was the predicted one: a located test pin with no confirmed road now holds at "◌ not set". The count missed that most suites pin through the shared `pinned()` fixture. That fixture now marks the speed operator-set, mirroring what #290 did for the side, which cleared 162. The remaining 40 were per-file fixes:<br>- the same operator speed inline or through a new `withOperatorSpeed()` in `refusal-voice`, `class-stability`, `error-honesty`, `suggest-contract`, `corridor-bar`, `fact-strip`, `manual-pin-move`, `near-intersection` and `no-location` (PINNED);<br>- `handoff-provenance` family 6;<br>- `rail.test` (its own `pinned()`, plus the guard for a partial `confirmedRoad`);<br>- one ruled rewrite: `no-location`'s typed-coordinates case now meets "Set the speed in Step 2" and picks 35 before Generate.<br>`picker-reapply`, `kind-confirm` and `pin-model-wire` were named in the prediction and needed nothing. |
+| `what-cells` option tests move (+20) | None existed; the 20 mph test is new, in `speed-guess.test.ts`. |
+| `rail.test` gains the speed blocker | 1 new rank test. |
+| Not predicted | `auto-apply.ts` changed: `applyClassification` protects an operator speed, as R110 Q4's road type is protected. The prediction stated the behaviour (change 2) but didn't list the file. |
+
+**Frontend:** 2064 → 2084 passed (199 files). `tsc` clean.

@@ -23,7 +23,7 @@ import type {
 // MIRROR (R123 Q2, Rule 3): the backend owns this table
 // (src/rules/speed_estimate.py `SPEED_BY_HIGHWAY`), because the audit
 // records a speed the operator chose from it; this copy only shows the
-// estimate before Generate.  tests/test_speed_estimate.py holds the two
+// estimate before Generate.  tests/test_speed_guess.py holds the two
 // equal, entry for entry.
 const SPEED_BY_CLASS: Record<string, number> = {
   motorway: 65,

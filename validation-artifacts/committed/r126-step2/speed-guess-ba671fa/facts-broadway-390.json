@@ -1,0 +1,14 @@
+{
+  "value": "30",
+  "shown": "30 mph",
+  "marker": "✓ measured",
+  "line": "OSM · 30 mph · measured",
+  "header": "3 guesses marked ⚠ · change any that are wrong",
+  "cta": null,
+  "generateDisabled": false,
+  "scroll": [
+    390,
+    390
+  ],
+  "errors": []
+}

@@ -1,0 +1,14 @@
+{
+  "value": "",
+  "shown": "Not set",
+  "marker": "◌ not set",
+  "line": "not set · operator-set when picked",
+  "header": "1 guess marked ⚠ · change any that are wrong",
+  "cta": "Set the speed in Step 2",
+  "generateDisabled": true,
+  "scroll": [
+    390,
+    390
+  ],
+  "errors": []
+}
