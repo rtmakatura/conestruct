@@ -234,12 +234,13 @@ def test_the_xlsx_and_crew_lines_say_guessed(client: TestClient, tmp_path: Path)
 
 
 def test_the_plan_sheet_notes_box_says_guessed(client: TestClient) -> None:
-    import fitz
+    # pypdfium2 is a project dependency (CI has it; PyMuPDF is not).
+    import pypdfium2 as pdfium
 
     def page1(body: dict[str, Any]) -> str:
         res = client.post("/render/pdf", json=body, headers=_auth())
         assert res.status_code == 200, res.text[:300]
-        return fitz.open(stream=res.content, filetype="pdf")[0].get_text()
+        return pdfium.PdfDocument(res.content)[0].get_textpage().get_text_range()
 
     flat = " ".join(page1(_guessed()).split())
     assert "SPEED GUESSED FROM THE ROAD CLASS. CONFIRM THE POSTED SPEED ON SITE." in flat
