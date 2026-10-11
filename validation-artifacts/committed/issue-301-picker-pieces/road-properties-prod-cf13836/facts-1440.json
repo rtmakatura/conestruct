@@ -1,0 +1,25 @@
+{
+  "site": "https://www.conestruct.com/sandbox",
+  "width": 1440,
+  "modalText": "WORK ZONE · DEFINE\nDefine Work Zone\n\nDrop a pin where the work starts, and pick the road.\n\nSEARCH\n− HIDE COORDINATE ENTRY\nLAT / LNG DECIMAL DEGREES\nSTREETS\n© Mapbox © OpenStreetMap Improve this map © Maxar\nSAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK\n✓ ROAD DETECTED · 1 MATCH\nNORTH CHERRY STREET NORTHBOUND (RESIDENTIAL, 0°)\n13 M FROM PIN · WAY 16984132\n↻ RE-DETECT ROADS\nCORRIDOR EXTENT\nSAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK.\nCancel\nSave & Close",
+  "before": {
+    "estimate": "⚠ no posted speed on this road · its class suggests 25 mph Use 25 mph",
+    "prov": "your change · operator-set from here on",
+    "speed": "65"
+  },
+  "after": {
+    "estimate": null,
+    "prov": "your change · the road-class estimate (highway=residential); the road has no posted speed",
+    "speed": "25",
+    "buttonBox": [
+      94,
+      32
+    ]
+  },
+  "scroll": [
+    1440,
+    1440
+  ],
+  "axe": [],
+  "errors": []
+}
