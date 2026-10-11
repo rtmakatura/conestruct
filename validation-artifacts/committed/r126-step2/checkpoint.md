@@ -1,6 +1,6 @@
 # 📋 Checkpoint: R126, Step 2 to the mockup and the speed as a guess
 
-Investigated on prod `cf13836` (this branch's base `9df9525` adds only Mark on map), 2026-10-10.
+Investigated on prod `cf13836` (this branch's base, `e47b926` on `issue-301-cross-street-entry`, adds only Mark on map and its evidence), 2026-10-10.
 No code written. Rulings: `rulings.md`. Every `path:line` is at `cf13836`; frontend paths are under
 `conestruct/site/`.
 
@@ -183,7 +183,7 @@ gated forms.
     known words.
 
 **Denver windows into the footer.**
-- The windows block (`ScheduleField.tsx:249-345`, mounted from `GeneratorSidebar.tsx:478`, placed
+- The windows block (`ScheduleField.tsx:249-345`, mounted from `components/GeneratorSidebar.tsx:478` at `cf13836`, `:486` on this branch, placed
   at `WhatBand.tsx:701`) becomes one footer line: "Denver windows · set dates to check".
 - Once dates are set, the same line carries the verdict, with the table opening from it like File
   details does (`WhatBand.tsx:264`).
@@ -279,7 +279,7 @@ The speed joins R108's record (`render_api.input_guesses`, `audit_blocks._input_
   carry an explicit speed).
 
 **Backend tests:**
-- `tests/test_speed_estimate.py` (14) is rewritten as `guesses.speed` tests: the mirror stays, and
+- `tests/test_speed_estimate.py` (11 run: 8 tests, one parametrised over 4 paths) is rewritten as `guesses.speed` tests: the mirror stays, and
   the record, stale 400 and PDF line move to the guess shape.
 - `tests/test_r108_guesses.py`: about 5 additions (the speed record, its PDF line, the XLSX and crew
   qualifier).
@@ -288,7 +288,7 @@ The speed joins R108's record (`render_api.input_guesses`, `audit_blocks._input_
 **Frontend tests:**
 - **Rewritten or deleted:**
   - `lib/scenarios/speed-estimate.test.ts` (8) → guess tests;
-  - `WhatBand.speed-estimate.test.tsx` (3) → the ⚠ line and the "◌ not set" row.
+  - `components/WhatBand.speed-estimate.test.tsx` (3) → the ⚠ line and the "◌ not set" row.
 - **"Speed limit" label:** about 25 hits in 20 files (GeneratorForms.a11y, WhatBand.declutter,
   spacing-scale, seven stubbed `<label>`s, DetectedVsApplied, band-facts, value-links,
   ResultsHead.grid, revision, site-corrections, road-pick). Mostly mechanical.

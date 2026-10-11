@@ -1,6 +1,6 @@
 # r126-step2: the rulings this arc is built under
 
-**Base:** `issue-301-cross-street-entry` at `9df9525` (stacked: that branch ships first). Prod is
+**Base:** `issue-301-cross-street-entry` at `e47b926` (stacked: that branch ships first). Prod is
 `cf13836`.
 
 ## R126 (Ryan, 2026-10-10), verbatim
