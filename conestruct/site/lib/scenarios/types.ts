@@ -176,15 +176,6 @@ export interface JurisdictionPlanFields {
    * no guess, and the payload is byte-identical to before.
    */
   guesses?: ScenarioGuesses | null;
-  /**
-   * R123 Q2 (#301) — `speed` was chosen by the operator from the road-class
-   * estimate ("Use N mph" on WHAT's Speed row), with the confirmed road's OSM
-   * `highway` tag it was estimated from.  The backend re-derives the estimate
-   * (src/rules/speed_estimate.py), records it in the audit, and refuses a
-   * stale one.  Exists only while `speed` holds that estimate
-   * (lib/scenarios/guesses.ts); absent ⇒ byte-identical to before.
-   */
-  speed_estimate?: { highwayClass: string } | null;
   schedule?: {
     date_mode: "single" | "range" | "tbd";
     work_date?: string;
@@ -387,13 +378,18 @@ export interface ScenarioGuesses {
   street_class?: { highwayClass: string };
   /** The pin the boundary lookup ran at. */
   jurisdiction_key?: { lat: number; lng: number };
+  /** R126: the confirmed road's OSM `highway` tag the speed was guessed
+   *  from (no readable posted speed on the road). */
+  speed?: { highwayClass: string };
 }
 
 /** R110 Q4 / Q7 / Q8 — fields the OPERATOR has written, so a fresh
  *  detection never overwrites them (Q4) and their marker reads "✓ yours"
  *  rather than "✓ default" (Q7, Q8).  Frontend bookkeeping like
  *  `confirmedRoad`: it rides the saved plan and the backend ignores it. */
-export type OperatorSetField = "roadType" | "laneWidth" | "night" | "workZoneSpeed";
+/** R127 Q1 (b): "speed" — the operator picked it (WHAT or a staged S7
+ *  correction), so a detection never overwrites it and it counts as set. */
+export type OperatorSetField = "roadType" | "laneWidth" | "night" | "workZoneSpeed" | "speed";
 
 export interface ScenarioMeta {
   project: string;

@@ -200,47 +200,9 @@ describe("summarizeHandoff — speed clamp/snap (UX-01)", () => {
 describe("summarizeHandoff — low-confidence skip/accept (UX-02)", () => {
   const SKIP_DELTA: AutoApplyDelta = { ...DELTA, speedApplied: false };
 
-  it("emits skipped_low_confidence when a fallback was shown but never applied", () => {
-    // No override, no OSM speed → form keeps the prior 45; the 35 fallback
-    // the operator saw in the picker evaporates.
-    const events = summarizeHandoff({
-      prior: DEFAULT_FLAGGER,
-      classification: fallbackClassification(35),
-      overrides: {},
-      final: DEFAULT_FLAGGER, // speed unchanged at 45
-      delta: SKIP_DELTA,
-    });
-    expect(events).toEqual([
-      {
-        field: "speed",
-        kind: "skipped_low_confidence",
-        detectedMph: 35,
-        inEffectMph: 45,
-        sourceLabel: 'highway-class fallback ("tertiary")',
-      },
-    ]);
-  });
-
-  it("emits accepted_low_confidence when the operator opts in via click-to-accept", () => {
-    // Click-to-accept writes the fallback as an override → it applies.
-    const final = { ...DEFAULT_FLAGGER, speed: 35 } as Scenario;
-    const events = summarizeHandoff({
-      prior: DEFAULT_FLAGGER,
-      classification: fallbackClassification(35),
-      overrides: { speedMph: 35 },
-      final,
-      delta: SKIP_DELTA,
-    });
-    expect(events).toEqual([
-      {
-        field: "speed",
-        kind: "accepted_low_confidence",
-        valueMph: 35,
-        sourceLabel: 'highway-class fallback ("tertiary")',
-      },
-    ]);
-  });
-
+  // R126: the skipped / accepted low-confidence pair is retired (the
+  // road-class estimate is prefilled as a guess); the clamp still names
+  // itself.
   it("an accepted fallback that is out of domain reports the clamp, not the accept", () => {
     // 35 mph fallback accepted on a multilane scenario (domain [45, 75])
     // → clamped up to 45; the clamp is the louder signal.

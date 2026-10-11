@@ -23,8 +23,23 @@ export const TEST_PIN = { lat: 39.73997, lng: -104.96632 };
 // open-points ruling 1) — right side, traffic heading north.
 export const TEST_SIDE = { side: "right", heading: "N" } as const;
 
+// R127 Q1 (b): the same for the speed.  The fixture pin has no confirmed
+// road, so nothing measures or guesses a speed there; the scenario's own
+// speed is the test's, i.e. the operator's ("speed" operator-set), so the
+// shell checks it rather than holding at "◌ not set".
+/** R127 Q1 (b): the scenario's speed is the operator's (operator-set), the
+ *  one source a road-less pin has.  For suites whose picker stub saves a pin
+ *  with no confirmed road and that go on to check or generate. */
+export function withOperatorSpeed<S extends Scenario>(s: S): S {
+  if (s.meta.operatorSet?.includes("speed")) return s;
+  return { ...s, meta: { ...s.meta, operatorSet: [...(s.meta.operatorSet ?? []), "speed"] } };
+}
+
 export function pinned<S extends Scenario>(s: S): S {
-  return { ...s, meta: { ...s.meta, ...TEST_PIN, work: { ...TEST_SIDE } } };
+  const operatorSet = s.meta.operatorSet?.includes("speed")
+    ? s.meta.operatorSet
+    : [...(s.meta.operatorSet ?? []), "speed" as const];
+  return { ...s, meta: { ...s.meta, ...TEST_PIN, work: { ...TEST_SIDE }, operatorSet } };
 }
 
 // #261: the smallest audit answer the shell can hold — `sections` and

@@ -120,6 +120,7 @@ async function mountPinnedWithCorrections() {
           lng: -105.0815,
           // #290: the side replaces the typed bearing (ruling 8).
           work: { ...TEST_SIDE },
+          operatorSet: ["speed"] /* R127 Q1 (b): no road at this pin, so the speed is the test's own */,
           siteConditionOverrides: CORRECTIONS,
         },
       }}

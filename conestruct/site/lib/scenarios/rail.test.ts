@@ -23,6 +23,7 @@ import {
   RECHECK_BLOCKER,
   REFUSAL_BLOCKER,
   SIDE_BLOCKER,
+  SPEED_BLOCKER,
   type RailInput,
 } from "./rail";
 
@@ -50,6 +51,9 @@ function pinned<S extends Scenario>(s: S): S {
       lng: -104.9,
       work: { side: "right", heading: "N" },
       intersection: { lat: 39.701, lng: -104.9, name: "E 17th Ave" },
+      // R127 Q1 (b): no confirmed road at this pin, so the speed is the
+      // operator's (operator-set), the only source a road-less pin has.
+      operatorSet: ["speed"],
     },
   };
 }
@@ -130,6 +134,21 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
     expect(rail.blocker?.message).toBe(
       "Mark the cross street on the map. The plan places it from there.",
     );
+  });
+
+  it("R127 Q1 (b): a located pin with no speed source names the speed, right after the side", () => {
+    const base = pinned(DEFAULT_SHOULDER);
+    const unset = { ...base, meta: { ...base.meta, operatorSet: undefined } };
+    expect(deriveRail(input(unset)).blocker).toEqual({
+      message: SPEED_BLOCKER,
+      entryId: "road",
+    });
+    // The side still ranks first when both are open.
+    const unsided = { ...unset, meta: { ...unset.meta, work: undefined } };
+    expect(deriveRail(input(unsided)).blocker?.message).toBe(SIDE_BLOCKER);
+    // No pin: the location's sentence is the reason, as before.
+    const unlocated = { ...unset, meta: { ...unset.meta, lat: 0, lng: 0 } };
+    expect(deriveRail(input(unlocated)).blocker?.message).not.toBe(SPEED_BLOCKER);
   });
 
   it("#290: a located work-start pin with no confirmed side names the side, right after the kind", () => {

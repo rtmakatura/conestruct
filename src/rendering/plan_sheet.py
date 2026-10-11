@@ -3464,6 +3464,22 @@ def _draw_notes(
                 for line in lines:
                     y[0] -= layout.footer_pads[1]
                     cv.drawString(x, y[0], line)
+        if params.speed_guessed:
+            # R127 Q7 (verbatim words, set in the box's own capitals): the
+            # posted speed this plan is built on is the road-class estimate,
+            # not a posted limit.  Only when the speed is an untouched guess.
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.black)
+            for line in _wrap_to_width(
+                cv,
+                "SPEED GUESSED FROM THE ROAD CLASS. CONFIRM THE POSTED SPEED ON SITE.",
+                "Helvetica-Bold",
+                6.5,
+                width - 16.0,
+                max_lines=2,
+            ):
+                y[0] -= layout.footer_pads[1]
+                cv.drawString(x, y[0], line)
         if params.near_intersection:
             # Option C citation note (Refs #117): the sheet cites the plate
             # instead of drawing the cross street.  The plate-vs-tool

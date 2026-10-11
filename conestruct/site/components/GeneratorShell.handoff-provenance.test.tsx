@@ -135,7 +135,7 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { MIN_AUDIT, corridorGeometryResponse } from "./test-fixtures";
+import { MIN_AUDIT, corridorGeometryResponse, withOperatorSpeed } from "./test-fixtures";
 import { answerSide, openWhere, openWhat } from "./__fixtures__/band-helpers";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
@@ -272,7 +272,10 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
   it("family 6 (correction 4): the clamp's width fits the sheet, and says it was narrowed", async () => {
     const user = userEvent.setup();
-    await mount(DEFAULT_SHOULDER);
+    // R127 Q1 (b): the stub's detection carries no confirmed road, so its
+    // speed reads as unset; this case generates, so the speed is the
+    // operator's.
+    await mount(withOperatorSpeed(DEFAULT_SHOULDER));
 
     await openWhere();
 

@@ -606,9 +606,15 @@ def _fines_double_blocks(fd: dict[str, Any]) -> list[Block]:
 _GUESS_CAVEAT = {
     "pin": "Confirm the jurisdiction with the permitting authority.",
     "road": "The jurisdiction's adopted classification map governs.",
+    # R126 / R127 Q7: the plan sheet's notes line says the same.
+    "road_class": "Confirm the posted speed on site.",
 }
-_GUESS_FIELD = {"jurisdiction_key": "Jurisdiction", "street_class": "Street class"}
-_GUESS_SOURCE = {"pin": "the pin", "road": "the road"}
+_GUESS_FIELD = {
+    "jurisdiction_key": "Jurisdiction",
+    "street_class": "Street class",
+    "speed": "Speed",
+}
+_GUESS_SOURCE = {"pin": "the pin", "road": "the road", "road_class": "the road class"}
 
 
 def _input_guesses_blocks(guesses: list[dict[str, Any]]) -> list[Block]:
@@ -625,25 +631,6 @@ def _input_guesses_blocks(guesses: list[dict[str, Any]]) -> list[Block]:
     ]
     return [
         Heading(2, _cell("Guessed inputs")),
-        Bullets([ListItem(_cell(line)) for line in lines]),
-    ]
-
-
-def _input_estimates_blocks(estimates: list[dict[str, Any]]) -> list[Block]:
-    """R123 Q2: one line per input the operator chose from an estimate —
-    the value, where the estimate came from, and that the operator chose
-    it.  No estimate, no block."""
-    if not estimates:
-        return []
-    lines = [
-        f"Speed limit: {_str(e, 'label')}. Estimated from the road class "
-        f"({_str(e, 'evidence')}). Chosen by the operator. Confirm the posted speed on site."
-        if e.get("field") == "speed"
-        else f"{_str(e, 'field')}: {_str(e, 'label')}. Estimated ({_str(e, 'evidence')})."
-        for e in estimates
-    ]
-    return [
-        Heading(2, _cell("Estimated inputs")),
         Bullets([ListItem(_cell(line)) for line in lines]),
     ]
 
@@ -706,8 +693,6 @@ def audit_to_blocks(
     # R108: the inputs the plan guessed, right after the summary that
     # reads them.  Absent from every projection with no guess.
     blocks += _input_guesses_blocks(projection.get("input_guesses", []))
-    # R123 Q2: inputs the operator chose from an estimate, beside the guesses.
-    blocks += _input_estimates_blocks(projection.get("input_estimates", []))
     blocks += _taper_blocks(sections.get("taper", {}))
     blocks += _buffer_blocks(sections.get("buffer", {}))
     blocks += _spacing_blocks(sections.get("spacing", {}))

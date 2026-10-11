@@ -23,15 +23,9 @@
 import {
   appendDetectionOverride,
   lanesArithmeticMismatch,
-  snapSpeedToDomain,
 } from "./auto-apply";
 import { applyRoadTypeOverride, dividedForShoulderRoadType } from "./overrides";
-import {
-  markOperatorSet,
-  setJurisdictionByOperator,
-  speedEstimateOffer,
-  withoutSpeedEstimate,
-} from "./guesses";
+import { markOperatorSet, setJurisdictionByOperator } from "./guesses";
 import { isFieldStaged } from "./site-corrections";
 import type {
   DetectionOverride,
@@ -60,34 +54,34 @@ type LaneRelayFields = {
  * reduction" — drop to undefined.  Only the shoulder kind carries the
  * field, so the `in` guard makes this a no-op elsewhere rather than a
  * per-kind branch.
+ *
+ * R127 Q1 (b): the operator's write (WHAT, or a staged S7 correction) —
+ * the speed is theirs from here on: operator-set, so it counts as set and
+ * a detection never overwrites it (R110 Q4), and R126's road-class guess
+ * record goes.
  */
 export function setSpeed(scenario: Scenario, mph: number): Scenario {
+  const mine = markOperatorSet(withoutSpeedGuessRecord(scenario), "speed");
   if (
-    "workZoneSpeed" in scenario &&
-    scenario.workZoneSpeed !== undefined &&
-    scenario.workZoneSpeed >= mph
+    "workZoneSpeed" in mine &&
+    mine.workZoneSpeed !== undefined &&
+    mine.workZoneSpeed >= mph
   ) {
-    return { ...scenario, speed: mph, workZoneSpeed: undefined } as Scenario;
+    return { ...mine, speed: mph, workZoneSpeed: undefined } as Scenario;
   }
-  return { ...scenario, speed: mph } as Scenario;
+  return { ...mine, speed: mph } as Scenario;
 }
 
-/**
- * R123 Q2 (#301): "Use N mph" on the Speed row — the operator takes the
- * road-class estimate.  Nothing is prefilled; this click is the only writer
- * of the record.  The speed snaps to the kind's domain like every app-moved
- * speed; the record (`speed_estimate`) is written only when the snapped
- * speed IS the estimate, so the audit never claims an estimate the plan
- * does not carry.
- */
-export function takeSpeedEstimate(scenario: Scenario): Scenario {
-  const offer = speedEstimateOffer(scenario);
-  if (!offer) return scenario;
-  const mph = snapSpeedToDomain(scenario.kind, offer.mph);
-  const next = withoutSpeedEstimate(setSpeed(scenario, mph));
-  return mph === offer.mph
-    ? ({ ...next, speed_estimate: { highwayClass: offer.highwayClass } } as Scenario)
-    : next;
+/** The scenario without R126's speed record (the guesses key dropped when
+ *  nothing else is guessed, never `{}`). */
+function withoutSpeedGuessRecord(scenario: Scenario): Scenario {
+  if (!scenario.guesses?.speed) return scenario;
+  const g = { ...scenario.guesses };
+  delete g.speed;
+  const next = { ...scenario } as Record<string, unknown>;
+  if (Object.keys(g).length === 0) delete next.guesses;
+  else next.guesses = g;
+  return next as unknown as Scenario;
 }
 
 /**

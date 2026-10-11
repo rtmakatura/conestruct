@@ -30,6 +30,7 @@ import type { Refusal } from "@/lib/render-types";
 import type { Scenario, ScenarioKind } from "./types";
 import { hasConfirmedSide, hasLocation } from "./index";
 import { matchRefusalAffordance } from "./auto-apply";
+import { speedSet } from "./guesses";
 import {
   validateApproaches,
   validateLanes,
@@ -144,6 +145,10 @@ export const KIND_BLOCKER = "Choose the kind of work";
  *  confirmed, the picker draws the pin and the sentence ..."), and the
  *  one reason every surface gives while the side is unset (rule 139). */
 export const SIDE_BLOCKER = "Say which side is occupied to lay out the work";
+/** R127 Q1 (b) — the speed is unset (no readable posted speed, no road
+ *  class to guess from, no operator pick): Step 2's Speed row says "◌ not
+ *  set", and this is the reason every surface gives (rule 139). */
+export const SPEED_BLOCKER = "Set the speed in Step 2";
 
 export const RAIL_ANCHOR_PREFIX = "rail-step-";
 
@@ -288,6 +293,12 @@ export function deriveRail({
   // needs comes from the side (ruling 8).  Only under the work-start model.
   else if (located && !hasConfirmedSide(scenario.meta))
     blocker = { message: SIDE_BLOCKER, entryId: "location" };
+  // R127 Q1 (b), RULE 5 (stated): a new rank, right after the side and
+  // before the WHAT band's own validations: the speed every distance is
+  // computed from has no source yet.  Only once there is a pin, like the
+  // side (before one, the location's sentence is the reason).
+  else if (located && !speedSet(scenario))
+    blocker = { message: SPEED_BLOCKER, entryId: "road" };
   else if (!lanes.ok && lanes.message)
     blocker = { message: lanes.message, entryId: "road" };
   else if (!approaches.ok && approaches.message)

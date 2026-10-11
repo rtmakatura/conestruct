@@ -88,6 +88,7 @@ vi.mock("./GeneratorSidebar", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { withOperatorSpeed } from "./test-fixtures";
 
 const SUGGEST_DENVER = {
   suggestion: "denver",
@@ -162,7 +163,7 @@ const last = () => bodies[bodies.length - 1];
 describe("the pin guesses the jurisdiction (R108)", () => {
   it("a pin dropped in this session fills an empty field and relays the pin it came from", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(DEFAULT_SCENARIO)} />);
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(select().value).toBe("denver"), { timeout: 3000 });
     await waitFor(() => expect(last()?.jurisdiction_key).toBe("denver"));
@@ -176,7 +177,7 @@ describe("the pin guesses the jurisdiction (R108)", () => {
 
   it("never overwrites the operator's jurisdiction (R110 Q4)", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(DEFAULT_SCENARIO)} />);
     await user.selectOptions(select(), "parker");
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
@@ -190,7 +191,7 @@ describe("the pin guesses the jurisdiction (R108)", () => {
 
   it("the operator's change replaces the guess and drops its record", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(DEFAULT_SCENARIO)} />);
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(select().value).toBe("denver"), { timeout: 3000 });
     await user.selectOptions(select(), "parker");
@@ -200,7 +201,7 @@ describe("the pin guesses the jurisdiction (R108)", () => {
 
   it("a moved pin drops the old guess in the same write, then guesses again", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(DEFAULT_SCENARIO)} />);
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(select().value).toBe("denver"), { timeout: 3000 });
     suggestResponse = () => jsonResponse(200, { ...SUGGEST_DENVER, suggestion: "parker" });
@@ -215,7 +216,7 @@ describe("the pin guesses the jurisdiction (R108)", () => {
     suggestResponse = () =>
       jsonResponse(200, { ...SUGGEST_DENVER, suggestion: null, confidence: "outside" });
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(DEFAULT_SCENARIO)} />);
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
     await act(async () => {
@@ -228,7 +229,7 @@ describe("the pin guesses the jurisdiction (R108)", () => {
   it("lookup failure: nothing is filled in, and the picker works as it does without it", async () => {
     suggestResponse = () => jsonResponse(500, { detail: "boom" });
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(DEFAULT_SCENARIO)} />);
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
     await waitFor(() => expect(screen.queryByText(/Checking boundary data/)).toBeNull());
@@ -239,7 +240,7 @@ describe("the pin guesses the jurisdiction (R108)", () => {
   });
 
   it("no pin (default 0/0): no lookup ever fires", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(DEFAULT_SCENARIO)} />);
     await act(async () => {
       await new Promise((r) => setTimeout(r, 600));
     });

@@ -136,7 +136,7 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { MIN_AUDIT, TEST_SIDE, corridorGeometryResponse } from "./test-fixtures";
+import { MIN_AUDIT, TEST_SIDE, corridorGeometryResponse, withOperatorSpeed } from "./test-fixtures";
 import { answerSide, openWhere, openWhat } from "./__fixtures__/band-helpers";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
@@ -203,7 +203,7 @@ async function mountSandbox() {
   render(
     <GeneratorShell
       mode="sandbox"
-      initialScenario={DEFAULT_NEAR_INTERSECTION}
+      initialScenario={withOperatorSpeed(DEFAULT_NEAR_INTERSECTION)}
     />,
   );
   await act(async () => {
@@ -415,6 +415,7 @@ describe("near_intersection picker → form → payload", () => {
             lng: -104.9,
             intersection: { lat: 39.7007, lng: -104.9, name: null },
             work: { ...TEST_SIDE },
+            operatorSet: ["speed"] /* R127 Q1 (b): no road at this pin, so the speed is the test's own */,
           },
         }}
       />,

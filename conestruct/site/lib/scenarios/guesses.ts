@@ -19,8 +19,12 @@
 //     or a generic field write can never leave a stale entry on the wire;
 //   · `applyJurisdictionGuess` — the pin lookup's answer, landing;
 //   · the operator's writers (`setStreetClassByOperator`,
-//     `setJurisdictionByOperator`) — the field becomes the operator's and
-//     its entry goes, so a fresh guess never overwrites it (Q4).
+//     `setJurisdictionByOperator`, and what-writes' `setSpeed`, which
+//     marks the speed operator-set) — the field becomes the operator's
+//     and its entry goes, so a fresh guess never overwrites it (Q4).
+//
+// R126 / R127 add the speed: the road-class estimate, prefilled on a road
+// with no readable posted speed (`speedGuessFor`, `reconcileSpeed`).
 //
 // Rule 3: nothing here decides a guess the backend does not re-derive.
 // The class table is the backend's (src/rules/street_class.py), mirrored
@@ -29,6 +33,9 @@
 // when nothing moves, so the shell's identity-keyed stamps do not churn.
 
 import { speedEstimateForClass, suggestStreetClass } from "../road-detection/classify";
+// A function-only cycle (auto-apply imports this module's operator-set
+// helpers): nothing is read at module load, so the order is safe.
+import { snapSpeedToDomain } from "./auto-apply";
 import type { ConfirmedRoad } from "../road-detection/types";
 import type { OperatorSetField, Scenario, ScenarioGuesses } from "./types";
 
@@ -46,7 +53,7 @@ function roadAtPin(s: Scenario): ConfirmedRoad | null {
 /** `s` with its guesses replaced; the key is dropped, never `{}`. */
 function withGuesses(s: Scenario, g: ScenarioGuesses): Scenario {
   const next = { ...s } as Record<string, unknown>;
-  if (g.street_class === undefined && g.jurisdiction_key === undefined) {
+  if (g.street_class === undefined && g.jurisdiction_key === undefined && g.speed === undefined) {
     delete next.guesses;
   } else {
     next.guesses = g;
@@ -68,9 +75,13 @@ export function isGuessed(s: Scenario, field: GuessField): boolean {
   return s.guesses?.[field] !== undefined;
 }
 
-/** R108's "N guesses" for the two guessed jurisdiction fields. */
+/** R108's "N guesses", with R126's speed. */
 export function guessCount(s: Scenario): number {
-  return (isGuessed(s, "street_class") ? 1 : 0) + (isGuessed(s, "jurisdiction_key") ? 1 : 0);
+  return (
+    (isGuessed(s, "street_class") ? 1 : 0) +
+    (isGuessed(s, "jurisdiction_key") ? 1 : 0) +
+    (isGuessed(s, "speed") ? 1 : 0)
+  );
 }
 
 /** Which road is confirmed at the pin: way and pin, so a re-save of the
@@ -129,46 +140,71 @@ function reconcileJurisdiction(s: Scenario): Scenario {
   return s;
 }
 
-/** R123 Q2 (#301): the road-class speed estimate WHAT's Speed row offers —
- *  the road at the pin carries no posted speed (its classification read no
- *  `maxspeed` tag at all: the low-confidence class fallback, the picker's
- *  old UX-02 condition) and its class estimates one.  Null: nothing to
- *  offer.  The table is the backend's, mirrored (`speedEstimateForClass`). */
-export function speedEstimateOffer(s: Scenario): { mph: number; highwayClass: string } | null {
+/** R126 (R127 Q2, Q3): the road-class guess for the road at the pin — the
+ *  road carries no READABLE posted speed (no `maxspeed` tag, or one nobody
+ *  can parse) and its class estimates one.  `mph` is the estimate snapped to
+ *  the kind's range, the value the plan carries.  Null: no road at the pin,
+ *  a readable posted speed, or a class with no estimate.  The table is the
+ *  backend's, mirrored (`speedEstimateForClass`). */
+export function speedGuessFor(s: Scenario): { mph: number; highwayClass: string } | null {
   const road = roadAtPin(s);
-  if (!road) return null;
-  const c = road.classification;
-  if (c.speedLimitMph !== undefined || c.fields?.speed?.confidence !== "low") return null;
+  // A partial record (no classification) reads as no readable speed only
+  // when the class itself is known; nothing is guessed without one.
+  if (!road || road.classification?.speedLimitMph !== undefined) return null;
   const tag = road.candidate.highway_class;
-  const mph = tag ? speedEstimateForClass(tag) : null;
-  return tag && mph !== null ? { mph, highwayClass: tag } : null;
+  const estimate = tag ? speedEstimateForClass(tag) : null;
+  if (!tag || estimate === null) return null;
+  return { mph: snapSpeedToDomain(s.kind, estimate), highwayClass: tag };
 }
 
-/** `s` without its speed-estimate record (the key dropped, never null). */
-export function withoutSpeedEstimate(s: Scenario): Scenario {
-  if (s.speed_estimate === undefined) return s;
-  const next = { ...s } as Record<string, unknown>;
-  delete next.speed_estimate;
-  return next as unknown as Scenario;
+/** R127 Q1 (b): is the speed SET?  Measured (a readable posted speed on the
+ *  road at the pin), guessed (R126's record) or written by the operator.
+ *  Otherwise WHAT reads "◌ not set", the live checks hold and Generate is
+ *  blocked until the operator picks one. */
+export function speedSet(s: Scenario): boolean {
+  const road = roadAtPin(s);
+  return (
+    (road !== null && road.classification?.speedLimitMph !== undefined) ||
+    isGuessed(s, "speed") ||
+    isOperatorSet(s, "speed")
+  );
 }
 
-/** R123 Q2: the record holds only while `speed` is still the estimate the
- *  operator chose, for the road still at the pin.  Any other write of the
- *  speed, a new road or a moved pin drops it in the same write. */
-function reconcileSpeedEstimate(s: Scenario): Scenario {
-  const entry = s.speed_estimate;
-  if (!entry) return s;
-  const offer = speedEstimateOffer(s);
-  if (!offer || offer.highwayClass !== entry.highwayClass || s.speed !== offer.mph) {
-    return withoutSpeedEstimate(s);
+/** `s` without its speed record; the speed itself stays. */
+function withoutSpeedGuess(s: Scenario): Scenario {
+  if (!s.guesses?.speed) return s;
+  const g = { ...s.guesses };
+  delete g.speed;
+  return withGuesses(s, g);
+}
+
+/** R126: the speed guess, on the R108 pattern.  The record holds only while
+ *  the speed is the guess for the road still at the pin: the operator's
+ *  write (`setSpeed`, operator-set) or a new road, a moved pin or a road
+ *  with a readable posted speed drops it.  A kind switch re-guesses at the
+ *  new kind's snap (R127 Q3).  An unrecorded speed is guessed when the road
+ *  at the pin is NEW, never over an operator's speed (R110 Q4). */
+function reconcileSpeed(s: Scenario, prev?: Scenario): Scenario {
+  const entry = s.guesses?.speed;
+  const guess = speedGuessFor(s);
+  if (entry) {
+    if (isOperatorSet(s, "speed") || !guess || guess.highwayClass !== entry.highwayClass) {
+      return withoutSpeedGuess(s);
+    }
+    return s.speed === guess.mph ? s : ({ ...s, speed: guess.mph } as Scenario);
   }
-  return s;
+  if (!guess || isOperatorSet(s, "speed")) return s;
+  if (prev !== undefined && roadKey(prev) === roadKey(s)) return s;
+  return withGuesses({ ...s, speed: guess.mph } as Scenario, {
+    ...(s.guesses ?? {}),
+    speed: { highwayClass: guess.highwayClass },
+  });
 }
 
 /** The shell's normalizer: run on every scenario write.  `prev` is the
  *  scenario the write replaced; omitted, the road counts as new. */
 export function withCurrentGuesses(s: Scenario, prev?: Scenario): Scenario {
-  return reconcileSpeedEstimate(reconcileJurisdiction(reconcileStreetClass(s, prev)));
+  return reconcileSpeed(reconcileJurisdiction(reconcileStreetClass(s, prev)), prev);
 }
 
 /** The pin lookup's answer, landing.  `at` is the pin it ran at; an

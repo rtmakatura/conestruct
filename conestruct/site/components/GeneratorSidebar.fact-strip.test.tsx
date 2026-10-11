@@ -46,6 +46,7 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { withOperatorSpeed } from "./test-fixtures";
 import { openWhere, openWhat } from "./__fixtures__/band-helpers";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
@@ -73,7 +74,7 @@ afterEach(() => {
 });
 
 async function mount(initial: Scenario) {
-  render(<GeneratorShell mode="sandbox" initialScenario={initial} />);
+  render(<GeneratorShell mode="sandbox" initialScenario={withOperatorSpeed(initial)} />);
   await act(async () => {
     await Promise.resolve();
   });

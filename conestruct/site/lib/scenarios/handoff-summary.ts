@@ -46,25 +46,9 @@ export type HandoffEvent =
       toMph: number;
       source: SpeedSource;
     }
-  // UX-02: the operator clicked "Use N mph" to accept a low-confidence
-  // fallback the form would otherwise have skipped — name the explicit
-  // opt-in so the value's provenance is on the record.
-  | {
-      field: "speed";
-      kind: "accepted_low_confidence";
-      valueMph: number;
-      sourceLabel: string;
-    }
-  // UX-02: a low-confidence fallback speed was shown in the picker but
-  // never applied (no OSM tag, not accepted), so the plan kept its prior
-  // value — name what was skipped and what's actually in effect.
-  | {
-      field: "speed";
-      kind: "skipped_low_confidence";
-      detectedMph: number;
-      inEffectMph: number;
-      sourceLabel: string;
-    }
+  // UX-02's accepted / skipped low-confidence pair is retired (R126): the
+  // road-class estimate is now prefilled as a guess, marked "⚠ from the
+  // road" on the row, so neither "not applied" nor "accepted" is true.
   // #62: roadType crosses the same seam.  The picker detects a roadType
   // (OSM classification) or carries a manual override; applyClassification /
   // applyRoadTypeOverride only keep it when it's in the scenario kind's
@@ -260,39 +244,7 @@ export function summarizeHandoff(args: SummarizeHandoffArgs): HandoffEvent[] {
         toMph: applied,
         source,
       });
-    } else if (
-      // UX-02 opt-in: the override equals the low-confidence fallback and
-      // OSM carried no high-confidence speed → the operator accepted the
-      // fallback via click-to-accept.  Name the explicit choice.
-      overrideSpeed !== undefined &&
-      osmSpeed === undefined &&
-      speedField?.confidence === "low" &&
-      speedField.value === overrideSpeed
-    ) {
-      events.push({
-        field: "speed",
-        kind: "accepted_low_confidence",
-        valueMph: applied,
-        sourceLabel: speedField.source,
-      });
     }
-  } else if (
-    // UX-02 silent evaporation: a low-confidence fallback was shown in the
-    // picker but never applied (no OSM tag, no acceptance), so the plan
-    // kept its prior speed.  Name what was skipped and what's in effect.
-    classification &&
-    delta &&
-    !delta.speedApplied &&
-    speedField?.confidence === "low" &&
-    speedField.value != null
-  ) {
-    events.push({
-      field: "speed",
-      kind: "skipped_low_confidence",
-      detectedMph: speedField.value,
-      inEffectMph: final.speed,
-      sourceLabel: speedField.source,
-    });
   }
 
   // --- Road type ---------------------------------------------------------
@@ -478,10 +430,6 @@ export function handoffEventIsCurrent(
         case "clamped":
         case "snapped":
           return scenario.speed === event.toMph;
-        case "accepted_low_confidence":
-          return scenario.speed === event.valueMph;
-        case "skipped_low_confidence":
-          return scenario.speed === event.inEffectMph;
       }
       break;
     case "roadType":

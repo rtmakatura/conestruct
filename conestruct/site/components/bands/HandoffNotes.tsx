@@ -63,11 +63,6 @@ export function handoffNoteText(
           const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
           return `Speed ${event.toMph} mph (snapped from ${event.fromMph} mph ${srcLabel} to the 5-mph grid).`;
         }
-        case "accepted_low_confidence":
-          return `Speed ${event.valueMph} mph: accepted low-confidence fallback (${event.sourceLabel}).`;
-        case "skipped_low_confidence":
-          // #301 (R123 Q2): the accept moved from the picker to this row.
-          return `Speed fallback ${event.detectedMph} mph not applied. The plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Press Use ${event.detectedMph} mph on this row to use it.`;
       }
       break;
     case "roadType": {

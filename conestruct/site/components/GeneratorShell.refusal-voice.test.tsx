@@ -63,7 +63,7 @@ const DECLINED_LINE =
 const FLAGGER_MULTILANE: FlaggerLaneClosureScenario = {
   ...DEFAULT_FLAGGER,
   detectedLanesTotal: 4,
-  meta: { ...DEFAULT_FLAGGER.meta, lat: 39.71466, lng: -104.94071, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */ },
+  meta: { ...DEFAULT_FLAGGER.meta, lat: 39.71466, lng: -104.94071, work: { side: "right", heading: "N" } /* #290: the side a located plan now carries */, operatorSet: ["speed"] /* R127 Q1 (b): no road at this pin, so the speed is the test's own */ },
 };
 
 type Deferred = {

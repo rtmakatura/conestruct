@@ -24,7 +24,7 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // the progress rail's trailing "Generate" jump entry is a second
 // /generate/i button on every mount now.
 import { GeneratorShell } from "./GeneratorShell";
-import { answerSide, confirmKind } from "./__fixtures__/band-helpers";
+import { answerSide, confirmKind, openWhat } from "./__fixtures__/band-helpers";
 import { TEST_SIDE, corridorGeometryResponse } from "./test-fixtures";
 import { DEFAULT_SHOULDER, hasLocation } from "@/lib/scenarios";
 import type { ShoulderScenario } from "@/lib/scenarios";
@@ -34,7 +34,7 @@ import type { ShoulderScenario } from "@/lib/scenarios";
 // a located plan's checks wait on the side).
 const PINNED: ShoulderScenario = {
   ...DEFAULT_SHOULDER,
-  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.73997, lng: -104.96632, work: { ...TEST_SIDE } },
+  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.73997, lng: -104.96632, work: { ...TEST_SIDE }, operatorSet: ["speed"] /* R127 Q1 (b): no road at this pin, so the speed is the test's own */ },
 };
 
 const CLEAN_AUDIT = {
@@ -276,9 +276,26 @@ describe("no location, no certification (#186)", () => {
     await answerSide();
     await flushDebounce();
     await settle();
+    // R127 Q1 (b), RULE 5 (stated): typed coordinates put no road under the
+    // pin, so nothing measures or guesses a speed (R126: "◌ not set").  The
+    // plan waits for the operator's speed, and nothing is checked before it.
+    expect(btn().disabled).toBe(true);
+    expect(
+      document.querySelector('[data-testid="cta-reason"]')?.textContent,
+    ).toContain("Set the speed in Step 2");
+    expect(document.body.textContent).not.toContain("READY FOR TCS REVIEW");
+    await openWhat();
+    await act(async () => {
+      fireEvent.change(document.getElementById("what-speed") as HTMLSelectElement, {
+        target: { value: "35" },
+      });
+    });
+    await flushDebounce();
+    await settle();
     expect(btn().disabled).toBe(false);
     // Confirmed: the checks fire, and the verdict the strip used to show
-    // too early is now the answer for a kind (and a side) a person chose.
+    // too early is now the answer for a kind, a side and a speed a person
+    // chose.
     expect(document.body.textContent).toContain("READY FOR TCS REVIEW");
   });
 

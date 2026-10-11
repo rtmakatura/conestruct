@@ -56,6 +56,7 @@ from src.rules.validators import (
     jurisdiction_display,
     road_type_display,
     scenario_display_name,
+    speed_display,
 )
 
 _TEMPLATES_DIR: Path = Path(__file__).parent / "templates"
@@ -827,6 +828,8 @@ def build_narrative_context(
         # is never displayed as a jurisdiction.  R110 Q3: the shared
         # producer adds the not-confirmed clause to an untouched pin guess.
         "jurisdiction_display": jurisdiction_display(params),
+        # R127 Q7: "N mph", with the not-confirmed clause on a road-class guess.
+        "speed_display": speed_display(params),
         # #257: the shared producer — the quote header prints the same words.
         "road_type_human": road_type_display(params),
         # UX-11: display name, not the raw "lane" / "shoulder" enum.

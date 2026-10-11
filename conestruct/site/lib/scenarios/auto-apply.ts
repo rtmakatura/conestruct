@@ -529,6 +529,19 @@ export function applyClassification(
     }
     delta.roadTypeApplied = false;
   }
+  // R127 Q1 (b) / R110 Q4: an operator-set speed is never overwritten by a
+  // detection — the posted speed it read, and the reduction it would have
+  // cleared, both stay as the operator left them.
+  if (isOperatorSet(scenario, "speed") && next.speed !== scenario.speed) {
+    next = { ...next, speed: scenario.speed } as Scenario;
+    if ("workZoneSpeed" in scenario) {
+      next = {
+        ...next,
+        workZoneSpeed: (scenario as { workZoneSpeed?: number }).workZoneSpeed,
+      } as Scenario;
+    }
+    delta.speedApplied = false;
+  }
   if (
     isOperatorSet(next, "laneWidth") &&
     (next as { laneWidth?: number }).laneWidth !== (scenario as { laneWidth?: number }).laneWidth

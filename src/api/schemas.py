@@ -351,6 +351,16 @@ class JurisdictionGuess(BaseModel):
     lng: float = Field(ge=-180, le=180, allow_inf_nan=False)
 
 
+class SpeedGuess(BaseModel):
+    """The raw fact a prefilled ``speed`` was guessed from (R126, R127):
+    the confirmed road's OSM ``highway`` tag, on a road with no readable
+    posted speed.  The backend maps it itself (``src/rules/speed_estimate.py``)
+    and caps it to the kind's speed range (R127 Q3) rather than trusting
+    the number."""
+
+    highwayClass: str = Field(min_length=1, max_length=40)
+
+
 class Guesses(BaseModel):
     """R108 / R110 Q1 — which jurisdiction-layer values are untouched
     guesses, each with the raw fact it came from (the relay-fact pattern).
@@ -365,33 +375,22 @@ class Guesses(BaseModel):
 
     street_class: StreetClassGuess | None = None
     jurisdiction_key: JurisdictionGuess | None = None
-
-
-class SpeedEstimate(BaseModel):
-    """R123 Q2 (#301): the raw fact behind a ``speed`` the operator chose from
-    the road-class estimate ("Use N mph" on WHAT's Speed row): the confirmed
-    road's OSM ``highway`` tag, on a road with no posted speed.  The backend
-    maps it itself (``src/rules/speed_estimate.py``) rather than trusting the
-    number, and the audit records the speed as estimated from the road class
-    and chosen by the operator.  Present only while ``speed`` still holds that
-    estimate; any other write of the speed drops it."""
-
-    highwayClass: str = Field(min_length=1, max_length=40)
+    # R126: the road-class speed estimate, prefilled as a guess.
+    speed: SpeedGuess | None = None
 
 
 class JurisdictionScenarioFields(BaseModel):
     """Mixin adding the optional jurisdiction-layer fields to every kind.
 
-    Also carries ``speed_estimate`` (R123 Q2): every kind inherits this mixin,
-    and the record rides the same relay-fact pattern as ``guesses``."""
+    ``guesses`` also carries the speed guess (R126): every kind inherits this
+    mixin.  R123 Q2's ``speed_estimate`` is retired; a saved plan that still
+    carries the key has it ignored."""
 
     jurisdiction_key: str | None = None
     street_class: Literal["local", "collector", "arterial"] | None = None
     schedule: WorkSchedule | None = None
     # R108 / R110 Q1: the untouched guesses among the two fields above.
     guesses: Guesses | None = None
-    # R123 Q2: a speed the operator chose from the road-class estimate.
-    speed_estimate: SpeedEstimate | None = None
 
 
 class DetectionOverride(BaseModel):
@@ -1243,6 +1242,13 @@ def _jurisdiction_guessed(scenario: Scenario) -> bool:
     )
 
 
+def _speed_guessed(scenario: Scenario) -> bool:
+    """True when the speed is an untouched road-class guess (R126): the
+    deliverables then say so (R127 Q7)."""
+    guesses = getattr(scenario, "guesses", None)
+    return bool(guesses is not None and guesses.speed is not None)
+
+
 # CHOSEN (#308 ruling R88, 2026-10-05): the shoulder a one-way street's plan
 # builds.  No source: no MUTCD, S-630-1, Colorado Supplement or Denver
 # (PT-116.1, Rule 22.3) text found sets a shoulder width for a one-way
@@ -1360,6 +1366,9 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
         # chokepoint has already proved the entry current
         # (render_api._ensure_guesses_current), so this reads presence only.
         "jurisdiction_guessed": _jurisdiction_guessed(scenario),
+        # R126 / R127 Q7: the speed is an untouched road-class guess (proved
+        # current at the same chokepoint).
+        "speed_guessed": _speed_guessed(scenario),
     }
 
     if isinstance(scenario, ShoulderScenario):

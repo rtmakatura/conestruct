@@ -131,7 +131,9 @@ export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
   shoulder: {
     roadTypes: opt("rural_undivided", "rural_divided", "urban_arterial", "freeway"),
     roadTypeNote: null,
-    speedMin: 25,
+    // R127: the schema's 20 mph floor (src/api/schemas.py), so a road posted
+    // at 20 holds a value the select can show.
+    speedMin: 20,
     speedMax: 75,
     lanes: [1, 2, 3, 4],
     lanesReason: null,
@@ -146,7 +148,9 @@ export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
     roadTypes: opt("rural_undivided", "urban_arterial"),
     roadTypeNote:
       "TA-10 applies to roads with one through lane in each direction",
-    speedMin: 25,
+    // R127: the schema's 20 mph floor (src/api/schemas.py), so a road posted
+    // at 20 holds a value the select can show.
+    speedMin: 20,
     speedMax: 55,
     lanes: null,
     // #209's read-only-with-reason.  The kind has no `lanes` field at
@@ -193,7 +197,9 @@ export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
   work_beyond_shoulder: {
     roadTypes: opt("rural_undivided", "rural_divided", "urban_arterial", "freeway"),
     roadTypeNote: null,
-    speedMin: 25,
+    // R127: the schema's 20 mph floor (src/api/schemas.py), so a road posted
+    // at 20 holds a value the select can show.
+    speedMin: 20,
     speedMax: 75,
     lanes: [1, 2, 3, 4],
     lanesReason: null,

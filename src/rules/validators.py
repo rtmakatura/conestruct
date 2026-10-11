@@ -234,6 +234,11 @@ class ScenarioParams:
     # guess the operator never confirmed (``scenario.guesses``, proved
     # current at the API chokepoint).  ``jurisdiction_display`` prints it.
     jurisdiction_guessed: bool = False
+    # R126 / R127 Q7 — True when ``speed_mph`` is the road-class estimate
+    # the operator never confirmed (``scenario.guesses.speed``, proved
+    # current at the API chokepoint).  ``speed_display`` prints it, and the
+    # plan sheet's notes box says so.
+    speed_guessed: bool = False
     # #290 — what the pin means (``ScenarioMeta.pinModel``), bridged by
     # ``scenario_to_call``.  It decides how ``bearing_deg`` reads: under
     # "corridor_end" it points from the pin toward the first sign; under
@@ -363,6 +368,19 @@ def road_type_display(params: ScenarioParams) -> str:
 # R110 Q3 (Ryan, 2026-10-07), verbatim: the words beside a jurisdiction the
 # pin guessed and the operator never confirmed.
 JURISDICTION_GUESSED_CLAUSE = "(guessed from the pin, not confirmed)"
+
+
+# R127 Q7: the words beside a speed guessed from the road class, on the
+# same pattern as R110 Q3's jurisdiction clause.
+SPEED_GUESSED_CLAUSE = "(guessed from the road class, not confirmed)"
+
+
+def speed_display(params: ScenarioParams) -> str:
+    """The speed line the XLSX Summary and the crew sheet print (R127 Q7):
+    "N mph", with R127's clause while it is an untouched road-class guess."""
+    if params.speed_guessed:
+        return f"{params.speed_mph} mph {SPEED_GUESSED_CLAUSE}"
+    return f"{params.speed_mph} mph"
 
 
 def jurisdiction_display(params: ScenarioParams) -> str:

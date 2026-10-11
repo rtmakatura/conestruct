@@ -22,6 +22,7 @@ from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.validators import (
+    SPEED_GUESSED_CLAUSE,
     DevicePlacement,
     ScenarioParams,
     generated_at,
@@ -244,7 +245,14 @@ def _populate_summary_sheet(
     rows = (
         ("Total device count", sum(r.quantity for r in aggregated_rows)),
         ("Total unique device types", len(aggregated_rows)),
-        ("Speed (mph)", params.speed_mph),
+        # R127 Q7: a road-class guess says so beside the number (the cell
+        # stays the plain integer otherwise, byte-identical).
+        (
+            "Speed (mph)",
+            f"{params.speed_mph} {SPEED_GUESSED_CLAUSE}"
+            if params.speed_guessed
+            else params.speed_mph,
+        ),
         # UX-11: display name, not the raw "lane" / "shoulder" enum.
         ("Closure type", scenario_display_name(params)),
         ("Work zone length (ft)", params.work_zone_length_ft),

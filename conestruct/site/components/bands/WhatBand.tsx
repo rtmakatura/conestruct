@@ -39,7 +39,6 @@ import {
   setRoadType,
   setSpeed,
   setWorkDates,
-  takeSpeedEstimate,
 } from "@/lib/scenarios/what-writes";
 import {
   WHAT_CELLS,
@@ -58,7 +57,7 @@ import {
   isGuessed,
   isOperatorSet,
   setJurisdictionByOperator,
-  speedEstimateOffer,
+  speedSet,
 } from "@/lib/scenarios/guesses";
 import { handoffNotesByCell } from "./HandoffNotes";
 import { PlanDetailCells, showsDividedToggle, streetClassProvenance } from "./PlanDetails";
@@ -392,17 +391,20 @@ export function WhatBand({
   const workDate = schedule?.work_date ?? "";
   const workDateEnd = schedule?.work_date_end ?? "";
 
-  // R123 Q2 (#301): the road-class estimate for a road with no posted
-  // speed, offered on the row with "Use N mph" until the operator takes it.
-  // Nothing is prefilled; the click is the record (`speed_estimate`).
-  const speedOffer = speedEstimateOffer(scenario);
-  const speedTaken = Boolean(scenario.speed_estimate) && speedOffer !== null;
-  const speedClause = speedTaken
+  // R126 / R127: the road-class estimate is prefilled as a guess on a road
+  // with no readable posted speed ("⚠ from the road", one line, like the
+  // street class); with no measured, guessed or operator speed the row
+  // reads "◌ not set" and Generate waits for it (Q1 b).
+  const speedGuess = scenario.guesses?.speed;
+  const speedIsSet = speedSet(scenario);
+  const speedClause = speedGuess
     ? {
-        text: `your change · the road-class estimate (highway=${speedOffer?.highwayClass}); the road has no posted speed`,
-        amber: false,
+        text: `guessed, not confirmed · OSM highway=${speedGuess.highwayClass} · from the road`,
+        amber: true,
       }
-    : clauseFor(detected, "Speed limit");
+    : !speedIsSet
+      ? { text: "not set · operator-set when picked", amber: false }
+      : clauseFor(detected, "Speed limit");
   const lanesClause = clauseFor(detected, "Lanes per direction");
   const roadTypeClause = clauseFor(detected, "Road type");
   // R110 Q7: lane width's own source.  Detection never measures a width
@@ -451,35 +453,20 @@ export function WhatBand({
             amber={speedClause.amber}
             notes={notes["speed"]}
             testid="speed"
-            alert={
-              speedOffer && !speedTaken ? (
-                <span className="tr-prov is-amber warnrow" data-testid="speed-estimate">
-                  <span aria-hidden>⚠ </span>
-                  no posted speed on this road · its class suggests {speedOffer.mph} mph{" "}
-                  <button
-                    type="button"
-                    className="act-btn"
-                    data-write=""
-                    aria-disabled={locked || undefined}
-                    onClick={() => {
-                      if (!locked) setScenario(takeSpeedEstimate(scenario));
-                    }}
-                    data-testid="speed-estimate-use"
-                  >
-                    Use {speedOffer.mph} mph
-                  </button>
-                </span>
-              ) : null
-            }
           >
             <select
               id="what-speed"
               className="a-fld"
               data-write=""
               disabled={locked}
-              value={scenario.speed}
+              value={speedIsSet ? scenario.speed : ""}
               onChange={(e) => setScenario(setSpeed(scenario, +e.target.value))}
             >
+              {!speedIsSet && (
+                <option value="" disabled>
+                  Not set
+                </option>
+              )}
               {speedOptions(scenario.kind).map((s) => (
                 <option key={s} value={s}>
                   {s} mph

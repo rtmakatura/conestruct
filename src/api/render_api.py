@@ -520,64 +520,56 @@ def input_guesses(scenario: Scenario) -> list[dict[str, Any]]:
                 "operator_confirmed": False,
             }
         )
+
+    sp = guesses.speed
+    if sp is not None:
+        # R126: the road-class estimate, prefilled as a guess; R127 Q3: capped
+        # to the kind's speed range, the evidence saying so when it moved.
+        from src.rules.speed_estimate import speed_estimate_from_highway
+
+        estimate = speed_estimate_from_highway(sp.highwayClass)
+        if estimate is None:
+            raise _guess_refusal(
+                "Speed", f"the road class highway={sp.highwayClass} gives no estimate"
+            )
+        lo, hi = _speed_bounds(scenario)
+        capped = min(max(estimate, lo), hi)
+        if scenario.speed != capped:
+            raise _guess_refusal(
+                "Speed",
+                f"the road class (highway={sp.highwayClass}) estimates {capped} mph "
+                "for this kind of work, and this plan carries another speed",
+            )
+        evidence = f"OSM highway={sp.highwayClass}; no readable posted speed on the road"
+        if capped != estimate:
+            evidence += f"; estimated {estimate} mph, capped at {capped} mph for this kind of work"
+        records.append(
+            {
+                "field": "speed",
+                "value": capped,
+                "label": f"{capped} mph",
+                "source": "road_class",
+                "evidence": evidence,
+                "operator_confirmed": False,
+            }
+        )
     return records
 
 
-def input_estimates(scenario: Scenario) -> list[dict[str, Any]]:
-    """R123 Q2 (#301) — a speed the operator chose from the road-class
-    estimate, recomputed from its raw fact and checked against the plan.
-
-    The relay-fact pattern of :func:`input_guesses`: the frontend relays the
-    road's OSM ``highway`` tag, the backend maps it (``speed_estimate``) and
-    refuses a record that no longer matches the plan's speed (``guess_stale``,
-    Rule 10).  Unlike a guess, the value is the operator's: they pressed
-    "Use N mph", so the record says so (``operator_confirmed``).  No
-    ``speed_estimate`` returns ``[]`` and every output stays byte-identical.
-    """
-    from src.rules.speed_estimate import speed_estimate_from_highway
-
-    est = getattr(scenario, "speed_estimate", None)
-    if est is None:
-        return []
-
-    def stale(why: str) -> HTTPException:
-        return HTTPException(
-            status_code=400,
-            detail={
-                "error": "guess_stale",
-                "message": (
-                    f"Speed limit is marked as chosen from the road-class estimate, but {why}. "
-                    "Set the speed limit in Step 2, then generate again."
-                ),
-            },
-        )
-
-    mph = speed_estimate_from_highway(est.highwayClass)
-    if mph is None:
-        raise stale(f"the road class highway={est.highwayClass} gives no estimate")
-    if scenario.speed != mph:
-        raise stale(
-            f"the road class (highway={est.highwayClass}) estimates {mph} mph, "
-            "and this plan carries another speed"
-        )
-    return [
-        {
-            "field": "speed",
-            "value": mph,
-            "label": f"{mph} mph",
-            "source": "road_class",
-            "evidence": f"OSM highway={est.highwayClass}; the road carries no posted speed",
-            "operator_confirmed": True,
-        }
-    ]
+def _speed_bounds(scenario: Scenario) -> tuple[int, int]:
+    """The kind's speed range, read from its own schema field (ge / le), so
+    the cap R127 Q3 applies is the one the wire already enforces."""
+    lo, hi = 0, 10_000
+    for meta in type(scenario).model_fields["speed"].metadata:
+        lo = getattr(meta, "ge", lo)
+        hi = getattr(meta, "le", hi)
+    return int(lo), int(hi)
 
 
 def _ensure_guesses_current(scenario: Scenario) -> None:
-    """The chokepoint's half of :func:`input_guesses` and
-    :func:`input_estimates`: refuse a stale record before anything is
-    built from it."""
+    """The chokepoint's half of :func:`input_guesses`: refuse a stale
+    guess before anything is built from it."""
     input_guesses(scenario)
-    input_estimates(scenario)
 
 
 def _ensure_carriageway_decided(scenario: Scenario) -> None:
@@ -2043,11 +2035,6 @@ def _audit_build(
     guessed = input_guesses(scenario)
     if guessed:
         projection["input_guesses"] = guessed
-    # R123 Q2 — a speed the operator chose from the road-class estimate:
-    # its source and that the operator chose it.  No record, no key.
-    estimated = input_estimates(scenario)
-    if estimated:
-        projection["input_estimates"] = estimated
     return projection, params, placements
 
 

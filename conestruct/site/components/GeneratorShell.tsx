@@ -103,7 +103,7 @@ import {
   type SnapshotDetection,
 } from "./DebugSnapshotButton";
 import type { JurisdictionLookup } from "./JurisdictionSection";
-import { applyJurisdictionGuess, withCurrentGuesses } from "@/lib/scenarios/guesses";
+import { applyJurisdictionGuess, speedSet, withCurrentGuesses } from "@/lib/scenarios/guesses";
 import type {
   JurisdictionBlock,
   JurisdictionSuggestion,
@@ -451,7 +451,11 @@ export function GeneratorShell({
   // Only where there IS a pin: with none, nothing directional exists to
   // guess (and the counts no side moves answer as they always did).
   const sideConfirmed = !hasLocation(scenario.meta) || hasConfirmedSide(scenario.meta);
-  const checksArmed = kindState === "confirmed" && sideConfirmed;
+  // R127 Q1 (b): and until the speed has a source (measured, guessed from
+  // the road class, or the operator's) — no check computes with a speed
+  // nobody gave, exactly as none does for an unset side.  Only at a pin.
+  const speedKnown = !hasLocation(scenario.meta) || speedSet(scenario);
+  const checksArmed = kindState === "confirmed" && sideConfirmed && speedKnown;
   // The two effects below SEND `fetchScenario`, which trails `scenario` by
   // the debounce — so the side must be on the scenario being sent, not only
   // on the live one.  Without this, the side click opens the gate one
@@ -460,7 +464,8 @@ export function GeneratorShell({
   // case).
   const fetchArmed =
     checksArmed &&
-    (!hasLocation(fetchScenario.meta) || hasConfirmedSide(fetchScenario.meta));
+    (!hasLocation(fetchScenario.meta) || hasConfirmedSide(fetchScenario.meta)) &&
+    (!hasLocation(fetchScenario.meta) || speedSet(fetchScenario));
 
   // #306 (R64): one Generate, one request, one scan.  The audit carries the
   // device breakdown (`include_breakdown`), built by the backend from the
