@@ -111,6 +111,10 @@ describe("R123 Q2: the Speed row's estimate", () => {
     ).toBe(
       "your change · the road-class estimate (highway=residential); the road has no posted speed",
     );
+    // The row's marker: the operator's value, "✓ yours" (markerOf).
+    expect(
+      document.querySelector('[data-testid="info-toggle-speed"]')?.textContent?.replace(/\s+/g, " ").trim(),
+    ).toBe("✓ yours");
   });
 
   it("a road with a posted speed offers nothing", () => {

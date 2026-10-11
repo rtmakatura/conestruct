@@ -101,3 +101,25 @@ keeps a "Use N mph" button and adds backend scope, so this file re-predicts the 
 
 **Copy changes:** the modal subtitle, the detection card's empty-state sentence, the
 `skipped_low_confidence` handoff note, and the new Speed-row line and button.
+
+## Outcome (the build, `d56c876` + the verifier's repairs)
+
+| Prediction | Outcome |
+|---|---|
+| Behaviour changes 1-5 | As predicted. The Speed row's marker after the click is "✓ yours", now asserted in `WhatBand.speed-estimate.test.tsx`. |
+| Byte-identical without `speed_estimate` | Held: no backend test or baseline changed. The backend suite went from 2688 to 2699 passed; the 11 new tests are all in `test_speed_estimate.py`. |
+| `LocationPickerModal.provenance` deleted (7) | Deleted (7). |
+| `provenance.test` source-read test deleted (1) | **Deviation:** rewritten, not deleted. It now asserts the picker mints no provenance token at all, keeping its "no second voice" guard. |
+| `road-pick` (5) | 5 rewritten: the detection card replaces the panel as the "road classified" signal, and the copy follows. Plus 1 new (the modal case below). |
+| `state-contract` (7) | 6 rewritten. The vacuous null check passed as it was. |
+| `scan-honesty` (2) | **Deviation:** unchanged. The moved Re-detect button keeps its name. |
+| `picker-reapply` (2 go) | 2 removed; 1 new #301 case added (a stray override key is ignored, and the detected 75 mph stands). |
+| `handoff-provenance` (1 goes) | 1 removed. |
+| `operator-set.test` (1) | **Deviation:** unchanged. Its S7 half never read the picker. |
+| `handoff-summary.test` unchanged | Unchanged. |
+| Type census moves | Moved: 4 rows, and `tsxUses` 268 → 252. |
+| Type-only fixtures (5) | 5, as named. |
+| New tests: WHAT row (3), reconcile (2), modal (1) | WHAT row 3; reconcile **8** (in a new `lib/scenarios/speed-estimate.test.ts`, covering the offer, the click, the snapped no-record case and the drop rules); modal 1. |
+| Not predicted | The Re-detect row is hidden at idle (no pin) and while detecting, as the panel's button was. It gained `data-testid="picker-redetect"`. |
+
+**Frontend:** 2064 → 2076 passed (197 → 198 files). `tsc` clean.

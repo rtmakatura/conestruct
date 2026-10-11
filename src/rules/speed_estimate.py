@@ -9,8 +9,9 @@ The table moves to the backend for the same reason R110 Q1 moved the street
 class table: the audit states where the value came from, so the backend must
 own the claim (Rule 3).  The frontend's ``SPEED_BY_CLASS``
 (``lib/road-detection/classify.ts``) is its commented MIRROR, used only to
-show the estimate before Generate, and ``tests/test_speed_estimate_mirror.py``
-holds the two equal.  The values are carried over unchanged from that table
+show the estimate before Generate, and ``tests/test_speed_estimate.py``
+(``test_the_frontend_table_mirrors_the_backend_table``) holds the two equal.
+The values are carried over unchanged from that table
 ("Ported verbatim from the previous lib/road-classify.ts"); they are a
 fallback for a sparsely tagged way, never a posted limit, so the plan never
 takes one without the operator's click.
