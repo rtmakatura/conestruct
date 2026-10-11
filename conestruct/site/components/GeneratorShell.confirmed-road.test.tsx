@@ -78,7 +78,6 @@ const CONFIRMED: ConfirmedRoad = {
   candidate: CANDIDATE,
   classification: CLASSIFICATION,
   method: "operator_pick",
-  overrides: {},
   isUrban: true,
   placeName: "Lafayette",
   pinLat: 40.0176,

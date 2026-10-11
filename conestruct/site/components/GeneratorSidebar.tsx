@@ -208,13 +208,6 @@ export function GeneratorSidebar({
   // proposed approaches over manual edits — the exact #112 clobber
   // class, one seam over.
   const lastAppliedCrossStreetRef = useRef<string | null>(null);
-  // Same guard for the picker overrides (#190): the reopened modal
-  // restores its saved overrides and re-emits them verbatim at Save, so
-  // an unconditional apply re-imposed a picker-set value over a manual
-  // form edit made since — the #112 clobber class through the overrides
-  // channel.  Unchanged overrides on re-save are not new information; a
-  // changed override (an explicit in-modal edit) still applies.
-  const lastAppliedOverridesRef = useRef<string | null>(null);
 
   const onKindChange = (kind: ScenarioKind) => {
     if (kind === scenario.kind) return;
@@ -223,7 +216,6 @@ export function GeneratorSidebar({
     // re-arms the ref, and a later picker Apply still compares content.
     lastAppliedDetectionRef.current = null;
     lastAppliedCrossStreetRef.current = null;
-    lastAppliedOverridesRef.current = null;
     setApproachConfirm({ pending: false, reason: null });
     // #181: a kind switch is not an erase site.  Shared inputs carry
     // (carryAcrossKinds), and the safety relays re-derive from the
@@ -327,15 +319,8 @@ export function GeneratorSidebar({
       next = clearDetectionRelays(next);
       lastAppliedDetectionRef.current = null;
     }
-    // #190: apply only CHANGED overrides — mirrors the classification
-    // guard above.  A no-change re-save re-emits the restored overrides
-    // byte-identically; re-imposing them would revert manual form edits.
-    const overridesJson = JSON.stringify(r.overrides);
-    const overridesChanged = overridesJson !== lastAppliedOverridesRef.current;
-    if (overridesChanged) {
-      next = applyOverridesToScenario(next, r.overrides);
-      lastAppliedOverridesRef.current = overridesJson;
-    }
+    // #301 (R123 Q1): the picker edits no road property, so Save carries
+    // no overrides; WHAT is the one place those values are set.
     // Cross-street candidate → approaches (near_intersection, #117).
     // Fresh-content guard mirrors the classification guard above: an
     // unchanged candidate on re-Apply is NOT new information and must
@@ -372,14 +357,13 @@ export function GeneratorSidebar({
     // the clamp/skip isn't silent (UX-01/UX-02).  Derived from the raw
     // picker result + the applied scenario; pure frontend metadata.
     // A skipped (unchanged) detection is passed as null — its values were
-    // not applied, so no note may claim they were.  Skipped (unchanged)
-    // overrides get the same treatment (#190): pass {} so the summary
-    // never names an application that didn't happen.
+    // not applied, so no note may claim they were.  The picker carries no
+    // overrides (#301, R123 Q1), so none is named.
     setHandoff(
       summarizeHandoff({
         prior: cur,
         classification: isNewDetection ? r.classification : null,
-        overrides: overridesChanged ? r.overrides : {},
+        overrides: {},
         final: next,
         delta,
       }),

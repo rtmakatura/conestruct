@@ -19,6 +19,12 @@ import type {
 // confidence so the operator sees the warning and verifies.  Ported
 // verbatim from the previous lib/road-classify.ts so the values seen
 // on sparsely-tagged OSM ways stay identical to today.
+//
+// MIRROR (R123 Q2, Rule 3): the backend owns this table
+// (src/rules/speed_estimate.py `SPEED_BY_HIGHWAY`), because the audit
+// records a speed the operator chose from it; this copy only shows the
+// estimate before Generate.  tests/test_speed_estimate.py holds the two
+// equal, entry for entry.
 const SPEED_BY_CLASS: Record<string, number> = {
   motorway: 65,
   motorway_link: 45,
@@ -455,6 +461,12 @@ export function suggestStreetClass(
   highwayClass: string,
 ): StreetClass | null {
   return STREET_CLASS_BY_HIGHWAY[highwayClass] ?? null;
+}
+
+/** R123 Q2: the mph a highway class estimates (the mirrored table above),
+ *  or null for a class with no estimate. */
+export function speedEstimateForClass(highwayClass: string): number | null {
+  return SPEED_BY_CLASS[highwayClass] ?? null;
 }
 
 // Convenience: derive a full RoadClassification from a picked

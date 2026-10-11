@@ -56,7 +56,6 @@ function road(highwayClass: string, at = PIN): ConfirmedRoad {
       "Denver",
     ),
     method: "auto_single",
-    overrides: {},
     isUrban: true,
     placeName: "Denver",
     pinLat: at.lat,

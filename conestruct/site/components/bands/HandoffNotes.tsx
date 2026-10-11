@@ -66,7 +66,8 @@ export function handoffNoteText(
         case "accepted_low_confidence":
           return `Speed ${event.valueMph} mph: accepted low-confidence fallback (${event.sourceLabel}).`;
         case "skipped_low_confidence":
-          return `Speed fallback ${event.detectedMph} mph not applied. The plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Accept it in the picker to use it.`;
+          // #301 (R123 Q2): the accept moved from the picker to this row.
+          return `Speed fallback ${event.detectedMph} mph not applied. The plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Press Use ${event.detectedMph} mph on this row to use it.`;
       }
       break;
     case "roadType": {

@@ -141,7 +141,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(screen.queryByText(/8 m from pin · way 111001/i)).toBeNull();
     expect(screen.getByRole("button", { name: "Change" })).toBeTruthy();
-    expect(screen.getByText("Speed limit (mph)")).toBeTruthy();
+    expect(screen.getByText(/Road detected · 1 match|Detected from OSM:/)).toBeTruthy();
   });
 
   it("payload: Save after a pick carries the picked road and its classification — and no bearing (#290)", async () => {
@@ -184,7 +184,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText("Speed limit (mph)");
+    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
     // The rail-top card shows the resolved outcome — a silent single
     // match read as a hang before.
     expect(screen.getByText(/Road detected · 1 match/i)).toBeTruthy();
@@ -194,13 +194,29 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(saveButton().disabled).toBe(false);
   });
 
+  it("#301 (R123 Q1): no road-property editor; WHAT is the one place they are set; Re-detect stays", async () => {
+    stubDetection(detection([EASTBOUND]));
+    mountModal();
+    typeCoords();
+    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
+    expect(screen.queryByText(/Road properties/i)).toBeNull();
+    expect(screen.queryByText(/Speed limit \(mph\)|Lanes per direction/)).toBeNull();
+    expect(screen.queryByRole("combobox", { name: "Road type" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Divided$|^Undivided$/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Use \d+ mph/ })).toBeNull();
+    expect(screen.getByTestId("picker-subtitle").textContent?.trim()).toBe(
+      "Drop a pin where the work starts, and pick the road.",
+    );
+    expect(screen.getByRole("button", { name: /Re-detect roads/ })).toBeTruthy();
+  });
+
   it("#290: the typed direction is retired — no field, no Use Detected, no Flip, no length", async () => {
     // FLOW.md §5a: "The typed bearing field retires deliberately (Rule 5)";
     // the band's Extent is the one length control (P2).
     stubDetection(detection([EASTBOUND]));
     mountModal();
     typeCoords();
-    await screen.findByText("Speed limit (mph)");
+    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
     expect(screen.queryByLabelText("Direction of travel in degrees")).toBeNull();
     expect(screen.queryByRole("button", { name: /Use Detected|Detected \(in use\)/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /Flip/ })).toBeNull();
@@ -216,7 +232,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     await screen.findByText(/No road detected within 30 m/i);
     // #152 A: the outcome card names the empty result — never nothing.
     expect(
-      screen.getByText(/Set road properties manually below/i),
+      screen.getByText(/Set road properties in Step 2/i),
     ).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
@@ -232,7 +248,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
 
     await screen.findByText(/Couldn't reach road-detection service/i);
     expect(
-      screen.getByText(/Set road properties manually below/i),
+      screen.getByText(/Set road properties in Step 2/i),
     ).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);

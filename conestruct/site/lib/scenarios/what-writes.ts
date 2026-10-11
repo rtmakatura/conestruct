@@ -23,9 +23,15 @@
 import {
   appendDetectionOverride,
   lanesArithmeticMismatch,
+  snapSpeedToDomain,
 } from "./auto-apply";
 import { applyRoadTypeOverride, dividedForShoulderRoadType } from "./overrides";
-import { markOperatorSet, setJurisdictionByOperator } from "./guesses";
+import {
+  markOperatorSet,
+  setJurisdictionByOperator,
+  speedEstimateOffer,
+  withoutSpeedEstimate,
+} from "./guesses";
 import { isFieldStaged } from "./site-corrections";
 import type {
   DetectionOverride,
@@ -64,6 +70,24 @@ export function setSpeed(scenario: Scenario, mph: number): Scenario {
     return { ...scenario, speed: mph, workZoneSpeed: undefined } as Scenario;
   }
   return { ...scenario, speed: mph } as Scenario;
+}
+
+/**
+ * R123 Q2 (#301): "Use N mph" on the Speed row — the operator takes the
+ * road-class estimate.  Nothing is prefilled; this click is the only writer
+ * of the record.  The speed snaps to the kind's domain like every app-moved
+ * speed; the record (`speed_estimate`) is written only when the snapped
+ * speed IS the estimate, so the audit never claims an estimate the plan
+ * does not carry.
+ */
+export function takeSpeedEstimate(scenario: Scenario): Scenario {
+  const offer = speedEstimateOffer(scenario);
+  if (!offer) return scenario;
+  const mph = snapSpeedToDomain(scenario.kind, offer.mph);
+  const next = withoutSpeedEstimate(setSpeed(scenario, mph));
+  return mph === offer.mph
+    ? ({ ...next, speed_estimate: { highwayClass: offer.highwayClass } } as Scenario)
+    : next;
 }
 
 /**

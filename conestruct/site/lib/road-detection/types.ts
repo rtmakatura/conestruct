@@ -1,11 +1,10 @@
 // Shared types for the unified road-detection pipeline.  This module is
 // the single source of truth for the data shapes that flow from
-// /api/road-bearing through to the LocationPickerModal's property panel
+// /api/road-bearing through to the LocationPickerModal's road pick
 // and on to applyClassification.  Both server (route handler) and client
 // (modal) import from here so the contract is symmetric.
 
 import type { RoadType } from "../scenarios";
-import type { RoadFieldOverrides } from "../scenarios/overrides";
 import type { CarriagewayFacts } from "./carriageway";
 
 export type Confidence = "high" | "medium" | "low";
@@ -158,9 +157,6 @@ export interface ConfirmedRoad {
   /** How the road was determined: auto-adopted sole candidate, or an
    *  explicit operator pick among multiple. */
   method: "auto_single" | "operator_pick";
-  /** Operator edits on top of the classification at confirm time —
-   *  restored so the reopened picker shows exactly what was applied. */
-  overrides: RoadFieldOverrides;
   /** Pin-level place context from the detection response, needed if the
    *  operator re-picks from the restored state. */
   isUrban: boolean;

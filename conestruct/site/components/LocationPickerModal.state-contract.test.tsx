@@ -77,7 +77,6 @@ const CONFIRMED: ConfirmedRoad = {
   candidate: EASTBOUND,
   classification: classifyFromCandidate(EASTBOUND, true, "Lafayette"),
   method: "operator_pick",
-  overrides: {},
   isUrban: true,
   placeName: "Lafayette",
   pinLat: 40.0176,
@@ -212,8 +211,8 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     expect(pendingDetects).toHaveLength(2);
     expect(screen.queryByText(/Which road\?/i)).toBeNull();
     expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.queryByText("Speed limit (mph)")).toBeNull();
-    expect(screen.getByText(/Classifying road…/)).toBeTruthy();
+    expect(screen.queryByText(/Road detected · 1 match|Detected from OSM:/)).toBeNull();
+    expect(screen.getByText(/Detecting roads at pin…/)).toBeTruthy();
   });
 
   it("out-of-order responses: a slow answer from a superseded pin never renders", async () => {
@@ -282,7 +281,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     // The confirmed road is on screen as-is: selection caption, road
     // properties, Save enabled — and no network round trip happened.
     expect(screen.getAllByText(/way 111001/).length).toBeGreaterThan(0);
-    expect(screen.getByText("Speed limit (mph)")).toBeTruthy();
+    expect(screen.getByText(/Road detected · 1 match|Detected from OSM:/)).toBeTruthy();
     expect(saveButton().disabled).toBe(false);
     expect(pendingDetects).toHaveLength(0);
 
@@ -304,7 +303,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     // No restored selection; tokenless env runs no auto-detect either,
     // so the panel sits at idle — but nothing claims a confirmed road.
     expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.queryByText("Speed limit (mph)")).toBeNull();
+    expect(screen.queryByText(/Road detected · 1 match|Detected from OSM:/)).toBeNull();
   });
 
   it("'Re-detect roads' is the explicit fresh-analysis path at an unmoved pin", async () => {
@@ -319,7 +318,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     expect(pendingDetects[0].body.lat).toBeCloseTo(40.0176);
     expect(pendingDetects[0].body.lng).toBeCloseTo(-105.13);
     expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.getByText(/Classifying road…/)).toBeTruthy();
+    expect(screen.getByText(/Detecting roads at pin…/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([WESTBOUND]));
     await screen.findAllByText(/way 111002/);
@@ -335,7 +334,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
 
     expect(pendingDetects).toHaveLength(1);
     expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.getByText(/Classifying road…/)).toBeTruthy();
+    expect(screen.getByText(/Detecting roads at pin…/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([OTHER_ROAD]));
     await screen.findAllByText(/way 222001/);
@@ -366,7 +365,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     mountModal();
     typeCoords();
     await respond(pendingDetects[0], detection([EASTBOUND]));
-    await screen.findByText("Speed limit (mph)");
+    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
     fireEvent.click(saveButton());
     expect(onSave.mock.calls[0][0].confirmedRoad.method).toBe("auto_single");
   });
@@ -393,7 +392,7 @@ describe("in-flight detection gates Save (#189)", () => {
     expect(screen.getByText(/Detecting road…/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([EASTBOUND]));
-    await screen.findByText("Speed limit (mph)");
+    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
     expect(saveButton().disabled).toBe(false);
     expect(screen.queryByText(/Detecting road…/)).toBeNull();
   });

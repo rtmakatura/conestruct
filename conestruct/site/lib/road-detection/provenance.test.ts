@@ -158,12 +158,13 @@ const SITE_ROOT = join(__dirname, "..", "..");
 const readSource = (rel: string) => readFileSync(join(SITE_ROOT, rel), "utf-8");
 
 describe("no surface mints this vocabulary a second time", () => {
-  it("the picker composes from the producer instead of templating its own", () => {
+  it("the picker mints no provenance token at all (#301: WHAT is the one voice)", () => {
+    // R123 Q1 took the road-properties panel, and its "OSM · …" captions,
+    // out of the picker; the WHAT band speaks for those fields.  A token
+    // template reappearing in the picker would be a second voice (P2).
     const src = readSource("components/LocationPickerModal.tsx");
-    expect(src).toContain('from "@/lib/road-detection/provenance"');
-    expect(src).toContain("sourceToken(field.method)");
-    // the literal it replaced
-    expect(src).not.toContain("`OSM · ${field.method}`");
+    expect(src).not.toContain('from "@/lib/road-detection/provenance"');
+    expect(src).not.toContain("OSM · ");
   });
 });
 

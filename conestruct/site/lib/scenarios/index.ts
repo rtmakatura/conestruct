@@ -421,6 +421,11 @@ export function carryAcrossKinds(prev: Scenario, next: Scenario): Scenario {
   // R108: the guess records describe the two fields carried above, so
   // they carry with them (key dropped when there are none).
   if (prev.guesses) carried = { ...carried, guesses: prev.guesses } as Scenario;
+  // R123 Q2: the speed-estimate record rides with the speed; the shell's
+  // normalizer (withCurrentGuesses) drops it if the snap moved the speed.
+  if (prev.speed_estimate) {
+    carried = { ...carried, speed_estimate: prev.speed_estimate } as Scenario;
+  }
   // R110 Q4: the operator's road type carries where the new kind can hold
   // it; where it cannot, its record goes and detection fills the field.
   // Lane width and the speed reduction start from the new kind's

@@ -544,12 +544,12 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — the picker modal (#166 sizing)",
     css: [],
     tsx: [
-      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 41 }, // #209: +1, the numeric editor's range alert; #290: -7, the retired work-zone panel (typed length + direction of travel); #290 hand-check: +1, the refused-corridor note; #301 piece 2: -1, the extent panel's "Total" label
+      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 29 }, // #301 piece 3 (R123 Q1): -12, the road-properties panel (its header, state lines, row captions, editors and the UX-02 accept); #209: +1, the numeric editor's range alert; #290: -7, the retired work-zone panel (typed length + direction of travel); #290 hand-check: +1, the refused-corridor note; #301 piece 2: -1, the extent panel's "Total" label
       { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 8 }, // #234: +1, the restored-intersection line
-      { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 7 }, // #290: +1, the pre-side ruling's sentence on the map (the "drop a pin" overlay's own treatment); #301 piece 2: -2, the per-zone length rows (label + value) — the band's rows are the one speaker
-      { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 4 }, // #290: -2, the retired work-zone panel's two inputs
+      { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 5 }, // #301 piece 3: -2, the panel's editors; #290: +1, the pre-side ruling's sentence on the map (the "drop a pin" overlay's own treatment); #301 piece 2: -2, the per-zone length rows (label + value) — the band's rows are the one speaker
+      { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 3 }, // #301 piece 3: -1, the panel's row label; #290: -2, the retired work-zone panel's two inputs
       { file: "components/LocationPickerModal.tsx", cls: "text-[17px]", count: 1 },
-      { file: "components/LocationPickerModal.tsx", cls: "text-[9px]", count: 3 },
+      { file: "components/LocationPickerModal.tsx", cls: "text-[9px]", count: 2 }, // #301 piece 3: -1, the panel's "modified" tag (Re-detect keeps its own)
     ],
   },
 ];
@@ -722,6 +722,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 268, // #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxUses: 252, // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
   tsxFiles: 34, // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;

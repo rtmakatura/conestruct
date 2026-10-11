@@ -12,27 +12,19 @@ import {
 import type * as MapboxGL from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import type {
-  Confidence,
   ConfirmedRoad,
-  DetectedField,
   RoadCandidate,
   RoadClassification,
   RoadDetectResponse,
 } from "@/lib/road-detection/types";
 import { isPreciseGeocode } from "@/lib/geocode-precision";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
-import { OPERATOR_SET, sourceToken } from "@/lib/road-detection/provenance";
 import {
   deriveCrossStreet,
   type CrossStreetCandidate,
 } from "@/lib/road-detection/cross-street";
 import { candidateLabel, crossStreetLabel } from "@/lib/road-detection/labels";
-import type { RoadType, ScenarioKind } from "@/lib/scenarios";
-import { snapSpeedToDomain } from "@/lib/scenarios";
-import {
-  clampLanesToDomain,
-  MAX_LANES_PER_DIRECTION,
-} from "@/lib/scenarios/validation";
+import type { ScenarioKind } from "@/lib/scenarios";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
 import {
   CORRIDOR_ZONES,
@@ -105,15 +97,14 @@ export interface LocationPickerInitial {
 // What the modal hands back on save.  ``classification`` is null when
 // auto-detect didn't run (e.g., no Mapbox token, off-road pin, OSM
 // timeout); the parent should treat that as "user wants to keep
-// existing road fields".  ``overrides`` carry any inline edits the
-// user made on top of the detected values — keyed by field so the
-// parent can apply them in scenario-narrowing-safe order.
+// existing road fields".  #301 (R123 Q1): the modal edits no road
+// property; WHAT is the one place speed, lanes, road type and divided
+// are set, so Save carries no overrides.
 export interface LocationPickerResult {
   address: string;
   lat: number;
   lng: number;
   classification: RoadClassification | null;
-  overrides: RoadFieldOverrides;
   /**
    * Proposed cross street from the "mark the intersection" second pin
    * (near_intersection kind only, #117).  Null when the kind doesn't
@@ -139,12 +130,6 @@ export interface LocationPickerResult {
    */
   confirmedRoad: ConfirmedRoad | null;
 }
-
-// Defined in lib/scenarios/overrides.ts (PR 4 extraction); imported
-// for local use and re-exported so existing importers keep their path.
-import type { RoadFieldOverrides } from "@/lib/scenarios/overrides";
-
-export type { RoadFieldOverrides };
 
 interface Props {
   open: boolean;
@@ -190,17 +175,9 @@ const CORRIDOR_SOURCE_ID = "corridor-source";
 const CORRIDOR_LAYER_ID = "corridor-layer";
 const CORRIDOR_LABEL_LAYER_ID = "corridor-labels";
 
-const ROAD_TYPE_OPTIONS: Array<{ v: RoadType; l: string }> = [
-  { v: "rural_undivided", l: "Rural, undivided" },
-  { v: "rural_divided", l: "Rural, divided" },
-  { v: "urban_arterial", l: "Urban arterial" },
-  { v: "freeway", l: "Freeway / interstate" },
-];
-
-// State machine for the Road Properties panel.  ``awaiting_pick`` is
-// the multi-candidate case: properties aren't synthesized until the
-// operator picks one road, so the panel sits in this state in the
-// meantime instead of guessing.
+// State machine for road detection.  ``awaiting_pick`` is the
+// multi-candidate case: no road's properties are synthesized until the
+// operator picks one, instead of guessing.
 type ClassifyStatus =
   | { state: "idle" }
   | { state: "resolving" }
@@ -242,43 +219,6 @@ function normaliseCoordText(raw: string): string {
 function fmtFt(n: number): string {
   if (!Number.isFinite(n)) return "0";
   return Math.round(n).toLocaleString("en-US");
-}
-
-// fix-spec-02 P1·04 — confidence speaks its own achromatic language:
-// filled pips (3/2/1 of 3) plus the word in the caption beneath the row
-// ("<source> · <level> confidence").  The old single dot borrowed the
-// interactive cyan, the output orange, and a hardcoded red — three role
-// collisions, and a hue-alone signal.
-function confPipCount(c: Confidence): number {
-  switch (c) {
-    case "high":
-      return 3;
-    case "medium":
-      return 2;
-    case "low":
-      return 1;
-  }
-}
-
-function ConfPips({ c }: { c: Confidence }) {
-  const filled = confPipCount(c);
-  return (
-    <span
-      className="inline-flex items-center gap-1"
-      title={`${c} confidence`}
-    >
-      {[0, 1, 2].map((i) => (
-        <span
-          key={i}
-          className={`inline-block w-1.5 h-1.5 rounded-full ${
-            i < filled
-              ? "bg-[color:var(--conf-fill)]"
-              : "bg-[color:var(--conf-empty)]"
-          }`}
-        />
-      ))}
-    </span>
-  );
 }
 
 // Build the marker DOM: a circle "pin" with an arrow extending from its
@@ -455,12 +395,6 @@ export function LocationPickerModal({
       ? { state: "detected", result: restoredRoad.classification }
       : { state: "idle" },
   );
-  // User overrides on top of the classification.  Keyed by field; an
-  // undefined entry means "no override, use detected".  The values
-  // here are committed to the parent on Save.
-  const [overrides, setOverrides] = useState<RoadFieldOverrides>(
-    restoredRoad?.overrides ?? {},
-  );
 
   // ---- Cross street (near_intersection kind only, #117) ------------------
   // Second pin marking the intersection.  The map's click handler
@@ -631,7 +565,7 @@ export function LocationPickerModal({
   // modal opens with a pre-existing corridor (the "Edit Location &
   // Corridor" flow with a saved plan).  After that, the camera stays
   // wherever the operator left it — drags, length edits, bearing
-  // changes, road-property overrides all just redraw the polyline.
+  // changes, road picks all just redraw the polyline.
   // Use the Recenter button to get a "show me everything" view back.
   const shouldAutoFitInitialRef = useRef(
     initialHasPin && (initial.scenario?.workLen ?? 0) > 0,
@@ -990,11 +924,6 @@ export function LocationPickerModal({
       }
 
       if (opts.detect) {
-        // Reset overrides on pin move so the fresh detection is the
-        // baseline.  Resetting here (not in candidate-pick) preserves
-        // operator edits when they pick a different carriageway from
-        // the same pin's candidate list.
-        setOverrides({});
         void detectAt(newLat, newLng);
       }
     },
@@ -1407,11 +1336,9 @@ export function LocationPickerModal({
 
   // Explicit fresh analysis at an unmoved pin — the ONLY way to re-run
   // detection without moving the pin (reopening the dialog is not a
-  // trigger).  Same reset semantics as a pin move: overrides clear so
-  // the fresh detection is the baseline.
+  // trigger).  Same semantics as a pin move.
   const onRedetect = () => {
     if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return;
-    setOverrides({});
     void detectAt(lat, lng);
   };
 
@@ -1520,7 +1447,6 @@ export function LocationPickerModal({
               bearingCandidates.length > 1
                 ? "operator_pick"
                 : (confirmedMethodRef.current ?? "auto_single"),
-            overrides,
             isUrban: detectionContext.isUrban,
             placeName: detectionContext.placeName,
             pinLat: lat,
@@ -1532,7 +1458,6 @@ export function LocationPickerModal({
       lat,
       lng,
       classification: classify.state === "detected" ? classify.result : null,
-      overrides,
       crossStreet: isNearIntersectionKind ? crossStreet : null,
       // #234: the pin and its name, as the picker shows them — a fresh
       // detection's name, or the restored one when the pin was not moved.
@@ -1583,8 +1508,7 @@ export function LocationPickerModal({
               className="text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"
               data-testid="picker-subtitle"
             >
-              Drop a pin where the work starts, and review the detected road
-              properties.
+              Drop a pin where the work starts, and pick the road.
             </p>
           </div>
           <button
@@ -1854,14 +1778,24 @@ export function LocationPickerModal({
                   onPick={applyCandidate}
                 />
               )}
-              <RoadPropertiesPanel
-                classify={classify}
-                overrides={overrides}
-                setOverrides={setOverrides}
-                scenarioKind={initial.scenarioKind}
-                canRedetect={hasPin}
-                onRedetect={onRedetect}
-              />
+              {/* #301 (R123 Q1): the road-properties panel is gone; WHAT is
+                  the one place speed, lanes, road type and divided are
+                  set.  Its explicit fresh-analysis affordance stays:
+                  reopening the dialog never re-detects (a restored
+                  confirmation stays put), so this is the one control that
+                  re-runs detection at an unmoved pin. */}
+              {hasPin && classify.state !== "idle" && classify.state !== "resolving" && (
+                <div className="px-6 py-2 border-b border-[color:var(--rule)] flex justify-end">
+                  <button
+                    type="button"
+                    onClick={onRedetect}
+                    data-testid="picker-redetect"
+                    className="border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-1 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
+                  >
+                    ↻ Re-detect roads
+                  </button>
+                </div>
+              )}
 
               <div className="border-t border-[color:var(--rule)]">
                 {isNearIntersectionKind && (
@@ -2067,511 +2001,6 @@ function CorridorLegend({ zones }: { zones: CorridorZone[] }) {
   );
 }
 
-// ---- RoadPropertiesPanel --------------------------------------------------
-
-function RoadPropertiesPanel({
-  classify,
-  overrides,
-  setOverrides,
-  scenarioKind,
-  canRedetect,
-  onRedetect,
-}: {
-  classify: ClassifyStatus;
-  overrides: RoadFieldOverrides;
-  setOverrides: (next: RoadFieldOverrides) => void;
-  scenarioKind: ScenarioKind;
-  canRedetect: boolean;
-  onRedetect: () => void;
-}) {
-  return (
-    <div>
-      <div className="px-6 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] flex items-center justify-between">
-        <span>Road properties</span>
-        {/* Explicit fresh-analysis affordance: reopening the dialog
-            never re-detects (a restored confirmation stays put), so
-            this is the one control that re-runs detection at an
-            unmoved pin. */}
-        {canRedetect && classify.state !== "resolving" && (
-          <button
-            type="button"
-            onClick={onRedetect}
-            className="border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-1 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
-          >
-            ↻ Re-detect roads
-          </button>
-        )}
-      </div>
-
-      <div className="px-6 py-1">
-        {classify.state === "idle" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-3">
-            Drop a pin on the map to auto-detect road properties.
-          </div>
-        )}
-        {classify.state === "resolving" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-3 flex items-center gap-2">
-            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[color:var(--act)]/40 border-t-[color:var(--act)] animate-spin" />
-            Classifying road…
-          </div>
-        )}
-        {classify.state === "awaiting_pick" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] py-3">
-            Multiple roads detected. Pick one above to load its
-            properties.
-          </div>
-        )}
-        {classify.state === "error" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] py-3">
-            {classify.message}. Fields default to the scenario&apos;s existing
-            values. Check them below.
-          </div>
-        )}
-        {classify.state === "detected" && (
-          <DetectedRows
-            result={classify.result}
-            overrides={overrides}
-            setOverrides={setOverrides}
-            scenarioKind={scenarioKind}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function DetectedRows({
-  result,
-  overrides,
-  setOverrides,
-  scenarioKind,
-}: {
-  result: RoadClassification;
-  overrides: RoadFieldOverrides;
-  setOverrides: (next: RoadFieldOverrides) => void;
-  scenarioKind: ScenarioKind;
-}) {
-  const speedDetected =
-    result.speedLimitMph ?? result.fields.speed.value ?? null;
-  const lanesDetected =
-    result.lanesPerDirection ?? result.fields.lanes.value ?? null;
-
-  const speedValue = overrides.speedMph ?? speedDetected;
-  const lanesValue = overrides.lanesPerDirection ?? lanesDetected;
-  const roadTypeValue = overrides.roadType ?? result.roadType;
-  const dividedValue = overrides.divided ?? result.divided;
-
-  // UX-01: surface the domain clamp right at the speed field so the
-  // operator sees the cap before Save.  The corridor preview already
-  // computes with the clamped value (commit 1); this names *why* the
-  // value shown in the field won't carry verbatim.  Only the bound clamp
-  // gets the "cap" framing; a pure 5-mph grid snap gets the lighter note.
-  const speedClampedTo =
-    speedValue != null ? snapSpeedToDomain(scenarioKind, speedValue) : null;
-  const speedSourceWord =
-    overrides.speedMph !== undefined ? "entered" : "detected (OSM)";
-  let speedNote: string | null = null;
-  if (
-    speedValue != null &&
-    speedClampedTo != null &&
-    speedClampedTo !== speedValue
-  ) {
-    const boundClamp = Math.round(speedValue / 5) * 5 !== speedClampedTo;
-    speedNote = boundClamp
-      ? `${speedValue} mph ${speedSourceWord}, but ${scenarioNoun(scenarioKind)} plans cap at ${speedClampedTo} mph (${scenarioTa(scenarioKind)} speed domain). Plan will use ${speedClampedTo}.`
-      : `${speedValue} mph ${speedSourceWord} snaps to the ${speedClampedTo} mph grid. Plan will use ${speedClampedTo}.`;
-  }
-
-  // #198 family 3: the lanes twin of the speed clamp note above — name
-  // the domain clamp at the field before Save.  Shoulder-only: it is the
-  // one kind that carries a lanes field, so "Plan will use N" is only
-  // true there (a non-shoulder kind discards the value entirely; the
-  // form-side skipped_not_applicable note covers that seam).
-  const lanesSourceWord =
-    overrides.lanesPerDirection !== undefined ? "entered" : "detected (OSM)";
-  let lanesNote: string | null = null;
-  if (scenarioKind === "shoulder" && lanesValue != null) {
-    const lanesClampedTo = clampLanesToDomain(lanesValue);
-    if (lanesClampedTo !== lanesValue) {
-      lanesNote = `${lanesValue} lanes/direction ${lanesSourceWord}, but plans draw at most ${MAX_LANES_PER_DIRECTION} lanes per direction. Plan will use ${lanesClampedTo}.`;
-    }
-  }
-
-  // UX-02: a low-confidence speed (highway-class fallback, no OSM tag)
-  // does not auto-apply.  Offer an explicit click-to-accept so the
-  // reviewed value can be kept in one click (Pattern B) instead of
-  // silently evaporating.  Once accepted it becomes an override (applies
-  // + drives the preview); the affordance hides and the row reads as
-  // modified.  No auto-apply behavior changes — the operator opts in.
-  const speedLowConf =
-    result.fields.speed.confidence === "low" && speedDetected != null;
-  const showAcceptSpeed = speedLowConf && overrides.speedMph === undefined;
-
-  return (
-    <div className="flex flex-col">
-      <RoadFieldRow
-        label="Speed limit (mph)"
-        field={result.fields.speed}
-        modified={
-          overrides.speedMph !== undefined &&
-          (overrides.speedMph !== speedDetected || speedLowConf)
-        }
-        note={speedNote}
-      >
-        <NumericFieldEditor
-          value={speedValue}
-          step={5}
-          min={5}
-          max={85}
-          onChange={(v) =>
-            setOverrides({
-              ...overrides,
-              speedMph: v ?? undefined,
-            })
-          }
-          onClear={() => {
-            const next = { ...overrides };
-            delete next.speedMph;
-            setOverrides(next);
-          }}
-          hasOverride={overrides.speedMph !== undefined}
-        />
-      </RoadFieldRow>
-
-      {showAcceptSpeed && (
-        <div className="flex items-center justify-between gap-3 py-2 -mt-1 border-b border-[color:var(--rule)]/40">
-          <span className="font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--warn)]">
-            Low-confidence fallback. It won&apos;t apply unless you accept it.
-          </span>
-          <button
-            type="button"
-            onClick={() =>
-              setOverrides({
-                ...overrides,
-                speedMph: speedDetected ?? undefined,
-              })
-            }
-            className="flex-shrink-0 border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-1 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors"
-          >
-            Use {speedDetected} mph
-          </button>
-        </div>
-      )}
-
-      <RoadFieldRow
-        label="Lanes per direction"
-        field={result.fields.lanes}
-        modified={
-          overrides.lanesPerDirection !== undefined &&
-          overrides.lanesPerDirection !== lanesDetected
-        }
-        note={lanesNote}
-      >
-        <NumericFieldEditor
-          value={lanesValue}
-          step={1}
-          min={1}
-          max={MAX_LANES_PER_DIRECTION}
-          onChange={(v) =>
-            setOverrides({
-              ...overrides,
-              lanesPerDirection: v ?? undefined,
-            })
-          }
-          onClear={() => {
-            const next = { ...overrides };
-            delete next.lanesPerDirection;
-            setOverrides(next);
-          }}
-          hasOverride={overrides.lanesPerDirection !== undefined}
-        />
-      </RoadFieldRow>
-
-      <RoadFieldRow
-        label="Road type"
-        field={result.fields.roadType}
-        modified={
-          overrides.roadType !== undefined &&
-          overrides.roadType !== result.roadType
-        }
-      >
-        <RoadTypeEditor
-          value={roadTypeValue}
-          onChange={(v) =>
-            setOverrides({
-              ...overrides,
-              roadType: v === result.roadType ? undefined : v,
-            })
-          }
-          onClear={() => {
-            const next = { ...overrides };
-            delete next.roadType;
-            setOverrides(next);
-          }}
-          hasOverride={overrides.roadType !== undefined}
-        />
-      </RoadFieldRow>
-
-      <RoadFieldRow
-        label="Divided"
-        field={result.fields.divided}
-        modified={
-          overrides.divided !== undefined &&
-          overrides.divided !== result.divided
-        }
-      >
-        <DividedEditor
-          value={dividedValue}
-          onChange={(v) =>
-            setOverrides({
-              ...overrides,
-              divided: v === result.divided ? undefined : v,
-            })
-          }
-          onClear={() => {
-            const next = { ...overrides };
-            delete next.divided;
-            setOverrides(next);
-          }}
-          hasOverride={overrides.divided !== undefined}
-        />
-      </RoadFieldRow>
-    </div>
-  );
-}
-
-// One detected road property.  Layout is a strict 2-column grid: label
-// + single-line source caption on the left, control on the right.  The
-// right column width is locked at 150 px so every editor — number,
-// dropdown, pill — anchors to the same column edge regardless of its
-// natural width.  Row height ~52 px keeps the section dense.
-function RoadFieldRow<T>({
-  label,
-  field,
-  modified,
-  children,
-  note,
-}: {
-  label: string;
-  field: DetectedField<T>;
-  modified: boolean;
-  children: React.ReactNode;
-  // Optional below-caption annotation (UX-01: the domain clamp/snap note
-  // on the speed row).  Rendered in the orange low-confidence tone so it
-  // reads as a "heads up, this value will change" signal.
-  note?: string | null;
-}) {
-  // The visible provenance is a short, non-truncating token — source +
-  // method only ("OSM · MEASURED" / "OSM · INFERRED").  The full
-  // sentence (the old visible line) plus the confidence word and raw
-  // evidence move to the tooltip, same pattern as the spec-chain
-  // breadcrumb (title attribute: hover + tap, no extra tab stop).
-  //
-  // Provenance tracks WHO owns the value now.  Once the operator edits
-  // or accepts a field (``modified``), the value is theirs, not the
-  // detector's — it reads "OPERATOR-SET" in the neutral tone and is
-  // never inferred, because a value the operator confirmed is no longer
-  // a guess (Ryan ruling).  Otherwise the warning tone follows the
-  // detection METHOD, not the pip count: only an inferred detected
-  // value borrows amber, so a measured value — even at medium
-  // confidence — reads neutral and never misuses the warning role.
-  const inferred = !modified && field.method === "inferred";
-  const confTone = inferred
-    ? "text-[color:var(--warn)]"
-    : "text-[color:var(--ink-on-dark-faint)]";
-  // The words come from the one vocabulary (#273, lib/road-detection/
-  // provenance.ts).  They used to be minted here and again in the
-  // detected-vs-applied ledger, which string-compared its own copy to
-  // pick a colour — two mints of one vocabulary, drifting apart on the
-  // first rename.  Rendering is unchanged: the uppercase is CSS
-  // (:2568), so this still reads "OSM · MEASURED" / "OPERATOR-SET".
-  const provenanceText = modified ? OPERATOR_SET : sourceToken(field.method);
-  const provenanceTitle = modified
-    ? `Operator-set: overrides the detected ${field.source}`
-    : [field.source, `${field.confidence} confidence`, field.rawData]
-        .filter(Boolean)
-        .join(" · ");
-  return (
-    <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 last:border-b-0 min-h-[52px]">
-      <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] text-white font-medium leading-none">
-            {label}
-          </span>
-          <ConfPips c={field.confidence} />
-          {modified && (
-            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-mute)] border border-dashed border-[color:var(--ink-faint)] px-1 leading-none py-1">
-              modified
-            </span>
-          )}
-        </div>
-        <div
-          className={`mt-1 font-mono text-[10px] uppercase tracking-[0.06em] leading-tight cursor-help ${confTone}`}
-          title={provenanceTitle}
-        >
-          {provenanceText}
-        </div>
-        {note && (
-          <div className="mt-1 font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--warn)]">
-            {note}
-          </div>
-        )}
-      </div>
-      <div className="flex items-center justify-end gap-1.5 min-w-0">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// Width of the revert button + its gap; the input fills the rest of
-// the 150 px right column so all three editors visually anchor to the
-// same column edge.
-function RevertButton({ onClear }: { onClear: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClear}
-      title="Revert to detected value"
-      className="font-mono text-[12px] text-[color:var(--ink-on-dark-faint)] hover:text-white px-1 leading-none flex-shrink-0"
-    >
-      ↺
-    </button>
-  );
-}
-
-function NumericFieldEditor({
-  value,
-  step,
-  min,
-  max,
-  onChange,
-  onClear,
-  hasOverride,
-}: {
-  value: number | null;
-  step: number;
-  min: number;
-  max: number;
-  onChange: (v: number | null) => void;
-  onClear: () => void;
-  hasOverride: boolean;
-}) {
-  // #209: `min` / `max` are the DOMAIN's bounds, and the input's own
-  // attributes do not enforce them on typing.  An entry outside them is
-  // refused, not clamped (rule 10: honest refusal beats silent
-  // substitution) — it stays on screen, marked invalid with the range
-  // beside it, and nothing is committed until it is in bounds.
-  const [draft, setDraft] = useState<string | null>(null);
-  const invalid = draft !== null;
-  return (
-    <>
-      <input
-        type="number"
-        step={step}
-        min={min}
-        max={max}
-        value={draft ?? value ?? ""}
-        aria-invalid={invalid || undefined}
-        onChange={(e) => {
-          const raw = e.target.value;
-          if (raw === "") {
-            setDraft(null);
-            onChange(null);
-            return;
-          }
-          const n = parseInt(raw, 10);
-          if (Number.isFinite(n) && n >= min && n <= max) {
-            setDraft(null);
-            onChange(n);
-          } else {
-            setDraft(raw);
-          }
-        }}
-        className="field-input flex-1 min-w-0 text-right"
-      />
-      {invalid && (
-        <span role="alert" className="font-mono text-[10px] text-[color:var(--fail)] flex-shrink-0">
-          {min}–{max}
-        </span>
-      )}
-      {hasOverride && <RevertButton onClear={onClear} />}
-    </>
-  );
-}
-
-function RoadTypeEditor({
-  value,
-  onChange,
-  onClear,
-  hasOverride,
-}: {
-  value: RoadType;
-  onChange: (v: RoadType) => void;
-  onClear: () => void;
-  hasOverride: boolean;
-}) {
-  return (
-    <>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as RoadType)}
-        aria-label="Road type"
-        className="field-input field-select flex-1 min-w-0 text-[12px]"
-      >
-        {ROAD_TYPE_OPTIONS.map((o) => (
-          <option key={o.v} value={o.v}>
-            {o.l}
-          </option>
-        ))}
-      </select>
-      {hasOverride && <RevertButton onClear={onClear} />}
-    </>
-  );
-}
-
-function DividedEditor({
-  value,
-  onChange,
-  onClear,
-  hasOverride,
-}: {
-  value: boolean;
-  onChange: (v: boolean) => void;
-  onClear: () => void;
-  hasOverride: boolean;
-}) {
-  return (
-    <>
-      <div className="flex flex-1 min-w-0 border border-[color:var(--rule)]">
-        <button
-          type="button"
-          onClick={() => onChange(true)}
-          className={`flex-1 font-mono text-[10px] uppercase tracking-[0.06em] py-1.5 ${
-            value
-              ? "bg-[color:var(--act)] text-[color:var(--on-act)]"
-              : "text-[color:var(--ink-on-dark)] hover:text-white"
-          }`}
-        >
-          Divided
-        </button>
-        <button
-          type="button"
-          onClick={() => onChange(false)}
-          className={`flex-1 font-mono text-[10px] uppercase tracking-[0.06em] py-1.5 border-l border-[color:var(--rule)] ${
-            !value
-              ? "bg-[color:var(--act)] text-[color:var(--on-act)]"
-              : "text-[color:var(--ink-on-dark)] hover:text-white"
-          }`}
-        >
-          Undivided
-        </button>
-      </div>
-      {hasOverride && <RevertButton onClear={onClear} />}
-    </>
-  );
-}
-
 function DetectionOutcomeCard({
   classifyState,
   emptyMessage,
@@ -2617,9 +2046,8 @@ function DetectionOutcomeCard({
           <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
             {/* #290: there is no direction to set here any more — with
                 no road, the band asks which way traffic heads. */}
-            Set road properties manually below, or drag the pin closer to
-            the roadway. With no road, the band asks which way traffic
-            heads.
+            Set road properties in Step 2, or drag the pin closer to the
+            roadway. With no road, the band asks which way traffic heads.
           </div>
         </div>
       </div>

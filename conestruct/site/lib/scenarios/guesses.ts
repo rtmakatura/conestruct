@@ -28,7 +28,7 @@
 // answer.  Every function returns its input unchanged (the same object)
 // when nothing moves, so the shell's identity-keyed stamps do not churn.
 
-import { suggestStreetClass } from "../road-detection/classify";
+import { speedEstimateForClass, suggestStreetClass } from "../road-detection/classify";
 import type { ConfirmedRoad } from "../road-detection/types";
 import type { OperatorSetField, Scenario, ScenarioGuesses } from "./types";
 
@@ -129,10 +129,46 @@ function reconcileJurisdiction(s: Scenario): Scenario {
   return s;
 }
 
+/** R123 Q2 (#301): the road-class speed estimate WHAT's Speed row offers —
+ *  the road at the pin carries no posted speed (its classification read no
+ *  `maxspeed` tag at all: the low-confidence class fallback, the picker's
+ *  old UX-02 condition) and its class estimates one.  Null: nothing to
+ *  offer.  The table is the backend's, mirrored (`speedEstimateForClass`). */
+export function speedEstimateOffer(s: Scenario): { mph: number; highwayClass: string } | null {
+  const road = roadAtPin(s);
+  if (!road) return null;
+  const c = road.classification;
+  if (c.speedLimitMph !== undefined || c.fields?.speed?.confidence !== "low") return null;
+  const tag = road.candidate.highway_class;
+  const mph = tag ? speedEstimateForClass(tag) : null;
+  return tag && mph !== null ? { mph, highwayClass: tag } : null;
+}
+
+/** `s` without its speed-estimate record (the key dropped, never null). */
+export function withoutSpeedEstimate(s: Scenario): Scenario {
+  if (s.speed_estimate === undefined) return s;
+  const next = { ...s } as Record<string, unknown>;
+  delete next.speed_estimate;
+  return next as unknown as Scenario;
+}
+
+/** R123 Q2: the record holds only while `speed` is still the estimate the
+ *  operator chose, for the road still at the pin.  Any other write of the
+ *  speed, a new road or a moved pin drops it in the same write. */
+function reconcileSpeedEstimate(s: Scenario): Scenario {
+  const entry = s.speed_estimate;
+  if (!entry) return s;
+  const offer = speedEstimateOffer(s);
+  if (!offer || offer.highwayClass !== entry.highwayClass || s.speed !== offer.mph) {
+    return withoutSpeedEstimate(s);
+  }
+  return s;
+}
+
 /** The shell's normalizer: run on every scenario write.  `prev` is the
  *  scenario the write replaced; omitted, the road counts as new. */
 export function withCurrentGuesses(s: Scenario, prev?: Scenario): Scenario {
-  return reconcileJurisdiction(reconcileStreetClass(s, prev));
+  return reconcileSpeedEstimate(reconcileJurisdiction(reconcileStreetClass(s, prev)));
 }
 
 /** The pin lookup's answer, landing.  `at` is the pin it ran at; an

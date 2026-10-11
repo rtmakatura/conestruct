@@ -9,8 +9,8 @@
 //
 // Family 1 — a CHANGED detection re-applies and overwrites manual form
 //            edits (lanes/divided/laneWidth); the change is named.
-// Family 2 — picker lanes/divided overrides on a kind without those
-//            fields are named as not applicable, not dropped silently.
+// Family 2 — retired with the picker's road-property panel (#301,
+//            R123 Q1): the picker sends no lanes/divided overrides.
 // Family 3 — an out-of-domain lane count is named as clamped.
 // Family 4 — a picker-lowered posted speed clears a standing work-zone
 //            reduction (named) instead of shipping a payload the
@@ -90,10 +90,8 @@ function detection(over: {
   } as RoadClassification;
 }
 
-function result(
-  classification: RoadClassification | null,
-  overrides: Record<string, unknown> = {},
-) {
+// #301 (R123 Q1): the picker carries no road-property overrides.
+function result(classification: RoadClassification | null) {
   return {
     address: "Lafayette, CO",
     lat: 39.9936,
@@ -101,7 +99,6 @@ function result(
     bearingDeg: 90,
     workZoneFt: 1000,
     classification,
-    overrides,
   };
 }
 
@@ -118,16 +115,6 @@ vi.mock("./LocationPickerModal", () => ({
         onClick={() => onSave(result(detection({ lanesPerDirection: 1, speedLimitMph: 65 })))}
       >
         APPLY_PIN_B_ONE_LANE
-      </button>
-      {/* F2: no detection change, picker-set lanes/divided overrides —
-          discarded on kinds without the fields. */}
-      <button
-        type="button"
-        onClick={() =>
-          onSave(result(detection({}), { lanesPerDirection: 2, divided: true }))
-        }
-      >
-        APPLY_OVERRIDES_LANES_DIVIDED
       </button>
       {/* F3: detection carrying an out-of-domain lane count. */}
       <button
@@ -259,30 +246,6 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     expect(
       screen.getByText(/Lanes set to 1\/direction \(OSM detection, was 3\)\./),
-    ).toBeTruthy();
-  });
-
-  it("family 2: picker lanes/divided overrides on a flagger plan are named as not applicable", async () => {
-    const user = userEvent.setup();
-    await mount(DEFAULT_FLAGGER);
-
-    await openWhere();
-
-    await user.click(screen.getByText("Pick on map"));
-    await user.click(screen.getByText("APPLY_OVERRIDES_LANES_DIVIDED"));
-
-    // #289 hand-check, 2026-09-23, correction 3: the "Applied from
-    // picker" box is retired; each sentence is a provenance line under
-    // the WHAT cell whose value it is about.  The STRINGS are unchanged
-    // (#198 byte-identity), so these matchers are too — only the band
-    // the reader opens to see them moved.
-    await openWhat();
-
-    expect(
-      screen.getByText(/Lanes setting 2\/direction from the picker not applied: flagger plans don't take a lane count\./),
-    ).toBeTruthy();
-    expect(
-      screen.getByText(/Divided setting from the picker not applied: flagger plans don't take a divided toggle\./),
     ).toBeTruthy();
   });
 

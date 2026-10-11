@@ -176,6 +176,15 @@ export interface JurisdictionPlanFields {
    * no guess, and the payload is byte-identical to before.
    */
   guesses?: ScenarioGuesses | null;
+  /**
+   * R123 Q2 (#301) — `speed` was chosen by the operator from the road-class
+   * estimate ("Use N mph" on WHAT's Speed row), with the confirmed road's OSM
+   * `highway` tag it was estimated from.  The backend re-derives the estimate
+   * (src/rules/speed_estimate.py), records it in the audit, and refuses a
+   * stale one.  Exists only while `speed` holds that estimate
+   * (lib/scenarios/guesses.ts); absent ⇒ byte-identical to before.
+   */
+  speed_estimate?: { highwayClass: string } | null;
   schedule?: {
     date_mode: "single" | "range" | "tbd";
     work_date?: string;

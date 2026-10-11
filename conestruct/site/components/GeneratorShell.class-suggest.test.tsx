@@ -71,7 +71,6 @@ function confirmedRoad(highwayClass: string): ConfirmedRoad {
       "Parker",
     ),
     method: "auto_single",
-    overrides: {},
     isUrban: true,
     placeName: "Parker",
     pinLat: PIN.lat,

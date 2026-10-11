@@ -44,7 +44,6 @@ function confirmedAt(pinLat: number, pinLng: number, geometry: Array<[number, nu
     },
     classification: null as never, // not read by the relay
     method: "auto_single",
-    overrides: {},
     isUrban: false,
     placeName: null,
     pinLat,
