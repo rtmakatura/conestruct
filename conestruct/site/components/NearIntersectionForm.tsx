@@ -31,6 +31,15 @@ import type { DetectionOverride } from "@/lib/scenarios";
 import { WHAT_CELLS } from "@/lib/scenarios/what-cells";
 import { useWriteLock } from "./WriteLock";
 import {
+  approachSpeedLine,
+  approachSpeedShown,
+  setApproachSpeed,
+} from "@/lib/scenarios/guesses";
+
+/** The approach's schema range (`IntersectionApproach.speed`: 25–55,
+ *  multiples of 5). */
+const APPROACH_SPEEDS = [25, 30, 35, 40, 45, 50, 55];
+import {
   CheckRow,
   ChipRow,
   Field,
@@ -78,6 +87,9 @@ export function NearIntersectionForm({
   const approachesValidation = validateApproaches(scenario);
 
   const legs = scenario.approaches;
+  // #316: the cross-street speed's state, one producer (guesses.ts).
+  const speedShown = approachSpeedShown(scenario);
+  const speedLine = approachSpeedLine(scenario);
   const setLegs = (next: NearIntersectionApproach[]) =>
     set("approaches", next);
   const updateAllLegs = (patch: Partial<NearIntersectionApproach>) =>
@@ -361,19 +373,40 @@ export function NearIntersectionForm({
           </select>
         </Field>
 
+        {/* #316 (R129 Q3): a select with "Not set", not the slider — a
+            slider always shows a position, so it showed the 30 the plan
+            didn't have (P16).  Its line says where the speed came from:
+            measured, guessed from the road class, the operator's, or not
+            set; the WHAT header counts its ⚠ (Q4). */}
         <Field>
-          <LabelRow htmlFor="ni-cross-speed" value={`${legs[0]?.speed ?? 30} mph`}>
-            Cross-street speed limit
-          </LabelRow>
-          <input id="ni-cross-speed"
-            type="range"
-            min="25"
-            max="55"
-            step="5"
-            value={legs[0]?.speed ?? 30}
-            onChange={(e) => updateAllLegs({ speed: +e.target.value })}
-            className="range-orange w-full my-1.5"
-          />
+          <LabelRow htmlFor="ni-cross-speed">Cross-street speed</LabelRow>
+          <select
+            id="ni-cross-speed"
+            className={`a-fld${speedShown ? "" : " is-unset"}`}
+            data-write=""
+            disabled={locked}
+            value={speedShown ? (legs[0]?.speed ?? "") : ""}
+            onChange={(e) =>
+              setScenario(setApproachSpeed(scenario, +e.target.value) as NearIntersectionScenario)
+            }
+          >
+            {!speedShown && (
+              <option value="" disabled>
+                Not set
+              </option>
+            )}
+            {APPROACH_SPEEDS.map((mph) => (
+              <option key={mph} value={mph}>
+                {mph} mph
+              </option>
+            ))}
+          </select>
+          <span
+            className={`tr-prov${speedLine.amber ? " is-amber" : ""}`}
+            data-testid="ni-cross-speed-prov"
+          >
+            {speedLine.amber ? `⚠ ${speedLine.text}` : speedLine.text}
+          </span>
         </Field>
 
         <Field>

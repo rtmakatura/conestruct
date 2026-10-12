@@ -47,6 +47,7 @@ vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 function crossStreet(over: Partial<CrossStreetCandidate>): CrossStreetCandidate {
   return {
     name: "Oak Street",
+    highwayClass: "tertiary",
     legCount: 2,
     signalized: true,
     speedMph: 30,
@@ -80,7 +81,15 @@ function result(cs: CrossStreetCandidate) {
     classification: null,
     overrides: {},
     crossStreet: cs,
-    intersection: { lat: 39.9943, lng: -105.0897, name: cs.name },
+    // #316: the real modal now saves the cross street's class and posted
+    // speed with the crossing (LocationPickerModal's Save).
+    intersection: {
+      lat: 39.9943,
+      lng: -105.0897,
+      name: cs.name,
+      highwayClass: cs.highwayClass ?? null,
+      postedSpeedMph: cs.speedMph,
+    },
   };
 }
 
@@ -433,7 +442,21 @@ describe("near_intersection picker → form → payload", () => {
     await openWhat();
     await user.click(chipIn("Cross-street lanes: direction B", "2"));
 
+    // #316 (R129 Q3): no detection, no cross-street speed: "Not set" until
+    // the operator picks one, and Generate waits (R127 Q1 b's rule).
+    const speed = document.querySelector("#ni-cross-speed") as HTMLSelectElement;
+    expect(speed.value).toBe("");
+    expect(screen.getByTestId("ni-cross-speed-prov").textContent).toBe(
+      "not set · operator-set when picked",
+    );
+    expect(document.body.textContent).toContain("Set the cross-street speed in Step 2");
+    await user.selectOptions(speed, "35");
+    expect(screen.getByTestId("ni-cross-speed-prov").textContent).toBe(
+      "your change · operator-set from here on",
+    );
+
     await generate(user);
+    expect(bundleBody?.scenario.approaches.map((a: { speed: number }) => a.speed)).toEqual([35, 35]);
     expect(bundleBody?.scenario.approaches).toHaveLength(2);
     expect(bundleBody?.scenario.approaches[0].id).toBe("cross_a");
     expect(bundleBody?.scenario.approaches[1].id).toBe("cross_b");

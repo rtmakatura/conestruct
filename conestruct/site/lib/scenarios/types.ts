@@ -381,6 +381,10 @@ export interface ScenarioGuesses {
   /** R126: the confirmed road's OSM `highway` tag the speed was guessed
    *  from (no readable posted speed on the road). */
   speed?: { highwayClass: string };
+  /** #316 (R129 Q5): the cross street's OSM `highway` tag its approach
+   *  speed was guessed from (no readable posted speed on it) — one record
+   *  for the cross street; every approach carries the speed. */
+  approach_speed?: { highwayClass: string };
 }
 
 /** R110 Q4 / Q7 / Q8 — fields the OPERATOR has written, so a fresh
@@ -389,7 +393,26 @@ export interface ScenarioGuesses {
  *  `confirmedRoad`: it rides the saved plan and the backend ignores it. */
 /** R127 Q1 (b): "speed" — the operator picked it (WHAT or a staged S7
  *  correction), so a detection never overwrites it and it counts as set. */
-export type OperatorSetField = "roadType" | "laneWidth" | "night" | "workZoneSpeed" | "speed";
+export type OperatorSetField =
+  | "roadType"
+  | "laneWidth"
+  | "night"
+  | "workZoneSpeed"
+  | "speed"
+  // #316: the cross street's approach speed (near_intersection).
+  | "approachSpeed";
+
+/** #234 — the marked intersection, as the picker saves it; #316 adds the
+ *  cross street's own facts from its detection (`highwayClass`, and the
+ *  posted speed when it carries a readable one).  Provenance only: the
+ *  backend ignores every key here but lat / lng / name. */
+export interface IntersectionRecord {
+  lat: number;
+  lng: number;
+  name: string | null;
+  highwayClass?: string | null;
+  postedSpeedMph?: number | null;
+}
 
 export interface ScenarioMeta {
   project: string;
@@ -466,7 +489,7 @@ export interface ScenarioMeta {
    * ignored by the Pydantic schema) and no plan math reads it — the
    * approaches the plan uses are the scenario's own fields.
    */
-  intersection?: { lat: number; lng: number; name: string | null } | null;
+  intersection?: IntersectionRecord | null;
   /**
    * Road centerline as [lat, lng] vertices (#140) — a WIRE-ONLY field
    * materialized by ``withRelayedCenterline`` at serialization time

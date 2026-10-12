@@ -37,7 +37,13 @@ import { speedEstimateForClass, suggestStreetClass } from "../road-detection/cla
 // helpers): nothing is read at module load, so the order is safe.
 import { snapSpeedToDomain } from "./auto-apply";
 import type { ConfirmedRoad } from "../road-detection/types";
-import type { OperatorSetField, Scenario, ScenarioGuesses } from "./types";
+import type {
+  IntersectionRecord,
+  NearIntersectionApproach,
+  OperatorSetField,
+  Scenario,
+  ScenarioGuesses,
+} from "./types";
 
 type StreetClass = NonNullable<Scenario["street_class"]>;
 type GuessField = keyof ScenarioGuesses;
@@ -53,7 +59,7 @@ function roadAtPin(s: Scenario): ConfirmedRoad | null {
 /** `s` with its guesses replaced; the key is dropped, never `{}`. */
 function withGuesses(s: Scenario, g: ScenarioGuesses): Scenario {
   const next = { ...s } as Record<string, unknown>;
-  if (g.street_class === undefined && g.jurisdiction_key === undefined && g.speed === undefined) {
+  if (Object.values(g).every((v) => v === undefined)) {
     delete next.guesses;
   } else {
     next.guesses = g;
@@ -80,7 +86,8 @@ export function guessCount(s: Scenario): number {
   return (
     (isGuessed(s, "street_class") ? 1 : 0) +
     (isGuessed(s, "jurisdiction_key") ? 1 : 0) +
-    (isGuessed(s, "speed") ? 1 : 0)
+    (isGuessed(s, "speed") ? 1 : 0) +
+    (isGuessed(s, "approach_speed") ? 1 : 0)
   );
 }
 
@@ -201,10 +208,127 @@ function reconcileSpeed(s: Scenario, prev?: Scenario): Scenario {
   });
 }
 
+// --- #316 (R129 Q3–Q5): the cross street's approach speed ------------------
+
+/** The marked crossing's own facts (#316), on a near-intersection plan. */
+function crossing(s: Scenario): IntersectionRecord | null {
+  return s.kind === "near_intersection" ? (s.meta.intersection ?? null) : null;
+}
+
+/** Which crossing, with its facts: a re-save of the same crossing is not a
+ *  new one; a moved pin or a different cross street is. */
+function crossingKey(s: Scenario): string | null {
+  const c = crossing(s);
+  return c ? JSON.stringify([c.lat, c.lng, c.highwayClass ?? null, c.postedSpeedMph ?? null]) : null;
+}
+
+function legs(s: Scenario): NearIntersectionApproach[] {
+  return s.kind === "near_intersection" ? s.approaches : [];
+}
+
+function withLegSpeed(s: Scenario, mph: number): Scenario {
+  if (s.kind !== "near_intersection") return s;
+  return { ...s, approaches: s.approaches.map((a) => ({ ...a, speed: mph })) } as Scenario;
+}
+
+/** #316: R126's guess for the cross street — it carries no readable posted
+ *  speed and its class estimates one (the backend's table, mirrored),
+ *  snapped to the approach's 25–55 range.  Null otherwise, or before a
+ *  crossing is marked. */
+export function approachSpeedGuessFor(s: Scenario): { mph: number; highwayClass: string } | null {
+  const c = crossing(s);
+  if (!c || (c.postedSpeedMph ?? null) !== null || !c.highwayClass) return null;
+  const estimate = speedEstimateForClass(c.highwayClass);
+  if (estimate === null) return null;
+  return { mph: snapSpeedToDomain("near_intersection", estimate), highwayClass: c.highwayClass };
+}
+
+/** #316 / R127 Q1 (b): is the cross-street speed SET?  Measured (the cross
+ *  street's readable posted speed), guessed, or the operator's.  True for
+ *  every other kind, and while no crossing is marked (#317's line is the
+ *  next step then, never a second blocker). */
+export function approachSpeedSet(s: Scenario): boolean {
+  const c = crossing(s);
+  if (s.kind !== "near_intersection" || !c) return true;
+  return (
+    (c.postedSpeedMph ?? null) !== null ||
+    isGuessed(s, "approach_speed") ||
+    isOperatorSet(s, "approachSpeed")
+  );
+}
+
+/** The cross-street speed row's line (one producer: the form shows it, the
+ *  WHAT header counts its ⚠ — R129 Q4). */
+export function approachSpeedLine(s: Scenario): { text: string; amber: boolean } {
+  const entry = s.guesses?.approach_speed;
+  if (entry) {
+    return {
+      text: `guessed, not confirmed · OSM highway=${entry.highwayClass} · from the road`,
+      amber: true,
+    };
+  }
+  if (isOperatorSet(s, "approachSpeed")) {
+    return { text: "your change · operator-set from here on", amber: false };
+  }
+  const c = crossing(s);
+  if (c && (c.postedSpeedMph ?? null) !== null) {
+    return { text: `OSM · ${legs(s)[0]?.speed ?? c.postedSpeedMph} mph · measured`, amber: false };
+  }
+  return { text: "not set · operator-set when picked", amber: false };
+}
+
+/** Does the row show a speed?  Measured, guessed or the operator's; "Not
+ *  set" otherwise — before a crossing, too: the default is no fact (P16). */
+export function approachSpeedShown(s: Scenario): boolean {
+  return crossing(s) ? approachSpeedSet(s) : isOperatorSet(s, "approachSpeed");
+}
+
+function withoutApproachGuess(s: Scenario): Scenario {
+  if (!s.guesses?.approach_speed) return s;
+  const g = { ...s.guesses };
+  delete g.approach_speed;
+  return withGuesses(s, g);
+}
+
+/** #316: the cross-street guess, on R126's pattern.  The record holds only
+ *  while every approach carries the guess for the crossing still marked;
+ *  the operator's write or a new crossing drops it.  A new crossing with no
+ *  posted speed is guessed, never over the operator's speed. */
+function reconcileApproachSpeed(s: Scenario, prev?: Scenario): Scenario {
+  if (s.kind !== "near_intersection") return withoutApproachGuess(s);
+  const entry = s.guesses?.approach_speed;
+  const guess = approachSpeedGuessFor(s);
+  if (entry) {
+    if (
+      isOperatorSet(s, "approachSpeed") ||
+      !guess ||
+      guess.highwayClass !== entry.highwayClass
+    ) {
+      return withoutApproachGuess(s);
+    }
+    return s.approaches.every((a) => a.speed === guess.mph) ? s : withLegSpeed(s, guess.mph);
+  }
+  if (!guess || isOperatorSet(s, "approachSpeed")) return s;
+  if (prev !== undefined && crossingKey(prev) === crossingKey(s)) return s;
+  return withGuesses(withLegSpeed(s, guess.mph), {
+    ...(s.guesses ?? {}),
+    approach_speed: { highwayClass: guess.highwayClass },
+  });
+}
+
+/** The operator picked the cross-street speed: theirs from here on, on
+ *  every approach (one cross street, one speed — R129 Q5). */
+export function setApproachSpeed(s: Scenario, mph: number): Scenario {
+  return withoutApproachGuess(markOperatorSet(withLegSpeed(s, mph), "approachSpeed"));
+}
+
 /** The shell's normalizer: run on every scenario write.  `prev` is the
  *  scenario the write replaced; omitted, the road counts as new. */
 export function withCurrentGuesses(s: Scenario, prev?: Scenario): Scenario {
-  return reconcileSpeed(reconcileJurisdiction(reconcileStreetClass(s, prev)), prev);
+  return reconcileApproachSpeed(
+    reconcileSpeed(reconcileJurisdiction(reconcileStreetClass(s, prev)), prev),
+    prev,
+  );
 }
 
 /** The pin lookup's answer, landing.  `at` is the pin it ran at; an

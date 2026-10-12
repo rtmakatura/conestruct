@@ -36,6 +36,9 @@ export interface CrossStreetCandidate {
    *  is the backend's to measure, from the marked intersection along the
    *  road from the work start — ruling 7, Rule 3.) */
   name: string | null;
+  /** #316: the cross street's OSM `highway` tag — its approach speed is
+   *  guessed from it when it carries no readable posted speed. */
+  highwayClass?: string | null;
   /** One direction of travel (oneway cross street) or two. */
   legCount: 1 | 2;
   /** True when a traffic-signal node sits within SIGNAL_NEARBY_M. */
@@ -248,6 +251,7 @@ export function deriveCrossStreet(
 
   return {
     name: cand.name ?? cand.ref,
+    highwayClass: cand.highway_class ?? null,
     legCount: oneway ? 1 : 2,
     signalized:
       cand.signal_distance_m !== null &&

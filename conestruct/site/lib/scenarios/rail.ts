@@ -30,7 +30,7 @@ import type { Refusal } from "@/lib/render-types";
 import type { Scenario, ScenarioKind } from "./types";
 import { hasConfirmedSide, hasLocation } from "./index";
 import { matchRefusalAffordance } from "./auto-apply";
-import { speedSet } from "./guesses";
+import { approachSpeedSet, speedSet } from "./guesses";
 import {
   validateApproaches,
   validateLanes,
@@ -153,6 +153,8 @@ export const SIDE_BLOCKER = "Say which side is occupied to lay out the work";
  *  class to guess from, no operator pick): Step 2's Speed row says "◌ not
  *  set", and this is the reason every surface gives (rule 139). */
 export const SPEED_BLOCKER = "Set the speed in Step 2";
+/** #316 (R129, R127 Q1 b's rule for the cross street). */
+export const APPROACH_SPEED_BLOCKER = "Set the cross-street speed in Step 2";
 
 export const RAIL_ANCHOR_PREFIX = "rail-step-";
 
@@ -314,6 +316,11 @@ export function deriveRail({
     blocker = { message: approaches.message, entryId: "extra" };
   else if (approachConfirm.pending)
     blocker = { message: HOLD_BLOCKER, entryId: "extra" };
+  // #316, RULE 5 (stated): a new rank right after the cross street's own
+  // two (its approaches and the lane-count hold), in the same group: the
+  // cross street's speed, which places its approach signs.
+  else if (located && !approachSpeedSet(scenario))
+    blocker = { message: APPROACH_SPEED_BLOCKER, entryId: "extra" };
   else if (refusal)
     blocker = {
       message: REFUSAL_BLOCKER,

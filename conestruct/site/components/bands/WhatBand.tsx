@@ -56,6 +56,7 @@ import {
 } from "@/lib/road-detection/detected-rows";
 import { provenanceClause } from "@/lib/road-detection/provenance";
 import {
+  approachSpeedLine,
   isGuessed,
   isOperatorSet,
   setJurisdictionByOperator,
@@ -430,6 +431,7 @@ export function WhatBand({
     ? "your change · operator-set from here on"
     : "default · the plan's standard lane; detection doesn't measure width";
   const classProv = streetClassProvenance(scenario);
+  const approachLine = approachSpeedLine(scenario);
   // R126: the Carriageway (divided) row's own line, when detection
   // reported divided-ness; PlanDetails falls back to default-or-yours.
   const dividedClause =
@@ -444,6 +446,10 @@ export function WhatBand({
     markerOf(roadTypeClause.text, { amber: roadTypeClause.amber }),
     markerOf(classProv.text, { amber: classProv.amber }),
     dividedClause ? markerOf(dividedClause.text, { amber: dividedClause.amber }) : null,
+    // #316 (R129 Q4): the cross-street speed's row renders in this band.
+    scenario.kind === "near_intersection"
+      ? markerOf(approachLine.text, { amber: approachLine.amber })
+      : null,
     markerOf(jurisdictionProv, { amber: jurisdictionAmber, error: jState === "not-evaluated" }),
   ].filter((m) => m?.glyph === "⚠").length;
 

@@ -20,6 +20,7 @@ import {
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
 import { deriveRail } from "@/lib/scenarios/rail";
+import { withoutOperatorSet } from "@/lib/scenarios/guesses";
 import { geometryRequestFor, notMarkedLine, useCorridorGeometry } from "@/lib/corridor-geometry";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { RoadClassification } from "@/lib/road-detection/types";
@@ -340,6 +341,9 @@ export function GeneratorSidebar({
     if (next.kind === "near_intersection" && r.crossStreet) {
       const crossJson = JSON.stringify(r.crossStreet);
       if (crossJson !== lastAppliedCrossStreetRef.current) {
+        // #316: the fresh detection's approaches replace the operator's
+        // speed as they always did, so the speed is no longer theirs.
+        next = withoutOperatorSet(next, "approachSpeed") as typeof next;
         next = {
           ...next,
           approaches: approachesFromCrossStreet(r.crossStreet),

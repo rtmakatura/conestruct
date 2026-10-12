@@ -36,6 +36,7 @@ import {
 } from "@/lib/corridor-polyline";
 import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
 import type { Scenario } from "@/lib/scenarios";
+import type { IntersectionRecord } from "@/lib/scenarios/types";
 import {
   geometryToPolyline,
   refusalReason,
@@ -83,7 +84,7 @@ export interface LocationPickerInitial {
    * restores its marker and names the crossing from it without firing
    * detection; moving the pin looks it up again.
    */
-  intersection?: { lat: number; lng: number; name: string | null } | null;
+  intersection?: IntersectionRecord | null;
   /**
    * #301 (R123 Q4): open with "mark the intersection" already armed (the
    * near-intersection form's "Mark on map").  near_intersection only;
@@ -125,7 +126,7 @@ export interface LocationPickerResult {
    * the second pin and the cross street's name.  The parent persists it
    * on ``scenario.meta.intersection``; null when no pin is marked.
    */
-  intersection: { lat: number; lng: number; name: string | null } | null;
+  intersection: IntersectionRecord | null;
   /**
    * The road choice as committed at Save: candidate identity,
    * classification, determination method, and the pin it was confirmed
@@ -1471,16 +1472,21 @@ export function LocationPickerModal({
       crossStreet: isNearIntersectionKind ? crossStreet : null,
       // #234: the pin and its name, as the picker shows them — a fresh
       // detection's name, or the restored one when the pin was not moved.
+      // #316: a fresh crossing also carries its cross street's class and
+      // posted speed, so the approach speed's source survives a reload
+      // (measured, guessed or not set); a restored one goes back exactly
+      // as it was saved.
       intersection:
         isNearIntersectionKind && crossPin
-          ? {
-              lat: crossPin.lat,
-              lng: crossPin.lng,
-              name:
-                crossStatus === "restored"
-                  ? (restoredCross?.name ?? null)
-                  : (crossStreet?.name ?? null),
-            }
+          ? crossStatus === "restored" && restoredCross
+            ? { ...restoredCross, lat: crossPin.lat, lng: crossPin.lng }
+            : {
+                lat: crossPin.lat,
+                lng: crossPin.lng,
+                name: crossStreet?.name ?? null,
+                highwayClass: crossStreet?.highwayClass ?? null,
+                postedSpeedMph: crossStreet?.speedMph ?? null,
+              }
           : null,
       confirmedRoad,
     });
