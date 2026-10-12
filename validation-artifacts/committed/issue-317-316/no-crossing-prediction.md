@@ -61,3 +61,21 @@ backend + frontend, `frontend-only: no`. Authority: `rulings.md` (R129), `checkp
 - **`after-*`:** after Save, the line and the button are gone, the chip "West side · southbound
   traffic" is offered, and the aerial asks for the side as before.
 - No horizontal scroll, no page errors, and no token hits.
+
+## R131 (after `4cd3c3d`)
+
+The "Not predicted" second voice is fixed per R131. The shell asks the geometry read once and hands
+the answer to the band and to the rail. Until the crossing is marked, the side control, the aerial,
+WHERE's "Which side is occupied?" row and the rail's side rank all read the backend's line. A stored
+side doesn't tick the row until then.
+
+- **Tests:** 3 new in `WhereBand.no-crossing.test.tsx` (the row and the control agree; the ledger
+  and rail units).
+- **Suites:** frontend 2107 passed; backend 2721 passed, 0 failed.
+- **One more cite moved:** `production-env.txt:26` now points at `WhereBand.tsx:507`.
+
+**Evidence:** `no-crossing-4cd3c3d/` (same capture, same stack setup).
+- **`before-*`:** `sideRow` = `notMarked` (minus ⚠) = `aerialNote` = "Mark the cross street on the
+  map to lay out the sides."; `pageHasSideSentence: false`.
+- **`after-*`:** once marked, the row and the aerial read the side sentence, and the West chip is
+  offered.
