@@ -1,0 +1,43 @@
+== Broadway one-way, right, sidewalk=False: road outline y 310.0..513.0; bands []; arrows y [466.6, 356.4]
+   DRUM st 1240 off 50: 7.0 pt past the road outline, 0.0 pt on the band
+   CONE st -50 off 50: 5.0 pt past the road outline, 0.0 pt on the band
+   ARROW_BOARD st 1240 overlaps DRUM st 1226.67 by 3.8 x 8.3 pt
+== Broadway one-way, right, sidewalk=True: road outline y 310.0..513.0; bands [(292.5, 313.5)]; arrows y [466.6, 356.4]
+   DRUM st 1240 off 50: 7.0 pt past the road outline, 10.5 pt on the band
+   DRUM st 1226.67 off 47.3333: 0.0 pt past the road outline, 1.2 pt on the band
+   CONE st -50 off 50: 5.0 pt past the road outline, 8.5 pt on the band
+   simulated A alone: worst channelizer on the band 3.0 pt; A + B: 0.0 pt
+   ARROW_BOARD st 1240 overlaps DRUM st 1226.67 by 3.8 x 8.3 pt
+== Broadway one-way, left, sidewalk=False: road outline y 457.0..660.0; bands []; arrows y [503.4, 613.6]
+   DRUM st 1240 off 50: 7.0 pt past the road outline, 0.0 pt on the band
+   CONE st -50 off 50: 5.0 pt past the road outline, 0.0 pt on the band
+   ARROW_BOARD st 1240 overlaps DRUM st 1226.67 by 3.8 x 8.3 pt
+== Broadway one-way, left, sidewalk=True: road outline y 457.0..660.0; bands [(656.5, 677.5)]; arrows y [503.4, 613.6]
+   DRUM st 1240 off 50: 7.0 pt past the road outline, 10.5 pt on the band
+   DRUM st 1226.67 off 47.3333: 0.0 pt past the road outline, 1.2 pt on the band
+   CONE st -50 off 50: 5.0 pt past the road outline, 8.5 pt on the band
+   simulated A alone: worst channelizer on the band 3.0 pt; A + B: 0.0 pt
+   ARROW_BOARD st 1240 overlaps DRUM st 1226.67 by 3.8 x 8.3 pt
+== two-way undivided (control-typical), sidewalk=False: road outline y 373.0..597.0; bands []; arrows y [359.0]
+   DRUM st 1104.44 off 32: 7.0 pt past the road outline, 0.0 pt on the band
+   CONE st -50 off 32: 5.0 pt past the road outline, 0.0 pt on the band
+== two-way undivided (control-typical), sidewalk=True: road outline y 373.0..597.0; bands [(355.5, 376.5)]; arrows y [359.0]
+   DRUM st 1104.44 off 32: 7.0 pt past the road outline, 10.5 pt on the band
+   DRUM st 1086.3 off 29.3333: 0.0 pt past the road outline, 1.2 pt on the band
+   CONE st -50 off 32: 5.0 pt past the road outline, 8.5 pt on the band
+   simulated A alone: worst channelizer on the band 3.0 pt; A + B: 0.0 pt
+   direction arrow y 359.0 lies on the band 355.5..376.5
+== divided (adv-shoulder), sidewalk=False: road outline y 294.0..676.0; bands []; arrows y [280.0, 690.0]
+   DRUM st 5510 off 52: 7.0 pt past the road outline, 0.0 pt on the band
+   CONE st -50 off 52: 5.0 pt past the road outline, 0.0 pt on the band
+   ARROW_BOARD st 5510 overlaps DRUM st 5510 by 10.0 x 8.5 pt
+   ARROW_BOARD st 5510 overlaps DRUM st 5472.5 by 8.0 x 8.8 pt
+== divided (adv-shoulder), sidewalk=True: road outline y 294.0..676.0; bands [(276.5, 297.5), (672.5, 693.5)]; arrows y [280.0, 690.0]
+   DRUM st 5510 off 52: 7.0 pt past the road outline, 10.5 pt on the band
+   DRUM st 5472.5 off 49.5: 0.0 pt past the road outline, 1.8 pt on the band
+   CONE st -50 off 52: 5.0 pt past the road outline, 8.5 pt on the band
+   simulated A alone: worst channelizer on the band 3.0 pt; A + B: 0.0 pt
+   ARROW_BOARD st 5510 overlaps DRUM st 5510 by 10.0 x 8.5 pt
+   ARROW_BOARD st 5510 overlaps DRUM st 5472.5 by 8.0 x 8.8 pt
+   direction arrow y 280.0 lies on the band 276.5..297.5
+   direction arrow y 690.0 lies on the band 672.5..693.5
