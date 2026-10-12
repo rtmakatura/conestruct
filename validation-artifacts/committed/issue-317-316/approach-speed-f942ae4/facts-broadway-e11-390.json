@@ -1,0 +1,17 @@
+{
+  "crossPanel": "CROSS STREET Move the intersection pin Clear East 11th Avenue: two-way, signal detected. The plan places it along the road from where the work starts. You'll c",
+  "crossSpeed": "35",
+  "crossShown": "35 mph",
+  "crossLine": "⚠ guessed, not confirmed · OSM highway=tertiary · from the road",
+  "crossLabel": "Cross-street speed",
+  "mainSpeed": "30",
+  "mainMarker": "✓ measured",
+  "header": "5 guesses marked ⚠ · change any that are wrong",
+  "cta": "Confirm the cross-street lane count first. It was filled from map data.",
+  "crossName": null,
+  "scroll": [
+    390,
+    390
+  ],
+  "errors": []
+}

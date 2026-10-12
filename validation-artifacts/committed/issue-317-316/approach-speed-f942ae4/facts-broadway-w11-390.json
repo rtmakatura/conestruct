@@ -1,0 +1,17 @@
+{
+  "crossPanel": "CROSS STREET Move the intersection pin Clear West 11th Avenue: two-way. The plan places it along the road from where the work starts. You'll confirm the detail",
+  "crossSpeed": "25",
+  "crossShown": "25 mph",
+  "crossLine": "OSM · 25 mph · measured",
+  "crossLabel": "Cross-street speed",
+  "mainSpeed": "30",
+  "mainMarker": "✓ measured",
+  "header": "4 guesses marked ⚠ · change any that are wrong",
+  "cta": "Confirm the cross-street lane count first. It was filled from map data.",
+  "crossName": null,
+  "scroll": [
+    390,
+    390
+  ],
+  "errors": []
+}
