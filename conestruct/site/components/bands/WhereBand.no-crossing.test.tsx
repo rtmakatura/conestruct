@@ -26,6 +26,8 @@ import { MIN_AUDIT, TEST_PIN } from "../test-fixtures";
 import { DEFAULT_NEAR_INTERSECTION, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
 import { aerialStage } from "@/lib/corridor-aerial";
+import { deriveMoveLedger } from "@/lib/scenarios/move-ledger";
+import { deriveRail, SIDE_BLOCKER } from "@/lib/scenarios/rail";
 import type { CorridorGeometry } from "@/lib/corridor-geometry";
 
 // render_api.INTERSECTION_NOT_MARKED_MESSAGE, as the read returns it.
@@ -124,6 +126,49 @@ describe("#317: no crossing marked", () => {
       expect(document.querySelector('[data-testid="side-control-not-marked"]')).toBeNull();
       cleanup();
     }
+  });
+});
+
+describe("R131: one voice — WHERE's side row reads the side control's line", () => {
+  it("the 'Which side is occupied?' row and the side control show the same line, and no side sentence", async () => {
+    render(<GeneratorShell mode="sandbox" initialScenario={NO_CROSSING} />);
+    await openWhere();
+    const control = await waitFor('[data-testid="side-control-not-marked"]');
+    const row = document.querySelector('[data-testid="move-side"]')!;
+    const sub = row.querySelector(".a-sub")!;
+    expect(sub.textContent).toBe(LINE);
+    expect(control!.textContent).toBe(`⚠ ${LINE}`);
+    expect(document.body.textContent).not.toContain(SIDE_BLOCKER);
+  });
+
+  it("the ledger: a stored side doesn't answer the row while the crossing isn't marked", () => {
+    const sided = {
+      ...NO_CROSSING,
+      meta: { ...NO_CROSSING.meta, work: { side: "right", travel: "with_geometry" } },
+    } as Scenario;
+    const row = deriveMoveLedger(sided, null, true, "West side · southbound traffic", LINE).rows.find(
+      (r) => r.id === "side",
+    )!;
+    expect(row.state).toBe("attention");
+    expect(row.value).toBeNull();
+    expect(row.subline).toBe(LINE);
+    const marked = deriveMoveLedger(sided, null, true, "West side · southbound traffic", null).rows.find(
+      (r) => r.id === "side",
+    )!;
+    expect(marked.state).toBe("done");
+    expect(marked.subline).toBeNull();
+  });
+
+  it("the rail's side rank is the same line, side stored or not; without it, the side sentence as before", () => {
+    const base = { approachConfirm: { pending: false, reason: null }, refusal: null, refusalPending: false };
+    const sided = {
+      ...NO_CROSSING,
+      meta: { ...NO_CROSSING.meta, work: { side: "right", travel: "with_geometry" } },
+    } as Scenario;
+    for (const s of [NO_CROSSING, sided]) {
+      expect(deriveRail({ ...base, scenario: s, notMarkedLine: LINE }).blocker?.message).toBe(LINE);
+    }
+    expect(deriveRail({ ...base, scenario: NO_CROSSING }).blocker?.message).toBe(SIDE_BLOCKER);
   });
 });
 

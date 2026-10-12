@@ -20,6 +20,7 @@ import {
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
 import { deriveRail } from "@/lib/scenarios/rail";
+import { geometryRequestFor, notMarkedLine, useCorridorGeometry } from "@/lib/corridor-geometry";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
@@ -182,6 +183,9 @@ export function GeneratorSidebar({
   // validations, the hold above, the shell's stamped refusal, and the
   // location sentinel, chained in the recorded rank order.  ``blocker``
   // is null exactly when the old seven-disjunct gate was open.
+  // #290 / R131: the geometry read the WHERE band shows, asked once here
+  // so the rail can read the same answer (the no-crossing line, #317).
+  const geometry = useCorridorGeometry(geometryRequestFor(scenario));
   const rail = deriveRail({
     scenario,
     approachConfirm,
@@ -189,6 +193,7 @@ export function GeneratorSidebar({
     refusalPending,
     // Defect 1: Generate waits on a person's confirmation of the kind.
     kindConfirmed: kindState === "confirmed",
+    notMarkedLine: notMarkedLine(geometry),
   });
   // #222: pre-pin, every step after Location renders pending (dim +
   // inert + focusable summary) -- detection fills road facts from the
@@ -453,6 +458,7 @@ export function GeneratorSidebar({
         onOpenPicker={() => openPicker()}
         // #317 (R129 Q1): WHERE's own Mark on map, before WHAT can open.
         onMarkIntersection={() => openPicker(true)}
+        geometry={geometry}
         onKindChange={onKindChange}
         kindState={kindState}
         onKindPicked={onKindPicked}

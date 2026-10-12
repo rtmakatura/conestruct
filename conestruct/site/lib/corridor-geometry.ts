@@ -12,6 +12,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Scenario, WorkPlacement } from "@/lib/scenarios/types";
+import { hasLocation } from "@/lib/scenarios";
+import { roadIsStale } from "@/lib/scenarios/band-facts";
 import {
   CORRIDOR_ZONES,
   ZONE_COLOR,
@@ -272,4 +274,22 @@ export function useCorridorGeometry(scenario: Scenario | null): GeometryFetch {
     };
   }, [key]);
   return result;
+}
+
+/** The scenario the WHERE band asks the geometry read about (#290): a
+ *  located work-start pin whose road is not stale — null otherwise.  One
+ *  rule for the band and the shell (R131), so both read one answer. */
+export function geometryRequestFor(scenario: Scenario): Scenario | null {
+  const located = hasLocation(scenario.meta);
+  const workStart = scenario.meta.pinModel === "work_start";
+  return located && workStart && !roadIsStale(scenario) ? scenario : null;
+}
+
+/** #317 / R131: the backend's line while a near-intersection plan's
+ *  crossing isn't marked ("Mark the cross street on the map to lay out the
+ *  sides."), or null.  The side control, the aerial, WHERE's side row and
+ *  the rail all read it from here — one voice (P2). */
+export function notMarkedLine(fetch: GeometryFetch): string | null {
+  const g = fetch.geometry;
+  return g?.status === "intersection_not_marked" ? (g.message ?? null) : null;
 }

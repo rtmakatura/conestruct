@@ -125,6 +125,10 @@ export interface RailInput {
    *  wire.  Defaults to true so a caller with no such question — the
    *  rail's own unit suite — reads the chain it always read. */
   kindConfirmed?: boolean;
+  /** #317 / R131: the backend's line while a near-intersection plan's
+   *  crossing isn't marked (`notMarkedLine`), or null.  The side rank
+   *  reads it in place of the side sentence, side stored or not. */
+  notMarkedLine?: string | null;
 }
 
 // The CTA-chain literals, moved here from GeneratorSidebar (#221
@@ -240,6 +244,7 @@ export function deriveRail({
   refusal,
   refusalPending,
   kindConfirmed = true,
+  notMarkedLine = null,
 }: RailInput): Rail {
   const wz = validateWorkZone(scenario);
   const lanes = validateLanes(scenario);
@@ -291,6 +296,10 @@ export function deriveRail({
   // #290, RULE 5 (stated): a new rank, right after the kind — both are
   // the WHERE band's answers, and the direction every corridor surface
   // needs comes from the side (ruling 8).  Only under the work-start model.
+  // #317 / R131: until the crossing is marked, the side rank is the
+  // backend's line — the same words as the side control and its row.
+  else if (located && notMarkedLine)
+    blocker = { message: notMarkedLine, entryId: "location" };
   else if (located && !hasConfirmedSide(scenario.meta))
     blocker = { message: SIDE_BLOCKER, entryId: "location" };
   // R127 Q1 (b), RULE 5 (stated): a new rank, right after the side and

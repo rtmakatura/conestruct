@@ -24,6 +24,7 @@ import type { ReactNode } from "react";
 import type { JurisdictionLookup } from "./JurisdictionSection";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { CorridorSpecLengths } from "@/lib/render-types";
+import type { GeometryFetch } from "@/lib/corridor-geometry";
 import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
@@ -45,6 +46,8 @@ export interface BandStackProps {
   onOpenPicker: () => void;
   /** #317 (R129 Q1): the picker, ready to mark the crossing. */
   onMarkIntersection?: () => void;
+  /** R131: the shell's geometry answer, so the band and the rail read one. */
+  geometry?: GeometryFetch;
   onKindChange: (k: ScenarioKind) => void;
   onGenerate: () => void;
   generating: boolean;
@@ -102,6 +105,7 @@ export function BandStack(props: BandStackProps) {
     setMeta,
     onOpenPicker,
     onMarkIntersection,
+    geometry,
     onKindChange,
     onGenerate,
     generating,
@@ -200,6 +204,7 @@ export function BandStack(props: BandStackProps) {
           setMeta={setMeta}
           onOpenPicker={onOpenPicker}
           onMarkIntersection={onMarkIntersection}
+          geometry={geometry}
           // Defect 1: the chip writes the kind AND records that a person
           // chose it.  Re-picking the kind already on the scenario (the
           // default's own chip) is a choice too — `onKindChange` returns

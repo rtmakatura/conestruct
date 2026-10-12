@@ -116,11 +116,20 @@ export function deriveMoveLedger(
    *  words have not arrived.  Handed in: the ledger computes no direction
    *  (Rule 3). */
   sideLabel: string | null = null,
+  /** #317 / R131: the backend's line while a near-intersection plan's
+   *  crossing isn't marked — the side row then reads it instead of the
+   *  side sentence, side stored or not (the side control shows no chips
+   *  until then).  Handed in: the ledger asks no endpoint. */
+  notMarkedLine: string | null = null,
 ): MoveLedger {
   const located = hasLocation(scenario.meta);
   const road = confirmedRoadLabel(scenario);
   const extent = scenario.workLen > 0;
   const sided = hasConfirmedSide(scenario.meta);
+  const notMarked = located ? notMarkedLine : null;
+  // #317 / R131: a stored side doesn't answer the row while the crossing
+  // isn't marked — nothing is laid out until it is.
+  const sidedHere = sided && notMarked === null;
   const answered = located && sided && kindConfirmed;
 
   const rows: MoveRow[] = [
@@ -183,14 +192,15 @@ export function deriveMoveLedger(
       // the side (Rule 3).  Before the side: the ruled sentence.
       id: "side",
       label: "Which side is occupied?",
-      state: !located ? "pending" : located && sided ? "done" : "attention",
-      glyph: GLYPH[!located ? "pending" : sided ? "done" : "attention"],
-      value: located && sided ? sideLabel : null,
+      state: !located ? "pending" : sidedHere ? "done" : "attention",
+      glyph: GLYPH[!located ? "pending" : sidedHere ? "done" : "attention"],
+      value: located && sidedHere ? sideLabel : null,
       // Rule 68: a link OR a word.  Answered, the row's control is still
       // the side control below it — a producer word.
       verb: null,
-      word: !located ? "pending" : sided ? "confirmed" : "needs you",
-      subline: located && !sided ? SIDE_BLOCKER : null,
+      word: !located ? "pending" : sidedHere ? "confirmed" : "needs you",
+      // R131: until the crossing is marked, the side control's own line.
+      subline: located && !sidedHere ? (notMarked ?? SIDE_BLOCKER) : null,
     },
     {
       // The kind's own row — the same hand-check ruling, in its words:

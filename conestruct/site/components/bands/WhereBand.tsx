@@ -51,6 +51,7 @@ import {
 import { deriveMoveLedger, type MoveRow } from "@/lib/scenarios/move-ledger";
 import {
   selectedSideOption,
+  notMarkedLine,
   useCorridorGeometry,
   type GeometryFetch,
   type SideOption,
@@ -147,6 +148,7 @@ function MoveLedgerRows({
   jurisdictionName,
   kindConfirmed,
   sideLabel,
+  notMarkedLine,
   onOpenPicker,
   locked,
 }: {
@@ -154,10 +156,18 @@ function MoveLedgerRows({
   jurisdictionName: string | null;
   kindConfirmed: boolean;
   sideLabel: string | null;
+  /** R131: the side control's own line while the crossing isn't marked. */
+  notMarkedLine: string | null;
   onOpenPicker: () => void;
   locked: boolean;
 }) {
-  const ledger = deriveMoveLedger(scenario, jurisdictionName, kindConfirmed, sideLabel);
+  const ledger = deriveMoveLedger(
+    scenario,
+    jurisdictionName,
+    kindConfirmed,
+    sideLabel,
+    notMarkedLine,
+  );
   const row = (r: MoveRow) => (
     <div
       key={r.id}
@@ -403,6 +413,7 @@ export function WhereBand({
   setMeta,
   onOpenPicker,
   onMarkIntersection,
+  geometry: shellGeometry,
   onKindChange,
   kindPicked = true,
   // Rule 10: the safe default is "not chosen" — an omitted prop must not
@@ -421,6 +432,9 @@ export function WhereBand({
   /** #317 (R129 Q1): the side control's Mark on map — the picker, ready to
    *  mark the crossing. */
   onMarkIntersection?: () => void;
+  /** R131: the shell's geometry answer (one read for the band and the
+   *  rail).  Absent — a band mounted alone — the band asks itself. */
+  geometry?: GeometryFetch;
   /** A chip click — the ONLY writer of the kind choice (defect 1). */
   onKindChange: (k: ScenarioKind) => void;
   /** Has a person clicked a chip?  False renders the chips with none
@@ -458,7 +472,10 @@ export function WhereBand({
   // a check: no verdict is formed from it, and the choices do not depend
   // on the kind, so it is asked before the kind is confirmed too.
   const workStart = scenario.meta.pinModel === "work_start";
-  const geometry = useCorridorGeometry(located && workStart && !stale ? scenario : null);
+  const ownGeometry = useCorridorGeometry(
+    shellGeometry ? null : located && workStart && !stale ? scenario : null,
+  );
+  const geometry = shellGeometry ?? ownGeometry;
   const sideLabel =
     selectedSideOption(geometry.geometry?.side_options ?? [], scenario.meta.work)?.label ?? null;
   const sided = hasConfirmedSide(scenario.meta);
@@ -601,6 +618,7 @@ export function WhereBand({
             jurisdictionName={jurisdictionName}
             kindConfirmed={kindConfirmed}
             sideLabel={sideLabel}
+            notMarkedLine={notMarkedLine(geometry)}
             onOpenPicker={onOpenPicker}
             locked={locked}
           />
