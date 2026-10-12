@@ -1,0 +1,24 @@
+== divided verdict (Colorado Blvd, the #312 repro)
+   params: is_divided=False one_way_street=False
+   mainline signs right: 8 ['G20-1', 'G20-2', 'G20-5P', 'R2-10', 'R2-11', 'W20-1', 'W20-5R', 'W4-2R']
+   mainline signs left (median side): 0 []
+   total placements: 34
+   Note 8 row: s": true, "label": "Signs on both sides of divided highway", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: False. Signs placed: 0 left, 8 rig
+   title: None
+== one-way street (#309, the same road with no twin)
+   params: is_divided=False one_way_street=True
+   mainline signs right: 8 ['G20-1', 'G20-2', 'G20-5P', 'R2-10', 'R2-11', 'W20-1', 'W20-5R', 'W4-2R']
+   mainline signs left (median side): 8 ['G20-1', 'G20-2', 'G20-5P', 'R2-10', 'R2-11', 'W20-1', 'W20-5R', 'W4-2R']
+   total placements: 42
+   Note 8 row: s": true, "label": "Signs on both sides of one-way street", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: True. Signs placed: 8 left, 8 right
+   title: None
+== two-way (no carriageway facts)
+   params: is_divided=False one_way_street=False
+   mainline signs right: 8 ['G20-1', 'G20-2', 'G20-5P', 'R2-10', 'R2-11', 'W20-1', 'W20-5R', 'W4-2R']
+   mainline signs left (median side): 0 []
+   total placements: 34
+   Note 8 row: s": true, "label": "Signs on both sides of divided highway", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: False. Signs placed: 0 left, 8 rig
+   title: None
+== the wire's own divided: true
+   /render/audit: 422 {"detail": [{"type": "value_error", "loc": ["body", "near_intersection"], "msg": "Value error, divided intersections aren't supported yet. Cases 18/19 are undivided/arterial plates; a divided mainline adds the median-ope
+== divided-verdict audit byte-identical to the two-way audit: True
