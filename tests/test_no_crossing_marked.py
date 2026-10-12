@@ -207,6 +207,41 @@ def test_a_bad_map_body_keeps_its_loc(client: TestClient) -> None:
     assert [e["loc"] for e in res.json()["detail"]] == [["body", "stage"]]
 
 
+@pytest.mark.parametrize(
+    "kwargs",
+    [{}, {"content": b"plain", "headers": {"content-type": "text/plain"}}],
+    ids=["missing body", "text/plain body"],
+)
+def test_a_missing_or_non_json_body_answers_as_any_endpoint(
+    client: TestClient, kwargs: dict[str, Any]
+) -> None:
+    """The geometry read's body is a Scenario, like /render/audit's, so their
+    422s are the same bytes; the map read's body is CorridorMapRequest, and
+    its 422 is the one main answered (FastAPI validates body models with
+    ``from_attributes=True``, so a non-object is ``model_attributes_type``)."""
+    headers = {**AUTH, **kwargs.get("headers", {})}
+    content = kwargs.get("content")
+    expected = client.post("/render/audit", headers=headers, content=content)
+    got = client.post("/render/corridor-geometry", headers=headers, content=content)
+    assert got.status_code == expected.status_code == 422
+    assert got.content == expected.content
+    m = client.post("/render/corridor-map", headers=headers, content=content)
+    assert m.status_code == 422
+    if content is None:
+        assert m.content == expected.content
+    else:
+        assert m.json() == {
+            "detail": [
+                {
+                    "type": "model_attributes_type",
+                    "loc": ["body"],
+                    "msg": "Input should be a valid dictionary or object to extract fields from",
+                    "input": "plain",
+                }
+            ]
+        }
+
+
 def test_a_non_json_body_is_still_refused(client: TestClient) -> None:
     res = client.post(
         "/render/corridor-geometry",

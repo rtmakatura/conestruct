@@ -423,7 +423,7 @@ def _validate_read_body(adapter: TypeAdapter[Any], body: Any) -> Any:
     body answers the same 422, byte for byte.
     """
     try:
-        return adapter.validate_python(body, context=READS_CROSSING_OPTIONAL)
+        return adapter.validate_python(body, context=READS_CROSSING_OPTIONAL, from_attributes=True)
     except ValidationError as exc:
         raise RequestValidationError(
             [{**e, "loc": ("body", *e["loc"])} for e in exc.errors(include_url=False)]

@@ -42,8 +42,8 @@ backend + frontend, `frontend-only: no`. Authority: `rulings.md` (R129), `checkp
 
 | Predicted | Actual |
 |---|---|
-| Backend existing: 0 | **0.** The full suite passed 2718 (2 skipped). One failure was in a case of my new file: `/render/replication-snapshot` wraps its body, so the bare scenario was refused for a missing key, not the crossing. Removed from the list. The changed files' suites pass 89/89 |
-| Backend new: ~10 | 16 in `tests/test_no_crossing_marked.py`. They include byte-identity of the reads' 422 against `/render/audit`'s for a bad body |
+| Backend existing: 0 | **1, missed and then fixed.** `test_vercel_env_check` failed: WhereBand's 41 new lines moved the `NEXT_PUBLIC_MAPBOX_TOKEN` line that `scripts/production-env.txt:26` cites (`:452` → `:490`). The same cite's `LocationPickerModal.tsx:367` had already drifted on main, now `:313`. My first report of the suite ("2718 passed, the one failure was my own case") was wrong: the verifier caught this failure (REPAIR). After the fix: **2721 passed, 2 skipped, 0 failed** |
+| Backend new: ~10 | 18 in `tests/test_no_crossing_marked.py`, plus two cases added after the REPAIR. The reads' 422 matches `/render/audit`'s bytes for a bad scenario, a missing body and a text/plain body. The map read's non-object 422 is pinned to main's (`model_attributes_type`). Main and the branch were diffed on 12 odd bodies (missing, text/plain, a JSON string, a JSON list, bad JSON, `{}`) and are identical. That needed `from_attributes=True`, which FastAPI uses for body models; before it, the map read answered `model_type` for 3 of them |
 | Frontend existing: 0–3 | **0.** 201 files, 2104 tests, all green |
 | Frontend new: ~6 | 5 (`WhereBand.no-crossing` ×4, one `BandAerial` case) |
 | **Not predicted** | The checkpoint said the rail "adds no second voice". It does: WHERE's own ledger row "Which side is occupied? · Say which side is occupied to lay out the work" (`rail.SIDE_BLOCKER`) still asks for the side while the side control asks for the crossing. It's visible in `before-390.png`. Not changed on this branch, because no ruling covers it; raised in the report |
