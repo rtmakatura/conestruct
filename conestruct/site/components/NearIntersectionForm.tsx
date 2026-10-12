@@ -383,42 +383,45 @@ export function NearIntersectionForm({
             highway=…, not confirmed) one click away in its details, the
             same FieldCell the mainline speed uses.  The WHAT header counts
             its ⚠ (Q4). */}
-        <FieldCell
-          label="Cross-street speed"
-          htmlFor="ni-cross-speed"
-          testid="cross-speed"
-          marker={markerOf(speedLine.text, { amber: speedLine.amber })}
-          provenance={
-            <span
-              className={`ni-prov tr-prov${speedLine.amber ? " is-amber" : ""}`}
-              data-testid="ni-cross-speed-prov"
-            >
-              {speedLine.amber ? `⚠ ${speedLine.text}` : speedLine.text}
-            </span>
-          }
-        >
-          <select
-            id="ni-cross-speed"
-            className={`a-fld${speedShown ? "" : " is-unset"}`}
-            data-write=""
-            disabled={locked}
-            value={speedShown ? (legs[0]?.speed ?? "") : ""}
-            onChange={(e) =>
-              setScenario(setApproachSpeed(scenario, +e.target.value) as NearIntersectionScenario)
+        {/* The form's own row wrapper keeps the rows' spacing (R133 build). */}
+        <Field>
+          <FieldCell
+            label="Cross-street speed"
+            htmlFor="ni-cross-speed"
+            testid="cross-speed"
+            marker={markerOf(speedLine.text, { amber: speedLine.amber })}
+            provenance={
+              <span
+                className={`ni-prov tr-prov${speedLine.amber ? " is-amber" : ""}`}
+                data-testid="ni-cross-speed-prov"
+              >
+                {speedLine.amber ? `⚠ ${speedLine.text}` : speedLine.text}
+              </span>
             }
           >
-            {!speedShown && (
-              <option value="" disabled>
-                Not set
-              </option>
-            )}
-            {APPROACH_SPEEDS.map((mph) => (
-              <option key={mph} value={mph}>
-                {mph} mph
-              </option>
-            ))}
-          </select>
-        </FieldCell>
+            <select
+              id="ni-cross-speed"
+              className={`a-fld${speedShown ? "" : " is-unset"}`}
+              data-write=""
+              disabled={locked}
+              value={speedShown ? (legs[0]?.speed ?? "") : ""}
+              onChange={(e) =>
+                setScenario(setApproachSpeed(scenario, +e.target.value) as NearIntersectionScenario)
+              }
+            >
+              {!speedShown && (
+                <option value="" disabled>
+                  Not set
+                </option>
+              )}
+              {APPROACH_SPEEDS.map((mph) => (
+                <option key={mph} value={mph}>
+                  {mph} mph
+                </option>
+              ))}
+            </select>
+          </FieldCell>
+        </Field>
 
         <Field>
           <LabelRow htmlFor="ni-cross-lane-width" value={`${legs[0]?.laneWidth ?? 12} ft`}>
