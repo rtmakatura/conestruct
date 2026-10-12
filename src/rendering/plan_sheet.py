@@ -2931,6 +2931,28 @@ class _NotesLayout:
     two_col_advance: bool
 
 
+# R127 Q7 / #316 (R129 Q6, R132): the plan sheet's NOTES line for a guessed
+# speed, verbatim.  One line in every case (R132): the road's, the cross
+# street's, or one combined line when both are guessed.
+SPEED_GUESSED_NOTE = "SPEED GUESSED FROM THE ROAD CLASS. CONFIRM THE POSTED SPEED ON SITE."
+CROSS_STREET_SPEED_GUESSED_NOTE = (
+    "CROSS-STREET SPEED GUESSED FROM THE ROAD CLASS. CONFIRM THE POSTED SPEED ON SITE."
+)
+BOTH_SPEEDS_GUESSED_NOTE = (
+    "ROAD AND CROSS-STREET SPEEDS GUESSED FROM THE ROAD CLASS. CONFIRM THEM ON SITE."
+)
+
+
+def _speed_guessed_note(params: ScenarioParams) -> str | None:
+    if params.speed_guessed and params.approach_speed_guessed:
+        return BOTH_SPEEDS_GUESSED_NOTE
+    if params.speed_guessed:
+        return SPEED_GUESSED_NOTE
+    if params.approach_speed_guessed:
+        return CROSS_STREET_SPEED_GUESSED_NOTE
+    return None
+
+
 def _notes_layout(schedule_rows: int, advance_rows: int) -> _NotesLayout:
     """Pick the layout tier for a notes box with the given row counts.
 
@@ -3464,34 +3486,16 @@ def _draw_notes(
                 for line in lines:
                     y[0] -= layout.footer_pads[1]
                     cv.drawString(x, y[0], line)
-        if params.speed_guessed:
-            # R127 Q7 (verbatim words, set in the box's own capitals): the
-            # posted speed this plan is built on is the road-class estimate,
-            # not a posted limit.  Only when the speed is an untouched guess.
+        speed_note = _speed_guessed_note(params)
+        if speed_note is not None:
+            # R127 Q7 / #316 (R129 Q6, R132): a speed this plan is built on is
+            # a road-class estimate, not a posted limit.  ONE line, whichever
+            # speeds are guessed (R132): two lines pushed sign-schedule rows
+            # off the sheet.  Set in the box's own capitals.
             cv.setFont("Helvetica-Bold", 6.5)
             cv.setFillColor(colors.black)
             for line in _wrap_to_width(
-                cv,
-                "SPEED GUESSED FROM THE ROAD CLASS. CONFIRM THE POSTED SPEED ON SITE.",
-                "Helvetica-Bold",
-                6.5,
-                width - 16.0,
-                max_lines=2,
-            ):
-                y[0] -= layout.footer_pads[1]
-                cv.drawString(x, y[0], line)
-        if params.approach_speed_guessed:
-            # #316 (R129 Q6): the cross street's approach speed — which sets
-            # its W20-1 / R2-10 positions — is the road-class estimate.
-            cv.setFont("Helvetica-Bold", 6.5)
-            cv.setFillColor(colors.black)
-            for line in _wrap_to_width(
-                cv,
-                "CROSS-STREET SPEED GUESSED FROM THE ROAD CLASS. CONFIRM THE POSTED SPEED ON SITE.",
-                "Helvetica-Bold",
-                6.5,
-                width - 16.0,
-                max_lines=2,
+                cv, speed_note, "Helvetica-Bold", 6.5, width - 16.0, max_lines=2
             ):
                 y[0] -= layout.footer_pads[1]
                 cv.drawString(x, y[0], line)

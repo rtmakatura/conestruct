@@ -33,3 +33,12 @@
     kind is confirmed. That second place would otherwise have said "Say which side is occupied…" too.
 - **A stored side doesn't answer the row** while the crossing isn't marked. The side control shows
   no chips then (R129 Q1), so a ticked row would be a second, contradicting voice.
+
+## R132 (Ryan, 2026-10-12), verbatim
+
+> R132, #316 NOTES: option (a). When both the road speed and the cross-street speed are guessed, the plan sheet prints one combined line: "ROAD AND CROSS-STREET SPEEDS GUESSED FROM THE ROAD CLASS. CONFIRM THEM ON SITE." When only one is guessed, print only that one's line. All 4 sign-schedule rows stay on the sheet in every case; add a test for that.
+>
+> Finish issue-316-approach-speed (tests, then the frontend per R129 Q3–Q5). Report before ship with screenshots at 1440 and 390 on N Broadway SB at E 11th Ave, plus an untagged-residential-meets-untagged-residential case, and the plan-sheet NOTES crops for all three guess combinations.
+
+**On the record:** the stop that R132 answers is the WIP commit `2239658`, with its crops in
+`notes-box/` (`probes/notes_render_probe.*`). With both lines, two SIGN SCHEDULE rows left the sheet.
