@@ -4948,18 +4948,24 @@ input[type="number"] {
 }
 /* The windows line is the table's control: a read (it opens a reference
    table), quiet like the line it is, with rule 15's 32 px hit box and a
-   dashed underline for the shape channel (rule 13). */
+   dashed underline for the shape channel (rule 13).  R128: the underline
+   is the TEXT's, so it ends where the words end (a box border ran the
+   button's full width). */
 .workbench .a-footline {
   background: none;
   border: 0;
-  border-bottom: 1px dashed var(--rule);
   padding: 0;
   min-height: 32px;
   text-align: left;
   cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 .workbench .a-footline:hover {
-  border-bottom-color: var(--act);
+  text-decoration-color: var(--act);
 }
 
 /* ─── R107 (setup-what-redesign, design-refs/WhatC5.dc.html) · the WHAT
@@ -5120,6 +5126,11 @@ input[type="number"] {
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--da-hair);
+}
+/* R128: a kind with no fields of its own (shoulder) leaves the row empty;
+   no strip and no second divider under the footer line then. */
+.workbench .a-kindrow:empty {
+  display: none;
 }
 
 /* ─── Rule 116's generate frame, and rules 130–131 · the primary ─── */

@@ -7,6 +7,8 @@
 //   - one marker per row, and no row reaches the "i about" fallback;
 //   - "Carriageway" reads detection's clause, or default-or-yours.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -194,6 +196,16 @@ describe("R126: one marker per row, none of them 'i about'", () => {
     cleanup();
     mount({ ...URBAN, divided: true, lanes: 2 } as unknown as Scenario);
     expect(screen.getByTestId("info-toggle-divided").textContent).toBe("✓ yours");
+  });
+
+  it("R128: an empty kind row (shoulder) takes no strip and no second divider", () => {
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    expect(css).toMatch(/\.workbench \.a-kindrow:empty \{\s*display: none;/);
+    const i = css.indexOf(".workbench .a-footline {");
+    const footline = css.slice(i, css.indexOf("}", i));
+    // R128: the windows line's underline is the text's, ending with the words.
+    expect(footline).toContain("text-decoration-line: underline;");
+    expect(footline).not.toMatch(/border-bottom/);
   });
 
   it("the road-type option reads 'Urban street' (R127 Q4); the wire value is unchanged", () => {
