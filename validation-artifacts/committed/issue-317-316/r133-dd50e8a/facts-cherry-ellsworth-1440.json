@@ -1,0 +1,18 @@
+{
+  "crossPanel": "CROSS STREET Move the intersection pin Clear East Ellsworth Avenue: two-way. The plan places it along the road from where the work starts. You'll confirm the d",
+  "crossSpeed": "25",
+  "crossShown": "25 mph",
+  "crossLine": "⚠ guessed, not confirmed · OSM highway=residential · from the road",
+  "crossMarker": "⚠ from the road",
+  "crossLabel": "Cross-street speed",
+  "mainSpeed": "25",
+  "mainMarker": "⚠ from the road",
+  "header": "5 guesses marked ⚠ · change any that are wrong",
+  "cta": "Confirm the cross-street lane count first. It was filled from map data.",
+  "crossName": null,
+  "scroll": [
+    1440,
+    1440
+  ],
+  "errors": []
+}
