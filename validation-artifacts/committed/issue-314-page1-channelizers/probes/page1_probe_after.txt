@@ -1,0 +1,20 @@
+== Broadway one-way, right, sidewalk=False: road outline y 310.0..513.0; bands []; arrows y [466.6, 356.4]
+   every cone / drum box inside the road outline and off the band
+== Broadway one-way, right, sidewalk=True: road outline y 310.0..513.0; bands [(292.5, 310.0)]; arrows y [466.6, 356.4]
+   every cone / drum box inside the road outline and off the band
+   simulated A alone: worst channelizer on the band 0.0 pt; A + B: 0.0 pt
+== Broadway one-way, left, sidewalk=False: road outline y 457.0..660.0; bands []; arrows y [503.4, 613.6]
+   every cone / drum box inside the road outline and off the band
+== Broadway one-way, left, sidewalk=True: road outline y 457.0..660.0; bands [(660.0, 677.5)]; arrows y [503.4, 613.6]
+   every cone / drum box inside the road outline and off the band
+   simulated A alone: worst channelizer on the band 0.0 pt; A + B: 0.0 pt
+== two-way undivided (control-typical), sidewalk=False: road outline y 373.0..597.0; bands []; arrows y [359.0]
+   every cone / drum box inside the road outline and off the band
+== two-way undivided (control-typical), sidewalk=True: road outline y 373.0..597.0; bands [(355.5, 373.0)]; arrows y [347.5]
+   every cone / drum box inside the road outline and off the band
+   simulated A alone: worst channelizer on the band 0.0 pt; A + B: 0.0 pt
+== divided (adv-shoulder), sidewalk=False: road outline y 294.0..676.0; bands []; arrows y [280.0, 690.0]
+   every cone / drum box inside the road outline and off the band
+== divided (adv-shoulder), sidewalk=True: road outline y 294.0..676.0; bands [(276.5, 294.0), (676.0, 693.5)]; arrows y [268.5, 701.5]
+   every cone / drum box inside the road outline and off the band
+   simulated A alone: worst channelizer on the band 0.0 pt; A + B: 0.0 pt

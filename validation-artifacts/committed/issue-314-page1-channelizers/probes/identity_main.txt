@@ -1,0 +1,58 @@
+broadway-right             placements         3c9e968d70eb5795
+broadway-right             audit              40d1d656ccdf422f
+broadway-right             markdown           721368155c78723d
+broadway-right             device-breakdown   7d201405f1776a78
+broadway-right             xlsx (cells)       c25ae27a65d90bc7
+broadway-right             audit-pdf (text)   214edc8cc2091dee
+broadway-right             crew-pdf (text)    ee9bbcd27105891f
+broadway-right +sidewalk   placements         86f6a58595e6cb8f
+broadway-right +sidewalk   audit              84f23620bfaf1414
+broadway-right +sidewalk   markdown           d083182b5c0254d4
+broadway-right +sidewalk   device-breakdown   250e4dc6521006ae
+broadway-right +sidewalk   xlsx (cells)       dbd2d73a190c18d3
+broadway-right +sidewalk   audit-pdf (text)   d67d700fa4fd4c13
+broadway-right +sidewalk   crew-pdf (text)    fd64dafe49a93819
+broadway-left              placements         0188bc60a52bbec7
+broadway-left              audit              6fd8521900ffb5e8
+broadway-left              markdown           8a93321610154fb8
+broadway-left              device-breakdown   abb7b42336d4b63a
+broadway-left              xlsx (cells)       713e8ce63b98a788
+broadway-left              audit-pdf (text)   1630d3c3f69600b4
+broadway-left              crew-pdf (text)    b048b5ad936e92e1
+broadway-left +sidewalk    placements         c17090b1ac1ad4e4
+broadway-left +sidewalk    audit              7ed045d8298adf4d
+broadway-left +sidewalk    markdown           2366db8ef311a988
+broadway-left +sidewalk    device-breakdown   f96d6a17edda39b6
+broadway-left +sidewalk    xlsx (cells)       4efcc65d09844149
+broadway-left +sidewalk    audit-pdf (text)   3ce18509660f51d8
+broadway-left +sidewalk    crew-pdf (text)    2953e3d928f65be9
+two-way                    placements         3a917a04b7067921
+two-way                    audit              44d90efae6f20f64
+two-way                    markdown           7adf92305df62542
+two-way                    device-breakdown   0ff64d9919c3f634
+two-way                    xlsx (cells)       272ffa66e3283164
+two-way                    audit-pdf (text)   4c70f57836a40b8c
+two-way                    crew-pdf (text)    1bcbc2a97ebd2b74
+two-way +sidewalk          placements         a2713ae7230d0aa9
+two-way +sidewalk          audit              f0aa9fe8af62d8ef
+two-way +sidewalk          markdown           8bbeedac52ce24d9
+two-way +sidewalk          device-breakdown   4e2d2bfe0e38e519
+two-way +sidewalk          xlsx (cells)       97a03cf21f4f8c5f
+two-way +sidewalk          audit-pdf (text)   2ba0d52142f60d91
+two-way +sidewalk          crew-pdf (text)    78ae8d7209439e35
+divided                    placements         66c02748293d3084
+divided                    audit              4fce105cc231a55d
+divided                    markdown           2acfd72da8cb2156
+divided                    device-breakdown   871f8b50140cf74f
+divided                    xlsx (cells)       45d56bc6fd29a1bf
+divided                    audit-pdf (text)   a4a9ba0902296bb3
+divided                    crew-pdf (text)    8a355250544a6df1
+divided +sidewalk          placements         146cbef96872ae80
+divided +sidewalk          audit              d39d35ca93a29f73
+divided +sidewalk          markdown           6cb86e0fe031574a
+divided +sidewalk          device-breakdown   09a38131563fdfd1
+divided +sidewalk          xlsx (cells)       aaf1993138057297
+divided +sidewalk          audit-pdf (text)   75883bc2501b43e6
+divided +sidewalk          crew-pdf (text)    b8931b04cd6fd098
+flagger                    page-1 positions   44a8030dd896c124
+near-intersection          page-1 positions   d4042acfe10827b0
