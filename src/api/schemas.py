@@ -875,6 +875,8 @@ class NearIntersectionScenario(
     kind: Literal["near_intersection"]
     meta: ScenarioMeta = ScenarioMeta()
 
+    # #312: a divided verdict is built from the carriageway facts below
+    # (one carriageway, #309's plan); the wire's own ``divided`` stays False.
     # --- mainline: same field set and bounds as ShoulderScenario,
     # speed capped at 55 like the flagger kind (D8); floor 25 per the
     # increment-1 ruling (same as the approach floor above) ---
@@ -1589,7 +1591,14 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             near_intersection=True,
             # #309: Note 8 names one-way streets; the generator mirrors
             # every mainline sign to the left curb on one (R114).
-            one_way_street=scenario.carriageway_verdict() == "one_way_street",
+            # #312 (R134 Q1 (a)): one carriageway of a divided road is a
+            # one-way roadway whose left curb is the median edge, so a
+            # divided verdict takes #309's plan whole (the drawing, the
+            # mirror at the CHOSEN -4.0 ft, Note 8 owed) and
+            # ``divided_carriageway`` changes only the words.  ``is_divided``
+            # stays False: no median is drawn and nothing is re-spaced.
+            one_way_street=scenario.carriageway_verdict() in ("one_way_street", "divided"),
+            divided_carriageway=scenario.carriageway_verdict() == "divided",
             **meta_kw,
         )
         station = (

@@ -878,6 +878,9 @@ def build_narrative_context(
         # #308: a one-way street has no centerline — its offsets are
         # measured from the left lane edge (``plan_sheet._draw_one_way_street``).
         "one_way_street": params.one_way_street,
+        # #312 (R134): one carriageway of a divided highway — the line
+        # names the median side and asks for the median opening (Q3).
+        "divided_carriageway": params.divided_carriageway,
         # #300: on a left-shoulder plan offset 0 is the RIGHT lane edge (the
         # edge opposite the work), so the origin names it.
         "offset_origin": (

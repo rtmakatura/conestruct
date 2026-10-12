@@ -738,7 +738,8 @@ function applyDetected(
           c.laneWidthFt,
         ),
         // #309: the raw carriageway facts, as the shoulder branch relays
-        // them (a one-way street signs both curbs, S-630-1 Sheet 2 Note 8).
+        // them (a one-way street signs both curbs, S-630-1 Sheet 2 Note 8;
+        // #312: so does one carriageway of a divided highway).
         // Undefined on every other road, which also clears a previous
         // road's facts and any answer about them.
         carriageway: c.carriageway,

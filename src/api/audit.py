@@ -985,7 +985,7 @@ def build_audit_trail(
         "pass": both_sides_pass,
         "label": (
             "Signs on both sides of one-way street"
-            if params.one_way_street
+            if params.one_way_street and not params.divided_carriageway
             else "Signs on both sides of divided highway"
         ),
         "citation": CO_CITATIONS.signs_both_sides,
@@ -1262,7 +1262,14 @@ def build_audit_trail(
         # both-sides signing the plan does; the two-way wording is
         # byte-identical.
         applied_to = (
-            "applied to a one-way street with every mainline warning and "
+            # #312 (R134): one carriageway of a divided highway, signed on
+            # both sides — the median side included.
+            "applied to one carriageway of a divided highway with every "
+            "mainline warning and regulatory sign posted on both sides of "
+            "the roadway, the median side included, per CDOT S-630-1 Sheet 2 "
+            "General Note 8"
+            if params.divided_carriageway
+            else "applied to a one-way street with every mainline warning and "
             "regulatory sign posted on both sides of the roadway per CDOT "
             "S-630-1 Sheet 2 General Note 8"
             if params.one_way_street
@@ -1279,7 +1286,11 @@ def build_audit_trail(
             "leg per MUTCD §6N.12 and the Sheet 10 advance-signing key."
         )
         departure_2 = (
-            "(2) A one-way street has no opposing mainline direction; the "
+            "(2) The opposing direction is the divided highway's other "
+            "carriageway, a separate roadway this plan does not sign; the "
+            "plate's opposing-direction signing does not apply. "
+            if params.divided_carriageway
+            else "(2) A one-way street has no opposing mainline direction; the "
             "plate's opposing-direction signing does not apply. "
             if params.one_way_street
             else "(2) The opposing mainline direction is not signed "
@@ -1423,7 +1434,15 @@ def build_audit_trail(
         case_section["one_way_street_widths"] = {
             "shoulder_ft": params.shoulder_width_ft,
             "lane_ft": params.lane_width_ft,
+            # #312: the same CHOSEN widths, on one carriageway of a divided
+            # highway; the key is present only then (one-way unchanged).
+            **({"road": "divided_carriageway"} if params.divided_carriageway else {}),
         }
+    # #312 (R134 Q3): the median opening the Sheet 10 plates don't draw —
+    # disclosed for the Engineer, nothing drawn.  Marker present only on a
+    # divided carriageway, so every other plan's sections stay identical.
+    if params.divided_carriageway:
+        case_section["median_opening_unverified"] = True
     # #300 (R119 Q3): a left-shoulder plan is Case 11 mirrored, CHOSEN.  The
     # marker rides the case section to ``audit_projection`` like R88's; left
     # plans only, so every other plan's sections stay byte-identical.
@@ -1717,6 +1736,16 @@ INTERSECTION_SUPPORT_ISSUE: str | None = "https://github.com/rtmakatura/conestru
 # #308 ruling R88: a one-way street's shoulder width and lane-width ceiling
 # have no published source; the pending item keyed to this URL says so.
 ONE_WAY_STREET_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/308"
+# #312 (R134 Q3): a near-intersection plan on a divided highway.
+DIVIDED_NEAR_INTERSECTION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/312"
+# The audit's pending item and the crew sheet's line say the same thing.
+MEDIAN_OPENING_PENDING = (
+    "Divided highway: the cross street crosses the median at an opening the "
+    "CDOT S-630-1 Sheet 10 plates (Cases 18/19) don't draw. Confirm the "
+    "signing at the median opening, and any turning traffic there, with the "
+    "Engineer (S-630-1 Sheet 2 General Note 8: 'as directed by the "
+    "Engineer'). Nothing is drawn for it (#312)."
+)
 
 # #300 (R119 Q3): S-630-1 draws no left-shoulder case; a left-shoulder plan
 # on a one-way street is Case 11 mirrored, and the pending item keyed to
@@ -1990,17 +2019,32 @@ def audit_projection(
     widths = case.pop("one_way_street_widths", None)
     if widths is not None:
         shoulder_ft = float(widths["shoulder_ft"])
+        road = (
+            "one carriageway of a divided highway"
+            if widths.get("road") == "divided_carriageway"
+            else "a one-way street"
+        )
         items.append(
             {
                 "kind": "one_way_street_widths_chosen",
                 "label": (
-                    f"On a one-way street the plan builds an {shoulder_ft:g} ft "
+                    f"On {road} the plan builds an {shoulder_ft:g} ft "
                     f"shoulder and fits lanes under a {MAX_DRAWABLE_HALF_ROAD_FT:g} ft "
                     f"half-road less that shoulder. Both values are CHOSEN: no "
                     f"MUTCD, S-630-1, Colorado Supplement or Denver text found "
                     f"sets them. Verify against the site (#308)."
                 ),
                 "tracking_issue": ONE_WAY_STREET_ISSUE,
+            }
+        )
+
+    # #312 (R134 Q3): the median opening at the cross street.
+    if case.pop("median_opening_unverified", False):
+        items.append(
+            {
+                "kind": "median_opening_unverified",
+                "label": MEDIAN_OPENING_PENDING,
+                "tracking_issue": DIVIDED_NEAR_INTERSECTION_ISSUE,
             }
         )
 

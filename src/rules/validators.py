@@ -261,6 +261,13 @@ class ScenarioParams:
     # True, ``is_divided`` is False and ``num_lanes`` counts every lane.
     # Appended with a default so every existing constructor is untouched.
     one_way_street: bool = False
+    # #312 (R134) — a near-intersection lane closure on one carriageway of
+    # a divided road.  It rides WITH ``one_way_street`` (the carriageway is
+    # a one-way roadway, its left curb the median edge: #309's geometry and
+    # mirror) and changes only the words — the title, the Note 8 row's
+    # label, the narrative, and the median-opening item.  ``is_divided``
+    # stays False.  Appended with a default.
+    divided_carriageway: bool = False
     # #300 (R82) — which curb the work is on.  ``"left"`` is laid out only
     # for shoulder work on a one-way street (R79, R80, R119 Q5; the gate is
     # ``schemas.left_side_built``).  Offsets keep their model: positive is
@@ -450,6 +457,9 @@ def scenario_display_name(params: ScenarioParams) -> str:
     if ct == "lane" and not divided and params.near_intersection:
         # #309: a one-way street is neither divided nor "Undivided"
         # (#308's shoulder title, same no-count convention).
+        if params.divided_carriageway:
+            # #312 (R134 Q4).
+            return "Lane Closure Near Intersection · Divided Highway"
         if params.one_way_street:
             return "Lane Closure Near Intersection · One-Way Street"
         return "Lane Closure Near Intersection · Undivided"

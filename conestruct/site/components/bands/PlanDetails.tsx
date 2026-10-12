@@ -391,8 +391,9 @@ export function PlanDetailCells({
             onChange={(v) => {
               const confirmed = v ? ("divided" as const) : ("one_way_street" as const);
               if (scenario.kind === "near_intersection") {
-                // #309 R114: only the answer.  The kind rejects divided,
-                // and a divided verdict keeps today's plan (Q3 (a)).
+                // #309 R114: only the answer.  The kind's wire `divided`
+                // stays false; a divided verdict builds one carriageway
+                // signed on both sides, the median side included (#312, R134).
                 setScenario({ ...scenario, carriageway: { ...carriageway, confirmed } });
                 return;
               }

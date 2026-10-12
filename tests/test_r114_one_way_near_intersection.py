@@ -322,13 +322,16 @@ def test_a_two_way_plan_s_xlsx_and_pdf_carry_the_same_content() -> None:
     assert _pdf_pages(_body(TWO_WAY)) == _pdf_pages(_body())
 
 
-def test_a_divided_verdict_keeps_today_s_plan() -> None:
-    """R114 Q3 (a): divided near-intersection plans are a follow-up issue."""
+def test_a_divided_verdict_builds_one_carriageway_signed_both_sides() -> None:
+    """R114 Q3 (a) deferred divided plans to #312; R134 Q1 (a) builds them
+    on this route: one carriageway, #309's mirror, the divided words
+    (tests/test_divided_near_intersection.py holds the rest)."""
     divided = {**ONE_WAY, "twinDistanceM": 14.8}
     placements, params = _plan(_body(divided))
-    assert params.one_way_street is False and params.is_divided is False
-    assert _post("/render/audit", _body(divided)).content == _post("/render/audit", _body()).content
-    assert len(placements) == 34
+    assert params.one_way_street is True and params.divided_carriageway is True
+    assert params.is_divided is False
+    assert _post("/render/audit", _body(divided)).content != _post("/render/audit", _body()).content
+    assert len(placements) == 42
 
 
 def test_an_undecided_road_is_refused_honestly() -> None:
