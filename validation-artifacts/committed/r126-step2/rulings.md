@@ -51,3 +51,24 @@ Recorded first in `validation-artifacts/committed/issue-301-picker-pieces/ruling
 - **D3 and R110 Q8:** D3 shows no marker on Hours or Speed reduction, while R110 Q8 ruled "✓
   default" on both. That belongs to `r126-step2-layout` and is raised in that branch's report. It
   doesn't touch `r126-speed-guess`.
+
+## After the r126-step2-layout report: R128 (Ryan, 2026-10-11), verbatim
+
+> r126-step2-layout browser check passed (screenshots match D3).
+>
+> R128, recording your two flags:
+> - Carriageway counts in the header when its divided-ness was only inferred (P2: the row's ⚠ and the header agree).
+> - Hours and Speed reduction keep "✓ default" (R110 Q8 stands over D3).
+> - The eight Q5 footer strings are approved as proposed.
+> Quote R126–R128 in r126-step2/rulings.md on the next branch.
+>
+> Small polish, one branch, no checkpoint:
+> - the dotted underline under "Denver windows · set dates to check" runs past the end of its text; make it end with the text;
+> - there's an empty strip with an extra divider below the footer line; remove it.
+> Report with screenshots at 1440 and 390 and the go.
+
+**On the record:**
+- R126 and R127 are quoted above (committed with `r126-speed-guess`).
+- The eight Q5 strings R128 approves are the table in `layout-prediction.md`'s outcome report, with
+  the times in the windows table's own AM/PM form ("10:00 PM–5:00 AM").
+- R128's polish ships as `r128-footer-polish`.
