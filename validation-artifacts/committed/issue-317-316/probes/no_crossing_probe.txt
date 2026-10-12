@@ -1,0 +1,18 @@
+== no side, no crossing (the repro)
+  today geometry: 422 {"detail": [{"type": "value_error", "loc": ["body", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection", "meta": {
+  today corridor-map stage=pin: 422 {"detail": [{"type": "value_error", "loc": ["body", "scenario", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection
+  today corridor-map stage=work: 422 {"detail": [{"type": "value_error", "loc": ["body", "scenario", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection
+  today /render/audit: 422 {"detail": [{"type": "value_error", "loc": ["body", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection", "meta": {
+  today /render/pdf: 422 {"detail": [{"type": "value_error", "loc": ["body", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection", "meta": {
+  proposed read (crossing never read) geometry: 200 status=side_not_confirmed side_options=[('right', 'West side · southbound traffic')]
+  proposed read (crossing never read) corridor-map stage=pin: 200 image/png
+  proposed read (crossing never read) corridor-map stage=work: 409 {"status": "side_not_confirmed", "message": null}
+== right side stored, no crossing
+  today geometry: 422 {"detail": [{"type": "value_error", "loc": ["body", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection", "meta": {
+  today corridor-map stage=pin: 422 {"detail": [{"type": "value_error", "loc": ["body", "scenario", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection
+  today corridor-map stage=work: 422 {"detail": [{"type": "value_error", "loc": ["body", "scenario", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection
+  today /render/audit: 422 {"detail": [{"type": "value_error", "loc": ["body", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection", "meta": {
+  today /render/pdf: 422 {"detail": [{"type": "value_error", "loc": ["body", "near_intersection"], "msg": "Value error, pinModel 'work_start' near_intersection needs meta.intersection (the marked cross street) to place the approaches.", "input": {"kind": "near_intersection", "meta": {
+  proposed read (crossing never read) geometry: 200 status=laid_out side_options=[('right', 'West side · southbound traffic')]
+  proposed read (crossing never read) corridor-map stage=pin: 200 image/png
+  proposed read (crossing never read) corridor-map stage=work: 200 image/png
