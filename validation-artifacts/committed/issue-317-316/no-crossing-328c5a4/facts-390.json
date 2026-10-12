@@ -1,0 +1,37 @@
+{
+  "before": {
+    "notMarked": "⚠ Mark the cross street on the map to lay out the sides.",
+    "mark": "Mark on map",
+    "chips": [],
+    "note": null,
+    "aerialNote": "Mark the cross street on the map to lay out the sides.",
+    "aerialStage": "pin",
+    "scroll": [
+      390,
+      390
+    ]
+  },
+  "pickerPrompt": 1,
+  "canvas": {
+    "x": 9,
+    "y": 206.5,
+    "width": 372,
+    "height": 371.359375
+  },
+  "crossDetected": null,
+  "after": {
+    "notMarked": null,
+    "mark": null,
+    "chips": [
+      "West side · southbound traffic"
+    ],
+    "note": null,
+    "aerialNote": "Say which side is occupied to lay out the work",
+    "aerialStage": "pin",
+    "scroll": [
+      390,
+      390
+    ]
+  },
+  "errors": []
+}
