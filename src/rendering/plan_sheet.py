@@ -1158,7 +1158,11 @@ def _bike_strip_ft(params: ScenarioParams) -> tuple[float, float]:
 
 def _sidewalk_strip_ft(params: ScenarioParams, shoulder_width_ft: float) -> tuple[float, float]:
     road_edge = params.num_lanes * params.lane_width_ft + shoulder_width_ft
-    return road_edge - 1.0, road_edge + 5.0
+    # #314 (R136, option B): the band starts AT the road edge.  It used to
+    # start 1 ft inside the shoulder, so a channelizer standing on the
+    # shoulder's outer line (S-630-1 Sheet 7 Case 11) was drawn on it.
+    # R9-9 and the sidewalk barricades (road_edge + 2 ft) stay on the band.
+    return road_edge, road_edge + 5.0
 
 
 # Site-condition flags the renderer draws context for.  Structured input
@@ -1705,7 +1709,101 @@ def _layout_device_positions(
 
     items = _clamp_sign_positions(items + median_items, params, on_road_max, bands)
     items = _fan_coincident_signs(items)
+    # #314 (R136, option A): the shoulder-edge channelizers inside the road
+    # outline, then the arrow board clear of them — in that order, because
+    # pulling the first taper drum in puts it under the board.
+    items = _pull_channelizers_inside_road(items, y_road_top, y_road_bottom)
+    items = _clear_arrow_board_of_channelizers(items, x_of)
     return items, lighting_items
+
+
+# #314: glyph half-sizes, the draw functions' own (``_draw_cone`` 8 x 10,
+# ``_draw_drum`` 10 x 14, ``_draw_arrow_board`` 20 x 12).
+_CHANNELIZER_HALF = {DeviceType.CONE: (4.0, 5.0), DeviceType.DRUM: (5.0, 7.0)}
+_ARROW_BOARD_HALF = (10.0, 6.0)
+_GLYPH_CLEARANCE_PT = 0.5
+
+
+def _pull_channelizers_inside_road(
+    items: list[tuple[DevicePlacement, float, float]],
+    y_road_top: float,
+    y_road_bottom: float,
+) -> list[tuple[DevicePlacement, float, float]]:
+    """#314 (R136, A step 1) — CHOSEN, render-only.  A cone or drum whose
+    glyph box crosses the road outline is pulled inward until the box sits
+    inside it (+0.5 pt).  The device stands on the shoulder's outer line
+    (S-630-1 Sheet 7 Case 11: the shoulder taper starts there and the
+    downstream taper returns to it); the glyph is drawn wholly on the road
+    so it never reads as standing on the sidewalk.  Placements are not
+    touched — the legend's "lateral offset exaggerated" covers the nudge."""
+    lo, hi = min(y_road_top, y_road_bottom), max(y_road_top, y_road_bottom)
+    out = []
+    for p, x, y in items:
+        half = _CHANNELIZER_HALF.get(p.device_type)
+        if half is not None:
+            h = half[1] + _GLYPH_CLEARANCE_PT
+            if hi - lo > 2 * h:
+                y = min(max(y, lo + h), hi - h)
+        out.append((p, x, y))
+    return out
+
+
+def _clear_arrow_board_of_channelizers(
+    items: list[tuple[DevicePlacement, float, float]],
+    x_of: Callable[[float], float],
+) -> list[tuple[DevicePlacement, float, float]]:
+    """#314 (R136, A step 2) — CHOSEN, render-only.  The arrow board stands
+    at the taper start, where the drums are; its glyph moves along the page
+    until its box clears every channelizer box (+0.5 pt): upstream first, and
+    downstream when upstream would leave the plan area (a taper starting at
+    the plan's edge, the divided plan).  Runs after
+    :func:`_pull_channelizers_inside_road`."""
+    chans = [
+        (
+            x - _CHANNELIZER_HALF[p.device_type][0],
+            x + _CHANNELIZER_HALF[p.device_type][0],
+            y - _CHANNELIZER_HALF[p.device_type][1],
+            y + _CHANNELIZER_HALF[p.device_type][1],
+        )
+        for p, x, y in items
+        if p.device_type in _CHANNELIZER_HALF
+    ]
+    if not chans:
+        return items
+    bw, bh = _ARROW_BOARD_HALF
+    x_min, x_max = PLAN_LEFT + bw, PLAN_RIGHT - bw
+
+    def slide(x: float, y: float, step: float) -> float | None:
+        """Slide the board in ``step``'s direction until clear; None if it
+        would leave the plan area first."""
+        for _ in range(len(chans) + 1):
+            hits = [
+                c
+                for c in chans
+                if x - bw < c[1] and c[0] < x + bw and y - bh < c[3] and c[2] < y + bh
+            ]
+            if not hits:
+                return x if x_min <= x <= x_max else None
+            if step < 0:
+                x = min(c[0] for c in hits) - bw - _GLYPH_CLEARANCE_PT
+            else:
+                x = max(c[1] for c in hits) + bw + _GLYPH_CLEARANCE_PT
+            if not x_min <= x <= x_max:
+                return None
+        return None
+
+    # Upstream is the direction of increasing station on the page.
+    upstream = 1.0 if x_of(1.0) > x_of(0.0) else -1.0
+    out = []
+    for p, x, y in items:
+        if p.device_type == DeviceType.ARROW_BOARD:
+            moved = slide(x, y, upstream)
+            if moved is None:
+                moved = slide(x, y, -upstream)
+            if moved is not None:
+                x = moved
+        out.append((p, x, y))
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -4613,6 +4711,17 @@ def _draw_schematic_page(
     shoulder_outer_offset = params.num_lanes * params.lane_width_ft + shoulder_width_ft
     arrow_y_work_side = _y_of(shoulder_outer_offset, params.is_divided) - 14.0
     arrow_y_open_side = _y_of(-shoulder_outer_offset, params.is_divided) + 14.0
+    # #314 (R136): a drawn sidewalk band sits where the arrow went (14 pt
+    # past the shoulder line); the arrow moves 8 pt beyond the band's outer
+    # edge instead.  The band is drawn on the work side, and on both sides
+    # of a divided road (``_draw_site_context``).
+    if _resolve_site_flags(site_flags)["pedestrian_facility"]:
+        sw_inner, sw_outer = _sidewalk_strip_ft(params, shoulder_width_ft)
+        lo, hi = _strip_y_range(sw_inner, sw_outer, 1, params.is_divided)
+        arrow_y_work_side = lo - 8.0 if hi <= PLAN_Y_CENTER else hi + 8.0
+        if params.is_divided:
+            lo, hi = _strip_y_range(sw_inner, sw_outer, -1, params.is_divided)
+            arrow_y_open_side = lo - 8.0 if hi <= PLAN_Y_CENTER else hi + 8.0
     arrow_x_left = PLAN_LEFT + 30.0
     arrow_x_right = PLAN_LEFT + 130.0
     if params.one_way_street:
