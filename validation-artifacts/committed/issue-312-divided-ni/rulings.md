@@ -26,11 +26,14 @@ A 20 mph urban road falls inside the "< = 40 MPH" band (A = B = C = 100 ft), but
 20 mph row. The row values above are read off the extraction's column layout; that's the column order
 the code's key table already uses.
 
-**The source the floor cites: a project ruling, not a standard.** `src/api/schemas.py:800-803` (the
-approach) and `:879-881` (the mainline):
+**The source the floor cites: a project ruling, not a standard.** The approach floor,
+`src/api/schemas.py:800-803`:
 
 > "Floor 25 per the increment-1 ruling — matching the enabled kinds' form floor, not the Table 6B-2
 > grid floor (the tables serve 20 mph, but that wider bound was offered and declined)."
+
+The mainline floor (`:881-882` on `issue-312-divided-ni-r2`) points to it: "floor 25 per the
+increment-1 ruling (same as the approach floor above)".
 
 - **The ruling's text isn't in the repo.** I searched `validation-artifacts/` and `src/`; only these
   two comments name it.

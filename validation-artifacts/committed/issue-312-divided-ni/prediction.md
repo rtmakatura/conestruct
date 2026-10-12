@@ -35,7 +35,7 @@ backend, plus frontend comments only. `frontend-only: no`. Authority: `rulings.m
 | New `tests/test_divided_near_intersection.py` | ~10 |
 | Frontend tests | 0 (comments only) |
 
-## Outcome (after the build, `438bc0c`)
+## Outcome (after the build, `27a4105` on -r2; `438bc0c` on the superseded branch)
 
 | Predicted | Actual |
 |---|---|
