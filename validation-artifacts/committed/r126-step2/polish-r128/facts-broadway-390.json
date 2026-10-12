@@ -1,0 +1,88 @@
+{
+  "header": "3 guesses marked ⚠ · change any that are wrong",
+  "rows": [
+    {
+      "row": "speed",
+      "label": "Speed",
+      "markers": [
+        "✓ measured"
+      ]
+    },
+    {
+      "row": "lanes",
+      "label": "Lanes",
+      "markers": [
+        "✓ changed"
+      ]
+    },
+    {
+      "row": "road-type",
+      "label": "Road type",
+      "markers": [
+        "⚠ from the road"
+      ]
+    },
+    {
+      "row": "street-class",
+      "label": "Street class",
+      "markers": [
+        "⚠ from the road"
+      ]
+    },
+    {
+      "row": "carriageway",
+      "label": "Carriageway",
+      "markers": [
+        "✓ detected"
+      ]
+    },
+    {
+      "row": "work-type",
+      "label": "Work type",
+      "markers": [
+        "✓ yours"
+      ]
+    },
+    {
+      "row": "night",
+      "label": "Hours",
+      "markers": [
+        "✓ default"
+      ]
+    },
+    {
+      "row": "reduction",
+      "label": "Speed reduction",
+      "markers": [
+        "✓ default"
+      ]
+    },
+    {
+      "row": "jurisdiction",
+      "label": "Jurisdiction",
+      "markers": [
+        "⚠ from the pin"
+      ]
+    },
+    {
+      "row": "work-dates",
+      "label": "Work dates",
+      "markers": [
+        "◌ not set"
+      ]
+    }
+  ],
+  "roadType": "Urban street",
+  "footer": [
+    "Denver windows · set dates to check",
+    "File details · ◌ 2 not set",
+    "",
+    "open ›"
+  ],
+  "scroll": [
+    390,
+    390
+  ],
+  "windowsOpen": "DENVER WINDOWS◌Arterial / Collector · Weekdayset dates to check",
+  "errors": []
+}
