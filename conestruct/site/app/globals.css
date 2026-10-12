@@ -4819,6 +4819,11 @@ input[type="number"] {
 .workbench .a-cell .tr-prov.is-amber {
   color: var(--warn);
 }
+/* #316: the cross-street speed's line lives in the kind's own form (not an
+   .a-cell); its guess is amber the same way (rule 138). */
+.workbench .ni-prov.tr-prov.is-amber {
+  color: var(--warn);
+}
 /* Rule 136's invalid: the message goes in the field's own provenance
    line, never only in the verdict strip. */
 .workbench .a-fld[aria-invalid="true"] {

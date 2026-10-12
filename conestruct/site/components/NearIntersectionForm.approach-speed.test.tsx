@@ -5,6 +5,8 @@
 // slider always shows a position); its line says where the speed came
 // from; WHAT's header counts its ⚠.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { DEFAULT_NEAR_INTERSECTION, type Scenario } from "@/lib/scenarios";
@@ -60,10 +62,16 @@ describe("the cross-street speed control (Q3)", () => {
     expect([...select().options].map((o) => o.value)).toEqual(["25", "30", "35", "40", "45", "50", "55"]);
   });
 
-  it("guessed: 25, and the line says so with ⚠", () => {
+  it("guessed: 25, and the line says so with ⚠, in amber (rule 138)", () => {
     form(GUESSED);
     expect(select().value).toBe("25");
     expect(line()).toBe("⚠ guessed, not confirmed · OSM highway=residential · from the road");
+    const el = screen.getByTestId("ni-cross-speed-prov");
+    expect(el.classList.contains("is-amber")).toBe(true);
+    expect(el.classList.contains("ni-prov")).toBe(true);
+    // The amber rule reaches this line outside the band's own cells.
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    expect(css).toMatch(/\.workbench \.ni-prov\.tr-prov\.is-amber \{\s*color: var\(--warn\);/);
   });
 
   it("measured: the posted speed", () => {

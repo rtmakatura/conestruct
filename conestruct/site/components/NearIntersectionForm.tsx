@@ -402,7 +402,7 @@ export function NearIntersectionForm({
             ))}
           </select>
           <span
-            className={`tr-prov${speedLine.amber ? " is-amber" : ""}`}
+            className={`ni-prov tr-prov${speedLine.amber ? " is-amber" : ""}`}
             data-testid="ni-cross-speed-prov"
           >
             {speedLine.amber ? `⚠ ${speedLine.text}` : speedLine.text}
