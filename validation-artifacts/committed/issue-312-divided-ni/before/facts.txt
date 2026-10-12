@@ -1,0 +1,5 @@
+plan sheet title: LANE CLOSURE NEAR INTERSECTION · UNDIVIDED
+audit Note 8 row: Signs on both sides of divided highway", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: False. Signs p
+audit PDF has 'Required: True': False
+audit PDF has 'Required: False': True
+audit PDF has 'median opening': False
