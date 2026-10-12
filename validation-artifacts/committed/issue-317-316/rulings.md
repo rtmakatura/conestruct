@@ -42,3 +42,23 @@
 
 **On the record:** the stop that R132 answers is the WIP commit `2239658`, with its crops in
 `notes-box/` (`probes/notes_render_probe.*`). With both lines, two SIGN SCHEDULE rows left the sheet.
+
+## R133 (Ryan, 2026-10-12), verbatim
+
+> #316 accepted on your prod check.
+>
+> R133, small polish branch (no checkpoint):
+> - The cross-street speed marker matches every other row: "⚠ from the road" when guessed, "✓ measured" when tagged. The detail (OSM highway=…, not confirmed) moves to the row's details line, the same as the mainline speed.
+> - The cross-street speed select starts at 20 mph, matching the mainline.
+> Screenshots at 1440 and 390 on the three #316 cases, the verifier, and the go.
+>
+> Then #312 (lane closure near an intersection on a divided road signs one side only; S-630-1 Note 8). Investigate first, with a 📋 checkpoint before code: a payload-level repro, Note 8 quoted with its cite, the options, and the Rule 5 churn. Reuse #309's approach where it fits.
+
+**On the record:**
+- **The marker:** built (`r133-cross-speed-marker`). The row is the same `FieldCell` the mainline
+  speed uses: one marker by the label, and the full line in its details.
+- **20 mph: not built, raised for a ruling.** On a near-intersection plan the mainline select already
+  starts at 25 (`what-cells.ts:173`, `speedMin: 25`), so the cross-street select (25–55) matches it.
+  The backend floors both at 25: the mainline `NearIntersectionScenario.speed` (`schemas.py:882`,
+  `ge=25`) and `IntersectionApproach.speed` (`:804`, `ge=25`). Offering 20 means lowering both
+  floors, a spec change to the kind's speed range, not polish.

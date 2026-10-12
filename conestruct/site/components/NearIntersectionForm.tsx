@@ -30,6 +30,8 @@ import {
 import type { DetectionOverride } from "@/lib/scenarios";
 import { WHAT_CELLS } from "@/lib/scenarios/what-cells";
 import { useWriteLock } from "./WriteLock";
+import { FieldCell } from "./bands/FieldCell";
+import { markerOf } from "@/lib/scenarios/provenance-marker";
 import {
   approachSpeedLine,
   approachSpeedShown,
@@ -375,11 +377,26 @@ export function NearIntersectionForm({
 
         {/* #316 (R129 Q3): a select with "Not set", not the slider — a
             slider always shows a position, so it showed the 30 the plan
-            didn't have (P16).  Its line says where the speed came from:
-            measured, guessed from the road class, the operator's, or not
-            set; the WHAT header counts its ⚠ (Q4). */}
-        <Field>
-          <LabelRow htmlFor="ni-cross-speed">Cross-street speed</LabelRow>
+            didn't have (P16).  R133: the row reads like every WHAT row —
+            one quiet marker ("⚠ from the road", "✓ measured", "✓ yours",
+            "◌ not set") beside the label, and the full line (OSM
+            highway=…, not confirmed) one click away in its details, the
+            same FieldCell the mainline speed uses.  The WHAT header counts
+            its ⚠ (Q4). */}
+        <FieldCell
+          label="Cross-street speed"
+          htmlFor="ni-cross-speed"
+          testid="cross-speed"
+          marker={markerOf(speedLine.text, { amber: speedLine.amber })}
+          provenance={
+            <span
+              className={`ni-prov tr-prov${speedLine.amber ? " is-amber" : ""}`}
+              data-testid="ni-cross-speed-prov"
+            >
+              {speedLine.amber ? `⚠ ${speedLine.text}` : speedLine.text}
+            </span>
+          }
+        >
           <select
             id="ni-cross-speed"
             className={`a-fld${speedShown ? "" : " is-unset"}`}
@@ -401,13 +418,7 @@ export function NearIntersectionForm({
               </option>
             ))}
           </select>
-          <span
-            className={`ni-prov tr-prov${speedLine.amber ? " is-amber" : ""}`}
-            data-testid="ni-cross-speed-prov"
-          >
-            {speedLine.amber ? `⚠ ${speedLine.text}` : speedLine.text}
-          </span>
-        </Field>
+        </FieldCell>
 
         <Field>
           <LabelRow htmlFor="ni-cross-lane-width" value={`${legs[0]?.laneWidth ?? 12} ft`}>

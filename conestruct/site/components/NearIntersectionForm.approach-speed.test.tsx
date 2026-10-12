@@ -11,7 +11,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { DEFAULT_NEAR_INTERSECTION, type Scenario } from "@/lib/scenarios";
 import type { IntersectionRecord, NearIntersectionScenario } from "@/lib/scenarios/types";
-import { withCurrentGuesses } from "@/lib/scenarios/guesses";
+import { setApproachSpeed, withCurrentGuesses } from "@/lib/scenarios/guesses";
+import { markerOf } from "@/lib/scenarios/provenance-marker";
 import { NearIntersectionForm } from "./NearIntersectionForm";
 import { WhatBand } from "./bands/WhatBand";
 
@@ -110,5 +111,41 @@ describe("WHAT's header counts the cross-street speed's ⚠ (Q4)", () => {
 
   it("a guessed cross-street speed adds one to the count; a measured one doesn't", () => {
     expect(header(GUESSED)).toBe(header(MEASURED) + 1);
+  });
+});
+
+describe("R133: the marker reads like every other row; the detail is in the row's details", () => {
+  const marker = () =>
+    document.querySelector('[data-testid="info-toggle-cross-speed"]')?.textContent?.replace(/\s+/g, " ").trim();
+  const details = () => document.querySelector('[data-testid="cell-cross-speed"]');
+
+  it("guessed: '⚠ from the road', the OSM class and 'not confirmed' behind it", () => {
+    form(GUESSED);
+    expect(marker()).toBe("⚠ from the road");
+    const prov = screen.getByTestId("ni-cross-speed-prov");
+    expect(prov.closest('[data-testid="cell-cross-speed"]')).toBe(details());
+    expect(prov.closest(".a-info")).not.toBeNull();
+    expect(prov.textContent).toContain("OSM highway=residential");
+  });
+
+  it("tagged: '✓ measured'; not set: '◌ not set'; the operator's: '✓ yours'", () => {
+    form(MEASURED);
+    expect(marker()).toBe("✓ measured");
+    cleanup();
+    form(UNSET);
+    expect(marker()).toBe("◌ not set");
+    cleanup();
+    form(setApproachSpeed(UNSET, 35) as NearIntersectionScenario);
+    expect(marker()).toBe("✓ yours");
+  });
+
+  it("the same state reads the same as the mainline speed's marker (WhatBand)", () => {
+    // The mainline's guessed line (R126) through the same producer.
+    const mainline = markerOf(
+      "guessed, not confirmed · OSM highway=residential · from the road",
+      { amber: true },
+    );
+    form(GUESSED);
+    expect(marker()).toBe(`${mainline?.glyph} ${mainline?.word}`);
   });
 });
