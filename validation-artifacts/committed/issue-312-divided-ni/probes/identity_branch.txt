@@ -1,0 +1,14 @@
+two-way          /render/audit                eaca779ff345d74c
+two-way          /render/markdown             82ef5be7e747344d
+two-way          /render/device-breakdown     ec00c73c4770e1d2
+two-way          /render/pdf (text)           6aec3f979399a37e
+two-way          /render/audit-pdf (text)     eaf12e33964107dc
+two-way          /render/crew-pdf (text)      64f1c591060dfaec
+two-way          /render/xlsx (cells)         00fa3c61ca1229ae
+one-way (#309)   /render/audit                8b884478563789f0
+one-way (#309)   /render/markdown             5ff0d8a94cd2caa1
+one-way (#309)   /render/device-breakdown     089dedaa50dae7e9
+one-way (#309)   /render/pdf (text)           97151b08802f50d6
+one-way (#309)   /render/audit-pdf (text)     704cba9d4e706377
+one-way (#309)   /render/crew-pdf (text)      dfe4aeaeb338d070
+one-way (#309)   /render/xlsx (cells)         3053ad9d2e795284

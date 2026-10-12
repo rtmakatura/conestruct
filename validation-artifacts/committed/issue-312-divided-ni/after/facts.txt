@@ -1,0 +1,11 @@
+plan sheet title: LANE CLOSURE NEAR INTERSECTION · DIVIDED HIGHWAY
+audit Note 8 row: Signs on both sides of divided highway", "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8", "detail": "Required: True. Signs pl
+pending item: {"kind": "median_opening_unverified", "label": "Divided highway: the cross street crosses the median at an opening the CDOT S-630-1 Sheet 10 plates (Cases 18/19) don't draw. Confirm the signing at the median opening, and any turning traffic there, with the Engineer (S-630-1 Sheet 2 General Note 8: 'as directed by the Engineer'). Nothing is drawn for it (#312).", "tracking_issue": "https://github.c
+crew line: 2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station -150 ft), right side of road 28 ft from the left edge of the roadway. Place matching sign on the left curb, 4 ft left of the left edge of the roadway.
+crew line: Place matching signs on the left curb at each location, 4 ft left of the left edge of the roadway (CDOT S-630-1 Sheet 2 General Note 8: both sides on a divided highway).
+crew line: 7. Place the mainline regulatory and bookend signs, on both sides: the right side 28 ft from the left edge of the roadway, the left curb 4 ft left of it: R2-10 BEGIN DOUBLE FINES ZONE at station 1,245 ft (half the C spacing inside the outermost W20-1, per S-630-1 Case 18); G20-1 at station 600 ft; R
+crew line: - Divided highway: all warning and regulatory signs are posted on BOTH sides of this carriageway, the median side included, per CDOT S-630-1 Sheet 2 General Note 8. Offsets are measured from the left (median) edge of the roadway.
+crew line: - Median opening: the plates don't draw the cross street's median opening. Confirm the signing at the median opening with the Engineer before setup.
+audit PDF has 'Required: True': True
+audit PDF has 'Required: False': False
+audit PDF has 'median opening': True
