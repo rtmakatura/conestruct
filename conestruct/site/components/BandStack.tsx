@@ -43,6 +43,8 @@ export interface BandStackProps {
   setScenario: (next: Scenario) => void;
   setMeta: (m: ScenarioMeta) => void;
   onOpenPicker: () => void;
+  /** #317 (R129 Q1): the picker, ready to mark the crossing. */
+  onMarkIntersection?: () => void;
   onKindChange: (k: ScenarioKind) => void;
   onGenerate: () => void;
   generating: boolean;
@@ -99,6 +101,7 @@ export function BandStack(props: BandStackProps) {
     setScenario,
     setMeta,
     onOpenPicker,
+    onMarkIntersection,
     onKindChange,
     onGenerate,
     generating,
@@ -196,6 +199,7 @@ export function BandStack(props: BandStackProps) {
           setScenario={setScenario}
           setMeta={setMeta}
           onOpenPicker={onOpenPicker}
+          onMarkIntersection={onMarkIntersection}
           // Defect 1: the chip writes the kind AND records that a person
           // chose it.  Re-picking the kind already on the scenario (the
           // default's own chip) is a choice too — `onKindChange` returns

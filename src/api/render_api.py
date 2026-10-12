@@ -21,26 +21,28 @@ import os
 import tempfile
 from collections.abc import Awaitable, Callable
 from pathlib import Path
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 import httpx
 import sentry_sdk
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, TypeAdapter, ValidationError
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
 from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
+    READS_CROSSING_OPTIONAL,
     CrossStreetStationError,
     NearIntersectionScenario,
     Scenario,
     ShoulderScenario,
     flagger_lane_ineligible_high,
+    intersection_not_marked,
     lanes_arithmetic_mismatch,
     left_side_built,
     scenario_to_call,
@@ -403,6 +405,29 @@ def _read_scenario(scenario: Scenario) -> tuple[Scenario, dict[str, str] | None]
         return scenario, None
     meta = scenario.meta.model_copy(update={"work": None})
     return scenario.model_copy(update={"meta": meta}), refusal
+
+
+# #317 (R129 Q1, Q2): the line the side control and the band's aerial both
+# render, verbatim, while a near-intersection plan's crossing isn't marked.
+INTERSECTION_NOT_MARKED_MESSAGE = "Mark the cross street on the map to lay out the sides."
+
+
+def _validate_read_body(adapter: TypeAdapter[Any], body: Any) -> Any:
+    """Validate a READ endpoint's body under READS_CROSSING_OPTIONAL (#317).
+
+    FastAPI's own body parsing passes no validation context, so a read that
+    took its model as a parameter could never answer a near-intersection
+    plan with no marked crossing.  The two reads take the JSON and validate
+    it here instead.  Any error is re-raised the way FastAPI raises it — the
+    same ``loc`` prefix ``("body", ...)``, no ``url`` — so every other bad
+    body answers the same 422, byte for byte.
+    """
+    try:
+        return adapter.validate_python(body, context=READS_CROSSING_OPTIONAL)
+    except ValidationError as exc:
+        raise RequestValidationError(
+            [{**e, "loc": ("body", *e["loc"])} for e in exc.errors(include_url=False)]
+        ) from exc
 
 
 def _ensure_preview_allowed(scenario: Scenario) -> None:
@@ -1378,8 +1403,11 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
     return options
 
 
+_SCENARIO_ADAPTER: TypeAdapter[Any] = TypeAdapter(Scenario)
+
+
 @app.post("/render/corridor-geometry")
-def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
+def render_corridor_geometry(body: Annotated[Any, Body()]) -> JSONResponse:
     """The laid-out corridor as geometry, per approach (#290, ruling 7).
 
     "Each approach's geometry returned by the backend, never sent on the
@@ -1410,8 +1438,14 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     (:func:`_read_scenario`), and the answer adds ``side_refused``
     (``{"side", "cause", "message"}``) — the key is present only then, so
     every other answer is byte-identical to before.
+
+    #317 (R129): a work-start near_intersection plan with no marked crossing
+    answers ``intersection_not_marked`` with the line in ``message``: the
+    side options are listed (they are true) but nothing is laid out, even
+    with a side stored — a corridor drawn without its cross street would be
+    a wrong picture.  Every deliverable still refuses that plan (422).
     """
-    scenario, side_refused = _read_scenario(scenario)
+    scenario, side_refused = _read_scenario(_validate_read_body(_SCENARIO_ADAPTER, body))
     _ensure_scenario_enabled(scenario)
     try:
         params, _generator, _kwargs = scenario_to_call(scenario, place_cross_street=False)
@@ -1442,6 +1476,10 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
         return JSONResponse(out)
     if pin_model == "work_start":
         out["side_options"] = _side_options(scenario, params)
+    if intersection_not_marked(scenario):
+        out["status"] = "intersection_not_marked"
+        out["message"] = INTERSECTION_NOT_MARKED_MESSAGE
+        return JSONResponse(out)
     if params.bearing_deg is None:
         out["status"] = "side_not_confirmed" if pin_model == "work_start" else "no_bearing"
         return JSONResponse(out)
@@ -1526,8 +1564,11 @@ class CorridorMapRequest(BaseModel):
     zoom: int = Field(default=0, ge=-1, le=3)
 
 
+_CORRIDOR_MAP_ADAPTER: TypeAdapter[CorridorMapRequest] = TypeAdapter(CorridorMapRequest)
+
+
 @app.post("/render/corridor-map")
-def render_corridor_map(req: CorridorMapRequest) -> Response:
+def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
     """The WHERE band's aerial: the laid-out corridor as a PNG (#301 piece 1).
 
     Ruling 1 on the #301 checkpoint: "Option (a), scenario in, PNG out,
@@ -1549,7 +1590,12 @@ def render_corridor_map(req: CorridorMapRequest) -> Response:
 
     #315 (R125 Q2): a stored left side the backend refuses reads as no side
     (:func:`_read_scenario`), so the band shows the pin picture.
+
+    #317 (R129 Q2): a near-intersection plan with no marked crossing gets
+    the pin picture; ``work`` / ``laid_out`` answer 409
+    ``intersection_not_marked`` with the same line as the geometry read.
     """
+    req = _validate_read_body(_CORRIDOR_MAP_ADAPTER, body)
     scenario, _side_refused = _read_scenario(req.scenario)
     _ensure_scenario_enabled(scenario)
     try:
@@ -1561,6 +1607,11 @@ def render_corridor_map(req: CorridorMapRequest) -> Response:
     if not (meta.lat and meta.lng):
         return JSONResponse({"status": "no_pin", "message": None}, status_code=409)
     approaches = None
+    if req.stage != "pin" and intersection_not_marked(scenario):
+        return JSONResponse(
+            {"status": "intersection_not_marked", "message": INTERSECTION_NOT_MARKED_MESSAGE},
+            status_code=409,
+        )
     if req.stage != "pin":
         if params.pin_model != "work_start" or params.bearing_deg is None:
             return JSONResponse({"status": "side_not_confirmed", "message": None}, status_code=409)

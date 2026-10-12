@@ -104,6 +104,22 @@ describe("the band's aerial, state by state", () => {
     expect(q("band-aerial")?.getAttribute("data-stage")).toBe("pin");
   });
 
+  it("#317 (R129 Q2): no crossing marked — the pin, and the side control's own line", async () => {
+    const line = "Mark the cross street on the map to lay out the sides.";
+    render(
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("intersection_not_marked", { message: line })}
+        kindConfirmed
+      />,
+    );
+    await settle();
+    expect(requests).toEqual([{ scenario: SCENARIO, stage: "pin", width: 600, height: 300 }]);
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
+    expect(q("band-aerial-note")?.textContent).toBe(line);
+    expect(q("band-aerial-note")?.textContent).not.toBe(AERIAL_FAILED);
+  });
+
   it("the side chosen, the kind owed: the work only, and a legend line for the rest (ruling 4)", async () => {
     render(<BandAerial scenario={SCENARIO} geometry={answer("laid_out")} kindConfirmed={false} />);
     await settle();

@@ -451,6 +451,8 @@ export function GeneratorSidebar({
         setScenario={setScenario}
         setMeta={setMeta}
         onOpenPicker={() => openPicker()}
+        // #317 (R129 Q1): WHERE's own Mark on map, before WHAT can open.
+        onMarkIntersection={() => openPicker(true)}
         onKindChange={onKindChange}
         kindState={kindState}
         onKindPicked={onKindPicked}

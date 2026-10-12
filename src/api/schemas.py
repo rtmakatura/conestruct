@@ -18,7 +18,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Annotated, Literal, Self
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, ValidationInfo, model_validator
 
 from src.api.site_scan import SiteScanRequest
 from src.generation.layout import (
@@ -164,6 +164,25 @@ class CarriagewayFacts(BaseModel):
             twin_searched=self.twinSearched,
             confirmed=self.confirmed,
         )
+
+
+# #317 (R129): the validation context the two READ endpoints
+# (/render/corridor-geometry, /render/corridor-map) validate their body
+# under.  It lets a work-start near_intersection with no marked crossing
+# through, so the reads can answer ``intersection_not_marked``; nothing else
+# passes a context, so every deliverable still refuses it.
+READS_CROSSING_OPTIONAL: dict[str, str] = {"reads": "crossing_optional"}
+
+
+def intersection_not_marked(scenario: object) -> bool:
+    """A work-start near_intersection plan whose crossing isn't marked (#317)."""
+    meta = getattr(scenario, "meta", None)
+    return (
+        getattr(scenario, "kind", None) == "near_intersection"
+        and meta is not None
+        and meta.pinModel == "work_start"
+        and meta.intersection is None
+    )
 
 
 class IntersectionPin(BaseModel):
@@ -907,7 +926,7 @@ class NearIntersectionScenario(
         return self
 
     @model_validator(mode="after")
-    def _check_station_producer(self) -> Self:
+    def _check_station_producer(self, info: ValidationInfo) -> Self:
         # #290: one producer for the cross street's station per pin model.
         # A corridor_end plan carries the value its frontend computed; a
         # work_start plan carries the marked intersection and never the
@@ -919,7 +938,11 @@ class NearIntersectionScenario(
                     "pinModel 'work_start': the backend computes each approach's "
                     "alongStationFt from meta.intersection; drop alongStationFt."
                 )
-            if self.meta.intersection is None:
+            # #317 (R129): the two READ endpoints answer a plan whose
+            # crossing isn't marked yet (``intersection_not_marked``) under
+            # READS_CROSSING_OPTIONAL; with no context — every deliverable,
+            # every other caller — the refusal stands, byte for byte.
+            if self.meta.intersection is None and info.context != READS_CROSSING_OPTIONAL:
                 raise ValueError(
                     "pinModel 'work_start' near_intersection needs meta.intersection "
                     "(the marked cross street) to place the approaches."

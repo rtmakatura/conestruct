@@ -76,7 +76,10 @@ export type GeometryStatus =
   | "no_pin"
   | "side_not_confirmed"
   | "no_bearing"
-  | "corridor_unbuildable";
+  | "corridor_unbuildable"
+  // #317 (R129): a near-intersection plan whose crossing isn't marked; the
+  // backend's `message` says so, and nothing is laid out until it is.
+  | "intersection_not_marked";
 
 export interface CorridorGeometry {
   status: GeometryStatus;

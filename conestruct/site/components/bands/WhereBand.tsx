@@ -226,11 +226,15 @@ function SideControl({
   scenario,
   setMeta,
   locked,
+  onMarkIntersection,
 }: {
   fetchState: GeometryFetch;
   scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
   locked: boolean;
+  /** #317 (R129 Q1): opens the picker ready to mark the crossing (#301's
+   *  `openPicker(true)`). */
+  onMarkIntersection?: () => void;
 }) {
   const options: SideOption[] = (fetchState.geometry?.side_options ?? []).filter(
     (o) => o.built,
@@ -241,10 +245,40 @@ function SideControl({
   // one line per cause, R125 Q1); the line is the backend's, verbatim, and
   // nothing is reset.
   const refused = fetchState.geometry?.side_refused ?? null;
+  // #317 (R129 Q1): a near-intersection plan with no crossing marked — the
+  // backend's line and Mark on map, and no chips: the sides can't be laid
+  // out until the crossing is marked.
+  const notMarked =
+    fetchState.geometry?.status === "intersection_not_marked"
+      ? (fetchState.geometry.message ?? null)
+      : null;
   return (
     <div className="mt-4" data-testid="side-control">
       <div className="tr-field">Occupied side</div>
-      {options.length === 0 ? (
+      {notMarked !== null ? (
+        <>
+          <div className="tr-prov mt-1" data-testid="side-control-not-marked">
+            <span aria-hidden="true">⚠ </span>
+            {notMarked}
+          </div>
+          {onMarkIntersection && (
+            <div className="mt-2">
+              <button
+                type="button"
+                className="act-btn"
+                data-write=""
+                aria-disabled={locked || undefined}
+                onClick={() => {
+                  if (!locked) onMarkIntersection();
+                }}
+                data-testid="side-control-mark"
+              >
+                Mark on map
+              </button>
+            </div>
+          )}
+        </>
+      ) : options.length === 0 ? (
         <div className="tr-prov mt-1" data-testid="side-control-note">
           {/* P8: one honest line while the road's sides are read; a
               failure says so rather than offering a guessed choice. */}
@@ -368,6 +402,7 @@ export function WhereBand({
   setScenario,
   setMeta,
   onOpenPicker,
+  onMarkIntersection,
   onKindChange,
   kindPicked = true,
   // Rule 10: the safe default is "not chosen" — an omitted prop must not
@@ -383,6 +418,9 @@ export function WhereBand({
   setScenario: (next: Scenario) => void;
   setMeta: (m: ScenarioMeta) => void;
   onOpenPicker: () => void;
+  /** #317 (R129 Q1): the side control's Mark on map — the picker, ready to
+   *  mark the crossing. */
+  onMarkIntersection?: () => void;
   /** A chip click — the ONLY writer of the kind choice (defect 1). */
   onKindChange: (k: ScenarioKind) => void;
   /** Has a person clicked a chip?  False renders the chips with none
@@ -590,6 +628,7 @@ export function WhereBand({
               scenario={scenario}
               setMeta={setMeta}
               locked={locked}
+              onMarkIntersection={onMarkIntersection}
             />
           )}
 

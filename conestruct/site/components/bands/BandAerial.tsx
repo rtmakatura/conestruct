@@ -143,6 +143,8 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
         : AERIAL_FAILED;
   } else if (aerial.state === "error") note = AERIAL_FAILED;
   else if (aerial.state !== "ready" && !holding) note = AERIAL_WAIT;
+  // #317 (R129 Q2): the side control's own line, the backend's verbatim.
+  else if (stage === "pin" && g?.status === "intersection_not_marked" && g.message) note = g.message;
   else if (stage === "pin") note = SIDE_BLOCKER;
 
   const shown = src !== null && stage !== null;

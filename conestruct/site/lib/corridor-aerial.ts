@@ -23,7 +23,8 @@ export function aerialStage(
   kindConfirmed: boolean,
 ): AerialStage | null {
   if (!g) return null;
-  if (g.status === "side_not_confirmed") return "pin";
+  // #317 (R129 Q2): no crossing marked yet — the pin, as before a side.
+  if (g.status === "side_not_confirmed" || g.status === "intersection_not_marked") return "pin";
   if (g.status === "laid_out") return kindConfirmed ? "laid_out" : "work";
   return null;
 }
