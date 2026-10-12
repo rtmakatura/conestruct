@@ -52,6 +52,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
+    approach_speed_display,
     generated_stamp,
     jurisdiction_display,
     road_type_display,
@@ -677,6 +678,8 @@ def build_narrative_context(
                 {
                     "id": a.id,
                     "speed_mph": a.speed_mph,
+                    # #316: "N mph", with the clause while guessed.
+                    "speed_display": approach_speed_display(a),
                     "road_type_human": ROAD_TYPE_DISPLAY.get(a.road_type, a.road_type),
                     "signalized": a.signalized,
                     "a_dist_ft": a_st["a_dist"],

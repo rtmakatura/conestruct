@@ -52,6 +52,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
+    approach_speed_display,
     shoulder_closed_sign_code,
     shoulder_ta_reference,
     validate_corridor_geometry,
@@ -1580,8 +1581,11 @@ def build_audit_trail(
                     "a_dist_ft": a_st["a_dist"],
                     "key_text": (
                         f"Sheet 10 advance-signing key: A = {a_st['a_dist']:g} ft "
-                        f"at {a.speed_mph} mph ({a.road_type})"
+                        f"at {approach_speed_display(a)} ({a.road_type})"
                     ),
+                    # #316: present only for a guessed speed, so every other
+                    # audit stays byte-identical.
+                    **({"speed_guessed": True} if a.speed_guessed else {}),
                     "sign_table": [
                         {
                             "Code": "W20-1",

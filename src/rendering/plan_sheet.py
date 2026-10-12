@@ -3480,6 +3480,21 @@ def _draw_notes(
             ):
                 y[0] -= layout.footer_pads[1]
                 cv.drawString(x, y[0], line)
+        if params.approach_speed_guessed:
+            # #316 (R129 Q6): the cross street's approach speed — which sets
+            # its W20-1 / R2-10 positions — is the road-class estimate.
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.black)
+            for line in _wrap_to_width(
+                cv,
+                "CROSS-STREET SPEED GUESSED FROM THE ROAD CLASS. CONFIRM THE POSTED SPEED ON SITE.",
+                "Helvetica-Bold",
+                6.5,
+                width - 16.0,
+                max_lines=2,
+            ):
+                y[0] -= layout.footer_pads[1]
+                cv.drawString(x, y[0], line)
         if params.near_intersection:
             # Option C citation note (Refs #117): the sheet cites the plate
             # instead of drawing the cross street.  The plate-vs-tool

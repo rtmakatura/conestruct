@@ -38,6 +38,7 @@ from src.rendering.document import (
     rich_text,
 )
 from src.rendering.tier_ledger import ledger_line, tier_ledger
+from src.rules.validators import SPEED_GUESSED_CLAUSE
 
 # Characters the projection emits that Helvetica/WinAnsi cannot render.
 _GLYPH_FALLBACKS: dict[str, str] = {
@@ -536,7 +537,8 @@ def _approaches_blocks(approaches: dict[str, Any]) -> list[Block]:
         )
         blocks.append(
             _body(
-                f"Approach '{_str(ap, 'id')}': {_g(ap, 'speed_mph')} mph, "
+                f"Approach '{_str(ap, 'id')}': {_g(ap, 'speed_mph')} mph"
+                f"{' ' + SPEED_GUESSED_CLAUSE if ap.get('speed_guessed') else ''}, "
                 f"{_str(ap, 'road_type')}{signal_note}. {_str(ap, 'key_text')}."
             )
         )
@@ -613,6 +615,8 @@ _GUESS_FIELD = {
     "jurisdiction_key": "Jurisdiction",
     "street_class": "Street class",
     "speed": "Speed",
+    # #316 (R129).
+    "approach_speed": "Cross-street speed",
 }
 _GUESS_SOURCE = {"pin": "the pin", "road": "the road", "road_class": "the road class"}
 

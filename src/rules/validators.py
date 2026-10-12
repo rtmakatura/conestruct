@@ -239,6 +239,10 @@ class ScenarioParams:
     # current at the API chokepoint).  ``speed_display`` prints it, and the
     # plan sheet's notes box says so.
     speed_guessed: bool = False
+    # #316 (R129 Q6) — True when the cross street's approach speed is the
+    # road-class estimate (``scenario.guesses.approach_speed``): the plan
+    # sheet's notes box says so.  Near-intersection only; False elsewhere.
+    approach_speed_guessed: bool = False
     # #290 — what the pin means (``ScenarioMeta.pinModel``), bridged by
     # ``scenario_to_call``.  It decides how ``bearing_deg`` reads: under
     # "corridor_end" it points from the pin toward the first sign; under
@@ -287,6 +291,8 @@ class ApproachParams:
     lane_width_ft: float
     along_station_ft: float
     signalized: bool = False
+    # #316 (R129): the speed is the cross street's road-class estimate.
+    speed_guessed: bool = False
 
 
 # MUTCD Table 6B-1 road category → the words every deliverable prints
@@ -381,6 +387,14 @@ def speed_display(params: ScenarioParams) -> str:
     if params.speed_guessed:
         return f"{params.speed_mph} mph {SPEED_GUESSED_CLAUSE}"
     return f"{params.speed_mph} mph"
+
+
+def approach_speed_display(approach: ApproachParams) -> str:
+    """An approach's speed as the audit and the crew sheet print it (#316):
+    "N mph", with R127's clause while it is an untouched road-class guess."""
+    if approach.speed_guessed:
+        return f"{approach.speed_mph} mph {SPEED_GUESSED_CLAUSE}"
+    return f"{approach.speed_mph} mph"
 
 
 def jurisdiction_display(params: ScenarioParams) -> str:

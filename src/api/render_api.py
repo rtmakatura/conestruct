@@ -578,14 +578,57 @@ def input_guesses(scenario: Scenario) -> list[dict[str, Any]]:
                 "operator_confirmed": False,
             }
         )
+
+    ap = guesses.approach_speed
+    if ap is not None:
+        # #316 (R129 Q5): the cross street's road-class estimate, one record
+        # for the street, capped to the approach's own speed range.
+        from src.api.schemas import IntersectionApproach
+        from src.rules.speed_estimate import speed_estimate_from_highway
+
+        approaches = getattr(scenario, "approaches", None)
+        if not approaches:
+            raise _guess_refusal("Cross-street speed", "this plan has no cross street")
+        estimate = speed_estimate_from_highway(ap.highwayClass)
+        if estimate is None:
+            raise _guess_refusal(
+                "Cross-street speed",
+                f"the cross street's class highway={ap.highwayClass} gives no estimate",
+            )
+        lo, hi = _field_bounds(IntersectionApproach, "speed")
+        capped = min(max(estimate, lo), hi)
+        if any(a.speed != capped for a in approaches):
+            raise _guess_refusal(
+                "Cross-street speed",
+                f"the cross street's class (highway={ap.highwayClass}) estimates "
+                f"{capped} mph, and this plan's approaches carry another speed",
+            )
+        evidence = f"OSM highway={ap.highwayClass} on the cross street; no readable posted speed"
+        if capped != estimate:
+            evidence += f"; estimated {estimate} mph, capped at {capped} mph"
+        records.append(
+            {
+                "field": "approach_speed",
+                "value": capped,
+                "label": f"{capped} mph",
+                "source": "road_class",
+                "evidence": evidence,
+                "operator_confirmed": False,
+            }
+        )
     return records
 
 
 def _speed_bounds(scenario: Scenario) -> tuple[int, int]:
     """The kind's speed range, read from its own schema field (ge / le), so
     the cap R127 Q3 applies is the one the wire already enforces."""
+    return _field_bounds(type(scenario), "speed")
+
+
+def _field_bounds(model: type[BaseModel], field: str) -> tuple[int, int]:
+    """A numeric field's schema range (ge / le) — the one the wire enforces."""
     lo, hi = 0, 10_000
-    for meta in type(scenario).model_fields["speed"].metadata:
+    for meta in model.model_fields[field].metadata:
         lo = getattr(meta, "ge", lo)
         hi = getattr(meta, "le", hi)
     return int(lo), int(hi)

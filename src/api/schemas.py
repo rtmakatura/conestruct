@@ -396,6 +396,9 @@ class Guesses(BaseModel):
     jurisdiction_key: JurisdictionGuess | None = None
     # R126: the road-class speed estimate, prefilled as a guess.
     speed: SpeedGuess | None = None
+    # #316 (R129 Q5): the same rule for a near-intersection plan's cross
+    # street — ONE record for the street, every approach carries its speed.
+    approach_speed: SpeedGuess | None = None
 
 
 class JurisdictionScenarioFields(BaseModel):
@@ -1272,6 +1275,13 @@ def _speed_guessed(scenario: Scenario) -> bool:
     return bool(guesses is not None and guesses.speed is not None)
 
 
+def _approach_speed_guessed(scenario: Scenario) -> bool:
+    """True when the cross street's approach speed is an untouched
+    road-class guess (#316, R129): the deliverables then say so."""
+    guesses = getattr(scenario, "guesses", None)
+    return bool(guesses is not None and guesses.approach_speed is not None)
+
+
 # CHOSEN (#308 ruling R88, 2026-10-05): the shoulder a one-way street's plan
 # builds.  No source: no MUTCD, S-630-1, Colorado Supplement or Denver
 # (PT-116.1, Rule 22.3) text found sets a shoulder width for a one-way
@@ -1392,6 +1402,8 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
         # R126 / R127 Q7: the speed is an untouched road-class guess (proved
         # current at the same chokepoint).
         "speed_guessed": _speed_guessed(scenario),
+        # #316 (R129 Q6): the cross street's speed, the same way.
+        "approach_speed_guessed": _approach_speed_guessed(scenario),
     }
 
     if isinstance(scenario, ShoulderScenario):
@@ -1594,6 +1606,7 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
                 lane_width_ft=a.laneWidth,
                 along_station_ft=station if station is not None else float(a.alongStationFt or 0.0),
                 signalized=a.signalized,
+                speed_guessed=_approach_speed_guessed(scenario),
             )
             for a in scenario.approaches
         ]

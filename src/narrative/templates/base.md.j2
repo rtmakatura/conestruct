@@ -27,7 +27,7 @@
 ### Cross-Street Signs (per approach leg; stations measured from the intersection curb line)
 
 {% for ap in ni_approaches %}
-- **{{ ap.id }} approach** ({{ ap.speed_mph }} mph, {{ ap.road_type_human }}{% if ap.signalized %}; signalized: signal operation review required before work begins, MUTCD §6N.12 / Part 4{% endif %}): W20-1 at {{ "{:,.0f}".format(ap.w20_1_ft) }} ft (twice the key distance A) and R2-10 at {{ "{:,.0f}".format(ap.r2_10_ft) }} ft (at A) on the approach side. The S-630-1 Sheet 10 advance-signing key gives A = {{ "{:,.0f}".format(ap.a_dist_ft) }} ft for this leg's speed and road type. R2-11 at {{ "{:,.0f}".format(ap.r2_11_ft) }} ft on the departure side.
+- **{{ ap.id }} approach** ({{ ap.speed_display }}, {{ ap.road_type_human }}{% if ap.signalized %}; signalized: signal operation review required before work begins, MUTCD §6N.12 / Part 4{% endif %}): W20-1 at {{ "{:,.0f}".format(ap.w20_1_ft) }} ft (twice the key distance A) and R2-10 at {{ "{:,.0f}".format(ap.r2_10_ft) }} ft (at A) on the approach side. The S-630-1 Sheet 10 advance-signing key gives A = {{ "{:,.0f}".format(ap.a_dist_ft) }} ft for this leg's speed and road type. R2-11 at {{ "{:,.0f}".format(ap.r2_11_ft) }} ft on the departure side.
 {% endfor %}
 {% endif %}
 
@@ -84,7 +84,7 @@
 
 8. Place the cross-street advance sets, one set per approach leg. Stations for each set are measured along that leg FROM the intersection curb line, increasing away from the intersection:
 {% for ap in ni_approaches %}
-   - **{{ ap.id }} approach** ({{ ap.speed_mph }} mph, {{ ap.road_type_human }}): W20-1 ROAD WORK AHEAD at {{ "{:,.0f}".format(ap.w20_1_ft) }} ft and R2-10 BEGIN DOUBLE FINES ZONE at {{ "{:,.0f}".format(ap.r2_10_ft) }} ft, both on the approach side {{ "{:.0f}".format(ap.sign_offset_ft) }} ft from that road's centerline. The W20-1 sits at twice the key distance A, the R2-10 at A, where the S-630-1 Sheet 10 advance-signing key gives A = {{ "{:,.0f}".format(ap.a_dist_ft) }} ft for this leg's own speed and road type. R2-11 END DOUBLE FINES ZONE at {{ "{:,.0f}".format(ap.r2_11_ft) }} ft on the departure side (facing traffic leaving the intersection).{% if ap.signalized %} This approach is signalized: signal operation must be reviewed before work begins (MUTCD §6N.12; Part 4). See the audit trail.{% endif +%}
+   - **{{ ap.id }} approach** ({{ ap.speed_display }}, {{ ap.road_type_human }}): W20-1 ROAD WORK AHEAD at {{ "{:,.0f}".format(ap.w20_1_ft) }} ft and R2-10 BEGIN DOUBLE FINES ZONE at {{ "{:,.0f}".format(ap.r2_10_ft) }} ft, both on the approach side {{ "{:.0f}".format(ap.sign_offset_ft) }} ft from that road's centerline. The W20-1 sits at twice the key distance A, the R2-10 at A, where the S-630-1 Sheet 10 advance-signing key gives A = {{ "{:,.0f}".format(ap.a_dist_ft) }} ft for this leg's own speed and road type. R2-11 END DOUBLE FINES ZONE at {{ "{:,.0f}".format(ap.r2_11_ft) }} ft on the departure side (facing traffic leaving the intersection).{% if ap.signalized %} This approach is signalized: signal operation must be reviewed before work begins (MUTCD §6N.12; Part 4). See the audit trail.{% endif +%}
 {% endfor %}
 
 **Sequencing note:** The MUTCD does not prescribe the order of mainline versus cross-street setup. Whether the cross-street sets go up before, after, or interleaved with the mainline sequence is the Traffic Control Supervisor's determination for this site.
