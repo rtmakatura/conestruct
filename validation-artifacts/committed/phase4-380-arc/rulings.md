@@ -124,3 +124,17 @@ folding R140 in would have held a finished change behind a ruling.
 
 **Order:** `r142-mapbox-wordmark` (light lane) first from main; `phase4-device-table` (R141) stacks
 on its tip.
+
+## R143 (Ryan, 2026-10-13), verbatim
+
+> R143, the floor (supersedes R137 Q3's message and R138's floor):
+> - Make the audit calculation row wrap at phone width: the MUTCD cite drops under the title, and the row fits 320 with nothing past the edge. Phone-only CSS.
+> - With that, the supported floor is 320 px. No floor message: nothing below 320 is common enough to need one. 360×800 stays the one test size; add 320 as a fit check (no horizontal scroll at any stage) in the tooling and DESIGN-SPACING.md.
+> - Fold in the results-page tap targets you found: the 8 pricing inputs and "Download Quote (XLSX)" reach 44 px at phone width.
+> One branch. Report with 320 and 360 screenshots of results with all disclosures open, the before/after sizes, and the go.
+>
+> Then continue: #286 and rule 169, rule 168's cards, #280.
+
+**Phase 4's branches now:** 1 sizes and tooling, 2 tap targets, 3 device table (all shipped);
+4 the floor at 320 (`phase4-floor-320`, this ruling; replaces "the floor message"); 5 #286 and
+rule 169; 6 rule 168's cards; 7 #280.

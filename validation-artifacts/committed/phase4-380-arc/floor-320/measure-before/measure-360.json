@@ -1,0 +1,62 @@
+{
+  "width": 360,
+  "empty": {
+    "scroll": [
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": []
+  },
+  "picker": {
+    "scroll": [
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": [
+      "a.mapboxgl-ctrl-logo \"Mapbox homepage\" 88x23"
+    ]
+  },
+  "where": {
+    "scroll": [
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": []
+  },
+  "what": {
+    "scroll": [
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": []
+  },
+  "results": {
+    "scroll": [
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1",
+      "div.sr-only \"Plan generated: 35 devices, 11 types.\" scroll=227 box=1"
+    ],
+    "smallTargets": []
+  },
+  "errors": []
+}

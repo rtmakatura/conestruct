@@ -1,0 +1,72 @@
+{
+  "width": 320,
+  "what-flagger": {
+    "scroll": [
+      320,
+      320,
+      320
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": []
+  },
+  "errorsFlagger": [],
+  "what-near-intersection": {
+    "scroll": [
+      320,
+      320,
+      320
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": []
+  },
+  "errorsNear": [],
+  "picker-map-interacted": {
+    "scroll": [
+      320,
+      320,
+      320
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": [
+      "a.mapboxgl-ctrl-logo \"Mapbox homepage\" 88x23"
+    ]
+  },
+  "disclosuresOpened": 10,
+  "results-disclosures-open": {
+    "scroll": [
+      334,
+      320,
+      334
+    ],
+    "overflow": [
+      "div.workbench-frame \"\" right=326.0",
+      "span.chev \"›\" right=334.2"
+    ],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1",
+      "div.sr-only \"Plan generated: 35 devices, 11 types.\" scroll=227 box=1",
+      "thead \"DEVICE TYPE MUTCD CODE FUNCTION QTY\" scroll=342 box=1"
+    ],
+    "smallTargets": [
+      "input.bg-[color:var(--canvas)].border \"1\" 123x38",
+      "input.bg-[color:var(--canvas)].border \"0\" 123x38",
+      "input.bg-[color:var(--canvas)].border \"5\" 123x38",
+      "input.bg-[color:var(--canvas)].border \"10\" 123x38",
+      "input.bg-[color:var(--canvas)].border \"10\" 123x38",
+      "input.bg-[color:var(--canvas)].border \"55\" 123x38",
+      "input.bg-[color:var(--canvas)].border \"75\" 123x38",
+      "input.bg-[color:var(--canvas)].border \"45\" 123x38",
+      "button.md:flex-1.font-sans \"Download Quote (XLSX) ↓\" 258x44"
+    ]
+  },
+  "errorsResults": []
+}
