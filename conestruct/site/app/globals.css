@@ -3640,6 +3640,106 @@ input[type="number"] {
   white-space: nowrap;
 }
 
+/* R141 (Phase 4 branch 3) — the device schedule at the phone width.
+   MUTCD codes never break mid-code ("G20-/1" at 360 before), at any width;
+   the desk table is otherwise unchanged.  The phone labels are hidden at
+   the desk, where the header row labels the columns. */
+.workbench .device-table .dt-code {
+  white-space: nowrap;
+}
+.workbench .device-table .dt-label {
+  display: none;
+}
+@media (max-width: 480px) {
+  /* Each device is one block: the name and the quantity on the first
+     line, the labelled code under the name, then the function.  (The
+     4-column table was 356 px wide in a 230 px box; the page widened to
+     421.) */
+  .workbench .device-table,
+  .workbench .device-table tbody {
+    display: block;
+    width: 100%;
+  }
+  /* The header row stays for screen readers, visually hidden. */
+  .workbench .device-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .workbench .device-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    row-gap: 2px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--paper-line-soft);
+  }
+  .workbench .device-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .workbench .device-table tbody td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+  .workbench .device-table tr.jr {
+    background: var(--dim-soft);
+  }
+  .workbench .device-table tr.jr td {
+    background: transparent;
+  }
+  .workbench .device-table .dt-device {
+    grid-column: 1;
+    grid-row: 1;
+    font-weight: 500;
+  }
+  .workbench .device-table td.num {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    text-align: right;
+  }
+  .workbench .device-table .dt-code,
+  .workbench .device-table .dt-fn {
+    grid-column: 1;
+    font-size: var(--fs-field-label);
+    color: var(--ink-faint);
+  }
+  .workbench .device-table .dt-label {
+    display: inline;
+    margin-right: 6px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .workbench .device-table td.num .dt-label {
+    display: block;
+    margin-right: 0;
+  }
+
+  /* The nested-frame fix (R141): inside the results disclosures a
+     reference chip sat in a chip in the panel, each level 1 px of border
+     and 16 px of padding a side, so the schedule had 230 px of a 360
+     screen.  At the phone width the chips there lose their side borders
+     and side padding and read as full-width sections between rules; the
+     panel's own padding stays (DisclosureRow is shared with the pricing
+     card).  Reference chips render only in the results disclosures. */
+  .workbench .disc-panel .refchip {
+    border-left: 0;
+    border-right: 0;
+  }
+  .workbench .disc-panel .refchip .chip-sum,
+  .workbench .disc-panel .refchip .chip-body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 /* Zone 2 error presentation: last successful results kept visible but
    visibly stale — dimmed and desaturated BELOW the ribbon that explains
    it.  The ribbon carries the words; the wash is never the only signal.

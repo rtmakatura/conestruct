@@ -160,22 +160,30 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
               {jurName}&apos;s published rules add them on top of the MUTCD baseline.
             </p>
           )}
-          <table className="device-table">
-            <thead>
-              <tr>
-                <th>Device type</th>
-                <th>MUTCD code</th>
-                <th>Function</th>
-                <th style={{ textAlign: "right" }}>Qty</th>
+          {/* R141: at the phone width each row stacks into a block (name
+              and quantity, then the labelled code, then the function); the
+              CSS changes the rows' display, which drops a table's implicit
+              roles in some browsers, so the roles are explicit.  The
+              visible "MUTCD"/"Qty" labels are the phone's stand-in for the
+              header row, which stays for screen readers (visually hidden
+              there), so the labels are aria-hidden: one labelling each. */}
+          <table className="device-table" role="table">
+            <thead role="rowgroup">
+              <tr role="row">
+                <th role="columnheader">Device type</th>
+                <th role="columnheader">MUTCD code</th>
+                <th role="columnheader">Function</th>
+                <th role="columnheader" style={{ textAlign: "right" }}>Qty</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup">
               {state.data.devices.map((row) => (
                 <tr
                   key={`${row.device}-${row.code}`}
+                  role="row"
                   className={row.jurisdiction_required ? "jr" : undefined}
                 >
-                  <td>
+                  <td role="cell" className="dt-device">
                     {row.device}
                     {row.jurisdiction_required && (
                       <span
@@ -186,9 +194,15 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
                       </span>
                     )}
                   </td>
-                  <td>{row.code}</td>
-                  <td>{row.function}</td>
-                  <td className="num">{row.qty}</td>
+                  <td role="cell" className="dt-code">
+                    <span className="dt-label" aria-hidden="true">MUTCD</span>
+                    {row.code}
+                  </td>
+                  <td role="cell" className="dt-fn">{row.function}</td>
+                  <td role="cell" className="num">
+                    <span className="dt-label" aria-hidden="true">Qty</span>
+                    {row.qty}
+                  </td>
                 </tr>
               ))}
             </tbody>

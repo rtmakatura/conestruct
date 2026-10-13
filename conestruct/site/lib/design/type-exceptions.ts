@@ -354,6 +354,12 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // the type now.  26px leaves the sheet with them; 9px, 10px and
       // 13px all remain elsewhere.
       { selector: ".workbench .device-table .jr-tag", size: "8.5px" },
+      // R141: the device schedule stacked at the phone width — the code
+      // and function lines at the field token, the "MUTCD"/"Qty" labels
+      // at the 9.5 px mono micro register (rule 134's fact link).  Both
+      // sizes are already in the sheet.
+      { selector: ".workbench .device-table .dt-code, .workbench .device-table .dt-fn", size: "var(--fs-field-label)" },
+      { selector: ".workbench .device-table .dt-label", size: "9.5px" },
       { selector: ".workbench .stale-ribbon", size: "var(--fs-body-value)" },
       { selector: ".workbench .wb-glyph", size: "13px" },
       { selector: ".workbench .wb-verb", size: "10px" },
@@ -671,7 +677,9 @@ export const CENSUS_PINS = {
   // R107 (setup-what-redesign): the segmented control's options at the
   // field's value token.  124 -> 125; sizes unchanged.
   // R106: the Setup box's values at rule 8's token.  125 -> 126.
-  cssDeclarations: 126,
+  // R141: the stacked device schedule's code/function lines and its
+  // labels.  126 -> 128; sizes unchanged (both already in the sheet).
+  cssDeclarations: 128,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

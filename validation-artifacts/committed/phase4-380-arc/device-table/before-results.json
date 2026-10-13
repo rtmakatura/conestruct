@@ -1,0 +1,97 @@
+{
+  "360": {
+    "pageScrollW": 421,
+    "screenW": 360,
+    "table": {
+      "left": 65,
+      "width": 356.4,
+      "right": 421.4
+    },
+    "rowHeights": [
+      80,
+      60,
+      60,
+      60,
+      60,
+      60,
+      80,
+      60,
+      60,
+      60,
+      60
+    ],
+    "codeLines": [
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1
+    ],
+    "bodyRowRights": [
+      421
+    ],
+    "theadRowRight": 421,
+    "theadOverflowWidth": "visible/355",
+    "chipLefts": [
+      31,
+      48
+    ],
+    "pastRightEdge": [
+      "div.workbench-frame right=413",
+      "table.device-table right=421"
+    ],
+    "disclosuresOpened": 10
+  },
+  "1440": {
+    "pageScrollW": 1440,
+    "screenW": 1440,
+    "table": {
+      "left": 331,
+      "width": 778,
+      "right": 1109
+    },
+    "rowHeights": [
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41
+    ],
+    "codeLines": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "bodyRowRights": [
+      1109
+    ],
+    "theadRowRight": 1109,
+    "theadOverflowWidth": "visible/777",
+    "chipLefts": [
+      297,
+      314
+    ],
+    "pastRightEdge": [],
+    "disclosuresOpened": 10
+  }
+}
