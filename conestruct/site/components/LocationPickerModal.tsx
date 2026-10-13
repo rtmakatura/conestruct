@@ -1531,7 +1531,7 @@ export function LocationPickerModal({
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"
+            className="tap-44 flex items-center justify-center text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path
@@ -1566,7 +1566,7 @@ export function LocationPickerModal({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Address or intersection search"
                 placeholder="Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"
-                className="field-input flex-1"
+                className="tap-44 field-input flex-1"
               />
               <button
                 type="submit"
@@ -1597,7 +1597,7 @@ export function LocationPickerModal({
               <button
                 type="button"
                 onClick={() => setShowManualCoords((s) => !s)}
-                className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
+                className="tap-44 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
               >
                 {showManualCoords
                   ? "− Hide coordinate entry"
@@ -1620,7 +1620,7 @@ export function LocationPickerModal({
                     onPaste={onCoordPaste}
                     aria-label="Latitude"
                     placeholder="Latitude (e.g., 38.8862)"
-                    className="field-input w-full"
+                    className="tap-44 field-input w-full"
                   />
                   {latError && (
                     <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
@@ -1637,7 +1637,7 @@ export function LocationPickerModal({
                     onPaste={onCoordPaste}
                     aria-label="Longitude"
                     placeholder="Longitude (e.g., -104.8354)"
-                    className="field-input w-full"
+                    className="tap-44 field-input w-full"
                   />
                   {lngError && (
                     <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
@@ -1653,14 +1653,14 @@ export function LocationPickerModal({
             {tokenAvailable ? (
               <div
                 ref={containerRef}
-                className="relative bg-black/30 flex-shrink-0 min-h-[320px] h-[44vh] md:h-auto md:shrink md:flex-1"
+                className="picker-map relative bg-black/30 flex-shrink-0 min-h-[320px] h-[44vh] md:h-auto md:shrink md:flex-1"
               >
                 <button
                   type="button"
                   onClick={() =>
                     setStyle(style === "satellite" ? "streets" : "satellite")
                   }
-                  className="absolute top-3 left-3 z-10 border border-white/30 bg-black/60 text-white font-mono text-[10px] uppercase tracking-[0.08em] px-3 py-1.5 hover:bg-black/80"
+                  className="tap-44 absolute top-3 left-3 z-10 border border-white/30 bg-black/60 text-white font-mono text-[10px] uppercase tracking-[0.08em] px-3 py-1.5 hover:bg-black/80"
                 >
                   {style === "satellite" ? "Streets" : "Satellite"}
                 </button>
@@ -1806,7 +1806,7 @@ export function LocationPickerModal({
                     type="button"
                     onClick={onRedetect}
                     data-testid="picker-redetect"
-                    className="border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-1 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
+                    className="tap-44 border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-1 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
                   >
                     ↻ Re-detect roads
                   </button>
@@ -1868,7 +1868,7 @@ export function LocationPickerModal({
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 font-sans text-[13px] text-[color:var(--ink-on-dark)] hover:text-white"
+            className="tap-44 px-4 py-2 font-sans text-[13px] text-[color:var(--ink-on-dark)] hover:text-white"
           >
             Cancel
           </button>
@@ -1876,7 +1876,7 @@ export function LocationPickerModal({
             type="button"
             onClick={onClickSave}
             disabled={!canSave}
-            className="px-6 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="tap-44 px-6 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Save &amp; Close
           </button>
@@ -2156,7 +2156,7 @@ function WhichRoadCard({
               <button
                 type="button"
                 onClick={() => setReExpanded(true)}
-                className="flex-shrink-0 border border-[color:var(--act-bright)] bg-transparent text-[color:var(--act-bright)] font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-1 hover:bg-[color:var(--act-bright)] hover:text-[color:var(--on-act)] transition-colors"
+                className="tap-44 flex-shrink-0 border border-[color:var(--act-bright)] bg-transparent text-[color:var(--act-bright)] font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-1 hover:bg-[color:var(--act-bright)] hover:text-[color:var(--on-act)] transition-colors"
               >
                 Change
               </button>

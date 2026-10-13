@@ -1,0 +1,653 @@
+{
+  "width": 360,
+  "picker": [
+    {
+      "label": "button \"Close\"",
+      "w": 34,
+      "h": 26
+    },
+    {
+      "label": "input[text] \"Address or intersection search\"",
+      "w": 205.8,
+      "h": 43
+    },
+    {
+      "label": "button \"− HIDE COORDINATE ENTRY\"",
+      "w": 148.6,
+      "h": 30
+    },
+    {
+      "label": "input[text] \"Latitude\"",
+      "w": 141,
+      "h": 43
+    },
+    {
+      "label": "input[text] \"Longitude\"",
+      "w": 141,
+      "h": 43
+    },
+    {
+      "label": "button \"STREETS\"",
+      "w": 73.6,
+      "h": 34
+    },
+    {
+      "label": "button \"Zoom in\"",
+      "w": 32,
+      "h": 32
+    },
+    {
+      "label": "button \"Zoom out\"",
+      "w": 32,
+      "h": 32
+    },
+    {
+      "label": "button \"Reset bearing to north\"",
+      "w": 32,
+      "h": 32
+    },
+    {
+      "label": "button \"Toggle attribution\"",
+      "w": 24,
+      "h": 24
+    },
+    {
+      "label": "a \"Mapbox homepage\"",
+      "w": 88,
+      "h": 23
+    },
+    {
+      "label": "button \"CHANGE\"",
+      "w": 58.8,
+      "h": 25
+    },
+    {
+      "label": "button #picker-redetect \"↻ RE-DETECT ROADS\"",
+      "w": 123.7,
+      "h": 23.5
+    },
+    {
+      "label": "button \"Cancel\"",
+      "w": 74.6,
+      "h": 35.5
+    },
+    {
+      "label": "button \"Save & Close\"",
+      "w": 128.7,
+      "h": 35.5
+    }
+  ],
+  "where": [
+    {
+      "label": "input \"Address or cross streets\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #where-open-picker \"Edit on map\"",
+      "w": 298,
+      "h": 48
+    },
+    {
+      "label": "button #move-action-spot \"CHANGE\"",
+      "w": 66.2,
+      "h": 44
+    },
+    {
+      "label": "button #move-action-start \"MOVE\"",
+      "w": 52.1,
+      "h": 44
+    },
+    {
+      "label": "button #move-action-extent \"CHANGE\"",
+      "w": 66.2,
+      "h": 44
+    },
+    {
+      "label": "button \"Zoom in\"",
+      "w": 44,
+      "h": 44
+    },
+    {
+      "label": "button \"Zoom out\"",
+      "w": 44,
+      "h": 44
+    },
+    {
+      "label": "button #side-option \"✓ West side · southbound traffic\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #side-option \"East side · southbound traffic\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #kind-chip-shoulder \"Shoulder work TA-3/TA-5 · S-630-1\"",
+      "w": 298,
+      "h": 63.3
+    },
+    {
+      "label": "button #kind-chip-flagger_lane_closure \"Flagger lane closure TA-10 · S-630-1\"",
+      "w": 298,
+      "h": 63.3
+    },
+    {
+      "label": "button #kind-chip-near_intersection \"Lane closure near intersection Cases 18/\"",
+      "w": 298,
+      "h": 63.3
+    },
+    {
+      "label": "button #info-toggle-worklen \"Details for Work zone length (ft)\"",
+      "w": 48.6,
+      "h": 44
+    },
+    {
+      "label": "input[number] \"1000\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #where-confirm \"Confirm shoulder work\"",
+      "w": 298,
+      "h": 48
+    }
+  ],
+  "what-shoulder": [
+    {
+      "label": "button #info-toggle-speed \"Details for Speed\"",
+      "w": 68.8,
+      "h": 44
+    },
+    {
+      "label": "select \"20 mph 25 mph 30 mph 35 mph 40 mph 45 mp\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-lanes \"Details for Lanes\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "select \"Lanes per direction\"",
+      "w": 145,
+      "h": 44
+    },
+    {
+      "label": "select \"Lane width\"",
+      "w": 145,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-road-type \"Details for Road type\"",
+      "w": 103.5,
+      "h": 44
+    },
+    {
+      "label": "select \"Rural, undivided Rural, divided Urban st\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-street-class \"Details for Street class\"",
+      "w": 103.5,
+      "h": 44
+    },
+    {
+      "label": "button \"Local\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button \"Collector\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button \"Arterial\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-carriageway \"Details for Carriageway\"",
+      "w": 68.8,
+      "h": 44
+    },
+    {
+      "label": "button \"One-way\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button \"Divided\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-work-type \"Details for Work type\"",
+      "w": 48.6,
+      "h": 44
+    },
+    {
+      "label": "select \"Utility locate Survey crew Signal cabine\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-night \"Details for Hours\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"Daytime\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button \"Night\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-reduction \"Details for Speed reduction\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"None\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button \"Reduced\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-jurisdiction \"Details for Jurisdiction\"",
+      "w": 96.8,
+      "h": 44
+    },
+    {
+      "label": "select \"Not set: MUTCD + CDOT only CDOT (state h\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-work-dates \"Details for Work dates\"",
+      "w": 62.6,
+      "h": 44
+    },
+    {
+      "label": "input[date] \"Work date, or the first day of a range\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #what-windows-line \"Denver windows · set dates to check\"",
+      "w": 235.3,
+      "h": 32
+    },
+    {
+      "label": "button \"Open file details\"",
+      "w": 42.2,
+      "h": 44
+    }
+  ],
+  "what-flagger": [
+    {
+      "label": "button #info-toggle-speed \"Details for Speed\"",
+      "w": 68.8,
+      "h": 44
+    },
+    {
+      "label": "select \"20 mph 25 mph 30 mph 35 mph 40 mph 45 mp\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-lanes \"Details for Lanes\"",
+      "w": 47,
+      "h": 44
+    },
+    {
+      "label": "input \"Lanes per direction (fixed by this plan \"",
+      "w": 145,
+      "h": 44
+    },
+    {
+      "label": "select \"Lane width\"",
+      "w": 145,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-road-type \"Details for Road type\"",
+      "w": 103.5,
+      "h": 44
+    },
+    {
+      "label": "select \"Rural, undivided Urban street\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-street-class \"Details for Street class\"",
+      "w": 103.5,
+      "h": 44
+    },
+    {
+      "label": "button \"Local\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button \"Collector\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button \"Arterial\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-work-type \"Details for Work type\"",
+      "w": 48.6,
+      "h": 44
+    },
+    {
+      "label": "select \"Utility cut Water main Chip seal Pavemen\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-night \"Details for Hours\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"Daytime\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button \"Night\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-jurisdiction \"Details for Jurisdiction\"",
+      "w": 62.7,
+      "h": 44
+    },
+    {
+      "label": "select \"Not set: MUTCD + CDOT only CDOT (state h\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-work-dates \"Details for Work dates\"",
+      "w": 62.6,
+      "h": 44
+    },
+    {
+      "label": "input[date] \"Work date, or the first day of a range\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #what-windows-line \"Windows · ◌ loading\"",
+      "w": 129.8,
+      "h": 32
+    },
+    {
+      "label": "button \"Open file details\"",
+      "w": 42.2,
+      "h": 44
+    },
+    {
+      "label": "button \"Road has one through lane in each direct\"",
+      "w": 250,
+      "h": 109
+    },
+    {
+      "label": "button \"Road carries two-way traffic Detection s\"",
+      "w": 250,
+      "h": 110
+    },
+    {
+      "label": "input[range] \"30\"",
+      "w": 250,
+      "h": 2
+    },
+    {
+      "label": "input[range] \"12\"",
+      "w": 250,
+      "h": 2
+    },
+    {
+      "label": "button \"Use AFAD Automated paddle\"",
+      "w": 250,
+      "h": 46
+    },
+    {
+      "label": "button \"Pilot car Convoy lead vehicle\"",
+      "w": 250,
+      "h": 46
+    },
+    {
+      "label": "button \"Pedestrian detour ADA route required\"",
+      "w": 250,
+      "h": 68
+    }
+  ],
+  "what-near-intersection": [
+    {
+      "label": "button #info-toggle-speed \"Details for Speed\"",
+      "w": 68.8,
+      "h": 44
+    },
+    {
+      "label": "select \"25 mph 30 mph 35 mph 40 mph 45 mph 50 mp\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-lanes \"Details for Lanes\"",
+      "w": 49.8,
+      "h": 44
+    },
+    {
+      "label": "select \"Lanes per direction\"",
+      "w": 145,
+      "h": 44
+    },
+    {
+      "label": "select \"Lane width\"",
+      "w": 145,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-road-type \"Details for Road type\"",
+      "w": 103.5,
+      "h": 44
+    },
+    {
+      "label": "select \"Rural, undivided Urban street\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-street-class \"Details for Street class\"",
+      "w": 103.5,
+      "h": 44
+    },
+    {
+      "label": "button \"Local\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button \"Collector\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button \"Arterial\"",
+      "w": 98.7,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-carriageway \"Details for Carriageway\"",
+      "w": 68.8,
+      "h": 44
+    },
+    {
+      "label": "button \"One-way\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button \"Divided\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-work-type \"Details for Work type\"",
+      "w": 48.6,
+      "h": 44
+    },
+    {
+      "label": "select \"Utility cut Water main Pavement patching\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-night \"Details for Hours\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"Daytime\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button \"Night\"",
+      "w": 148,
+      "h": 42
+    },
+    {
+      "label": "button #info-toggle-jurisdiction \"Details for Jurisdiction\"",
+      "w": 96.8,
+      "h": 44
+    },
+    {
+      "label": "select \"Not set: MUTCD + CDOT only CDOT (state h\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #info-toggle-work-dates \"Details for Work dates\"",
+      "w": 62.6,
+      "h": 44
+    },
+    {
+      "label": "input[date] \"Work date, or the first day of a range\"",
+      "w": 298,
+      "h": 44
+    },
+    {
+      "label": "button #what-windows-line \"Denver windows · set dates to check\"",
+      "w": 235.3,
+      "h": 32
+    },
+    {
+      "label": "button \"Open file details\"",
+      "w": 42.2,
+      "h": 44
+    },
+    {
+      "label": "button \"One (T-intersection)\"",
+      "w": 124,
+      "h": 54
+    },
+    {
+      "label": "button \"Both\"",
+      "w": 124,
+      "h": 54
+    },
+    {
+      "label": "button \"Signalized intersection Traffic signal p\"",
+      "w": 250,
+      "h": 68
+    },
+    {
+      "label": "select \"Rural, undivided Urban street\"",
+      "w": 250,
+      "h": 43
+    },
+    {
+      "label": "button #info-toggle-cross-speed \"Details for Cross-street speed\"",
+      "w": 103.5,
+      "h": 44
+    },
+    {
+      "label": "select \"25 mph 30 mph 35 mph 40 mph 45 mph 50 mp\"",
+      "w": 250,
+      "h": 44
+    },
+    {
+      "label": "input[range] \"12\"",
+      "w": 250,
+      "h": 2
+    },
+    {
+      "label": "button \"1\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"2\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"3\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"4\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"1\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"2\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"3\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"4\"",
+      "w": 62,
+      "h": 44
+    },
+    {
+      "label": "button \"Lane count is right\"",
+      "w": 131.1,
+      "h": 28
+    }
+  ]
+}

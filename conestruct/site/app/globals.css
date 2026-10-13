@@ -5053,7 +5053,9 @@ input[type="number"] {
 .workbench .a-seg {
   display: grid;
   height: 44px;
-  border: 1px solid var(--rule);
+  /* R138: the frame is an inset shadow, not a border, so each option
+     fills the whole 44 px track (a 1 px border left the buttons 42). */
+  box-shadow: inset 0 0 0 1px var(--rule);
   background: var(--canvas-tint);
 }
 .workbench .a-seg > button {
@@ -5222,6 +5224,24 @@ input[type="number"] {
   .workbench .act-btn {
     min-height: 44px;
   }
+  /* R138 (Phase 4, tap targets): the rest of WHERE, WHAT and its footer
+     at the phone width, measured on production at 360x800.  OPEN was
+     44 tall but 42.2 wide; the windows line 32; the selects and text
+     fields 43 (their 10 px padding); a slider's box was its 2 px track. */
+  .workbench .a-lk {
+    min-width: 44px;
+    justify-content: center;
+  }
+  .workbench .a-footline {
+    min-height: 44px;
+  }
+  .workbench .field-input {
+    min-height: 44px;
+  }
+  .workbench .range-orange {
+    height: 44px;
+    margin-block: 0;
+  }
   .workbench .a-pri,
   .workbench .a-pri.is-xl,
   .workbench .a-findrow .a-pri {
@@ -5256,6 +5276,39 @@ input[type="number"] {
   }
   .workbench .a-chips {
     flex-direction: column;
+  }
+}
+
+/* R138 (Phase 4, tap targets) — rule 163's 44 px for controls styled in
+   their own markup (the location picker, the cross-street lane confirm):
+   they carry `tap-44`.  Phone width only; the desk keeps rule 15. */
+@media (max-width: 480px) {
+  .tap-44 {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Mapbox's own map buttons in the picker (zoom, compass, the
+     attribution toggle) were 32 and 24.  The wordmark link is Mapbox's
+     logo, drawn at its own size, and stays as it is. */
+  .picker-map .mapboxgl-ctrl-group button {
+    width: 44px;
+    height: 44px;
+  }
+  /* The icons keep their drawn size; only the hit box grows. */
+  .picker-map .mapboxgl-ctrl-group button .mapboxgl-ctrl-icon {
+    background-size: 32px 32px;
+  }
+  .picker-map .mapboxgl-ctrl-attrib.mapboxgl-compact {
+    min-height: 44px;
+    padding-right: 44px;
+    border-radius: 22px;
+  }
+  .picker-map .mapboxgl-ctrl-attrib-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    background-position: center;
+    background-size: 24px 24px;
   }
 }
 

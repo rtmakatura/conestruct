@@ -473,7 +473,7 @@ export function NearIntersectionForm({
             <button
               type="button"
               onClick={confirmLaneCounts}
-              className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
+              className="tap-44 mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
             >
               Lane count is right
             </button>
@@ -492,7 +492,7 @@ export function NearIntersectionForm({
             <button
               type="button"
               onClick={undoConfirmLaneCounts}
-              className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
+              className="tap-44 mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
             >
               Undo: restore detected lane data
             </button>
