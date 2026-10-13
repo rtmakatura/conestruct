@@ -1407,7 +1407,8 @@ def test_audit_buffer_55_no_divergence_fields_suppression() -> None:
     # divergence STRUCTURED keys (jurisdiction / cdot_value_ft /
     # mutcd_value_ft / divergence) are what must be suppressed at a silent
     # speed — and they remain absent here.
-    assert keys == {"speed_mph", "lookup_text", "buffer_ft", "source", "citation"}
+    # #286: ``result_text`` is the panel's row result ("B = … ft").
+    assert keys == {"speed_mph", "lookup_text", "buffer_ft", "source", "citation", "result_text"}
 
 
 # --- Federal jurisdiction explicit unit tests ----------------------------

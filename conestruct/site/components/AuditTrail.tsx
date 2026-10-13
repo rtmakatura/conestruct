@@ -39,6 +39,27 @@ const SPACING_CITATION_FALLBACK = {
   cite: "MUTCD § 6K.01",
   footer: "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
 } as const;
+// #286 (R144): the advance row reads ``sections.advance.citation`` now.  Its
+// footer used to be written here as "MUTCD § 6B-1", a section that doesn't
+// exist (citation defect 20); §6H.02 places the signs by Table 6B-1.
+const ADVANCE_CITATION_FALLBACK = {
+  cite: "MUTCD TABLE 6B-1",
+  footer: "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
+} as const;
+
+// #286 (R144 Q1, Rule 3): a calculation row's result and formula lines are
+// the backend's ``result_text`` / ``formula_text``, rendered as received.
+// The panel adds no label and does no arithmetic.  Before the plan is
+// generated, or when the field is absent (a backend older than this
+// frontend, in the deploy window), the result is "—" (Rule 10).
+function wireResult(text: unknown, generated: boolean): string {
+  return generated && typeof text === "string" ? text : "—";
+}
+function wireLines(lines: unknown): string[] {
+  return Array.isArray(lines)
+    ? lines.filter((l): l is string => typeof l === "string")
+    : [];
+}
 
 // Read the backend ``section.citation`` ({cite, footer}); fall back to the
 // corrected constant above when the field is absent (deploy window).
@@ -300,9 +321,12 @@ export function flaggerSightDistanceItem(
       ? `${afadDevices} AFAD`
       : `${flaggerStations} flagger`
     : "—";
+  // #286 (R144 Q5): the result and the SSD line are the audit's own, at
+  // the speed the audit used (this row used to build the line from the
+  // form's speed).
   return {
     title: "Flagger station sight distance",
-    result: generated ? `${ssd} ft` : "—",
+    result: wireResult(flagger?.sight_distance_result_text, generated),
     cite: citation.cite,
     body: (
       <>
@@ -312,14 +336,11 @@ export function flaggerSightDistanceItem(
           § 6D.06, which points to Table 6B-2), so they can stop on the
           open lane.
         </p>
-        <div className="formula">
-          <span>SSD</span>
-          <span className="op">@</span>
-          <span className="var">{scenario.speed}</span>
-          <span className="op">mph</span>
-          <span className="op">=</span>
-          <span className="res">{r(ssd)} ft</span>
-        </div>
+        {wireLines(flagger?.sight_distance_formula_text).map((line, i) => (
+          <div className="formula" key={i}>
+            {line}
+          </div>
+        ))}
         <p>
           Stations:{" "}
           <strong>
@@ -658,44 +679,32 @@ function taperItem(
   if (!data) {
     return {
       title: "Taper length calculation",
-      result: "L = —",
+      result: "—",
       cite: TAPER_CITATION_FALLBACK.cite,
       body: placeholderBody(audit),
     };
   }
 
   const taper = data.sections.taper as Record<string, unknown>;
-  const isShoulder = taper.closure_type === "shoulder";
-  const labelPrefix = isShoulder ? "L/3" : "L";
-  const lengthFt = data.summary.taper_length_ft;
   const formulaChoice = taper.formula_choice as string | undefined;
 
-  // Backend emits every value in this family as whole feet (``_ft`` in
-  // src/api/audit.py) — the summary chip and the trailing number of
-  // each calc line are the same integer by construction.  Display work
-  // here is glyph-only: substitute "×" for the backend's ASCII " x ".
-  // (Frontend-engine-removal PR A deleted a client-side Math.round +
-  // trailing-number regex rewrite of the backend's derivation text —
-  // both numeric no-ops that duplicated the backend's rounding
-  // contract; the audit prose now renders as received.)
-  const xify = (s: string) => s.replace(/ x /g, " × ");
-  const lCalcText = xify((taper.L_calc_text as string | undefined) ?? "");
-  const lThirdRaw = taper.L_third_calc_text as string | undefined;
-  const lThirdCalcText =
-    isShoulder && lThirdRaw ? xify(lThirdRaw) : undefined;
-
+  // #286 (R144 Q1): the "L/3"/"L" label, the "×" glyph and which formula
+  // lines show (L/3 on a shoulder closure only) are the backend's
+  // (``result_text`` / ``formula_text`` in src/api/audit.py).  The row
+  // renders them as received.
   const citation = sectionCitation(taper, TAPER_CITATION_FALLBACK);
   return {
     title: "Taper length calculation",
-    result: `${labelPrefix} = ${r(lengthFt)}${generated ? " ft" : ""}`,
+    result: wireResult(taper.result_text, generated),
     cite: citation.cite,
     body: (
       <>
         {formulaChoice && <p>{formulaChoice}</p>}
-        {lCalcText && <div className="formula">{lCalcText}</div>}
-        {isShoulder && lThirdCalcText && (
-          <div className="formula">{lThirdCalcText}</div>
-        )}
+        {wireLines(taper.formula_text).map((line, i) => (
+          <div className="formula" key={i}>
+            {line}
+          </div>
+        ))}
         <div className="citation">
           <span className="check">✓</span>
           {citation.footer}
@@ -714,18 +723,18 @@ function bufferItem(
   if (!data) {
     return {
       title: "Buffer space calculation",
-      result: "B = — ft",
+      result: "—",
       cite: BUFFER_CITATION_FALLBACK.cite,
       body: placeholderBody(audit),
     };
   }
   const buffer = data.sections.buffer as Record<string, unknown>;
   const lookupText = buffer.lookup_text as string;
-  const bufferFt = data.summary.buffer_space_ft;
   const citation = sectionCitation(buffer, BUFFER_CITATION_FALLBACK);
   return {
     title: "Buffer space calculation",
-    result: `B = ${r(bufferFt)} ft`,
+    // #286: the "B =" label is the backend's (``result_text``).
+    result: wireResult(buffer.result_text, generated),
     cite: citation.cite,
     body: (
       <>
@@ -752,40 +761,32 @@ function spacingItem(
   if (!data) {
     return {
       title: "Channelizing device spacing",
-      result: "— devices",
+      result: "—",
       cite: SPACING_CITATION_FALLBACK.cite,
       body: placeholderBody(audit),
     };
   }
   const spacing = data.sections.spacing as Record<string, unknown>;
-  const nDrums = spacing.n_taper_drums_required as number;
-  const nCones = spacing.n_tangent_cones_required as number;
-  const totalDevices = nDrums + nCones;
-  const inTaperFt = data.summary.device_spacing_taper_ft;
-  const onTangentFt = data.summary.device_spacing_tangent_ft;
   const inTaperText = spacing.in_taper_text as string;
   const onTangentText = spacing.on_tangent_text as string;
-  const taperCountText = spacing.taper_count_text as string;
-  const tangentCountText = spacing.tangent_count_text as string;
-  // #96 — downstream-taper derivation line; absent until the backend
-  // deploy lands (Vercel-leads-Modal window), so render conditionally.
-  const downstreamCountText = spacing.downstream_count_text as
-    | string
-    | undefined;
   const citation = sectionCitation(spacing, SPACING_CITATION_FALLBACK);
   return {
     title: "Channelizing device spacing",
-    result: `${r(totalDevices)} devices · ${r(inTaperFt)}/${r(onTangentFt)} ft o.c.`,
+    // #286 (R144 Q1, Rule 3): the device total is the backend's; this row
+    // used to add the taper drums and tangent cones itself.  The count
+    // lines (taper, tangent, then the #96 downstream line when the layout
+    // places one) are ``formula_text``.
+    result: wireResult(spacing.result_text, generated),
     cite: citation.cite,
     body: (
       <>
         <p>{inTaperText}</p>
         <p>{onTangentText}</p>
-        <div className="formula">{taperCountText}</div>
-        <div className="formula">{tangentCountText}</div>
-        {downstreamCountText ? (
-          <div className="formula">{downstreamCountText}</div>
-        ) : null}
+        {wireLines(spacing.formula_text).map((line, i) => (
+          <div className="formula" key={i}>
+            {line}
+          </div>
+        ))}
         <div className="citation">
           <span className="check">✓</span>
           {citation.footer}
@@ -811,8 +812,8 @@ function advanceItem(
   if (!data) {
     return {
       title: "Advance warning sign set",
-      result: "— signs",
-      cite: "MUTCD TABLE 6B-1",
+      result: "—",
+      cite: ADVANCE_CITATION_FALLBACK.cite,
       body: placeholderBody(audit),
     };
   }
@@ -820,10 +821,13 @@ function advanceItem(
   const roadTypeText = advance.road_type_text as string;
   const spacingText = advance.spacing_text as string;
   const signTable = (advance.sign_table as AdvanceSignRow[]) ?? [];
+  // #286 (R144 Q1): the sign count and both citation strings are the
+  // backend's; the footer this row used to write was "MUTCD § 6B-1".
+  const citation = sectionCitation(advance, ADVANCE_CITATION_FALLBACK);
   return {
     title: "Advance warning sign set",
-    result: `${r(signTable.length)} signs`,
-    cite: "MUTCD TABLE 6B-1",
+    result: wireResult(advance.result_text, generated),
+    cite: citation.cite,
     body: (
       <>
         <p>{roadTypeText}</p>
@@ -850,7 +854,7 @@ function advanceItem(
         </table>
         <div className="citation">
           <span className="check">✓</span>
-          MUTCD § 6B-1 · ADVANCE WARNING SIGN SPACING
+          {citation.footer}
         </div>
       </>
     ),

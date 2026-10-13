@@ -81,7 +81,11 @@
     "citation": {
      "cite": "MUTCD \u00a7 6B.08",
      "footer": "MUTCD 2023 EDITION \u00b7 CHAPTER 6B \u00b7 TABLE 6B-3"
-    }
+    },
+    "result_text": "L = 280 ft",
+    "formula_text": [
+     "L = 10.5 \u00d7 40^2 / 60 = 280 ft"
+    ]
    },
    "buffer": {
     "speed_mph": 40,
@@ -91,7 +95,8 @@
     "citation": {
      "cite": "MUTCD \u00a7 6B.06",
      "footer": "MUTCD \u00a7 6B.06 \u00b7 STOPPING SIGHT DISTANCE"
-    }
+    },
+    "result_text": "B = 305 ft"
    },
    "spacing": {
     "speed_mph": 40,
@@ -110,7 +115,13 @@
     },
     "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 31 tangent + 2 downstream = 33 cones total",
     "n_downstream_taper_cones": 2,
-    "n_cones_placed_total": 33
+    "n_cones_placed_total": 33,
+    "result_text": "34 devices \u00b7 40/80 ft o.c.",
+    "formula_text": [
+     "L = 280 ft / 40 ft max spacing -> 8 drums at 40.0 ft intervals",
+     "2000 ft / 80 ft max spacing -> 26 cones at 80.0 ft intervals",
+     "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 31 tangent + 2 downstream = 33 cones total"
+    ]
    },
    "advance": {
     "road_type_text": "Speed 40 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low",
@@ -147,7 +158,12 @@
       "Distance from Taper (ft)": "100 upstream"
      }
     ],
-    "source": "MUTCD 11th Ed. Table 6B-1"
+    "source": "MUTCD 11th Ed. Table 6B-1",
+    "result_text": "5 signs",
+    "citation": {
+     "cite": "MUTCD TABLE 6B-1",
+     "footer": "MUTCD \u00a7 6H.02 \u00b7 TABLE 6B-1 \u00b7 ADVANCE WARNING SIGN SPACING"
+    }
    },
    "colorado": {
     "checks": [

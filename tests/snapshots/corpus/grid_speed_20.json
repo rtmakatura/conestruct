@@ -12,6 +12,11 @@
   },
   "sections": {
     "advance": {
+      "citation": {
+        "cite": "MUTCD TABLE 6B-1",
+        "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+      },
+      "result_text": "3 signs",
       "road_type_text": "Speed 20 mph, road_type = 'rural' -> Table 6B-1 category: rural",
       "sign_table": [
         {
@@ -43,6 +48,7 @@
         "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
       },
       "lookup_text": "MUTCD Table 6B-2: 115 ft (CDOT supplement silent at this speed)",
+      "result_text": "B = 115 ft",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
       "speed_mph": 20
     },
@@ -149,6 +155,11 @@
         "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
       },
       "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 51 tangent + 2 downstream = 53 cones total",
+      "formula_text": [
+        "L/3 = 22 ft / 20 ft max spacing -> 3 drums at 11.1 ft intervals",
+        "2000 ft / 40 ft max spacing -> 51 cones at 40.0 ft intervals",
+        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 51 tangent + 2 downstream = 53 cones total"
+      ],
       "in_taper_text": "20 mph -> 20 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
       "n_cones_placed_total": 53,
       "n_downstream_taper_cones": 2,
@@ -157,6 +168,7 @@
       "n_taper_drums_actual": 3,
       "n_taper_drums_required": 3,
       "on_tangent_text": "20 mph -> 40 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "result_text": "54 devices · 20/40 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 20,
       "tangent_count_text": "2000 ft / 40 ft max spacing -> 51 cones at 40.0 ft intervals",
@@ -177,8 +189,13 @@
       "closure_type": "shoulder",
       "formula_choice": "Speed 20 mph < 45 mph threshold -> using L = W x S^2 / 60",
       "formula_latex": "L = \\frac{W \\times S^2}{60}",
+      "formula_text": [
+        "L = 10 × 20^2 / 60 = 67 ft",
+        "L/3 = 67 / 3 = 22 ft"
+      ],
       "offset_ft": 10.0,
       "offset_label": "shoulder width",
+      "result_text": "L/3 = 22 ft",
       "shoulder_width_ft": 10.0,
       "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
       "speed_mph": 20

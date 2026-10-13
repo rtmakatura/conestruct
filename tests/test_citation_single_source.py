@@ -48,7 +48,8 @@ def test_no_parallel_citation_literals_in_audit_source() -> None:
 def test_no_parallel_federal_section_literals_in_audit_source() -> None:
     """#98 — the federal taper/buffer/spacing section and table numbers
     (``_SEC_TAPER``/``_SEC_BUFFER``/``_SEC_SPACING``/``_TBL_TAPER``/
-    ``_TBL_TAPER_L``/``_TBL_BUFFER``) have exactly one definition in ``audit.py``: their
+    ``_TBL_TAPER_L``/``_TBL_BUFFER``, and since #286 ``_SEC_ADVANCE``/
+    ``_TBL_ADVANCE``) have exactly one definition in ``audit.py``: their
     own assignments.  Every prose sentence and panel dict interpolates
     them, so no other *rendered* string literal may spell a section or
     table number out.  Docstrings are exempt (explanatory text, never
@@ -62,6 +63,9 @@ def test_no_parallel_federal_section_literals_in_audit_source() -> None:
         audit_module._TBL_TAPER,
         audit_module._TBL_TAPER_L,
         audit_module._TBL_BUFFER,
+        # #286 (R144): the advance warning sign spacing pair.
+        audit_module._SEC_ADVANCE,
+        audit_module._TBL_ADVANCE,
     }
     tree = ast.parse(_AUDIT_SOURCE)
     docstrings: set[int] = set()

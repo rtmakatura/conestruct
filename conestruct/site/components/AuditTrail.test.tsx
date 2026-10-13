@@ -730,8 +730,11 @@ describe("#97 audit-panel citation edition guard", () => {
     // Stop-or-Yield; Table 6E-1 does not exist in the 11th edition).
     "§ 6E.06",
     "6E-1",
+    // #286 — citation defect 20: the advance footer's "§ 6B-1" (a table,
+    // not a section).
+    "§ 6B-1",
   ];
-  const FRESH = ["6B.06", "6K.01", "6B.08", "6B-3"];
+  const FRESH = ["6B.06", "6K.01", "6B.08", "6B-3", "6H.02"];
 
   function itemsHtml(items: ItemSpec[]): string {
     return items
@@ -765,6 +768,7 @@ describe("#97 audit-panel citation edition guard", () => {
       n_taper_drums_required: 5,
       n_tangent_cones_required: 10,
     };
+    const advance: Record<string, unknown> = { sign_table: [] };
     if (withCitation) {
       taper.citation = taperCitation;
       buffer.citation = {
@@ -775,12 +779,16 @@ describe("#97 audit-panel citation edition guard", () => {
         cite: "MUTCD § 6K.01",
         footer: "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
       };
+      advance.citation = {
+        cite: "MUTCD TABLE 6B-1",
+        footer: "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
+      };
     }
     return {
       taper,
       buffer,
       spacing,
-      advance: {},
+      advance,
       colorado: {},
       case: { url: "https://www.codot.gov/...PDF" },
       flagger: {},
@@ -925,7 +933,13 @@ describe("#96 spacing card downstream-taper line", () => {
     "(MUTCD Sec 6B.08: 50-100 ft downstream taper); " +
     "10 tangent + 2 downstream = 12 cones total";
 
+  const TAPER_LINE = "L/3 = 220 ft / 55 ft max spacing -> 5 drums";
+  const TANGENT_LINE = "500 ft / 110 ft max spacing -> 10 cones";
+
+  // #286: the backend sends the count lines as ``formula_text`` (taper,
+  // tangent, then the downstream line when the layout places one).
   function stateWith(spacingExtra: Record<string, unknown>): AuditState {
+    const ds = spacingExtra.downstream_count_text as string | undefined;
     return {
       state: "ready",
       data: {
@@ -950,6 +964,7 @@ describe("#96 spacing card downstream-taper line", () => {
             tangent_count_text: "500 ft / 110 ft max spacing -> 10 cones",
             n_taper_drums_required: 5,
             n_tangent_cones_required: 10,
+            formula_text: ds ? [TAPER_LINE, TANGENT_LINE, ds] : [TAPER_LINE, TANGENT_LINE],
             ...spacingExtra,
           },
           advance: {},
@@ -1030,14 +1045,14 @@ describe("taper derivation text renders as received (PR A sentinel)", () => {
     };
   }
 
-  it("shoulder: L_third_calc_text trailing value is the backend's, not a client re-round", () => {
-    // Sentinel: summary chip says 999, the backend derivation text says
-    // 220.  The retired roundTrailing would have regex-rewritten the text
-    // to "999 ft"; the panel must now show the backend's "220 ft".
+  it("shoulder: the formula lines are the backend's, not a client re-round", () => {
+    // Sentinel: summary chip says 999, the backend's lines say 220.  The
+    // retired roundTrailing would have regex-rewritten the text to
+    // "999 ft"; the panel must show the backend's "220 ft".
     const audit = auditWithTaper(999, {
       closure_type: "shoulder",
-      L_calc_text: "L = 12 x 55 = 660 ft",
-      L_third_calc_text: "L/3 = 660 / 3 = 220 ft",
+      result_text: "L/3 = 220 ft",
+      formula_text: ["L = 12 × 55 = 660 ft", "L/3 = 660 / 3 = 220 ft"],
     });
     const items = buildShoulderItems(dummyShoulder, audit, true, String);
     const taperSpec = items[0];
@@ -1045,30 +1060,99 @@ describe("taper derivation text renders as received (PR A sentinel)", () => {
     const html = renderToStaticMarkup(taperSpec.body as ReactElement);
     expect(html).toContain("220 ft");
     expect(html).not.toContain("999 ft");
-    // The chip still reads the (equally backend-provided) summary value.
-    expect(taperSpec.result).toContain("999");
+    expect(taperSpec.result).toBe("L/3 = 220 ft");
   });
 
-  it("lane closure: L_calc_text trailing value is the backend's, not a client re-round", () => {
+  it("#286: the result's label is the backend's, not chosen from closure_type", () => {
+    // Sentinel: a lane closure whose result_text says "L/3".  The retired
+    // labelPrefix would have written "L = 999" from closure_type and the
+    // summary; the row shows the wire's string as received.
     const audit = auditWithTaper(999, {
       closure_type: "lane",
-      L_calc_text: "L = 12 x 55 = 660 ft",
+      result_text: "L/3 = 77 ft",
+      formula_text: ["L = 12 × 55 = 660 ft"],
     });
     const items = buildShoulderItems(dummyShoulder, audit, true, String);
-    const html = renderToStaticMarkup(items[0].body as ReactElement);
-    expect(html).toContain("660 ft");
-    expect(html).not.toContain("999 ft");
+    expect(items[0].result).toBe("L/3 = 77 ft");
   });
 
-  it("glyph substitution survives: ASCII ' x ' renders as ' × '", () => {
+  it("#286: formula lines render as received (no glyph rewrite, no line picked by kind)", () => {
+    // The "×" swap is the backend's now: a planted ASCII " x " survives,
+    // and a second line on a lane closure still shows (the retired
+    // isShoulder gate would have hidden it).
     const audit = auditWithTaper(660, {
       closure_type: "lane",
-      L_calc_text: "L = 12 x 55 = 660 ft",
+      result_text: "L = 660 ft",
+      formula_text: ["L = 12 x 55 = 660 ft", "Required: L = 660 ft"],
     });
     const items = buildShoulderItems(dummyShoulder, audit, true, String);
     const html = renderToStaticMarkup(items[0].body as ReactElement);
-    expect(html).toContain("12 × 55");
-    expect(html).not.toContain("12 x 55");
+    expect(html).toContain("12 x 55");
+    expect(html).toContain("Required: L = 660 ft");
+  });
+
+  it("#286: result_text absent (a backend older than this panel) → —", () => {
+    const audit = auditWithTaper(660, { closure_type: "shoulder" });
+    const items = buildShoulderItems(dummyShoulder, audit, true, String);
+    expect(items[0].result).toBe("—");
+    expect(items[1].result).toBe("—");
+    expect(items[2].result).toBe("—");
+    expect(items[3].result).toBe("—");
+  });
+
+  it("#286: before the plan is generated, results read — even with the field present", () => {
+    const audit = auditWithTaper(660, { result_text: "L/3 = 220 ft", formula_text: [] });
+    const items = buildShoulderItems(dummyShoulder, audit, false, String);
+    expect(items[0].result).toBe("—");
+  });
+
+  it("#286 (Rule 3): the device total is the backend's, not nDrums + nCones", () => {
+    // Sentinel: 5 drums + 10 cones would sum to 15; the wire says 123.
+    const base = auditWithTaper(220, {}) as Extract<AuditState, { state: "ready" }>;
+    const audit: AuditState = {
+      state: "ready",
+      data: {
+        ...base.data,
+        sections: {
+          ...base.data.sections,
+          spacing: {
+            n_taper_drums_required: 5,
+            n_tangent_cones_required: 10,
+            result_text: "123 devices · 55/110 ft o.c.",
+            formula_text: [],
+          },
+        },
+      },
+    };
+    const items = buildShoulderItems(dummyShoulder, audit, true, String);
+    expect(items[2].result).toBe("123 devices · 55/110 ft o.c.");
+  });
+
+  it("#286: the advance row's count and citation are the backend's", () => {
+    const base = auditWithTaper(220, {}) as Extract<AuditState, { state: "ready" }>;
+    const withAdvance = (advance: Record<string, unknown>): AuditState => ({
+      state: "ready",
+      data: { ...base.data, sections: { ...base.data.sections, advance } },
+    });
+    // Sentinel: one table row, but the wire says 9 signs and a sentinel footer.
+    const sent = buildShoulderItems(
+      dummyShoulder,
+      withAdvance({
+        sign_table: [{ Position: "A", Code: "W20-1", "Station (ft)": "1", "Distance from Taper (ft)": "1" }],
+        result_text: "9 signs",
+        citation: { cite: "MUTCD TABLE 6B-1", footer: "SENTINEL-ADVANCE-FOOTER" },
+      }),
+      true,
+      String,
+    )[3];
+    expect(sent.result).toBe("9 signs");
+    expect(renderToStaticMarkup(sent.body as ReactElement)).toContain("SENTINEL-ADVANCE-FOOTER");
+    // Field absent (deploy window): the corrected fallback, never "§ 6B-1".
+    const fallback = buildShoulderItems(dummyShoulder, withAdvance({ sign_table: [] }), true, String)[3];
+    const html = renderToStaticMarkup(fallback.body as ReactElement);
+    expect(fallback.cite).toBe("MUTCD TABLE 6B-1");
+    expect(html).toContain("MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING");
+    expect(html).not.toContain("§ 6B-1");
   });
 });
 
@@ -1174,10 +1258,14 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
   it("sentinel: renders the backend's 777 ft, proving read-not-computed", () => {
     // Table 6B-2 at 45 mph is 360 ft — a computed row could never show
     // 777.  The deleted BUFFER_TABLE would have rendered 360 here.
+    // #286 (R144 Q5): the line's speed is the audit's (sentinel 99), not
+    // the form's (45).
     const data = auditWith({
       flagger: {
         sight_distance_ft: 777,
         sight_distance_citation: BACKEND_CITATION,
+        sight_distance_result_text: "777 ft",
+        sight_distance_formula_text: ["SSD @ 99 mph = 777 ft"],
       },
     });
     const item = flaggerSightDistanceItem(data, FLAGGER, true, r);
@@ -1185,6 +1273,8 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
     expect(item?.cite).toBe("MUTCD § 6D.06");
     const html = renderToStaticMarkup(item!.body as ReactElement);
     expect(html).toContain("777");
+    expect(html).toContain("SSD @ 99 mph = 777 ft");
+    expect(html).not.toContain("SSD @ 45");
     expect(html).toContain("TABLE 6B-2 · STOPPING SIGHT DISTANCE");
     expect(html).not.toContain("6E.06");
     expect(html).not.toContain("6E-1");

@@ -47,8 +47,14 @@ describe("near_intersection trace parity (#223)", () => {
     // backend re-derivation updates this test's expectation with it.
     expect(fx.audit.summary.ta).toBe("TA-22");
     expect(items[5].result).toBe(fx.audit.summary.case_id);
+    // #286: each result is the section's own result_text, as received.
+    const sections = fx.audit.sections as Record<string, { result_text?: string }>;
+    expect(items[0].result).toBe(sections.taper.result_text);
     expect(items[0].result).toBe(`L = ${fx.audit.summary.taper_length_ft} ft`);
+    expect(items[1].result).toBe(sections.buffer.result_text);
     expect(items[1].result).toBe(`B = ${fx.audit.summary.buffer_space_ft} ft`);
+    expect(items[2].result).toBe(sections.spacing.result_text);
+    expect(items[3].result).toBe(sections.advance.result_text);
     const advanceHtml = renderToStaticMarkup(items[3].body as ReactElement);
     for (const row of (fx.audit.sections.advance as { sign_table: Array<{ Code: string }> })
       .sign_table) {
@@ -59,7 +65,10 @@ describe("near_intersection trace parity (#223)", () => {
   it("on error, rows blank per #187/#192 — no prior numbers under a failed banner", () => {
     const items = buildScenarioItems(fx.scenario, errored, true, r);
     expect(items).toHaveLength(6);
-    expect(items[0].result).toBe("L = —");
-    expect(items[1].result).toBe("B = — ft");
+    // #286: no label of the panel's own around the blank.
+    expect(items[0].result).toBe("—");
+    expect(items[1].result).toBe("—");
+    expect(items[2].result).toBe("—");
+    expect(items[3].result).toBe("—");
   });
 });

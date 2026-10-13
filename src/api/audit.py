@@ -103,6 +103,14 @@ _TBL_TAPER: str = "6B-3"
 # p. 775 (validation-artifacts/committed/s2-arc13-demo-fixes/).
 _TBL_TAPER_L: str = "6B-4"
 _TBL_BUFFER: str = "6B-2"
+# #286 (R144) — advance warning sign spacing.  Table 6B-1 "Recommended
+# Advance Warning Sign Minimum Spacing" (MUTCD 11th Ed. printed p. 773);
+# §6H.02 "Position of Advance Warning Signs" ¶01 places the signs by it
+# (printed p. 798).  The panel's footer used to be hand-written as
+# "MUTCD § 6B-1", a section that doesn't exist (citation defect 20,
+# validation-artifacts/committed/phase4-380-arc/issue-286/citations.md).
+_SEC_ADVANCE: str = "6H.02"
+_TBL_ADVANCE: str = "6B-1"
 _CITATION_TAPER: dict[str, str] = {
     "cite": f"MUTCD § {_SEC_TAPER}",
     "footer": f"MUTCD 2023 EDITION · CHAPTER 6B · TABLE {_TBL_TAPER}",
@@ -115,6 +123,21 @@ _CITATION_SPACING: dict[str, str] = {
     "cite": f"MUTCD § {_SEC_SPACING}",
     "footer": f"MUTCD § {_SEC_SPACING} · CHANNELIZING DEVICE SPACING",
 }
+_CITATION_ADVANCE: dict[str, str] = {
+    "cite": f"MUTCD TABLE {_TBL_ADVANCE}",
+    "footer": f"MUTCD § {_SEC_ADVANCE} · TABLE {_TBL_ADVANCE} · ADVANCE WARNING SIGN SPACING",
+}
+
+
+def _times(text: str) -> str:
+    """Display form of a formula line: "×" for the ASCII " x " (#286).
+
+    The prose fields (``L_calc_text`` and the rest) keep ASCII for the PDF;
+    ``formula_text`` is the panel's copy, so the glyph swap the panel used
+    to do happens here, once.
+    """
+    return text.replace(" x ", " × ")
+
 
 # Sheet 12 FINES DOUBLE SIGNING NOTES — operational rules attached to
 # every applicable fines_double section (shoulder, lane-divided, and
@@ -473,6 +496,15 @@ def build_audit_trail(
         "cdot_reference": cdot_reference,
         # #97 — discrete panel citation (the PDF keeps rendering ``source``).
         "citation": _CITATION_TAPER,
+        # #286 (R144 Q1) — the panel's row renders these and nothing it
+        # works out itself: the result line (its "L/3"/"L" label used to
+        # be chosen in AuditTrail.tsx from ``closure_type``) and the
+        # formula lines (the L/3 line shows on a shoulder closure only).
+        "result_text": (
+            f"{'L/3' if params.closure_type == 'shoulder' else 'L'} = {_ft(L_required)} ft"
+        ),
+        "formula_text": [_times(L_calc_text)]
+        + ([_times(L_required_calc_text)] if params.closure_type == "shoulder" else []),
     }
 
     # ------------------------------------------------------------------
@@ -577,6 +609,10 @@ def build_audit_trail(
             ),
             "citation": _CITATION_BUFFER,
         }
+    # #286 (R144 Q1) — the row's result; the "B =" label used to be the
+    # panel's.  No ``formula_text``: the buffer is a table lookup, and
+    # ``lookup_text`` is the line the panel shows.
+    buffer_section["result_text"] = f"B = {buf:g} ft"
 
     # ------------------------------------------------------------------
     # 3. Channelizing device spacing
@@ -685,6 +721,17 @@ def build_audit_trail(
         )
         spacing_section["n_downstream_taper_cones"] = n_ds_cones
         spacing_section["n_cones_placed_total"] = actual_cones
+    # #286 (R144 Q1) — the row's result and formula lines.  The device
+    # total is the sum AuditTrail.tsx used to do itself (taper drums + tangent
+    # cones required, the same two counts the count lines derive); Rule 3
+    # puts it here.
+    spacing_section["result_text"] = (
+        f"{n_taper_drums + n_tangent_cones} devices · {in_taper:g}/{on_tan:g} ft o.c."
+    )
+    spacing_section["formula_text"] = [
+        spacing_section["taper_count_text"],
+        spacing_section["tangent_count_text"],
+    ] + ([spacing_section["downstream_count_text"]] if n_ds_cones else [])
 
     # ------------------------------------------------------------------
     # 4. Advance warning sign placement
@@ -925,11 +972,17 @@ def build_audit_trail(
     advance_section = {
         "road_type_text": (
             f"Speed {speed} mph, road_type = '{params.road_type}' "
-            f"-> Table 6B-1 category: {resolved_category}"
+            f"-> Table {_TBL_ADVANCE} category: {resolved_category}"
         ),
         "spacing_text": f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft",
         "sign_table": sign_table_rows,
-        "source": "MUTCD 11th Ed. Table 6B-1",
+        "source": f"MUTCD 11th Ed. Table {_TBL_ADVANCE}",
+        # #286 (R144 Q1) — the row's result (the panel used to count the
+        # table's rows itself) and its citation (the panel used to write
+        # both strings by hand, the footer as the nonexistent "§ 6B-1").
+        # No ``formula_text``: the spacing is a table lookup.
+        "result_text": f"{len(sign_table_rows)} signs",
+        "citation": _CITATION_ADVANCE,
     }
 
     # ------------------------------------------------------------------
@@ -1500,6 +1553,12 @@ def build_audit_trail(
             "cite": "MUTCD § 6D.06",
             "footer": f"MUTCD § 6D.06 · TABLE {_TBL_BUFFER} · STOPPING SIGHT DISTANCE",
         }
+        # #286 (R144 Q5) — the row's result and its formula line, at the
+        # speed this audit used (the panel used to build the line from its
+        # own form speed).
+        ssd_ft = flagger_section["sight_distance_ft"]
+        flagger_section["sight_distance_result_text"] = f"{ssd_ft} ft"
+        flagger_section["sight_distance_formula_text"] = [f"SSD @ {speed} mph = {ssd_ft} ft"]
 
     # ------------------------------------------------------------------
     # 9. Corridor / aerial validation (best-effort OSM check)
@@ -1983,7 +2042,7 @@ def audit_projection(
         if road_type is None:
             raise ValueError(
                 "audit_projection: road_type is required for the shoulder "
-                "kind (TA-3 vs TA-5 splits on the Table 6B-1 category)."
+                f"kind (TA-3 vs TA-5 splits on the Table {_TBL_ADVANCE} category)."
             )
         ta = shoulder_ta_reference(road_type)
     # Side-aware near_intersection TA (both verified by subject): TA-21

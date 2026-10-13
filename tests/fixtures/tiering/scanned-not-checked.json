@@ -36,7 +36,12 @@
           }
         ],
         "source": "MUTCD 11th Ed. Table 6B-1",
-        "spacing_text": "A = 350 ft, B = 350 ft, C = 350 ft"
+        "spacing_text": "A = 350 ft, B = 350 ft, C = 350 ft",
+        "result_text": "3 signs",
+        "citation": {
+          "cite": "MUTCD TABLE 6B-1",
+          "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+        }
       },
       "buffer": {
         "buffer_ft": 360.0,
@@ -46,7 +51,8 @@
         },
         "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
         "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
-        "speed_mph": 45
+        "speed_mph": 45,
+        "result_text": "B = 360 ft"
       },
       "case": {
         "case": "Case 11: Shoulder closure on divided highway",
@@ -183,7 +189,13 @@
         "source": "MUTCD 11th Ed. Sec 6K.01",
         "speed_mph": 45,
         "tangent_count_text": "1100 ft / 90 ft max spacing -> 14 cones at 84.6 ft intervals",
-        "taper_count_text": "L/3 = 150 ft / 45 ft max spacing -> 5 drums at 37.5 ft intervals"
+        "taper_count_text": "L/3 = 150 ft / 45 ft max spacing -> 5 drums at 37.5 ft intervals",
+        "result_text": "19 devices · 45/90 ft o.c.",
+        "formula_text": [
+          "L/3 = 150 ft / 45 ft max spacing -> 5 drums at 37.5 ft intervals",
+          "1100 ft / 90 ft max spacing -> 14 cones at 84.6 ft intervals",
+          "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 14 tangent + 2 downstream = 16 cones total"
+        ]
       },
       "taper": {
         "L_calc_text": "L = 10 x 45 = 450 ft",
@@ -204,7 +216,12 @@
         "offset_label": "shoulder width",
         "shoulder_width_ft": 10.0,
         "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
-        "speed_mph": 45
+        "speed_mph": 45,
+        "result_text": "L/3 = 150 ft",
+        "formula_text": [
+          "L = 10 × 45 = 450 ft",
+          "L/3 = 450 / 3 = 150 ft"
+        ]
       }
     },
     "summary": {

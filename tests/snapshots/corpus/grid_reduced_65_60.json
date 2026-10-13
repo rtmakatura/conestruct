@@ -12,6 +12,11 @@
   },
   "sections": {
     "advance": {
+      "citation": {
+        "cite": "MUTCD TABLE 6B-1",
+        "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+      },
+      "result_text": "4 signs",
       "road_type_text": "Speed 65 mph, road_type = 'rural' -> Table 6B-1 category: rural",
       "sign_table": [
         {
@@ -53,6 +58,7 @@
       "jurisdiction": "CDOT",
       "lookup_text": "CDOT supplement: 570 ft. MUTCD Table 6B-2: 645 ft. Plan uses CDOT supplement value. Note: CDOT supplement permits shorter buffer than federal table. Verify against project-specific engineering judgment.",
       "mutcd_value_ft": 645,
+      "result_text": "B = 570 ft",
       "source": "CDOT S-630-1 Standard Plan, Sheet 14 (Case 26 at 65 mph). MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (federal baseline).",
       "speed_mph": 65
     },
@@ -193,6 +199,11 @@
         "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
       },
       "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 17 tangent + 2 downstream = 19 cones total",
+      "formula_text": [
+        "L/3 = 217 ft / 65 ft max spacing -> 5 drums at 54.2 ft intervals",
+        "2000 ft / 130 ft max spacing -> 17 cones at 125.0 ft intervals",
+        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 17 tangent + 2 downstream = 19 cones total"
+      ],
       "in_taper_text": "65 mph -> 65 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
       "n_cones_placed_total": 19,
       "n_downstream_taper_cones": 2,
@@ -201,6 +212,7 @@
       "n_taper_drums_actual": 5,
       "n_taper_drums_required": 5,
       "on_tangent_text": "65 mph -> 130 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "result_text": "22 devices · 65/130 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 65,
       "tangent_count_text": "2000 ft / 130 ft max spacing -> 17 cones at 125.0 ft intervals",
@@ -221,8 +233,13 @@
       "closure_type": "shoulder",
       "formula_choice": "Speed 65 mph >= 45 mph threshold -> using L = W x S",
       "formula_latex": "L = W \\times S",
+      "formula_text": [
+        "L = 10 × 65 = 650 ft",
+        "L/3 = 650 / 3 = 217 ft"
+      ],
       "offset_ft": 10.0,
       "offset_label": "shoulder width",
+      "result_text": "L/3 = 217 ft",
       "shoulder_width_ft": 10.0,
       "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
       "speed_mph": 65

@@ -70,8 +70,10 @@ const READY_AUDIT: AuditResponse = {
     step_count: 8,
   },
   sections: {
-    taper: {},
-    buffer: {},
+    // #286: the rows render the backend's result_text, so the numbers this
+    // suite watches (183, 495) ride in on it, as they do on the wire.
+    taper: { result_text: "L/3 = 183 ft" },
+    buffer: { result_text: "B = 495 ft" },
     spacing: {},
     advance: {},
     colorado: {},

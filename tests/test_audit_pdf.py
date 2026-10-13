@@ -64,7 +64,27 @@ _PARAMS = ScenarioParams(
 # whole.  Phase-2 debt: when the NOT-CHECKED disclosure and the scan
 # provenance start printing, REMOVE this key from the skip set so the
 # single-source proof covers them.
-_SKIP_KEYS = frozenset({"formula_latex", "flag", "level", "reason", "error", "site_scan"})
+#
+# #286 (R144 Q1/Q5): ``result_text`` / ``formula_text`` (and the flagger's
+# ``sight_distance_result_text`` / ``sight_distance_formula_text``) are the
+# React panel's display lines: the row result and its formula lines, which
+# the panel used to compose itself.  The PDF prints the same numbers through
+# its own prose fields (``L_calc_text``, ``lookup_text``, the count texts),
+# which this proof keeps covering.  Whether the PDF prints these lines too
+# is a separate visible-content decision, as with the SSD chips below.  The
+# key names are used nowhere else in the projection, so skipping them
+# globally hides no rendered string.
+_PANEL_ONLY_KEYS = frozenset(
+    {
+        "result_text",
+        "formula_text",
+        "sight_distance_result_text",
+        "sight_distance_formula_text",
+    }
+)
+_SKIP_KEYS = (
+    frozenset({"formula_latex", "flag", "level", "reason", "error", "site_scan"}) | _PANEL_ONLY_KEYS
+)
 
 # #97 — the taper/buffer/spacing ``citation`` field ({cite, footer}) feeds
 # the React audit PANEL's cite header + footer chip only; the PDF renders
@@ -99,6 +119,11 @@ _PANEL_ONLY_CITATIONS = frozenset(
         # a separate visible-content decision, not bundled here.
         "MUTCD § 6D.06",
         "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+        # #286 — the advance-sign citation chips (sections.advance.citation,
+        # ``_CITATION_ADVANCE``): panel-only; the PDF's advance block keeps
+        # its prose ``source`` ("MUTCD 11th Ed. Table 6B-1").
+        "MUTCD TABLE 6B-1",
+        "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
     }
 )
 
