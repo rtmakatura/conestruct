@@ -86,3 +86,17 @@ its layout to fit wide content.
   4. #286 and rule 169;
   5. rule 168's cards;
   6. #280.
+
+## R139 (Ryan, 2026-10-12), verbatim
+
+> Branch 1 accepted on your prod check. Go on branch 2 (tap targets, R138) as listed. Report before ship with 1440 and 360 screenshots, and a before/after table of every control's size. R139: add a Phase 4 branch after tap targets for the results page's device table, which is 421 px wide at 360 and widens the page. It must fit 360 with no sideways page scroll: stack or wrap the columns, or scroll inside its own box with a visible cue. Propose which in that branch's report, with screenshots, before building.
+
+**Phase 4's branches are now seven:**
+1. sizes and tooling (shipped);
+2. tap targets (R138);
+3. the device table (R139): fits 360 with no sideways page scroll; the choice (stack/wrap vs.
+   scroll in its own box with a visible cue) is proposed with screenshots before building;
+4. the floor message;
+5. #286 and rule 169;
+6. rule 168's cards;
+7. #280.
