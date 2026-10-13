@@ -49,3 +49,22 @@ Branch 1 measures those at the chosen size before setting the floor message.
 
 **Recommended floor: 360 px** (R137 Q3: "If it's small, the floor is 360"). Under Q4, the one phone
 size everywhere becomes **360×800**.
+
+## R138 (Ryan, 2026-10-12), verbatim
+
+> R138: floor 360 px; one phone size everywhere, 360×800 (screenshots, verify-jbar alongside 1440×1000, DESIGN-SPACING.md, the light lane's convention). Rename "the 380 arc" in the docs you touch.
+>
+> Add a tap-target branch to Phase 4, after branch 1: every control on WHERE, WHAT, the footer and the picker reaches 44 px in its smaller dimension (R107 already ruled 44 px for WHAT's controls; the 42 px chips miss it). That covers the chips, the windows line, OPEN, Close, the coordinate toggle, the map controls, Re-detect roads and Cancel. Mapbox's own map buttons: fix if we can style them; if not, say so.
+>
+> Finish branch 1 at 360×800, including the surfaces you haven't measured yet (other kinds' forms, the results disclosures opened, the picker's map). Report before ship.
+
+**On the record:**
+- **The arc's new name:** "the phone arc (360 px)" in the docs this branch touches. This folder keeps
+  its name, `phase4-380-arc`, because commits and rulings already cite it.
+- **Phase 4's branches are now six:**
+  1. sizes and tooling;
+  2. tap targets (R138);
+  3. the floor message;
+  4. #286 and rule 169;
+  5. rule 168's cards;
+  6. #280.
