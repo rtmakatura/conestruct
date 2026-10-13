@@ -1,0 +1,186 @@
+{
+  "shoulder-1440": {
+    "speed": null,
+    "rows": [
+      {
+        "title": "Taper length calculation",
+        "result": "L/3 = 40 ft",
+        "cite": "MUTCD § 6B.08",
+        "formulas": [
+          "L = 8 × 30^2 / 60 = 120 ft",
+          "L/3 = 120 / 3 = 40 ft"
+        ],
+        "footer": "✓ MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
+      {
+        "title": "Buffer space calculation",
+        "result": "B = 200 ft",
+        "cite": "MUTCD § 6B.06",
+        "formulas": [
+          "MUTCD Table 6B-2: 200 ft (CDOT supplement silent at this speed)"
+        ],
+        "footer": "✓ MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
+      {
+        "title": "Channelizing device spacing",
+        "result": "22 devices · 30/60 ft o.c.",
+        "cite": "MUTCD § 6K.01",
+        "formulas": [
+          "L/3 = 40 ft / 30 ft max spacing -> 4 drums at 13.3 ft intervals",
+          "1000 ft / 60 ft max spacing -> 18 cones at 58.8 ft intervals",
+          "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 18 tangent + 2 downstream = 20 cones total"
+        ],
+        "footer": "✓ MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
+      {
+        "title": "Advance warning sign set",
+        "result": "3 signs",
+        "cite": "MUTCD TABLE 6B-1",
+        "formulas": [],
+        "footer": "✓ MUTCD § 6B-1 · ADVANCE WARNING SIGN SPACING"
+      }
+    ]
+  },
+  "shoulder-360": {
+    "speed": null,
+    "rows": [
+      {
+        "title": "Taper length calculation",
+        "result": "L/3 = 40 ft",
+        "cite": "MUTCD § 6B.08",
+        "formulas": [
+          "L = 8 × 30^2 / 60 = 120 ft",
+          "L/3 = 120 / 3 = 40 ft"
+        ],
+        "footer": "✓ MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
+      {
+        "title": "Buffer space calculation",
+        "result": "B = 200 ft",
+        "cite": "MUTCD § 6B.06",
+        "formulas": [
+          "MUTCD Table 6B-2: 200 ft (CDOT supplement silent at this speed)"
+        ],
+        "footer": "✓ MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
+      {
+        "title": "Channelizing device spacing",
+        "result": "22 devices · 30/60 ft o.c.",
+        "cite": "MUTCD § 6K.01",
+        "formulas": [
+          "L/3 = 40 ft / 30 ft max spacing -> 4 drums at 13.3 ft intervals",
+          "1000 ft / 60 ft max spacing -> 18 cones at 58.8 ft intervals",
+          "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 18 tangent + 2 downstream = 20 cones total"
+        ],
+        "footer": "✓ MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
+      {
+        "title": "Advance warning sign set",
+        "result": "3 signs",
+        "cite": "MUTCD TABLE 6B-1",
+        "formulas": [],
+        "footer": "✓ MUTCD § 6B-1 · ADVANCE WARNING SIGN SPACING"
+      }
+    ]
+  },
+  "flagger-1440": {
+    "speed": null,
+    "rows": [
+      {
+        "title": "Taper length calculation",
+        "result": "L = 100 ft",
+        "cite": "MUTCD § 6B.08",
+        "formulas": [
+          "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)"
+        ],
+        "footer": "✓ MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
+      {
+        "title": "Buffer space calculation",
+        "result": "B = 305 ft",
+        "cite": "MUTCD § 6B.06",
+        "formulas": [
+          "MUTCD Table 6B-2: 305 ft (CDOT supplement silent at this speed)"
+        ],
+        "footer": "✓ MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
+      {
+        "title": "Channelizing device spacing",
+        "result": "20 devices · 20/80 ft o.c.",
+        "cite": "MUTCD § 6K.01",
+        "formulas": [
+          "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
+          "1000 ft / 80 ft max spacing -> 14 cones at 76.9 ft intervals",
+          "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 14 tangent + 4 downstream = 18 cones total"
+        ],
+        "footer": "✓ MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
+      {
+        "title": "Flagger station sight distance",
+        "result": "305 ft",
+        "cite": "MUTCD § 6D.06",
+        "formulas": [
+          "SSD@40mph=305 ft"
+        ],
+        "footer": "✓ MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+      },
+      {
+        "title": "Advance warning sign set",
+        "result": "4 signs",
+        "cite": "MUTCD TABLE 6B-1",
+        "formulas": [],
+        "footer": "✓ MUTCD § 6B-1 · ADVANCE WARNING SIGN SPACING"
+      }
+    ]
+  },
+  "flagger-360": {
+    "speed": null,
+    "rows": [
+      {
+        "title": "Taper length calculation",
+        "result": "L = 100 ft",
+        "cite": "MUTCD § 6B.08",
+        "formulas": [
+          "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)"
+        ],
+        "footer": "✓ MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
+      {
+        "title": "Buffer space calculation",
+        "result": "B = 305 ft",
+        "cite": "MUTCD § 6B.06",
+        "formulas": [
+          "MUTCD Table 6B-2: 305 ft (CDOT supplement silent at this speed)"
+        ],
+        "footer": "✓ MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
+      {
+        "title": "Channelizing device spacing",
+        "result": "20 devices · 20/80 ft o.c.",
+        "cite": "MUTCD § 6K.01",
+        "formulas": [
+          "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
+          "1000 ft / 80 ft max spacing -> 14 cones at 76.9 ft intervals",
+          "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 14 tangent + 4 downstream = 18 cones total"
+        ],
+        "footer": "✓ MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
+      {
+        "title": "Flagger station sight distance",
+        "result": "305 ft",
+        "cite": "MUTCD § 6D.06",
+        "formulas": [
+          "SSD@40mph=305 ft"
+        ],
+        "footer": "✓ MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+      },
+      {
+        "title": "Advance warning sign set",
+        "result": "4 signs",
+        "cite": "MUTCD TABLE 6B-1",
+        "formulas": [],
+        "footer": "✓ MUTCD § 6B-1 · ADVANCE WARNING SIGN SPACING"
+      }
+    ]
+  }
+}

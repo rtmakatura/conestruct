@@ -1,6 +1,6 @@
 # Citations this branch touches, verified by subject (R144 Q2)
 
-Source: `validation-artifacts/ta10_flagger/mutcd_part6.pdf` (MUTCD 11th Edition, December 2023,
+Source: `validation-artifacts/ta10_flagger/mutcd_part6.pdf`, an untracked local copy in the main checkout (MUTCD 11th Edition, December 2023,
 Part 6), page text extracted with pypdf on 2026-10-13. "PDF p." is the file's page; "printed p." is
 the page number printed in its header.
 

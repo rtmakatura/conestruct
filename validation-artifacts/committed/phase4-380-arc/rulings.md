@@ -152,7 +152,7 @@ rule 169; 6 rule 168's cards; 7 #280.
 
 **#281 §2.8 is superseded (Q2).** #281 §2.8 cites the 2009 edition: §6C.08 (tapers), §6C.06
 (buffer), Table 6C-1 (advance sign spacing). The 11th-edition numbers govern, each verified by
-subject in the committed `validation-artifacts/ta10_flagger/mutcd_part6.pdf`: §6B.08 Tapers with
+subject in `validation-artifacts/ta10_flagger/mutcd_part6.pdf` (untracked; the main checkout's local copy): §6B.08 Tapers with
 Tables 6B-3 and 6B-4 (printed p. 775), §6B.06 with Table 6B-2 (pp. 773, 775), Table 6B-1
 "Recommended Advance Warning Sign Minimum Spacing" (p. 773). Evidence, with every other citation
 this branch touches: `issue-286/citations.md`.
