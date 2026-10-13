@@ -1,0 +1,56 @@
+{
+  "width": 360,
+  "picker-map-interacted": {
+    "scroll": [
+      360,
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": [
+      "button.text-[color:var(--ink-on-dark-faint)].hover:text-white \"Close\" 34x26",
+      "input.field-input.flex-1 \"Address or intersection search\" 206x43",
+      "button.font-mono.text-[10px] \"− HIDE COORDINATE ENTRY\" 149x30",
+      "input.field-input.w-full \"Latitude\" 141x43",
+      "input.field-input.w-full \"Longitude\" 141x43",
+      "button.absolute.top-3 \"STREETS\" 74x34",
+      "button.mapboxgl-ctrl-zoom-in \"Zoom in\" 32x32",
+      "button.mapboxgl-ctrl-zoom-out \"Zoom out\" 32x32",
+      "button.mapboxgl-ctrl-compass \"Reset bearing to north\" 32x32",
+      "button.mapboxgl-ctrl-attrib-button \"Toggle attribution\" 24x24",
+      "a.mapboxgl-ctrl-logo \"Mapbox homepage\" 88x23",
+      "button.px-4.py-2 \"Cancel\" 75x36"
+    ]
+  },
+  "disclosuresOpened": 10,
+  "results-disclosures-open": {
+    "scroll": [
+      421,
+      360,
+      421
+    ],
+    "overflow": [
+      "div.workbench-frame \"\" right=413.0",
+      "table.device-table \"DEVICE TYPE MUTCD CODE FUNCTION QTY ROAD CONSTRUCT\" right=421.4"
+    ],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1",
+      "div.sr-only \"Plan generated: 35 devices, 11 types.\" scroll=227 box=1"
+    ],
+    "smallTargets": [
+      "input.bg-[color:var(--canvas)].border \"1\" 143x38",
+      "input.bg-[color:var(--canvas)].border \"0\" 143x38",
+      "input.bg-[color:var(--canvas)].border \"5\" 143x38",
+      "input.bg-[color:var(--canvas)].border \"10\" 143x38",
+      "input.bg-[color:var(--canvas)].border \"10\" 143x38",
+      "input.bg-[color:var(--canvas)].border \"55\" 143x38",
+      "input.bg-[color:var(--canvas)].border \"75\" 143x38",
+      "input.bg-[color:var(--canvas)].border \"45\" 143x38",
+      "button.md:flex-1.font-sans \"Download Quote (XLSX) ↓\" 298x44"
+    ]
+  },
+  "errorsResults": []
+}

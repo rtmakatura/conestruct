@@ -1,0 +1,52 @@
+{
+  "width": 360,
+  "what-flagger": {
+    "scroll": [
+      360,
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": [
+      "button \"Local\" 99x42",
+      "button \"Collector\" 99x42",
+      "button \"Arterial\" 99x42",
+      "button \"Daytime\" 148x42",
+      "button \"Night\" 148x42",
+      "button[what-windows-line].a-footline.tr-prov \"Windows · ◌ loading\" 130x32",
+      "button.a-lk \"OPEN ›\" 42x44",
+      "input.range-orange.w-full \"30\" 250x2",
+      "input.range-orange.w-full \"12\" 250x2"
+    ]
+  },
+  "errorsFlagger": [],
+  "what-near-intersection": {
+    "scroll": [
+      360,
+      360,
+      360
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": [
+      "button \"Local\" 99x42",
+      "button \"Collector\" 99x42",
+      "button \"Arterial\" 99x42",
+      "button \"One-way\" 148x42",
+      "button \"Divided\" 148x42",
+      "button \"Daytime\" 148x42",
+      "button \"Night\" 148x42",
+      "button[what-windows-line].a-footline.tr-prov \"Denver windows · set dates to check\" 235x32",
+      "button.a-lk \"OPEN ›\" 42x44",
+      "select.field-input.field-select \"Rural, undivided Urban street\" 250x43",
+      "input.range-orange.w-full \"12\" 250x2",
+      "button.mt-1.5.px-3 \"Lane count is right\" 131x28"
+    ]
+  },
+  "errorsNear": []
+}

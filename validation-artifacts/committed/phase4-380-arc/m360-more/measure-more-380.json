@@ -1,0 +1,58 @@
+{
+  "width": 380,
+  "picker-map-interacted": {
+    "scroll": [
+      380,
+      380,
+      380
+    ],
+    "overflow": [],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1"
+    ],
+    "smallTargets": [
+      "button.text-[color:var(--ink-on-dark-faint)].hover:text-white \"Close\" 34x26",
+      "input.field-input.flex-1 \"Address or intersection search\" 226x43",
+      "button.font-mono.text-[10px] \"− HIDE COORDINATE ENTRY\" 156x15",
+      "input.field-input.w-full \"Latitude\" 151x43",
+      "input.field-input.w-full \"Longitude\" 151x43",
+      "button.absolute.top-3 \"STREETS\" 74x34",
+      "button.mapboxgl-ctrl-zoom-in \"Zoom in\" 32x32",
+      "button.mapboxgl-ctrl-zoom-out \"Zoom out\" 32x32",
+      "button.mapboxgl-ctrl-compass \"Reset bearing to north\" 32x32",
+      "button.mapboxgl-ctrl-attrib-button \"Toggle attribution\" 24x24",
+      "a.mapboxgl-ctrl-logo \"Mapbox homepage\" 88x23",
+      "button[picker-redetect].border.border-[color:var(--rule)] \"↻ RE-DETECT ROADS\" 124x24",
+      "button.px-4.py-2 \"Cancel\" 75x36",
+      "button.px-6.py-2 \"Save & Close\" 129x36"
+    ]
+  },
+  "disclosuresOpened": 10,
+  "results-disclosures-open": {
+    "scroll": [
+      422,
+      380,
+      422
+    ],
+    "overflow": [
+      "div.workbench-frame \"\" right=414.0",
+      "table.device-table \"DEVICE TYPE MUTCD CODE FUNCTION QTY ROAD CONSTRUCT\" right=421.4"
+    ],
+    "clippedText": [
+      "h1.sr-only \"Method of Handling Traffic plan generator\" scroll=258 box=1",
+      "div.sr-only \"Plan generated: 35 devices, 11 types.\" scroll=227 box=1"
+    ],
+    "smallTargets": [
+      "input.bg-[color:var(--canvas)].border \"1\" 153x38",
+      "input.bg-[color:var(--canvas)].border \"0\" 153x38",
+      "input.bg-[color:var(--canvas)].border \"5\" 153x38",
+      "input.bg-[color:var(--canvas)].border \"10\" 153x38",
+      "input.bg-[color:var(--canvas)].border \"10\" 153x38",
+      "input.bg-[color:var(--canvas)].border \"55\" 153x38",
+      "input.bg-[color:var(--canvas)].border \"75\" 153x38",
+      "input.bg-[color:var(--canvas)].border \"45\" 153x38",
+      "button.md:flex-1.font-sans \"Download Quote (XLSX) ↓\" 318x44"
+    ]
+  },
+  "errorsResults": []
+}

@@ -58,6 +58,24 @@ size everywhere becomes **360×800**.
 >
 > Finish branch 1 at 360×800, including the surfaces you haven't measured yet (other kinds' forms, the results disclosures opened, the picker's map). Report before ship.
 
+**The remaining surfaces at 360×800** (R138: other kinds' forms, results disclosures opened, the
+picker's map), in `m360-more/`. Overflow is measured against the screen width, because a phone widens
+its layout to fit wide content.
+
+| Surface | 360 | 380 |
+|---|---|---|
+| WHAT, flagger | no overflow, no scroll | — |
+| WHAT, near-intersection with E 11th Ave marked (cross-street group) | no overflow, no scroll | — |
+| The picker after zoom ×2, a pan and a tap moving the pin | no overflow, no scroll | the same |
+| Results, all 10 disclosures opened | **the device table is 421.4 px wide**; the page widens to 421 | **the same: 421.4 px; the page widens to 422** |
+
+- **The device table** (`table.device-table`) is an existing defect, not a 360 one. The phone arc fixes
+  it.
+- **More under-44 px targets** from the forms, present at 380 as well, for the tap-target branch:
+  - the cross-street speed and lane-width range sliders (the element box is 2 px tall);
+  - the cross-street type select (43 px);
+  - "Lane count is right" (28 px).
+
 **On the record:**
 - **The arc's new name:** "the phone arc (360 px)" in the docs this branch touches. This folder keeps
   its name, `phase4-380-arc`, because commits and rulings already cite it.

@@ -22,9 +22,34 @@ Exceptions (documented, deliberate):
   section gap. Kept off the scale on purpose.
 - **`.audit-body` left inset** (68px) — aligns to the accordion's number
   column (`36px` grid column + `16px` gap), not a spacing-scale value.
-- **`.jbar` internals** — pixel-measured geometric-stability slots
-  (`.jbar-slot-*` in `globals.css`). Re-measure with
-  `scripts/verify-jbar-stability.mjs` before touching any `.jbar` padding.
+- **The jurisdiction cell** — its height is held identical across every
+  jurisdiction, while the evaluation is in flight and through a street-class
+  switch (#276's reserve). Re-measure with `scripts/verify-jbar-stability.mjs`
+  at both supported sizes before touching the cell's padding or its line.
+  (The script's `.jbar` surface was removed in §8.31; Phase 4 / R138
+  repointed it at the cell. The `.jbar-slot-*` rules left in `globals.css`
+  style nothing.)
+
+## Supported sizes (Phase 4, R137 Q3/Q4, R138)
+
+Two sizes, everywhere a size is named: screenshots and evidence,
+`scripts/verify-jbar-stability.mjs`, and these docs.
+
+| Size | Role |
+|---|---|
+| **1440×1000** | the desk |
+| **360×800** | the phone, and the floor (R138: "floor 360 px; one phone size everywhere, 360×800") |
+
+- **Why 360:** many Android phones are 360 px wide (R137 Q3). Measured on
+  production at 360×800 vs 380×800, nothing breaks at 360 that doesn't
+  already at 380 (`validation-artifacts/committed/phase4-380-arc/`).
+- **The CSS** still says `@media (max-width: 480px)` for the phone rules; a
+  360 px phone falls inside it.
+- **Below the floor:** Phase 4's floor-message branch shows an honest
+  minimum-width message rather than a degraded layout (#153).
+- **The phone work** is Phase 4, "the phone arc (360 px)". Its rule numbers
+  (#281's "160–179") keep their names.
+
 ## LocationPickerModal (issue #166)
 
 The modal is on the same six steps. Its roles map onto the page's:
@@ -282,7 +307,7 @@ Owners below cite Part 2 by rule number. **Part 2 is comment 1 on issue
 | 13.5px | `--fs-body-value` | rules 8 + 9 — body value, item body |
 | 12.5px | `--fs-field-label` | rules 5 + 17 — field label, text symbols |
 | 62px | `--fs-hero-numeral` | rules 10 + 81 — the counts hero |
-| 42px | `--fs-hero-numeral-380` | rule 169 — the counts hero at 380 |
+| 42px | `--fs-hero-numeral-380` | rule 169 — the counts hero at the phone width (360 px floor, R138; the token keeps its name) |
 
 Only `--fs-step-question` has a consumer in this commit (`.tr-question`,
 role 5). The other eight are declared and unconsumed by design; each

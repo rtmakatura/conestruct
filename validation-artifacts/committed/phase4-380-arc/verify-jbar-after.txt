@@ -1,0 +1,36 @@
+viewport 1440x1000: STABLE — cell heights 65
+  none                       cell=65
+  cdot                       cell=65
+  denver                     cell=65
+  lakewood                   cell=65
+  englewood                  cell=65
+  littleton                  cell=65
+  centennial                 cell=65
+  parker                     cell=65
+  e470                       cell=65
+  denver(in flight)          cell=65
+  class:Local(in flight)     cell=65
+  class:Local(settled)       cell=65
+  class:Collector(in flight) cell=65
+  class:Collector(settled)   cell=65
+  class:Arterial(in flight)  cell=65
+  class:Arterial(settled)    cell=65
+viewport 360x800: STABLE — cell heights 115
+  none                       cell=115
+  cdot                       cell=115
+  denver                     cell=115
+  lakewood                   cell=115
+  englewood                  cell=115
+  littleton                  cell=115
+  centennial                 cell=115
+  parker                     cell=115
+  e470                       cell=115
+  denver(in flight)          cell=115
+  class:Local(in flight)     cell=115
+  class:Local(settled)       cell=115
+  class:Collector(in flight) cell=115
+  class:Collector(settled)   cell=115
+  class:Arterial(in flight)  cell=115
+  class:Arterial(settled)    cell=115
+
+token hits: []

@@ -39,3 +39,14 @@ change**. Authority: `rulings.md` (R137, R138).
 | Area | Rough count |
 |---|---|
 | Tests | 0 (the script isn't in a test suite; docs only) |
+
+## Outcome
+
+| Predicted | Actual |
+|---|---|
+| Tests: 0 | **0.** Frontend 203 files, 2123 passed. Nothing in the backend changed |
+| `verify-jbar-stability.mjs` can't run as written | **Confirmed, fairly.** Main's script, given the site's gate header, fails at its first step: "page.selectOption: Timeout 30000ms exceeded … waiting for locator('#jl-jurisdiction')" (`verify-jbar-before.txt`). My first run without the gate also failed, but at the gate, which proved nothing, so I re-ran it gated |
+| The repurposed script | **Exit 0, STABLE at both sizes** (`verify-jbar-after.txt`). The jurisdiction cell is 65 px at 1440×1000 and 115 px at 360×800, identical across all 9 options, the in-flight evaluation and three street-class switches, with no skeleton. It now takes the site's gate (`scripts/gate.cjs`, the header added inside its own stall route too) and waits for hydration before its first click |
+| The remaining 360 measurements | See `rulings.md` below R138 and `m360-more/` |
+| **Not predicted** | **The device table** (results, its disclosure opened) is **421 px wide at both 360 and 380**, so a phone widens the page to fit it (layout 421 / 422 px). It's an existing defect at 380, so it doesn't change the floor; the phone arc fixes it. The flagger and near-intersection forms add four under-44 px targets for the tap-target branch: the two range sliders (2 px element box), the cross-street type select (43 px) and "Lane count is right" (28 px) |
+| The light lane's convention | **Not changed here:** it lives in `handoff.md`, untracked. It needs a foreground session; my own captures use 360×800 from now on |
