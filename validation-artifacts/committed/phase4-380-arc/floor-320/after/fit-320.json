@@ -1,0 +1,42 @@
+{
+  "empty": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "picker": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "picker-moved": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "where": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-shoulder": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "results": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-flagger": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-near": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  }
+}

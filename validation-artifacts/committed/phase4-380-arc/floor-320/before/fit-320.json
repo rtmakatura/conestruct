@@ -1,0 +1,45 @@
+{
+  "empty": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "picker": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "picker-moved": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "where": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-shoulder": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "results": {
+    "scrollWidth": 334,
+    "screen": 320,
+    "past": [
+      "div.workbench-frame right=326",
+      "span.chev right=334"
+    ]
+  },
+  "what-flagger": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-near": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  }
+}

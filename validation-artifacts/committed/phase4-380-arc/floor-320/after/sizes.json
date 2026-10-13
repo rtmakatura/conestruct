@@ -1,0 +1,222 @@
+{
+  "320": {
+    "pageScrollW": 320,
+    "screenW": 320,
+    "auditRows": [
+      {
+        "title": "Taper length calculation",
+        "w": 258,
+        "h": 110,
+        "right": 289,
+        "citeBelowTitle": true,
+        "citeRight": 253.2
+      },
+      {
+        "title": "Buffer space calculation",
+        "w": 258,
+        "h": 110,
+        "right": 289,
+        "citeBelowTitle": true,
+        "citeRight": 253.2
+      },
+      {
+        "title": "Channelizing device spacing",
+        "w": 258,
+        "h": 128,
+        "right": 289,
+        "citeBelowTitle": true,
+        "citeRight": 253.2
+      },
+      {
+        "title": "Advance warning sign set",
+        "w": 258,
+        "h": 110,
+        "right": 289,
+        "citeBelowTitle": true,
+        "citeRight": 253.2
+      },
+      {
+        "title": "TA-3 · S-630-1 reference",
+        "w": 258,
+        "h": 146,
+        "right": 289,
+        "citeBelowTitle": true,
+        "citeRight": 253.2
+      }
+    ],
+    "quoteInputs": [
+      {
+        "value": "1",
+        "w": 123,
+        "h": 44,
+        "right": 154
+      },
+      {
+        "value": "0",
+        "w": 123,
+        "h": 44,
+        "right": 289
+      },
+      {
+        "value": "5",
+        "w": 123,
+        "h": 44,
+        "right": 154
+      },
+      {
+        "value": "10",
+        "w": 123,
+        "h": 44,
+        "right": 289
+      },
+      {
+        "value": "10",
+        "w": 123,
+        "h": 44,
+        "right": 154
+      },
+      {
+        "value": "55",
+        "w": 123,
+        "h": 44,
+        "right": 289
+      },
+      {
+        "value": "75",
+        "w": 123,
+        "h": 44,
+        "right": 154
+      },
+      {
+        "value": "45",
+        "w": 123,
+        "h": 44,
+        "right": 289
+      }
+    ],
+    "quoteButtons": [
+      {
+        "label": "Preview breakdown",
+        "w": 258,
+        "h": 45.5,
+        "right": 289
+      },
+      {
+        "label": "Download Quote (XLSX) ↓",
+        "w": 258,
+        "h": 44,
+        "right": 289
+      }
+    ]
+  },
+  "360": {
+    "pageScrollW": 360,
+    "screenW": 360,
+    "auditRows": [
+      {
+        "title": "Taper length calculation",
+        "w": 298,
+        "h": 87.5,
+        "right": 329,
+        "citeBelowTitle": true,
+        "citeRight": 293.2
+      },
+      {
+        "title": "Buffer space calculation",
+        "w": 298,
+        "h": 87.5,
+        "right": 329,
+        "citeBelowTitle": true,
+        "citeRight": 293.2
+      },
+      {
+        "title": "Channelizing device spacing",
+        "w": 298,
+        "h": 110,
+        "right": 329,
+        "citeBelowTitle": true,
+        "citeRight": 293.2
+      },
+      {
+        "title": "Advance warning sign set",
+        "w": 298,
+        "h": 87.5,
+        "right": 329,
+        "citeBelowTitle": true,
+        "citeRight": 293.2
+      },
+      {
+        "title": "TA-3 · S-630-1 reference",
+        "w": 298,
+        "h": 105.5,
+        "right": 329,
+        "citeBelowTitle": true,
+        "citeRight": 293.2
+      }
+    ],
+    "quoteInputs": [
+      {
+        "value": "1",
+        "w": 143,
+        "h": 44,
+        "right": 174
+      },
+      {
+        "value": "0",
+        "w": 143,
+        "h": 44,
+        "right": 329
+      },
+      {
+        "value": "5",
+        "w": 143,
+        "h": 44,
+        "right": 174
+      },
+      {
+        "value": "10",
+        "w": 143,
+        "h": 44,
+        "right": 329
+      },
+      {
+        "value": "10",
+        "w": 143,
+        "h": 44,
+        "right": 174
+      },
+      {
+        "value": "55",
+        "w": 143,
+        "h": 44,
+        "right": 329
+      },
+      {
+        "value": "75",
+        "w": 143,
+        "h": 44,
+        "right": 174
+      },
+      {
+        "value": "45",
+        "w": 143,
+        "h": 44,
+        "right": 329
+      }
+    ],
+    "quoteButtons": [
+      {
+        "label": "Preview breakdown",
+        "w": 298,
+        "h": 45.5,
+        "right": 329
+      },
+      {
+        "label": "Download Quote (XLSX) ↓",
+        "w": 298,
+        "h": 44,
+        "right": 329
+      }
+    ]
+  }
+}
