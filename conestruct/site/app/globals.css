@@ -3184,6 +3184,34 @@ input[type="number"] {
     font-size: var(--fs-hero-numeral-380);
   }
 }
+/* Rule 169 (R144 Q4): at the phone width the geometry cell is not
+   rendered; its four rows are in Reference's "Zone geometry" group
+   (ZoneGeometryGroup), and its jurisdiction line is the WHAT band's
+   jurisdiction cell (ruling 196).  The counts hero keeps its two cells. */
+@media (max-width: 480px) {
+  .workbench .hero-meta {
+    display: none;
+  }
+}
+/* Rule 169's second home: Reference's "Zone geometry" group, at every
+   width.  Its rows take rule 82's treatment, as the hero's do:
+   space-between, mono 11px, body ink, gap 7px. */
+.workbench .zone-geo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.workbench .zone-geo .ref-group-label {
+  margin-bottom: 1px;
+}
+.workbench .zone-geo .zg-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark);
+}
 
 /* ─── #288 Phase 1 clause 3 · DOWNLOAD CARDS (rules 84–86) and the ONE
    PRIMARY (rule 130, rulings 182/183) ───
@@ -3683,6 +3711,16 @@ input[type="number"] {
 .workbench .device-table .dt-label {
   display: none;
 }
+/* The fold-in to rule 169's branch: the advance row's sign table.  Its
+   codes never break, at any width ("W20-/1" at 320 and 360 before); its
+   phone labels are hidden at the desk, where the header row labels the
+   columns. */
+.workbench .sign-table .st-code {
+  white-space: nowrap;
+}
+.workbench .sign-table .st-label {
+  display: none;
+}
 @media (max-width: 480px) {
   /* Each device is one block: the name and the quantity on the first
      line, the labelled code under the name, then the function.  (The
@@ -3753,6 +3791,68 @@ input[type="number"] {
   .workbench .device-table td.num .dt-label {
     display: block;
     margin-right: 0;
+  }
+
+  /* The advance row's sign table, one block per sign: the position and
+     the code on the first line, then the labelled station and distance
+     from the taper.  (Its 4 columns were 279 px wide in a 258 px box at
+     320, and the open row widened the page to 378.) */
+  .workbench .sign-table,
+  .workbench .sign-table tbody {
+    display: block;
+    width: 100%;
+  }
+  /* The header row stays for screen readers, visually hidden. */
+  .workbench .sign-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .workbench .sign-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    row-gap: 2px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--paper-line-soft);
+  }
+  .workbench .sign-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .workbench .sign-table tbody td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+  .workbench .sign-table .st-pos {
+    grid-column: 1;
+    grid-row: 1;
+    font-weight: 500;
+  }
+  .workbench .sign-table .st-code {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: right;
+    font-weight: 500;
+  }
+  .workbench .sign-table .st-sta,
+  .workbench .sign-table .st-dist {
+    grid-column: 1 / -1;
+    font-size: var(--fs-field-label);
+    color: var(--ink-faint);
+  }
+  .workbench .sign-table .st-label {
+    display: inline;
+    margin-right: 6px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
   /* The nested-frame fix (R141): inside the results disclosures a

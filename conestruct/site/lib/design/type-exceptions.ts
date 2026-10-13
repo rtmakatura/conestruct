@@ -360,6 +360,13 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // sizes are already in the sheet.
       { selector: ".workbench .device-table .dt-code, .workbench .device-table .dt-fn", size: "var(--fs-field-label)" },
       { selector: ".workbench .device-table .dt-label", size: "9.5px" },
+      // Rule 169 (R144 Q4): Reference's Zone geometry rows at rule 82's
+      // mono 11px, as the hero's geometry rows; and the fold-in's advance
+      // sign table stacked at the phone width, R141's two sizes again.
+      // All three sizes are already in the sheet.
+      { selector: ".workbench .zone-geo .zg-row", size: "11px" },
+      { selector: ".workbench .sign-table .st-sta, .workbench .sign-table .st-dist", size: "var(--fs-field-label)" },
+      { selector: ".workbench .sign-table .st-label", size: "9.5px" },
       { selector: ".workbench .stale-ribbon", size: "var(--fs-body-value)" },
       { selector: ".workbench .wb-glyph", size: "13px" },
       { selector: ".workbench .wb-verb", size: "10px" },
@@ -679,7 +686,9 @@ export const CENSUS_PINS = {
   // R106: the Setup box's values at rule 8's token.  125 -> 126.
   // R141: the stacked device schedule's code/function lines and its
   // labels.  126 -> 128; sizes unchanged (both already in the sheet).
-  cssDeclarations: 128,
+  // Rule 169: the Zone geometry rows and the stacked sign table's lines
+  // and labels.  128 -> 131; sizes unchanged.
+  cssDeclarations: 131,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

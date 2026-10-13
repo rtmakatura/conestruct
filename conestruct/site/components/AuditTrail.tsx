@@ -832,22 +832,35 @@ function advanceItem(
       <>
         <p>{roadTypeText}</p>
         <p>{spacingText}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Position</th>
-              <th>Code</th>
-              <th>Station (ft)</th>
-              <th>Distance from Taper (ft)</th>
+        {/* The fold-in to rule 169's branch (R141's pattern): at the phone
+            width each sign stacks into a block (position and code, then the
+            labelled station and distance), and a code never breaks at any
+            width.  The CSS changes the rows' display, which drops a table's
+            implicit roles in some browsers, so the roles are explicit; the
+            visible labels stand in for the header row, which stays for
+            screen readers, so they are aria-hidden. */}
+        <table className="sign-table" role="table">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th role="columnheader">Position</th>
+              <th role="columnheader">Code</th>
+              <th role="columnheader">Station (ft)</th>
+              <th role="columnheader">Distance from Taper (ft)</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody role="rowgroup">
             {signTable.map((row, i) => (
-              <tr key={i}>
-                <td>{row.Position}</td>
-                <td>{row.Code}</td>
-                <td>{row["Station (ft)"]}</td>
-                <td>{row["Distance from Taper (ft)"]}</td>
+              <tr key={i} role="row">
+                <td role="cell" className="st-pos">{row.Position}</td>
+                <td role="cell" className="st-code">{row.Code}</td>
+                <td role="cell" className="st-sta">
+                  <span className="st-label" aria-hidden="true">Station (ft)</span>
+                  {row["Station (ft)"]}
+                </td>
+                <td role="cell" className="st-dist">
+                  <span className="st-label" aria-hidden="true">From taper (ft)</span>
+                  {row["Distance from Taper (ft)"]}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -27,8 +27,21 @@
 // is recomputed locally; a response missing either count renders no hero
 // at all.
 
-import type { DeviceBreakdownState } from "./DeviceBreakdown";
+import type { DeviceBreakdownState, ZoneGeometry } from "./DeviceBreakdown";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
+
+/** Rule 169 (R144 Q4): the four zone-geometry rows, as label and value.
+ *  The hero shows them at the desk and Reference's "Zone geometry" group
+ *  at every width; both render this one list, so the two can't drift.
+ *  Every value is the backend's ``zone_geometry`` as received. */
+export function zoneGeometryRows(g: ZoneGeometry): { label: string; value: string }[] {
+  return [
+    { label: "Taper L", value: `${g.taper_l_ft} ft` },
+    { label: "Buffer B", value: `${g.buffer_b_ft} ft` },
+    { label: "Device spacing", value: `${g.device_spacing_ft} ft o.c.` },
+    { label: "Work zone", value: `${g.work_len_ft.toLocaleString("en-US")} ft` },
+  ];
+}
 
 interface Props {
   breakdown: DeviceBreakdownState;
@@ -91,26 +104,12 @@ export function ResultsHero({ breakdown, jurisdiction }: Props) {
             : "Baseline · MHT"}
         </div>
         {g ? (
-          <>
-            <div className="row">
-              <span>Taper L</span>
-              <span className="mv">{g.taper_l_ft} ft</span>
+          zoneGeometryRows(g).map((row) => (
+            <div className="row" key={row.label}>
+              <span>{row.label}</span>
+              <span className="mv">{row.value}</span>
             </div>
-            <div className="row">
-              <span>Buffer B</span>
-              <span className="mv">{g.buffer_b_ft} ft</span>
-            </div>
-            <div className="row">
-              <span>Device spacing</span>
-              <span className="mv">{g.device_spacing_ft} ft o.c.</span>
-            </div>
-            <div className="row">
-              <span>Work zone</span>
-              <span className="mv">
-                {g.work_len_ft.toLocaleString("en-US")} ft
-              </span>
-            </div>
-          </>
+          ))
         ) : (
           <div className="row">
             <span>Zone geometry unavailable</span>

@@ -54,6 +54,7 @@ import {
   type ItemSpec,
 } from "./AuditTrail";
 import { DeviceBreakdown, type DeviceBreakdownState } from "./DeviceBreakdown";
+import { ZoneGeometryGroup } from "./ZoneGeometryGroup";
 import {
   SCAN_BUCKET_TO_FLAG,
   SCAN_KEYED_BUCKETS,
@@ -588,6 +589,13 @@ export function TieredReference({
     );
   }
   if (showAudit) {
+    // Rule 169 (R144 Q4): the zone geometry's rows, here at every width;
+    // the counts hero drops its geometry cell at the phone width.
+    referenceBody.push(
+      <div key="zone-geo" className={jur ? "mt-2" : undefined}>
+        <ZoneGeometryGroup breakdown={breakdown} />
+      </div>,
+    );
     referenceBody.push(
       <div key="devices" className={jur ? "mt-2" : undefined}>
         <DeviceBreakdown state={breakdown} onRetry={onRetry} />
@@ -703,7 +711,7 @@ export function TieredReference({
             label="Reference"
             summary={
               <>
-                permit · hours windows · device schedule
+                permit · hours windows · {showAudit && <>zone geometry · </>}device schedule
                 {jur && jur.chips.hazard.length > 0 && <> · hazard meters</>}
               </>
             }

@@ -13,6 +13,9 @@
 //   what-flagger     the same road as a flagger lane closure
 //   what-near        near an intersection, the crossing marked on the map
 //   results          Generate, every disclosure opened
+//   row N            then each of the audit's calculation rows opened in
+//                    turn (they open one at a time), the page checked with
+//                    each open
 // At each: the page's scroll width against the SCREEN's width (a phone
 // widens its layout to fit wide content, so innerWidth is not the test)
 // and the outermost elements past the right edge.  Exits 1 on any
@@ -177,6 +180,31 @@ async function openAll(page) {
       await openAll(page);
       await page.waitForTimeout(1500);
       await check(page, "results");
+      // Rule 169's branch: the audit's calculation rows are plain buttons
+      // (no aria-expanded), so openAll leaves them shut, and one opens at
+      // a time.  Open each in turn and check the page with it open (the
+      // advance row's sign table widened the page to 378 at 320 and 360
+      // while this check passed).  A screenshot only when a row scrolls.
+      const items = page.locator(".audit-item:visible");
+      const nRows = await items.count();
+      for (let i = 0; i < nRows; i += 1) {
+        const it = items.nth(i);
+        const title = ((await it.locator(".audit-head .title").innerText().catch(() => "")) || "").trim();
+        if (!(await it.evaluate((el) => el.classList.contains("open")))) {
+          await it.locator(".audit-head").scrollIntoViewIfNeeded().catch(() => {});
+          await it.locator(".audit-head").click({ timeout: 3000 }).catch(() => {});
+          await page.waitForTimeout(500);
+        }
+        const stage = `row ${i + 1}`;
+        await page.mouse.move(1, 1).catch(() => {});
+        out[stage] = { title, ...(await fit(page)) };
+        const ok = out[stage].scrollWidth <= out[stage].screen;
+        console.log(`${w} ${stage.padEnd(14)} ${ok ? "fits" : "SCROLLS"} scroll=${out[stage].scrollWidth} screen=${out[stage].screen} (${title})${out[stage].past.length ? " past: " + out[stage].past.join(", ") : ""}`);
+        if (!ok) {
+          failures.push(`${w} ${stage} (${title})`);
+          if (OUT) await page.screenshot({ path: path.join(OUT, `row-${i + 1}-${w}.png`), fullPage: true });
+        }
+      }
       await ctx.close();
     }
     {

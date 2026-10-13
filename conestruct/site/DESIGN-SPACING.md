@@ -49,8 +49,9 @@ them.
   and set the floor at 320 (it was 360 under R138).
 - **The fit check** is `scripts/verify-phone-fit.cjs`: every stage of
   `/sandbox` (empty, the picker before and after the map moves, WHERE, WHAT for
-  shoulder, flagger and near-intersection, results with every disclosure open)
-  at 320×800 and 360×800, failing on any sideways scroll.
+  shoulder, flagger and near-intersection, results with every disclosure open,
+  then each of the audit's calculation rows opened in turn) at 320×800 and
+  360×800, failing on any sideways scroll.
 - **Below the floor:** nothing. R143: "No floor message: nothing below 320 is
   common enough to need one."
 - **The CSS** still says `@media (max-width: 480px)` for the phone rules; 320
