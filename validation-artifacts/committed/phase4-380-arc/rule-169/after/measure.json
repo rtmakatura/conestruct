@@ -1,0 +1,128 @@
+{
+  "320": {
+    "pageScrollW": 320,
+    "screenW": 320,
+    "heroMetaRendered": false,
+    "heroMetaRows": [
+      "Taper L40 ft",
+      "Buffer B200 ft",
+      "Device spacing30 ft o.c.",
+      "Work zone1,000 ft"
+    ],
+    "zoneGeoRendered": true,
+    "zoneGeoRows": [
+      "Taper L 40 ft",
+      "Buffer B 200 ft",
+      "Device spacing 30 ft o.c.",
+      "Work zone 1,000 ft"
+    ],
+    "advance": {
+      "tableW": 174,
+      "tableScrollW": 174,
+      "bodyW": 258,
+      "bodyRight": 289,
+      "tableRight": 273,
+      "codes": [
+        {
+          "code": "W20-1",
+          "lines": 1,
+          "right": 261
+        },
+        {
+          "code": "W20-2",
+          "lines": 1,
+          "right": 261
+        },
+        {
+          "code": "W21-5aR",
+          "lines": 1,
+          "right": 261
+        }
+      ]
+    }
+  },
+  "360": {
+    "pageScrollW": 360,
+    "screenW": 360,
+    "heroMetaRendered": false,
+    "heroMetaRows": [
+      "Taper L40 ft",
+      "Buffer B200 ft",
+      "Device spacing30 ft o.c.",
+      "Work zone1,000 ft"
+    ],
+    "zoneGeoRendered": true,
+    "zoneGeoRows": [
+      "Taper L 40 ft",
+      "Buffer B 200 ft",
+      "Device spacing 30 ft o.c.",
+      "Work zone 1,000 ft"
+    ],
+    "advance": {
+      "tableW": 214,
+      "tableScrollW": 214,
+      "bodyW": 298,
+      "bodyRight": 329,
+      "tableRight": 313,
+      "codes": [
+        {
+          "code": "W20-1",
+          "lines": 1,
+          "right": 301
+        },
+        {
+          "code": "W20-2",
+          "lines": 1,
+          "right": 301
+        },
+        {
+          "code": "W21-5aR",
+          "lines": 1,
+          "right": 301
+        }
+      ]
+    }
+  },
+  "1440": {
+    "pageScrollW": 1440,
+    "screenW": 1440,
+    "heroMetaRendered": true,
+    "heroMetaRows": [
+      "Taper L 40 ft",
+      "Buffer B 200 ft",
+      "Device spacing 30 ft o.c.",
+      "Work zone 1,000 ft"
+    ],
+    "zoneGeoRendered": true,
+    "zoneGeoRows": [
+      "Taper L 40 ft",
+      "Buffer B 200 ft",
+      "Device spacing 30 ft o.c.",
+      "Work zone 1,000 ft"
+    ],
+    "advance": {
+      "tableW": 480,
+      "tableScrollW": 480,
+      "bodyW": 846,
+      "bodyRight": 1143,
+      "tableRight": 845,
+      "codes": [
+        {
+          "code": "W20-1",
+          "lines": 1,
+          "right": 539.1
+        },
+        {
+          "code": "W20-2",
+          "lines": 1,
+          "right": 539.1
+        },
+        {
+          "code": "W21-5aR",
+          "lines": 1,
+          "right": 539.1
+        }
+      ]
+    }
+  }
+}

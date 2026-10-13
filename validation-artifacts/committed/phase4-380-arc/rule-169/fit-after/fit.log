@@ -1,0 +1,29 @@
+﻿320 empty          fits scroll=320 screen=320
+320 picker         fits scroll=320 screen=320
+320 picker-moved   fits scroll=320 screen=320
+320 where          fits scroll=320 screen=320
+320 what-shoulder  fits scroll=320 screen=320
+320 results        fits scroll=320 screen=320
+320 row 1          fits scroll=320 screen=320 (Taper length calculation)
+320 row 2          fits scroll=320 screen=320 (Buffer space calculation)
+320 row 3          fits scroll=320 screen=320 (Channelizing device spacing)
+320 row 4          fits scroll=320 screen=320 (Advance warning sign set)
+320 row 5          fits scroll=320 screen=320 (TA-3 · S-630-1 reference)
+320 what-flagger   fits scroll=320 screen=320
+320 what-near      fits scroll=320 screen=320
+360 empty          fits scroll=360 screen=360
+360 picker         fits scroll=360 screen=360
+360 picker-moved   fits scroll=360 screen=360
+360 where          fits scroll=360 screen=360
+360 what-shoulder  fits scroll=360 screen=360
+360 results        fits scroll=360 screen=360
+360 row 1          fits scroll=360 screen=360 (Taper length calculation)
+360 row 2          fits scroll=360 screen=360 (Buffer space calculation)
+360 row 3          fits scroll=360 screen=360 (Channelizing device spacing)
+360 row 4          fits scroll=360 screen=360 (Advance warning sign set)
+360 row 5          fits scroll=360 screen=360 (TA-3 · S-630-1 reference)
+360 what-flagger   fits scroll=360 screen=360
+360 what-near      fits scroll=360 screen=360
+FIT CHECK PASSED at 320 and 360 px
+
+token hits: []

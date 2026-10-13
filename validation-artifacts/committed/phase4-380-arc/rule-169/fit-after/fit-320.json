@@ -1,0 +1,72 @@
+{
+  "empty": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "picker": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "picker-moved": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "where": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-shoulder": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "results": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "row 1": {
+    "title": "Taper length calculation",
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "row 2": {
+    "title": "Buffer space calculation",
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "row 3": {
+    "title": "Channelizing device spacing",
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "row 4": {
+    "title": "Advance warning sign set",
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "row 5": {
+    "title": "TA-3 · S-630-1 reference",
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-flagger": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  },
+  "what-near": {
+    "scrollWidth": 320,
+    "screen": 320,
+    "past": []
+  }
+}
