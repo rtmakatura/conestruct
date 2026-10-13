@@ -165,3 +165,14 @@ needs a foreground session.
 
 **Branches (Q6):** A, `issue-286-formula-fields`, from main `3fdf074`; B, `rule-169-geometry-home`,
 stacks on A's tip.
+
+## #286 A accepted; branch B's fold-in (Ryan, 2026-10-13), verbatim
+
+> #286 A accepted on your prod check.
+>
+> Go on branch B (rule-169-geometry-home), from main c109778. Fold in the advance row's sign table at 360: it's cut off at the right edge, and its codes break mid-code ("W20-" / "1"). Make it fit 360 and 320 with codes kept whole, phone-only. Report before ship with 320, 360 and 1440 screenshots of results with all disclosures open, and the Reference "Zone geometry" group close up.
+>
+> Separately, draft an issue for the chat to repost: the sight-distance row's "Stations: 2 flagger station(s)" is counted by the panel from the form's AFAD switch, which is Rule 3 math in the frontend. Backend should send it.
+
+**Branch B starts from main `c109778`** (A shipped and its branch was cleaned up), so it no longer
+stacks on a live branch. Prediction and measurement: `rule-169/`.

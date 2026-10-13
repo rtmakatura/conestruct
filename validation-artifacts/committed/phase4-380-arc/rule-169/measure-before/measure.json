@@ -1,0 +1,113 @@
+{
+  "320": {
+    "pageScrollW": 378,
+    "screenW": 320,
+    "heroMetaRendered": true,
+    "heroMetaRows": [
+      "Taper L 40 ft",
+      "Buffer B 200 ft",
+      "Device spacing 30 ft o.c.",
+      "Work zone 1,000 ft"
+    ],
+    "zoneGeoRendered": false,
+    "zoneGeoRows": [],
+    "advance": {
+      "tableW": 279.5,
+      "tableScrollW": 279,
+      "bodyW": 258,
+      "bodyRight": 289,
+      "tableRight": 378.5,
+      "codes": [
+        {
+          "code": "W20-1",
+          "lines": 2,
+          "right": 231.6
+        },
+        {
+          "code": "W20-2",
+          "lines": 2,
+          "right": 231.6
+        },
+        {
+          "code": "W21-5aR",
+          "lines": 2,
+          "right": 231.6
+        }
+      ]
+    }
+  },
+  "360": {
+    "pageScrollW": 378,
+    "screenW": 360,
+    "heroMetaRendered": true,
+    "heroMetaRows": [
+      "Taper L 50 ft",
+      "Buffer B 200 ft",
+      "Device spacing 30 ft o.c.",
+      "Work zone 1,000 ft"
+    ],
+    "zoneGeoRendered": false,
+    "zoneGeoRows": [],
+    "advance": {
+      "tableW": 279.5,
+      "tableScrollW": 279,
+      "bodyW": 298,
+      "bodyRight": 329,
+      "tableRight": 378.5,
+      "codes": [
+        {
+          "code": "W20-1",
+          "lines": 2,
+          "right": 231.6
+        },
+        {
+          "code": "W20-2",
+          "lines": 2,
+          "right": 231.6
+        },
+        {
+          "code": "W21-5aR",
+          "lines": 2,
+          "right": 231.6
+        }
+      ]
+    }
+  },
+  "1440": {
+    "pageScrollW": 1440,
+    "screenW": 1440,
+    "heroMetaRendered": true,
+    "heroMetaRows": [
+      "Taper L 40 ft",
+      "Buffer B 200 ft",
+      "Device spacing 30 ft o.c.",
+      "Work zone 1,000 ft"
+    ],
+    "zoneGeoRendered": false,
+    "zoneGeoRows": [],
+    "advance": {
+      "tableW": 480,
+      "tableScrollW": 480,
+      "bodyW": 846,
+      "bodyRight": 1143,
+      "tableRight": 845,
+      "codes": [
+        {
+          "code": "W20-1",
+          "lines": 1,
+          "right": 539.1
+        },
+        {
+          "code": "W20-2",
+          "lines": 1,
+          "right": 539.1
+        },
+        {
+          "code": "W21-5aR",
+          "lines": 1,
+          "right": 539.1
+        }
+      ]
+    }
+  }
+}
