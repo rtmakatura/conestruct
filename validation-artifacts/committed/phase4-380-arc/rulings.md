@@ -138,3 +138,30 @@ on its tip.
 **Phase 4's branches now:** 1 sizes and tooling, 2 tap targets, 3 device table (all shipped);
 4 the floor at 320 (`phase4-floor-320`, this ruling; replaces "the floor message"); 5 #286 and
 rule 169; 6 rule 168's cards; 7 #280.
+
+## R144 (Ryan, 2026-10-13), verbatim
+
+> R144, #286 / rule 169 rulings:
+> - Q1: (a). result_text on every calculation section, formula_text where there's a formula, and a citation object on the advance-sign section. The frontend renders only wire fields; its labels and the nDrums + nCones sum go (Rule 3).
+> - Q2: keep the 11th-edition numbers and record #281 §2.8's 2009 numbers as superseded. The "MUTCD § 6B-1" footer counts as a found defect, so the citation counter goes to 20; record it in the rulings file. Check every citation the branch touches against its subject, with a page cite.
+> - Q3: the calculation rows stay in "Checked & passed".
+> - Q4: (a). A "Zone geometry" group in Reference, and the hero's geometry cell is not rendered at ≤480.
+> - Q5: yes. The sight-distance text comes from the wire, using the audit's speed. The fixed "≥45 mph uses L=W·S" line stays.
+> - Q6: two stacked branches as proposed. Rule 5 prediction committed first, and the 16 audit snapshots and 74 corpus files are listed in it. Each branch reports before ship.
+> Add the CLAUDE.md counter (15 → 20) to the foreground-session list.
+
+**#281 §2.8 is superseded (Q2).** #281 §2.8 cites the 2009 edition: §6C.08 (tapers), §6C.06
+(buffer), Table 6C-1 (advance sign spacing). The 11th-edition numbers govern, each verified by
+subject in the committed `validation-artifacts/ta10_flagger/mutcd_part6.pdf`: §6B.08 Tapers with
+Tables 6B-3 and 6B-4 (printed p. 775), §6B.06 with Table 6B-2 (pp. 773, 775), Table 6B-1
+"Recommended Advance Warning Sign Minimum Spacing" (p. 773). Evidence, with every other citation
+this branch touches: `issue-286/citations.md`.
+
+**Citation counter: 19 → 20.** The defect: the audit panel's advance warning sign footer read
+"MUTCD § 6B-1 · ADVANCE WARNING SIGN SPACING" (`conestruct/site/components/AuditTrail.tsx:853` at
+`3fdf074`). 6B-1 is a table; the 11th edition has no § 6B-1. The previous count, 19, is recorded in
+`../s2-arc13-demo-fixes/p775-verification.md`. `CLAUDE.md:32` still says 15; changing it (15 → 20)
+needs a foreground session.
+
+**Branches (Q6):** A, `issue-286-formula-fields`, from main `3fdf074`; B, `rule-169-geometry-home`,
+stacks on A's tip.
