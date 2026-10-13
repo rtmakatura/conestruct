@@ -1317,6 +1317,39 @@ body {
 .workbench .audit-item.open .audit-head .chev {
   color: var(--ink);
 }
+/* R143 (Phase 4, the floor at 320): at the phone width the MUTCD cite
+   drops under the title.  Five columns in one row (number, title, result,
+   cite, chevron) ran 14 px past a 320 screen with every disclosure open.
+   The result drops too (R143 build): left beside the title, a long result
+   ("22 devices · 30/60 ft o.c.") squeezed the title's column narrower than
+   its words and the two overlapped at 320.  So the title has the row's
+   width, then the result, then the cite.  The desk row is unchanged. */
+@media (max-width: 480px) {
+  .workbench .audit-head {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "num title chev"
+      ". result ."
+      ". cite .";
+    column-gap: 12px;
+    row-gap: 4px;
+  }
+  .workbench .audit-head .num {
+    grid-area: num;
+  }
+  .workbench .audit-head .title {
+    grid-area: title;
+  }
+  .workbench .audit-head .result {
+    grid-area: result;
+  }
+  .workbench .audit-head .cite {
+    grid-area: cite;
+  }
+  .workbench .audit-head .chev {
+    grid-area: chev;
+  }
+}
 
 .workbench .audit-body {
   background: var(--paper-deep);

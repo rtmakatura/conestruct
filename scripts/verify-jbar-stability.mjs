@@ -2,7 +2,7 @@
 // stable: its height must be IDENTICAL across every selection (none + all
 // launch-8), while the evaluation is in flight, and through a street-class
 // switch — and no skeleton may appear.  Run at the two supported sizes,
-// 1440×1000 and the phone floor 360×800 (R138, DESIGN-SPACING.md
+// 1440×1000 and the phone test size 360×800 (R138, DESIGN-SPACING.md
 // "Supported sizes").
 //
 // Phase 4 (R138): this script used to drive the jurisdiction summary bar

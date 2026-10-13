@@ -30,25 +30,33 @@ Exceptions (documented, deliberate):
   repointed it at the cell. The `.jbar-slot-*` rules left in `globals.css`
   style nothing.)
 
-## Supported sizes (Phase 4, R137 Q3/Q4, R138)
+## Supported sizes (Phase 4, R137 Q3/Q4, R138, R143)
 
-Two sizes, everywhere a size is named: screenshots and evidence,
-`scripts/verify-jbar-stability.mjs`, and these docs.
+Two test sizes, everywhere a size is named: screenshots and evidence,
+`scripts/verify-jbar-stability.mjs`, and these docs. One fit check below
+them.
 
 | Size | Role |
 |---|---|
 | **1440×1000** | the desk |
-| **360×800** | the phone, and the floor (R138: "floor 360 px; one phone size everywhere, 360×800") |
+| **360×800** | the phone: the one phone test size (R138: "one phone size everywhere, 360×800") |
+| **320×800** | the floor, a fit check only (R143): no stage scrolls sideways |
 
-- **Why 360:** many Android phones are 360 px wide (R137 Q3). Measured on
-  production at 360×800 vs 380×800, nothing breaks at 360 that doesn't
-  already at 380 (`validation-artifacts/committed/phase4-380-arc/`).
-- **The CSS** still says `@media (max-width: 480px)` for the phone rules; a
-  360 px phone falls inside it.
-- **Below the floor:** Phase 4's floor-message branch shows an honest
-  minimum-width message rather than a degraded layout (#153).
-- **The phone work** is Phase 4, "the phone arc (360 px)". Its rule numbers
-  (#281's "160–179") keep their names.
+- **Why 360 for testing:** many Android phones are 360 px wide (R137 Q3).
+- **Why 320 for the floor:** it is the narrowest common phone. Measured on
+  production (`validation-artifacts/committed/phase4-380-arc/floor-320/`), 320
+  broke in one place, the audit trail's calculation rows; R143 made those wrap
+  and set the floor at 320 (it was 360 under R138).
+- **The fit check** is `scripts/verify-phone-fit.cjs`: every stage of
+  `/sandbox` (empty, the picker before and after the map moves, WHERE, WHAT for
+  shoulder, flagger and near-intersection, results with every disclosure open)
+  at 320×800 and 360×800, failing on any sideways scroll.
+- **Below the floor:** nothing. R143: "No floor message: nothing below 320 is
+  common enough to need one."
+- **The CSS** still says `@media (max-width: 480px)` for the phone rules; 320
+  and 360 px phones fall inside it.
+- **The phone work** is Phase 4, "the phone arc". Its rule numbers (#281's
+  "160–179") keep their names.
 
 ## LocationPickerModal (issue #166)
 
@@ -307,7 +315,7 @@ Owners below cite Part 2 by rule number. **Part 2 is comment 1 on issue
 | 13.5px | `--fs-body-value` | rules 8 + 9 — body value, item body |
 | 12.5px | `--fs-field-label` | rules 5 + 17 — field label, text symbols |
 | 62px | `--fs-hero-numeral` | rules 10 + 81 — the counts hero |
-| 42px | `--fs-hero-numeral-380` | rule 169 — the counts hero at the phone width (360 px floor, R138; the token keeps its name) |
+| 42px | `--fs-hero-numeral-380` | rule 169 — the counts hero at the phone width (the token keeps its name) |
 
 Only `--fs-step-question` has a consumer in this commit (`.tr-question`,
 role 5). The other eight are declared and unconsumed by design; each
