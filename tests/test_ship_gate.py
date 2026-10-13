@@ -111,6 +111,20 @@ def test_a_prefix_of_the_reported_branch_is_not_the_branch(tmp_path):
     assert code == 2 and "not in CC's latest result: line" in err
 
 
+def test_a_branch_ending_the_sentence_with_a_full_stop_is_the_branch(tmp_path):
+    line = "result: built and verified on ship-loop-3."
+    t = write_transcript(tmp_path, [assistant(line, "a1"), human("ship ship-loop-3", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3 -DryRun", t)
+    assert code == 0, err
+
+
+def test_a_dotted_longer_branch_is_not_the_branch(tmp_path):
+    line = "result: built and verified on ship-loop-3.1"
+    t = write_transcript(tmp_path, [assistant(line, "a1"), human("ship ship-loop-3", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3 -DryRun", t)
+    assert code == 2 and "not in CC's latest result: line" in err
+
+
 def test_only_the_latest_result_line_counts(tmp_path):
     older = "result: `old-branch` ready; ship with `.\\scripts\\ship.ps1 -Branch old-branch`."
     t = write_transcript(

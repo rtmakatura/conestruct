@@ -123,7 +123,9 @@ def find_go(transcript_path: str) -> tuple[str, str, str]:
     i_r, line = last_result
     if i_h < i_r:
         raise Block("the go comes before CC's latest result: line; a go counts only after it")
-    if not re.search(rf"(?<![\w./-]){re.escape(branch)}(?![\w./-])", line):
+    # A full stop right after the branch ends the sentence; a dot followed by
+    # more name characters is a longer branch name (ship-loop-3.1).
+    if not re.search(rf"(?<![\w./-]){re.escape(branch)}(?![\w/-]|\.[\w./-])", line):
         raise Block(f'branch "{branch}" is not in CC\'s latest result: line: {line[:160]!r}')
     return branch, uuid, line
 
