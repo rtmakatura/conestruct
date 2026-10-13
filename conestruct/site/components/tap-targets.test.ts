@@ -53,6 +53,15 @@ describe("R138 tap targets", () => {
     expect(picker).toContain('className="picker-map ');
   });
 
+  it("R140: the form chip rows are 44 at every width, outside any media query", () => {
+    const at = css.indexOf("/* R140: the form chip rows");
+    expect(at).toBeGreaterThan(0);
+    expect(css.slice(at)).toMatch(/\*\/\n\.workbench \.band-stack \.chip \{\n {2}min-height: 44px;\n\}/);
+    // and no longer on rule 15's 32 px desk list
+    expect(css).not.toMatch(/\.band-stack \.chip \{\n {2}min-height: 32px/);
+    expect(css).not.toMatch(/\.band-stack \.chip,\n/);
+  });
+
   it("the cross-street lane confirm and its undo carry tap-44", () => {
     expect(ni.match(/className="tap-44 mt-1\.5/g)?.length).toBe(2);
   });

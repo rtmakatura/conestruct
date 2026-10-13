@@ -5366,18 +5366,22 @@ input[type="number"] {
 .workbench .band-stack .step-pending-summary,
 .workbench .band-stack .a-open button[class*="font-mono"],
 .workbench .band-stack .jbar-suggest button,
-.workbench .band-stack .classpick button,
-.workbench .band-stack .chip {
+.workbench .band-stack .classpick button {
   min-height: 32px;
 }
 @media (max-width: 480px) {
   .workbench .band-stack .step-pending-summary,
   .workbench .band-stack .a-open button[class*="font-mono"],
   .workbench .band-stack .jbar-suggest button,
-  .workbench .band-stack .classpick button,
-  .workbench .band-stack .chip {
+  .workbench .band-stack .classpick button {
     min-height: 44px;
   }
+}
+/* R140: the form chip rows (near-intersection's cross-street directions
+   and lane counts) are WHAT controls, so R107's 44 px holds at every
+   width, not rule 15's 32 at the desk (they measured 36 at 1440). */
+.workbench .band-stack .chip {
+  min-height: 44px;
 }
 
 /* Rule 51 — the verdict strip's symbol, left of the word, in every

@@ -100,3 +100,16 @@ its layout to fit wide content.
 5. #286 and rule 169;
 6. rule 168's cards;
 7. #280.
+
+## R140 (Ryan, 2026-10-13), verbatim
+
+> Tap targets accepted on your prod check.
+>
+> R140: raise the near-intersection chip rows ("One (T-intersection)/Both", lanes "1–4") to 44 px at every width, per R107. The other desk sizes under 44 stay under rule 15. Fold this into branch 3 or ship it as its own light-lane branch, whichever is smaller.
+>
+> Mapbox wordmark: investigate only, no code. Find out why Mapbox's logo control set display:none (the style JSON, the token's account flags, or a Mapbox-side change since yesterday), and whether our plan with Mapbox still requires the wordmark under its terms. Quote the source. Report what you find.
+>
+> Then Phase 4 branch 3, the device table (R139): your stack/wrap vs scroll-in-box proposal with 360 screenshots, before building.
+
+**R140 is its own light-lane branch** (`r140-ni-chips`, one CSS rule): branch 3 is proposal-first, so
+folding R140 in would have held a finished change behind a ruling.

@@ -1,0 +1,50 @@
+{
+  "now-360": {
+    "tableW": 356.4,
+    "tableRight": 421.4,
+    "rows": 11,
+    "pageScrollW": 421,
+    "screenW": 360,
+    "innerW": 421,
+    "boxScroll": null
+  },
+  "A-360": {
+    "tableW": 230,
+    "tableRight": 295,
+    "rows": 11,
+    "pageScrollW": 360,
+    "screenW": 360,
+    "innerW": 360,
+    "boxScroll": null
+  },
+  "B-360": {
+    "tableW": 230,
+    "tableRight": 295,
+    "rows": 11,
+    "pageScrollW": 360,
+    "screenW": 360,
+    "innerW": 360,
+    "boxScroll": null
+  },
+  "C-360": {
+    "tableW": 595.4,
+    "tableRight": 660.4,
+    "rows": 11,
+    "pageScrollW": 360,
+    "screenW": 360,
+    "innerW": 360,
+    "boxScroll": [
+      595,
+      230
+    ]
+  },
+  "now-1440": {
+    "tableW": 778,
+    "tableRight": 1109,
+    "rows": 11,
+    "pageScrollW": 1440,
+    "screenW": 1440,
+    "innerW": 1440,
+    "boxScroll": null
+  }
+}
