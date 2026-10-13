@@ -5279,6 +5279,17 @@ input[type="number"] {
   }
 }
 
+/* R142 — Mapbox's wordmark is always shown.  Mapbox's attribution terms
+   require the logo on maps using its styles, but GL JS hides its own logo
+   control (an inline `display: none`) whenever a source's TileJSON says
+   `mapbox_logo: false`, which the satellite style started saying on
+   2026-10-13 (phase4-380-arc/mapbox-wordmark.md).  `!important` outranks
+   that inline style; every width; the logo itself is not restyled.  The
+   wordmark is Mapbox's, exempt from rule 163's 44 px (R142). */
+.mapboxgl-ctrl:has(> .mapboxgl-ctrl-logo) {
+  display: block !important;
+}
+
 /* R138 (Phase 4, tap targets) — rule 163's 44 px for controls styled in
    their own markup (the location picker, the cross-street lane confirm):
    they carry `tap-44`.  Phone width only; the desk keeps rule 15. */
@@ -5309,6 +5320,9 @@ input[type="number"] {
     border-radius: 22px;
     background-position: center;
     background-size: 24px 24px;
+    /* R142 build: Mapbox's own rule doesn't set it (its icon was the
+       button's size), so the 24 px icon tiled across the 44 px button. */
+    background-repeat: no-repeat;
   }
 }
 

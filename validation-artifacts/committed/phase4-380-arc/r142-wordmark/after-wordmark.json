@@ -1,0 +1,36 @@
+{
+  "360": {
+    "present": true,
+    "mapboxInline": "display: none;",
+    "computedDisplay": "block",
+    "box": [
+      15,
+      621,
+      88,
+      23
+    ],
+    "insideMap": true,
+    "styleToggleOffers": "STREETS",
+    "stylesRequested": [
+      "mapbox/satellite-streets-v12",
+      "mapbox/satellite-streets-v12/iconset.pbf"
+    ]
+  },
+  "1440": {
+    "present": true,
+    "mapboxInline": "display: none;",
+    "computedDisplay": "block",
+    "box": [
+      87,
+      850,
+      88,
+      23
+    ],
+    "insideMap": true,
+    "styleToggleOffers": "STREETS",
+    "stylesRequested": [
+      "mapbox/satellite-streets-v12",
+      "mapbox/satellite-streets-v12/iconset.pbf"
+    ]
+  }
+}

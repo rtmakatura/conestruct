@@ -113,3 +113,14 @@ its layout to fit wide content.
 
 **R140 is its own light-lane branch** (`r140-ni-chips`, one CSS rule): branch 3 is proposal-first, so
 folding R140 in would have held a finished change behind a ruling.
+
+## R141 and R142 (Ryan, 2026-10-13), verbatim
+
+> R140 accepted on your prod check.
+>
+> R141, device table (Phase 4 branch 3): A. Stacked blocks on phones only: name and quantity on the first line, then the labelled MUTCD code, then the function. MUTCD codes never break mid-code. The desk table stays as it is. Also fold in the nested-frame fix if it's phone-only CSS: give the disclosure content its width back at 360 so the 65 px isn't wasted. If that touches anything beyond the results disclosures, split it into its own branch. Report with 360 and 1440 screenshots of the results page, all disclosures open, and the go.
+>
+> R142, Mapbox wordmark: always show it, whatever the style data says. Mapbox's terms require the logo. Smallest change that keeps the logo control visible at every width, with a test. The wordmark is Mapbox's and is exempt from our 44 px rule. Light-lane branch, separate from branch 3; screenshots at 1440 and 360 with the satellite style, and the go.
+
+**Order:** `r142-mapbox-wordmark` (light lane) first from main; `phase4-device-table` (R141) stacks
+on its tip.
