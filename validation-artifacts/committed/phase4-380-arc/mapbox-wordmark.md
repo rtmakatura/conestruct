@@ -8,7 +8,7 @@ them.
 Mapbox GL JS (installed **3.23.1**; `package.json` asks `^3.8.0`) hides its own logo control
 whenever any map source says the logo isn't required:
 
-- `node_modules/mapbox-gl/dist/mapbox-gl-dev.js:94600`: the control starts hidden
+- `node_modules/mapbox-gl/dist/mapbox-gl-dev.js:94601`: the control starts hidden
   (`this._container.style.display = "none";`) and re-checks on every `sourcedata` event (:94602).
 - `:94616–94619` `_updateLogo` sets `block`/`none` from `_logoRequired()`.
 - `:94621–94631` `_logoRequired` returns false if any source has `mapbox_logo` false:
