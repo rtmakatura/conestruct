@@ -4723,7 +4723,7 @@ def _draw_schematic_page(
     # They are drawn at the page's left, upstream, where lane 1 on each
     # side (the lane beside the centerline or median) is open and clear of
     # devices: the plan closes the rightmost lane (#176), never lane 1,
-    # except the flagger's one lane (below).
+    # except the flagger's one lane (its branch below).
     arrow_x_left = PLAN_LEFT + 30.0
     arrow_x_right = PLAN_LEFT + 130.0
     half_lane = 0.5 * params.lane_width_ft
@@ -4735,24 +4735,29 @@ def _draw_schematic_page(
         for lane in sorted({1, open_lanes}):
             y = _y_of((lane - 0.5) * params.lane_width_ft, False)
             _draw_lane_arrow(c, arrow_x_left, arrow_x_right, y, pointing_right=True)
+    elif params.closure_type == "lane" and params.num_lanes == 1:
+        # The flagger plan: its one work-side lane is closed from the page's
+        # left edge (its taper drums start there), and both directions take
+        # turns in the one open lane (TA-10, one-lane two-way).  So both
+        # arrows sit in that lane, opposite ways (ruled (b), #321): the
+        # work-side one nearer the centerline, 0.4 of the lane apart.
+        lane = params.lane_width_ft
+        _draw_lane_arrow(
+            c, arrow_x_left, arrow_x_right, _y_of(-0.3 * lane, False), pointing_right=True
+        )
+        _draw_lane_arrow(
+            c, arrow_x_left, arrow_x_right, _y_of(-0.7 * lane, False), pointing_right=False
+        )
     else:
-        if params.closure_type == "lane" and params.num_lanes == 1:
-            # The flagger plan's one work-side lane is closed from the
-            # page's left edge (its taper drums start there), so it has no
-            # open lane where the arrows are drawn.  Its arrow keeps the
-            # pre-#321 place in the page margin past the shoulder, pending
-            # a ruling (#321).  #314 (R136): past a drawn sidewalk band.
-            shoulder_outer_offset = params.num_lanes * params.lane_width_ft + shoulder_width_ft
-            y_work = _y_of(shoulder_outer_offset, params.is_divided) - 14.0
-            if _resolve_site_flags(site_flags)["pedestrian_facility"]:
-                sw_inner, sw_outer = _sidewalk_strip_ft(params, shoulder_width_ft)
-                lo, hi = _strip_y_range(sw_inner, sw_outer, 1, params.is_divided)
-                y_work = lo - 8.0 if hi <= PLAN_Y_CENTER else hi + 8.0
-        else:
-            y_work = _y_of(half_lane, params.is_divided)
-        _draw_lane_arrow(c, arrow_x_left, arrow_x_right, y_work, pointing_right=True)
-        # The opposing direction, on two-way and divided roads alike: its
-        # lane 1, pointing left.
+        # Each direction in lane 1 of its side, on two-way and divided
+        # roads alike: the work side pointing right, the opposing side left.
+        _draw_lane_arrow(
+            c,
+            arrow_x_left,
+            arrow_x_right,
+            _y_of(half_lane, params.is_divided),
+            pointing_right=True,
+        )
         _draw_lane_arrow(
             c,
             arrow_x_left,

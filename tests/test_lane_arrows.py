@@ -109,9 +109,12 @@ def test_divided_one_arrow_per_carriageway_in_lane_one(monkeypatch: pytest.Monke
     assert _in_lane(opposing, -11.0, -0.001, True)
 
 
-def test_flagger_gains_its_opposing_arrow_and_keeps_its_work_side_one(
+def test_flagger_both_arrows_in_the_one_open_lane(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """Ruled (b): both directions take turns in the flagger plan's one open
+    lane, so both arrows sit in it, opposite ways, the work-side one nearer
+    the centerline."""
     body = {
         "kind": "flagger_lane_closure",
         "meta": META,
@@ -127,12 +130,14 @@ def test_flagger_gains_its_opposing_arrow_and_keeps_its_work_side_one(
         "pedestrianAccess": False,
     }
     arrows = _arrows(monkeypatch, body)
+    assert sorted(p for _, p in arrows) == [False, True]
     work = next(y for y, p in arrows if p)
     opposing = next(y for y, p in arrows if not p)
+    assert _in_lane(work, -11.0, 0.0, False)
     assert _in_lane(opposing, -11.0, 0.0, False)
-    # The work-side lane is closed where the arrows are drawn: the arrow
-    # stays past the shoulder, outside the asphalt, pending a ruling (#321).
-    assert not _in_lane(work, 0.0, 11.0, False)
+    # Nearer the centerline (offset 0) than the opposing arrow, and apart.
+    assert abs(work - ps._y_of(0.0)) < abs(opposing - ps._y_of(0.0))
+    assert abs(work - opposing) >= 0.4 * 11.0 * ps.PTS_PER_OFFSET_FT - 0.01
 
 
 def test_one_way_unchanged(monkeypatch: pytest.MonkeyPatch) -> None:
