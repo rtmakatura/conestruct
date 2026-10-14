@@ -1,0 +1,1602 @@
+[
+ {
+  "case": "shoulder-45mph",
+  "i": 0,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 11.3,
+  "bytes": 248608,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 0,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 7.37,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 0,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 4.13,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 0,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.11,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 1,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 9.69,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 1,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 9.02,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 1,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 14.29,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 1,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 11.69,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 2,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.08,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 2,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.08,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 2,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.92,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 2,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.3,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 3,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 6.46,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 3,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 8.03,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 3,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 5.17,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 3,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.29,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 4,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 5.56,
+  "bytes": 248608,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 4,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 7.31,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 4,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.0,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 4,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.21,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 5,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 7.5,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 5,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 12.43,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 5,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.73,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 5,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.46,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 6,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 5.05,
+  "bytes": 248608,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 6,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.82,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 6,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.31,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 6,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.8,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 7,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 9.1,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 7,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 8.28,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 7,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.84,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 7,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.13,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 8,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.07,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 8,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.01,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 8,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.1,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 8,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.16,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 9,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 6.72,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 9,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.03,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 9,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.85,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 9,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.54,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 10,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 6.73,
+  "bytes": 248608,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 10,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.25,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 10,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.57,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 10,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.86,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 11,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 14.18,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 11,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 10.34,
+  "bytes": 248608,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 11,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.24,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 11,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 2.86,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 12,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.13,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 12,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.65,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 12,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 9.86,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 12,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 12.39,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 13,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 5.42,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 13,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 8.06,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 13,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 11.78,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 13,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 2.62,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 14,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 6.57,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 14,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 11.29,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 14,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 2.87,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 14,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.78,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 15,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.97,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 15,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.54,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 15,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.09,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 15,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.45,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 16,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 2.93,
+  "bytes": 248608,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 16,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 11.8,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 16,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.43,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 16,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.84,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 17,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.08,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 17,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 6.79,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 17,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.1,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 17,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.18,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 18,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.84,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 18,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 12.18,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 18,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 4.4,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 18,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.89,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 19,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.43,
+  "bytes": 84410,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 19,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 2.61,
+  "bytes": 248608,
+  "count": 1234
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 19,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.66,
+  "bytes": 84409,
+  "count": 415
+ },
+ {
+  "case": "shoulder-45mph",
+  "i": 19,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.06,
+  "bytes": 248607,
+  "count": 1234
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 0,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 6.69,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 0,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.08,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 0,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 4.7,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 0,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.89,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 1,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.58,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 1,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 4.82,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 1,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.32,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 1,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 4.72,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 2,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 3.74,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 2,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 7.3,
+  "bytes": 124594,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 2,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.66,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 2,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.79,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 3,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 6.35,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 3,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.1,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 3,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.7,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 3,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.41,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 4,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 4.44,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 4,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.36,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 4,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.8,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 4,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.71,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 5,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 8.39,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 5,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 3.59,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 5,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.9,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 5,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.12,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 6,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 6.23,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 6,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.46,
+  "bytes": 124594,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 6,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.55,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 6,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.8,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 7,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 8.3,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 7,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.5,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 7,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.69,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 7,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.39,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 8,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 2.94,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 8,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 6.45,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 8,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.76,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 8,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.29,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 9,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.03,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 9,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 12.25,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 9,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.09,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 9,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 4.53,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 10,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 4.7,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 10,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.45,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 10,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.55,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 10,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.98,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 11,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 9.46,
+  "bytes": 124594,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 11,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 7.1,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 11,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.99,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 11,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.83,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 12,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.03,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 12,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.38,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 12,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.5,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 12,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 4.05,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 13,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 8.57,
+  "bytes": 124594,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 13,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 10.43,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 13,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.92,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 13,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.56,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 14,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.39,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 14,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.33,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 14,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.29,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 14,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.43,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 15,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 8.2,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 15,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 3.8,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 15,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.35,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 15,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.54,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 16,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 504,
+  "s": 7.06,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 16,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 200,
+  "s": 6.88,
+  "bytes": 124594,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 16,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.71,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 16,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.93,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 17,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 11.64,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 17,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 5.22,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 17,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.81,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 17,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 2.92,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 18,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 7.84,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 18,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 7.26,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 18,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.95,
+  "bytes": 565690,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 18,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.24,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 19,
+  "mirror": "overpass-api.de",
+  "shape": "strip",
+  "status": 504,
+  "s": 10.34,
+  "bytes": 695,
+  "count": null
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 19,
+  "mirror": "overpass-api.de",
+  "shape": "box",
+  "status": 200,
+  "s": 2.88,
+  "bytes": 565691,
+  "count": 2898
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 19,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "strip",
+  "status": 200,
+  "s": 3.31,
+  "bytes": 124593,
+  "count": 626
+ },
+ {
+  "case": "flagger-rural-45mph-both-approaches",
+  "i": 19,
+  "mirror": "overpass.openstreetmap.fr",
+  "shape": "box",
+  "status": 200,
+  "s": 3.89,
+  "bytes": 565690,
+  "count": 2898
+ }
+]

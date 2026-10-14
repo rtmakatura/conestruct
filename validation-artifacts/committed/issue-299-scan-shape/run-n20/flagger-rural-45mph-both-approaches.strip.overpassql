@@ -1,0 +1,19 @@
+[out:json][timeout:10];
+(
+  node(around:100,39.738231,-104.991560,39.750247,-104.975930)["highway"="traffic_signals"];
+  node(around:100,39.738231,-104.991560,39.750247,-104.975930)["highway"="crossing"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["highway"="footway"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["footway"="sidewalk"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["highway"="cycleway"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["cycleway"];
+  node(around:100,39.738231,-104.991560,39.750247,-104.975930)["amenity"="school"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["amenity"="school"];
+  node(around:100,39.738231,-104.991560,39.750247,-104.975930)["railway"="level_crossing"];
+  node(around:100,39.738231,-104.991560,39.750247,-104.975930)["amenity"="hospital"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["amenity"="hospital"];
+  node(around:100,39.738231,-104.991560,39.750247,-104.975930)["highway"="motorway_junction"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["highway"="motorway_link"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["highway"="trunk_link"];
+  way(around:100,39.738231,-104.991560,39.750247,-104.975930)["bridge"="yes"];
+);
+out center tags;
