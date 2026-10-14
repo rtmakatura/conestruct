@@ -164,6 +164,9 @@ const FLOORED = [
   // (asserted below).
   "a-setupcell",
   "a-setupcell-part",
+  // Rule 168 (R137 Q1): the "4 files" line under the zip — 44 px in the
+  // ≤480 block, and not displayed at the desk (components/rule-168.test.tsx).
+  "dl-files",
 ];
 /** Tailwind-floored controls (the footer's links). */
 const TW_FLOOR = /min-h-\[(32|44)px\]/;

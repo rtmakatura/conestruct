@@ -259,18 +259,25 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
     await generate();
     const label = `${BUNDLE_PART_KINDS.length} files`;
     expect(BUNDLE_PART_KINDS.length).toBe(4);
+    // Rule 168 (R137 Q1): the count has two homes in the markup, one per
+    // width: beside the zip at the desk, and as the "4 files" line under
+    // it at the phone.  CSS shows exactly one of them at each width
+    // (components/rule-168.test.tsx pins both rules), so it's stated once
+    // on screen.  Anything past those two is a restatement.
     const text = document.body.textContent ?? "";
-    expect(text.split(label).length - 1, `"${label}" stated exactly once`).toBe(1);
+    expect(text.split(label).length - 1, `"${label}": one home per width`).toBe(2);
     // Rule 12: it traces to the zip's own parts, and it sits beside the
     // control it describes.
     expect(document.querySelector(".dl-all .dl-all-count")!.textContent).toBe(label);
+    expect(document.querySelector(".dl-files")!.textContent).toContain(label);
   });
 
   it("it is stated once in the OTHER state too — the count does not follow the primary", async () => {
     served = AUDIT_CLEAN;
     await generate();
     const label = `${BUNDLE_PART_KINDS.length} files`;
-    expect((document.body.textContent ?? "").split(label).length - 1).toBe(1);
+    // The same two homes, one per width (above).
+    expect((document.body.textContent ?? "").split(label).length - 1).toBe(2);
   });
 
   it("no OTHER file-count numeral is printed anywhere — the retired chip is not back", async () => {
@@ -283,7 +290,7 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
     // No \b after "files": textContent runs adjacent elements together
     // ("4 filesPlan sheet"), so a word boundary never lands there.  The
     // claim is about how many times a file COUNT is printed, not about
-    // what follows it.
-    expect(text.match(/\d+ files/gi) ?? []).toHaveLength(1);
+    // what follows it.  Rule 168: two homes, one shown per width (above).
+    expect(text.match(/\d+ files/gi) ?? []).toHaveLength(2);
   });
 });

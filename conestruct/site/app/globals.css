@@ -3393,6 +3393,48 @@ input[type="number"] {
     min-height: 44px;
   }
 }
+/* Rule 168 (R137 Q1, R145 self-ruled): at the phone width the four cards
+   sit closed behind a "4 files" line under the zip; the line is a
+   disclosure that opens onto them (the zip lacks the crew and audit PDFs,
+   so the cards must stay reachable).  It renders only where the zip does
+   (OutputCards' hasZip).  At the desk the line is hidden and the count
+   stays beside the zip; at the phone the count beside the zip is hidden
+   and the line carries it: stated once at each width (§8.29).  The line
+   takes the provenance role's type (.tr-prov). */
+.workbench .dl-files {
+  display: none;
+}
+@media (max-width: 480px) {
+  .workbench .dl-files {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 12px;
+    padding: 0 12px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-on-dark);
+    cursor: pointer;
+  }
+  .workbench .dl-files:focus-visible {
+    outline: 2px solid var(--act);
+    outline-offset: 2px;
+  }
+  .workbench .dl-files .chev {
+    transition: transform 0.15s;
+  }
+  .workbench .dl-files[aria-expanded="true"] .chev {
+    transform: rotate(90deg);
+  }
+  .workbench .dl-all .dl-all-count {
+    display: none;
+  }
+  .workbench .dls.dl-phone-closed {
+    display: none;
+  }
+}
 /* #289 fidelity F6 — rule 132's GHOST (audit rows 150–153): height 44,
    padding 0 16, 1 px #2c3e53, transparent, Inter 500 13 #eaf0f7; hover
    ground rgba(255,255,255,.03); disabled "as rule 130" (#1d2c3c /

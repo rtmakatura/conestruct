@@ -100,7 +100,13 @@ describe("OutputCards download cards", () => {
     // counts.
     expect(BUNDLE_PART_KINDS.length).toBe(4);
     expect(screen.queryByText("MHT PACKAGE")).toBeNull();
-    expect(screen.getAllByText(`${BUNDLE_PART_KINDS.length} files`)).toHaveLength(1);
+    // Rule 168 (R137 Q1): two homes in the markup, beside the zip (the
+    // desk) and the "4 files" line under it (the phone); CSS shows one
+    // per width (components/rule-168.test.tsx).
+    const homes = screen.getAllByText(`${BUNDLE_PART_KINDS.length} files`);
+    expect(homes).toHaveLength(2);
+    expect(homes[0].classList.contains("dl-all-count")).toBe(true);
+    expect(homes[1].closest(".dl-files")).not.toBeNull();
     expect(screen.queryByText(/\d (FILES|SHEETS)/)).toBeNull();
   });
 

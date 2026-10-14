@@ -177,6 +177,9 @@ export function OutputCards({
   primary = "download-all",
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
+  // Rule 168 (R137 Q1, R145 self-ruled): at the phone width the four cards
+  // sit closed behind the "4 files" line under the zip.  Closed by default.
+  const [filesOpen, setFilesOpen] = useState(false);
   if (!generated) {
     // #289 hand-check, 2026-09-22, correction 4 — NO RESULTS ZONE BEFORE
     // GENERATE.  Part 1 §2.1 lists what S1 holds and then says what it
@@ -255,6 +258,16 @@ export function OutputCards({
   // parts and the two numbers are about different things.
   const zipLabel = `${BUNDLE_PART_KINDS.length} files`;
   const zipIsPrimary = primary === "download-all";
+  // Rule 168 (R137 Q1): the phone hides the cards behind a "4 files" line
+  // under the zip.  R145 self-ruled (phase4-380-arc/rulings.md): the line
+  // is a disclosure that opens onto the cards, because the zip doesn't
+  // hold everything the cards offer (the crew PDF and the audit PDF are
+  // not bundle parts), so hiding them outright would take two downloads
+  // off the phone (Rule 10).  Only where the zip renders: a saved plan has
+  // no zip, and its cards stay.  At the desk the line is hidden by CSS and
+  // the count stays beside the zip; at the phone the count beside the zip
+  // is hidden and the line carries it, so it's stated once either way.
+  const hasZip = mode.kind === "public" && Boolean(onDownloadAll);
   return (
     // #289 fidelity F3 — Part 2 rule 27: "downloads → quote 12 px" (mb-3;
     // was mb-4, 16).
@@ -266,7 +279,7 @@ export function OutputCards({
           row: inline beside the zip it counts, not stacked under it.  The
           line renders only when there is a zip to hold — an empty padded
           row would be a gap standing in for nothing. */}
-      {mode.kind === "public" && onDownloadAll && (
+      {hasZip && (
       <div className="flex items-center justify-end gap-4 px-1 pb-3">
         {/* Ruling 183, settled by clause 3: the zip renders at BOTH
             widths — rule 86 dropped it at 1440 and rule 168 made it the
@@ -288,7 +301,28 @@ export function OutputCards({
         </div>
       </div>
       )}
-      <div className="dls">
+      {hasZip && (
+        // A disclosure: it shows what's already generated and writes
+        // nothing, so it is a read under the write lock (#252), as
+        // DisclosureRow's control is.
+        <button
+          type="button"
+          className="dl-files tr-prov"
+          data-read=""
+          aria-expanded={filesOpen}
+          aria-controls="dl-cards"
+          onClick={() => setFilesOpen((o) => !o)}
+        >
+          <span>{zipLabel}</span>
+          <span className="chev" aria-hidden="true">
+            ›
+          </span>
+        </button>
+      )}
+      <div
+        id="dl-cards"
+        className={`dls${hasZip && !filesOpen ? " dl-phone-closed" : ""}`}
+      >
         {cards.map((card) => (
           <DlCard
             key={card.kind}
