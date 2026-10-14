@@ -4718,28 +4718,15 @@ def _draw_schematic_page(
     )
     _draw_site_context(c, params, x_of, shoulder_width_ft, site_flags)
     _draw_landmarks(c, params, x_of, shoulder_width_ft)
-    # Direction-of-travel indicators sit in the page margin just outside
-    # the asphalt — below the work-side shoulder and (when divided) above
-    # the opposing shoulder.  Keeps the arrow from fighting taper drums
-    # or tangent cones for screen real estate, while staying close enough
-    # to the carriageway it describes that the semantics are unambiguous.
-    # A one-way street's arrows sit in its lanes instead (#308 R94).
-    shoulder_outer_offset = params.num_lanes * params.lane_width_ft + shoulder_width_ft
-    arrow_y_work_side = _y_of(shoulder_outer_offset, params.is_divided) - 14.0
-    arrow_y_open_side = _y_of(-shoulder_outer_offset, params.is_divided) + 14.0
-    # #314 (R136): a drawn sidewalk band sits where the arrow went (14 pt
-    # past the shoulder line); the arrow moves 8 pt beyond the band's outer
-    # edge instead.  The band is drawn on the work side, and on both sides
-    # of a divided road (``_draw_site_context``).
-    if _resolve_site_flags(site_flags)["pedestrian_facility"]:
-        sw_inner, sw_outer = _sidewalk_strip_ft(params, shoulder_width_ft)
-        lo, hi = _strip_y_range(sw_inner, sw_outer, 1, params.is_divided)
-        arrow_y_work_side = lo - 8.0 if hi <= PLAN_Y_CENTER else hi + 8.0
-        if params.is_divided:
-            lo, hi = _strip_y_range(sw_inner, sw_outer, -1, params.is_divided)
-            arrow_y_open_side = lo - 8.0 if hi <= PLAN_Y_CENTER else hi + 8.0
+    # Direction-of-travel arrows sit inside an open travel lane, pointing
+    # the lane's direction (#321, following #308 R94's one-way branch).
+    # They are drawn at the page's left, upstream, where lane 1 on each
+    # side (the lane beside the centerline or median) is open and clear of
+    # devices: the plan closes the rightmost lane (#176), never lane 1,
+    # except the flagger's one lane (below).
     arrow_x_left = PLAN_LEFT + 30.0
     arrow_x_right = PLAN_LEFT + 130.0
+    half_lane = 0.5 * params.lane_width_ft
     if params.one_way_street:
         # #308 R94: inside the travel lanes, every one the same direction —
         # the leftmost lane and the rightmost open one (a lane closure's
@@ -4749,13 +4736,28 @@ def _draw_schematic_page(
             y = _y_of((lane - 0.5) * params.lane_width_ft, False)
             _draw_lane_arrow(c, arrow_x_left, arrow_x_right, y, pointing_right=True)
     else:
-        _draw_lane_arrow(c, arrow_x_left, arrow_x_right, arrow_y_work_side, pointing_right=True)
-    if params.is_divided:
+        if params.closure_type == "lane" and params.num_lanes == 1:
+            # The flagger plan's one work-side lane is closed from the
+            # page's left edge (its taper drums start there), so it has no
+            # open lane where the arrows are drawn.  Its arrow keeps the
+            # pre-#321 place in the page margin past the shoulder, pending
+            # a ruling (#321).  #314 (R136): past a drawn sidewalk band.
+            shoulder_outer_offset = params.num_lanes * params.lane_width_ft + shoulder_width_ft
+            y_work = _y_of(shoulder_outer_offset, params.is_divided) - 14.0
+            if _resolve_site_flags(site_flags)["pedestrian_facility"]:
+                sw_inner, sw_outer = _sidewalk_strip_ft(params, shoulder_width_ft)
+                lo, hi = _strip_y_range(sw_inner, sw_outer, 1, params.is_divided)
+                y_work = lo - 8.0 if hi <= PLAN_Y_CENTER else hi + 8.0
+        else:
+            y_work = _y_of(half_lane, params.is_divided)
+        _draw_lane_arrow(c, arrow_x_left, arrow_x_right, y_work, pointing_right=True)
+        # The opposing direction, on two-way and divided roads alike: its
+        # lane 1, pointing left.
         _draw_lane_arrow(
             c,
             arrow_x_left,
             arrow_x_right,
-            arrow_y_open_side,
+            _y_of(-half_lane, params.is_divided),
             pointing_right=False,
         )
     _draw_devices(
