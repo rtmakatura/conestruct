@@ -211,10 +211,16 @@ def _advance_blocks(advance: dict[str, Any]) -> list[Block]:
     return blocks
 
 
-def _colorado_blocks(colorado: dict[str, Any]) -> list[Block]:
+def _colorado_blocks(colorado: dict[str, Any], cdot_sheet: str = "") -> list[Block]:
     if not colorado:
         return []
-    blocks: list[Block] = [Heading(2, _cell("Colorado Requirements (CDOT S-630-1)"))]
+    # #266: the standard sheet is the plan's own (the summary's
+    # ``cdot_sheet``, the one producer the screen and the plan sheet read),
+    # S-630-3 on the divided lane-closure kinds.  No sheet, no sheet named.
+    heading = (
+        f"Colorado Requirements (CDOT {cdot_sheet})" if cdot_sheet else "Colorado Requirements"
+    )
+    blocks: list[Block] = [Heading(2, _cell(heading))]
     checks = colorado.get("checks", [])
     if checks:
         rows = [
@@ -701,7 +707,7 @@ def audit_to_blocks(
     blocks += _buffer_blocks(sections.get("buffer", {}))
     blocks += _spacing_blocks(sections.get("spacing", {}))
     blocks += _advance_blocks(sections.get("advance", {}))
-    blocks += _colorado_blocks(sections.get("colorado", {}))
+    blocks += _colorado_blocks(sections.get("colorado", {}), _str(summary, "cdot_sheet"))
     blocks += _case_blocks(sections.get("case", {}))
     blocks += _geometry_blocks(sections.get("geometry_validation", {}))
     blocks += _corridor_blocks(sections.get("corridor_validation", {}))
