@@ -201,3 +201,10 @@ Why this fits existing rules: rule 168's own text makes the line a disclosure ("
 ready" disclosure"); #288 clause 3 declined to build it only because then it would have restated
 a count already on screen, and here it holds the cards. Rule 169 (R144 Q4) set the precedent that
 what the phone hides stays reachable.
+## #280 (Phase 4 branch 7): R145 self-ruled, not shortened
+
+R137 Q5: "yes, inside Phase 4, measured first." Measured on production `72a602a`
+(`issue-280/README.md`): "Freeway / interstate" wraps only in the setup box's value at 320
+(+14 px, a clean break at the "/"), fits at 360 and 1440, and appears in no deliverable.
+**R145 self-ruled:** not shortened; #280 closes as ruled-against, the outcome its own acceptance
+names. Reasons in `issue-280/README.md`.

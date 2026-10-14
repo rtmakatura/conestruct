@@ -1,0 +1,218 @@
+{
+  "320-what": {
+    "pageW": 320,
+    "hits": [
+      {
+        "tag": "select",
+        "cls": "a-fld",
+        "id": "what-road-type",
+        "text": "Freeway / interstate",
+        "boxW": 258,
+        "contentW": 232,
+        "lines": 1,
+        "clipped": false,
+        "lineHeight": 16.2,
+        "widths": {
+          "Freeway / interstate": 126.2,
+          "Freeway": 53.9,
+          "Freeway/interstate": 117.9,
+          "Interstate": 60.2
+        },
+        "fullTextW": 126.2
+      }
+    ]
+  },
+  "320-results": {
+    "pageW": 320,
+    "hits": [
+      {
+        "tag": "span",
+        "cls": "a-setup-v",
+        "id": null,
+        "text": "Freeway / interstate",
+        "boxW": 120.5,
+        "contentW": 121,
+        "lines": 2,
+        "clipped": false,
+        "lineHeight": 19.6,
+        "widths": {
+          "Freeway / interstate": 126.2,
+          "Freeway": 53.9,
+          "Freeway/interstate": 117.9,
+          "Interstate": 60.2
+        },
+        "fullTextW": 126.2
+      }
+    ]
+  },
+  "320-cost": {
+    "Freeway / interstate": {
+      "lines": 2,
+      "cellH": 78.1,
+      "boxH": 335.1,
+      "valueW": 120.5
+    },
+    "Freeway": {
+      "lines": 1,
+      "cellH": 64,
+      "boxH": 321,
+      "valueW": 54
+    },
+    "Freeway/interstate": {
+      "lines": 1,
+      "cellH": 64,
+      "boxH": 321,
+      "valueW": 117.9
+    },
+    "Interstate": {
+      "lines": 1,
+      "cellH": 64,
+      "boxH": 321,
+      "valueW": 60.2
+    }
+  },
+  "360-what": {
+    "pageW": 360,
+    "hits": [
+      {
+        "tag": "select",
+        "cls": "a-fld",
+        "id": "what-road-type",
+        "text": "Freeway / interstate",
+        "boxW": 298,
+        "contentW": 272,
+        "lines": 1,
+        "clipped": false,
+        "lineHeight": 16.2,
+        "widths": {
+          "Freeway / interstate": 126.2,
+          "Freeway": 53.9,
+          "Freeway/interstate": 117.9,
+          "Interstate": 60.2
+        },
+        "fullTextW": 126.2
+      }
+    ]
+  },
+  "360-results": {
+    "pageW": 360,
+    "hits": [
+      {
+        "tag": "span",
+        "cls": "a-setup-v",
+        "id": null,
+        "text": "Freeway / interstate",
+        "boxW": 126.2,
+        "contentW": 126,
+        "lines": 1,
+        "clipped": false,
+        "lineHeight": 19.6,
+        "widths": {
+          "Freeway / interstate": 126.2,
+          "Freeway": 53.9,
+          "Freeway/interstate": 117.9,
+          "Interstate": 60.2
+        },
+        "fullTextW": 126.2
+      }
+    ]
+  },
+  "360-cost": {
+    "Freeway / interstate": {
+      "lines": 1,
+      "cellH": 64,
+      "boxH": 321,
+      "valueW": 126.2
+    },
+    "Freeway": {
+      "lines": 1,
+      "cellH": 64,
+      "boxH": 321,
+      "valueW": 54
+    },
+    "Freeway/interstate": {
+      "lines": 1,
+      "cellH": 64,
+      "boxH": 321,
+      "valueW": 117.9
+    },
+    "Interstate": {
+      "lines": 1,
+      "cellH": 64,
+      "boxH": 321,
+      "valueW": 60.2
+    }
+  },
+  "1440-what": {
+    "pageW": 1440,
+    "hits": [
+      {
+        "tag": "select",
+        "cls": "a-fld",
+        "id": "what-road-type",
+        "text": "Freeway / interstate",
+        "boxW": 263,
+        "contentW": 237,
+        "lines": 1,
+        "clipped": false,
+        "lineHeight": 16.2,
+        "widths": {
+          "Freeway / interstate": 126.2,
+          "Freeway": 53.9,
+          "Freeway/interstate": 117.9,
+          "Interstate": 60.2
+        },
+        "fullTextW": 126.2
+      }
+    ]
+  },
+  "1440-results": {
+    "pageW": 1440,
+    "hits": [
+      {
+        "tag": "span",
+        "cls": "a-setup-v",
+        "id": null,
+        "text": "Freeway / interstate",
+        "boxW": 126.2,
+        "contentW": 126,
+        "lines": 1,
+        "clipped": false,
+        "lineHeight": 19.6,
+        "widths": {
+          "Freeway / interstate": 126.2,
+          "Freeway": 53.9,
+          "Freeway/interstate": 117.9,
+          "Interstate": 60.2
+        },
+        "fullTextW": 126.2
+      }
+    ]
+  },
+  "1440-cost": {
+    "Freeway / interstate": {
+      "lines": 1,
+      "cellH": 65,
+      "boxH": 129,
+      "valueW": 126.2
+    },
+    "Freeway": {
+      "lines": 1,
+      "cellH": 65,
+      "boxH": 129,
+      "valueW": 54
+    },
+    "Freeway/interstate": {
+      "lines": 1,
+      "cellH": 65,
+      "boxH": 129,
+      "valueW": 117.9
+    },
+    "Interstate": {
+      "lines": 1,
+      "cellH": 65,
+      "boxH": 129,
+      "valueW": 60.2
+    }
+  }
+}
