@@ -176,13 +176,42 @@ async function shoot(page, sel, name) {
         log(`${width}: ${before.length} NEEDS YOU rows: ${JSON.stringify(before.map((r) => [r.text.slice(0, 70), r.buttons]))}`);
         await shoot(page, ".needs-you", `${PIN_ID}-needsyou-${width}`);
         if (MODE === "ack") {
+          // Capture what the regenerate after Apply sends and what the
+          // audit answers: the payload-level proof (Rule 11).
+          const wire = [];
+          page.on("request", (rq) => {
+            if (/\/api\/render\/audit$/.test(new URL(rq.url()).pathname)) {
+              try {
+                const s = JSON.parse(rq.postData() || "{}").scenario || {};
+                wire.push({ sent: (s.meta || {}).acknowledged ?? null });
+              } catch {}
+            }
+          });
+          page.on("response", async (r) => {
+            if (/\/api\/render\/audit$/.test(new URL(r.url()).pathname) && r.status() === 200) {
+              const j = await r.json().catch(() => ({}));
+              wire.push({ audit: j.acknowledged ?? null });
+            }
+          });
           const ack = page.locator(".needs-you button", { hasText: /^Acknowledge$/i }).first();
           if (await ack.count()) {
             await ack.click();
             await page.waitForTimeout(1500);
-            const after = await page.evaluate(NEEDS);
-            rows.push({ width, afterAck: after });
-            log(`${width}: after ACKNOWLEDGE: ${JSON.stringify(after.map((r) => [r.text.slice(0, 90), r.buttons]))}`);
+            const staged = await page.evaluate(NEEDS);
+            rows.push({ width, staged });
+            log(`${width}: staged: ${JSON.stringify(staged.map((r) => [r.text.slice(0, 110), r.buttons]))}`);
+            await shoot(page, ".needs-you", `${PIN_ID}-staged-${width}`);
+            const apply = page.locator(".needs-you button", { hasText: /^Apply .*acknowledgement/i }).first();
+            await apply.click();
+            for (let i = 0; i < 120; i++) {
+              await page.waitForTimeout(1000);
+              if (!(await page.locator(".working-band").count()) && !(await page.locator(".results-stale").count())) break;
+            }
+            await page.waitForTimeout(2500);
+            const applied = await page.evaluate(NEEDS);
+            rows.push({ width, applied, wire });
+            log(`${width}: applied: ${JSON.stringify(applied.map((r) => [r.text.slice(0, 110), r.buttons]))}`);
+            log(`${width}: wire: ${JSON.stringify(wire).slice(0, 700)}`);
             await shoot(page, ".needs-you", `${PIN_ID}-acknowledged-${width}`);
           } else {
             log(`${width}: no ACKNOWLEDGE button`);

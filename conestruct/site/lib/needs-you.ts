@@ -46,7 +46,10 @@ export const TIER_WORDS: Record<NeedsYouTier, string> = {
  *  declaration (data-write) and the suggest-never-set audit can both read
  *  it; a row with no real write carries ``null`` instead (ruling d). */
 export interface NeedsYouAction {
-  kind: "dismiss" | "keep" | "correct-in-setup";
+  /** #297: "acknowledge" / "withdraw" stage an acknowledgement or its
+   *  withdrawal; "undo" un-stages one.  Each writes `meta.acknowledged`
+   *  at Apply and nothing else. */
+  kind: "dismiss" | "keep" | "correct-in-setup" | "acknowledge" | "withdraw" | "undo";
   label: string;
   /** Rule 77: a row carries one button unless it offers a true pair. */
   pair?: NeedsYouAction;
@@ -67,7 +70,18 @@ export interface NeedsYouItem {
   evidence?: string;
   /** null = no control renders (ruling d). */
   action: NeedsYouAction | null;
+  /** #297: where this item's acknowledgement stands, when it has one.
+   *  The item renders in every state; only its provenance and button
+   *  change. */
+  ack?: "staged" | "acknowledged" | "withdrawal-staged";
 }
+
+/** #297: the acknowledgement's words on the provenance line. */
+const ACK_WORDS: Record<NonNullable<NeedsYouItem["ack"]>, string> = {
+  staged: "acknowledgement staged",
+  acknowledged: "acknowledged",
+  "withdrawal-staged": "withdrawal staged",
+};
 
 export interface NeedsYouModel {
   items: NeedsYouItem[];
@@ -85,7 +99,8 @@ export interface NeedsYouModel {
  *  wire's own evidence when it carried any.  Never invents. */
 export function itemProvenance(item: NeedsYouItem): string {
   const word = TIER_WORDS[item.tier];
-  return item.evidence ? `${word} · ${item.evidence}` : word;
+  const line = item.evidence ? `${word} · ${item.evidence}` : word;
+  return item.ack ? `${line} · ${ACK_WORDS[item.ack]}` : line;
 }
 
 /** Ruling 185's provenance decomposition.  Returns null when one side is

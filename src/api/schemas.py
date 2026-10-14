@@ -257,6 +257,12 @@ class ScenarioMeta(BaseModel):
     # deliverable reads them.
     roadName: str | None = Field(default=None, max_length=200)
     roadRef: str | None = Field(default=None, max_length=200)
+    # #297: the NEEDS YOU items the operator acknowledged, by stable id
+    # (``jur:delta:<jurisdiction>:<10 hex>``).  Read only by the audit,
+    # which lists each one; nothing about the plan reads it.
+    acknowledged: list[Annotated[str, Field(max_length=120)]] | None = Field(
+        default=None, max_length=50
+    )
     # Site-condition flags consumed by src.rules.site_adjustments. Default
     # empty: a missing or empty dict keeps the baseline layout unchanged.
     siteConditions: dict[str, bool] = Field(default_factory=dict)

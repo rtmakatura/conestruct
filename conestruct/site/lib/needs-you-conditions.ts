@@ -37,10 +37,8 @@ import type {
   SiteScanProvenance,
 } from "./render-types";
 import type { NeedsYouModel } from "./needs-you";
-import { MANUAL_FLAGS, isFieldStaged, isScannedFlag } from "./scenarios/site-corrections";
-import type { StagedCorrection, StagedFieldEdit } from "./scenarios/types";
-
-type FlagStaged = Exclude<StagedCorrection, StagedFieldEdit>;
+import { MANUAL_FLAGS, isFlagStaged, isScannedFlag, type FlagStaged } from "./scenarios/site-corrections";
+import type { StagedCorrection } from "./scenarios/types";
 
 export type ConditionRow =
   | { kind: "staged"; flag: string; staged: FlagStaged; bucket?: ScanBucketWire }
@@ -75,7 +73,8 @@ export function conditionRows(
   if (buckets === null && corrections.length === 0) return [];
   const byFlag = new Map(corrections.map((c) => [c.flag, c] as const));
   const stagedFor = new Map(
-    staged.filter((s): s is FlagStaged => !isFieldStaged(s)).map((s) => [s.flag as string, s] as const),
+    // #297: field edits and acknowledgements carry no flag.
+    staged.filter(isFlagStaged).map((s) => [s.flag as string, s] as const),
   );
 
   const rows: ConditionRow[] = [];

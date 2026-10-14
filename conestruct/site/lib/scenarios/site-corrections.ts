@@ -20,6 +20,7 @@ import type {
   SiteConditionOverride,
   SiteConditions,
   SiteDismissReason,
+  StagedAcknowledgement,
   StagedCorrection,
   StagedManualCondition,
 } from "./types";
@@ -27,6 +28,7 @@ import type { SiteScanProvenance } from "@/lib/render-types";
 import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
 
 export type {
+  StagedAcknowledgement,
   StagedCorrection,
   StagedFieldEdit,
   StagedManualCondition,
@@ -43,18 +45,46 @@ export function isFieldStaged(s: StagedCorrection): s is StagedFieldEdit {
   return "field" in s;
 }
 
+/** #297: is this staged entry an acknowledgement (or its withdrawal)? */
+export function isAckStaged(s: StagedCorrection): s is StagedAcknowledgement {
+  return "acknowledge" in s;
+}
+
+/** The site-condition corrections: every staged entry that carries a
+ *  `flag` (neither a field edit nor an acknowledgement). */
+export type FlagStaged = Exclude<StagedCorrection, StagedFieldEdit | StagedAcknowledgement>;
+export function isFlagStaged(s: StagedCorrection): s is FlagStaged {
+  return !isFieldStaged(s) && !isAckStaged(s);
+}
+
 /** The identity `stage` / `unstage` key on.  Corrections are one per
  *  flag (the backend refuses duplicates); field edits are one per field,
  *  so a second edit of the same field replaces the first rather than
  *  stacking — the staged set is the DIFFERENCE from the plan on screen,
- *  never a history of typing. */
+ *  never a history of typing.  An acknowledgement is one per item. */
 export function stagedKey(s: StagedCorrection): string {
-  return isFieldStaged(s) ? `field:${s.field}` : s.flag;
+  if (isFieldStaged(s)) return `field:${s.field}`;
+  if (isAckStaged(s)) return `ack:${s.acknowledge}`;
+  return s.flag;
 }
 
 export function isManualStaged(s: StagedCorrection): s is StagedManualCondition {
-  if (isFieldStaged(s)) return false;
+  if (!isFlagStaged(s)) return false;
   return "on" in s;
+}
+
+/** #297: `meta.acknowledged` with one id set or cleared.  The key drops
+ *  when the list empties (the #179 shape), so acknowledge-then-withdraw
+ *  leaves `meta` byte-identical to before. */
+export function withAcknowledged(meta: ScenarioMeta, id: string, set: boolean): ScenarioMeta {
+  const now = meta.acknowledged ?? [];
+  const next = set ? (now.includes(id) ? now : [...now, id]) : now.filter((x) => x !== id);
+  if (next === now) return meta;
+  if (next.length === 0) {
+    const { acknowledged: _drop, ...rest } = meta;
+    return rest as ScenarioMeta;
+  }
+  return { ...meta, acknowledged: next };
 }
 
 /** Row labels and their standing descriptions for the two manual keys —
@@ -253,7 +283,7 @@ export function stage(staged: readonly StagedCorrection[], entry: StagedCorrecti
 /** Undo on a staged row: the intent leaves the set — no request. */
 export function unstage(
   staged: readonly StagedCorrection[],
-  key: ScannedSiteFlag | ManualSiteFlag | `field:${string}`,
+  key: ScannedSiteFlag | ManualSiteFlag | `field:${string}` | `ack:${string}`,
 ): StagedCorrection[] {
   return staged.filter((s) => stagedKey(s) !== key);
 }
@@ -269,6 +299,11 @@ export function applyStaged(meta: ScenarioMeta, staged: readonly StagedCorrectio
     // `applyStagedFields` (what-writes.ts) folds those, and APPLY calls
     // both in one `setScenario` so the two halves land together.
     if (isFieldStaged(s)) continue;
+    // #297: an acknowledgement writes only `meta.acknowledged`.
+    if (isAckStaged(s)) {
+      next = withAcknowledged(next, s.acknowledge, s.set);
+      continue;
+    }
     if (isManualStaged(s)) {
       next = withManualCondition(next, s.flag, s.on);
       continue;
@@ -336,12 +371,15 @@ export function deriveCorrectionsStanding(
  */
 export function stagedEnumeration(staged: readonly StagedCorrection[]): string {
   const fields = staged.filter(isFieldStaged).length;
-  const corrections = staged.length - fields;
+  const acks = staged.filter(isAckStaged).length;
+  const corrections = staged.length - fields - acks;
   const parts: string[] = [];
   if (fields > 0) parts.push(`${fields} field${fields === 1 ? "" : "s"}`);
   if (corrections > 0) {
     parts.push(`${corrections} correction${corrections === 1 ? "" : "s"}`);
   }
+  // #297: an acknowledgement is named as one, never counted a correction.
+  if (acks > 0) parts.push(`${acks} acknowledgement${acks === 1 ? "" : "s"}`);
   return parts.join(" · ");
 }
 

@@ -16,10 +16,13 @@
 //   ⚠  jurisdiction deltas (conditional/unknown) · Colorado FAILs ·
 //      site-scan NOT CHECKED · corridor · geometry · signalized approaches
 //
-// ACTIONS — ruling d, applied strictly.  Every item here carries
-// `action: null`, so no row renders a button.  That is not an oversight
-// and not a placeholder:
-//   · ACKNOWLEDGE has nothing on the wire to write at all (clause d).
+// ACTIONS: ruling d, applied strictly.  Every item here except a
+// jurisdiction delta carries `action: null`, so no row renders a button.
+// That is not an oversight and not a placeholder:
+//   · ACKNOWLEDGE now has a field to write (#297, Ryan 2026-10-14):
+//     `meta.acknowledged`, by the item's stable id.  It is offered on the
+//     jurisdiction-delta rows only, the items with no other write, and it
+//     stages like a correction (`withAck`); Apply writes it.
 //   · DISMISS / KEEP and CORRECT IN SETUP are real writes, and they have
 //     an owner: NeedsYouConditions.tsx, which absorbed the corrections
 //     block WHOLE under Part 1 §8.5 — the staging contract, the standing
@@ -56,6 +59,29 @@ function fromDelta(
     evidence: deltaDetail(d, jurisdictionName),
     action: null,
   };
+}
+
+/** #297: where acknowledgements stand, for the delta rows' controls.
+ *  `acknowledged` is the plan's (`meta.acknowledged`); `staged` maps an
+ *  item id to its staged intent (true acknowledges, false withdraws). */
+export interface AckState {
+  acknowledged: readonly string[];
+  staged: ReadonlyMap<string, boolean>;
+}
+
+/** #297: a delta row with its acknowledgement control and state.  The
+ *  row's tier, title and evidence never change: the operator acknowledged
+ *  the item, not the condition (rule 10). */
+export function withAck(item: NeedsYouItem, acks: AckState): NeedsYouItem {
+  const intent = acks.staged.get(item.id);
+  if (intent === true) return { ...item, ack: "staged", action: { kind: "undo", label: "Undo" } };
+  if (intent === false) {
+    return { ...item, ack: "withdrawal-staged", action: { kind: "undo", label: "Undo" } };
+  }
+  if (acks.acknowledged.includes(item.id)) {
+    return { ...item, ack: "acknowledged", action: { kind: "withdraw", label: "Withdraw" } };
+  }
+  return { ...item, action: { kind: "acknowledge", label: "Acknowledge" } };
 }
 
 /** A site adjustment's device counts, as the record carried them ("6
@@ -102,9 +128,12 @@ export interface NeedsYouItemsInput {
   /** SITE_ADJUSTMENT_DETAIL, injected so this module stays free of the
    *  component layer's copy table. */
   siteLabel: (flag: string) => string;
+  /** #297: the acknowledgements, for the delta rows' control.  Absent:
+   *  no delta row renders one (the pre-#297 rendering). */
+  acks?: AckState;
 }
 
-export function buildNeedsYouItems({ sources, siteLabel }: NeedsYouItemsInput): NeedsYouItem[] {
+export function buildNeedsYouItems({ sources, siteLabel, acks }: NeedsYouItemsInput): NeedsYouItem[] {
   const {
     deltas, jurisdictionName,
     deltasChanged, siteChanged, finesItem, finesApplicable,
@@ -119,11 +148,17 @@ export function buildNeedsYouItems({ sources, siteLabel }: NeedsYouItemsInput): 
   // module's own id-uniqueness test, not by review.
   const deltaIndex = new Map(deltas.map((d, i) => [d, i] as const));
 
+  // #297: a delta row offers ACKNOWLEDGE only when it has the backend's
+  // stable key; a position-based id would move the acknowledgement onto
+  // another rule when an earlier one stopped firing.
+  const ackable = (d: AppliedDelta, item: NeedsYouItem): NeedsYouItem =>
+    acks && d.key ? withAck(item, acks) : item;
+
   const items: NeedsYouItem[] = [];
 
   // ── ▲ changed — this plan is different because of these ──
   deltasChanged.forEach((d) =>
-    items.push(fromDelta(d, deltaIndex.get(d) ?? -1, "changed", jurisdictionName)),
+    items.push(ackable(d, fromDelta(d, deltaIndex.get(d) ?? -1, "changed", jurisdictionName))),
   );
   siteChanged.forEach((rec) => items.push(fromSiteAdjustment(rec, siteLabel(rec.flag))));
   if (finesItem && finesApplicable) {
@@ -132,7 +167,7 @@ export function buildNeedsYouItems({ sources, siteLabel }: NeedsYouItemsInput): 
 
   // ── ⚠ attention — obligations the tool cannot discharge ──
   deltasAttention.forEach((d) =>
-    items.push(fromDelta(d, deltaIndex.get(d) ?? -1, "attention", jurisdictionName)),
+    items.push(ackable(d, fromDelta(d, deltaIndex.get(d) ?? -1, "attention", jurisdictionName))),
   );
   // #297: keyed by the check's own label, not its position among the
   // FAILs -- a check that starts passing must not move the next one's id.

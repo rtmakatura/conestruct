@@ -36,7 +36,7 @@ import { AppNav } from "./AppNav";
 import { SITE_ADJUSTMENT_DETAIL } from "./AuditTrail";
 import { deriveTierSources } from "@/lib/tier-sources";
 import { buildNeedsYouItems } from "@/lib/needs-you-items";
-import { deriveNeedsYou } from "@/lib/needs-you";
+import { deriveNeedsYou, type NeedsYouAction } from "@/lib/needs-you";
 import { conditionRows, mergeConditions, primaryCount } from "@/lib/needs-you-conditions";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { StatusBar } from "./StatusBar";
@@ -53,7 +53,10 @@ import { settledData } from "./AuditTrail";
 import {
   applyStaged,
   fmtScanStamp,
+  isAckStaged,
   stage,
+  stagedSentence,
+  unstage,
 } from "@/lib/scenarios/site-corrections";
 // #289 Phase 2, S7 (ruling e) — revision's producers.  The fold and the
 // enumerating sentence live with the other writes that are more than a
@@ -1271,8 +1274,21 @@ export function GeneratorShell({
       }),
       siteLabel: (flag) =>
         SITE_ADJUSTMENT_DETAIL[flag as keyof typeof SITE_ADJUSTMENT_DETAIL]?.label ?? flag,
+      // #297: the plan's acknowledgements and the staged intents, for the
+      // delta rows' ACKNOWLEDGE control.
+      acks: {
+        acknowledged: scenario.meta.acknowledged ?? [],
+        staged: new Map(staged.filter(isAckStaged).map((s) => [s.acknowledge, s.set] as const)),
+      },
     }),
   );
+  // #297: a delta row's control stages an intent; Apply writes it.  The
+  // one scenario write stays Apply's (#254).
+  const onNeedsYouAction = (id: string, kind: NeedsYouAction["kind"]) => {
+    if (kind === "acknowledge") setStaged(stage(staged, { acknowledge: id, set: true }));
+    else if (kind === "withdraw") setStaged(stage(staged, { acknowledge: id, set: false }));
+    else if (kind === "undo") setStaged(unstage(staged, `ack:${id}`));
+  };
   // #261: the audit card's "N checks" — assignTiers' ledger.checked over
   // the same inputs TieredReference hands the tier model (the STAMPED
   // audit, the jurisdiction block once it has loaded), so the card and
@@ -2052,6 +2068,33 @@ export function GeneratorShell({
                       ownsPrimary={primaryOwner === "needs-you"}
                       adjustments={needsYouAdjustments}
                     />
+                  ) : null
+                }
+                onAction={onNeedsYouAction}
+                applyRow={
+                  // #297: without condition rows there is no Apply row, so
+                  // a staged acknowledgement gets this one: the same
+                  // sentence, the same one write (applyStagedAll).
+                  staged.length > 0 ? (
+                    <li key="apply" className="ny-item ny-apply sc-apply" data-testid="ny-ack-apply">
+                      <span className="ny-glyph" aria-hidden />
+                      <div className="ny-mid">
+                        <span className="sc-apply-text tr-prov">{stagedSentence(staged)}</span>
+                      </div>
+                      <div className="ny-right">
+                        <span className="ny-acts">
+                          <button
+                            type="button"
+                            className="act tr-step"
+                            data-write=""
+                            disabled={scanInFlight}
+                            onClick={applyStagedAll}
+                          >
+                            Apply {stagedEnumeration(staged)}
+                          </button>
+                        </span>
+                      </div>
+                    </li>
                   ) : null
                 }
               />

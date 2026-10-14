@@ -48,7 +48,15 @@ export function NeedsYou({
   conditions = null,
   inFlight = false,
   primary = "needs-you",
+  onAction,
+  applyRow = null,
 }: {
+  /** #297: a row's control was pressed.  The shell stages the intent;
+   *  nothing here writes. */
+  onAction?: (id: string, kind: NeedsYouAction["kind"]) => void;
+  /** #297: the Apply row, when something is staged and the condition rows
+   *  (which carry their own) are not mounted.  Same sentence, same write. */
+  applyRow?: ReactNode;
   model: NeedsYouModel;
   /** #288 clause 3 — read, never decided here.  The shell derives it
    *  once (lib/results-primary.ts) and hands the same answer to the
@@ -104,15 +112,24 @@ export function NeedsYou({
       </div>
       <ul className="ny-items">
         {model.items.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item key={item.id} item={item} onAction={onAction} locked={inFlight} />
         ))}
         {conditions}
+        {conditions === null ? applyRow : null}
       </ul>
     </section>
   );
 }
 
-function Item({ item }: { item: NeedsYouItem }) {
+function Item({
+  item,
+  onAction,
+  locked,
+}: {
+  item: NeedsYouItem;
+  onAction?: (id: string, kind: NeedsYouAction["kind"]) => void;
+  locked: boolean;
+}) {
   return (
     <li className={`ny-item is-${item.tier}`}>
       {/* Rule 74's three tracks: 20px glyph / body / auto actions. */}
@@ -136,28 +153,57 @@ function Item({ item }: { item: NeedsYouItem }) {
         {/* Ruling d: an action that would write nothing does not render
             as a button.  The row still shows — an honest item without a
             control beats a control that writes nothing. */}
-        {item.action ? <Actions action={item.action} /> : null}
+        {item.action ? (
+          <Actions
+            action={item.action}
+            locked={locked}
+            press={(kind) => onAction?.(item.id, kind)}
+          />
+        ) : null}
       </div>
     </li>
   );
 }
 
-function Actions({ action }: { action: NeedsYouAction }) {
+function Actions({
+  action,
+  locked,
+  press,
+}: {
+  action: NeedsYouAction;
+  locked: boolean;
+  press: (kind: NeedsYouAction["kind"]) => void;
+}) {
   // Rule 77: one button per row unless the row offers a true pair.
   return (
     <span className="ny-acts">
-      <ActionButton action={action} />
-      {action.pair ? <ActionButton action={action.pair} /> : null}
+      <ActionButton action={action} locked={locked} press={press} />
+      {action.pair ? <ActionButton action={action.pair} locked={locked} press={press} /> : null}
     </span>
   );
 }
 
-function ActionButton({ action }: { action: NeedsYouAction }) {
+function ActionButton({
+  action,
+  locked,
+  press,
+}: {
+  action: NeedsYouAction;
+  locked: boolean;
+  press: (kind: NeedsYouAction["kind"]) => void;
+}) {
   // The .act control, rule 133.  data-write declares the write for the
   // write-lock honesty test — every control in this block writes, or it
-  // would not have rendered (ruling d).
+  // would not have rendered (ruling d).  #297: it stages; Apply writes.
+  // Disabled under the write lock like every write.
   return (
-    <button type="button" className="act" data-write={action.kind}>
+    <button
+      type="button"
+      className="act"
+      data-write={action.kind}
+      disabled={locked}
+      onClick={() => press(action.kind)}
+    >
       {action.label}
     </button>
   );

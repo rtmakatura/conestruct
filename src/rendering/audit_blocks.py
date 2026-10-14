@@ -666,6 +666,25 @@ def _kind_proposal_blocks(record: dict[str, Any] | None) -> list[Block]:
     ]
 
 
+def _acknowledged_blocks(entries: list[dict[str, Any]] | None) -> list[Block]:
+    """#297: one line per item the operator acknowledged, in the rule's own
+    words and source.  An item whose rule no longer fires for this plan
+    says so.  Nothing acknowledged, no block."""
+    if not entries:
+        return []
+    lines = []
+    for e in entries:
+        if e.get("applies"):
+            src = f" ({_str(e, 'source')})" if e.get("source") else ""
+            lines.append(f"{_str(e, 'rule')}{src}")
+        else:
+            lines.append(f"{_str(e, 'id')} (no longer applies to this plan)")
+    return [
+        Heading(2, _cell("Acknowledged by the operator")),
+        Bullets([ListItem(_cell(line)) for line in lines]),
+    ]
+
+
 def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
     if not pending:
         return []
@@ -725,6 +744,7 @@ def audit_to_blocks(
     # reads them.  Absent from every projection with no guess.
     blocks += _input_guesses_blocks(projection.get("input_guesses", []))
     blocks += _kind_proposal_blocks(projection.get("kind_proposal"))
+    blocks += _acknowledged_blocks(projection.get("acknowledged"))
     blocks += _taper_blocks(sections.get("taper", {}))
     blocks += _buffer_blocks(sections.get("buffer", {}))
     blocks += _spacing_blocks(sections.get("spacing", {}))

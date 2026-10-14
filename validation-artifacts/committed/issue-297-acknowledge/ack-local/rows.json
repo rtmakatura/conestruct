@@ -1,0 +1,348 @@
+[
+ {
+  "width": 1440,
+  "needsYou": [
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠double-posted setneeds attention · required by LakewoodLakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6Acknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠Lakewood work-method ruleneeds attention · required by LakewoodLakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering StandardsAcknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Adjacent at-grade intersectiondetected · 11 found · nearest 337.9 ftno devices addedMUTCD § 6N.12 p. 848 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Pedestrian sidewalksdetected · 9 found · nearest 493.1 ftchanged this plan · 4 devices addedMUTCD § 6C.02 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-fold",
+    "text": "✓ 3 none found · ◌ 2 not assertedShow 5",
+    "buttons": [
+     "Show 5"
+    ]
+   },
+   {
+    "cls": "ny-item ny-apply sc-apply",
+    "text": "no corrections staged · staging costs nothing, Apply re-generates onceApply 0 corrections",
+    "buttons": [
+     "Apply 0 corrections"
+    ]
+   },
+   {
+    "cls": "ny-item ny-foot sc-foot",
+    "text": "corridor scan · 14 oct · 23:10 utc · 2.8 s · apply re-generates the plan",
+    "buttons": []
+   }
+  ]
+ },
+ {
+  "width": 1440,
+  "staged": [
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠double-posted setneeds attention · required by Lakewood · acknowledgement stagedLakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6Undo",
+    "buttons": [
+     "Undo"
+    ]
+   },
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠Lakewood work-method ruleneeds attention · required by LakewoodLakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering StandardsAcknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Adjacent at-grade intersectiondetected · 11 found · nearest 337.9 ftno devices addedMUTCD § 6N.12 p. 848 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Pedestrian sidewalksdetected · 9 found · nearest 493.1 ftchanged this plan · 4 devices addedMUTCD § 6C.02 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-fold",
+    "text": "✓ 3 none found · ◌ 2 not assertedShow 5",
+    "buttons": [
+     "Show 5"
+    ]
+   },
+   {
+    "cls": "ny-item ny-apply sc-apply",
+    "text": "1 acknowledgement staged · not yet appliedApply 1 acknowledgement",
+    "buttons": [
+     "Apply 1 acknowledgement"
+    ]
+   },
+   {
+    "cls": "ny-item ny-foot sc-foot",
+    "text": "corridor scan · 14 oct · 23:10 utc · 2.8 s · apply re-generates the plan",
+    "buttons": []
+   }
+  ]
+ },
+ {
+  "width": 1440,
+  "applied": [
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠double-posted setneeds attention · required by Lakewood · acknowledgedLakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6Withdraw",
+    "buttons": [
+     "Withdraw"
+    ]
+   },
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠Lakewood work-method ruleneeds attention · required by LakewoodLakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering StandardsAcknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Adjacent at-grade intersectiondetected · 11 found · nearest 337.9 ftno devices addedMUTCD § 6N.12 p. 848 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Pedestrian sidewalksdetected · 9 found · nearest 493.1 ftchanged this plan · 4 devices addedMUTCD § 6C.02 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-fold",
+    "text": "✓ 3 none found · ◌ 2 not assertedShow 5",
+    "buttons": [
+     "Show 5"
+    ]
+   },
+   {
+    "cls": "ny-item ny-apply sc-apply",
+    "text": "no corrections staged · staging costs nothing, Apply re-generates onceApply 0 corrections",
+    "buttons": [
+     "Apply 0 corrections"
+    ]
+   },
+   {
+    "cls": "ny-item ny-foot sc-foot",
+    "text": "corridor scan · 14 oct · 23:10 utc · 2.8 s · memoised · apply re-generates the plan",
+    "buttons": []
+   }
+  ],
+  "wire": [
+   {
+    "sent": [
+     "jur:delta:lakewood:3eeee55be3"
+    ]
+   },
+   {
+    "audit": [
+     {
+      "id": "jur:delta:lakewood:3eeee55be3",
+      "rule": "Double posting of signs is required on state highways with a median, optional on city streets.",
+      "source": "Lakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6",
+      "applies": true
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "needsYou": [
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠double-posted setneeds attention · required by LakewoodLakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6Acknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠Lakewood work-method ruleneeds attention · required by LakewoodLakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering StandardsAcknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Adjacent at-grade intersectiondetected · 11 found · nearest 337.9 ftno devices addedMUTCD § 6N.12 p. 848 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Pedestrian sidewalksdetected · 9 found · nearest 493.1 ftchanged this plan · 4 devices addedMUTCD § 6C.02 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-fold",
+    "text": "✓ 3 none found · ◌ 2 not assertedShow 5",
+    "buttons": [
+     "Show 5"
+    ]
+   },
+   {
+    "cls": "ny-item ny-apply sc-apply",
+    "text": "no corrections staged · staging costs nothing, Apply re-generates onceApply 0 corrections",
+    "buttons": [
+     "Apply 0 corrections"
+    ]
+   },
+   {
+    "cls": "ny-item ny-foot sc-foot",
+    "text": "corridor scan · 14 oct · 23:10 utc · 2.8 s · memoised · apply re-generates the plan",
+    "buttons": []
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "staged": [
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠double-posted setneeds attention · required by Lakewood · acknowledgement stagedLakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6Undo",
+    "buttons": [
+     "Undo"
+    ]
+   },
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠Lakewood work-method ruleneeds attention · required by LakewoodLakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering StandardsAcknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Adjacent at-grade intersectiondetected · 11 found · nearest 337.9 ftno devices addedMUTCD § 6N.12 p. 848 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Pedestrian sidewalksdetected · 9 found · nearest 493.1 ftchanged this plan · 4 devices addedMUTCD § 6C.02 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-fold",
+    "text": "✓ 3 none found · ◌ 2 not assertedShow 5",
+    "buttons": [
+     "Show 5"
+    ]
+   },
+   {
+    "cls": "ny-item ny-apply sc-apply",
+    "text": "1 acknowledgement staged · not yet appliedApply 1 acknowledgement",
+    "buttons": [
+     "Apply 1 acknowledgement"
+    ]
+   },
+   {
+    "cls": "ny-item ny-foot sc-foot",
+    "text": "corridor scan · 14 oct · 23:10 utc · 2.8 s · memoised · apply re-generates the plan",
+    "buttons": []
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "applied": [
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠double-posted setneeds attention · required by Lakewood · acknowledgedLakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6Withdraw",
+    "buttons": [
+     "Withdraw"
+    ]
+   },
+   {
+    "cls": "ny-item is-attention",
+    "text": "⚠Lakewood work-method ruleneeds attention · required by LakewoodLakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering StandardsAcknowledge",
+    "buttons": [
+     "Acknowledge"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Adjacent at-grade intersectiondetected · 11 found · nearest 337.9 ftno devices addedMUTCD § 6N.12 p. 848 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-cond site-correction-row",
+    "text": "▲Pedestrian sidewalksdetected · 9 found · nearest 493.1 ftchanged this plan · 4 devices addedMUTCD § 6C.02 · OPENSTREETMAPDismiss",
+    "buttons": [
+     "Dismiss"
+    ]
+   },
+   {
+    "cls": "ny-item ny-fold",
+    "text": "✓ 3 none found · ◌ 2 not assertedShow 5",
+    "buttons": [
+     "Show 5"
+    ]
+   },
+   {
+    "cls": "ny-item ny-apply sc-apply",
+    "text": "no corrections staged · staging costs nothing, Apply re-generates onceApply 0 corrections",
+    "buttons": [
+     "Apply 0 corrections"
+    ]
+   },
+   {
+    "cls": "ny-item ny-foot sc-foot",
+    "text": "corridor scan · 14 oct · 23:10 utc · 2.8 s · memoised · apply re-generates the plan",
+    "buttons": []
+   }
+  ],
+  "wire": [
+   {
+    "sent": [
+     "jur:delta:lakewood:3eeee55be3"
+    ]
+   },
+   {
+    "audit": [
+     {
+      "id": "jur:delta:lakewood:3eeee55be3",
+      "rule": "Double posting of signs is required on state highways with a median, optional on city streets.",
+      "source": "Lakewood typical TCP sheet — Lane Closure on a Multi-Lane Street § note 6",
+      "applies": true
+     }
+    ]
+   }
+  ]
+ }
+]

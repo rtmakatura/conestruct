@@ -2193,7 +2193,31 @@ def _audit_build(
             "chosen": scenario.kind,
             "basis": proposal["basis"],
         }
+    # #297: what the operator acknowledged (Ryan: "The audit lists what was
+    # acknowledged").  Each id is resolved against this plan's evaluated
+    # jurisdiction, so the entry carries the rule's own words and source;
+    # an id whose rule no longer fires for this plan is listed as such,
+    # never dropped.  Nothing acknowledged, no key: byte-identical.
+    acknowledged = scenario.meta.acknowledged or []
+    if acknowledged:
+        jurisdiction, _deltas = _jurisdiction_eval(scenario, params, placements)
+        fired = {
+            f"jur:delta:{d['key']}": d
+            for d in (jurisdiction or {}).get("applied_deltas", [])
+            if d.get("key")
+        }
+        projection["acknowledged"] = [_acknowledged_entry(i, fired.get(i)) for i in acknowledged]
     return projection, params, placements
+
+
+def _acknowledged_entry(item_id: str, delta: dict[str, Any] | None) -> dict[str, Any]:
+    """#297: one acknowledged item for the audit: the rule's sentence and
+    source when it still fires for this plan, ``applies: False`` when not."""
+    if delta is None:
+        return {"id": item_id, "rule": None, "source": None, "applies": False}
+    src = delta.get("source") or {}
+    source = " § ".join(str(s) for s in (src.get("doc"), src.get("section")) if s) or None
+    return {"id": item_id, "rule": delta.get("rule"), "source": source, "applies": True}
 
 
 @app.post("/render/audit")

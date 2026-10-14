@@ -337,10 +337,23 @@ export type StagedFieldKey =
   | "roadType"
   | "jurisdiction_key";
 
+/**
+ * #297 step 3: a staged ACKNOWLEDGE (or its withdrawal) of one NEEDS YOU
+ * jurisdiction-delta item, by its stable id (`jur:delta:<key>`).  Apply
+ * folds it into `meta.acknowledged`.  Its own shape, so no guard that
+ * reads a site-condition `flag` can mistake it for one.
+ */
+export interface StagedAcknowledgement {
+  acknowledge: string;
+  /** true acknowledges; false withdraws an acknowledgement on the plan. */
+  set: boolean;
+}
+
 export type StagedCorrection =
   | StagedScanCorrection
   | StagedManualCondition
-  | StagedFieldEdit;
+  | StagedFieldEdit
+  | StagedAcknowledgement;
 
 /** #290 — the pin's meaning; see ``ScenarioMeta.pinModel``. */
 export type PinModel = "corridor_end" | "work_start";
@@ -506,6 +519,15 @@ export interface ScenarioMeta {
    */
   roadName?: string;
   roadRef?: string;
+  /**
+   * #297: the NEEDS YOU items the operator has acknowledged, by stable id
+   * (`jur:delta:<jurisdiction>:<10 hex>`).  Written only by Apply, from a
+   * staged acknowledgement; it rides the saved plan and survives every
+   * regenerate (unlike the scan's proceed-anyway stamp).  The backend's
+   * audit lists each one.  Acknowledging records that the operator saw
+   * the item; it changes nothing about the plan.  Absent when empty.
+   */
+  acknowledged?: string[];
 }
 
 export interface ShoulderScenario extends JurisdictionPlanFields {

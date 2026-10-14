@@ -107,13 +107,16 @@ import {
   dismissMarker,
   fmtScanDuration,
   fmtScanStamp,
+  isAckStaged,
   isFieldStaged,
+  isFlagStaged,
   isManualStaged,
   isScannedFlag,
   stage,
   stagedEnumeration,
   stagedSentence,
   unstage,
+  type FlagStaged,
 } from "@/lib/scenarios/site-corrections";
 import { applyStagedFields } from "@/lib/scenarios/what-writes";
 import type {
@@ -198,10 +201,10 @@ export function SiteConditionRows({
   // one staging mechanism).  This block is about site conditions, so it
   // indexes the entries that have a flag and ignores the rest; APPLY
   // still carries the whole list, which is ruling 191's point.
-  const stagedFor = new Map<string, Exclude<StagedCorrection, StagedFieldEdit>>(
-    staged
-      .filter((s): s is Exclude<StagedCorrection, StagedFieldEdit> => !isFieldStaged(s))
-      .map((s) => [s.flag, s]),
+  // #297: an acknowledgement has no flag either, so it is excluded with
+  // the field edits (`isFlagStaged`).
+  const stagedFor = new Map<string, FlagStaged>(
+    staged.filter(isFlagStaged).map((s) => [s.flag, s]),
   );
   if (buckets === null && corrections.length === 0) return null;
 
@@ -254,6 +257,7 @@ export function SiteConditionRows({
     // type, and it names the value so a stray one would be legible
     // rather than a crash.
     if (isFieldStaged(s)) return `${s.label} → ${String(s.to)}`;
+    if (isAckStaged(s)) return s.set ? "acknowledge" : "withdraw";
     if (isManualStaged(s)) return s.on ? "assert" : "undo";
     if (s.marker === null) return "undo";
     if (s.marker.action === "assert") return "assert";
@@ -369,7 +373,7 @@ export function SiteConditionRows({
 
   // #254: a STAGED row — ◌ (--none) + the condition + "staged — not yet
   // applied" + the intent, Undo un-stages (no request).
-  const stagedRow = (s: Exclude<StagedCorrection, StagedFieldEdit>) =>
+  const stagedRow = (s: FlagStaged) =>
     row(
       `staged-${s.flag}`,
       "sc-staged site-correction-staged",
