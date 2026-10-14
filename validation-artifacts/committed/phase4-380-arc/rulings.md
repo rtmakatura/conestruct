@@ -176,3 +176,28 @@ stacks on A's tip.
 
 **Branch B starts from main `c109778`** (A shipped and its branch was cleaned up), so it no longer
 stacks on a live branch. Prediction and measurement: `rule-169/`.
+
+## Ship hold (Ryan, 2026-10-13), verbatim
+
+> Noted. Keep building rule 168's cards (and #280 after) in your worktrees, but don't ship anything until I tell you DESK is done and the main checkout is back on main. The stations issue: I'll post it from the chat.
+
+## Rule 168 (Phase 4 branch 6): R145 self-ruled
+
+R137 Q1 (verbatim above): "Rule 168 is open, narrowed to hiding the four cards at the narrow
+width, with a "4 files" line under the zip."
+
+**Found when measuring** (`rule-168/measure-before/`): the cards and the zip don't hold the same
+files. The cards offer five downloads (plan sheet PDF, device list XLSX, crew PDF, crew .md,
+audit PDF); the zip holds four parts (`BUNDLE_PART_KINDS`: plan PDF, XLSX, crew .md, quote). The
+crew PDF and the audit PDF are not in the zip, and the zip renders only in the public sandbox
+(`OutputCards.tsx`: `mode.kind === "public" && onDownloadAll`). Hiding the cards outright would
+take two downloads off the phone, and every download off a saved plan's phone view (Rule 10).
+
+**R145 self-ruled:** at ≤480 px, where the zip renders, the "4 files" line under the zip is a
+disclosure; opening it shows the four cards. Closed by default. Where no zip renders (a saved
+plan), the cards stay. The desk is unchanged.
+
+Why this fits existing rules: rule 168's own text makes the line a disclosure ("plus a "✓ 4 files
+ready" disclosure"); #288 clause 3 declined to build it only because then it would have restated
+a count already on screen, and here it holds the cards. Rule 169 (R144 Q4) set the precedent that
+what the phone hides stays reachable.
