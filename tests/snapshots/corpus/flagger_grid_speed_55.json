@@ -129,6 +129,7 @@
       "sight_distance_ft": 495,
       "sight_distance_result_text": "495 ft",
       "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+      "stations_text": "2 flagger station(s)",
       "table": [
         {
           "Label": "FLAGGER_1",

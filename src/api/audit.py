@@ -273,6 +273,7 @@ def build_audit_trail(
     site_lng: float | None = None,
     approaches: list[ApproachParams] | None = None,
     road_bearing: dict[str, Any] | None = None,
+    pilot_car: bool = False,
 ) -> dict[str, Any]:
     """Recompute every audit-trail intermediate the verification UI needs.
 
@@ -1558,6 +1559,26 @@ def build_audit_trail(
         # own form speed).
         ssd_ft = flagger_section["sight_distance_ft"]
         flagger_section["sight_distance_result_text"] = f"{ssd_ft} ft"
+        # #319 (Rule 3) — the row's station line, counted from the plan
+        # the layout placed: flagger stations (FLAGGER_STATION) and AFADs
+        # (the TEMPORARY_SIGNAL placements the flagger generator labels
+        # AFAD_1/AFAD_2, layout.py's ``afad`` branch).  The panel used to
+        # write "2 flagger" / "2 AFAD" from the form's AFAD switch.  The
+        # pilot car isn't a roadside placement (its G20-4 rides the
+        # vehicle), so it arrives as the relayed raw fact ``pilot_car``.
+        n_afad = sum(
+            1
+            for p in mainline_placements
+            if p.device_type == DeviceType.TEMPORARY_SIGNAL and (p.label or "").startswith("AFAD")
+        )
+        station_parts = []
+        if flagger_placements:
+            station_parts.append(f"{len(flagger_placements)} flagger station(s)")
+        if n_afad:
+            station_parts.append(f"{n_afad} AFAD")
+        flagger_section["stations_text"] = " + ".join(station_parts) or "none placed"
+        if pilot_car:
+            flagger_section["pilot_car_text"] = "1 vehicle"
         flagger_section["sight_distance_formula_text"] = [f"SSD @ {speed} mph = {ssd_ft} ft"]
 
     # ------------------------------------------------------------------

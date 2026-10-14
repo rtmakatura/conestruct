@@ -80,6 +80,10 @@ _PANEL_ONLY_KEYS = frozenset(
         "formula_text",
         "sight_distance_result_text",
         "sight_distance_formula_text",
+        # #319: the same row's station line and pilot car, panel-only
+        # likewise (the PDF's flagger block keeps its table and narrative).
+        "stations_text",
+        "pilot_car_text",
     }
 )
 _SKIP_KEYS = (

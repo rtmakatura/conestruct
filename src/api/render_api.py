@@ -2080,6 +2080,10 @@ def _audit_build(
         # the generator got; the builder raises rather than emit a
         # partial audit without them (#117).
         approaches=approaches,
+        # #319: the pilot car is a generator kwarg, not a ScenarioParams
+        # field and not a roadside placement, so the flagger station line
+        # gets it as a relayed raw fact.  Only the flagger kind carries it.
+        pilot_car=bool(getattr(scenario, "pilotCar", False)),
     )
     step_count = _compute_step_count(scenario)
     projection = audit_projection(

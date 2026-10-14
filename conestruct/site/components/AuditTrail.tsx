@@ -313,14 +313,14 @@ export function flaggerSightDistanceItem(
     { citation: flagger?.sight_distance_citation },
     SSD_CITATION_FALLBACK,
   );
-  const flaggerStations = scenario.afad ? 0 : 2;
-  const afadDevices = scenario.afad ? 2 : 0;
-  const pilotCarVehicles = scenario.pilotCar ? 1 : 0;
-  const flaggerSummary = generated
-    ? scenario.afad
-      ? `${afadDevices} AFAD`
-      : `${flaggerStations} flagger`
-    : "—";
+  // #319 (Rule 3): the station line is the audit's, counted from the plan
+  // the layout placed (flagger stations, AFADs) plus the relayed pilot car.
+  // This row used to write "2 flagger" / "2 AFAD" from the form's switch.
+  const stationsText = wireResult(flagger?.stations_text, generated);
+  const pilotCarText =
+    generated && typeof flagger?.pilot_car_text === "string"
+      ? flagger.pilot_car_text
+      : null;
   // #286 (R144 Q5): the result and the SSD line are the audit's own, at
   // the speed the audit used (this row used to build the line from the
   // form's speed).
@@ -342,15 +342,11 @@ export function flaggerSightDistanceItem(
           </div>
         ))}
         <p>
-          Stations:{" "}
-          <strong>
-            {flaggerSummary}
-            {scenario.afad ? "" : " station(s)"}
-          </strong>
-          {pilotCarVehicles > 0 && (
+          Stations: <strong>{stationsText}</strong>
+          {pilotCarText !== null && (
             <>
               {" "}
-              · Pilot car: <strong>1 vehicle</strong>
+              · Pilot car: <strong>{pilotCarText}</strong>
             </>
           )}
         </p>

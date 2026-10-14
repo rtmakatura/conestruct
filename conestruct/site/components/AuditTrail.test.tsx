@@ -1280,6 +1280,42 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
     expect(html).not.toContain("6E-1");
   });
 
+  it("#319: the station line is the payload's, not the form's switch", () => {
+    // Sentinel: the form says no AFAD and no pilot car (FLAGGER has both
+    // off); the payload says otherwise.  The retired row would have
+    // written "2 flagger station(s)" and no pilot car.
+    const data = auditWith({
+      flagger: {
+        sight_distance_ft: 360,
+        sight_distance_citation: BACKEND_CITATION,
+        stations_text: "3 AFAD",
+        pilot_car_text: "1 vehicle",
+      },
+    });
+    const html = renderToStaticMarkup(
+      flaggerSightDistanceItem(data, FLAGGER, true, r)!.body as ReactElement,
+    );
+    expect(html).toContain("Stations: <strong>3 AFAD</strong>");
+    expect(html).toContain("Pilot car: <strong>1 vehicle</strong>");
+    expect(html).not.toContain("flagger station(s)");
+  });
+
+  it("#319: no station field (an older backend) or not generated → —, never a count", () => {
+    const data = auditWith({ flagger: { sight_distance_ft: 360 } });
+    const absent = renderToStaticMarkup(
+      flaggerSightDistanceItem(data, FLAGGER, true, r)!.body as ReactElement,
+    );
+    expect(absent).toContain("Stations: <strong>—</strong>");
+    expect(absent).not.toContain("Pilot car");
+    const withField = auditWith({
+      flagger: { sight_distance_ft: 360, stations_text: "2 flagger station(s)" },
+    });
+    const pre = renderToStaticMarkup(
+      flaggerSightDistanceItem(withField, FLAGGER, false, r)!.body as ReactElement,
+    );
+    expect(pre).toContain("Stations: <strong>—</strong>");
+  });
+
   it("absent field → the row is OMITTED from the flagger items, never computed", () => {
     const data = auditWith({ flagger: { applicable: true, count: 2 } });
     expect(flaggerSightDistanceItem(data, FLAGGER, true, r)).toBeNull();
