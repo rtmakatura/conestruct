@@ -169,11 +169,19 @@ function report(rows, startedAt, hzStart, hzEnd) {
     // Two trips put that second wait in here; one trip cannot.  So a
     // residual that collapses between an unfolded build and a folded one is
     // the fold, measured rather than asserted.
-    const res = ok.map((r) => r.residual_ms).filter((v) => typeof v === "number").sort((a, b) => a - b);
+    // #293: only a fresh scan's duration belongs to THIS request.  On a memo
+    // hit `duration_ms` is the stored scan's, so `wall - duration` is not a
+    // residual and can go negative (it did: -3336 and -15574 ms on cycle 1's
+    // Lakewood "cold" rows in runs 3 and 4, both served from the memo,
+    // `memo_hit: true` on their own audits).  Those rows are left out, and
+    // counted, rather than reported as a number that can't be true.
+    const fresh = ok.filter((r) => r.memo_hit === false);
+    const res = fresh.map((r) => r.residual_ms).filter((v) => typeof v === "number").sort((a, b) => a - b);
     if (res.length) {
       const q = (f) => res[Math.min(res.length - 1, Math.floor(f * res.length))];
-      p("   residual_ms (ok, = layout + any second trip): n=" + res.length +
-        " min=" + res[0] + " median=" + q(0.5) + " p90=" + q(0.9) + " max=" + res[res.length - 1]);
+      p("   residual_ms (ok, fresh scans only, = layout + any second trip): n=" + res.length +
+        " min=" + res[0] + " median=" + q(0.5) + " p90=" + q(0.9) + " max=" + res[res.length - 1] +
+        "   (" + (ok.length - fresh.length) + " memo-hit row(s) omitted: their duration is a stored scan's)");
     }
     const warm = rows.filter((r) => r.pin === pin.name && r.leg === "warm" && r.http === 200);
     const warmMiss = warm.filter((r) => r.memo_hit === false);
