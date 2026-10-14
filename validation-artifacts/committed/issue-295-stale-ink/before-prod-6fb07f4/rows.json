@@ -1,0 +1,422 @@
+[
+ {
+  "id": "base",
+  "ok": null,
+  "detail": "https://www.conestruct.com"
+ },
+ {
+  "id": "1440.try1.settle",
+  "ok": true,
+  "detail": "the answer settled"
+ },
+ {
+  "id": "1440.staged.provoked",
+  "ok": true,
+  "detail": "a SPEED edit staged, not applied; the dim is up with no request in flight"
+ },
+ {
+  "id": "1440.staged.wrapper",
+  "ok": true,
+  "detail": "49 text element(s) under .results-stale (17 distinct label/colour/size)"
+ },
+ {
+  "id": "1440.staged.pixels",
+  "ok": false,
+  "detail": "47 sampled, 38 under their floor, 2 unreadable; nearest the floor: .top > span.fmt \"PDF\" 2.08:1/4.5 · .top > span.fmt \"PDF + MD\" 2.08:1/4.5 · .top > span.fmt \"PDF\" 2.08:1/4.5 · .desc > span.qty \"devices\" 2.1:1/4.5 · .top > span.fmt \"XLSX\" 2.25:1/4.5 · .qty > b \"14\" 2.27:1/4.5"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > span.k \"Total devices\" 10px: 2.63:1 < 4.5 (ink rgb(86,95,107) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"35\" 62px: 2.63:1 < 3 (ink rgb(118,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"on the plan sheet\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > span.k \"Unique types\" 10px: 2.63:1 < 4.5 (ink rgb(86,95,107) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"11\" 62px: 2.63:1 < 3 (ink rgb(118,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"distinct device types to source\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-meta > div.caseid.tr-prov \"Denver · TCP\" 10.5px: 4.3:1 < 4.5 (ink rgb(121,129,138) on rgb(20,29,40); declared rgb(234, 240, 247))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Taper L\" 11px: 3.24:1 < 4.5 (ink rgb(100,109,120) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"40 ft\" 11px: 2.79:1 < 4.5 (ink rgb(90,99,110) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Buffer B\" 11px: 3.24:1 < 4.5 (ink rgb(100,109,120) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"200 ft\" 11px: 3.53:1 < 4.5 (ink rgb(106,115,126) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Device spacing\" 11px: 3.84:1 < 4.5 (ink rgb(112,121,131) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"30 ft o.c.\" 11px: 3.58:1 < 4.5 (ink rgb(107,116,127) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Work zone\" 11px: 3.28:1 < 4.5 (ink rgb(101,110,120) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"1,000 ft\" 11px: 3.53:1 < 4.5 (ink rgb(106,115,126) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".dl-all > span.dl-all-count.tr-prov \"4 files\" 10.5px: 2.38:1 < 4.5 (ink rgb(81,91,103) on rgb(20,32,46); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".dl-all > button.act.tr-step \"All (.zip)\" 9.5px: 3.42:1 < 4.5 (ink rgb(106,115,126) on rgb(20,32,46); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".top > span.fmt \"PDF\" 10.5px: 2.08:1 < 4.5 (ink rgb(71,80,92) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".desc > span \"11×17 · TA-3 · S-630-1\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.pixels.fail",
+  "ok": false,
+  "detail": ".desc > span.qty \"devices\" 10.5px: 2.1:1 < 4.5 (ink rgb(71,81,92) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.staged.axe",
+  "ok": false,
+  "detail": "color-contrast inside the dim: 33 violation(s), 10 pass, 6 incomplete — .hero-cell:nth-child(1) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio  | .hero-cell:nth-child(1) > .num: Fix any of the following: Element has insufficient color contrast of 2.74 (foreground color: #8a552e, background color: #121e2c, font size: 46.5pt (62px), font weight: normal). Expected contrast ratio | .hero-cell:nth-child(1) > .sub.tr-prov: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati | .hero-cell:nth-child(2) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio "
+ },
+ {
+  "id": "1440.staged.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "1440.staged.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 0.5, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer: 1 field staged, not yet applied.\"]"
+ },
+ {
+  "id": "1440.flight.provoked",
+  "ok": true,
+  "detail": "Apply sent; the dim is up with the request held"
+ },
+ {
+  "id": "1440.flight.wrapper",
+  "ok": true,
+  "detail": "45 text element(s) under .results-stale (17 distinct label/colour/size)"
+ },
+ {
+  "id": "1440.flight.pixels",
+  "ok": false,
+  "detail": "44 sampled, 40 under their floor, 1 unreadable; nearest the floor: .dl-btn > span.font-mono \"↓\" 1.22:1/4.5 · .dl-btn > span.font-mono \"↓\" 1.23:1/4.5 · .dl-btn > span.font-mono \"↓\" 1.23:1/4.5 · .dl-btn > span.font-mono \"↓\" 1.23:1/4.5 · .dl-btn > span.font-mono \"↓\" 1.27:1/4.5 · .dl-actions > button.dl-btn \"Download PDF\" 1.28:1/4.5"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > span.k \"Total devices\" 10px: 2.63:1 < 4.5 (ink rgb(86,95,107) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"35\" 62px: 2.62:1 < 3 (ink rgb(117,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"on the plan sheet\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > span.k \"Unique types\" 10px: 2.63:1 < 4.5 (ink rgb(86,95,107) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"11\" 62px: 2.62:1 < 3 (ink rgb(117,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"distinct device types to source\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-meta > div.caseid.tr-prov \"Denver · TCP\" 10.5px: 4.25:1 < 4.5 (ink rgb(120,128,137) on rgb(20,29,40); declared rgb(234, 240, 247))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Taper L\" 11px: 3.23:1 < 4.5 (ink rgb(100,109,119) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"40 ft\" 11px: 2.79:1 < 4.5 (ink rgb(90,99,110) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Buffer B\" 11px: 3.53:1 < 4.5 (ink rgb(106,115,126) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"200 ft\" 11px: 3.53:1 < 4.5 (ink rgb(106,115,126) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Device spacing\" 11px: 3.79:1 < 4.5 (ink rgb(111,120,131) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"30 ft o.c.\" 11px: 3.58:1 < 4.5 (ink rgb(107,116,127) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span \"Work zone\" 11px: 3.24:1 < 4.5 (ink rgb(100,109,120) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".row > span.mv \"1,000 ft\" 11px: 3.53:1 < 4.5 (ink rgb(106,115,126) on rgb(20,29,40); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".dl-all > span.dl-all-count.tr-prov \"4 files\" 10.5px: 2.37:1 < 4.5 (ink rgb(80,91,102) on rgb(20,32,46); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".dl-all > button.act.tr-step \"All (.zip)\" 9.5px: 2.04:1 < 4.5 (ink rgb(71,81,94) on rgb(20,32,46); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".top > span.fmt \"PDF\" 10.5px: 2.08:1 < 4.5 (ink rgb(71,80,92) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".desc > span \"11×17 · TA-3 · S-630-1\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "1440.flight.pixels.fail",
+  "ok": false,
+  "detail": ".dl-actions > button.dl-btn \"Download PDF\" 13px: 1.28:1 < 4.5 (ink rgb(41,51,62) on rgb(23,32,44); declared rgb(110, 124, 142))"
+ },
+ {
+  "id": "1440.flight.axe",
+  "ok": false,
+  "detail": "color-contrast inside the dim: 28 violation(s), 5 pass, 0 incomplete — .hero-cell:nth-child(1) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio  | .hero-cell:nth-child(1) > .num: Fix any of the following: Element has insufficient color contrast of 2.74 (foreground color: #8a552e, background color: #121e2c, font size: 46.5pt (62px), font weight: normal). Expected contrast ratio | .hero-cell:nth-child(1) > .sub.tr-prov: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati | .hero-cell:nth-child(2) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio "
+ },
+ {
+  "id": "1440.flight.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "1440.flight.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 0.5, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer. These values predate the request in flight.\"]"
+ },
+ {
+  "id": "380.try1.settle",
+  "ok": true,
+  "detail": "the answer settled"
+ },
+ {
+  "id": "380.staged.provoked",
+  "ok": true,
+  "detail": "a SPEED edit staged, not applied; the dim is up with no request in flight"
+ },
+ {
+  "id": "380.staged.wrapper",
+  "ok": true,
+  "detail": "11 text element(s) under .results-stale (8 distinct label/colour/size)"
+ },
+ {
+  "id": "380.staged.pixels",
+  "ok": false,
+  "detail": "9 sampled, 9 under their floor, 2 unreadable; nearest the floor: .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 2.42:1/4.5 · .hero-cell > div.sub.tr-prov \"on the plan sheet\" 2.46:1/4.5 · .hero-cell > div.sub.tr-prov \"distinct device types to source\" 2.46:1/4.5 · .hero-cell > span.k \"Total devices\" 2.63:1/4.5 · .hero-cell > span.k \"Unique types\" 2.63:1/4.5 · .dl-all > button.act.tr-step \"All (.zip)\" 3.42:1/4.5"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > span.k \"Total devices\" 10px: 2.63:1 < 4.5 (ink rgb(86,95,107) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"35\" 42px: 2.63:1 < 3 (ink rgb(118,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"on the plan sheet\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > span.k \"Unique types\" 10px: 2.63:1 < 4.5 (ink rgb(86,95,107) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"11\" 42px: 2.63:1 < 3 (ink rgb(118,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"distinct device types to source\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".dl-all > button.act.tr-step \"All (.zip)\" 9.5px: 3.42:1 < 4.5 (ink rgb(106,115,126) on rgb(20,32,46); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".dl-files.tr-prov > span \"4 files\" 10.5px: 3.42:1 < 4.5 (ink rgb(106,115,126) on rgb(20,32,46); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "380.staged.pixels.fail",
+  "ok": false,
+  "detail": ".tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 10.5px: 2.42:1 < 4.5 (ink rgb(82,92,104) on rgb(20,32,46); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.staged.axe",
+  "ok": false,
+  "detail": "color-contrast inside the dim: 9 violation(s), 0 pass, 1 incomplete — .hero-cell:nth-child(1) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio  | .hero-cell:nth-child(1) > .num: Fix any of the following: Element has insufficient color contrast of 2.74 (foreground color: #8a552e, background color: #121e2c, font size: 31.5pt (42px), font weight: normal). Expected contrast ratio | .hero-cell:nth-child(1) > .sub.tr-prov: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati | .hero-cell:nth-child(2) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio "
+ },
+ {
+  "id": "380.staged.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "380.staged.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 0.5, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer: 1 field staged, not yet applied.\"]"
+ },
+ {
+  "id": "380.flight.provoked",
+  "ok": true,
+  "detail": "Apply sent; the dim is up with the request held"
+ },
+ {
+  "id": "380.flight.wrapper",
+  "ok": true,
+  "detail": "11 text element(s) under .results-stale (8 distinct label/colour/size)"
+ },
+ {
+  "id": "380.flight.pixels",
+  "ok": false,
+  "detail": "8 sampled, 8 under their floor, 3 unreadable; nearest the floor: .dl-all > button.act.tr-step \"All (.zip)\" 2.04:1/4.5 · .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 2.42:1/4.5 · .hero-cell > div.sub.tr-prov \"on the plan sheet\" 2.46:1/4.5 · .hero-cell > div.sub.tr-prov \"distinct device types to source\" 2.46:1/4.5 · .hero-cell > span.k \"Unique types\" 2.63:1/4.5 · .dl-files.tr-prov > span \"4 files\" 3.42:1/4.5"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"35\" 42px: 2.63:1 < 3 (ink rgb(118,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"on the plan sheet\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > span.k \"Unique types\" 10px: 2.63:1 < 4.5 (ink rgb(86,95,107) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.num \"11\" 42px: 2.63:1 < 3 (ink rgb(118,88,68) on rgb(20,29,40); declared rgb(255, 138, 46))"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".hero-cell > div.sub.tr-prov \"distinct device types to source\" 10.5px: 2.46:1 < 4.5 (ink rgb(81,91,103) on rgb(20,29,40); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".dl-all > button.act.tr-step \"All (.zip)\" 9.5px: 2.04:1 < 4.5 (ink rgb(71,81,94) on rgb(20,32,46); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".dl-files.tr-prov > span \"4 files\" 10.5px: 3.42:1 < 4.5 (ink rgb(106,115,126) on rgb(20,32,46); declared rgb(200, 209, 221))"
+ },
+ {
+  "id": "380.flight.pixels.fail",
+  "ok": false,
+  "detail": ".tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 10.5px: 2.42:1 < 4.5 (ink rgb(82,92,104) on rgb(20,32,46); declared rgb(147, 160, 176))"
+ },
+ {
+  "id": "380.flight.axe",
+  "ok": false,
+  "detail": "color-contrast inside the dim: 8 violation(s), 0 pass, 0 incomplete — .hero-cell:nth-child(1) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio  | .hero-cell:nth-child(1) > .num: Fix any of the following: Element has insufficient color contrast of 2.74 (foreground color: #8a552e, background color: #121e2c, font size: 31.5pt (42px), font weight: normal). Expected contrast ratio | .hero-cell:nth-child(1) > .sub.tr-prov: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati | .hero-cell:nth-child(2) > .k: Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio "
+ },
+ {
+  "id": "380.flight.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "380.flight.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 0.5, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer. These values predate the request in flight.\"]"
+ }
+]

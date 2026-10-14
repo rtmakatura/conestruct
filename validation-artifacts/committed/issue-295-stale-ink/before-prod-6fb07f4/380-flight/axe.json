@@ -1,0 +1,38 @@
+{
+ "violations": [
+  {
+   "target": ".hero-cell:nth-child(1) > .k",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio "
+  },
+  {
+   "target": ".hero-cell:nth-child(1) > .num",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 2.74 (foreground color: #8a552e, background color: #121e2c, font size: 31.5pt (42px), font weight: normal). Expected contrast ratio"
+  },
+  {
+   "target": ".hero-cell:nth-child(1) > .sub.tr-prov",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati"
+  },
+  {
+   "target": ".hero-cell:nth-child(2) > .k",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio "
+  },
+  {
+   "target": ".hero-cell:nth-child(2) > .num",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 2.74 (foreground color: #8a552e, background color: #121e2c, font size: 31.5pt (42px), font weight: normal). Expected contrast ratio"
+  },
+  {
+   "target": ".hero-cell:nth-child(2) > .sub.tr-prov",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 2.62 (foreground color: #54606f, background color: #121e2c, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati"
+  },
+  {
+   "target": ".dl-files > span:nth-child(1)",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 3.71 (foreground color: #6e7986, background color: #14202e, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati"
+  },
+  {
+   "target": ".tier-cue > .tr-prov",
+   "summary": "Fix any of the following: Element has insufficient color contrast of 2.57 (foreground color: #54606f, background color: #14202e, font size: 7.9pt (10.5px), font weight: normal). Expected contrast rati"
+  }
+ ],
+ "passes": 0,
+ "incomplete": 0
+}
