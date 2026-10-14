@@ -1,0 +1,128 @@
+{
+ "_provenance": "#285 rec285.py: overpass answer recorded 2026-10-14 for the us24_hartsel pin (shared-node query at 1700 m, road ref='US 24'); centerline stitched from the road's own ways.",
+ "pin": [
+  39.021746,
+  -105.792864
+ ],
+ "road": {
+  "ref": "US 24"
+ },
+ "centerline": [
+  [
+   39.0214771,
+   -105.7937344
+  ],
+  [
+   39.0216102,
+   -105.7932819
+  ],
+  [
+   39.021746,
+   -105.7928637
+  ],
+  [
+   39.0286188,
+   -105.77395
+  ]
+ ],
+ "overpass": {
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.7 375dc00a",
+  "osm3s": {
+   "timestamp_osm_base": "2026-10-14T19:01:02Z",
+   "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+   {
+    "type": "way",
+    "id": 106204136,
+    "nodes": [
+     177802739,
+     1456207636,
+     1895749089,
+     1456207625,
+     1895749085,
+     1456207617,
+     177813022,
+     177813024,
+     177801618,
+     177813026,
+     1895749086,
+     1895749087,
+     177813028,
+     1895749090,
+     1456207635,
+     1895749091,
+     177813030,
+     1895749093,
+     177813031
+    ],
+    "tags": {
+     "cycleway:both": "no",
+     "hgv": "designated",
+     "hgv:national_network": "yes",
+     "highway": "trunk",
+     "lanes": "2",
+     "ref": "US 24;CO 9",
+     "source:hgv:national_network": "CDOT \"Highway Data Explorer\"",
+     "surface": "paved"
+    }
+   },
+   {
+    "type": "way",
+    "id": 179223983,
+    "nodes": [
+     1895749080,
+     9388491286,
+     177813019
+    ],
+    "tags": {
+     "bridge": "yes",
+     "hgv": "designated",
+     "hgv:national_network": "yes",
+     "highway": "trunk",
+     "lanes": "2",
+     "layer": "1",
+     "ref": "US 24",
+     "source": "Bing",
+     "source:hgv:national_network": "CDOT \"Highway Data Explorer\"",
+     "surface": "paved"
+    }
+   },
+   {
+    "type": "way",
+    "id": 204555757,
+    "nodes": [
+     2145525578,
+     534759456,
+     13951551878,
+     177802739
+    ],
+    "tags": {
+     "highway": "primary",
+     "lanes": "2",
+     "lanes:backward": "1",
+     "lanes:forward": "1",
+     "maxspeed": "35 mph",
+     "ref": "CO 9",
+     "sidewalk": "no",
+     "source": "tiger",
+     "surface": "asphalt",
+     "tracktype": "grade1"
+    }
+   },
+   {
+    "type": "node",
+    "id": 177802739,
+    "lat": 39.0214771,
+    "lon": -105.7937344
+   },
+   {
+    "type": "node",
+    "id": 1895749080,
+    "lat": 39.0286188,
+    "lon": -105.77395
+   }
+  ]
+ }
+}

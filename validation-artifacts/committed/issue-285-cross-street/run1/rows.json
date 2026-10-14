@@ -1,0 +1,1676 @@
+[
+ {
+  "pin": "N Broadway SB, Denver",
+  "road": "North Broadway",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 1.107,
+  "kb": 7.1,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "East 11th Avenue",
+    "West 11th Avenue"
+   ],
+   "m": 19.7,
+   "node": 3397108608
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "N Broadway SB, Denver",
+  "road": "North Broadway",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.828,
+  "kb": 7.1,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "East 11th Avenue",
+    "West 11th Avenue"
+   ],
+   "m": 19.7,
+   "node": 3397108608
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "N Broadway SB, Denver",
+  "road": "North Broadway",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 1.74,
+  "kb": 12.6,
+  "shared": 13,
+  "nearest": {
+   "names": [
+    "East 11th Avenue",
+    "West 11th Avenue"
+   ],
+   "m": 19.7,
+   "node": 3397108608
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "N Broadway SB, Denver",
+  "road": "North Broadway",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.757,
+  "kb": 12.6,
+  "shared": 13,
+  "nearest": {
+   "names": [
+    "East 11th Avenue",
+    "West 11th Avenue"
+   ],
+   "m": 19.7,
+   "node": 3397108608
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "N Broadway SB, Denver",
+  "road": "North Broadway",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 1.027,
+  "kb": 25.5,
+  "shared": 30,
+  "nearest": {
+   "names": [
+    "East 11th Avenue",
+    "West 11th Avenue"
+   ],
+   "m": 19.7,
+   "node": 3397108608
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "N Broadway SB, Denver",
+  "road": "North Broadway",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 1.053,
+  "kb": 25.5,
+  "shared": 30,
+  "nearest": {
+   "names": [
+    "East 11th Avenue",
+    "West 11th Avenue"
+   ],
+   "m": 19.7,
+   "node": 3397108608
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "road": "Lafayette Street",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.969,
+  "kb": 6.7,
+  "shared": 10,
+  "nearest": {
+   "names": [
+    "East 17th Avenue"
+   ],
+   "m": 46.5,
+   "node": 176080675
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "road": "Lafayette Street",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 1.959,
+  "kb": 6.7,
+  "shared": 10,
+  "nearest": {
+   "names": [
+    "East 17th Avenue"
+   ],
+   "m": 46.5,
+   "node": 176080675
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "road": "Lafayette Street",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.722,
+  "kb": 9.5,
+  "shared": 15,
+  "nearest": {
+   "names": [
+    "East 17th Avenue"
+   ],
+   "m": 46.5,
+   "node": 176080675
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "road": "Lafayette Street",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.714,
+  "kb": 9.5,
+  "shared": 15,
+  "nearest": {
+   "names": [
+    "East 17th Avenue"
+   ],
+   "m": 46.5,
+   "node": 176080675
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "road": "Lafayette Street",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.986,
+  "kb": 11.3,
+  "shared": 19,
+  "nearest": {
+   "names": [
+    "East 17th Avenue"
+   ],
+   "m": 46.5,
+   "node": 176080675
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "road": "Lafayette Street",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 1.125,
+  "kb": 11.3,
+  "shared": 19,
+  "nearest": {
+   "names": [
+    "East 17th Avenue"
+   ],
+   "m": 46.5,
+   "node": 176080675
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Bayaud Ave, Denver",
+  "road": "East Bayaud Avenue",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 1.299,
+  "kb": 8.0,
+  "shared": 14,
+  "nearest": {
+   "names": [
+    "South Colorado Boulevard",
+    "South Leetsdale Drive"
+   ],
+   "m": 6.1,
+   "node": 526628709
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Bayaud Ave, Denver",
+  "road": "East Bayaud Avenue",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.868,
+  "kb": 8.0,
+  "shared": 14,
+  "nearest": {
+   "names": [
+    "South Colorado Boulevard",
+    "South Leetsdale Drive"
+   ],
+   "m": 6.1,
+   "node": 526628709
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Bayaud Ave, Denver",
+  "road": "East Bayaud Avenue",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.884,
+  "kb": 15.7,
+  "shared": 31,
+  "nearest": {
+   "names": [
+    "South Colorado Boulevard",
+    "South Leetsdale Drive"
+   ],
+   "m": 6.1,
+   "node": 526628709
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Bayaud Ave, Denver",
+  "road": "East Bayaud Avenue",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.855,
+  "kb": 15.7,
+  "shared": 31,
+  "nearest": {
+   "names": [
+    "South Colorado Boulevard",
+    "South Leetsdale Drive"
+   ],
+   "m": 6.1,
+   "node": 526628709
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Bayaud Ave, Denver",
+  "road": "East Bayaud Avenue",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.873,
+  "kb": 15.7,
+  "shared": 31,
+  "nearest": {
+   "names": [
+    "South Colorado Boulevard",
+    "South Leetsdale Drive"
+   ],
+   "m": 6.1,
+   "node": 526628709
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Bayaud Ave, Denver",
+  "road": "East Bayaud Avenue",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.888,
+  "kb": 15.7,
+  "shared": 31,
+  "nearest": {
+   "names": [
+    "South Colorado Boulevard",
+    "South Leetsdale Drive"
+   ],
+   "m": 6.1,
+   "node": 526628709
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Colfax Ave, Denver",
+  "road": "East Colfax Avenue",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.932,
+  "kb": 16.4,
+  "shared": 34,
+  "nearest": {
+   "names": [
+    "North York Street"
+   ],
+   "m": 19.0,
+   "node": 14073687957
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Colfax Ave, Denver",
+  "road": "East Colfax Avenue",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.805,
+  "kb": 16.4,
+  "shared": 34,
+  "nearest": {
+   "names": [
+    "North York Street"
+   ],
+   "m": 19.0,
+   "node": 14073687957
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Colfax Ave, Denver",
+  "road": "East Colfax Avenue",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.83,
+  "kb": 23.0,
+  "shared": 52,
+  "nearest": {
+   "names": [
+    "North York Street"
+   ],
+   "m": 19.0,
+   "node": 14073687957
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Colfax Ave, Denver",
+  "road": "East Colfax Avenue",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.907,
+  "kb": 23.0,
+  "shared": 52,
+  "nearest": {
+   "names": [
+    "North York Street"
+   ],
+   "m": 19.0,
+   "node": 14073687957
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Colfax Ave, Denver",
+  "road": "East Colfax Avenue",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.908,
+  "kb": 35.4,
+  "shared": 85,
+  "nearest": {
+   "names": [
+    "North York Street"
+   ],
+   "m": 19.0,
+   "node": 14073687957
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "E Colfax Ave, Denver",
+  "road": "East Colfax Avenue",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 1.16,
+  "kb": 35.4,
+  "shared": 85,
+  "nearest": {
+   "names": [
+    "North York Street"
+   ],
+   "m": 19.0,
+   "node": 14073687957
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Federal Blvd, Denver",
+  "road": "North Federal Boulevard",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 1.422,
+  "kb": 7.4,
+  "shared": 14,
+  "nearest": {
+   "names": [
+    "West 9th Avenue"
+   ],
+   "m": 90.5,
+   "node": 9886954619
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Federal Blvd, Denver",
+  "road": "North Federal Boulevard",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.786,
+  "kb": 7.4,
+  "shared": 14,
+  "nearest": {
+   "names": [
+    "West 9th Avenue"
+   ],
+   "m": 90.5,
+   "node": 9886954619
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Federal Blvd, Denver",
+  "road": "North Federal Boulevard",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.924,
+  "kb": 9.4,
+  "shared": 21,
+  "nearest": {
+   "names": [
+    "West 9th Avenue"
+   ],
+   "m": 90.5,
+   "node": 9886954619
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Federal Blvd, Denver",
+  "road": "North Federal Boulevard",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.591,
+  "kb": 9.4,
+  "shared": 21,
+  "nearest": {
+   "names": [
+    "West 9th Avenue"
+   ],
+   "m": 90.5,
+   "node": 9886954619
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Federal Blvd, Denver",
+  "road": "North Federal Boulevard",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.784,
+  "kb": 17.6,
+  "shared": 40,
+  "nearest": {
+   "names": [
+    "West 9th Avenue"
+   ],
+   "m": 90.5,
+   "node": 9886954619
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Federal Blvd, Denver",
+  "road": "North Federal Boulevard",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.999,
+  "kb": 17.6,
+  "shared": 40,
+  "nearest": {
+   "names": [
+    "West 9th Avenue"
+   ],
+   "m": 90.5,
+   "node": 9886954619
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "W Alameda Ave, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.778,
+  "kb": 6.4,
+  "shared": 13,
+  "nearest": {
+   "names": [
+    "West Alameda Avenue"
+   ],
+   "m": 23.6,
+   "node": 177309439
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "W Alameda Ave, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.556,
+  "kb": 6.4,
+  "shared": 13,
+  "nearest": {
+   "names": [
+    "West Alameda Avenue"
+   ],
+   "m": 23.6,
+   "node": 177309439
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "W Alameda Ave, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.636,
+  "kb": 8.6,
+  "shared": 18,
+  "nearest": {
+   "names": [
+    "West Alameda Avenue"
+   ],
+   "m": 23.6,
+   "node": 177309439
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "W Alameda Ave, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.604,
+  "kb": 8.6,
+  "shared": 18,
+  "nearest": {
+   "names": [
+    "West Alameda Avenue"
+   ],
+   "m": 23.6,
+   "node": 177309439
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "W Alameda Ave, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.714,
+  "kb": 11.2,
+  "shared": 25,
+  "nearest": {
+   "names": [
+    "West Alameda Avenue"
+   ],
+   "m": 23.6,
+   "node": 177309439
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "W Alameda Ave, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.714,
+  "kb": 11.2,
+  "shared": 25,
+  "nearest": {
+   "names": [
+    "West Alameda Avenue"
+   ],
+   "m": 23.6,
+   "node": 177309439
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "S Wadsworth Blvd, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.909,
+  "kb": 5.3,
+  "shared": 12,
+  "nearest": {
+   "names": [
+    "West Vassar Avenue"
+   ],
+   "m": 12.4,
+   "node": 576877078
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "S Wadsworth Blvd, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.527,
+  "kb": 5.3,
+  "shared": 12,
+  "nearest": {
+   "names": [
+    "West Vassar Avenue"
+   ],
+   "m": 12.4,
+   "node": 576877078
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "S Wadsworth Blvd, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 2.061,
+  "kb": 7.8,
+  "shared": 20,
+  "nearest": {
+   "names": [
+    "West Vassar Avenue"
+   ],
+   "m": 12.4,
+   "node": 576877078
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "S Wadsworth Blvd, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.632,
+  "kb": 7.8,
+  "shared": 20,
+  "nearest": {
+   "names": [
+    "West Vassar Avenue"
+   ],
+   "m": 12.4,
+   "node": 576877078
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "S Wadsworth Blvd, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.808,
+  "kb": 12.5,
+  "shared": 33,
+  "nearest": {
+   "names": [
+    "West Vassar Avenue"
+   ],
+   "m": 12.4,
+   "node": 576877078
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "S Wadsworth Blvd, Lakewood",
+  "road": "South Wadsworth Boulevard",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 1.388,
+  "kb": 12.5,
+  "shared": 33,
+  "nearest": {
+   "names": [
+    "West Vassar Avenue"
+   ],
+   "m": 12.4,
+   "node": 576877078
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lookout Mountain Rd, Golden (fixture anchor)",
+  "road": "Lookout Mountain Road",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 1.301,
+  "kb": 3.8,
+  "shared": 4,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lookout Mountain Rd, Golden (fixture anchor)",
+  "road": "Lookout Mountain Road",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 1.561,
+  "kb": 3.8,
+  "shared": 4,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lookout Mountain Rd, Golden (fixture anchor)",
+  "road": "Lookout Mountain Road",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.556,
+  "kb": 3.1,
+  "shared": 4,
+  "nearest": {
+   "names": [
+    "Bonvue Drive"
+   ],
+   "m": 594.3,
+   "node": 177273599
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lookout Mountain Rd, Golden (fixture anchor)",
+  "road": "Lookout Mountain Road",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.594,
+  "kb": 3.1,
+  "shared": 4,
+  "nearest": {
+   "names": [
+    "Bonvue Drive"
+   ],
+   "m": 594.3,
+   "node": 177273599
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lookout Mountain Rd, Golden (fixture anchor)",
+  "road": "Lookout Mountain Road",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.623,
+  "kb": 6.9,
+  "shared": 8,
+  "nearest": {
+   "names": [
+    "Bonvue Drive"
+   ],
+   "m": 594.3,
+   "node": 177273599
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "Lookout Mountain Rd, Golden (fixture anchor)",
+  "road": "Lookout Mountain Road",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 1.244,
+  "kb": 6.9,
+  "shared": 8,
+  "nearest": {
+   "names": [
+    "Bonvue Drive"
+   ],
+   "m": 594.3,
+   "node": 177273599
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 near Cheyenne Wells",
+  "road": "US 40;US 385",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.547,
+  "kb": 3.7,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 44.5"
+   ],
+   "m": 381.1,
+   "node": 176460632
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 near Cheyenne Wells",
+  "road": "US 40;US 385",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.533,
+  "kb": 3.7,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 44.5"
+   ],
+   "m": 381.1,
+   "node": 176460632
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 near Cheyenne Wells",
+  "road": "US 40;US 385",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.527,
+  "kb": 4.7,
+  "shared": 4,
+  "nearest": {
+   "names": [
+    "County Road 44.5"
+   ],
+   "m": 381.1,
+   "node": 176460632
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 near Cheyenne Wells",
+  "road": "US 40;US 385",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.787,
+  "kb": 4.7,
+  "shared": 4,
+  "nearest": {
+   "names": [
+    "County Road 44.5"
+   ],
+   "m": 381.1,
+   "node": 176460632
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 near Cheyenne Wells",
+  "road": "US 40;US 385",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.548,
+  "kb": 4.7,
+  "shared": 4,
+  "nearest": {
+   "names": [
+    "County Road 44.5"
+   ],
+   "m": 381.1,
+   "node": 176460632
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 near Cheyenne Wells",
+  "road": "US 40;US 385",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.536,
+  "kb": 4.7,
+  "shared": 4,
+  "nearest": {
+   "names": [
+    "County Road 44.5"
+   ],
+   "m": 381.1,
+   "node": 176460632
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 71 south of Ordway",
+  "road": "County Road C",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.598,
+  "kb": 3.7,
+  "shared": 5,
+  "nearest": {
+   "names": [
+    "CO 71"
+   ],
+   "m": 0.0,
+   "node": 176640008
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 71 south of Ordway",
+  "road": "County Road C",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.58,
+  "kb": 3.7,
+  "shared": 5,
+  "nearest": {
+   "names": [
+    "CO 71"
+   ],
+   "m": 0.0,
+   "node": 176640008
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 71 south of Ordway",
+  "road": "County Road C",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.54,
+  "kb": 3.7,
+  "shared": 5,
+  "nearest": {
+   "names": [
+    "CO 71"
+   ],
+   "m": 0.0,
+   "node": 176640008
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 71 south of Ordway",
+  "road": "County Road C",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.603,
+  "kb": 3.7,
+  "shared": 5,
+  "nearest": {
+   "names": [
+    "CO 71"
+   ],
+   "m": 0.0,
+   "node": 176640008
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 71 south of Ordway",
+  "road": "County Road C",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.583,
+  "kb": 3.7,
+  "shared": 5,
+  "nearest": {
+   "names": [
+    "CO 71"
+   ],
+   "m": 0.0,
+   "node": 176640008
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 71 south of Ordway",
+  "road": "County Road C",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.562,
+  "kb": 3.7,
+  "shared": 5,
+  "nearest": {
+   "names": [
+    "CO 71"
+   ],
+   "m": 0.0,
+   "node": 176640008
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 west of Craig",
+  "road": "West Victory Way",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.982,
+  "kb": 3.2,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 15"
+   ],
+   "m": 693.4,
+   "node": 177636423
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 west of Craig",
+  "road": "West Victory Way",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 1.446,
+  "kb": 3.2,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 15"
+   ],
+   "m": 693.4,
+   "node": 177636423
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 west of Craig",
+  "road": "West Victory Way",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.581,
+  "kb": 3.2,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 15"
+   ],
+   "m": 693.4,
+   "node": 177636423
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 west of Craig",
+  "road": "West Victory Way",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.551,
+  "kb": 3.2,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 15"
+   ],
+   "m": 693.4,
+   "node": 177636423
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 west of Craig",
+  "road": "West Victory Way",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.578,
+  "kb": 3.2,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 15"
+   ],
+   "m": 693.4,
+   "node": 177636423
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 40 west of Craig",
+  "road": "West Victory Way",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.582,
+  "kb": 3.2,
+  "shared": 3,
+  "nearest": {
+   "names": [
+    "County Road 15"
+   ],
+   "m": 693.4,
+   "node": 177636423
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 119 Boulder Canyon",
+  "road": "Boulder Canyon Drive",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.99,
+  "kb": 1.7,
+  "shared": 2,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 119 Boulder Canyon",
+  "road": "Boulder Canyon Drive",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 1.985,
+  "kb": 1.7,
+  "shared": 2,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 119 Boulder Canyon",
+  "road": "Boulder Canyon Drive",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.571,
+  "kb": 1.7,
+  "shared": 2,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 119 Boulder Canyon",
+  "road": "Boulder Canyon Drive",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.521,
+  "kb": 1.7,
+  "shared": 2,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 119 Boulder Canyon",
+  "road": "Boulder Canyon Drive",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.567,
+  "kb": 5.4,
+  "shared": 2,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 119 Boulder Canyon",
+  "road": "Boulder Canyon Drive",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.582,
+  "kb": 5.4,
+  "shared": 2,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 285 south of Fairplay",
+  "road": "US 285",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 1.005,
+  "kb": 3.8,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "Black Bucktail Street"
+   ],
+   "m": 1016.5,
+   "node": 177817550
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 285 south of Fairplay",
+  "road": "US 285",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 1.146,
+  "kb": 3.8,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "Black Bucktail Street"
+   ],
+   "m": 1016.5,
+   "node": 177817550
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 285 south of Fairplay",
+  "road": "US 285",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.568,
+  "kb": 3.8,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "Black Bucktail Street"
+   ],
+   "m": 1016.5,
+   "node": 177817550
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 285 south of Fairplay",
+  "road": "US 285",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.51,
+  "kb": 3.8,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "Black Bucktail Street"
+   ],
+   "m": 1016.5,
+   "node": 177817550
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 285 south of Fairplay",
+  "road": "US 285",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.544,
+  "kb": 3.8,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "Black Bucktail Street"
+   ],
+   "m": 1016.5,
+   "node": 177817550
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 285 south of Fairplay",
+  "road": "US 285",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.574,
+  "kb": 3.8,
+  "shared": 7,
+  "nearest": {
+   "names": [
+    "Black Bucktail Street"
+   ],
+   "m": 1016.5,
+   "node": 177817550
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 24 near Hartsel",
+  "road": "US 24",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 1.038,
+  "kb": 1.5,
+  "shared": 2,
+  "nearest": {
+   "names": [
+    "CO 9",
+    "US 24;CO 9"
+   ],
+   "m": 80.9,
+   "node": 177802739
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 24 near Hartsel",
+  "road": "US 24",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.564,
+  "kb": 1.5,
+  "shared": 2,
+  "nearest": {
+   "names": [
+    "CO 9",
+    "US 24;CO 9"
+   ],
+   "m": 80.9,
+   "node": 177802739
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 24 near Hartsel",
+  "road": "US 24",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.589,
+  "kb": 1.5,
+  "shared": 2,
+  "nearest": {
+   "names": [
+    "CO 9",
+    "US 24;CO 9"
+   ],
+   "m": 80.9,
+   "node": 177802739
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 24 near Hartsel",
+  "road": "US 24",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.7,
+  "kb": 1.5,
+  "shared": 2,
+  "nearest": {
+   "names": [
+    "CO 9",
+    "US 24;CO 9"
+   ],
+   "m": 80.9,
+   "node": 177802739
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 24 near Hartsel",
+  "road": "US 24",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.506,
+  "kb": 1.5,
+  "shared": 2,
+  "nearest": {
+   "names": [
+    "CO 9",
+    "US 24;CO 9"
+   ],
+   "m": 80.9,
+   "node": 177802739
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 24 near Hartsel",
+  "road": "US 24",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.529,
+  "kb": 1.5,
+  "shared": 2,
+  "nearest": {
+   "names": [
+    "CO 9",
+    "US 24;CO 9"
+   ],
+   "m": 80.9,
+   "node": 177802739
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 287 north of Lamar",
+  "road": "US 50;US 287",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 0.953,
+  "kb": 2.2,
+  "shared": 4,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 287 north of Lamar",
+  "road": "US 50;US 287",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 0.514,
+  "kb": 2.2,
+  "shared": 4,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 287 north of Lamar",
+  "road": "US 50;US 287",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.59,
+  "kb": 2.1,
+  "shared": 4,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 287 north of Lamar",
+  "road": "US 50;US 287",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.543,
+  "kb": 2.1,
+  "shared": 4,
+  "nearest": null,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 287 north of Lamar",
+  "road": "US 50;US 287",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.768,
+  "kb": 4.3,
+  "shared": 11,
+  "nearest": {
+   "names": [
+    "County Road 7"
+   ],
+   "m": 924.7,
+   "node": 177829935
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "US 287 north of Lamar",
+  "road": "US 50;US 287",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 1.094,
+  "kb": 4.3,
+  "shared": 11,
+  "nearest": {
+   "names": [
+    "County Road 7"
+   ],
+   "m": 924.7,
+   "node": 177829935
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 9 north of Breckenridge",
+  "road": "CO 9",
+  "radius": 400,
+  "rep": 0,
+  "ok": true,
+  "s": 1.022,
+  "kb": 3.0,
+  "shared": 6,
+  "nearest": {
+   "names": [
+    "Tiger Road"
+   ],
+   "m": 391.1,
+   "node": 178101247
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 9 north of Breckenridge",
+  "road": "CO 9",
+  "radius": 400,
+  "rep": 1,
+  "ok": true,
+  "s": 1.728,
+  "kb": 3.0,
+  "shared": 6,
+  "nearest": {
+   "names": [
+    "Tiger Road"
+   ],
+   "m": 391.1,
+   "node": 178101247
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 9 north of Breckenridge",
+  "road": "CO 9",
+  "radius": 800,
+  "rep": 0,
+  "ok": true,
+  "s": 0.586,
+  "kb": 3.6,
+  "shared": 6,
+  "nearest": {
+   "names": [
+    "Tiger Road"
+   ],
+   "m": 391.1,
+   "node": 178101247
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 9 north of Breckenridge",
+  "road": "CO 9",
+  "radius": 800,
+  "rep": 1,
+  "ok": true,
+  "s": 0.604,
+  "kb": 3.6,
+  "shared": 6,
+  "nearest": {
+   "names": [
+    "Tiger Road"
+   ],
+   "m": 391.1,
+   "node": 178101247
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 9 north of Breckenridge",
+  "road": "CO 9",
+  "radius": 1700,
+  "rep": 0,
+  "ok": true,
+  "s": 0.588,
+  "kb": 5.5,
+  "shared": 12,
+  "nearest": {
+   "names": [
+    "Tiger Road"
+   ],
+   "m": 391.1,
+   "node": 178101247
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "pin": "CO 9 north of Breckenridge",
+  "road": "CO 9",
+  "radius": 1700,
+  "rep": 1,
+  "ok": true,
+  "s": 0.6,
+  "kb": 5.5,
+  "shared": 12,
+  "nearest": {
+   "names": [
+    "Tiger Road"
+   ],
+   "m": 391.1,
+   "node": 178101247
+  },
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ }
+]
