@@ -48,6 +48,7 @@ from src.rules.corridor import (
 from src.rules.device_aggregation import AggregatedDeviceRow
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
+from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import PLAQUE_CODES, schedule_key, substitute_sign_description
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -3546,14 +3547,8 @@ def _draw_notes(
         y[0] -= layout.footer_pads[0]
         cv.setFont("Helvetica-Oblique", 6.5)
         cv.setFillColor(colors.HexColor("#666666"))
-        cv.drawString(
-            x,
-            y[0],
-            (
-                "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6 "
-                "(effective 2026-01-18), Colorado Supplement."
-            ),
-        )
+        # #265: the one reference line the crew instructions print too.
+        cv.drawString(x, y[0], REFERENCE_LINE)
         _draw_notes_footers(cv, y)
         return y[0]
 

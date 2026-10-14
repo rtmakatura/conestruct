@@ -35,6 +35,7 @@ from src.generation.layout import (
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
 from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
+from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -897,6 +898,8 @@ def build_narrative_context(
         # lane per direction offer no choice; shoulder closures close no
         # lane.  Same predicate as the plan-sheet footer note.
         "rightmost_lane_assumed": rightmost_lane_assumption_active(params),
+        # #265: the one reference line page 1 prints too.
+        "reference_line": REFERENCE_LINE,
         # #310: the road has more lanes per direction than the plan draws;
         # the plan sheet's and the audit's sentence (one source).
         "lanes_drawn_below_road": lanes_drawn_below_road(params),

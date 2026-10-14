@@ -34,6 +34,7 @@ from src.generation.layout import (  # noqa: E402
 from src.narrative.crew_narrative import generate_crew_narrative  # noqa: E402
 from src.rendering.plan_sheet import render_plan_sheet  # noqa: E402
 from src.rules.night_adjustments import apply_night_adjustments  # noqa: E402
+from src.rules.references import REFERENCE_LINE  # noqa: E402
 from src.rules.site_adjustments import apply_site_adjustments  # noqa: E402
 from src.rules.site_detection import detect_site_conditions  # noqa: E402
 from src.rules.validators import ScenarioParams, validate_layout  # noqa: E402
@@ -664,8 +665,8 @@ if generate_button:
         st.error(f"Generation failed: {type(exc).__name__}: {exc}")
 
 st.divider()
+# #265: the one reference line the plan sheet and crew sheet print.
 st.caption(
     "MHT Tool v0.1 — For review purposes only. A certified Traffic Control "
-    "Supervisor (TCS) must approve all plans before field implementation. "
-    "Reference: CDOT S-630-1, MUTCD 11th Ed., Colorado Supplement (Jan 2026)."
+    "Supervisor (TCS) must approve all plans before field implementation. " + REFERENCE_LINE
 )
