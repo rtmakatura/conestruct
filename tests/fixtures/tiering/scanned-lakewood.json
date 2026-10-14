@@ -575,7 +575,8 @@
           "condition": "state highway with a median (CDOT-permit territory)",
           "night": null
         },
-        "device_label": "Advance warning signs"
+        "device_label": "Advance warning signs",
+        "key": "lakewood:3eeee55be3"
       },
       {
         "effect": {
@@ -594,7 +595,8 @@
           "closure": null,
           "condition": "excavation left open overnight",
           "night": null
-        }
+        },
+        "key": "lakewood:a1070ec38f"
       }
     ],
     "authority": "city",

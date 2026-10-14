@@ -151,9 +151,10 @@ def test_the_audit_pdf_ledger_counts_the_met_rule_as_checked() -> None:
     _projection, params, placements = render_api._audit_build(scenario)
     jurisdiction, _ = render_api._jurisdiction_eval(scenario, params, placements)
     facts = tier_facts(None, jurisdiction)
+    # #297: a live evaluation keys each delta by its stable key.
     ids = [
-        f"jur:delta:{i}"
-        for i, d in enumerate(jurisdiction["applied_deltas"])
+        f"jur:delta:{d['key']}"
+        for d in jurisdiction["applied_deltas"]
         if d["effect"].get("device") == "arrow_board"
     ]
     assert ids and all(facts[i] == "checked" for i in ids)

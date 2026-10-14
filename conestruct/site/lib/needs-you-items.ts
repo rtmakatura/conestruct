@@ -35,6 +35,7 @@ import { deltaCite, deltaDetail, deltaTitle } from "./delta-words";
 import type { SiteAdjustmentRecord } from "./render-types";
 import type { NeedsYouItem, NeedsYouTier } from "./needs-you";
 import type { TierSources } from "./tier-sources";
+import { deltaFactId } from "./tiering";
 import type { ItemSpec } from "@/components/AuditTrail";
 
 /** R116 / R117: a rule's row, in the words lib/delta-words chooses --
@@ -47,7 +48,7 @@ function fromDelta(
   jurisdictionName: string | null,
 ): NeedsYouItem {
   return {
-    id: `jur:delta:${i}`,
+    id: deltaFactId(d, i),
     tier,
     title: deltaTitle(d, jurisdictionName),
     result: d.status.toUpperCase(),
@@ -133,9 +134,11 @@ export function buildNeedsYouItems({ sources, siteLabel }: NeedsYouItemsInput): 
   deltasAttention.forEach((d) =>
     items.push(fromDelta(d, deltaIndex.get(d) ?? -1, "attention", jurisdictionName)),
   );
-  coloradoFails.forEach((c, i) =>
+  // #297: keyed by the check's own label, not its position among the
+  // FAILs -- a check that starts passing must not move the next one's id.
+  coloradoFails.forEach((c) =>
     items.push({
-      id: `audit:colorado:fail:${i}`,
+      id: `audit:colorado:fail:${c.label}`,
       tier: "attention",
       title: c.label,
       result: "FAIL",

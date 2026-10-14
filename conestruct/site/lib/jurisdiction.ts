@@ -85,6 +85,10 @@ export interface AppliedDelta {
    *  plan.  `false`: the layout already met it (R118: checked, not
    *  changed).  Absent on every other rule, and on older wires. */
   raised?: boolean;
+  /** #297: the delta's stable key, "<jurisdiction>:<10 hex>" (a hash of
+   *  its own record; src/rules/jurisdiction.py `delta_key`).  Absent on a
+   *  recorded block that predates it. */
+  key?: string;
 }
 
 export interface Meter {

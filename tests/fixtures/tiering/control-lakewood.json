@@ -348,7 +348,8 @@
      "status": "provisional"
     },
     "status": "conditional",
-    "device_label": "Advance warning signs"
+    "device_label": "Advance warning signs",
+    "key": "lakewood:3eeee55be3"
    },
    {
     "severity": "op",
@@ -367,7 +368,8 @@
      "date": "2016-09-01",
      "status": "verified"
     },
-    "status": "conditional"
+    "status": "conditional",
+    "key": "lakewood:a1070ec38f"
    }
   ],
   "chips": {

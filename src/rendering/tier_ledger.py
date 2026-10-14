@@ -48,7 +48,8 @@ def tier_facts(
 
     if jurisdiction is not None:
         for i, d in enumerate(jurisdiction.get("applied_deltas", [])):
-            fid = f"jur:delta:{i}"
+            # #297: the delta's stable key when it has one (deltaFactId).
+            fid = f"jur:delta:{d['key']}" if d.get("key") else f"jur:delta:{i}"
             if d.get("status") in ("conditional", "unknown"):
                 facts[fid] = "attention"
             elif d.get("severity") == "admin":

@@ -157,12 +157,21 @@ function fact(id: string, tier: Tier, reason: string): TierFact {
   return { id, tier, reason };
 }
 
+/** #297: a delta's fact id.  The backend's stable `key` (a hash of the
+ *  delta's own record, src/rules/jurisdiction.py `delta_key`) when it is
+ *  there; the old position-among-the-fired-deltas otherwise, so a recorded
+ *  block without keys still gives every fact an id.  NEEDS YOU and
+ *  src/rendering/tier_ledger.py use the same rule. */
+export function deltaFactId(d: { key?: string }, i: number): string {
+  return d.key ? `jur:delta:${d.key}` : `jur:delta:${i}`;
+}
+
 export function assignTiers({ jurisdiction, audit, auditFailed = false }: TieringInput): TierModel {
   const facts: TierFact[] = [];
 
   if (jurisdiction) {
     jurisdiction.applied_deltas.forEach((d, i) => {
-      const id = `jur:delta:${i}`;
+      const id = deltaFactId(d, i);
       if (d.status === "conditional" || d.status === "unknown") {
         facts.push(fact(id, "attention", `delta ${d.status}`));
       } else if (d.severity === "admin") {

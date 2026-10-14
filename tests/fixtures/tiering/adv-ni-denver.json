@@ -642,7 +642,8 @@
     },
     "status": "fires",
     "raised": false,
-    "device_label": "Arrow board"
+    "device_label": "Arrow board",
+    "key": "denver:dbbcc32e35"
    }
   ],
   "chips": {

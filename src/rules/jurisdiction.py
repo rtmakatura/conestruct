@@ -28,6 +28,7 @@ Design rules (phase1-backend-spec §1–§3):
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 from dataclasses import dataclass, field
@@ -544,13 +545,29 @@ def _any_provisional(node: Any) -> bool:
     return False
 
 
+def delta_key(jurisdiction_key: str, delta: dict[str, Any]) -> str:
+    """#297: a delta's stable key, ``"<jurisdiction>:<10 hex>"``.
+
+    The record carries no id (the schema forbids extra fields), and the
+    position among the deltas that FIRE moves whenever an earlier delta
+    stops or starts firing.  The key hashes the delta's own record instead
+    (canonical JSON), so it does not move when other deltas change, and it
+    does change when this rule's words, source or effect are edited -- an
+    acknowledgement of the old rule does not carry over to the new one.
+    """
+    canon = json.dumps(delta, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return f"{jurisdiction_key}:{hashlib.sha1(canon.encode('utf-8')).hexdigest()[:10]}"
+
+
 def evaluate(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
     """Full jurisdiction evaluation — the ``jurisdiction`` results block (spec §3.2)."""
     applied_deltas: list[dict[str, Any]] = []
     for delta in record.get("deltas", []):
         verdict = evaluate_trigger(delta.get("trigger"), ctx)
         if verdict in (FIRES, CONDITIONAL, UNKNOWN):
-            applied_deltas.append(_chip(delta, verdict))
+            chip = _chip(delta, verdict)
+            chip["key"] = delta_key(record["key"], delta)
+            applied_deltas.append(chip)
 
     chips: dict[str, list[dict[str, Any]]] = {"personnel": [], "device": [], "hazard": []}
     for rec in record.get("personnel", []):

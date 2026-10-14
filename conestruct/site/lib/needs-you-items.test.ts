@@ -162,6 +162,26 @@ describe("buildNeedsYouItems", () => {
     expect(ids).toContain("jur:delta:0");
     expect(ids).toContain("jur:delta:2"); // the attention delta keeps its FULL-array index
     expect(ids).toContain("audit:site:school_zone");
-    expect(ids).toContain("audit:colorado:fail:0");
+    expect(ids).toContain("audit:colorado:fail:L");
+  });
+
+  it("#297: a delta with the backend's key is id'd by it, not by its position", () => {
+    const a = delta({ key: "denver:aaaaaaaaaa" }), b = delta({ key: "denver:bbbbbbbbbb" });
+    const both = build({ deltas: [a, b], deltasChanged: [a, b] }).map((i) => i.id);
+    // `a` stops firing: `b` moves from index 1 to 0 and keeps its id.
+    const onlyB = build({ deltas: [b], deltasChanged: [b] }).map((i) => i.id);
+    expect(both).toEqual(["jur:delta:denver:aaaaaaaaaa", "jur:delta:denver:bbbbbbbbbb"]);
+    expect(onlyB).toEqual(["jur:delta:denver:bbbbbbbbbb"]);
+  });
+
+  it("#297: a Colorado FAIL is id'd by its label, so a check that starts passing moves nothing", () => {
+    const fails = [
+      { pass: false, label: "Flagger certification", citation: "c", detail: "" },
+      { pass: false, label: "Night lighting", citation: "c", detail: "" },
+    ];
+    const both = build({ coloradoFails: fails }).map((i) => i.id);
+    const one = build({ coloradoFails: [fails[1]] }).map((i) => i.id);
+    expect(both).toContain("audit:colorado:fail:Night lighting");
+    expect(one).toEqual(["audit:colorado:fail:Night lighting"]);
   });
 });
