@@ -1,0 +1,90 @@
+[
+ {
+  "pin": "N Broadway SB, Denver",
+  "width": 1440,
+  "answer": {
+   "status": 200,
+   "body": {
+    "status": "found",
+    "text": "50 ft S of East 11th Avenue",
+    "cross_street": "East 11th Avenue",
+    "offset_ft": 50,
+    "direction": "S",
+    "source": "osm_shared_node",
+    "provenance_text": "cross street from OSM node 3397108608 · searched 1,700 m",
+    "osm_node_id": 3397108608,
+    "reason": null,
+    "radius_m": 1700
+   }
+  },
+  "start": "50 ft S of East 11th Avenue",
+  "provenance": "North Broadway southbound · Sherman Street Historic District · 39.73370, -104.98753 · OSM detection · way 131232822 · operator pick · cross street from OSM node 3397108608 · searched 1,700 m",
+  "fact": "North Broadway Southbound · 50 ft S of East 11th Avenue · 1,000 ft · shoulder work"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "width": 1440,
+  "answer": {
+   "status": 200,
+   "body": {
+    "status": "found",
+    "text": "140 ft N of East 17th Avenue",
+    "cross_street": "East 17th Avenue",
+    "offset_ft": 140,
+    "direction": "N",
+    "source": "osm_shared_node",
+    "provenance_text": "cross street from OSM node 176080675 · searched 1,700 m",
+    "osm_node_id": 176080675,
+    "reason": null,
+    "radius_m": 1700
+   }
+  },
+  "start": "140 ft N of East 17th Avenue",
+  "provenance": "Lafayette Street northbound · City Park West · 39.74362, -104.97070 · OSM detection · way 581254411 · sole match auto-adopted · cross street from OSM node 176080675 · searched 1,700 m",
+  "fact": "Lafayette Street Northbound · 140 ft N of East 17th Avenue · 1,000 ft · shoulder work"
+ },
+ {
+  "pin": "N Broadway SB, Denver",
+  "width": 380,
+  "answer": {
+   "status": 200,
+   "body": {
+    "status": "found",
+    "text": "50 ft S of East 11th Avenue",
+    "cross_street": "East 11th Avenue",
+    "offset_ft": 50,
+    "direction": "S",
+    "source": "osm_shared_node",
+    "provenance_text": "cross street from OSM node 3397108608 · searched 1,700 m",
+    "osm_node_id": 3397108608,
+    "reason": null,
+    "radius_m": 1700
+   }
+  },
+  "start": "50 ft S of East 11th Avenue",
+  "provenance": "North Broadway southbound · Sherman Street Historic District · 39.73370, -104.98753 · OSM detection · way 131232822 · operator pick · cross street from OSM node 3397108608 · searched 1,700 m",
+  "fact": "North Broadway Southbound · 50 ft S of East 11th Avenue · 1,000 ft · shoulder work"
+ },
+ {
+  "pin": "Lafayette St, Denver",
+  "width": 380,
+  "answer": {
+   "status": 200,
+   "body": {
+    "status": "found",
+    "text": "140 ft N of East 17th Avenue",
+    "cross_street": "East 17th Avenue",
+    "offset_ft": 140,
+    "direction": "N",
+    "source": "osm_shared_node",
+    "provenance_text": "cross street from OSM node 176080675 · searched 1,700 m",
+    "osm_node_id": 176080675,
+    "reason": null,
+    "radius_m": 1700
+   }
+  },
+  "start": "140 ft N of East 17th Avenue",
+  "provenance": "Lafayette Street northbound · City Park West · 39.74362, -104.97070 · OSM detection · way 581254411 · sole match auto-adopted · cross street from OSM node 176080675 · searched 1,700 m",
+  "fact": "Lafayette Street Northbound · 140 ft N of East 17th Avenue · 1,000 ft · shoulder work"
+ }
+]

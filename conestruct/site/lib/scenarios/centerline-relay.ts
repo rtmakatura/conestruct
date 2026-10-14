@@ -32,5 +32,11 @@ export function withRelayedCenterline<S extends Scenario>(scenario: S): S {
           },
         }
       : {};
-  return { ...scenario, meta: { ...meta, centerline: geometry, ...roadDirection } };
+  // #285: the road's own name and ref ride with its geometry, behind the
+  // same key; the nearest-intersection read finds the road's ways by them.
+  const identity = {
+    ...(confirmed.candidate.name ? { roadName: confirmed.candidate.name } : {}),
+    ...(confirmed.candidate.ref ? { roadRef: confirmed.candidate.ref } : {}),
+  };
+  return { ...scenario, meta: { ...meta, centerline: geometry, ...roadDirection, ...identity } };
 }

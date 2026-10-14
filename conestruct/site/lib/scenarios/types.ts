@@ -499,6 +499,13 @@ export interface ScenarioMeta {
    * along the road.  Absent ⇒ the straight-chord frame.
    */
   centerline?: Array<[number, number]>;
+  /**
+   * #285: the confirmed road's OSM name and ref, WIRE-ONLY like
+   * ``centerline`` and relayed behind the same staleness key.  The
+   * backend's nearest-intersection read finds the road's ways by them.
+   */
+  roadName?: string;
+  roadRef?: string;
 }
 
 export interface ShoulderScenario extends JurisdictionPlanFields {

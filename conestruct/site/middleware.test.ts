@@ -160,6 +160,7 @@ const GATED_API: Row[] = [
   { path: "/api/render/audit", method: "POST", file: "app/api/render/audit/route.ts" },
   { path: "/api/render/bundle", method: "POST", file: "app/api/render/bundle/route.ts" },
   { path: "/api/render/corridor-geometry", method: "POST", file: "app/api/render/corridor-geometry/route.ts" },
+  { path: "/api/render/nearest-intersection", method: "POST", file: "app/api/render/nearest-intersection/route.ts" },
   { path: "/api/render/device-breakdown", method: "POST", file: "app/api/render/device-breakdown/route.ts" },
   { path: "/api/render/quote-breakdown", method: "POST", file: "app/api/render/quote-breakdown/route.ts" },
   { path: "/api/replication-snapshot", method: "POST", file: "app/api/replication-snapshot/route.ts" },

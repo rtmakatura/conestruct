@@ -121,6 +121,10 @@ export function deriveMoveLedger(
    *  side sentence, side stored or not (the side control shows no chips
    *  until then).  Handed in: the ledger asks no endpoint. */
   notMarkedLine: string | null = null,
+  /** #285: the backend's nearest-cross-street tag ("210 ft N of West 38th
+   *  Avenue"), or null while there is none.  Handed in: the ledger asks
+   *  no endpoint and measures nothing. */
+  crossStreetTag: string | null = null,
 ): MoveLedger {
   const located = hasLocation(scenario.meta);
   const road = confirmedRoadLabel(scenario);
@@ -156,7 +160,9 @@ export function deriveMoveLedger(
       // row says so in a word rather than inventing one (rule 10).  The
       // coordinates ride the band's provenance (Part 1 §7.15 reserves
       // the lat/lng for provenance lines).
-      value: located ? (road ?? (scenario.meta.address || null)) : null,
+      // #285: once the backend names the nearest cross street, the tag is
+      // that answer; the road name stays the fallback for every other one.
+      value: located ? (crossStreetTag ?? road ?? (scenario.meta.address || null)) : null,
       // MOVE stays the verb: the pin is what a re-open changes.
       verb: located ? "MOVE" : null,
       word: located ? null : "pending",

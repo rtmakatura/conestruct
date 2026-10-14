@@ -22,6 +22,7 @@ import {
 import { deriveRail } from "@/lib/scenarios/rail";
 import { withoutOperatorSet } from "@/lib/scenarios/guesses";
 import { geometryRequestFor, notMarkedLine, useCorridorGeometry } from "@/lib/corridor-geometry";
+import { crossStreetRequestFor, useCrossStreetTag } from "@/lib/cross-street-tag";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
@@ -187,6 +188,9 @@ export function GeneratorSidebar({
   // #290 / R131: the geometry read the WHERE band shows, asked once here
   // so the rail can read the same answer (the no-crossing line, #317).
   const geometry = useCorridorGeometry(geometryRequestFor(scenario));
+  // #285: the work start's nearest named cross street, asked once per
+  // confirmed pin and handed to the band and the fact line together.
+  const crossStreet = useCrossStreetTag(crossStreetRequestFor(scenario));
   const rail = deriveRail({
     scenario,
     approachConfirm,
@@ -463,6 +467,7 @@ export function GeneratorSidebar({
         // #317 (R129 Q1): WHERE's own Mark on map, before WHAT can open.
         onMarkIntersection={() => openPicker(true)}
         geometry={geometry}
+        crossStreet={crossStreet}
         onKindChange={onKindChange}
         kindState={kindState}
         onKindPicked={onKindPicked}

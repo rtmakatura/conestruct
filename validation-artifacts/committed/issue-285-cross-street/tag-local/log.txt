@@ -1,0 +1,17 @@
+base http://localhost:3295
+broadway @1440: answer 200 {"status":"found","text":"50 ft S of East 11th Avenue"}
+   Work starts: "50 ft S of East 11th Avenue"  PASS (= the backend's text)
+   provenance: "North Broadway southbound · Sherman Street Historic District · 39.73370, -104.98753 · OSM detection · way 131232822 · operator pick · cross street from OSM node 3397108608 · searched 1,700 m"  PASS
+   fact line: "North Broadway Southbound · 50 ft S of East 11th Avenue · 1,000 ft · shoulder work"  PASS
+lafayette @1440: answer 200 {"status":"found","text":"140 ft N of East 17th Avenue"}
+   Work starts: "140 ft N of East 17th Avenue"  PASS (= the backend's text)
+   provenance: "Lafayette Street northbound · City Park West · 39.74362, -104.97070 · OSM detection · way 581254411 · sole match auto-adopted · cross street from OSM node 176080675 · searched 1,700 m"  PASS
+   fact line: "Lafayette Street Northbound · 140 ft N of East 17th Avenue · 1,000 ft · shoulder work"  PASS
+broadway @380: answer 200 {"status":"found","text":"50 ft S of East 11th Avenue"}
+   Work starts: "50 ft S of East 11th Avenue"  PASS (= the backend's text)
+   provenance: "North Broadway southbound · Sherman Street Historic District · 39.73370, -104.98753 · OSM detection · way 131232822 · operator pick · cross street from OSM node 3397108608 · searched 1,700 m"  PASS
+   fact line: "North Broadway Southbound · 50 ft S of East 11th Avenue · 1,000 ft · shoulder work"  PASS
+lafayette @380: answer 200 {"status":"found","text":"140 ft N of East 17th Avenue"}
+   Work starts: "140 ft N of East 17th Avenue"  PASS (= the backend's text)
+   provenance: "Lafayette Street northbound · City Park West · 39.74362, -104.97070 · OSM detection · way 581254411 · sole match auto-adopted · cross street from OSM node 176080675 · searched 1,700 m"  PASS
+   fact line: "Lafayette Street Northbound · 140 ft N of East 17th Avenue · 1,000 ft · shoulder work"  PASS

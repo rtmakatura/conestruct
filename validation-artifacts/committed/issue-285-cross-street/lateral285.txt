@@ -1,0 +1,6 @@
+broadway: on the recorded stitch, node laterals (m) = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+us24_hartsel: on the recorded stitch, node laterals (m) = [0.0, 0.0]
+us287_lamar: on the recorded stitch, node laterals (m) = [0.0, 0.0, 0.0, 0.0, 0.0, 12.32, 12.5, 12.7, 13.04, 18.96, 59.08]
+boulder_canyon: on the recorded stitch, node laterals (m) = [0.0, 0.0]
+lookout: on the recorded stitch, node laterals (m) = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+broadway on the PICKER's geometry, node laterals (m) = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.96, 145.68, 208.78]

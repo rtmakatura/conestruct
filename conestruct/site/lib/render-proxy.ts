@@ -291,6 +291,55 @@ export async function fetchCorridorGeometry(
   return new Response(upstream.body, { status: 200, headers });
 }
 
+// #285: the nearest named cross street at the work start (POST
+// /render/nearest-intersection on Modal).  A read: one Overpass call, no
+// scan, no lock.  The relay carries the road's name, ref and centerline
+// while the pin is the confirmed one; without them the backend answers
+// not_applicable and the tag keeps the road name.
+export async function fetchNearestIntersection(
+  scenario: Scenario,
+): Promise<Response> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    return new Response("Render service not configured", { status: 503 });
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(
+      `${url.replace(/\/$/, "")}/render/nearest-intersection`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${secret}`,
+        },
+        body: JSON.stringify(withRelayedCenterline(scenario)),
+      },
+    );
+  } catch (err) {
+    console.error("nearest intersection fetch failed", err);
+    return new Response("Render service unreachable", { status: 502 });
+  }
+
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    console.error(`nearest intersection upstream ${upstream.status}`, detail);
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
+    return new Response("Nearest intersection failed", { status: 502 });
+  }
+
+  const headers = new Headers();
+  headers.set(
+    "content-type",
+    upstream.headers.get("content-type") ?? "application/json",
+  );
+  headers.set("cache-control", "private, no-store");
+  return new Response(upstream.body, { status: 200, headers });
+}
+
 // #301 piece 1 — the WHERE band's aerial (POST /render/corridor-map on
 // Modal): the scenario and the picture asked for in, a PNG out.  The
 // backend draws it (the one layout call, page 2's overlay) and holds the

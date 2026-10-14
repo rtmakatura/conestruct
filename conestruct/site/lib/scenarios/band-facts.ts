@@ -161,6 +161,10 @@ const ft = (n: number) => `${n.toLocaleString("en-US")} ft`;
 export function whereValue(
   scenario: Scenario,
   kindConfirmed = true,
+  /** #285: the backend's nearest-cross-street tag ("210 ft N of West
+   *  38th Avenue"), or null while there is none.  Handed in: this module
+   *  asks no endpoint and composes no distance (Rule 3). */
+  crossStreetTag: string | null = null,
 ): string | null {
   if (!hasLocation(scenario.meta)) return null;
   const parts: string[] = [];
@@ -170,8 +174,12 @@ export function whereValue(
   // #234: the marked intersection, named by the picker's own producer
   // (crossStreetLabel) — near_intersection only, the one kind that
   // marks one.  "Fact line <-> modal agree on the intersection."
+  // #285: the backend's tag names the cross street and the offset; on a
+  // near_intersection plan it is the marked cross pin's own name, so it
+  // replaces the bare "at" clause rather than repeating it.
   const x = scenario.meta.intersection;
-  if (scenario.kind === "near_intersection" && x) parts.push(`at ${crossStreetLabel(x.name)}`);
+  if (crossStreetTag) parts.push(crossStreetTag);
+  else if (scenario.kind === "near_intersection" && x) parts.push(`at ${crossStreetLabel(x.name)}`);
   if (scenario.workLen > 0) parts.push(ft(scenario.workLen));
   if (kindConfirmed) parts.push(kindLabel(scenario.kind).toLowerCase());
   return parts.join(" · ");
@@ -187,7 +195,12 @@ export function whereValue(
  * lines."  Until the tag has a producer, the coordinates ARE the position
  * and they belong here rather than nowhere.
  */
-export function whereProvenance(scenario: Scenario): string {
+export function whereProvenance(
+  scenario: Scenario,
+  /** #285: where the cross-street tag came from, in the backend's words
+   *  ("cross street from OSM node 3397108608 · searched 1,700 m"). */
+  crossStreetProvenance: string | null = null,
+): string {
   if (!hasLocation(scenario.meta)) return "the work, not the first sign";
   const road = scenario.meta.confirmedRoad;
   const coords = `${scenario.meta.lat.toFixed(5)}, ${scenario.meta.lng.toFixed(5)}`;
@@ -202,7 +215,8 @@ export function whereProvenance(scenario: Scenario): string {
   const source = `OSM detection · way ${road.candidate.way_id} · ${
     road.method === "auto_single" ? "sole match auto-adopted" : "operator pick"
   }`;
-  return `${l.primary} ${l.direction.toLowerCase()}${place} · ${coords} · ${source}`;
+  const cross = crossStreetProvenance ? ` · ${crossStreetProvenance}` : "";
+  return `${l.primary} ${l.direction.toLowerCase()}${place} · ${coords} · ${source}${cross}`;
 }
 
 /**
@@ -367,6 +381,8 @@ export interface BandInput {
    *  `scenario.kind` cannot say, because it always holds a value.
    *  Defaults to true for callers that do not ask. */
   kindConfirmed?: boolean;
+  /** #285: the backend's nearest-cross-street tag, or null. */
+  crossStreetTag?: string | null;
 }
 
 /**
@@ -380,9 +396,10 @@ export function deriveBands({
   openOverride,
   blockerReason = null,
   kindConfirmed = true,
+  crossStreetTag = null,
 }: BandInput): BandModel {
   const located = hasLocation(scenario.meta);
-  const where = whereValue(scenario, kindConfirmed);
+  const where = whereValue(scenario, kindConfirmed, crossStreetTag);
   // WHAT is reachable once the pin is down AND a person has confirmed the
   // kind.  Before that it is a pending line, and its reason is the one
   // thing still owed.

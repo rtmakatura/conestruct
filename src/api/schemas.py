@@ -250,6 +250,13 @@ class ScenarioMeta(BaseModel):
     # silently (Pydantic) and renders the chord — graceful, but the
     # reason backend-first is the deploy order for this arc.
     centerline: list[tuple[float, float]] | None = None
+    # #285: the confirmed road's OSM name and ref, wire-only like
+    # ``centerline`` (the proxy relays them from the picker's confirmed
+    # candidate while the pin is the one it was confirmed at).  Read only
+    # by /render/nearest-intersection to find the road's ways; no
+    # deliverable reads them.
+    roadName: str | None = Field(default=None, max_length=200)
+    roadRef: str | None = Field(default=None, max_length=200)
     # Site-condition flags consumed by src.rules.site_adjustments. Default
     # empty: a missing or empty dict keeps the baseline layout unchanged.
     siteConditions: dict[str, bool] = Field(default_factory=dict)

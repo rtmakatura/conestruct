@@ -57,6 +57,13 @@ verbatim", and nothing is built until it lands.
 > proposed-kind and nearest-intersection issues. Requires Phase 0, Phase 2, and the pre-scan
 > lever. Refs #281
 
+**Reversed 2026-10-14 (Ryan, #285):** the acceptance line "The tag names a cross street only from a
+bucket; otherwise the road name" no longer holds as written. Ryan: "The reversal of #290's 'only from a
+bucket' wording is approved." The tag names a cross street from #285's own read
+(`POST /render/nearest-intersection`). The read takes a node the confirmed road shares with another named
+way within 1700 m, or on a near_intersection plan the operator's marked cross pin. Otherwise the tag is
+still the road name. See `validation-artifacts/committed/issue-285-cross-street/`.
+
 ---
 
 ## FLOW.md §5a, the ruled model, verbatim (FLOW.md lines 48–69 at `6fe391e`)

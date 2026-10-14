@@ -56,6 +56,7 @@ import {
   type GeometryFetch,
   type SideOption,
 } from "@/lib/corridor-geometry";
+import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
 import { OpenBand } from "./BandPrimitives";
@@ -149,6 +150,7 @@ function MoveLedgerRows({
   kindConfirmed,
   sideLabel,
   notMarkedLine,
+  crossStreetTag,
   onOpenPicker,
   locked,
 }: {
@@ -158,6 +160,8 @@ function MoveLedgerRows({
   sideLabel: string | null;
   /** R131: the side control's own line while the crossing isn't marked. */
   notMarkedLine: string | null;
+  /** #285: the backend's nearest-cross-street tag, or null. */
+  crossStreetTag: string | null;
   onOpenPicker: () => void;
   locked: boolean;
 }) {
@@ -167,6 +171,7 @@ function MoveLedgerRows({
     kindConfirmed,
     sideLabel,
     notMarkedLine,
+    crossStreetTag,
   );
   const row = (r: MoveRow) => (
     <div
@@ -414,6 +419,7 @@ export function WhereBand({
   onOpenPicker,
   onMarkIntersection,
   geometry: shellGeometry,
+  crossStreet = null,
   onKindChange,
   kindPicked = true,
   // Rule 10: the safe default is "not chosen" — an omitted prop must not
@@ -435,6 +441,9 @@ export function WhereBand({
   /** R131: the shell's geometry answer (one read for the band and the
    *  rail).  Absent — a band mounted alone — the band asks itself. */
   geometry?: GeometryFetch;
+  /** #285: the shell's nearest-cross-street answer (asked once, handed
+   *  down like `geometry`).  Null leaves the tag on the road name. */
+  crossStreet?: CrossStreetTag | null;
   /** A chip click — the ONLY writer of the kind choice (defect 1). */
   onKindChange: (k: ScenarioKind) => void;
   /** Has a person clicked a chip?  False renders the chips with none
@@ -538,7 +547,7 @@ export function WhereBand({
     <OpenBand
       stepIndex={stepIndex}
       head="WHERE"
-      provenance={whereProvenance(scenario)}
+      provenance={whereProvenance(scenario, crossStreet?.provenance ?? null)}
       question="Where is the work?"
       questionProvenance={
         located
@@ -619,6 +628,7 @@ export function WhereBand({
             kindConfirmed={kindConfirmed}
             sideLabel={sideLabel}
             notMarkedLine={notMarkedLine(geometry)}
+            crossStreetTag={crossStreet?.text ?? null}
             onOpenPicker={onOpenPicker}
             locked={locked}
           />

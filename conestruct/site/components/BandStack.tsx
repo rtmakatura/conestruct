@@ -25,6 +25,7 @@ import type { JurisdictionLookup } from "./JurisdictionSection";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import type { GeometryFetch } from "@/lib/corridor-geometry";
+import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
@@ -48,6 +49,9 @@ export interface BandStackProps {
   onMarkIntersection?: () => void;
   /** R131: the shell's geometry answer, so the band and the rail read one. */
   geometry?: GeometryFetch;
+  /** #285: the shell's nearest-cross-street answer, for WHERE's fact line
+   *  and its "Work starts" row alike. */
+  crossStreet?: CrossStreetTag | null;
   onKindChange: (k: ScenarioKind) => void;
   onGenerate: () => void;
   generating: boolean;
@@ -106,6 +110,7 @@ export function BandStack(props: BandStackProps) {
     onOpenPicker,
     onMarkIntersection,
     geometry,
+    crossStreet = null,
     onKindChange,
     onGenerate,
     generating,
@@ -149,6 +154,7 @@ export function BandStack(props: BandStackProps) {
     openOverride,
     blockerReason,
     kindConfirmed: kindState === "confirmed",
+    crossStreetTag: crossStreet?.text ?? null,
   });
 
   const stackRef = useRef<HTMLDivElement | null>(null);
@@ -205,6 +211,7 @@ export function BandStack(props: BandStackProps) {
           onOpenPicker={onOpenPicker}
           onMarkIntersection={onMarkIntersection}
           geometry={geometry}
+          crossStreet={crossStreet}
           // Defect 1: the chip writes the kind AND records that a person
           // chose it.  Re-picking the kind already on the scenario (the
           // default's own chip) is a choice too — `onKindChange` returns

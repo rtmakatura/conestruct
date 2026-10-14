@@ -1611,6 +1611,45 @@ class CorridorMapRequest(BaseModel):
 _CORRIDOR_MAP_ADAPTER: TypeAdapter[CorridorMapRequest] = TypeAdapter(CorridorMapRequest)
 
 
+@app.post("/render/nearest-intersection")
+def render_nearest_intersection(body: Annotated[Any, Body()]) -> JSONResponse:
+    """The nearest named cross street at the work start (#285).
+
+    A read (#290 ruling 4): one Overpass call, no scan, no generator, no
+    memo, no lock; it suggests and never sets.  It reads the wire-only
+    ``meta.roadName`` / ``meta.roadRef`` and ``meta.centerline`` the proxy
+    relays while the pin is the confirmed one, and on a near_intersection
+    plan the marked cross pin (#234) answers instead.
+
+    Response (:meth:`src.rules.nearest_intersection.Answer.as_json`)::
+
+        {"status": "found" | "none" | "unavailable" | "not_applicable",
+         "text": "210 ft N of West 38th Avenue" | null,
+         "cross_street", "offset_ft", "direction", "source",
+         "provenance_text", "osm_node_id", "reason", "radius_m"}
+
+    Only ``found`` carries words; every other status leaves the tag on the
+    ruled interim, the road name (Rule 10).
+    """
+    from src.rules.nearest_intersection import Answer, nearest_intersection
+
+    scenario = _validate_read_body(_SCENARIO_ADAPTER, body)
+    _ensure_scenario_enabled(scenario)
+    meta = scenario.meta
+    if not (meta.lat and meta.lng) or meta.pinModel != "work_start":
+        return JSONResponse(Answer(status="not_applicable", reason="no work-start pin").as_json())
+    cross = meta.intersection if getattr(scenario, "kind", None) == "near_intersection" else None
+    answer = nearest_intersection(
+        pin=(meta.lat, meta.lng),
+        centerline=[tuple(p) for p in meta.centerline] if meta.centerline else None,
+        road_name=meta.roadName,
+        road_ref=meta.roadRef,
+        marked_cross=(cross.lat, cross.lng) if cross and cross.name else None,
+        marked_cross_name=cross.name if cross else None,
+    )
+    return JSONResponse(answer.as_json())
+
+
 @app.post("/render/corridor-map")
 def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
     """The WHERE band's aerial: the laid-out corridor as a PNG (#301 piece 1).
