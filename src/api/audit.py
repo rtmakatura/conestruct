@@ -1841,6 +1841,10 @@ LEFT_SHOULDER_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issu
 # (render_api._ensure_lane_confidence).
 LANE_CONFIDENCE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/120"
 
+# #310: the plan draws at most 4 lanes per direction; when the road has
+# more, the pending item keyed to this URL says so (the #176 pattern).
+LANE_CEILING_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/310"
+
 # Tracking issue for override provenance (#177): when a user confirm/edit
 # superseded a disputed detection (the erased relays were driving a live
 # refusal or caution), the pending item keyed to this URL states both
@@ -2019,6 +2023,7 @@ def audit_projection(
     lane_count_suspect: bool = False,
     override_records: list[dict[str, Any]] | None = None,
     site_scan: dict[str, Any] | None = None,
+    lanes_drawn_below_road: str | None = None,
 ) -> dict[str, Any]:
     """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
 
@@ -2287,6 +2292,20 @@ def audit_projection(
                     "before deploying."
                 ),
                 "tracking_issue": LANE_CONFIDENCE_ISSUE,
+            }
+        )
+
+    # #310: the road has more lanes per direction than the plan draws.
+    # The render-API caller threads ``layout.lanes_drawn_below_road``'s
+    # sentence (audit_projection has no params, same convention as
+    # ``lane_count_suspect`` above), the one the plan sheet and the crew
+    # narrative print, so the three surfaces can't disagree.
+    if lanes_drawn_below_road:
+        items.append(
+            {
+                "kind": "lanes_drawn_below_road",
+                "label": lanes_drawn_below_road,
+                "tracking_issue": LANE_CEILING_ISSUE,
             }
         )
 

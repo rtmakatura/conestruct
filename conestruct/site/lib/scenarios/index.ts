@@ -465,6 +465,7 @@ export function clearDetectionRelays(s: Scenario): Scenario {
   delete rest.detectedLanesForward;
   delete rest.detectedLanesBackward;
   delete rest.detectedLanesBothWays;
+  delete rest.roadLanesPerDirection;
   delete rest.oneway;
   delete rest.signalDistanceM;
   delete rest.detectionOverrides;

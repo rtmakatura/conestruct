@@ -14,7 +14,7 @@ import { carriagewayVerdict } from "../road-detection/carriageway";
 import { isOperatorSet, withoutOperatorSet } from "./guesses";
 import { dividedForShoulderRoadType } from "./overrides";
 import type { RoadClassification } from "../road-detection/types";
-import { clampLanesToDomain, laneWidthCeilingFt } from "./validation";
+import { clampLanesToDomain, laneWidthCeilingFt, roadLanesRelay } from "./validation";
 import type {
   DetectionOverride,
   Scenario,
@@ -620,6 +620,11 @@ function applyDetected(
           detectedLanesForward: c.detectedLanesForward,
           detectedLanesBackward: c.detectedLanesBackward,
           detectedLanesBothWays: c.detectedLanesBothWays,
+          // #310: the road's per-direction count before the clamp above,
+          // relayed raw so the backend can say the plan draws fewer lanes
+          // than the road has.  Undefined when no count was detected,
+          // which also clears a previous road's.
+          roadLanesPerDirection: lanesApplied ? roadLanesRelay(c.lanesPerDirection) : undefined,
           // Relay the signal-proximity fact for the backend's
           // signal-proximity lane-confidence gate (issue #173).  Pure
           // fact; drives no geometry here.

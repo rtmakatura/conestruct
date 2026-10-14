@@ -38,7 +38,7 @@ from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
 from src.api.site_scan import corrections_disclosure, not_checked_disclosure
-from src.generation.layout import rightmost_lane_assumption_active
+from src.generation.layout import lanes_drawn_below_road, rightmost_lane_assumption_active
 from src.rendering import static_aerial as _static_aerial
 from src.rules.corridor import (
     M_PER_FT,
@@ -3338,6 +3338,9 @@ def _draw_notes(
     # below are not list rows: the tier is picked from list rows only,
     # and the fit loop makes room for the fixed text by cutting rows.
     rightmost_lane_note = rightmost_lane_assumption_active(params)
+    # #310: the same fixed-obligation class, when the road has more lanes
+    # per direction than the sheet draws.
+    lanes_note = lanes_drawn_below_road(params)
     # #224 phase 3 (s2-arc17): the NOT-CHECKED disclosure — a fixed-
     # obligation line of the same class as the rightmost-lane note (never
     # cut; reserved up front, 2 wrapped lines).  The predicate and the
@@ -3647,6 +3650,19 @@ def _draw_notes(
                 6.5,
                 width - 16.0,
                 max_lines=3,
+            ):
+                y[0] -= layout.footer_pads[1]
+                cv.drawString(x, y[0], line)
+        if lanes_note:
+            # #310: the road has more lanes per direction than the sheet
+            # draws (the 4-lane ceiling), and the sheet says so, the #176
+            # class of fixed-obligation note.  The sentence is the one the
+            # audit and the crew narrative print (``lanes_drawn_below_road``),
+            # set in the box's capitals.
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.black)
+            for line in _wrap_to_width(
+                cv, lanes_note.upper(), "Helvetica-Bold", 6.5, width - 16.0, max_lines=3
             ):
                 y[0] -= layout.footer_pads[1]
                 cv.drawString(x, y[0], line)

@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field, ValidationInfo, model_validator
 
 from src.api.site_scan import SiteScanRequest
 from src.generation.layout import (
+    PLAN_MAX_LANES_PER_DIRECTION,
     generate_flagger_alternating_2lane,
     generate_lane_closure_divided,
     generate_mobile_op_2lane,
@@ -518,7 +519,7 @@ class ShoulderScenario(
     # ``ScenarioParams.num_lanes``).  Capped at 4: even at the 8-ft
     # minimum lane width, 5+ lanes exceed MAX_DRAWABLE_HALF_ROAD_FT
     # (cross-checked against laneWidth below).
-    lanes: int = Field(ge=1, le=4)
+    lanes: int = Field(ge=1, le=PLAN_MAX_LANES_PER_DIRECTION)
     laneWidth: float = Field(ge=8.0, le=14.0)
     divided: bool
 
@@ -580,6 +581,16 @@ class ShoulderScenario(
     detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
     # #308 — see ``CarriagewayFacts``.  None ⇒ ``divided`` stands as sent.
     carriageway: CarriagewayFacts | None = None
+    # #310 — relay: the road's lane count per direction before the plan's
+    # 4-lane ceiling (the detected count, or the operator's picker
+    # override; ``lanes`` above is what the plan draws).  A pure fact: it
+    # drives no geometry.  Sole consumer is the disclosure that the sheet
+    # draws fewer lanes than the road has (``layout.lanes_drawn_below_road``,
+    # on page 1, in the audit and in the crew narrative).  None / omitted:
+    # no relay, no disclosure.  The frontend clears it when the operator
+    # edits the lane count on the form.  No upper bound: the predicate needs
+    # none, and a large count is still what the map or the operator said.
+    roadLanesPerDirection: int | None = Field(default=None, ge=1)
 
     def carriageway_verdict(self) -> CarriagewayVerdict:
         """The backend's verdict on the road (``src/rules/carriageway.py``);
@@ -882,7 +893,7 @@ class NearIntersectionScenario(
     # increment-1 ruling (same as the approach floor above) ---
     roadType: IntersectionRoadType
     speed: int = Field(ge=25, le=55, multiple_of=5)
-    lanes: int = Field(ge=1, le=4)  # per direction, as everywhere
+    lanes: int = Field(ge=1, le=PLAN_MAX_LANES_PER_DIRECTION)  # per direction, as everywhere
     laneWidth: float = Field(ge=9.0, le=14.0)
     divided: bool  # Phase 1: must be False (validator below)
 
@@ -1442,6 +1453,8 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
                 if scenario.meta.work is not None and scenario.meta.work.side == "left"
                 else "right"
             ),
+            # #310: the road's lanes per direction, relayed raw.
+            road_lanes_per_direction=scenario.roadLanesPerDirection,
             **meta_kw,
         )
         # A one-way street signs one side, the closed shoulder's (R90:

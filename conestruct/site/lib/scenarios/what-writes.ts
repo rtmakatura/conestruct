@@ -188,6 +188,8 @@ export function setLanes(scenario: Scenario, n: number): Scenario {
     detectedLanesForward: undefined,
     detectedLanesBackward: undefined,
     detectedLanesBothWays: undefined,
+    // #310: the road's count is no longer the detection's claim either.
+    roadLanesPerDirection: undefined,
     detectionOverrides: disputed
       ? appendDetectionOverride(s.detectionOverrides, {
           via: "shoulder_lane_edit",

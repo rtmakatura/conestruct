@@ -71,6 +71,15 @@ export function clampLanesToDomain(lanes: number): number {
   return Math.min(MAX_LANES_PER_DIRECTION, Math.max(1, whole));
 }
 
+/** #310: the road's lane count as the `roadLanesPerDirection` relay — the
+ *  count unclamped (the backend says when the plan draws fewer), or
+ *  nothing when it isn't a whole count of at least 1.  An OSM tag can
+ *  parse to 0; sending it would 422 the whole render (the wire's `ge=1`),
+ *  the failure `clampLanesToDomain` exists to prevent. */
+export function roadLanesRelay(lanes: number | undefined): number | undefined {
+  return lanes !== undefined && Number.isInteger(lanes) && lanes >= 1 ? lanes : undefined;
+}
+
 export interface LanesValidation {
   ok: boolean;
   /** Inline error message; null when ok. */

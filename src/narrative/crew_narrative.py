@@ -28,6 +28,7 @@ from src.api.site_scan import correction_sentences, not_checked_disclosure
 from src.generation.layout import (
     ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT,
     device_count_floors,
+    lanes_drawn_below_road,
     near_intersection_stations,
     rightmost_lane_assumption_active,
 )
@@ -896,6 +897,9 @@ def build_narrative_context(
         # lane per direction offer no choice; shoulder closures close no
         # lane.  Same predicate as the plan-sheet footer note.
         "rightmost_lane_assumed": rightmost_lane_assumption_active(params),
+        # #310: the road has more lanes per direction than the plan draws;
+        # the plan sheet's and the audit's sentence (one source).
+        "lanes_drawn_below_road": lanes_drawn_below_road(params),
         "is_flagger": narrative_is_flagger,
         "is_afad": is_afad,
         "flagger_station_1_ft": flagger_station_1_ft,

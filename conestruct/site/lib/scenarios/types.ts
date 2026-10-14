@@ -549,6 +549,14 @@ export interface ShoulderScenario extends JurisdictionPlanFields {
   detectedLanesBackward?: number;
   detectedLanesBothWays?: number;
   /**
+   * #310 — the road's lane count per direction before the plan's 4-lane
+   * ceiling (`clampLanesToDomain`): the detected count, or the operator's
+   * picker override.  A pure relay: `lanes` stays what the plan draws, and
+   * the backend says so on every surface when the road has more.  Cleared
+   * with the other lane relays when the operator edits the lane count.
+   */
+  roadLanesPerDirection?: number;
+  /**
    * Meters to the nearest detected traffic-signal node (issue #173),
    * relayed unchanged to the backend's signal-proximity branch of the
    * lane-confidence gate: within the backend's CHOSEN threshold, a

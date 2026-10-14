@@ -15,7 +15,7 @@
 
 import { snapSpeedToDomain } from "./auto-apply";
 import { markOperatorSet } from "./guesses";
-import { clampLanesToDomain } from "./validation";
+import { clampLanesToDomain, roadLanesRelay } from "./validation";
 import type {
   FlaggerRoadType,
   LaneClosureRoadType,
@@ -136,7 +136,14 @@ export function applyOverridesToScenario(
   if (overrides.lanesPerDirection !== undefined && next.kind === "shoulder") {
     // Clamp to the schema domain (1..4), same B-04 class as the speed
     // snap above — never hand the user a 422 for an app-filled value.
-    next = { ...next, lanes: clampLanesToDomain(overrides.lanesPerDirection) };
+    // #310: the operator's count is a statement about the road, so it
+    // rides as the road's count too; the backend says when the plan draws
+    // fewer lanes than that.
+    next = {
+      ...next,
+      lanes: clampLanesToDomain(overrides.lanesPerDirection),
+      roadLanesPerDirection: roadLanesRelay(overrides.lanesPerDirection),
+    };
   }
   return next;
 }

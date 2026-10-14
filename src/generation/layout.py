@@ -173,6 +173,32 @@ def rightmost_lane_assumption_active(params: ScenarioParams) -> bool:
     return params.closure_type == "lane" and params.num_lanes >= 2
 
 
+# #310 — the most lanes per direction a plan draws (the shoulder wire's
+# ``lanes`` cap, ``schemas.py``: 5+ lanes overrun the sheet's drawable
+# half-road, ``MAX_DRAWABLE_HALF_ROAD_FT``).
+PLAN_MAX_LANES_PER_DIRECTION = 4
+
+
+def lanes_drawn_below_road(params: ScenarioParams) -> str | None:
+    """The #310 disclosure, or None: the road has more lanes per direction
+    than the plan draws.
+
+    The single source for all three surfaces (the plan sheet's notes box,
+    the audit's pending item, the crew narrative's Safety Notes), the #176
+    pattern: one predicate, one sentence, so they can't disagree.  The
+    numbers are the plan's and the relayed road's, never literals.  The
+    sheet prints it upper-cased.
+    """
+    road = params.road_lanes_per_direction
+    if road is None or road <= params.num_lanes:
+        return None
+    return (
+        f"Drawn as {params.num_lanes} lanes per direction; the road has {road}. "
+        f"Plans draw at most {PLAN_MAX_LANES_PER_DIRECTION} lanes per direction, "
+        f"so the device offsets are measured against {params.num_lanes} lanes."
+    )
+
+
 # R119 Q1: a shoulder plan's arrow board shows caution mode, never an
 # arrow.  MUTCD 11th Ed. §6L.06 ¶18 (Standard), p. 833: "For shoulder
 # work, for blocking the shoulder, for roadside work near the shoulder,

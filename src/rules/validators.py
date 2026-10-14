@@ -276,6 +276,14 @@ class ScenarioParams:
     # plan's.  Only the sign codes, the words and page 1 follow the side.
     # Appended with a default so every existing constructor is untouched.
     work_side: Literal["right", "left"] = "right"
+    # #310 — the road's lane count per direction before the plan's 4-lane
+    # ceiling (the shoulder wire's ``roadLanesPerDirection`` relay: the
+    # detected count, or the operator's picker override).  A fact about
+    # the road, never geometry: ``num_lanes`` stays what is drawn.  When it
+    # exceeds ``num_lanes`` every surface says the sheet draws fewer lanes
+    # than the road has (``lanes_drawn_below_road``).  None: no relay.
+    # Appended with a default so every existing constructor is untouched.
+    road_lanes_per_direction: int | None = None
 
 
 @dataclass(frozen=True)

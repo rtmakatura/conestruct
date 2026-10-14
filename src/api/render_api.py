@@ -57,6 +57,7 @@ from src.api.site_scan import (
 )
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
+from src.generation.layout import lanes_drawn_below_road
 from src.narrative.crew_narrative import (
     generate_crew_narrative,
     generate_crew_narrative_pdf,
@@ -2106,6 +2107,9 @@ def _audit_build(
             getattr(scenario, "detectedLanesBackward", None),
             getattr(scenario, "detectedLanesBothWays", None),
         ),
+        # #310 — the road has more lanes per direction than the plan draws;
+        # the sentence the plan sheet and the crew narrative print.
+        lanes_drawn_below_road=lanes_drawn_below_road(params),
         # #177 — override provenance: the scenario's detection-override
         # markers, threaded as plain dicts (audit_projection has no
         # scenario).  exclude_none so the audit clause is built from the
