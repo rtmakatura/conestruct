@@ -1,0 +1,372 @@
+{
+  "320": {
+    "open": {
+      "zip": {
+        "top": 2292.5,
+        "h": 44,
+        "w": 284
+      },
+      "zipText": "↓ ALL (.ZIP)",
+      "zipPrimary": false,
+      "row": {
+        "top": 2404.5,
+        "h": 604,
+        "w": 292
+      },
+      "cols": "292px",
+      "cards": [
+        {
+          "title": "Plan sheet PDF",
+          "buttons": [
+            "Download PDF ↓"
+          ],
+          "top": 2404.5,
+          "h": 142,
+          "w": 292
+        },
+        {
+          "title": "Device list XLSX",
+          "buttons": [
+            "Download XLSX ↓"
+          ],
+          "top": 2558.5,
+          "h": 142,
+          "w": 292
+        },
+        {
+          "title": "Crew instructions PDF + MD",
+          "buttons": [
+            "Download PDF ↓",
+            "Download .md ↓"
+          ],
+          "top": 2712.5,
+          "h": 142,
+          "w": 292
+        },
+        {
+          "title": "Audit trail PDF",
+          "buttons": [
+            "Download PDF ↓"
+          ],
+          "top": 2866.5,
+          "h": 142,
+          "w": 292
+        }
+      ],
+      "hero": {
+        "top": 2119.3,
+        "h": 161.3,
+        "w": 292
+      },
+      "pageH": 11781,
+      "pageW": 320,
+      "files": {
+        "text": "4 files ›",
+        "expanded": "true",
+        "top": 2348.5,
+        "h": 44,
+        "w": 292
+      },
+      "visibleCards": 4,
+      "downloadBlock": {
+        "top": 2292.5,
+        "h": 716,
+        "w": 292
+      }
+    },
+    "closed": {
+      "zip": {
+        "top": 2292.5,
+        "h": 44,
+        "w": 284
+      },
+      "zipText": "↓ ALL (.ZIP)",
+      "zipPrimary": false,
+      "row": {
+        "top": 2209,
+        "h": 0,
+        "w": 0
+      },
+      "cols": "1fr",
+      "cards": [
+        {
+          "title": "Plan sheetPDF",
+          "buttons": [
+            "Download PDF↓"
+          ],
+          "top": 2209,
+          "h": 0,
+          "w": 0
+        },
+        {
+          "title": "Device listXLSX",
+          "buttons": [
+            "Download XLSX↓"
+          ],
+          "top": 2209,
+          "h": 0,
+          "w": 0
+        },
+        {
+          "title": "Crew instructionsPDF + MD",
+          "buttons": [
+            "Download PDF↓",
+            "Download .md↓"
+          ],
+          "top": 2209,
+          "h": 0,
+          "w": 0
+        },
+        {
+          "title": "Audit trailPDF",
+          "buttons": [
+            "Download PDF↓"
+          ],
+          "top": 2209,
+          "h": 0,
+          "w": 0
+        }
+      ],
+      "hero": {
+        "top": 2119.3,
+        "h": 161.3,
+        "w": 292
+      },
+      "pageH": 11161,
+      "pageW": 320,
+      "files": {
+        "text": "4 files ›",
+        "expanded": "false",
+        "top": 2348.5,
+        "h": 44,
+        "w": 292
+      },
+      "visibleCards": 0,
+      "downloadBlock": {
+        "top": 2292.5,
+        "h": 100,
+        "w": 292
+      }
+    }
+  },
+  "360": {
+    "open": {
+      "zip": {
+        "top": 2140,
+        "h": 44,
+        "w": 324
+      },
+      "zipText": "↓ ALL (.ZIP)",
+      "zipPrimary": false,
+      "row": {
+        "top": 2252,
+        "h": 604,
+        "w": 332
+      },
+      "cols": "332px",
+      "cards": [
+        {
+          "title": "Plan sheet PDF",
+          "buttons": [
+            "Download PDF ↓"
+          ],
+          "top": 2252,
+          "h": 142,
+          "w": 332
+        },
+        {
+          "title": "Device list XLSX",
+          "buttons": [
+            "Download XLSX ↓"
+          ],
+          "top": 2406,
+          "h": 142,
+          "w": 332
+        },
+        {
+          "title": "Crew instructions PDF + MD",
+          "buttons": [
+            "Download PDF ↓",
+            "Download .md ↓"
+          ],
+          "top": 2560,
+          "h": 142,
+          "w": 332
+        },
+        {
+          "title": "Audit trail PDF",
+          "buttons": [
+            "Download PDF ↓"
+          ],
+          "top": 2714,
+          "h": 142,
+          "w": 332
+        }
+      ],
+      "hero": {
+        "top": 1982.5,
+        "h": 145.5,
+        "w": 332
+      },
+      "pageH": 10826,
+      "pageW": 360,
+      "files": {
+        "text": "4 files ›",
+        "expanded": "true",
+        "top": 2196,
+        "h": 44,
+        "w": 332
+      },
+      "visibleCards": 4,
+      "downloadBlock": {
+        "top": 2140,
+        "h": 716,
+        "w": 332
+      }
+    },
+    "closed": {
+      "zip": {
+        "top": 2140,
+        "h": 44,
+        "w": 324
+      },
+      "zipText": "↓ ALL (.ZIP)",
+      "zipPrimary": false,
+      "row": {
+        "top": 2056,
+        "h": 0,
+        "w": 0
+      },
+      "cols": "1fr",
+      "cards": [
+        {
+          "title": "Plan sheetPDF",
+          "buttons": [
+            "Download PDF↓"
+          ],
+          "top": 2056,
+          "h": 0,
+          "w": 0
+        },
+        {
+          "title": "Device listXLSX",
+          "buttons": [
+            "Download XLSX↓"
+          ],
+          "top": 2056,
+          "h": 0,
+          "w": 0
+        },
+        {
+          "title": "Crew instructionsPDF + MD",
+          "buttons": [
+            "Download PDF↓",
+            "Download .md↓"
+          ],
+          "top": 2056,
+          "h": 0,
+          "w": 0
+        },
+        {
+          "title": "Audit trailPDF",
+          "buttons": [
+            "Download PDF↓"
+          ],
+          "top": 2056,
+          "h": 0,
+          "w": 0
+        }
+      ],
+      "hero": {
+        "top": 1982.5,
+        "h": 145.5,
+        "w": 332
+      },
+      "pageH": 10206,
+      "pageW": 360,
+      "files": {
+        "text": "4 files ›",
+        "expanded": "false",
+        "top": 2196,
+        "h": 44,
+        "w": 332
+      },
+      "visibleCards": 0,
+      "downloadBlock": {
+        "top": 2140,
+        "h": 100,
+        "w": 332
+      }
+    }
+  },
+  "1440": {
+    "open": {
+      "zip": {
+        "top": 1326.5,
+        "h": 32,
+        "w": 167.4
+      },
+      "zipText": "4 files ↓ ALL (.ZIP)",
+      "zipPrimary": false,
+      "row": {
+        "top": 1370.5,
+        "h": 142,
+        "w": 880
+      },
+      "cols": "211px 211px 211px 211px",
+      "cards": [
+        {
+          "title": "Plan sheet PDF",
+          "buttons": [
+            "Download PDF ↓"
+          ],
+          "top": 1370.5,
+          "h": 142,
+          "w": 211
+        },
+        {
+          "title": "Device list XLSX",
+          "buttons": [
+            "Download XLSX ↓"
+          ],
+          "top": 1370.5,
+          "h": 142,
+          "w": 211
+        },
+        {
+          "title": "Crew instructions PDF + MD",
+          "buttons": [
+            "Download PDF ↓",
+            "Download .md ↓"
+          ],
+          "top": 1370.5,
+          "h": 142,
+          "w": 211
+        },
+        {
+          "title": "Audit trail PDF",
+          "buttons": [
+            "Download PDF ↓"
+          ],
+          "top": 1370.5,
+          "h": 142,
+          "w": 211
+        }
+      ],
+      "hero": {
+        "top": 1153.8,
+        "h": 160.8,
+        "w": 880
+      },
+      "pageH": 6588,
+      "pageW": 1440,
+      "files": null,
+      "visibleCards": 4,
+      "downloadBlock": {
+        "top": 1326.5,
+        "h": 186,
+        "w": 880
+      }
+    }
+  }
+}

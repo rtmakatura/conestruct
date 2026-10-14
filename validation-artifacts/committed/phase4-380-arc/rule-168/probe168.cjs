@@ -29,7 +29,7 @@ gateHeaders(SITE);
       continue;
     }
     await page.mouse.move(1, 1).catch(() => {});
-    const m = await page.evaluate(() => {
+    const measure = () => page.evaluate(() => {
       const r1 = (x) => Math.round(x * 10) / 10;
       const box = (el) => {
         if (!el) return null;
@@ -53,17 +53,47 @@ gateHeaders(SITE);
         })),
         hero: box(hero),
         pageH: document.documentElement.scrollHeight,
+        pageW: document.documentElement.scrollWidth,
+        files: (() => {
+          const f = document.querySelector(".dl-files");
+          if (!f || f.getBoundingClientRect().width === 0) return null;
+          return { text: f.innerText.replace(/\s+/g, " ").trim(), expanded: f.getAttribute("aria-expanded"), ...box(f) };
+        })(),
+        visibleCards: cards.filter((c) => c.getBoundingClientRect().width > 0).length,
+        downloadBlock: (() => {
+          const parent = (dls || zip)?.parentElement;
+          return box(parent);
+        })(),
       };
     });
-    out[w] = m;
-    console.log("w" + w, "zip", JSON.stringify(m.zip), m.zipText, "primary", m.zipPrimary, "| row", JSON.stringify(m.row), "cols", m.cols, "| cards", m.cards.map((c) => `${c.title} h${c.h} [${c.buttons.join(", ")}]`).join(" ; "));
-    const row = page.locator(".dls").first();
-    if (await row.count()) {
+    const shot = async (name) => {
+      const row = page.locator(".dls").first();
+      if (!(await row.count())) return;
       const zipEl = page.locator(".dl-all").first();
-      await (await zipEl.count() ? zipEl : row).scrollIntoViewIfNeeded().catch(() => {});
+      await ((await zipEl.count()) ? zipEl : row).scrollIntoViewIfNeeded().catch(() => {});
       await page.waitForTimeout(300);
-      const parent = row.locator("xpath=..");
-      await parent.screenshot({ path: path.join(OUT, `dl-${w}.png`) }).catch(() => {});
+      await row.locator("xpath=..").screenshot({ path: path.join(OUT, `${name}-${w}.png`) }).catch(() => {});
+    };
+    const log = (label, m) =>
+      console.log("w" + w, label, "| zip", JSON.stringify(m.zip), m.zipText, "primary", m.zipPrimary, "| files line", JSON.stringify(m.files), "| visible cards", m.visibleCards, "| block", JSON.stringify(m.downloadBlock), "| page width", m.pageW, "| cards", m.cards.map((c) => `${c.title} h${c.h} [${c.buttons.join(", ")}]`).join(" ; "));
+    // As the results flow leaves it: every aria-expanded control opened,
+    // the "4 files" line included (where it renders).
+    const opened = await measure();
+    log("open", opened);
+    await shot("dl-open");
+    out[w] = { open: opened };
+    // Then the default the page loads with: the line closed again.
+    const line = page.locator(".dl-files:visible").first();
+    if ((await line.count()) && (await line.getAttribute("aria-expanded")) === "true") {
+      await line.click();
+      await page.waitForTimeout(500);
+      await page.mouse.move(1, 1).catch(() => {});
+      const closed = await measure();
+      log("closed", closed);
+      await shot("dl-closed");
+      out[w].closed = closed;
+    } else {
+      await shot("dl");
     }
     await ctx.close();
   }
