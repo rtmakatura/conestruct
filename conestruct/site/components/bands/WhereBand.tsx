@@ -361,9 +361,12 @@ function SideControl({
  * absence renders as an absence rather than as nothing at all, and #277's
  * surviving bullet wants the gate named.  One line does both.
  *
- * Suggest-never-set: a chip CONFIRMS the kind.  Nothing proposes one —
- * the "✓ proposed" citation suffix has no producer this phase (#281's own
- * audit ruling), so no chip carries it.
+ * Suggest-never-set: a chip CONFIRMS the kind.  #284 gives the "✓
+ * proposed" citation suffix its producer: the corridor-geometry answer's
+ * `kind_proposal`, present only when the road facts leave exactly one live
+ * kind (src/rules/kind_proposal.py).  It marks that chip and prints the
+ * backend's reason under the row; it never presses the chip (Ryan,
+ * 2026-10-14: "never pre-selected").  The click is still the person's.
  *
  * #289 hand-check, 2026-09-23, defect 1: `value` is null until a person
  * clicks a chip, and then NO chip is pressed.  `scenario.kind` is not
@@ -374,10 +377,13 @@ function KindChips({
   value,
   onChange,
   locked,
+  proposal = null,
 }: {
   value: ScenarioKind | null;
   onChange: (k: ScenarioKind) => void;
   locked: boolean;
+  /** #284: the backend's proposal, or null.  Marks; never presses. */
+  proposal?: { kind: ScenarioKind; basis: string } | null;
 }) {
   const live = SCENARIO_KINDS.filter((k) => isScenarioKindEnabled(k.v));
   const gated = SCENARIO_KINDS.length - live.length;
@@ -398,10 +404,20 @@ function KindChips({
             data-testid={`kind-chip-${k.v}`}
           >
             <span className="tr-field">{k.l}</span>
-            <span className="tr-prov">{kindCitation(k.v)}</span>
+            <span className="tr-prov">
+              {kindCitation(k.v)}
+              {proposal?.kind === k.v && (
+                <span data-testid="kind-proposed-mark"> · ✓ proposed</span>
+              )}
+            </span>
           </button>
         ))}
       </div>
+      {proposal && live.some((k) => k.v === proposal.kind) && (
+        <div className="tr-prov mt-2" data-testid="kind-proposal-note">
+          ✓ proposed: {proposal.basis} Pick it to use it.
+        </div>
+      )}
       {gated > 0 && (
         <div className="tr-prov mt-2" data-testid="kind-gate-note">
           {gated} more kinds aren&apos;t enabled yet. Each waits until its typical
@@ -703,6 +719,7 @@ export function WhereBand({
                 value={kindPicked ? scenario.kind : null}
                 onChange={onKindChange}
                 locked={locked}
+                proposal={geometry.geometry?.kind_proposal ?? null}
               />
             </div>
           )}

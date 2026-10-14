@@ -1,0 +1,2 @@
+base http://localhost:3295 mode chips pin tremont
+1440: chips [{"id":"kind-chip-shoulder","pressed":"false","text":"Shoulder workTA-3/TA-5 · S-630-1 · ✓ proposed"},{"id":"kind-chip-flagger_lane_closure","pressed":"false","text":"Flagger lane closureTA-10 · S-630-1"},{"id":"kind-chip-near_intersection","pressed":"false","text":"Lane closure near intersectionCases 18/19 · S-630-1"}]

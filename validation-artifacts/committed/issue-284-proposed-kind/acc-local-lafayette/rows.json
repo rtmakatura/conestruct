@@ -1,0 +1,23 @@
+[
+ {
+  "width": 1440,
+  "proposed": null,
+  "answers": {
+   "kind-chip-shoulder": {
+    "status": 200,
+    "text": "{\"summary\":{\"ta\":\"TA-3\",\"cdot_sheet\":\"S-630-1\",\"case_id\":\"Case 11: Shoulder closure on undivided highway\",\"taper_length_ft\":28,\"taper_label\":\"L/3 (shoulder taper)\",\"buffer_space_ft\":155.0,\"device_spacing_taper_ft\":25.0,\"",
+    "refusal": null
+   },
+   "kind-chip-flagger_lane_closure": {
+    "status": 200,
+    "text": "{\"summary\":{\"ta\":\"TA-10\",\"cdot_sheet\":\"S-630-1\",\"case_id\":\"MUTCD TA-10: Flagger one-lane two-way\",\"taper_length_ft\":100,\"taper_label\":\"one-lane two-way taper\",\"buffer_space_ft\":155.0,\"device_spacing_taper_ft\":20.0,\"devic",
+    "refusal": null
+   },
+   "kind-chip-near_intersection": {
+    "status": null,
+    "text": "no audit fired",
+    "refusal": "Mark the cross street on the map to lay out the sides."
+   }
+  }
+ }
+]

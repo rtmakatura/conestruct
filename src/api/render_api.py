@@ -87,6 +87,7 @@ from src.rules.jurisdiction import (
 from src.rules.jurisdiction import (
     evaluate as evaluate_jurisdiction,
 )
+from src.rules.kind_proposal import propose_kind
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
@@ -1518,6 +1519,12 @@ def render_corridor_geometry(body: Annotated[Any, Body()]) -> JSONResponse:
     if not located:
         out["status"] = "no_pin"
         return JSONResponse(out)
+    # #284: the kind the road leaves, when it leaves exactly one.  Present
+    # only then, so every other answer is byte-identical to before; never
+    # sets the kind (suggest-never-set).
+    proposal = propose_kind(scenario)
+    if proposal is not None:
+        out["kind_proposal"] = {"kind": proposal["kind"], "basis": proposal["basis"]}
     if pin_model == "work_start":
         out["side_options"] = _side_options(scenario, params)
     if intersection_not_marked(scenario):
@@ -2176,6 +2183,16 @@ def _audit_build(
     guessed = input_guesses(scenario)
     if guessed:
         projection["input_guesses"] = guessed
+    # #284: the kind the road left, beside the kind the operator chose
+    # (Ryan: "the audit records it as proposed then chosen").  No proposal,
+    # no key: byte-identical.
+    proposal = propose_kind(scenario)
+    if proposal is not None:
+        projection["kind_proposal"] = {
+            "proposed": proposal["kind"],
+            "chosen": scenario.kind,
+            "basis": proposal["basis"],
+        }
     return projection, params, placements
 
 

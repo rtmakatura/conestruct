@@ -1,0 +1,4 @@
+base http://localhost:3295 mode accuracy pin lafayette
+1440: proposed null; shoulder=null (no audit fired) | flagger_lane_closure=null (no audit fired) | near_intersection=null (no audit fired)
+base http://localhost:3295 mode accuracy pin lafayette
+1440: proposed null; shoulder=200 | flagger_lane_closure=200 | near_intersection=null (no audit fired)

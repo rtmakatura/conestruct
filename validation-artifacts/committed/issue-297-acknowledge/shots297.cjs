@@ -25,8 +25,16 @@ const PINS = {
   broadway: { lat: "39.73370", lng: "-104.98753", chip: "kind-chip-shoulder" },
   // Lafayette St, Denver: a two-way residential street.
   lafayette: { lat: "39.74362", lng: "-104.97070", chip: "kind-chip-shoulder" },
-  // I-25 frontage / a divided arterial: S Colorado Blvd at Evans.
+  // S Colorado Blvd at Evans: a multi-lane arterial.
   colorado: { lat: "39.67850", lng: "-104.94070", chip: "kind-chip-shoulder" },
+  // S Santa Fe Dr: a divided trunk road, three lanes each way.
+  santafe: { lat: "39.70000", lng: "-104.98770", chip: "kind-chip-shoulder" },
+  // E Hampden Ave (US 285): a divided arterial.
+  hampden: { lat: "39.65340", lng: "-104.94060", chip: "kind-chip-shoulder" },
+  // One-lane one-way streets (OSM lanes=1, oneway=yes): Clarkson St
+  // (tertiary, way 44932808) and Tremont Pl (residential, way 44959616).
+  clarkson: { lat: "39.72547", lng: "-104.97757", chip: "kind-chip-shoulder" },
+  tremont: { lat: "39.75474", lng: "-104.97466", chip: "kind-chip-shoulder" },
 };
 const PIN = PINS[PIN_ID];
 fs.mkdirSync(OUT, { recursive: true });
@@ -109,7 +117,52 @@ async function shoot(page, sel, name) {
     const page = await ctx.newPage();
     try {
       await toConfirmedRoad(page);
-      if (MODE === "chips") {
+      if (MODE === "accuracy") {
+        // #284 accuracy: confirm each live kind in turn, each in a fresh
+        // page (chip, side, Confirm), and record the backend's answer to
+        // the audit that confirmation fires.  A proposal is accurate when
+        // the proposed kind is answered and every other kind is refused.
+        await page.waitForTimeout(3000);
+        const proposed = await page.evaluate(() => {
+          const m = document.querySelector('[data-testid="kind-proposed-mark"]');
+          const b = m && m.closest("button");
+          return b ? b.getAttribute("data-testid") : null;
+        });
+        const answers = {};
+        for (const id of ["kind-chip-shoulder", "kind-chip-flagger_lane_closure", "kind-chip-near_intersection"]) {
+          const p = await ctx.newPage();
+          const audits = [];
+          p.on("response", async (r) => {
+            if (/\/api\/render\/audit$/.test(new URL(r.url()).pathname)) {
+              const text = await r.text().catch(() => "");
+              audits.push({ status: r.status(), text: text.slice(0, 220) });
+            }
+          });
+          try {
+            await toConfirmedRoad(p);
+            await p.locator(`[data-testid="${id}"]`).click();
+            await p.waitForTimeout(2500);
+            const side = p.locator('[data-testid="side-option"]').first();
+            for (let i = 0; i < 15 && (await side.count()) === 0; i += 1) await p.waitForTimeout(1000);
+            if (await side.count()) await side.click();
+            await p.waitForTimeout(1500);
+            await (await hook(p, "where-confirm")).click().catch(() => {});
+            for (let i = 0; i < 30 && audits.length === 0; i += 1) await p.waitForTimeout(500);
+            await p.waitForTimeout(1500);
+            const last = audits.slice(-1)[0] || null;
+            const shown = await p.evaluate(() => (document.body.textContent || "").replace(/\s+/g, " "));
+            const refusal = (shown.match(/(This road appears[^.]*\.|This looks like[^.]*\.|divided intersections[^.]*\.|Mark the cross street[^.]*\.)/) || [null])[0];
+            answers[id] = last
+              ? { status: last.status, text: last.text, refusal }
+              : { status: null, text: "no audit fired", refusal };
+          } catch (e) {
+            answers[id] = { status: null, text: `CRASH ${String(e.message).split("\n")[0]}` };
+          }
+          await p.close();
+        }
+        rows.push({ width, proposed, answers });
+        log(`${width}: proposed ${proposed}; ${Object.entries(answers).map(([k, v]) => `${k.replace("kind-chip-", "")}=${v.status}${v.status === 200 ? "" : " (" + v.text.replace(/\s+/g, " ").slice(0, 110) + ")"}`).join(" | ")}`);
+      } else if (MODE === "chips") {
         await page.waitForTimeout(3000);
         const chips = await page.evaluate(CHIPS);
         rows.push({ width, chips });

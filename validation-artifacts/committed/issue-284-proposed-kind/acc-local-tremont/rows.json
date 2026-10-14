@@ -1,0 +1,23 @@
+[
+ {
+  "width": 1440,
+  "proposed": "kind-chip-shoulder",
+  "answers": {
+   "kind-chip-shoulder": {
+    "status": 200,
+    "text": "{\"summary\":{\"ta\":\"TA-3\",\"cdot_sheet\":\"S-630-1\",\"case_id\":\"Case 11: Shoulder closure on one-way street\",\"taper_length_ft\":28,\"taper_label\":\"L/3 (shoulder taper)\",\"buffer_space_ft\":155.0,\"device_spacing_taper_ft\":25.0,\"dev",
+    "refusal": null
+   },
+   "kind-chip-flagger_lane_closure": {
+    "status": 400,
+    "text": "{\"detail\":\"This looks like a single-lane road, which isn't supported yet. A flagger operation (TA-10) needs a lane in each direction. If the detection is wrong, confirm “Road has one lane in each direction” in the form a",
+    "refusal": null
+   },
+   "kind-chip-near_intersection": {
+    "status": null,
+    "text": "no audit fired",
+    "refusal": "Mark the cross street on the map to lay out the sides."
+   }
+  }
+ }
+]

@@ -1,0 +1,2 @@
+base http://localhost:3295 mode accuracy pin clarkson
+1440: proposed kind-chip-shoulder; shoulder=200 | flagger_lane_closure=400 ({"detail":"This looks like a single-lane road, which isn't supported yet. A flagger operation (TA-10) needs a ) | near_intersection=null (no audit fired)

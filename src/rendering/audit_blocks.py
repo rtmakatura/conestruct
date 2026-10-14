@@ -645,6 +645,27 @@ def _input_guesses_blocks(guesses: list[dict[str, Any]]) -> list[Block]:
     ]
 
 
+def _kind_proposal_blocks(record: dict[str, Any] | None) -> list[Block]:
+    """#284: the kind the road left, then the kind the operator chose.  No
+    proposal, no block."""
+    if not record:
+        return []
+    from src.rules.kind_proposal import KIND_WORDS
+
+    proposed = KIND_WORDS.get(_str(record, "proposed"), _str(record, "proposed"))
+    chosen = KIND_WORDS.get(_str(record, "chosen"), _str(record, "chosen"))
+    then = (
+        "The operator chose it."
+        if record.get("proposed") == record.get("chosen")
+        else f"The operator chose {chosen} instead."
+    )
+    line = f"Proposed {proposed}. {_str(record, 'basis')} {then}"
+    return [
+        Heading(2, _cell("Kind of work")),
+        Bullets([ListItem(_cell(line))]),
+    ]
+
+
 def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
     if not pending:
         return []
@@ -703,6 +724,7 @@ def audit_to_blocks(
     # R108: the inputs the plan guessed, right after the summary that
     # reads them.  Absent from every projection with no guess.
     blocks += _input_guesses_blocks(projection.get("input_guesses", []))
+    blocks += _kind_proposal_blocks(projection.get("kind_proposal"))
     blocks += _taper_blocks(sections.get("taper", {}))
     blocks += _buffer_blocks(sections.get("buffer", {}))
     blocks += _spacing_blocks(sections.get("spacing", {}))

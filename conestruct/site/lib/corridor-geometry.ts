@@ -11,7 +11,7 @@
 // unchanged.  No station, length or direction is computed here.
 
 import { useEffect, useRef, useState } from "react";
-import type { Scenario, WorkPlacement } from "@/lib/scenarios/types";
+import type { Scenario, ScenarioKind, WorkPlacement } from "@/lib/scenarios/types";
 import { hasLocation } from "@/lib/scenarios";
 import { roadIsStale } from "@/lib/scenarios/band-facts";
 import {
@@ -100,6 +100,10 @@ export interface CorridorGeometry {
   /** #315: present only when the scenario's stored left side is one the
    *  backend refuses; the read then answers as if no side were stored. */
   side_refused?: SideRefusal | null;
+  /** #284: the one kind the road leaves, with the backend's reason.
+   *  Present only when the road facts leave exactly one live kind.  A
+   *  suggestion: it never sets or presses a kind. */
+  kind_proposal?: { kind: ScenarioKind; basis: string } | null;
 }
 
 /** The side choice currently on the scenario, if it is one of the options. */

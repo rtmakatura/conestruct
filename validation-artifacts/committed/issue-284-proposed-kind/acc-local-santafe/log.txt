@@ -1,0 +1,4 @@
+base http://localhost:3295 mode accuracy pin santafe
+1440: proposed kind-chip-shoulder; shoulder=null (no audit fired) | flagger_lane_closure=null (no audit fired) | near_intersection=null (no audit fired)
+base http://localhost:3295 mode accuracy pin santafe
+1440: proposed kind-chip-shoulder; shoulder=200 | flagger_lane_closure=400 ({"detail":"This road appears to carry more lanes than a flagger operation covers. TA-10 applies where one thro) | near_intersection=null (no audit fired)
