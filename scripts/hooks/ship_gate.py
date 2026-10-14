@@ -19,6 +19,13 @@ Exit 0 = allow.  Exit 2 = block; the reason goes to stderr, which CC sees.
        path, so a folder git can't read is covered too).  The cleanup after
        the ship removes worktrees, and Windows can't delete a folder a live
        session sits in.  A refusal here doesn't spend the go.
+   R147: the go `ship ready` ships every branch named in that result: line
+   (its backticked tokens that are branches, `main` excepted), one run each,
+   in the listed order.  Each run must ship the first listed branch this go
+   has not shipped yet, and a later branch is allowed only once the earlier
+   one's pushed sha is in origin/main.  So a failed run (or a -DryRun)
+   stops the rest: the gate can't read an exit status, but it can read
+   whether the merge happened.
 2. Anything else that moves main, force-pushes any branch, or deletes a
    remote branch is blocked, whatever the go (R10):
      - git push to main (main, HEAD:main, x:refs/heads/main, --all, --mirror),
@@ -56,6 +63,8 @@ SHIP = re.compile(r"ship\.ps1", re.IGNORECASE)
 RELEVANT = re.compile(r"\bgit\b|\bgh\b|ship\.ps1", re.IGNORECASE)
 NOT_HUMAN = ("<local-command", "<command-name>", "<command-message>", "<local-command-caveat>")
 SYSTEM_REMINDER = re.compile(r"<system-reminder>[\s\S]*?</system-reminder>")
+READY = "ready"  # R147: `ship ready`
+BACKTICKED = re.compile(r"`([A-Za-z0-9._/-]+)`")
 
 
 class Block(Exception):
@@ -123,6 +132,8 @@ def find_go(transcript_path: str) -> tuple[str, str, str]:
     i_r, line = last_result
     if i_h < i_r:
         raise Block("the go comes before CC's latest result: line; a go counts only after it")
+    if branch == READY:
+        return branch, uuid, line  # R147: consume_ready reads the line
     # A full stop right after the branch ends the sentence; a dot followed by
     # more name characters is a longer branch name (ship-loop-3.1).
     if not re.search(rf"(?<![\w./-]){re.escape(branch)}(?![\w/-]|\.[\w./-])", line):
@@ -149,6 +160,70 @@ def ledger_path() -> Path:
     if r.returncode != 0:
         raise Block("cannot locate the repo for the ledger")
     return Path(r.stdout.strip()).parent / ".claude" / "ship-gate-ledger.json"
+
+
+def _repo_git(*args: str) -> str | None:
+    """A git call in the repo the hook belongs to (SHIP_GATE_REPO for tests)."""
+    where = os.environ.get("SHIP_GATE_REPO") or str(Path(__file__).resolve().parent)
+    r = subprocess.run(["git", *args], cwd=where, capture_output=True, text=True)
+    return r.stdout.strip() if r.returncode == 0 else None
+
+
+def pushed_sha(branch: str) -> str | None:
+    return _repo_git("rev-parse", "--verify", "--quiet", f"refs/remotes/origin/{branch}^{{commit}}")
+
+
+def listed_branches(line: str) -> list[str]:
+    """R147: the branches a result: line names, in order -- its backticked
+    tokens that are pushed branches, `main` and repeats dropped.  A sha or
+    a file name in backticks isn't a branch on origin, so it isn't listed."""
+    out: list[str] = []
+    for tok in BACKTICKED.findall(line):
+        if tok not in out and not _is_main_ref(tok) and tok != READY and pushed_sha(tok):
+            out.append(tok)
+    return out
+
+
+def consume_ready(uuid: str, line: str, arg: str | None) -> str:
+    """R147: the next branch of a `ship ready` go, recorded as shipped.  The
+    queue is read from the result: line on the go's first run and kept in
+    the ledger, because each ship's cleanup deletes the shipped branch."""
+    p = ledger_path()
+    used = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    entry = used.get(uuid)
+    if entry is None:
+        entry = {"queue": listed_branches(line), "shipped": []}
+        if not entry["queue"]:
+            raise Block(
+                f'"ship ready" but CC\'s latest result: line names no pushed branch: {line[:160]!r}'
+            )
+    elif not isinstance(entry, dict):
+        raise Block("this go was already used; one go = one run")
+    queue, done = entry["queue"], entry["shipped"]
+    if len(done) >= len(queue):
+        raise Block(f'this "ship ready" go has shipped all of {queue}; it is used up')
+    nxt = queue[len(done)]
+    if arg != nxt:
+        raise Block(f'"ship ready" ships {queue} in that order; next is "{nxt}", not "{arg}"')
+    if done:
+        prev = done[-1]
+        main_sha = _repo_git("rev-parse", "--verify", "--quiet", "refs/remotes/origin/main")
+        merged = main_sha is not None and (
+            _repo_git("merge-base", "--is-ancestor", prev["sha"], main_sha) is not None
+        )
+        if not merged:
+            raise Block(
+                f'"{prev["branch"]}" ({prev["sha"][:7]}) is not in origin/main, so its run failed '
+                f'or was a dry run; "ship ready" stops at the first failure'
+            )
+    sha = pushed_sha(nxt)
+    if sha is None:
+        raise Block(f'"{nxt}" is not pushed to origin')
+    done.append({"branch": nxt, "sha": sha})
+    used[uuid] = entry
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(used, indent=2), encoding="utf-8")
+    return nxt
 
 
 def consume(uuid: str, branch: str) -> None:
@@ -321,9 +396,12 @@ def decide(payload: dict) -> None:
     if SHIP.search(command):
         if re.search(r"-FrontendCheckOnly\b", command) and not re.search(r"-Branch\b", command):
             return  # read-only
-        branch, uuid, _line = find_go(payload.get("transcript_path") or "")
+        branch, uuid, line = find_go(payload.get("transcript_path") or "")
         arg = ship_branch_arg(command)
-        if arg != branch:
+        ready = branch == READY
+        if ready:
+            branch = arg or ""  # consume_ready checks it is the next listed one
+        elif arg != branch:
             raise Block(f'the go names "{branch}" but the command ships "{arg}"')
         # R77: the SESSION's cwd, never one moved by a cd inside the command:
         # a `Set-Location` there moves only that command's shell, and the
@@ -337,7 +415,10 @@ def decide(payload: dict) -> None:
                 "returns it to where it started; any other session moves to the main checkout "
                 "(cd there).  Then run the ship again.  The go is not spent (R95)."
             )
-        consume(uuid, branch)
+        if ready:
+            consume_ready(uuid, line, arg)
+        else:
+            consume(uuid, branch)
         return
     # R68: each git call is judged in the directory it runs in -- the
     # session's cwd, moved by any earlier `cd` / `Set-Location` in the same

@@ -61,7 +61,13 @@ def repo(tmp_path: Path) -> Path:
     return r
 
 
-def hook(tmp_path: Path, command: str, transcript: str | None = None, cwd: Path | None = None):
+def hook(
+    tmp_path: Path,
+    command: str,
+    transcript: str | None = None,
+    cwd: Path | None = None,
+    repo_refs: Path | None = None,
+):
     payload = {
         "hook_event_name": "PreToolUse",
         "tool_name": "Bash",
@@ -70,6 +76,8 @@ def hook(tmp_path: Path, command: str, transcript: str | None = None, cwd: Path 
         "cwd": str(cwd or tmp_path),
     }
     env = {**__import__("os").environ, "SHIP_GATE_LEDGER": str(tmp_path / "ledger.json")}
+    if repo_refs is not None:
+        env["SHIP_GATE_REPO"] = str(repo_refs)
     r = subprocess.run(
         [sys.executable, str(HOOK)],
         input=json.dumps(payload),
@@ -123,6 +131,93 @@ def test_a_dotted_longer_branch_is_not_the_branch(tmp_path):
     t = write_transcript(tmp_path, [assistant(line, "a1"), human("ship ship-loop-3", "g1")])
     code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3 -DryRun", t)
     assert code == 2 and "not in CC's latest result: line" in err
+
+
+# --------------------------------------------------------------------------- #
+# R147: `ship ready` ships every branch in the result: line, in order
+# --------------------------------------------------------------------------- #
+
+READY_REPORT = (
+    "result: `alpha` and `beta-2` are verified (tip `abc1234`, base `main`); go: `ship ready`"
+)
+
+
+@pytest.fixture
+def pushed(tmp_path: Path) -> tuple[Path, callable]:
+    """A scratch repo whose origin has main, alpha and beta-2, each one commit
+    ahead of the last; returns it and a function that merges a branch into
+    origin/main (what a ship that worked leaves behind)."""
+    r = tmp_path / "refs-repo"
+    r.mkdir()
+    run = lambda *a: subprocess.run(  # noqa: E731
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", *a],
+        cwd=r,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    run("init", "-q", "-b", "main")
+    run("commit", "-q", "--allow-empty", "-m", "init")
+    run("update-ref", "refs/remotes/origin/main", "HEAD")
+    for name in ("alpha", "beta-2"):
+        run("commit", "-q", "--allow-empty", "-m", name)
+        run("update-ref", f"refs/remotes/origin/{name}", "HEAD")
+
+    def merge(name: str) -> None:
+        run("update-ref", "refs/remotes/origin/main", f"refs/remotes/origin/{name}")
+        run("update-ref", "-d", f"refs/remotes/origin/{name}")  # the cleanup deletes it
+
+    return r, merge
+
+
+def test_ship_ready_ships_the_listed_branches_in_order(tmp_path, pushed):
+    refs, merge = pushed
+    t = write_transcript(tmp_path, [assistant(READY_REPORT, "a1"), human("ship ready", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch beta-2", t, repo_refs=refs)
+    assert code == 2 and 'next is "alpha"' in err
+    code, err = hook(tmp_path, f"{SHIP} -Branch alpha", t, repo_refs=refs)
+    assert code == 0, err
+    merge("alpha")
+    code, err = hook(tmp_path, f"{SHIP} -Branch beta-2", t, repo_refs=refs)
+    assert code == 0, err
+    merge("beta-2")
+    code, err = hook(tmp_path, f"{SHIP} -Branch beta-2", t, repo_refs=refs)
+    assert code == 2 and "used up" in err
+
+
+def test_ship_ready_stops_at_the_first_failure(tmp_path, pushed):
+    refs, _merge = pushed
+    t = write_transcript(tmp_path, [assistant(READY_REPORT, "a1"), human("ship ready", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch alpha", t, repo_refs=refs)
+    assert code == 0, err
+    # alpha's run failed: origin/main never got it
+    code, err = hook(tmp_path, f"{SHIP} -Branch beta-2", t, repo_refs=refs)
+    assert code == 2 and "stops at the first failure" in err
+
+
+def test_ship_ready_lists_only_pushed_branches(tmp_path, pushed):
+    refs, _merge = pushed
+    t = write_transcript(tmp_path, [assistant(READY_REPORT, "a1"), human("ship ready", "g1")])
+    for name in ("main", "abc1234", "ready"):
+        code, err = hook(tmp_path, f"{SHIP} -Branch {name}", t, repo_refs=refs)
+        assert code == 2 and 'next is "alpha"' in err
+
+
+def test_ship_ready_with_no_branch_in_the_result_line_is_refused(tmp_path, pushed):
+    refs, _merge = pushed
+    line = "result: nothing to ship; tip `abc1234`"
+    t = write_transcript(tmp_path, [assistant(line, "a1"), human("ship ready", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch alpha", t, repo_refs=refs)
+    assert code == 2 and "names no pushed branch" in err
+
+
+def test_a_single_go_still_ships_one_branch(tmp_path, pushed):
+    refs, _merge = pushed
+    t = write_transcript(tmp_path, [assistant(READY_REPORT, "a1"), human("ship alpha", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch alpha", t, repo_refs=refs)
+    assert code == 0, err
+    code, err = hook(tmp_path, f"{SHIP} -Branch beta-2", t, repo_refs=refs)
+    assert code == 2
 
 
 def test_only_the_latest_result_line_counts(tmp_path):
