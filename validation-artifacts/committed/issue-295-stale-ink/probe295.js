@@ -129,9 +129,12 @@ async function applyStaged(page) {
 
 /** Every visible element under the wrapper that owns a non-blank text
  *  node: a stable label, its declared colour and size, and a page rect. */
-const INVENTORY = () => {
-  const w = document.querySelector(".results-stale");
+const INVENTORY = (settled) => {
+  const hero = document.querySelector(".hero");
+  const w = settled ? hero && hero.closest('div[class=""]') : document.querySelector(".results-stale");
   if (!w) return null;
+  document.querySelectorAll("[data-probe-root]").forEach((e) => e.removeAttribute("data-probe-root"));
+  w.setAttribute("data-probe-root", "");
   const out = [];
   const seen = new Set();
   for (const el of w.querySelectorAll("*")) {
@@ -205,8 +208,9 @@ async function sample(page, it, OUTP) {
 }
 
 async function measure(page, vp, st) {
-  const inv = await page.evaluate(INVENTORY);
-  if (!inv) { check(`${vp}.${st}.wrapper`, false, ".results-stale is not mounted"); return; }
+  const settled = st === "settled";
+  const inv = await page.evaluate(INVENTORY, settled);
+  if (!inv) { check(`${vp}.${st}.wrapper`, false, settled ? "the results wrapper was not found" : ".results-stale is not mounted"); return; }
   check(`${vp}.${st}.wrapper`, true, `${inv.length} text element(s) under .results-stale (${inv.filter((i) => !i.dup).length} distinct label/colour/size)`);
   const dir = path.join(OUT, `${vp}-${st}`);
   fs.mkdirSync(dir, { recursive: true });
@@ -216,7 +220,7 @@ async function measure(page, vp, st) {
     i++;
     // Must still be in the dim when sampled: a settle mid-run would
     // measure the undimmed page and pass vacuously.
-    if (!(await page.locator(".results-stale").count())) {
+    if (!settled && !(await page.locator(".results-stale").count())) {
       check(`${vp}.${st}.held`, false, `the dim cleared after ${i - 1} of ${inv.length} samples`);
       break;
     }
@@ -237,12 +241,18 @@ async function measure(page, vp, st) {
 
   await page.addScriptTag({ path: "C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site/node_modules/axe-core/axe.min.js" });
   const ax = await page.evaluate(async () => {
-    const r = await window.axe.run({ include: [".results-stale"] }, { runOnly: { type: "rule", values: ["color-contrast"] } });
+    const r = await window.axe.run({ include: ["[data-probe-root]"] }, { runOnly: { type: "rule", values: ["color-contrast"] } });
     return { violations: r.violations.flatMap((v) => v.nodes.map((n) => ({ target: n.target.join(" "), summary: (n.failureSummary || "").replace(/\s+/g, " ").slice(0, 200) }))), passes: r.passes.reduce((s, v) => s + v.nodes.length, 0), incomplete: r.incomplete.reduce((s, v) => s + v.nodes.length, 0) };
   });
   fs.writeFileSync(path.join(dir, "axe.json"), JSON.stringify(ax, null, 1));
   check(`${vp}.${st}.axe`, ax.violations.length === 0,
     `color-contrast inside the dim: ${ax.violations.length} violation(s), ${ax.passes} pass, ${ax.incomplete} incomplete${ax.violations.length ? " — " + ax.violations.slice(0, 4).map((v) => v.target + ": " + v.summary).join(" | ") : ""}`);
+  if (settled) {
+    // Calibration: the same sampler on the undimmed answer, where #288 leg 6
+    // measured 0 colour-contrast violations.  A reading under the floor
+    // here is the sampler's error, not the page's.
+    return;
+  }
   check(`${vp}.${st}.still-dimmed`, (await page.locator(".results-stale").count()) > 0, "the wrapper was still mounted when axe finished");
   const treat = await page.evaluate(() => {
     const w = document.querySelector(".results-stale");
@@ -263,13 +273,16 @@ async function measure(page, vp, st) {
   const browser = await chromium.launch();
   for (const width of WIDTHS) {
     const vp = String(width);
-    const ctx = await browser.newContext({ viewport: { width, height: width >= 1440 ? 1000 : 800 } });
+    // Device scale 2: at 1, a 10 px glyph's strokes rarely reach their
+    // declared colour, so the highest-contrast pixel under-reads the ink.
+    const ctx = await browser.newContext({ viewport: { width, height: width >= 1440 ? 1000 : 800 }, deviceScaleFactor: 2 });
     await applyGate(ctx, BASE);
     const page = await ctx.newPage();
     let ok = false;
     for (let t = 1; t <= 3 && !ok; t++) ok = await toResults(page, `${vp}.try${t}`);
     if (!ok) { await ctx.close(); continue; }
     await L.shot(page, OUT, `${vp}-settled`, false);
+    await measure(page, vp, "settled");
 
     // ── staged ──
     const why = await stageSpeed(page);

@@ -1,0 +1,34 @@
+INFO base — http://localhost:3295
+PASS 1440.try1.settle — the answer settled
+PASS 1440.settled.wrapper — 49 text element(s) under .results-stale (17 distinct label/colour/size)
+PASS 1440.settled.pixels — 49 sampled, 0 under their floor, 0 unreadable, 0 disabled (exempt); nearest the floor: .dl-all > span.dl-all-count.tr-prov "4 files" 6.19:1/4.5 · .tier-cue > span.tr-prov "◌ previous answer, refreshing…" 6.19:1/4.5 · .hero-cell > span.k "Total devices" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov "on the plan sheet" 6.47:1/4.5 · .hero-cell > span.k "Unique types" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov "distinct device types to source" 6.47:1/4.5
+PASS 1440.settled.axe — color-contrast inside the dim: 0 violation(s), 43 pass, 6 incomplete
+PASS 1440.staged.provoked — a SPEED edit staged, not applied; the dim is up with no request in flight
+PASS 1440.staged.wrapper — 49 text element(s) under .results-stale (17 distinct label/colour/size)
+PASS 1440.staged.pixels — 49 sampled, 0 under their floor, 0 unreadable, 0 disabled (exempt); nearest the floor: .qty > b "35" 4.61:1/4.5 · .qty > b "11" 4.61:1/4.5 · .qty > b "14" 4.61:1/4.5 · .qty > b "15" 4.61:1/4.5 · .dl-all > span.dl-all-count.tr-prov "4 files" 4.72:1/4.5 · .tier-cue > span.tr-prov "◌ previous answer, refreshing…" 4.72:1/4.5
+PASS 1440.staged.axe — color-contrast inside the dim: 0 violation(s), 43 pass, 6 incomplete
+PASS 1440.staged.still-dimmed — the wrapper was still mounted when axe finished
+PASS 1440.staged.treatment — wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: ["Previous answer: 1 field staged, not yet applied."]
+PASS 1440.flight.provoked — Apply sent; the dim is up with the request held
+PASS 1440.flight.wrapper — 45 text element(s) under .results-stale (17 distinct label/colour/size)
+PASS 1440.flight.pixels — 33 sampled, 0 under their floor, 0 unreadable, 12 disabled (exempt); nearest the floor: .qty > b "14" 4.61:1/4.5 · .qty > b "15" 4.61:1/4.5 · .dl-all > span.dl-all-count.tr-prov "4 files" 4.72:1/4.5 · .tier-cue > span.tr-prov "◌ previous answer, refreshing…" 4.72:1/4.5 · .hero-cell > span.k "Total devices" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov "on the plan sheet" 4.97:1/4.5
+PASS 1440.flight.axe — color-contrast inside the dim: 0 violation(s), 33 pass, 0 incomplete
+PASS 1440.flight.still-dimmed — the wrapper was still mounted when axe finished
+PASS 1440.flight.treatment — wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: ["Previous answer. These values predate the request in flight."]
+PASS 380.try1.settle — the answer settled
+PASS 380.settled.wrapper — 11 text element(s) under .results-stale (8 distinct label/colour/size)
+PASS 380.settled.pixels — 10 sampled, 0 under their floor, 1 unreadable, 0 disabled (exempt); nearest the floor: .tier-cue > span.tr-prov "◌ previous answer, refreshing…" 6.19:1/4.5 · .hero-cell > span.k "Total devices" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov "on the plan sheet" 6.47:1/4.5 · .hero-cell > span.k "Unique types" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov "distinct device types to source" 6.47:1/4.5 · .act.tr-step > span.font-mono "↓" 9.43:1/4.5
+PASS 380.settled.axe — color-contrast inside the dim: 0 violation(s), 9 pass, 1 incomplete
+PASS 380.staged.provoked — a SPEED edit staged, not applied; the dim is up with no request in flight
+PASS 380.staged.wrapper — 11 text element(s) under .results-stale (8 distinct label/colour/size)
+PASS 380.staged.pixels — 10 sampled, 0 under their floor, 1 unreadable, 0 disabled (exempt); nearest the floor: .tier-cue > span.tr-prov "◌ previous answer, refreshing…" 4.72:1/4.5 · .act.tr-step > span.font-mono "↓" 4.92:1/4.5 · .hero-cell > span.k "Total devices" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov "on the plan sheet" 4.97:1/4.5 · .hero-cell > span.k "Unique types" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov "distinct device types to source" 4.97:1/4.5
+PASS 380.staged.axe — color-contrast inside the dim: 0 violation(s), 9 pass, 1 incomplete
+PASS 380.staged.still-dimmed — the wrapper was still mounted when axe finished
+PASS 380.staged.treatment — wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: ["Previous answer: 1 field staged, not yet applied."]
+PASS 380.flight.provoked — Apply sent; the dim is up with the request held
+PASS 380.flight.wrapper — 11 text element(s) under .results-stale (8 distinct label/colour/size)
+PASS 380.flight.pixels — 7 sampled, 0 under their floor, 2 unreadable, 2 disabled (exempt); nearest the floor: .tier-cue > span.tr-prov "◌ previous answer, refreshing…" 4.72:1/4.5 · .hero-cell > div.sub.tr-prov "on the plan sheet" 4.97:1/4.5 · .hero-cell > span.k "Unique types" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov "distinct device types to source" 4.97:1/4.5 · .dl-files.tr-prov > span "4 files" 6.32:1/4.5 · .hero-cell > div.num "35" 4.61:1/3
+PASS 380.flight.axe — color-contrast inside the dim: 0 violation(s), 8 pass, 0 incomplete
+PASS 380.flight.still-dimmed — the wrapper was still mounted when axe finished
+PASS 380.flight.treatment — wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: ["Previous answer. These values predate the request in flight."]
+done

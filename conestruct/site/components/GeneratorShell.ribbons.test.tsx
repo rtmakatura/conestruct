@@ -171,12 +171,25 @@ describe("#288 clause 6 — rules 100–102's treatment", () => {
     expect(block).not.toMatch(/var\(--fail/);
   });
 
-  it("the dim itself is unchanged — clause 6 moved the ribbon, not the wash", () => {
+  it("the wash keeps its grayscale; #295 (A) replaced the opacity with the stale ink", () => {
     const wash = (() => {
       const i = css.indexOf(".workbench .results-stale {");
       return css.slice(i, css.indexOf("}", i));
     })();
-    expect(wash).toMatch(/opacity:\s*0\.5/);
+    // Clause 6 moved the ribbon, not the wash; #295 (A) changed how the
+    // wash dims the text under it.  Opacity dimmed every token to 2.57–3.80:1.
+    expect(wash).not.toMatch(/opacity/);
     expect(wash).toMatch(/grayscale\(0\.4\)/);
+    for (const [token, stale] of [
+      ["--ink", "--stale-ink"],
+      ["--ink-on-dark", "--stale-ink-on-dark"],
+      ["--ink-faint", "--stale-ink-faint"],
+      ["--ink-on-dark-faint", "--stale-ink-faint"],
+      ["--none", "--stale-ink-faint"],
+      ["--dim", "--stale-dim"],
+      ["--orange", "--stale-dim"],
+    ]) {
+      expect(wash).toMatch(new RegExp(`(^|\\s|;)${token}:\\s*var\\(${stale}\\);`));
+    }
   });
 });

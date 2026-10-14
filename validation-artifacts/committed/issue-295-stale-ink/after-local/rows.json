@@ -1,0 +1,167 @@
+[
+ {
+  "id": "base",
+  "ok": null,
+  "detail": "http://localhost:3295"
+ },
+ {
+  "id": "1440.try1.settle",
+  "ok": true,
+  "detail": "the answer settled"
+ },
+ {
+  "id": "1440.settled.wrapper",
+  "ok": true,
+  "detail": "49 text element(s) under .results-stale (17 distinct label/colour/size)"
+ },
+ {
+  "id": "1440.settled.pixels",
+  "ok": true,
+  "detail": "49 sampled, 0 under their floor, 0 unreadable, 0 disabled (exempt); nearest the floor: .dl-all > span.dl-all-count.tr-prov \"4 files\" 6.19:1/4.5 · .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 6.19:1/4.5 · .hero-cell > span.k \"Total devices\" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov \"on the plan sheet\" 6.47:1/4.5 · .hero-cell > span.k \"Unique types\" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov \"distinct device types to source\" 6.47:1/4.5"
+ },
+ {
+  "id": "1440.settled.axe",
+  "ok": true,
+  "detail": "color-contrast inside the dim: 0 violation(s), 43 pass, 6 incomplete"
+ },
+ {
+  "id": "1440.staged.provoked",
+  "ok": true,
+  "detail": "a SPEED edit staged, not applied; the dim is up with no request in flight"
+ },
+ {
+  "id": "1440.staged.wrapper",
+  "ok": true,
+  "detail": "49 text element(s) under .results-stale (17 distinct label/colour/size)"
+ },
+ {
+  "id": "1440.staged.pixels",
+  "ok": true,
+  "detail": "49 sampled, 0 under their floor, 0 unreadable, 0 disabled (exempt); nearest the floor: .qty > b \"35\" 4.61:1/4.5 · .qty > b \"11\" 4.61:1/4.5 · .qty > b \"14\" 4.61:1/4.5 · .qty > b \"15\" 4.61:1/4.5 · .dl-all > span.dl-all-count.tr-prov \"4 files\" 4.72:1/4.5 · .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 4.72:1/4.5"
+ },
+ {
+  "id": "1440.staged.axe",
+  "ok": true,
+  "detail": "color-contrast inside the dim: 0 violation(s), 43 pass, 6 incomplete"
+ },
+ {
+  "id": "1440.staged.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "1440.staged.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer: 1 field staged, not yet applied.\"]"
+ },
+ {
+  "id": "1440.flight.provoked",
+  "ok": true,
+  "detail": "Apply sent; the dim is up with the request held"
+ },
+ {
+  "id": "1440.flight.wrapper",
+  "ok": true,
+  "detail": "45 text element(s) under .results-stale (17 distinct label/colour/size)"
+ },
+ {
+  "id": "1440.flight.pixels",
+  "ok": true,
+  "detail": "33 sampled, 0 under their floor, 0 unreadable, 12 disabled (exempt); nearest the floor: .qty > b \"14\" 4.61:1/4.5 · .qty > b \"15\" 4.61:1/4.5 · .dl-all > span.dl-all-count.tr-prov \"4 files\" 4.72:1/4.5 · .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 4.72:1/4.5 · .hero-cell > span.k \"Total devices\" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov \"on the plan sheet\" 4.97:1/4.5"
+ },
+ {
+  "id": "1440.flight.axe",
+  "ok": true,
+  "detail": "color-contrast inside the dim: 0 violation(s), 33 pass, 0 incomplete"
+ },
+ {
+  "id": "1440.flight.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "1440.flight.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer. These values predate the request in flight.\"]"
+ },
+ {
+  "id": "380.try1.settle",
+  "ok": true,
+  "detail": "the answer settled"
+ },
+ {
+  "id": "380.settled.wrapper",
+  "ok": true,
+  "detail": "11 text element(s) under .results-stale (8 distinct label/colour/size)"
+ },
+ {
+  "id": "380.settled.pixels",
+  "ok": true,
+  "detail": "10 sampled, 0 under their floor, 1 unreadable, 0 disabled (exempt); nearest the floor: .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 6.19:1/4.5 · .hero-cell > span.k \"Total devices\" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov \"on the plan sheet\" 6.47:1/4.5 · .hero-cell > span.k \"Unique types\" 6.47:1/4.5 · .hero-cell > div.sub.tr-prov \"distinct device types to source\" 6.47:1/4.5 · .act.tr-step > span.font-mono \"↓\" 9.43:1/4.5"
+ },
+ {
+  "id": "380.settled.axe",
+  "ok": true,
+  "detail": "color-contrast inside the dim: 0 violation(s), 9 pass, 1 incomplete"
+ },
+ {
+  "id": "380.staged.provoked",
+  "ok": true,
+  "detail": "a SPEED edit staged, not applied; the dim is up with no request in flight"
+ },
+ {
+  "id": "380.staged.wrapper",
+  "ok": true,
+  "detail": "11 text element(s) under .results-stale (8 distinct label/colour/size)"
+ },
+ {
+  "id": "380.staged.pixels",
+  "ok": true,
+  "detail": "10 sampled, 0 under their floor, 1 unreadable, 0 disabled (exempt); nearest the floor: .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 4.72:1/4.5 · .act.tr-step > span.font-mono \"↓\" 4.92:1/4.5 · .hero-cell > span.k \"Total devices\" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov \"on the plan sheet\" 4.97:1/4.5 · .hero-cell > span.k \"Unique types\" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov \"distinct device types to source\" 4.97:1/4.5"
+ },
+ {
+  "id": "380.staged.axe",
+  "ok": true,
+  "detail": "color-contrast inside the dim: 0 violation(s), 9 pass, 1 incomplete"
+ },
+ {
+  "id": "380.staged.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "380.staged.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer: 1 field staged, not yet applied.\"]"
+ },
+ {
+  "id": "380.flight.provoked",
+  "ok": true,
+  "detail": "Apply sent; the dim is up with the request held"
+ },
+ {
+  "id": "380.flight.wrapper",
+  "ok": true,
+  "detail": "11 text element(s) under .results-stale (8 distinct label/colour/size)"
+ },
+ {
+  "id": "380.flight.pixels",
+  "ok": true,
+  "detail": "7 sampled, 0 under their floor, 2 unreadable, 2 disabled (exempt); nearest the floor: .tier-cue > span.tr-prov \"◌ previous answer, refreshing…\" 4.72:1/4.5 · .hero-cell > div.sub.tr-prov \"on the plan sheet\" 4.97:1/4.5 · .hero-cell > span.k \"Unique types\" 4.97:1/4.5 · .hero-cell > div.sub.tr-prov \"distinct device types to source\" 4.97:1/4.5 · .dl-files.tr-prov > span \"4 files\" 6.32:1/4.5 · .hero-cell > div.num \"35\" 4.61:1/3"
+ },
+ {
+  "id": "380.flight.axe",
+  "ok": true,
+  "detail": "color-contrast inside the dim: 0 violation(s), 8 pass, 0 incomplete"
+ },
+ {
+  "id": "380.flight.still-dimmed",
+  "ok": true,
+  "detail": "the wrapper was still mounted when axe finished"
+ },
+ {
+  "id": "380.flight.treatment",
+  "ok": true,
+  "detail": "wrapper opacity 1, filter grayscale(0.4); 1 ribbon(s), 0 inside the dim: [\"Previous answer. These values predate the request in flight.\"]"
+ }
+]

@@ -869,6 +869,22 @@ body {
   --ink-on-dark: #c8d1dd;
   --ink-on-dark-faint: #93a0b0;
 
+  /* #295 (A): the stale palette: the ink a previous answer reads in
+     under `.results-stale`.  Each is its token composited over --canvas
+     at the alpha that first reaches a target ratio: what `opacity: .5`
+     did, stopped at a measured floor instead of a fixed alpha
+     (validation-artifacts/committed/issue-295-stale-ink/palette295.py).
+     On --canvas / --da-ground: --stale-ink 7.01 / 7.32, --stale-ink-on-dark
+     6.31 / 6.59, --stale-ink-faint 4.74 / 4.96, --stale-dim 4.73 / 4.94.
+     The .5 dim gave 4.58, 3.68, 2.57, 2.68.  --stale-ink-on-dark aims
+     higher than the floor needs: the zip's 9.5 px "↓" is one 1 px stroke
+     that never renders its full colour, and at 5.63 it read 4.24:1 on
+     pixels. */
+  --stale-ink: #a2aab3;
+  --stale-ink-on-dark: #98a1ae;
+  --stale-ink-faint: #7e8b9a;
+  --stale-dim: #cb732e;
+
   /* #252: the working band's surface — darker than --canvas (1.07:1;
      the band reads as chrome from its --act border and shadow, not
      its fill).  Shared with #253's step strip, which composites it at
@@ -3932,10 +3948,32 @@ input[type="number"] {
    ribbon stops wearing failure chrome: it is not a failure, it is the
    sentence that says what follows is a previous answer.  The ⚠ in the
    breakdown-failure string carries that state in the text, where rule 13
-   wants it — never by the container's hue alone. */
+   wants it — never by the container's hue alone.
+
+   ─── #295 option A · RULE 13 AFTER THE DIM ───
+   `opacity: .5` dimmed the text it covered to 2.57–3.80:1 (29 axe
+   violations mid-refetch, LEG5.md): the answer the ribbon points at was
+   the least legible thing in the zone.  The wrapper now steps the INK
+   down instead: it redefines the ink tokens to the stale palette, so
+   every descendant reading a token follows, and each stale value clears
+   4.5:1 on both grounds (rule 13: text inside a dimmed region clears
+   the floor AFTER the dim).  The grayscale stays as the wash: it drains
+   hue from everything under the wrapper, graphics included, at close to
+   no luminance cost.  --orange is --dim's alias, resolved where it is
+   declared, so it is remapped too.  Not remapped: --act (it fills solid
+   controls behind --on-act ink) and the verdict colours (--pass fills the
+   audit's check tile); they stay at full value, above the floor, under
+   the wash.  Not-current still reads without the ribbon: the ink steps
+   down, the hue drains, and `.tier-cue` carries "◌ previous answer". */
 .workbench .results-stale {
-  opacity: 0.5;
   filter: grayscale(0.4);
+  --ink: var(--stale-ink);
+  --ink-on-dark: var(--stale-ink-on-dark);
+  --ink-faint: var(--stale-ink-faint);
+  --ink-on-dark-faint: var(--stale-ink-faint);
+  --none: var(--stale-ink-faint);
+  --dim: var(--stale-dim);
+  --orange: var(--stale-dim);
 }
 .workbench .stale-ribbon {
   /* Rule 100. */

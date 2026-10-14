@@ -42,7 +42,7 @@ def over(t, g, a):
 GROUNDS = {"--da-ground": rgb("#101c29"), "--canvas": rgb("#14202e")}
 TOKENS = {
     "--ink": ("#eaf0f7", 7.0),
-    "--ink-on-dark": ("#c8d1dd", 5.6),
+    "--ink-on-dark": ("#c8d1dd", 6.3),
     "--ink-faint / --ink-on-dark-faint / --none": ("#93a0b0", 4.7),
     "--dim": ("#ff8a2e", 4.7),
 }
