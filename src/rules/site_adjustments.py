@@ -23,7 +23,8 @@ from src.rules.validators import DevicePlacement, ScenarioParams
 # limited_sight_distance. Pulled from the labels emitted by the layout
 # generators (layout.py) plus the W-codes called out in the spec.
 _ADVANCE_SIGN_LABELS: frozenset[str] = frozenset(
-    {"W20-1", "W20-2", "W21-5aR", "W20-5R", "W4-2R", "W20-5L", "W4-2L", "W20-7", "W3-4"}
+    # #325: W21-5aL, the left shoulder's (#300), moves like W21-5aR.
+    {"W20-1", "W20-2", "W21-5aR", "W21-5aL", "W20-5R", "W4-2R", "W20-5L", "W4-2L", "W20-7", "W3-4"}
 )
 
 
