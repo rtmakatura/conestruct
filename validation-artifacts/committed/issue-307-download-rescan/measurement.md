@@ -18,9 +18,9 @@ Every download route (`/render/pdf`, `/xlsx`, `/markdown`, `/crew-pdf`, `/quote`
 | e-bayaud | scan 8.9 s | rescan | rescan | rescan | memo |
 | colorado-blvd | scan 7.1 s | memo | rescan | memo | rescan |
 
-- **15 of 20 follow-ups scanned again.** That includes 4 of the 5 sent the moment Generate answered, inside the 120 s memo TTL. The requests land on different containers (`max_containers=8`), and the memo is per container.
-- **The five hits are scattered.** Two came after the TTL: a hit is any container that has scanned the corridor in the last 120 s, which includes an earlier follow-up's own rescan.
-- **All 25 answered 200 tonight,** every scan by `overpass.openstreetmap.fr`, the rescans in 2.9–5.7 s. On a slow-mirror hour each rescan is its own chance to refuse. #292 measured 2 of 30 refusals across three windows.
+- **14 of 20 follow-ups scanned again.** That includes 4 of the 5 sent the moment Generate answered, inside the 120 s memo TTL. The requests land on different containers (`max_containers=8`), and the memo is per container.
+- **The six hits are scattered.** Two came after the TTL: a hit is any container that has scanned the corridor in the last 120 s, which includes an earlier follow-up's own rescan.
+- **All 25 answered 200 tonight,** every scan by `overpass.openstreetmap.fr`, the rescans in 2.7–5.7 s. On a slow-mirror hour each rescan is its own chance to refuse. #292 measured 2 of 30 refusals across three windows.
 
 ## What it means for the fix
 
