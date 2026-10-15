@@ -25,4 +25,8 @@ Prediction: `prediction.md`, committed in `31fb5053` before any code. Base: `9cc
 - **`data-download` on the saved buttons.** The #183 test finds "the clean saved download" by its route, as it did by the anchor's `href`, and the dirty-state buttons carry none. So each saved button carries `data-download="<route it fetches>"`, and the test's `pdfAnchor()` reads that. Its four assertions are otherwise unchanged and pass.
 - **Clearing on dirty, not just stamping.** The stamp (plan id, not dirty) alone would bring an old error back after the plan is saved again (same id, clean). So `DlCard` and `QuotePanel` also clear the error when the plan goes dirty. Pinned: dirty, then clean again, shows no error and no "Try again".
 
+## Correction to rulings.md item 1
+
+"The sandbox's own wording" holds for the five cards. The sandbox's quote button (`QuotePanel.tsx` public path) prints `Render failed (<status>)` for every failure, 400 included. The saved quote goes through `downloadSavedPart`, so on a 400 it prints the backend's message instead. That's more specific and is no new copy. The verifier caught it; the helper's comment now says so.
+
 Prod: the saved surface is dormant (flag off; needs a signed-in account), so the prod check after the ship is `/sandbox`'s cards and quote download, unchanged.

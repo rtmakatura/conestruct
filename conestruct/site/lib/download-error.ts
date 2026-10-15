@@ -34,8 +34,9 @@ function filenameFrom(res: Response, ext: string): string {
 
 // #203: a saved plan's download, fetched in the page so a failure stays
 // on it.  Resolves to null when the file was saved, or to the message
-// the card prints (the same wording the sandbox prints for the same
-// response).
+// the card prints (the wording the sandbox's download cards print for
+// the same response; the sandbox's quote button names every failure by
+// its status, so on a 400 the saved quote is the more specific of the two).
 export async function downloadSavedPart(url: string, ext: string): Promise<string | null> {
   let res: Response;
   try {
