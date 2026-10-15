@@ -1,0 +1,27 @@
+{
+ "fresh": {
+  "ok": true,
+  "quoteSettingsColumns": 1,
+  "recorded": 3
+ },
+ "productionLikeBefore": {
+  "quoteSettingsColumns": 1,
+  "recorded": 2
+ },
+ "productionLikeOld0002": {
+  "ok": false,
+  "error": "column \"quote_settings\" of relation \"plans\" already exists",
+  "quoteSettingsColumns": 1,
+  "recorded": 2
+ },
+ "productionLikeNew0002": {
+  "ok": true,
+  "quoteSettingsColumns": 1,
+  "recorded": 3
+ },
+ "rerun": {
+  "ok": true,
+  "quoteSettingsColumns": 1,
+  "recorded": 3
+ }
+}

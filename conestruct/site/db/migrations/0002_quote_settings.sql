@@ -1,1 +1,1 @@
-ALTER TABLE "plans" ADD COLUMN "quote_settings" jsonb;
+ALTER TABLE "plans" ADD COLUMN IF NOT EXISTS "quote_settings" jsonb;
