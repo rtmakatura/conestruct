@@ -31,6 +31,8 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "W20-2": "ROAD WORK XXX FT",
     "W20-4": "ONE LANE ROAD AHEAD",
     "W20-5R": "RIGHT LANE CLOSED AHEAD",
+    # #323: §6H.07 ¶02 (p. 805), "RIGHT (LEFT) LANE CLOSED".
+    "W20-5L": "LEFT LANE CLOSED AHEAD",
     "W20-7": "FLAGGER AHEAD",
     "W20-7a": "AFAD AHEAD",
     "W3-4": "BE PREPARED TO STOP",
@@ -42,6 +44,8 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "W16-2a": "NEXT XXX FT plaque",
     "W7-3a": "NEXT XX MILES plaque",
     "W4-2R": "RIGHT LANE ENDS",
+    # #323: TA-33 Note 1 (p. 924), the "corresponding Lane Ends" sign.
+    "W4-2L": "LEFT LANE ENDS",
     "W5-1": "ROAD NARROWS",
     # Guide (G-series)
     "G20-1": "ROAD CONSTRUCTION (NEXT XXX FT)",

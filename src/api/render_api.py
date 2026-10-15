@@ -304,6 +304,14 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
         # #300 (R119 Q4): the backend refuses and names the fix; the side
         # control shows it.  No frontend reset.  R120: worded positively
         # (no "not X" contrast; unslop rules apply to UI strings).
+        # #323: a near_intersection plan names its own work; every other kind
+        # keeps #300's words.
+        if isinstance(scenario, NearIntersectionScenario):
+            raise _pin_model_refusal(
+                "meta.work.side 'left' needs a lane closure near an intersection on a "
+                "one-way street: a road tagged one-way and confirmed as a one-way street. "
+                "Choose the right side, or plan this work on a one-way street."
+            )
         raise _pin_model_refusal(
             "meta.work.side 'left' needs shoulder work on a one-way street: a road "
             "tagged one-way and confirmed as a one-way street. Choose the right side, "
@@ -312,7 +320,7 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
     if work.side not in ("right", "left"):
         raise _pin_model_refusal(
             f"meta.work.side {work.side!r} is not built yet: right-side work is laid out, "
-            "and left-side shoulder work on a one-way street."
+            "and left-side shoulder or near-intersection lane work on a one-way street."
         )
     if not (meta.lat and meta.lng):
         return
@@ -350,33 +358,35 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
 # side the backend no longer builds, one per cause, written here so the
 # frontend composes nothing (Rule 3; one voice, P2).  Unslop-checked: no
 # "not X" contrast.  The deliverable endpoints keep R120's 400 above.
+# #323: ``{work}`` is the kind's noun -- "shoulder work" (the wording since
+# #300) or "lane work" (near_intersection).
 SIDE_REFUSAL_MESSAGES: dict[str, str] = {
     "not_shoulder": (
-        "Left-side work is laid out for shoulder work only. Pick a right-side curb, "
-        "or switch back to Shoulder work."
+        "Left-side work is laid out for shoulder work and for lane closures near an "
+        "intersection. Pick a right-side curb, or switch the kind of work."
     ),
     "no_road": (
-        "Left-side shoulder work needs a confirmed road. Pick the road on the map, "
+        "Left-side {work} needs a confirmed road. Pick the road on the map, "
         "or pick a right-side curb."
     ),
     "no_facts": (
-        "Left-side shoulder work needs a one-way street confirmed from the map. Reopen "
+        "Left-side {work} needs a one-way street confirmed from the map. Reopen "
         "the map and pick the road again, or pick a right-side curb."
     ),
     "two_way": (
-        "Left-side shoulder work needs a one-way street, and the map shows this road as "
+        "Left-side {work} needs a one-way street, and the map shows this road as "
         "two-way. Pick a right-side curb."
     ),
     "divided": (
-        "Left-side shoulder work needs a one-way street, and this road reads as divided. "
+        "Left-side {work} needs a one-way street, and this road reads as divided. "
         "Pick a right-side curb, or change Carriageway."
     ),
     "undecided": (
-        "Left-side shoulder work needs a one-way street, and this road's carriageway is "
+        "Left-side {work} needs a one-way street, and this road's carriageway is "
         "still open. Answer Carriageway, or pick a right-side curb."
     ),
     "highway": (
-        "Left-side shoulder work is laid out on one-way streets, and this road is a "
+        "Left-side {work} is laid out on one-way streets, and this road is a "
         "highway. Pick a right-side curb."
     ),
 }
@@ -401,7 +411,7 @@ def _side_refusal(scenario: Scenario) -> dict[str, str] | None:
         return None
     if left_side_built(scenario):
         return None
-    if not isinstance(scenario, ShoulderScenario):
+    if not isinstance(scenario, (ShoulderScenario, NearIntersectionScenario)):
         cause = "not_shoulder"
     elif not meta.centerline or len(meta.centerline) < 2:
         cause = "no_road"
@@ -423,7 +433,12 @@ def _side_refusal(scenario: Scenario) -> dict[str, str] | None:
             cause = "no_facts"
         else:
             cause = "highway"
-    return {"side": "left", "cause": cause, "message": SIDE_REFUSAL_MESSAGES[cause]}
+    work_noun = "lane work" if isinstance(scenario, NearIntersectionScenario) else "shoulder work"
+    return {
+        "side": "left",
+        "cause": cause,
+        "message": SIDE_REFUSAL_MESSAGES[cause].format(work=work_noun),
+    }
 
 
 def _read_scenario(scenario: Scenario) -> tuple[Scenario, dict[str, str] | None]:

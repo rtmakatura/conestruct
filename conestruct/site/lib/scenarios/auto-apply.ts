@@ -190,7 +190,9 @@ const ONE_WAY_TAGS = new Set(["yes", "-1"]);
 
 export function leftSideBuilt(scenario: Scenario): boolean {
   return (
-    scenario.kind === "shoulder" &&
+    // #323: near_intersection's left lane too (its far side is refused by
+    // the backend where the cross street's station is measured).
+    (scenario.kind === "shoulder" || scenario.kind === "near_intersection") &&
     carriagewayVerdict(scenario.carriageway) === "one_way_street" &&
     ONE_WAY_TAGS.has(scenario.meta.roadDirection?.oneway ?? "")
   );
@@ -212,7 +214,7 @@ export function matchRefusalAffordance(
     return {
       code: "work_side",
       pointer:
-        "Left-side work is laid out only for shoulder work on a one-way street. Choose a side under Occupied side to proceed.",
+        "Left-side work is laid out for shoulder work and for lane closures near an intersection, on a one-way street. Choose a side under Occupied side to proceed.",
     };
   }
   // near_intersection (#117 enablement, #120's gate): exact mirror of

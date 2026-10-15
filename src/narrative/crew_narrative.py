@@ -857,6 +857,9 @@ def build_narrative_context(
         # #300: the work side's curb in the steps that name it ("right" on
         # every plan but a left-shoulder plan on a one-way street).
         "work_side_word": params.work_side,
+        # #323: the curb opposite the work (Note 8's mirrored signs) and the
+        # way traffic merges off a closed lane; "left" on every right plan.
+        "other_side_word": "right" if params.work_side == "left" else "left",
         "takedown_sign_sequence": _format_takedown_sign_sequence(takedown_order),
         "taper_start_station": taper_start_station,
         "taper_end_station": taper_end_station,

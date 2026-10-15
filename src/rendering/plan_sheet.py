@@ -3745,7 +3745,9 @@ def _draw_notes(
             for line in _wrap_to_width(
                 cv,
                 (
-                    "CLOSED LANE DRAWN AS THE RIGHTMOST LANE: A MODELING "
+                    # #323: a left-lane plan draws the LEFTMOST lane.
+                    "CLOSED LANE DRAWN AS THE "
+                    f"{'LEFTMOST' if params.work_side == 'left' else 'RIGHTMOST'} LANE: A MODELING "
                     "ASSUMPTION; NO MUTCD RULE SELECTS THE LANE (THE WORK "
                     "LOCATION DOES). IF THE WORK OCCUPIES A DIFFERENT LANE, "
                     "THIS PLAN DOES NOT APPLY AS DRAWN."

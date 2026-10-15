@@ -131,7 +131,8 @@ def test_each_stale_shape_is_named_by_its_own_cause(cause: str) -> None:
     assert _side_refusal(scenario) == {
         "side": "left",
         "cause": cause,
-        "message": SIDE_REFUSAL_MESSAGES[cause],
+        # #323: the messages take the kind's noun; these plans are shoulder.
+        "message": SIDE_REFUSAL_MESSAGES[cause].format(work="shoulder work"),
     }
 
 
@@ -154,7 +155,8 @@ def test_the_geometry_read_answers_a_stale_left_as_no_side(client: TestClient, c
     assert j["side_refused"] == {
         "side": "left",
         "cause": cause,
-        "message": SIDE_REFUSAL_MESSAGES[cause],
+        # #323: the messages take the kind's noun; these plans are shoulder.
+        "message": SIDE_REFUSAL_MESSAGES[cause].format(work="shoulder work"),
     }
     # Only the curbs the backend builds, all right sides here.
     assert j["side_options"] and all(o["work"]["side"] == "right" for o in j["side_options"])
@@ -179,9 +181,10 @@ def test_the_prod_repro_offers_the_west_curb(client: TestClient) -> None:
     assert [(o["label"], o["work"]) for o in j["side_options"]] == [
         ("West side · southbound traffic", {"side": "right", "travel": "with_geometry"}),
     ]
+    # #323: left-side work is laid out for two kinds now; the message names both.
     assert j["side_refused"]["message"] == (
-        "Left-side work is laid out for shoulder work only. Pick a right-side curb, "
-        "or switch back to Shoulder work."
+        "Left-side work is laid out for shoulder work and for lane closures near an "
+        "intersection. Pick a right-side curb, or switch the kind of work."
     )
 
 

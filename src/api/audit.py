@@ -411,6 +411,13 @@ def build_audit_trail(
         cdot_reference = (
             "CDOT S-630-1 Case 18 (traffic control around a work area "
             "near an intersection, one lane closed; Sheet 10)"
+            if params.work_side != "left"
+            # #323, CHOSEN: Case 18 is drawn for the right lane only; a
+            # left-lane plan on a one-way street is that case mirrored (the
+            # pending_verification item cites the sources and says so).
+            else "CDOT S-630-1 Case 18 (traffic control around a work area near an "
+            "intersection, one lane closed; Sheet 10), mirrored to the left lane of a "
+            "one-way street"
         )
     elif is_lane:
         L_required = L_full
@@ -789,7 +796,9 @@ def build_audit_trail(
         sign_b_station = _chain["w20_4_r"]
         sign_c_station = _chain["w20_1_r"]
     elif is_lane:
-        sign_codes = {"A": "W4-2R", "B": "W20-5R", "C": "W20-1"}
+        # #323: a left-lane plan takes the LEFT legends (§6H.07 ¶02).
+        lane_side = "L" if params.work_side == "left" else "R"
+        sign_codes = {"A": f"W4-2{lane_side}", "B": f"W20-5{lane_side}", "C": "W20-1"}
     else:
         sign_codes = {"A": sc, "B": "W20-2", "C": "W20-1"}
 
@@ -1507,7 +1516,9 @@ def build_audit_trail(
     # marker rides the case section to ``audit_projection`` like R88's; left
     # plans only, so every other plan's sections stay byte-identical.
     if params.work_side == "left":
-        case_section["left_shoulder_mirrored"] = True
+        # #323: a left near-intersection plan is the left LANE (Case 18
+        # mirrored); only a shoulder plan is Case 11 mirrored.
+        case_section["left_lane_mirrored" if is_near else "left_shoulder_mirrored"] = True
 
     # ------------------------------------------------------------------
     # 8. Flagger placement (only meaningful when flaggers are present)
@@ -1838,6 +1849,10 @@ MEDIAN_OPENING_PENDING = (
 # this URL says so.
 LEFT_SHOULDER_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/300"
 
+# #323: a near-side left-lane plan on a one-way street is Case 18 mirrored;
+# the pending item keyed to this URL says so and cites the sources.
+LEFT_LANE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/323"
+
 # Tracking issue for lane-count trust (#120): when detection relays OSM
 # lane tags that contradict each other (lanes != lanes:forward +
 # lanes:backward + lanes:both_ways), the pending item keyed to this URL
@@ -2154,6 +2169,26 @@ def audit_projection(
                     "the site (#300)."
                 ),
                 "tracking_issue": LEFT_SHOULDER_ISSUE,
+            }
+        )
+
+    # #323: the left-lane mirror is CHOSEN, its elements sourced; disclosed
+    # (Rule 12).  Keyed off the case section's marker.
+    if case.pop("left_lane_mirrored", False):
+        items.append(
+            {
+                "kind": "left_lane_mirrored",
+                "label": (
+                    "S-630-1 draws Case 18 for the right lane only, and no figure draws a "
+                    "near-side left-lane closure on a one-way street. This plan mirrors "
+                    "Case 18 to the left lane: the same devices and distances, a near-side "
+                    "work space handled as a midblock lane closure (MUTCD 11th Ed. §6N.12 "
+                    "¶08, p. 849), the taper into the right-hand lane (Fig. 6P-21 Note 1, "
+                    "p. 900), the LEFT LANE CLOSED and Lane Ends signs (§6H.07 ¶02, p. 805; "
+                    "Fig. 6P-33 Note 1, p. 924) and signs on both curbs (S-630-1 Note 8). "
+                    "The mirror is CHOSEN. Verify against the site (#323)."
+                ),
+                "tracking_issue": LEFT_LANE_ISSUE,
             }
         )
 

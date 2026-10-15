@@ -1266,8 +1266,13 @@ def left_side_built(scenario: Scenario) -> bool:
     The one predicate the side options and the request gate share
     (``render_api._side_options``, ``render_api._ensure_pin_model_complete``):
 
-    * shoulder work only (R79: near-intersection left and left lane
-      closures wait for Rule 8 evidence);
+    * shoulder work, and (#323) near_intersection's NEAR side: the left
+      lane of a one-way street, Case 18 mirrored with every element
+      sourced (the checkpoint, validation-artifacts/committed/
+      issue-323-left-lane/).  The far side (TA-23's turn bay) and mid-block
+      lane closures still wait (R79; #323 Q1/Q2).  The near/far split needs
+      the marked cross street's station, so it is refused where that is
+      measured (``scenario_to_call``), not here;
     * #308's carriageway verdict is a one-way STREET (R80, read through
       #308's predicate: one carriageway of a divided road keeps its
       median side unoffered);
@@ -1279,7 +1284,7 @@ def left_side_built(scenario: Scenario) -> bool:
     """
     from src.rules.carriageway import ONE_WAY_TAGS
 
-    if not isinstance(scenario, ShoulderScenario):
+    if not isinstance(scenario, (ShoulderScenario, NearIntersectionScenario)):
         return False
     meta = scenario.meta
     road = meta.roadDirection
@@ -1372,6 +1377,15 @@ def plan_shoulder_width_ft(
         return 10.0
     # flagger_lane_closure, mobile_op_2lane, near_intersection
     return 8.0
+
+
+# #323: the honest refusal for a left-lane plan with the cross street on
+# the far side of the work (not built; #323 Q1).
+LEFT_LANE_FAR_SIDE_MESSAGE = (
+    "Left-lane work is laid out only when the cross street is just past the work "
+    "(the near side). This cross street comes before the work, so pick the right-side "
+    "curb, or mark the cross street the work ends at."
+)
 
 
 class CrossStreetStationError(ValueError):
@@ -1653,6 +1667,14 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             # stays False: no median is drawn and nothing is re-spaced.
             one_way_street=scenario.carriageway_verdict() in ("one_way_street", "divided"),
             divided_carriageway=scenario.carriageway_verdict() == "divided",
+            # #323: the left lane of a one-way street (near side only; the
+            # request gate has already refused "left" unless
+            # ``left_side_built`` holds, and the far side is refused below).
+            work_side=(
+                "left"
+                if scenario.meta.work is not None and scenario.meta.work.side == "left"
+                else "right"
+            ),
             **meta_kw,
         )
         station = (
@@ -1660,6 +1682,15 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             if params.pin_model == "work_start" and place_cross_street
             else (0.0 if params.pin_model == "work_start" else None)
         )
+        if params.work_side == "left":
+            far = (station is not None and station > params.work_zone_length_ft) or any(
+                station is None and (a.alongStationFt or 0.0) > params.work_zone_length_ft
+                for a in scenario.approaches
+            )
+            if far:
+                # #323 Q1: TA-23 draws the left lane's far side as a turn bay
+                # with R3-7L, a different layout from the right's; not built.
+                raise CrossStreetStationError(LEFT_LANE_FAR_SIDE_MESSAGE)
         approaches = [
             ApproachParams(
                 id=a.id,

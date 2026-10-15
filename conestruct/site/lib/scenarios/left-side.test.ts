@@ -55,8 +55,17 @@ describe("leftSideBuilt (mirror of schemas.left_side_built)", () => {
     expect(leftSideBuilt(answered)).toBe(false);
   });
 
-  it("fails for any kind but shoulder (R79)", () => {
+  it("fails for a kind with no left side (#323: shoulder and near_intersection have one)", () => {
+    // DEFAULT_NEAR_INTERSECTION carries no one-way street, so it fails on the
+    // road, not the kind; the kind gate is the flagger's.
     expect(leftSideBuilt(DEFAULT_NEAR_INTERSECTION)).toBe(false);
+    const niOneWay = {
+      ...DEFAULT_NEAR_INTERSECTION,
+      carriageway: BROADWAY_LEFT.carriageway,
+      meta: { ...DEFAULT_NEAR_INTERSECTION.meta, roadDirection: BROADWAY_LEFT.meta.roadDirection },
+    } as Scenario;
+    expect(leftSideBuilt(niOneWay)).toBe(true);
+    expect(leftSideBuilt({ ...niOneWay, kind: "flagger_lane_closure" } as Scenario)).toBe(false);
   });
 });
 
@@ -73,7 +82,7 @@ describe("matchRefusalAffordance — the work_side row (#300, R119 Q4)", () => {
     expect(matchRefusalAffordance(stale)).toEqual({
       code: "work_side",
       pointer:
-        "Left-side work is laid out only for shoulder work on a one-way street. Choose a side under Occupied side to proceed.",
+        "Left-side work is laid out for shoulder work and for lane closures near an intersection, on a one-way street. Choose a side under Occupied side to proceed.",
     });
   });
 

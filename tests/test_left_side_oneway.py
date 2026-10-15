@@ -14,7 +14,6 @@ a one-way candidate after #308), and page 1's drawing calls.
 
 from __future__ import annotations
 
-import copy
 import json
 import os
 from dataclasses import replace
@@ -27,7 +26,7 @@ from fastapi.testclient import TestClient
 from pydantic import TypeAdapter
 
 from src.api.render_api import app
-from src.api.schemas import Scenario, left_side_built, scenario_to_call
+from src.api.schemas import Scenario, scenario_to_call
 from src.rendering import plan_sheet as ps
 from src.rules import site_detection as sd
 from src.rules.devices import DeviceType
@@ -134,7 +133,9 @@ def _refusal(client: TestClient, body: dict[str, Any], endpoint: str = "/render/
 
 @pytest.mark.parametrize(
     "label",
-    ["divided", "no tag with an operator's answer", "near_intersection kind", "no facts"],
+    # #323: a near_intersection plan's left side now builds on a one-way
+    # street (tests/test_left_lane_near_intersection.py); it left this list.
+    ["divided", "no tag with an operator's answer", "no facts"],
 )
 def test_a_left_side_the_gate_refuses_names_the_fix(client: TestClient, label: str) -> None:
     body = broadway("left")
@@ -145,22 +146,6 @@ def test_a_left_side_the_gate_refuses_names_the_fix(client: TestClient, label: s
         # tag is read, so the gate checks the tag itself.
         body["carriageway"]["confirmed"] = "one_way_street"
         body["meta"]["roadDirection"]["oneway"] = None
-    elif label == "near_intersection kind":
-        # R79: the same pin and left side, but a near-intersection plan.
-        assert left_side_built(parsed(broadway("left"))) is True
-        body = json.loads(
-            (
-                Path(__file__).parent / "fixtures" / "pdf_worst_case" / "adv-near-intersection.json"
-            ).read_text(encoding="utf-8")
-        )["scenario"]
-        body["meta"].update(
-            {k: copy.deepcopy(v) for k, v in broadway("left")["meta"].items() if k != "project"}
-        )
-        # A work-start plan's cross-street stations are the backend's, read
-        # from the marked cross street (E 6th Ave, downstream on Broadway).
-        for approach in body["approaches"]:
-            approach.pop("alongStationFt", None)
-        body["meta"]["intersection"] = {"lat": 39.7255, "lng": -104.98746, "name": "E 6th Ave"}
     else:
         del body["carriageway"]
     message = _refusal(client, body)

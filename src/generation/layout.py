@@ -1514,9 +1514,15 @@ def generate_near_intersection(
 
     # 1. Advance warning signs — lane-closure series, single side
     # (undivided; S-630-1 Sheet 2 Note 8 mirroring applies to divided roads).
+    # #323: a left-lane plan (one-way street, near side) takes the LEFT
+    # legends -- §6H.07 ¶02 (p. 805) "RIGHT (LEFT) LANE CLOSED", and TA-33
+    # Note 1 (p. 924) "the LEFT LANE CLOSED signs and the corresponding Lane
+    # Ends signs shall be substituted".  Stations and offsets are the right
+    # plan's (the offset model: positive toward the work).
+    lane_side = "L" if params.work_side == "left" else "R"
     for label, station in (
-        ("W4-2R", st["sign_a"]),  # RIGHT LANE ENDS (merge arrow)
-        ("W20-5R", st["sign_b"]),  # RIGHT LANE CLOSED AHEAD
+        (f"W4-2{lane_side}", st["sign_a"]),  # RIGHT (LEFT) LANE ENDS (merge arrow)
+        (f"W20-5{lane_side}", st["sign_b"]),  # RIGHT (LEFT) LANE CLOSED AHEAD
         ("W20-1", st["sign_c"]),  # ROAD WORK AHEAD
         ("R2-10", st["r2_10"]),  # BEGIN DOUBLE FINES ZONE at 1/2 C (Case 18)
     ):
@@ -1545,13 +1551,14 @@ def generate_near_intersection(
             )
         )
 
-    # 3. Arrow board at the taper start, LEFT arrow (merge left).
+    # 3. Arrow board at the taper start, pointing the way traffic merges:
+    # left off a closed right lane, right off a closed left lane (#323).
     placements.append(
         DevicePlacement(
             device_type=DeviceType.ARROW_BOARD,
             station_ft=st["taper_start"],
             offset_ft=arrow_board_offset,
-            label="LEFT_ARROW",
+            label="RIGHT_ARROW" if params.work_side == "left" else "LEFT_ARROW",
         )
     )
 
