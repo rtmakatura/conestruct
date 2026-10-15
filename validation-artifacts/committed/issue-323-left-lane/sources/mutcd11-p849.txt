@@ -1,0 +1,49 @@
+December 2023 Sect. 6N.12 
+Guidance:
+04 The effect of the work upon signal operation should be considered, and temporary corrective actions should 
+be taken, if necessary, such as revising signal phasing and/or timing to provide adequate capacity, maintaining 
+or adjusting signal detectors, and relocating signal heads to provide adequate visibility as described in Part 4.
+Standard:
+05 When work will occur near an intersection where operational, capacity, or pedestrian accessibility 
+problems are anticipated, the highway agency having jurisdiction shall be contacted.
+Guidance:
+06 For work at an intersection, advance warning signs, devices, and markings should be used on all cross 
+streets, as appropriate. The typical applications depict urban intersections on arterial streets. Where the posted 
+speed limit, the off-peak 85th-percentile speed prior to the work starting, or the anticipated speed exceeds 40 
+mph, additional warning signs should be used in the advance warning area.
+07 Pedestrian crossings near TTC sites should be separated from the worksite by appropriate barriers that 
+maintain the accessibility and detectability for pedestrians with disabilities.
+Support:
+08 Near-side work spaces, as depicted in Figure 6P-21, are simply handled as a midblock lane closure. A problem 
+that might occur with near-side lane closure is a reduction in capacity, which during certain hours of operation 
+could result in congestion and back-ups.
+Option:
+09 When near-side work spaces are used, a mandatory turn lane may be used for through vehicular traffic.
+10 Where space is restricted in advance of near-side work spaces, as with short block spacings, two warning signs 
+may be used in the advance warning area, and a third action-type warning or a regulatory sign (such as Keep Left) 
+may be placed within the transition area.
+Support:
+11 Far-side work spaces, as depicted in Figures 6P-22 through 6P-25, involve additional treatment because road 
+users typically enter the activity area by straight-through and left-turn or right-turn movements.
+Guidance:
+12 When a lane through an intersection must be closed on the far side, it should also be closed on the near-side 
+approach to preclude merging movements within the intersection.
+Option:
+13 If there are a significant number of vehicles turning from a near-side lane that is closed on the far side, 
+the near-side lane may be converted to a mandatory turn lane.
+Support:
+14 Figures 6P-26 and 6P-27 provide guidance on applicable procedures for work performed within 
+the intersection.
+Option:
+15 If the work is within the intersection, any of the following strategies may be used:
+A. A small work space so that road users can move around it, as shown in Figure 6P-26;
+B. Flaggers or uniformed law enforcement officers to direct road users, as shown in Figure 6P-27;
+C. Work in stages so the work space is kept to a minimum; and
+D. Road closures or upstream diversions to reduce road user volumes.
+Guidance:
+16 Depending on road user conditions, a flagger(s) and/or a uniformed law enforcement officer(s) should 
+be used to control road users.
+Support:
+17 Figures 6P-52 through 6P-54 provide guidance on applicable procedures for work performed within a 
+circular intersection.
+MUTCD 11th Edition Page 849

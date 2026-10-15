@@ -1,0 +1,217 @@
+Date: Comments
+Computer File Information Sheet Revisions
+Not to Scale
+Creation Date:
+CAD Ver.:ORD 10.12 Scale: Units:English
+07/04/12
+Highway Construction
+Traffic Controls for 
+Created By: KEN
+Last Modification Date:
+Last Modified By: NRR
+07/01/26
+Standard Plan No.
+S-630-1
+Standard Sheet No. 10 of 26
+EB Issued by the Traffic Safety & Engineering Services: July 01, 2026 Project Sheet Number:
+Colorado Department of Transportation
+Around a Work Area Near an Intersection
+Typical Application of Traffic Control
+Near an Intersection, One Lane Closed
+Traffic Control Around a Work Area
+Typical Application
+C
+B
+A
+A
+B
+C
+Case No. 19
+Case No. 18
+Notes:
+TYPE III
+TYPE III
+C B A
+W20-7
+W20-4
+A
+L
+C B
+W20-5(R)
+W4-2(R)
+W20-1
+A
+50' MIN.
+100' MAX.
+100'
+500'
+100'
+50' MIN.
+100' MAX.
+L
+B
+A
+100'
+C
+500'
+100'
+10'
+MIN.
+10'
+MIN.
+10' MIN.
+10' MIN.
+10'
+MIN.
+MIN.
+10'
+B C
+W20-4
+W20-4
+VARIES
+VARIES
+W20-1
+W20-5(R) W4-2(R)
+W20-1
+W20-7 W20-1
+W20-7
+W20-1
+W20-1 W20-4 W20-7
+BARRICADE
+BARRICADE
+W20-1
+* * *
+*
+*
+*
+*
+* *
+*
+*
+*
+*
+*
+*
+* *
+*
+For Road Closure
+Typical Signing
+Case No. 20
+TYPE III TYPE III
+500' 500'
+W20-2
+R11-2
+R11-3
+W20-3
+500' 500'
+W20-2
+OR
+OR
+R11-4
+BARRICADE
+W20-3 W20-3
+M4-10
+R11-3
+OR
+R11-4
+BARRICADE
+A B C
+100
+350
+500
+2640
+100
+350
+500
+1500
+100
+350
+500
+1000
+ROAD TYPE
+EXPRESSWAY/FREEWAY
+RURAL
+DISTANCE BETWEEN SIGNS
+*Key to Advance Signing Distances
+URBAN (< = 40 MPH)
+URBAN (> = 45 MPH) placed within one, or perhaps two, blocks.
+applications. Urban applications require the signs to be 
+Sign placement shown on cases 18 and 19 typifies rural 
+R2-11
+500'
+R2-11
+R2-11
+R2-11
+R2-11 R2-11
+R2-11
+R2-11
+R2-10
+C
+*
+R2-10
+R2-10
+*½ C
+R2-10
+*½ C
+R2-10
+½ C
+R2-10
+*½ C
+R2-10
+½ C
+*
+R2-10
+1.
+2.
+all cases as determined by the Engineer.
+Truck-mounted attenuators (TMA) optional for
+OR
+W20-3
+W20-1
+W20-3
+VARIES
+CZ
+Work Area
+Legend
+Direction Of Travel
+Concrete Barrier (Temporary)
+Type III Barricade
+Flashing Beacon
+Shoulder Taper = 1/3 L
+S = Numerical Value of Speed Limit
+Speed 40 Mph or Less: L =
+Speed 45 Mph or More: L = S X W
+L = Minimum Length Of Taper
+or 85 Percentile Speed
+L 
+Transition Taper Length:
+W = Width of Offset
+Arrow Panel
+Advance Warning Flashing or Sequencing 
+See Fines Double Signing Notes On Sheet 12. 
+Buffer Space (see General Note 23 on Sheet 2).
+Clear Zone (see General Note 17 on Sheet 2).
+Mobile Attenuator
+Flagger Station
+and one lane, two-way traffic tapers.
+delineate merging tapers, shifting tapers, 
+Drums or vertical panels shall be used to
+control devices included in the plans. 
+to be used, see schedule of traffic 
+Channelizing device: for type of device 
+devices.
+are included in the schedule of consturction control 
+construction activity and are required when they 
+determined by detour design and/or scope of 
+These devices are optional. Their need shall be 
+for more than 3 days.
+Required when work occupies the location 
+2
+60
+WS
+Denver, CO 80204
+2829 West Howard Place
+Engineering Services
+Traffic Safety & 
+XX
+XX

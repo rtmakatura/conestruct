@@ -1,0 +1,55 @@
+Sect. 6P.01 December 2023
+Notes for Figure 6P-22—Typical Application 22
+Right-Hand Lane Closure on the Far Side of an Intersection
+Guidance:
+1. If the work space extends across a crosswalk, the crosswalk should be closed using the information and 
+devices shown in Figure 6P-29.
+Option:
+2. Positive protection devices may be used per Section 6M.02.
+3. When the normal procedure of closing on the near side of the intersection any lane that is not carried 
+through the intersection results in the closure of a right-hand lane having significant right-turn movements, 
+then the right-hand lane may be restricted to right turns only, requiring through traffic to use the left lane.
+4. For intersection approaches reduced to a single lane, left-turn movements may be prohibited to maintain 
+capacity for through vehicular traffic.
+5. Flashing warning lights and/or flags may be used to call attention to the advance warning signs.
+6. Where the turning radius is large, it may be possible to create a right-turn island using channelizing 
+devices or pavement markings.
+7. If dimension “A” is not available to create a temporary right-turn lane, continuous channelizers may be 
+installed from the end of the taper to the intersection and, as a result, the RIGHT LANE MUST TURN 
+RIGHT signs would not be installed.
+Support:
+8. By first closing off the right-hand lane and then reopening it as a turn bay, the capacity of the through lane 
+is preserved by separating the right-turning vehicles from the through vehicles.
+W20-1
+(optional)
+W20-1
+W20-1
+W20-1
+W20-5R
+W4-2R
+R3-7R
+G20-2
+(optional)
+G20-2
+(optional)
+(optional)
+G20-2
+(optional)
+G20-2
+(optional)
+A A
+L
+A
+B
+C
+A
+A
+Notes: See Table 6P-2 for the meanings of 
+the symbols used in this figure.
+ See Table 6B-1 for the meanings of 
+the letter codes used in this figure.
+ See Table 6B-4 for formulas for 
+calculating taper length (L).
+Figure 6P-22. Right-Hand Lane Closure on the Far Side of an Intersection (TA-22)
+Typical Application 22
+Page 902 MUTCD 11th Edition

@@ -1,0 +1,63 @@
+Sect. 6P.01 December 2023
+Notes for Figure 6P-33—Typical Application 33
+Stationary Lane Closure on a Divided Highway
+Standard:
+1. This information also shall be used when work is being performed in the lane adjacent to the 
+median on a divided highway. In this case, the LEFT LANE CLOSED signs and the corresponding 
+Lane Ends signs shall be substituted.
+2. When a side road intersects the highway within the TTC zone, additional TTC devices shall be 
+placed as needed.
+Guidance:
+3. When paved shoulders having a width of 8 feet or more are closed, channelizing devices should be used 
+to close the shoulder in advance of the merging taper to direct vehicular traffic to remain within the 
+traveled way.
+Option:
+4. A truck-mounted attenuator may be used on the work vehicle and/or shadow vehicle.
+5. Positive protection devices may be used per Section 6M.02.
+Support:
+6. Where conditions permit, restricting all vehicles, equipment, workers, and their activities to one side of the 
+roadway might be advantageous.
+Standard:
+7. An arrow board shall be used when a freeway lane is closed. When more than one freeway lane is 
+closed, a separate arrow board shall be used for each closed lane. Shoulder taper
+(see Note 3) A
+Buffer space (optional) Buffer space (optional)
+L
+B
+C
+Shoulder taper
+(see Note 3) A
+L
+B
+C
+A – LONG-TERM AND
+INTERMEDIATE
+B – SHORT-TERM
+Temporary white
+edge line
+100 ft (optional)
+500 ft
+500 ft
+Work vehicle
+Truck-mounted
+attenuator
+(optional)
+Notes: See Table 6P-2 for the meanings of 
+the symbols used in this figure.
+ See Table 6B-1 for the meanings of 
+the letter codes used in this figure.
+ See Table 6B-4 for formulas for 
+calculating taper length (L).
+G20-2
+(optional)
+G20-2
+(optional)
+W4-2R
+W20-5R
+W4-2R
+W20-5R
+W20-1
+W20-1
+Figure 6P-33. Stationary Lane Closure on a Divided Highway (TA-33)
+Typical Application 33
+Page 924 MUTCD 11th Edition

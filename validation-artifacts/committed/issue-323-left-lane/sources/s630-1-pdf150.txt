@@ -1,0 +1,142 @@
+Date: Comments
+Computer File Information Sheet Revisions
+Not to Scale
+Creation Date:
+CAD Ver.:ORD 10.12 Scale: Units:English
+07/04/12
+Highway Construction
+Traffic Controls for 
+Created By: KEN
+Last Modification Date:
+Last Modified By: NRR
+07/01/26
+Standard Plan No.
+S-630-1
+Standard Sheet No. 2 of 26
+EB Issued by the Traffic Safety & Engineering Services: July 01, 2026 Project Sheet Number: Denver, CO 80204
+2829 West Howard Place
+Engineering Services
+Traffic Safety & 
+Colorado Department of Transportation
+Provision 626 - Public Information Services.
+30. Project information signage may be installed if specified in Project Special 
+days with either intermittent or continuous lane closures.
+nearby, is anticipated to cause sustained work zone impacts at a location for three or more consecutive 
+29. A significant project is defined as one that, alone or in combination with other concurrent projects 
+directed by the project plans and specifications, and/or the Project Engineer.
+28. The typical cases depicted in this standard reflect the minimum requirements, unless as otherwise 
+use is encouraged on higher speed facilities when traffic is being diverted from its usual course.
+27. Raised pavement markers may be used to supplement temporary striping during non-snow periods. Their 
+caution mode.
+or for temporarily closing one lane on a two-lane, two-wayroadway, use the arrow boards only in the 
+If arrow boards are used for shoulder work, blocking the shoulder, for roadside work near the shoulder, 
+closed lane.
+26. When arrow boards are used to close multiple lanes, a separate arrow board shall be used for each 
+drivers' line of sight to advance warning signs is obstructed.
+and/or where there are infrequent exits. Additional signage is also encouraged in locations where 
+Additional advance warning signage is encouraged in all cases where traffic volumes and speeds are high 
+of upcoming traffic conditions and to alert them of upcoming lane usage.
+significantly reduced as a result of construction. The legends should be changed to advise motorists
+for any lane closures on interstate and other high speed facilities especially when the level of service is 
+25. Additional VMS signage should be considered at least a mile in advance of the signing shown in the detail 
+traffic control plan (TCP) or the contractor's method of handling traffic (MHT).
+Engineer. When a buffer space is used, dimensions and/or devices used are to be incorporated in the 
+24. Buffer space is optional. Need must be determined on a project or site specific basis as directed by the 
+For additional pavement marking details, see Standard Plan S-627-1 "Pavement Markings".
+recent CDOT Standard Specifications for Road and Bridge Construction.
+edge line temporary markings shall be in place at the end of each work day in accordance with the most 
+undivided roadways that are being constructed under traffic, full compliance center line, lane line, and 
+23. For temporary pavement markings and control points for installing those pavement markings for 
+escape path, but shall not present any glare to traffic.
+feet above the roadway, and a power source. It shall illuminate the station area and a flagger
+source (500 watt minimum), self-supporting stand with variable light height from a minimum of eight 
+approved. A typical light should provide the following: a fully directional swivel mount quartz light 
+22. Flood lights shall be used to illuminate flagger stations during the hours of darkness unless otherwise 
+Engineer.
+signalized intersection. Flagging is not permitted on interstates unless approved by the Region Traffic 
+signals have been disabled or set to flash mode. Only a uniformed police officer may direct traffic in a 
+21. Flagging operations shall not override visible regulatory signing or traffic signals, even when traffic 
+regarding AFAD.
+the most recent CDOT Standard Specifications for Road and Bridge Construction for additional guidance 
+20. Flagger station shall comprise of either a flagger or an automated flagger assistance device (AFAD). See 
+see the applicable standard plans.
+19. For details on barricades, concrete barrier (temporary), vertical panels, and flashing beacon (portable), 
+the Engineer.
+10. Based on sight distance and other considerations, the final locations of signs are subject to approval of 
+installation operations.
+and take-down of most case applications; daily work site access; and pavement marking removal and 
+9. Additional traffic control devices addressing flagging, speed reduction, etc. will be necessary for set-up 
+(ex: Case 11 on Sheet 7).
+lane ramps, one-way streets, and as directed by the Engineer, except where only one shoulder is closed 
+8. All warning and regulatory signs shall be posted on both sides of the roadway on divided highways, multi-
+"Right 2", etc. at no additional cost.
+W20-5 warning signs shall be furnished with exchangeable plaques reading "Right", "Left", "Center", 
+Engineer after award, or may be available upon request.
+Supplement" thereto. Sign layouts for other signs will be furnished in the plans, transmitted to the 
+For detailed dimensions of signs with sign code numbers, see "Standard Highway Signs" and the "Colorado 
+Construction traffic sign (special), sq. ft., may be used for some project specific information signs.
+Panel Size C Greater than 16 sq. ft.
+Panel Size B 9.01 to 16.00 sq. ft.
+Panel Size A 0.01 to 9.00 sq. ft. (including Type 1 and Type 2 barricades).
+7. Construction traffic signs shall be measured by the following sizes and descriptions:
+plans, or approved by the Engineer.
+6. Contractor and personal vehicle parking is prohibited within the right-of-way unless designated on the 
+serviceable by the Engineer, shall be replaced.
+5. Any traffic control device that is damaged, weathered, worn, or otherwise deemed no longer 
+R2-11 signs. The spacing of these signs may be changed as directed by the Engineer.
+4. Work Zone (G20-5p) and Fines Double (R2-6p) signs shall be provided every 2640' between R2-10 and 
+The regulatory or advisory speed reduction displayed shall not exceed 15 mph per sign installation.
+speed for condition named is lower than the posted speed limit.
+An advisory speed plaque (W13-1p) may be used with a warning sign when the maximum recommended 
+R2-1 (Optional) signs. 
+construction traffic control devices, should be installed at the locations shown on the typical cases by 
+When a change in an existing speed limit is required, the R2-1 signs, shown on the schedule of 
+"CDOT Temporary Speed Limit Reduction."
+3. When speed limit reduction is required, such reduction shall be in accordance with CDOT Form 568, 
+approved by the Engineer.
+2. Work on the project shall not be started until all required traffic control devices are in place, and 
+Temporary Traffic Control Devices & Features".
+All devices shall meet the requirements of the latest edition of the ATSSA "Quality Guidelines for 
+as necessary during the progress of construction, and removed entirely when the project is completed. 
+washing), replaced if damaged, removed when temporarily not in use and returned when required, reset 
+flashing beacon (portable), and channelizing devices, shall be furnished, installed, maintained (including 
+1. All construction zone traffic control devices, including but not limited to barricades, signs, arrow panels, 
+General Notes
+the speed limit. (e.g. 50 mph = 50 feet to 100 feet maximum)
+b. For tangents along the buffer space or work area, spacing may not be greater than two times 
+(e.g. 45 mph = 45 feet)
+a. For tapers and transitions, spacing equals the numerical value of the speed limit.
+18. Channelizing device spacing, in feet, shall be as follows:
+to meet clear zone requirements, or fitted with an impact attenuation device.
+barrier (temporary). The barrier shall be tied to an existing structure or guard rail, flared or extended, 
+application, throughout the length of two-way operation. The transition zones shall have concrete 
+separated either with concrete barrier (temporary), or with channelizing devices approved for this 
+17. When two-way traffic is placed on one roadway of a normally divided highway, opposing traffic shall be 
+more).
+16. Type 1 barricades shall not be used on freeways, expressways, or other high speed roadways (55 mph or 
+inches when used on other high speed roadways (45 mph or more) with an ADT of 6,000 or more.
+they are used on freeways and expressways, or during nighttime working hours. They should also be 36 
+15. Traffic cones shall be at least 28 inches in height. However, the minimum size shall be 36 inches when 
+horizontal position is not permitted.
+roadway, the sign may remain in place when not applicable, but laying the sign panel down in a 
+the barrier with a saddle type bracket. If the bracket allows the sign panel to be turned parallel to the 
+14. Signs mounted on the median of divided highways where median barrier is in place may be mounted on 
+elevation.
+at lower heights, but the bottom of the signs shall not be less than one foot above the pavement 
+Signs approved to be mounted on portable supports, or appropriate signs mounted on barricades, may be 
+Placement" unless otherwise approved.
+13. All construction sign placement shall be in accordance with Standard Plan "Typical Ground Sign 
+to the Engineer, and must be approved by the Engineer prior to their use.
+Other post designs or systems require the submittal of an FHWA eligibility letter of acceptance 
+e. Certain post sizes and shapes require a "Break-Away" device. See the applicable standard plan. 
+that makes them hazardous to traffic.
+d. Portable or temporary mounting shall not be constructed or weighted by any method or material 
+accepted).
+c. Symbols and legends shall be of good workmanship (uneven or hand lettering will not be 
+specifications and/or as shown on the plans.
+b. Reflective sheeting shall conform to ASTMD4956. The type shall be as described in the standard 
+a. Sign panels may be fabricated from plywood, steel, aluminum, or other suitable material.
+appearing traffic controls, and:
+12. All sign material shall be sound and durable to the degree necessary for maintaining effective and neat 
+additional advance signing shall be placed beyond the congestion.
+11. If construction related traffic congestion backs up beyond the installed advance sign sequence, 
