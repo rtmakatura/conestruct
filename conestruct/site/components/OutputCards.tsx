@@ -504,6 +504,16 @@ function DlCard({
           ) : null}
         </span>
       </div>
+      {/* #318 (R149): at the phone width an 11×17 sheet fits to ~1.8 px
+          text (validation-artifacts/committed/issue-318-phone-drawings),
+          so the Plan sheet card says how to read it.  Rendered on every
+          width and shown only ≤480 px by CSS, so the desk card is
+          unchanged; the button below stays one tap. */}
+      {card.kind === "pdf" ? (
+        <p className="dl-phone-note tr-prov" data-testid="dl-phone-note">
+          This is an 11×17 drawing. Open it on a bigger screen or print it.
+        </p>
+      ) : null}
       {note}
       <div className="dl-actions">{actions}</div>
     </div>

@@ -3450,6 +3450,18 @@ input[type="number"] {
   .workbench .dls.dl-phone-closed {
     display: none;
   }
+  /* #318 (R149): the Plan sheet card's line, phone only.  One class more
+     specific than the off-phone rule below, which follows it in the file. */
+  .workbench .dls .dl-card .dl-phone-note {
+    display: block;
+  }
+}
+/* #318 (R149): off the phone the line is not shown, so the desk card is
+   pixel-identical to before. */
+.workbench .dl-card .dl-phone-note {
+  display: none;
+  margin: 6px 0 0;
+  color: var(--ink-on-dark);
 }
 /* #289 fidelity F6 — rule 132's GHOST (audit rows 150–153): height 44,
    padding 0 16, 1 px #2c3e53, transparent, Inter 500 13 #eaf0f7; hover

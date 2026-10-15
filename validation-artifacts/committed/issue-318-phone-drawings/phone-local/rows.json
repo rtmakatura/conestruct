@@ -1,0 +1,47 @@
+[
+ {
+  "width": 360,
+  "notePresent": true,
+  "noteShown": true,
+  "noteText": "This is an 11×17 drawing. Open it on a bigger screen or print it.",
+  "cardTitle": "Plan sheet",
+  "controls": [
+   {
+    "text": "Download PDF↓",
+    "w": 302,
+    "h": 44
+   }
+  ],
+  "otherCardsWithNote": 1
+ },
+ {
+  "width": 320,
+  "notePresent": true,
+  "noteShown": true,
+  "noteText": "This is an 11×17 drawing. Open it on a bigger screen or print it.",
+  "cardTitle": "Plan sheet",
+  "controls": [
+   {
+    "text": "Download PDF↓",
+    "w": 262,
+    "h": 44
+   }
+  ],
+  "otherCardsWithNote": 1
+ },
+ {
+  "width": 1440,
+  "notePresent": true,
+  "noteShown": false,
+  "noteText": "This is an 11×17 drawing. Open it on a bigger screen or print it.",
+  "cardTitle": "Plan sheet",
+  "controls": [
+   {
+    "text": "Download PDF↓",
+    "w": 181,
+    "h": 44
+   }
+  ],
+  "otherCardsWithNote": 1
+ }
+]
