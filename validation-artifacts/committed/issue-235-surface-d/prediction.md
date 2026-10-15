@@ -71,3 +71,29 @@ New tests:
 - NOTES no longer prints it;
 - the worst-case title block picks pitch 9 and clears the hairline;
 - broadway-left lists all 5 advance signs.
+
+## Addendum (Ryan, 2026-10-14, before ship): the cut line keeps the codes
+
+Committed before the change.
+
+1. **The "+N MORE" line names the cut codes.**
+   - Any "+N MORE ADVANCE SIGNS" line names the cut rows' codes in the advance table's order. The cut rows are
+     `advance[advance_cap:]`; duplicates and "—" are dropped, the same as the all-cut line. For example:
+
+     > +3 MORE ADVANCE SIGNS (W20-5R, R2-10, W20-1). SEE CREW NARRATIVE & DEVICE LIST
+
+   - The line wraps to the box at 7 pt bold, up to 3 lines.
+   - If it does not fit, the existing cut loop keeps cutting rows until the all-cut line prints. That is today's
+     fallback, unchanged.
+   - Predictions:
+     - The near-intersection N Broadway sheet (one-way and two-way) keeps its W4-2R row. The line above measures
+       307 pt in the 358 pt NOTES width, so it is one line, and the sheet names all 4 codes.
+     - The N Broadway SB plan cuts nothing, so it is unchanged (5 of 5).
+     - Containment stays 0 / 0 / 0 on the 13 fixtures and the 4 sample plans.
+     - Churn: `test_r117_pdf_notes.py` near-intersection pins the new string.
+2. **Why `ni-before` shows SHEET 1 OF 2 with an AERIAL row and `ni-after` shows 1 OF 1 with none.**
+   - The before image rendered from the main checkout, whose gitignored `.env` holds a Mapbox token.
+     `plan_sheet.py` loads `.env` on import (`load_dotenv()`), so the aerial page rendered.
+   - The worktree has no `.env`, so the after image skipped page 2 ("MAPBOX_TOKEN not set") and its title block
+     had no AERIAL row.
+   - Not a code difference. The re-render loads the same `.env` for both sides, as production does.
