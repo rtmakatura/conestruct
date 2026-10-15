@@ -131,7 +131,9 @@ def test_a_tampered_or_foreign_token_is_refused(monkeypatch: pytest.MonkeyPatch)
     tok = st.sign_scan("k1", {"sidewalks": {"detected": True, "count": 2}}, "t", 1)
     body, mac = tok.split(".")
     flipped = body[:-1] + ("A" if body[-1] != "A" else "B")
-    for bad in (f"{flipped}.{mac}", "no-dot", f"{body}.", ""):
+    # Non-ASCII in either half is malformed (the verifier's repair: the body
+    # half used to raise UnicodeEncodeError, a 500 at the endpoint).
+    for bad in (f"{flipped}.{mac}", "no-dot", f"{body}.", "", "é.AAAA", f"{body}.é"):
         with pytest.raises(st.ScanTokenInvalid):
             st.verify_scan(bad)
     monkeypatch.setenv("RENDER_API_SECRET", "another-secret")
@@ -198,6 +200,12 @@ def test_a_bad_token_is_an_honest_400(client: TestClient, overpass: Overpass) ->
     assert res.status_code == 400
     assert res.json()["detail"]["error"] == "site_scan_token_invalid"
     assert "Generate the plan again" in res.json()["detail"]["message"]
+
+
+def test_a_non_ascii_token_is_the_same_honest_400(client: TestClient, overpass: Overpass) -> None:
+    res = client.post("/render/pdf", headers=AUTH, json=with_token(scenario(), "é.AAAA"))
+    assert res.status_code == 400
+    assert res.json()["detail"]["error"] == "site_scan_token_invalid"
 
 
 def test_a_token_for_another_corridor_is_ignored_and_the_request_scans(

@@ -77,9 +77,12 @@ def verify_scan(token: str) -> dict[str, Any]:
     try:
         body, mac = token.split(".")
         given = _unb64(mac)
+        # A non-ASCII body is malformed, never a 500 (UnicodeEncodeError is
+        # a ValueError, caught here with the rest).
+        body_bytes = body.encode("ascii")
     except (ValueError, TypeError) as exc:
         raise ScanTokenInvalid("malformed token") from exc
-    expected = hmac.new(_mac_key(), body.encode("ascii"), hashlib.sha256).digest()
+    expected = hmac.new(_mac_key(), body_bytes, hashlib.sha256).digest()
     if not hmac.compare_digest(given, expected):
         raise ScanTokenInvalid("signature does not match")
     try:

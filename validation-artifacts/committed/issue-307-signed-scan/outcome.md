@@ -22,3 +22,9 @@ Prediction: `prediction.md`, committed in `607b0773` before any code. Base: `114
   - `GeneratorShell.input-gating.test.tsx` pins the audit body exactly. It now includes `include_scan_token: true` beside #306's `include_breakdown`.
   - `tests/test_r117_jurisdiction_raised.py` calls `render_api._audit_build` directly and unpacked three values. It now unpacks four, since `_audit_build` returns the scan result too, so `/render/audit` can sign it.
 - **A token-served scan doesn't seed the receiving container's memo.** The memo write is skipped on any hit, and the token is the download's own copy, so there's nothing to share.
+
+## Verifier REPAIR (cycle 1), fixed
+
+`verify_scan` encoded the token's body to ASCII outside its `try`, so a non-ASCII token (`é.AAAA`) raised `UnicodeEncodeError` before the MAC check. That reached the client as a 500 instead of the 400 `site_scan_token_invalid`. The verifier reproduced it. The encode now sits inside the malformed-token guard. Pinned: `é.AAAA` and `<body>.é` are `ScanTokenInvalid`, and `/render/pdf` with `é.AAAA` returns 400 `site_scan_token_invalid` (`test_a_non_ascii_token_is_the_same_honest_400`). Python suite +1: 2869 passed, 2 skipped.
+
+Also noted by the verifier: `prediction.md` wrote `sign_scan(entry)`, while the code's signature is `sign_scan(key, buckets, measured_at, duration_ms)` (the entry's four parts).
