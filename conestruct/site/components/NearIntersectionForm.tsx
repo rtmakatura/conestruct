@@ -70,6 +70,9 @@ interface Props {
   /** #301 (R123 Q4): open the picker with "mark the intersection" armed —
    *  the line below names the action, so the action sits beside it. */
   onMarkIntersection?: () => void;
+  /** #323 R153: Table 6B-1's A off the audit (backend-owned), shown only
+   *  as TA-22's dimension beside the turn-bay field.  Null until known. */
+  advanceSpacingAFt?: number | null;
 }
 
 export function NearIntersectionForm({
@@ -79,6 +82,7 @@ export function NearIntersectionForm({
   clearApproachConfirm,
   stepsPending = false,
   onMarkIntersection,
+  advanceSpacingAFt = null,
 }: Props) {
   const locked = useWriteLock();
   const set = <K extends keyof NearIntersectionScenario>(
@@ -217,6 +221,13 @@ export function NearIntersectionForm({
   const along = legs[0]?.alongStationFt ?? -200;
   const sideUpstream = along > scenario.workLen;
   const distanceFt = sideUpstream ? along - scenario.workLen : -along;
+  // #323 R153: the turn-bay field shows for a left-lane plan whose cross
+  // street may be past the far end (TA-23).  On the marked-intersection
+  // model only the backend knows near from far, so it shows for every left
+  // plan there; display only, the backend decides what the length is for.
+  const showTurnBay =
+    scenario.meta.work?.side === "left" &&
+    (scenario.meta.pinModel === "work_start" || !sideUpstream);
   const setSideAndDistance = (upstream: boolean, dist: number) => {
     const nextAlong = upstream ? scenario.workLen + dist : -dist;
     updateAllLegs({ alongStationFt: nextAlong });
@@ -345,6 +356,46 @@ export function NearIntersectionForm({
           )}
         </Field>
         </>
+        )}
+
+        {/* #323 R153: the left-turn bay's storage length is site geometry
+            (TA-23 Note 5), so the operator enters it.  Empty by default,
+            never prefilled; TA-22's A is a labelled reference from a
+            different figure and is never written into the field. */}
+        {showTurnBay && (
+          <Field>
+            <LabelRow htmlFor="ni-turn-bay">Left-turn bay storage length (ft)</LabelRow>
+            <input id="ni-turn-bay"
+              type="number"
+              inputMode="numeric"
+              min="1"
+              className="field-input"
+              placeholder="Not entered"
+              aria-describedby="ni-turn-bay-help ni-turn-bay-ref"
+              value={scenario.turnBayStorageFt ?? ""}
+              onChange={(e) =>
+                set(
+                  "turnBayStorageFt",
+                  e.target.value === "" ? undefined : +e.target.value,
+                )
+              }
+            />
+            <p id="ni-turn-bay-help" className="tr-prov mt-1.5 mb-0">
+              You enter this. When the intersection is past the far end of
+              the work, the left lane becomes a left-turn bay (TA-23), and
+              TA-23 sizes the bay to hold every turning vehicle in one
+              signal cycle (Note 5, p. 904). Take it from the signal timing
+              or counts. The far-side plan won&apos;t build without it.
+            </p>
+            <p id="ni-turn-bay-ref" className="tr-prov mt-1 mb-0">
+              Reference only, from a different figure: TA-22 (Fig. 6P-22,
+              p. 903) dimensions its right-turn lane as A
+              {advanceSpacingAFt !== null
+                ? `, ${advanceSpacingAFt.toLocaleString("en-US")} ft at this speed (Table 6B-1)`
+                : " (Table 6B-1), shown once the checks run"}
+              . It isn&apos;t used for this bay.
+            </p>
+          </Field>
         )}
 
         <CheckRow

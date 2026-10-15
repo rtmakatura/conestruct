@@ -148,6 +148,11 @@ export interface NearIntersectionScenario extends JurisdictionPlanFields {
    *  carriageway.py).  A one-way street signs both curbs (S-630-1 Sheet 2
    *  Note 8); `confirmed` is the operator's answer to an undecided road. */
   carriageway?: CarriagewayFacts;
+  /** #323 R153 — the left-turn bay's storage length (TA-23's channelizer
+   *  run from the 100 ft point to the stop line), in feet.  Site geometry:
+   *  TA-23 sizes it by signal-cycle demand (Note 5, p. 904), so only the
+   *  operator enters it.  No default; absent until entered (Rule 10/12). */
+  turnBayStorageFt?: number;
 }
 
 /**
