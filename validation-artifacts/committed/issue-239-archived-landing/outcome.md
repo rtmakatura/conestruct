@@ -16,3 +16,12 @@ Prediction: `prediction.md`, committed in `b240d136` before any code. Base: `b62
 Measured before deleting: none of the ten components had an importer outside the page and each other (`grep` over `conestruct/site` and `scripts/`). PlanSheet, ScenarioCard and TaperViz were imported only by Hero and MathSection.
 
 `globals.css` rules that only these components used were left in place (rulings.md 4).
+
+## Found after the ship-prep CI run: two cites moved
+
+CI's Python suite failed on this branch's tip (`ba084013`, and every branch stacked on it) at `tests/test_vercel_env_check.py::test_every_cite_is_real_and_one_names_the_variable`. #239's comment edits moved two lines that `scripts/production-env.txt` (R29) cites:
+
+- `SENTRY_AUTH_TOKEN`: `next.config.mjs:38` → `:37`;
+- `NEXT_PUBLIC_AUTH_UI`: `lib/feature-flags.ts:12` → `:13`.
+
+The arc's local run covered the site suite only, so it missed this. The branch is pushed and stacked, and rewriting it would need a force push, so the fix is its own commit at the top of the stack (`issue-195-app-plans-redirect`). The stack ships as one fast-forward. Full Python suite there: 2854 passed, 2 skipped.
