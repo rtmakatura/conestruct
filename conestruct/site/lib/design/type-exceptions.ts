@@ -455,36 +455,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/AppNav.tsx", cls: "text-[10px]", count: 4 },
       { file: "components/Wordmark.tsx", cls: "text-[14.5px]", count: 1 },
       { file: "components/AppSheetMeta.tsx", cls: "text-[10px]", count: 1 },
-      { file: "components/FinalCTA.tsx", cls: "text-[11px]", count: 2 },
-      { file: "components/FinalCTA.tsx", cls: "text-[17px]", count: 1 },
-      { file: "components/FinalCTA.tsx", cls: "text-[40px]", count: 1 },
-      { file: "components/FinalCTA.tsx", cls: "text-[56px]", count: 1 },
-      { file: "components/Footer.tsx", cls: "text-[11px]", count: 1 },
-      { file: "components/Hero.tsx", cls: "text-[11px]", count: 1 },
-      { file: "components/Hero.tsx", cls: "text-[13px]", count: 1 },
-      { file: "components/Hero.tsx", cls: "text-[18px]", count: 1 },
-      { file: "components/Hero.tsx", cls: "text-[40px]", count: 1 },
-      { file: "components/Hero.tsx", cls: "text-[56px]", count: 1 },
-      { file: "components/MathSection.tsx", cls: "text-[10px]", count: 6 },
-      { file: "components/MathSection.tsx", cls: "text-[11px]", count: 4 },
-      { file: "components/MathSection.tsx", cls: "text-[13px]", count: 1 },
-      { file: "components/MathSection.tsx", cls: "text-[16px]", count: 1 },
-      { file: "components/MathSection.tsx", cls: "text-[17px]", count: 1 },
-      { file: "components/MathSection.tsx", cls: "text-[28px]", count: 1 },
-      { file: "components/MathSection.tsx", cls: "text-[36px]", count: 1 },
-      { file: "components/MathSection.tsx", cls: "text-[9px]", count: 1 },
-      { file: "components/Nav.tsx", cls: "text-[11px]", count: 1 },
-      { file: "components/Nav.tsx", cls: "text-[13px]", count: 1 },
-      { file: "components/Nav.tsx", cls: "text-[22px]", count: 1 },
-      { file: "components/Nav.tsx", cls: "text-sm", count: 4 },
       { file: "components/PlanRow.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/PlanRow.tsx", cls: "text-[13px]", count: 4 },
       { file: "components/PlanRow.tsx", cls: "text-[18px]", count: 1 },
-      { file: "components/PlanSheet.tsx", cls: "text-[10px]", count: 4 },
-      { file: "components/PlanSheet.tsx", cls: "text-[11px]", count: 1 },
-      { file: "components/PlanSheet.tsx", cls: "text-[9px]", count: 4 },
-      { file: "components/ScenarioCard.tsx", cls: "text-[10px]", count: 2 },
-      { file: "components/ScenarioCard.tsx", cls: "text-[12px]", count: 1 },
     ],
   },
   {
@@ -495,7 +468,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/DebugSnapshotButton.tsx", cls: "text-[10px]", count: 2 },
       { file: "components/DeviceBreakdown.tsx", cls: "text-[11px]", count: 1 },
       { file: "components/DeviceBreakdown.tsx", cls: "text-[12px]", count: 4 },
-      { file: "components/DimStrip.tsx", cls: "text-[11px]", count: 1 },
       // #289 Phase 2: FlaggerForm's 10px site was the >1500 ft pilot-car
       // note, which moved to the WHERE band with the work-zone length it
       // is about (FLOW.md §5a move 3).  Row DELETED.
@@ -533,7 +505,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/QuotePanel.tsx", cls: "text-[16px]", count: 1 },
       { file: "components/QuotePanel.tsx", cls: "text-[28px]", count: 1 },
       { file: "components/ScheduleField.tsx", cls: "text-[11px]", count: 2 },
-      { file: "components/SheetMeta.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/TieredReference.tsx", cls: "text-[11px]", count: 3 },
       { file: "components/TieredReference.tsx", cls: "text-[12px]", count: 4 },
       { file: "components/TieredReference.tsx", cls: "text-[13px]", count: 1 },
@@ -721,7 +692,7 @@ export const CENSUS_PINS = {
   // coming-soon-gate C-Q8: the six legal-page sites leave (terms and
   // privacy, 36/15/11 px each); the wordmark's site moves AppNav ->
   // Wordmark (one out, one in).  92 -> 86.
-  tsxSites: 86,
+  tsxSites: 57, // #239: -29, the archived landing's nine components deleted (86 -> 57)
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -739,6 +710,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 252, // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
-  tsxFiles: 34, // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
+  tsxUses: 204, // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxFiles: 25, // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;

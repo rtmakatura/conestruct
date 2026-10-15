@@ -181,7 +181,8 @@ const observedCode = codeHexLiterals(SITE_ROOT);
 
 describe("#263 ink literals — code (comments stripped)", () => {
   it("the scanner reads the tree", () => {
-    expect(observedCode.get("components/TaperViz.tsx")?.length).toBe(18);
+    // #239: the sentinel was TaperViz (18), deleted with the archived landing.
+    expect(observedCode.get("components/LocationPickerModal.tsx")?.length).toBe(4);
   });
 
   it("every file with a literal is declared with its exact set and count; every declared file still has them", () => {
@@ -196,7 +197,8 @@ describe("#263 ink literals — code (comments stripped)", () => {
     }
   });
 
-  it("TaperViz and PlanSheet declare themselves decorative in their header", () => {
+  it("no decorative row remains (#239 deleted the only two, TaperViz and PlanSheet); a new one must declare itself in its header", () => {
+    expect(CODE_LITERALS.filter((x) => x.disposition === "decorative")).toEqual([]);
     for (const f of CODE_LITERALS.filter((x) => x.headerMarker)) {
       const head = readFileSync(join(SITE_ROOT, f.file), "utf-8").split("\n").slice(0, 12).join("\n");
       expect(head, f.file).toContain(f.headerMarker!);

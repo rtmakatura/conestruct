@@ -1,12 +1,10 @@
 import { describe, it, expect } from "vitest";
 
 // Route-level pin for the redirects declared in next.config.mjs.
-// The archived marketing page at app/(archived)/landing/page.tsx stays on
-// disk (the /landing rewrite item is parked) but must be unreachable: it
-// carries pre-verification copy ("~90 sec", "100% MUTCD-cited") and a
-// Sign in link that the flag-off public surface does not offer.  The
-// redirect is config-level — the same mechanism that already sends
-// /try to /sandbox — so it is served before any render.
+// The archived marketing page at app/(archived)/landing/page.tsx was
+// deleted in #239 (its copy predated verification: "~90 sec", "100%
+// MUTCD-cited").  The redirect stays so an old /landing link still lands
+// on the public page.  It is config-level, served before any render.
 //
 // coming-soon-gate C-Q5: both now go to / (the public placeholder) as
 // 307s — /sandbox is gated (R1.1, R1.2), and a 308's hard browser cache

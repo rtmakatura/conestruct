@@ -128,8 +128,9 @@ const GATED_PAGES: Row[] = [
   { path: "/sign-up", method: "GET", file: "app/sign-up/[[...sign-up]]/page.tsx" },
   { path: "/sign-up/verify-email-address", method: "GET", file: "app/sign-up/[[...sign-up]]/page.tsx" },
   { path: "/debug/sentry-test", method: "GET", file: "app/debug/sentry-test/page.tsx" },
-  // The archived landing (never served: next.config.mjs redirects first).
-  { path: "/landing", method: "GET", file: "app/(archived)/landing/page.tsx" },
+  // The archived landing was deleted in #239; next.config.mjs still
+  // redirects /landing to /, so no file serves it.
+  { path: "/landing", method: "GET", file: "" },
   // Default-deny: near-misses of public paths and unknown paths.
   { path: "/sign-inx", method: "GET", file: "" },
   { path: "/terms/extra", method: "GET", file: "" },

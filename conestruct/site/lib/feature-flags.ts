@@ -5,7 +5,8 @@
 //
 // To revive the gated flow:
 //   1. Set NEXT_PUBLIC_AUTH_UI=true in .env.local / Vercel
-//   2. Restore the marketing landing as the homepage (see
+//   2. Decide the homepage. / is the coming-soon page; the archived
+//      marketing landing was deleted in #239 (git keeps it at 4c52c492,
 //      app/(archived)/landing/page.tsx)
 //   3. (Optional) Re-link /app from the public nav
 export const AUTH_UI_ENABLED =

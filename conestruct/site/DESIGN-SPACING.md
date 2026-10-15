@@ -323,7 +323,8 @@ role 5). The other eight are declared and unconsumed by design; each
 moves into a role or exception row in the commit whose surface first
 reads it. **Three of the nine values already existed in the sheet** as
 debt rows — 12.5px on four `.workbench` selectors, 15px on three, and
-22px as `Nav.tsx`'s `text-[22px]` wordmark. Those rows are untouched:
+22px as `Nav.tsx`'s `text-[22px]` wordmark (deleted with the archived
+landing in #239). Those rows are untouched:
 they share a pixel value with a ruled size, not its owner, and folding
 them would claim a role they do not play.
 

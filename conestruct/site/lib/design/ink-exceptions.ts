@@ -65,49 +65,8 @@ export const CSS_OWNER_SWAPS: readonly OwnerSwap[] = [
 
 /** Code literals per file (comments stripped, tests excluded). */
 export const CODE_LITERALS: readonly FileLiterals[] = [
-  {
-    file: "components/TaperViz.tsx",
-    hexes: [
-      "#1B2838",
-      "#9A8E7A",
-      "#C44A6E",
-      "#C45F08",
-      "#CFC8BD",
-      "#D9D3CA",
-      "#E8710A",
-      "#F2C9D6",
-      "#FAF6F0",
-    ],
-    count: 18,
-    disposition: "decorative",
-    reason:
-      "the landing page's taper illustration (MathSection.tsx) on the landing paper palette — an SVG picture, not a workbench surface; not the print sheet (that is src/rendering/plan_sheet.py)",
-    headerMarker: "DECORATIVE — landing illustration",
-  },
-  {
-    file: "components/PlanSheet.tsx",
-    hexes: [
-      "#1B2838",
-      "#27AE60",
-      "#8A95A4",
-      "#9A8E7A",
-      "#C44A6E",
-      "#C45F08",
-      "#CFC8BD",
-      "#D9D3CA",
-      "#E5B83A",
-      "#E8710A",
-      "#ECE4D9",
-      "#F2C94C",
-      "#F2C9D6",
-      "#FAF6F0",
-    ],
-    count: 36,
-    disposition: "decorative",
-    reason:
-      "the landing hero's animated plan-sheet illustration (Hero.tsx) on the landing paper palette — an SVG picture, not the print sheet",
-    headerMarker: "DECORATIVE — landing illustration",
-  },
+  // #239: TaperViz (18) and PlanSheet (36), the archived landing's two
+  // decorative illustrations, left with the page.
   {
     file: "components/LocationPickerModal.tsx",
     hexes: ["#000000", "#1EC8A5", "#E8710A", "#ffffff"],

@@ -34,6 +34,8 @@ Opens at http://localhost:3000.
 
 ## Files ported
 
+The landing components below were deleted with the archived /landing page in #239 (git keeps them at `4c52c492`).
+
 - `prototypes/landing.html` + `app.jsx` → `app/page.tsx` + `components/{Nav,SheetMeta,Hero,DimStrip,FinalCTA,Footer}.tsx`
 - `prototypes/hero-anim.jsx` → `components/{ScenarioCard,PlanSheet}.tsx` (animation state lives in `Hero.tsx`)
 - `prototypes/math-section.jsx` → `components/{MathSection,TaperViz}.tsx`

@@ -23,10 +23,9 @@ const nextConfig = {
       // as 307s.  /sandbox is gated (R1.1, R1.2); a 308 is cached hard by
       // browsers and these destinations have already moved once.
       { source: "/try", destination: "/", permanent: false },
-      // The archived marketing page (app/(archived)/landing/page.tsx)
-      // carries pre-verification copy and a Sign in link the public
-      // surface does not offer; it stays on disk for the parked /landing
-      // rewrite but must not be served meanwhile.
+      // The archived marketing page was deleted in #239 (git keeps it at
+      // 4c52c492, app/(archived)/landing/page.tsx); an old /landing link
+      // still lands on the public page.
       { source: "/landing", destination: "/", permanent: false },
     ];
   },
