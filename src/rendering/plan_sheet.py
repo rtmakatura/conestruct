@@ -38,7 +38,11 @@ from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
 from src.api.site_scan import corrections_disclosure, not_checked_disclosure
-from src.generation.layout import lanes_drawn_below_road, rightmost_lane_assumption_active
+from src.generation.layout import (
+    lanes_drawn_below_road,
+    near_intersection_stations,
+    rightmost_lane_assumption_active,
+)
 from src.rendering import static_aerial as _static_aerial
 from src.rules.corridor import (
     M_PER_FT,
@@ -200,6 +204,9 @@ def _make_x_mapping(
     thread them from this mapping so the on-page/off-page partition
     cannot drift between the schematic and the notes table.
     """
+    frame = _TURN_BAY_FRAME.get()
+    if frame is not None:
+        return _turn_bay_x_mapping(placements, frame)
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     taper_len = _required_taper_length(params, shoulder_width_ft)
@@ -242,6 +249,51 @@ def _make_x_mapping(
     }
 
 
+def _turn_bay_compression(frame: Mapping[str, float]) -> float:
+    """#328: the scale factor on the stretch from the work zone to the far
+    curb -- 1.0 (to scale) when it fits in ``BUFFER_VISUAL_FT``, else the
+    factor that compresses it to that length (the buffer's convention)."""
+    gap = frame["downstream_curb"] - frame["wz"]
+    return 1.0 if gap <= BUFFER_VISUAL_FT else BUFFER_VISUAL_FT / gap
+
+
+def _turn_bay_x_mapping(placements: list[DevicePlacement], frame: Mapping[str, float]) -> dict:
+    """#328: page 1's frame for TA-23 (Fig. 6P-23, p. 905).
+
+    Upstream to downstream: the taper, the opening, the left-turn bay and
+    the cross street to scale; the stretch from the far curb to the work
+    zone compressed to ``BUFFER_VISUAL_FT`` when longer (a // break, its
+    channelizers named by the dimension line rather than drawn); the work
+    zone to scale.  Same keys as ``_make_x_mapping``; the off-page origin
+    is the real taper start.
+    """
+    wz = frame["wz"]
+    dc = frame["downstream_curb"]
+    k = _turn_bay_compression(frame)
+
+    def effective(s: float) -> float:
+        if s <= wz:
+            return s
+        if s <= dc:
+            return wz + (s - wz) * k
+        return wz + (dc - wz) * k + (s - dc)
+
+    eff_min = min(effective(p.station_ft) for p in placements) - 50.0
+    eff_max = effective(frame["taper_start"]) + 100.0
+    pts_per_ft = (PLAN_RIGHT - PLAN_LEFT) / (eff_max - eff_min)
+
+    def x_of(s: float) -> float:
+        return PLAN_LEFT + (eff_max - effective(s)) * pts_per_ft
+
+    return {
+        "x_of": x_of,
+        "pts_per_ft": pts_per_ft,
+        "taper_start_station": frame["taper_start"],
+        "station_max_visible": frame["taper_start"] + 50.0,
+        "buffer_break_x": x_of((wz + dc) / 2.0),
+    }
+
+
 # #300 (R81, R119 Q2), CHOSEN: a left-shoulder plan's schematic is page 1
 # mirrored top-to-bottom, so the work sits on the LEFT of the left-to-right
 # traffic arrows (the page top).  Text stays upright, so the mirror is not
@@ -250,6 +302,14 @@ def _make_x_mapping(
 # while ``_render_schematic_page`` draws a left plan (``render_plan_sheet``).
 _PAGE_MIRRORED: contextvars.ContextVar[bool] = contextvars.ContextVar(
     "plan_sheet_page_mirrored", default=False
+)
+
+# #328: TA-23's page-1 frame -- the turn-bay plan's stations (from
+# ``near_intersection_stations``), set only while ``render_plan_sheet`` draws
+# a plan whose left lane reopens as a left-turn bay.  None on every other
+# plan, whose page 1 keeps the midblock frame byte for byte.
+_TURN_BAY_FRAME: contextvars.ContextVar[dict[str, float] | None] = contextvars.ContextVar(
+    "plan_sheet_turn_bay_frame", default=None
 )
 
 
@@ -304,6 +364,7 @@ def _draw_one_way_street(
     shoulder_width_ft: float,
     closure_type: str,
     num_lanes: int,
+    closed_x_spans: list[tuple[float, float]] | None = None,
 ) -> None:
     """#308 — a one-way street: ``num_lanes`` lanes, every one the same
     direction, a curb strip on each side, no centerline and no median.
@@ -358,7 +419,11 @@ def _draw_one_way_street(
     if closure_type == "lane":
         c.setFillColor(SHOULDER_CLOSED_FILL)
         y0, h = band(y_work_lane_edge, y_work_lane_edge + lane_h)
-        c.rect(x_left, y0, width, h, fill=1, stroke=0)
+        # #328: a TA-23 plan paints the lane closed only where it is (the
+        # taper, and from the far curb through the work); the bay and the
+        # opening stay open.  None: the full width, as every other plan.
+        for xa, xb in closed_x_spans if closed_x_spans is not None else [(x_left, PLAN_RIGHT)]:
+            c.rect(xa, y0, xb - xa, h, fill=1, stroke=0)
 
     # Lane lines between same-direction lanes (white dashed, 2 pt).
     if num_lanes > 1:
@@ -398,13 +463,16 @@ def _draw_road(
     is_divided: bool = True,
     num_lanes: int = 2,
     one_way_street: bool = False,
+    closed_x_spans: list[tuple[float, float]] | None = None,
 ) -> None:
     x_left = PLAN_LEFT
     x_right = PLAN_RIGHT
     width = x_right - x_left
 
     if one_way_street:
-        _draw_one_way_street(c, lane_width_ft, shoulder_width_ft, closure_type, num_lanes)
+        _draw_one_way_street(
+            c, lane_width_ft, shoulder_width_ft, closure_type, num_lanes, closed_x_spans
+        )
         return
 
     lane_h = lane_width_ft * PTS_PER_OFFSET_FT
@@ -1997,6 +2065,28 @@ def _draw_lane_arrow(
         c.line(x_left, y, x_left + head, y - half_h)
 
 
+def _draw_cross_street(
+    c: canvas.Canvas,
+    x_a: float,
+    x_b: float,
+    params: ScenarioParams,
+    shoulder_width_ft: float,
+) -> None:
+    """#328: the cross street TA-23's bay ends at, drawn across the road
+    between its curb lines: pavement over the lanes and both curb strips,
+    so no edge line, lane line or closed-lane shading crosses it (no
+    device stands inside the intersection either).  The dimension line
+    names it."""
+    y_top, y_bot = _road_y_extent(params, shoulder_width_ft)
+    lo, hi = sorted((x_a, x_b))
+    c.setFillColor(LANE_FILL)
+    c.rect(lo, y_bot, hi - lo, y_top - y_bot, fill=1, stroke=0)
+    c.setStrokeColor(ROAD_BORDER)
+    c.setLineWidth(0.5)
+    c.line(lo, y_bot, lo, y_top)
+    c.line(hi, y_bot, hi, y_top)
+
+
 def _draw_scale_break(c: canvas.Canvas, x_center: float, y_top: float, y_bot: float) -> None:
     """Two thin diagonal slashes across the road indicating a compressed
     region (standard engineering // mark; kept light so it doesn't fight
@@ -2067,6 +2157,37 @@ def _draw_landmarks(
         # #257: one format for the length on every surface ("1,000 ft").
         (x_of(wz_start), x_of(wz_end), f"WORK ZONE = {wz_len:,.0f} ft"),
     ]
+    # #328: TA-23's own spans (Fig. 6P-23, p. 905): the taper where it is,
+    # the opening, the bay with the operator's length, the cross street,
+    # the closed stretch to the work zone (NTS when compressed).
+    frame = _TURN_BAY_FRAME.get()
+    if frame is not None:
+        compressed = _turn_bay_compression(frame) < 1.0
+        to_curb = frame["downstream_curb"] - wz_len
+        segs = [
+            (
+                x_of(frame["taper_start"]),
+                x_of(frame["taper_end"]),
+                f"{taper_label} = {frame['taper_start'] - frame['taper_end']:.0f} ft",
+            ),
+            (
+                x_of(frame["taper_end"]),
+                x_of(frame["bay_start"]),
+                f"OPENING = {frame['opening_ft']:.0f} ft",
+            ),
+            (
+                x_of(frame["bay_start"]),
+                x_of(frame["upstream_curb"]),
+                f"LEFT-TURN BAY = {frame['storage_ft']:,.0f} ft, ENTERED BY OPERATOR",
+            ),
+            (x_of(frame["upstream_curb"]), x_of(frame["downstream_curb"]), "CROSS STREET"),
+            (
+                x_of(frame["downstream_curb"]),
+                x_of(wz_start),
+                f"CLOSED = {to_curb:,.0f} ft{' (NTS)' if compressed else ''}",
+            ),
+            (x_of(wz_start), x_of(wz_end), f"WORK ZONE = {wz_len:,.0f} ft"),
+        ]
     occupied: list[tuple[int, float, float]] = []  # (tier, x_lo, x_hi)
     for x1, x2, label in segs:
         tw = c.stringWidth(label, "Helvetica", 7)
@@ -2082,6 +2203,12 @@ def _draw_landmarks(
         _draw_dim(c, x1, x2, y_top, label, raise_tier=tier, below=below)
 
     # Scale-break marks across the road in the (compressed) buffer region.
+    # #328: on TA-23, across the compressed stretch to the far curb, if any.
+    if frame is not None:
+        if _turn_bay_compression(frame) < 1.0:
+            mid = (wz_len + frame["downstream_curb"]) / 2.0
+            _draw_scale_break(c, x_of(mid), y_road_top, y_road_bottom)
+        return
     buffer_mid_x = x_of(wz_len + buf_len / 2.0)
     _draw_scale_break(c, buffer_mid_x, y_road_top, y_road_bottom)
 
@@ -4625,6 +4752,23 @@ def render_plan_sheet(
         # #323 R153: the left lane's far side is TA-23 (the left-turn bay).
         if ta_override == "TA-22" and params.work_side == "left":
             ta_override = "TA-23"
+    # #328: TA-23's page-1 frame, from the generator's own stations (set only
+    # when the bridge passed a turn-bay length, i.e. TA-23's layout).
+    turn_bay_frame: dict[str, float] | None = None
+    if params.near_intersection and params.turn_bay_storage_ft is not None and approaches:
+        ni_st = near_intersection_stations(params, approaches)
+        bay = ni_st.get("turn_bay")
+        if bay is not None:
+            turn_bay_frame = {
+                "wz": params.work_zone_length_ft,
+                "downstream_curb": ni_st["downstream_curb"],
+                "upstream_curb": ni_st["upstream_curb"],
+                "bay_start": bay["bay_start"],
+                "taper_end": ni_st["taper_end"],
+                "taper_start": ni_st["taper_start"],
+                "storage_ft": bay["storage_ft"],
+                "opening_ft": bay["opening_ft"],
+            }
     if shoulder_width_ft is None:
         shoulder_width_ft = params.shoulder_width_ft
     # Prefer params-supplied metadata; fall back to the per-call kwargs
@@ -4712,26 +4856,30 @@ def render_plan_sheet(
         effective_project_name = project_name
     location_description = getattr(params, "location_description", "") or site_address or ""
 
-    _render_schematic_page(
-        c,
-        placements,
-        params,
-        project_name=effective_project_name,
-        location_description=location_description,
-        sheet_number="1",
-        total_sheets=page1_total,
-        shoulder_width_ft=shoulder_width_ft,
-        title=title,
-        aerial_page="2" if aerial_png is not None else None,
-        site_flags=site_flags,
-        ta_override=ta_override,
-        include_device_summary=include_device_summary,
-        jurisdiction_conflicts=jurisdiction_conflicts,
-        applied_deltas=applied_deltas,
-        site_scan=site_scan,
-        site_lat=site_lat,
-        site_lng=site_lng,
-    )
+    frame_token = _TURN_BAY_FRAME.set(turn_bay_frame)
+    try:
+        _render_schematic_page(
+            c,
+            placements,
+            params,
+            project_name=effective_project_name,
+            location_description=location_description,
+            sheet_number="1",
+            total_sheets=page1_total,
+            shoulder_width_ft=shoulder_width_ft,
+            title=title,
+            aerial_page="2" if aerial_png is not None else None,
+            site_flags=site_flags,
+            ta_override=ta_override,
+            include_device_summary=include_device_summary,
+            jurisdiction_conflicts=jurisdiction_conflicts,
+            applied_deltas=applied_deltas,
+            site_scan=site_scan,
+            site_lat=site_lat,
+            site_lng=site_lng,
+        )
+    finally:
+        _TURN_BAY_FRAME.reset(frame_token)
     _draw_sheet_border(c)
     c.showPage()
 
@@ -4819,6 +4967,36 @@ def _draw_schematic_page(
         f"Scale {scale_short} applies to the work zone + taper. "
         "Buffer compressed; lateral offset exaggerated."
     )
+    # #328: TA-23's page 1 (``_TURN_BAY_FRAME``): the lane is shaded closed
+    # only over the taper and from the far curb through the work; the bay
+    # and the opening are open.  The stretch from the far curb to the work
+    # zone, when compressed, keeps its signs but not its channelizers (at
+    # the compressed pitch they would pile up); the dimension line names it.
+    frame = _TURN_BAY_FRAME.get()
+    closed_x_spans: list[tuple[float, float]] | None = None
+    drawn_placements = placements
+    if frame is not None:
+        compressed = _turn_bay_compression(frame) < 1.0
+        scale_long = (
+            f"Scale {scale_short} applies to the work zone, the left-turn bay and the taper. "
+            + (
+                "Stretch from the work zone to the cross street compressed; lateral offset "
+                "exaggerated."
+                if compressed
+                else "Lateral offset exaggerated."
+            )
+        )
+        closed_x_spans = [
+            (x_of(frame["taper_start"]), x_of(frame["taper_end"])),
+            (x_of(frame["downstream_curb"]), PLAN_RIGHT),
+        ]
+        if compressed:
+            drawn_placements = [
+                p
+                for p in placements
+                if p.device_type not in (DeviceType.CONE, DeviceType.DRUM)
+                or not (frame["wz"] < p.station_ft < frame["downstream_curb"])
+            ]
 
     schedule_order, code_to_num = build_sign_schedule(placements, station_max_visible)
 
@@ -4830,7 +5008,16 @@ def _draw_schematic_page(
         is_divided=params.is_divided,
         num_lanes=params.num_lanes,
         one_way_street=params.one_way_street,
+        closed_x_spans=closed_x_spans,
     )
+    if frame is not None:
+        _draw_cross_street(
+            c,
+            x_of(frame["upstream_curb"]),
+            x_of(frame["downstream_curb"]),
+            params,
+            shoulder_width_ft,
+        )
     _draw_site_context(c, params, x_of, shoulder_width_ft, site_flags)
     _draw_landmarks(c, params, x_of, shoulder_width_ft)
     # Direction-of-travel arrows sit inside an open travel lane, pointing
@@ -4882,7 +5069,7 @@ def _draw_schematic_page(
         )
     _draw_devices(
         c,
-        placements,
+        drawn_placements,
         x_of,
         station_max_visible,
         params,
