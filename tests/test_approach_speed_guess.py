@@ -260,10 +260,26 @@ def test_the_notes_print_one_line_and_keep_every_schedule_row(
         elif line is None or other not in line:
             assert other not in flat
     # R132: "All 4 sign-schedule rows stay on the sheet in every case."
-    schedule = flat[flat.index("SIGN SCHEDULE") : flat.index("ADVANCE SIGNS OFF-PAGE")]
+    # The schedule ends where the advance section starts: the all-cut
+    # line, or (when a row fits, #235) the table's title.
+    start = flat.index("SIGN SCHEDULE")
+    end = min(
+        i
+        for i in (flat.find("ADVANCE SIGNS OFF-PAGE"), flat.find("ADVANCE WARNING SIGNS"))
+        if i > 0
+    )
+    schedule = flat[start:end]
     for code in SCHEDULE:
         assert code in schedule, code
     assert "MORE SIGNS" not in flat
+    # R117 Q3a's all-cut line: with a guessed-speed note printing, every
+    # advance row is cut and one line names them; with no note (#235's
+    # freed room) the first row fits and the table prints instead.
+    if line is not None:
+        assert "ADVANCE SIGNS OFF-PAGE (" in flat
+    else:
+        assert "ADVANCE SIGNS OFF-PAGE (" not in flat
+        assert "ADVANCE WARNING SIGNS" in flat
 
 
 def _parse(b: dict[str, Any]) -> Any:

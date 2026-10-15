@@ -187,8 +187,18 @@ def _advance_rows(lines: list[dict[str, Any]]) -> int:
     i0 = next(
         i for i, t in enumerate(texts) if t.startswith("ADVANCE WARNING") or "OFF-PAGE (" in t
     )
-    i1 = next(i for i, t in enumerate(texts) if t.startswith("Reference"))
-    return sum(len(re.findall(r"\d+ ft", t)) for t in texts[i0 + 1 : i1])
+    # The table ends at its first line with no distance (the "+N MORE"
+    # line, a disclosure, or the box's end; #235 moved the Reference line
+    # to the title block).
+    rows = 0
+    for t in texts[i0 + 1 :]:
+        if "DISTANCE" in t:
+            continue
+        n = len(re.findall(r"\d+ ft", t))
+        if n == 0:
+            break
+        rows += n
+    return rows
 
 
 @pytest.mark.parametrize("carriageway", [ONE_WAY, None], ids=["one-way", "two-way"])
@@ -201,14 +211,15 @@ def test_the_near_intersection_box_reads_clean(carriageway: dict | None) -> None
     flat = _page_text(pdf)
     assert _clearance(lines) >= MIN_CLEARANCE_PT, [ln["text"][:40] for ln in lines]
     assert _inside(lines)
-    # Q3a: the cut advance rows as one line naming every code.
-    assert (
-        "4 ADVANCE SIGNS OFF-PAGE (W4-2R, W20-5R, R2-10, W20-1). SEE CREW NARRATIVE & DEVICE LIST"
-        in flat
-    )
-    # No empty table: no doubled column header, no "+N MORE" over nothing.
+    # Q3a's all-cut line no longer fires here: #235 (R150 B) moved the legal
+    # trailer to the title block, so the first advance row fits and the cut
+    # names the rest.  The all-cut line keeps its coverage on the denser
+    # speed-guessed sheets (test_approach_speed_guess).
+    assert _advance_rows(lines) == 1
+    assert "+3 MORE ADVANCE SIGNS. SEE CREW NARRATIVE & DEVICE LIST" in flat
+    assert "ADVANCE SIGNS OFF-PAGE (" not in flat
+    # No doubled column header.
     assert "DISTANCE CODE" not in flat
-    assert "MORE ADVANCE SIGNS" not in flat
     # Q3b: the plate departures are pointed to, not printed.
     assert "PLATE DEPARTURES: SEE AUDIT" in flat
     assert "Plate typifies" not in flat
@@ -226,8 +237,10 @@ def test_a_shoulder_box_still_draws_its_advance_rows() -> None:
 
 def test_case_27_keeps_its_four_two_column_rows() -> None:
     """Q3c: the extra spacing is for one-column tables; Case 27's long table
-    stays two columns and keeps the 4 rows it drew before."""
+    stays two columns.  It drew 4 of its 8 entries before #235 (R150 B)
+    moved the legal trailer to the title block; now all 8 fit."""
     lines = _notes_lines(_case27_pdf())
-    assert _advance_rows(lines) == 4
+    assert _advance_rows(lines) == 8
+    assert not any("MORE ADVANCE SIGNS" in ln["text"] for ln in lines)
     assert any("DISTANCE CODE" in ln["text"] for ln in lines)  # still two columns
     assert _inside(lines)

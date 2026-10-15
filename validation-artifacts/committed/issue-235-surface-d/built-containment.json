@@ -1,0 +1,87 @@
+{
+ "harness/adv-flagger": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/adv-near-intersection": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/adv-shoulder": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/broadway-left": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/control-typical": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-asserted": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-asserted-work-start": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-dismissed": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-dismissed-work-start": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-not-checked": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-not-checked-work-start": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-ok": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "harness/scanned-ok-work-start": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "sample/i25_freeway": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "sample/us85_rural": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "sample/25mph_urban": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ },
+ "sample/45mph_rural": {
+  "edge": 0,
+  "box_cross": 0,
+  "collisions": 0
+ }
+}

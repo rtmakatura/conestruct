@@ -159,7 +159,7 @@ def test_plan_sheet_carries_the_corrections_line(
     text = _pdf_text(r.content, tmp_path, f"{name}.pdf")
     for half in halves:
         assert half in text
-    assert "DRAFT FOR PE REVIEW" in text  # the trailer still renders after it
+    assert "DRAFT FOR PE REVIEW" in text  # the trailer still renders (title block foot)
 
 
 def test_plan_sheet_prints_nothing_without_corrections(

@@ -62,25 +62,35 @@ def test_the_line_attaches_the_date_to_the_supplement() -> None:
     )
 
 
-def test_page_one_prints_it_on_one_line_inside_the_notes_box(
+def test_page_one_prints_it_once_at_the_foot_of_the_title_block(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """#235 (R150 B): the line moved from NOTES to the title block's foot,
+    wrapped at word breaks to the block's inset, text unchanged."""
     widths: list[float] = []
-    real = ps._draw_notes
+    real = ps._draw_structured_title_block
 
     def spy(*a: Any, **kw: Any) -> None:
         widths.append(kw["box_w"])
         return real(*a, **kw)
 
-    monkeypatch.setattr(ps, "_draw_notes", spy)
+    monkeypatch.setattr(ps, "_draw_structured_title_block", spy)
     r = client.post("/render/pdf", headers=AUTH, json=BODY)
     assert r.status_code == 200, r.text[:300]
     page = pdfium.PdfDocument(io.BytesIO(r.content))[0]
     text = " ".join(page.get_textpage().get_text_range().split())
-    assert REFERENCE_LINE in text
+    assert REFERENCE_LINE in text  # wrapped lines join at a space
+    assert text.count("Reference: CDOT") == 1
     assert "Part 6 (effective" not in text  # the misattribution is gone
-    # Drawn with drawString (no wrap) at the box's own inset.
-    assert stringWidth(REFERENCE_LINE, "Helvetica-Oblique", 6.5) <= widths[0] - 16.0
+    from reportlab.pdfgen import canvas
+
+    inner = widths[0] - 2 * ps.TITLE_BLOCK_PAD
+    rows = ps._title_block_trailer(canvas.Canvas(io.BytesIO()), inner)
+    oblique = [ln for font, _ink, ln in rows if font == "Helvetica-Oblique"]
+    assert " ".join(oblique[:-1]) == REFERENCE_LINE  # the last oblique row is Verify
+    assert oblique[-1] == "Verify all dimensions before use."
+    for font, _ink, ln in rows:
+        assert stringWidth(ln, font, 6.5) <= inner
 
 
 def test_the_crew_instructions_print_the_same_line() -> None:
