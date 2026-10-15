@@ -1,0 +1,33 @@
+{
+ "startedAt": "2026-10-15T15:02:24.179Z",
+ "widths": {
+  "360": {
+   "builtSha": "97b24c8c74637c8b249d66e98b001e086bcdb720",
+   "noticeAtOpen": 0,
+   "noticeAt": "2026-10-15T15:10:01.861Z",
+   "liveSha": "11443c3a30e3fcedca5cf387548ddb23a3f9bdc8",
+   "text": "New version. Reload",
+   "navHeight": 52,
+   "buttonHeight": 51,
+   "scrollWidth": 360,
+   "afterReload": {
+    "noticeCount": 0
+   }
+  },
+  "1440": {
+   "builtSha": "97b24c8c74637c8b249d66e98b001e086bcdb720",
+   "noticeAtOpen": 0,
+   "noticeAt": "2026-10-15T15:09:53.799Z",
+   "liveSha": "11443c3a30e3fcedca5cf387548ddb23a3f9bdc8",
+   "text": "New version. Reload",
+   "navHeight": 52,
+   "buttonHeight": 51,
+   "scrollWidth": 1440,
+   "afterReload": {
+    "noticeCount": 0
+   }
+  }
+ },
+ "endedAt": "2026-10-15T15:10:08.384Z",
+ "timedOut": false
+}

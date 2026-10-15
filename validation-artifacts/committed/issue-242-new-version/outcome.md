@@ -14,3 +14,16 @@ Prediction: `prediction.md`, committed in `70ac4de1` before any code. Base: `824
 ## Not predicted
 
 The prediction said the nav is "byte-identical until a newer deploy exists". It isn't quite. The polite live region (`<span role="status">`) is mounted always and stays empty until the button appears inside it. A live region has to exist before its content changes to be announced, and putting `role="status"` on the button itself would have replaced its button role. The empty span has no content, padding or border, so it takes no width. The prod proof measures the nav either way.
+
+## Prod proof (shipped `97b24c8`, then `11443c3` deployed over it)
+
+`prod/held242.cjs` opened `/sandbox` at 1440 and 360 on the `97b24c8` build and held the tabs. It told each tab every 20 s that it became visible, across the `issue-202-quote-settings` frontend deploy (`11443c3`). Two independent runs (`prod/held242.json`, `prod/held242b.json`):
+
+| run, width | built | notice at (UTC) | live | text | nav | button | scrollWidth | after Reload |
+|---|---|---|---|---|---|---|---|---|
+| 1, 1440 | `97b24c8` | 15:09:43 | `11443c3` | New version. Reload | 52 px | 51 px | 1440 | notice gone |
+| 1, 360 | `97b24c8` | 15:09:51 | `11443c3` | New version. Reload | 52 px | 51 px | 360 | notice gone |
+| 2, 1440 | `97b24c8` | 15:09:53 | `11443c3` | New version. Reload | 52 px | 51 px | 1440 | notice gone |
+| 2, 360 | `97b24c8` | 15:10:01 | `11443c3` | New version. Reload | 52 px | 51 px | 360 | notice gone |
+
+No tab showed the notice at open, while the live build was its own. The nav height didn't change (52 px). The button fills it, minus the nav's 1 px border, which is above the 44 px floor. There's no sideways scroll at 360. Crops of the nav: `prod/held242*-1440.png`, `prod/held242*-360.png`.

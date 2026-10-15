@@ -28,3 +28,22 @@ Prediction: `prediction.md`, committed in `607b0773` before any code. Base: `114
 `verify_scan` encoded the token's body to ASCII outside its `try`, so a non-ASCII token (`é.AAAA`) raised `UnicodeEncodeError` before the MAC check. That reached the client as a 500 instead of the 400 `site_scan_token_invalid`. The verifier reproduced it. The encode now sits inside the malformed-token guard. Pinned: `é.AAAA` and `<body>.é` are `ScanTokenInvalid`, and `/render/pdf` with `é.AAAA` returns 400 `site_scan_token_invalid` (`test_a_non_ascii_token_is_the_same_honest_400`). Python suite +1: 2869 passed, 2 skipped.
 
 Also noted by the verifier: `prediction.md` wrote `sign_scan(entry)`, while the code's signature is `sign_scan(key, buckets, measured_at, duration_ms)` (the entry's four parts).
+
+## Prod proof: 20 of 20 (shipped `75213bf`)
+
+`prod/proof307.py`, through the gate and the site's own routes. Healthz was `75213bf` (`prod/proof307-run1.healthz.json`), output `prod/proof307-run1.jsonl`.
+
+For 5 Denver pins, one Generate each (audit with `include_scan_token`): every scan answered (`ok`, `memo_hit` false) and returned a token. Then four downloads per pin, carrying the token as the site does:
+
+| delay | kind | 5 pins: status / `x-site-scan-source` |
+|---|---|---|
+| +0 s | pdf | 200 / token × 5 |
+| +30 s | xlsx | 200 / token × 5 |
+| +90 s | crew-pdf | 200 / token × 5 |
+| +150 s | quote | 200 / token × 5 |
+
+**20 of 20 downloads answered 200 from the Generate's scan, with no re-scan.** That includes the five at +150 s, past the 120 s memo TTL. At these same four delays, before this shipped, 14 of 20 follow-ups scanned again (`issue-307-download-rescan/measurement.md`).
+
+A tampered token got `400 {"error": "site_scan_token_invalid", "message": "This download carried a copy of the plan's site scan that couldn't be verified. Generate the plan again, then download it.", "reason": "signature does not match"}`.
+
+**In the browser** (`prod/browser307.cjs`, `/sandbox` at 1440): after a Generate on N Broadway SB, the plan sheet card's Download PDF request carried `site_scan.token`. The response was 200 with `x-site-scan-source: token`, and the PDF was 1,016,137 bytes. No page errors.

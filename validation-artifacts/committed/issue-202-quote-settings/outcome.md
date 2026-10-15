@@ -27,3 +27,17 @@ It's additive only: one new nullable column with no default. Nothing is dropped,
 ## Not predicted
 
 **`onSaved`'s fourth argument is passed only when the shell gave PlanSaveButton settings.** At first it was always passed. Then #183's test "update PUTs the live scenario and hands the same object to onSaved", which asserts the exact three-argument call, saw a trailing `undefined` and failed. A caller with no settings now sees the same call it always did.
+
+## The migration on production, and the ship
+
+The ship-time check (read-only) couldn't confirm that the main checkout's `.env.local` database is production's. Vercel holds `DATABASE_URL` as a Hidden Secret, so `vercel env pull` returns an 11-character placeholder. So the run stopped before migrating, as planned. Ryan then ran the statement on the production branch in the Neon console, with `IF NOT EXISTS` (2026-10-15):
+
+```sql
+ALTER TABLE "plans" ADD COLUMN IF NOT EXISTS "quote_settings" jsonb;
+```
+
+`issue-202-quote-settings` then shipped: `11443c3`, SHIP VERIFIED, frontend built at `11443c3`. Its frontend deploy is the one #242's held tabs saw (`issue-242-new-version/outcome.md`).
+
+**Follow-up:** the console run isn't recorded in drizzle's `__drizzle_migrations` table on production. A future `drizzle-kit migrate` against production would try `0002_quote_settings.sql` again, and its plain `ADD COLUMN` would fail on the existing column. Record the migration, or run `migrate` only after making that file idempotent.
+
+The saved-plan screens are checked locally and by mounted tests only (R151 item 3). On prod, `/sandbox`'s quote panel is unchanged: 8 fields, "Auto · 0 from layout", "Download Quote (XLSX)".
