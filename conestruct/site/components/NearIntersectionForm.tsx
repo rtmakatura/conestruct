@@ -222,12 +222,13 @@ export function NearIntersectionForm({
   const sideUpstream = along > scenario.workLen;
   const distanceFt = sideUpstream ? along - scenario.workLen : -along;
   // #323 R153: the turn-bay field shows for a left-lane plan whose cross
-  // street may be past the far end (TA-23).  On the marked-intersection
-  // model only the backend knows near from far, so it shows for every left
-  // plan there; display only, the backend decides what the length is for.
+  // street may come before the work, the far side of the intersection
+  // (TA-23).  On the marked-intersection model only the backend knows near
+  // from far, so it shows for every left plan there; display only, the
+  // backend decides what the length is for.
   const showTurnBay =
     scenario.meta.work?.side === "left" &&
-    (scenario.meta.pinModel === "work_start" || !sideUpstream);
+    (scenario.meta.pinModel === "work_start" || sideUpstream);
   const setSideAndDistance = (upstream: boolean, dist: number) => {
     const nextAlong = upstream ? scenario.workLen + dist : -dist;
     updateAllLegs({ alongStationFt: nextAlong });
@@ -381,11 +382,11 @@ export function NearIntersectionForm({
               }
             />
             <p id="ni-turn-bay-help" className="tr-prov mt-1.5 mb-0">
-              You enter this. When the intersection is past the far end of
-              the work, the left lane becomes a left-turn bay (TA-23), and
+              You enter this. When the cross street comes before the work,
+              the left lane ahead of it becomes a left-turn bay (TA-23).
               TA-23 sizes the bay to hold every turning vehicle in one
-              signal cycle (Note 5, p. 904). Take it from the signal timing
-              or counts. The far-side plan won&apos;t build without it.
+              signal cycle (Note 5, p. 904), so take it from the signal
+              timing or counts. That plan won&apos;t build without it.
             </p>
             <p id="ni-turn-bay-ref" className="tr-prov mt-1 mb-0">
               Reference only, from a different figure: TA-22 (Fig. 6P-22,
