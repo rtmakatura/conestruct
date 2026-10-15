@@ -110,3 +110,23 @@ describe("approachesItem", () => {
     expect(html).toContain("side of the work zone");
   });
 });
+
+// #323 R153: TA-23's left-turn bay rides the section as ``turn_bay``; the
+// panel prints the backend's sentence (storage "entered by operator")
+// verbatim, and nothing when the key is absent.
+describe("approachesItem: the left-turn bay (#323 R153)", () => {
+  const TEXT =
+    "Left-turn bay storage 300 ft, entered by operator (MUTCD TA-23 Note 5, p. 904).";
+
+  it("prints the backend's turn-bay sentence when present", () => {
+    const html = renderBody(
+      approachesItem({ ...SECTION, turn_bay: { text: TEXT, provenance: "entered by operator" } }),
+    );
+    expect(html).toContain('data-testid="turn-bay-text"');
+    expect(html).toContain("entered by operator");
+  });
+
+  it("prints nothing for it on every other plan", () => {
+    expect(renderBody(approachesItem(SECTION))).not.toContain("turn-bay-text");
+  });
+});

@@ -3729,6 +3729,24 @@ def _draw_notes(
                 cv.setFont("Helvetica-Bold", 6.5)
                 cv.setFillColor(colors.black)
                 cv.drawString(x, y[0], line)
+        if params.near_intersection and params.turn_bay_storage_ft is not None:
+            # #323 R153: the plan records the bay's length as the
+            # operator's (set only on TA-23's layout, by the bridge).
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.black)
+            for line in _wrap_to_width(
+                cv,
+                (
+                    f"LEFT-TURN BAY STORAGE {params.turn_bay_storage_ft:,.0f} FT, ENTERED BY "
+                    "OPERATOR (MUTCD TA-23 NOTE 5); NOT CHECKED BY THIS TOOL."
+                ),
+                "Helvetica-Bold",
+                6.5,
+                width - 16.0,
+                max_lines=2,
+            ):
+                step()
+                cv.drawString(x, y[0], line)
         if rightmost_lane_note:
             # #176's visible right-side note (ruled 2026-08-03): the closed
             # lane is a modeling assumption, and the sheet must say so —
@@ -4604,6 +4622,9 @@ def render_plan_sheet(
         # Side of an Intersection".
         _along = approaches[0].along_station_ft
         ta_override = "TA-22" if _along > params.work_zone_length_ft else "TA-21"
+        # #323 R153: the left lane's far side is TA-23 (the left-turn bay).
+        if ta_override == "TA-22" and params.work_side == "left":
+            ta_override = "TA-23"
     if shoulder_width_ft is None:
         shoulder_width_ft = params.shoulder_width_ft
     # Prefer params-supplied metadata; fall back to the per-call kwargs

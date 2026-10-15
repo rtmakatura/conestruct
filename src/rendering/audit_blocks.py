@@ -551,6 +551,12 @@ def _approaches_blocks(approaches: dict[str, Any]) -> list[Block]:
         table = _table_from_dicts(ap.get("sign_table", []), weights=[1, 2, 2])
         if table is not None:
             blocks.append(table)
+    # #323 R153: TA-23's left-turn bay (present only on that layout), its
+    # storage "entered by operator" — the backend sentence verbatim.
+    bay = approaches.get("turn_bay")
+    if bay:
+        blocks.append(_body(_str(bay, "text")))
+        blocks.append(_body(f"Source: {_str(bay, 'source')}"))
     blocks.append(_body(f"Source: {_str(approaches, 'source')}"))
     return blocks
 

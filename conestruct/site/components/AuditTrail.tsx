@@ -1066,6 +1066,8 @@ export function approachesItem(
     typeof section.narrative === "string" ? section.narrative : "";
   const source = typeof section.source === "string" ? section.source : "";
   const nSignalized = rows.filter((r) => r.signalized).length;
+  const turnBay = section.turn_bay as { text?: unknown } | undefined;
+  const turnBayText = typeof turnBay?.text === "string" ? turnBay.text : "";
 
   return {
     title: "Cross-street approaches",
@@ -1119,6 +1121,9 @@ export function approachesItem(
             )}
           </div>
         ))}
+        {/* #323 R153: TA-23's left-turn bay, the backend's sentence (the
+            storage "entered by operator"); absent on every other plan. */}
+        {turnBayText && <p data-testid="turn-bay-text">{turnBayText}</p>}
         <div className="citation">
           <span className="check">{nSignalized > 0 ? "⚠" : "✓"}</span>
           {source || "MUTCD § 6N.12; CDOT S-630-1 SHEET 10"}

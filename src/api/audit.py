@@ -412,6 +412,13 @@ def build_audit_trail(
             "CDOT S-630-1 Case 18 (traffic control around a work area "
             "near an intersection, one lane closed; Sheet 10)"
             if params.work_side != "left"
+            # #323 R153: the left lane's far side is TA-23's turn bay, which
+            # no S-630-1 case draws; Case 18 still keys the cross-street sets.
+            else "CDOT S-630-1 Case 18 (Sheet 10) for the cross-street signing; the "
+            "left lane's far side follows MUTCD 11th Ed. TA-23 (Fig. 6P-23, a left-hand "
+            "lane closure on the far side of an intersection, the left lane reopened as "
+            "a left-turn bay), which no S-630-1 case draws"
+            if ni is not None and "turn_bay" in ni
             # #323, CHOSEN: Case 18 is drawn for the right lane only; a
             # left-lane plan on a one-way street is that case mirrored (the
             # pending_verification item cites the sources and says so).
@@ -1517,8 +1524,13 @@ def build_audit_trail(
     # plans only, so every other plan's sections stay byte-identical.
     if params.work_side == "left":
         # #323: a left near-intersection plan is the left LANE (Case 18
-        # mirrored); only a shoulder plan is Case 11 mirrored.
-        case_section["left_lane_mirrored" if is_near else "left_shoulder_mirrored"] = True
+        # mirrored); only a shoulder plan is Case 11 mirrored.  #323 R153:
+        # its far side is TA-23 itself (drawn for the left lane), so it
+        # takes the turn bay's item instead of the mirror's.
+        if ni is not None and "turn_bay" in ni:
+            case_section["left_turn_bay"] = True
+        else:
+            case_section["left_lane_mirrored" if is_near else "left_shoulder_mirrored"] = True
 
     # ------------------------------------------------------------------
     # 8. Flagger placement (only meaningful when flaggers are present)
@@ -1734,6 +1746,31 @@ def build_audit_trail(
             "source": ("MUTCD §6N.12; CDOT S-630-1 Sheet 10, Cases 18/19 (advance-signing key)"),
             "approaches": approach_rows,
         }
+        # #323 R153: TA-23's left-turn bay, present only on that layout so
+        # every other audit stays byte-identical.  The storage length is the
+        # operator's (R153: recorded as "entered by operator"); the rest is
+        # the station math the generator used.
+        bay = ni.get("turn_bay")
+        if bay is not None:
+            approaches_section["turn_bay"] = {
+                "storage_ft": bay["storage_ft"],
+                "provenance": "entered by operator",
+                "opening_ft": bay["opening_ft"],
+                "bay_start_station_ft": bay["bay_start"],
+                "stop_line_station_ft": bay["bay_end"],
+                "r3_7l_station_ft": ni["taper_end"],
+                "text": (
+                    f"Left-turn bay storage {bay['storage_ft']:,.0f} ft, entered by operator "
+                    "(MUTCD TA-23 Note 5, p. 904: sized to hold the vehicles that turn left "
+                    "in one signal cycle). Lane-line channelizers run it from station "
+                    f"{bay['bay_start']:,.0f} to the stop line at the upstream curb "
+                    f"({bay['bay_end']:,.0f}). The taper ends {bay['opening_ft']:,.0f} ft "
+                    "before the bay (TA-23 draws 100 ft), with LEFT LANE MUST TURN LEFT "
+                    "(R3-7L) on the channelized island and on the far curb at station "
+                    f"{ni['taper_end']:,.0f}."
+                ),
+                "source": "MUTCD 11th Ed. TA-23 (Fig. 6P-23, p. 905; Notes 4 and 5, p. 904)",
+            }
 
     out: dict[str, Any] = {
         "taper": taper_section,
@@ -2096,7 +2133,8 @@ def audit_projection(
     # is the near-side figure, TA-22 the far-side one.  ``side`` derives
     # from the approaches section build_audit_trail emitted.
     if scenario_kind == "near_intersection" and audit.get("approaches", {}).get("side") == "far":
-        ta = "TA-22"
+        # #323 R153: the left lane's far side is TA-23 (the turn bay).
+        ta = "TA-23" if "turn_bay" in audit.get("approaches", {}) else "TA-22"
 
     taper = dict(audit["taper"])
     case = dict(audit["case"])
@@ -2187,6 +2225,30 @@ def audit_projection(
                     "p. 900), the LEFT LANE CLOSED and Lane Ends signs (§6H.07 ¶02, p. 805; "
                     "Fig. 6P-33 Note 1, p. 924) and signs on both curbs (S-630-1 Note 8). "
                     "The mirror is CHOSEN. Verify against the site (#323)."
+                ),
+                "tracking_issue": LEFT_LANE_ISSUE,
+            }
+        )
+
+    # #323 R153: TA-23's turn bay.  Its elements are TA-23's own; what the
+    # figure leaves open is chosen (R145 S1-S7), and the storage length is
+    # the operator's.  Disclosed (Rule 12).
+    if case.pop("left_turn_bay", False):
+        items.append(
+            {
+                "kind": "left_turn_bay",
+                "label": (
+                    "The left lane's far side follows MUTCD 11th Ed. TA-23 (Fig. 6P-23, p. 905): "
+                    "the taper closes the left lane before the intersection and the lane reopens "
+                    "as a left-turn bay (Note 4, p. 904), with LEFT LANE MUST TURN LEFT on the "
+                    "channelized island and the far curb (Note 5). The bay's storage length was "
+                    "entered by the operator; this tool doesn't check it against the signal "
+                    "timing. Chosen where TA-23 leaves it open: the bay ends at the upstream curb "
+                    "line, standing in for the stop line; the 100 ft opening grows when the "
+                    "buffer reaches further; no centerline channelizers on a one-way street; the "
+                    "arrow board at the work space, as drawn; the closed lane stays channelized "
+                    "from the far curb to the work zone; the downstream end as on the right far "
+                    "side. Verify against the site (#323)."
                 ),
                 "tracking_issue": LEFT_LANE_ISSUE,
             }

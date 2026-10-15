@@ -1086,9 +1086,11 @@ def _placements_for(
     except CrossStreetStationError as exc:
         # #290: a work-start near_intersection plan whose cross street the
         # backend could not place — the operator's input, told as such.
+        # #323 R153: the refusal's own code (``turn_bay_storage_missing``)
+        # lets the page point at the field it names.
         raise HTTPException(
             status_code=400,
-            detail={"error": "generator_rejected", "message": str(exc)},
+            detail={"error": exc.code, "message": str(exc)},
         ) from exc
     except UnknownJurisdictionError as exc:
         # #257: the bridge resolves ``jurisdiction_key`` to the record's

@@ -1260,6 +1260,10 @@ def generate_lane_closure_divided(
 # 100-ft dimension S-630-1 Sheet 10 Cases 18/19 draw between the taper
 # and the corner.
 _INTERSECTION_TAPER_CLEARANCE_FT: float = 100.0
+# #323 R153: TA-23's opening between the merging taper's end (where the
+# R3-7L pair stands) and the start of the left-turn bay's lane-line
+# channelizers: the "100 ft" dimension Fig. 6P-23 draws (p. 905).
+_TA23_BAY_OPENING_FT: float = 100.0
 # Departure-side END DOUBLE FINES ZONE (R2-11) station in the approach
 # frame, per the 100-ft dimension on Case 18's cross-street departure
 # legs (and past the far curb on the mainline).
@@ -1369,7 +1373,30 @@ def near_intersection_stations(
     # The midblock anchoring (workLen + buffer) still applies when it is
     # the more upstream of the two.
     taper_end_station = wz_len + buf_len
-    if side == "far":
+    # #323 R153: the left lane's far side is TA-23 (Fig. 6P-23, p. 905): the
+    # taper closes the left lane, then a 100 ft opening, then the left-turn
+    # bay's lane-line channelizers run the operator's storage length to the
+    # stop line (the upstream curb, R145 S1).  The same ``max`` against the
+    # midblock anchoring as the right far side (S2): the storage stays as
+    # entered, and the opening grows when the buffer reaches further.
+    turn_bay: dict[str, float] | None = None
+    if side == "far" and params.work_side == "left":
+        storage = params.turn_bay_storage_ft
+        if storage is None:
+            raise ValueError(
+                "a left-lane plan whose cross street comes before the work is "
+                "TA-23's left-turn bay, which needs the operator's storage length "
+                "(params.turn_bay_storage_ft)."
+            )
+        bay_start = upstream_curb + storage
+        taper_end_station = max(taper_end_station, bay_start + _TA23_BAY_OPENING_FT)
+        turn_bay = {
+            "storage_ft": storage,
+            "bay_start": bay_start,
+            "bay_end": upstream_curb,
+            "opening_ft": taper_end_station - bay_start,
+        }
+    elif side == "far":
         taper_end_station = max(taper_end_station, upstream_curb + _INTERSECTION_TAPER_CLEARANCE_FT)
     taper_start_station = taper_end_station + taper_len
 
@@ -1430,7 +1457,7 @@ def near_intersection_stations(
             "r2_11": _INTERSECTION_R2_11_SETBACK_FT,
         }
 
-    return {
+    out: dict[str, Any] = {
         "side": side,
         "along_station_ft": along,
         "half_cross_ft": half_cross_ft,
@@ -1453,6 +1480,10 @@ def near_intersection_stations(
         "extend_to_corner": extend_to_corner,
         "approaches": approach_stations,
     }
+    # Present only on TA-23's layout, so every other plan's dict is unchanged.
+    if turn_bay is not None:
+        out["turn_bay"] = turn_bay
+    return out
 
 
 # #309 R114 Q1, CHOSEN: the left-curb sign's offset on a one-way street.
@@ -1553,10 +1584,14 @@ def generate_near_intersection(
 
     # 3. Arrow board at the taper start, pointing the way traffic merges:
     # left off a closed right lane, right off a closed left lane (#323).
+    # #323 R153 (R145 S5): TA-23 draws its (optional) arrow board at the
+    # work space's upstream end past the intersection, and none on the
+    # approach taper, so the left far side places it there.
+    turn_bay = st.get("turn_bay")
     placements.append(
         DevicePlacement(
             device_type=DeviceType.ARROW_BOARD,
-            station_ft=st["taper_start"],
+            station_ft=wz_len if turn_bay is not None else st["taper_start"],
             offset_ft=arrow_board_offset,
             label="RIGHT_ARROW" if params.work_side == "left" else "LEFT_ARROW",
         )
@@ -1578,7 +1613,30 @@ def generate_near_intersection(
     # basis is therefore Fig. 6P-22 substance via note 7, not only the
     # §6N.12.12 prose (Refs #117, #108).
     tangent_spacing_target = device_spacing_on_tangent(speed)
-    if st["side"] == "far":
+    if turn_bay is not None:
+        # #323 R153, TA-23 (Fig. 6P-23, p. 905): no device in the opening
+        # past the taper; the left-turn bay's lane-line channelizers run
+        # the operator's storage length to the stop line (R145 S1).  No
+        # centerline channelizers: a one-way street has no centerline
+        # (S3).
+        s = turn_bay["bay_start"]
+        while s > turn_bay["bay_end"]:
+            placements.append(
+                DevicePlacement(DeviceType.CONE, station_ft=s, offset_ft=lane_line_offset)
+            )
+            s -= tangent_spacing_target
+        placements.append(
+            DevicePlacement(
+                DeviceType.CONE, station_ft=turn_bay["bay_end"], offset_ft=lane_line_offset
+            )
+        )
+        s = st["downstream_curb"]
+        while s > st["wz_start"]:
+            placements.append(
+                DevicePlacement(DeviceType.CONE, station_ft=s, offset_ft=lane_line_offset)
+            )
+            s -= tangent_spacing_target
+    elif st["side"] == "far":
         s = st["taper_end"] - tangent_spacing_target
         while s > st["upstream_curb"]:
             placements.append(
@@ -1688,6 +1746,22 @@ def generate_near_intersection(
             for p in list(placements)
             if p.device_type == DeviceType.SIGN_GENERIC and p.approach_id == "mainline"
         )
+
+    # 9b. #323 R153: TA-23's LEFT LANE MUST TURN LEFT pair, at the taper's
+    # end: one on the channelized island in the closed lane ("repeated on
+    # the left adjacent to the lane that it controls", Note 5, p. 904) and
+    # one on the far curb (R145 S4).  Added after the Note 8 mirror: the pair
+    # is already the both-sides posting.
+    if turn_bay is not None:
+        for offset in (arrow_board_offset, -ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT):
+            placements.append(
+                DevicePlacement(
+                    device_type=DeviceType.SIGN_GENERIC,
+                    station_ft=st["taper_end"],
+                    offset_ft=offset,
+                    label="R3-7L",
+                )
+            )
 
     # 10. Cross-street advance sets, one per approach (§6N.12.06 /
     # Sheet 10 Case 18): W20-1 outermost, R2-10 inside it on the

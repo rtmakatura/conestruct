@@ -284,6 +284,13 @@ class ScenarioParams:
     # than the road has (``lanes_drawn_below_road``).  None: no relay.
     # Appended with a default so every existing constructor is untouched.
     road_lanes_per_direction: int | None = None
+    # #323 R153 — the left-turn bay's storage length, ENTERED BY THE
+    # OPERATOR (TA-23 sizes it by signal-cycle demand, Note 5, p. 904; no
+    # default exists, Rule 12).  Read only by a left near_intersection plan
+    # whose cross street comes before the work (TA-23's far side); None on
+    # every other plan.  Appended with a default so every existing
+    # constructor is untouched.
+    turn_bay_storage_ft: float | None = None
 
 
 @dataclass(frozen=True)

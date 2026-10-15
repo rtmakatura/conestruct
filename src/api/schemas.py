@@ -16,6 +16,7 @@ generator callable that the rules engine consumes.
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import replace
 from typing import Annotated, Literal, Self
 
 from pydantic import BaseModel, Field, ValidationInfo, model_validator
@@ -959,6 +960,14 @@ class NearIntersectionScenario(
     # (R114 Q3 (a): divided near-intersection plans are a follow-up).
     # None ⇒ no signal, byte-identical to every plan before #309.
     carriageway: CarriagewayFacts | None = None
+    # #323 R153 — the left-turn bay's storage length (TA-23's channelizer run
+    # up to the stop line), in feet, entered by the operator: TA-23 sizes it
+    # by signal-cycle demand (Note 5, p. 904), so it is site geometry with no
+    # default (Rule 12).  Read only by a left plan whose cross street comes
+    # before the work; a left far-side plan without it is refused, naming
+    # the field (Rule 10).  Bounds (R145 self-ruled S8): above 0, and the
+    # ceiling every along-road length takes.
+    turnBayStorageFt: float | None = Field(default=None, gt=0.0, le=WORK_LEN_MAX_FT)
 
     def carriageway_verdict(self) -> CarriagewayVerdict:
         """The backend's verdict on the road; ``not_applicable`` when no
@@ -1379,18 +1388,27 @@ def plan_shoulder_width_ft(
     return 8.0
 
 
-# #323: the honest refusal for a left-lane plan with the cross street on
-# the far side of the work (not built; #323 Q1).
-LEFT_LANE_FAR_SIDE_MESSAGE = (
-    "Left-lane work is laid out only when the cross street is just past the work "
-    "(the near side). This cross street comes before the work, so pick the right-side "
-    "curb, or mark the cross street the work ends at."
+# #323 R153: a left-lane plan whose cross street comes before the work is
+# TA-23's left-turn bay, whose storage length only the operator knows.
+# Until it is entered the plan refuses and names the field (Rule 10).
+TURN_BAY_STORAGE_MISSING = "turn_bay_storage_missing"
+TURN_BAY_STORAGE_MISSING_MESSAGE = (
+    "Enter the left-turn bay storage length under Cross street. This cross street "
+    "comes before the work, so the left lane ahead of it becomes a left-turn bay "
+    "(MUTCD TA-23), and its length comes from the site's signal timing or turn counts."
 )
 
 
 class CrossStreetStationError(ValueError):
     """A work-start near_intersection plan's computed cross-street station
-    is unusable — the render API turns it into an honest 400."""
+    is unusable — the render API turns it into an honest 400.
+
+    ``code`` is the 400's ``detail.error``: ``generator_rejected`` unless
+    the refusal has its own (#323 R153: ``turn_bay_storage_missing``)."""
+
+    def __init__(self, message: str, code: str = "generator_rejected") -> None:
+        super().__init__(message)
+        self.code = code
 
 
 def work_start_cross_station(scenario: NearIntersectionScenario, params: ScenarioParams) -> float:
@@ -1667,9 +1685,9 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             # stays False: no median is drawn and nothing is re-spaced.
             one_way_street=scenario.carriageway_verdict() in ("one_way_street", "divided"),
             divided_carriageway=scenario.carriageway_verdict() == "divided",
-            # #323: the left lane of a one-way street (near side only; the
-            # request gate has already refused "left" unless
-            # ``left_side_built`` holds, and the far side is refused below).
+            # #323: the left lane of a one-way street (the request gate has
+            # already refused "left" unless ``left_side_built`` holds; the
+            # far side needs the bay's storage length, checked below).
             work_side=(
                 "left"
                 if scenario.meta.work is not None and scenario.meta.work.side == "left"
@@ -1688,9 +1706,13 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
                 for a in scenario.approaches
             )
             if far:
-                # #323 Q1: TA-23 draws the left lane's far side as a turn bay
-                # with R3-7L, a different layout from the right's; not built.
-                raise CrossStreetStationError(LEFT_LANE_FAR_SIDE_MESSAGE)
+                # #323 R153: TA-23 reopens the left lane as a turn bay whose
+                # storage length the operator enters; refused until it is.
+                if scenario.turnBayStorageFt is None:
+                    raise CrossStreetStationError(
+                        TURN_BAY_STORAGE_MISSING_MESSAGE, code=TURN_BAY_STORAGE_MISSING
+                    )
+                params = replace(params, turn_bay_storage_ft=scenario.turnBayStorageFt)
         approaches = [
             ApproachParams(
                 id=a.id,

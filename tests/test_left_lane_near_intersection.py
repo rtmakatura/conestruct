@@ -159,11 +159,15 @@ def test_page_1_draws_the_left_plan_inside_its_boxes(tmp_path: Path) -> None:
     assert counts == {k: 0 for k in counts}, counts
 
 
-def test_the_far_side_is_refused_and_names_the_fix(client: TestClient) -> None:
+def test_the_far_side_without_a_bay_length_is_refused_and_names_the_field(
+    client: TestClient,
+) -> None:
+    # #323 R153: the far side builds TA-23's turn bay once the operator
+    # enters its storage length (tests/test_left_turn_bay_ta23.py).
     r = client.post("/render/pdf", headers=AUTH, json=ni("left", UPSTREAM))
     assert r.status_code == 400, r.text[:300]
-    assert "only when the cross street is just past the work" in r.text
-    assert "pick the right-side curb" in r.text
+    assert r.json()["detail"]["error"] == "turn_bay_storage_missing"
+    assert "Enter the left-turn bay storage length under Cross street" in r.text
 
 
 def test_the_far_side_on_the_right_still_builds(client: TestClient) -> None:

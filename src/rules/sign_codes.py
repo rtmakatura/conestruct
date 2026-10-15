@@ -60,6 +60,8 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "R2-6P": "FINES DOUBLE plaque",
     "R2-10": "BEGIN DOUBLE FINES ZONE",
     "R2-11": "END DOUBLE FINES ZONE",
+    # #323 R153: TA-23 (Fig. 6P-23, p. 905), the left-turn bay's sign.
+    "R3-7L": "LEFT LANE MUST TURN LEFT",
     # Route / school (M-series, S-series)
     "M4-9a": "BIKE DETOUR",
     "S1-1": "SCHOOL",

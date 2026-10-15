@@ -729,6 +729,18 @@ def build_narrative_context(
                 "distance": (f"{-ni['r2_11']:,.0f} ft downstream of the work zone"),
             }
         )
+        # #323 R153: TA-23's LEFT LANE MUST TURN LEFT pair at the taper end.
+        if "turn_bay" in ni:
+            sign_schedule.append(
+                {
+                    "code": "R3-7L",
+                    "description": description_for("R3-7L"),
+                    "distance": (
+                        f"{taper_start_station - ni['taper_end']:,.0f} ft downstream of the "
+                        "taper start (at the taper end; island and far curb, TA-23)"
+                    ),
+                }
+            )
 
     # -----------------------------------------------------------------
     # Pedestrian/bicycle accommodation (#125) — statements derive from
@@ -953,6 +965,28 @@ def build_narrative_context(
         "ni_r2_10_station_ft": ni["r2_10"] if ni is not None else 0.0,
         "ni_r2_11_station_ft": ni["r2_11"] if ni is not None else 0.0,
         "ni_g20_1_station_ft": ni["g20_1"] if ni is not None else 0.0,
+        # #323 R153: TA-23's left-turn bay (None on every other plan), with
+        # the cone counts split at the intersection for step 3.
+        "ni_turn_bay": (
+            {
+                **ni["turn_bay"],
+                "taper_end": ni["taper_end"],
+                "bay_cones": sum(
+                    1
+                    for p in mainline_placements
+                    if p.device_type == DeviceType.CONE
+                    and ni["turn_bay"]["bay_end"] <= p.station_ft <= ni["turn_bay"]["bay_start"]
+                ),
+                "far_cones": sum(
+                    1
+                    for p in mainline_placements
+                    if p.device_type == DeviceType.CONE
+                    and wz_len < p.station_ft <= ni["downstream_curb"]
+                ),
+            }
+            if ni is not None and "turn_bay" in ni
+            else None
+        ),
         # #268: the one generated stamp (UTC date), shared with the plan
         # sheet's DATE and the two workbooks.
         "generation_date": generated_stamp(),
