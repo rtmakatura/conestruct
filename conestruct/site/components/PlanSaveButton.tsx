@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SignInButton } from "@clerk/nextjs";
 import type { Scenario } from "@/lib/scenarios";
+import type { QuoteSettings } from "@/lib/quote-settings";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
@@ -15,7 +16,16 @@ interface Props {
   // the shell keeps it as the dirty-detection baseline (#197
   // baseline-ref variant), so it must be the object the PUT/POST body
   // was built from, never a re-read or a clone.
-  onSaved: (id: string, name: string, saved: Scenario) => void;
+  onSaved: (
+    id: string,
+    name: string,
+    saved: Scenario,
+    savedSettings?: QuoteSettings,
+  ) => void;
+  // #202: the quote settings on screen, persisted with the plan.  Like
+  // ``saved``, the object handed back through onSaved is the one the body
+  // was built from (the shell's settings dirty baseline).
+  quoteSettings?: QuoteSettings;
 }
 
 interface MeResponse {
@@ -24,7 +34,7 @@ interface MeResponse {
   currentTermsVersion: string;
 }
 
-export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
+export function PlanSaveButton({ scenario, planId, planName, onSaved, quoteSettings }: Props) {
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
@@ -72,6 +82,13 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
     return () => clearTimeout(t);
   }, [status]);
 
+  // The settings ride along only when the shell passed them (#202), so a
+  // caller without them sees the three-argument call it always did.
+  const reportSaved = (id: string, name: string) => {
+    if (quoteSettings) onSaved(id, name, scenario, quoteSettings);
+    else onSaved(id, name, scenario);
+  };
+
   const doCreate = async (name: string) => {
     setStatus("saving");
     try {
@@ -81,6 +98,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
         body: JSON.stringify({
           name,
           data: scenario,
+          ...(quoteSettings ? { quoteSettings } : {}),
           acceptedTerms: ackChecked,
           acceptedTermsVersion: me?.currentTermsVersion ?? null,
         }),
@@ -90,7 +108,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
         return;
       }
       const row = await res.json();
-      onSaved(row.id, row.name, scenario);
+      reportSaved(row.id, row.name);
       setStatus("saved");
     } catch {
       setStatus("error");
@@ -104,14 +122,18 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
       const res = await fetch(`/api/plans/${planId}`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name: planName, data: scenario }),
+        body: JSON.stringify({
+          name: planName,
+          data: scenario,
+          ...(quoteSettings ? { quoteSettings } : {}),
+        }),
       });
       if (!res.ok) {
         setStatus("error");
         return;
       }
       const row = await res.json();
-      onSaved(row.id, row.name, scenario);
+      reportSaved(row.id, row.name);
       setStatus("saved");
     } catch {
       setStatus("error");

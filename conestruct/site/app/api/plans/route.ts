@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { and, eq, isNull } from "drizzle-orm";
 import { getDb, plans, users } from "@/db";
 import { TERMS_VERSION } from "@/lib/legal";
+import { coerceQuoteSettings } from "@/lib/quote-settings";
 
 export async function POST(req: Request) {
   const { userId, orgId } = await auth();
@@ -18,9 +19,10 @@ export async function POST(req: Request) {
   if (typeof body !== "object" || body === null) {
     return new Response("Invalid body", { status: 400 });
   }
-  const { name, data, acceptedTerms, acceptedTermsVersion } = body as {
+  const { name, data, quoteSettings, acceptedTerms, acceptedTermsVersion } = body as {
     name?: unknown;
     data?: unknown;
+    quoteSettings?: unknown;
     acceptedTerms?: unknown;
     acceptedTermsVersion?: unknown;
   };
@@ -64,6 +66,9 @@ export async function POST(req: Request) {
       createdByUserId: userId,
       name: name.trim(),
       data,
+      // #202: the quote settings on screen at save, bounded like every
+      // render route's; absent leaves the column null (defaults).
+      quoteSettings: quoteSettings === undefined ? null : coerceQuoteSettings(quoteSettings),
     })
     .returning();
 

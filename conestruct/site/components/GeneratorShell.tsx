@@ -193,6 +193,9 @@ interface Props {
   initialScenario?: Scenario;
   initialPlanId?: string | null;
   initialPlanName?: string | null;
+  /** #202: the quote settings saved with the plan (DEFAULT_QUOTE_SETTINGS
+   *  for a row saved before they were). */
+  initialQuoteSettings?: QuoteSettings;
 }
 
 export function GeneratorShell({
@@ -200,6 +203,7 @@ export function GeneratorShell({
   initialScenario,
   initialPlanId = null,
   initialPlanName = null,
+  initialQuoteSettings,
 }: Props = {}) {
   const [scenario, setScenarioRaw] = useState<Scenario>(
     initialScenario ?? DEFAULT_SCENARIO,
@@ -250,7 +254,7 @@ export function GeneratorShell({
   // can read the user's edits and QuotePanel reads/writes the same store
   // through props — no second settings copy.
   const [settings, setSettings] = useState<QuoteSettings>(
-    DEFAULT_QUOTE_SETTINGS,
+    initialQuoteSettings ?? DEFAULT_QUOTE_SETTINGS,
   );
   // Manual-override guards for the quote inputs, shell-owned (restage):
   // the pricing card unmounts across reopen → regenerate cycles, and
@@ -299,16 +303,30 @@ export function GeneratorShell({
     initialScenario ?? null,
   );
 
-  const onSaved = (id: string, name: string, saved: Scenario) => {
+  // #202: the settings baseline beside the scenario's, by the same
+  // identity rule: the object the server page seeded, then the object the
+  // last save persisted.  A rate edit spread-replaces ``settings``, so the
+  // row-backed quote stops presenting as the quote on screen until saved.
+  const [savedSettings, setSavedSettings] = useState<QuoteSettings>(settings);
+
+  const onSaved = (
+    id: string,
+    name: string,
+    saved: Scenario,
+    persistedSettings?: QuoteSettings,
+  ) => {
     setPlanId(id);
     setPlanName(name);
     setSavedScenario(saved);
+    if (persistedSettings) setSavedSettings(persistedSettings);
   };
   // Rows only exist to be downloaded in workbench mode with a saved plan;
   // everywhere else the flag is inert (public mode POSTs the live
   // scenario, so it can't go stale).
   const planDirty =
-    mode === "workbench" && planId !== null && scenario !== savedScenario;
+    mode === "workbench" &&
+    planId !== null &&
+    (scenario !== savedScenario || settings !== savedSettings);
 
   // OutputCards stay visible from first paint (original behavior); the
   // Generate button now performs a real bundled-zip download rather than
@@ -1600,6 +1618,7 @@ export function GeneratorShell({
         planId={planId}
         planName={planName}
         onSaved={onSaved}
+        quoteSettings={settings}
       />
       {/* #289 fidelity F4 — Part 1 §8.32: "Sheet meta — DROPPED from the
           screen; the TA/sheet citation it carried moves to the nav's right

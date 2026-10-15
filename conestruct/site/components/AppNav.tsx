@@ -6,6 +6,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import type { Scenario } from "@/lib/scenarios";
+import type { QuoteSettings } from "@/lib/quote-settings";
 import { AUTH_UI_ENABLED } from "@/lib/feature-flags";
 import { useNewVersion } from "@/lib/new-version";
 import { Wordmark } from "./Wordmark";
@@ -24,10 +25,25 @@ interface Props {
   scenario: Scenario;
   planId: string | null;
   planName: string | null;
-  onSaved: (id: string, name: string, saved: Scenario) => void;
+  onSaved: (
+    id: string,
+    name: string,
+    saved: Scenario,
+    savedSettings?: QuoteSettings,
+  ) => void;
+  /** #202: the quote settings Save persists with the plan. */
+  quoteSettings?: QuoteSettings;
 }
 
-export function AppNav({ mode, citation, scenario, planId, planName, onSaved }: Props) {
+export function AppNav({
+  mode,
+  citation,
+  scenario,
+  planId,
+  planName,
+  onSaved,
+  quoteSettings,
+}: Props) {
   const isSandbox = mode === "sandbox";
   const newVersion = useNewVersion();
   return (
@@ -109,6 +125,7 @@ export function AppNav({ mode, citation, scenario, planId, planName, onSaved }: 
                 planId={planId}
                 planName={planName}
                 onSaved={onSaved}
+                quoteSettings={quoteSettings}
               />
               <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
                 <OrganizationSwitcher

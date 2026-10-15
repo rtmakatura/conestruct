@@ -15,6 +15,13 @@
       "when": 1777383867584,
       "tag": "0001_bright_maelstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792073131527,
+      "tag": "0002_quote_settings",
+      "breakpoints": true
     }
   ]
 }

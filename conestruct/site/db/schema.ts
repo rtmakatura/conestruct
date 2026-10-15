@@ -29,6 +29,10 @@ export const plans = pgTable(
       .references(() => users.id, { onDelete: "restrict" }),
     name: text("name").notNull(),
     data: jsonb("data").notNull(),
+    // #202: the quote settings saved with the plan (QuoteSettings, coerced
+    // on write).  Nullable: rows saved before this column price at
+    // DEFAULT_QUOTE_SETTINGS, and the workbench shows those values.
+    quoteSettings: jsonb("quote_settings"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },

@@ -5,6 +5,7 @@ import { getDb, plans } from "@/db";
 import { GeneratorShell } from "@/components/GeneratorShell";
 import { toScenario } from "@/lib/scenarios";
 import { AUTH_UI_ENABLED } from "@/lib/feature-flags";
+import { coerceQuoteSettings, DEFAULT_QUOTE_SETTINGS } from "@/lib/quote-settings";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -38,6 +39,11 @@ export default async function PlanPage({
       initialScenario={toScenario(row.data)}
       initialPlanId={row.id}
       initialPlanName={row.name}
+      // #202: a row saved before settings were persisted opens on the
+      // defaults its quote is priced at.
+      initialQuoteSettings={
+        row.quoteSettings == null ? DEFAULT_QUOTE_SETTINGS : coerceQuoteSettings(row.quoteSettings)
+      }
     />
   );
 }

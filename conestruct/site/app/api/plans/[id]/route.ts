@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { getDb, plans } from "@/db";
+import { coerceQuoteSettings } from "@/lib/quote-settings";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -27,9 +28,13 @@ export async function PUT(
   if (typeof body !== "object" || body === null) {
     return new Response("Invalid body", { status: 400 });
   }
-  const { name, data } = body as { name?: unknown; data?: unknown };
+  const { name, data, quoteSettings } = body as {
+    name?: unknown;
+    data?: unknown;
+    quoteSettings?: unknown;
+  };
 
-  const updates: { name?: string; data?: unknown; updatedAt: Date } = {
+  const updates: { name?: string; data?: unknown; quoteSettings?: unknown; updatedAt: Date } = {
     updatedAt: new Date(),
   };
 
@@ -47,7 +52,17 @@ export async function PUT(
     updates.data = data;
   }
 
-  if (updates.name === undefined && updates.data === undefined) {
+  // #202: the quote settings on screen at save, bounded like every render
+  // route's.  Absent leaves the stored settings as they are.
+  if (quoteSettings !== undefined) {
+    updates.quoteSettings = coerceQuoteSettings(quoteSettings);
+  }
+
+  if (
+    updates.name === undefined &&
+    updates.data === undefined &&
+    updates.quoteSettings === undefined
+  ) {
     return new Response("nothing to update", { status: 400 });
   }
 

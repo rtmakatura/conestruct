@@ -6,6 +6,7 @@ import type { Scenario } from "@/lib/scenarios";
 import { withRelayedCenterline } from "@/lib/scenarios/centerline-relay";
 import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import {
+  coerceQuoteSettings,
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
 } from "@/lib/quote-settings";
@@ -563,5 +564,12 @@ export async function proxyRender(
   if (!row) return new Response("Not found", { status: 404 });
 
   const scenario = toScenario(row.data);
-  return renderScenarioToResponse(scenario, kind, { downloadName: row.name });
+  // #202: the quote prices at the settings saved with the plan; a row
+  // saved before they were prices at DEFAULT_QUOTE_SETTINGS, the values the
+  // workbench shows for it.
+  const quoteSettings =
+    kind === "quote" && row.quoteSettings != null
+      ? coerceQuoteSettings(row.quoteSettings)
+      : undefined;
+  return renderScenarioToResponse(scenario, kind, { downloadName: row.name, quoteSettings });
 }
