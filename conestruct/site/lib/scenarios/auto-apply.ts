@@ -11,6 +11,7 @@
 // road property. Q6 of V1-Wide Item 1 review (2026-06-06).
 
 import { carriagewayVerdict } from "../road-detection/carriageway";
+import { withRelayedCenterline } from "./centerline-relay";
 import { isOperatorSet, withoutOperatorSet } from "./guesses";
 import { dividedForShoulderRoadType } from "./overrides";
 import type { RoadClassification } from "../road-detection/types";
@@ -186,15 +187,22 @@ export function signalProximityLaneConfidence(s: {
 // wire-only here; its stand-in is the relayed roadDirection, which only a
 // confirmed road carries.  Display-only: it decides the pointer, never a
 // value.
+//
+// #327: the relayed roadDirection is materialized only on the WIRE
+// (withRelayedCenterline, at the render proxy); the shell's scenario holds
+// the confirmed road instead.  The mirror reads the scenario as the wire
+// will carry it, so it sees the one-way tag the backend sees, behind the
+// same pin-equality staleness key.
 const ONE_WAY_TAGS = new Set(["yes", "-1"]);
 
 export function leftSideBuilt(scenario: Scenario): boolean {
+  const wire = withRelayedCenterline(scenario);
   return (
-    // #323: near_intersection's left lane too (its far side is refused by
-    // the backend where the cross street's station is measured).
-    (scenario.kind === "shoulder" || scenario.kind === "near_intersection") &&
-    carriagewayVerdict(scenario.carriageway) === "one_way_street" &&
-    ONE_WAY_TAGS.has(scenario.meta.roadDirection?.oneway ?? "")
+    // #323: near_intersection's left lane too (its far side needs the
+    // operator's turn-bay length, checked by the backend).
+    (wire.kind === "shoulder" || wire.kind === "near_intersection") &&
+    carriagewayVerdict(wire.carriageway) === "one_way_street" &&
+    ONE_WAY_TAGS.has(wire.meta.roadDirection?.oneway ?? "")
   );
 }
 

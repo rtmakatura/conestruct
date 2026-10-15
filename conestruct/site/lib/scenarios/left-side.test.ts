@@ -103,3 +103,75 @@ describe("matchRefusalAffordance — the work_side row (#300, R119 Q4)", () => {
     expect(matchRefusalAffordance(right)).toBeNull();
   });
 });
+
+// #327: the shell's scenario never carries roadDirection; the render proxy
+// derives it from the confirmed road (withRelayedCenterline).  The tests
+// above set roadDirection directly, the wire's shape, which is how the
+// mirror passed while every live left plan read "not built".  These hold
+// the scenario as the shell does.
+describe("leftSideBuilt reads the road as the wire carries it (#327)", () => {
+  const PIN = { lat: 39.7337, lng: -104.98753 };
+  const confirmed = (pinLat: number, pinLng: number) => ({
+    candidate: {
+      way_id: "131232822",
+      highway_class: "primary",
+      name: "North Broadway",
+      ref: null,
+      bearing: 180,
+      snap_distance_m: 11,
+      snapped_lat: pinLat,
+      snapped_lng: pinLng,
+      tags: {
+        oneway: "yes",
+        maxspeed: null,
+        lanes: null,
+        lanes_forward: null,
+        lanes_backward: null,
+        lanes_both_ways: null,
+        turn_lanes: null,
+        turn_lanes_forward: null,
+        turn_lanes_backward: null,
+      },
+      signal_distance_m: null,
+      geometry: [
+        [39.7346, -104.98754],
+        [39.7328, -104.98752],
+      ] as Array<[number, number]>,
+    },
+    classification: null as never,
+    method: "auto_single" as const,
+    isUrban: true,
+    placeName: null,
+    pinLat,
+    pinLng,
+  });
+  const { roadDirection: _dropped, ...metaWithoutDirection } = BROADWAY_LEFT.meta;
+  const asShellHolds = (pinLat: number, pinLng: number): ShoulderScenario => ({
+    ...BROADWAY_LEFT,
+    meta: { ...metaWithoutDirection, ...PIN, confirmedRoad: confirmed(pinLat, pinLng) },
+  });
+
+  it("holds for a left shoulder plan on the confirmed one-way road", () => {
+    const s = asShellHolds(PIN.lat, PIN.lng);
+    expect(s.meta.roadDirection).toBeUndefined();
+    expect(leftSideBuilt(s)).toBe(true);
+    expect(matchRefusalAffordance(s)).toBeNull();
+  });
+
+  it("holds for a left near-intersection plan on the same road", () => {
+    const shoulder = asShellHolds(PIN.lat, PIN.lng);
+    const ni = {
+      ...DEFAULT_NEAR_INTERSECTION,
+      carriageway: shoulder.carriageway,
+      meta: { ...DEFAULT_NEAR_INTERSECTION.meta, ...shoulder.meta },
+    } as Scenario;
+    expect(leftSideBuilt(ni)).toBe(true);
+    expect(matchRefusalAffordance(ni)).toBeNull();
+  });
+
+  it("fails after the pin moves off the confirmed road, as the wire relays nothing", () => {
+    const moved = asShellHolds(PIN.lat + 0.001, PIN.lng);
+    expect(leftSideBuilt(moved)).toBe(false);
+    expect(matchRefusalAffordance(moved)?.code).toBe("work_side");
+  });
+});
