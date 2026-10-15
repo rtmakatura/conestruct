@@ -166,6 +166,8 @@ const GATED_API: Row[] = [
   { path: "/api/render/quote-breakdown", method: "POST", file: "app/api/render/quote-breakdown/route.ts" },
   { path: "/api/replication-snapshot", method: "POST", file: "app/api/replication-snapshot/route.ts" },
   { path: "/api/road-bearing", method: "POST", file: "app/api/road-bearing/route.ts" },
+  // #242: the live frontend build, asked by an open tab.
+  { path: "/api/version", method: "GET", file: "app/api/version/route.ts" },
   // Default-deny near-misses of the webhook.
   { path: "/api/clerk/webhook/extra", method: "POST", file: "" },
   { path: "/api/clerk/webhookx", method: "POST", file: "" },

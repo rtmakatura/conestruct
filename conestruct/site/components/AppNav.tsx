@@ -7,6 +7,7 @@ import {
 } from "@clerk/nextjs";
 import type { Scenario } from "@/lib/scenarios";
 import { AUTH_UI_ENABLED } from "@/lib/feature-flags";
+import { useNewVersion } from "@/lib/new-version";
 import { Wordmark } from "./Wordmark";
 import {
   PlanSaveButton,
@@ -28,6 +29,7 @@ interface Props {
 
 export function AppNav({ mode, citation, scenario, planId, planName, onSaved }: Props) {
   const isSandbox = mode === "sandbox";
+  const newVersion = useNewVersion();
   return (
     <nav className="sticky top-0 z-[var(--z-nav)] flex items-stretch justify-between h-[var(--nav-h)] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
       <div className="flex items-stretch">
@@ -65,6 +67,21 @@ export function AppNav({ mode, citation, scenario, planId, planName, onSaved }: 
         )}
       </div>
       <div className="flex items-stretch">
+        {/* #242 (R151): a newer frontend is live and this tab still runs the
+            old bundle.  One line, only then; the user reloads, never the page
+            itself.  It fills the nav's fixed height, so nothing moves (P1). */}
+        <span role="status" className="flex items-stretch">
+          {newVersion && (
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="flex items-center px-4 border-l border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--act)] hover:bg-[color:var(--rule)] transition-colors"
+              data-testid="nav-new-version"
+            >
+              New version. Reload
+            </button>
+          )}
+        </span>
         {/* Deliberately no status dot here (#132): the green pulse that
             used to sit beside this badge was hardcoded chrome derived
             from nothing — under Rule 10 the honest render of no signal

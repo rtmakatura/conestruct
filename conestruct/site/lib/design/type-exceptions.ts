@@ -452,7 +452,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // coming-soon-gate C-Q8: the wordmark's drawing MOVED to
       // Wordmark.tsx (shared with the public chrome) — same class, one
       // site out of AppNav and one into Wordmark.
-      { file: "components/AppNav.tsx", cls: "text-[10px]", count: 4 },
+      { file: "components/AppNav.tsx", cls: "text-[10px]", count: 5 }, // #242: +1, the new-version button
       { file: "components/Wordmark.tsx", cls: "text-[14.5px]", count: 1 },
       { file: "components/AppSheetMeta.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/PlanRow.tsx", cls: "text-[10px]", count: 1 },
@@ -710,6 +710,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 204, // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxUses: 205, // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
   tsxFiles: 25, // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;
