@@ -38,9 +38,19 @@ export function carriagewayApplies(onewayTag: string | null, highwayClass: strin
   return ONE_WAY_TAGS.has(onewayTag ?? "") && STREET_CLASSES.has(highwayClass);
 }
 
+/** #322: the classes divided by class (the backend's DIVIDED_BY_CLASS).
+ *  A one-way trunk or motorway carriageway is one side of a divided
+ *  highway; no twin test decides it. */
+const DIVIDED_BY_CLASS = new Set(["trunk", "motorway"]);
+
+export function dividedByClass(onewayTag: string | null, highwayClass: string): boolean {
+  return ONE_WAY_TAGS.has(onewayTag ?? "") && DIVIDED_BY_CLASS.has(highwayClass);
+}
+
 export function carriagewayVerdict(facts: CarriagewayFacts | undefined): CarriagewayVerdict {
   if (!facts) return "not_applicable";
   if (facts.confirmed) return facts.confirmed;
+  if (dividedByClass(facts.oneway, facts.highwayClass)) return "divided";
   if (!carriagewayApplies(facts.oneway, facts.highwayClass)) return "not_applicable";
   if (facts.twinDistanceM !== null && facts.twinDistanceM <= TWIN_RADIUS_M) return "divided";
   if (!facts.twinSearched) return "undecided";

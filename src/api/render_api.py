@@ -365,7 +365,7 @@ def _side_refusal(scenario: Scenario) -> dict[str, str] | None:
     #308's verdict, whose ``not_applicable`` splits on whether carriageway
     facts were relayed at all.
     """
-    from src.rules.carriageway import ONE_WAY_TAGS
+    from src.rules.carriageway import DIVIDED_BY_CLASS, ONE_WAY_TAGS
 
     meta = scenario.meta
     work = meta.work
@@ -383,7 +383,13 @@ def _side_refusal(scenario: Scenario) -> dict[str, str] | None:
         cause = "two_way"
     else:
         verdict = scenario.carriageway_verdict()
-        if verdict in ("divided", "undecided"):
+        cw = scenario.carriageway
+        if cw is not None and cw.highwayClass in DIVIDED_BY_CLASS:
+            # #322: a trunk / motorway is divided by class; there is no
+            # Carriageway row to change, so the refusal names the highway
+            # (its words before #322, unchanged).
+            cause = "highway"
+        elif verdict in ("divided", "undecided"):
             cause = verdict
         elif scenario.carriageway is None:
             cause = "no_facts"

@@ -42,6 +42,15 @@ ONE_WAY_TAGS = frozenset({"yes", "-1"})
 # names on its own ("multi-lane ramps") and which is not a one-way street.
 STREET_CLASSES = frozenset({"primary", "secondary", "tertiary", "unclassified", "residential"})
 
+# #322 (R145 under #312's R134): the classes divided by class.  A one-way
+# trunk or motorway carriageway is one side of a divided highway, which is
+# how classify.ts already reads them for the shoulder kind ("divided by
+# class").  Without this, a near-intersection plan on a divided trunk road
+# (S Santa Fe Dr at 39.69322, -104.99425) carried no divided fact and was
+# built undivided with right-side signs only.  ``*_link`` is not here:
+# a ramp is Note 8's "multi-lane ramps", its own case.
+DIVIDED_BY_CLASS = frozenset({"trunk", "motorway"})
+
 CarriagewayVerdict = Literal["one_way_street", "divided", "undecided", "not_applicable"]
 
 
@@ -56,15 +65,19 @@ def carriageway_verdict(
     """The verdict, by rules applied in order (R83):
 
     1. The operator answered → that answer.
-    2. Not a street class, or not tagged one-way → ``not_applicable``
+    2. #322: a one-way carriageway of a class divided by class (trunk,
+       motorway) → ``divided``.  No twin test: the class says it.
+    3. Not a street class, or not tagged one-way → ``not_applicable``
        (the scenario's own ``divided`` stands, exactly as before #308).
-    3. A same-name twin within ``TWIN_RADIUS_M`` → ``divided``.
-    4. The same-name search did not run → ``undecided`` (the operator
+    4. A same-name twin within ``TWIN_RADIUS_M`` → ``divided``.
+    5. The same-name search did not run → ``undecided`` (the operator
        confirms; the backend refuses until then).
-    5. Otherwise → ``one_way_street``.
+    6. Otherwise → ``one_way_street``.
     """
     if confirmed is not None:
         return confirmed
+    if highway_class in DIVIDED_BY_CLASS and oneway in ONE_WAY_TAGS:
+        return "divided"
     if highway_class not in STREET_CLASSES or oneway not in ONE_WAY_TAGS:
         return "not_applicable"
     if twin_distance_m is not None and twin_distance_m <= TWIN_RADIUS_M:

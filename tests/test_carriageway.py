@@ -79,10 +79,27 @@ def test_every_street_class_takes_the_twin_rule(highway_class: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "highway_class",
-    ["motorway", "motorway_link", "trunk", "trunk_link", "primary_link", "secondary_link"],
+    "highway_class", ["motorway_link", "trunk_link", "primary_link", "secondary_link"]
 )
-def test_motorways_trunks_and_ramps_keep_their_class_rule(highway_class: str) -> None:
+def test_ramps_keep_their_class_rule(highway_class: str) -> None:
     """A ramp is not a one-way street (Note 8 names multi-lane ramps on
-    their own); motorways and trunks are divided by class."""
+    their own)."""
     assert verdict(highway_class=highway_class) == "not_applicable"
+
+
+@pytest.mark.parametrize("highway_class", ["trunk", "motorway"])
+def test_a_one_way_trunk_or_motorway_is_divided_by_class(highway_class: str) -> None:
+    """#322: one carriageway of a divided highway.  No twin test: the class
+    says it, as classify.ts already reads it for the shoulder kind."""
+    assert verdict(highway_class=highway_class) == "divided"
+    assert verdict(highway_class=highway_class, twin_searched=False) == "divided"
+    assert verdict(highway_class=highway_class, oneway="-1") == "divided"
+
+
+@pytest.mark.parametrize("oneway", [None, "no", "reversible"])
+def test_a_two_way_trunk_is_not_this_predicates_question(oneway: str | None) -> None:
+    assert verdict(highway_class="trunk", oneway=oneway) == "not_applicable"
+
+
+def test_the_operator_answer_still_wins_on_a_trunk() -> None:
+    assert verdict(highway_class="trunk", confirmed="one_way_street") == "one_way_street"

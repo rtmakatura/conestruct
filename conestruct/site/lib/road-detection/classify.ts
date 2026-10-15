@@ -1,6 +1,7 @@
 import type { RoadType } from "../scenarios";
 import {
   carriagewayApplies,
+  dividedByClass,
   carriagewayVerdict,
   TWIN_RADIUS_M,
   type CarriagewayFacts,
@@ -229,8 +230,11 @@ export function classifyFromOsmTags(
   // #308: a street-class one-way is a one-way street or one side of a
   // divided road, decided by its same-name twin (the mirror of the
   // backend's predicate; R83).  The raw facts ride the scenario so the
-  // backend decides for itself.
-  const carriageway: CarriagewayFacts | undefined = carriagewayApplies(tags.oneway, highwayClass)
+  // backend decides for itself.  #322: a one-way trunk or motorway rides
+  // too (divided by class), so the near-intersection kind, which reads
+  // divided-ness only from these facts, learns it is on a divided road.
+  const carriageway: CarriagewayFacts | undefined =
+    carriagewayApplies(tags.oneway, highwayClass) || dividedByClass(tags.oneway, highwayClass)
     ? {
         oneway: tags.oneway,
         highwayClass,

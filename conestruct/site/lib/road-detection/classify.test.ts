@@ -7,6 +7,7 @@ import {
   parseMaxspeedToMph,
 } from "@/lib/road-detection/classify";
 import type { RoadCandidate } from "@/lib/road-detection/types";
+import { carriagewayVerdict } from "@/lib/road-detection/carriageway";
 
 // These tests pin classifyFromOsmTags's output for the field/tag
 // combinations the existing tool relies on.  Output shape and values
@@ -561,10 +562,22 @@ describe("divided rationale/value agreement (#123)", () => {
     expect(rural(13).roadType).toBe("rural_divided");
   });
 
-  it("trunk one-way: divided by class, no carriageway facts relayed", () => {
+  it("trunk one-way: divided by class, and #322 relays its carriageway facts", () => {
+    // #322: the facts ride so the near-intersection kind (which reads
+    // divided-ness only from them) learns the road is divided; the
+    // verdict is divided by class, no twin test.
     const r = classify("trunk");
     expect(r.divided).toBe(true);
-    expect(r.fields.divided.source).toBe("inferred from class=trunk");
+    expect(r.carriageway).toMatchObject({ oneway: "yes", highwayClass: "trunk" });
+    expect(carriagewayVerdict(r.carriageway)).toBe("divided");
+  });
+
+  it("#322: a two-way trunk relays nothing (only a one-way carriageway is divided by class)", () => {
+    const r = classifyFromOsmTags(
+      { highwayClass: "trunk", name: "X", ref: null, tags: { ...onewayTags, oneway: null } },
+      true,
+      null,
+    );
     expect(r.carriageway).toBeUndefined();
   });
 
