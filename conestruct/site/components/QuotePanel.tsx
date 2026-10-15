@@ -8,7 +8,7 @@ import {
   type SetStateAction,
 } from "react";
 import Link from "next/link";
-import { type QuoteSettings } from "@/lib/quote-settings";
+import { DEFAULT_QUOTE_SETTINGS, type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 import { stampMatches, type AnswerStamp } from "@/lib/answer-stamp";
 import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
@@ -301,86 +301,95 @@ export function QuotePanel({
 
   const body = (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
-        <NumberField
-          label="Duration (days)"
-          value={settings.project_duration_days}
-          min={1}
-          max={365}
-          step={1}
-          onChange={(v) =>
-            setSettings({ ...settings, project_duration_days: v })
-          }
-        />
-        <NumberField
-          label="Flaggers"
-          value={settings.num_flaggers}
-          min={0}
-          max={20}
-          step={1}
-          onChange={(v) => {
-            setSettings({ ...settings, num_flaggers: v });
-            setFlaggerSource("manual");
-          }}
-          caption={flaggerCaption(flaggerSource, autoFlaggers)}
-        />
-        <NumberField
-          label="Delivery (mi)"
-          value={settings.delivery_distance_miles}
-          min={0}
-          max={500}
-          step={5}
-          onChange={(v) => {
-            setSettings({ ...settings, delivery_distance_miles: v });
-            setDelivery({ state: "manual" });
-          }}
-          caption={deliveryCaption(delivery)}
-        />
-        <NumberField
-          label="Overhead (%)"
-          value={pctToDisplay(settings.overhead_pct)}
-          min={0}
-          max={100}
-          step={1}
-          onChange={(v) =>
-            setSettings({ ...settings, overhead_pct: v / 100 })
-          }
-        />
-        <NumberField
-          label="Profit (%)"
-          value={pctToDisplay(settings.profit_pct)}
-          min={0}
-          max={100}
-          step={1}
-          onChange={(v) => setSettings({ ...settings, profit_pct: v / 100 })}
-        />
-        <NumberField
-          label="Flagger ($/hr)"
-          value={settings.flagger_hourly_rate}
-          min={0}
-          max={500}
-          step={1}
-          onChange={(v) =>
-            setSettings({ ...settings, flagger_hourly_rate: v })
-          }
-        />
-        <NumberField
-          label="TCS ($/hr)"
-          value={settings.tcs_hourly_rate}
-          min={0}
-          max={500}
-          step={1}
-          onChange={(v) => setSettings({ ...settings, tcs_hourly_rate: v })}
-        />
-        <NumberField
-          label="Crew ($/hr)"
-          value={settings.crew_hourly_rate}
-          min={0}
-          max={500}
-          step={1}
-          onChange={(v) => setSettings({ ...settings, crew_hourly_rate: v })}
-        />
-      </div>
+      {mode.kind === "saved" ? (
+        // #194: the saved-plan quote route sends no settings, so it prices
+        // at DEFAULT_QUOTE_SETTINGS (render-proxy.ts).  Editable fields here
+        // would reach no request; the panel states what the quote uses.
+        <p className="tr-prov mb-4" data-testid="quote-saved-defaults">
+          {savedDefaultsLine(DEFAULT_QUOTE_SETTINGS)}
+        </p>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+          <NumberField
+            label="Duration (days)"
+            value={settings.project_duration_days}
+            min={1}
+            max={365}
+            step={1}
+            onChange={(v) =>
+              setSettings({ ...settings, project_duration_days: v })
+            }
+          />
+          <NumberField
+            label="Flaggers"
+            value={settings.num_flaggers}
+            min={0}
+            max={20}
+            step={1}
+            onChange={(v) => {
+              setSettings({ ...settings, num_flaggers: v });
+              setFlaggerSource("manual");
+            }}
+            caption={flaggerCaption(flaggerSource, autoFlaggers)}
+          />
+          <NumberField
+            label="Delivery (mi)"
+            value={settings.delivery_distance_miles}
+            min={0}
+            max={500}
+            step={5}
+            onChange={(v) => {
+              setSettings({ ...settings, delivery_distance_miles: v });
+              setDelivery({ state: "manual" });
+            }}
+            caption={deliveryCaption(delivery)}
+          />
+          <NumberField
+            label="Overhead (%)"
+            value={pctToDisplay(settings.overhead_pct)}
+            min={0}
+            max={100}
+            step={1}
+            onChange={(v) =>
+              setSettings({ ...settings, overhead_pct: v / 100 })
+            }
+          />
+          <NumberField
+            label="Profit (%)"
+            value={pctToDisplay(settings.profit_pct)}
+            min={0}
+            max={100}
+            step={1}
+            onChange={(v) => setSettings({ ...settings, profit_pct: v / 100 })}
+          />
+          <NumberField
+            label="Flagger ($/hr)"
+            value={settings.flagger_hourly_rate}
+            min={0}
+            max={500}
+            step={1}
+            onChange={(v) =>
+              setSettings({ ...settings, flagger_hourly_rate: v })
+            }
+          />
+          <NumberField
+            label="TCS ($/hr)"
+            value={settings.tcs_hourly_rate}
+            min={0}
+            max={500}
+            step={1}
+            onChange={(v) => setSettings({ ...settings, tcs_hourly_rate: v })}
+          />
+          <NumberField
+            label="Crew ($/hr)"
+            value={settings.crew_hourly_rate}
+            min={0}
+            max={500}
+            step={1}
+            onChange={(v) => setSettings({ ...settings, crew_hourly_rate: v })}
+          />
+        </div>
+      )}
 
       {mode.kind === "public" ? (
         <div className="flex flex-col md:flex-row gap-3">
@@ -717,6 +726,20 @@ function deliveryCaption(
     case "idle":
       return undefined;
   }
+}
+
+// #194: the settings a saved plan's quote is priced at, in words.
+export function savedDefaultsLine(s: QuoteSettings): string {
+  const days = `${s.project_duration_days} day${s.project_duration_days === 1 ? "" : "s"}`;
+  const flaggers = `${s.num_flaggers} flagger${s.num_flaggers === 1 ? "" : "s"}`;
+  const pct = (p: number) => `${Math.round(p * 100)}%`;
+  return (
+    `This saved plan's quote uses the default settings: ${days}, ${flaggers}, ` +
+    `${s.delivery_distance_miles} mi delivery, ${pct(s.overhead_pct)} overhead, ` +
+    `${pct(s.profit_pct)} profit, and $${s.flagger_hourly_rate} flagger, ` +
+    `$${s.tcs_hourly_rate} TCS and $${s.crew_hourly_rate} crew per hour. ` +
+    "Custom rates can't be saved with a plan yet."
+  );
 }
 
 function flaggerCaption(
