@@ -1,0 +1,54 @@
+{
+ "today": {
+  "title": "Today (prod)",
+  "counts": {
+   "edge": 0,
+   "box_cross": 0,
+   "collisions": 0
+  },
+  "fails": {
+   "edge": [],
+   "box_cross": [],
+   "collisions": []
+  }
+ },
+ "a": {
+  "title": "A: one type ramp",
+  "counts": {
+   "edge": 0,
+   "box_cross": 0,
+   "collisions": 0
+  },
+  "fails": {
+   "edge": [],
+   "box_cross": [],
+   "collisions": []
+  }
+ },
+ "b": {
+  "title": "B: A + legal trailer in the title block",
+  "counts": {
+   "edge": 0,
+   "box_cross": 0,
+   "collisions": 0
+  },
+  "fails": {
+   "edge": [],
+   "box_cross": [],
+   "collisions": []
+  }
+ },
+ "c": {
+  "title": "C: A + rebalanced column widths",
+  "counts": {
+   "edge": 0,
+   "box_cross": 0,
+   "collisions": 0
+  },
+  "fails": {
+   "edge": [],
+   "box_cross": [],
+   "collisions": []
+  }
+ }
+}
