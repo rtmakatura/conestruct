@@ -1607,20 +1607,6 @@ export function GeneratorShell({
   // are the kind's, and a held answer is the PREVIOUS kind's (a chip
   // re-picked after a confirmation) — showing it would be the stale
   // answer rule 10 forbids.  The WHERE rows say what they wait on.
-  // #323 R153: Table 6B-1's A, the backend's number, parsed from the
-  // advance section's ``spacing_text`` ("A = 100 ft, ...").  Reference
-  // display only; the wiring arc replaces the parse with a wire field.
-  const advanceSpacingText = checksArmed
-    ? (currentAudit?.sections?.advance as { spacing_text?: unknown } | undefined)
-        ?.spacing_text
-    : undefined;
-  const advanceSpacingMatch =
-    typeof advanceSpacingText === "string"
-      ? /A = ([0-9.]+) ft/.exec(advanceSpacingText)
-      : null;
-  const advanceSpacingAFt = advanceSpacingMatch
-    ? Number(advanceSpacingMatch[1])
-    : null;
   const corridorSpecLengths = checksArmed
     ? (currentAudit?.sections?.corridor_spec ?? null)
     : null;
@@ -1875,7 +1861,6 @@ export function GeneratorShell({
                 refusalPending={refusalPending}
                 corridorSpecLengths={corridorSpecLengths}
                 jurisdictionName={jurisdictionBlock?.name ?? null}
-                advanceSpacingAFt={advanceSpacingAFt}
                 jurisdictionBlock={jurisdictionBlock}
                 // #289 ruling 196 / #276: only the shell can tell "not yet"
                 // from "did not answer" — it owns the breakdown fetch — so

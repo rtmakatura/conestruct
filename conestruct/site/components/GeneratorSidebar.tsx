@@ -73,10 +73,6 @@ interface Props {
   // jurisdiction is named.  The strip falls back to the option label /
   // "Not set" — a real answer, never blank.
   jurisdictionName?: string | null;
-  // #323 R153: Table 6B-1's A for this plan, read off the audit's advance
-  // section (backend-owned, Rule 3), shown beside the turn-bay field as a
-  // labelled reference from TA-22 only; never a value.  Null until known.
-  advanceSpacingAFt?: number | null;
   // #227 schedule reference block: the full evaluated block — window
   // set + hours_eval — for the Schedule step's window rows.
   jurisdictionBlock?: JurisdictionBlock | null;
@@ -147,7 +143,6 @@ export function GeneratorSidebar({
   refusalPending,
   corridorSpecLengths,
   jurisdictionName = null,
-  advanceSpacingAFt = null,
   jurisdictionBlock = null,
   jurisdictionLoading = false,
   jurisdictionRevalidating = false,
@@ -440,7 +435,6 @@ export function GeneratorSidebar({
             setApproachConfirm({ pending: false, reason: null })
           }
           onMarkIntersection={() => openPicker(true)}
-          advanceSpacingAFt={advanceSpacingAFt}
         />
       )}
     </>

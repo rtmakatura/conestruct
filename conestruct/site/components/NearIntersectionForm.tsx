@@ -70,9 +70,6 @@ interface Props {
   /** #301 (R123 Q4): open the picker with "mark the intersection" armed —
    *  the line below names the action, so the action sits beside it. */
   onMarkIntersection?: () => void;
-  /** #323 R153: Table 6B-1's A off the audit (backend-owned), shown only
-   *  as TA-22's dimension beside the turn-bay field.  Null until known. */
-  advanceSpacingAFt?: number | null;
 }
 
 export function NearIntersectionForm({
@@ -82,7 +79,6 @@ export function NearIntersectionForm({
   clearApproachConfirm,
   stepsPending = false,
   onMarkIntersection,
-  advanceSpacingAFt = null,
 }: Props) {
   const locked = useWriteLock();
   const set = <K extends keyof NearIntersectionScenario>(
@@ -361,8 +357,8 @@ export function NearIntersectionForm({
 
         {/* #323 R153: the left-turn bay's storage length is site geometry
             (TA-23 Note 5), so the operator enters it.  Empty by default,
-            never prefilled; TA-22's A is a labelled reference from a
-            different figure and is never written into the field. */}
+            never prefilled, and no number from another figure beside it
+            (Ryan's review of R153: it invites copying). */}
         {showTurnBay && (
           <Field>
             <LabelRow htmlFor="ni-turn-bay">Left-turn bay storage length (ft)</LabelRow>
@@ -372,7 +368,7 @@ export function NearIntersectionForm({
               min="1"
               className="field-input"
               placeholder="Not entered"
-              aria-describedby="ni-turn-bay-help ni-turn-bay-ref"
+              aria-describedby="ni-turn-bay-help"
               value={scenario.turnBayStorageFt ?? ""}
               onChange={(e) =>
                 set(
@@ -382,19 +378,10 @@ export function NearIntersectionForm({
               }
             />
             <p id="ni-turn-bay-help" className="tr-prov mt-1.5 mb-0">
-              You enter this. When the cross street comes before the work,
-              the left lane ahead of it becomes a left-turn bay (TA-23).
-              TA-23 sizes the bay to hold every turning vehicle in one
-              signal cycle (Note 5, p. 904), so take it from the signal
-              timing or counts. That plan won&apos;t build without it.
-            </p>
-            <p id="ni-turn-bay-ref" className="tr-prov mt-1 mb-0">
-              Reference only, from a different figure: TA-22 (Fig. 6P-22,
-              p. 903) dimensions its right-turn lane as A
-              {advanceSpacingAFt !== null
-                ? `, ${advanceSpacingAFt.toLocaleString("en-US")} ft at this speed (Table 6B-1)`
-                : " (Table 6B-1), shown once the checks run"}
-              . It isn&apos;t used for this bay.
+              Enter the length the bay needs to hold the vehicles that turn
+              left in one signal cycle (MUTCD TA-23, Note 5, p. 904). Get it
+              from the signal timing or turn counts. The plan won&apos;t
+              build without it.
             </p>
           </Field>
         )}
