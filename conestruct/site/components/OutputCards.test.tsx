@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { OutputCards } from "./OutputCards";
 import { BUNDLE_PART_KINDS } from "@/lib/render-types";
@@ -145,7 +145,7 @@ describe("OutputCards download cards", () => {
     expect(document.body.textContent).not.toContain("—");
   });
 
-  it("breakdown failed, saved mode: the row-backed anchors are inert too", () => {
+  it("breakdown failed, saved mode: the row-backed downloads are inert too", () => {
     const { container } = render(
       <OutputCards
         summary={SUMMARY}
@@ -155,11 +155,13 @@ describe("OutputCards download cards", () => {
         auditChecked={13}
       />,
     );
-    const anchors = Array.from(container.querySelectorAll(".dl-card a.dl-btn"));
-    expect(anchors).toHaveLength(5);
-    for (const a of anchors) {
-      expect(a.getAttribute("aria-disabled")).toBe("true");
-    }
+    // #203: fetch-driven buttons now, disabled like the public ones.
+    const buttons = Array.from(
+      container.querySelectorAll<HTMLButtonElement>(".dl-card button.dl-btn"),
+    );
+    expect(buttons).toHaveLength(5);
+    for (const b of buttons) expect(b.disabled).toBe(true);
+    expect(container.querySelectorAll(".dl-card a")).toHaveLength(0);
   });
 
   it("no \"—\" and no \"done\" in any .dl-card .desc text node, in any state", () => {
@@ -230,7 +232,7 @@ describe("OutputCards download cards", () => {
     expect(document.body.textContent).not.toMatch(/Bundling/);
   });
 
-  it("saved mode with a plan id: cards link to the plan's download routes and no zip button renders", () => {
+  it("saved mode with a plan id: cards download from the plan's routes and no zip button renders", async () => {
     const onDownloadAll = vi.fn();
     const { container } = render(
       <OutputCards
@@ -241,10 +243,25 @@ describe("OutputCards download cards", () => {
         onDownloadAll={onDownloadAll}
       />,
     );
-    const hrefs = Array.from(container.querySelectorAll(".dl-card a")).map(
-      (a) => a.getAttribute("href"),
+    // #203: buttons that GET the plan's routes (in card order), not
+    // anchors that navigate the tab on a failure.
+    expect(container.querySelectorAll(".dl-card a")).toHaveLength(0);
+    const fetched: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) => {
+        fetched.push(url);
+        return Promise.resolve(new Response("x", { status: 200 }));
+      }),
     );
-    expect(hrefs).toEqual([
+    for (const b of Array.from(
+      container.querySelectorAll<HTMLButtonElement>(".dl-card button.dl-btn"),
+    )) {
+      fireEvent.click(b);
+      await waitFor(() => expect(b.disabled).toBe(false));
+    }
+    vi.unstubAllGlobals();
+    expect(fetched).toEqual([
       "/api/plans/plan-1/pdf",
       "/api/plans/plan-1/xlsx",
       "/api/plans/plan-1/crew-pdf",

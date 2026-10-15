@@ -86,8 +86,10 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
   } as unknown as Response);
 });
 
-function pdfAnchor(): HTMLAnchorElement | null {
-  return document.querySelector('a[href="/api/plans/p1/pdf"]');
+// #203: the row-backed downloads are fetch-driven buttons; each carries
+// the route it fetches as data-download (the anchor's href before).
+function pdfAnchor(): HTMLElement | null {
+  return document.querySelector('[data-download="/api/plans/p1/pdf"]');
 }
 
 async function mountSavedPlan() {
@@ -151,7 +153,7 @@ describe("workbench downloads gate on dirty state (#183)", () => {
     expect((bodies[bodies.length - 1] as { scenario: { speed: number } }).scenario.speed).toBe(35);
     // …so the DB-row anchors must not present as downloads of it.
     expect(pdfAnchor()).toBeNull();
-    expect(document.querySelector('a[href="/api/plans/p1/quote"]')).toBeNull();
+    expect(document.querySelector('[data-download="/api/plans/p1/quote"]')).toBeNull();
     expect(screen.getAllByText(/Save to download/).length).toBeGreaterThan(0);
   });
 

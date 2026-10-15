@@ -76,8 +76,10 @@ describe("saved-mode quote panel (#194)", () => {
 
   it("keeps the row-backed download", () => {
     open({ kind: "saved", planId: "plan-1" });
-    const a = screen.getByRole("link", { name: /Download Quote \(XLSX\)/ });
-    expect(a.getAttribute("href")).toBe("/api/plans/plan-1/quote");
+    // #203: a button that GETs the plan's quote route (no anchor).
+    expect(screen.queryByRole("link", { name: /Download Quote \(XLSX\)/ })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /Download Quote \(XLSX\)/ }));
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith("/api/plans/plan-1/quote");
   });
 
   it("public mode still renders the eight fields and the flagger caption", () => {

@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Scenario } from "@/lib/scenarios";
 import { BUNDLE_PART_KINDS, type AuditSummary } from "@/lib/render-types";
 import type { PrimaryOwner } from "@/lib/results-primary";
 import { stampMatches } from "@/lib/answer-stamp";
+import { downloadSavedPart, extractValidationMessage } from "@/lib/download-error";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
-import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
+import { useRenderRequest, useWriteLock } from "./WriteLock";
 
 type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf" | "audit-pdf";
 
@@ -141,29 +142,6 @@ function safeFilename(name: string | undefined, ext: string): string {
   return `${cleaned || "plan"}.${ext}`;
 }
 
-// Pull a user-facing message out of a 400 response body.  The render
-// service raises HTTPException(400, detail={"error": ..., "message":
-// "...", "violations": [...]}); FastAPI serialises that as
-// {"detail": {...}}.  Some validators raise with a string detail, in
-// which case we fall back to that.  Anything we can't parse becomes
-// the safe default "Invalid scenario".
-async function extractValidationMessage(res: Response): Promise<string> {
-  try {
-    const body = (await res.json()) as {
-      detail?: { message?: unknown } | string;
-    };
-    if (body.detail && typeof body.detail === "object") {
-      const m = body.detail.message;
-      if (typeof m === "string" && m.length > 0) return m;
-    }
-    if (typeof body.detail === "string" && body.detail.length > 0) {
-      return body.detail;
-    }
-  } catch {
-    // Body wasn't JSON — fall through to default.
-  }
-  return "Invalid scenario";
-}
 
 export function OutputCards({
   summary,
@@ -360,12 +338,26 @@ function DlCard({
     msg: string;
     for: unknown;
   } | null>(null);
+  // #203: a saved plan's error is stamped with the plan id and shows
+  // while that plan is on screen unedited; an edit makes it dirty, which
+  // disables the downloads, so the error dies on edit.
   const currentError =
-    error !== null &&
-    mode.kind === "public" &&
-    stampMatches([error.for], [mode.scenario])
-      ? error
-      : null;
+    error === null
+      ? null
+      : mode.kind === "public"
+        ? stampMatches([error.for], [mode.scenario])
+          ? error
+          : null
+        : mode.planId !== null && error.for === mode.planId && !mode.dirty
+          ? error
+          : null;
+
+  // A saved plan that goes dirty drops its error, so saving it again
+  // (same id, clean) can't bring back an error about the old copy.
+  const savedDirty = mode.kind === "saved" && mode.dirty === true;
+  useEffect(() => {
+    if (savedDirty) setError(null);
+  }, [savedDirty]);
 
   const kinds: RenderKind[] = card.secondaryKind
     ? [card.kind, card.secondaryKind]
@@ -417,6 +409,23 @@ function DlCard({
     }
   };
 
+  // #203: the saved plan's row-backed download, fetched in the page so a
+  // failure prints in the card instead of navigating the tab away.
+  const onSavedDownload = async (dlKind: RenderKind) => {
+    if (mode.kind !== "saved" || !mode.planId) return;
+    const planId = mode.planId;
+    setBusyKind(dlKind);
+    setError(null);
+    const endRender = beginRender(RENDER_LABELS[dlKind]);
+    try {
+      const msg = await downloadSavedPart(`/api/plans/${planId}/${dlKind}`, EXT[dlKind]);
+      if (msg !== null) setError({ kind: dlKind, msg, for: planId });
+    } finally {
+      endRender();
+      setBusyKind(null);
+    }
+  };
+
   // #261 (P4/P11): the card's actions are ONE bottom-anchored row
   // (`.dl-actions`, the card's last child) — the crew card's PDF and .md
   // sit side by side in it — so every card's first button shares one top
@@ -448,17 +457,20 @@ function DlCard({
               </button>
             ))
           : kinds.map((k) => (
-              <a
+              <button
                 key={k}
-                href={`/api/plans/${mode.planId}/${k}`}
-                download
+                type="button"
                 className="dl-btn"
                 data-write=""
-                {...lockedAnchorProps(locked || failed)}
+                // The route this button fetches (an anchor's href used
+                // to carry it; tests and readers find the download by it).
+                data-download={`/api/plans/${mode.planId}/${k}`}
+                onClick={() => onSavedDownload(k)}
+                disabled={busyKind !== null || locked || failed}
               >
-                {labelFor(k)}
+                {currentError?.kind === k ? "Try again" : labelFor(k)}
                 <span className="font-mono">↓</span>
-              </a>
+              </button>
             ))
         : [
             <Link key={card.kind} href={SIGNUP_HREF} className="dl-btn">
@@ -467,19 +479,18 @@ function DlCard({
             </Link>,
           ];
 
-  const note =
-    mode.kind === "public" ? (
-      currentError ? (
-        <div className="text-[12px] leading-snug text-[color:var(--fail)] font-sans">
-          {currentError.msg}
-        </div>
-      ) : null
-    ) : mode.planId && mode.dirty ? (
-      <div className="text-[12px] leading-snug text-[color:var(--ink-faint)] font-sans">
-        Unsaved edits. Save to download the plan on screen. The saved copy
-        no longer matches it.
-      </div>
-    ) : null;
+  // #203: a failed download prints here in both modes (the stamp above
+  // already limits a saved plan's error to the unedited plan).
+  const note = currentError ? (
+    <div className="text-[12px] leading-snug text-[color:var(--fail)] font-sans">
+      {currentError.msg}
+    </div>
+  ) : mode.kind === "saved" && mode.planId && mode.dirty ? (
+    <div className="text-[12px] leading-snug text-[color:var(--ink-faint)] font-sans">
+      Unsaved edits. Save to download the plan on screen. The saved copy
+      no longer matches it.
+    </div>
+  ) : null;
 
   return (
     <div className="dl-card">

@@ -11,7 +11,8 @@ import Link from "next/link";
 import { DEFAULT_QUOTE_SETTINGS, type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 import { stampMatches, type AnswerStamp } from "@/lib/answer-stamp";
-import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
+import { downloadSavedPart } from "@/lib/download-error";
+import { useRenderRequest, useWriteLock } from "./WriteLock";
 
 // Lifted to GeneratorShell (restage): the pricing card unmounts across
 // reopen → regenerate cycles now, so any state guarding a manual edit
@@ -299,6 +300,27 @@ export function QuotePanel({
     }
   };
 
+  // #203: the saved plan's quote, fetched in the page so a failure
+  // prints on the panel's error line instead of navigating away.
+  const onSavedDownload = async () => {
+    if (mode.kind !== "saved" || !mode.planId) return;
+    setDownloading(true);
+    setErr(null);
+    const endRender = beginRender("quote XLSX");
+    try {
+      setErr(await downloadSavedPart(`/api/plans/${mode.planId}/quote`, "xlsx"));
+    } finally {
+      endRender();
+      setDownloading(false);
+    }
+  };
+  // An edit makes a saved plan dirty, which replaces the download; an
+  // error about the saved copy goes with it.
+  const savedDirty = mode.kind === "saved" && mode.dirty === true;
+  useEffect(() => {
+    if (savedDirty) setErr(null);
+  }, [savedDirty]);
+
   const body = (
     <>
       {mode.kind === "saved" ? (
@@ -424,16 +446,17 @@ export function QuotePanel({
             Save to download the edited plan
           </button>
         ) : (
-          <a
-            href={`/api/plans/${mode.planId}/quote`}
-            download
+          <button
+            type="button"
             data-write=""
-            {...lockedAnchorProps(locked)}
-            className="tap-44 block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors"
+            data-download={`/api/plans/${mode.planId}/quote`}
+            onClick={onSavedDownload}
+            disabled={downloading || locked}
+            className="tap-44 block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors disabled:opacity-60"
           >
             Download Quote (XLSX)
             <span className="font-mono">↓</span>
-          </a>
+          </button>
         )
       ) : (
         <Link
