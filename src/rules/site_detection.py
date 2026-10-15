@@ -26,7 +26,7 @@ import ssl
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypeGuard
 
 import certifi
 import httpx
@@ -287,7 +287,7 @@ async def _race(
     if not live:
         return None, "; ".join(errors) or "no mirrors configured"
     async with httpx.AsyncClient(verify=_tls_context()) as client:
-        tasks = [
+        tasks: list[asyncio.Future[Any]] = [
             asyncio.ensure_future(_ask_mirror(client, u, query, deadline, validate)) for u in live
         ]
         pending: set[asyncio.Future[Any]] = set(tasks)
@@ -338,7 +338,7 @@ async def _race_overspan_first(
     deadline = time.monotonic() + total_s
     errors: list[str] = []
     async with httpx.AsyncClient(verify=_tls_context()) as client:
-        tasks = [
+        tasks: list[asyncio.Future[Any]] = [
             asyncio.ensure_future(_ask_mirror(client, OVERSPAN_URL, query, deadline, validate))
         ]
         pending: set[asyncio.Future[Any]] = set(tasks)
@@ -1128,7 +1128,7 @@ def detect_road_bearing(
     return _bearing_from_elements(payload.get("elements", []), lat, lng, out, radius_m=radius_m)
 
 
-def _has_coords(point: Any) -> bool:
+def _has_coords(point: Any) -> TypeGuard[dict[str, Any]]:
     """A geometry point with a numeric ``lat`` and ``lon`` (#304)."""
     return (
         isinstance(point, dict)

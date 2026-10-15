@@ -1217,7 +1217,7 @@ def _meta_params(meta: ScenarioMeta) -> dict:
     ScenarioParams.  ``project_name`` defaults to "Untitled Project"
     when the UI sends an empty string so the title block always carries
     a non-empty PROJECT row."""
-    centerline = tuple(tuple(p) for p in meta.centerline) if meta.centerline else None
+    centerline = tuple((p[0], p[1]) for p in meta.centerline) if meta.centerline else None
     return {
         "project_name": meta.project or "Untitled Project",
         "location_description": meta.locationDescription or meta.address or "",

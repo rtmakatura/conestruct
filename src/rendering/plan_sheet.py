@@ -3208,6 +3208,9 @@ def _device_summary_cells(row: AggregatedDeviceRow, params: ScenarioParams) -> t
     # breakdown's "Jurisdiction-required" row.
     if row.display_override is not None:
         return ("—", row.display_override)
+    # Below here the row aggregates real placements: it has a type and a
+    # representative (only a delta-only add, returned above, lacks them).
+    assert dt is not None and row.representative is not None
     if dt == DeviceType.SIGN_GENERIC:
         if row.label is None:
             return ("—", "Construction sign (unlabeled)")
@@ -3492,6 +3495,7 @@ def _draw_notes(
         elif is_off_road:
             rows.append(("Advance sign A", f"{sign_a_dist:.0f} ft"))
         else:
+            assert taper_label is not None  # None only on mobile / off-road, above
             rows.append(("Work zone", f"{params.work_zone_length_ft:,.0f} ft"))
             rows.append((taper_label, f"{taper_len:.0f} ft"))
             rows.append(("Buffer", f"{buf_len:.0f} ft"))
@@ -4829,12 +4833,12 @@ def _draw_schematic_page(
         # turns in the one open lane (TA-10, one-lane two-way).  So both
         # arrows sit in that lane, opposite ways (ruled (b), #321): the
         # work-side one nearer the centerline, 0.4 of the lane apart.
-        lane = params.lane_width_ft
+        lane_w = params.lane_width_ft
         _draw_lane_arrow(
-            c, arrow_x_left, arrow_x_right, _y_of(-0.3 * lane, False), pointing_right=True
+            c, arrow_x_left, arrow_x_right, _y_of(-0.3 * lane_w, False), pointing_right=True
         )
         _draw_lane_arrow(
-            c, arrow_x_left, arrow_x_right, _y_of(-0.7 * lane, False), pointing_right=False
+            c, arrow_x_left, arrow_x_right, _y_of(-0.7 * lane_w, False), pointing_right=False
         )
     else:
         # Each direction in lane 1 of its side, on two-way and divided

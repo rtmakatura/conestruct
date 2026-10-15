@@ -34,6 +34,11 @@ jobs:
       - name: Ruff check
         run: uv run ruff check .
 
+      - name: Mypy (src, the ratchet at 0)
+        # #208: the ratchet drifted from 35 to 75 errors while it was a local
+        # gate. In CI, R50 stops a ship on any new error (TYPES.md).
+        run: uv run mypy
+
       - name: Pytest (full suite)
         # -rs: every skip prints its reason (R50: Windows-only tests say so).
         run: uv run pytest -rs

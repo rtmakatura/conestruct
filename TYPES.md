@@ -54,13 +54,19 @@ Mypy on `src/` takes ~2-5 seconds cold. Pre-commit already runs ruff
 Windows). Stacking another multi-second check on every commit makes pre-commit
 painful enough that people start using `--no-verify`.
 
-**Mypy is manual / future server-side CI only.** Run it before pushing if
-you've changed Python code. When server-side CI exists, mypy joins it there.
+**Mypy runs in CI.** `.github/workflows/python-tests.yml` runs `uv run mypy`
+after Ruff, and R50 stops a ship unless CI is green on the tip, so a new mypy
+error stops the ship. Run it locally before pushing if you've changed Python
+code.
 
 ### Ratchet rule
 
-The project has a non-strict baseline of **35 known errors in 6 files**
-(measured 2026-05-25). New code should not increase this baseline.
+The baseline is **0 errors** (`Success: no issues found in 48 source files`,
+measured 2026-10-14, #208). New code keeps it at 0, and CI enforces it.
+
+The previous baseline, 35 errors in 6 files (2026-05-25), drifted to 75 in 13
+while mypy was a local gate. #208 fixed all 75 without changing behavior:
+`validation-artifacts/committed/issue-208-mypy-ratchet/`.
 
 When you add code to or touch a strict-listed module, your changes must keep
 the module strict-clean. When you clean up a not-yet-strict module, add it to

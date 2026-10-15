@@ -313,7 +313,7 @@ def build_audit_trail(
         raise ValueError(
             "build_audit_trail: approaches are only meaningful for the near_intersection kind."
         )
-    ni = near_intersection_stations(params, approaches) if is_near else None
+    ni = near_intersection_stations(params, approaches) if is_near and approaches else None
     # Mainline-frame placements — approach-frame stations are measured
     # from the intersection curb line and must never be mixed into
     # mainline math (DevicePlacement.approach_id contract).  Identity
@@ -1088,6 +1088,7 @@ def build_audit_trail(
             ),
         }
     else:
+        assert wz_speed is not None  # is_reduced implies it (line 330)
         delta = speed - wz_speed
         n_signs_required = co_speed_reduction_signs(speed, wz_speed)
         n_w3_5_placed = sum(
@@ -1183,7 +1184,12 @@ def build_audit_trail(
         "detail": "Not applicable (not a mobile operation).",
     }
 
-    co_checks = [both_sides, plaques_section, speed_reduction_section, flagger_lighting_section]
+    co_checks: list[dict[str, Any]] = [
+        both_sides,
+        plaques_section,
+        speed_reduction_section,
+        flagger_lighting_section,
+    ]
     co_section = {
         "checks": co_checks,
         "info_items": [aadt_section],
@@ -1518,7 +1524,7 @@ def build_audit_trail(
         }
         for i, p in enumerate(flagger_placements)
     ]
-    flagger_section = {
+    flagger_section: dict[str, Any] = {
         "applicable": is_flagger or len(flagger_placements) > 0,
         "count": len(flagger_placements),
         "required": 2 if is_flagger else 0,

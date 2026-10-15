@@ -74,10 +74,12 @@ def aggregate_device_rows(placements: list[DevicePlacement]) -> list[AggregatedD
         if current is None or p.station_ft < current.station_ft:
             representatives[key] = p
 
-    return sorted(
-        (
-            AggregatedDeviceRow(dt, label, n, representatives[(dt, label)])
-            for (dt, label), n in counts.items()
-        ),
-        key=lambda row: device_row_sort_key(row.device_type, row.label),
-    )
+    # Sorted on the (type, label) key before the rows are built, where the
+    # type is still the placement's non-optional DeviceType; same key, same
+    # stable order as sorting the built rows.
+    return [
+        AggregatedDeviceRow(dt, label, n, representatives[(dt, label)])
+        for (dt, label), n in sorted(
+            counts.items(), key=lambda kv: device_row_sort_key(kv[0][0], kv[0][1])
+        )
+    ]

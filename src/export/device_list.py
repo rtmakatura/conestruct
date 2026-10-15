@@ -155,6 +155,8 @@ def _row_for(
             _JURISDICTION_UNMAPPED_NOTE.format(doc=doc),
         )
 
+    # ``device_type`` is None only on a delta-only add, which returned above.
+    assert device_type is not None
     label = row.label
     representative = row.representative
     spec = DEVICE_CATALOG[device_type]
@@ -334,6 +336,7 @@ if __name__ == "__main__":
     print(f"{'#':>3}  {'Device Type':25s}  {'Label':12s}  {'Qty':>4s}")
     print("-" * 52)
     for i, row in enumerate(aggregated, start=1):
+        assert row.device_type is not None  # placements always carry a type
         print(f"{i:>3}  {row.device_type.value:25s}  {(row.label or '-'):12s}  {row.quantity:>4d}")
     print("-" * 52)
     print(f"     {'TOTAL':25s}  {'':12s}  {len(placements):>4d}")

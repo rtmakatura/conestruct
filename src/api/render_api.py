@@ -32,6 +32,7 @@ from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field, TypeAdapter, ValidationError
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
+from sentry_sdk.types import Event, Hint
 
 from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
 from src.api.replication_snapshot import build_snapshot_markdown
@@ -123,9 +124,7 @@ ENABLED_SCENARIOS: frozenset[str] = frozenset(
 )
 
 
-def _drop_expected_http_errors(
-    event: dict[str, Any], hint: dict[str, Any]
-) -> dict[str, Any] | None:
+def _drop_expected_http_errors(event: Event, hint: Hint) -> Event | None:
     """Drop intentional 4xx HTTPExceptions before they reach Sentry.
 
     Validator 400s (geometry_validation_failed, gated scenario kinds)
@@ -307,7 +306,7 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
         travel = travel_bearing_at(
             meta.lat,
             meta.lng,
-            centerline=tuple(tuple(p) for p in meta.centerline or []),
+            centerline=tuple((p[0], p[1]) for p in meta.centerline or []),
             travel=work.travel,
             heading=None,
         )
@@ -978,7 +977,7 @@ def _safe_filename(scenario: Scenario, ext: str) -> str:
 
 def _placements_for(
     scenario: Scenario,
-) -> tuple[list, object, list[dict], list[dict], list | None, SiteScanResult]:
+) -> tuple[list, ScenarioParams, list[dict], list[dict], list | None, SiteScanResult]:
     """Run the generator and apply site- and night-condition adjustments.
 
     Returns ``(placements, params, site_records, night_records,
@@ -1196,7 +1195,7 @@ def _render_with(
     scenario: Scenario,
     suffix: str,
     write: Callable[
-        [Path, list, object, list[dict], list[dict], list | None, SiteScanResult], Path
+        [Path, list, ScenarioParams, list[dict], list[dict], list | None, SiteScanResult], Path
     ],
 ) -> bytes:
     """Run scenario_to_call, invoke ``write``, return the file bytes.
@@ -1910,7 +1909,7 @@ def _sign_function_category(code: str) -> str:
     return "Advance warning"
 
 
-def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> dict[str, object]:
+def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> dict[str, Any]:
     """Format one shared aggregated row into a panel-ready dict.
 
     Base rows read exactly as before the shared aggregation: signs carry
@@ -1927,7 +1926,7 @@ def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> d
     """
     dt = row.device_type
     if row.display_override is not None:
-        out: dict[str, object] = {
+        out: dict[str, Any] = {
             "device": row.display_override,
             "code": "—",
             "function": "Jurisdiction-required",
@@ -1951,6 +1950,7 @@ def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> d
             "qty": row.quantity,
         }
     else:
+        assert dt is not None  # None only on a delta-only add (display_override)
         device_label, function_label = _NON_SIGN_DISPLAY.get(dt, (dt.value, "Other"))
         out = {
             "device": device_label,

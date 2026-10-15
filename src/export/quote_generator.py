@@ -310,7 +310,9 @@ def _equipment_line_for(
             jurisdiction_unmapped=True,
         )
 
-    # Normal row (possibly a delta-topped-up real row).
+    # Normal row (possibly a delta-topped-up real row).  ``device_type`` is
+    # None only on a delta-only add, which returned above.
+    assert device_type is not None
     label = row.label
     representative = row.representative
     rate = EQUIPMENT_DAILY_RATES.get(device_type, 0.0)
@@ -874,15 +876,15 @@ if __name__ == "__main__":
         )
     print()
     print("Labor lines:")
-    for line in breakdown.labor_lines:
+    for labor in breakdown.labor_lines:
         print(
-            f"  {line.role:<18}  {line.personnel} x {line.hours_per_day:>4.1f} hr x "
-            f"{line.days}d x ${line.rate:>5.2f}/hr = ${line.extended:>9,.2f}"
+            f"  {labor.role:<18}  {labor.personnel} x {labor.hours_per_day:>4.1f} hr x "
+            f"{labor.days}d x ${labor.rate:>5.2f}/hr = ${labor.extended:>9,.2f}"
         )
     print()
     print("Delivery lines:")
-    for line in breakdown.delivery_lines:
+    for dl in breakdown.delivery_lines:
         print(
-            f"  {line.item:<22}  {line.trips} trips x max({line.distance_miles} mi x "
-            f"${line.rate_per_mile}/mi, ${line.min_trip_charge}) = ${line.extended:>9,.2f}"
+            f"  {dl.item:<22}  {dl.trips} trips x max({dl.distance_miles} mi x "
+            f"${dl.rate_per_mile}/mi, ${dl.min_trip_charge}) = ${dl.extended:>9,.2f}"
         )

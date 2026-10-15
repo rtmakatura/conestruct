@@ -251,8 +251,8 @@ with st.sidebar.expander("Site Conditions"):
     detection_result = (detection or {}).get("result") or {}
     flag_to_detection = {flag: det for det, flag in _DETECTION_TO_FLAG.items()}
     for flag_key, label in _SITE_CONDITION_LABELS.items():
-        det_key = flag_to_detection.get(flag_key)
-        prefill = bool(det_key and detection_result.get(det_key, {}).get("detected"))
+        flag_det_key = flag_to_detection.get(flag_key)
+        prefill = bool(flag_det_key and detection_result.get(flag_det_key, {}).get("detected"))
         site_conditions[flag_key] = st.checkbox(label, value=prefill, key=f"site_cond_{flag_key}")
 
 generate_button = st.sidebar.button(

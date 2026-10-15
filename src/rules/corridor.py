@@ -364,7 +364,7 @@ class WorkCorridor:
         """
         if self.centerline is None or len(self.centerline) < 2:
             return None
-        cached = self.__dict__.get("_frame_cache")
+        cached: tuple[list[float], float, float] | None = self.__dict__.get("_frame_cache")
         if cached is not None:
             return cached
         pts = self.centerline
@@ -612,7 +612,7 @@ class WorkCorridor:
             endpoints.append(_destination_point(*upstream, self.bearing_deg, longitudinal_buffer_m))
             endpoints.append(_destination_point(*downstream, reciprocal, longitudinal_buffer_m))
 
-        corners: list[tuple[float, float]] = list(endpoints)
+        corners = list(endpoints)
         for lat, lng in endpoints:
             corners.append(_destination_point(lat, lng, left, lateral_buffer_m))
             corners.append(_destination_point(lat, lng, right, lateral_buffer_m))

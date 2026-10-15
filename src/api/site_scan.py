@@ -52,7 +52,7 @@ import time
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -252,6 +252,7 @@ def _apply_corrections(
     for o in overrides:
         flag = str(getattr(o, "flag", ""))
         action = str(getattr(o, "action", ""))
+        status: Literal["applied", "moot"]
         label = SITE_CONDITION_LABELS.get(flag, flag)
         detected: bool | None = None
         if buckets is not None:
@@ -294,7 +295,9 @@ def _apply_corrections(
         records.append(
             SiteScanCorrection(
                 flag=flag,
-                action=action,
+                # "dismiss" or "assert": the else branch above treats
+                # anything but "dismiss" as an assertion.
+                action=cast(Literal["dismiss", "assert"], action),
                 reason=getattr(o, "reason", None),
                 note=getattr(o, "note", None),
                 recorded_at=str(getattr(o, "recorded_at", "") or ""),

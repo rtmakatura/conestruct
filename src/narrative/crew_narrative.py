@@ -20,7 +20,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -316,7 +316,11 @@ def build_narrative_context(
             "build_narrative_context: approaches are only meaningful for "
             "the near_intersection kind."
         )
-    ni = near_intersection_stations(params, approaches) if is_near_intersection else None
+    ni = (
+        near_intersection_stations(params, approaches)
+        if is_near_intersection and approaches
+        else None
+    )
     # Mainline-frame placements — approach-frame stations are measured
     # from the intersection curb line and must never be mixed into
     # mainline math (DevicePlacement.approach_id contract).  Identity
@@ -347,6 +351,7 @@ def build_narrative_context(
         # value near_intersection_stations computed above (single
         # source); the shoulder L/3 below would describe a taper a
         # third the length of the one the layout deploys.
+        assert ni is not None
         taper_len = ni["taper_len"]
     else:
         taper_len = shoulder_taper_length(speed, shoulder_width)
@@ -503,6 +508,8 @@ def build_narrative_context(
         # the layout uses.  Stations match ``layout.py``: rightmost
         # (closest to R2-10) at 530 ft upstream of R2-10; each prior
         # row +530 ft further upstream.
+        # fines_double_applicable is is_reduced, which needs a work-zone speed.
+        assert params.work_zone_speed_mph is not None
         n_w3_5 = co_speed_reduction_signs(params.speed_mph, params.work_zone_speed_mph)
         w3_5_rows: list[dict[str, str]] = []
         for k in range(n_w3_5 - 1, -1, -1):
@@ -1002,7 +1009,8 @@ def _refine_with_llm(template_markdown: str) -> str:
         )
         block = response.content[0]
         if getattr(block, "type", None) == "text":
-            return block.text
+            # A text block: the type tag is the SDK's own discriminator.
+            return cast(Any, block).text
         return template_markdown
     except Exception:
         # Plumbing only — fall back silently when the SDK call fails so
