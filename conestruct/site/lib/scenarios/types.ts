@@ -398,6 +398,11 @@ export interface ScenarioGuesses {
    *  speed was guessed from (no readable posted speed on it) — one record
    *  for the cross street; every approach carries the speed. */
   approach_speed?: { highwayClass: string };
+  /** #291 (R148): the raw facts an INFERRED road type came from (the
+   *  road's class, its urban/rural verdict and its divided verdict).
+   *  Urban/rural is a guess off nearby places; the record lets the audit
+   *  list it as guessed, not confirmed. */
+  road_type?: { highwayClass: string; urban: boolean; divided: boolean };
 }
 
 /** R110 Q4 / Q7 / Q8 — fields the OPERATOR has written, so a fresh

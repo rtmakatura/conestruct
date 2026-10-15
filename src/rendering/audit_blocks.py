@@ -616,6 +616,8 @@ _GUESS_CAVEAT = {
     "road": "The jurisdiction's adopted classification map governs.",
     # R126 / R127 Q7: the plan sheet's notes line says the same.
     "road_class": "Confirm the posted speed on site.",
+    # #291 (R148): urban/rural is read off nearby places.
+    "road_places": "Confirm on site whether the work is in an urban or rural setting.",
 }
 _GUESS_FIELD = {
     "jurisdiction_key": "Jurisdiction",
@@ -623,8 +625,15 @@ _GUESS_FIELD = {
     "speed": "Speed",
     # #316 (R129).
     "approach_speed": "Cross-street speed",
+    # #291 (R148).
+    "road_type": "Road type",
 }
-_GUESS_SOURCE = {"pin": "the pin", "road": "the road", "road_class": "the road class"}
+_GUESS_SOURCE = {
+    "pin": "the pin",
+    "road": "the road",
+    "road_class": "the road class",
+    "road_places": "the road and nearby places",
+}
 
 
 def _input_guesses_blocks(guesses: list[dict[str, Any]]) -> list[Block]:

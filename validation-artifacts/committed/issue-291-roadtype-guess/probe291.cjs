@@ -69,6 +69,20 @@ const rows = [];
     }
     const last = sent.slice(-1)[0] || {};
     const row = { width, text, select, sentRoadType: last.roadType ?? null, sentGuesses: last.guesses ?? null, auditGuesses: audits.slice(-1)[0] ?? null };
+    if (process.env.CHANGE === "1" && select) {
+      // The operator corrects it: the record must go from the next audit.
+      const before = audits.length;
+      await page.selectOption(`#${select.id}`, "rural_undivided");
+      for (let i = 0; i < 30 && audits.length === before; i += 1) await page.waitForTimeout(500);
+      await page.waitForTimeout(1500);
+      const after = sent.slice(-1)[0] || {};
+      row.afterChange = {
+        sentRoadType: after.roadType ?? null,
+        sentGuesses: after.guesses ?? null,
+        auditGuesses: audits.slice(-1)[0] ?? null,
+        fieldText: (await road.textContent()).replace(/\s+/g, " ").match(/Road type.{0,120}/)?.[0] ?? null,
+      };
+    }
     rows.push(row);
     console.log(JSON.stringify(row).slice(0, 900));
     await ctx.close();

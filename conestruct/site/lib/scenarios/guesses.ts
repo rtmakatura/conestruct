@@ -322,12 +322,63 @@ export function setApproachSpeed(s: Scenario, mph: number): Scenario {
   return withoutApproachGuess(markOperatorSet(withLegSpeed(s, mph), "approachSpeed"));
 }
 
+// --- #291 (R148): the road type's urban/rural call ------------------------
+
+/** R148: the road type is a guess when detection INFERRED it (every class
+ *  but motorway → freeway folds in the urban/rural call, a guess off
+ *  nearby places).  The facts it came from and the value it guessed; null
+ *  when there is no confirmed road at the pin or the type was measured. */
+export function roadTypeGuessFor(
+  s: Scenario,
+): { highwayClass: string; urban: boolean; divided: boolean; value: Scenario["roadType"] } | null {
+  const road = roadAtPin(s);
+  const c = road?.classification;
+  if (!road || !c || c.fields?.roadType?.method !== "inferred") return null;
+  return {
+    highwayClass: road.candidate.highway_class,
+    urban: road.isUrban,
+    divided: c.divided,
+    value: c.roadType as Scenario["roadType"],
+  };
+}
+
+/** R148 on the R108 pattern.  Detection writes the road type itself; this
+ *  keeps only its RECORD: present iff the plan's road type still holds the
+ *  inferred value for the road at the pin and the operator has not set it.
+ *  An operator change, a new road or a moved pin drops it.  Never writes
+ *  `roadType`. */
+function reconcileRoadType(s: Scenario): Scenario {
+  const entry = s.guesses?.road_type;
+  const g = roadTypeGuessFor(s);
+  const holds = g !== null && !isOperatorSet(s, "roadType") && s.roadType === g.value;
+  if (!holds) {
+    if (!entry) return s;
+    const rest = { ...s.guesses };
+    delete rest.road_type;
+    return withGuesses(s, rest);
+  }
+  if (
+    entry &&
+    entry.highwayClass === g.highwayClass &&
+    entry.urban === g.urban &&
+    entry.divided === g.divided
+  ) {
+    return s;
+  }
+  return withGuesses(s, {
+    ...(s.guesses ?? {}),
+    road_type: { highwayClass: g.highwayClass, urban: g.urban, divided: g.divided },
+  });
+}
+
 /** The shell's normalizer: run on every scenario write.  `prev` is the
  *  scenario the write replaced; omitted, the road counts as new. */
 export function withCurrentGuesses(s: Scenario, prev?: Scenario): Scenario {
-  return reconcileApproachSpeed(
-    reconcileSpeed(reconcileJurisdiction(reconcileStreetClass(s, prev)), prev),
-    prev,
+  return reconcileRoadType(
+    reconcileApproachSpeed(
+      reconcileSpeed(reconcileJurisdiction(reconcileStreetClass(s, prev)), prev),
+      prev,
+    ),
   );
 }
 

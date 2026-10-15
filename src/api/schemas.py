@@ -384,6 +384,28 @@ class JurisdictionGuess(BaseModel):
     lng: float = Field(ge=-180, le=180, allow_inf_nan=False)
 
 
+class RoadTypeGuess(BaseModel):
+    """#291 (R148): the raw facts an inferred ``roadType`` came from: the
+    confirmed road's OSM ``highway`` tag, its urban/rural verdict (a guess
+    off nearby places, the part #291 is about) and its divided verdict.
+    The backend maps them itself (``road_type_from_facts``) rather than
+    trusting the road type."""
+
+    highwayClass: str = Field(min_length=1, max_length=40)
+    urban: bool
+    divided: bool
+
+
+def road_type_from_facts(urban: bool, divided: bool) -> str:
+    """#291: the road type an inferred classification gives (the mirror of
+    classify.ts for every class but motorway, whose freeway is measured):
+    urban → urban street; rural → rural divided or undivided by the
+    divided verdict."""
+    if urban:
+        return "urban_arterial"
+    return "rural_divided" if divided else "rural_undivided"
+
+
 class SpeedGuess(BaseModel):
     """The raw fact a prefilled ``speed`` was guessed from (R126, R127):
     the confirmed road's OSM ``highway`` tag, on a road with no readable
@@ -413,6 +435,8 @@ class Guesses(BaseModel):
     # #316 (R129 Q5): the same rule for a near-intersection plan's cross
     # street — ONE record for the street, every approach carries its speed.
     approach_speed: SpeedGuess | None = None
+    # #291 (R148): the inferred road type's urban/rural call.
+    road_type: RoadTypeGuess | None = None
 
 
 class JurisdictionScenarioFields(BaseModel):

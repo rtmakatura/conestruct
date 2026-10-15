@@ -624,7 +624,44 @@ def input_guesses(scenario: Scenario) -> list[dict[str, Any]]:
                 "operator_confirmed": False,
             }
         )
+
+    rt = guesses.road_type
+    if rt is not None:
+        # #291 (R148): the inferred road type.  Its urban/rural half is a
+        # guess off nearby places; recorded as guessed, not confirmed.
+        from src.api.schemas import road_type_from_facts
+
+        guessed_type = road_type_from_facts(rt.urban, rt.divided)
+        if scenario.roadType != guessed_type:
+            raise _guess_refusal(
+                "Road type",
+                f"the road (highway={rt.highwayClass}, {'urban' if rt.urban else 'rural'}) "
+                f"guesses {_ROAD_TYPE_LABEL[guessed_type]}, not the road type this plan carries",
+            )
+        records.append(
+            {
+                "field": "road_type",
+                "value": guessed_type,
+                "label": _ROAD_TYPE_LABEL[guessed_type],
+                "source": "road_places",
+                "evidence": (
+                    f"OSM highway={rt.highwayClass}; "
+                    f"{'urban' if rt.urban else 'rural'}, inferred from nearby places"
+                ),
+                "operator_confirmed": False,
+            }
+        )
     return records
+
+
+# #291: the road type's words, as the WHAT band's select says them
+# (conestruct/site ROAD_TYPE_LABELS).
+_ROAD_TYPE_LABEL = {
+    "urban_arterial": "Urban street",
+    "rural_undivided": "Rural, undivided",
+    "rural_divided": "Rural, divided",
+    "freeway": "Freeway / interstate",
+}
 
 
 def _speed_bounds(scenario: Scenario) -> tuple[int, int]:

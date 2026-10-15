@@ -1,0 +1,116 @@
+[
+ {
+  "width": 1440,
+  "text": "The roadSpeed✓ measured20 mph25 mph30 mph35 mph40 mph45 mph50 mph55 mph60 mph65 mph70 mph75 mphOSM · 20 mph · measuredLanes✓ measured1 per side2 per side3 per side4 per side9 ft9.5 ft10 ft10.5 ft11 ft11.5 ft12 ft12.5 ft13 ft13.5 ft14 ftOSM · 1 · measuredLane width · default · the plan's standard lane; detection doesn't measure width⚠ Lanes set to 1/direction (OSM detection, was 2).Road type⚠ from the roadRural, undividedRural, dividedUrban streetFreeway / interstate⚠ OSM · Urban street · inferred⚠ Road type set to Urban street (from detected Rural, divided, OSM detection).⚠ Road set to undivided (OSM detection, was divided).Street class⚠ from the roadLocalCollectorArterial⚠ guessed, not confirmed · OSM highway=tertiary · from the roaddetected road tier: OSM tertiaryCarriageway⚠ from the roadUndividedDivided⚠ OSM · Undivided · inferred⚠ Divided Undivided · OSM · Undivided · inferred",
+  "select": {
+   "id": "what-road-type",
+   "value": "urban_arterial",
+   "disabled": false
+  },
+  "sentRoadType": "urban_arterial",
+  "sentGuesses": {
+   "street_class": {
+    "highwayClass": "tertiary"
+   },
+   "road_type": {
+    "highwayClass": "tertiary",
+    "urban": true,
+    "divided": false
+   }
+  },
+  "auditGuesses": [
+   {
+    "field": "street_class",
+    "value": "collector",
+    "label": "Collector",
+    "source": "road",
+    "evidence": "OSM highway=tertiary",
+    "operator_confirmed": false
+   },
+   {
+    "field": "road_type",
+    "value": "urban_arterial",
+    "label": "Urban street",
+    "source": "road_places",
+    "evidence": "OSM highway=tertiary; urban, inferred from nearby places",
+    "operator_confirmed": false
+   }
+  ],
+  "afterChange": {
+   "sentRoadType": "rural_undivided",
+   "sentGuesses": {
+    "street_class": {
+     "highwayClass": "tertiary"
+    }
+   },
+   "auditGuesses": [
+    {
+     "field": "street_class",
+     "value": "collector",
+     "label": "Collector",
+     "source": "road",
+     "evidence": "OSM highway=tertiary",
+     "operator_confirmed": false
+    }
+   ],
+   "fieldText": "Road type⚠ yoursRural, undividedRural, dividedUrban streetFreeway / interstate⚠ OSM · Urban street · inferred · operator-set⚠ Div"
+  }
+ },
+ {
+  "width": 360,
+  "text": "The roadSpeed✓ measured20 mph25 mph30 mph35 mph40 mph45 mph50 mph55 mph60 mph65 mph70 mph75 mphOSM · 20 mph · measuredLanes✓ measured1 per side2 per side3 per side4 per side9 ft9.5 ft10 ft10.5 ft11 ft11.5 ft12 ft12.5 ft13 ft13.5 ft14 ftOSM · 1 · measuredLane width · default · the plan's standard lane; detection doesn't measure width⚠ Lanes set to 1/direction (OSM detection, was 2).Road type⚠ from the roadRural, undividedRural, dividedUrban streetFreeway / interstate⚠ OSM · Urban street · inferred⚠ Road type set to Urban street (from detected Rural, divided, OSM detection).⚠ Road set to undivided (OSM detection, was divided).Street class⚠ from the roadLocalCollectorArterial⚠ guessed, not confirmed · OSM highway=tertiary · from the roaddetected road tier: OSM tertiaryCarriageway⚠ from the roadUndividedDivided⚠ OSM · Undivided · inferred⚠ Divided Undivided · OSM · Undivided · inferred",
+  "select": {
+   "id": "what-road-type",
+   "value": "urban_arterial",
+   "disabled": false
+  },
+  "sentRoadType": "urban_arterial",
+  "sentGuesses": {
+   "street_class": {
+    "highwayClass": "tertiary"
+   },
+   "road_type": {
+    "highwayClass": "tertiary",
+    "urban": true,
+    "divided": false
+   }
+  },
+  "auditGuesses": [
+   {
+    "field": "street_class",
+    "value": "collector",
+    "label": "Collector",
+    "source": "road",
+    "evidence": "OSM highway=tertiary",
+    "operator_confirmed": false
+   },
+   {
+    "field": "road_type",
+    "value": "urban_arterial",
+    "label": "Urban street",
+    "source": "road_places",
+    "evidence": "OSM highway=tertiary; urban, inferred from nearby places",
+    "operator_confirmed": false
+   }
+  ],
+  "afterChange": {
+   "sentRoadType": "rural_undivided",
+   "sentGuesses": {
+    "street_class": {
+     "highwayClass": "tertiary"
+    }
+   },
+   "auditGuesses": [
+    {
+     "field": "street_class",
+     "value": "collector",
+     "label": "Collector",
+     "source": "road",
+     "evidence": "OSM highway=tertiary",
+     "operator_confirmed": false
+    }
+   ],
+   "fieldText": "Road type⚠ yoursRural, undividedRural, dividedUrban streetFreeway / interstate⚠ OSM · Urban street · inferred · operator-set⚠ Div"
+  }
+ }
+]
