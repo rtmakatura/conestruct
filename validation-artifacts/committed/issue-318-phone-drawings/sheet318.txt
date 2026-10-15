@@ -1,0 +1,3 @@
+page 1: 1224 x 792 pt; font sizes (pt: chars): {6.0: 50, 6.5: 878, 7.0: 425, 7.5: 22, 8.0: 319, 9.0: 27, 10.0: 24, 11.0: 5, 14.0: 24}
+at 360 px fit-width: 1 pt = 0.294 px; smallest text 6.0 pt = 1.76 px; the body sizes 7-9 pt = 2.06-2.65 px (smallest ruled UI role: 10 px)
+at 320 px fit-width: 1 pt = 0.261 px; smallest text 6.0 pt = 1.57 px; the body sizes 7-9 pt = 1.83-2.35 px (smallest ruled UI role: 10 px)

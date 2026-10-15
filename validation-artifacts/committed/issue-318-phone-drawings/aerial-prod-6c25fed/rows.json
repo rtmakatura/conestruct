@@ -1,0 +1,116 @@
+[
+ {
+  "width": 360,
+  "items": [
+   {
+    "text": "Advance warning",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Taper",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Buffer",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Work zone",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Downstream",
+    "fontPx": 10.5,
+    "clipped": false
+   }
+  ],
+  "imageCssWidth": 296,
+  "legendWidth": 298,
+  "minFontPx": 10.5,
+  "clippedCount": 0,
+  "axe": {
+   "violations": 0,
+   "passes": 5
+  }
+ },
+ {
+  "width": 320,
+  "items": [
+   {
+    "text": "Advance warning",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Taper",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Buffer",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Work zone",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Downstream",
+    "fontPx": 10.5,
+    "clipped": false
+   }
+  ],
+  "imageCssWidth": 256,
+  "legendWidth": 258,
+  "minFontPx": 10.5,
+  "clippedCount": 0,
+  "axe": {
+   "violations": 0,
+   "passes": 5
+  }
+ },
+ {
+  "width": 1440,
+  "items": [
+   {
+    "text": "Advance warning",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Taper",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Buffer",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Work zone",
+    "fontPx": 10.5,
+    "clipped": false
+   },
+   {
+    "text": "Downstream",
+    "fontPx": 10.5,
+    "clipped": false
+   }
+  ],
+  "imageCssWidth": 844,
+  "legendWidth": 846,
+  "minFontPx": 10.5,
+  "clippedCount": 0,
+  "axe": {
+   "violations": 0,
+   "passes": 5
+  }
+ }
+]
