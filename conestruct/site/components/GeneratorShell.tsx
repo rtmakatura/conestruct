@@ -10,6 +10,7 @@ import {
 import type { StagedCorrection } from "@/lib/scenarios/types";
 import {
   SITE_SCAN_UNAVAILABLE_CODE,
+  withScanToken,
   withSiteScan,
 } from "@/lib/scenarios/site-scan";
 import {
@@ -425,6 +426,18 @@ export function GeneratorShell({
     [scenario, generated, proceedFor],
   );
   const fetchScenario = useDebouncedScenario(wireScenario, FETCH_DEBOUNCE_MS);
+  // #307 (R151): the Generate's signed scan, from the audit that answered
+  // for ``for``.  Downloads carry it only while that is still the scenario
+  // on screen, so the PDF, XLSX, crew sheet and quote are built from the
+  // same scan as the plan, on any container, at any delay.
+  const [scanToken, setScanToken] = useState<{ token: string; for: Scenario } | null>(null);
+  const downloadScenario = useMemo(
+    () =>
+      scanToken !== null && scanToken.for === wireScenario
+        ? withScanToken(wireScenario, scanToken.token)
+        : wireScenario,
+    [scanToken, wireScenario],
+  );
 
   // The STAMPED audit view — the rationale sits with the strip's
   // derivations below ("Decision 2 (frontend-engine-removal)…"); the
@@ -535,7 +548,11 @@ export function GeneratorShell({
         const res = await fetch("/api/render/audit", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ scenario: { ...fetchScenario, include_breakdown: true } }),
+          // #307 (R151): the audit also signs the scan it answered from
+          // (only when the scan ran), for this plan's downloads to send back.
+          body: JSON.stringify({
+            scenario: { ...fetchScenario, include_breakdown: true, include_scan_token: true },
+          }),
           signal: controller.signal,
         });
         clearTimeout(slowTimer);
@@ -586,9 +603,15 @@ export function GeneratorShell({
           });
           return;
         }
-        const { breakdown, ...data } = (await res.json()) as AuditResponse & {
+        const { breakdown, site_scan_token, ...data } = (await res.json()) as AuditResponse & {
           breakdown?: DeviceBreakdownData;
+          site_scan_token?: string;
         };
+        // #307: kept beside the answer, stamped with the scenario it is for;
+        // never part of the audit the panels read.
+        setScanToken(
+          typeof site_scan_token === "string" ? { token: site_scan_token, for: fetchScenario } : null,
+        );
         setAuditState((prev) => ({
           state: "ready",
           data: data as AuditResponse,
@@ -1078,7 +1101,7 @@ export function GeneratorShell({
         // zipped quote.xlsx matches the on-screen rates. Omitting them made
         // the route coerce defaults, silently ignoring every edit.
         // #224 phase 2: the wire scenario — the zip is the scanned plan.
-        body: JSON.stringify({ scenario: wireScenario, settings }),
+        body: JSON.stringify({ scenario: downloadScenario, settings }),
       });
       if (!res.ok) {
         setBundleError(`Bundle failed (${res.status})`);
@@ -2193,7 +2216,7 @@ export function GeneratorShell({
                     declined={planDeclined}
                     mode={
                       mode === "sandbox"
-                        ? { kind: "public", scenario: wireScenario }
+                        ? { kind: "public", scenario: downloadScenario }
                         : { kind: "saved", planId, dirty: planDirty }
                     }
                     breakdown={deviceBreakdown}
@@ -2253,7 +2276,7 @@ export function GeneratorShell({
                   <PricingCard
                     mode={
                       mode === "sandbox"
-                        ? { kind: "public", scenario: wireScenario }
+                        ? { kind: "public", scenario: downloadScenario }
                         : { kind: "saved", planId, dirty: planDirty }
                     }
                     settings={settings}

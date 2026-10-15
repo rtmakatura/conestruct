@@ -163,7 +163,7 @@ export interface JurisdictionPlanFields {
    * scenario the shell posts once generated (lib/scenarios/site-scan.ts);
    * never on the scenario the forms edit or a saved plan carries.
    */
-  site_scan?: { proceed_if_unavailable: boolean } | null;
+  site_scan?: { proceed_if_unavailable: boolean; token?: string } | null;
   jurisdiction_key?: string | null;
   street_class?: "local" | "collector" | "arterial" | null;
   /**

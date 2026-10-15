@@ -148,7 +148,7 @@ def test_the_breakdown_says_the_board_was_already_placed() -> None:
 
 def test_the_audit_pdf_ledger_counts_the_met_rule_as_checked() -> None:
     scenario = TypeAdapter(Scenario).validate_python(_broadway_denver())
-    _projection, params, placements = render_api._audit_build(scenario)
+    _projection, params, placements, _scan = render_api._audit_build(scenario)
     jurisdiction, _ = render_api._jurisdiction_eval(scenario, params, placements)
     facts = tier_facts(None, jurisdiction)
     # #297: a live evaluation keys each delta by its stable key.

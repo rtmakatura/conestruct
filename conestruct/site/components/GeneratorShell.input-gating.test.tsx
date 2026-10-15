@@ -219,7 +219,12 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
     const sent = JSON.parse(auditBodies[0]) as { scenario: unknown };
     // #186: the mount is the pinned default — the body must carry it
     // verbatim, coordinates included.  #306: plus the one flag that asks
-    // the audit for its device breakdown.
-    expect(sent.scenario).toEqual({ ...PINNED_SHOULDER, include_breakdown: true });
+    // the audit for its device breakdown; #307: and the one that asks it
+    // to sign its scan for the downloads.
+    expect(sent.scenario).toEqual({
+      ...PINNED_SHOULDER,
+      include_breakdown: true,
+      include_scan_token: true,
+    });
   });
 });

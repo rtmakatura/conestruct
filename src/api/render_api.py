@@ -16,6 +16,7 @@ routes that proxy to it.
 
 from __future__ import annotations
 
+import contextvars
 import math
 import os
 import tempfile
@@ -36,6 +37,7 @@ from sentry_sdk.types import Event, Hint
 
 from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
 from src.api.replication_snapshot import build_snapshot_markdown
+from src.api.scan_token import ScanTokenInvalid, sign_scan, verify_scan
 from src.api.schemas import (
     READS_CROSSING_OPTIONAL,
     CrossStreetStationError,
@@ -108,6 +110,23 @@ from src.rules.validators import (
 )
 
 ENV_SECRET_VAR = "RENDER_API_SECRET"
+
+# #307: where this request's scan answer came from ("scan" / "memo" /
+# "token"), reported as the ``x-site-scan-source`` response header.  The
+# middleware below sets a fresh holder per request before the endpoint
+# runs; the endpoint's thread shares the same dict, so _placements_for's
+# write is visible to the middleware after.  A download's body never
+# changes; the header is how a probe sees whether it re-scanned.
+_SCAN_SOURCE: contextvars.ContextVar[dict[str, str] | None] = contextvars.ContextVar(
+    "scan_source", default=None
+)
+SCAN_SOURCE_HEADER = "x-site-scan-source"
+
+SITE_SCAN_TOKEN_INVALID_ERROR = "site_scan_token_invalid"
+SITE_SCAN_TOKEN_INVALID_MESSAGE = (
+    "This download carried a copy of the plan's site scan that couldn't be "
+    "verified. Generate the plan again, then download it."
+)
 
 # Mirror of conestruct/site/lib/scenarios/index.ts ENABLED_SCENARIO_KINDS.
 # Kinds enable as their generators pass validation against the CDOT
@@ -205,6 +224,16 @@ def _ensure_scenario_enabled(
     # #306: the same opt-IN shape for ``include_breakdown`` -- only
     # /render/audit honours it, and every other path refuses it in the
     # caller's words rather than dropping it silently (Rule 10).
+    # #307: ``include_scan_token`` takes the same opt-in shape and the same
+    # one endpoint as ``include_breakdown``.
+    if not allow_include_breakdown and getattr(scenario, "include_scan_token", False):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "include_scan_token is accepted only on /render/audit, which signs "
+                "the scan it answered from. Drop `include_scan_token` here."
+            ),
+        )
     if not allow_include_breakdown and getattr(scenario, "include_breakdown", False):
         raise HTTPException(
             status_code=400,
@@ -956,7 +985,15 @@ async def require_bearer_secret(
     header = request.headers.get("authorization", "")
     if not header.startswith("Bearer ") or header[len("Bearer ") :] != expected:
         return Response(content="unauthorized", status_code=401)
-    return await call_next(request)
+    holder: dict[str, str] = {}
+    reset = _SCAN_SOURCE.set(holder)
+    try:
+        response = await call_next(request)
+    finally:
+        _SCAN_SOURCE.reset(reset)
+    if "source" in holder:
+        response.headers[SCAN_SOURCE_HEADER] = holder["source"]
+    return response
 
 
 @app.get("/healthz")
@@ -1164,12 +1201,38 @@ def _placements_for(
         # reaching here (_ensure_preview_allowed).
         site_scan = SiteScanResult(not_run_provenance("not_requested"), {})
     else:
-        site_scan = run_site_scan(scenario, params)
+        site_scan = run_site_scan(scenario, params, _verified_scan_token(scenario))
+        if site_scan.source is not None:
+            holder = _SCAN_SOURCE.get()
+            if holder is not None:
+                holder["source"] = site_scan.source
         if site_scan.refused:
             raise HTTPException(status_code=400, detail=refusal_detail(site_scan.provenance))
     placements, site_records = apply_site_adjustments(placements, params, site_scan.effective_flags)
     placements, night_records = apply_night_adjustments(placements, params)
     return placements, params, site_records, night_records, approaches, site_scan
+
+
+def _verified_scan_token(scenario: Scenario) -> dict[str, Any] | None:
+    """#307 (R151): the download's signed copy of its Generate's scan,
+    verified, or None when it carries none.  An invalid one is refused
+    honestly; it is never ignored, because a client that sent one meant
+    "build from the scan I was shown"."""
+    request = getattr(scenario, "site_scan", None)
+    token = getattr(request, "token", None) if request is not None else None
+    if not token:
+        return None
+    try:
+        return verify_scan(token)
+    except ScanTokenInvalid as exc:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": SITE_SCAN_TOKEN_INVALID_ERROR,
+                "message": SITE_SCAN_TOKEN_INVALID_MESSAGE,
+                "reason": str(exc),
+            },
+        ) from exc
 
 
 def _plan_sheet_site_flags(scenario: Scenario, effective_flags: dict[str, bool]) -> dict[str, bool]:
@@ -2143,13 +2206,13 @@ def _audit_projection_and_params_for(
     scenario: Scenario,
 ) -> tuple[dict[str, Any], Any]:
     """The projection and the params (see :func:`_audit_build`)."""
-    projection, params, _placements = _audit_build(scenario)
+    projection, params, _placements, _scan = _audit_build(scenario)
     return projection, params
 
 
 def _audit_build(
     scenario: Scenario,
-) -> tuple[dict[str, Any], Any, list[Any]]:
+) -> tuple[dict[str, Any], Any, list[Any], SiteScanResult]:
     """The projection plus the params it was built from — the PDF path
     needs the params once more for the #220 jurisdiction evaluation
     (same single ``_jurisdiction_eval`` the breakdown endpoint uses),
@@ -2250,7 +2313,7 @@ def _audit_build(
             if d.get("key")
         }
         projection["acknowledged"] = [_acknowledged_entry(i, fired.get(i)) for i in acknowledged]
-    return projection, params, placements
+    return projection, params, placements, site_scan
 
 
 def _acknowledged_entry(item_id: str, delta: dict[str, Any] | None) -> dict[str, Any]:
@@ -2283,7 +2346,12 @@ def render_audit(scenario: Scenario) -> JSONResponse:
     """
     _ensure_scenario_enabled(scenario, allow_include_breakdown=True)
     try:
-        projection, params, placements = _audit_build(scenario)
+        projection, params, placements, site_scan = _audit_build(scenario)
+        if getattr(scenario, "include_scan_token", False) and site_scan.memo_entry:
+            # #307 (R151): the scan this audit answered from, signed, for
+            # the Generate's downloads to send back.  Opt-in (R145 4):
+            # without it the response is byte-identical to before.
+            projection["site_scan_token"] = sign_scan(*site_scan.memo_entry)
         if getattr(scenario, "include_breakdown", False):
             # #306 (R64): one Generate, one scan -- the breakdown comes from
             # the placements this request already built, never a second
@@ -2308,7 +2376,7 @@ def render_audit_pdf_endpoint(scenario: Scenario) -> Response:
     """
     _ensure_scenario_enabled(scenario)
     try:
-        projection, params, placements = _audit_build(scenario)
+        projection, params, placements, _scan = _audit_build(scenario)
         # #220 — the cover's triage line counts jurisdiction facts too
         # (deltas, obligations, the hours verdict) when the scenario
         # names a jurisdiction; same single evaluation the breakdown

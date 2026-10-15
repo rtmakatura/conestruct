@@ -358,6 +358,10 @@ class SiteScanRequest(BaseModel):
     """
 
     proceed_if_unavailable: bool = False
+    # #307 (R151): a download's signed copy of its Generate's scan
+    # (src/api/scan_token.py).  Verified in ``_placements_for`` before the
+    # scan runs; absent on every Generate.
+    token: str | None = None
 
 
 class SiteScanInputs(BaseModel):
@@ -479,6 +483,13 @@ class SiteScanResult:
     # pre-#256 path, and every stub), in which case the check falls back to
     # its own fetch exactly as before.
     road_bearing: dict[str, Any] | None = None
+    # #307: where the answer came from -- "scan" (Overpass), "memo" (this
+    # container's memo), "token" (a download's signed copy of its
+    # Generate's scan) -- or None when no scan answered.
+    source: Literal["scan", "memo", "token"] | None = None
+    # #307: the memo's own tuple for an answered scan, ``(key, buckets,
+    # measured_at, duration_ms)`` -- what /render/audit signs on request.
+    memo_entry: tuple[str, dict[str, Any], str, int] | None = None
 
     @property
     def refused(self) -> bool:
@@ -647,11 +658,16 @@ def _apply_precedence(
     return effective, discarded
 
 
-def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
+def run_site_scan(
+    scenario: Any, params: Any, token_entry: Mapping[str, Any] | None = None
+) -> SiteScanResult:
     """Run (or memo-serve, or honestly skip) the corridor site scan.
 
     Never raises.  ``scenario`` is any Scenario kind; ``params`` the
-    ScenarioParams ``scenario_to_call`` produced for it.
+    ScenarioParams ``scenario_to_call`` produced for it.  ``token_entry``
+    (#307) is a download's verified signed copy of its Generate's scan:
+    when its key is this request's key it is the answer, served like a
+    memo hit; any other key is ignored and the request scans as before.
     """
     manual: dict[str, bool] = dict(getattr(scenario.meta, "siteConditions", None) or {})
     overrides: list[Any] = list(getattr(scenario.meta, "siteConditionOverrides", None) or [])
@@ -782,11 +798,22 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
     )
 
     key = _memo_key(inputs, centerline)
-    hit = _memo_get(key)
+    source: Literal["scan", "memo", "token"]
+    if token_entry is not None and token_entry.get("key") == key:
+        hit: tuple[dict[str, Any], str, int] | None = (
+            dict(token_entry["buckets"]),
+            str(token_entry["measured_at"]),
+            int(token_entry["duration_ms"]),
+        )
+        source = "token"
+    else:
+        hit = _memo_get(key)
+        source = "memo"
     memo_hit = hit is not None
     if hit is not None:
         buckets, measured_at, duration_ms = hit
     else:
+        source = "scan"
         t0 = time.monotonic()
         measured_at = datetime.now(UTC).isoformat(timespec="seconds")
         # #256 ruling c: one round trip serves the scan AND the corridor
@@ -857,4 +884,10 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         **_fetch_fields(buckets),
     )
     road_bearing = buckets.get("road_bearing")
-    return SiteScanResult(prov, effective, road_bearing if isinstance(road_bearing, dict) else None)
+    return SiteScanResult(
+        prov,
+        effective,
+        road_bearing if isinstance(road_bearing, dict) else None,
+        source=source,
+        memo_entry=(key, buckets, measured_at, duration_ms),
+    )

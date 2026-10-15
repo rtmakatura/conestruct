@@ -147,6 +147,10 @@ export async function renderScenarioToResponse(
   if (contentType) headers.set("content-type", contentType);
   headers.set("content-disposition", `attachment; filename="${filename}"`);
   headers.set("cache-control", "private, no-store");
+  // #307: where the backend's scan answer came from ("token" when the
+  // download carried its Generate's signed scan); the body is the file.
+  const scanSource = upstream.headers.get("x-site-scan-source");
+  if (scanSource) headers.set("x-site-scan-source", scanSource);
 
   return new Response(upstream.body, { status: 200, headers });
 }

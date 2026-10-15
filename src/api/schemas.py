@@ -365,6 +365,10 @@ class PreviewScenarioFields(BaseModel):
 
     preview: bool = False
     include_breakdown: bool = False
+    # #307 (R151): the same opt-in, same one endpoint.  True => the audit
+    # response also carries ``site_scan_token``, the scan it answered from,
+    # signed, for the Generate's downloads to send back.
+    include_scan_token: bool = False
 
 
 class StreetClassGuess(BaseModel):

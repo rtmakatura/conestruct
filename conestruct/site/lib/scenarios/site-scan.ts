@@ -18,6 +18,9 @@ import type { Scenario } from "./types";
 
 export interface SiteScanRequest {
   proceed_if_unavailable: boolean;
+  /** #307 (R151): the Generate's scan, signed by the backend; carried only
+   *  by downloads (``withScanToken``), never by the audit itself. */
+  token?: string;
 }
 
 /** The backend 400's ``detail.error`` for a refused scan (site_scan.py). */
@@ -25,6 +28,14 @@ export const SITE_SCAN_UNAVAILABLE_CODE = "site_scan_unavailable";
 
 export function withSiteScan(scenario: Scenario, proceed: boolean): Scenario {
   return { ...scenario, site_scan: { proceed_if_unavailable: proceed } };
+}
+
+/** #307 (R151): a download's wire scenario, carrying its Generate's signed
+ *  scan so the backend builds from that answer instead of scanning again.
+ *  A scenario without ``site_scan`` (pre-generate) is returned as is. */
+export function withScanToken(scenario: Scenario, token: string): Scenario {
+  if (!scenario.site_scan) return scenario;
+  return { ...scenario, site_scan: { ...scenario.site_scan, token } };
 }
 
 export function carriesSiteScan(scenario: Scenario): boolean {
