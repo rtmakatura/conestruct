@@ -46,4 +46,4 @@ For 5 Denver pins, one Generate each (audit with `include_scan_token`): every sc
 
 A tampered token got `400 {"error": "site_scan_token_invalid", "message": "This download carried a copy of the plan's site scan that couldn't be verified. Generate the plan again, then download it.", "reason": "signature does not match"}`.
 
-**In the browser** (`prod/browser307.cjs`, `/sandbox` at 1440): after a Generate on N Broadway SB, the plan sheet card's Download PDF request carried `site_scan.token`. The response was 200 with `x-site-scan-source: token`, and the PDF was 1,016,137 bytes. No page errors.
+**In the browser** (`prod/browser307.cjs`, `/sandbox` at 1440; its printed output, copied from the run, is `prod/browser307-output.json`): after a Generate on N Broadway SB, the plan sheet card's Download PDF request carried `site_scan.token`. The response was 200 with `x-site-scan-source: token`, and the PDF was 1,016,137 bytes. No page errors.
