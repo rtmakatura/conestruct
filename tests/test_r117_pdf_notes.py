@@ -216,7 +216,10 @@ def test_the_near_intersection_box_reads_clean(carriageway: dict | None) -> None
     # names the rest.  The all-cut line keeps its coverage on the denser
     # speed-guessed sheets (test_approach_speed_guess).
     assert _advance_rows(lines) == 1
-    assert "+3 MORE ADVANCE SIGNS. SEE CREW NARRATIVE & DEVICE LIST" in flat
+    # Ryan 2026-10-14: the cut line names the cut codes, in table order, so
+    # the sheet names all 4 (W4-2R in its row) as it did before #235.
+    assert "+3 MORE ADVANCE SIGNS (W20-5R, R2-10, W20-1). SEE CREW NARRATIVE & DEVICE LIST" in flat
+    assert "W4-2R" in flat
     assert "ADVANCE SIGNS OFF-PAGE (" not in flat
     # No doubled column header.
     assert "DISTANCE CODE" not in flat

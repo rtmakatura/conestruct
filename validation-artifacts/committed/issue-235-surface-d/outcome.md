@@ -85,3 +85,51 @@ New tests are in `tests/test_plan_sheet_footer_235.py` (4 tests):
 - broadway-left lists all 5 advance signs with containment 0;
 - the pitch steps at 13, 14 and 18 lines;
 - the worst-case title block clears the hairline.
+
+## Addendum outcome (Ryan, 2026-10-14, before ship)
+
+Prediction addendum: `prediction.md` (`28fe0d2`).
+
+### 1. The cut line names the cut codes (built as predicted)
+
+`_draw_notes`: the "+N MORE ADVANCE SIGNS" line names `advance[advance_cap:]`'s codes in table order, with "—"
+and duplicates dropped. It is wrapped at 7 pt bold, up to 3 lines. When it can't fit beside a kept row, the
+existing cut loop falls through to the all-cut line.
+
+| sheet | prints |
+|---|---|
+| near-intersection N Broadway (one-way and two-way) | `W4-2R RIGHT LANE ENDS 100 ft`, then "+3 MORE ADVANCE SIGNS (W20-5R, R2-10, W20-1). SEE CREW NARRATIVE & DEVICE LIST": all 4 codes named |
+| the same plan with a guessed-speed note (road / cross / both) | the fallback: "4 ADVANCE SIGNS OFF-PAGE (W4-2R, W20-5R, R2-10, W20-1). SEE CREW NARRATIVE & DEVICE LIST" |
+| adv-flagger | "+4 MORE ADVANCE SIGNS (W3-4, W20-4, W20-1, S1-1)." |
+| adv-shoulder | "+4 MORE ADVANCE SIGNS (W20-2, W20-1, W3-5, S1-1)." |
+| adv-near-intersection | the fallback: "5 ADVANCE SIGNS OFF-PAGE (W4-2R, W20-5R, R2-10, W20-1, S1-1)" |
+| N Broadway SB (broadway-left) | nothing cut: 5 of 5 |
+
+These are pinned by:
+- `test_r117_pdf_notes.py`, the near-intersection exact string;
+- `test_approach_speed_guess.py`, both exact strings: the cut line when nothing is guessed, the all-cut fallback
+  when a speed is guessed;
+- `test_plan_sheet_footer_235.py::test_every_cut_line_names_its_codes`: every "MORE ADVANCE SIGNS" on the 13
+  fixtures is followed by "(", and at least 2 such lines print.
+
+Containment is 0 / 0 / 0 on the 13 fixtures and the 4 sample plans (`built-containment.json`, re-measured).
+
+### 2. Why the old before/after title blocks differed
+
+- **The cause.** `ni-before` was rendered from the main checkout. Its gitignored `.env` holds a Mapbox token, and
+  `plan_sheet.py` loads `.env` on import. So the aerial page rendered: "SHEET: 1 OF 2" plus an "AERIAL: See page 2"
+  row.
+- The worktree has no `.env`, so the old `ni-after` skipped page 2: "1 OF 1", no AERIAL row.
+- The code did not cause the difference.
+- **The re-render.** `band235.py` loads the main checkout's `.env` into the process (the token is never
+  printed) for both sides, as production carries it. Both sides render 2 pages.
+
+| image | pages | containment | AERIAL row above the trailer's hairline | last row (STATUS) above it |
+|---|---|---|---|---|
+| `ni-before-band.png` (`a4b53ec`) | 2 | 0 / 0 / 0 | (no trailer in the title block) | |
+| `ni-after-band.png` | 2 | 0 / 0 / 0 | 48.4 pt clear | 21.5 pt clear |
+| `broadway-before-band.png` (`a4b53ec`) | 2 | 0 / 0 / 0 | (no trailer in the title block) | |
+| `broadway-after-band.png` | 2 | 0 / 0 / 0 | 37.4 pt clear | 10.5 pt clear |
+
+`ni235.py` is replaced by `band235.py`. `built-band.png` and the mockups render without the aerial page, as
+the old pair did (no `.env` in the worktree): their title blocks read "1 OF 1" with no AERIAL row.

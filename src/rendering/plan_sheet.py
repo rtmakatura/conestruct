@@ -3612,16 +3612,27 @@ def _draw_notes(
             _draw_advance_table_one_column(cv, capped_advance, x, x_right, y, layout, column_header)
         if advance_cap < len(advance):
             # #216: the full advance series lives in the crew narrative
-            # and the device list — the cut names it (rule 10).
+            # and the device list — the cut names it (rule 10).  #235
+            # (Ryan, 2026-10-14): it names the cut codes too, in table
+            # order; when the longer line can't fit, the caller's cut loop
+            # keeps cutting until the all-cut line above prints instead.
+            cut_codes = list(
+                dict.fromkeys(
+                    code for code, _d, _s in advance[advance_cap:] if code and code != "—"
+                )
+            )
+            named = f" ({', '.join(cut_codes)})" if cut_codes else ""
+            more_text = (
+                f"+{len(advance) - advance_cap} MORE ADVANCE SIGNS{named}. "
+                "SEE CREW NARRATIVE & DEVICE LIST"
+            )
             cv.setFillColor(colors.black)
             cv.setFont("Helvetica-Bold", 7)
-            cv.drawString(
-                x,
-                y[0],
-                f"+{len(advance) - advance_cap} MORE ADVANCE SIGNS. "
-                "SEE CREW NARRATIVE & DEVICE LIST",
-            )
-            y[0] -= layout.row_pitch
+            for line in _wrap_to_width(
+                cv, more_text, "Helvetica-Bold", 7, x_right - x, max_lines=3
+            ):
+                cv.drawString(x, y[0], line)
+                y[0] -= layout.row_pitch
         return _finish(cv, y)
 
     def _finish(cv: canvas.Canvas, y: list[float]) -> float:

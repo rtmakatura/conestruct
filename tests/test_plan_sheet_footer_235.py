@@ -77,6 +77,25 @@ def test_the_broadway_plan_lists_all_five_advance_signs(client: TestClient, tmp_
     assert counts == {"edge": 0, "box_cross": 0, "collisions": 0}
 
 
+def test_every_cut_line_names_its_codes(client: TestClient, tmp_path: Path) -> None:
+    """Ryan 2026-10-14: any "+N MORE ADVANCE SIGNS" line names the cut
+    codes in parentheses.  Checked on every containment fixture."""
+    import pypdfium2 as pdfium
+
+    from tests.test_pdf_containment import BASELINE, FIXTURE_DIR
+
+    seen = 0
+    for name in sorted(BASELINE):
+        body = json.loads((FIXTURE_DIR / f"{name}.json").read_text(encoding="utf-8"))
+        pdf = _render(client, tmp_path, body["scenario"], name)
+        doc = pdfium.PdfDocument(str(pdf))
+        flat = " ".join(doc[0].get_textpage().get_text_range().split())
+        doc.close()
+        assert flat.count("MORE ADVANCE SIGNS") == flat.count("MORE ADVANCE SIGNS ("), name
+        seen += flat.count("MORE ADVANCE SIGNS (")
+    assert seen >= 2  # adv-flagger and adv-shoulder print a cut line today
+
+
 def test_typical_title_blocks_keep_the_11pt_pitch() -> None:
     top = ps.FOOTER_BOX_Y + ps.FOOTER_BOX_H
     rule = ps.FOOTER_BOX_Y + ps.TITLE_BLOCK_PAD + ps.TITLE_BLOCK_TRAILER_PITCH * 4 + 10

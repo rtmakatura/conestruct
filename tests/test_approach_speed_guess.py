@@ -275,11 +275,21 @@ def test_the_notes_print_one_line_and_keep_every_schedule_row(
     # R117 Q3a's all-cut line: with a guessed-speed note printing, every
     # advance row is cut and one line names them; with no note (#235's
     # freed room) the first row fits and the table prints instead.
+    # Either way the sheet names all 4 codes (Ryan, 2026-10-14): the cut
+    # line names the cut codes; when it can't fit beside a kept row, the
+    # all-cut line names every code instead.
     if line is not None:
-        assert "ADVANCE SIGNS OFF-PAGE (" in flat
+        assert (
+            "4 ADVANCE SIGNS OFF-PAGE (W4-2R, W20-5R, R2-10, W20-1). "
+            "SEE CREW NARRATIVE & DEVICE LIST" in flat
+        )
+        assert "MORE ADVANCE SIGNS" not in flat
     else:
         assert "ADVANCE SIGNS OFF-PAGE (" not in flat
-        assert "ADVANCE WARNING SIGNS" in flat
+        assert "W4-2R RIGHT LANE ENDS" in flat
+        assert (
+            "+3 MORE ADVANCE SIGNS (W20-5R, R2-10, W20-1). SEE CREW NARRATIVE & DEVICE LIST" in flat
+        )
 
 
 def _parse(b: dict[str, Any]) -> Any:
