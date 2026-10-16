@@ -52,10 +52,21 @@ def drawn_dims(
         output_path=str(tmp_path / "p.pdf"),
         approaches=kwargs["approaches"],
     )
-    # The fit-by-construction dry run may draw page 1 twice; keep the last pass.
-    first = next(i for i, c in enumerate(calls) if c["label"].startswith("L = "))
+    # Page 1's dimension line is six labels from "L = " to "WORK ZONE"; the
+    # fit-by-construction dry run may draw it more than once, so keep the
+    # last complete pass.
     starts = [i for i, c in enumerate(calls) if c["label"].startswith("L = ")]
-    return calls[starts[-1] :] if starts else calls[first:]
+    assert starts, "no dimension line drawn"
+    group = calls[starts[-1] : starts[-1] + 6]
+    assert [c["label"].split(" ")[0] for c in group] == [
+        "L",
+        "OPENING",
+        "LEFT-TURN",
+        "CROSS",
+        "CLOSED",
+        "WORK",
+    ], [c["label"] for c in group]
+    return group
 
 
 @pytest.mark.parametrize("storage", [50.0, 300.0, 1200.0])
@@ -92,7 +103,28 @@ def test_no_label_touches_a_label_a_leader_or_a_tick(
                     assert not (lo_j - 3.0 < ld_i < hi_j + 3.0), (li, "leader through", lj)
 
 
-def test_every_other_plan_keeps_the_greedy_rows() -> None:
-    # The search is TA-23's only: with no turn-bay frame, _draw_landmarks
-    # never calls it (parity holds every other page byte-identical).
+def test_the_search_runs_on_ta_23_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Every other plan keeps the greedy rows (parity holds their pages
+    # byte-identical); the search runs only on TA-23's frame.
+    seen: list[int] = []
+    real = ps._place_dim_labels
+
+    def spy(spans):  # type: ignore[no-untyped-def]
+        seen.append(len(spans))
+        return real(spans)
+
+    monkeypatch.setattr(ps, "_place_dim_labels", spy)
+    for side, storage in (("right", None), ("left", 300.0)):
+        body = ni(side, UPSTREAM)
+        if storage is not None:
+            body["turnBayStorageFt"] = storage
+        params, gen, kwargs = scenario_to_call(parsed(body))
+        seen.clear()
+        render_plan_sheet(
+            gen(params, **kwargs),
+            params,
+            output_path=str(tmp_path / f"{side}.pdf"),
+            approaches=kwargs["approaches"],
+        )
+        assert (len(seen) > 0) == (side == "left"), (side, seen)
     assert ps._TURN_BAY_FRAME.get() is None
