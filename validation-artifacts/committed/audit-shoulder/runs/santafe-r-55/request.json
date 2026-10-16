@@ -1,0 +1,255 @@
+{
+ "scenario": {
+  "kind": "shoulder",
+  "meta": {
+   "project": "Audit 22 santafe-r-55",
+   "address": "",
+   "lat": 39.69322,
+   "lng": -104.99425,
+   "pinModel": "work_start",
+   "confirmedRoad": {
+    "candidate": {
+     "way_id": "16981493",
+     "highway_class": "trunk",
+     "name": "South Santa Fe Drive",
+     "ref": "US 85",
+     "bearing": 195.93,
+     "snap_distance_m": 2.99,
+     "snapped_lat": 39.69322738909991,
+     "snapped_lng": -104.99428363676445,
+     "tags": {
+      "oneway": "yes",
+      "maxspeed": null,
+      "lanes": "3",
+      "lanes_forward": null,
+      "lanes_backward": null,
+      "lanes_both_ways": null,
+      "turn_lanes": null,
+      "turn_lanes_forward": null,
+      "turn_lanes_backward": null
+     },
+     "signal_distance_m": null,
+     "geometry": [
+      [
+       39.693522,
+       -104.9941166
+      ],
+      [
+       39.693238,
+       -104.9942797
+      ],
+      [
+       39.6930531,
+       -104.9943483
+      ],
+      [
+       39.6929144,
+       -104.9943741
+      ],
+      [
+       39.6927361,
+       -104.9943998
+      ],
+      [
+       39.692571,
+       -104.9943998
+      ],
+      [
+       39.6924191,
+       -104.9943827
+      ],
+      [
+       39.6922804,
+       -104.9943312
+      ],
+      [
+       39.6921615,
+       -104.9942711
+      ],
+      [
+       39.6921112,
+       -104.9942389
+      ],
+      [
+       39.6918511,
+       -104.9940737
+      ],
+      [
+       39.6915486,
+       -104.9938171
+      ],
+      [
+       39.6913489,
+       -104.9936522
+      ],
+      [
+       39.6909867,
+       -104.9933251
+      ],
+      [
+       39.6907397,
+       -104.9931043
+      ],
+      [
+       39.6906954,
+       -104.9930635
+      ],
+      [
+       39.6905718,
+       -104.9929499
+      ],
+      [
+       39.6903933,
+       -104.9927956
+      ],
+      [
+       39.6902385,
+       -104.9926736
+      ],
+      [
+       39.6900733,
+       -104.992565
+      ],
+      [
+       39.6898711,
+       -104.9924644
+      ],
+      [
+       39.6896203,
+       -104.9923785
+      ],
+      [
+       39.6895023,
+       -104.9923416
+      ],
+      [
+       39.6893875,
+       -104.9923056
+      ],
+      [
+       39.6892026,
+       -104.9922455
+      ],
+      [
+       39.6890177,
+       -104.992194
+      ],
+      [
+       39.6887667,
+       -104.9921511
+      ],
+      [
+       39.6880302,
+       -104.9921827
+      ],
+      [
+       39.6877461,
+       -104.9921947
+      ],
+      [
+       39.6877069,
+       -104.9921964
+      ],
+      [
+       39.6875646,
+       -104.9922026
+      ],
+      [
+       39.6859243,
+       -104.9922092
+      ],
+      [
+       39.6839493,
+       -104.9922435
+      ],
+      [
+       39.6834497,
+       -104.9922707
+      ],
+      [
+       39.6828462,
+       -104.9923036
+      ],
+      [
+       39.6823508,
+       -104.9923551
+      ],
+      [
+       39.6821405,
+       -104.9924076
+      ],
+      [
+       39.6812675,
+       -104.9926383
+      ],
+      [
+       39.6805079,
+       -104.9928787
+      ],
+      [
+       39.6798011,
+       -104.9931276
+      ],
+      [
+       39.6789835,
+       -104.9933955
+      ]
+     ],
+     "twin_searched": true,
+     "twin_distance_m": 153.97
+    },
+    "classification": {
+     "roadType": "urban_arterial",
+     "divided": true,
+     "laneWidthFt": 12,
+     "lanesPerDirection": 3
+    },
+    "method": "operator_pick",
+    "overrides": {},
+    "isUrban": true,
+    "placeName": "Alamo Placita",
+    "pinLat": 39.69322,
+    "pinLng": -104.99425
+   },
+   "intersection": null,
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "siteConditions": {
+    "limited_sight_distance": true
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 55,
+  "lanes": 3,
+  "laneWidth": 12.0,
+  "divided": true,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 800,
+  "night": false,
+  "site_scan": {
+   "proceed_if_unavailable": false
+  },
+  "detectedLanesTotal": 3,
+  "roadLanesPerDirection": 3,
+  "carriageway": {
+   "oneway": "yes",
+   "highwayClass": "trunk",
+   "twinDistanceM": 153.97,
+   "twinSearched": true
+  },
+  "street_class": "arterial",
+  "jurisdiction_key": "denver",
+  "guesses": {
+   "street_class": {
+    "highwayClass": "trunk"
+   },
+   "jurisdiction_key": {
+    "lat": 39.69322,
+    "lng": -104.99425
+   }
+  }
+ }
+}

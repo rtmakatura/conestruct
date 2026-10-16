@@ -1,0 +1,52 @@
+{
+ "row": {
+  "n": "26",
+  "id": "canyon-r-55",
+  "pin": "N",
+  "side": "right",
+  "speed": 55,
+  "lsd": true,
+  "len": 800,
+  "night": false,
+  "place": [
+   "mountain"
+  ]
+ },
+ "pin": {
+  "place": "Boulder Canyon Dr (CO 119, mountain)",
+  "lat": 40.00185,
+  "lng": -105.41289,
+  "road": "Boulder Canyon|CO 119",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 792780
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6576
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 4964
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 6727
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10161
+  }
+ }
+}

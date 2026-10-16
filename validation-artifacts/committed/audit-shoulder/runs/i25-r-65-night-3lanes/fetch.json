@@ -1,0 +1,57 @@
+{
+ "row": {
+  "n": "30b",
+  "id": "i25-r-65-night-3lanes",
+  "pin": "Q",
+  "side": "right",
+  "speed": 65,
+  "lsd": false,
+  "len": 1500,
+  "night": true,
+  "place": [
+   "freeway"
+  ],
+  "over": {
+   "lanes": 3,
+   "laneWidth": 12
+  },
+  "_why": "row 30 refused (the site fits I-25's 4 lanes at 10.5 ft; the freeway rule needs 11); the operator's recovery of drawing 3 lanes"
+ },
+ "pin": {
+  "place": "I-25, Denver",
+  "lat": 39.68539,
+  "lng": -104.96427,
+  "road": "I 25",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 884256
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 7053
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 8150
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 9233
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10771
+  }
+ }
+}

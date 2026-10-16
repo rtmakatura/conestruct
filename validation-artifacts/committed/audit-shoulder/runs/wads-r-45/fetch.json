@@ -1,0 +1,49 @@
+{
+ "row": {
+  "n": "17",
+  "id": "wads-r-45",
+  "pin": "I",
+  "side": "right",
+  "speed": 45,
+  "lsd": false,
+  "len": 1500,
+  "night": false
+ },
+ "pin": {
+  "place": "S Wadsworth Blvd, 1500 block, Lakewood",
+  "lat": 39.68857,
+  "lng": -105.08112,
+  "road": "Wadsworth",
+  "source": "geocoded"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 1082913
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6747
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 5476
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7227
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10333
+  }
+ }
+}

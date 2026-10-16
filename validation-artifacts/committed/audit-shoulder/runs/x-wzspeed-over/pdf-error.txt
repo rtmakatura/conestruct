@@ -1,0 +1,1 @@
+{"detail":"workZoneSpeed (45) must be <= posted speed (35)."}

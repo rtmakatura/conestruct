@@ -1,0 +1,32 @@
+{
+ "row": {
+  "n": "30",
+  "id": "i25-r-65-night",
+  "pin": "Q",
+  "side": "right",
+  "speed": 65,
+  "lsd": false,
+  "len": 1500,
+  "night": true,
+  "place": [
+   "freeway"
+  ]
+ },
+ "pin": {
+  "place": "I-25, Denver",
+  "lat": 39.68539,
+  "lng": -104.96427,
+  "road": "I 25",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 629
+  }
+ }
+}

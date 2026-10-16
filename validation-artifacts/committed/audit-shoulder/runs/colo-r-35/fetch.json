@@ -1,0 +1,49 @@
+{
+ "row": {
+  "n": "11",
+  "id": "colo-r-35",
+  "pin": "F",
+  "side": "right",
+  "speed": 35,
+  "lsd": false,
+  "len": 1500,
+  "night": false
+ },
+ "pin": {
+  "place": "S Colorado Blvd, 4800 block, Denver",
+  "lat": 39.7112,
+  "lng": -104.94062,
+  "road": "Colorado Boulevard",
+  "source": "geocoded"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 978091
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6792
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 6628
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7853
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10402
+  }
+ }
+}

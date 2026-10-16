@@ -1,0 +1,251 @@
+{
+ "scenario": {
+  "kind": "shoulder",
+  "meta": {
+   "project": "Audit 29 lamar-r-55",
+   "address": "",
+   "lat": 38.1158,
+   "lng": -102.62119,
+   "pinModel": "work_start",
+   "confirmedRoad": {
+    "candidate": {
+     "way_id": "52080565",
+     "highway_class": "trunk",
+     "name": null,
+     "ref": "US 50;US 287",
+     "bearing": 270.66,
+     "snap_distance_m": 0.29,
+     "snapped_lat": 38.1157973804638,
+     "snapped_lng": -102.62119003824442,
+     "tags": {
+      "oneway": "yes",
+      "maxspeed": "50 mph",
+      "lanes": "2",
+      "lanes_forward": null,
+      "lanes_backward": null,
+      "lanes_both_ways": null,
+      "turn_lanes": null,
+      "turn_lanes_forward": null,
+      "turn_lanes_backward": null
+     },
+     "signal_distance_m": null,
+     "geometry": [
+      [
+       38.1034333,
+       -102.6182671
+      ],
+      [
+       38.1045773,
+       -102.6182988
+      ],
+      [
+       38.1061575,
+       -102.6183276
+      ],
+      [
+       38.1088977,
+       -102.6183509
+      ],
+      [
+       38.1098072,
+       -102.6183566
+      ],
+      [
+       38.109992,
+       -102.6183581
+      ],
+      [
+       38.1119862,
+       -102.6183841
+      ],
+      [
+       38.1126339,
+       -102.6183918
+      ],
+      [
+       38.1131141,
+       -102.6183889
+      ],
+      [
+       38.1134953,
+       -102.6183929
+      ],
+      [
+       38.1138481,
+       -102.6184042
+      ],
+      [
+       38.1140822,
+       -102.6184391
+      ],
+      [
+       38.114266,
+       -102.618493
+      ],
+      [
+       38.1144477,
+       -102.6185641
+      ],
+      [
+       38.1145862,
+       -102.6186419
+      ],
+      [
+       38.1147564,
+       -102.618755
+      ],
+      [
+       38.1149397,
+       -102.6189103
+      ],
+      [
+       38.1151106,
+       -102.6190841
+      ],
+      [
+       38.1152798,
+       -102.6193221
+      ],
+      [
+       38.115425,
+       -102.6195639
+      ],
+      [
+       38.1155431,
+       -102.6198097
+      ],
+      [
+       38.1157108,
+       -102.6203071
+      ],
+      [
+       38.1157668,
+       -102.6206382
+      ],
+      [
+       38.1157948,
+       -102.6209045
+      ],
+      [
+       38.1157974,
+       -102.6211922
+      ],
+      [
+       38.1157858,
+       -102.6214569
+      ],
+      [
+       38.1157742,
+       -102.6215679
+      ],
+      [
+       38.1157435,
+       -102.6217681
+      ],
+      [
+       38.1156724,
+       -102.6222331
+      ],
+      [
+       38.1155526,
+       -102.6229672
+      ],
+      [
+       38.1154058,
+       -102.6238675
+      ],
+      [
+       38.1153082,
+       -102.6244412
+      ],
+      [
+       38.1151951,
+       -102.625125
+      ],
+      [
+       38.1150197,
+       -102.6261845
+      ],
+      [
+       38.1144059,
+       -102.6298518
+      ],
+      [
+       38.1142558,
+       -102.6308143
+      ],
+      [
+       38.1141373,
+       -102.6315491
+      ],
+      [
+       38.1138393,
+       -102.6334137
+      ],
+      [
+       38.1135793,
+       -102.635041
+      ],
+      [
+       38.1131308,
+       -102.6379837
+      ],
+      [
+       38.1130328,
+       -102.6385036
+      ],
+      [
+       38.112923,
+       -102.6391511
+      ]
+     ],
+     "twin_searched": true,
+     "twin_distance_m": 11.76
+    },
+    "classification": {
+     "roadType": "urban_arterial",
+     "divided": true,
+     "laneWidthFt": 12,
+     "lanesPerDirection": 2
+    },
+    "method": "operator_pick",
+    "overrides": {},
+    "isUrban": true,
+    "placeName": "Culp",
+    "pinLat": 38.1158,
+    "pinLng": -102.62119
+   },
+   "intersection": null,
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 55,
+  "lanes": 2,
+  "laneWidth": 12.0,
+  "divided": true,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 200,
+  "night": false,
+  "site_scan": {
+   "proceed_if_unavailable": false
+  },
+  "detectedLanesTotal": 2,
+  "roadLanesPerDirection": 2,
+  "carriageway": {
+   "oneway": "yes",
+   "highwayClass": "trunk",
+   "twinDistanceM": 11.76,
+   "twinSearched": true
+  },
+  "street_class": "arterial",
+  "guesses": {
+   "street_class": {
+    "highwayClass": "trunk"
+   }
+  }
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "row": {
+  "n": "X1",
+  "id": "x-speed-80",
+  "pin": "Q",
+  "side": "right",
+  "speed": 80,
+  "lsd": false,
+  "len": 1500,
+  "night": false,
+  "expect": {
+   "refuse": [
+    422,
+    400
+   ],
+   "names": "speed"
+  }
+ },
+ "pin": {
+  "place": "I-25, Denver",
+  "lat": 39.68539,
+  "lng": -104.96427,
+  "road": "I 25",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 53
+  }
+ }
+}

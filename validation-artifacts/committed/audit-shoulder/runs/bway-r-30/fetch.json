@@ -1,0 +1,49 @@
+{
+ "row": {
+  "n": "1",
+  "id": "bway-r-30",
+  "pin": "A",
+  "side": "right",
+  "speed": 30,
+  "lsd": false,
+  "len": 200,
+  "night": false
+ },
+ "pin": {
+  "place": "N Broadway SB, Denver (one-way)",
+  "lat": 39.7337,
+  "lng": -104.98753,
+  "road": "Broadway",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 913351
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6739
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 6270
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7768
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10327
+  }
+ }
+}

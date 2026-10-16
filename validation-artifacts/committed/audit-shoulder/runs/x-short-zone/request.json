@@ -1,0 +1,138 @@
+{
+ "scenario": {
+  "kind": "shoulder",
+  "meta": {
+   "project": "Audit X4 x-short-zone",
+   "address": "",
+   "lat": 39.68857,
+   "lng": -105.08112,
+   "pinModel": "work_start",
+   "confirmedRoad": {
+    "candidate": {
+     "way_id": "17070362",
+     "highway_class": "residential",
+     "name": "South Wadsworth Service Road",
+     "ref": null,
+     "bearing": 359.98,
+     "snap_distance_m": 11.38,
+     "snapped_lat": 39.68856995700376,
+     "snapped_lng": -105.08125303453785,
+     "tags": {
+      "oneway": "no",
+      "maxspeed": null,
+      "lanes": null,
+      "lanes_forward": null,
+      "lanes_backward": null,
+      "lanes_both_ways": null,
+      "turn_lanes": null,
+      "turn_lanes_forward": null,
+      "turn_lanes_backward": null
+     },
+     "signal_distance_m": null,
+     "geometry": [
+      [
+       39.684859,
+       -105.081217
+      ],
+      [
+       39.6849174,
+       -105.0812177
+      ],
+      [
+       39.6856535,
+       -105.0812261
+      ],
+      [
+       39.6864537,
+       -105.0812426
+      ],
+      [
+       39.6871653,
+       -105.0812337
+      ],
+      [
+       39.6872051,
+       -105.0812336
+      ],
+      [
+       39.687957,
+       -105.0812527
+      ],
+      [
+       39.6886899,
+       -105.0812531
+      ],
+      [
+       39.688742,
+       -105.0812541
+      ],
+      [
+       39.6891869,
+       -105.081263
+      ],
+      [
+       39.6892303,
+       -105.0812593
+      ],
+      [
+       39.6892611,
+       -105.081253
+      ],
+      [
+       39.6893073,
+       -105.0812335
+      ],
+      [
+       39.6893353,
+       -105.0812152
+      ],
+      [
+       39.6893463,
+       -105.0812053
+      ]
+     ]
+    },
+    "classification": {
+     "roadType": "urban_arterial",
+     "divided": false,
+     "laneWidthFt": 12,
+     "lanesPerDirection": null
+    },
+    "method": "operator_pick",
+    "overrides": {},
+    "isUrban": true,
+    "placeName": "Lakewood",
+    "pinLat": 39.68857,
+    "pinLng": -105.08112
+   },
+   "intersection": null,
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 45,
+  "lanes": 1,
+  "laneWidth": 12.0,
+  "divided": false,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 50,
+  "night": false,
+  "site_scan": {
+   "proceed_if_unavailable": false
+  },
+  "street_class": "local",
+  "jurisdiction_key": "lakewood",
+  "guesses": {
+   "street_class": {
+    "highwayClass": "residential"
+   },
+   "jurisdiction_key": {
+    "lat": 39.68857,
+    "lng": -105.08112
+   }
+  }
+ }
+}

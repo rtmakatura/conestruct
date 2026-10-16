@@ -1,0 +1,87 @@
+{
+ "scenario": {
+  "kind": "shoulder",
+  "meta": {
+   "project": "Audit 27 hartsel-r-65",
+   "address": "",
+   "lat": 39.02175,
+   "lng": -105.79286,
+   "pinModel": "work_start",
+   "confirmedRoad": {
+    "candidate": {
+     "way_id": "17122234",
+     "highway_class": "trunk",
+     "name": null,
+     "ref": "US 24",
+     "bearing": 64.93,
+     "snap_distance_m": 0.27,
+     "snapped_lat": 39.02174782118689,
+     "snapped_lng": -105.79285868815876,
+     "tags": {
+      "oneway": null,
+      "maxspeed": null,
+      "lanes": "2",
+      "lanes_forward": null,
+      "lanes_backward": null,
+      "lanes_both_ways": null,
+      "turn_lanes": null,
+      "turn_lanes_forward": null,
+      "turn_lanes_backward": null
+     },
+     "signal_distance_m": null,
+     "geometry": [
+      [
+       39.0214771,
+       -105.7937344
+      ],
+      [
+       39.0216102,
+       -105.7932819
+      ],
+      [
+       39.021746,
+       -105.7928637
+      ]
+     ]
+    },
+    "classification": {
+     "roadType": "rural_divided",
+     "divided": true,
+     "laneWidthFt": 12,
+     "lanesPerDirection": 1
+    },
+    "method": "operator_pick",
+    "overrides": {},
+    "isUrban": false,
+    "placeName": "Hartsel",
+    "pinLat": 39.02175,
+    "pinLng": -105.79286
+   },
+   "intersection": null,
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   }
+  },
+  "roadType": "rural_divided",
+  "speed": 65,
+  "lanes": 1,
+  "laneWidth": 12.0,
+  "divided": true,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 1500,
+  "night": false,
+  "site_scan": {
+   "proceed_if_unavailable": false
+  },
+  "detectedLanesTotal": 2,
+  "roadLanesPerDirection": 1,
+  "street_class": "arterial",
+  "guesses": {
+   "street_class": {
+    "highwayClass": "trunk"
+   }
+  }
+ }
+}

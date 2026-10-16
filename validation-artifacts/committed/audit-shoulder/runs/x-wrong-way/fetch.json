@@ -1,0 +1,36 @@
+{
+ "row": {
+  "n": "X8",
+  "id": "x-wrong-way",
+  "pin": "A",
+  "side": "right",
+  "speed": 30,
+  "lsd": false,
+  "len": 200,
+  "night": false,
+  "travel": "against_geometry",
+  "expect": {
+   "refuse": [
+    400
+   ],
+   "names": "one-way|direction|way"
+  }
+ },
+ "pin": {
+  "place": "N Broadway SB, Denver (one-way)",
+  "lat": 39.7337,
+  "lng": -104.98753,
+  "road": "Broadway",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 167
+  }
+ }
+}

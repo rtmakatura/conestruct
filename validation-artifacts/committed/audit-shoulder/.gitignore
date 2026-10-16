@@ -1,0 +1,5 @@
+# Plan and crew PDFs (about 1 MB each) stay local; page 1 is kept as PNG and
+# all pages as text (runs/<id>/plan-text.txt).  Re-fetch with fetch.py.
+runs/*/plan.pdf
+runs/*/crew.pdf
+runs/*/_page1_peek.png

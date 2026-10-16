@@ -1,0 +1,57 @@
+{
+ "road_bearing": {
+  "scan_status": "ok",
+  "candidates": [
+   {
+    "way_id": "17122234",
+    "highway_class": "trunk",
+    "name": null,
+    "ref": "US 24",
+    "bearing": 64.93,
+    "snap_distance_m": 0.27,
+    "snapped_lat": 39.02174782118689,
+    "snapped_lng": -105.79285868815876,
+    "tags": {
+     "oneway": null,
+     "maxspeed": null,
+     "lanes": "2",
+     "lanes_forward": null,
+     "lanes_backward": null,
+     "lanes_both_ways": null,
+     "turn_lanes": null,
+     "turn_lanes_forward": null,
+     "turn_lanes_backward": null
+    },
+    "signal_distance_m": null,
+    "geometry": [
+     [
+      39.0214771,
+      -105.7937344
+     ],
+     [
+      39.0216102,
+      -105.7932819
+     ],
+     [
+      39.021746,
+      -105.7928637
+     ]
+    ]
+   }
+  ],
+  "primary_index": 0,
+  "isUrban": false,
+  "placeName": "Hartsel"
+ },
+ "jurisdiction": {
+  "suggestion": null,
+  "reason": "Pin is outside the mapped Denver-metro boundary layer (US Census TIGER/Line, 2025 vintage).",
+  "confidence": "outside_supported",
+  "distance_to_boundary_ft": 267892.9,
+  "warnings": [],
+  "boundary_source": {
+   "source": "US Census TIGER/Line Place boundaries",
+   "vintage": "2025"
+  }
+ }
+}

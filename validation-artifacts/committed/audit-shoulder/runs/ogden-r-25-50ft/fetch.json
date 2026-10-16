@@ -1,0 +1,50 @@
+{
+ "row": {
+  "n": "32",
+  "id": "ogden-r-25-50ft",
+  "pin": "C",
+  "side": "right",
+  "speed": 25,
+  "lsd": false,
+  "len": 50,
+  "night": false,
+  "_ruling": "addition b, 2026-10-16"
+ },
+ "pin": {
+  "place": "Ogden St between 6th and 7th Ave, Denver (two-way residential)",
+  "lat": 39.7265,
+  "lng": -104.97525,
+  "road": "Ogden",
+  "source": "picked 2026-10-16 from /api/road-bearing (two-way, 2 lanes). The first pin (fixture 39.72550, -104.98753) confirmed as West 6th Avenue, which OSM tags one-way; E 6th Ave and E 17th Ave are one-way carriageways too"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 776211
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6744
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 5839
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7462
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10330
+  }
+ }
+}

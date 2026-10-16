@@ -1,0 +1,114 @@
+# Method of Handling Traffic: Crew Instructions
+
+## Project Information
+
+- **Speed limit:** 65 mph
+- **Road type:** Freeway
+- **Closure type:** Shoulder Closure · Divided Highway
+- **Work zone length:** 1,500 ft
+- **Jurisdiction:** Denver (guessed from the pin, not confirmed)
+- **Generated:** 2026-10-16
+
+## Required Equipment
+
+- 26× Construction/Warning Sign (see sign list below)
+  - 2× G20-1 ROAD CONSTRUCTION (NEXT 1500 FT)
+  - 2× G20-2 END ROAD WORK
+  - 6× G20-5P CONSTRUCTION ZONE plaque
+  - 2× R9-9 SIDEWALK CLOSED
+  - 2× W16-2a NEXT 1,862 FT
+  - 2× W20-1 ROAD WORK AHEAD
+  - 2× W20-2 ROAD WORK 2500 FT
+  - 4× W21-5aR RIGHT SHOULDER CLOSED AHEAD
+  - 2× W5-1 ROAD NARROWS
+  - 2× W7-3a NEXT 1 MILE
+- 5× Channelizing Drum (36-inch)
+- 15× Traffic Cone (36-inch)
+- 5× Type C Steady-Burn Warning Light
+- 2× Type III Barricade
+- 1× Arrow Board
+- 1× Portable Light Plant
+
+## Sign Placement Schedule
+
+| Sign Code | Description | Distance from Taper |
+|-----------|-------------|---------------------|
+| W20-1 | ROAD WORK AHEAD | 5,140 ft upstream |
+| W20-2 | ROAD WORK 2500 FT | 2,500 ft upstream |
+| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 1,000 ft upstream |
+| W16-2a | NEXT 1,862 FT (under upstream W21-5aR) | 1,000 ft upstream |
+| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 750 ft upstream |
+| W7-3a | NEXT 1 MILE (under downstream W21-5aR) | 750 ft upstream |
+| W5-1 | ROAD NARROWS | 500 ft upstream |
+| G20-5P | CONSTRUCTION ZONE plaque | Within work zone |
+| G20-2 | END ROAD WORK | Downstream of work zone |
+
+## Setup Procedure
+
+**Important: Set up from downstream to upstream (against traffic flow). This ensures you are always working behind protection.**
+
+1. Position arrow board at the upstream start of the shoulder taper (station 2,362 ft). Set it to caution mode (flashing caution or alternating diamond). Shoulder work takes caution mode only, never an arrow (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Activate flashing.
+
+2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station -150 ft), right side of road 40 ft from centerline. Place matching sign on left side.
+
+3. Place 2 traffic cones in the downstream taper, between station -50 ft (shoulder edge) and station 0 (lane edge) at 25 ft spacing. This taper returns traffic from the lane edge back to the shoulder edge past the work zone (MUTCD §6B.08 downstream taper). Then place 13 traffic cones along the right lane edge at 125 ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station 1,500 ft. Offset: 36 ft from centerline.
+
+4. Place G20-5P WORK ZONE plaque(s) within the work zone at approximately 500 ft intervals. Place matching plaques on left side.
+
+5. Place 5 channelizing drums in the shoulder taper, starting at station 2,145 ft and working upstream to station 2,362 ft. Space drums at 54 ft intervals. Drums transition from the lane edge (36 ft) to the shoulder edge (46 ft).
+
+6. Place advance warning signs upstream of the taper:
+   - W5-1 at 500 ft upstream of taper start (station 2,862 ft), right side.
+   - W21-5aR at 750 ft upstream of taper start (station 3,112 ft), right side.
+   - W7-3a at 750 ft upstream of taper start (station 3,112 ft), right side.
+   - W21-5aR at 1,000 ft upstream of taper start (station 3,362 ft), right side.
+   - W16-2a at 1,000 ft upstream of taper start (station 3,362 ft), right side.
+   - W20-2 at 2,500 ft upstream of taper start (station 4,862 ft), right side.
+   - W20-1 at 5,140 ft upstream of taper start (station 7,502 ft), right side.
+   Place matching signs on left side at each location.
+
+## Takedown Procedure
+
+**Important: Remove from upstream to downstream (with traffic flow). Remove advance warning signs first, work zone devices last.**
+
+1. Remove advance warning signs: W20-1 first, then W20-2, then W21-5aR, then W16-2a, then W21-5aR, then W7-3a, then W5-1. Remove both sides at each station.
+2. Remove taper drums from upstream to downstream.
+3. Deactivate and remove arrow board.
+4. Remove work zone cones from upstream to downstream.
+5. Remove G20-5P plaques.
+6. Remove G20-2 END ROAD WORK sign(s).
+
+## Safety Notes
+
+- All personnel in the work zone must wear ANSI Class 2 (daytime) or Class 3 (nighttime) high-visibility apparel.
+- Nighttime operation: Ensure all devices meet retroreflectivity requirements. Flagger stations require 500W quartz illumination at minimum 8 ft height per CDOT S-630-1 Sheet 2 General Note 22.
+- Divided highway: All warning and regulatory signs must be posted on BOTH sides of the roadway per CDOT S-630-1 Sheet 2 General Note 8.
+- Lanes: Drawn as 3 lanes per direction; the road has 4. Plans draw at most 4 lanes per direction, so the device offsets are measured against 3 lanes.
+- Maintain 645 ft longitudinal buffer space between the taper and the work area at all times.
+- Maximum speed reduction per sign installation: 15 mph (CDOT S-630-1 Sheet 2 General Note 3).
+- This plan was generated by MHT Tool. A certified Traffic Control Supervisor (TCS) must review, approve, and sign before field implementation.
+- Reference: CDOT S-630-1, MUTCD 11th Edition Part 6, Colorado Supplement (effective January 18, 2026).
+
+## Pedestrian and Bicycle Accommodation
+
+- A pedestrian facility is affected by this closure. 2 R9-9 SIDEWALK CLOSED signs are placed at the closure (MUTCD §6G.10: the plain R9-9 legend; no alternate-side assertion, which belongs to R9-10, and no detour-routing signs, which require sidewalk geometry this plan does not carry). Sidewalk closure points are barricaded (MUTCD §6C.02). Pedestrians must not be diverted into an open travel lane.
+- **Denver TCP sheet requirements**: The submitted TCP must depict sidewalks, pedestrian accessible routes, and bike-lane assignments as existing conditions, plus the proposed pedestrian accessible route, bike facilities, and a sidewalk/bike closure detail. That existing-conditions inventory is site-survey content this generated draft doesn't carry. The TCS supplies it on the submitted TCP.
+- The TCS verifies pedestrian and bicycle accommodation on site; where a facility is maintained, it must remain accessible and detectable per MUTCD standards.
+
+## Emergency Access
+
+- All travel lanes remain open; the closure occupies the shoulder only. Emergency vehicles pass through the work zone in the open lanes.
+- The Traffic Control Supervisor completes and confirms the emergency access plan for this site and coordinates notification of police, fire, and emergency medical responder agencies prior to work (TCS duties per CDOT Standard Specifications 630.11).
+- An emergency access plan is a required minimum element of the approved Method of Handling Traffic (CDOT 630.10(a)); this section is draft input for it, not the approved plan.
+
+## Site-Specific Notes
+
+- **adjacent_intersection**: No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure. _(MUTCD §6N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.))_
+- **adjacent_interchange**: No devices added: the per-ramp interchange layout isn't generated. See the pending-verification disclosure. _(MUTCD §6N.16 p. 851: Interchanges (11th Ed.))_
+- **pedestrian_facility**: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone. _(MUTCD §6C.02: pedestrian considerations in work zones)_
+
+## Night Operation Notes
+
+- **night_taper_lighting**: Added 5 Type C steady-burn warning lights on taper drums for nighttime visibility. _(MUTCD §6L.07: warning lights on channelizing devices in nighttime work zones)_
+- **night_work_area_lighting**: Added 1 portable light plant at the start of the work zone (25 ft past the buffer) to illuminate the work area. _(CDOT M&S §630.05.1: illumination requirement for nighttime work zones)_
+- **night_retroreflective**: All devices, signs, and barricades must be retroreflective. Verify warehouse inventory before deployment. Inspect retroreflectivity at shift start. _(MUTCD §6F.01 + §6K.01: retroreflectivity requirements for nighttime visibility)_

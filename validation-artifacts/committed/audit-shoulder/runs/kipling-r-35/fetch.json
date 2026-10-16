@@ -1,0 +1,52 @@
+{
+ "row": {
+  "n": "20",
+  "id": "kipling-r-35",
+  "pin": "K",
+  "side": "right",
+  "speed": 35,
+  "lsd": true,
+  "len": 1500,
+  "night": false,
+  "place": [
+   "sidewalk"
+  ]
+ },
+ "pin": {
+  "place": "Kipling St (CO 391) near W 10th Ave, Lakewood",
+  "lat": 39.735,
+  "lng": -105.1093,
+  "road": "Kipling",
+  "source": "picked 2026-10-16 from /api/road-bearing; the geocoded 700-block point returned no road, and points nearer 6th Ave snap to the frontage road"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 927174
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6794
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 6497
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7724
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10409
+  }
+ }
+}

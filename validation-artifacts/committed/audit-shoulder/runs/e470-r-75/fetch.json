@@ -1,0 +1,52 @@
+{
+ "row": {
+  "n": "31",
+  "id": "e470-r-75",
+  "pin": "R",
+  "side": "right",
+  "speed": 75,
+  "lsd": false,
+  "len": 5000,
+  "night": false,
+  "place": [
+   "freeway"
+  ]
+ },
+ "pin": {
+  "place": "E-470",
+  "lat": 39.8282,
+  "lng": -104.7472,
+  "road": "E470|E-470",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 512140
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6738
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 6365
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7383
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10337
+  }
+ }
+}

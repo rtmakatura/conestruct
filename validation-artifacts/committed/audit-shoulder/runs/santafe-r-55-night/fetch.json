@@ -1,0 +1,49 @@
+{
+ "row": {
+  "n": "21",
+  "id": "santafe-r-55-night",
+  "pin": "L",
+  "side": "right",
+  "speed": 55,
+  "lsd": false,
+  "len": 1500,
+  "night": true
+ },
+ "pin": {
+  "place": "S Santa Fe Dr (US 85), divided",
+  "lat": 39.69322,
+  "lng": -104.99425,
+  "road": "Santa Fe|US 85",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 1042900
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6964
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 7628
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 8375
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10673
+  }
+ }
+}

@@ -1,0 +1,52 @@
+{
+ "row": {
+  "n": "24",
+  "id": "lookout-r-35-night",
+  "pin": "M",
+  "side": "right",
+  "speed": 35,
+  "lsd": true,
+  "len": 200,
+  "night": true,
+  "place": [
+   "mountain"
+  ]
+ },
+ "pin": {
+  "place": "Lookout Mountain Rd (mountain)",
+  "lat": 39.74231,
+  "lng": -105.23925,
+  "road": "Lookout Mountain",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 709813
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6748
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 5913
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7374
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10440
+  }
+ }
+}

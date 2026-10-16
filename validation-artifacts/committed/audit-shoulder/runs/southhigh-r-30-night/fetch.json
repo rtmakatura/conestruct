@@ -1,0 +1,53 @@
+{
+ "row": {
+  "n": "10",
+  "id": "southhigh-r-30-night",
+  "pin": "E",
+  "side": "right",
+  "speed": 30,
+  "lsd": false,
+  "len": 1500,
+  "night": true,
+  "place": [
+   "school",
+   "sidewalk"
+  ]
+ },
+ "pin": {
+  "place": "E Louisiana Ave at South High School, Denver",
+  "lat": 39.6928,
+  "lng": -104.96595,
+  "road": "Louisiana",
+  "source": "geocoded, then moved onto the road 2026-10-16: the campus point 39.69212 returned no candidate"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 766580
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6967
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 7141
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 8206
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10664
+  }
+ }
+}

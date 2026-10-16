@@ -1,0 +1,49 @@
+{
+ "row": {
+  "n": "4",
+  "id": "e14-r-25-night",
+  "pin": "B",
+  "side": "right",
+  "speed": 25,
+  "lsd": true,
+  "len": 200,
+  "night": true
+ },
+ "pin": {
+  "place": "E 14th Ave at Washington St, Denver (one-way)",
+  "lat": 39.73848,
+  "lng": -104.979,
+  "road": "14th Avenue",
+  "source": "moved onto the road 2026-10-16: the fixture pin 39.74120, -104.98756 sits on Broadway, and /api/road-bearing offered only North Broadway"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 529839
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6957
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 7608
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 8472
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10656
+  }
+ }
+}

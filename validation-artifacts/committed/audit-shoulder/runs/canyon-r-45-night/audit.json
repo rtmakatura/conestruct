@@ -1,0 +1,405 @@
+{
+ "summary": {
+  "ta": "TA-3",
+  "cdot_sheet": "S-630-1",
+  "case_id": "Case 11: Shoulder closure on undivided highway",
+  "taper_length_ft": 120,
+  "taper_label": "L/3 (shoulder taper)",
+  "buffer_space_ft": 360.0,
+  "device_spacing_taper_ft": 45.0,
+  "device_spacing_tangent_ft": 90.0,
+  "step_count": 14,
+  "case_routing": "shoulder_no_reduction"
+ },
+ "sections": {
+  "taper": {
+   "speed_mph": 45,
+   "closure_type": "shoulder",
+   "offset_label": "shoulder width",
+   "offset_ft": 8.0,
+   "shoulder_width_ft": 8.0,
+   "formula_choice": "Speed 45 mph >= 45 mph threshold -> using L = W x S",
+   "formula_latex": "L = W \\times S",
+   "L_calc_text": "L = 8 x 45 = 360 ft",
+   "L_full_ft": 360,
+   "L_third_calc_text": "L/3 = 360 / 3 = 120 ft",
+   "L_third_ft": 120,
+   "L_required_ft": 120,
+   "L_required_label": "L/3 (shoulder taper)",
+   "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
+   "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway)",
+   "citation": {
+    "cite": "MUTCD § 6B.08",
+    "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+   },
+   "result_text": "L/3 = 120 ft",
+   "formula_text": [
+    "L = 8 × 45 = 360 ft",
+    "L/3 = 360 / 3 = 120 ft"
+   ]
+  },
+  "buffer": {
+   "speed_mph": 45,
+   "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
+   "buffer_ft": 360.0,
+   "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+   "citation": {
+    "cite": "MUTCD § 6B.06",
+    "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+   },
+   "result_text": "B = 360 ft"
+  },
+  "spacing": {
+   "speed_mph": 45,
+   "in_taper_text": "45 mph -> 45 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+   "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+   "taper_count_text": "L/3 = 120 ft / 45 ft max spacing -> 4 drums at 40.0 ft intervals",
+   "tangent_count_text": "1500 ft / 90 ft max spacing -> 18 cones at 88.2 ft intervals",
+   "n_taper_drums_required": 4,
+   "n_taper_drums_actual": 4,
+   "n_tangent_cones_required": 18,
+   "n_tangent_cones_actual": 20,
+   "source": "MUTCD 11th Ed. Sec 6K.01",
+   "citation": {
+    "cite": "MUTCD § 6K.01",
+    "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+   },
+   "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 18 tangent + 2 downstream = 20 cones total",
+   "n_downstream_taper_cones": 2,
+   "n_cones_placed_total": 20,
+   "result_text": "22 devices · 45/90 ft o.c.",
+   "formula_text": [
+    "L/3 = 120 ft / 45 ft max spacing -> 4 drums at 40.0 ft intervals",
+    "1500 ft / 90 ft max spacing -> 18 cones at 88.2 ft intervals",
+    "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 18 tangent + 2 downstream = 20 cones total"
+   ]
+  },
+  "advance": {
+   "road_type_text": "Speed 45 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+   "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft",
+   "sign_table": [
+    {
+     "Position": "Advance (W20-1)",
+     "Code": "W20-1",
+     "Station (ft)": "5,220",
+     "Distance from Taper (ft)": "3,240 upstream"
+    },
+    {
+     "Position": "Advance (W20-2)",
+     "Code": "W20-2",
+     "Station (ft)": "4,470",
+     "Distance from Taper (ft)": "2,490 upstream"
+    },
+    {
+     "Position": "Advance (W21-5aR)",
+     "Code": "W21-5aR",
+     "Station (ft)": "3,720",
+     "Distance from Taper (ft)": "1,740 upstream"
+    }
+   ],
+   "source": "MUTCD 11th Ed. Table 6B-1",
+   "result_text": "3 signs",
+   "citation": {
+    "cite": "MUTCD TABLE 6B-1",
+    "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+   }
+  },
+  "colorado": {
+   "checks": [
+    {
+     "pass": true,
+     "label": "Signs on both sides of divided highway",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+     "detail": "Required: False. Signs placed: 0 left, 7 right."
+    },
+    {
+     "pass": true,
+     "label": "G20-5P Work Zone signs every 2,640 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+     "detail": "Zone length: 3,480 ft. Required: 2. Placed: 2."
+    },
+    {
+     "pass": true,
+     "label": "Speed reduction <= 15 mph per sign installation",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+     "detail": "No work-zone speed reduction. Posted speed 45 mph applies throughout the zone."
+    },
+    {
+     "pass": true,
+     "label": "Flagger station lighting 500W @ 8 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+     "detail": "Not applicable (no flaggers)."
+    }
+   ],
+   "info_items": [
+    {
+     "info": true,
+     "label": "AADT threshold for mobile operations (<= 2,000)",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+     "detail": "Not applicable (not a mobile operation)."
+    }
+   ],
+   "all_pass": true,
+   "fail_count": 0
+  },
+  "case": {
+   "case": "Case 11: Shoulder closure on undivided highway",
+   "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+   "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11, the general shoulder-work typical (drawn for freeway/expressway), applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
+   "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 45 mph.",
+   "routing": "shoulder_no_reduction"
+  },
+  "flagger": {
+   "applicable": false,
+   "count": 0,
+   "required": 0,
+   "table": [],
+   "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+   "narrative": "Not applicable for this scenario."
+  },
+  "corridor_validation": {
+   "checked": true,
+   "warnings": []
+  },
+  "geometry_validation": {
+   "speed_mph": 45,
+   "work_zone_ft": 1500.0,
+   "taper_ft": 120,
+   "taper_label": "L/3 (shoulder taper)",
+   "buffer_ft": 360.0,
+   "violations": [],
+   "all_pass": true,
+   "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"
+  },
+  "corridor_spec": {
+   "taper_ft": 120,
+   "buffer_ft": 360,
+   "advance_warning_ft": 1500,
+   "downstream_taper_ft": 50,
+   "road_category": "rural"
+  },
+  "site_adjustments": [
+   {
+    "flag": "limited_sight_distance",
+    "action": "Moved 3 advance warning sign(s) 50% farther upstream from the taper to compensate for limited sight distance.",
+    "devices_added": 0,
+    "devices_modified": 3,
+    "rule": "MUTCD §6B.04: increased advance warning for limited sight distance",
+    "citation": "MUTCD § 6B.04"
+   }
+  ],
+  "site_scan": {
+   "status": "ok",
+   "reason": null,
+   "error": null,
+   "mode": "corridor",
+   "measured_at": "2026-10-16T17:24:30+00:00",
+   "duration_ms": 1976,
+   "budget_s": 20.0,
+   "memo_hit": false,
+   "mirror": "https://overpass.openstreetmap.fr/api/interpreter",
+   "overpass_remark": null,
+   "response_bytes": 5291,
+   "element_count": 0,
+   "proceeded_anyway": false,
+   "inputs": {
+    "lat": 40.00185,
+    "lng": -105.41289,
+    "bearing_deg": 236.34105749065463,
+    "speed_mph": 45,
+    "work_zone_ft": 1500.0,
+    "closure_type": "shoulder",
+    "road_type": "rural",
+    "lane_width_ft": 12.0,
+    "shoulder_width_ft": 8.0,
+    "centerline_vertices": 172,
+    "bbox": [
+     39.99608914861364,
+     -105.41648725990285,
+     40.00551222160592,
+     -105.40382766772393
+    ],
+    "pin_model": "work_start",
+    "opposing_bbox": null
+   },
+   "buckets": {
+    "intersections": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "interchanges": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": [],
+     "junction_refs": []
+    },
+    "sidewalks": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "bike_facilities": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "schools": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "railroad_crossings": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "hospitals": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "road_curvature": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [
+      "Road curvature analysis not implemented; assume straight."
+     ],
+     "features": []
+    }
+   },
+   "flags": {
+    "limited_sight_distance": true
+   },
+   "manual_flags_discarded": {},
+   "disclosure": null,
+   "corrections": [],
+   "corrections_advisory": null
+  }
+ },
+ "pending_verification": {
+  "count": 0,
+  "note": "",
+  "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+ },
+ "plan_flags": {
+  "validation_warnings": 0,
+  "compliance_fails": 0,
+  "v1_limitations": 0,
+  "is_clean": true
+ },
+ "pin": {
+  "model": "work_start"
+ },
+ "input_guesses": [
+  {
+   "field": "street_class",
+   "value": "arterial",
+   "label": "Arterial",
+   "source": "road",
+   "evidence": "OSM highway=primary",
+   "operator_confirmed": false
+  }
+ ],
+ "breakdown": {
+  "devices": [
+   {
+    "device": "ROAD CONSTRUCTION (NEXT 1500 FT)",
+    "code": "G20-1",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "END ROAD WORK",
+    "code": "G20-2",
+    "function": "Termination",
+    "qty": 1
+   },
+   {
+    "device": "CONSTRUCTION ZONE plaque",
+    "code": "G20-5P",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "ROAD WORK AHEAD",
+    "code": "W20-1",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "ROAD WORK 2490 FT",
+    "code": "W20-2",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "RIGHT SHOULDER CLOSED AHEAD",
+    "code": "W21-5aR",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "Channelizing Drum",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 4
+   },
+   {
+    "device": "Traffic Cone (36-inch)",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 20
+   },
+   {
+    "device": "Type C Warning Light (steady)",
+    "code": "—",
+    "function": "Channelizing (night)",
+    "qty": 4
+   },
+   {
+    "device": "Arrow Board",
+    "code": "—",
+    "function": "Lane closure indication",
+    "qty": 1
+   },
+   {
+    "device": "Portable Light Plant",
+    "code": "—",
+    "function": "Illumination",
+    "qty": 1
+   }
+  ],
+  "total_devices": 37,
+  "unique_types": 11,
+  "zone_geometry": {
+   "taper_l_ft": 120,
+   "buffer_b_ft": 360,
+   "device_spacing_ft": 45,
+   "work_len_ft": 1500.0
+  }
+ }
+}

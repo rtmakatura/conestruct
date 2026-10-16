@@ -1,0 +1,821 @@
+{
+ "summary": {
+  "ta": "TA-3",
+  "cdot_sheet": "S-630-1",
+  "case_id": "Case 11: Shoulder closure on undivided highway",
+  "taper_length_ft": 28,
+  "taper_label": "L/3 (shoulder taper)",
+  "buffer_space_ft": 155.0,
+  "device_spacing_taper_ft": 25.0,
+  "device_spacing_tangent_ft": 50.0,
+  "step_count": 11,
+  "case_routing": "shoulder_no_reduction"
+ },
+ "sections": {
+  "taper": {
+   "speed_mph": 25,
+   "closure_type": "shoulder",
+   "offset_label": "shoulder width",
+   "offset_ft": 8.0,
+   "shoulder_width_ft": 8.0,
+   "formula_choice": "Speed 25 mph < 45 mph threshold -> using L = W x S^2 / 60",
+   "formula_latex": "L = \\frac{W \\times S^2}{60}",
+   "L_calc_text": "L = 8 x 25^2 / 60 = 83 ft",
+   "L_full_ft": 83,
+   "L_third_calc_text": "L/3 = 83 / 3 = 28 ft",
+   "L_third_ft": 28,
+   "L_required_ft": 28,
+   "L_required_label": "L/3 (shoulder taper)",
+   "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
+   "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway)",
+   "citation": {
+    "cite": "MUTCD § 6B.08",
+    "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+   },
+   "result_text": "L/3 = 28 ft",
+   "formula_text": [
+    "L = 8 × 25^2 / 60 = 83 ft",
+    "L/3 = 83 / 3 = 28 ft"
+   ]
+  },
+  "buffer": {
+   "speed_mph": 25,
+   "lookup_text": "MUTCD Table 6B-2: 155 ft (CDOT supplement silent at this speed)",
+   "buffer_ft": 155.0,
+   "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+   "citation": {
+    "cite": "MUTCD § 6B.06",
+    "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+   },
+   "result_text": "B = 155 ft"
+  },
+  "spacing": {
+   "speed_mph": 25,
+   "in_taper_text": "25 mph -> 25 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+   "on_tangent_text": "25 mph -> 50 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+   "taper_count_text": "L/3 = 28 ft / 25 ft max spacing -> 4 drums at 9.3 ft intervals",
+   "tangent_count_text": "200 ft / 50 ft max spacing -> 5 cones at 50.0 ft intervals",
+   "n_taper_drums_required": 4,
+   "n_taper_drums_actual": 4,
+   "n_tangent_cones_required": 5,
+   "n_tangent_cones_actual": 7,
+   "source": "MUTCD 11th Ed. Sec 6K.01",
+   "citation": {
+    "cite": "MUTCD § 6K.01",
+    "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+   },
+   "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 5 tangent + 2 downstream = 7 cones total",
+   "n_downstream_taper_cones": 2,
+   "n_cones_placed_total": 7,
+   "result_text": "9 devices · 25/50 ft o.c.",
+   "formula_text": [
+    "L/3 = 28 ft / 25 ft max spacing -> 4 drums at 9.3 ft intervals",
+    "200 ft / 50 ft max spacing -> 5 cones at 50.0 ft intervals",
+    "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 5 tangent + 2 downstream = 7 cones total"
+   ]
+  },
+  "advance": {
+   "road_type_text": "Speed 25 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low",
+   "spacing_text": "A = 100 ft, B = 100 ft, C = 100 ft",
+   "sign_table": [
+    {
+     "Position": "C (furthest)",
+     "Code": "W20-1",
+     "Station (ft)": "683",
+     "Distance from Taper (ft)": "300 upstream"
+    },
+    {
+     "Position": "B (middle)",
+     "Code": "W20-2",
+     "Station (ft)": "583",
+     "Distance from Taper (ft)": "200 upstream"
+    },
+    {
+     "Position": "A (nearest)",
+     "Code": "W21-5aR",
+     "Station (ft)": "483",
+     "Distance from Taper (ft)": "100 upstream"
+    }
+   ],
+   "source": "MUTCD 11th Ed. Table 6B-1",
+   "result_text": "3 signs",
+   "citation": {
+    "cite": "MUTCD TABLE 6B-1",
+    "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+   }
+  },
+  "colorado": {
+   "checks": [
+    {
+     "pass": true,
+     "label": "Signs on both sides of divided highway",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+     "detail": "Required: False. Signs placed: 0 left, 8 right."
+    },
+    {
+     "pass": true,
+     "label": "G20-5P Work Zone signs every 2,640 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+     "detail": "Zone length: 683 ft. Required: 1. Placed: 1."
+    },
+    {
+     "pass": true,
+     "label": "Speed reduction <= 15 mph per sign installation",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+     "detail": "No work-zone speed reduction. Posted speed 25 mph applies throughout the zone."
+    },
+    {
+     "pass": true,
+     "label": "Flagger station lighting 500W @ 8 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+     "detail": "Not applicable (no flaggers)."
+    }
+   ],
+   "info_items": [
+    {
+     "info": true,
+     "label": "AADT threshold for mobile operations (<= 2,000)",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+     "detail": "Not applicable (not a mobile operation)."
+    }
+   ],
+   "all_pass": true,
+   "fail_count": 0
+  },
+  "case": {
+   "case": "Case 11: Shoulder closure on undivided highway",
+   "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+   "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11, the general shoulder-work typical (drawn for freeway/expressway), applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
+   "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 25 mph.",
+   "routing": "shoulder_no_reduction"
+  },
+  "flagger": {
+   "applicable": false,
+   "count": 0,
+   "required": 0,
+   "table": [],
+   "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+   "narrative": "Not applicable for this scenario."
+  },
+  "corridor_validation": {
+   "checked": true,
+   "warnings": [
+    {
+     "flag": "no_road_at_anchor",
+     "level": "warning",
+     "message": "No motorway/trunk/primary/secondary road detected at anchor (39.73105, -105.10397) within 50 m (closest road within 50 m: 'residential').  Verify coordinates correspond to the actual work zone."
+    }
+   ]
+  },
+  "geometry_validation": {
+   "speed_mph": 25,
+   "work_zone_ft": 200.0,
+   "taper_ft": 28,
+   "taper_label": "L/3 (shoulder taper)",
+   "buffer_ft": 155.0,
+   "violations": [],
+   "all_pass": true,
+   "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"
+  },
+  "corridor_spec": {
+   "taper_ft": 28,
+   "buffer_ft": 155,
+   "advance_warning_ft": 300,
+   "downstream_taper_ft": 50,
+   "road_category": "urban_low"
+  },
+  "site_adjustments": [
+   {
+    "flag": "adjacent_intersection",
+    "action": "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
+    "devices_added": 0,
+    "rule": "MUTCD §6N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.)",
+    "citation": "MUTCD § 6N.12 p. 848"
+   },
+   {
+    "flag": "pedestrian_facility",
+    "action": "Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
+    "devices_added": 4,
+    "rule": "MUTCD §6C.02: pedestrian considerations in work zones",
+    "citation": "MUTCD § 6C.02"
+   }
+  ],
+  "site_scan": {
+   "status": "ok",
+   "reason": null,
+   "error": null,
+   "mode": "corridor",
+   "measured_at": "2026-10-16T17:41:51+00:00",
+   "duration_ms": 2164,
+   "budget_s": 20.0,
+   "memo_hit": false,
+   "mirror": "https://overpass.openstreetmap.fr/api/interpreter",
+   "overpass_remark": null,
+   "response_bytes": 13363,
+   "element_count": 56,
+   "proceeded_anyway": false,
+   "inputs": {
+    "lat": 39.73105,
+    "lng": -105.10397,
+    "bearing_deg": 294.4622655793527,
+    "speed_mph": 25,
+    "work_zone_ft": 200.0,
+    "closure_type": "shoulder",
+    "road_type": "urban_low",
+    "lane_width_ft": 12.0,
+    "shoulder_width_ft": 8.0,
+    "centerline_vertices": 34,
+    "bbox": [
+     39.729153931238336,
+     -105.10798803252652,
+     39.73198342160592,
+     -105.09963207033184
+    ],
+    "pin_model": "work_start",
+    "opposing_bbox": null
+   },
+   "buckets": {
+    "intersections": {
+     "detected": true,
+     "count": 10,
+     "nearest_distance_m": 31.2,
+     "nearest_distance_ft": 102.4,
+     "details": [
+      "unnamed at 39.7310, -105.1044 [work_zone @ 176 ft]",
+      "unnamed at 39.7311, -105.1049 [downstream @ 26 ft]",
+      "unnamed at 39.7292, -105.1056 [outside @ -174 ft]",
+      "unnamed at 39.7302, -105.1022 [outside @ 871 ft]",
+      "unnamed at 39.7293, -105.1024 [outside @ 947 ft]"
+     ],
+     "features": [
+      {
+       "label": "unnamed at 39.7293, -105.1003",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": 1531.8,
+       "lateral_offset_ft": 204.9,
+       "distance_to_anchor_m": 371.6
+      },
+      {
+       "label": "unnamed at 39.7292, -105.1002",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": 1562.0,
+       "lateral_offset_ft": 221.4,
+       "distance_to_anchor_m": 381.4
+      },
+      {
+       "label": "unnamed at 39.7310, -105.1044",
+       "zone": "work_zone",
+       "relevant": true,
+       "along_station_ft": 175.6,
+       "lateral_offset_ft": 20.0,
+       "distance_to_anchor_m": 37.8
+      },
+      {
+       "label": "unnamed at 39.7292, -105.1074",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -672.0,
+       "lateral_offset_ft": 661.2,
+       "distance_to_anchor_m": 356.8
+      },
+      {
+       "label": "unnamed at 39.7293, -105.1045",
+       "zone": "lateral",
+       "relevant": false,
+       "along_station_ft": 524.1,
+       "lateral_offset_ft": 622.9,
+       "distance_to_anchor_m": 202.9
+      }
+     ]
+    },
+    "interchanges": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": [
+      {
+       "label": "unnamed at 39.7317, -105.1037",
+       "zone": "lateral",
+       "relevant": false,
+       "along_station_ft": 281.7,
+       "lateral_offset_ft": 256.8,
+       "distance_to_anchor_m": 78.4
+      }
+     ],
+     "junction_refs": []
+    },
+    "sidewalks": {
+     "detected": true,
+     "count": 6,
+     "nearest_distance_m": 31.3,
+     "nearest_distance_ft": 102.7,
+     "details": [
+      "unnamed at 39.7306, -105.1026 [lateral 62 ft off centerline]",
+      "unnamed at 39.7305, -105.1024 [lateral 63 ft off centerline]",
+      "unnamed at 39.7311, -105.1045 [work_zone @ 156 ft]",
+      "unnamed at 39.7311, -105.1049 [downstream @ 26 ft]",
+      "unnamed at 39.7310, -105.1044 [work_zone @ 177 ft]"
+     ],
+     "features": [
+      {
+       "label": "unnamed at 39.7293, -105.1003",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": 1523.8,
+       "lateral_offset_ft": 208.6,
+       "distance_to_anchor_m": 369.3
+      },
+      {
+       "label": "unnamed at 39.7297, -105.1002",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": 1499.8,
+       "lateral_offset_ft": 71.9,
+       "distance_to_anchor_m": 358.2
+      },
+      {
+       "label": "unnamed at 39.7283, -105.1002",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": 1688.5,
+       "lateral_offset_ft": 524.0,
+       "distance_to_anchor_m": 442.2
+      },
+      {
+       "label": "unnamed at 39.7310, -105.1064",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -380.7,
+       "lateral_offset_ft": 20.4,
+       "distance_to_anchor_m": 207.2
+      },
+      {
+       "label": "unnamed at 39.7290, -105.1074",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -662.3,
+       "lateral_offset_ft": 747.6,
+       "distance_to_anchor_m": 369.9
+      }
+     ]
+    },
+    "bike_facilities": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "schools": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": [
+      {
+       "label": "unnamed at 39.7292, -105.1067",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -481.2,
+       "lateral_offset_ft": 672.1,
+       "distance_to_anchor_m": 312.4
+      }
+     ]
+    },
+    "railroad_crossings": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "hospitals": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "road_curvature": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [
+      "Road curvature analysis not implemented; assume straight."
+     ],
+     "features": []
+    }
+   },
+   "flags": {
+    "adjacent_intersection": true,
+    "pedestrian_facility": true
+   },
+   "manual_flags_discarded": {},
+   "disclosure": null,
+   "corrections": [],
+   "corrections_advisory": null
+  }
+ },
+ "pending_verification": {
+  "count": 1,
+  "note": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+  "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117",
+  "items": [
+   {
+    "kind": "intersection_layout_not_generated",
+    "label": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+   }
+  ]
+ },
+ "plan_flags": {
+  "validation_warnings": 1,
+  "compliance_fails": 0,
+  "v1_limitations": 1,
+  "is_clean": false
+ },
+ "pin": {
+  "model": "work_start"
+ },
+ "input_guesses": [
+  {
+   "field": "street_class",
+   "value": "local",
+   "label": "Local",
+   "source": "road",
+   "evidence": "OSM highway=residential",
+   "operator_confirmed": false
+  },
+  {
+   "field": "jurisdiction_key",
+   "value": "lakewood",
+   "label": "Lakewood",
+   "source": "pin",
+   "evidence": "Pin is inside Lakewood municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+   "operator_confirmed": false
+  }
+ ],
+ "breakdown": {
+  "devices": [
+   {
+    "device": "ROAD CONSTRUCTION (NEXT 200 FT)",
+    "code": "G20-1",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "END ROAD WORK",
+    "code": "G20-2",
+    "function": "Termination",
+    "qty": 1
+   },
+   {
+    "device": "CONSTRUCTION ZONE plaque",
+    "code": "G20-5P",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "SIDEWALK CLOSED",
+    "code": "R9-9",
+    "function": "Regulatory",
+    "qty": 2
+   },
+   {
+    "device": "ROAD WORK AHEAD",
+    "code": "W20-1",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "ROAD WORK 200 FT",
+    "code": "W20-2",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "RIGHT SHOULDER CLOSED AHEAD",
+    "code": "W21-5aR",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "Channelizing Drum",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 4
+   },
+   {
+    "device": "Traffic Cone (28-inch)",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 7
+   },
+   {
+    "device": "Type C Warning Light (steady)",
+    "code": "—",
+    "function": "Channelizing (night)",
+    "qty": 4
+   },
+   {
+    "device": "Type III Barricade",
+    "code": "—",
+    "function": "Closure",
+    "qty": 2
+   },
+   {
+    "device": "Arrow Board",
+    "code": "—",
+    "function": "Lane closure indication",
+    "qty": 1
+   },
+   {
+    "device": "Portable Light Plant",
+    "code": "—",
+    "function": "Illumination",
+    "qty": 1
+   }
+  ],
+  "total_devices": 27,
+  "unique_types": 13,
+  "zone_geometry": {
+   "taper_l_ft": 28,
+   "buffer_b_ft": 155,
+   "device_spacing_ft": 25,
+   "work_len_ft": 200.0
+  },
+  "jurisdiction": {
+   "key": "lakewood",
+   "name": "Lakewood",
+   "tcp_term": "TCP",
+   "row_term": "right-of-way",
+   "authority": "city",
+   "chain": [
+    {
+     "title": "MUTCD (via state law — LMC 10.45.010 names no edition; the typicals cite 'Part VI', pre-2003 numbering)",
+     "display_name": "MUTCD (via state law)"
+    },
+    {
+     "title": "Lakewood Engineering Regulations, Construction Specifications and Design Standards (Sept 1986, updated through March 2021)",
+     "display_name": "Eng. Regs & Standards"
+    },
+    {
+     "title": "Lakewood typical TCP sheets (3, undated)",
+     "display_name": "Typical TCP sheets"
+    },
+    {
+     "title": "Public Way Inspections Fees (eff. 2021-01-01)",
+     "display_name": "Inspection Fees"
+    }
+   ],
+   "class_required": true,
+   "classification_map_url": null,
+   "hours": {
+    "shape": "ban_windows",
+    "windows": [
+     {
+      "kind": "ban",
+      "days": "weekday",
+      "classes": [
+       "arterial",
+       "collector"
+      ],
+      "start": 7.0,
+      "end": 9.0,
+      "note": "No arterial/collector lane closures 7:00-9:00 a.m., 'unless otherwise approved'. Confirmed by three independent documents; identical windows to Englewood's statutory peak ban (regional convergence).",
+      "source": {
+       "doc": "Lakewood typical TCP sheets (1, 2, 3)",
+       "status": "provisional"
+      }
+     },
+     {
+      "kind": "ban",
+      "days": "weekday",
+      "classes": [
+       "arterial",
+       "collector"
+      ],
+      "start": 15.5,
+      "end": 18.0,
+      "source": {
+       "doc": "Lakewood typical TCP sheets (1, 2, 3)",
+       "status": "provisional"
+      }
+     }
+    ],
+    "holiday_rule": "none",
+    "override_note": "'Unless otherwise approved' — an explicit escape hatch; render as a banner, not a block (locked decision #1). The Transportation Engineering Division must approve any changes to the typical plans.",
+    "conflict": null
+   },
+   "fees": {
+    "model": "flat",
+    "items": [
+     {
+      "label": "Operation using typical traffic control plan (shoulder work any classification; one-lane closure, local street)",
+      "amount_cents": 0,
+      "effective": "2021-01-01",
+      "note": "No-fee permit required — matching a city typical costs $0 and skips the review cycle (F20: the second corpus jurisdiction whose fee responds to TCP design).",
+      "source": {
+       "doc": "Lakewood Public Way Inspections Fees",
+       "date": "2021-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Operation requiring traffic control plan approval",
+      "amount_cents": 2600,
+      "effective": "2021-01-01",
+      "source": {
+       "doc": "Lakewood Public Way Inspections Fees",
+       "date": "2021-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "CDOT Access Permit (each change in access)",
+      "amount_cents": 7500,
+      "per": "each",
+      "effective": "2021-01-01",
+      "source": {
+       "doc": "Lakewood Public Way Inspections Fees",
+       "date": "2021-01-01",
+       "status": "verified"
+      }
+     }
+    ],
+    "formula": null,
+    "note": "Schedule effective 2021-01-01 and prints its own staleness warning twice ('fees change periodically... call 303-987-7500 to verify') — render with that caveat. Read end to end: NO resubmittal, penalty, or expedite fee published."
+   },
+   "meters": [],
+   "applied_deltas": [
+    {
+     "severity": "count",
+     "rule": "Double posting of signs is required on state highways with a median, optional on city streets.",
+     "effect": {
+      "op": "add_device",
+      "device": "advance_warning_signs",
+      "note": "double-posted set"
+     },
+     "trigger": {
+      "classes": null,
+      "closure": null,
+      "night": null,
+      "condition": "state highway with a median (CDOT-permit territory)"
+     },
+     "source": {
+      "doc": "Lakewood typical TCP sheet — Lane Closure on a Multi-Lane Street",
+      "section": "note 6",
+      "status": "provisional"
+     },
+     "status": "conditional",
+     "key": "lakewood:3eeee55be3",
+     "device_label": "Advance warning signs"
+    },
+    {
+     "severity": "op",
+     "rule": "No open overnight trenches/holes in the ROW — three independent sources (typical sheets, permit form standing conditions, Engineering Standards). Traffic plates permitted (contrast Englewood's overnight plate ban).",
+     "effect": {
+      "op": "method"
+     },
+     "trigger": {
+      "classes": null,
+      "closure": null,
+      "night": null,
+      "condition": "excavation left open overnight"
+     },
+     "source": {
+      "doc": "Lakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering Standards",
+      "date": "2016-09-01",
+      "status": "verified"
+     },
+     "status": "conditional",
+     "key": "lakewood:a1070ec38f"
+    }
+   ],
+   "chips": {
+    "personnel": [],
+    "device": [
+     {
+      "rule": "Truck-mounted attenuator and trailer/truck flasher-or-arrow shown as (optional) on the shoulder and multi-lane typicals; END ROAD WORK sign (optional). Barricading must comply with 'City and M.U.T.C.D. Standards' (permit form standing condition — co-equal).",
+      "source": {
+       "doc": "Lakewood typical TCP sheets + Permit Application (rev. 9/16)",
+       "date": "2016-09-01",
+       "status": "verified"
+      },
+      "status": "fires"
+     }
+    ],
+    "hazard": []
+   },
+   "hours_eval": {
+    "status": "unknown",
+    "violations": [],
+    "note": "no work schedule provided"
+   },
+   "permit": {
+    "tier_suggested": null,
+    "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
+    "tiers": [
+     {
+      "label": "Operation using typical traffic control plan",
+      "definition": "Shoulder work (any street classification) or a one-lane closure on a local street, on the city's own fill-in typical — NO-FEE permit required. The typicals are optional and fee-advantaged, not mandatory ('may be useful for your submittal').",
+      "source": {
+       "doc": "Lakewood Public Way Inspections Fees",
+       "date": "2021-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Operation requiring traffic control plan approval",
+      "definition": "Site-specific TCP review: $26.00 and a review cycle. Ambiguity preserved (Q-LKWD-6): the no-fee list names two of the three typicals — the multi-lane-closure typical is absent, and the conservative reading is that multi-lane closures require approval regardless.",
+      "source": {
+       "doc": "Lakewood Public Way Inspections Fees",
+       "date": "2021-01-01",
+       "status": "verified"
+      }
+     }
+    ],
+    "notes": [
+     {
+      "rule": "Entity gate: Contractor REGISTRATION (Muni Code Ch. 14.11) — registration, not a license class. Form-field verified subcontractor gate: 'List All Sub-Contractors: ___ Lakewood Lic #: ___' — every subcontractor is named on the permit with a Lakewood license number. CBC appears on the permit by name.",
+      "source": {
+       "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)",
+       "date": "2016-09-01",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "Surety: two structures — annual letter of credit / cash / guarantee letter, OR per-permit cash or LOC — with an UNPUBLISHED amount (blank field, set per permit). Render as 'surety required — amount set by the city.' An 'Investigation fee' line exists on the form with no published amount (conventionally a work-without-permit penalty; recorded, not priced).",
+      "source": {
+       "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)",
+       "date": "2016-09-01",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "The city's TCP form carries a named, dedicated 'Barricade Co. and Phone' field plus a 24-Hour Emergency Phone — the second Colorado jurisdiction whose official TCP artifact structurally assumes a barricade company in the loop.",
+      "source": {
+       "doc": "Lakewood typical TCP sheets (field list)",
+       "status": "provisional"
+      }
+     },
+     {
+      "rule": "Submission runs through ETRAKiT (both a public way permit AND a traffic control plan required). Adoption posture: the Engineering Standards enumerate ten CDOT M-standards and ZERO S-series — Lakewood inherits no CDOT work-zone geometry; city standard beats CDOT standard where both speak ('the City of Lakewood Design Standard shall be used').",
+      "source": {
+       "doc": "Lakewood TCP page + Engineering Standards §VI-B",
+       "date": "2021-03-01",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "Permit valid 180 days; eleven-month inspection; one-year warranty effective after inspection and acceptance; hot patch same day (weather permitting).",
+      "source": {
+       "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)",
+       "date": "2016-09-01",
+       "status": "verified"
+      }
+     }
+    ],
+    "multi_agency": [
+     {
+      "rule": "The typicals distinguish state highways from city streets in two separate rules (arrow board; double posting) — state-highway work is CDOT-permit territory. A priced CDOT interface exists on the city schedule: CDOT Access Permit $75.00 each change in access.",
+      "source": {
+       "doc": "Lakewood typical TCP sheets + Public Way Inspections Fees",
+       "date": "2021-01-01",
+       "status": "verified"
+      }
+     }
+    ],
+    "leads": [
+     {
+      "label": "Inspector notice before work",
+      "lead_days": 24,
+      "lead_unit": "hours",
+      "note": "'CALL INSPECTOR 24 HOURS IN ADVANCE OF WORK!!!' (303-987-7900) — three independent sources. This is an INSPECTION notice, not a submittal lead; conflating the two would be a material error. Plan-review turnaround is NOT PUBLISHED anywhere (five documents exhausted — genuine NL, phone-only).",
+      "source": {
+       "doc": "Lakewood Permit Application (rev. 9/16) + Engineering Standards",
+       "date": "2016-09-01",
+       "status": "verified"
+      }
+     }
+    ],
+    "notices": [],
+    "onsite": {
+     "items": [],
+     "digital_ok": null
+    }
+   },
+   "conflicts": [],
+   "provisional": true
+  }
+ }
+}

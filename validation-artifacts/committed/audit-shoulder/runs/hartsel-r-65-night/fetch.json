@@ -1,0 +1,52 @@
+{
+ "row": {
+  "n": "28",
+  "id": "hartsel-r-65-night",
+  "pin": "O",
+  "side": "right",
+  "speed": 65,
+  "lsd": true,
+  "len": 5000,
+  "night": true,
+  "place": [
+   "outside-area"
+  ]
+ },
+ "pin": {
+  "place": "US 24 near Hartsel (rural)",
+  "lat": 39.02175,
+  "lng": -105.79286,
+  "road": "US 24",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 583772
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6759
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 6233
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7573
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10448
+  }
+ }
+}

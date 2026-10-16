@@ -1,0 +1,39 @@
+{
+ "row": {
+  "n": "X10",
+  "id": "x-freeway-narrow",
+  "pin": "Q",
+  "side": "right",
+  "speed": 65,
+  "lsd": false,
+  "len": 1500,
+  "night": false,
+  "over": {
+   "lanes": 2,
+   "laneWidth": 10
+  },
+  "expect": {
+   "refuse": [
+    400
+   ],
+   "names": "lane width|11"
+  }
+ },
+ "pin": {
+  "place": "I-25, Denver",
+  "lat": 39.68539,
+  "lng": -104.96427,
+  "road": "I 25",
+  "source": "fixture"
+ },
+ "healthz_sha": "1f08f49fe0152e91dabe0c7420bd69e6dc2de81d",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 629
+  }
+ }
+}
