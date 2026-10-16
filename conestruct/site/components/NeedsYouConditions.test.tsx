@@ -645,7 +645,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     expect(sight.querySelector(".ny-glyph")?.textContent).toBe("◌");
     expect(within(sight).getByText("not asserted")).toBeTruthy();
     expect(sight.querySelector(".sc-evidence")?.textContent).toBe(
-      "Curve or hill crest. Moves advance signs 50% farther upstream.",
+      "Curve or hill crest. Moves the advance signs farther upstream (MUTCD §6B.04).",
     );
     expect(sight.querySelector(".ny-cite")?.textContent).toBe("OPERATOR");
     // Rule 78: it stages — nothing writes until Apply.

@@ -54,6 +54,7 @@ from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import PLAQUE_CODES, schedule_key, substitute_sign_description
+from src.rules.site_adjustments import limited_sight_page_note
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
@@ -3575,6 +3576,7 @@ def _draw_notes(
     box_w: float,
     jurisdiction_conflicts: list[dict[str, Any]] | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    limited_sight: bool = False,
 ) -> None:
     """Draw the NOTES & SIGN SCHEDULE panel as three tabular sub-sections.
 
@@ -3963,6 +3965,21 @@ def _draw_notes(
             cv.setFillColor(colors.black)
             for line in _wrap_to_width(
                 cv, speed_note, "Helvetica-Bold", 6.5, width - 16.0, max_lines=2
+            ):
+                step()
+                cv.drawString(x, y[0], line)
+        if limited_sight:
+            # #331 R155: the moved distance's rule and the Engineer note
+            # (S-630-1 Sheet 2 Notes 10, 25), one producer with the audit's.
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.black)
+            for line in _wrap_to_width(
+                cv,
+                limited_sight_page_note(params),
+                "Helvetica-Bold",
+                6.5,
+                width - 16.0,
+                max_lines=4,
             ):
                 step()
                 cv.drawString(x, y[0], line)
@@ -5261,6 +5278,7 @@ def _draw_schematic_page(
         box_w=geom.notes_w,
         jurisdiction_conflicts=jurisdiction_conflicts,
         site_scan=site_scan,
+        limited_sight=bool((site_flags or {}).get("limited_sight_distance")),
     )
     if geom.device_x is not None and geom.device_w is not None:
         _draw_device_summary(c, geom.device_x, geom.device_w, placements, params, applied_deltas)

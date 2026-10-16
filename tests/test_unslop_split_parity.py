@@ -41,6 +41,12 @@ _OLD_SITE_RULES: dict[str, str] = {
 }
 
 
+# Titles reworded deliberately after R37 (Rule 5, stated with the change).
+# #331 R155: the 1.5 factor's "increased advance warning" became the
+# §6B.04 range rule.
+_RETITLED: frozenset[str] = frozenset({"limited_sight_distance"})
+
+
 def _old_site_split(rule: str) -> list[str]:
     return rule.split(" — ")
 
@@ -85,9 +91,13 @@ def test_site_rule_split_parity(flag: str) -> None:
     assert "—" not in new
     old_parts = _old_site_split(old)
     new_parts = _new_site_split(new)
-    # Two parts on both sides, and the parts are identical.
+    # Two parts on both sides, and the parts are identical -- except a
+    # title changed on purpose after R37 (the citation part still holds).
     assert len(old_parts) == 2
-    assert new_parts == old_parts
+    if flag in _RETITLED:
+        assert new_parts[0] == old_parts[0] and len(new_parts) == 2
+    else:
+        assert new_parts == old_parts
     # The left (citation) part never contains the new separator, so the
     # first ": " is always the boundary.
     assert ": " not in new_parts[0]

@@ -319,20 +319,7 @@ def advance_warning_spacing(
         ValueError: ``road_type`` is ``None`` at 55+ mph, or is a
             string not in :data:`VALID_ROAD_TYPES`.
     """
-    if road_type is None:
-        if speed_mph <= 40:
-            road_type = "urban_low"
-        elif speed_mph < 45:
-            road_type = "urban_high"
-        elif speed_mph < 55:
-            road_type = "rural"
-        else:
-            raise ValueError(
-                f"advance_warning_spacing requires an explicit road_type at "
-                f"{speed_mph} mph (auto-infer is unsafe at 55+ mph because "
-                "rural / expressway / freeway differ by thousands of feet "
-                "in Table 6B-1).  Pass one of 'rural', 'expressway', 'freeway'."
-            )
+    road_type = _infer_road_type(speed_mph, road_type)
 
     if road_type not in VALID_ROAD_TYPES:
         raise ValueError(
@@ -354,6 +341,54 @@ def advance_warning_spacing(
         f"road_type {road_type!r} is valid but missing from "
         "ADVANCE_WARNING_SIGN_SPACING table — table data may be incomplete."
     )
+
+
+def _infer_road_type(speed_mph: int, road_type: str | None) -> str:
+    """``advance_warning_spacing``'s road-category inference (see there)."""
+    if road_type is None:
+        if speed_mph <= 40:
+            road_type = "urban_low"
+        elif speed_mph < 45:
+            road_type = "urban_high"
+        elif speed_mph < 55:
+            road_type = "rural"
+        else:
+            raise ValueError(
+                f"advance_warning_spacing requires an explicit road_type at "
+                f"{speed_mph} mph (auto-infer is unsafe at 55+ mph because "
+                "rural / expressway / freeway differ by thousands of feet "
+                "in Table 6B-1).  Pass one of 'rural', 'expressway', 'freeway'."
+            )
+    return road_type
+
+
+# MUTCD 11th Ed. §6B.04 p. 771: the nearest warning sign "should range from
+# 4 to 8 times the speed limit in mph" on urban streets (¶04) and "from 8 to
+# 12 times" on rural roads (¶06).  The top of each range is the
+# limited-sight-distance placement (R155, Ryan 2026-10-16).  Expressways and
+# freeways are in neither range and keep Table 6B-1.
+_SIGHT_RANGE_TOP: dict[str, tuple[int, str]] = {
+    "urban_low": (8, "urban"),
+    "urban_high": (8, "urban"),
+    "rural": (12, "rural"),
+}
+
+
+def limited_sight_nearest_sign(
+    speed_mph: int, road_type: str | None
+) -> tuple[float, int, str] | None:
+    """The nearest advance sign's distance under limited sight distance.
+
+    Returns ``(distance_ft, factor, range_name)``: the top of MUTCD §6B.04's
+    range (¶04 urban 8 × speed, ¶06 rural 12 × speed, p. 771), which takes
+    Table 6B-1's A distance's place (R155).  ``None`` on an expressway or
+    freeway, where no §6B.04 range applies and Table 6B-1 stands.
+    """
+    top = _SIGHT_RANGE_TOP.get(_infer_road_type(speed_mph, road_type))
+    if top is None:
+        return None
+    factor, range_name = top
+    return float(factor * speed_mph), factor, range_name
 
 
 # ---------------------------------------------------------------------------

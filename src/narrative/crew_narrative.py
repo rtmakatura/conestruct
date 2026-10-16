@@ -687,7 +687,16 @@ def build_narrative_context(
     ni_approaches: list[dict[str, Any]] = []
     ni_companion_cones = 0
     ni_lane_line_offset = 0.0
+    ni_r2_10_station = 0.0
     if ni is not None:
+        # #331: the mainline R2-10 as placed.  Limited sight distance moves
+        # it with the advance series (site_adjustments), so the generator's
+        # ni["r2_10"] is the unmoved value.
+        ni_r2_10_station = next(
+            p.station_ft
+            for p in mainline_placements
+            if p.label == "R2-10" and p.station_ft > taper_start_station
+        )
         ni_lane_line_offset = (params.num_lanes - 1) * params.lane_width_ft
         ni_companion_cones = sum(
             1
@@ -719,7 +728,7 @@ def build_narrative_context(
                 "code": "R2-10",
                 "description": description_for("R2-10"),
                 "distance": (
-                    f"{ni['r2_10'] - taper_start_station:,.0f} ft upstream "
+                    f"{ni_r2_10_station - taper_start_station:,.0f} ft upstream "
                     "(1/2 C inside the outermost sign, per Case 18)"
                 ),
             }
@@ -978,7 +987,7 @@ def build_narrative_context(
         "ni_downstream_curb_ft": ni["downstream_curb"] if ni is not None else 0.0,
         "ni_companion_cones": ni_companion_cones,
         "ni_lane_line_offset_ft": ni_lane_line_offset,
-        "ni_r2_10_station_ft": ni["r2_10"] if ni is not None else 0.0,
+        "ni_r2_10_station_ft": ni_r2_10_station,
         "ni_r2_11_station_ft": ni["r2_11"] if ni is not None else 0.0,
         "ni_g20_1_station_ft": ni["g20_1"] if ni is not None else 0.0,
         # #323 R153: TA-23's left-turn bay (None on every other plan), with

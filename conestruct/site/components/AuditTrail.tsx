@@ -96,8 +96,8 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
   limited_sight_distance: {
     label: "Limited sight distance",
     rule: "MUTCD § 6B.04",
-    action:
-      "Advance warning signs moved 50% farther upstream to compensate for restricted sight lines.",
+    // #331: no panel copy; the move's distance depends on the speed and
+    // the road, so the panel prints the backend's sentence.
   },
   adjacent_intersection: {
     label: "Intersection within work zone",

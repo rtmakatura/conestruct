@@ -17,13 +17,14 @@ from dataclasses import replace
 from typing import Any
 
 from src.rules.devices import DeviceType
+from src.rules.spacing import advance_warning_spacing, limited_sight_nearest_sign
 from src.rules.validators import DevicePlacement, ScenarioParams
 
-# Advance-warning labels eligible for upstream relocation under
-# limited_sight_distance. Pulled from the labels emitted by the layout
+# Advance-warning labels: the school-zone S1-1 goes 500 ft beyond the
+# farthest of these.  Pulled from the labels emitted by the layout
 # generators (layout.py) plus the W-codes called out in the spec.
 _ADVANCE_SIGN_LABELS: frozenset[str] = frozenset(
-    # #325: W21-5aL, the left shoulder's (#300), moves like W21-5aR.
+    # #325: W21-5aL, the left shoulder's (#300).
     {"W20-1", "W20-2", "W21-5aR", "W21-5aL", "W20-5R", "W4-2R", "W20-5L", "W4-2L", "W20-7", "W3-4"}
 )
 
@@ -44,31 +45,119 @@ def _ped_offset(params: ScenarioParams) -> float:
     return lane_edge + _shoulder_width(params) + 2.0
 
 
+# Each approach's nearest advance sign: the sign Table 6B-1's A distance
+# places (layout.py).  Shoulder plans: the SHOULDER CLOSED sign (#300,
+# #325 the left one); lane and near-intersection plans: the LANE ENDS
+# sign (#323 the left one); flagger plans: FLAGGER AHEAD (or AFAD AHEAD).
+_NEAREST_SIGN_LABELS: frozenset[str] = frozenset(
+    {"W21-5aR", "W21-5aL", "W4-2R", "W4-2L", "W20-7", "W20-7a"}
+)
+
+# CDOT S-630-1 Sheet 2 General Notes 10 and 25, the note every plan with the
+# flag carries (R155).  The crew sheet prints it in the record's sentence and
+# page 1 prints it in capitals (plan_sheet._draw_notes).
+LIMITED_SIGHT_ENGINEER_NOTE = (
+    "The Engineer sets the final sign locations (CDOT S-630-1 Sheet 2 Note 10). "
+    "Add advance warning signs where the line of sight to them is obstructed (Note 25)."
+)
+
+
+def limited_sight_page_note(params: ScenarioParams) -> str:
+    """Page 1's NOTES line for a plan with limited sight distance (R155).
+
+    The same numbers as the audit record's sentence, in the box's capitals.
+    """
+    from src.rules.validators import _is_flagger_scenario
+
+    a_ft = advance_warning_spacing(params.speed_mph, params.road_type)["A"]
+    top = limited_sight_nearest_sign(params.speed_mph, params.road_type)
+    anchor = "EACH FLAGGER" if _is_flagger_scenario(params) else "THE TAPER"
+    if top is not None and top[0] > a_ft:
+        lead = (
+            f"LIMITED SIGHT DISTANCE: NEAREST ADVANCE SIGN {top[0]:,.0f} FT FROM {anchor} "
+            f"({top[1]} × {params.speed_mph} MPH, MUTCD §6B.04)."
+        )
+    else:
+        lead = "LIMITED SIGHT DISTANCE: TABLE 6B-1 SPACING KEPT."
+    return f"{lead} {LIMITED_SIGHT_ENGINEER_NOTE.upper()}"
+
+
 def _adjust_limited_sight_distance(
     placements: list[DevicePlacement],
+    params: ScenarioParams,
 ) -> tuple[list[DevicePlacement], dict[str, Any]]:
-    """Move advance warning signs 50% farther upstream from the taper."""
+    """Move each approach's advance warning signs out to §6B.04's range top.
+
+    R155 (Ryan, 2026-10-16, clarified at #331's checkpoint): the top of
+    MUTCD §6B.04's range (8 × speed urban, 12 × speed rural) takes Table
+    6B-1's A distance's place, and each approach's whole advance series
+    moves upstream together, so every gap behind the nearest sign keeps its
+    Table 6B-1 value.  A is measured from the taper on shoulder and
+    near-intersection plans and from the flagger station on flagger plans
+    (Fig. 6P-10), so the nearest sign lands at the range top from that same
+    anchor.  Never closer than A; expressways and freeways keep Table 6B-1;
+    cross-street approaches stay (their frame is the curb line) and the
+    Engineer note covers them.
+    """
+    from src.rules.validators import _is_flagger_scenario
+
+    a_ft = advance_warning_spacing(params.speed_mph, params.road_type)["A"]
+    top = limited_sight_nearest_sign(params.speed_mph, params.road_type)
+    shift = 0.0 if top is None else max(0.0, top[0] - a_ft)
+
+    mainline = [p for p in placements if p.approach_id == "mainline"]
+    nearest = [p.station_ft for p in mainline if p.label in _NEAREST_SIGN_LABELS]
+    upstream = min((s for s in nearest if s > 0), default=None)
+    # Only a flagger plan signs the opposing approach (negative stations).
+    downstream = max((s for s in nearest if s < 0), default=None)
+
     out: list[DevicePlacement] = []
     moved = 0
     for p in placements:
-        if (
-            p.device_type == DeviceType.SIGN_GENERIC
-            and p.label in _ADVANCE_SIGN_LABELS
-            and p.station_ft > 0
-        ):
-            out.append(replace(p, station_ft=p.station_ft * 1.5))
-            moved += 1
-        else:
-            out.append(p)
+        if shift and p.approach_id == "mainline":
+            if upstream is not None and p.station_ft >= upstream:
+                out.append(replace(p, station_ft=p.station_ft + shift))
+                moved += 1
+                continue
+            if downstream is not None and p.station_ft <= downstream:
+                out.append(replace(p, station_ft=p.station_ft - shift))
+                moved += 1
+                continue
+        out.append(p)
+
+    anchor = "each flagger station" if _is_flagger_scenario(params) else "the taper"
+    if top is None:
+        moved_text = (
+            f"No signs moved: MUTCD §6B.04's placement ranges cover urban streets "
+            f"and rural roads, so this {params.road_type}'s Table 6B-1 spacing stands."
+        )
+    elif not moved and shift:
+        moved_text = "No signs moved: this plan has no advance warning series to move."
+    elif not moved:
+        moved_text = (
+            f"No signs moved: Table 6B-1 already puts the nearest sign {a_ft:,.0f} ft "
+            f"from {anchor}, beyond the top of MUTCD §6B.04's {top[2]} range "
+            f"({top[1]} × {params.speed_mph} mph = {top[0]:,.0f} ft)."
+        )
+    else:
+        moved_text = (
+            f"Moved {moved} advance warning sign(s) {shift:,.0f} ft farther upstream. "
+            f"The nearest sign now sits {top[0]:,.0f} ft from {anchor} "
+            f"({top[1]} × {params.speed_mph} mph, the top of MUTCD §6B.04's {top[2]} "
+            f"range) instead of Table 6B-1's {a_ft:,.0f} ft, and the signs behind it "
+            "keep Table 6B-1's spacing."
+        )
     record = {
         "flag": "limited_sight_distance",
-        "action": (
-            f"Moved {moved} advance warning sign(s) 50% farther upstream from "
-            "the taper to compensate for limited sight distance."
-        ),
+        "action": f"{moved_text} {LIMITED_SIGHT_ENGINEER_NOTE}",
         "devices_added": 0,
         "devices_modified": moved,
-        "rule": "MUTCD §6B.04: increased advance warning for limited sight distance",
+        "rule": (
+            # The chip is the prefix before ": " (audit._site_citation), kept
+            # "MUTCD § 6B.04" to match the frontend's static table.
+            "MUTCD §6B.04: limited sight distance puts the nearest warning sign "
+            "at the top of ¶04's urban or ¶06's rural range (p. 771)"
+        ),
     }
     return out, record
 
@@ -273,7 +362,7 @@ def apply_site_adjustments(
     records: list[dict[str, Any]] = []
 
     if flags.get("limited_sight_distance"):
-        out, rec = _adjust_limited_sight_distance(out)
+        out, rec = _adjust_limited_sight_distance(out, params)
         records.append(rec)
 
     if flags.get("adjacent_intersection"):

@@ -93,7 +93,7 @@ export function withAcknowledged(meta: ScenarioMeta, id: string, set: boolean): 
 export const MANUAL_FLAG_LABELS: Record<ManualSiteFlag, { label: string; desc: string }> = {
   limited_sight_distance: {
     label: "Limited sight distance",
-    desc: "Curve or hill crest. Moves advance signs 50% farther upstream.",
+    desc: "Curve or hill crest. Moves the advance signs farther upstream (MUTCD §6B.04).",
   },
   driveways_present: {
     label: "Driveways present",

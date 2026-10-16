@@ -21,25 +21,25 @@
       "sign_table": [
         {
           "Code": "W20-1",
-          "Distance from Taper (ft)": "3,589 upstream",
-          "Position": "Advance (W20-1)",
-          "Station (ft)": "6,268"
+          "Distance from Taper (ft)": "1,660 upstream",
+          "Position": "C (furthest)",
+          "Station (ft)": "4,338"
         },
         {
           "Code": "W20-2",
-          "Distance from Taper (ft)": "2,839 upstream",
-          "Position": "Advance (W20-2)",
-          "Station (ft)": "5,518"
+          "Distance from Taper (ft)": "1,160 upstream",
+          "Position": "B (middle)",
+          "Station (ft)": "3,838"
         },
         {
           "Code": "W21-5aR",
-          "Distance from Taper (ft)": "2,089 upstream",
-          "Position": "Advance (W21-5aR)",
-          "Station (ft)": "4,768"
+          "Distance from Taper (ft)": "660 upstream",
+          "Position": "A (nearest)",
+          "Station (ft)": "3,338"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
-      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft; limited sight distance moves every advance sign 160 ft farther upstream (MUTCD §6B.04)"
     },
     "buffer": {
       "buffer_ft": 495.0,
@@ -129,12 +129,12 @@
     },
     "site_adjustments": [
       {
-        "action": "Moved 6 advance warning sign(s) 50% farther upstream from the taper to compensate for limited sight distance.",
+        "action": "Moved 6 advance warning sign(s) 160 ft farther upstream. The nearest sign now sits 660 ft from the taper (12 × 55 mph, the top of MUTCD §6B.04's rural range) instead of Table 6B-1's 500 ft, and the signs behind it keep Table 6B-1's spacing. The Engineer sets the final sign locations (CDOT S-630-1 Sheet 2 Note 10). Add advance warning signs where the line of sight to them is obstructed (Note 25).",
         "citation": "MUTCD § 6B.04",
         "devices_added": 0,
         "devices_modified": 6,
         "flag": "limited_sight_distance",
-        "rule": "MUTCD §6B.04: increased advance warning for limited sight distance"
+        "rule": "MUTCD §6B.04: limited sight distance puts the nearest warning sign at the top of ¶04's urban or ¶06's rural range (p. 771)"
       }
     ],
     "site_scan": {

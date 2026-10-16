@@ -854,7 +854,19 @@ def build_audit_trail(
     # preserves geometric consistency across routings.
     w21_5aR_downstream_st = (sign_a_station + (taper_start_station + 500.0)) / 2.0
 
+    # #331: limited sight distance moves the whole advance series by one
+    # amount (site_adjustments, R155).  Read the amount off the placed A
+    # sign so the A/B/C positions still name the moved signs.  Placements
+    # below the table's A station (the freeway A2) are not the A sign.
+    _placed_a = [
+        p.station_ft
+        for p in mainline_placements
+        if p.label == sign_codes["A"] and p.station_ft >= sign_a_station - 0.5
+    ]
+    series_shift = min(_placed_a) - sign_a_station if _placed_a else 0.0
+
     def _position_label(label: str, station_ft: float, w3_5_step: int) -> str:
+        station_ft -= series_shift
         if ni is not None and label == "R2-10" and abs(station_ft - ni["r2_10"]) <= 0.5:
             return "1/2 C inside the outermost sign (Case 18)"
         if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
@@ -1017,7 +1029,14 @@ def build_audit_trail(
             f"Speed {speed} mph, road_type = '{params.road_type}' "
             f"-> Table {_TBL_ADVANCE} category: {resolved_category}"
         ),
-        "spacing_text": f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft",
+        "spacing_text": f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft"
+        + (
+            # #331: the plan's nearest sign is not at the table's A.
+            f"; limited sight distance moves every advance sign {series_shift:,.0f} ft "
+            "farther upstream (MUTCD §6B.04)"
+            if series_shift > 0.5
+            else ""
+        ),
         "sign_table": sign_table_rows,
         "source": f"MUTCD 11th Ed. Table {_TBL_ADVANCE}",
         # #286 (R144 Q1) — the row's result (the panel used to count the
