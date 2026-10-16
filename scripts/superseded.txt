@@ -34,3 +34,4 @@ issue-312-divided-ni a9398a0b9f4b217c7d6745fd9660410cc990caf1 -- carried by issu
 phase4-380-scope 4758b3e453b03a330de98ace03a0d4a6a95b376c -- carried by phase4-sizes-tooling (e6604b7; cherry-picked onto main 0eee1a7 after #314 shipped; R55: no force push)
 ship-gate-full-stop bb8d6013565491f3bc30a08c48692ecd67932c0c -- carried by ship-gate-full-stop-r2 (6afb804, d0bd6a6; rebased onto origin/main 72a602a, then R147 built on it; R55: no force push)
 rule-168-cards 385e29860bb3b9bec912d160da1ba878dbc65cea -- carried by rule-168-cards-r2 (958390e, ee33853, d2b17e4; cherry-picked onto main f0254be after the ship-gate R147 ship, the ship merging fast-forward only; R55: no force push)
+issue-330-ta23-dim-labels e2db2a43ff3143657ca57c18def2fae47946b9a6 -- carried by issue-330-ta23-dim-labels-r2 (98e68c7, 647495e; cherry-picked onto main 2b82fad after #329 shipped, the ship merging fast-forward only; R55: no force push)
