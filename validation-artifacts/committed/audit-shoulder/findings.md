@@ -1,6 +1,22 @@
 # Shoulder-work audit: findings for review
 
-Production `1f08f49`, 2026-10-16. Each finding below is a candidate issue (label `audit-shoulder`). None is filed yet; Ryan reviews the gallery first. Row names link to their section in [index.md](index.md), where page 1 and the full check table are shown.
+Production `1f08f49`, 2026-10-16. Ryan reviewed the gallery and confirmed all 11 findings on 2026-10-16. Each is filed as its own issue, labelled `audit-shoulder`:
+
+| Finding | Issue | Severity |
+|---|---|---|
+| F1 limited sight distance | #331 | high |
+| F2 two-lane trunk drawn divided | #332 | high |
+| F3 bare buffer | #333 | high |
+| F4 freeway Case 11 distances | #334 | medium |
+| F5 4-lane freeway refusal loop | #335 | medium |
+| F6 28-inch cones at night | #336 | medium |
+| F7 crew sheet Note 8 wording | #337 | medium |
+| F8 shoulder width not stated | #338 | medium |
+| F9 sidewalk on I-25 | #339 | low |
+| F10 refusals don't name the field | #340 | low |
+| F11 lane note wording | #341 | low |
+
+Edition items: commented on #265 (https://github.com/rtmakatura/conestruct/issues/265#issuecomment-6222799944). Row names link to their section in [index.md](index.md), where page 1 and the full check table are shown.
 
 **Severity:**
 - **High:** the plan tells a crew to do something the sources don't support, or describes the road wrongly.
@@ -97,6 +113,7 @@ Page 1: "DRAWN AS 3 LANES PER DIRECTION; THE ROAD HAS 4. PLANS DRAW AT MOST 4 LA
 - Under CDOT's split these 35–40 mph roads are urban-low, so 100 ft spacing, and the plans pass.
 - Under Lakewood's split (`data/jurisdictions/lakewood.json`, 30/35) they're urban-high, so 350 ft, and the plans fall short.
 - The engine always uses CDOT values (`src/api/schemas.py:1519`), and 02-JURISDICTION-DATA.md is missing. Which split should Lakewood plans use?
+- **Answered (Ryan, 2026-10-16):** no ruling needed. The engine keeps CDOT values. Lakewood's 35 mph split stays parked with 02-JURISDICTION-DATA.md, on the same line as #205. No issue.
 
 ## Recorded, not findings
 - **Clean on every plan:**
