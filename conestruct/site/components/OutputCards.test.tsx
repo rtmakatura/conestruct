@@ -201,10 +201,14 @@ describe("OutputCards download cards", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     renderPublic();
-    expect(screen.getAllByText("Download PDF")).toHaveLength(3); // plan + crew + audit
+    expect(screen.getAllByText("Download PDF")).toHaveLength(2); // plan + audit
     expect(screen.getByText("Download XLSX")).toBeTruthy();
+    // #329: the crew card's shared row says the format; the accessible
+    // name keeps the whole action.
+    const crewPdf = screen.getByRole("button", { name: "Download crew instructions PDF" });
+    expect(crewPdf.textContent).toBe("PDF↓");
 
-    fireEvent.click(screen.getByText("Download .md"));
+    fireEvent.click(screen.getByRole("button", { name: "Download crew instructions .md" }));
     await screen.findByText("Try again");
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/render/markdown",

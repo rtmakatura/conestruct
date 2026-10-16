@@ -103,6 +103,19 @@ const LABELS: Record<RenderKind, string> = {
   "audit-pdf": "Download PDF",
 };
 
+// #329: a card offering two formats shares one row between two buttons
+// (the crew card's PDF and .md); at desk width each is ~87 px, and the full
+// "Download PDF" wrapped to two lines.  Those buttons say the format only,
+// under the card's own title, and keep the whole action as their
+// accessible name (``sharedAriaLabel``).
+const SHARED_LABELS: Record<RenderKind, string> = {
+  pdf: "PDF",
+  xlsx: "XLSX",
+  markdown: ".md",
+  "crew-pdf": "PDF",
+  "audit-pdf": "PDF",
+};
+
 const SIGNUP_LABELS: Record<RenderKind, string> = {
   pdf: "Sign up to download PDF",
   xlsx: "Sign up to download XLSX",
@@ -363,8 +376,20 @@ function DlCard({
     ? [card.kind, card.secondaryKind]
     : [card.kind];
 
+  const shared = kinds.length > 1;
   const labelFor = (k: RenderKind) =>
-    mode.kind === "saved" && !mode.planId ? SIGNUP_LABELS[k] : LABELS[k];
+    mode.kind === "saved" && !mode.planId
+      ? SIGNUP_LABELS[k]
+      : shared
+        ? SHARED_LABELS[k]
+        : LABELS[k];
+  // #329: the short label's full action ("Download crew instructions
+  // PDF"), which contains the visible text (WCAG 2.5.3).  Not while the
+  // button reads "Try again": the name follows the visible label.
+  const sharedAriaLabel = (k: RenderKind) =>
+    shared && currentError?.kind !== k
+      ? `Download ${card.title.toLowerCase()} ${SHARED_LABELS[k]}`
+      : undefined;
 
   const beginRender = useRenderRequest();
   const onPublicDownload = async (dlKind: RenderKind) => {
@@ -439,6 +464,7 @@ function DlCard({
             type="button"
             className="dl-btn"
             data-write=""
+            aria-label={sharedAriaLabel(k)}
             onClick={() => onPublicDownload(k)}
             disabled={busyKind !== null || locked || failed || card.unavailable === true}
           >
@@ -451,7 +477,14 @@ function DlCard({
       : mode.planId
         ? mode.dirty
           ? kinds.map((k) => (
-              <button key={k} type="button" className="dl-btn" data-write="" disabled>
+              <button
+                key={k}
+                type="button"
+                className="dl-btn"
+                data-write=""
+                aria-label={sharedAriaLabel(k)}
+                disabled
+              >
                 {labelFor(k)}
                 <span className="font-mono">↓</span>
               </button>
@@ -465,6 +498,7 @@ function DlCard({
                 // The route this button fetches (an anchor's href used
                 // to carry it; tests and readers find the download by it).
                 data-download={`/api/plans/${mode.planId}/${k}`}
+                aria-label={sharedAriaLabel(k)}
                 onClick={() => onSavedDownload(k)}
                 disabled={busyKind !== null || locked || failed}
               >
