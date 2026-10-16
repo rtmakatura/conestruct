@@ -1986,6 +1986,7 @@ def _draw_dim(
     label: str,
     raise_tier: int | None = None,
     below: bool = False,
+    anchor: str = "center",
 ) -> None:
     """Dimension line with a centered label.
 
@@ -2015,7 +2016,7 @@ def _draw_dim(
         if raise_tier > 0:
             y_label = y - 2.0 - 10.0 * raise_tier - 5.0
             c.line(x_center, y - 1.0, x_center, y_label + 6.5)
-            c.drawCentredString(x_center, y_label, label)
+            _draw_anchored(c, x_center, y_label, label, anchor)
         else:
             c.drawCentredString(x_center, y - 10.0, label)
         return
@@ -2036,9 +2037,113 @@ def _draw_dim(
         # segments' raised labels can coexist instead of colliding.
         y_label = y + 2.0 + 10.0 * raise_tier
         c.line(x_center, y + 1.0, x_center, y_label - 1.5)
-        c.drawCentredString(x_center, y_label, label)
+        _draw_anchored(c, x_center, y_label, label, anchor)
     else:
         c.drawCentredString(x_center, y + 5.0, label)
+
+
+# #330: a raised label's text beside its leader -- centred on it (every plan
+# but TA-23's), or hanging to its right ("left": the text starts at the
+# leader) or to its left ("right": the text ends at it), 1 pt off.
+_ANCHOR_GAP_PT: float = 1.0
+
+
+def _draw_anchored(c: canvas.Canvas, x: float, y: float, label: str, anchor: str) -> None:
+    if anchor == "left":
+        c.drawString(x + _ANCHOR_GAP_PT, y, label)
+    elif anchor == "right":
+        c.drawRightString(x - _ANCHOR_GAP_PT, y, label)
+    else:
+        c.drawCentredString(x, y, label)
+
+
+def _anchored_extent(x: float, width: float, anchor: str) -> tuple[float, float]:
+    if anchor == "left":
+        return x + _ANCHOR_GAP_PT, x + _ANCHOR_GAP_PT + width
+    if anchor == "right":
+        return x - _ANCHOR_GAP_PT - width, x - _ANCHOR_GAP_PT
+    return x - width / 2.0, x + width / 2.0
+
+
+# #330: the gaps the TA-23 label search keeps -- between two labels in one
+# row, and between a leader and any label it passes.  Chosen for legibility
+# at 7 pt; a drawing convention, not a plan value.
+_LABEL_GAP_PT: float = 4.0
+_LEADER_GAP_PT: float = 3.0
+_MAX_TIER: int = 4
+
+
+def _place_dim_labels(
+    spans: list[tuple[float, float, float]],
+) -> list[tuple[int, str]] | None:
+    """#330: rows and anchors for one dimension line's labels (TA-23's).
+
+    ``spans`` is ``(x1, x2, text_width)`` per label.  A label that fits its
+    span sits in it (row 0); the rest are raised to a row 1..``_MAX_TIER``
+    and anchored centred, left or right of their leader (the span's
+    midpoint).  The least-raised, then least-shifted, layout in which no
+    two labels in a row come within ``_LABEL_GAP_PT``, no leader passes
+    within ``_LEADER_GAP_PT`` of a label in a row it crosses, and every
+    label stays on the plan.  None when there is none (the caller then
+    keeps the greedy rows).
+    """
+    fixed: list[tuple[int, float, float]] = []  # (row, lo, hi) of in-span labels
+    raised: list[tuple[int, float, float]] = []  # (index, leader x, width)
+    for i, (x1, x2, w) in enumerate(spans):
+        lo, hi = sorted((x1, x2))
+        if w <= hi - lo - 4.0:
+            xc = (lo + hi) / 2.0
+            fixed.append((0, xc - w / 2.0, xc + w / 2.0))
+        else:
+            raised.append((i, (lo + hi) / 2.0, w))
+    options = [
+        (tier, anchor, tier * 10 + (0 if anchor == "center" else 1))
+        for tier in range(1, _MAX_TIER + 1)
+        for anchor in ("center", "left", "right")
+    ]
+    best: tuple[int, list[tuple[int, str]]] | None = None
+
+    def clear(row: int, lo: float, hi: float, leader: float, placed: list) -> bool:
+        if lo < PLAN_LEFT + 2.0 or hi > PLAN_RIGHT - 2.0:
+            return False
+        for prow, plo, phi, pleader in placed:
+            if prow == row and lo < phi + _LABEL_GAP_PT and plo < hi + _LABEL_GAP_PT:
+                return False
+            # This leader crosses rows 0..row-1; another's crosses 0..prow-1.
+            if prow < row and plo - _LEADER_GAP_PT < leader < phi + _LEADER_GAP_PT:
+                return False
+            if (
+                pleader is not None
+                and row < prow
+                and lo - _LEADER_GAP_PT < pleader < hi + _LEADER_GAP_PT
+            ):
+                return False
+        return True
+
+    def search(k: int, placed: list, chosen: list[tuple[int, str]], cost: int) -> None:
+        nonlocal best
+        if best is not None and cost >= best[0]:
+            return
+        if k == len(raised):
+            best = (cost, list(chosen))
+            return
+        _i, leader, w = raised[k]
+        for tier, anchor, c_opt in options:
+            lo, hi = _anchored_extent(leader, w, anchor)
+            if clear(tier, lo, hi, leader, placed):
+                placed.append((tier, lo, hi, leader))
+                chosen.append((tier, anchor))
+                search(k + 1, placed, chosen, cost + c_opt)
+                placed.pop()
+                chosen.pop()
+
+    search(0, [(row, lo, hi, None) for row, lo, hi in fixed], [], 0)
+    if best is None:
+        return None
+    out: list[tuple[int, str]] = [(0, "center")] * len(spans)
+    for (i, _leader, _w), placement in zip(raised, best[1], strict=True):
+        out[i] = placement
+    return out
 
 
 def _draw_lane_arrow(
@@ -2188,6 +2293,16 @@ def _draw_landmarks(
             ),
             (x_of(wz_start), x_of(wz_end), f"WORK ZONE = {wz_len:,.0f} ft"),
         ]
+    # #330: TA-23's labels take rows and anchors from ``_place_dim_labels``
+    # so no leader crosses a label; every other plan keeps the greedy rows.
+    if frame is not None:
+        layout = _place_dim_labels(
+            [(x1, x2, c.stringWidth(label, "Helvetica", 7)) for x1, x2, label in segs]
+        )
+        if layout is not None:
+            for (x1, x2, label), (tier, anchor) in zip(segs, layout, strict=True):
+                _draw_dim(c, x1, x2, y_top, label, raise_tier=tier, below=below, anchor=anchor)
+            segs = []
     occupied: list[tuple[int, float, float]] = []  # (tier, x_lo, x_hi)
     for x1, x2, label in segs:
         tw = c.stringWidth(label, "Helvetica", 7)
