@@ -44,7 +44,11 @@ def _road_facts(scenario: Any) -> dict[str, Any]:
         or (carriageway.oneway if carriageway else None)
     )
     verdict = scenario.carriageway_verdict() if hasattr(scenario, "carriageway_verdict") else None
-    divided = bool(getattr(scenario, "divided", False)) or verdict == "divided"
+    # #332: an ``undivided`` verdict (a two-way trunk) outranks a stale
+    # ``divided`` flag, as ``plans_divided`` does for the shoulder kind.
+    divided = verdict == "divided" or (
+        verdict != "undivided" and bool(getattr(scenario, "divided", False))
+    )
     return {
         "oneway": oneway,
         "divided": divided,

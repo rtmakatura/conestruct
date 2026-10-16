@@ -60,10 +60,14 @@ function oneWayFacts(scenario: Scenario): CarriagewayFacts | null {
  *  #308: on a one-way road the carriageway row carries the same fact,
  *  so the toggle steps aside — one control per fact (P2). */
 export function showsDividedToggle(scenario: Scenario): boolean {
+  // #332: a two-way trunk is undivided by the backend's verdict, which the
+  // toggle couldn't change (P2: no control the plan ignores).
+  const cw = "carriageway" in scenario ? scenario.carriageway : undefined;
   return (
     PLAN_DETAILS[scenario.kind]?.dividedToggle === true &&
     scenario.roadType === "urban_arterial" &&
-    oneWayFacts(scenario) === null
+    oneWayFacts(scenario) === null &&
+    carriagewayVerdict(cw) !== "undivided"
   );
 }
 

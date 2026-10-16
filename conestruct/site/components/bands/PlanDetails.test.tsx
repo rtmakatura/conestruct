@@ -121,6 +121,18 @@ describe("which cells a kind gets", () => {
     expect(screen.getByTestId("cell-divided")).toBeTruthy();
   });
 
+  it("#332: no divided toggle on a two-way trunk (the backend's verdict decides)", () => {
+    const urban = {
+      ...DEFAULT_SHOULDER,
+      roadType: "urban_arterial",
+      divided: false,
+      carriageway: { oneway: null, highwayClass: "trunk", twinDistanceM: null, twinSearched: false },
+    } as Scenario;
+    expect(showsDividedToggle(urban)).toBe(false);
+    mount(urban);
+    expect(screen.queryByTestId("cell-divided")).toBeNull();
+  });
+
   it("a gated kind renders no cells at all (rule 8)", () => {
     mount({ ...DEFAULT_SHOULDER, kind: "mobile_op_2lane" } as unknown as Scenario);
     expect(cells()).toHaveLength(0);

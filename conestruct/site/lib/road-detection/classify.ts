@@ -1,7 +1,7 @@
 import type { RoadType } from "../scenarios";
 import {
   carriagewayApplies,
-  dividedByClass,
+  classDecidesCarriageway,
   carriagewayVerdict,
   TWIN_RADIUS_M,
   type CarriagewayFacts,
@@ -233,8 +233,10 @@ export function classifyFromOsmTags(
   // backend decides for itself.  #322: a one-way trunk or motorway rides
   // too (divided by class), so the near-intersection kind, which reads
   // divided-ness only from these facts, learns it is on a divided road.
+  // #332: a two-way trunk rides too (one way carrying both directions,
+  // e.g. US 24 near Hartsel), so it reads undivided, not divided by class.
   const carriageway: CarriagewayFacts | undefined =
-    carriagewayApplies(tags.oneway, highwayClass) || dividedByClass(tags.oneway, highwayClass)
+    carriagewayApplies(tags.oneway, highwayClass) || classDecidesCarriageway(tags.oneway, highwayClass)
     ? {
         oneway: tags.oneway,
         highwayClass,
@@ -414,9 +416,14 @@ export function classifyFromOsmTags(
         // never a decision that wasn't made.  #308: a street-class
         // one-way names the twin evidence that decided it; only a
         // one-way primary_link still reads divided from the tag.
+        // #332: a trunk/motorway is decided by its class and its tag.
         source:
-          fieldDividedConf === "high"
+          verdict === "undivided"
+            ? `OSM class=${highwayClass}, not tagged one-way: both directions on one way → undivided`
+            : fieldDividedConf === "high"
             ? `OSM class=${highwayClass} (always divided)`
+            : verdict === "divided" && classDecidesCarriageway(tags.oneway, highwayClass)
+              ? `OSM class=${highwayClass}, oneway=yes: one carriageway of a divided highway → divided`
             : verdict === "divided"
               ? `OSM oneway=yes; same-name carriageway ${carriageway?.twinDistanceM} m away → divided`
               : verdict === "one_way_street"

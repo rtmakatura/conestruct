@@ -173,14 +173,40 @@ describe("classifyFromOsmTags", () => {
     expect(r.fields.roadType.confidence).toBe("high");
   });
 
-  it("classifies rural trunk as rural_divided", () => {
+  // #332 (Rule 5, predicted): a trunk way with no oneway tag carries both
+  // directions — a two-lane highway like US 24 near Hartsel — so it is
+  // undivided.  Before #332 every trunk read rural_divided.
+  it("classifies a rural two-way trunk as rural_undivided (#332)", () => {
     const r = classifyFromOsmTags(
-      { highwayClass: "trunk", name: "US 85", ref: "US 85", tags: baseTags },
+      { highwayClass: "trunk", name: "US 24", ref: "US 24", tags: baseTags },
+      false,
+      null,
+    );
+    expect(r.roadType).toBe("rural_undivided");
+    expect(r.divided).toBe(false);
+    expect(r.fields.divided.source).toBe(
+      "OSM class=trunk, not tagged one-way: both directions on one way → undivided",
+    );
+  });
+
+  it("a rural one-way trunk is still rural_divided", () => {
+    const r = classifyFromOsmTags(
+      { highwayClass: "trunk", name: "US 85", ref: "US 85", tags: { ...baseTags, oneway: "yes" } },
       false,
       null,
     );
     expect(r.roadType).toBe("rural_divided");
     expect(r.divided).toBe(true);
+  });
+
+  it("an untagged motorway stays divided and relays nothing (OSM implies oneway=yes)", () => {
+    const r = classifyFromOsmTags(
+      { highwayClass: "motorway", name: "Interstate 25", ref: "I 25", tags: baseTags },
+      false,
+      null,
+    );
+    expect(r.divided).toBe(true);
+    expect(r.carriageway).toBeUndefined();
   });
 
   // #308 (RULE 5, stated in the checkpoint's churn table): primary + oneway
@@ -572,13 +598,30 @@ describe("divided rationale/value agreement (#123)", () => {
     expect(carriagewayVerdict(r.carriageway)).toBe("divided");
   });
 
-  it("#322: a two-way trunk relays nothing (only a one-way carriageway is divided by class)", () => {
+  it("#332: a two-way trunk relays its facts and reads undivided", () => {
+    // Before #332 it relayed nothing and kept divided-by-class (a median
+    // drawn on a two-lane highway).
+    for (const oneway of [null, "no"]) {
+      const r = classifyFromOsmTags(
+        { highwayClass: "trunk", name: "X", ref: null, tags: { ...onewayTags, oneway } },
+        true,
+        null,
+      );
+      expect(r.carriageway).toMatchObject({ oneway, highwayClass: "trunk" });
+      expect(carriagewayVerdict(r.carriageway)).toBe("undivided");
+      expect(r.divided).toBe(false);
+      expect(r.roadType).toBe("urban_arterial");
+    }
+  });
+
+  it("a reversible trunk keeps its class reading and relays nothing", () => {
     const r = classifyFromOsmTags(
-      { highwayClass: "trunk", name: "X", ref: null, tags: { ...onewayTags, oneway: null } },
+      { highwayClass: "trunk", name: "X", ref: null, tags: { ...onewayTags, oneway: "reversible" } },
       true,
       null,
     );
     expect(r.carriageway).toBeUndefined();
+    expect(r.divided).toBe(true);
   });
 
   it("primary_link one-way keeps its class rule (a ramp is not a one-way street)", () => {

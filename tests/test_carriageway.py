@@ -96,9 +96,30 @@ def test_a_one_way_trunk_or_motorway_is_divided_by_class(highway_class: str) -> 
     assert verdict(highway_class=highway_class, oneway="-1") == "divided"
 
 
-@pytest.mark.parametrize("oneway", [None, "no", "reversible"])
-def test_a_two_way_trunk_is_not_this_predicates_question(oneway: str | None) -> None:
+@pytest.mark.parametrize("oneway", [None, "no"])
+def test_a_two_way_trunk_is_undivided(oneway: str | None) -> None:
+    """#332: one way carrying both directions (US 24 near Hartsel) has no
+    median.  Before #332 it was ``not_applicable`` and the site's
+    divided-by-class flag stood."""
+    assert verdict(highway_class="trunk", oneway=oneway) == "undivided"
+
+
+def test_an_untagged_motorway_is_not_undivided() -> None:
+    """OSM implies ``oneway=yes`` on every motorway, tagged or not: an
+    untagged motorway is still one carriageway, so the scenario's own
+    ``divided`` stands."""
+    assert verdict(highway_class="motorway", oneway=None) == "not_applicable"
+
+
+@pytest.mark.parametrize("oneway", ["reversible", "alternating"])
+def test_a_reversible_trunk_keeps_its_own_divided(oneway: str) -> None:
+    """Reversible express lanes are their own carriageway, not a two-lane
+    road: the scenario's ``divided`` stands, as before #332."""
     assert verdict(highway_class="trunk", oneway=oneway) == "not_applicable"
+
+
+def test_a_ramp_that_is_two_way_is_still_its_class_rule() -> None:
+    assert verdict(highway_class="trunk_link", oneway=None) == "not_applicable"
 
 
 def test_the_operator_answer_still_wins_on_a_trunk() -> None:

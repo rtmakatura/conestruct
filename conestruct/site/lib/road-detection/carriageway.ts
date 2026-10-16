@@ -17,7 +17,12 @@ export const TWIN_RADIUS_M = 100;
 const ONE_WAY_TAGS = new Set(["yes", "-1"]);
 const STREET_CLASSES = new Set(["primary", "secondary", "tertiary", "unclassified", "residential"]);
 
-export type CarriagewayVerdict = "one_way_street" | "divided" | "undecided" | "not_applicable";
+export type CarriagewayVerdict =
+  | "one_way_street"
+  | "divided"
+  | "undivided"
+  | "undecided"
+  | "not_applicable";
 
 export interface TwinEvidence {
   distanceM: number | null;
@@ -47,10 +52,28 @@ export function dividedByClass(onewayTag: string | null, highwayClass: string): 
   return ONE_WAY_TAGS.has(onewayTag ?? "") && DIVIDED_BY_CLASS.has(highwayClass);
 }
 
+/** #332: a trunk way carrying both directions (untagged or oneway=no). */
+export function undividedTrunk(onewayTag: string | null | undefined, highwayClass: string): boolean {
+  return highwayClass === "trunk" && (onewayTag == null || onewayTag === "no");
+}
+
+/** #322/#332: the class decides the carriageway, so its facts ride:
+ *  divided (a one-way trunk or motorway carriageway) or undivided (one
+ *  two-way trunk way, e.g. US 24 near Hartsel).  An untagged motorway
+ *  doesn't ride: OSM implies oneway=yes there, and the classifier's
+ *  divided-by-class reading stands. */
+export function classDecidesCarriageway(onewayTag: string | null, highwayClass: string): boolean {
+  return dividedByClass(onewayTag, highwayClass) || undividedTrunk(onewayTag, highwayClass);
+}
+
 export function carriagewayVerdict(facts: CarriagewayFacts | undefined): CarriagewayVerdict {
   if (!facts) return "not_applicable";
   if (facts.confirmed) return facts.confirmed;
   if (dividedByClass(facts.oneway, facts.highwayClass)) return "divided";
+  // #332: the backend's rule 2b — both directions on one trunk way
+  // (untagged or oneway=no; reversible/alternating keep their own reading).
+  // Not a motorway: OSM implies oneway=yes on every motorway.
+  if (undividedTrunk(facts.oneway, facts.highwayClass)) return "undivided";
   if (!carriagewayApplies(facts.oneway, facts.highwayClass)) return "not_applicable";
   if (facts.twinDistanceM !== null && facts.twinDistanceM <= TWIN_RADIUS_M) return "divided";
   if (!facts.twinSearched) return "undecided";

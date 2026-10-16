@@ -51,7 +51,22 @@ STREET_CLASSES = frozenset({"primary", "secondary", "tertiary", "unclassified", 
 # a ramp is Note 8's "multi-lane ramps", its own case.
 DIVIDED_BY_CLASS = frozenset({"trunk", "motorway"})
 
-CarriagewayVerdict = Literal["one_way_street", "divided", "undecided", "not_applicable"]
+# #332 (R145 self-ruled S1): ``undivided`` is the other half of the class
+# rule.  A trunk or motorway way NOT tagged one-way carries both directions
+# on one way, so no median separates them: a two-lane highway such as US 24
+# near Hartsel (39.02175, -105.79286).  Before #332 the site read every
+# trunk as divided and the plan drew a median that isn't there.
+# Only an untagged or ``oneway=no`` way: ``reversible`` / ``alternating``
+# (e.g. I-25's reversible express lanes, their own carriageway) keep the
+# scenario's own ``divided`` as before.  Only ``trunk``: in OSM a
+# ``highway=motorway`` implies ``oneway=yes`` even untagged, so an
+# untagged motorway is still one carriageway of a divided highway.
+TWO_WAY_TAGS = frozenset({None, "no"})
+UNDIVIDED_WHEN_TWO_WAY = frozenset({"trunk"})
+
+CarriagewayVerdict = Literal[
+    "one_way_street", "divided", "undivided", "undecided", "not_applicable"
+]
 
 
 def carriageway_verdict(
@@ -67,6 +82,9 @@ def carriageway_verdict(
     1. The operator answered → that answer.
     2. #322: a one-way carriageway of a class divided by class (trunk,
        motorway) → ``divided``.  No twin test: the class says it.
+    2b. #332: a trunk way that is two-way (untagged or ``oneway=no``) →
+       ``undivided`` (both directions on one way).  Not a motorway: OSM
+       implies ``oneway=yes`` on every motorway.
     3. Not a street class, or not tagged one-way → ``not_applicable``
        (the scenario's own ``divided`` stands, exactly as before #308).
     4. A same-name twin within ``TWIN_RADIUS_M`` → ``divided``.
@@ -78,6 +96,8 @@ def carriageway_verdict(
         return confirmed
     if highway_class in DIVIDED_BY_CLASS and oneway in ONE_WAY_TAGS:
         return "divided"
+    if highway_class in UNDIVIDED_WHEN_TWO_WAY and oneway in TWO_WAY_TAGS:
+        return "undivided"
     if highway_class not in STREET_CLASSES or oneway not in ONE_WAY_TAGS:
         return "not_applicable"
     if twin_distance_m is not None and twin_distance_m <= TWIN_RADIUS_M:
