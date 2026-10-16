@@ -20,3 +20,12 @@ Every mainline placement at or beyond the approach's nearest sign (the sign Tabl
 - **Crew sheet:** the record's sentence (Site-Specific Notes), the distances from placements, and the near-intersection R2-10 read from its placement (it read the generator's unmoved station).
 - **Page 1:** one NOTES line: the nearest sign's distance and rule, then the Engineer note, from `site_adjustments.limited_sight_page_note`.
 - **Panel:** the static "50% farther" panel copy is removed so the backend's sentence shows (`AuditTrail.tsx`, the pedestrian_facility pattern). The setup chip's description reads "Moves the advance signs farther upstream (MUTCD §6B.04)."
+
+## S4 (R145 self-ruled, after the production check): page 1's note is one line
+- **Finding.** The prod check of `d4c244f` (`prod-d4c244f/`) replayed `bway-l-30-night` through `/api/render/*`. The audit and the crew sheet read 240 / 340 / 440 ft. On page 1, the notes box cut W20-2 and W20-1 to "+2 MORE ADVANCE SIGNS (W20-2, W20-1)". The production scan found a sidewalk, so the sign schedule gained an R9-9 row, and S3's three-line note then took the rows' room. Before #331 the same plan showed all three rows. The cut is disclosed, so Rule 10 holds, but the page lost the distances the note is about.
+- **Rule.** The page-1 note fits one line of the narrower (4-box) notes box (358 pt at Helvetica-Bold 6.5):
+  > LIMITED SIGHT: NEAREST SIGN 8 × SPEED (MUTCD §6B.04). SIGNS PER ENGINEER (S-630-1 NOTES 10, 25).
+
+  Plans where nothing moves read "TABLE 6B-1 SPACING KEPT". The distances are in the advance table on the same page. The full sentence (the moved distance, the anchor, Note 10's "subject to approval of the Engineer" and Note 25's added signs) stays in the audit and on the crew sheet.
+- **Fits:** R155's "add the note" (the note is still on page 1, citing both notes). Rule 10 (no rows lost to the note). P2: one producer, `limited_sight_page_note`.
+- **Guard.** A width test pins the note to one line in both footer geometries. A rendered test of the production shape (5 lanes drawn as 4, R9-9 in the schedule) pins all three rows on page 1.

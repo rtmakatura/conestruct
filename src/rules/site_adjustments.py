@@ -65,21 +65,19 @@ LIMITED_SIGHT_ENGINEER_NOTE = (
 def limited_sight_page_note(params: ScenarioParams) -> str:
     """Page 1's NOTES line for a plan with limited sight distance (R155).
 
-    The same numbers as the audit record's sentence, in the box's capitals.
+    One line: page 1's notes box has no room for more without cutting the
+    advance-sign rows it exists to show (#331's prod check: a scanned
+    sidewalk's R9-9 row plus a three-line note cut W20-2 and W20-1 on N
+    Broadway).  The distances are the advance table's; the full sentence is
+    the audit's and the crew sheet's.
     """
-    from src.rules.validators import _is_flagger_scenario
-
     a_ft = advance_warning_spacing(params.speed_mph, params.road_type)["A"]
     top = limited_sight_nearest_sign(params.speed_mph, params.road_type)
-    anchor = "EACH FLAGGER" if _is_flagger_scenario(params) else "THE TAPER"
     if top is not None and top[0] > a_ft:
-        lead = (
-            f"LIMITED SIGHT DISTANCE: NEAREST ADVANCE SIGN {top[0]:,.0f} FT FROM {anchor} "
-            f"({top[1]} × {params.speed_mph} MPH, MUTCD §6B.04)."
-        )
+        lead = f"NEAREST SIGN {top[1]} × SPEED (MUTCD §6B.04)"
     else:
-        lead = "LIMITED SIGHT DISTANCE: TABLE 6B-1 SPACING KEPT."
-    return f"{lead} {LIMITED_SIGHT_ENGINEER_NOTE.upper()}"
+        lead = "TABLE 6B-1 SPACING KEPT"
+    return f"LIMITED SIGHT: {lead}. SIGNS PER ENGINEER (S-630-1 NOTES 10, 25)."
 
 
 def _adjust_limited_sight_distance(

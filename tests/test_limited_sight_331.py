@@ -38,6 +38,10 @@ from tests.test_left_side_oneway import broadway
 _TEST_SECRET = "test-secret-do-not-deploy"
 AUTH = {"Authorization": f"Bearer {_TEST_SECRET}"}
 LSD = {"limited_sight_distance": True}
+PAGE_NOTE_URBAN = (
+    "LIMITED SIGHT: NEAREST SIGN 8 × SPEED (MUTCD §6B.04). SIGNS PER ENGINEER "
+    "(S-630-1 NOTES 10, 25)."
+)
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -227,8 +231,7 @@ def test_broadway_reads_240_340_440_on_every_surface() -> None:
     flat = " ".join(page1.split())
     assert "W21-5aL LEFT SHOULDER CLOSED AHEAD 240 ft" in flat
     assert "W20-1 ROAD WORK AHEAD 440 ft" in flat
-    assert "LIMITED SIGHT DISTANCE: NEAREST ADVANCE SIGN 240 FT FROM THE TAPER (8 × 30 MPH" in flat
-    assert "THE ENGINEER SETS THE FINAL SIGN LOCATIONS (CDOT S-630-1 SHEET 2 NOTE 10)" in flat
+    assert PAGE_NOTE_URBAN in flat
 
 
 def test_the_near_intersection_r2_10_reads_as_placed_on_the_crew_sheet() -> None:
@@ -241,9 +244,7 @@ def test_the_near_intersection_r2_10_reads_as_placed_on_the_crew_sheet() -> None
     assert rows["R2-10"]["Distance from Taper (ft)"] == "350 upstream"
     assert rows["R2-10"]["Position"] == "1/2 C inside the outermost sign (Case 18)"
     assert "| R2-10 | BEGIN DOUBLE FINES ZONE | 350 ft upstream" in md
-    assert "LIMITED SIGHT DISTANCE: NEAREST ADVANCE SIGN 200 FT FROM THE TAPER" in " ".join(
-        page1.split()
-    )
+    assert PAGE_NOTE_URBAN in " ".join(page1.split())
 
 
 def test_the_flagger_surfaces_agree() -> None:
@@ -270,4 +271,61 @@ def test_the_flagger_surfaces_agree() -> None:
     for code in ("W20-7", "W3-4", "W20-4", "W20-1"):
         dist = rows[code]["Distance from Taper (ft)"].replace(" upstream", "")
         assert f"| {code} |" in md and f"| {dist} ft upstream |" in md
-    assert "NEAREST ADVANCE SIGN 540 FT FROM EACH FLAGGER (12 × 45 MPH" in " ".join(page1.split())
+    assert (
+        "LIMITED SIGHT: NEAREST SIGN 12 × SPEED (MUTCD §6B.04). SIGNS PER ENGINEER "
+        "(S-630-1 NOTES 10, 25)."
+    ) in " ".join(page1.split())
+
+
+def test_production_broadway_keeps_every_advance_row_on_page_1() -> None:
+    """#331's prod check: the production plan (5 lanes drawn as 4, a scanned
+    sidewalk's R9-9 in the sign schedule) cut W20-2 and W20-1 to "+2 MORE"
+    under the three-line note.  The one-line note keeps all three rows."""
+    b = broadway(
+        "left",
+        speed=30,
+        workLen=1500,
+        night=True,
+        lanes=4,
+        laneWidth=11.0,
+        roadType="urban_arterial",
+        roadLanesPerDirection=5,
+        detectedLanesTotal=5,
+    )
+    b["meta"]["siteConditions"] = {**LSD, "pedestrian_facility": True}
+    _, _, page1 = _surfaces(b)
+    flat = " ".join(page1.split())
+    assert "R9-9 SIDEWALK CLOSED" in flat
+    assert "MORE ADVANCE SIGNS" not in flat
+    for row in (
+        "W21-5aL LEFT SHOULDER CLOSED AHEAD 240 ft",
+        "W20-2 ROAD WORK 340 FT 340 ft",
+        "W20-1 ROAD WORK AHEAD 440 ft",
+    ):
+        assert row in flat
+    # One printed line: the note sits whole on a single text line.
+    assert any(ln.strip() == PAGE_NOTE_URBAN for ln in page1.splitlines())
+
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        _shoulder(30, "urban_low", 800.0),
+        _shoulder(65, "rural", 800.0, divided=True),
+        _shoulder(65, "freeway", 800.0, divided=True),
+    ],
+)
+@pytest.mark.parametrize("with_summary", [True, False])
+def test_the_page_note_fits_one_line_of_the_notes_box(
+    params: ScenarioParams, with_summary: bool
+) -> None:
+    """Page 1's notes box cuts advance rows before notes, so the note must
+    stay one line in the narrower (4-box) footer as well."""
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+
+    from src.rendering.plan_sheet import _footer_geometry
+    from src.rules.site_adjustments import limited_sight_page_note
+
+    capacity = _footer_geometry(with_summary).notes_w - 16.0
+    note = limited_sight_page_note(params)
+    assert stringWidth(note, "Helvetica-Bold", 6.5) <= capacity, note

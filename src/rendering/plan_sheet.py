@@ -3979,7 +3979,7 @@ def _draw_notes(
                 "Helvetica-Bold",
                 6.5,
                 width - 16.0,
-                max_lines=4,
+                max_lines=2,
             ):
                 step()
                 cv.drawString(x, y[0], line)
