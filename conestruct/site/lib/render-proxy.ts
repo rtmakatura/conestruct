@@ -97,7 +97,13 @@ function safeFilename(name: string, ext: string): string {
 export async function renderScenarioToResponse(
   scenario: Scenario,
   kind: RenderKind,
-  opts: { downloadName?: string; quoteSettings?: QuoteSettings } = {},
+  opts: {
+    downloadName?: string;
+    quoteSettings?: QuoteSettings;
+    // #324: "default" when a saved plan has no settings of its own; the
+    // backend's quote XLSX then says its rates are the defaults (Rule 10).
+    settingsSource?: "default";
+  } = {},
 ): Promise<Response> {
   const url = process.env.MODAL_RENDER_URL;
   const secret = process.env.MODAL_RENDER_SECRET;
@@ -110,7 +116,11 @@ export async function renderScenarioToResponse(
   const wireScenario = withRelayedCenterline(scenario);
   const requestBody =
     kind === "quote"
-      ? { scenario: wireScenario, settings: opts.quoteSettings ?? DEFAULT_QUOTE_SETTINGS }
+      ? {
+          scenario: wireScenario,
+          settings: opts.quoteSettings ?? DEFAULT_QUOTE_SETTINGS,
+          ...(opts.settingsSource ? { settings_source: opts.settingsSource } : {}),
+        }
       : wireScenario;
 
   let upstream: Response;
@@ -575,5 +585,12 @@ export async function proxyRender(
     kind === "quote" && row.quoteSettings != null
       ? coerceQuoteSettings(row.quoteSettings)
       : undefined;
-  return renderScenarioToResponse(scenario, kind, { downloadName: row.name, quoteSettings });
+  // #324: and says so -- the row knows it has none; the backend never guesses.
+  const settingsSource =
+    kind === "quote" && row.quoteSettings == null ? ("default" as const) : undefined;
+  return renderScenarioToResponse(scenario, kind, {
+    downloadName: row.name,
+    quoteSettings,
+    settingsSource,
+  });
 }

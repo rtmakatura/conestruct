@@ -588,6 +588,7 @@ def _populate_summary_sheet(
     params: ScenarioParams,
     project_duration_days: int,
     breakdown: QuoteBreakdown,
+    rates_are_defaults: bool = False,
 ) -> None:
     sheet.title = "Quote Summary"
     sheet.sheet_view.showGridLines = False
@@ -623,6 +624,10 @@ def _populate_summary_sheet(
             + ("  |  Night operation" if params.is_night else "")
         ),
     )
+    # #324 (Rule 10): a saved plan with no rates of its own prices at the
+    # defaults, and its quote says so.  Row 8 is empty otherwise.
+    if rates_are_defaults:
+        sheet.cell(row=8, column=1, value=QUOTE_DEFAULT_RATES_LINE).font = _SUBTOTAL_FONT
 
     table_start = 10
     sheet.cell(row=table_start, column=1, value="Category").font = _HEADER_FONT
@@ -689,6 +694,13 @@ def _populate_terms_sheet(sheet) -> None:
 # ---------------------------------------------------------------------------
 
 
+# #324: the line a quote carries when its rates are the default settings
+# because the saved plan kept none of its own.
+QUOTE_DEFAULT_RATES_LINE = (
+    "Rates are the default settings. This plan was saved before plans kept their own rates."
+)
+
+
 def generate_quote(
     placements: list[DevicePlacement],
     params: ScenarioParams,
@@ -712,6 +724,7 @@ def generate_quote(
     profit_pct: float = 0.10,
     night_multiplier: float = 1.5,
     applied_deltas: list[dict[str, Any]] | None = None,
+    rates_are_defaults: bool = False,
 ) -> tuple[str, QuoteBreakdown]:
     """Write a contractor pricing workbook for ``placements``.
 
@@ -792,6 +805,7 @@ def generate_quote(
         params=params,
         project_duration_days=project_duration_days,
         breakdown=breakdown,
+        rates_are_defaults=rates_are_defaults,
     )
     _populate_equipment_sheet(equipment_sheet, equipment_lines)
     _populate_labor_sheet(

@@ -1881,6 +1881,11 @@ class QuoteSettings(BaseModel):
 class QuoteRequest(BaseModel):
     scenario: Scenario
     settings: QuoteSettings = Field(default_factory=QuoteSettings)
+    # #324: "default" when the settings are the defaults because the saved
+    # plan has none of its own (a row saved before #202).  Set only by the
+    # site's row route, which knows; the XLSX then says so (Rule 10).
+    # Absent on every other request, whose workbook is unchanged.
+    settings_source: Literal["default"] | None = None
 
 
 def _run_quote(req: QuoteRequest):
@@ -1903,6 +1908,7 @@ def _run_quote(req: QuoteRequest):
             flagger_hourly_rate=req.settings.flagger_hourly_rate,
             tcs_hourly_rate=req.settings.tcs_hourly_rate,
             crew_hourly_rate=req.settings.crew_hourly_rate,
+            rates_are_defaults=req.settings_source == "default",
             # Fired jurisdiction count deltas reach the priced quote through the
             # same shared aggregation the XLSX/PDF use (issue #151/#154), so the
             # bid document and the estimate can never disagree on device counts.

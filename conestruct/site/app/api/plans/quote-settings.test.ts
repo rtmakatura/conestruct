@@ -124,6 +124,9 @@ describe("the row-backed quote prices with the saved settings (#202)", () => {
       ...DEFAULT_QUOTE_SETTINGS,
       overhead_pct: 0.2,
     });
+    // #324: a plan with its own settings sends no source, so its quote is
+    // byte-for-byte today's.
+    expect(sent[0]).not.toHaveProperty("settings_source");
   });
 
   it("a row with no saved settings prices at the defaults", async () => {
@@ -131,6 +134,8 @@ describe("the row-backed quote prices with the saved settings (#202)", () => {
     db.row = { id: ID, name: "Plan A", data: DEFAULT_SCENARIO, quoteSettings: null };
     await proxyRender(ID, "quote");
     expect((sent[0] as { settings: unknown }).settings).toEqual(DEFAULT_QUOTE_SETTINGS);
+    // #324: and says the rates are the defaults, so the XLSX can say so.
+    expect((sent[0] as { settings_source?: unknown }).settings_source).toBe("default");
   });
 
   it("other kinds send the scenario alone, as before", async () => {
@@ -143,5 +148,13 @@ describe("the row-backed quote prices with the saved settings (#202)", () => {
     };
     await proxyRender(ID, "pdf");
     expect(sent[0]).not.toHaveProperty("settings");
+    expect(sent[0]).not.toHaveProperty("settings_source");
+  });
+
+  it("a null-settings row's other kinds carry no source either (#324)", async () => {
+    const sent = upstream();
+    db.row = { id: ID, name: "Plan A", data: DEFAULT_SCENARIO, quoteSettings: null };
+    await proxyRender(ID, "xlsx");
+    expect(sent[0]).not.toHaveProperty("settings_source");
   });
 });
