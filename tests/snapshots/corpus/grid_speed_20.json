@@ -150,25 +150,29 @@
       "status": "not_run"
     },
     "spacing": {
+      "buffer_cone_spacing_ft": 38.3,
+      "buffer_count_text": "Buffer: 115 ft / 40 ft max spacing -> 2 cones at 38.3 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
       "citation": {
         "cite": "MUTCD § 6K.01",
         "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
       },
-      "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 51 tangent + 2 downstream = 53 cones total",
+      "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 51 tangent + 2 buffer + 2 downstream = 55 cones total",
       "formula_text": [
         "L/3 = 22 ft / 20 ft max spacing -> 3 drums at 11.1 ft intervals",
         "2000 ft / 40 ft max spacing -> 51 cones at 40.0 ft intervals",
-        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 51 tangent + 2 downstream = 53 cones total"
+        "Buffer: 115 ft / 40 ft max spacing -> 2 cones at 38.3 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 51 tangent + 2 buffer + 2 downstream = 55 cones total"
       ],
       "in_taper_text": "20 mph -> 20 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
-      "n_cones_placed_total": 53,
+      "n_buffer_cones": 2,
+      "n_cones_placed_total": 55,
       "n_downstream_taper_cones": 2,
-      "n_tangent_cones_actual": 53,
+      "n_tangent_cones_actual": 55,
       "n_tangent_cones_required": 51,
       "n_taper_drums_actual": 3,
       "n_taper_drums_required": 3,
       "on_tangent_text": "20 mph -> 40 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
-      "result_text": "54 devices · 20/40 ft o.c.",
+      "result_text": "56 devices · 20/40 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 20,
       "tangent_count_text": "2000 ft / 40 ft max spacing -> 51 cones at 40.0 ft intervals",

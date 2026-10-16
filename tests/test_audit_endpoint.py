@@ -1025,14 +1025,16 @@ def test_audit_no_reduction_matches_baseline(client: TestClient) -> None:
 
 
 def test_audit_spacing_downstream_taper_fields_shoulder(client: TestClient) -> None:
-    """Shoulder: fixed 2 downstream-taper cones; total = tangent + 2 and
-    matches the all-cones ``n_tangent_cones_actual`` by construction."""
+    """Shoulder: fixed 2 downstream-taper cones; total = tangent + buffer
+    (#333) + 2 and matches the all-cones ``n_tangent_cones_actual`` by
+    construction."""
     res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
     assert res.status_code == 200
     sp = res.json()["sections"]["spacing"]
     assert sp["n_downstream_taper_cones"] == 2
+    assert sp["n_buffer_cones"] > 0
     assert sp["n_cones_placed_total"] == sp["n_tangent_cones_actual"]
-    assert sp["n_cones_placed_total"] == sp["n_tangent_cones_required"] + 2
+    assert sp["n_cones_placed_total"] == sp["n_tangent_cones_required"] + sp["n_buffer_cones"] + 2
     text = sp["downstream_count_text"]
     assert "Downstream taper" in text
     assert "Sec 6B.08" in text

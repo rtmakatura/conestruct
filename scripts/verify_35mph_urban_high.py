@@ -43,7 +43,7 @@ run_scenario(
         # 600 / 70 = 8.57 -> floor=8 (75, in [63,77]); ceil=9 (66.67, in).
         # both in -> smaller dev wins -> ceil (66.67, dev=3.33) over floor (75, dev=5).
         # 9 intervals -> 10 cones on tangent + 2 ds-taper = 12.
-        n_tangent_cones_total=12,
+        n_tangent_cones_total=15,  # #333: + 3 buffer cones
         formula_kind="quadratic",
     ),
 )

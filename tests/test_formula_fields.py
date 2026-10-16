@@ -106,17 +106,21 @@ def _common(t: dict[str, Any]) -> None:
     taper, buffer, spacing, advance = t["taper"], t["buffer"], t["spacing"], t["advance"]
     assert buffer["result_text"] == f"B = {buffer['buffer_ft']:g} ft"
     assert "formula_text" not in buffer  # a table lookup; lookup_text is its line
-    total = spacing["n_taper_drums_required"] + spacing["n_tangent_cones_required"]
+    total = (
+        spacing["n_taper_drums_required"]
+        + spacing["n_tangent_cones_required"]
+        + spacing.get("n_buffer_cones", 0)  # #333: a shoulder plan's buffer cones
+    )
     assert spacing["result_text"].startswith(f"{total} devices · ")
     assert spacing["result_text"].endswith(" ft o.c.")
     assert spacing["formula_text"][:2] == [
         spacing["taper_count_text"],
         spacing["tangent_count_text"],
     ]
-    if "downstream_count_text" in spacing:
-        assert spacing["formula_text"][2:] == [spacing["downstream_count_text"]]
-    else:
-        assert len(spacing["formula_text"]) == 2
+    # #333: a shoulder plan's buffer line sits between the tangent and the
+    # downstream lines.
+    rest = [spacing[k] for k in ("buffer_count_text", "downstream_count_text") if k in spacing]
+    assert spacing["formula_text"][2:] == rest
     assert advance["result_text"] == f"{len(advance['sign_table'])} signs"
     assert advance["citation"] == _CITATION_ADVANCE
     assert "formula_text" not in advance  # a table lookup

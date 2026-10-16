@@ -40,7 +40,7 @@ run_scenario(
         spacing_in_taper_ft=45.0,
         spacing_on_tangent_ft=90.0,
         n_taper_drums=4,  # min_count floor; 3 intervals @ 40 ft
-        n_tangent_cones_total=12,  # 10 tangent + 2 ds-taper
+        n_tangent_cones_total=15,  # 10 tangent + 3 buffer (#333) + 2 ds-taper
         formula_kind="linear",
     ),
 )

@@ -547,6 +547,8 @@ if generate_button:
             st.code(f"On tangent:  {sp['on_tangent_text']}", language="text")
             st.code(f"Taper:       {sp['taper_count_text']}", language="text")
             st.code(f"Tangent:     {sp['tangent_count_text']}", language="text")
+            if sp.get("buffer_count_text"):
+                st.code(f"Buffer:      {sp['buffer_count_text']}", language="text")
             if sp.get("downstream_count_text"):
                 st.code(f"Downstream:  {sp['downstream_count_text']}", language="text")
             st.write(

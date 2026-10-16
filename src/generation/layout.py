@@ -109,6 +109,27 @@ def device_count_floors(params: ScenarioParams) -> tuple[int, int]:
     return taper_min, tangent_min
 
 
+def buffer_cone_stations(wz_len: float, buf_len: float, speed: int) -> list[float]:
+    """#333 — the shoulder buffer's lane-edge cones (R145 self-ruled S2).
+
+    CDOT S-630-1 Sheet 2 General Note 18b: "For tangents along the buffer
+    space or work area, spacing may not be greater than two times the speed
+    limit" (MUTCD 11th Ed. §6K.01 ¶04, p. 815, the same 2x).  The buffer runs
+    from the work zone's upstream end (``wz_len``, the last work-zone cone)
+    to the taper's downstream end (``wz_len + buf_len``, the last taper
+    drum), so it takes the fewest equal intervals at <= 2S and a cone at each
+    interior point.  A buffer of 2S or less needs none.  The one producer:
+    the shoulder generators, the audit and the crew narrative read it.
+    """
+    if buf_len <= 0:
+        return []
+    n_intervals = math.ceil(buf_len / device_spacing_on_tangent(speed) - 1e-9)
+    if n_intervals <= 1:
+        return []
+    spacing = buf_len / n_intervals
+    return [wz_len + k * spacing for k in range(1, n_intervals)]
+
+
 class ClosedLaneLateral(NamedTuple):
     """Lateral landmarks of the closed/occupied travel lane (issue #176)."""
 
@@ -423,7 +444,15 @@ def generate_shoulder_closure_divided(
         )
     )
 
-    # 4. Buffer space — intentionally empty.
+    # 4. Buffer space: lane-edge cones at <= 2S (#333, S-630-1 Note 18b).
+    for station in buffer_cone_stations(wz_len, buf_len, speed):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=lane_edge_offset,
+            )
+        )
 
     # 5. CONSTRUCTION ZONE plaques (G20-5P).  Count is keyed to the total
     # signed length, but the plaques themselves stay inside the work zone
@@ -798,7 +827,15 @@ def generate_shoulder_closure_undivided(
         )
     )
 
-    # 4. Buffer space — intentionally empty.
+    # 4. Buffer space: lane-edge cones at <= 2S (#333, S-630-1 Note 18b).
+    for station in buffer_cone_stations(wz_len, buf_len, speed):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=lane_edge_offset,
+            )
+        )
 
     # 5. CONSTRUCTION ZONE plaques (G20-5P) at half-mile intervals.
     total_zone_length = sign_c_station

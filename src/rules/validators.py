@@ -776,8 +776,9 @@ def validate_channelizer_spacing(
         prev_in_taper = i_prev in taper_set
         cur_in_taper = i_cur in taper_set
         # Skip pairs that straddle a zone boundary (taper ↔ tangent).  The
-        # gap between zones is the buffer space, which is intentionally
-        # empty and is covered by validate_buffer_space.
+        # buffer's length is covered by validate_buffer_space; a shoulder
+        # plan's buffer cones (#333, S-630-1 Note 18b) sit on the tangent
+        # line, so their pairs are checked here as tangent pairs.
         if prev_in_taper != cur_in_taper:
             continue
         spacing = placements[i_cur].station_ft - placements[i_prev].station_ft

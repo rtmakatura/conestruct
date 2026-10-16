@@ -2214,8 +2214,13 @@ def _draw_landmarks(
     params: ScenarioParams,
     x_of: Callable[[float], float],
     shoulder_width_ft: float,
+    buffer_cones: int = 0,
 ) -> None:
     """Dimension callouts for taper, buffer, and work zone (visible portion only).
+
+    #333: ``buffer_cones`` is the count of a shoulder plan's buffer cones,
+    which page 1 doesn't draw inside the compressed buffer; the buffer
+    label names them instead.
 
     Mobile and off-road operations have no fixed taper, buffer, or
     bounded work zone, so the dimension band is skipped — drawing it
@@ -2258,7 +2263,12 @@ def _draw_landmarks(
     # the later one stacks a tier higher instead of overprinting.
     segs = [
         (x_of(taper_start), x_of(taper_end), f"{taper_label} = {taper_len:.0f} ft"),
-        (x_of(taper_end), x_of(wz_start), f"BUFFER = {buf_len:.0f} ft (NTS)"),
+        (
+            x_of(taper_end),
+            x_of(wz_start),
+            f"BUFFER = {buf_len:.0f} ft (NTS)"
+            + (f" · {buffer_cones} CONE{'S' if buffer_cones != 1 else ''}" if buffer_cones else ""),
+        ),
         # #257: one format for the length on every surface ("1,000 ft").
         (x_of(wz_start), x_of(wz_end), f"WORK ZONE = {wz_len:,.0f} ft"),
     ]
@@ -2310,12 +2320,22 @@ def _draw_landmarks(
             _draw_dim(c, x1, x2, y_top, label, raise_tier=0, below=below)
             continue
         xc = (x1 + x2) / 2.0
-        lo, hi = xc - tw / 2.0 - 2.0, xc + tw / 2.0 + 2.0
+        # #333: a raised label that would cross a page margin centred (the
+        # buffer label naming its cones, near the left edge) hangs from its
+        # leader toward the page instead.  Every label that fit keeps
+        # "center", byte-identical.
+        anchor = "center"
+        if xc - tw / 2.0 < MARGIN + 2.0:
+            anchor = "left"
+        elif xc + tw / 2.0 > PAGE_W - MARGIN - 2.0:
+            anchor = "right"
+        t_lo, t_hi = _anchored_extent(xc, tw, anchor)
+        lo, hi = t_lo - 2.0, t_hi + 2.0
         tier = 1
         while any(t == tier and lo < ohi and olo < hi for t, olo, ohi in occupied):
             tier += 1
         occupied.append((tier, lo, hi))
-        _draw_dim(c, x1, x2, y_top, label, raise_tier=tier, below=below)
+        _draw_dim(c, x1, x2, y_top, label, raise_tier=tier, below=below, anchor=anchor)
 
     # Scale-break marks across the road in the (compressed) buffer region.
     # #328: on TA-23, across the compressed stretch to the far curb, if any.
@@ -5090,6 +5110,27 @@ def _draw_schematic_page(
     frame = _TURN_BAY_FRAME.get()
     closed_x_spans: list[tuple[float, float]] | None = None
     drawn_placements = placements
+    # #333 (S3): a shoulder plan's buffer cones (S-630-1 Note 18b) sit in the
+    # buffer page 1 compresses to BUFFER_VISUAL_FT, where at highway scale
+    # they would pile up on the scale-break mark.  As TA-23 does for its
+    # compressed stretch, they aren't drawn there; the buffer label names
+    # them, and every list (summary, XLSX, quote, crew sheet) counts them.
+    buffer_cones = 0
+    if frame is None and params.closure_type == "shoulder":
+        buf_len = buffer_space(
+            params.speed_mph,
+            jurisdiction=params.jurisdiction,
+            work_zone_speed_mph=params.work_zone_speed_mph,
+        )
+        wz_len = params.work_zone_length_ft
+        in_buffer = [
+            p
+            for p in placements
+            if p.device_type == DeviceType.CONE and wz_len < p.station_ft < wz_len + buf_len
+        ]
+        if in_buffer:
+            buffer_cones = len(in_buffer)
+            drawn_placements = [p for p in placements if not any(p is q for q in in_buffer)]
     if frame is not None:
         compressed = _turn_bay_compression(frame) < 1.0
         scale_long = (
@@ -5134,7 +5175,7 @@ def _draw_schematic_page(
             shoulder_width_ft,
         )
     _draw_site_context(c, params, x_of, shoulder_width_ft, site_flags)
-    _draw_landmarks(c, params, x_of, shoulder_width_ft)
+    _draw_landmarks(c, params, x_of, shoulder_width_ft, buffer_cones)
     # Direction-of-travel arrows sit inside an open travel lane, pointing
     # the lane's direction (#321, following #308 R94's one-way branch).
     # They are drawn at the page's left, upstream, where lane 1 on each

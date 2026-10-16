@@ -39,7 +39,7 @@ run_scenario(
         spacing_in_taper_ft=25.0,
         spacing_on_tangent_ft=50.0,
         n_taper_drums=4,  # min_count=4 floor
-        n_tangent_cones_total=13,  # 11 tangent + 2 ds-taper
+        n_tangent_cones_total=16,  # 11 tangent + 3 buffer (#333) + 2 ds-taper
         formula_kind="quadratic",
     ),
 )

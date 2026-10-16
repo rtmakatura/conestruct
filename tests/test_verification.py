@@ -341,10 +341,13 @@ def test_shoulder_closure_divided_cone_count() -> None:
     Before the asymmetric-window fix the picker returned 8 cones at
     114.3 ft spacing — a §6C.09 violation.  Updated to 11 total cones
     (9 tangent + 2 downstream) to reflect the compliant layout.
+
+    #333: plus 4 buffer cones (S-630-1 Note 18b): the 495 ft buffer at
+    55 mph takes ceil(495 / 110) = 5 intervals, so 4 interior cones → 15.
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
-    assert _count_by_type(placements, DeviceType.CONE) == 11
+    assert _count_by_type(placements, DeviceType.CONE) == 15
 
 
 def test_shoulder_closure_divided_arrow_board_count() -> None:
@@ -388,7 +391,7 @@ def test_shoulder_closure_divided_total_devices() -> None:
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
-    assert len(placements) == 31
+    assert len(placements) == 35  # #333: +4 buffer cones
 
 
 def test_shoulder_closure_divided_all_signs_have_labels() -> None:
@@ -635,7 +638,7 @@ def test_site_adjustments_baseline_unchanged() -> None:
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(placements, params, flags=None)
-    assert len(adjusted) == 31
+    assert len(adjusted) == 35  # #333: +4 buffer cones
     assert records == []
 
 
@@ -651,7 +654,7 @@ def test_site_adjustments_pedestrian_facility_adds_four() -> None:
     adjusted, records = apply_site_adjustments(
         placements, params, flags={"pedestrian_facility": True}
     )
-    assert len(adjusted) == 35
+    assert len(adjusted) == 39  # #333: +4 buffer cones
     # Verify the add-types match the audit record claim.
     delta_barricades = _count_by_type(adjusted, DeviceType.BARRICADE_TYPE_III) - _count_by_type(
         placements, DeviceType.BARRICADE_TYPE_III
@@ -695,7 +698,7 @@ def test_site_adjustments_all_flags_add_eight() -> None:
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(placements, params, flags=flags)
-    assert len(adjusted) == 39
+    assert len(adjusted) == 43  # #333: +4 buffer cones
     # Seven audit records, one per checked flag (the no-device flags
     # included — their records drive the audit disclosures).
     flags_seen = {r["flag"] for r in records}

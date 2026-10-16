@@ -642,26 +642,36 @@ def test_crew_narrative_w20_2_schedule_substitutes_distance() -> None:
 # the instructed total must equal the bill's CONE count by construction.
 
 
-def _cone_split(placements: list[DevicePlacement]) -> tuple[int, int]:
-    """(tangent, downstream-taper) CONE counts straight from the placements."""
-    tangent = sum(1 for p in placements if p.device_type == DeviceType.CONE and p.station_ft >= 0.0)
-    ds = sum(1 for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0.0)
-    return tangent, ds
+def _cone_split(placements: list[DevicePlacement], wz_len: float) -> tuple[int, int, int]:
+    """(work-zone tangent, buffer, downstream-taper) CONE counts straight from
+    the placements.  #333: a shoulder plan's buffer cones sit past the work
+    zone, between it and the taper."""
+    cones = [p for p in placements if p.device_type == DeviceType.CONE]
+    tangent = sum(1 for p in cones if 0.0 <= p.station_ft <= wz_len)
+    buffer = sum(1 for p in cones if p.station_ft > wz_len)
+    ds = sum(1 for p in cones if p.station_ft < 0.0)
+    return tangent, buffer, ds
 
 
 def test_crew_narrative_shoulder_step3_instructs_downstream_taper_cones() -> None:
     """#96: shoulder step 3 leads with the downstream-taper cones (fixed 2),
-    and the instructed total equals the bill's CONE placement count."""
+    and the instructed total equals the bill's CONE placement count.  #333:
+    the buffer cones are instructed too, in their own sentence."""
     placements = generate_shoulder_closure_divided(_SITE_ADJ_PARAMS)
     context = build_narrative_context(placements, _SITE_ADJ_PARAMS)
     markdown = _render_template(context)
-    n_tangent, n_ds = _cone_split(placements)
+    n_tangent, n_buffer, n_ds = _cone_split(placements, _SITE_ADJ_PARAMS.work_zone_length_ft)
 
     assert n_ds == 2  # shoulder generators place a fixed short downstream taper
+    assert n_buffer > 0
     assert f"Place {n_ds} traffic cones in the downstream taper" in markdown
     assert f"Then place {n_tangent} traffic cones along the right lane edge" in markdown
+    assert f"{n_buffer} more traffic cones at" in markdown
     # Instructed total == equipment-bill total (bill counts all CONE placements).
-    assert context["num_ds_cones"] + context["num_tangent_cones"] == n_tangent + n_ds
+    assert (
+        context["num_ds_cones"] + context["num_tangent_cones"] + context["num_buffer_cones"]
+        == n_tangent + n_buffer + n_ds
+    )
 
 
 _FLAGGER_DS_PARAMS = ScenarioParams(
@@ -685,7 +695,9 @@ def test_crew_narrative_flagger_step3_instructs_downstream_taper_cones() -> None
     placements = generate_flagger_alternating_2lane(_FLAGGER_DS_PARAMS)
     context = build_narrative_context(placements, _FLAGGER_DS_PARAMS)
     markdown = _render_template(context)
-    n_tangent, n_ds = _cone_split(placements)
+    n_tangent, n_buffer, n_ds = _cone_split(placements, _FLAGGER_DS_PARAMS.work_zone_length_ft)
+    n_tangent += n_buffer  # a flagger plan places no buffer cones (#333 is shoulder only)
+    assert n_buffer == 0
 
     assert n_ds > 2  # computed count — the 50 ft run at ~20 ft spacing exceeds 2
     assert f"Place {n_ds} traffic cones in the downstream taper" in markdown

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import io
 import os
+import re
 from typing import Any
 
 import pytest
@@ -22,6 +23,8 @@ from openpyxl import load_workbook
 from src.api.render_api import app
 from src.export.quote_generator import QUOTE_DEFAULT_RATES_LINE
 from tests.test_quote_settings import _shoulder_scenario
+
+_STAMP = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
 
 DEFAULTS = {
     "project_duration_days": 1,
@@ -53,9 +56,14 @@ def quote(client: TestClient, **extra: Any) -> dict[str, dict[str, Any]]:
     )
     assert r.status_code == 200, r.text[:300]
     wb = load_workbook(io.BytesIO(r.content))
+    # The "Generated" timestamp ticks between two requests that straddle a
+    # second, so it's left out of the comparison.
     return {
         ws.title: {
-            c.coordinate: c.value for row in ws.iter_rows() for c in row if c.value is not None
+            c.coordinate: c.value
+            for row in ws.iter_rows()
+            for c in row
+            if c.value is not None and not _STAMP.match(str(c.value))
         }
         for ws in wb.worksheets
     }

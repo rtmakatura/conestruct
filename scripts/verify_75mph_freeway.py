@@ -47,7 +47,7 @@ run_scenario(
         n_taper_drums=5,
         # 1500 / 150 = 10.0 -> exact.  floor=ceil=10 intervals -> 11 cones
         # on tangent line + 2 downstream-taper cones = 13.
-        n_tangent_cones_total=13,
+        n_tangent_cones_total=18,  # #333: + 5 buffer cones
         formula_kind="linear",
     ),
 )

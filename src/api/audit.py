@@ -667,6 +667,18 @@ def build_audit_trail(
         if p.device_type == DeviceType.CONE and p.station_ft < 0.0
     ]
     n_ds_cones = len(ds_cone_stations)
+    # #333 — a shoulder plan's buffer cones (``layout.buffer_cone_stations``,
+    # S-630-1 Note 18b), counted from the placements like the downstream run.
+    n_buffer_cones = (
+        sum(
+            1
+            for p in mainline_placements
+            if p.device_type == DeviceType.CONE and wz_len < p.station_ft < wz_len + buf
+        )
+        if params.closure_type == "shoulder"
+        else 0
+    )
+    buffer_cone_spacing = buf / (n_buffer_cones + 1) if n_buffer_cones else 0.0
 
     if is_flagger:
         taper_label = "one-lane two-way taper"
@@ -724,14 +736,23 @@ def build_audit_trail(
     # emitted only when the layout actually places downstream cones (the
     # gated no-cone scenarios stay untouched).  Components are placement-
     # derived so the sum equals the bill/XLSX count by construction.
+    if n_buffer_cones:
+        spacing_section["buffer_count_text"] = (
+            f"Buffer: {buf:g} ft / {on_tan:g} ft max spacing "
+            f"-> {n_buffer_cones} cones at {buffer_cone_spacing:.1f} ft intervals "
+            f"(CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)"
+        )
+        spacing_section["n_buffer_cones"] = n_buffer_cones
+        spacing_section["buffer_cone_spacing_ft"] = round(buffer_cone_spacing, 1)
     if n_ds_cones:
         ds_len = -min(ds_cone_stations)
         ds_spacing = ds_len / n_ds_cones
-        n_tangent_actual = actual_cones - n_ds_cones
+        n_tangent_actual = actual_cones - n_ds_cones - n_buffer_cones
+        buffer_term = f"{n_buffer_cones} buffer + " if n_buffer_cones else ""
         spacing_section["downstream_count_text"] = (
             f"Downstream taper: {ds_len:g} ft at ~{ds_spacing:g} ft spacing "
             f"-> {n_ds_cones} cones (MUTCD Sec {_SEC_TAPER}: 50-100 ft downstream taper); "
-            f"{n_tangent_actual} tangent + {n_ds_cones} downstream = "
+            f"{n_tangent_actual} tangent + {buffer_term}{n_ds_cones} downstream = "
             f"{actual_cones} cones total"
         )
         spacing_section["n_downstream_taper_cones"] = n_ds_cones
@@ -741,12 +762,17 @@ def build_audit_trail(
     # cones required, the same two counts the count lines derive); Rule 3
     # puts it here.
     spacing_section["result_text"] = (
-        f"{n_taper_drums + n_tangent_cones} devices · {in_taper:g}/{on_tan:g} ft o.c."
+        f"{n_taper_drums + n_tangent_cones + n_buffer_cones} devices · "
+        f"{in_taper:g}/{on_tan:g} ft o.c."
     )
-    spacing_section["formula_text"] = [
-        spacing_section["taper_count_text"],
-        spacing_section["tangent_count_text"],
-    ] + ([spacing_section["downstream_count_text"]] if n_ds_cones else [])
+    spacing_section["formula_text"] = (
+        [
+            spacing_section["taper_count_text"],
+            spacing_section["tangent_count_text"],
+        ]
+        + ([spacing_section["buffer_count_text"]] if n_buffer_cones else [])
+        + ([spacing_section["downstream_count_text"]] if n_ds_cones else [])
+    )
 
     # ------------------------------------------------------------------
     # 4. Advance warning sign placement

@@ -408,6 +408,19 @@ def build_narrative_context(
         if p.device_type == DeviceType.CONE and p.station_ft < 0.0
     ]
     n_ds_cones = len(ds_cone_stations)
+    # #333 — a shoulder plan's buffer cones (``layout.buffer_cone_stations``,
+    # S-630-1 Note 18b), from the placements so step 3 instructs every cone
+    # the bill counts.
+    n_buffer_cones = (
+        sum(
+            1
+            for p in mainline_placements
+            if p.device_type == DeviceType.CONE and wz_len < p.station_ft < taper_end_station
+        )
+        if params.closure_type == "shoulder"
+        else 0
+    )
+    buffer_cone_spacing_ft = buf_len / (n_buffer_cones + 1) if n_buffer_cones else 0.0
     ds_taper_len_ft = -min(ds_cone_stations) if ds_cone_stations else 0.0
     ds_spacing_ft = ds_taper_len_ft / n_ds_cones if n_ds_cones else 0.0
     n_plaques_right = sum(
@@ -881,6 +894,9 @@ def build_narrative_context(
         "num_taper_drums": n_taper_drums,
         "num_tangent_cones": n_tangent_cones,
         "num_ds_cones": n_ds_cones,
+        "num_buffer_cones": n_buffer_cones,
+        "buffer_cone_spacing_ft": buffer_cone_spacing_ft,
+        "buffer_end_station_ft": taper_end_station,
         "ds_taper_len_ft": ds_taper_len_ft,
         "ds_spacing_ft": ds_spacing_ft,
         "buffer_space_ft": buf_len,

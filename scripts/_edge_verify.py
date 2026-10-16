@@ -45,7 +45,7 @@ class Expected:
     spacing_in_taper_ft: float
     spacing_on_tangent_ft: float
     n_taper_drums: int
-    n_tangent_cones_total: int  # tangent line + downstream-taper cones
+    n_tangent_cones_total: int  # tangent line + buffer (#333) + downstream-taper cones
     formula_kind: str  # "linear" or "quadratic"
 
 

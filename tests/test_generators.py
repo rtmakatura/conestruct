@@ -76,6 +76,9 @@ def _run(
 # ---------------------------------------------------------------------------
 # generate_shoulder_closure_divided
 # ---------------------------------------------------------------------------
+# #333: every shoulder CONE count below includes the buffer's cones
+# (S-630-1 Note 18b), ceil(buffer / 2S) - 1 of them: 3 at 25-45 mph,
+# 4 at 55-65 mph, 5 at 75 mph (Table 6B-2 buffers).
 
 
 @pytest.mark.parametrize(
@@ -89,14 +92,14 @@ def _run(
             # 40 mph now uses the quadratic taper (L = W*S^2/60): shoulder
             # taper 10*40^2/60/3 = 88.89 ft vs the old linear 133.33 ft, so
             # one fewer taper drum (DRUM 5 -> 4).  All other zones unchanged.
-            {"SIGN_GENERIC": 14, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 16},
+            {"SIGN_GENERIC": 14, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 19},
         ),
         (
             45,
             "rural",
             800.0,
             12.0,
-            {"SIGN_GENERIC": 14, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 12},
+            {"SIGN_GENERIC": 14, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 15},
         ),
         (
             55,
@@ -105,7 +108,7 @@ def _run(
             11.0,
             # Tangent pick(2000, 110): pre-fix floor=18 at 111.11 ft (>110 max);
             # post-fix ceil=19 at 105.26 ft → 20 tangent + 2 downstream = 22.
-            {"SIGN_GENERIC": 14, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 22},
+            {"SIGN_GENERIC": 14, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 26},
         ),
         (
             65,
@@ -114,7 +117,7 @@ def _run(
             12.0,
             # Tangent pick(5000, 130): pre-fix floor=38 at 131.58 ft (>130);
             # post-fix ceil=39 at 128.21 ft → 40 tangent + 2 downstream = 42.
-            {"SIGN_GENERIC": 20, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 42},
+            {"SIGN_GENERIC": 20, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 46},
         ),
         (
             75,
@@ -129,7 +132,7 @@ def _run(
             # plaques (mirrored) = +6 signs.  Other parametrize cases are
             # non-freeway (rural / expressway), so the G1/G2 gates don't
             # fire there.
-            {"SIGN_GENERIC": 30, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 57},
+            {"SIGN_GENERIC": 30, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 62},
         ),
     ],
     ids=[
@@ -169,17 +172,23 @@ def test_shoulder_divided(
 @pytest.mark.parametrize(
     "speed,road_type,wz_len,lane_w,expected",
     [
-        (25, "urban_low", 200.0, 11.0, {"SIGN_GENERIC": 6, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 7}),
+        (
+            25,
+            "urban_low",
+            200.0,
+            11.0,
+            {"SIGN_GENERIC": 6, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 10},
+        ),
         # 35 mph: tangent pick(500, 70): pre-fix floor=7 at 71.43 ft (>70 max);
         # post-fix ceil=8 at 62.5 ft → 9 tangent + 2 downstream = 11.
-        (35, "rural", 500.0, 11.0, {"SIGN_GENERIC": 6, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 11}),
+        (35, "rural", 500.0, 11.0, {"SIGN_GENERIC": 6, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 14}),
         # 45 mph: tangent pick(1000, 90): pre-fix floor=11 at 90.91 ft (>90);
         # post-fix ceil=12 at 83.33 ft → 13 tangent + 2 downstream = 15.
-        (45, "rural", 1000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 15}),
+        (45, "rural", 1000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 18}),
         # 55 mph: tangent pick(3000, 110): pre-fix floor=27 at 111.11 ft (>110);
         # post-fix ceil=28 at 107.14 ft → 29 tangent + 2 downstream = 31.
-        (55, "rural", 3000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 31}),
-        (60, "rural", 1500.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 16}),
+        (55, "rural", 3000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 35}),
+        (60, "rural", 1500.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 20}),
     ],
     ids=[
         "25mph_urban_low_200ft",
