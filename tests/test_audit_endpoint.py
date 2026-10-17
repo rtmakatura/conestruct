@@ -356,8 +356,15 @@ def test_audit_road_type_text_sourced_from_lookup_value(road_type: str, speed: i
         jurisdiction="CDOT",
     )
     raw = audit_module.build_audit_trail([], params)
+    # #334 (S4): a freeway shoulder plan names Case 11, where its spacing
+    # comes from, not a Table 6B-1 category.
+    expected = (
+        "CDOT S-630-1 Sheet 7 Case 11 (freeway shoulder work)"
+        if road_type == "freeway"
+        else f"Table 6B-1 category: {road_type}"
+    )
     assert raw["advance"]["road_type_text"] == (
-        f"Speed {speed} mph, road_type = '{road_type}' -> Table 6B-1 category: {road_type}"
+        f"Speed {speed} mph, road_type = '{road_type}' -> {expected}"
     )
 
 

@@ -21,11 +21,14 @@ from src.generation.layout import (
     device_count_floors,
     flagger_chain_stations,
     near_intersection_stations,
+    second_shoulder_closed_station,
+    shoulder_advance_stations,
 )
 from src.rules.corridor import placed_downstream_taper_ft
 from src.rules.devices import DeviceType
 from src.rules.sign_codes import PLAQUE_CODES, substitute_sign_description
 from src.rules.spacing import (
+    CASE_11_FREEWAY_SIGN_FT,
     _cdot_buffer_or_none,
     advance_warning_spacing,
     buffer_space,
@@ -53,6 +56,7 @@ from src.rules.validators import (
     ScenarioParams,
     _is_flagger_scenario,
     approach_speed_display,
+    case_11_freeway_series,
     shoulder_closed_sign_code,
     shoulder_ta_reference,
     validate_corridor_geometry,
@@ -126,6 +130,14 @@ _CITATION_SPACING: dict[str, str] = {
 _CITATION_ADVANCE: dict[str, str] = {
     "cite": f"MUTCD TABLE {_TBL_ADVANCE}",
     "footer": f"MUTCD § {_SEC_ADVANCE} · TABLE {_TBL_ADVANCE} · ADVANCE WARNING SIGN SPACING",
+}
+# #334 (ruling S4) — a freeway shoulder plan that cites Case 11 places its
+# signs at Case 11's distances (``CASE_11_FREEWAY_SIGN_FT``), so its
+# advance row cites the sheet they come from.
+_CASE_11_SOURCE: str = "CDOT S-630-1 Sheet 7 Case 11"
+_CITATION_ADVANCE_CASE_11: dict[str, str] = {
+    "cite": "CDOT S-630-1 CASE 11",
+    "footer": "CDOT S-630-1 · SHEET 7 · CASE 11 · SHOULDER WORK - FREEWAY/EXPRESSWAY",
 }
 
 
@@ -803,8 +815,15 @@ def build_audit_trail(
     taper_end_station = wz_len + buf
     taper_start_station = taper_end_station + L_required
     sign_a_station = taper_start_station + a_ft
-    sign_b_station = sign_a_station + b_ft
+    sign_b_station: float | None = sign_a_station + b_ft
     sign_c_station = sign_b_station + c_ft
+    # #334: a Case 11 plan's stations from the generators' own producer
+    # (no W20-2, so no B).
+    case_11 = case_11_freeway_series(params)
+    if case_11:
+        sign_a_station, sign_b_station, sign_c_station = shoulder_advance_stations(
+            params, taper_start_station
+        )
     if ni is not None:
         # Far-side geometry can pull the taper further upstream than the
         # midblock anchoring (§6N.12.12 companion closure) — read the
@@ -859,11 +878,10 @@ def build_audit_trail(
     # matched against the computed anchor stations above so the
     # established A/B/C vocabulary is preserved.
     #
-    # The W21-5aR-pair anchor (G1): second W21-5aR at the midpoint
-    # between sign_a_station and the W5-1-would-be station
-    # (taper_start + 500), independent of whether W5-1 actually emits —
-    # preserves geometric consistency across routings.
-    w21_5aR_downstream_st = (sign_a_station + (taper_start_station + 500.0)) / 2.0
+    # The W21-5aR-pair anchor (G1): the generators' own second-sign
+    # station (Case 11's 1,000 ft, #334; the pre-#334 midpoint on a
+    # Case 26/27 plan until #344).
+    w21_5aR_downstream_st = second_shoulder_closed_station(params, taper_start_station)
 
     # #331: limited sight distance moves the whole advance series by one
     # amount (site_adjustments, R155).  Read the amount off the placed A
@@ -880,9 +898,27 @@ def build_audit_trail(
         station_ft -= series_shift
         if ni is not None and label == "R2-10" and abs(station_ft - ni["r2_10"]) <= 0.5:
             return "1/2 C inside the outermost sign (Case 18)"
+        if case_11:
+            # #334 (S4): Case 11's positions, not Table 6B-1's A/B/C.
+            if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
+                return "Furthest (Case 11)"
+            if label == sign_codes["A"] and abs(station_ft - sign_a_station) <= 0.5:
+                return f"First {sc} (Case 11)"
+            if label == "W16-2a" and abs(station_ft - sign_a_station) <= 0.5:
+                return f"First {sc} plaque"
+            if label == sc and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
+                return f"Second {sc} (Case 11)"
+            if label == "W7-3a" and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
+                return f"Second {sc} plaque"
+            if label == "W5-1":
+                return "W5-1 (Case 11)"
         if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
             return "C (furthest)"
-        if label == sign_codes["B"] and abs(station_ft - sign_b_station) <= 0.5:
+        if (
+            sign_b_station is not None
+            and label == sign_codes["B"]
+            and abs(station_ft - sign_b_station) <= 0.5
+        ):
             return "B (middle)"
         if label == sign_codes["A"] and abs(station_ft - sign_a_station) <= 0.5:
             return "A (nearest)"
@@ -938,7 +974,10 @@ def build_audit_trail(
                 _, plaque_value = substitute_sign_description(
                     label, p.station_ft, params, taper_start_station=taper_start_station
                 )
-                host = f"{sc} at A" if label == "W16-2a" else f"second {sc}"
+                if label == "W16-2a":
+                    host = f"first {sc}" if case_11 else f"{sc} at A"
+                else:
+                    host = f"second {sc}"
                 distance_text = f"{plaque_value} (under {host})"
             else:
                 distance_text = f"{p.station_ft - taper_start_station:,.0f} upstream"
@@ -958,31 +997,20 @@ def build_audit_trail(
         # Distances derived from the anchor stations so the flagger
         # 4-sign chain (W20-1 at A+B+2C) and the standard 3-sign chain
         # both report correctly.
+        # A Case 11 plan has no B (#334, ruling Q1).
         sign_table_rows = [
             {
-                "Position": "C (furthest)",
-                "Code": sign_codes["C"],
-                "Station (ft)": f"{sign_c_station:,.0f}",
-                "Distance from Taper (ft)": (
-                    f"{sign_c_station - taper_start_station:,.0f} upstream"
-                ),
-            },
-            {
-                "Position": "B (middle)",
-                "Code": sign_codes["B"],
-                "Station (ft)": f"{sign_b_station:,.0f}",
-                "Distance from Taper (ft)": (
-                    f"{sign_b_station - taper_start_station:,.0f} upstream"
-                ),
-            },
-            {
-                "Position": "A (nearest)",
-                "Code": sign_codes["A"],
-                "Station (ft)": f"{sign_a_station:,.0f}",
-                "Distance from Taper (ft)": (
-                    f"{sign_a_station - taper_start_station:,.0f} upstream"
-                ),
-            },
+                "Position": _position_label(sign_codes[key], station, 0),
+                "Code": sign_codes[key],
+                "Station (ft)": f"{station:,.0f}",
+                "Distance from Taper (ft)": (f"{station - taper_start_station:,.0f} upstream"),
+            }
+            for key, station in (
+                ("C", sign_c_station),
+                ("B", sign_b_station),
+                ("A", sign_a_station),
+            )
+            if station is not None
         ]
         if is_flagger:
             # W3-4 (emitted by default per the locked OQ-2 decision)
@@ -1013,13 +1041,17 @@ def build_audit_trail(
             sign_table_rows.extend(
                 [
                     {
-                        "Position": "A plaque",
+                        "Position": _position_label("W16-2a", sign_a_station, 0),
                         "Code": "W16-2a",
                         "Station (ft)": f"{sign_a_station:,.0f}",
-                        "Distance from Taper (ft)": (f"{w16_2a_value} (under {sc} at A)"),
+                        "Distance from Taper (ft)": (
+                            f"{w16_2a_value} (under first {sc})"
+                            if case_11
+                            else f"{w16_2a_value} (under {sc} at A)"
+                        ),
                     },
                     {
-                        "Position": f"A2 (second {sc})",
+                        "Position": _position_label(sc, w21_5aR_downstream_st, 0),
                         "Code": sc,
                         "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
                         "Distance from Taper (ft)": (
@@ -1027,7 +1059,7 @@ def build_audit_trail(
                         ),
                     },
                     {
-                        "Position": "A2 plaque",
+                        "Position": _position_label("W7-3a", w21_5aR_downstream_st, 0),
                         "Code": "W7-3a",
                         "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
                         "Distance from Taper (ft)": (f"{w7_3a_value} (under second {sc})"),
@@ -1038,9 +1070,23 @@ def build_audit_trail(
     advance_section = {
         "road_type_text": (
             f"Speed {speed} mph, road_type = '{params.road_type}' "
-            f"-> Table {_TBL_ADVANCE} category: {resolved_category}"
+            + (
+                f"-> {_CASE_11_SOURCE} (freeway shoulder work)"
+                if case_11
+                else f"-> Table {_TBL_ADVANCE} category: {resolved_category}"
+            )
         ),
-        "spacing_text": f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft"
+        "spacing_text": (
+            # #334 (S4): the distances the plan places, from the taper.
+            f"{_CASE_11_SOURCE}, from the taper: "
+            # W5-1 is placed only without a speed reduction (layout step 1a).
+            + ("" if is_reduced else f"W5-1 {CASE_11_FREEWAY_SIGN_FT['W5-1']:,.0f} ft, ")
+            + f"second {sc} {CASE_11_FREEWAY_SIGN_FT['A2']:,.0f} ft, "
+            f"first {sc} {CASE_11_FREEWAY_SIGN_FT['A']:,.0f} ft, "
+            f"W20-1 {CASE_11_FREEWAY_SIGN_FT['C']:,.0f} ft"
+            if case_11
+            else f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft"
+        )
         + (
             # #331: the plan's nearest sign is not at the table's A.
             f"; limited sight distance moves every advance sign {series_shift:,.0f} ft "
@@ -1049,13 +1095,13 @@ def build_audit_trail(
             else ""
         ),
         "sign_table": sign_table_rows,
-        "source": f"MUTCD 11th Ed. Table {_TBL_ADVANCE}",
+        "source": _CASE_11_SOURCE if case_11 else f"MUTCD 11th Ed. Table {_TBL_ADVANCE}",
         # #286 (R144 Q1) — the row's result (the panel used to count the
         # table's rows itself) and its citation (the panel used to write
         # both strings by hand, the footer as the nonexistent "§ 6B-1").
         # No ``formula_text``: the spacing is a table lookup.
         "result_text": f"{len(sign_table_rows)} signs",
-        "citation": _CITATION_ADVANCE,
+        "citation": _CITATION_ADVANCE_CASE_11 if case_11 else _CITATION_ADVANCE,
     }
 
     # ------------------------------------------------------------------

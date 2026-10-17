@@ -272,6 +272,24 @@ def _is_cdot_minimum(
 # ---------------------------------------------------------------------------
 
 
+# #334 (ruling S1): a freeway shoulder plan that cites Case 11 places its
+# signs at Case 11's distances, not Table 6B-1's.  CDOT S-630-1 Sheet 7,
+# Case No. 11 "Shoulder Work - Freeway/Expressway" (PDF p. 155), read on
+# the rendered sheet; dimensions run upstream from the start of the 1/3 L
+# shoulder taper: "500'" to W5-1, "500'" more to W21-5aR with W7-3a(X),
+# "1000'" more to W21-5aR with W16-2a, "1000'" more to the G20-5P /
+# R2-1(XX) group, "2200'" more to W20-1.  Cumulative, keyed by position:
+# A2 is the second (downstream) W21-5aR, A the first, C the farthest sign.
+# Case 11 shows no W20-2 (ruling Q1).  The one producer: the generators,
+# the audit, the crew sheet and the validator read these.
+CASE_11_FREEWAY_SIGN_FT: dict[str, float] = {
+    "W5-1": 500.0,
+    "A2": 1000.0,
+    "A": 2000.0,
+    "C": 5200.0,
+}
+
+
 VALID_ROAD_TYPES: frozenset[str] = frozenset(
     {"urban_low", "urban_high", "rural", "expressway", "freeway"}
 )

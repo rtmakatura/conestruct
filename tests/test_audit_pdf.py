@@ -128,6 +128,10 @@ _PANEL_ONLY_CITATIONS = frozenset(
         # its prose ``source`` ("MUTCD 11th Ed. Table 6B-1").
         "MUTCD TABLE 6B-1",
         "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
+        # #334 — the same chip on a Case 11 plan (``_CITATION_ADVANCE_CASE_11``);
+        # the PDF keeps its prose ``source`` ("CDOT S-630-1 Sheet 7 Case 11").
+        "CDOT S-630-1 CASE 11",
+        "CDOT S-630-1 · SHEET 7 · CASE 11 · SHOULDER WORK - FREEWAY/EXPRESSWAY",
     }
 )
 

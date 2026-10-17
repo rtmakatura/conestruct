@@ -31,6 +31,7 @@ from src.generation.layout import (
     lanes_drawn_below_road,
     near_intersection_stations,
     rightmost_lane_assumption_active,
+    shoulder_advance_stations,
 )
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
@@ -443,9 +444,8 @@ def build_narrative_context(
     # layout + audit.sign_table.  W7-3a's value is station-independent
     # (deterministic V1 miles default inside the helper).
     if params.road_type == "freeway" and params.closure_type == "shoulder":
-        rt_for_lookup = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
-        a_dist_ft = advance_warning_spacing(speed, rt_for_lookup)["A"]
-        sign_a_station = taper_start_station + a_dist_ft
+        # The generators' own first-sign station (Case 11's 2,000 ft, #334).
+        sign_a_station, _, _ = shoulder_advance_stations(params, taper_start_station)
         _, w16_2a_value = substitute_sign_description(
             "W16-2a", sign_a_station, params, taper_start_station=taper_start_station
         )

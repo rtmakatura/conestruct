@@ -18,7 +18,9 @@ from zoneinfo import ZoneInfo
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.spacing import (
+    CASE_11_FREEWAY_SIGN_FT,
     VALID_ROAD_TYPES,
+    _is_cdot_minimum,
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
@@ -571,6 +573,23 @@ def _is_flagger_scenario(params: ScenarioParams) -> bool:
     )
 
 
+def case_11_freeway_series(params: ScenarioParams) -> bool:
+    """True when a plan's advance signs follow Case 11's distances (#334, S1).
+
+    A freeway shoulder closure that is not a Case 26/27 plan: the audit
+    cites S-630-1 Case 11 for it, so its signs sit at
+    ``CASE_11_FREEWAY_SIGN_FT`` from the taper.  A Case 26/27 plan (the
+    CDOT 65->60 / 75->65 step-down, ``_is_cdot_minimum``) keeps the Table
+    6B-1 series until #344 builds Sheet 14's.  Single-source predicate for
+    the generators, the audit, the crew sheet and the validator.
+    """
+    return (
+        params.road_type == "freeway"
+        and params.closure_type == "shoulder"
+        and not _is_cdot_minimum(params.jurisdiction, params.speed_mph, params.work_zone_speed_mph)
+    )
+
+
 def _channelizer_indices(placements: list[DevicePlacement]) -> list[int]:
     return [i for i, p in enumerate(placements) if DEVICE_CATALOG[p.device_type].is_channelizer]
 
@@ -863,6 +882,9 @@ def validate_advance_warning_signs(
             )
         ]
 
+    if case_11_freeway_series(params):
+        return _case_11_spacing_violations(placements, taper_upstream)
+
     # Use the scenario's road_type directly — every value in
     # ScenarioParams.road_type is now a Table 6B-1 category, so we
     # don't need to nullify-and-infer.
@@ -907,6 +929,69 @@ def validate_advance_warning_signs(
     return out
 
 
+def _case_11_spacing_violations(
+    placements: list[DevicePlacement],
+    taper_upstream: float,
+) -> list[Violation]:
+    """Case 11 plans: each sign at least its Case 11 distance (#334, S2).
+
+    Scoring a Case 11 plan on Table 6B-1's freeway row would flag the
+    typical it cites: Case 11's own gaps are 500 / 500 / 1,000 / 3,200 ft.
+    The W5-1 row is checked only where W5-1 is placed (a reduced-speed
+    plan omits it).  W5-1 is in ``_NON_ADVANCE_WARNING_SIGN_LABELS``, so the
+    signs are read here without that filter.
+    """
+    by_label: dict[str, list[int]] = {}
+    for i in _sign_indices(placements):
+        if placements[i].station_ft <= taper_upstream:
+            continue
+        by_label.setdefault(_advance_warning_label_key(placements[i].label), []).append(i)
+    shoulder_closed = by_label.get("W21-5AR", []) + by_label.get("W21-5AL", [])
+
+    def _pick(idx: list[int], upstream: bool) -> int | None:
+        ordered = sorted(idx, key=lambda i: placements[i].station_ft)
+        if not ordered:
+            return None
+        return ordered[-1] if upstream else ordered[0]
+
+    checks = (
+        ("W20-1", _pick(by_label.get("W20-1", []), True), CASE_11_FREEWAY_SIGN_FT["C"]),
+        ("first W21-5aR", _pick(shoulder_closed, True), CASE_11_FREEWAY_SIGN_FT["A"]),
+        ("second W21-5aR", _pick(shoulder_closed, False), CASE_11_FREEWAY_SIGN_FT["A2"]),
+        ("W5-1", _pick(by_label.get("W5-1", []), False), CASE_11_FREEWAY_SIGN_FT["W5-1"]),
+    )
+    out: list[Violation] = []
+    for name, idx, expected in checks:
+        if idx is None:
+            if name == "W5-1":
+                continue
+            out.append(
+                Violation(
+                    rule_id="MISSING_ADVANCE_SIGN",
+                    severity="error",
+                    message=f"No {name} upstream of the taper; CDOT S-630-1 Case 11 places one.",
+                    mutcd_section="CDOT S-630-1 Sheet 7 Case 11",
+                    device_index=None,
+                )
+            )
+            continue
+        actual = placements[idx].station_ft - taper_upstream
+        if actual < expected - 0.5:
+            out.append(
+                Violation(
+                    rule_id="ADVANCE_SIGN_SPACING_OFF",
+                    severity="warning",
+                    message=(
+                        f"The {name} is {actual:.0f} ft from the taper; CDOT S-630-1 "
+                        f"Case 11 places it at least {expected:.0f} ft upstream."
+                    ),
+                    mutcd_section="CDOT S-630-1 Sheet 7 Case 11",
+                    device_index=idx,
+                )
+            )
+    return out
+
+
 def validate_buffer_space(
     placements: list[DevicePlacement],
     params: ScenarioParams,
@@ -924,8 +1009,6 @@ def validate_buffer_space(
     regulatory floors enforced strictly (tolerance = 1.0); MUTCD
     advisory values carry the standard 10% rounding tolerance.
     """
-    from src.rules.spacing import _is_cdot_minimum
-
     taper = _extract_taper_indices(placements)
     if not taper:
         return []

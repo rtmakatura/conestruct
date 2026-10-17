@@ -131,8 +131,9 @@ def _run(
             # shoulder adds 2× second W21-5aR + 2× W16-2a + 2× W7-3a
             # plaques (mirrored) = +6 signs.  Other parametrize cases are
             # non-freeway (rural / expressway), so the G1/G2 gates don't
-            # fire there.
-            {"SIGN_GENERIC": 30, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 62},
+            # fire there.  #334 (Q1): a Case 11 plan places no W20-2, so
+            # the mirrored pair goes (-2).
+            {"SIGN_GENERIC": 28, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 62},
         ),
     ],
     ids=[
@@ -1067,19 +1068,19 @@ def test_shoulder_undivided_freeway_emits_single_side_w21_5aR_pair() -> None:
 
 
 def test_shoulder_divided_freeway_w21_5aR_pair_station_geometry() -> None:
-    """Second W21-5aR sits at the midpoint between sign_a_station and
-    the W5-1-would-be station (taper_start + 500).  W16-2a is co-located
-    with the upstream W21-5aR; W7-3a is co-located with the downstream
-    W21-5aR.  At 65 mph CDOT freeway, no reduction → buffer = 645 (federal
-    posted-speed value; the 570 Case 26 minimum needs the 65 -> 60
-    step-down).  taper_start = 1000 + 645 + 216.67 = 1861.67; sign_a =
-    taper_start + 1000 = 2861.67; W5-1-would-be = 2361.67; midpoint =
-    2611.67."""
+    """#334: the W21-5aR pair sits at CDOT S-630-1 Sheet 7 Case 11's
+    distances from the taper start: the second (downstream) at 1,000 ft,
+    the first (upstream) at 2,000 ft.  W16-2a is co-located with the
+    upstream W21-5aR; W7-3a is co-located with the downstream W21-5aR.  At
+    65 mph CDOT freeway, no reduction → buffer = 645 (federal posted-speed
+    value; the 570 Case 26 minimum needs the 65 -> 60 step-down).
+    taper_start = 1000 + 645 + 216.67 = 1861.67."""
     params = _freeway_shoulder_divided_params(None)
     placements = generate_shoulder_closure_divided(params)
     w21_stations = sorted({p.station_ft for p in placements if p.label == "W21-5aR"})
-    expected_upstream = 1000.0 + 645.0 + (10.0 * 65 / 3.0) + 1000.0
-    expected_downstream = (expected_upstream + (expected_upstream - 1000.0 + 500.0)) / 2.0
+    taper_start = 1000.0 + 645.0 + (10.0 * 65 / 3.0)
+    expected_upstream = taper_start + 2000.0
+    expected_downstream = taper_start + 1000.0
     assert w21_stations[0] == pytest.approx(expected_downstream)
     assert w21_stations[1] == pytest.approx(expected_upstream)
     # W16-2a co-located with upstream W21-5aR

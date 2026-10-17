@@ -18,6 +18,7 @@ from typing import Any, NamedTuple
 
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
+    CASE_11_FREEWAY_SIGN_FT,
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
@@ -37,6 +38,7 @@ from src.rules.validators import (
     ApproachParams,
     DevicePlacement,
     ScenarioParams,
+    case_11_freeway_series,
     shoulder_closed_sign_code,
 )
 
@@ -231,6 +233,42 @@ def lanes_drawn_below_road(params: ScenarioParams) -> str | None:
 SHOULDER_ARROW_BOARD_LABEL: str = "CAUTION"
 
 
+def shoulder_advance_stations(
+    params: ScenarioParams, taper_start_station: float
+) -> tuple[float, float | None, float]:
+    """The shoulder plan's SHOULDER CLOSED (A), W20-2 (B) and W20-1 (C) stations.
+
+    Table 6B-1's A / A+B / A+B+C from the taper start, except on a plan
+    that cites Case 11 (``case_11_freeway_series``, #334): the first
+    SHOULDER CLOSED sign at Case 11's 2,000 ft, W20-1 at 5,200 ft and no
+    W20-2 (B is None; ruling Q1).  The one producer for the generators,
+    the audit and the crew sheet.
+    """
+    if case_11_freeway_series(params):
+        return (
+            taper_start_station + CASE_11_FREEWAY_SIGN_FT["A"],
+            None,
+            taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"],
+        )
+    abc = advance_warning_spacing(params.speed_mph, params.road_type)
+    sign_a = taper_start_station + abc["A"]
+    sign_b = sign_a + abc["B"]
+    return sign_a, sign_b, sign_b + abc["C"]
+
+
+def second_shoulder_closed_station(params: ScenarioParams, taper_start_station: float) -> float:
+    """The freeway plan's second (downstream) SHOULDER CLOSED sign station.
+
+    Case 11's 1,000 ft (#334).  A Case 26/27 plan keeps the pre-#334
+    midpoint of the first sign and the W5-1 would-be station (taper start
+    + 500 ft) until #344 builds Sheet 14's 530 ft.
+    """
+    if case_11_freeway_series(params):
+        return taper_start_station + CASE_11_FREEWAY_SIGN_FT["A2"]
+    sign_a, _, _ = shoulder_advance_stations(params, taper_start_station)
+    return (sign_a + taper_start_station + CASE_11_FREEWAY_SIGN_FT["W5-1"]) / 2.0
+
+
 def generate_shoulder_closure_divided(
     params: ScenarioParams,
     shoulder_width_ft: float | None = None,
@@ -274,13 +312,11 @@ def generate_shoulder_closure_divided(
     taper_end_station = wz_start_station + buf_len
     taper_start_station = taper_end_station + taper_len
 
-    # Advance warning sign A/B/C (MUTCD Table 6B-1)
-    spacing_abc = advance_warning_spacing(speed, params.road_type)
-    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
-
-    sign_a_station = taper_start_station + a_dist
-    sign_b_station = sign_a_station + b_dist
-    sign_c_station = sign_b_station + c_dist
+    # Advance warning sign A/B/C (MUTCD Table 6B-1), or Case 11's
+    # distances on a freeway plan that cites it (#334)
+    sign_a_station, sign_b_station, sign_c_station = shoulder_advance_stations(
+        params, taper_start_station
+    )
 
     placements: list[DevicePlacement] = []
 
@@ -294,10 +330,14 @@ def generate_shoulder_closure_divided(
     # on the right shoulder (+offset) and the median side (-offset) at
     # the same station so drivers in either lane see the same advance
     # cues regardless of where they are in the carriageway.
-    advance_signs = (
-        ("W21-5aR", sign_a_station),  # RIGHT SHOULDER CLOSED AHEAD
-        ("W20-2", sign_b_station),  # ROAD WORK xxx FT
-        ("W20-1", sign_c_station),  # ROAD WORK AHEAD
+    advance_signs = tuple(
+        (label, station)
+        for label, station in (
+            ("W21-5aR", sign_a_station),  # RIGHT SHOULDER CLOSED AHEAD
+            ("W20-2", sign_b_station),  # ROAD WORK xxx FT; none on Case 11 (#334 Q1)
+            ("W20-1", sign_c_station),  # ROAD WORK AHEAD
+        )
+        if station is not None
     )
     for label, station in advance_signs:
         placements.append(
@@ -318,14 +358,14 @@ def generate_shoulder_closure_divided(
         )
 
     # 1a. W5-1 ROAD NARROWS (V1-Wide G2) per CDOT S-630-1 Sheet 7 Case 11,
-    # position 7 — emitted 500 ft upstream of taper start on freeway
-    # no-reduction shoulder closures.  Sheet 14 Cases 26/27 (reduced
+    # position 7 — emitted at Case 11's 500 ft upstream of taper start on
+    # freeway no-reduction shoulder closures.  Sheet 14 Cases 26/27 (reduced
     # work-zone speed) omit W5-1 per case_specific_notes; gate is the
     # inverse of the Fines Double / G4 / G5 predicate.  Mirrored:
     # the house mirroring (step 1).
     is_reduced = params.work_zone_speed_mph is not None and params.work_zone_speed_mph < speed
     if params.road_type == "freeway" and not is_reduced:
-        w5_1_station = taper_start_station + 500.0
+        w5_1_station = taper_start_station + CASE_11_FREEWAY_SIGN_FT["W5-1"]
         placements.append(
             DevicePlacement(DeviceType.SIGN_GENERIC, w5_1_station, sign_offset_right, label="W5-1")
         )
@@ -345,11 +385,10 @@ def generate_shoulder_closure_divided(
     # case_10/TA-10).  Applies on both no-reduction and reduced-speed
     # routings — fixture uniformity across Cases 11/11b/26/27.
     #
-    # Geometry: second W21-5aR sits at the midpoint between the first
-    # W21-5aR (sign_a_station) and the W5-1-would-be station
-    # (taper_start_station + 500).  Using the would-be anchor regardless
-    # of W5-1 emission preserves geometric consistency across reduced
-    # vs no-reduction routings.  Plaques sit at identical
+    # Geometry (#334): the first W21-5aR sits at Case 11's 2,000 ft and the
+    # second at its 1,000 ft from the taper start
+    # (``second_shoulder_closed_station``).  A Case 26/27 plan keeps the
+    # pre-#334 midpoint until #344.  Plaques sit at identical
     # station + offset as their parent W21-5aR — separate DevicePlacement
     # rows per the G20-5P/R2-6P plaque-attachment precedent;
     # plan_sheet._deoverlap_signs_pairwise spreads them vertically at
@@ -358,8 +397,7 @@ def generate_shoulder_closure_divided(
     # Mirrored: the house mirroring (step 1).
     if params.road_type == "freeway" and params.closure_type == "shoulder":
         w21_5aR_upstream_station = sign_a_station  # first W21-5aR (already placed above)
-        w5_1_would_be_station = taper_start_station + 500.0
-        w21_5aR_downstream_station = (w21_5aR_upstream_station + w5_1_would_be_station) / 2.0
+        w21_5aR_downstream_station = second_shoulder_closed_station(params, taper_start_station)
         # Plaque labels follow the bare-code convention (parity with
         # R2-1 / W20-2 / G20-5P — parametric text lives in the audit
         # sign_table + crew narrative rows, not the placement label).
@@ -724,12 +762,9 @@ def generate_shoulder_closure_undivided(
     taper_end_station = wz_start_station + buf_len
     taper_start_station = taper_end_station + taper_len
 
-    spacing_abc = advance_warning_spacing(speed, params.road_type)
-    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
-
-    sign_a_station = taper_start_station + a_dist
-    sign_b_station = sign_a_station + b_dist
-    sign_c_station = sign_b_station + c_dist
+    sign_a_station, sign_b_station, sign_c_station = shoulder_advance_stations(
+        params, taper_start_station
+    )
 
     placements: list[DevicePlacement] = []
 
@@ -737,10 +772,14 @@ def generate_shoulder_closure_undivided(
     # SHOULDER CLOSED sign names the work side (W21-5aR, or W21-5aL on a
     # left-shoulder plan on a one-way street).
     shoulder_code = shoulder_closed_sign_code(params)
-    advance_signs = (
-        (shoulder_code, sign_a_station),  # RIGHT (LEFT) SHOULDER CLOSED AHEAD
-        ("W20-2", sign_b_station),  # ROAD WORK xxx FT
-        ("W20-1", sign_c_station),  # ROAD WORK AHEAD
+    advance_signs = tuple(
+        (label, station)
+        for label, station in (
+            (shoulder_code, sign_a_station),  # RIGHT (LEFT) SHOULDER CLOSED AHEAD
+            ("W20-2", sign_b_station),  # ROAD WORK xxx FT; none on Case 11 (#334 Q1)
+            ("W20-1", sign_c_station),  # ROAD WORK AHEAD
+        )
+        if station is not None
     )
     for label, station in advance_signs:
         placements.append(
@@ -757,7 +796,7 @@ def generate_shoulder_closure_undivided(
     # gate matches the divided generator (freeway + not is_reduced).
     is_reduced = params.work_zone_speed_mph is not None and params.work_zone_speed_mph < speed
     if params.road_type == "freeway" and not is_reduced:
-        w5_1_station = taper_start_station + 500.0
+        w5_1_station = taper_start_station + CASE_11_FREEWAY_SIGN_FT["W5-1"]
         placements.append(
             DevicePlacement(DeviceType.SIGN_GENERIC, w5_1_station, sign_offset_right, label="W5-1")
         )
@@ -768,8 +807,7 @@ def generate_shoulder_closure_undivided(
     # match the divided generator — see that copy for the design notes.
     if params.road_type == "freeway" and params.closure_type == "shoulder":
         w21_5aR_upstream_station = sign_a_station
-        w5_1_would_be_station = taper_start_station + 500.0
-        w21_5aR_downstream_station = (w21_5aR_upstream_station + w5_1_would_be_station) / 2.0
+        w21_5aR_downstream_station = second_shoulder_closed_station(params, taper_start_station)
         placements.append(
             DevicePlacement(
                 DeviceType.SIGN_GENERIC,

@@ -366,7 +366,7 @@ def test_crew_narrative_plaque_values_equal_shared_helper_and_audit() -> None:
 
     audit_rows = {r["Code"]: r for r in trail["advance"]["sign_table"]}
     w16_audit = re.fullmatch(
-        r"(NEXT [\d,]+ FT) \(under W21-5aR at A\)",
+        r"(NEXT [\d,]+ FT) \(under first W21-5aR\)",
         audit_rows["W16-2a"]["Distance from Taper (ft)"],
     )
     w7_audit = re.fullmatch(

@@ -913,7 +913,7 @@ def test_build_advance_warning_table_empty_placements() -> None:
 
 def test_build_advance_warning_table_case_11_off_page_rows() -> None:
     """Case 11 freeway shoulder closure surfaces the full off-page set:
-    baseline W21-5aR/W20-2/W20-1, plus G1's second W21-5aR + W16-2a /
+    baseline W21-5aR/W20-1 (no W20-2 since #334, Q1), plus G1's second W21-5aR + W16-2a /
     W7-3a plaques and G2's W5-1.  Regression for the hard-coded 3-entry
     list at plan_sheet.py:2226-2230 that pre-dated G1/G2.
     """
@@ -946,40 +946,37 @@ def test_build_advance_warning_table_case_11_off_page_rows() -> None:
     )
 
     codes = [code for code, _desc, _dist in rows]
-    # Closest-first: W5-1 @ 500, then second W21-5aR + W7-3a plaque @
-    # 750 (parent before plaque), then first W21-5aR + W16-2a plaque @
-    # 1000 (parent before plaque), then W20-2 and W20-1.
+    # Closest-first, at Case 11's distances (#334): W5-1 @ 500, then
+    # second W21-5aR + W7-3a plaque @ 1000 (parent before plaque), then
+    # first W21-5aR + W16-2a plaque @ 2000 (parent before plaque), then
+    # W20-1 @ 5200.
     assert codes == [
         "W5-1",
         "W21-5aR",
         "W7-3a",
         "W21-5aR",
         "W16-2a",
-        "W20-2",
         "W20-1",
     ], f"Off-page order unexpected: {codes}"
 
     # Distances ascending; plaque shares its parent's distance.
     dists = [round(d) for _code, _desc, d in rows]
     assert dists == sorted(dists), f"Distances not ascending: {dists}"
-    parent1_dist = next(d for c, _, d in rows if c == "W21-5aR" and round(d) == 750)
+    parent1_dist = next(d for c, _, d in rows if c == "W21-5aR" and round(d) == 1000)
     plaque_w7_dist = next(d for c, _, d in rows if c == "W7-3a")
     assert round(parent1_dist) == round(plaque_w7_dist)
 
-    # W20-2 description substitutes its actual distance, not the literal
-    # XXX placeholder from the SIGN_DESCRIPTIONS template.
-    w20_2_desc = next(desc for code, desc, _d in rows if code == "W20-2")
-    assert "XXX" not in w20_2_desc
-    assert "ROAD WORK" in w20_2_desc and "FT" in w20_2_desc
+    dist_by_code = {code: round(d) for code, _desc, d in rows}
+    assert dist_by_code["W20-1"] == 5200
 
-    # G1 plaque substitution: W16-2a "NEXT XXX FT" -> NEXT 1,678 FT
-    # (= sign_a_station - wz_len = 1000 + 495 + 183 + 1000 - 1000).
+    # G1 plaque substitution: W16-2a "NEXT XXX FT" -> NEXT 2,678 FT
+    # (= sign_a_station - wz_len = 1000 + 495 + 183 + 2000 - 1000).
     # W7-3a "NEXT XX MILES" -> NEXT 1 MILE (max(1, round(1000/5280))).
     w16_2a_desc = next(desc for code, desc, _d in rows if code == "W16-2a")
     assert "XXX" not in w16_2a_desc and "plaque" not in w16_2a_desc, (
         f"W16-2a description must substitute the NEXT-FT value, got {w16_2a_desc!r}"
     )
-    assert "NEXT 1,678 FT" in w16_2a_desc
+    assert "NEXT 2,678 FT" in w16_2a_desc
 
     w7_3a_desc = next(desc for code, desc, _d in rows if code == "W7-3a")
     assert "XX" not in w7_3a_desc and "plaque" not in w7_3a_desc, (
@@ -1236,16 +1233,17 @@ def test_case_11_pdf_renders_g1_g2_off_page_signs() -> None:
     finally:
         os.unlink(path)
 
-    for code in ("W5-1", "W16-2a", "W7-3a", "W21-5aR", "W20-2", "W20-1"):
+    for code in ("W5-1", "W16-2a", "W7-3a", "W21-5aR", "W20-1"):
         assert code in text, (
             f"Expected {code} in the rendered PDF off-page table; not found in: {text!r}"
         )
+    assert "W20-2" not in text  # Case 11 shows none (#334, Q1)
 
     # G1 plaque substitution must reach the PDF — audit / crew_narrative
-    # already substitute these.  W16-2a "NEXT XXX FT" → NEXT 1,678 FT
-    # (= sign_a_station - wz_len for 55 mph freeway, wz_len=1000).
+    # already substitute these.  W16-2a "NEXT XXX FT" → NEXT 2,678 FT
+    # (= sign_a_station - wz_len for 55 mph freeway, wz_len=1000; #334).
     # W7-3a "NEXT XX MILES" → NEXT 1 MILE (workLen=1000 < 5280 → 1).
-    assert "NEXT 1,678 FT" in text, f"W16-2a placeholder not substituted in PDF; text: {text!r}"
+    assert "NEXT 2,678 FT" in text, f"W16-2a placeholder not substituted in PDF; text: {text!r}"
     assert "NEXT 1 MILE" in text and "NEXT XX MILES" not in text, (
         f"W7-3a placeholder not substituted in PDF; text: {text!r}"
     )

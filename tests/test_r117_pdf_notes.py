@@ -241,9 +241,11 @@ def test_a_shoulder_box_still_draws_its_advance_rows() -> None:
 def test_case_27_keeps_its_four_two_column_rows() -> None:
     """Q3c: the extra spacing is for one-column tables; Case 27's long table
     stays two columns.  It drew 4 of its 8 entries before #235 (R150 B)
-    moved the legal trailer to the title block; now all 8 fit."""
+    moved the legal trailer to the title block; now all 8 fit.  #334: 75 to
+    40 isn't Case 27's 75 to 65 step-down, so the plan cites Case 11 and
+    places no W20-2 (Q1): 7 entries."""
     lines = _notes_lines(_case27_pdf())
-    assert _advance_rows(lines) == 8
+    assert _advance_rows(lines) == 7
     assert not any("MORE ADVANCE SIGNS" in ln["text"] for ln in lines)
     assert any("DISTANCE CODE" in ln["text"] for ln in lines)  # still two columns
     assert _inside(lines)
