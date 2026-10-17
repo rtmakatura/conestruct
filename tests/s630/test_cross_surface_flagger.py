@@ -135,7 +135,7 @@ def test_flagger_quote_sign_descriptions_appear_in_narrative(tmp_path) -> None:
 )
 def test_flagger_cone_description_resolves_size(name: str, expected: str, tmp_path) -> None:
     """Quote and XLSX resolve the cone size via cone_display_name(speed)
-    (36-inch at >=45 mph per MUTCD Sec 6F.65), matching the narrative text."""
+    (36-inch at >=45 mph per S-630-1 Note 15), matching the narrative text."""
     placements, params = _pipeline(BODIES[name])
     quote_cones = [r for r in _quote_equipment_rows(placements, params, tmp_path) if r[1] == "CONE"]
     xlsx_cones = [r for r in _xlsx_device_rows(placements, params, tmp_path) if r[1] == "CONE"]

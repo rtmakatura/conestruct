@@ -168,7 +168,9 @@ def _device_summary(
     # by display name — via the shared device_row_sort_key helper.
     for dt, n in sorted(non_sign_counts.items(), key=lambda kv: device_row_sort_key(kv[0], None)):
         label = (
-            cone_display_name(params.speed_mph)
+            cone_display_name(
+                params.speed_mph, is_night=params.is_night, road_type=params.road_type
+            )
             if dt == DeviceType.CONE
             else _DEVICE_HUMAN_NAMES.get(dt, dt.value)
         )

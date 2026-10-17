@@ -117,7 +117,9 @@ def _panel_non_sign_types() -> list[DeviceType]:
     """Non-sign DeviceTypes in panel order (rows with code '—')."""
     placements = generate_shoulder_closure_divided(_PARAMS)
     inverse = {disp: dt for dt, (disp, _fn) in _NON_SIGN_DISPLAY.items()}
-    inverse[cone_display_name(_PARAMS.speed_mph)] = DeviceType.CONE
+    inverse[
+        cone_display_name(_PARAMS.speed_mph, is_night=_PARAMS.is_night, road_type=_PARAMS.road_type)
+    ] = DeviceType.CONE
     out: list[DeviceType] = []
     for row in _build_device_breakdown(placements, _PARAMS):
         if row["code"] == "—":
@@ -131,7 +133,9 @@ def _crew_non_sign_types() -> list[DeviceType]:
     placements = generate_shoulder_closure_divided(_PARAMS)
     context = build_narrative_context(placements, _PARAMS)
     inverse = {disp: dt for dt, disp in _DEVICE_HUMAN_NAMES.items()}
-    inverse[cone_display_name(_PARAMS.speed_mph)] = DeviceType.CONE
+    inverse[
+        cone_display_name(_PARAMS.speed_mph, is_night=_PARAMS.is_night, road_type=_PARAMS.road_type)
+    ] = DeviceType.CONE
     out: list[DeviceType] = []
     for row in context["device_summary"]:
         if not row["children"]:

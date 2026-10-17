@@ -225,7 +225,9 @@ def _description_for(
         code, human = substitute_sign_description(label, station_ft, params)
         return f"{code} {human}".strip() if human != code else code
     if device_type == DeviceType.CONE:
-        return cone_display_name(params.speed_mph)
+        return cone_display_name(
+            params.speed_mph, is_night=params.is_night, road_type=params.road_type
+        )
     return DEVICE_CATALOG[device_type].description
 
 

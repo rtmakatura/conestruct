@@ -101,16 +101,23 @@ class DeviceSpec:
 # ---------------------------------------------------------------------------
 
 
-def cone_display_name(speed_mph: float) -> str:
-    """Return the size-appropriate cone label per MUTCD §6F.65.
+def cone_display_name(speed_mph: float, *, is_night: bool, road_type: str) -> str:
+    """Return the size-appropriate cone label per CDOT S-630-1 Sheet 2 Note 15.
 
-    36-inch cones are required at speeds ≥45 mph; 28-inch cones are
-    acceptable below that threshold. The catalog description above is
+    Note 15: cones "shall be at least 28 inches"; the minimum is 36 inches
+    "on freeways and expressways, or during nighttime working hours", and
+    they "should also be 36 inches" at 45 mph or more with an ADT of 6,000
+    or more.  ADT is not collected, so the 45 mph clause applies at every
+    ADT (#336 S2, the conservative reading).  ``is_night`` and
+    ``road_type`` are keyword-only with no default so no surface can fall
+    back to a speed-only size (#336 S3).  The catalog description above is
     intentionally vague ("28- or 36-inch …") — rendering surfaces
     (plan-sheet legend, crew narrative, device-breakdown panel) call
-    this helper to print the actual size for the posted speed.
+    this helper to print the actual size.
     """
-    return "Traffic Cone (36-inch)" if speed_mph >= 45 else "Traffic Cone (28-inch)"
+    if is_night or road_type in ("freeway", "expressway") or speed_mph >= 45:
+        return "Traffic Cone (36-inch)"
+    return "Traffic Cone (28-inch)"
 
 
 # ---------------------------------------------------------------------------

@@ -185,7 +185,7 @@ def test_narrative_equipment_carries_no_template_tokens(name: str) -> None:
 # ---------------------------------------------------------------------------
 
 # Low-speed variant of the Case 11 body: 40 mph on an undivided rural
-# road, below the MUTCD §6F.65 36-inch cone threshold — exercises the
+# road, by day below 45 mph (S-630-1 Note 15, #336) — exercises the
 # 28-inch branch of cone_display_name on the export surfaces.
 CASE_11_LOW_SPEED_BODY: dict[str, Any] = {
     **CASE_11_GENERAL_BODY,

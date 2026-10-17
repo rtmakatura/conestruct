@@ -3104,7 +3104,7 @@ def _draw_legend(
                 glyph(c, glyph_x, yy + 3)
             c.setFillColor(colors.black)
             label = (
-                cone_display_name(speed_mph)
+                cone_display_name(speed_mph, is_night=params.is_night, road_type=params.road_type)
                 if dt == DeviceType.CONE
                 else "Arrow Board (caution mode)"
                 if dt == DeviceType.ARROW_BOARD and boards_in_caution
@@ -3480,7 +3480,12 @@ def _device_summary_cells(row: AggregatedDeviceRow, params: ScenarioParams) -> t
         code, human = substitute_sign_description(row.label, row.representative.station_ft, params)
         return (code, human if human != code else "")
     if dt == DeviceType.CONE:
-        return ("—", cone_display_name(params.speed_mph))
+        return (
+            "—",
+            cone_display_name(
+                params.speed_mph, is_night=params.is_night, road_type=params.road_type
+            ),
+        )
     return ("—", DEVICE_CATALOG[dt].description)
 
 

@@ -1943,7 +1943,7 @@ def render_quote(req: QuoteRequest) -> Response:
 # Display names + function categories for the /render/device-breakdown
 # response. Mirrors the legend label set in plan_sheet._DEVICE_DISPLAY_NAMES;
 # CONE is handled separately via cone_display_name() so the size adapts
-# to the posted speed (MUTCD §6F.65).
+# to the plan (CDOT S-630-1 Sheet 2 Note 15: speed, night, road type).
 _NON_SIGN_DISPLAY: dict[DeviceType, tuple[str, str]] = {
     DeviceType.DRUM: ("Channelizing Drum", "Channelizing"),
     DeviceType.TUBULAR_MARKER: ("Tubular Marker", "Channelizing"),
@@ -2030,7 +2030,9 @@ def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> d
         }
     elif dt == DeviceType.CONE:
         out = {
-            "device": cone_display_name(params.speed_mph),
+            "device": cone_display_name(
+                params.speed_mph, is_night=params.is_night, road_type=params.road_type
+            ),
             "code": "—",
             "function": "Channelizing",
             "qty": row.quantity,

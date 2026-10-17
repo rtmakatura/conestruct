@@ -179,9 +179,11 @@ def _row_for(
         unit = "EACH"  # V1 override; catalog says SF per Table 630-7 footnote.
         notes = _BARRICADE_TYPE_II_NOTE
     elif device_type == DeviceType.CONE:
-        # Resolve the size for the posted speed (§6F.65) — same helper the
+        # Resolve the size per S-630-1 Note 15 (#336) — same helper the
         # narrative, UI breakdown, and plan-sheet legend use (Refs #101).
-        description = cone_display_name(params.speed_mph)
+        description = cone_display_name(
+            params.speed_mph, is_night=params.is_night, road_type=params.road_type
+        )
         type_label = device_type.value
         unit = spec.unit
         notes = ""
