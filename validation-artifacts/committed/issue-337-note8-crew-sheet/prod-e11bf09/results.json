@@ -1,0 +1,24 @@
+{
+ "healthz_sha": "e11bf093a8aaaab9581ce59ebab851d72d4dcc40",
+ "colo-r-35": {
+  "pass": true,
+  "audit_note8": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 6 left, 10 right.",
+  "crew_note8_lines": [
+   "- Divided highway: this plan posts signs on both sides of the roadway by choice. CDOT S-630-1 Sheet 2 General Note 8 doesn't require it when only one shoulder is closed (Case 11 on Sheet 7)."
+  ]
+ },
+ "colo-r-40-night": {
+  "pass": true,
+  "audit_note8": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 6 left, 8 right.",
+  "crew_note8_lines": [
+   "- Divided highway: this plan posts signs on both sides of the roadway by choice. CDOT S-630-1 Sheet 2 General Note 8 doesn't require it when only one shoulder is closed (Case 11 on Sheet 7)."
+  ]
+ },
+ "bway-r-30": {
+  "pass": true,
+  "audit_note8": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 8 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): \u201cA SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.\u201d Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to the MUTCD and set no sign-side rule. DOTI standards and details not read.",
+  "crew_note8_lines": [
+   "- One-way street: signs go on the closed shoulder's side only, under the single-shoulder exception in CDOT S-630-1 Sheet 2 General Note 8 (and MUTCD 11th Ed. Fig. 6P-3 Note 1, p. 864). Offsets are measured from the left edge of the roadway."
+  ]
+ }
+}
