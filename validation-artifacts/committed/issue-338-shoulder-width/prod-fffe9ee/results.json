@@ -1,0 +1,64 @@
+{
+ "healthz_sha": "fffe9eea9d08c878b8fd9c0c0105cd35439009af",
+ "ogden-r-25-50ft": {
+  "page1_row": true,
+  "basis": "assumed",
+  "formula_text_0": "W = 8 ft (assumed)",
+  "pending_kinds": [
+   "intersection_layout_not_generated"
+  ],
+  "plan_flags": {
+   "validation_warnings": 2,
+   "compliance_fails": 0,
+   "v1_limitations": 1,
+   "is_clean": false
+  },
+  "pass": true
+ },
+ "colo-r-35": {
+  "page1_row": true,
+  "basis": "assumed",
+  "formula_text_0": "W = 10 ft (assumed)",
+  "pending_kinds": [
+   "intersection_layout_not_generated",
+   "lanes_drawn_below_road"
+  ],
+  "plan_flags": {
+   "validation_warnings": 0,
+   "compliance_fails": 0,
+   "v1_limitations": 2,
+   "is_clean": false
+  },
+  "pass": true
+ },
+ "bway-r-30": {
+  "page1_row": true,
+  "basis": "assumed",
+  "formula_text_0": "W = 8 ft (assumed)",
+  "pending_kinds": [
+   "one_way_street_widths_chosen",
+   "intersection_layout_not_generated",
+   "lanes_drawn_below_road"
+  ],
+  "plan_flags": {
+   "validation_warnings": 0,
+   "compliance_fails": 0,
+   "v1_limitations": 3,
+   "is_clean": false
+  },
+  "pass": true
+ },
+ "flagger-control": {
+  "page1_row": null,
+  "basis": null,
+  "formula_text_0": "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)",
+  "pending_kinds": [],
+  "plan_flags": {
+   "validation_warnings": 0,
+   "compliance_fails": 0,
+   "v1_limitations": 0,
+   "is_clean": true
+  },
+  "pass": true
+ }
+}
