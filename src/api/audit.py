@@ -518,9 +518,20 @@ def build_audit_trail(
         "result_text": (
             f"{'L/3' if params.closure_type == 'shoulder' else 'L'} = {_ft(L_required)} ft"
         ),
-        "formula_text": [_times(L_calc_text)]
+        "formula_text": (
+            # #338 (Q1 = B): W leads the shoulder lines, marked assumed.
+            [f"W = {offset_ft:g} ft (assumed)"] if params.closure_type == "shoulder" else []
+        )
+        + [_times(L_calc_text)]
         + ([_times(L_required_calc_text)] if params.closure_type == "shoulder" else []),
     }
+    # #338 (Q1 = B, Ryan 2026-10-16): no input measures a shoulder width;
+    # ``plan_shoulder_width_ft`` assumes it.  Recorded beside the value on
+    # every shoulder plan, never as a pending item, so the strip stays
+    # green (as R110 Q2's guesses do).  Shoulder plans only: every other
+    # plan's taper section stays byte-identical.
+    if params.closure_type == "shoulder":
+        taper_section["shoulder_width_basis"] = "assumed"
 
     # ------------------------------------------------------------------
     # 2. Buffer space — jurisdiction-aware (V1-Wide Item 2).

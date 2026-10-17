@@ -133,7 +133,9 @@ def _taper_blocks(taper: dict[str, Any]) -> list[Block]:
                 ("Closure type", _str(taper, "closure_type")),
                 (
                     f"Offset ({_str(taper, 'offset_label')})",
-                    f"{_g(taper, 'offset_ft')} ft",
+                    f"{_g(taper, 'offset_ft')} ft"
+                    # #338: the backend marks an assumed shoulder width.
+                    + (" (assumed)" if taper.get("shoulder_width_basis") == "assumed" else ""),
                 ),
                 (
                     f"Required taper ({_str(taper, 'L_required_label')})",

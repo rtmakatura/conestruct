@@ -14,3 +14,14 @@
 - One-way-street and divided-carriageway shoulder plans' audit JSON and audit PDF (R88's item already discloses the width).
 - Crew sheet (markdown and PDF), XLSX and device breakdown for every plan. None of them print `pending_verification` or the PARAMETERS block.
 - Geometry, placements, taper length and every number on page 2.
+
+## Revised after Q1 = B (written before the B diff)
+Page 1 rows are as above (S1, already verified). The audit half becomes:
+| Surface | Plans | Change |
+|---|---|---|
+| Audit JSON `sections.taper` | every `closure_type == "shoulder"` plan | `+shoulder_width_basis: "assumed"`; `formula_text` gains a leading `W = N ft (assumed)` line. `pending_verification` and `plan_flags` are unchanged. |
+| Audit PDF taper table | the same plans | The Offset row value goes from `8 ft` to `8 ft (assumed)`. |
+| /sandbox Taper length row | the same plans | One extra formula line, first: `W = 8 ft (assumed)`. |
+| Locked snapshots | every shoulder-plan audit snapshot (corpus grid and other pinned projections) | Re-baselined. The diff is exactly these two taper keys. |
+
+Byte-identical: every non-shoulder plan's audit; `pending_verification`, `plan_flags` and the status strip on every plan; the crew sheet, XLSX and page 2 everywhere.

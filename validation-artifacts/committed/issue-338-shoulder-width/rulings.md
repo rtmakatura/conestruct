@@ -16,3 +16,12 @@ Citation: MUTCD 11th Ed. Table 6B-4, p. 775, "W = width of offset in feet" (quot
 
 ## Out of scope (from the issue)
 A shoulder-width input. It's the larger change the issue names as separate.
+
+## Q1 — ruled by Ryan, 2026-10-16: B
+> #338 Q1: B (Ryan, 2026-10-16). Show "8 ft (assumed)" (10 ft on divided) beside the width in the audit PDF and the /sandbox audit panel; the strip stays green, same as R110 Q2. Build it on the paused branch, then the usual loop to a result: line.
+
+## S3 — R145 self-ruled: how B is carried (backend owns the text, Rule 3)
+- Audit JSON: the taper section of every `closure_type == "shoulder"` plan gains `shoulder_width_basis: "assumed"`. This is the record "for every road type". No pending item, so `is_clean` is untouched.
+- Audit PDF: the taper table's Offset row prints `8 ft (assumed)` when the basis is assumed (`audit_blocks.py`).
+- /sandbox audit panel: the panel renders `formula_text` as received (#286 R144 Q1), so the backend puts `W = 8 ft (assumed)` first in it on shoulder closures. No frontend code changes.
+- One-way and divided-carriageway plans get it too. Their width is R88's CHOSEN 8 ft, also unmeasured, and R88's pending item stays as it is.

@@ -133,7 +133,11 @@ def test_shoulder_closure_lines() -> None:
     _common(t)
     taper = t["taper"]
     assert taper["result_text"] == "L/3 = 183 ft"
-    assert taper["formula_text"] == ["L = 10 × 55 = 550 ft", "L/3 = 550 / 3 = 183 ft"]
+    assert taper["formula_text"] == [
+        "W = 10 ft (assumed)",  # #338 (Q1 = B)
+        "L = 10 × 55 = 550 ft",
+        "L/3 = 550 / 3 = 183 ft",
+    ]
     assert t["spacing"]["result_text"].endswith("· 55/110 ft o.c.")
 
 
@@ -143,7 +147,11 @@ def test_low_speed_shoulder_quadratic_line() -> None:
         _shoulder(roadType="urban_arterial", speed=25, workLen=400.0, divided=False, lanes=1)
     )
     _common(t)
-    assert t["taper"]["formula_text"] == ["L = 8 × 25^2 / 60 = 83 ft", "L/3 = 83 / 3 = 28 ft"]
+    assert t["taper"]["formula_text"] == [
+        "W = 8 ft (assumed)",  # #338 (Q1 = B)
+        "L = 8 × 25^2 / 60 = 83 ft",
+        "L/3 = 83 / 3 = 28 ft",
+    ]
     assert t["taper"]["result_text"] == "L/3 = 28 ft"
 
 

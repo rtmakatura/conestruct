@@ -194,12 +194,14 @@
       "formula_choice": "Speed 25 mph < 45 mph threshold -> using L = W x S^2 / 60",
       "formula_latex": "L = \\frac{W \\times S^2}{60}",
       "formula_text": [
+        "W = 8 ft (assumed)",
         "L = 8 × 25^2 / 60 = 83 ft",
         "L/3 = 83 / 3 = 28 ft"
       ],
       "offset_ft": 8.0,
       "offset_label": "shoulder width",
       "result_text": "L/3 = 28 ft",
+      "shoulder_width_basis": "assumed",
       "shoulder_width_ft": 8.0,
       "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
       "speed_mph": 25
