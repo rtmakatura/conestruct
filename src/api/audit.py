@@ -815,8 +815,8 @@ def build_audit_trail(
     taper_end_station = wz_len + buf
     taper_start_station = taper_end_station + L_required
     sign_a_station = taper_start_station + a_ft
+    sign_c_station = sign_a_station + b_ft + c_ft
     sign_b_station: float | None = sign_a_station + b_ft
-    sign_c_station = sign_b_station + c_ft
     # #334: a Case 11 plan's stations from the generators' own producer
     # (no W20-2, so no B).
     case_11 = case_11_freeway_series(params)
