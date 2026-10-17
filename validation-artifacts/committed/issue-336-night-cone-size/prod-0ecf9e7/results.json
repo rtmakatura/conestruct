@@ -1,0 +1,98 @@
+{
+ "bway-l-30-night": {
+  "expected": "Traffic Cone (36-inch)",
+  "pass": true,
+  "surfaces": {
+   "breakdown": [
+    "Traffic Cone (36-inch)"
+   ],
+   "page1": [
+    "Traffic Cone (36-inch)"
+   ],
+   "crew_md": [
+    "Traffic Cone (36-inch)"
+   ],
+   "crew_pdf": [
+    "Traffic Cone (36-inch)"
+   ],
+   "xlsx": [
+    "Traffic Cone (36-inch)"
+   ],
+   "quote": [
+    "Traffic Cone (36-inch)"
+   ]
+  }
+ },
+ "colo-r-40-night": {
+  "expected": "Traffic Cone (36-inch)",
+  "pass": true,
+  "surfaces": {
+   "breakdown": [
+    "Traffic Cone (36-inch)"
+   ],
+   "page1": [
+    "Traffic Cone (36-inch)"
+   ],
+   "crew_md": [
+    "Traffic Cone (36-inch)"
+   ],
+   "crew_pdf": [
+    "Traffic Cone (36-inch)"
+   ],
+   "xlsx": [
+    "Traffic Cone (36-inch)"
+   ],
+   "quote": [
+    "Traffic Cone (36-inch)"
+   ]
+  }
+ },
+ "expo-div-r-35-night": {
+  "expected": "Traffic Cone (36-inch)",
+  "pass": true,
+  "surfaces": {
+   "breakdown": [
+    "Traffic Cone (36-inch)"
+   ],
+   "page1": [
+    "Traffic Cone (36-inch)"
+   ],
+   "crew_md": [
+    "Traffic Cone (36-inch)"
+   ],
+   "crew_pdf": [
+    "Traffic Cone (36-inch)"
+   ],
+   "xlsx": [
+    "Traffic Cone (36-inch)"
+   ],
+   "quote": [
+    "Traffic Cone (36-inch)"
+   ]
+  }
+ },
+ "bway-l-30-day": {
+  "expected": "Traffic Cone (28-inch)",
+  "pass": true,
+  "surfaces": {
+   "breakdown": [
+    "Traffic Cone (28-inch)"
+   ],
+   "page1": [
+    "Traffic Cone (28-inch)"
+   ],
+   "crew_md": [
+    "Traffic Cone (28-inch)"
+   ],
+   "crew_pdf": [
+    "Traffic Cone (28-inch)"
+   ],
+   "xlsx": [
+    "Traffic Cone (28-inch)"
+   ],
+   "quote": [
+    "Traffic Cone (28-inch)"
+   ]
+  }
+ }
+}
