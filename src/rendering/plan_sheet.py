@@ -3766,6 +3766,12 @@ def _draw_notes(
         else:
             assert taper_label is not None  # None only on mobile / off-road, above
             rows.append(("Work zone", f"{params.work_zone_length_ft:,.0f} ft"))
+            if taper_label == "Shoulder taper (L/3)":
+                # #338: the width the shoulder taper is built on (W in
+                # L = W·S²/60 or W·S).  Nothing measures it; the plan
+                # assumes it (``plan_shoulder_width_ft``), so the sheet
+                # says so beside the taper it drives (Rule 10).
+                rows.append(("Shoulder width", f"{shoulder_width_ft:g} ft (assumed)"))
             rows.append((taper_label, f"{taper_len:.0f} ft"))
             rows.append(("Buffer", f"{buf_len:.0f} ft"))
         col_x = [x, x + width / 2.0]

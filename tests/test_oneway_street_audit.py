@@ -153,7 +153,8 @@ def test_a_two_way_plan_carries_none_of_it(client: TestClient) -> None:
     a = audit(client, body(None))
     assert a["sections"]["case"]["case"] == "Case 11: Shoulder closure on undivided highway"
     assert note8(a)["label"] == "Signs on both sides of divided highway"
-    assert a["pending_verification"]["count"] == 0
+    # #338: its one pending item is the assumed shoulder width, not R88's.
+    assert [i["kind"] for i in a["pending_verification"]["items"]] == ["shoulder_width_assumed"]
 
 
 def _crew(client: TestClient, b: dict[str, Any]) -> str:
