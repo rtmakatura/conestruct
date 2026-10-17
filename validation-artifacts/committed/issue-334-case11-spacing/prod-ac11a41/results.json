@@ -1,0 +1,200 @@
+{
+ "healthz_sha": "ac11a41a35509fcc2e65c13eb3745d94dc38fed5",
+ "e470-r-75": {
+  "audit": [
+   [
+    "W20-1",
+    5200
+   ],
+   [
+    "W21-5aR",
+    1000
+   ],
+   [
+    "W21-5aR",
+    2000
+   ],
+   [
+    "W5-1",
+    500
+   ]
+  ],
+  "page1": [
+   [
+    "W20-1",
+    5200
+   ],
+   [
+    "W21-5aR",
+    1000
+   ],
+   [
+    "W21-5aR",
+    2000
+   ],
+   [
+    "W5-1",
+    500
+   ]
+  ],
+  "crew": [
+   [
+    "W20-1",
+    5200
+   ],
+   [
+    "W21-5aR",
+    1000
+   ],
+   [
+    "W21-5aR",
+    2000
+   ],
+   [
+    "W5-1",
+    500
+   ]
+  ],
+  "positions": [
+   "Furthest (Case 11)",
+   "First W21-5aR (Case 11)",
+   "First W21-5aR plaque",
+   "Second W21-5aR (Case 11)",
+   "Second W21-5aR plaque",
+   "W5-1 (Case 11)"
+  ],
+  "source": "CDOT S-630-1 Sheet 7 Case 11",
+  "plan_flags": {
+   "validation_warnings": 0,
+   "compliance_fails": 0,
+   "v1_limitations": 1,
+   "is_clean": false
+  },
+  "pass": true
+ },
+ "i25-r-65-night-3lanes": {
+  "audit": [
+   [
+    "W20-1",
+    5200
+   ],
+   [
+    "W21-5aR",
+    1000
+   ],
+   [
+    "W21-5aR",
+    2000
+   ],
+   [
+    "W5-1",
+    500
+   ]
+  ],
+  "page1": [
+   [
+    "W20-1",
+    5200
+   ],
+   [
+    "W21-5aR",
+    1000
+   ],
+   [
+    "W21-5aR",
+    2000
+   ],
+   [
+    "W5-1",
+    500
+   ]
+  ],
+  "crew": [
+   [
+    "W20-1",
+    5200
+   ],
+   [
+    "W21-5aR",
+    1000
+   ],
+   [
+    "W21-5aR",
+    2000
+   ],
+   [
+    "W5-1",
+    500
+   ]
+  ],
+  "positions": [
+   "Furthest (Case 11)",
+   "First W21-5aR (Case 11)",
+   "First W21-5aR plaque",
+   "Second W21-5aR (Case 11)",
+   "Second W21-5aR plaque",
+   "W5-1 (Case 11)"
+  ],
+  "source": "CDOT S-630-1 Sheet 7 Case 11",
+  "plan_flags": {
+   "validation_warnings": 0,
+   "compliance_fails": 0,
+   "v1_limitations": 3,
+   "is_clean": false
+  },
+  "pass": true
+ },
+ "colo-r-35": {
+  "audit": [
+   [
+    "W20-1",
+    300
+   ],
+   [
+    "W20-2",
+    200
+   ],
+   [
+    "W21-5aR",
+    100
+   ]
+  ],
+  "page1": [
+   [
+    "W20-1",
+    300
+   ],
+   [
+    "W21-5aR",
+    100
+   ]
+  ],
+  "crew": [
+   [
+    "W20-1",
+    300
+   ],
+   [
+    "W20-2",
+    200
+   ],
+   [
+    "W21-5aR",
+    100
+   ]
+  ],
+  "positions": [
+   "C (furthest)",
+   "B (middle)",
+   "A (nearest)"
+  ],
+  "source": "MUTCD 11th Ed. Table 6B-1",
+  "plan_flags": {
+   "validation_warnings": 0,
+   "compliance_fails": 0,
+   "v1_limitations": 2,
+   "is_clean": false
+  },
+  "pass": true
+ }
+}
