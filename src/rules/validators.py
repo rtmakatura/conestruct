@@ -71,6 +71,29 @@ MIN_FLAGGER_STATIONS: int = 2
 # non-conformance regardless of what's being done on it.
 FREEWAY_MIN_LANE_WIDTH_FT: float = 11.0
 
+# Widest half-road (work-direction lanes + shoulder, in ft) the plan
+# sheet can draw at its fixed 3.5 pt/ft vertical scale.  Verified
+# empirically: at 52 ft (e.g. 3 lanes x 14 ft + 10 ft shoulder) the
+# sheet renders cleanly; beyond it the road collides with the title
+# block and dimension callouts.  Shoulder width is derived in the
+# bridge (10 ft divided / 8 ft undivided).  Lives here since #335 so the
+# freeway refusal can name the lane count that fits; src/api/schemas.py
+# imports it.  Mirrored in conestruct/site/lib/scenarios/validation.ts
+# (MAX_DRAWABLE_HALF_ROAD_FT).
+MAX_DRAWABLE_HALF_ROAD_FT: float = 52.0
+
+
+def freeway_max_drawable_lanes(shoulder_width_ft: float) -> int:
+    """#335: the most lanes the sheet draws at the freeway minimum width.
+
+    When a freeway scenario has more lanes than this, no lane width
+    satisfies both ``FREEWAY_MIN_LANE_WIDTH_FT`` and
+    ``MAX_DRAWABLE_HALF_ROAD_FT``, so the only recovery either refusal
+    can offer is drawing this many lanes.
+    """
+    return int((MAX_DRAWABLE_HALF_ROAD_FT - shoulder_width_ft) // FREEWAY_MIN_LANE_WIDTH_FT)
+
+
 # Sign labels that may sit upstream of the taper but are *not* part of
 # the Table 6B-1 advance-warning sequence — they are instructional or
 # regulatory signs that travel with the flagger station, work-zone
@@ -1771,6 +1794,19 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     out: list[Violation] = []
 
     if params.road_type == "freeway" and params.lane_width_ft < FREEWAY_MIN_LANE_WIDTH_FT:
+        # #335: past this many lanes an 11 ft lane trips the schema's
+        # drawable-half-road refusal, so the recovery is the count that fits.
+        fit_lanes = freeway_max_drawable_lanes(params.shoulder_width_ft)
+        if params.num_lanes > fit_lanes:
+            recovery = (
+                f"At {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft the plan sheet draws at most "
+                f"{fit_lanes} lanes in this direction beside the "
+                f"{params.shoulder_width_ft:.0f} ft shoulder (its widest half-road is "
+                f"{MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft). Set lanes per direction to "
+                f"{fit_lanes} and lane width to {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft"
+            )
+        else:
+            recovery = f"Increase lane width to at least {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft"
         out.append(
             Violation(
                 rule_id="LANE_WIDTH_BELOW_FREEWAY_MIN",
@@ -1779,8 +1815,7 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
                     f"Lane width {params.lane_width_ft:.1f} ft is below the "
                     f"{FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft minimum for freeway "
                     "work zones (CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' "
-                    f"annotation). Increase lane width to at least "
-                    f"{FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft, or verify the "
+                    f"annotation). {recovery}, or verify the "
                     "scenario is not actually on a freeway."
                 ),
                 mutcd_section="CDOT S-630-1 Sheet 7 (Case 11)",

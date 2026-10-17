@@ -127,6 +127,35 @@ describe("validateLanes — drawable half-road mirror", () => {
     expect(validateLanes({ ...base, laneWidth: 11.5 }).ok).toBe(false);
   });
 
+  // #335: on a freeway the narrower lane trips the backend's 11 ft
+  // minimum, so the message names the lane count instead.
+  it("freeway 4 x 11 divided names 3 lanes, not a narrower lane", () => {
+    const v = validateLanes({
+      ...DEFAULT_SHOULDER,
+      roadType: "freeway",
+      divided: true,
+      lanes: 4,
+      laneWidth: 11,
+    });
+    expect(v.ok).toBe(false);
+    expect(v.message).toContain("Set lanes to 3.");
+    expect(v.message).not.toContain("lane width of");
+    expect(
+      validateLanes({ ...DEFAULT_SHOULDER, roadType: "freeway", lanes: 3, laneWidth: 11 }).ok,
+    ).toBe(true);
+  });
+
+  it("freeway keeps the lane-width fix when that width is at least 11 ft", () => {
+    const v = validateLanes({
+      ...DEFAULT_SHOULDER,
+      roadType: "freeway",
+      divided: true,
+      lanes: 3,
+      laneWidth: 14.5,
+    });
+    expect(v.message).toContain("lane width of 14 ft or less");
+  });
+
   it("rejects lane counts outside 1..4", () => {
     expect(validateLanes({ ...DEFAULT_SHOULDER, lanes: 5 }).ok).toBe(false);
     expect(validateLanes({ ...DEFAULT_SHOULDER, lanes: 0 }).ok).toBe(false);

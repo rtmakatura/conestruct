@@ -27,6 +27,12 @@ export const MAX_WORK_LEN_FT = 20000;
 export const MAX_LANES_PER_DIRECTION = 4;
 export const MAX_DRAWABLE_HALF_ROAD_FT = 52;
 
+// #335: display-only mirror of FREEWAY_MIN_LANE_WIDTH_FT in
+// src/rules/validators.py (CDOT S-630-1 Sheet 7 Case 11 "11' MIN.").  It
+// decides only which recovery the drawable refusal names; the backend
+// owns the rule (Rule 3).
+const FREEWAY_MIN_LANE_WIDTH_FT = 11;
+
 /** The shoulder width the drawable check adds to the lanes, as both
  *  validators derive it: 10 ft behind a divided SHOULDER plan, 8 ft
  *  otherwise (`src/api/schemas.py:410`); near_intersection is
@@ -119,12 +125,31 @@ export function validateLanes(scenario: Scenario): LanesValidation {
     // Widest lane the slider offers (0.5-ft steps) that still fits.
     const maxWidth =
       Math.floor(((MAX_DRAWABLE_HALF_ROAD_FT - shoulderFt) / scenario.lanes) * 2) / 2;
+    const exceeds =
+      `${scenario.lanes} lanes × ${scenario.laneWidth} ft + ${shoulderFt} ft shoulder ` +
+      `is wider than the plan sheet can draw (${MAX_DRAWABLE_HALF_ROAD_FT} ft per ` +
+      `direction).`;
+    // #335: mirrors the backend's freeway branch — a narrower lane trips
+    // the 11 ft freeway minimum, so the only recovery is fewer lanes.
+    if (
+      scenario.kind === "shoulder" &&
+      scenario.roadType === "freeway" &&
+      maxWidth < FREEWAY_MIN_LANE_WIDTH_FT
+    ) {
+      const fitLanes = Math.floor(
+        (MAX_DRAWABLE_HALF_ROAD_FT - shoulderFt) / FREEWAY_MIN_LANE_WIDTH_FT,
+      );
+      return {
+        ok: false,
+        message:
+          `${exceeds} Freeway lanes must be at least ${FREEWAY_MIN_LANE_WIDTH_FT} ft, ` +
+          `so the sheet draws at most ${fitLanes} lanes per direction. ` +
+          `Set lanes to ${fitLanes}.`,
+      };
+    }
     return {
       ok: false,
-      message:
-        `${scenario.lanes} lanes × ${scenario.laneWidth} ft + ${shoulderFt} ft shoulder ` +
-        `is wider than the plan sheet can draw (${MAX_DRAWABLE_HALF_ROAD_FT} ft per ` +
-        `direction). Use a lane width of ${maxWidth} ft or less, or fewer lanes.`,
+      message: `${exceeds} Use a lane width of ${maxWidth} ft or less, or fewer lanes.`,
     };
   }
   return { ok: true, message: null };

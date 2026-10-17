@@ -34,7 +34,14 @@ from src.generation.layout import (
     generate_work_beyond_shoulder,
 )
 from src.rules.carriageway import CarriagewayVerdict, carriageway_verdict
-from src.rules.validators import ApproachParams, DevicePlacement, ScenarioParams
+from src.rules.validators import (
+    FREEWAY_MIN_LANE_WIDTH_FT,
+    MAX_DRAWABLE_HALF_ROAD_FT,
+    ApproachParams,
+    DevicePlacement,
+    ScenarioParams,
+    freeway_max_drawable_lanes,
+)
 
 # ---------------------------------------------------------------------------
 # Pydantic models — mirror TS Scenario exactly (camelCase field names)
@@ -50,14 +57,9 @@ from src.rules.validators import ApproachParams, DevicePlacement, ScenarioParams
 # conestruct/site/lib/scenarios/validation.ts (MAX_WORK_LEN_FT).
 WORK_LEN_MAX_FT = 20000.0
 
-# Widest half-road (work-direction lanes + shoulder, in ft) the plan
-# sheet can draw at its fixed 3.5 pt/ft vertical scale.  Verified
-# empirically: at 52 ft (e.g. 3 lanes x 14 ft + 10 ft shoulder) the
-# sheet renders cleanly; beyond it the road collides with the title
-# block and dimension callouts.  Shoulder width is derived in the
-# bridge (10 ft divided / 8 ft undivided).  Mirrored in
-# conestruct/site/lib/scenarios/validation.ts (MAX_DRAWABLE_HALF_ROAD_FT).
-MAX_DRAWABLE_HALF_ROAD_FT = 52.0
+# MAX_DRAWABLE_HALF_ROAD_FT, the widest half-road the plan sheet can
+# draw, is defined in src/rules/validators.py since #335 (imported
+# above); importers keep reading it from this module.
 
 
 ScannedSiteFlag = Literal[
@@ -671,11 +673,24 @@ class ShoulderScenario(
         half_road = self.lanes * self.laneWidth + shoulder_ft
         if half_road > MAX_DRAWABLE_HALF_ROAD_FT:
             max_width = (MAX_DRAWABLE_HALF_ROAD_FT - shoulder_ft) / self.lanes
-            raise ValueError(
+            exceeds = (
                 f"{self.lanes} lanes x {self.laneWidth} ft + {shoulder_ft:.0f} ft shoulder "
                 f"= {half_road:.1f} ft exceeds the plan sheet's drawable half-road "
-                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft). Use a lane width of "
-                f"{max_width:.1f} ft or less, or reduce the lane count."
+                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft)."
+            )
+            # #335: on a freeway a narrower lane trips the 11 ft minimum
+            # (validate_corridor_geometry), so the only recovery is fewer lanes.
+            if self.roadType == "freeway" and max_width < FREEWAY_MIN_LANE_WIDTH_FT:
+                fit_lanes = freeway_max_drawable_lanes(shoulder_ft)
+                raise ValueError(
+                    f"{exceeds} Freeway lanes must be at least "
+                    f"{FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft (CDOT S-630-1 Sheet 7 Case 11 "
+                    f"'11' MIN.'), so the sheet draws at most {fit_lanes} lanes in this "
+                    f"direction. Reduce the lane count to {fit_lanes}."
+                )
+            raise ValueError(
+                f"{exceeds} Use a lane width of {max_width:.1f} ft or less, "
+                "or reduce the lane count."
             )
         return self
 
