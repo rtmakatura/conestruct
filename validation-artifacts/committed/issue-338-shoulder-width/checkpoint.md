@@ -11,3 +11,6 @@ This is an R145 stop: it changes the verdict on most live plans (design directio
 - **C. Pending item that doesn't count as a V1 limitation.** This needs a new class of pending item, so it's new machinery.
 
 Page 1's row (S1) holds under every option.
+
+## State while Q1 waits
+The withdrawn S2 code is removed from the branch: `src/api/audit.py` and `tests/test_oneway_street_audit.py` are back to origin/main. The branch now carries S1 only (page 1's row) and `tests/s630/test_shoulder_width_338.py` (4 cases: page 1 states the width and it equals the audit's `taper.shoulder_width_ft`, on undivided, divided and one-way plans, plus a flagger control). Red on origin/main src: 3 failed, 1 passed. Full suite: 2988 passed, 2 skipped. The audit half is built after Q1.

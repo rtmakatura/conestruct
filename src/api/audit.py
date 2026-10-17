@@ -1559,15 +1559,6 @@ def build_audit_trail(
             # highway; the key is present only then (one-way unchanged).
             **({"road": "divided_carriageway"} if params.divided_carriageway else {}),
         }
-    # #338: every other shoulder plan builds its taper on an assumed width
-    # too (``plan_shoulder_width_ft``: 8 ft undivided, 10 ft divided); no
-    # input measures it.  Disclosed the way R88's is; shoulder plans only,
-    # so every other plan's sections stay byte-identical.
-    elif params.closure_type == "shoulder":
-        case_section["shoulder_width_assumed"] = {
-            "shoulder_ft": params.shoulder_width_ft,
-            "road": "divided" if params.is_divided else "undivided",
-        }
     # #312 (R134 Q3): the median opening the Sheet 10 plates don't draw —
     # disclosed for the Engineer, nothing drawn.  Marker present only on a
     # divided carriageway, so every other plan's sections stay identical.
@@ -1924,8 +1915,6 @@ INTERSECTION_SUPPORT_ISSUE: str | None = "https://github.com/rtmakatura/conestru
 # #308 ruling R88: a one-way street's shoulder width and lane-width ceiling
 # have no published source; the pending item keyed to this URL says so.
 ONE_WAY_STREET_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/308"
-# #338: every other shoulder plan's assumed shoulder width.
-SHOULDER_WIDTH_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/338"
 # #312 (R134 Q3): a near-intersection plan on a divided highway.
 DIVIDED_NEAR_INTERSECTION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/312"
 # The audit's pending item and the crew sheet's line say the same thing.
@@ -2235,26 +2224,6 @@ def audit_projection(
                     f"sets them. Verify against the site (#308)."
                 ),
                 "tracking_issue": ONE_WAY_STREET_ISSUE,
-            }
-        )
-
-    # #338: the shoulder width a two-way or divided shoulder plan's taper
-    # is built on is assumed, never measured (Rule 10).  Keyed off the case
-    # section's marker, so every non-shoulder plan's list is byte-identical.
-    assumed = case.pop("shoulder_width_assumed", None)
-    if assumed is not None:
-        shoulder_ft = float(assumed["shoulder_ft"])
-        road = "a divided highway" if assumed["road"] == "divided" else "an undivided road"
-        items.append(
-            {
-                "kind": "shoulder_width_assumed",
-                "label": (
-                    f"On {road} the plan assumes a shoulder {shoulder_ft:g} ft wide. "
-                    f"Nothing measures it, and the shoulder taper is built on it "
-                    f"(MUTCD Table 6B-4: W = width of offset), so a narrower or "
-                    f"wider shoulder changes the taper. Verify against the site (#338)."
-                ),
-                "tracking_issue": SHOULDER_WIDTH_ISSUE,
             }
         )
 
