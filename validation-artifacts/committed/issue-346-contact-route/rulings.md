@@ -45,3 +45,11 @@ S10. **Waitlist notification Reply-To is the submitter.** This matches Email 2's
 S11. **Config missing answers 503 with the inline error.** Missing means any of the five env vars unset, or `REPLY_DUE_BUSINESS_DAYS` not a positive integer. Nothing has a default in code.
 
 S12. **The env-check fixtures gain five synthetic rows.** `tests/fixtures/vercel-env/*.txt` is the real `vercel env ls production` listing of 2026-09-28. Once the five #346 names are `required`, the "real listing passes" tests need them present. They were added by hand, and the test's docstring says they did not come from a real listing. The real ship still checks the live Production listing, so it stops until Ryan adds them in Vercel.
+
+## Real send (2026-10-18, second session)
+
+Ryan, 2026-10-18 (the `/start 346` message): "Resend is set up: conestruct.com is Verified, and SPF, DKIM (Resend + Workspace) and DMARC p=none are live. All five env vars are now in Vercel, in Production and Preview. … The landing-v2-page holds block only the ship, so they don't block this session. Finish the form and run the real test submission. Don't ship."
+
+S13. **R145 self-ruled: the test inbox is Ryan's own, by plus-address, and the signature URL stays as the spec names it.**
+- `ryan+346job@` and `ryan+346wait@conestruct.com` deliver to the inbox that also gets CONTACT_TO. One mailbox therefore shows all three emails, and no outside address receives test mail.
+- `https://conestruct.com/email-signature.png` answers 307 to `www` in production. Changing it would depart from `design/landing-v2/cc-prompt-landing-v2-form.md:43`, so it is flagged to Ryan, not changed (real-send/README.md).

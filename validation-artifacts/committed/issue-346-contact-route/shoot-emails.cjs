@@ -1,12 +1,13 @@
 // #346: each rendered email's HTML part in a 600 px window, once with images
 // and once with images blocked (the way many inboxes open it).  Offline: the
 // signature's https URL is answered from public/email-signature.png.
-//   node shoot-emails.cjs   (writes emails/*.png beside the .html)
+//   node shoot-emails.cjs [dir]   (writes <dir>/*.png beside the .html;
+//   dir defaults to emails/, real-send/received/ holds the inbox's copies)
 const { chromium } = require("../../../scripts/audit-lib.js");
 const fs = require("fs");
 const path = require("path");
 (async () => {
-  const dir = path.join(__dirname, "emails");
+  const dir = path.resolve(__dirname, process.argv[2] ?? "emails");
   const browser = await chromium.launch();
   for (const f of fs.readdirSync(dir).filter((n) => n.endsWith(".html"))) {
     for (const blocked of [false, true]) {
