@@ -1,0 +1,3 @@
+#349 check · http://localhost:3149/ · 2026-10-18T23:15:11.759Z
+1440: status 200 · scroll 1440/1440 ok · step3 svg true viewBox "0 0 1200 430" 1158x415 · img 0 · MEDIAN/DIVIDED text false · axe 0 · targets under 32: none · contrast below AA: none · page errors none
+390: status 200 · scroll 390/390 ok · step3 svg true viewBox "0 0 1200 430" 338x121 · img 0 · MEDIAN/DIVIDED text false · axe 0 · targets under 44: none · contrast below AA: none · page errors none

@@ -233,6 +233,20 @@ describe("landing v2 — links and held items", () => {
     expect(hrefs.filter((h) => /sign-in|sign-up|sandbox/.test(h))).toEqual([]);
   });
 
+  it("#349: step 3 draws the undivided Colfax plan, not the median sheet", () => {
+    const c = mount();
+    const sheet = c.querySelector(".lv-step3 .lv-sheet")!;
+    expect(sheet.querySelector("img")).toBeNull();
+    const svg = sheet.querySelector("svg.lv-sheet-img")!;
+    expect(svg.getAttribute("viewBox")).toBe("0 0 1200 430");
+    expect(svg.getAttribute("aria-label")).toMatch(/^Illustration of the Colfax shoulder closure/);
+    expect(svg.textContent).not.toMatch(/MEDIAN|DIVIDED/i);
+    expect(svg.innerHTML).toContain("E COLFAX AVE");
+    // the step 1 drawing's pattern ids stay unique on the page
+    const ids = [...c.querySelectorAll("svg [id]")].map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   it("the sections run in the reference's order", () => {
     const c = mount();
     const labels = [...c.querySelectorAll(".lv-label .lv-head-ink")].map((e) => e.textContent);

@@ -56,6 +56,11 @@ const art = {
   HERO_WIDE: convert("hero-plan.svg"),
   HERO_NARROW: convert("hero-plan-narrow.svg"),
   STEP1: convert("step1-plan.svg"),
+  // #349: step 3's drawing.  step1-plan.svg uncropped (viewBox 0 0 1200
+  // 430) with its pattern ids renamed step1 -> step3, so both can sit on
+  // one page.  It replaces colfax-plan-dark.jpg, whose median the road
+  // doesn't have.
+  STEP3: convert("step3-plan.svg"),
 };
 
 let out =
