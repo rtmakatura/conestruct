@@ -61,6 +61,8 @@ const art = {
   // one page.  It replaces colfax-plan-dark.jpg, whose median the road
   // doesn't have.
   STEP3: convert("step3-plan.svg"),
+  // #349 ruling: the phone crop, from design/landing-v2/step3-narrow.py.
+  STEP3_NARROW: convert("step3-plan-narrow.svg"),
 };
 
 let out =

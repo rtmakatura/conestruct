@@ -242,6 +242,16 @@ describe("landing v2 — links and held items", () => {
     expect(svg.getAttribute("aria-label")).toMatch(/^Illustration of the Colfax shoulder closure/);
     expect(svg.textContent).not.toMatch(/MEDIAN|DIVIDED/i);
     expect(svg.innerHTML).toContain("E COLFAX AVE");
+    // the phone crop (ruling: labels >= 11 px at 390): every text is set
+    // at 26 units, 11.6 px across the ~338 px panel's 760-unit viewBox
+    const narrow = sheet.querySelector(".lv-illus-narrow svg.lv-sheet-img")!;
+    expect(narrow.getAttribute("viewBox")).toBe("340 -62 760 342");
+    expect(narrow.textContent).not.toMatch(/MEDIAN|DIVIDED/i);
+    const sizes = [...narrow.querySelectorAll("text")].map((t) => Number(t.getAttribute("font-size")));
+    expect(sizes.filter((n) => n < 26)).toEqual([]);
+    expect(narrow.textContent).toContain("L/3 50 FT");
+    expect(narrow.textContent).toContain("BUFFER 200 FT");
+    expect(narrow.textContent).toContain("WORK ZONE 1,000 FT");
     // the step 1 drawing's pattern ids stay unique on the page
     const ids = [...c.querySelectorAll("svg [id]")].map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);

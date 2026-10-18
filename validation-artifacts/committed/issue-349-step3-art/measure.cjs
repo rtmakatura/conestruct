@@ -2,7 +2,9 @@
 // 390.  Per width: status, sideways scroll, axe on step 3, target floors
 // and contrast pairs in step 3, page errors, what step 3 holds (an <svg>,
 // no <img>, no MEDIAN / DIVIDED text) and its rendered size, plus a
-// screenshot of the step 3 sheet.
+// screenshot of the step 3 sheet.  Run 2 (the phone-crop ruling) adds
+// which drawing is visible and the smallest rendered size of any text in
+// it that falls inside its viewBox (the ruling's floor: 11 px at 390).
 //
 //   AUDIT_OUT=<dir> node measure.cjs <base>
 const { chromium, fs, path, PAIRS, TARGETS, runAxe } = require("../../../scripts/audit-lib.js");
@@ -34,10 +36,18 @@ const aa = (p) => (p.size >= 24 || (p.size >= 18.66 && +p.weight >= 700) ? 3 : 4
     await page.waitForTimeout(400);
     const facts = await page.evaluate(() => {
       const s = document.querySelector(".lv-step3 .lv-sheet");
-      const svg = s.querySelector("svg.lv-sheet-img");
+      const svg = [...s.querySelectorAll("svg.lv-sheet-img")].find((e) => e.getBoundingClientRect().width > 0);
       const r = svg.getBoundingClientRect();
+      const vbw = Number(svg.getAttribute("viewBox").split(" ")[2]);
+      const shown = [...svg.querySelectorAll("text")].filter((t) => {
+        const b = t.getBoundingClientRect();
+        return b.width > 0 && b.right > r.left && b.left < r.right && b.bottom > r.top && b.top < r.bottom;
+      });
+      const px = shown.map((t) => +((Number(t.getAttribute("font-size")) * r.width) / vbw).toFixed(1));
       return {
         imgs: s.querySelectorAll("img").length,
+        texts: shown.length,
+        minPx: px.length ? Math.min(...px) : null,
         svg: !!svg,
         viewBox: svg?.getAttribute("viewBox"),
         size: `${Math.round(r.width)}x${Math.round(r.height)}`,
@@ -53,7 +63,7 @@ const aa = (p) => (p.size >= 24 || (p.size >= 18.66 && +p.weight >= 700) ? 3 : 4
     const axe = await runAxe(page, OUT, `step3-${w}`);
     log(
       `${w}: status ${resp.status()} · scroll ${facts.sw}/${facts.iw} ${facts.sw > facts.iw ? "SIDEWAYS" : "ok"}` +
-        ` · step3 svg ${facts.svg} viewBox "${facts.viewBox}" ${facts.size} · img ${facts.imgs} · MEDIAN/DIVIDED text ${facts.medianText}` +
+        ` · step3 svg ${facts.svg} viewBox "${facts.viewBox}" ${facts.size} · img ${facts.imgs} · text shown ${facts.texts}, smallest ${facts.minPx} px · MEDIAN/DIVIDED text ${facts.medianText}` +
         ` · axe ${axe.length ? axe.map((v) => `${v.id}(${v.nodes.length})`).join(",") : "0"}` +
         ` · targets under ${floor}: ${small.length ? small.map((t) => `${t.name} ${t.w}x${t.h}`).join("; ") : "none"}` +
         ` · contrast below AA: ${low.length ? low.map((p) => `"${p.text}" ${p.ratio}`).join("; ") : "none"}` +

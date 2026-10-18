@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CompareForm } from "./CompareForm";
 import { Hero } from "./Hero";
-import { STEP1, STEP3 } from "./plan-art";
+import { STEP1, STEP3, STEP3_NARROW } from "./plan-art";
 import { PlanSvg } from "./PlanSvg";
 import { WaitlistForm } from "./WaitlistForm";
 
@@ -312,7 +312,13 @@ export function Landing() {
                     <span className="lv-head-ink">METHOD OF HANDLING TRAFFIC · E COLFAX AVE EB</span>
                     <span className="lv-draft">DRAFT</span>
                   </div>
-                  <PlanSvg art={STEP3} className="lv-sheet-img" />
+                  {/* #349: the phone crop below 720px, the hero's switch. */}
+                  <div className="lv-illus-wide">
+                    <PlanSvg art={STEP3} className="lv-sheet-img" />
+                  </div>
+                  <div className="lv-illus-narrow">
+                    <PlanSvg art={STEP3_NARROW} className="lv-sheet-img" />
+                  </div>
                   <div className="lv-facts">
                     <Fact label="TYPICAL" value="TA-3 · S-630-1" />
                     <Fact label="SPEED" value="30 mph" />
