@@ -211,10 +211,19 @@ def lanes_drawn_below_road(params: ScenarioParams) -> str | None:
     pattern: one predicate, one sentence, so they can't disagree.  The
     numbers are the plan's and the relayed road's, never literals.  The
     sheet prints it upper-cased.
+
+    #341: the sheet's limit is named only when it is the cause (the plan
+    draws exactly the limit and the road has more); a plan drawn below
+    the limit drew the entered count.
     """
     road = params.road_lanes_per_direction
     if road is None or road <= params.num_lanes:
         return None
+    if params.num_lanes < PLAN_MAX_LANES_PER_DIRECTION:
+        return (
+            f"Drawn as {params.num_lanes} lanes per direction (entered); the road has {road}. "
+            f"Device offsets are measured against {params.num_lanes} lanes."
+        )
     return (
         f"Drawn as {params.num_lanes} lanes per direction; the road has {road}. "
         f"Plans draw at most {PLAN_MAX_LANES_PER_DIRECTION} lanes per direction, "

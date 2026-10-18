@@ -141,3 +141,35 @@ def test_the_crew_narrative_says_so() -> None:
     assert f"- Lanes: {SENTENCE}" in r.text
     plain = client.post("/render/markdown", headers=AUTH, json=_body())
     assert "the road has" not in plain.text
+
+
+# #341 (R145 self-ruled S1): the sheet's limit is named only when it is the
+# cause.  A plan drawn below the limit drew the entered count.
+ENTERED = (
+    "Drawn as 3 lanes per direction (entered); the road has 4. "
+    "Device offsets are measured against 3 lanes."
+)
+
+
+def test_below_the_limit_the_note_names_the_entered_count() -> None:
+    assert lanes_drawn_below_road(_params(3, 4)) == ENTERED
+    # 3 of 5: the limit allowed 4, so it is not why 3 was drawn.
+    assert "(entered); the road has 5." in (lanes_drawn_below_road(_params(3, 5)) or "")
+    for num_lanes, road in ((3, 4), (3, 5), (1, 2)):
+        assert "at most" not in (lanes_drawn_below_road(_params(num_lanes, road)) or "")
+    # At the limit with a bigger road, today's sentence is unchanged.
+    assert lanes_drawn_below_road(_params(4, 5)) == SENTENCE
+
+
+def test_below_the_limit_every_surface_prints_the_entered_wording() -> None:
+    body = _body(lanes=3, roadLanesPerDirection=4)
+    r = client.post("/render/audit", headers=AUTH, json=body)
+    assert r.status_code == 200, r.text[:300]
+    assert _pending_kinds(r.json())["lanes_drawn_below_road"]["label"] == ENTERED
+    text = _page_text(body)
+    assert "DRAWN AS 3 LANES PER DIRECTION (ENTERED); THE ROAD HAS 4." in text
+    assert "MEASURED AGAINST 3 LANES." in text
+    assert "AT MOST" not in text
+    md = client.post("/render/markdown", headers=AUTH, json=body)
+    assert md.status_code == 200, md.text[:300]
+    assert f"- Lanes: {ENTERED}" in md.text
