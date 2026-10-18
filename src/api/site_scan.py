@@ -658,6 +658,38 @@ def _apply_precedence(
     return effective, discarded
 
 
+# #339 (R145 self-ruled, CHOSEN): a freeway plan counts no sidewalk.  The
+# scan sees only each path's centre, and the 150 ft lateral band was sized
+# for an arterial half-section (site_detection._BUCKET_RELEVANCE_OVERRIDES),
+# so near a freeway it catches the crossing streets, overpasses and frontage
+# roads -- 43 paths on I-25, none on the freeway.  The paths found are kept
+# and named as not counted (Rule 10); the operator can still assert one.
+# Applied after the memo read, like the bearing threshold: the memo keeps
+# the raw scan.
+def _freeway_sidewalk_note(found: int) -> str:
+    paths = "1 sidewalk path" if found == 1 else f"{found} sidewalk paths"
+    return (
+        f"{paths} near the freeway not counted: the scan can't tell a sidewalk "
+        "along a freeway from one on a crossing or frontage street. "
+        "If one runs along the work zone, correct the scan."
+    )
+
+
+def _uncount_freeway_sidewalks(buckets: dict[str, Any], road_type: str) -> dict[str, Any]:
+    bucket = buckets.get("sidewalks")
+    if road_type != "freeway" or not isinstance(bucket, dict) or not bucket.get("detected"):
+        return buckets
+    uncounted = {
+        **bucket,
+        "detected": False,
+        "count": 0,
+        "nearest_distance_m": None,
+        "details": [_freeway_sidewalk_note(int(bucket.get("count") or 0))],
+        "features": [{**f, "relevant": False} for f in bucket.get("features") or []],
+    }
+    return {**buckets, "sidewalks": uncounted}
+
+
 def run_site_scan(
     scenario: Any, params: Any, token_entry: Mapping[str, Any] | None = None
 ) -> SiteScanResult:
@@ -861,6 +893,8 @@ def run_site_scan(
 
     if not memo_hit:
         _MEMO[key] = (time.monotonic(), buckets, measured_at, duration_ms)
+    raw_buckets = buckets
+    buckets = _uncount_freeway_sidewalks(buckets, inputs.road_type)
 
     effective, discarded = _apply_precedence(manual, buckets)
     # Phase 4: the operator's corrections, after the scan's precedence.
@@ -889,5 +923,5 @@ def run_site_scan(
         effective,
         road_bearing if isinstance(road_bearing, dict) else None,
         source=source,
-        memo_entry=(key, buckets, measured_at, duration_ms),
+        memo_entry=(key, raw_buckets, measured_at, duration_ms),
     )
