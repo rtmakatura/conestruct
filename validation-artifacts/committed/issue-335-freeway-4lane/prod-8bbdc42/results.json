@@ -1,0 +1,27 @@
+{
+  "sha": "8bbdc42",
+  "healthz": "8bbdc42683542f408bd4632c952644b9d33bff96",
+  "results": {
+    "1_site_default_4x10.5": {
+      "status": 400,
+      "rule": true,
+      "names_fix": "Set lanes per direction to 3 and lane width to 11 ft",
+      "old_wording_absent": true,
+      "pass": true
+    },
+    "2_follow_fix": {
+      "applied": "Set lanes per direction to 3 and lane width to 11 ft",
+      "status": 200,
+      "pass": true
+    },
+    "3_old_loop_step_4x11": {
+      "status": 400,
+      "names_fix": "Reduce the lane count to 3.",
+      "old_wording_absent": true,
+      "pass": true,
+      "fix_status": 200
+    }
+  },
+  "summary": "3/3 PASS",
+  "correction": "Run 1 scored step 3 FAIL only because it expected HTTP 422; the site proxy returns the schema refusal as 400. Wording, old-wording absence and the fix's HTTP 200 all passed in run 1. Step 3 now accepts 400 or 422."
+}
