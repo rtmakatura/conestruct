@@ -7345,7 +7345,11 @@ input[type="number"] {
   letter-spacing: 0.16em;
   overflow: hidden;
 }
+/* Each link fills the nav's height, so its hit box clears rule 15's floor. */
 .workbench .lv-nav-links a {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
   color: var(--ink-faint);
   text-decoration: none;
   white-space: nowrap;
@@ -7498,8 +7502,13 @@ input[type="number"] {
   border-color: var(--pri-off);
   cursor: not-allowed;
 }
+/* Rule 15's floors (32 px, 44 px at 480 and below) on the two text links:
+   the box grows, the words keep their size. */
 .workbench .lv-textlink,
 .workbench .lv-pilot-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
   font-size: 15px;
   color: var(--act);
   text-decoration: none;
@@ -8273,12 +8282,16 @@ input[type="number"] {
   resize: none;
   line-height: 1.5;
 }
+/* The native radio, invisible, laid over its whole tile: the tile is the
+   input's own hit box, and the visible state comes from :checked. */
 .workbench .lv-vh {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
-  width: 1px;
-  height: 1px;
   margin: 0;
+  cursor: pointer;
 }
 .workbench .lv-opts {
   display: grid;
@@ -8493,6 +8506,10 @@ input[type="number"] {
   .workbench .lv-footer-links a {
     min-height: 44px;
     min-width: 44px;
+  }
+  .workbench .lv-textlink,
+  .workbench .lv-pilot-link {
+    min-height: 44px;
   }
 }
 
