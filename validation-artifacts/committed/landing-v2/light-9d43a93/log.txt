@@ -1,0 +1,11 @@
+light check · http://localhost:3100/ · 2026-10-18T06:28:37.627Z
+1440: status 200 · scroll 1440/1440 ok · axe 0 · targets under 32: HOW IT WORKS 91x13; WHAT YOU GET 91x13; SOURCES 53x13; or join the waitlist 126x19; Shoulder work 1x1; Flagger lane closure 1x1; Lane closure near an intersection 1x1; Something else 1x1; Daytime 1x1; Night 1x1; Apply for the pilot → 149x19 · contrast lowest 3.34, below AA: "Opening soon" 3.34; "Opening soon" 3.34 · page errors none · hero wide/narrow display block/none
+1440: intersection row focused after 8 Tab · drawing class "plan mB mC f-int | plan mB mC f-int" · outline solid rgb(86, 188, 242)
+1440: after blur, drawing class "plan mB mC | plan mB mC"
+1440: checked radios: Shoulder work, Daytime
+1440: running animations · reduced motion 0 · no preference 28
+390: status 200 · scroll 390/390 ok · axe 0 · targets under 44: or join the waitlist 126x19; Shoulder work 1x1; Flagger lane closure 1x1; Lane closure near an intersection 1x1; Something else 1x1; Daytime 1x1; Night 1x1; Apply for the pilot → 149x19 · contrast lowest 3.34, below AA: "Opening soon" 3.34; "Opening soon" 3.34 · page errors none · hero wide/narrow display none/block
+390: intersection row focused after 5 Tab · drawing class "plan mB mC f-int | plan mB mC f-int" · outline solid rgb(86, 188, 242)
+390: after blur, drawing class "plan mB mC | plan mB mC"
+390: checked radios: Shoulder work, Daytime
+390: running animations · reduced motion 0 · no preference 28
