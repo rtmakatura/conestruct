@@ -69,3 +69,13 @@ S15. **R145 self-ruled: how the /privacy section is placed.** It is checked firs
 - **Flagged to Ryan, not changed:** /privacy names no contact address anywhere else, and its interim line "You may request deletion…" gives no address. `safety@conestruct.com` appears nowhere in the code. Every address the site shows is `ryan@conestruct.com` (`components/landing/Landing.tsx:18`, `components/landing/useContactSubmit.ts:14`, `lib/coming-soon-copy.ts:13`, the emails' Reply-To and signature).
 
 S16. **The header check is closed (ruling 3).** Ryan read the raw headers on both emails: From, Reply-To, SPF, DKIM and DMARC all pass. `real-send/README.md` marks it closed.
+
+## Ryan's address ruling, 2026-10-18
+
+"safety@conestruct.com is the privacy/deletion contact only. Everything else stays ryan@conestruct.com. No changes outside /privacy. In /privacy: 1. Make the existing "You may request deletion…" line name safety@conestruct.com. 2. In the form section, change "for a short time" to "for up to an hour". Record it as one ruling. Don't ship."
+
+S17. **Applied as ruled, and only on /privacy.**
+- The interim line now reads "You may request deletion of your account and plan data at any time by emailing safety@conestruct.com." Ryan's ruling named the address but not the words, so "by emailing" is CC's.
+- The form section now says "keeps your IP address for up to an hour". That matches S15: each limiter key expires within the 1-hour window.
+- `app/privacy/page.test.tsx` pins both.
+- `ryan@conestruct.com` is unchanged everywhere else.

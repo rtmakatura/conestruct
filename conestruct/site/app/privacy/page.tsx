@@ -7,9 +7,10 @@ export const metadata: Metadata = {
 };
 
 // #346 ruling (Ryan, 2026-10-18): this section added as written, no
-// rewording.  One string, so the words are byte-for-byte his.
+// rewording, then "for a short time" -> "for up to an hour" (address
+// ruling, S17).  One string, so the words are byte-for-byte his.
 const PAST_JOB_FORM =
-  '"Send us a past job" form. When you use this form, we collect your name, company, email, phone (if you give it), the job\'s location, and the job details you enter. We email them to Conestruct through Resend, our email provider, and send you a copy. We use them only to draft your comparison plan and to reply to you. If you send us an approved plan, it arrives by email reply and we use it only for that comparison. To block abuse, our rate limiter (Upstash) keeps your IP address for a short time. We don\'t sell any of this. To have it deleted, email safety@conestruct.com.';
+  '"Send us a past job" form. When you use this form, we collect your name, company, email, phone (if you give it), the job\'s location, and the job details you enter. We email them to Conestruct through Resend, our email provider, and send you a copy. We use them only to draft your comparison plan and to reply to you. If you send us an approved plan, it arrives by email reply and we use it only for that comparison. To block abuse, our rate limiter (Upstash) keeps your IP address for up to an hour. We don\'t sell any of this. To have it deleted, email safety@conestruct.com.';
 
 export default function PrivacyPage() {
   return (
@@ -47,7 +48,7 @@ export default function PrivacyPage() {
             </li>
             <li>
               You may request deletion of your account and plan data at any
-              time.
+              time by emailing safety@conestruct.com.
             </li>
           </ul>
           <p>{PAST_JOB_FORM}</p>

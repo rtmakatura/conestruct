@@ -11,7 +11,7 @@ import PrivacyPage from "./page";
 afterEach(cleanup);
 
 const RULED =
-  `"Send us a past job" form. When you use this form, we collect your name, company, email, phone (if you give it), the job's location, and the job details you enter. We email them to Conestruct through Resend, our email provider, and send you a copy. We use them only to draft your comparison plan and to reply to you. If you send us an approved plan, it arrives by email reply and we use it only for that comparison. To block abuse, our rate limiter (Upstash) keeps your IP address for a short time. We don't sell any of this. To have it deleted, email safety@conestruct.com.`;
+  `"Send us a past job" form. When you use this form, we collect your name, company, email, phone (if you give it), the job's location, and the job details you enter. We email them to Conestruct through Resend, our email provider, and send you a copy. We use them only to draft your comparison plan and to reply to you. If you send us an approved plan, it arrives by email reply and we use it only for that comparison. To block abuse, our rate limiter (Upstash) keeps your IP address for up to an hour. We don't sell any of this. To have it deleted, email safety@conestruct.com.`;
 
 describe("#346 — the past-job form's privacy section", () => {
   it("renders Ryan's wording exactly, as its own paragraph after the interim list", () => {
@@ -25,5 +25,11 @@ describe("#346 — the past-job form's privacy section", () => {
   it("keeps the placeholder's four interim points", () => {
     const c = render(<PrivacyPage />).container;
     expect(c.querySelectorAll("article li")).toHaveLength(4);
+  });
+
+  it("names safety@conestruct.com as the deletion contact (address ruling)", () => {
+    const c = render(<PrivacyPage />).container;
+    const li = [...c.querySelectorAll("article li")].map((l) => l.textContent?.replace(/\s+/g, " ").trim());
+    expect(li[3]).toBe("You may request deletion of your account and plan data at any time by emailing safety@conestruct.com.");
   });
 });
