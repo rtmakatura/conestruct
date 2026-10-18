@@ -88,6 +88,14 @@ export const CODE_LITERALS: readonly FileLiterals[] = [
       "ZONE_COLOR — the corridor zones' one colour home, consumed by the live map (mapbox-gl expressions) and the Static Images URL builder; neither reads CSS",
   },
   {
+    file: "lib/contact/emails.ts",
+    hexes: ["#1a1a1a"],
+    count: 1,
+    disposition: "third-party theme",
+    reason:
+      "#346: the body ink of the landing forms' HTML emails, inline in the <body> style; mail clients read neither CSS variables nor the site's stylesheet",
+  },
+  {
     file: "app/layout.tsx",
     hexes: ["#0F1620", "#2D9CDB", "#E6EDF5"],
     count: 3,
