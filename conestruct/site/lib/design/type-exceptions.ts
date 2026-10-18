@@ -89,6 +89,80 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
+  {
+    name: "landing v2 at `/` (design/landing-v2/, the Oct 17 canvas)",
+    sizes: ["16px", "14.5px", "10px", "clamp(28px, 3vw, 36px)", "22px", "15px", "14px", "10.5px", "15.5px", "clamp(42px, 5vw, 60px)", "17.5px", "13px", "26px", "clamp(20px, 2.2vw, 26px)", "clamp(40px, 5vw, 64px)", "13.5px", "9.5px", "12px", "19px", "11px", "clamp(32px, 4vw, 44px)", "12.5px"],
+    reason:
+      "the approved landing page, rebuilt from landing-v2-reference.html with its copy and type scale word for word and size for size.  It is a marketing page with its own display register (the h1, the pain heads, the close heading), so it declares its sizes here rather than folding them into the workbench roles; nothing on /sandbox reads them.  The five clamp() values are the reference's fluid display sizes",
+    css: [
+      { selector: ".workbench.lv-page", size: "16px" },
+      { selector: ".workbench .lv-wordmark", size: "14.5px" },
+      { selector: ".workbench .lv-nav-links", size: "10px" },
+      { selector: ".workbench .lv-nav-cta", size: "10px" },
+      { selector: ".workbench .lv-label", size: "10px" },
+      { selector: ".workbench .lv-h2", size: "clamp(28px, 3vw, 36px)" },
+      { selector: ".workbench .lv-h3", size: "22px" },
+      { selector: ".workbench .lv-body", size: "16px" },
+      { selector: ".workbench .lv-body-15", size: "15px" },
+      { selector: ".workbench .lv-small", size: "14px" },
+      { selector: ".workbench .lv-mono-note", size: "10.5px" },
+      { selector: ".workbench .lv-eyebrow", size: "10px" },
+      { selector: ".workbench .lv-pri", size: "15.5px" },
+      { selector: ".workbench .lv-sec", size: "15px" },
+      { selector: ".workbench .lv-textlink, .workbench .lv-pilot-link", size: "15px" },
+      { selector: ".workbench .lv-kicker", size: "10px" },
+      { selector: ".workbench .lv-h1", size: "clamp(42px, 5vw, 60px)" },
+      { selector: ".workbench .lv-lede", size: "17.5px" },
+      { selector: ".workbench .lv-cta-note", size: "14px" },
+      { selector: ".workbench .lv-panel-head", size: "10px" },
+      { selector: ".workbench .lv-flag-glyph", size: "13px" },
+      { selector: ".workbench .lv-flag-title", size: "15.5px" },
+      { selector: ".workbench .lv-flag-meta", size: "10.5px" },
+      { selector: ".workbench .lv-stat-num", size: "26px" },
+      { selector: ".workbench .lv-stat-label", size: "10px" },
+      { selector: ".workbench .lv-hint", size: "10.5px" },
+      { selector: ".workbench .lv-figcap", size: "10px" },
+      { selector: ".workbench .lv-statement", size: "clamp(20px, 2.2vw, 26px)" },
+      { selector: ".workbench .lv-pain-head", size: "clamp(40px, 5vw, 64px)" },
+      { selector: ".workbench .lv-pain-body p", size: "16px" },
+      { selector: ".workbench .lv-cite", size: "10.5px" },
+      { selector: ".workbench .lv-close-line", size: "17.5px" },
+      { selector: ".workbench .lv-step-kicker", size: "10px" },
+      { selector: ".workbench .lv-step-body", size: "15px" },
+      { selector: ".workbench .lv-found-label", size: "13.5px" },
+      { selector: ".workbench .lv-found-value", size: "13.5px" },
+      { selector: ".workbench .lv-legend", size: "10px" },
+      { selector: ".workbench .lv-read-q", size: "22px" },
+      { selector: ".workbench .lv-read-label", size: "13.5px" },
+      { selector: ".workbench .lv-read-src", size: "10.5px" },
+      { selector: ".workbench .lv-read-value", size: "13.5px" },
+      { selector: ".workbench .lv-fact-label", size: "9.5px" },
+      { selector: ".workbench .lv-fact-value", size: "12px" },
+      { selector: ".workbench .lv-file-head", size: "10px" },
+      { selector: ".workbench .lv-file-title", size: "19px" },
+      { selector: ".workbench .lv-file-foot", size: "11px" },
+      { selector: ".workbench .lv-audit-body", size: "13px" },
+      { selector: ".workbench .lv-audit-src", size: "10.5px" },
+      { selector: ".workbench .lv-wont-head", size: "15.5px" },
+      { selector: ".workbench .lv-who dt", size: "10px" },
+      { selector: ".workbench .lv-who dd", size: "15px" },
+      { selector: ".workbench .lv-why-p", size: "15px" },
+      { selector: ".workbench .lv-founder-name", size: "14px" },
+      { selector: ".workbench .lv-founder-role", size: "9.5px" },
+      { selector: ".workbench .lv-h2-close", size: "clamp(32px, 4vw, 44px)" },
+      { selector: ".workbench .lv-close-lede", size: "17.5px" },
+      { selector: ".workbench .lv-legend-row", size: "10px" },
+      { selector: ".workbench .lv-field-label, .workbench .lv-field-legend", size: "12.5px" },
+      { selector: ".workbench .lv-input", size: "15px" },
+      { selector: ".workbench .lv-unit", size: "11px" },
+      { selector: ".workbench .lv-opt-title", size: "14px" },
+      { selector: ".workbench .lv-opt-note", size: "10px" },
+      { selector: ".workbench .lv-seg-box", size: "14px" },
+      { selector: ".workbench .lv-how-list li", size: "14px" },
+      { selector: ".workbench .lv-footer-in", size: "10px" },
+    ],
+    tsx: [],
+  },
   // "page h1" (28px) is DELETED — #289 fidelity F4 (ruled Q2): the visible
   // H1 is removed from the screen; it stays in the DOM as `sr-only`, which
   // carries no size, so the exception has no site left.
@@ -659,7 +733,8 @@ export const CENSUS_PINS = {
   // labels.  126 -> 128; sizes unchanged (both already in the sheet).
   // Rule 169: the Zone geometry rows and the stacked sign table's lines
   // and labels.  128 -> 131; sizes unchanged.
-  cssDeclarations: 131,
+  // Landing v2: the page's own scale, 65 declarations.  131 -> 196.
+  cssDeclarations: 196,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
@@ -674,7 +749,9 @@ export const CENSUS_PINS = {
   // not one of #283's nine — so the row rendered the inherited size (the
   // audit's row 161).  The row states rule 95.4's 10.5 px, and the
   // undeclared name leaves the sheet.
-  cssSizes: 24,
+  // Landing v2: 24 -> 36.  Of its 22 sizes, ten were already in the
+  // sheet; the twelve new are its display and micro registers.
+  cssSizes: 36,
   // Correction 3 again: the "Applied from picker" BOX is deleted (its
   // sentences are now provenance lines under the WHAT cells they
   // describe), and its one text-[12px] goes with it — one use, one site

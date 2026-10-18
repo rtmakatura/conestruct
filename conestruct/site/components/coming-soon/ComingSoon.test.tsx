@@ -11,12 +11,23 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import Page from "@/app/page";
+import { PublicChrome } from "@/components/PublicChrome";
+import { ComingSoon } from "@/components/coming-soon/ComingSoon";
 import { ZONE_COLOR, ZONE_LABEL } from "@/lib/corridor-zones";
 import { FOUNDERS, HOW, NOTIFY_HREF, SOURCES } from "@/lib/coming-soon-copy";
 import { PUBLIC_LINE } from "@/lib/public-copy";
 
 afterEach(cleanup);
+
+// Landing v2 took `/`; the Plan Sheet is mounted as app/page.tsx rendered
+// it, so these tests keep guarding it until it is retired.
+function Page() {
+  return (
+    <PublicChrome sheet>
+      <ComingSoon />
+    </PublicChrome>
+  );
+}
 
 const mount = () => render(<Page />).container;
 

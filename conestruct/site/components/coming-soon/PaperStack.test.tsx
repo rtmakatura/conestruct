@@ -10,9 +10,20 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import Page from "@/app/page";
+import { PublicChrome } from "@/components/PublicChrome";
+import { ComingSoon } from "@/components/coming-soon/ComingSoon";
 
 afterEach(cleanup);
+
+// Landing v2 took `/`; the Plan Sheet is mounted as app/page.tsx rendered
+// it, so these tests keep guarding it until it is retired.
+function Page() {
+  return (
+    <PublicChrome sheet>
+      <ComingSoon />
+    </PublicChrome>
+  );
+}
 
 const stacks = () => {
   const c = render(<Page />).container;
