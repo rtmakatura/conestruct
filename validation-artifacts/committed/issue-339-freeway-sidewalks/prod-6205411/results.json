@@ -1,0 +1,55 @@
+{
+ "sha_expected": "6205411",
+ "healthz_sha": "62054116a70a83385e06737b3bcb43127ccb28fa",
+ "1_i25_freeway_no_sidewalk": {
+  "scan_status": "ok",
+  "road_type": "freeway",
+  "pedestrian_facility": null,
+  "sidewalks_detected": false,
+  "sidewalks_details": [
+   "43 sidewalk paths near the freeway not counted: the scan can't tell a sidewalk along a freeway from one on a crossing or frontage street. If one runs along the work zone, correct the scan."
+  ],
+  "r9_9_in_breakdown": false,
+  "sidewalk_adjustment": false,
+  "crew_ped_affected": false,
+  "crew_ped_none": true,
+  "pass": true
+ },
+ "2_bway_control_keeps_sidewalk": {
+  "scan_status": "ok",
+  "road_type": "urban_low",
+  "pedestrian_facility": true,
+  "sidewalks_detected": true,
+  "sidewalks_details": [
+   "unnamed at 39.7346, -104.9876 [advance_warning @ 615 ft]",
+   "unnamed at 39.7339, -104.9876 [buffer @ 358 ft]",
+   "unnamed at 39.7339, -104.9874 [buffer @ 391 ft]",
+   "unnamed at 39.7338, -104.9874 [buffer @ 321 ft]",
+   "unnamed at 39.7346, -104.9873 [advance_warning @ 621 ft]"
+  ],
+  "r9_9_in_breakdown": true,
+  "sidewalk_adjustment": true,
+  "crew_ped_affected": true,
+  "crew_ped_none": false,
+  "pass": true
+ },
+ "3_colfax_control_keeps_sidewalk": {
+  "scan_status": "ok",
+  "road_type": "urban_low",
+  "pedestrian_facility": true,
+  "sidewalks_detected": true,
+  "sidewalks_details": [
+   "unnamed at 39.7403, -104.9586 [lateral 56 ft off centerline]",
+   "unnamed at 39.7401, -104.9587 [advance_warning @ 818 ft]",
+   "unnamed at 39.7399, -104.9616 [lateral 59 ft off centerline]",
+   "unnamed at 39.7399, -104.9610 [lateral 59 ft off centerline]",
+   "unnamed at 39.7401, -104.9616 [downstream @ 2 ft]"
+  ],
+  "r9_9_in_breakdown": true,
+  "sidewalk_adjustment": true,
+  "crew_ped_affected": true,
+  "crew_ped_none": false,
+  "pass": true
+ },
+ "pass": true
+}
