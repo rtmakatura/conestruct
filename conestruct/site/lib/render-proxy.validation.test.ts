@@ -98,6 +98,46 @@ describe("validationPassthrough (#184)", () => {
     expect(body.detail).toContain("'short' or 'long'");
   });
 
+  // #340 — the three schema refusals from the shoulder audit (X1, X2, X9).
+  // loc/type/msg as the backend answers them (TestClient capture on the
+  // #340 branch: speed 80, speed 15, 5 lanes).
+  it.each([
+    ["less_than_equal", "speed", "Input should be less than or equal to 75"],
+    ["greater_than_equal", "speed", "Input should be greater than or equal to 20"],
+    ["less_than_equal", "lanes", "Input should be less than or equal to 4"],
+  ])("names the field on a %s refusal of %s (#340)", async (type, field, msg) => {
+    const res = validationPassthrough(
+      422,
+      JSON.stringify({ detail: [{ type, loc: ["body", "shoulder", field], msg }] }),
+    );
+    expect(res?.status).toBe(400);
+    const body = (await res?.json()) as { detail: string };
+    expect(body.detail).toBe(`${field}: ${msg}`);
+  });
+
+  it("names each field when several are refused, and leaves a body-level message bare (#340)", async () => {
+    const two = validationPassthrough(422, LIVE_422_TWO_ERRORS);
+    expect(((await two?.json()) as { detail: string }).detail).toBe(
+      "workType: Input should be 'utility_locate', 'survey', 'signal_cabinet', 'guardrail' or 'other'" +
+        " · duration: Input should be 'short' or 'long'",
+    );
+    const tag = validationPassthrough(
+      422,
+      JSON.stringify({
+        detail: [
+          {
+            type: "union_tag_not_found",
+            loc: ["body"],
+            msg: "Unable to extract tag using discriminator 'kind'",
+          },
+        ],
+      }),
+    );
+    expect(((await tag?.json()) as { detail: string }).detail).toBe(
+      "Unable to extract tag using discriminator 'kind'",
+    );
+  });
+
   it("returns null for 5xx and for an unparseable 422 — those stay honest 502s", () => {
     expect(validationPassthrough(500, "render failed: boom")).toBeNull();
     expect(validationPassthrough(502, "")).toBeNull();

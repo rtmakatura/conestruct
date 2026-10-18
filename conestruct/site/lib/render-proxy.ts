@@ -51,7 +51,11 @@ const EXT: Record<RenderKind, string> = {
 //   already use, so the existing PLAN DECLINED path (#180) renders the
 //   validation message with no client change.  Pydantic prefixes
 //   model-validator messages with "Value error, " — stripped, it isn't
-//   part of the sentence the validator wrote.
+//   part of the sentence the validator wrote.  Pydantic's own messages
+//   ("Input should be less than or equal to 75") never name the field,
+//   so they take the last string of ``loc`` as a prefix (#340):
+//   "speed: Input should be ...".  A ``value_error`` is a validator's
+//   own sentence and stays as written.
 //
 // Returns null for every other status (including an unparseable 422 —
 // a body we can't quote honestly stays an honest 502 at the call site).
@@ -69,12 +73,18 @@ export function validationPassthrough(
   let message: string;
   try {
     const body = JSON.parse(detail) as {
-      detail?: { msg?: unknown }[];
+      detail?: { msg?: unknown; type?: unknown; loc?: unknown }[];
     };
     const msgs = (body.detail ?? [])
-      .map((e) => (typeof e.msg === "string" ? e.msg : ""))
-      .filter(Boolean)
-      .map((m) => m.replace(/^Value error, /, ""));
+      .map((e) => {
+        if (typeof e.msg !== "string" || !e.msg) return "";
+        if (e.type === "value_error") return e.msg.replace(/^Value error, /, "");
+        const field = Array.isArray(e.loc)
+          ? e.loc.filter((p): p is string => typeof p === "string").at(-1)
+          : undefined;
+        return field && field !== "body" ? `${field}: ${e.msg}` : e.msg;
+      })
+      .filter(Boolean);
     if (msgs.length === 0) return null;
     message = msgs.join(" · ");
   } catch {
