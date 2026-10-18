@@ -1,0 +1,6 @@
+i25-r-65-night-3lanes
+  audit 200 label: Drawn as 3 lanes per direction (entered); the road has 4. Device offsets are measured against 3 lanes.
+  pdf 200 page 1: DRAWN AS 3 LANES PER DIRECTION (ENTERED); THE ROAD HAS 4. DEVICE OFFSETS ARE MEASURED AGAINST 3 LANES. TRAFFIC CONTROL DEVICE SUMMARY MUTCD DEVICE QTY G20-1 ROAD CONSTRUC
+alameda-r-35
+  audit 200 label: Drawn as 4 lanes per direction; the road has 5. Plans draw at most 4 lanes per direction, so the device offsets are measured against 4 lanes.
+  pdf 200 page 1: DRAWN AS 4 LANES PER DIRECTION; THE ROAD HAS 5. PLANS DRAW AT MOST 4 LANES PER DIRECTION, SO THE DEVICE OFFSETS ARE MEASURED AGAINST 4 LANES. TRAFFIC CONTROL DEVICE SUMMA
