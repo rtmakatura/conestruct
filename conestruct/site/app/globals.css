@@ -8446,6 +8446,26 @@ input[type="number"] {
   min-width: 0;
   min-height: 48px;
 }
+/* #346: the forms' honeypot (off-screen, aria-hidden, out of the tab
+   order), the one inline error (⚠ carries it, not the hue alone: Rule
+   13), and the confirmation that replaces a sent form. */
+.workbench .lv-pot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.workbench .lv-send-error {
+  color: var(--warn);
+}
+.workbench .lv-send-error a {
+  color: inherit;
+  text-decoration: underline;
+}
+.workbench .lv-sent:focus {
+  outline: none;
+}
 
 /* footer */
 .workbench .lv-footer {

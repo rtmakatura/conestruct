@@ -5,8 +5,8 @@
 // controls, the held items, and that every in-page link lands somewhere.
 // Layout, contrast, targets and motion are the browser leg.
 
-import { cleanup, fireEvent, render } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, findByRole, findByText, fireEvent, render, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Page from "@/app/page";
 
 afterEach(cleanup);
@@ -74,15 +74,147 @@ describe("landing v2 — the form", () => {
     }
   });
 
-  it("nothing submits yet: both buttons are disabled and read 'Opening soon'", () => {
+  it("both submits are live and read the reference's labels; neither form has an action", () => {
     const c = mount();
     const submits = [...c.querySelectorAll<HTMLButtonElement>('button[type="submit"]')];
-    expect(submits).toHaveLength(2);
-    for (const b of submits) {
-      expect(b.disabled).toBe(true);
-      expect(b.textContent).toBe("Opening soon");
-    }
+    expect(submits.map((b) => [b.textContent, b.disabled])).toEqual([
+      ["Send us the job", false],
+      ["Join the waitlist", false],
+    ]);
+    expect(c.textContent).not.toContain("Opening soon");
     for (const f of c.querySelectorAll("form")) expect(f.getAttribute("action")).toBeNull();
+  });
+
+  it("each form carries a honeypot hidden from people and from the tab order", () => {
+    const pots = [...mount().querySelectorAll<HTMLInputElement>('input[name="website"]')];
+    expect(pots).toHaveLength(2);
+    for (const p of pots) {
+      expect(p.tabIndex).toBe(-1);
+      expect(p.closest('[aria-hidden="true"]')).not.toBeNull();
+      expect(p.value).toBe("");
+    }
+  });
+});
+
+// #346: the forms post to /api/contact (mounted flow, Rule 11).  `fetch`
+// is the stand-in; the route's own behaviour is app/api/contact/route.test.ts.
+describe("landing v2 — the forms send (#346)", () => {
+  type Call = { url: string; body: Record<string, unknown> };
+  let calls: Call[];
+  let answer: () => Promise<Response>;
+  beforeEach(() => {
+    calls = [];
+    answer = async () => new Response("{}", { status: 200 });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init: RequestInit) => {
+        calls.push({ url, body: JSON.parse(init.body as string) });
+        return answer();
+      }),
+    );
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  const jobForm = (c: HTMLElement) => c.querySelector<HTMLFormElement>('form[aria-label="Send us a past job"]')!;
+  const joinForm = (c: HTMLElement) => c.querySelector<HTMLFormElement>("form#join")!;
+  const type = (c: HTMLElement, id: string, v: string) =>
+    fireEvent.change(c.querySelector<HTMLInputElement>(`#${id}`)!, { target: { value: v } });
+  const pick = (c: HTMLElement, name: string, v: string) =>
+    fireEvent.click(c.querySelector<HTMLInputElement>(`input[name="${name}"][value="${v}"]`)!);
+
+  function fillJob(c: HTMLElement) {
+    type(c, "c-name", "Dana Ortiz");
+    type(c, "c-company", "Front Range Traffic");
+    type(c, "c-email", "dana@frtraffic.com");
+    type(c, "c-where", "E Colfax Ave & N Race St");
+    type(c, "c-city", "Denver");
+    pick(c, "kind", "Shoulder work");
+    type(c, "c-side", "South side");
+    type(c, "c-length", "1,000");
+    pick(c, "hours", "Night");
+  }
+
+  it("the job form posts exactly the route's keys, then is replaced by its confirmation", async () => {
+    const c = mount();
+    fillJob(c);
+    fireEvent.submit(jobForm(c));
+    const done = await findByText(c, "Got it. Check your inbox for a confirmation.");
+    expect(calls).toHaveLength(1);
+    expect(calls[0].url).toBe("/api/contact");
+    const { elapsed_ms, ...rest } = calls[0].body;
+    expect(typeof elapsed_ms).toBe("number");
+    expect(rest).toEqual({
+      type: "job",
+      website: "",
+      name: "Dana Ortiz",
+      company: "Front Range Traffic",
+      email: "dana@frtraffic.com",
+      phone: "",
+      where: "E Colfax Ave & N Race St",
+      city: "Denver",
+      kind: "Shoulder work",
+      side: "South side",
+      length_ft: "1,000",
+      hours: "Night",
+      notes: "",
+    });
+    expect(jobForm(c)).toBeNull();
+    expect(document.activeElement).toBe(done.closest("[tabindex]"));
+  });
+
+  for (const [label, make] of [
+    ["a 502", async () => new Response("{}", { status: 502 })],
+    ["a 429", async () => new Response("{}", { status: 429 })],
+    ["a 503", async () => new Response("{}", { status: 503 })],
+    ["no answer", async () => Promise.reject(new TypeError("offline"))],
+  ] as [string, () => Promise<Response>][]) {
+    it(`${label}: the honest inline error, the form and its values kept`, async () => {
+      answer = make;
+      const c = mount();
+      fillJob(c);
+      fireEvent.submit(jobForm(c));
+      const alert = await findByRole(jobForm(c), "alert");
+      expect(alert.textContent).toBe("⚠ That didn't send. Try again, or email ryan@conestruct.com.");
+      expect(alert.querySelector("a")?.getAttribute("href")).toBe("mailto:ryan@conestruct.com");
+      expect(c.querySelector<HTMLInputElement>("#c-name")!.value).toBe("Dana Ortiz");
+      expect(c.textContent).not.toContain("Got it.");
+    });
+  }
+
+  it("while sending, the button reads 'Sending…' and is disabled", async () => {
+    let release!: (r: Response) => void;
+    answer = () => new Promise((r) => (release = r));
+    const c = mount();
+    fillJob(c);
+    fireEvent.submit(jobForm(c));
+    const button = jobForm(c).querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    await waitFor(() => expect(button.textContent).toBe("Sending…"));
+    expect(button.disabled).toBe(true);
+    release(new Response("{}", { status: 200 }));
+    await findByText(c, "Got it. Check your inbox for a confirmation.");
+  });
+
+  it("the waitlist posts type=waitlist with one email and is replaced by \"You're on the list.\"", async () => {
+    const c = mount();
+    type(c, "w-email", "pat@example.com");
+    fireEvent.submit(joinForm(c));
+    await findByText(c, "You're on the list.");
+    const { elapsed_ms, ...rest } = calls[0].body;
+    expect(typeof elapsed_ms).toBe("number");
+    expect(rest).toEqual({ type: "waitlist", website: "", email: "pat@example.com" });
+    expect(joinForm(c)).toBeNull();
+    // the job form is untouched
+    expect(jobForm(c)).not.toBeNull();
+  });
+
+  it("the waitlist refused: the same inline error", async () => {
+    answer = async () => new Response("{}", { status: 429 });
+    const c = mount();
+    type(c, "w-email", "pat@example.com");
+    fireEvent.submit(joinForm(c));
+    expect((await findByRole(joinForm(c), "alert")).textContent).toBe(
+      "⚠ That didn't send. Try again, or email ryan@conestruct.com.",
+    );
   });
 });
 

@@ -16,7 +16,9 @@ export const GATE_HEADER = "x-conestruct-gate";
 // A3-Q2 adds `/404` (the "Road closed" page, R19: "Public, like `/`").
 // Every other unknown path stays gated — an anonymous visitor there goes
 // to `/`, not to the 404.
-const PUBLIC_EXACT = new Set(["/", "/terms", "/privacy", "/404", "/api/clerk/webhook"]);
+// #346 adds `/api/contact`, the landing page's two forms (that route
+// only: "the gate allowlist covers the new route only").
+const PUBLIC_EXACT = new Set(["/", "/terms", "/privacy", "/404", "/api/clerk/webhook", "/api/contact"]);
 
 export function isPublicPath(pathname: string): boolean {
   return (

@@ -161,6 +161,57 @@ export async function rateLimitOr429(
   }
 }
 
+// ── the fail-CLOSED variant (#346) ─────────────────────────────────────
+// The contact route sends email from conestruct.com, so an unbounded caller
+// burns the provider quota and the domain's reputation.  Unlike the sandbox
+// routes above, it REFUSES when the limiter is unconfigured, misconfigured
+// or unreachable (#346 ruling 5: "this route refuses when the limiter is
+// down").  `rateLimitOr429` above is unchanged.
+
+export type Window = `${number} ${"s" | "m" | "h" | "d"}`;
+export type Cap = { limit: number; window: Window };
+export type StrictResult = { ok: true } | { ok: false; reason: "limited" | "unavailable" };
+
+function strictLimiter(state: State, routeId: string, scope: string, cap: Cap): Ratelimit {
+  if (state.kind !== "on") throw new Error("limiter not configured");
+  const key = `strict:${routeId}:${scope}:${cap.limit}:${cap.window}`;
+  let limiter = state.limiters.get(key);
+  if (!limiter) {
+    limiter = new Ratelimit({
+      redis: state.redis,
+      limiter: Ratelimit.fixedWindow(cap.limit, cap.window),
+      prefix: `ratelimit:${routeId}:${scope}`,
+      analytics: false,
+    });
+    state.limiters.set(key, limiter);
+  }
+  return limiter;
+}
+
+/**
+ * A per-IP cap and a global cap on one route, both backed by Upstash.
+ * The per-IP count is spent first; a caller over it never touches the
+ * global count.  Every failure mode answers `unavailable`, never allow.
+ */
+export async function rateLimitStrict(
+  req: NextRequest,
+  routeId: string,
+  caps: { perIp: Cap; global: Cap },
+): Promise<StrictResult> {
+  try {
+    const state = resolveState();
+    if (state.kind !== "on") return { ok: false, reason: "unavailable" };
+    const ip = await strictLimiter(state, routeId, "ip", caps.perIp).limit(clientIp(req));
+    if (!ip.success) return { ok: false, reason: "limited" };
+    const all = await strictLimiter(state, routeId, "global", caps.global).limit("global");
+    if (!all.success) return { ok: false, reason: "limited" };
+    return { ok: true };
+  } catch (err) {
+    console.error(`rate-limit: failing CLOSED for ${routeId}`, err);
+    return { ok: false, reason: "unavailable" };
+  }
+}
+
 // Test seam: reset the memoised state so a test can re-resolve under a
 // different env / mock.  Not used in production.
 export function __resetRateLimitStateForTests(): void {

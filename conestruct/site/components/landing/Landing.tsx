@@ -4,6 +4,7 @@ import { CompareForm } from "./CompareForm";
 import { Hero } from "./Hero";
 import { STEP1 } from "./plan-art";
 import { PlanSvg } from "./PlanSvg";
+import { WaitlistForm } from "./WaitlistForm";
 
 // Landing v2 at `/` — the approved page from the Oct 17 canvas
 // (design/landing-v2/landing-v2-reference.html), rebuilt on the workbench
@@ -506,17 +507,7 @@ export function Landing() {
                     Apply for the pilot →
                   </a>
                 </div>
-                <form id="join" className="lv-join">
-                  <label htmlFor="w-email" className="lv-field-label">
-                    Not ready? Get one email the day it opens.
-                  </label>
-                  <div className="lv-join-row">
-                    <input id="w-email" name="email" type="email" autoComplete="email" placeholder="you@company.com" className="lv-input lv-join-input" />
-                    <button type="submit" className="lv-sec" disabled>
-                      Opening soon
-                    </button>
-                  </div>
-                </form>
+                <WaitlistForm />
               </div>
             </div>
           </Section>

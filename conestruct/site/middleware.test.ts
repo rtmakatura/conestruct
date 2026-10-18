@@ -113,6 +113,8 @@ const PUBLIC: Row[] = [
   { path: "/sign-in", method: "GET", file: "app/sign-in/[[...sign-in]]/page.tsx" },
   { path: "/sign-in/factor-one", method: "GET", file: "app/sign-in/[[...sign-in]]/page.tsx" },
   { path: "/api/clerk/webhook", method: "POST", file: "app/api/clerk/webhook/route.ts" },
+  // #346: the landing page's forms.
+  { path: "/api/contact", method: "POST", file: "app/api/contact/route.ts" },
 ];
 
 const GATED_PAGES: Row[] = [
@@ -171,6 +173,9 @@ const GATED_API: Row[] = [
   // Default-deny near-misses of the webhook.
   { path: "/api/clerk/webhook/extra", method: "POST", file: "" },
   { path: "/api/clerk/webhookx", method: "POST", file: "" },
+  // Default-deny near-misses of the contact route (#346).
+  { path: "/api/contact/extra", method: "POST", file: "" },
+  { path: "/api/contacts", method: "POST", file: "" },
 ];
 
 beforeEach(() => {

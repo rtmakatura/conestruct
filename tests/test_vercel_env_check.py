@@ -9,7 +9,10 @@ Three layers, each tested where it lives:
   (tests/fixtures/vercel-env/production-full.txt is the real listing of
   2026-09-28, after the fix; production-one-short.txt drops CLERK_SECRET_KEY,
   the outage's cause; preview-only-secret.txt scopes it Preview only, the state
-  before the fix).
+  before the fix).  The five #346 rows (RESEND_API_KEY, CONTACT_TO,
+  CONTACT_FROM, REPLY_TURNAROUND, REPLY_DUE_BUSINESS_DAYS) were added to all
+  three by hand on 2026-10-18 when the list made them required; they are not
+  from a real listing.
 - scripts/ship.ps1, the wiring: read as text, like test_ship_push.py, because
   the ship_gate hook gates any run of it.  The check runs after the gh check
   and before `git merge`, and its failure says "Nothing was merged or pushed."

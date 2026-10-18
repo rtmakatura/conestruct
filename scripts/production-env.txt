@@ -28,6 +28,11 @@ required      DATABASE_URL                                     db/index.ts:9 -- 
 required      UPSTASH_REDIS_REST_URL                           lib/rate-limit.ts:80 -- unset, the rate limiter silently turns off (fail-open)
 required      UPSTASH_REDIS_REST_TOKEN                         lib/rate-limit.ts:81 -- same
 required      NEXT_PUBLIC_SENTRY_DSN                           sentry.server.config.ts:3, sentry.client.config.ts:3, sentry.edge.config.ts:3 -- unset, error monitoring silently turns off
+required      RESEND_API_KEY                                   lib/contact/send.ts:15 -- unset, the landing forms refuse (503)
+required      CONTACT_TO                                       lib/contact/send.ts:16 -- where the landing forms' notifications go
+required      CONTACT_FROM                                     lib/contact/send.ts:17 -- the sender on every landing-form email
+required      REPLY_TURNAROUND                                 lib/contact/send.ts:18 -- the confirmation's promise; no default in code
+required      REPLY_DUE_BUSINESS_DAYS                          lib/contact/send.ts:19 -- the due date in Ryan's notification
 
 not-required  SENTRY_AUTH_TOKEN                                next.config.mjs:37 -- build-time source-map upload only (.env.example:39)
 not-required  NEXT_PUBLIC_SHEET_REVISED                        next.config.mjs:18, components/coming-soon/ComingSoon.tsx:60 -- set by next.config.mjs itself at build time (Denver's date, R42); never a Vercel variable

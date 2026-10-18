@@ -1,0 +1,9 @@
+From: Ryan at Conestruct <ryan@conestruct.com>
+To: ryan@conestruct.com
+Reply-To: pat@example.com
+Subject: Waitlist: pat@example.com
+
+pat@example.com joined the waitlist.
+
+Received Sat, Oct 17, 2026, 11:05 AM MDT.
+Hitting reply goes straight to them.
