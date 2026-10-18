@@ -1,0 +1,42 @@
+/* Landing v2 motion. B = live road (hero), C = linked spotlight (hero card <-> drawing), D = scroll reveal.
+   Spotlight state: add class f-int | f-walk | f-taper | f-buffer | f-dev to the svg.plan on hover/focus of the matching card row or number. */
+
+
+@keyframes mfade{from{opacity:0}}
+@keyframes mgrow{from{transform:scaleX(0)}}
+@keyframes mdrop{from{opacity:0;transform:translateY(-10px)}}
+@keyframes mrise{from{opacity:0;transform:translateY(8px)}}
+@keyframes mblink{0%,49%{opacity:1}50%,100%{opacity:.15}}
+@keyframes mdrive-e{from{transform:translateX(0)}to{transform:translateX(1240px)}}
+@keyframes mdrive-w{from{transform:translateX(1240px)}to{transform:translateX(0)}}
+@keyframes mmerge{0%{transform:translate(0,0)}22%{transform:translate(272.8px,0)}30%{transform:translate(372px,-25px)}100%{transform:translate(1240px,-25px)}}
+@keyframes msig{0%,49%{opacity:.55}50%,100%{opacity:.08}}
+@keyframes msigwin{0%,9.9%{opacity:0}10%,30%{opacity:1}30.1%,100%{opacity:0}}
+@keyframes mring{from{transform:scale(1);opacity:.9}to{transform:scale(5.5);opacity:0}}
+
+@media (prefers-reduced-motion: no-preference){
+.mB .car-e{animation-name:mdrive-e;animation-timing-function:linear;animation-iteration-count:infinite}
+.mB .car-w{animation-name:mdrive-w;animation-timing-function:linear;animation-iteration-count:infinite}
+.mB .car-merge{animation-name:mmerge;animation-timing-function:linear;animation-iteration-count:infinite}
+.mB .sig{animation-name:msigwin;animation-timing-function:linear;animation-iteration-count:infinite}
+.mB .sigd{animation:msig .8s linear infinite}
+.mB .ab1{animation:mblink 1.2s linear infinite}
+.mB .ab2{animation:mblink 1.2s linear infinite;animation-delay:-.6s}
+}
+.mC .z{transition:opacity .25s ease}
+.mC.f-int .z:not(.k-int):not(.lanes):not(.base),.mC.f-walk .z:not(.k-walk):not(.lanes):not(.base),.mC.f-taper .z:not(.k-taper):not(.lanes):not(.base),.mC.f-buffer .z:not(.k-buffer):not(.lanes):not(.base),.mC.f-dev .z:not(.cn):not(.ab):not(.sg):not(.lanes):not(.base){opacity:.16}
+.mC.f-int .z.base,.mC.f-walk .z.base,.mC.f-taper .z.base,.mC.f-buffer .z.base,.mC.f-dev .z.base{opacity:.5}
+.mC.f-int .z.base.k-int{opacity:1}
+.mC .ring{transform-box:fill-box;transform-origin:center;opacity:0}
+@media (prefers-reduced-motion: no-preference){
+.mC.f-int .k-int .ring,.mC.f-walk .k-walk .ring{animation:mring 1.3s ease-out infinite}
+}
+.mC-card button{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;transition:background .2s ease}
+.mC-card button:hover,.mC-card button:focus-visible{background:#16283a}
+.mC-card button:focus-visible{outline:2px solid #56bcf2;outline-offset:-2px}
+
+/* D: scroll reveal (progressive enhancement; build may use IntersectionObserver instead) */
+@supports (animation-timeline: view()){@media (prefers-reduced-motion: no-preference){
+.reveal{animation:mrise linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
+.rule-draw{transform-origin:left center;animation:mgrow linear both;animation-timeline:view();animation-range:entry 0% cover 25%}
+}}
