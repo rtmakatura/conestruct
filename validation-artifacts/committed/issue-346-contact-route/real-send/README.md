@@ -35,18 +35,13 @@ The three bodies were checked against what the code should produce:
 
 The confirmation shows the signature's alt text ("Ryan Makatura, Founder, Conestruct"). Below it is the 400×200 box that is reserved for the image, so the layout doesn't jump when the image loads. The text signature follows. The two notifications carry no image. The `*.png` copies without `-images-blocked` load the signature from `public/email-signature.png`.
 
-## Not checked here
+## Headers: closed
 
-The Gmail API returns no raw headers, so CC could not check three things:
-- the Reply-To header
-- the sender's display name, "Ryan at Conestruct"
-- the SPF, DKIM and DMARC results
-
-To check them in Gmail, open email 1 or 2 and use ⋮ → "Show original".
+The Gmail API returns no raw headers, so CC could not check them. Ryan read them himself on 2026-10-18, using "Show original" on both emails. From, Reply-To, SPF, DKIM and DMARC all pass (rulings.md S16).
 
 **Signature image in production.** `https://conestruct.com/email-signature.png` does not resolve yet:
 - Production answers it with 307 to `https://www.conestruct.com/email-signature.png`.
 - That URL is a 404 today, because the file ships with this branch.
-- After the ship, the image will load through one redirect.
+- The emails sent on 2026-10-18 used this apex URL, so their image needed one redirect, and would have needed it even after the ship.
 
-Gmail's image proxy follows redirects. Some other clients may not, and would show the alt text. The URL is the one the spec names (`design/landing-v2/cc-prompt-landing-v2-form.md:43`), so it is unchanged. See rulings.md S13.
+Gmail's image proxy follows redirects. Some other clients may not, and would show the alt text. Ryan's ruling of 2026-10-18 moved the URL to `https://www.conestruct.com/email-signature.png` (rulings.md S14). The emails in `received/` keep the apex URL they were sent with.

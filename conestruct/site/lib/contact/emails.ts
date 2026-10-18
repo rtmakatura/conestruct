@@ -19,7 +19,7 @@ export type Email = { from: string; to: string; replyTo: string; subject: string
 
 export const REPLY_TO = "ryan@conestruct.com";
 export const SUBJECT_MAX = 80;
-export const SIGNATURE_URL = "https://conestruct.com/email-signature.png";
+export const SIGNATURE_URL = "https://www.conestruct.com/email-signature.png";
 export const SIGNATURE_ALT = "Ryan Makatura, Founder, Conestruct";
 export const SIGNATURE_TEXT = "Ryan Makatura\nFounder, Conestruct\n407-252-2385 · conestruct.com · ryan@conestruct.com";
 

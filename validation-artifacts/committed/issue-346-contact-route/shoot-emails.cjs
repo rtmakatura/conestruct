@@ -12,7 +12,7 @@ const path = require("path");
   for (const f of fs.readdirSync(dir).filter((n) => n.endsWith(".html"))) {
     for (const blocked of [false, true]) {
       const page = await browser.newPage({ viewport: { width: 600, height: 400 } });
-      await page.route("https://conestruct.com/email-signature.png", (r) =>
+      await page.route("https://www.conestruct.com/email-signature.png", (r) =>
         blocked ? r.abort() : r.fulfill({ path: path.join(__dirname, "../../../conestruct/site/public/email-signature.png") }),
       );
       await page.goto("file://" + path.join(dir, f));

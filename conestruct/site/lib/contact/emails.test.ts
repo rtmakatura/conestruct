@@ -70,7 +70,7 @@ describe("the confirmation, to the submitter", () => {
 
   it("HTML: the signature image at 400×200 with its alt, then the text signature under it", () => {
     expect(e.html).toContain(
-      '<img src="https://conestruct.com/email-signature.png" width="400" height="200" alt="Ryan Makatura, Founder, Conestruct"',
+      '<img src="https://www.conestruct.com/email-signature.png" width="400" height="200" alt="Ryan Makatura, Founder, Conestruct"',
     );
     const img = e.html.indexOf("<img");
     expect(e.html.indexOf("Ryan Makatura<br>Founder, Conestruct<br>407-252-2385")).toBeGreaterThan(img);

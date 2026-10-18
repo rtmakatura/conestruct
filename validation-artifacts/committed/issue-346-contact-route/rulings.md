@@ -53,3 +53,19 @@ Ryan, 2026-10-18 (the `/start 346` message): "Resend is set up: conestruct.com i
 S13. **R145 self-ruled: the test inbox is Ryan's own, by plus-address, and the signature URL stays as the spec names it.**
 - `ryan+346job@` and `ryan+346wait@conestruct.com` deliver to the inbox that also gets CONTACT_TO. One mailbox therefore shows all three emails, and no outside address receives test mail.
 - `https://conestruct.com/email-signature.png` answers 307 to `www` in production. Changing it would depart from `design/landing-v2/cc-prompt-landing-v2-form.md:43`, so it is flagged to Ryan, not changed (real-send/README.md).
+
+## Ryan's rulings, 2026-10-18 (after the real send)
+
+1. "Signature image: change the URL to https://www.conestruct.com/email-signature.png. Record it as a ruling that amends cc-prompt-landing-v2-form.md:43."
+2. "/privacy: add this section as written, with no rewording" (the section text is in `conestruct/site/app/privacy/page.tsx`, pinned by `app/privacy/page.test.tsx`). "First check the Upstash sentence against lib/rate-limit.ts … If my wording is wrong, stop and tell me before you add it."
+3. "Header check is done: From, Reply-To, SPF, DKIM and DMARC pass on both emails (Ryan checked the raw headers). Mark that item closed. Don't ship."
+
+S14. **Ruling 1 amends `design/landing-v2/cc-prompt-landing-v2-form.md:43`.** The signature image is `https://www.conestruct.com/email-signature.png`. Production sends the apex to `www` with a 307, so this drops the redirect hop that some mail clients won't follow. `SIGNATURE_URL` (`lib/contact/emails.ts:22`) and its test now use it. The prompt file is unchanged; this entry is the amendment. `emails/1-confirmation.html` was re-rendered from the code, and the other fixtures and all PNGs came out byte-identical. `real-send/received/` keeps the apex URL, because that is what was sent on 2026-10-18.
+
+S15. **R145 self-ruled: how the /privacy section is placed.** It is checked first, then placed.
+- **The Upstash sentence is accurate.** The limiter keys on the raw client IP, not a hash: the first `x-forwarded-for` entry (`lib/rate-limit.ts:125-131`), passed to `.limit()` at `:204`. Upstash stores it in the key name `ratelimit:contact:ip:<IP>:<bucket>` and sets `PEXPIRE` to the window on the bucket's first hit (`@upstash/ratelimit` 2.0.8, `dist/index.js:198-202`). The contact window is 1 hour, so each key lives at most 1 hour. Analytics are off (`:184`). "keeps your IP address for a short time" is true, and nothing in it claims hashing.
+- **Placement.** The text is one string constant, rendered as one plain paragraph after the placeholder's interim list. It has no bold or heading of its own, because the page has no section headings to match.
+- **Left unchanged:** the DRAFT label and `TERMS_VERSION`. `TERMS_VERSION` is shared with /terms, so changing it is not CC's call.
+- **Flagged to Ryan, not changed:** /privacy names no contact address anywhere else, and its interim line "You may request deletion…" gives no address. `safety@conestruct.com` appears nowhere in the code. Every address the site shows is `ryan@conestruct.com` (`components/landing/Landing.tsx:18`, `components/landing/useContactSubmit.ts:14`, `lib/coming-soon-copy.ts:13`, the emails' Reply-To and signature).
+
+S16. **The header check is closed (ruling 3).** Ryan read the raw headers on both emails: From, Reply-To, SPF, DKIM and DMARC all pass. `real-send/README.md` marks it closed.
