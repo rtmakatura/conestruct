@@ -8446,22 +8446,34 @@ input[type="number"] {
   min-width: 0;
   min-height: 48px;
 }
-/* #346: the forms' honeypot (off-screen, aria-hidden, out of the tab
-   order), the one inline error (⚠ carries it, not the hue alone: Rule
-   13), and the confirmation that replaces a sent form. */
+/* #346: the forms' honeypot (off-screen and hidden, aria-hidden, out of
+   the tab order; still in the HTML a bot fills), the one inline error (⚠
+   carries it, not the hue alone: Rule 13), and the confirmation that
+   replaces a sent form. */
 .workbench .lv-pot {
   position: absolute;
   left: -10000px;
   width: 1px;
   height: 1px;
   overflow: hidden;
+  visibility: hidden;
 }
 .workbench .lv-send-error {
   color: var(--warn);
 }
+/* Rule 15's floor on the fallback address: the box grows, the words
+   keep their size (as .lv-textlink). */
 .workbench .lv-send-error a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
   color: inherit;
   text-decoration: underline;
+}
+@media (max-width: 480px) {
+  .workbench .lv-send-error a {
+    min-height: 44px;
+  }
 }
 .workbench .lv-sent:focus {
   outline: none;

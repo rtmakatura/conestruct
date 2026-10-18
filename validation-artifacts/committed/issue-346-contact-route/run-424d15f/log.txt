@@ -1,0 +1,14 @@
+#346 check · http://localhost:3100/ · 2026-10-18T17:28:50.429Z
+1440: idle · status 200 · scroll 1440/1440 ok · axe 0 · targets under 32:  215x20;  215x20 · contrast lowest 6, below AA: none
+1440: refused (502) · posts job(elapsed 5952 ms, keys 14), waitlist(elapsed 6081 ms, keys 4) · alerts ["⚠ That didn't send. Try again, or email ryan@conestruct.com.","⚠ That didn't send. Try again, or email ryan@conestruct.com.",""] · scroll 1440/1440 ok · axe 0 · targets under 32:  215x20; ryan@conestruct.com 147x17 · contrast lowest 5.72, below AA: none
+1440: page errors none
+1440: sent (200) · posts job(elapsed 2070 ms, keys 14), waitlist(elapsed 2208 ms, keys 4) · {"job":"Got it. Check your inbox for a confirmation.","join":"You're on the list.","forms":0,"focus":"lv-join lv-sent"} · scroll 1440/1440 ok · axe 0 · targets under 32: none · contrast lowest 6, below AA: none
+1440: page errors none
+390: idle · status 200 · scroll 390/390 ok · axe 0 · targets under 44:  215x20;  215x20 · contrast lowest 6, below AA: none
+390: refused (502) · posts job(elapsed 3254 ms, keys 14), waitlist(elapsed 3386 ms, keys 4) · alerts ["⚠ That didn't send. Try again, or email ryan@conestruct.com.","⚠ That didn't send. Try again, or email ryan@conestruct.com.",""] · scroll 390/390 ok · axe 0 · targets under 44:  215x20; ryan@conestruct.com 147x17 · contrast lowest 5.72, below AA: none
+390: page errors none
+390: sent (200) · posts job(elapsed 1650 ms, keys 14), waitlist(elapsed 1736 ms, keys 4) · {"job":"Got it. Check your inbox for a confirmation.","join":"You're on the list.","forms":0,"focus":"lv-join lv-sent"} · scroll 390/390 ok · axe 0 · targets under 44: none · contrast lowest 6, below AA: none
+390: page errors none
+real POST /api/contact (no session): 503 {"ok":false,"reason":"unavailable"}
+real GET /api/contact (no session): 405
+real POST /api/contacts (near miss, no session): 401
