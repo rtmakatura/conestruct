@@ -1,0 +1,1 @@
+{"detail":"speed: Input should be greater than or equal to 20"}
