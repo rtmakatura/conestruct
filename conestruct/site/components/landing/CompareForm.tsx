@@ -1,38 +1,37 @@
 "use client";
 
-// Landing v2, section 07: "Send us a past job".  The fields, labels and
-// placeholders are the reference's; the names are the ones
-// cc-prompt-landing-v2-form.md gives the route.  It posts to /api/contact
+// Landing v2, "Send us a job you've already permitted".  The labels and
+// placeholders are the lean page's (design/landing-v2/lean-page/); the
+// names are the ones cc-prompt-landing-v2-form.md gives the route, and
+// the payload is unchanged: phone and notes sit closed behind "+ Add a
+// phone number or a note" and still submit.  It posts to /api/contact
 // (#346); on success the form is replaced by its confirmation, and any
 // refusal shows the honest inline error (ruling 5).
 //
-// "Kind of work" is radio tiles and "Hours" a two-part segmented radio:
-// native inputs, visually hidden, the visible state from :checked.
+// "Kind of work" is radio chips (the plain name only; the wire value was
+// always the name) and "Hours" a two-part segmented radio: native inputs,
+// visually hidden, the visible state from :checked.
 
-import { HONEYPOT } from "@/lib/contact/validate";
+import { useState } from "react";
+import { HONEYPOT, KINDS } from "@/lib/contact/validate";
 import { FALLBACK_EMAIL, SEND_ERROR, useContactSubmit, type Status } from "./useContactSubmit";
-
-const KINDS = [
-  { value: "Shoulder work", note: "TA-3 / TA-5 · S-630-1" },
-  { value: "Flagger lane closure", note: "TA-10 · S-630-1" },
-  { value: "Lane closure near an intersection", note: "cases 18 / 19 · S-630-1" },
-  { value: "Something else", note: "tell us below" },
-];
 
 function Field({
   id,
   name,
   label,
   optional,
+  span,
   ...input
 }: {
+  span: string;
   id: string;
   name: string;
   label: string;
   optional?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className="lv-field">
+    <div className={`lv-field ${span}`}>
       <label htmlFor={id} className="lv-field-label">
         {label}
         {optional && <span className="lv-optional"> (optional)</span>}
@@ -63,18 +62,9 @@ export function SendError({ status }: { status: Status }) {
   );
 }
 
-function Legend({ n, title, optional }: { n: string; title: string; optional?: boolean }) {
-  return (
-    <legend className="lv-legend-row">
-      <span className="lv-faint">{n}</span>
-      {title}
-      {optional && <span className="lv-faint lv-legend-opt">optional</span>}
-    </legend>
-  );
-}
-
 export function CompareForm() {
   const { status, onSubmit, doneRef } = useContactSubmit("job");
+  const [more, setMore] = useState(false);
   if (status === "sent")
     return (
       <div ref={doneRef} tabIndex={-1} className="lv-form lv-sent">
@@ -84,61 +74,46 @@ export function CompareForm() {
   return (
     <form className="lv-form" aria-label="Send us a past job" onSubmit={onSubmit}>
       <Honeypot id="c-website" />
-      <fieldset className="lv-fs">
-        <Legend n="01" title="YOU" />
-        <div className="lv-fields">
-          <Field required id="c-name" name="name" label="Name" type="text" autoComplete="name" placeholder="First and last" />
-          <Field required id="c-company" name="company" label="Company" type="text" autoComplete="organization" placeholder="Company name" />
-          <Field required id="c-email" name="email" label="Work email" type="email" autoComplete="email" placeholder="you@company.com" />
-          <Field id="c-phone" name="phone" label="Phone" optional type="tel" autoComplete="tel" placeholder="(303) 555-0100" />
-        </div>
-      </fieldset>
-
-      <fieldset className="lv-fs lv-fs-next">
-        <Legend n="02" title="THE JOB" />
-        <div className="lv-fields">
-          <Field required id="c-where" name="where" label="Where does the work start?" type="text" placeholder="Address or cross streets" />
-          <Field required id="c-city" name="city" label="City" type="text" placeholder="Denver" />
-        </div>
-        <fieldset className="lv-fs-plain">
+      <div className="lv-fgrid">
+        <Field span="lv-s3" required id="c-name" name="name" label="Name" type="text" autoComplete="name" />
+        <Field span="lv-s3" required id="c-company" name="company" label="Company" type="text" autoComplete="organization" />
+        <Field span="lv-s6" required id="c-email" name="email" label="Work email" type="email" autoComplete="email" />
+        <Field span="lv-s4" required id="c-where" name="where" label="Where does the work start?" type="text" placeholder="Address or cross streets" />
+        <Field span="lv-s2" required id="c-city" name="city" label="City" type="text" />
+        <fieldset className="lv-fs-plain lv-s6">
           <legend className="lv-field-legend">Kind of work</legend>
           <div className="lv-opts">
             {KINDS.map((k) => (
-              <label key={k.value} className="lv-opt">
-                <input type="radio" name="kind" value={k.value} className="lv-vh" required />
+              <label key={k} className="lv-opt">
+                <input type="radio" name="kind" value={k} className="lv-vh" required />
                 <span className="lv-opt-box">
                   <span aria-hidden="true" className="lv-opt-dot" />
-                  <span className="lv-opt-title">{k.value}</span>
-                  <span />
-                  <span className="lv-opt-note">{k.note}</span>
+                  <span className="lv-opt-title">{k}</span>
                 </span>
               </label>
             ))}
           </div>
         </fieldset>
-        <div className="lv-fields">
-          <Field required id="c-side" name="side" label="Side of the road" type="text" placeholder="South side, eastbound" />
-          <div className="lv-field">
-            <label htmlFor="c-length" className="lv-field-label">
-              Length of the work
-            </label>
-            <div className="lv-unit-wrap">
-              <input
-                id="c-length"
-                name="length_ft"
-                required
-                type="text"
-                inputMode="numeric"
-                placeholder="1,000"
-                className="lv-input lv-input-unit"
-              />
-              <span aria-hidden="true" className="lv-unit">
-                ft
-              </span>
-            </div>
+        <Field span="lv-s2" required id="c-side" name="side" label="Side of the road" type="text" placeholder="e.g. south side" />
+        <div className="lv-field lv-s2">
+          <label htmlFor="c-length" className="lv-field-label">
+            Length
+          </label>
+          <div className="lv-unit-wrap">
+            <input
+              id="c-length"
+              name="length_ft"
+              required
+              type="text"
+              inputMode="numeric"
+              className="lv-input lv-input-unit"
+            />
+            <span aria-hidden="true" className="lv-unit">
+              ft
+            </span>
           </div>
         </div>
-        <fieldset className="lv-fs-plain">
+        <fieldset className="lv-fs-plain lv-s2">
           <legend className="lv-field-legend">Hours</legend>
           <div className="lv-segs">
             {["Daytime", "Night"].map((h) => (
@@ -149,35 +124,44 @@ export function CompareForm() {
             ))}
           </div>
         </fieldset>
-        <div className="lv-field">
-          <label htmlFor="c-notes" className="lv-field-label">
-            Anything else?<span className="lv-optional"> (optional)</span>
-          </label>
-          <textarea
-            id="c-notes"
-            name="notes"
-            rows={3}
-            maxLength={2000}
-            placeholder="Posted speed, lane count, dates, or what the approved plan called for"
-            className="lv-input lv-textarea"
-          />
+        <div className="lv-s6">
+          <button
+            type="button"
+            className="lv-textlink lv-reveal"
+            aria-expanded={more}
+            aria-controls="c-more"
+            onClick={() => setMore((m) => !m)}
+          >
+            <span aria-hidden="true">{more ? "−" : "+"}</span> Add a phone number or a note
+          </button>
         </div>
-      </fieldset>
-
-      <fieldset className="lv-fs lv-fs-next">
-        <Legend n="03" title="THE APPROVED PLAN" optional />
-        <p className="lv-small lv-on-dark">
-          Once you send this, we&apos;ll email you a confirmation. Reply to it with the approved plan and we&apos;ll send
-          ours back beside it.
-        </p>
-      </fieldset>
+        <div id="c-more" className="lv-fgrid lv-s6" hidden={!more}>
+          <Field span="lv-s3" id="c-phone" name="phone" label="Phone" optional type="tel" autoComplete="tel" placeholder="(303) 555-0100" />
+          <div className="lv-field lv-s6">
+            <label htmlFor="c-notes" className="lv-field-label">
+              Anything else?<span className="lv-optional"> (optional)</span>
+            </label>
+            <textarea
+              id="c-notes"
+              name="notes"
+              rows={3}
+              maxLength={2000}
+              placeholder="Posted speed, lane count, dates, or what the approved plan called for"
+              className="lv-input lv-textarea"
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="lv-submit">
         <SendError status={status} />
-        <button type="submit" className="lv-pri lv-pri-block" disabled={status === "sending"}>
-          {status === "sending" ? "Sending…" : "Send us the job"}
-        </button>
-        <p className="lv-mono-note lv-center">used only to draft your comparison</p>
+        <div className="lv-submit-row">
+          <button type="submit" className="lv-pri" disabled={status === "sending"}>
+            {status === "sending" ? "Sending…" : "Send us the job"}
+          </button>
+          <p className="lv-submit-note">We&apos;ll email a confirmation. Reply to it with the approved plan.</p>
+        </div>
+        <p className="lv-mono-note">used only to draft your comparison</p>
       </div>
     </form>
   );

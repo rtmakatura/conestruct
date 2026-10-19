@@ -289,41 +289,165 @@ describe("landing v2 — links and held items", () => {
     expect(hrefs.filter((h) => /sign-in|sign-up|sandbox/.test(h))).toEqual([]);
   });
 
-  it("#349: step 3 draws the undivided Colfax plan, not the median sheet", () => {
+  it("the sections run in the lean page's order, under the nav's three links", () => {
     const c = mount();
-    const sheet = c.querySelector(".lv-step3 .lv-sheet")!;
-    expect(sheet.querySelector("img")).toBeNull();
-    const svg = sheet.querySelector("svg.lv-sheet-img")!;
-    expect(svg.getAttribute("viewBox")).toBe("0 0 1200 430");
-    expect(svg.getAttribute("aria-label")).toMatch(/^Illustration of the Colfax shoulder closure/);
-    expect(svg.textContent).not.toMatch(/MEDIAN|DIVIDED/i);
-    expect(svg.innerHTML).toContain("E COLFAX AVE");
-    // the phone crop (ruling: labels >= 11 px at 390): every text is set
-    // at 26 units, 11.6 px across the ~338 px panel's 760-unit viewBox
-    const narrow = sheet.querySelector(".lv-illus-narrow svg.lv-sheet-img")!;
-    expect(narrow.getAttribute("viewBox")).toBe("340 -62 760 342");
-    expect(narrow.textContent).not.toMatch(/MEDIAN|DIVIDED/i);
-    const sizes = [...narrow.querySelectorAll("text")].map((t) => Number(t.getAttribute("font-size")));
-    expect(sizes.filter((n) => n < 26)).toEqual([]);
-    expect(narrow.textContent).toContain("L/3 50 FT");
-    expect(narrow.textContent).toContain("BUFFER 200 FT");
-    expect(narrow.textContent).toContain("WORK ZONE 1,000 FT");
-    // the step 1 drawing's pattern ids stay unique on the page
-    const ids = [...c.querySelectorAll("svg [id]")].map((e) => e.id);
-    expect(new Set(ids).size).toBe(ids.length);
+    expect(c.querySelector("h1")?.textContent).toBe("Mark the work.Get the plan.");
+    expect([...c.querySelectorAll("h2")].map((h) => h.textContent)).toEqual([
+      "A plan that comes back costs you twice.",
+      "Three moves, and every number shows its work.",
+      "One job in, four files out.",
+      "Send us a job you've already permitted.",
+    ]);
+    const nav = [...c.querySelectorAll<HTMLAnchorElement>(".lv-nav-links a, .lv-nav-cta")];
+    expect(nav.map((a) => [a.textContent, a.getAttribute("href")])).toEqual([
+      ["HOW IT WORKS", "#how"],
+      ["WHAT YOU GET", "#files"],
+      ["SEND US A PAST JOB", "#send"],
+    ]);
+    // the section numbers and the cut sections are gone
+    expect(c.textContent).not.toMatch(/HOW IT GOES NOW|WHAT IT WON'T DO|WHO IT'S FOR|L = W × S²/);
   });
 
-  it("the sections run in the reference's order", () => {
+  it("the legal lines stay word for word", () => {
     const c = mount();
-    const labels = [...c.querySelectorAll(".lv-label .lv-head-ink")].map((e) => e.textContent);
-    expect(labels).toEqual([
-      "02HOW IT GOES NOW",
-      "03HOW A PLAN IS MADE",
-      "04WHAT YOU HAND OVER",
-      "05EVERY NUMBER SHOWS WHERE IT CAME FROM",
-      "06WHO IT'S FOR, AND WHO'S BUILDING IT",
-      "07BUILT IN COLORADO",
+    expect(c.querySelector(".lv-footer")?.textContent).toContain(
+      "OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT",
+    );
+    expect([...c.querySelectorAll(".lv-footer a")].map((a) => a.getAttribute("href"))).toEqual(["/terms", "/privacy"]);
+    expect(c.querySelector('form[aria-label="Send us a past job"]')?.textContent).toContain(
+      "used only to draft your comparison",
+    );
+  });
+
+  it("the three step pictures are inline, hidden from assistive tech, and carry their animation classes", () => {
+    const steps = [...mount().querySelectorAll("#how .lv-step svg")];
+    expect(steps).toHaveLength(3);
+    for (const svg of steps) {
+      expect(svg.getAttribute("aria-hidden")).toBe("true");
+      expect(svg.querySelector('[class^="a-"]')).not.toBeNull();
+    }
+  });
+
+  it("the file tiles are plain cards until the sample is confirmed (#350): no link, no hover class", () => {
+    const tiles = [...mount().querySelectorAll("#files .lv-ft")];
+    expect(tiles.map((t) => t.querySelector(".lv-ft-title")?.textContent)).toEqual([
+      "Plan sheet",
+      "Device list",
+      "Crew sheet",
+      "Audit",
     ]);
-    expect(c.querySelector("h1")?.textContent).toBe("Mark the work.Get the plan.");
+    for (const t of tiles) {
+      expect(t.tagName).toBe("DIV");
+      expect(t.classList.contains("ft")).toBe(false);
+    }
+  });
+});
+
+describe("landing v2 — the lean form", () => {
+  it("Kind of work shows the plain name only", () => {
+    const c = mount();
+    const chips = [...c.querySelectorAll(".lv-opt")].map((l) => l.textContent);
+    expect(chips).toEqual(["Shoulder work", "Flagger lane closure", "Lane closure near an intersection", "Something else"]);
+    expect(c.querySelector("form")?.textContent).not.toMatch(/TA-\d|S-630|THE APPROVED PLAN/);
+    expect(c.textContent).toContain("We'll email a confirmation. Reply to it with the approved plan.");
+  });
+
+  it("phone and the note sit behind one aria-expanded button, and still submit", async () => {
+    const calls: Record<string, unknown>[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url: string, init: RequestInit) => {
+        calls.push(JSON.parse(init.body as string));
+        return new Response("{}", { status: 200 });
+      }),
+    );
+    const c = mount();
+    const more = c.querySelector<HTMLDivElement>("#c-more")!;
+    const button = c.querySelector<HTMLButtonElement>('button[aria-controls="c-more"]')!;
+    expect(button.type).toBe("button");
+    expect(button.textContent).toBe("+ Add a phone number or a note");
+    expect(button.getAttribute("aria-expanded")).toBe("false");
+    expect(more.hidden).toBe(true);
+    expect(more.querySelector("#c-phone")).not.toBeNull();
+    expect(more.querySelector("#c-notes")).not.toBeNull();
+    fireEvent.click(button);
+    expect(button.getAttribute("aria-expanded")).toBe("true");
+    expect(more.hidden).toBe(false);
+    for (const [id, v] of [
+      ["c-name", "Dana Ortiz"],
+      ["c-company", "Front Range Traffic"],
+      ["c-email", "dana@frtraffic.com"],
+      ["c-phone", "303-555-0100"],
+      ["c-where", "E Colfax Ave & N Race St"],
+      ["c-city", "Denver"],
+      ["c-side", "South side"],
+      ["c-length", "1,000"],
+      ["c-notes", "Approved in May"],
+    ])
+      fireEvent.change(c.querySelector(`#${id}`)!, { target: { value: v } });
+    fireEvent.click(c.querySelector('input[name="kind"][value="Flagger lane closure"]')!);
+    fireEvent.click(c.querySelector('input[name="hours"][value="Daytime"]')!);
+    // collapsed again, the values still go
+    fireEvent.click(button);
+    expect(more.hidden).toBe(true);
+    fireEvent.submit(c.querySelector('form[aria-label="Send us a past job"]')!);
+    await findByText(c, "Got it. Check your inbox for a confirmation.");
+    expect(calls[0]).toMatchObject({ phone: "303-555-0100", notes: "Approved in May", kind: "Flagger lane closure" });
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("landing v2 — the scroll-in (LeanMotion)", () => {
+  type Cb = (entries: { target: Element; isIntersecting: boolean }[]) => void;
+  let cb: Cb;
+  let observed: Element[];
+  let reduce: boolean;
+  beforeEach(() => {
+    observed = [];
+    reduce = false;
+    vi.stubGlobal(
+      "IntersectionObserver",
+      class {
+        // next/link observes too; LeanMotion's is the one at 0.25
+        mine: boolean;
+        constructor(fn: Cb, opts?: { threshold?: number }) {
+          this.mine = opts?.threshold === 0.25;
+          if (this.mine) cb = fn;
+        }
+        observe(el: Element) {
+          if (this.mine) observed.push(el);
+        }
+        unobserve(el: Element) {
+          if (this.mine) observed = observed.filter((e) => e !== el);
+        }
+        disconnect() {}
+      },
+    );
+    vi.stubGlobal("matchMedia", (q: string) => ({ matches: reduce && q.includes("reduce") }));
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("each animated section gets `go` once, on its first scroll-in, and the start state hides only after JS ran", () => {
+    const c = mount();
+    const sections = [...c.querySelectorAll(".an")];
+    expect(sections.map((s) => s.id)).toEqual(["", "how", "files"]);
+    expect(c.querySelector(".lv-outer")?.classList.contains("js-anim")).toBe(true);
+    // happy-dom lays nothing out, so none is on screen at load: all observed
+    expect(observed).toEqual(sections);
+    cb([{ target: sections[1], isIntersecting: true }]);
+    expect(sections[1].classList.contains("go")).toBe(true);
+    expect(observed).not.toContain(sections[1]);
+    expect(sections[0].classList.contains("go")).toBe(false);
+    // the hero and the form never animate
+    expect(c.querySelector(".lv-hero")?.closest(".an")).toBeNull();
+    expect(c.querySelector("#send")?.classList.contains("an")).toBe(false);
+  });
+
+  it("reduced motion: no `go`, no hidden start state, nothing observed", () => {
+    reduce = true;
+    const c = mount();
+    expect(c.querySelector(".lv-outer")?.classList.contains("js-anim")).toBe(false);
+    expect(c.querySelectorAll(".go")).toHaveLength(0);
+    expect(observed).toEqual([]);
   });
 });

@@ -981,6 +981,22 @@ body {
   --lv-hover: #16283a;
   --lv-checked: #14273a;
   --lv-seg-hover: #132233;
+  /* The lean page (design/landing-v2/lean-page/, the Oct 19 canvas) —
+     TRACED to its lean-motion.css and step pictures.  The linked file
+     tile's hover ground and kind ink; the step 2 check mark, which the
+     canvas draws in the work-zone green (so it carries --lv-work's flag
+     above); the step 3 sheet's paper, title band, ink, road, centre
+     line, work zone and faint lines.  Decorative: no state meaning. */
+  --lv-tile-hover: #122233;
+  --lv-tile-kind-hover: #ffa65c;
+  --lv-ok: var(--lv-work);
+  --lv-sheet: #f1eee7;
+  --lv-sheet-band: #dcd6ca;
+  --lv-sheet-ink: #5d6876;
+  --lv-sheet-road: #dedad0;
+  --lv-sheet-center: #c79d1f;
+  --lv-sheet-zone: #10916e;
+  --lv-sheet-faint: #aaa395;
   /* The desktop hero's 3D scene (design/landing-v2/hero-3d/iso_hero.py,
      the Oct 19 canvas) — TRACED to the generator's palette, one token per
      hex, named for what it paints; scripts/landing-plan-art.mjs swaps them
@@ -7322,21 +7338,7 @@ input[type="number"] {
 .workbench .lv-flag-meta,
 .workbench .lv-stat,
 .workbench .lv-figcap,
-.workbench .lv-label,
-.workbench .lv-cite,
-.workbench .lv-step-kicker,
-.workbench .lv-legend,
-.workbench .lv-read-src,
-.workbench .lv-facts,
-.workbench .lv-file-head,
-.workbench .lv-file-foot,
-.workbench .lv-audit-body,
-.workbench .lv-who dt,
 .workbench .lv-eyebrow,
-.workbench .lv-founder-initial,
-.workbench .lv-founder-role,
-.workbench .lv-legend-row,
-.workbench .lv-opt-note,
 .workbench .lv-unit,
 .workbench .lv-how-n,
 .workbench .lv-nav-links,
@@ -7441,33 +7443,8 @@ input[type="number"] {
   padding: 0 clamp(16px, 4vw, 40px);
   box-sizing: border-box;
 }
-.workbench .lv-section {
-  padding: clamp(56px, 6.5vw, 88px) 0;
-}
-.workbench .lv-rule {
-  height: 1px;
-  background: var(--rule);
-}
-.workbench .lv-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  margin-bottom: 32px;
-}
 .workbench .lv-head-ink {
   color: var(--ink);
-}
-.workbench .lv-label-n {
-  color: var(--ink-faint);
-  margin-right: 12px;
-}
-.workbench .lv-label-aside {
-  color: var(--ink-faint);
-  letter-spacing: 0.06em;
 }
 .workbench .lv-h2 {
   margin: 0 0 48px;
@@ -7566,8 +7543,7 @@ input[type="number"] {
 }
 /* Rule 15's floors (32 px, 44 px at 480 and below) on the two text links:
    the box grows, the words keep their size. */
-.workbench .lv-textlink,
-.workbench .lv-pilot-link {
+.workbench .lv-textlink {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
@@ -7578,8 +7554,7 @@ input[type="number"] {
 .workbench .lv-textlink {
   font-weight: 500;
 }
-.workbench .lv-textlink:hover,
-.workbench .lv-pilot-link:hover {
+.workbench .lv-textlink:hover {
   color: var(--act-bright);
 }
 
@@ -7629,12 +7604,6 @@ input[type="number"] {
   align-items: center;
   flex-wrap: wrap;
   gap: 16px 24px;
-}
-.workbench .lv-cta-note {
-  margin: 0;
-  max-width: 460px;
-  font-size: 14px;
-  line-height: 1.55;
 }
 /* v2: the lede, the CTAs and their notes sit right of the headline */
 .workbench .lv-hero-pitch {
@@ -7865,521 +7834,160 @@ input[type="number"] {
   box-shadow: inset 0 -2px 0 var(--dim);
 }
 
-/* 02 how it goes now */
-.workbench .lv-statement {
-  margin: 0 0 48px;
-  max-width: 820px;
-  font-size: clamp(20px, 2.2vw, 26px);
-  line-height: 1.35;
-  font-weight: 500;
-  color: var(--ink);
+/* The lean page's sections (design/landing-v2/lean-page/, the Oct 19
+   canvas).  Each is a full-width band with a 1 px rule on top and the
+   1240 column inside; the send band is tinted.  Grids drop to one column
+   at 720 and below. */
+.workbench .lv-band {
+  border-top: 1px solid var(--rule-soft);
+  padding: clamp(56px, 6.5vw, 88px) 0;
 }
-.workbench .lv-pains {
-  border-top: 1px solid var(--rule);
+.workbench .lv-band-tint {
+  background: var(--canvas-tint);
 }
+.workbench .lv-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 40px);
+  box-sizing: border-box;
+}
+.workbench .lv-band-label {
+  margin-bottom: 20px;
+}
+.workbench .lv-band .lv-h2 {
+  max-width: 760px;
+}
+.workbench .lv-cols3,
+.workbench .lv-cols4 {
+  display: grid;
+  gap: 40px;
+}
+.workbench .lv-cols3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.workbench .lv-cols4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.workbench .lv-after {
+  margin-top: 32px;
+}
+
+/* the problem */
 .workbench .lv-pain {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px clamp(32px, 4vw, 56px);
-  align-items: flex-start;
-  padding: 32px 0;
-  border-bottom: 1px solid var(--rule);
-}
-.workbench .lv-pain-head {
-  flex: 1 1 360px;
-  font-size: clamp(40px, 5vw, 64px);
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  color: var(--ink);
-}
-.workbench .lv-pain-body {
-  flex: 1.2 1 420px;
-  display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-top: 6px;
+  gap: 10px;
 }
-.workbench .lv-pain-body p {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.6;
-}
-.workbench .lv-cite {
-  font-size: 10.5px;
+.workbench .lv-sup {
+  margin-left: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   color: var(--ink-faint);
 }
-.workbench .lv-close-line {
-  margin: 48px 0 0;
-  max-width: 760px;
-  font-size: 17.5px;
-  line-height: 1.5;
-  color: var(--ink);
+.workbench .lv-notes {
+  margin-top: 48px;
 }
 
-/* 03 how a plan is made */
-.workbench .lv-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 64px;
-}
+/* how it works */
 .workbench .lv-step {
   display: flex;
-  flex-wrap: wrap;
-  gap: clamp(32px, 4vw, 56px);
-  align-items: flex-start;
-}
-.workbench .lv-step-copy {
-  flex: 1 1 300px;
-  max-width: 440px;
-  display: flex;
   flex-direction: column;
+  gap: 16px;
+}
+.workbench .lv-step-pic {
+  border: 1px solid var(--rule);
+}
+.workbench .lv-step-art {
+  display: block;
+}
+.workbench .lv-step-title {
+  display: flex;
+  align-items: baseline;
   gap: 12px;
 }
-.workbench .lv-step-kicker {
-  font-size: 10px;
-  letter-spacing: 0.12em;
+.workbench .lv-step-n {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
   color: var(--ink-faint);
-}
-.workbench .lv-step-body {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-}
-.workbench .lv-step-panel-col {
-  flex: 1.6 1 480px;
-  min-width: 0;
-}
-.workbench .lv-panel-head-start {
-  display: flex;
-  gap: 14px;
-  letter-spacing: normal;
-}
-.workbench .lv-panel-head.lv-panel-head-start {
-  justify-content: flex-start;
-}
-.workbench .lv-step-of {
-  letter-spacing: 0.12em;
-  color: var(--ink-faint);
-}
-.workbench .lv-step-name {
-  letter-spacing: 0.18em;
-  font-weight: 500;
-  color: var(--ink);
-}
-.workbench .lv-found-list {
-  padding: 4px 20px;
-}
-.workbench .lv-found {
-  display: grid;
-  grid-template-columns: 16px auto minmax(0, 1fr);
-  column-gap: 12px;
-  align-items: baseline;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--da-hair);
-}
-.workbench .lv-found.lv-row-last,
-.workbench .lv-read.lv-row-last,
-.workbench .lv-audit-row.lv-row-last {
-  border-bottom: 0;
-}
-.workbench .lv-pass {
-  color: var(--pass);
-}
-.workbench .lv-found-label {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--ink);
-  white-space: nowrap;
-}
-.workbench .lv-found-value {
-  font-size: 13.5px;
-  text-align: right;
-}
-.workbench .lv-step1-art {
-  border-top: 1px solid var(--da-hair);
-  overflow: hidden;
-}
-.workbench .lv-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-  padding: 14px 20px;
-  border-top: 1px solid var(--da-hair);
-  font-size: 10px;
-  color: var(--ink-faint);
-}
-.workbench .lv-legend > span {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.workbench .lv-swatch {
-  width: 18px;
-  height: 3px;
-}
-.workbench .lv-swatch-adv {
-  background: var(--lv-adv);
-}
-.workbench .lv-swatch-dim {
-  background: var(--dim);
-}
-.workbench .lv-swatch-work {
-  background: var(--lv-work);
-}
-.workbench .lv-read-list {
-  padding: 20px 20px 4px;
-}
-.workbench .lv-read-q {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--ink);
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--da-hair);
-}
-.workbench .lv-read {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(140px, 180px);
-  column-gap: 16px;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--da-hair);
-}
-.workbench .lv-read-name {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.workbench .lv-read-label {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--ink);
-}
-.workbench .lv-read-src {
-  font-size: 10.5px;
-  color: var(--ink-faint);
-}
-.workbench .lv-read-src.lv-warn {
-  color: var(--warn);
-}
-.workbench .lv-read-value {
-  padding: 10px 12px;
-  border: 1px solid var(--rule);
-  font-size: 13.5px;
-  color: var(--ink);
-}
-.workbench .lv-step3 {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-.workbench .lv-step3-copy {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px clamp(32px, 4vw, 56px);
-  align-items: flex-end;
-}
-.workbench .lv-sheet {
-  margin: 0;
-}
-.workbench .lv-draft {
-  border: 1px solid var(--dim);
-  padding: 2px 8px;
-  color: var(--dim);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-}
-.workbench .lv-sheet-img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.workbench .lv-facts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
-  gap: 1px;
-  background: var(--da-hair);
-  border-top: 1px solid var(--da-hair);
-}
-.workbench .lv-fact {
-  padding: 12px 20px;
-  background: var(--da-ground);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.workbench .lv-fact-label {
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  color: var(--ink-faint);
-}
-.workbench .lv-fact-value {
-  font-size: 12px;
-  color: var(--ink);
-}
-.workbench .lv-fact-value.lv-dim {
-  color: var(--dim);
 }
 
-/* 04 what you hand over; bordered grids are a 1 px gap over --rule */
-.workbench .lv-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: 1px;
-  background: var(--rule);
-}
-.workbench .lv-grid-framed {
-  border: 1px solid var(--rule);
-}
-.workbench .lv-cell {
-  padding: clamp(20px, 2.5vw, 28px);
-  background: var(--da-ground);
+/* what you get: the tiles link to the sample plan once #350 closes; only
+   a linked tile (.ft) takes the hover */
+.workbench .lv-ft {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  padding: clamp(20px, 2.5vw, 28px);
+  background: var(--da-ground);
+  border: 1px solid var(--rule);
+  text-decoration: none;
+  color: var(--ink-on-dark);
 }
-.workbench .lv-file {
-  gap: 12px;
-}
-.workbench .lv-file-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+.workbench .lv-ft-k {
+  font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.12em;
-  color: var(--ink-faint);
+  color: var(--dim);
 }
-.workbench .lv-file-title {
-  margin: 0;
+.workbench .lv-ft-title {
   font-size: 19px;
   font-weight: 600;
   color: var(--ink);
 }
-.workbench .lv-file-foot {
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--da-hair);
-  font-size: 11px;
-  color: var(--ink-faint);
+.workbench .lv-ft.ft:hover {
+  border-color: var(--act);
+  background: var(--lv-tile-hover);
 }
-.workbench .lv-files-foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 24px;
+.workbench .lv-ft.ft:hover .ft-k {
+  color: var(--lv-tile-kind-hover);
 }
 
-/* 05 sources */
-.workbench .lv-split {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(32px, 4vw, 56px);
-  align-items: flex-start;
-}
-.workbench .lv-split-copy {
-  display: flex;
-  flex-direction: column;
-}
-.workbench .lv-split-copy-340 {
-  flex: 1 1 340px;
-  gap: 20px;
-}
-.workbench .lv-split-copy-380 {
-  flex: 1 1 380px;
-  gap: 24px;
-}
-.workbench .lv-audit {
-  flex: 1 1 420px;
-  min-width: 0;
-  margin: 0;
-}
-.workbench .lv-audit-body {
-  padding: 8px 20px 20px;
-  font-size: 13px;
-}
-.workbench .lv-audit-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--da-hair);
-}
-.workbench .lv-audit-val {
-  text-align: right;
-}
-.workbench .lv-audit-src {
-  margin: 12px 0 0;
-  font-size: 10.5px;
-  line-height: 1.6;
-  color: var(--ink-faint);
-}
-.workbench .lv-wonts {
-  margin-top: 64px;
-}
-.workbench .lv-wont {
-  gap: 8px;
-}
-.workbench .lv-wont-head {
-  font-size: 15.5px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-/* 06 who */
-.workbench .lv-whos {
-  margin: 0;
-  border-top: 1px solid var(--rule);
-}
-.workbench .lv-who {
-  display: grid;
-  grid-template-columns: minmax(96px, 120px) minmax(0, 1fr);
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--rule);
-}
-.workbench .lv-who dt {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: var(--ink-faint);
-  padding-top: 4px;
-}
-.workbench .lv-who dd {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-}
-.workbench .lv-why {
-  flex: 1 1 380px;
-  min-width: 0;
-}
-.workbench .lv-why-body {
-  padding: clamp(20px, 2.5vw, 28px);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border-bottom: 1px solid var(--rule);
-}
-.workbench .lv-why-p {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.65;
-}
-.workbench .lv-founders {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
-  gap: 1px;
-  background: var(--rule);
-}
-.workbench .lv-founder {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: var(--da-ground);
-}
-.workbench .lv-founder-initial {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--rule);
-  color: var(--ink-faint);
-}
-.workbench .lv-founder-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.workbench .lv-founder-name {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--ink);
-}
-.workbench .lv-founder-role {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  color: var(--ink-faint);
-  white-space: nowrap;
-}
-
-/* 07 send us a past job */
-.workbench .lv-h2-close {
-  margin: 0 0 16px;
-  max-width: 820px;
-  font-size: clamp(32px, 4vw, 44px);
-  line-height: 1.1;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--ink);
-}
-.workbench .lv-close-lede {
-  margin: 0 0 48px;
-  max-width: 720px;
-  font-size: 17.5px;
-  line-height: 1.55;
-}
+/* send us a job you've already permitted */
 .workbench .lv-compare {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 32px clamp(32px, 5vw, 72px);
+  align-items: start;
 }
 .workbench .lv-form {
-  flex: 1.4 1 420px;
   min-width: 0;
-  border: 1px solid var(--rule);
-  background: var(--da-ground);
-  padding: clamp(20px, 3vw, 36px);
   display: flex;
   flex-direction: column;
   gap: 28px;
 }
-.workbench .lv-fs,
+.workbench .lv-fgrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 20px 16px;
+}
+.workbench .lv-fgrid[hidden] {
+  display: none;
+}
+.workbench .lv-s2 {
+  grid-column: span 2;
+}
+.workbench .lv-s3 {
+  grid-column: span 3;
+}
+.workbench .lv-s4 {
+  grid-column: span 4;
+}
+.workbench .lv-s6 {
+  grid-column: span 6;
+}
 .workbench .lv-fs-plain {
   margin: 0;
   padding: 0;
   border: 0;
   min-width: 0;
 }
-.workbench .lv-fs {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.workbench .lv-fs.lv-fs-next {
-  padding-top: 28px;
-  border-top: 1px solid var(--da-hair);
-}
-.workbench .lv-legend-row {
-  float: left;
-  width: 100%;
-  padding: 0;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  color: var(--ink);
-}
-.workbench .lv-legend-opt {
-  font-weight: 400;
-}
-.workbench .lv-fields {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
-  gap: 20px 16px;
-}
 .workbench .lv-field {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 .workbench .lv-field-label,
 .workbench .lv-field-legend {
@@ -8396,7 +8004,7 @@ input[type="number"] {
 }
 .workbench .lv-input {
   width: 100%;
-  min-height: 52px;
+  min-height: 48px;
   box-sizing: border-box;
   padding: 0 14px;
   background: var(--panel-ground);
@@ -8429,8 +8037,9 @@ input[type="number"] {
   resize: none;
   line-height: 1.5;
 }
-/* The native radio, invisible, laid over its whole tile: the tile is the
-   input's own hit box, and the visible state comes from :checked. */
+/* The native radio, invisible, laid over its whole chip: the chip is the
+   input's own hit box, and the visible state comes from :checked (the
+   dot fills as well as the border turning, Rule 13). */
 .workbench .lv-vh {
   position: absolute;
   inset: 0;
@@ -8441,8 +8050,8 @@ input[type="number"] {
   cursor: pointer;
 }
 .workbench .lv-opts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 .workbench .lv-opt,
@@ -8452,35 +8061,27 @@ input[type="number"] {
   min-width: 0;
 }
 .workbench .lv-opt-box {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 14px 1fr;
-  column-gap: 12px;
-  row-gap: 4px;
-  align-items: start;
-  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
   box-sizing: border-box;
   border: 1px solid var(--rule);
   background: var(--panel-ground);
   cursor: pointer;
 }
 .workbench .lv-opt-dot {
+  flex: none;
   width: 12px;
   height: 12px;
-  margin-top: 3px;
   box-sizing: border-box;
   border: 1px solid var(--paper-line);
   border-radius: 50%;
 }
 .workbench .lv-opt-title {
   font-size: 14px;
-  font-weight: 500;
   color: var(--ink);
-}
-.workbench .lv-opt-note {
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: var(--ink-faint);
 }
 .workbench .lv-opt:hover .lv-opt-box {
   border-color: var(--paper-line);
@@ -8506,7 +8107,7 @@ input[type="number"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
+  min-height: 46px;
   font-size: 14px;
   color: var(--ink-on-dark);
   background: var(--panel-ground);
@@ -8525,26 +8126,39 @@ input[type="number"] {
   outline: 2px solid var(--act-bright);
   outline-offset: 2px;
 }
+/* "+ Add a phone number or a note": a button that reads as the page's
+   text links. */
+.workbench .lv-reveal {
+  gap: 0.35em;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
 .workbench .lv-submit {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: 4px;
 }
-.workbench .lv-pilot {
-  flex: 1 1 340px;
+.workbench .lv-submit-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.workbench .lv-submit-note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-faint);
+}
+.workbench .lv-compare-aside {
   min-width: 0;
   display: flex;
   flex-direction: column;
-}
-.workbench .lv-pilot-block {
-  padding: clamp(20px, 2.5vw, 28px);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.workbench .lv-pilot-how {
-  border-bottom: 1px solid var(--rule);
+  gap: 24px;
 }
 .workbench .lv-how-list {
   margin: 0;
@@ -8552,32 +8166,30 @@ input[type="number"] {
   list-style: none;
   display: flex;
   flex-direction: column;
+  gap: 14px;
 }
 .workbench .lv-how-list li {
   display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 8px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--da-hair);
-  font-size: 14px;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  font-size: 15.5px;
   line-height: 1.5;
 }
-.workbench .lv-how-list li:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
 .workbench .lv-how-n {
-  color: var(--ink-faint);
+  font-size: 12px;
+  color: var(--dim);
 }
-.workbench .lv-pilot-link {
-  align-self: flex-start;
-  margin-top: 4px;
-  font-weight: 600;
+.workbench .lv-aside-links {
+  border-top: 1px solid var(--rule-soft);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
 .workbench .lv-join {
-  margin-top: auto;
-  padding: clamp(20px, 2.5vw, 28px);
-  border-top: 1px solid var(--rule);
+  align-self: stretch;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -8591,8 +8203,26 @@ input[type="number"] {
   flex: 1 1 180px;
   width: auto;
   min-width: 0;
-  min-height: 48px;
 }
+
+/* the trust row */
+.workbench .lv-trust {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 48px;
+}
+.workbench .lv-trust-who {
+  margin: 0;
+  font-size: 17.5px;
+  line-height: 1.55;
+}
+.workbench .lv-trust-review {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
 /* #346: the forms' honeypot (off-screen and hidden, aria-hidden, out of
    the tab order; still in the HTML a bot fills), the one inline error (⚠
    carries it, not the hue alone: Rule 13), and the confirmation that
@@ -8663,13 +8293,20 @@ input[type="number"] {
   color: var(--ink);
 }
 
-/* phones: nav links hide, founders stack, the hero takes the narrow plan */
+/* phones: nav links hide, the grids and the form fields stack, the hero
+   takes the narrow plan */
 @media (max-width: 720px) {
   .workbench .lv-nav-links {
     display: none;
   }
-  .workbench .lv-founders {
-    grid-template-columns: 1fr;
+  .workbench .lv-cols3,
+  .workbench .lv-cols4,
+  .workbench .lv-compare,
+  .workbench .lv-trust {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workbench .lv-fgrid > * {
+    grid-column: span 6;
   }
   .workbench .lv-hero-copy {
     padding-bottom: 0;
@@ -8689,17 +8326,16 @@ input[type="number"] {
     min-height: 44px;
     min-width: 44px;
   }
-  .workbench .lv-textlink,
-  .workbench .lv-pilot-link {
+  .workbench .lv-textlink {
     min-height: 44px;
   }
 }
 
 /* The landing motion exception: B (traffic, soft turn signals, the arrow
-   board's blink), C (the spotlight's fade and pulse) and D (scroll
-   reveal).  Nothing here runs under reduced motion: the drawing sits
-   still, the spotlight dims without a fade, and every section is in
-   place.  D is CSS scroll-driven animation, progressive enhancement. */
+   board's blink), C (the spotlight's fade and pulse) and the lean page's
+   once-per-section scroll-in.  Nothing here runs under reduced motion:
+   the drawing sits still, the spotlight dims without a fade, and every
+   section shows finished. */
 @media (prefers-reduced-motion: no-preference) {
   .workbench .plan.mB .car-e {
     animation-name: lv-drive-e;
@@ -8752,28 +8388,104 @@ input[type="number"] {
   .workbench .lv-seg-box {
     transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
   }
-  @supports (animation-timeline: view()) {
-    .workbench.lv-page .reveal {
-      animation: lv-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-    .workbench.lv-page .rule-draw {
-      transform-origin: left center;
-      animation: lv-grow linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 25%;
-    }
+  /* The lean page's scroll-in (design/landing-v2/lean-page/
+     lean-motion.css): it runs only in a section LeanMotion has marked
+     `go`, once.  The starting state is hidden only under .js-anim,
+     which LeanMotion adds to .lv-outer, so without JS nothing is hidden. */
+  .workbench.lv-page .js-anim .an:not(.go) .rv,
+  .workbench.lv-page .js-anim .an:not(.go) [class^="a-"],
+  .workbench.lv-page .js-anim .an:not(.go) [class*=" a-"] {
+    opacity: 0;
   }
-  @keyframes lv-grow {
-    from {
-      transform: scaleX(0);
-    }
+  .workbench.lv-page .an svg .a-drop,
+  .workbench.lv-page .an svg .a-pop,
+  .workbench.lv-page .an svg .a-slide,
+  .workbench.lv-page .an svg .a-rise {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+  .workbench.lv-page .an.go .rv {
+    animation: lv-rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .workbench.lv-page .an.go .a-fade {
+    animation: lv-fade 0.35s ease-out both;
+  }
+  .workbench.lv-page .an.go .a-rise {
+    animation: lv-rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .workbench.lv-page .an.go .a-drop {
+    animation: lv-drop 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  }
+  .workbench.lv-page .an.go .a-pop {
+    animation: lv-pop 0.28s cubic-bezier(0.3, 1.5, 0.5, 1) both;
+  }
+  .workbench.lv-page .an.go .a-slide {
+    animation: lv-slide 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .workbench.lv-page .an.go .a-draw {
+    stroke-dasharray: 1;
+    animation: lv-draw 0.6s ease-out both;
+  }
+  .workbench .lv-ft.ft {
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .workbench .lv-ft.ft .ft-k {
+    transition: color 0.2s ease;
   }
   @keyframes lv-rise {
     from {
       opacity: 0;
       transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes lv-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes lv-drop {
+    from {
+      opacity: 0;
+      transform: translateY(-26px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes lv-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes lv-slide {
+    from {
+      opacity: 0;
+      transform: translateX(-14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes lv-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
     }
   }
   @keyframes lv-blink {

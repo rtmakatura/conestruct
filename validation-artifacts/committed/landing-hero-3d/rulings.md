@@ -93,3 +93,29 @@ S11. **R145 self-ruled: the card's transitions and the scene's fade stay in the 
 
 F5. **At 1440×900 the figure's bottom is below the fold at load.** The figure (card, scene and caption) is 592 px tall, so once scrolled to, it fits in one screen with the card and the whole scene together. At load it starts at y 479, and its bottom edge is 172 px below the fold. The canvas mock fit because it left out the two lines under the CTAs. The page keeps them as ruled, which makes the right column, and so the top row, taller (`01-rest-1440x900-at-load.png`). Fitting at load would need one of three things: dropping or moving those lines, a smaller hero top padding (96 px at 1440), or a smaller scene. Each one is Ryan's call.
 
+
+## The lean page (cc-prompt-lean-page.md, 2026-10-19)
+
+The prompt and its files are in `design/landing-v2/lean-page/` (the canvas `ref/LeanPage.canvas.html`, three reference shots, the three step SVGs and `lean-motion.css`). Light lane, no checkpoint. The items below are where the prompt and the code disagreed, or where it left a choice. Each is flagged for Ryan.
+
+L1. **Flagged: no sample plan download exists.** The prompt says each file tile "is a link to the existing sample plan download". There is none. #350 (open) holds the download until the Colfax sheet is confirmed, and `Landing.test.tsx` asserts "Download the sample plan" is absent. Built default: `SAMPLE_HREF = null` in `Landing.tsx`. "See the audit in the sample plan →" and "Download the sample plan ↓" are not rendered, and the four tiles are plain cards with no link and no hover (Rule 10: an absent file renders as absent). Setting `SAMPLE_HREF` once #350 closes turns on the links, the `.ft` hover and the `download` attribute together.
+
+L2. **Flagged: the problem notes have no URLs to link.** The prompt says the notes "link to the same source URLs the current section 02 cites". Section 02 cited plain text only (`denver doti pwpt-121.2`, `aurora tcp instructions`), and the repo holds no URL for either. Built default: the note line is plain text, word for word from the canvas. No URL is invented.
+
+L3. **Flagged: the kind-of-work code was never in the submission or the emails.** The wire value is the plain name (`lib/contact/validate.ts` `KINDS`), and `lib/contact/emails.ts` prints `Kind of work: ${s.kind}`. The TA / S-630 notes were only on the page. They come off the page, and nothing in the payload or the emails changes.
+
+L4. **R145 self-ruled: the waitlist form stays visible, under the pilot link.** A hidden waitlist behind a "Not ready? Join the waitlist" toggle broke the #346 test "the waitlist refused: the same inline error" (`findByRole` skips hidden content). The prompt says a broken #346 test means the form changed too much. So the email field and button show under the pilot link, and the label keeps the shipped copy "Not ready? Get one email the day it opens."
+
+L5. **Flagged, legal-adjacent wording that the mock changes:**
+  - The hero's second fine-print line "conestruct doesn't stamp or approve plans" goes, per the prompt. The trust row says it again: "Conestruct doesn't stamp or approve plans".
+  - "What it won't do" goes with the sources section, per the prompt. Its "It won't promise approval. That's the city's call." is not restated anywhere on the page.
+  - The trust row's review line is new wording, word for word from the mock.
+  - Unchanged: the footer line, the Terms and Privacy links, and "used only to draft your comparison".
+
+L6. **R145 self-ruled: tokens, not hexes.** The ink gate (#263) bars hexes in components. The step pictures' and the tile hover's colours map to existing tokens where one matches exactly. Seven `--lv-sheet-*` tokens and `--lv-tile-hover` / `--lv-tile-kind-hover` are new. The step 2 check mark uses `--lv-ok`, an alias of `--lv-work` (#3fd3a8), so it carries that token's open INK_RESERVED flag.
+
+L7. **R145 self-ruled: the scroll-in replaces D.** The old CSS scroll-driven reveal (`.reveal`, `.rule-draw`) is gone. The lean motion lives in the landing's no-preference block. The hiding class is `.js-anim` on `.lv-outer`, not on `html`, so every selector in that block stays a landing one (`motion.test.ts`). `motion.test.ts` now lists the five new keyframes, and it allows `lv-draw` to move `stroke-dashoffset`, which is paint only and moves no layout.
+
+L8. **R145 self-ruled: the existing scale, not the mock's.** The mock's 40 px / 700 section heads and 96 px padding are drawn at the canvas size. The page keeps `.lv-h2` (clamp 28–36, 600) and the section padding clamp(56px, 6.5vw, 88px), per "keep the existing design tokens, spacing system and components".
+
+L9. **R145 self-ruled: the form's placeholders follow the mock.** Name, Company, Work email and City have no placeholder. Side reads "e.g. south side", and Length keeps its "ft" unit, now with no placeholder. Phone and the note keep theirs.

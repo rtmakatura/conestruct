@@ -67,22 +67,16 @@ export function Hero() {
           </p>
           <div className="lv-cta-stack">
             <div className="lv-cta-row">
-              <a className="lv-pri" href="#compare">
+              <a className="lv-pri" href="#send">
                 Send us a past job
               </a>
               <a className="lv-textlink" href="#join">
                 or join the waitlist
               </a>
             </div>
-            <p className="lv-cta-note">
-              Pick a job you&apos;ve already permitted. We&apos;ll draft it from the road so you can
-              see Conestruct on a road you know.
-            </p>
           </div>
           <p className="lv-mono-note">
             drafts for review by a certified tcs or pe
-            <br />
-            conestruct doesn&apos;t stamp or approve plans
           </p>
         </div>
       </div>

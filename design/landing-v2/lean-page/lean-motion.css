@@ -1,0 +1,19 @@
+/* Lean page motion. Animations run only under .go, which JS adds once per section on scroll-in. */
+.ft{transition:border-color .2s ease,background-color .2s ease}
+.ft:hover{border-color:#34a9e8 !important;background:#122233 !important}
+.ft .ft-k{transition:color .2s ease}.ft:hover .ft-k{color:#ffa65c !important}
+.an svg .a-drop,.an svg .a-pop,.an svg .a-slide,.an svg .a-rise{transform-box:fill-box;transform-origin:50% 100%}
+.go .rv{animation:rv-rise .55s cubic-bezier(.2,.7,.2,1) both}
+.go .a-fade{animation:a-fade .35s ease-out both}
+.go .a-rise{animation:rv-rise .45s cubic-bezier(.2,.7,.2,1) both}
+.go .a-drop{animation:a-drop .5s cubic-bezier(.3,1.4,.5,1) both}
+.go .a-pop{animation:a-pop .28s cubic-bezier(.3,1.5,.5,1) both}
+.go .a-slide{animation:a-slide .35s cubic-bezier(.2,.7,.2,1) both}
+.go .a-draw{stroke-dasharray:1;animation:a-draw .6s ease-out both}
+@keyframes rv-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes a-fade{from{opacity:0}to{opacity:1}}
+@keyframes a-drop{from{opacity:0;transform:translateY(-26px)}to{opacity:1;transform:none}}
+@keyframes a-pop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:none}}
+@keyframes a-slide{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes a-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){.go .rv,.go [class^="a-"],.go [class*=" a-"]{animation:none !important}}

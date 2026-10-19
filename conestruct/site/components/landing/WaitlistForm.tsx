@@ -1,6 +1,6 @@
 "use client";
 
-// The waitlist, in the pilot panel (#346 "Scope addition"): one email,
+// The waitlist, under the paid pilot link (#346 "Scope addition"): one email,
 // the same route as the job form with `type=waitlist`, the same guards.
 // On success the form is replaced by "You're on the list."
 

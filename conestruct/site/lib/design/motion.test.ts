@@ -7,8 +7,10 @@
 // or animation in globals.css fails here by name.
 //
 // Landing v2 (DESIGN-PRINCIPLES.md, the landing motion ruling) adds the
-// third and last: B, C and D on `/`, in their own no-preference block at
-// the end of the sheet, every selector a landing one.
+// third and last: B, C and the lean page's scroll-in on `/` (D, the CSS
+// scroll-driven reveal, gave way to it on landing-hero-3d), in their own
+// no-preference block at the end of the sheet, every selector a landing
+// one.
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -35,14 +37,18 @@ const NO_PREF = "@media (prefers-reduced-motion: no-preference)";
 const LANDING = block(css.lastIndexOf(NO_PREF));
 const LANDING_KEYFRAMES = [
   "lv-blink",
+  "lv-draw",
   "lv-drive-e",
   "lv-drive-w",
-  "lv-grow",
+  "lv-drop",
+  "lv-fade",
   "lv-merge",
+  "lv-pop",
   "lv-ring",
   "lv-rise",
   "lv-sig",
   "lv-sigwin",
+  "lv-slide",
 ];
 
 describe("R10 — animation is the band's track and the coming-soon drawing, nothing else (hover colour transitions are not animation)", () => {
@@ -132,7 +138,7 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
   });
 });
 
-describe("landing v2 — the recorded landing exception: B, C and D, all off under reduced motion", () => {
+describe("landing v2 — the recorded landing exception: B, C and the scroll-in, all off under reduced motion", () => {
   it("its keyframes live inside its own no-preference block, and every selector there is a landing one", () => {
     expect(LANDING).not.toBe(block(css.indexOf(NO_PREF)));
     const inside = [...LANDING.matchAll(/@keyframes\s+([\w-]+)/g)].map((m) => m[1]).sort();
@@ -155,11 +161,12 @@ describe("landing v2 — the recorded landing exception: B, C and D, all off und
     expect(moving.map(([, sel]) => sel.trim())).toEqual([]);
   });
 
-  it("the landing's keyframes move opacity and transform only, so no box moves in layout", () => {
+  it("the landing's keyframes move opacity and transform only (lv-draw a stroke's dash offset, paint only), so no box moves in layout", () => {
     for (const name of LANDING_KEYFRAMES) {
       const k = block(LANDING.indexOf(`@keyframes ${name}`) + css.indexOf(LANDING));
       const props = [...k.matchAll(/([\w-]+)\s*:/g)].map((m) => m[1]);
-      for (const p of props) expect(["opacity", "transform"], name).toContain(p);
+      const allowed = name === "lv-draw" ? ["stroke-dashoffset"] : ["opacity", "transform"];
+      for (const p of props) expect(allowed, name).toContain(p);
     }
   });
 });

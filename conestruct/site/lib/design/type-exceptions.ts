@@ -93,13 +93,12 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     name: "landing v2 at `/` (design/landing-v2/, the Oct 17 canvas)",
     sizes: ["16px", "14.5px", "10px", "clamp(28px, 3vw, 36px)", "22px", "15px", "14px", "10.5px", "15.5px", "clamp(42px, 5vw, 60px)", "17.5px", "13px", "26px", "clamp(20px, 2.2vw, 26px)", "clamp(40px, 5vw, 64px)", "13.5px", "9.5px", "12px", "19px", "11px", "clamp(32px, 4vw, 44px)", "12.5px"],
     reason:
-      "the approved landing page, rebuilt from landing-v2-reference.html with its copy and type scale word for word and size for size.  It is a marketing page with its own display register (the h1, the pain heads, the close heading), so it declares its sizes here rather than folding them into the workbench roles; nothing on /sandbox reads them.  The five clamp() values are the reference's fluid display sizes",
+      "the approved landing page, rebuilt from landing-v2-reference.html with its copy and type scale word for word and size for size.  It is a marketing page with its own display register (the h1 and the section heads; the lean page of Oct 19 kept that scale), so it declares its sizes here rather than folding them into the workbench roles; nothing on /sandbox reads them.  The five clamp() values are the reference's fluid display sizes",
     css: [
       { selector: ".workbench.lv-page", size: "16px" },
       { selector: ".workbench .lv-wordmark", size: "14.5px" },
       { selector: ".workbench .lv-nav-links", size: "10px" },
       { selector: ".workbench .lv-nav-cta", size: "10px" },
-      { selector: ".workbench .lv-label", size: "10px" },
       { selector: ".workbench .lv-h2", size: "clamp(28px, 3vw, 36px)" },
       { selector: ".workbench .lv-h3", size: "22px" },
       { selector: ".workbench .lv-body", size: "16px" },
@@ -109,11 +108,9 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".workbench .lv-eyebrow", size: "10px" },
       { selector: ".workbench .lv-pri", size: "15.5px" },
       { selector: ".workbench .lv-sec", size: "15px" },
-      { selector: ".workbench .lv-textlink, .workbench .lv-pilot-link", size: "15px" },
       { selector: ".workbench .lv-kicker", size: "10px" },
       { selector: ".workbench .lv-h1", size: "clamp(42px, 5vw, 60px)" },
       { selector: ".workbench .lv-lede", size: "17.5px" },
-      { selector: ".workbench .lv-cta-note", size: "14px" },
       { selector: ".workbench .lv-panel-head", size: "10px" },
       { selector: ".workbench .lv-flag-glyph", size: "13px" },
       { selector: ".workbench .lv-flag-title", size: "13.5px" },
@@ -121,43 +118,21 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".workbench .lv-stat-num", size: "19px" },
       { selector: ".workbench .lv-stat-label", size: "10px" },
       { selector: ".workbench .lv-figcap", size: "10px" },
-      { selector: ".workbench .lv-statement", size: "clamp(20px, 2.2vw, 26px)" },
-      { selector: ".workbench .lv-pain-head", size: "clamp(40px, 5vw, 64px)" },
-      { selector: ".workbench .lv-pain-body p", size: "16px" },
-      { selector: ".workbench .lv-cite", size: "10.5px" },
-      { selector: ".workbench .lv-close-line", size: "17.5px" },
-      { selector: ".workbench .lv-step-kicker", size: "10px" },
-      { selector: ".workbench .lv-step-body", size: "15px" },
-      { selector: ".workbench .lv-found-label", size: "13.5px" },
-      { selector: ".workbench .lv-found-value", size: "13.5px" },
-      { selector: ".workbench .lv-legend", size: "10px" },
-      { selector: ".workbench .lv-read-q", size: "22px" },
-      { selector: ".workbench .lv-read-label", size: "13.5px" },
-      { selector: ".workbench .lv-read-src", size: "10.5px" },
-      { selector: ".workbench .lv-read-value", size: "13.5px" },
-      { selector: ".workbench .lv-fact-label", size: "9.5px" },
-      { selector: ".workbench .lv-fact-value", size: "12px" },
-      { selector: ".workbench .lv-file-head", size: "10px" },
-      { selector: ".workbench .lv-file-title", size: "19px" },
-      { selector: ".workbench .lv-file-foot", size: "11px" },
-      { selector: ".workbench .lv-audit-body", size: "13px" },
-      { selector: ".workbench .lv-audit-src", size: "10.5px" },
-      { selector: ".workbench .lv-wont-head", size: "15.5px" },
-      { selector: ".workbench .lv-who dt", size: "10px" },
-      { selector: ".workbench .lv-who dd", size: "15px" },
-      { selector: ".workbench .lv-why-p", size: "15px" },
-      { selector: ".workbench .lv-founder-name", size: "14px" },
-      { selector: ".workbench .lv-founder-role", size: "9.5px" },
-      { selector: ".workbench .lv-h2-close", size: "clamp(32px, 4vw, 44px)" },
-      { selector: ".workbench .lv-close-lede", size: "17.5px" },
-      { selector: ".workbench .lv-legend-row", size: "10px" },
       { selector: ".workbench .lv-field-label, .workbench .lv-field-legend", size: "12.5px" },
       { selector: ".workbench .lv-input", size: "15px" },
       { selector: ".workbench .lv-unit", size: "11px" },
       { selector: ".workbench .lv-opt-title", size: "14px" },
-      { selector: ".workbench .lv-opt-note", size: "10px" },
       { selector: ".workbench .lv-seg-box", size: "14px" },
-      { selector: ".workbench .lv-how-list li", size: "14px" },
+      { selector: ".workbench .lv-textlink", size: "15px" },
+      { selector: ".workbench .lv-sup", size: "10px" },
+      { selector: ".workbench .lv-step-n", size: "11px" },
+      { selector: ".workbench .lv-ft-k", size: "10px" },
+      { selector: ".workbench .lv-ft-title", size: "19px" },
+      { selector: ".workbench .lv-submit-note", size: "14px" },
+      { selector: ".workbench .lv-how-list li", size: "15.5px" },
+      { selector: ".workbench .lv-how-n", size: "12px" },
+      { selector: ".workbench .lv-trust-who", size: "17.5px" },
+      { selector: ".workbench .lv-trust-review", size: "15px" },
       { selector: ".workbench .lv-footer-in", size: "10px" },
     ],
     tsx: [],
@@ -735,7 +710,10 @@ export const CENSUS_PINS = {
   // Landing v2: the page's own scale, 65 declarations.  131 -> 196.
   // Landing hero v2 (the compact card): the hint line moves into the
   // caption, so .lv-hint's declaration goes.  196 -> 195.
-  cssDeclarations: 195,
+  // The lean landing page (design/landing-v2/lean-page/): sections 02-06
+  // and the form's legends, notes and pilot panel go (35 declarations),
+  // the lean sections add 10.  195 -> 170.
+  cssDeclarations: 170,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
@@ -754,7 +732,10 @@ export const CENSUS_PINS = {
   // sheet; the twelve new are its display and micro registers.
   // Landing hero v2: the stat number goes 26px -> 19px, and it was 26px's
   // last site (19px, 13.5px and 10px were already in the sheet).  36 -> 35.
-  cssSizes: 35,
+  // The lean landing page: its three display clamps (the statement, the
+  // pain heads, the close heading) leave with their sections; every size
+  // the lean sections use was already in the sheet.  35 -> 32.
+  cssSizes: 32,
   // Correction 3 again: the "Applied from picker" BOX is deleted (its
   // sentences are now provenance lines under the WHAT cells they
   // describe), and its one text-[12px] goes with it — one use, one site
