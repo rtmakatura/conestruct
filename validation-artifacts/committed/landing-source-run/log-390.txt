@@ -1,0 +1,9 @@
+build: (no meta)
+picker heading: WHICH ROAD? · 3 DETECTED
+side options: ["South side · eastbound traffic"]
+aerial settled; ledger: ✓ Found the spot East Colfax Avenue Eastbound · Denver CHANGE ✓ Work starts 90 ft W of Williams Street MOVE ✓ Extent 1,000 ft · typed CHANGE ✓ Which side is occupied? South side · eastbound traffic confirmed ✓ Kind of work Shoulder work confirmed ✓ See the plan grow approaches laid out laid out
+legend: Advance warning Taper Buffer Work zone Downstream
+01-where-confirmed-390.png  box={"x":14,"y":166,"width":362,"height":1634.0625}
+strip: ⚠ VERIFIED · 1 PLAN FLAG REVIEW FLAGS
+05-results-head-390.png  box={"x":14,"y":68,"width":362,"height":1135}
+06-counts-files-390.png  box={"x":14,"y":1217,"width":362,"height":257.5}

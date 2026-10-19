@@ -1,0 +1,19 @@
+build: (no meta)
+picker heading: WHICH ROAD? · 3 DETECTED
+03-picker-which-road-1440.png  box={"x":80,"y":45,"width":1280,"height":810}
+side options: ["South side · eastbound traffic"]
+01b-where-side-chosen-1440.png  box={"x":280,"y":153,"width":880,"height":1221.5625}
+04-what-band-1440.png  box={"x":280,"y":225,"width":880,"height":552}
+aerial settled; ledger: ✓ Found the spot East Colfax Avenue Eastbound · Denver CHANGE ✓ Work starts 90 ft W of Williams Street MOVE ✓ Extent 1,000 ft · typed CHANGE ✓ Which side is occupied? South side · eastbound traffic confirmed ✓ Kind of work Shoulder work confirmed ✓ See the plan grow approaches laid out laid out
+legend: Advance warning Taper Buffer Work zone Downstream
+01-where-confirmed-1440.png  box={"x":280,"y":153,"width":880,"height":1184.6875}
+02-where-aerial-grown-1440.png  box={"x":297,"y":649.4375,"width":846,"height":323.75}
+strip: ⚠ VERIFIED · 1 PLAN FLAG REVIEW FLAGS
+05-results-head-1440.png  box={"x":280,"y":78,"width":880,"height":645.5}
+06-counts-files-1440.png  box={"x":280,"y":737.5,"width":880,"height":358.75}
+07-full-page-1440.png
+download [Download PDF ↓] -> 01-plan.pdf (737265 bytes)
+download [Download XLSX ↓] -> 02-plan.xlsx (6744 bytes)
+download [PDF ↓] -> 03-plan.crew.pdf (7860 bytes)
+download [.md ↓] -> 04-plan.md (6540 bytes)
+download [Download PDF ↓] -> 05-plan.audit.pdf (9361 bytes)
