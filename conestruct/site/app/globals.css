@@ -7559,8 +7559,10 @@ input[type="number"] {
 }
 
 /* 01 hero */
+/* F5 (Ryan, 2026-10-19): the top padding tops out at 56 (was 96) so more
+   of the figure is above the fold at 1440x900 */
 .workbench .lv-hero {
-  padding: clamp(48px, 7vw, 96px) 0 clamp(56px, 6.5vw, 88px);
+  padding: clamp(48px, 7vw, 56px) 0 clamp(56px, 6.5vw, 88px);
 }
 .workbench .lv-hero-row {
   display: flex;

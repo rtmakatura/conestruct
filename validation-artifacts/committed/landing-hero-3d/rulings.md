@@ -119,3 +119,12 @@ L7. **R145 self-ruled: the scroll-in replaces D.** The old CSS scroll-driven rev
 L8. **R145 self-ruled: the existing scale, not the mock's.** The mock's 40 px / 700 section heads and 96 px padding are drawn at the canvas size. The page keeps `.lv-h2` (clamp 28–36, 600) and the section padding clamp(56px, 6.5vw, 88px), per "keep the existing design tokens, spacing system and components".
 
 L9. **R145 self-ruled: the form's placeholders follow the mock.** Name, Company, Work email and City have no placeholder. Side reads "e.g. south side", and Length keeps its "ft" unit, now with no placeholder. Phone and the note keep theirs.
+
+## Ryan's rulings before the ship (2026-10-19)
+
+F5, resolved by ruling. "Measure the figure at 1440×900 at load. If its bottom edge is below the fold, cut the hero top padding from 96px to 56px and measure again." Measured with `measure-f5.cjs`, results in `light-<sha>/f5.txt`:
+  - On the lean page with 96 px of top padding, the figure spans y 407–1000, so its bottom is **100 px** below the fold. That is already 72 px better than the 172 px on hero v2, because the lean hero dropped the CTA note.
+  - With 56 px of top padding (`clamp(48px, 7vw, 56px)`, so only widths of 800 px and up change), it spans y 367–960, so its bottom is **60 px** below the fold.
+  - The figure still doesn't fit at load. The other two options from F5, a smaller scene or moving more lines, weren't ruled, so nothing more changed.
+
+L10. **Ryan's ruling: "It won't promise approval. That's the city's call." is restored word for word.** It is the last sentence of the trust row's review line, and `Landing.test.tsx` "the legal lines stay word for word" pins it. This closes the second item of L5.

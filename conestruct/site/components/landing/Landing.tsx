@@ -260,7 +260,7 @@ export function Landing() {
               </p>
               <p className="lv-trust-review">
                 Drafts for review by a certified TCS or PE. Conestruct doesn&apos;t stamp or approve plans, and anything
-                it inferred is marked as inferred.
+                it inferred is marked as inferred. It won&apos;t promise approval. That&apos;s the city&apos;s call.
               </p>
             </div>
           </Band>

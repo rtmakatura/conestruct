@@ -313,6 +313,10 @@ describe("landing v2 — links and held items", () => {
     expect(c.querySelector(".lv-footer")?.textContent).toContain(
       "OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT",
     );
+    // Ryan's ruling 2026-10-19: restored from "What it won't do", word for word
+    expect(c.querySelector(".lv-trust-review")?.textContent?.trim().endsWith(
+      "It won't promise approval. That's the city's call.",
+    )).toBe(true);
     expect([...c.querySelectorAll(".lv-footer a")].map((a) => a.getAttribute("href"))).toEqual(["/terms", "/privacy"]);
     expect(c.querySelector('form[aria-label="Send us a past job"]')?.textContent).toContain(
       "used only to draft your comparison",
