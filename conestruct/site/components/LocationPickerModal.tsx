@@ -99,6 +99,12 @@ export interface LocationPickerInitial {
    * movement only.  A mismatched pin invalidates it (stale record).
    */
   confirmedRoad?: ConfirmedRoad | null;
+  /**
+   * #347 — the form's selected jurisdiction.  Sent with every search so
+   * a cross-street pair typed with no city is looked up inside that
+   * jurisdiction's area (lib/geocode.ts).
+   */
+  jurisdictionKey?: string | null;
 }
 
 // What the modal hands back on save.  ``classification`` is null when
@@ -1168,7 +1174,10 @@ export function LocationPickerModal({
             const r = await fetch("/api/geocode", {
               method: "POST",
               headers: { "content-type": "application/json" },
-              body: JSON.stringify({ address: initialAddress }),
+              body: JSON.stringify({
+                address: initialAddress,
+                jurisdiction_key: initial.jurisdictionKey ?? null,
+              }),
             });
             if (cancelled) return;
             if (r.ok) {
@@ -1366,7 +1375,10 @@ export function LocationPickerModal({
         const r = await fetch("/api/geocode", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ address: q }),
+          body: JSON.stringify({
+            address: q,
+            jurisdiction_key: initial.jurisdictionKey ?? null,
+          }),
         });
         if (!r.ok) {
           const msg =
@@ -1409,7 +1421,7 @@ export function LocationPickerModal({
         setSearchStatus({ state: "error", message: (err as Error).message });
       }
     },
-    [searchQuery, applyPinPosition],
+    [searchQuery, applyPinPosition, initial.jurisdictionKey],
   );
 
   // ---- Save / cancel ----------------------------------------------------

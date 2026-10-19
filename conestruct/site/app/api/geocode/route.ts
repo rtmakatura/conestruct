@@ -25,7 +25,12 @@ export async function POST(req: NextRequest) {
     return new Response("Invalid address", { status: 400 });
   }
 
-  const result = await geocodeAddress(address, req.signal);
+  // #347: the form's selected jurisdiction scopes a cross-street pair
+  // typed with no city.  Anything but a string is ignored.
+  const jk = (body as { jurisdiction_key?: unknown })?.jurisdiction_key;
+  const jurisdictionKey = typeof jk === "string" ? jk : null;
+
+  const result = await geocodeAddress(address, req.signal, { jurisdictionKey });
   if (!result.ok) {
     return new Response(result.reason, { status: result.status });
   }

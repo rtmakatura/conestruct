@@ -1,0 +1,317 @@
+{
+  "source": "US Census TIGER/Line 2025 Place boundaries, Colorado (tl_2025_08_place.zip)",
+  "vintage": "2025",
+  "built_by": "scripts/build_jurisdiction_areas.py",
+  "areas": {
+    "arvada": {
+      "name": "Arvada",
+      "supported": false,
+      "bbox": [
+        -105.303897,
+        39.784035,
+        -105.040499,
+        39.890924
+      ]
+    },
+    "aurora": {
+      "name": "Aurora",
+      "supported": false,
+      "bbox": [
+        -104.886539,
+        39.550908,
+        -104.489074,
+        39.826852
+      ]
+    },
+    "bow_mar": {
+      "name": "Bow Mar",
+      "supported": false,
+      "bbox": [
+        -105.059541,
+        39.613936,
+        -105.044139,
+        39.63877
+      ]
+    },
+    "broomfield": {
+      "name": "Broomfield",
+      "supported": false,
+      "bbox": [
+        -105.166056,
+        39.889212,
+        -104.961071,
+        40.044144
+      ]
+    },
+    "castle_pines": {
+      "name": "Castle Pines",
+      "supported": false,
+      "bbox": [
+        -104.923624,
+        39.419166,
+        -104.830191,
+        39.492747
+      ]
+    },
+    "castle_rock": {
+      "name": "Castle Rock",
+      "supported": false,
+      "bbox": [
+        -104.920729,
+        39.311292,
+        -104.761306,
+        39.434998
+      ]
+    },
+    "centennial": {
+      "name": "Centennial",
+      "supported": true,
+      "bbox": [
+        -104.98834,
+        39.565948,
+        -104.726175,
+        39.63842
+      ]
+    },
+    "cherry_hills_village": {
+      "name": "Cherry Hills Village",
+      "supported": false,
+      "bbox": [
+        -104.978633,
+        39.624049,
+        -104.913227,
+        39.653227
+      ]
+    },
+    "columbine_valley": {
+      "name": "Columbine Valley",
+      "supported": false,
+      "bbox": [
+        -105.047188,
+        39.587901,
+        -105.024552,
+        39.611312
+      ]
+    },
+    "commerce_city": {
+      "name": "Commerce City",
+      "supported": false,
+      "bbox": [
+        -104.968863,
+        39.783778,
+        -104.659163,
+        39.928837
+      ]
+    },
+    "denver": {
+      "name": "Denver",
+      "supported": true,
+      "bbox": [
+        -105.109924,
+        39.614311,
+        -104.599581,
+        39.914178
+      ]
+    },
+    "edgewater": {
+      "name": "Edgewater",
+      "supported": false,
+      "bbox": [
+        -105.074374,
+        39.743273,
+        -105.05321,
+        39.758467
+      ]
+    },
+    "englewood": {
+      "name": "Englewood",
+      "supported": true,
+      "bbox": [
+        -105.034955,
+        39.616835,
+        -104.959426,
+        39.678684
+      ]
+    },
+    "federal_heights": {
+      "name": "Federal Heights",
+      "supported": false,
+      "bbox": [
+        -105.025113,
+        39.849045,
+        -104.996532,
+        39.88513
+      ]
+    },
+    "foxfield": {
+      "name": "Foxfield",
+      "supported": false,
+      "bbox": [
+        -104.802251,
+        39.580422,
+        -104.773167,
+        39.595021
+      ]
+    },
+    "glendale": {
+      "name": "Glendale",
+      "supported": false,
+      "bbox": [
+        -104.940729,
+        39.694762,
+        -104.926963,
+        39.711098
+      ]
+    },
+    "golden": {
+      "name": "Golden",
+      "supported": false,
+      "bbox": [
+        -105.24049,
+        39.700602,
+        -105.161848,
+        39.787219
+      ]
+    },
+    "greeley": {
+      "name": "Greeley",
+      "supported": true,
+      "bbox": [
+        -104.907501,
+        40.377672,
+        -104.619411,
+        40.481003
+      ]
+    },
+    "greenwood_village": {
+      "name": "Greenwood Village",
+      "supported": false,
+      "bbox": [
+        -104.980637,
+        39.587763,
+        -104.847673,
+        39.643651
+      ]
+    },
+    "lakeside": {
+      "name": "Lakeside",
+      "supported": false,
+      "bbox": [
+        -105.062659,
+        39.776583,
+        -105.053183,
+        39.783847
+      ]
+    },
+    "lakewood": {
+      "name": "Lakewood",
+      "supported": true,
+      "bbox": [
+        -105.199906,
+        39.618317,
+        -105.053191,
+        39.761942
+      ]
+    },
+    "littleton": {
+      "name": "Littleton",
+      "supported": true,
+      "bbox": [
+        -105.11101,
+        39.536173,
+        -104.973246,
+        39.629394
+      ]
+    },
+    "lone_tree": {
+      "name": "Lone Tree",
+      "supported": false,
+      "bbox": [
+        -104.909144,
+        39.506839,
+        -104.829928,
+        39.565983
+      ]
+    },
+    "morrison": {
+      "name": "Morrison",
+      "supported": false,
+      "bbox": [
+        -105.22233,
+        39.617194,
+        -105.162373,
+        39.660312
+      ]
+    },
+    "mountain_view": {
+      "name": "Mountain View",
+      "supported": false,
+      "bbox": [
+        -105.060188,
+        39.772938,
+        -105.053241,
+        39.77661
+      ]
+    },
+    "northglenn": {
+      "name": "Northglenn",
+      "supported": false,
+      "bbox": [
+        -105.015532,
+        39.868093,
+        -104.942207,
+        40.014979
+      ]
+    },
+    "parker": {
+      "name": "Parker",
+      "supported": true,
+      "bbox": [
+        -104.830116,
+        39.45307,
+        -104.70848,
+        39.565988
+      ]
+    },
+    "sheridan": {
+      "name": "Sheridan",
+      "supported": false,
+      "bbox": [
+        -105.034739,
+        39.631528,
+        -105.000229,
+        39.660508
+      ]
+    },
+    "thornton": {
+      "name": "Thornton",
+      "supported": true,
+      "bbox": [
+        -105.015517,
+        39.830873,
+        -104.878022,
+        40.000418
+      ]
+    },
+    "westminster": {
+      "name": "Westminster",
+      "supported": false,
+      "bbox": [
+        -105.165557,
+        39.818138,
+        -104.987761,
+        39.968528
+      ]
+    },
+    "wheat_ridge": {
+      "name": "Wheat Ridge",
+      "supported": false,
+      "bbox": [
+        -105.165386,
+        39.754678,
+        -105.053237,
+        39.794658
+      ]
+    }
+  }
+}

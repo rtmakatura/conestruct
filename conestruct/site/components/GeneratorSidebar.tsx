@@ -538,6 +538,8 @@ export function GeneratorSidebar({
             // #234: handed back so the picker restores the marker.
             intersection: scenario.meta.intersection ?? null,
             armIntersection: pickerArmsIntersection,
+            // #347: scopes a cross-street search typed with no city.
+            jurisdictionKey: scenario.jurisdiction_key ?? null,
           }}
           onCancel={() => setPickerOpen(false)}
           onSave={onPickerSave}

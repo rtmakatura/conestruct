@@ -97,6 +97,7 @@ let geocodeResponse: {
   lng: number;
   placeType: string | null;
 } | null = null;
+let geocodeBodies: Array<{ address: string; jurisdiction_key: string | null }> = [];
 
 function installFetch() {
   vi.stubGlobal(
@@ -113,6 +114,7 @@ function installFetch() {
         });
       }
       if (u.includes("/api/geocode")) {
+        geocodeBodies.push(JSON.parse(String(init?.body)));
         if (!geocodeResponse) {
           return Promise.resolve({
             ok: false,
@@ -181,6 +183,7 @@ beforeEach(() => {
   delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
   pendingDetects = [];
   geocodeResponse = null;
+  geocodeBodies = [];
   installFetch();
 });
 
@@ -271,6 +274,53 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
         "Area located. Drop a pin on the road to detect roads.",
       ),
     ).toBeNull();
+  });
+});
+
+describe("#347 cross-street search", () => {
+  function search(q: string) {
+    fireEvent.change(
+      screen.getByLabelText("Address or intersection search"),
+      { target: { value: q } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+  }
+
+  it("sends the selected jurisdiction; an intersection answer places the pin and detects there", async () => {
+    geocodeResponse = { lat: 39.739964, lng: -104.966006, placeType: "intersection" };
+    mountModal({ jurisdictionKey: "denver" });
+    search("Colfax & Williams");
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(geocodeBodies).toEqual([
+      { address: "Colfax & Williams", jurisdiction_key: "denver" },
+    ]);
+    expect(pendingDetects).toHaveLength(1);
+    expect(pendingDetects[0].body).toMatchObject({ lat: 39.739964, lng: -104.966006 });
+  });
+
+  it("no jurisdiction selected: sends null; a 404 (no corner found) places no pin and says so", async () => {
+    geocodeResponse = null; // the stub answers 404
+    mountModal();
+    search("Colfax & Main");
+
+    await screen.findByText("No match for that address");
+    expect(geocodeBodies).toEqual([{ address: "Colfax & Main", jurisdiction_key: null }]);
+    expect(pendingDetects).toHaveLength(0);
+    expect(saveButton().disabled).toBe(true);
+  });
+
+  it("the corner not found inside the area: the area answer recenters and asks for a pin", async () => {
+    geocodeResponse = { lat: 39.764245, lng: -104.854753, placeType: "place" };
+    mountModal({ jurisdictionKey: "denver" });
+    search("Colfax & Main");
+
+    await screen.findByText(
+      "Area located. Drop a pin on the road to detect roads.",
+    );
+    expect(pendingDetects).toHaveLength(0);
   });
 });
 
