@@ -1,0 +1,31 @@
+3D hero check · http://localhost:3149/ · main e8ee3d79 · 2026-10-19T17:18:17.857Z
+inline scene: HERO_ISO inner 79301 bytes (the hero-plan.svg drawing it replaces is gone from the page)
+1440: status 200 · scroll 1440/1440 ok · visible "hero-iso" 1158x699 · role img · aria-label "Isometric illustration of the Colfax shoulder cl…" · caption "E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN | DISTANCES TO SCALE ALONG THE ROAD · WIDTHS EXAGGERATED" · axe 0 · targets under 32: none · contrast below AA: none (25 pairs)
+1440: SVG label fills vs #25384d: rgb(147, 160, 176) 4.51; rgb(234, 240, 247) 10.45; rgb(244, 192, 32) 7.08; rgb(255, 138, 46) 5.1; rgb(63, 211, 168) 6.33 · smallest label 9.1 px
+1440: card "Adjacent at-grade intersection" → scene "hero-iso f-int" · lit [▲Adjacent at-grade intersectionn] ok
+1440: card "Pedestrian sidewalks" → scene "hero-iso f-walk" · lit [▲Pedestrian sidewalksnearest 65.] ok
+1440: card "43" → scene "hero-iso f-dev" · lit [43devices] ok
+1440: card "50 ft" → scene "hero-iso f-taper" · lit [50 fttaper · table 6b-4] ok
+1440: card "200 ft" → scene "hero-iso f-buffer" · lit [200 ftbuffer · table 6b-2] ok
+1440: scene arrow-board (data-k taper) → scene "hero-iso f-taper" · lit [50 fttaper · table 6b-4] ok
+1440: scene buffer-cone (data-k buffer) → scene "hero-iso f-buffer" · lit [200 ftbuffer · table 6b-2] ok
+1440: scene sign (data-k dev) → scene "hero-iso f-dev" · lit [43devices] ok
+1440: scene intersection-pin (data-k int) → scene "hero-iso f-int" · lit [▲Adjacent at-grade intersectionn] ok
+1440: scene barricade (data-k walk) → scene "hero-iso f-walk" · lit [▲Pedestrian sidewalksnearest 65.] ok
+1440: page errors none
+1280: status 200 · scroll 1280/1280 ok · visible "hero-iso" 1158x699 · role img · aria-label "Isometric illustration of the Colfax shoulder cl…" · caption "E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN | DISTANCES TO SCALE ALONG THE ROAD · WIDTHS EXAGGERATED" · axe 0 · targets under 32: none · contrast below AA: none (25 pairs)
+1280: SVG label fills vs #25384d: rgb(147, 160, 176) 4.51; rgb(234, 240, 247) 10.45; rgb(244, 192, 32) 7.08; rgb(255, 138, 46) 5.1; rgb(63, 211, 168) 6.33 · smallest label 9.1 px
+1280: card "Adjacent at-grade intersection" → scene "hero-iso f-int" · lit [▲Adjacent at-grade intersectionn] ok
+1280: card "Pedestrian sidewalks" → scene "hero-iso f-walk" · lit [▲Pedestrian sidewalksnearest 65.] ok
+1280: card "43" → scene "hero-iso f-dev" · lit [43devices] ok
+1280: card "50 ft" → scene "hero-iso f-taper" · lit [50 fttaper · table 6b-4] ok
+1280: card "200 ft" → scene "hero-iso f-buffer" · lit [200 ftbuffer · table 6b-2] ok
+1280: scene arrow-board (data-k taper) → scene "hero-iso f-taper" · lit [50 fttaper · table 6b-4] ok
+1280: scene buffer-cone (data-k buffer) → scene "hero-iso f-buffer" · lit [200 ftbuffer · table 6b-2] ok
+1280: scene sign (data-k dev) → scene "hero-iso f-dev" · lit [43devices] ok
+1280: scene intersection-pin (data-k int) → scene "hero-iso f-int" · lit [▲Adjacent at-grade intersectionn] ok
+1280: scene barricade (data-k walk) → scene "hero-iso f-walk" · lit [▲Pedestrian sidewalksnearest 65.] ok
+1280: page errors none
+390: status 200 · scroll 390/390 ok · visible "plan mB mC" 338x241 · role img · aria-label "Illustration of the Colfax shoulder closure: adv…" · caption "E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN | ILLUSTRATION · NOT TO SCALE" · axe 0 · targets under 44: none · contrast below AA: none (25 pairs)
+390: phone drawing vs main's HERO_NARROW · markup true · viewBox true · aria-label true · class "plan mB mC"
+390: page errors none
