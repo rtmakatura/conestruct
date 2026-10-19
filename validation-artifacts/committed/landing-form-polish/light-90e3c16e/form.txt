@@ -1,0 +1,29 @@
+1440: Kind of work rows 1 · room at the row's end 11.3 px · option heights 44/44/44/44 · label font 14px · labels ["Shoulder work","Flagger lane closure","Lane closure near an intersection","Something else"] · form 717.8 · aside 410.2 · Hours 48 px (top 596.81) · Side 48 px (top 596.81) · Length 48 px · clipped overflow ["lv-pot","lv-pot"] · scroll width 1440
+1280: Kind of work rows 1 · room at the row's end 11.3 px · option heights 44/44/44/44 · label font 14px · labels ["Shoulder work","Flagger lane closure","Lane closure near an intersection","Something else"] · form 717.8 · aside 410.2 · Hours 48 px (top 596.31) · Side 48 px (top 596.31) · Length 48 px · clipped overflow ["lv-pot","lv-pot"] · scroll width 1280
+390: Kind of work rows 3 · room at the row's end 35.6 px · option heights 44/44/44/44 · label font 14px · labels ["Shoulder work","Flagger lane closure","Lane closure near an intersection","Something else"] · form 340 · aside 340 · Hours 48 px (top 603.27) · Side 48 px (top 421.27) · Length 48 px · clipped overflow ["lv-pot","lv-pot"] · scroll width 390
+hours states at 1x: rest, hover (Night), selected (Daytime), keyboard focus (hours=Daytime focus-visible true)
+hours states at 1.25x: rest, hover (Night), selected (Daytime), keyboard focus (hours=Daytime focus-visible true)
+edge 1x scroll+0: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1x scroll+0.25: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1x scroll+0.5: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1x scroll+0.75: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1x scroll+3: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1x scroll+7: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1x scroll+11: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1x scroll+13: Hours [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 2c3e53 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+0: Hours [16232f 16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+0.25: Hours [16232f 16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+0.5: Hours [16232f 16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+0.75: Hours [16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+3: Hours [16232f 16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+7: Hours [16232f 16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+11: Hours [16232f 16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29]
+edge 1.25x scroll+13: Hours [16232f 16232f 16232f 263649 172634 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 253548 1d2d3d 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+0: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+0.25: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+0.5: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+0.75: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+3: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+7: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+11: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
+edge 1.5x scroll+13: Hours [16232f 16232f 16232f 16232f 213040 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29] · Length [16232f 16232f 16232f 16232f 1f2e3e 2c3e53 0f1c29 0f1c29 0f1c29 0f1c29 0f1c29]
