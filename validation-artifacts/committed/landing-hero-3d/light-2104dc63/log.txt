@@ -1,0 +1,19 @@
+hero v2 check · http://localhost:3149/ · main e8ee3d79 · 2026-10-19T18:34:35.887Z
+1440: status 200 · scroll 1440/1440 ok · visible "hero-iso" · role img · aria-label true · card inside the figure at 20,20 330x238 · caption "E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN · POINT AT THE CARD OR THE ROAD | DISTANCES TO SCALE ALONG THE ROAD · WIDTHS EXAGGERATED" · axe 0 · targets under 32: none · contrast below AA: none (25 pairs) · page errors none
+1440x900 fit: figure (card, scene, caption) at page y 479-1072, 592 px tall · at load bottom edge 172 px below the fold · scrolled to it fits in one screen · scene parts under the card: none
+sweep 1440 along the road, 128 steps (10 ft, the cut skipped): -345 ft none → -325 ft dev [43devices] → -25 ft taper [50 fttaper · 6b-4] → 75 ft buffer [200 ftbuffer · 6b-2] → 265 ft dev [43devices] → 1325 ft none → 1385 ft dev [43devices]
+sweep 1440: off the svg → scene none · lit [] · steps where the scene disagreed with the pointer: 0
+card "Adjacent at-grade intersection" → right across the card edge (px past it): -164px int → 4px none · then off: none
+card "Pedestrian sidewalks" → right across the card edge (px past it): -164px walk → 4px none · then off: none
+card "43" → right across the card edge (px past it): -43px dev → 5px taper → 125px buffer · then off: none
+card "50 ft" → right across the card edge (px past it): -59px taper → 5px buffer → 125px none · then off: none
+card "200 ft" → right across the card edge (px past it): -62px buffer → 2px none · then off: none
+key taper → scene f-taper · lit [50 fttaper · 6b-4] ok
+key buffer → scene f-buffer · lit [200 ftbuffer · 6b-2] ok
+key dev → scene f-dev · lit [43devices] ok
+key int → scene f-int · lit [▲Adjacent at-grade inter] ok
+key walk → scene f-walk · lit [▲Pedestrian sidewalksnea] ok
+1280: status 200 · scroll 1280/1280 ok · visible "hero-iso" · role img · aria-label true · card inside the figure at 20,20 330x238 · caption "E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN · POINT AT THE CARD OR THE ROAD | DISTANCES TO SCALE ALONG THE ROAD · WIDTHS EXAGGERATED" · axe 0 · targets under 32: none · contrast below AA: none (25 pairs) · page errors none
+1024: status 200 · scroll 1024/1024 ok · visible "hero-iso" · role img · aria-label true · card above the drawing 926x206 · caption "E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN · POINT AT THE CARD OR THE ROAD | DISTANCES TO SCALE ALONG THE ROAD · WIDTHS EXAGGERATED" · axe 0 · targets under 32: none · contrast below AA: none (25 pairs) · page errors none
+390: status 200 · scroll 390/390 ok · visible "plan mB mC" · role img · aria-label true · card above the drawing 340x222 · caption "E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN · POINT AT THE CARD | ILLUSTRATION · NOT TO SCALE" · axe 0 · targets under 44: none · contrast below AA: none (25 pairs) · page errors none
+390: phone drawing vs main's HERO_NARROW · markup true · viewBox true · aria-label true · class "plan mB mC"

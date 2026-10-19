@@ -47,3 +47,49 @@ F2. **The flat drawings' drums.** Step 1 and step 3 draw the taper's 3 drums wit
 F3. **`iso_hero.py` on Windows.** `python iso_hero.py hero-iso.svg` crashes on a cp1252 console: `write_text` has no `encoding=` and the labels carry "▲". Run it with `PYTHONUTF8=1`. Not changed, because the prompt limits edits to source-record mismatches.
 
 F4. **The cursor.** The canvas CSS gives the scene's linked groups `cursor: pointer`. They aren't clickable. It's kept as approved.
+
+---
+
+# Hero v2 (Ryan's review of `ccacd32`)
+
+The prompt is `design/landing-v2/hero-3d/cc-prompt-hero-3d-v2.md`, delivered 2026-10-19 with the v2 generator, SVG, canvas CSS ("Idea 2 v2") and `ref-v2/`. The rulings of the first pass still stand. F3 above is resolved by Ryan's generator fix.
+
+## Ryan's rulings, 2026-10-19 (the prompt's §2 and §3, word for word)
+
+> 1. **Glow is minimal.** One thin edge (`drop-shadow(0 0 1.5px …)`) on the active part. The large soft glow is gone.
+> 2. **Clear hover zones.** The SVG now has one invisible hit polygon per zone (`class="hit"`, `data-k`): signs, taper, buffer, work zone (two parts across the break), intersection and closed sidewalk. While a key is active, its ground outline (`class="mark k-<key>"`, dashed with a light tint) shows, so it's clear what you're pointing at. Only `.hit` polygons and the two pins (`.fl`) take the pointer. Every other `.z` group gets `pointer-events: none`.
+> 3. **No sticky hover.** In `ccacd32`, a part stayed active after the cursor left it, and moving straight to the next part didn't switch. Replace the per-group handlers with one handler on the `<svg>`:
+>    - `pointerover`: `key = event.target.closest('[data-k]')?.dataset.k ?? null`, and set it only when it differs from the current key;
+>    - `pointerleave` on the svg: clear the key.
+>
+>    Zones touch edge to edge, so moving across them switches cleanly. The card buttons keep their own enter/leave and focus/blur.
+> 4. **Shorter scene.** The flatter camera and lower buildings make the viewBox 1200×586 (was 724).
+> 5. **Card inside the illustration.** The NEEDS YOU card moves into the figure, absolutely positioned at the top-left (`left: 20px; top: 20px; width: 330px`) over the scene's empty corner. Below 1100px it goes back to normal flow above the drawing. The hero's top row becomes two columns: eyebrow and headline on the left, the paragraph and both CTAs on the right, aligned to the bottom (see `ref-v2/01`). Keep both existing lines under the CTAs ("Pick a job you've already permitted…" and the fine print "drafts for review by a certified tcs or pe…"). The canvas mock left them out for space, but the page keeps them.
+> 6. **Compact card.** The flag rows and stats use 9px × 14px padding, the titles 13.5px, the meta lines 10px, the numbers 19px. The stats row sizes each cell to its content (`grid-template-columns: auto auto auto`) with 1px dividers. Stat labels are one line: `devices`, `taper · 6b-4`, `buffer · 6b-2`. The card's hint line moves into the caption: `… FROM THE OCT 17 RUN · POINT AT THE CARD OR THE ROAD`.
+>
+> Phones keep the flat narrow drawing, unchanged.
+>
+> The Windows crash on "▲" from your last report is fixed: `iso_hero.py` now writes the SVG with `encoding='utf-8'`. Regenerate with `python iso_hero.py hero-iso.svg` and check the output equals the delivered SVG. Update the provenance test.
+
+## Checked
+
+- **The camera change moved no device.** `tests/test_landing_hero_devices.py` passes unchanged against the v2 SVG: the same feet for every device. It reads the projection from `iso_hero.py` itself, so the flatter camera needed no parsing change.
+- **Provenance.** `iso_hero.py` reproduces the delivered `hero-iso.svg` (C2PA block aside). The provenance test now runs `python iso_hero.py <out>` with a bare environment (no `PYTHONUTF8`). Red proof: the first-pass generator fails it on this machine (`UnicodeEncodeError: 'charmap' codec can't encode character '▲'`).
+- **Keys.** A new test checks four things: every `data-k` is one of the 5 card keys; only `.hit` polygons and the two `.fl` pins carry one; every key has a hit zone; and the zone counts are dev 4, walk 2, int 1, taper 1, buffer 1. A mounted test (`Landing.test.tsx`) checks the same keys in the rendered page.
+
+## Self-rulings
+
+S7. **R145 self-ruled: the hit zones' `#000` is a token.** The ink gate allows no hex outside the token blocks, and the plan-art script refused 3-digit hexes. `--iso-hit: #000000` joins the `--iso-*` tokens, and the script now maps 3-digit hexes through the same table, so an unmapped one still stops it.
+
+S8. **R145 self-ruled: phones read "POINT AT THE CARD".** The hint moves into the caption as ruled. Phones keep the flat drawing, which has no hover zones, so below 720 px the caption drops "OR THE ROAD".
+
+S9. **R145 self-ruled: the scene's pointer stays mouse-only**, as in the first pass. Keyboard users reach every key through the card buttons, and a touch on a zone doesn't leave a key set.
+
+S10. **R145 self-ruled: the type census follows the compact card.** The census rows change to `.lv-flag-title` 13.5px, `.lv-flag-meta` 10px and `.lv-stat-num` 19px, and the `.lv-hint` row goes. The census pins go 196 → 195 declarations and 36 → 35 sizes, because 26px had only the stat number. Each size the card now uses was already in the sheet.
+
+S11. **R145 self-ruled: the card's transitions and the scene's fade stay in the landing's no-preference block**, as in S3. The canvas CSS's `.hv` and `.ring` rules are left out: v2 has no rings, and the pins' cursor comes from `.z.fl`.
+
+## Flagged, not changed
+
+F5. **At 1440×900 the figure's bottom is below the fold at load.** The figure (card, scene and caption) is 592 px tall, so once scrolled to, it fits in one screen with the card and the whole scene together. At load it starts at y 479, and its bottom edge is 172 px below the fold. The canvas mock fit because it left out the two lines under the CTAs. The page keeps them as ruled, which makes the right column, and so the top row, taller (`01-rest-1440x900-at-load.png`). Fitting at load would need one of three things: dropping or moving those lines, a smaller hero top padding (96 px at 1440), or a smaller scene. Each one is Ryan's call.
+
