@@ -2,6 +2,12 @@
   "source": "US Census TIGER/Line 2025 Place boundaries, Colorado (tl_2025_08_place.zip)",
   "vintage": "2025",
   "built_by": "scripts/build_jurisdiction_areas.py",
+  "combined": [
+    -105.303897,
+    39.311292,
+    -104.489074,
+    40.481003
+  ],
   "areas": {
     "arvada": {
       "name": "Arvada",

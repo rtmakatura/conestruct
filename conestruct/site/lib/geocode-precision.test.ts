@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isPreciseGeocode } from "./geocode-precision";
+import { geocodeErrorMessage, isPreciseGeocode } from "./geocode-precision";
 
 describe("isPreciseGeocode", () => {
   it("street-level classes are precise", () => {
@@ -27,5 +27,16 @@ describe("isPreciseGeocode", () => {
     expect(isPreciseGeocode(null)).toBe(false);
     expect(isPreciseGeocode("some_future_type")).toBe(false);
     expect(isPreciseGeocode("")).toBe(false);
+  });
+});
+
+describe("geocodeErrorMessage (#347)", () => {
+  it.each([
+    [503, "Geocoding not configured"],
+    [404, "No match for that address"],
+    [422, "Add a city to search cross streets."],
+    [502, "Geocoding failed (502)"],
+  ])("%i reads %s", (status, msg) => {
+    expect(geocodeErrorMessage(status)).toBe(msg);
   });
 });

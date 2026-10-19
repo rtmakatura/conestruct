@@ -9,13 +9,16 @@
 // pair is searched inside that city's box, and only a result Mapbox flags
 // ``properties.accuracy: "intersection"`` is accepted (v5 types it
 // "address" like any street address).  No flagged hit ⇒ the area itself
-// comes back as a coarse match, or 404 when there is no area: never a
-// far-off street address presented as the corner (Rule 10).
+// comes back as a coarse match: never a far-off street address presented
+// as the corner (Rule 10).  With no city typed and no jurisdiction
+// selected, the area is all of our TIGER places together, and no flagged
+// hit inside it answers 422: "Add a city to search cross streets."
 
 import {
   areaForKey,
   areaForName,
   bboxCenter,
+  COMBINED_BBOX,
   type BBox,
 } from "@/lib/jurisdiction-areas";
 
@@ -84,19 +87,30 @@ async function mapbox(
   return { ok: true, features: payload.features ?? [] };
 }
 
-/** The box and center to search a street pair in, or null for none. */
+interface SearchBox {
+  bbox: BBox | null;
+  center: [number, number];
+  /** All TIGER places together: no city typed, no jurisdiction. */
+  combined?: true;
+}
+
+/** The box and center to search a street pair in. */
 async function searchArea(
   cross: CrossStreetQuery,
   opts: GeocodeOptions,
   token: string,
   signal?: AbortSignal,
 ): Promise<
-  | { ok: true; area: { bbox: BBox | null; center: [number, number] } | null }
+  | { ok: true; area: SearchBox }
   | { ok: false; status: number; reason: string }
 > {
   if (cross.city === null) {
     const a = areaForKey(opts.jurisdictionKey);
-    return { ok: true, area: a ? { bbox: a.bbox, center: bboxCenter(a.bbox) } : null };
+    if (a) return { ok: true, area: { bbox: a.bbox, center: bboxCenter(a.bbox) } };
+    return {
+      ok: true,
+      area: { bbox: COMBINED_BBOX, center: bboxCenter(COMBINED_BBOX), combined: true },
+    };
   }
   // A typed city that is one of our TIGER places, with no state or with
   // Colorado, uses that polygon's box: Mapbox alone ranks Lakewood and
@@ -116,6 +130,10 @@ async function searchArea(
   return { ok: true, area: { bbox: place.bbox ?? null, center: place.center } };
 }
 
+function inside([lng, lat]: [number, number], b: BBox): boolean {
+  return b[0] <= lng && lng <= b[2] && b[1] <= lat && lat <= b[3];
+}
+
 async function geocodeCrossStreets(
   cross: CrossStreetQuery,
   opts: GeocodeOptions,
@@ -125,25 +143,27 @@ async function geocodeCrossStreets(
   const scoped = await searchArea(cross, opts, token, signal);
   if (!scoped.ok) return scoped;
   const area = scoped.area;
-  const scope = area
-    ? `${area.bbox ? `&bbox=${area.bbox.join(",")}` : ""}&proximity=${area.center.join(",")}`
-    : "";
+  const scope = `${area.bbox ? `&bbox=${area.bbox.join(",")}` : ""}&proximity=${area.center.join(",")}`;
   const r = await mapbox(cross.streets, `&types=address&limit=5${scope}`, token, signal);
   if (!r.ok) return r;
   const hit = r.features.find(
-    (f) => f.properties?.accuracy === "intersection" && f.center?.length === 2,
+    (f) =>
+      f.properties?.accuracy === "intersection" &&
+      f.center?.length === 2 &&
+      // The combined area must hold the corner, not just rank it.
+      (!area.combined || inside(f.center, COMBINED_BBOX)),
   );
   if (hit?.center) {
     const [lng, lat] = hit.center;
     return { ok: true, lat, lng, placeType: "intersection" };
   }
-  if (area) {
-    // The corner was not found inside the area: hand back the area as a
-    // coarse match, so the picker recenters and asks for a pin.
-    const [lng, lat] = area.center;
-    return { ok: true, lat, lng, placeType: "place" };
+  if (area.combined) {
+    return { ok: false, status: 422, reason: "add a city" };
   }
-  return { ok: false, status: 404, reason: "no intersection match" };
+  // The corner was not found inside the area: hand back the area as a
+  // coarse match, so the picker recenters and asks for a pin.
+  const [lng, lat] = area.center;
+  return { ok: true, lat, lng, placeType: "place" };
 }
 
 export async function geocodeAddress(

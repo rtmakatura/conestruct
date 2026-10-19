@@ -17,7 +17,7 @@ import type {
   RoadClassification,
   RoadDetectResponse,
 } from "@/lib/road-detection/types";
-import { isPreciseGeocode } from "@/lib/geocode-precision";
+import { geocodeErrorMessage, isPreciseGeocode } from "@/lib/geocode-precision";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import {
   deriveCrossStreet,
@@ -1207,13 +1207,10 @@ export function LocationPickerModal({
                 });
               }
             } else {
-              const msg =
-                r.status === 503
-                  ? "Geocoding not configured"
-                  : r.status === 404
-                    ? "No match for that address"
-                    : `Geocoding failed (${r.status})`;
-              setSearchStatus({ state: "error", message: msg });
+              setSearchStatus({
+                state: "error",
+                message: geocodeErrorMessage(r.status),
+              });
             }
           } catch (err) {
             if (!cancelled) {
@@ -1381,13 +1378,10 @@ export function LocationPickerModal({
           }),
         });
         if (!r.ok) {
-          const msg =
-            r.status === 503
-              ? "Geocoding not configured"
-              : r.status === 404
-                ? "No match for that address"
-                : `Geocoding failed (${r.status})`;
-          setSearchStatus({ state: "error", message: msg });
+          setSearchStatus({
+            state: "error",
+            message: geocodeErrorMessage(r.status),
+          });
           return;
         }
         const j = (await r.json()) as {

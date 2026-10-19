@@ -4,7 +4,7 @@
 // run of the same cases is lib/geocode.live.test.ts.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { geocodeAddress, parseCrossStreets } from "./geocode";
-import { areaForKey, areaForName, bboxCenter } from "./jurisdiction-areas";
+import { areaForKey, areaForName, bboxCenter, COMBINED_BBOX } from "./jurisdiction-areas";
 
 const CORNER = {
   center: [-104.966006, 39.739964],
@@ -15,6 +15,11 @@ const SCHUYLER_NE = {
   center: [-97.064631, 41.452042],
   place_type: ["address"],
   properties: {},
+};
+const PLAINWELL_MI = {
+  center: [-85.641768, 42.437325],
+  place_type: ["address"],
+  properties: { accuracy: "intersection" },
 };
 const STREET = {
   center: [-104.965881, 39.729264],
@@ -135,24 +140,30 @@ describe("cross streets with no city typed", () => {
     expect(r).toEqual({ ok: true, lat, lng, placeType: "place" });
   });
 
-  it("no jurisdiction: accepts only an intersection-flagged result, unscoped", async () => {
+  it("no jurisdiction: searches all our places together; accepts only a flagged corner", async () => {
     answer = () => ({ features: [STREET, CORNER] });
     const r = await geocodeAddress("Colfax and Williams");
     expect(r).toEqual({ ok: true, lat: 39.739964, lng: -104.966006, placeType: "intersection" });
-    expect(calls[0].searchParams.get("bbox")).toBeNull();
+    expect(calls[0].searchParams.get("bbox")).toBe(COMBINED_BBOX.join(","));
   });
 
-  it("no jurisdiction and no flagged result ⇒ 404, never the street address", async () => {
+  it("no jurisdiction and no flagged result: 422, add a city; never the street address", async () => {
     answer = () => ({ features: [SCHUYLER_NE, STREET] });
     const r = await geocodeAddress("Colfax & Williams");
-    expect(r).toEqual({ ok: false, status: 404, reason: "no intersection match" });
+    expect(r).toEqual({ ok: false, status: 422, reason: "add a city" });
+  });
+
+  it("no jurisdiction: a flagged corner outside our places (Plainwell, MI) is refused", async () => {
+    answer = () => ({ features: [PLAINWELL_MI] });
+    const r = await geocodeAddress("Colfax & Main");
+    expect(r).toEqual({ ok: false, status: 422, reason: "add a city" });
   });
 
   it("a jurisdiction with no TIGER place (cdot) is treated as none", async () => {
     answer = () => ({ features: [STREET] });
     const r = await geocodeAddress("Colfax & Main", undefined, { jurisdictionKey: "cdot" });
-    expect(calls[0].searchParams.get("bbox")).toBeNull();
-    expect(r).toEqual({ ok: false, status: 404, reason: "no intersection match" });
+    expect(calls[0].searchParams.get("bbox")).toBe(COMBINED_BBOX.join(","));
+    expect(r).toEqual({ ok: false, status: 422, reason: "add a city" });
   });
 });
 

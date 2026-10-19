@@ -97,6 +97,7 @@ let geocodeResponse: {
   lng: number;
   placeType: string | null;
 } | null = null;
+let geocodeFailStatus = 404;
 let geocodeBodies: Array<{ address: string; jurisdiction_key: string | null }> = [];
 
 function installFetch() {
@@ -118,7 +119,7 @@ function installFetch() {
         if (!geocodeResponse) {
           return Promise.resolve({
             ok: false,
-            status: 404,
+            status: geocodeFailStatus,
             json: async () => ({}),
           });
         }
@@ -184,6 +185,7 @@ beforeEach(() => {
   pendingDetects = [];
   geocodeResponse = null;
   geocodeBodies = [];
+  geocodeFailStatus = 404;
   installFetch();
 });
 
@@ -301,12 +303,13 @@ describe("#347 cross-street search", () => {
     expect(pendingDetects[0].body).toMatchObject({ lat: 39.739964, lng: -104.966006 });
   });
 
-  it("no jurisdiction selected: sends null; a 404 (no corner found) places no pin and says so", async () => {
-    geocodeResponse = null; // the stub answers 404
+  it("no jurisdiction selected: sends null; a 422 (no corner in our places) places no pin and asks for a city", async () => {
+    geocodeResponse = null;
+    geocodeFailStatus = 422;
     mountModal();
     search("Colfax & Main");
 
-    await screen.findByText("No match for that address");
+    await screen.findByText("Add a city to search cross streets.");
     expect(geocodeBodies).toEqual([{ address: "Colfax & Main", jurisdiction_key: null }]);
     expect(pendingDetects).toHaveLength(0);
     expect(saveButton().disabled).toBe(true);

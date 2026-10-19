@@ -39,3 +39,13 @@ def test_every_box_is_the_polygon_extent() -> None:
     for key, area in areas.items():
         if area["supported"]:
             assert (REPO_ROOT / "data" / "jurisdictions" / f"{key}.json").exists(), key
+
+
+def test_combined_box_is_the_extent_of_every_place() -> None:
+    built = _builder().build()
+    boxes = [a["bbox"] for a in built["areas"].values()]
+    assert len(boxes) == 31
+    min_lng, min_lat, max_lng, max_lat = built["combined"]
+    for b in boxes:
+        assert min_lng <= b[0] and min_lat <= b[1] and b[2] <= max_lng and b[3] <= max_lat
+    assert min_lng in [b[0] for b in boxes] and max_lat in [b[3] for b in boxes]

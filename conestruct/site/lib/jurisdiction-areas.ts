@@ -14,6 +14,9 @@ export interface SearchArea {
   bbox: BBox;
 }
 
+/** The extent of every place below together (no city, no jurisdiction). */
+export const COMBINED_BBOX = data.combined as BBox;
+
 const AREAS: SearchArea[] = Object.entries(data.areas).map(([key, a]) => ({
   key,
   name: a.name,

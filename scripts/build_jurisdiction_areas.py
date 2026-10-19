@@ -1,10 +1,11 @@
 """Build the geocoder's search areas from the boundary layer (#347).
 
 The site's geocoder scopes a cross-street search ("Colfax & Williams")
-to a place: the city typed after the streets, or the jurisdiction the
-form has selected.  Mapbox takes that scope as a bounding box.  Every
-box here is the extent of a US Census TIGER/Line Place polygon already
-in ``data/boundaries/`` (provenance in its ``_meta.json``), so no
+to a place: the city typed after the streets, the jurisdiction the
+form has selected, or, with neither, all of the places together.
+Mapbox takes that scope as a bounding box.  Every box here is the
+extent of US Census TIGER/Line Place polygons already in
+``data/boundaries/`` (provenance in its ``_meta.json``), so no
 coordinate is chosen by hand (Rule 12).
 
 Writes ``conestruct/site/lib/jurisdiction-areas.json``.  The site reads
@@ -62,10 +63,19 @@ def build() -> dict[str, Any]:
             "supported": False,
             "bbox": _extent(feat["geometry"]),
         }
+    boxes = [a["bbox"] for a in areas.values()]
     return {
         "source": meta["places"]["source"],
         "vintage": meta["places"]["vintage"],
         "built_by": "scripts/build_jurisdiction_areas.py",
+        # The extent of every place above: the search area for a street
+        # pair typed with no city and no jurisdiction selected (#347).
+        "combined": [
+            min(b[0] for b in boxes),
+            min(b[1] for b in boxes),
+            max(b[2] for b in boxes),
+            max(b[3] for b in boxes),
+        ],
         "areas": dict(sorted(areas.items())),
     }
 

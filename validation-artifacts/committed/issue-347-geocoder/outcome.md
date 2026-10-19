@@ -11,7 +11,28 @@
 - **Byte-identical:** every other query's Mapbox request (`…/{q}.json?access_token=…&limit=1`, asserted in `lib/geocode.test.ts`) and its response. The picker's precise/coarse/error handling is unchanged; `"intersection"` was already in `PRECISE_PLACE_TYPES`.
 - **New file:** `conestruct/site/lib/jurisdiction-areas.json` (31 TIGER place extents).
 
-## Live results (2026-10-18, `LIVE_GEOCODE=1 npx vitest run lib/geocode.live.test.ts`)
+## Second ruling (flag 2), Rule 5 prediction
+- **Changes:** only a street pair with no city typed and no jurisdiction with a TIGER place (none, `cdot`, `e470`, …). It is now searched inside the combined box, and a flagged corner outside it, or no flagged corner at all, answers 422 "add a city". Live, that changes exactly two rows: `Colfax & Main` with none and with cdot (both were Plainwell, MI).
+- **Byte-identical:** every other row of the live table, and the plain-address request. The picker's 404/503/other messages are unchanged; they moved into `geocodeErrorMessage`.
+
+## Live results, second run (2026-10-18, after the second ruling)
+| Input | Jurisdiction selected | Result | placeType | Distance | Case |
+|---|---|---|---|---|---|
+| `Colfax & Williams, Denver` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 1: same |
+| `Colfax and Williams` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 2: same |
+| `E Colfax Ave and N Williams St` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 3: same |
+| `E Colfax Ave & N Race St, Denver` | none | 39.739962, -104.963485 | intersection | 0.13 mi | issue input 4: same |
+| `Colfax & Williams` | none | 39.739964, -104.966006 | intersection | 0.00 mi | same (Denver is inside the combined box) |
+| `Colfax & Williams` | denver | 39.739964, -104.966006 | intersection | 0.00 mi | same |
+| `Colfax & Main` | none | HTTP 422 add a city | | | **changed**: was Plainwell, MI |
+| `Colfax & Main` | denver | 39.764245, -104.854753 | place | 6.14 mi | same |
+| `Colfax & Main` | cdot | HTTP 422 add a city | | | **changed**: was Plainwell, MI (CDOT has no TIGER place) |
+| `Colfax & Main, Aurora` | none | 39.688880, -104.687806 | place | 15.20 mi | same |
+| `Colfax & Main, Aurora, IL` | none | 41.758194, -88.315002 | place | 881.23 mi | same |
+| `Colfax & Kipling, Lakewood` | none | 39.740123, -105.109456 | intersection | 7.62 mi | same |
+| `1437 Bannock St, Denver, CO` | none | 39.739247, -104.990970 | address | 1.33 mi | same, unchanged path |
+
+## Live results, first run (2026-10-18, `LIVE_GEOCODE=1 npx vitest run lib/geocode.live.test.ts`)
 Distance is from the Colfax & Williams corner (39.739964, -104.966006).
 
 | Input | Jurisdiction selected | Result | placeType | Distance | Case |
@@ -31,8 +52,9 @@ Distance is from the Colfax & Williams corner (39.739964, -104.966006).
 | `1437 Bannock St, Denver, CO` | none | 39.739247, -104.990970 | address | 1.33 mi | plain street address, unchanged path |
 
 ## Tests
-- `lib/geocode.test.ts` (stubbed Mapbox): the four issue inputs' shapes, no-city with and without a jurisdiction, a no-area jurisdiction, the plain address's exact unchanged URL, Aurora and Aurora, IL.
+- `lib/geocode.test.ts` (stubbed Mapbox): the four issue inputs' shapes, no-city with and without a jurisdiction (combined box; a flagged corner outside it, such as Plainwell, MI, gets 422), a no-area jurisdiction, the plain address's exact unchanged URL, Aurora and Aurora, IL.
 - `app/api/geocode/route.test.ts`: `jurisdiction_key` forwarded; non-string ⇒ null.
-- `components/LocationPickerModal.state-contract.test.tsx` (mounted): the search body carries the jurisdiction; an intersection answer places the pin and detects there; a 404 places no pin and shows "No match for that address"; an area answer shows "Area located".
-- `tests/test_jurisdiction_areas.py`: the committed areas equal a fresh build from `data/boundaries/`.
+- `components/LocationPickerModal.state-contract.test.tsx` (mounted): the search body carries the jurisdiction; an intersection answer places the pin and detects there; a 422 places no pin and shows "Add a city to search cross streets."; an area answer shows "Area located".
+- `tests/test_jurisdiction_areas.py`: the committed areas equal a fresh build from `data/boundaries/`, and the combined box is the extent of all 31.
+- `lib/geocode-precision.test.ts`: `geocodeErrorMessage` for 503, 404, 422 and other statuses.
 - Red proof: against the pre-fix `lib/geocode.ts` and picker, the new site tests fail 19 of 35.

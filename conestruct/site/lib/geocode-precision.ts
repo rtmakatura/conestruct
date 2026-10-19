@@ -23,3 +23,13 @@ const PRECISE_PLACE_TYPES: ReadonlySet<string> = new Set([
 export function isPreciseGeocode(placeType: string | null): boolean {
   return placeType !== null && PRECISE_PLACE_TYPES.has(placeType);
 }
+
+/** The search bar's line for a failed /api/geocode answer.  422 is a
+ *  street pair typed with no city and no jurisdiction whose corner is
+ *  not inside our places (#347, lib/geocode.ts). */
+export function geocodeErrorMessage(status: number): string {
+  if (status === 503) return "Geocoding not configured";
+  if (status === 404) return "No match for that address";
+  if (status === 422) return "Add a city to search cross streets.";
+  return `Geocoding failed (${status})`;
+}
