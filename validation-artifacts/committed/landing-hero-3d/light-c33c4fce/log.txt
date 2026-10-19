@@ -1,0 +1,9 @@
+1440: status 200 · page height 3905 px · scroll width 1440 · visible words 585 (below the hero 425) · on screen at load (go at once): [false,false,false] · after the scroll: go [true,true,true] · js-anim true · elements not at opacity 1: 0 · axe 0 · targets under 32: none · contrast below AA: none (155 pairs) · page errors none
+1440 form: "+ Add a phone number or a note" → aria-expanded true · phone shown true · note shown true
+motion · How it works: 33 animations frozen and stepped · 0.3s cols [0.85,0.00,0.00] · 0.9s cols [1.00,0.00,0.00] · 1.5s cols [1.00,0.98,0.00] · 2.2s cols [1.00,1.00,0.00] · 3.1s cols [1.00,1.00,1.00] · 4.3s cols [1.00,1.00,1.00]
+motion · play once: before 33 animations, all finished · after scrolling away and back: running 0, class changes 0, class "lv-band an go"
+motion · loaded at /#files (top 0): #files has go at once true
+reduced motion: go 0 · js-anim false · animations in the sections 0 · elements not at opacity 1: 0 · page errors none
+JS off: status 200 · go 0 · elements not at opacity 1: 0
+links: .lv-nav-links a[href="#how"] → #how top 0 ok · .lv-nav-links a[href="#files"] → #files top 0 ok · .lv-nav-cta → #send top 0 ok · .lv-hero a[href="#send"] → #send top 0 ok · .lv-hero a[href="#join"] → #join top 20 ok · .lv-wordmark → #top top 0 ok · pilot link mailto:ryan@conestruct.com?subject=Conestruct%20paid%20pilot
+390: status 200 · scroll width 390 · height 6568 · columns: steps 1, files 1, send 1, trust 1 · form field left edges [25] · phone hero "plan mB mC" shown true · axe 0 · targets under 44: none · contrast below AA: none (155 pairs) · page errors none

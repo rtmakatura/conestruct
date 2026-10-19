@@ -122,7 +122,7 @@ L9. **R145 self-ruled: the form's placeholders follow the mock.** Name, Company,
 
 ## Ryan's rulings before the ship (2026-10-19)
 
-F5, resolved by ruling. "Measure the figure at 1440×900 at load. If its bottom edge is below the fold, cut the hero top padding from 96px to 56px and measure again." Measured with `measure-f5.cjs`, results in `light-<sha>/f5.txt`:
+F5, resolved by ruling. "Measure the figure at 1440×900 at load. If its bottom edge is below the fold, cut the hero top padding from 96px to 56px and measure again." Measured with `measure-f5.cjs`, results in `light-c33c4fce/f5.txt`:
   - On the lean page with 96 px of top padding, the figure spans y 407–1000, so its bottom is **100 px** below the fold. That is already 72 px better than the 172 px on hero v2, because the lean hero dropped the CTA note.
   - With 56 px of top padding (`clamp(48px, 7vw, 56px)`, so only widths of 800 px and up change), it spans y 367–960, so its bottom is **60 px** below the fold.
   - The figure still doesn't fit at load. The other two options from F5, a smaller scene or moving more lines, weren't ruled, so nothing more changed.

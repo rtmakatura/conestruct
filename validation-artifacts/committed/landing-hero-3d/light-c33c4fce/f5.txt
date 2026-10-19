@@ -1,0 +1,2 @@
+F5 before: hero top padding 96px · figure y 407-1000 (592 px) · overflow past the 900 px fold 100 px
+F5 after: hero top padding 56px · figure y 367-960 (592 px) · overflow past the 900 px fold 60 px
