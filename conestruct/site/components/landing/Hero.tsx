@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { HERO_NARROW, HERO_WIDE } from "./plan-art";
+import { useState, type PointerEvent } from "react";
+import { HERO_ISO, HERO_NARROW } from "./plan-art";
 import { PlanSvg } from "./PlanSvg";
 
 // Landing v2 hero (design/landing-v2/landing-v2-reference.html, the first
@@ -9,7 +9,19 @@ import { PlanSvg } from "./PlanSvg";
 // hover or focus puts one f-* class on the drawing, and leaving or blurring
 // clears it.  The drawing's own CSS (globals.css, "landing v2") does the
 // dimming, so keyboard and mouse land on the same state.
+//
+// The desktop drawing is the 3D scene (design/landing-v2/hero-3d/).  It
+// links back: pointing at a scene part with data-k sets the same focus, and
+// the matching card row or number shows data-on="1".  Mouse only; the card
+// buttons already reach every key from the keyboard.  Phones keep the flat
+// drawing (Ryan's ruling, 2026-10-19).
 type Focus = "int" | "walk" | "dev" | "taper" | "buffer";
+const KEYS: readonly string[] = ["int", "walk", "dev", "taper", "buffer"];
+
+function sceneKey(el: EventTarget | null): Focus | null {
+  const k = el instanceof Element ? el.closest("[data-k]")?.getAttribute("data-k") : null;
+  return k && KEYS.includes(k) ? (k as Focus) : null;
+}
 
 export function Hero() {
   const [focus, setFocus] = useState<Focus | null>(null);
@@ -18,8 +30,21 @@ export function Hero() {
     onFocus: () => setFocus(f),
     onMouseLeave: () => setFocus(null),
     onBlur: () => setFocus(null),
+    "data-on": focus === f ? "1" : "0",
   });
   const planClass = `plan mB mC${focus ? ` f-${focus}` : ""}`;
+  const isoClass = `hero-iso${focus ? ` f-${focus}` : ""}`;
+  // Pointer enter/leave on the scene's data-k groups, delegated from the
+  // <svg> (its markup is inner HTML).  Leaving a group for another sets
+  // the other's key; leaving for bare scene clears it.
+  const sceneOver = (e: PointerEvent<SVGSVGElement>) => {
+    const k = e.pointerType === "mouse" ? sceneKey(e.target) : null;
+    if (k) setFocus(k);
+  };
+  const sceneOut = (e: PointerEvent<SVGSVGElement>) => {
+    if (e.pointerType !== "mouse" || !sceneKey(e.target)) return;
+    setFocus(sceneKey(e.relatedTarget));
+  };
 
   return (
     <section className="lv-hero">
@@ -111,7 +136,12 @@ export function Hero() {
       <figure className="lv-hero-fig">
         <div className="lv-frame">
           <div className="lv-illus-wide">
-            <PlanSvg art={HERO_WIDE} className={planClass} />
+            <PlanSvg
+              art={HERO_ISO}
+              className={isoClass}
+              onPointerOver={sceneOver}
+              onPointerOut={sceneOut}
+            />
           </div>
           <div className="lv-illus-narrow">
             <PlanSvg art={HERO_NARROW} className={planClass} />
@@ -119,7 +149,8 @@ export function Hero() {
         </div>
         <figcaption className="lv-figcap">
           <span>E COLFAX AVE EASTBOUND · SHOULDER WORK · FROM THE OCT 17 RUN</span>
-          <span>ILLUSTRATION · NOT TO SCALE</span>
+          <span className="lv-illus-wide">DISTANCES TO SCALE ALONG THE ROAD · WIDTHS EXAGGERATED</span>
+          <span className="lv-illus-narrow">ILLUSTRATION · NOT TO SCALE</span>
         </figcaption>
       </figure>
     </section>

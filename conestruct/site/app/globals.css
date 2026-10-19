@@ -981,6 +981,68 @@ body {
   --lv-hover: #16283a;
   --lv-checked: #14273a;
   --lv-seg-hover: #132233;
+  /* The desktop hero's 3D scene (design/landing-v2/hero-3d/iso_hero.py,
+     the Oct 19 canvas) — TRACED to the generator's palette, one token per
+     hex, named for what it paints; scripts/landing-plan-art.mjs swaps them
+     in.  Decorative: no state meaning. */
+  --iso-sky-top: #132232;
+  --iso-sky-foot: #0c1722;
+  --iso-pool: #1f3550;
+  --iso-slab-top: #1a2b3e;
+  --iso-slab-foot: #0e1925;
+  --iso-slab-west: #0b1520;
+  --iso-ground: #162636;
+  --iso-road: #1e2f42;
+  --iso-edge: #3a4f68;
+  --iso-shadow: #050b12;
+  --iso-outline: #0c1622;
+  --iso-shoulder-line: #4b5f7a;
+  --iso-crosswalk: #9aa8b8;
+  --iso-walk-top: #25384d;
+  --iso-walk-south: #2f4560;
+  --iso-walk-west: #1c2c3e;
+  --iso-bldg-1-top: #22354a;
+  --iso-bldg-1-west: #132233;
+  --iso-bldg-2-top: #283c52;
+  --iso-bldg-2-south: #1f3246;
+  --iso-bldg-2-west: #162739;
+  --iso-bldg-3-top: #1f3044;
+  --iso-bldg-3-south: #182838;
+  --iso-bldg-3-west: #111e2d;
+  --iso-window: #2c4560;
+  --iso-awning: #3c5f72;
+  --iso-roof-unit-top: #33495f;
+  --iso-roof-unit-south: #2a3e53;
+  --iso-roof-unit-west: #1f3043;
+  --iso-trunk: #3b3326;
+  --iso-leaf-lit: #4b6b5f;
+  --iso-leaf: #2b4540;
+  --iso-leaf-shade: #1d322f;
+  --iso-planter-top: #1b2c3e;
+  --iso-planter-south: #15243a;
+  --iso-planter-west: #0f1c2c;
+  --iso-cone-base-top: #b4551a;
+  --iso-cone-base-south: #8a3f12;
+  --iso-cone-base-west: #6f330f;
+  --iso-cone-lit: #ffa45a;
+  --iso-cone-shade: #c35a16;
+  --iso-reflective: #f4f1ea;
+  --iso-rail: #f1ede4;
+  --iso-panel-back: #4a5666;
+  --iso-legend: #111820;
+  --iso-post: #8c99a8;
+  --iso-sign-back: #7b8796;
+  --iso-cab-top: #dfe3ea;
+  --iso-cab-south: #b9c1cc;
+  --iso-cab-west: #c9d0d9;
+  --iso-glass: #1d2a38;
+  --iso-box-top: #eef1f5;
+  --iso-box-south: #c3cad4;
+  --iso-box-west: #d6dbe2;
+  --iso-trailer-south: #22344a;
+  --iso-trailer-west: #1a293b;
+  --iso-mast: #7d8a9a;
+  --iso-board: #0a131c;
 
   /* confidence speaks its own achromatic language (P1·04) */
   --conf-fill: #c6d2e0;
@@ -7718,6 +7780,50 @@ input[type="number"] {
   opacity: 0;
 }
 
+/* The desktop hero's 3D scene (design/landing-v2/hero-3d/hero-iso.css):
+   the same dimming, plus a glow on the focused part.  Its data-k groups
+   set the focus too (Hero.tsx), and the card shows it with data-on. */
+.workbench .hero-iso.f-int .z:not(.k-int):not(.lanes):not(.base),
+.workbench .hero-iso.f-walk .z:not(.k-walk):not(.lanes):not(.base),
+.workbench .hero-iso.f-taper .z:not(.k-taper):not(.lanes):not(.base),
+.workbench .hero-iso.f-buffer .z:not(.k-buffer):not(.lanes):not(.base),
+.workbench .hero-iso.f-dev .z:not(.cn):not(.ab):not(.sg):not(.lanes):not(.base) {
+  opacity: 0.16;
+}
+.workbench .hero-iso.f-int .z.base,
+.workbench .hero-iso.f-walk .z.base,
+.workbench .hero-iso.f-taper .z.base,
+.workbench .hero-iso.f-buffer .z.base,
+.workbench .hero-iso.f-dev .z.base {
+  opacity: 0.5;
+}
+.workbench .hero-iso.f-taper .z.k-taper,
+.workbench .hero-iso.f-buffer .z.k-buffer,
+.workbench .hero-iso.f-dev .z.cn,
+.workbench .hero-iso.f-dev .z.ab,
+.workbench .hero-iso.f-dev .z.sg {
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--dim) 75%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, var(--dim) 35%, transparent));
+}
+.workbench .hero-iso.f-int .z.k-int.fl,
+.workbench .hero-iso.f-walk .z.k-walk {
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--warn) 70%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, var(--warn) 30%, transparent));
+}
+.workbench .hero-iso .hv {
+  cursor: pointer;
+}
+.workbench .lv-flag[data-on="1"],
+.workbench .lv-stat[data-on="1"] {
+  background: var(--lv-hover);
+}
+.workbench .lv-flag[data-on="1"] {
+  box-shadow: inset 3px 0 0 var(--warn);
+}
+.workbench .lv-stat[data-on="1"] {
+  box-shadow: inset 0 -2px 0 var(--dim);
+}
+
 /* 02 how it goes now */
 .workbench .lv-statement {
   margin: 0 0 48px;
@@ -8583,6 +8689,9 @@ input[type="number"] {
   }
   .workbench .plan.mC .z {
     transition: opacity 0.25s ease;
+  }
+  .workbench .hero-iso .z {
+    transition: opacity 0.25s ease, filter 0.25s ease;
   }
   .workbench .plan.mC.f-int .k-int .ring,
   .workbench .plan.mC.f-walk .k-walk .ring {

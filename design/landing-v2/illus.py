@@ -1,6 +1,15 @@
 # Plan-view illustration of the Colfax shoulder closure, drawn in the Conestruct palette.
 # Not to scale. Numbers match the Oct 17 run: L/3 50 ft, buffer 200 ft, work zone 1,000 ft,
 # intersection 64 ft, sidewalk +4 devices.
+# Device counts (devices='run', the default) match the run too
+# (validation-artifacts/committed/landing-source-run/README.md): 3 drums in the taper,
+# 3 buffer cones, 18 work-zone cones, 2 downstream, each set spaced evenly in its segment.
+# devices='canvas' keeps the Oct 17 canvas's decorative 6 / 4 / 21 / 2, which only the
+# phone hero (hero-plan-narrow.svg) still draws: Ryan ruled it unchanged until the
+# platform-wide mobile pass.
+#
+#   python design/landing-v2/illus.py          writes step1-plan.svg and step3-plan.svg
+#   python design/landing-v2/step3-narrow.py   then derives step3-plan-narrow.svg
 #
 # Every top-level element carries class "z" plus an optional key (k-int, k-walk, k-taper,
 # k-buffer, k-work) so motion versions can animate or spotlight parts of the plan.
@@ -26,7 +35,7 @@ def cone(x, y):
     return f'<path d="M{x-3.5} {y+3.5} L{x} {y-4} L{x+3.5} {y+3.5} Z" fill="{DIM}"/>'
 
 
-def svg(uid='a', view=None, note=True, traffic=False, rings=False, svg_class=''):
+def svg(uid='a', view=None, note=True, traffic=False, rings=False, svg_class='', devices='run'):
     W, H = 1200, 430
     top_blk, top_walk, road0 = (96, 128), (128, 140), 140
     shoulder = (240, 258); walk = (258, 272); bot_blk = (272, 324)
@@ -96,12 +105,21 @@ def svg(uid='a', view=None, note=True, traffic=False, rings=False, svg_class='')
     o.append(g('k-walk walk', walkc))
 
     n = 0
-    for i in range(6):
-        x = tp0 + i * (tp1 - tp0) / 5; y = 255 - i * (255 - 241) / 5
+    if devices == 'canvas':
+        taper, buffer = [tp0 + i * (tp1 - tp0) / 5 for i in range(6)], range(480, wz0, 26)
+        work = range(wz0, wz1 + 1, 25)
+    else:
+        # the run: 3 drums 25 ft apart across the taper, 3 buffer cones 50 ft apart,
+        # 18 work-zone cones end to end (58.8 ft apart)
+        taper = [tp0 + i * (tp1 - tp0) / 2 for i in range(3)]
+        buffer = [tp1 + i * (wz0 - tp1) / 4 for i in range(1, 4)]
+        work = [round(wz0 + i * (wz1 - wz0) / 17, 1) for i in range(18)]
+    for x in taper:
+        y = 255 - (x - tp0) / (tp1 - tp0) * (255 - 241)
         o.append(g('cn k-taper', cone(x, y), n)); n += 1
-    for x in range(480, wz0, 26):
+    for x in buffer:
         o.append(g('cn k-buffer', cone(x, 241), n)); n += 1
-    for x in range(wz0, wz1 + 1, 25):
+    for x in work:
         o.append(g('cn k-work', cone(x, 241), n)); n += 1
     for i in range(1, 3):
         o.append(g('cn k-work', cone(wz1 + i * 16, 241 + i * 6), n)); n += 1
@@ -153,6 +171,7 @@ def svg(uid='a', view=None, note=True, traffic=False, rings=False, svg_class='')
 
 if __name__ == '__main__':
     import pathlib
-    p = pathlib.Path(__file__).with_name('illus_test.html')
-    p.write_text(f'<!doctype html><html><body style="margin:0;background:#14202e;padding:40px">{svg()}</body></html>')
-    print(p)
+    here = pathlib.Path(__file__).parent
+    for name, uid, view in (('step1-plan.svg', 'step1', '370 128 780 150'), ('step3-plan.svg', 'step3', '0 0 1200 430')):
+        (here / name).write_text(svg(uid=uid, view=view, note=False), encoding='utf-8')
+        print(name)

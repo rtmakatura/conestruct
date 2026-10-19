@@ -1,0 +1,31 @@
+/* Hero highlight + linking, extracted from the approved canvas (Idea 2 board, Oct 19).
+   State: put class f-<key> on svg.hero-iso (key = int | walk | taper | buffer | dev) while a card row/number
+   or a scene part with data-k="<key>" is hovered or focused; clear it on leave/blur.
+   Card: set data-on="1" on the card row/number whose key matches, "0" otherwise.
+   .hero-card is the existing NEEDS YOU card; rename the selector to whatever the component uses. */
+
+.hero-iso .z{transition:opacity .25s ease}
+.hero-iso.f-int .z:not(.k-int):not(.lanes):not(.base),.hero-iso.f-walk .z:not(.k-walk):not(.lanes):not(.base),.hero-iso.f-taper .z:not(.k-taper):not(.lanes):not(.base),.hero-iso.f-buffer .z:not(.k-buffer):not(.lanes):not(.base),.hero-iso.f-dev .z:not(.cn):not(.ab):not(.sg):not(.lanes):not(.base){opacity:.16}
+.hero-iso.f-int .z.base,.hero-iso.f-walk .z.base,.hero-iso.f-taper .z.base,.hero-iso.f-buffer .z.base,.hero-iso.f-dev .z.base{opacity:.5}
+.hero-iso.f-int .z.base.k-int{opacity:1}
+.hero-iso .ring{transform-box:fill-box;transform-origin:center;opacity:0}
+@media (prefers-reduced-motion: no-preference){
+.hero-iso.f-int .k-int .ring,.hero-iso.f-walk .k-walk .ring{animation:mring 1.3s ease-out infinite}
+}
+.hero-card button{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;transition:background .2s ease}
+.hero-card button:hover,.hero-card button:focus-visible{background:#16283a}
+.hero-card button:focus-visible{outline:2px solid #56bcf2;outline-offset:-2px}
+
+.hero-iso .z{transition:opacity .25s ease,filter .25s ease}
+.hero-iso.f-taper .z.k-taper,.hero-iso.f-buffer .z.k-buffer{filter:drop-shadow(0 0 3px rgba(255,138,46,.75)) drop-shadow(0 0 10px rgba(255,138,46,.35))}
+.hero-iso.f-dev .z.cn,.hero-iso.f-dev .z.ab,.hero-iso.f-dev .z.sg{filter:drop-shadow(0 0 3px rgba(255,138,46,.75)) drop-shadow(0 0 10px rgba(255,138,46,.35))}
+.hero-iso.f-int .z.k-int.fl,.hero-iso.f-walk .z.k-walk{filter:drop-shadow(0 0 3px rgba(244,192,32,.7)) drop-shadow(0 0 10px rgba(244,192,32,.3))}
+.hero-iso.f-taper .bub.k-taper circle,.hero-iso.f-buffer .bub.k-buffer circle{fill:#ff8a2e}
+.hero-iso.f-taper .bub.k-taper .bubn,.hero-iso.f-buffer .bub.k-buffer .bubn{fill:#0c1622}
+.xh{transition:opacity .15s ease}
+.drawing-wrap{cursor:crosshair}
+
+.hv{cursor:pointer}
+.hero-card [data-on="1"]{background:#16283a}
+.hero-card button.row[data-on="1"]{box-shadow:inset 3px 0 0 #f4c020}
+.hero-card .stats [data-on="1"]{box-shadow:inset 0 -2px 0 #ff8a2e}

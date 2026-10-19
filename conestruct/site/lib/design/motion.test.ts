@@ -143,14 +143,14 @@ describe("landing v2 — the recorded landing exception: B, C and D, all off und
       .map((x) => x.replace(/@supports[^{]*\{/, "").trim())
       .filter(Boolean);
     expect(selectors.length).toBeGreaterThan(0);
-    for (const sel of selectors) expect(sel).toMatch(/^\.workbench(\.lv-page | \.lv-| \.plan\.m[BC])/);
+    for (const sel of selectors) expect(sel).toMatch(/^\.workbench(\.lv-page | \.lv-| \.plan\.m[BC]| \.hero-iso)/);
   });
 
   it("nothing outside that block animates or transitions a landing selector", () => {
     const outside = css.replace(LANDING, "");
     for (const name of LANDING_KEYFRAMES) expect(outside).not.toContain(name);
     const moving = [...outside.matchAll(/([^{}]*)\{([^{}]*)\}/g)].filter(
-      ([, sel, b]) => /\.lv-|\.plan\.m[BC]/.test(sel) && /(animation|transition)[\w-]*\s*:/.test(b),
+      ([, sel, b]) => /\.lv-|\.plan\.m[BC]|\.hero-iso/.test(sel) && /(animation|transition)[\w-]*\s*:/.test(b),
     );
     expect(moving.map(([, sel]) => sel.trim())).toEqual([]);
   });

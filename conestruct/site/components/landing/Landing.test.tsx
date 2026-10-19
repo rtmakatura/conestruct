@@ -12,7 +12,14 @@ import Page from "@/app/page";
 afterEach(cleanup);
 
 const mount = () => render(<Page />).container;
-const plans = (c: HTMLElement) => [...c.querySelectorAll("svg.plan")];
+// the desktop 3D scene and the phone's flat drawing, with their resting classes
+const heroes = (c: HTMLElement) =>
+  [...c.querySelectorAll("svg.hero-iso, svg.plan")].map((svg) => ({
+    svg,
+    rest: svg.classList.contains("hero-iso") ? "hero-iso" : "plan mB mC",
+  }));
+const lit = (c: HTMLElement) =>
+  [...c.querySelectorAll('aside button[data-on="1"]')].map((b) => b.textContent);
 
 describe("landing v2 — the spotlight (C)", () => {
   const cases: [string, string][] = [
@@ -34,22 +41,53 @@ describe("landing v2 — the spotlight (C)", () => {
     it(`${text}: hover and focus set ${cls} on both hero drawings; leaving and blurring clear it`, () => {
       const c = mount();
       const button = [...c.querySelectorAll("aside button")].find((b) => b.textContent?.includes(text))!;
-      expect(plans(c)).toHaveLength(2);
+      expect(heroes(c).map((h) => h.rest)).toEqual(["hero-iso", "plan mB mC"]);
       fireEvent.mouseEnter(button);
-      for (const svg of plans(c)) expect(svg.classList.contains(cls)).toBe(true);
+      for (const { svg } of heroes(c)) expect(svg.classList.contains(cls)).toBe(true);
+      expect(lit(c)).toEqual([button.textContent]);
       fireEvent.mouseLeave(button);
-      for (const svg of plans(c)) expect(svg.getAttribute("class")).toBe("plan mB mC");
+      for (const { svg, rest } of heroes(c)) expect(svg.getAttribute("class")).toBe(rest);
+      expect(lit(c)).toEqual([]);
       fireEvent.focus(button);
-      for (const svg of plans(c)) expect(svg.classList.contains(cls)).toBe(true);
+      for (const { svg } of heroes(c)) expect(svg.classList.contains(cls)).toBe(true);
+      expect(lit(c)).toEqual([button.textContent]);
       fireEvent.blur(button);
-      for (const svg of plans(c)) expect(svg.getAttribute("class")).toBe("plan mB mC");
+      for (const { svg, rest } of heroes(c)) expect(svg.getAttribute("class")).toBe(rest);
+      expect(lit(c)).toEqual([]);
     });
   }
+
+  it("pointing at a scene part sets its key and lights its card button; leaving clears both", () => {
+    const c = mount();
+    const scene = c.querySelector("svg.hero-iso")!;
+    const button = (text: string) =>
+      [...c.querySelectorAll("aside button")].find((b) => b.textContent?.includes(text))!.textContent;
+    const parts: [string, string, string][] = [
+      ["taper", "f-taper", "50 ft"],
+      ["buffer", "f-buffer", "200 ft"],
+      ["dev", "f-dev", "43"],
+      ["int", "f-int", "Adjacent at-grade intersection"],
+      ["walk", "f-walk", "Pedestrian sidewalks"],
+    ];
+    for (const [k, cls, text] of parts) {
+      const part = scene.querySelector(`[data-k="${k}"]`)!.firstElementChild!;
+      fireEvent.pointerOver(part, { pointerType: "mouse" });
+      expect(scene.getAttribute("class")).toBe(`hero-iso ${cls}`);
+      expect(lit(c)).toEqual([button(text)]);
+      fireEvent.pointerOut(part, { pointerType: "mouse", relatedTarget: scene });
+      expect(scene.getAttribute("class")).toBe("hero-iso");
+      expect(lit(c)).toEqual([]);
+    }
+    // touch does not set it: the groups are mouse-only
+    fireEvent.pointerOver(scene.querySelector('[data-k="taper"]')!.firstElementChild!, { pointerType: "touch" });
+    expect(scene.getAttribute("class")).toBe("hero-iso");
+  });
 
   it("the drawings carry their keyed groups and no hex (every colour is a workbench token)", () => {
     const c = mount();
     for (const key of ["k-int", "k-walk", "k-taper", "k-buffer", "k-work"])
-      expect(c.querySelector(`svg.plan .z.${key}`), key).not.toBeNull();
+      for (const svg of ["svg.hero-iso", "svg.plan"])
+        expect(c.querySelector(`${svg} .z.${key}`), `${svg} ${key}`).not.toBeNull();
     for (const svg of c.querySelectorAll("svg")) expect(svg.outerHTML).not.toMatch(/#[0-9a-fA-F]{6}\b/);
   });
 });
