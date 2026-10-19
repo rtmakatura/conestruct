@@ -1043,6 +1043,7 @@ body {
   --iso-trailer-west: #1a293b;
   --iso-mast: #7d8a9a;
   --iso-board: #0a131c;
+  --iso-hit: #000000;
 
   /* confidence speaks its own achromatic language (P1·04) */
   --conf-fill: #c6d2e0;
@@ -7320,7 +7321,6 @@ input[type="number"] {
 .workbench .lv-panel-head,
 .workbench .lv-flag-meta,
 .workbench .lv-stat,
-.workbench .lv-hint,
 .workbench .lv-figcap,
 .workbench .lv-label,
 .workbench .lv-cite,
@@ -7636,11 +7636,15 @@ input[type="number"] {
   font-size: 14px;
   line-height: 1.55;
 }
-.workbench .lv-card-col {
+/* v2: the lede, the CTAs and their notes sit right of the headline */
+.workbench .lv-hero-pitch {
   flex: 1 1 420px;
   max-width: 560px;
   min-width: 0;
   margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 .workbench .lv-needs,
 .workbench .lv-panel {
@@ -7652,7 +7656,7 @@ input[type="number"] {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding: 14px 20px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--da-hair);
   font-size: 10px;
   letter-spacing: 0.18em;
@@ -7689,9 +7693,9 @@ input[type="number"] {
 .workbench .lv-flag-grid {
   display: grid;
   grid-template-columns: 16px 1fr;
-  column-gap: 12px;
-  row-gap: 6px;
-  padding: 16px 20px;
+  column-gap: 6px;
+  row-gap: 3px;
+  padding: 9px 14px;
 }
 .workbench .lv-flag-glyph {
   color: var(--warn);
@@ -7699,28 +7703,31 @@ input[type="number"] {
   line-height: 1.5;
 }
 .workbench .lv-flag-title {
-  font-size: 15.5px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--ink);
 }
 .workbench .lv-flag-meta {
-  font-size: 10.5px;
+  font-size: 10px;
   line-height: 1.6;
   color: var(--ink-faint);
 }
 .workbench .lv-stats {
   border-top: 1px solid var(--da-hair);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: auto auto auto;
+}
+.workbench .lv-stat + .lv-stat {
+  border-left: 1px solid var(--da-hair);
 }
 .workbench .lv-stat-in {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 16px 20px;
+  gap: 5px;
+  padding: 9px 14px;
 }
 .workbench .lv-stat-num {
-  font-size: 26px;
+  font-size: 19px;
   font-weight: 500;
   line-height: 1;
   color: var(--dim);
@@ -7730,13 +7737,26 @@ input[type="number"] {
   font-size: 10px;
   color: var(--ink-faint);
 }
-.workbench .lv-hint {
-  margin: 10px 0 0;
-  font-size: 10.5px;
-  color: var(--ink-faint);
-}
 .workbench .lv-hero-fig {
   margin: 0;
+}
+/* v2: the NEEDS YOU card sits inside the figure, over the scene's empty
+   top-left corner, from 1100 px; narrower, it stacks above the drawing */
+.workbench .lv-hero-stage {
+  position: relative;
+}
+.workbench .lv-hero-stage .lv-needs {
+  margin: 0 0 16px;
+}
+@media (min-width: 1100px) {
+  .workbench .lv-hero-stage .lv-needs {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 1;
+    width: 330px;
+    margin: 0;
+  }
 }
 .workbench .lv-frame {
   border: 1px solid var(--rule);
@@ -7780,38 +7800,59 @@ input[type="number"] {
   opacity: 0;
 }
 
-/* The desktop hero's 3D scene (design/landing-v2/hero-3d/hero-iso.css):
-   the same dimming, plus a glow on the focused part.  Its data-k groups
-   set the focus too (Hero.tsx), and the card shows it with data-on. */
+/* The desktop hero's 3D scene, v2 (design/landing-v2/hero-3d/hero-iso.css):
+   the same dimming and a thin edge on the focused part.  Only the hover
+   zones (.hit) and the two pins take the pointer; each key's ground
+   outline (.mark) shows while it is focused.  Hero.tsx sets the focus from
+   them, and the card shows it with data-on. */
+.workbench .hero-iso .z {
+  pointer-events: none;
+}
+.workbench .hero-iso .z.fl {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.workbench .hero-iso .hit {
+  cursor: pointer;
+}
+.workbench .hero-iso .mark {
+  opacity: 0;
+  pointer-events: none;
+}
+.workbench .hero-iso.f-int .mark.k-int,
+.workbench .hero-iso.f-walk .mark.k-walk,
+.workbench .hero-iso.f-taper .mark.k-taper,
+.workbench .hero-iso.f-buffer .mark.k-buffer,
+.workbench .hero-iso.f-dev .mark.k-dev {
+  opacity: 1;
+}
 .workbench .hero-iso.f-int .z:not(.k-int):not(.lanes):not(.base),
 .workbench .hero-iso.f-walk .z:not(.k-walk):not(.lanes):not(.base),
 .workbench .hero-iso.f-taper .z:not(.k-taper):not(.lanes):not(.base),
 .workbench .hero-iso.f-buffer .z:not(.k-buffer):not(.lanes):not(.base),
 .workbench .hero-iso.f-dev .z:not(.cn):not(.ab):not(.sg):not(.lanes):not(.base) {
-  opacity: 0.16;
+  opacity: 0.22;
 }
 .workbench .hero-iso.f-int .z.base,
 .workbench .hero-iso.f-walk .z.base,
 .workbench .hero-iso.f-taper .z.base,
 .workbench .hero-iso.f-buffer .z.base,
 .workbench .hero-iso.f-dev .z.base {
-  opacity: 0.5;
+  opacity: 0.55;
+}
+.workbench .hero-iso.f-int .z.base.k-int {
+  opacity: 1;
 }
 .workbench .hero-iso.f-taper .z.k-taper,
 .workbench .hero-iso.f-buffer .z.k-buffer,
 .workbench .hero-iso.f-dev .z.cn,
 .workbench .hero-iso.f-dev .z.ab,
 .workbench .hero-iso.f-dev .z.sg {
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--dim) 75%, transparent))
-    drop-shadow(0 0 10px color-mix(in srgb, var(--dim) 35%, transparent));
+  filter: drop-shadow(0 0 1.5px color-mix(in srgb, var(--dim) 55%, transparent));
 }
 .workbench .hero-iso.f-int .z.k-int.fl,
 .workbench .hero-iso.f-walk .z.k-walk {
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--warn) 70%, transparent))
-    drop-shadow(0 0 10px color-mix(in srgb, var(--warn) 30%, transparent));
-}
-.workbench .hero-iso .hv {
-  cursor: pointer;
+  filter: drop-shadow(0 0 1.5px color-mix(in srgb, var(--warn) 50%, transparent));
 }
 .workbench .lv-flag[data-on="1"],
 .workbench .lv-stat[data-on="1"] {
@@ -8639,6 +8680,9 @@ input[type="number"] {
   .workbench .lv-illus-narrow {
     display: block;
   }
+  .workbench .lv-figcap .lv-illus-narrow {
+    display: inline;
+  }
 }
 @media (max-width: 480px) {
   .workbench .lv-footer-links a {
@@ -8691,7 +8735,10 @@ input[type="number"] {
     transition: opacity 0.25s ease;
   }
   .workbench .hero-iso .z {
-    transition: opacity 0.25s ease, filter 0.25s ease;
+    transition: opacity 0.2s ease;
+  }
+  .workbench .hero-iso .mark {
+    transition: opacity 0.15s ease;
   }
   .workbench .plan.mC.f-int .k-int .ring,
   .workbench .plan.mC.f-walk .k-walk .ring {

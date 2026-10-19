@@ -1,29 +1,28 @@
-/* Hero highlight + linking, extracted from the approved canvas (Idea 2 board, Oct 19).
-   State: put class f-<key> on svg.hero-iso (key = int | walk | taper | buffer | dev) while a card row/number
-   or a scene part with data-k="<key>" is hovered or focused; clear it on leave/blur.
-   Card: set data-on="1" on the card row/number whose key matches, "0" otherwise.
-   .hero-card is the existing NEEDS YOU card; rename the selector to whatever the component uses. */
+/* Hero v2 rules, extracted from the approved canvas board "Idea 2 v2" (Oct 19).
+   State: class f-<key> on svg.hero-iso while a key is active (int | walk | taper | buffer | dev).
+   Card: data-on="1" on the row/number whose key is active. .hero-card = the NEEDS YOU card,
+   .hero-fig = the figure wrapper the card sits inside. Rename selectors to match the component. */
 
-.hero-iso .z{transition:opacity .25s ease}
-.hero-iso.f-int .z:not(.k-int):not(.lanes):not(.base),.hero-iso.f-walk .z:not(.k-walk):not(.lanes):not(.base),.hero-iso.f-taper .z:not(.k-taper):not(.lanes):not(.base),.hero-iso.f-buffer .z:not(.k-buffer):not(.lanes):not(.base),.hero-iso.f-dev .z:not(.cn):not(.ab):not(.sg):not(.lanes):not(.base){opacity:.16}
-.hero-iso.f-int .z.base,.hero-iso.f-walk .z.base,.hero-iso.f-taper .z.base,.hero-iso.f-buffer .z.base,.hero-iso.f-dev .z.base{opacity:.5}
+.hero-iso .z{transition:opacity .2s ease;pointer-events:none}
+.hero-iso .z.fl{pointer-events:auto;cursor:pointer}
+.hero-iso .hit{cursor:pointer}
+.hero-iso .mark{opacity:0;transition:opacity .15s ease;pointer-events:none}
+.hero-iso.f-int .mark.k-int{opacity:1}.hero-iso.f-walk .mark.k-walk{opacity:1}.hero-iso.f-taper .mark.k-taper{opacity:1}.hero-iso.f-buffer .mark.k-buffer{opacity:1}.hero-iso.f-dev .mark.k-dev{opacity:1}
+.hero-iso.f-int .z:not(.k-int):not(.lanes):not(.base),.hero-iso.f-walk .z:not(.k-walk):not(.lanes):not(.base),.hero-iso.f-taper .z:not(.k-taper):not(.lanes):not(.base),.hero-iso.f-buffer .z:not(.k-buffer):not(.lanes):not(.base),.hero-iso.f-dev .z:not(.cn):not(.ab):not(.sg):not(.lanes):not(.base){opacity:.22}
+.hero-iso.f-int .z.base,.hero-iso.f-walk .z.base,.hero-iso.f-taper .z.base,.hero-iso.f-buffer .z.base,.hero-iso.f-dev .z.base{opacity:.55}
 .hero-iso.f-int .z.base.k-int{opacity:1}
-.hero-iso .ring{transform-box:fill-box;transform-origin:center;opacity:0}
-@media (prefers-reduced-motion: no-preference){
-.hero-iso.f-int .k-int .ring,.hero-iso.f-walk .k-walk .ring{animation:mring 1.3s ease-out infinite}
-}
-.hero-card button{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;transition:background .2s ease}
+.hero-iso.f-taper .z.k-taper,.hero-iso.f-buffer .z.k-buffer,.hero-iso.f-dev .z.cn,.hero-iso.f-dev .z.ab,.hero-iso.f-dev .z.sg{filter:drop-shadow(0 0 1.5px rgba(255,138,46,.55))}
+.hero-iso.f-int .z.k-int.fl,.hero-iso.f-walk .z.k-walk{filter:drop-shadow(0 0 1.5px rgba(244,192,32,.5))}
+.hero-iso .ring{opacity:0}
+.hero-card button{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;transition:background .15s ease}
 .hero-card button:hover,.hero-card button:focus-visible{background:#16283a}
 .hero-card button:focus-visible{outline:2px solid #56bcf2;outline-offset:-2px}
-
-.hero-iso .z{transition:opacity .25s ease,filter .25s ease}
-.hero-iso.f-taper .z.k-taper,.hero-iso.f-buffer .z.k-buffer{filter:drop-shadow(0 0 3px rgba(255,138,46,.75)) drop-shadow(0 0 10px rgba(255,138,46,.35))}
-.hero-iso.f-dev .z.cn,.hero-iso.f-dev .z.ab,.hero-iso.f-dev .z.sg{filter:drop-shadow(0 0 3px rgba(255,138,46,.75)) drop-shadow(0 0 10px rgba(255,138,46,.35))}
-.hero-iso.f-int .z.k-int.fl,.hero-iso.f-walk .z.k-walk{filter:drop-shadow(0 0 3px rgba(244,192,32,.7)) drop-shadow(0 0 10px rgba(244,192,32,.3))}
-.hero-iso.f-taper .bub.k-taper circle,.hero-iso.f-buffer .bub.k-buffer circle{fill:#ff8a2e}
-.hero-iso.f-taper .bub.k-taper .bubn,.hero-iso.f-buffer .bub.k-buffer .bubn{fill:#0c1622}
-.xh{transition:opacity .15s ease}
-.drawing-wrap{cursor:crosshair}
+.hero-fig{position:relative}
+.hero-fig .hero-card{position:absolute;left:20px;top:20px;width:330px;margin:0;max-width:none;flex:none}
+.hero-fig .stats{grid-template-columns:auto auto auto !important}
+.hero-fig .stats > *:not(:first-child){border-left:1px solid #223345}
+.hero-fig .stats > * > span{gap:5px !important}
+@media (max-width:1100px){.hero-fig .hero-card{position:static;width:auto;margin:0 0 16px}}
 
 .hv{cursor:pointer}
 .hero-card [data-on="1"]{background:#16283a}

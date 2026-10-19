@@ -15,7 +15,10 @@ scale, so only their counts are checked.
 from __future__ import annotations
 
 import importlib.util
+import os
 import re
+import subprocess
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -105,12 +108,21 @@ def hero() -> ET.Element:
     return _parse(DESIGN / "hero-3d" / "hero-iso.svg")
 
 
-def test_the_svg_is_the_generators_output():
-    # hand edits are not allowed: the committed SVG is iso_hero.py's output
+def test_the_svg_is_the_generators_output(tmp_path):
+    # hand edits are not allowed: the committed SVG is what `python iso_hero.py
+    # hero-iso.svg` writes (run as-is, so a console code page that can't
+    # encode the "▲" labels fails here too)
+    out = tmp_path / "hero-iso.svg"
+    subprocess.run(
+        [sys.executable, str(DESIGN / "hero-3d" / "iso_hero.py"), str(out)],
+        check=True,
+        capture_output=True,
+        env={"PATH": "", "SYSTEMROOT": os.environ.get("SYSTEMROOT", "")},
+    )
     text = (DESIGN / "hero-3d" / "hero-iso.svg").read_text(encoding="utf-8")
     text = re.sub(r"<metadata>[\s\S]*?</metadata>", "", text)
     text = text.replace(' xmlns:c2pa="http://c2pa.org/manifest"', "")
-    assert text.strip() == ISO.svg(svg_class="hero-iso", uid="h", hover="data").strip()
+    assert text.strip() == out.read_text(encoding="utf-8").strip()
 
 
 def test_taper_three_drums_25_ft_apart(hero):
@@ -190,14 +202,24 @@ def test_signs_at_300_200_100_ft_and_g20_2_at_1400(hero):
     }
 
 
-def test_scene_parts_link_to_the_card(hero):
-    keys: dict[str, int] = {}
-    for g in _all(hero, "g"):
-        if g.get("data-k"):
-            keys[g.get("data-k")] = keys.get(g.get("data-k"), 0) + 1
-    # taper: 3 drums, arrow board, dimension; buffer: 3 cones, dimension;
-    # dev: 11 work-zone cones, 4 signs; walk: zone, barricades, flag; int: flag
-    assert keys == {"taper": 5, "buffer": 4, "dev": 15, "walk": 3, "int": 1}
+KEYS = {"int", "walk", "taper", "buffer", "dev"}
+
+
+def test_every_link_key_is_a_card_key_and_every_card_key_has_a_hit_zone(hero):
+    linked = [e for e in hero.iter() if e.get("data-k") is not None]
+    assert {e.get("data-k") for e in linked} <= KEYS
+    # only the hit zones and the two pins carry a key
+    for e in linked:
+        cls = set((e.get("class") or "").split())
+        assert cls == {"hit"} or "fl" in cls, e.attrib
+    hits: dict[str, int] = {}
+    for e in linked:
+        if e.get("class") == "hit":
+            hits[e.get("data-k")] = hits.get(e.get("data-k"), 0) + 1
+    assert set(hits) == KEYS
+    # signs, both halves of the work zone and G20-2 are "dev"; the closed
+    # sidewalk is two halves across the break
+    assert hits == {"dev": 4, "walk": 2, "int": 1, "taper": 1, "buffer": 1}
 
 
 @pytest.mark.parametrize("name", ["step1-plan.svg", "step3-plan.svg", "step3-plan-narrow.svg"])

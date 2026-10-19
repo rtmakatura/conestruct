@@ -1,6 +1,6 @@
 # Landing page source run: E Colfax Ave, Oct 17, 2026
 
-This folder records the generator run behind the numbers on the landing page (`/`). The page calls it "the Oct 17 run" (`Hero.tsx:151`, `Landing.tsx:234`, `:373`). The files are copied byte for byte from Ryan's capture folder, `%USERPROFILE%\conestruct-captures\landing-2026-10-17\`. They were captured 2026-10-17, 20:32–20:36 local, by a browser run of `/sandbox`.
+This folder records the generator run behind the numbers on the landing page (`/`). The page calls it "the Oct 17 run" (`Hero.tsx:158`, `Landing.tsx:234`, `:373`). The files are copied byte for byte from Ryan's capture folder, `%USERPROFILE%\conestruct-captures\landing-2026-10-17\`. They were captured 2026-10-17, 20:32–20:36 local, by a browser run of `/sandbox`.
 
 The capture logs say `build: (no meta)`, so they don't record which deployment produced the run. This README doesn't claim one.
 
@@ -25,20 +25,20 @@ From `log-1440.txt` (the step ledger) and the exports:
 | `08-deliverables/08a…08c-*-200dpi.png` | 200 dpi renders of plan sheet p1, audit p1 and device list sheet 1 |
 
 ## Every number on the landing page, against this run
-Status as of main `aa481c4` (2026-10-19); the hero and the drawings updated on branch `landing-hero-3d` the same day.
+Status as of main `aa481c4` (2026-10-19); the hero and the drawings updated on branch `landing-hero-3d` the same day (hero v2 the same day again).
 - Landing paths are under `conestruct/site/components/landing/`.
 - `md` = `08-deliverables/04-plan.md`, `audit` = `08-deliverables/05-plan.audit.pdf`, `xlsx` = `08-deliverables/02-plan.xlsx`.
 
 ### Printed text
 | Where | Landing says | This run says | |
 |---|---|---|---|
-| Hero card `Hero.tsx:87` | 2 site conditions | adjacent intersection and pedestrian sidewalks DETECTED (audit p3) | match |
-| Hero card `Hero.tsx:96` | nearest 64 ft · no devices added · §6N.12 | "42 found · nearest 64 ft from anchor" (audit p3); "No devices added: the cross-street approach layout isn't generated" (md:91) | match |
-| Hero card `Hero.tsx:107-108` | nearest 65.9 ft · 4 devices added · §6C.02 | "46 found · nearest 65.9 ft from anchor" (audit p3); 2 Type III barricades + 2 R9-9 (md:92) | match |
-| Hero card `Hero.tsx:115` | 43 devices | Total device count 43 (xlsx Summary row 2) | match |
-| Hero card `Hero.tsx:121` | 50 ft taper · Table 6B-4 | 50 ft, L/3; Table 6B-4 (audit p1) | match |
-| Hero card `Hero.tsx:127` | 200 ft buffer · Table 6B-2 | 200 ft; Table 6B-2 (audit p1) | match |
-| Hero caption `Hero.tsx:151` | E Colfax Ave eastbound · shoulder work | "East Colfax Avenue Eastbound", "Shoulder work" (log-1440.txt) | match |
+| Hero card `Hero.tsx:94` | 2 site conditions | adjacent intersection and pedestrian sidewalks DETECTED (audit p3) | match |
+| Hero card `Hero.tsx:104` | nearest 64 ft · no devices added · §6N.12 | "42 found · nearest 64 ft from anchor" (audit p3); "No devices added: the cross-street approach layout isn't generated" (md:91) | match |
+| Hero card `Hero.tsx:116-117` | nearest 65.9 ft · 4 devices added · §6C.02 | "46 found · nearest 65.9 ft from anchor" (audit p3); 2 Type III barricades + 2 R9-9 (md:92) | match |
+| Hero card `Hero.tsx:124` | 43 devices | Total device count 43 (xlsx Summary row 2) | match |
+| Hero card `Hero.tsx:130` | 50 ft taper · Table 6B-4 | 50 ft, L/3; Table 6B-4 (audit p1) | match |
+| Hero card `Hero.tsx:136` | 200 ft buffer · Table 6B-2 | 200 ft; Table 6B-2 (audit p1) | match |
+| Hero caption `Hero.tsx:158` | E Colfax Ave eastbound · shoulder work | "East Colfax Avenue Eastbound", "Shoulder work" (log-1440.txt) | match |
 | Step 1 `Landing.tsx:251` | Work starts 90 ft W of Williams Street | same (log-1440.txt) | match |
 | Step 1 `Landing.tsx:252` | Extent 1,000 ft · typed | same (log-1440.txt) | match |
 | Step 2 `Landing.tsx:289` | 3 guesses marked | 3 guessed inputs: street class, jurisdiction, road type (audit p1) | match |
@@ -56,19 +56,19 @@ Status as of main `aa481c4` (2026-10-19); the hero and the drawings updated on b
 
 | Drawing element | Drawn | This run | |
 |---|---|---|---|
-| Advance signs (`iso_hero.py:444-455`) | W20-1, W20-2, W21-5aR at −300, −200, −100 ft, right side | same, plus a matching left-side set (md:52-55) | match; the left set is omitted (rulings.md) |
-| Arrow board (`iso_hero.py:429-441`) | 1, caution bar, at the taper start | 1, caution mode (md:41) | match |
-| Taper devices (`iso_hero.py:405-406`) | 3 drums at 0, 25, 50 ft | 3 drums at 25 ft (md:49) | match |
-| Buffer devices (`iso_hero.py:407-408`) | 3 cones at +100, +150, +200 | 3 cones at 50 ft between +50 and +250 (md:45) | match |
-| Work-zone devices (`iso_hero.py:409-412`) | the 9 of 18 cones (58.8 ft apart) outside the cut | 18 cones, +250 to +1,250, 58.8 ft apart (md:45; audit p2) | match |
-| Downstream taper (`iso_hero.py:413-414`) | 2 cones at +1,275 and +1,300 | 2 cones (md:45) | match |
-| Sidewalk devices (`iso_hero.py:371-400`) | 2 Type III barricades at +250 and +1,250, each with an R9-9 | 2 barricades + 2 R9-9 at the work zone's ends (md:79, 92) | match |
-| G20-2 (`iso_hero.py:456-470`) | +1,400 ft, right side | +1,400 ft, right + left (md:43) | match; the left one is omitted (rulings.md) |
+| Advance signs (`iso_hero.py:450-461`) | W20-1, W20-2, W21-5aR at −300, −200, −100 ft, right side | same, plus a matching left-side set (md:52-55) | match; the left set is omitted (rulings.md) |
+| Arrow board (`iso_hero.py:435-447`) | 1, caution bar, at the taper start | 1, caution mode (md:41) | match |
+| Taper devices (`iso_hero.py:411-412`) | 3 drums at 0, 25, 50 ft | 3 drums at 25 ft (md:49) | match |
+| Buffer devices (`iso_hero.py:413-414`) | 3 cones at +100, +150, +200 | 3 cones at 50 ft between +50 and +250 (md:45) | match |
+| Work-zone devices (`iso_hero.py:415-418`) | the 9 of 18 cones (58.8 ft apart) outside the cut | 18 cones, +250 to +1,250, 58.8 ft apart (md:45; audit p2) | match |
+| Downstream taper (`iso_hero.py:419-420`) | 2 cones at +1,275 and +1,300 | 2 cones (md:45) | match |
+| Sidewalk devices (`iso_hero.py:377-406`) | 2 Type III barricades at +250 and +1,250, each with an R9-9 | 2 barricades + 2 R9-9 at the work zone's ends (md:79, 92) | match |
+| G20-2 (`iso_hero.py:462-476`) | +1,400 ft, right side | +1,400 ft, right + left (md:43) | match; the left one is omitted (rulings.md) |
 | G20-1, G20-5P | not drawn | no station in the plan (md:15, 47) | omitted (rulings.md) |
-| Intersection flag (`iso_hero.py:484`) | ▲ INTERSECTION · 64 FT, at Williams St, 90 ft into the work zone | 64 ft from the corridor anchor; "Work starts 90 ft W of Williams Street" (log-1440.txt) | the number matches; Williams is placed from log-1440 (rulings.md) |
-| Road (`iso_hero.py:266-276`) | two-way, undivided, double yellow | divided highway with a median (#350) | differs; the drawing is right about the road |
+| Intersection flag (`iso_hero.py:515`) | ▲ INTERSECTION · 64 FT, at Williams St, 90 ft into the work zone | 64 ft from the corridor anchor; "Work starts 90 ft W of Williams Street" (log-1440.txt) | the number matches; Williams is placed from log-1440 (rulings.md) |
+| Road (`iso_hero.py:271-281`) | two-way, undivided, double yellow | divided highway with a median (#350) | differs; the drawing is right about the road |
 
-The scene also draws a work truck in the work zone (`iso_hero.py:419-427`). It is scenery, not a device in the plan.
+The scene also draws a work truck in the work zone (`iso_hero.py:425-433`). It is scenery, not a device in the plan.
 
 **Phones, step 1 and step 3.** The flat drawings (`HERO_NARROW`, `STEP1`, `STEP3`, `STEP3_NARROW` in `plan-art.ts`) come from `design/landing-v2/illus.py`. Its values are typed in by hand. The full drawing says "ILLUSTRATION · NOT TO SCALE" (`illus.py:167`). `python design/landing-v2/illus.py` writes the step 1 and step 3 drawings; `step3-narrow.py` derives the phone crop. The phone hero keeps the Oct 17 canvas's device counts (`devices='canvas'`, `illus.py:108-112`): Ryan ruled it unchanged until the platform-wide mobile pass.
 

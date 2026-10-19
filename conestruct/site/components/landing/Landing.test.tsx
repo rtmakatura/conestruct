@@ -57,30 +57,48 @@ describe("landing v2 — the spotlight (C)", () => {
     });
   }
 
-  it("pointing at a scene part sets its key and lights its card button; leaving clears both", () => {
+  it("pointing at a scene zone sets its key and lights its card button; the next zone switches it; leaving clears", () => {
     const c = mount();
     const scene = c.querySelector("svg.hero-iso")!;
     const button = (text: string) =>
       [...c.querySelectorAll("aside button")].find((b) => b.textContent?.includes(text))!.textContent;
-    const parts: [string, string, string][] = [
-      ["taper", "f-taper", "50 ft"],
-      ["buffer", "f-buffer", "200 ft"],
-      ["dev", "f-dev", "43"],
-      ["int", "f-int", "Adjacent at-grade intersection"],
-      ["walk", "f-walk", "Pedestrian sidewalks"],
+    const zones: [string, string][] = [
+      ["taper", "50 ft"],
+      ["buffer", "200 ft"],
+      ["dev", "43"],
+      ["int", "Adjacent at-grade intersection"],
+      ["walk", "Pedestrian sidewalks"],
     ];
-    for (const [k, cls, text] of parts) {
-      const part = scene.querySelector(`[data-k="${k}"]`)!.firstElementChild!;
-      fireEvent.pointerOver(part, { pointerType: "mouse" });
-      expect(scene.getAttribute("class")).toBe(`hero-iso ${cls}`);
+    // straight from zone to zone, no leave in between: each one takes over
+    for (const [k, text] of zones) {
+      fireEvent.pointerOver(scene.querySelector(`.hit[data-k="${k}"]`)!, { pointerType: "mouse" });
+      expect(scene.getAttribute("class")).toBe(`hero-iso f-${k}`);
       expect(lit(c)).toEqual([button(text)]);
-      fireEvent.pointerOut(part, { pointerType: "mouse", relatedTarget: scene });
-      expect(scene.getAttribute("class")).toBe("hero-iso");
-      expect(lit(c)).toEqual([]);
     }
-    // touch does not set it: the groups are mouse-only
-    fireEvent.pointerOver(scene.querySelector('[data-k="taper"]')!.firstElementChild!, { pointerType: "touch" });
+    // bare scene clears
+    fireEvent.pointerOver(scene.firstElementChild!, { pointerType: "mouse" });
     expect(scene.getAttribute("class")).toBe("hero-iso");
+    expect(lit(c)).toEqual([]);
+    // the intersection pin is a target too
+    fireEvent.pointerOver(scene.querySelector('.fl[data-k="int"] rect')!, { pointerType: "mouse" });
+    expect(scene.getAttribute("class")).toBe("hero-iso f-int");
+    // leaving the svg clears
+    fireEvent.pointerOut(scene.querySelector('.fl[data-k="int"] rect')!, {
+      pointerType: "mouse",
+      relatedTarget: document.body,
+    });
+    expect(scene.getAttribute("class")).toBe("hero-iso");
+    expect(lit(c)).toEqual([]);
+    // touch does not set it: the zones are mouse-only
+    fireEvent.pointerOver(scene.querySelector('.hit[data-k="taper"]')!, { pointerType: "touch" });
+    expect(scene.getAttribute("class")).toBe("hero-iso");
+  });
+
+  it("every scene key is a card key, and every card key has a hover zone", () => {
+    const scene = mount().querySelector("svg.hero-iso")!;
+    const keys = ["int", "walk", "dev", "taper", "buffer"];
+    for (const e of scene.querySelectorAll("[data-k]")) expect(keys).toContain(e.getAttribute("data-k"));
+    for (const k of keys) expect(scene.querySelector(`.hit[data-k="${k}"]`), k).not.toBeNull();
   });
 
   it("the drawings carry their keyed groups and no hex (every colour is a workbench token)", () => {

@@ -98,6 +98,9 @@ const ISO = {
   "#1a293b": "--iso-trailer-west",
   "#7d8a9a": "--iso-mast",
   "#0a131c": "--iso-board",
+  // v2: the invisible hover zones (fill-opacity 0); the fill is there only
+  // so they take the pointer
+  "#000": "--iso-hit",
 };
 
 function convert(file, extra = {}) {
@@ -107,7 +110,7 @@ function convert(file, extra = {}) {
   if (!open) throw new Error(`${file}: no <svg>`);
   const attr = (name) => new RegExp(` ${name}="([^"]*)"`).exec(open[1])?.[1];
   let inner = svg.slice(open[0].length, svg.lastIndexOf("</svg>"));
-  inner = inner.replace(/#[0-9a-fA-F]{6}\b/g, (hex) => {
+  inner = inner.replace(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g, (hex) => {
     const t = extra[hex.toLowerCase()] ?? TOKEN[hex.toLowerCase()];
     if (!t) throw new Error(`${file}: unmapped ${hex}`);
     return `var(${t})`;

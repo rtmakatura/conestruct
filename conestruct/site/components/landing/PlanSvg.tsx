@@ -5,7 +5,7 @@ import type { PlanArt } from "./plan-art";
 // designer's (design/landing-v2/*.svg via scripts/landing-plan-art.mjs),
 // static and ours, so it goes in as inner HTML; the root <svg> is real
 // JSX so the spotlight can set its class and the hero can listen on it.
-type Events = Pick<SVGAttributes<SVGSVGElement>, "onPointerOver" | "onPointerOut">;
+type Events = Pick<SVGAttributes<SVGSVGElement>, "onPointerOver" | "onPointerLeave">;
 
 export function PlanSvg({ art, className, ...events }: { art: PlanArt; className?: string } & Events) {
   return (

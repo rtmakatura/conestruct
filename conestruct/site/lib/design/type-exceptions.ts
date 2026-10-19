@@ -116,11 +116,10 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".workbench .lv-cta-note", size: "14px" },
       { selector: ".workbench .lv-panel-head", size: "10px" },
       { selector: ".workbench .lv-flag-glyph", size: "13px" },
-      { selector: ".workbench .lv-flag-title", size: "15.5px" },
-      { selector: ".workbench .lv-flag-meta", size: "10.5px" },
-      { selector: ".workbench .lv-stat-num", size: "26px" },
+      { selector: ".workbench .lv-flag-title", size: "13.5px" },
+      { selector: ".workbench .lv-flag-meta", size: "10px" },
+      { selector: ".workbench .lv-stat-num", size: "19px" },
       { selector: ".workbench .lv-stat-label", size: "10px" },
-      { selector: ".workbench .lv-hint", size: "10.5px" },
       { selector: ".workbench .lv-figcap", size: "10px" },
       { selector: ".workbench .lv-statement", size: "clamp(20px, 2.2vw, 26px)" },
       { selector: ".workbench .lv-pain-head", size: "clamp(40px, 5vw, 64px)" },
@@ -734,7 +733,9 @@ export const CENSUS_PINS = {
   // Rule 169: the Zone geometry rows and the stacked sign table's lines
   // and labels.  128 -> 131; sizes unchanged.
   // Landing v2: the page's own scale, 65 declarations.  131 -> 196.
-  cssDeclarations: 196,
+  // Landing hero v2 (the compact card): the hint line moves into the
+  // caption, so .lv-hint's declaration goes.  196 -> 195.
+  cssDeclarations: 195,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
@@ -751,7 +752,9 @@ export const CENSUS_PINS = {
   // undeclared name leaves the sheet.
   // Landing v2: 24 -> 36.  Of its 22 sizes, ten were already in the
   // sheet; the twelve new are its display and micro registers.
-  cssSizes: 36,
+  // Landing hero v2: the stat number goes 26px -> 19px, and it was 26px's
+  // last site (19px, 13.5px and 10px were already in the sheet).  36 -> 35.
+  cssSizes: 35,
   // Correction 3 again: the "Applied from picker" BOX is deleted (its
   // sentences are now provenance lines under the WHAT cells they
   // describe), and its one text-[12px] goes with it — one use, one site

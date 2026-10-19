@@ -1,7 +1,9 @@
-# Landing hero: the Oct 17 Colfax shoulder closure as an isometric diorama. Static (no animation).
+# Landing hero v2: the Oct 17 Colfax shoulder closure as an isometric diorama. Static (no animation).
 # Usage:  python iso_hero.py hero-iso.svg
 # Device layout comes from validation-artifacts/committed/landing-source-run/ (Oct 17 run, 30 mph, 1,000 ft).
-# Groups that link to the hero card carry data-k="int|walk|taper|buffer|dev"; every top-level group has class "z".
+# Hover: polygons with class "hit" and data-k="int|walk|taper|buffer|dev" are the pointer targets; the two
+# site-condition pins (class "fl") carry data-k too. Everything else has pointer-events none via CSS.
+# Each key also has a ground outline, class "mark k-<key>", hidden until that key is active.
 # Same keys as the flat drawing (k-int, k-walk, k-taper, k-buffer, k-work, cn, ab, sg) so the card's
 # linked highlight works unchanged. Along the road, world x is in feet and to scale (taper start = 0 ft);
 # the work zone has a plan-style break (600-1,100 ft not shown). Widths across the road are exaggerated.
@@ -13,8 +15,8 @@ DIM, WARN, WORK = '#ff8a2e', '#f4c020', '#3fd3a8'      # output orange, site-con
 RULE, LANE, CENTER = '#2c3e53', '#3a4d66', '#8c7a2a'
 MONO = "'JetBrains Mono', ui-monospace, monospace"
 
-A, B = math.radians(24), math.radians(30)
-KY, KX = 1.6, 0.72
+A, B = math.radians(18), math.radians(30)
+KY, KX = 1.35, 0.72
 BRK0_FT, BRK1_FT, GAP = 600, 1100, 22
 
 
@@ -23,7 +25,7 @@ def F(ft):
     return ft if ft <= BRK0_FT else ft - (BRK1_FT - BRK0_FT) + GAP
 
 
-YS, YN, T = -30, 212, 16
+YS, YN, T = -30, 192, 16
 X0, X1 = F(-345), F(1430)
 BX0, BX1 = F(BRK0_FT), BRK0_FT + GAP
 PIECES = [(X0, BX0), (BX1, X1)]
@@ -40,7 +42,7 @@ def _raw(x, y, z=0):
     return (x * math.cos(A) - y * math.cos(B), -x * math.sin(A) - y * math.sin(B) - z)
 
 
-_pts = [_raw(x, y, z) for x in (X0, X1) for y in (YS - 16, YN) for z in (-T, 0, 84)]
+_pts = [_raw(x, y, z) for x in (X0, X1) for y in (YS - 16, YN) for z in (-T, 0, 58)]
 _minx, _maxx = min(a for a, b in _pts), max(a for a, b in _pts)
 _miny, _maxy = min(b for a, b in _pts), max(b for a, b in _pts)
 W, M, BOT = 1200, 18, 46
@@ -189,18 +191,21 @@ def _hover_key(cls):
 
 
 def _add_hover(svg_text):
-    def sub(m):
+    # canvas (DC) wiring: hit zones and pins call on.<key> / off
+    def pin(m):
         k = _hover_key(m.group(1))
-        if not k:
+        if not k or 'fl' not in m.group(1).split():
             return m.group(0)
         return f'<g class="z {m.group(1)} hv" onMouseEnter="{{{{on.{k}}}}}" onMouseLeave="{{{{off}}}}"'
-    return re.sub(r'<g class="z ([^"]*)"', sub, svg_text)
+    svg_text = re.sub(r'<g class="z ([^"]*)"', pin, svg_text)
+    return re.sub(r'class="hit" data-k="(\w+)"', lambda m: f'class="hit" onMouseEnter="{{{{on.{m.group(1)}}}}}" onMouseLeave="{{{{off}}}}"', svg_text)
 
 
 def _add_data_k(svg_text):
+    # site wiring: pins get data-k; hit zones already carry it
     def sub(m):
         k = _hover_key(m.group(1))
-        return m.group(0) if not k else f'<g class="z {m.group(1)} hv" data-k="{k}"'
+        return m.group(0) if not k or 'fl' not in m.group(1).split() else f'<g class="z {m.group(1)} hv" data-k="{k}"'
     return re.sub(r'<g class="z ([^"]*)"', sub, svg_text)
 
 
@@ -292,6 +297,7 @@ def _svg(svg_class, uid, view):
     ln.append(f'<text x="{nm[0]:.1f}" y="{nm[1]:.1f}" font-family="{MONO}" font-size="{10*TS[0]:.1f}" fill="{FAINT}" letter-spacing="4" transform="rotate({-math.degrees(A):.1f} {nm[0]:.1f} {nm[1]:.1f})">E COLFAX AVE</text>')
     o.append(g('lanes', ''.join(ln)))
 
+    MARKS_AT = len(o)
     # ---- work zone surfaces ----
     glow = ''.join(f'<ellipse cx="{P(x, 20, 0)[0]:.1f}" cy="{P(x, 20, 0)[1]:.1f}" rx="{70*K:.0f}" ry="{26*K:.0f}" fill="url(#wg{uid})"/>'
                    for x in (WZ0 + 60, WZ0 + 200, BX0 - 40, BX1 + 70))
@@ -310,8 +316,8 @@ def _svg(svg_class, uid, view):
             w = 44 + (k * 23) % 52
             if x + w > s1: w = s1 - x
             if w < 26: break
-            d = 36 + (k * 13) % 34
-            h = 24 + (k * 29) % 58
+            d = 30 + (k * 13) % 26
+            h = 18 + (k * 29) % 36
             blds.append((x, NWALK[1] + 9, x + w, NWALK[1] + 9 + d, h))
             x += w + 9
             k += 1
@@ -319,10 +325,10 @@ def _svg(svg_class, uid, view):
     yb = NWALK[1] + 9
     blds = [b for b in blds if b[0] < BX1] + [
         (BX1 + 6, yb + 4, BX1 + 44, yb + 34, 13, 'shop'),
-        (BX1 + 50, yb, BX1 + 96, yb + 52, 46, 'step'),
-        (BX1 + 102, yb + 8, BX1 + 128, yb + 40, 30, 'roof'),
-        (BX1 + 134, yb, BX1 + 168, yb + 58, 64, 'plain'),
-        (BX1 + 174, yb + 6, min(BX1 + 206, X1 - 6), yb + 36, 20, 'roof'),
+        (BX1 + 50, yb, BX1 + 96, yb + 44, 36, 'step'),
+        (BX1 + 102, yb + 8, BX1 + 128, yb + 38, 24, 'roof'),
+        (BX1 + 134, yb, BX1 + 168, yb + 48, 46, 'plain'),
+        (BX1 + 174, yb + 6, min(BX1 + 206, X1 - 6), yb + 34, 18, 'roof'),
     ]
     blds = [b if len(b) == 6 else b + (('roof', 'plain', 'step', 'plain')[i % 4],) for i, b in enumerate(blds)]
     o.append(g('base', ''.join(shadow(b[0], b[1], b[2], b[3], b[4], 0.42) for b in blds)))
@@ -469,6 +475,31 @@ def _svg(svg_class, uid, view):
         eg += text(b0[0], b0[1] + 14 + 9 * TS[0], 'G20-2', 9, INK) + text(b0[0], b0[1] + 16 + 21 * TS[0], 'END', 8.5, FAINT)
     o.append(g('sg k-adv', eg, 3))
 
+
+    # ---- hover zones: one per thing the card names. The mark is the ground outline shown while that key
+    # is active; the hit polygon covers the zone's full height so pointing anywhere at it works.
+    def zone(x0, x1, y0, y1, ztop, key, col, z0=0.3):
+        mark = (f'<g class="mark k-{key}">'
+                + quad(x0, y0, x1, y1, z0, col, col, 1.4, ' fill-opacity="0.08" stroke-dasharray="5 4" stroke-opacity="0.9"')
+                + '</g>')
+        corners = [P(x, y, z) for x in (x0, x1) for y in (y0, y1) for z in (0, ztop)]
+        hit = f'<polygon class="hit" data-k="{key}" points="{pts(hull(corners))}" fill="#000" fill-opacity="0"/>'
+        return mark, hit
+    Z = [
+        (WZ0 - 12, BX0, WALK[0], WALK[1], 18, 'walk', WARN),
+        (BX1, WZ1 + 12, WALK[0], WALK[1], 18, 'walk', WARN),
+        (WIL[0], WIL[1], SHO[1] + 2, NWALK[0], 6, 'int', WARN),
+        (WZ0, BX0, SHO[0], SHO[1] + 2, 16, 'dev', DIM),
+        (BX1, F(1310), SHO[0], SHO[1] + 2, 16, 'dev', DIM),
+        (F(50), WZ0, SHO[0], SHO[1] + 2, 16, 'buffer', DIM),
+        (F(-30), F(50), SHO[0] - 4, SHO[1] + 2, 34, 'taper', DIM),
+        (F(-330), F(-70), WALK[0] - 4, SHO[1], 44, 'dev', DIM),
+        (F(1380), F(1420), WALK[0] - 4, SHO[1], 34, 'dev', DIM),
+    ]
+    made = [zone(*z) for z in Z]
+    marks = ''.join(m for m, h in made)
+    hits = ''.join(h for m, h in made)
+
     # site-condition pins
     def pin(x, y, label, key, i, h=58, z0=0, flip=False):
         b0, b1 = P(x, y, z0), P(x, y, z0 + h)
@@ -522,7 +553,9 @@ def _svg(svg_class, uid, view):
                 o_ += f'<line x1="{q[0]:.1f}" y1="{q[1]-5:.1f}" x2="{q[0]:.1f}" y2="{q[1]+5:.1f}" stroke="{BODY}"/>'
         return o_
 
+    o.insert(MARKS_AT, marks)
     if VIEW[0] == 'narrow':
+        o.append(hits)
         o.append('</svg>')
         return ''.join(o)
     o.append(g('dm k-taper', seg(TP0, TP1, DIM) + label_on(TP0, TP1, 'L/3', '50 FT', DIM), 0))
@@ -534,6 +567,7 @@ def _svg(svg_class, uid, view):
                f'dominant-baseline="middle" transform="rotate({gang:.1f} {gx:.1f} {gy:.1f})">500 FT NOT SHOWN</text>')
     o.append(g('dm k-work', seg(WZ0, BX0, WORK) + seg(BX1, WZ1, WORK) + brk + label_on(WZ0, BX0, 'WORK ZONE', '1,000 FT', WORK) + gap_lab, 2))
 
+    o.append(hits)
     o.append('</svg>')
     return ''.join(o)
 
@@ -541,5 +575,5 @@ def _svg(svg_class, uid, view):
 if __name__ == '__main__':
     import sys, pathlib
     out = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else 'hero-iso.svg')
-    out.write_text(svg(svg_class='hero-iso', uid='h', hover='data'))
+    out.write_text(svg(svg_class='hero-iso', uid='h', hover='data'), encoding='utf-8')
     print(out, W, H)
