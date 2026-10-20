@@ -1,0 +1,9 @@
+PASS shoulder off the freeway: HTTP 400
+  {"detail":"4 lanes x 11.0 ft + 10 ft shoulder = 54.0 ft exceeds the 52 ft half-road this plan can draw. Use a lane width of 10.5 ft or less, or reduce the lane count."}
+PASS shoulder on the freeway (I-25, 4 x 11 ft): HTTP 400
+  {"detail":"4 lanes x 11.0 ft + 10 ft shoulder = 54.0 ft exceeds the 52 ft half-road this plan can draw. Freeway lanes must be at least 11 ft (CDOT S-630-1 Sheet 7 Case 11 '11' MIN.'), so this plan draws at most 3 lanes in this direction. Reduce the lane count to 3."}
+PASS near_intersection: HTTP 400
+  {"detail":"4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the 52 ft half-road this plan can draw. Use a lane width of 11.0 ft or less, or reduce the lane count."}
+PASS freeway lane width (I-25 form, 4 x 10.5 ft): HTTP 400
+  {"detail":{"error":"geometry_validation_failed","message":"Lane width 10.5 ft is below the 11 ft minimum for freeway work zones (CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). At 11 ft this plan draws at most 3 lanes in this direction beside the 10 ft shoulder (the widest half-road it can draw is 52 ft). Set lanes per direction to 3 and lane width to 11 ft, or verify the scenario is not actually on a freeway.","violations":[{"rule_id":"LANE_WIDTH_BELOW_FREEWAY_MIN","severity":"error","message":"Lane width 10.5 ft is below the 11 ft minimum for freeway work zones (CDOT S-630-1 Sheet 7 Cas
+4/4 passed
