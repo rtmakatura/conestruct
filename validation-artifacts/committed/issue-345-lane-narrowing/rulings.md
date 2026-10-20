@@ -22,3 +22,13 @@ sentence: the operator chose it. All numbers come from the existing constants
 (`FREEWAY_MIN_LANE_WIDTH_FT` 11, CDOT S-630-1 Sheet 7 Case 11 "11' MIN.";
 `MAX_DRAWABLE_HALF_ROAD_FT` 52, CHOSEN, already printed by the #335 refusal;
 the plan's shoulder width).
+
+## S3 — Ryan, 2026-10-19 (pre-ship): the 52 ft is not "the sheet's"
+Ryan asked where "the sheet's 52 ft half-road" comes from. It is
+`MAX_DRAWABLE_HALF_ROAD_FT` (src/rules/validators.py:75-84): the widest
+half-road Conestruct's plan drawing fits at its 3.5 pt/ft scale, found
+empirically (CHOSEN). It is not on CDOT S-630-1 Sheet 7 and it is not I-25's
+measured width. "The sheet's" could be read as CDOT's sheet, so the sentence now
+says "the 52 ft half-road this plan can draw". Ryan's example wording ("the
+road's 52 ft half-width") was not used: it would state the road is 52 ft wide,
+which nothing measured. The 11 ft cite (Sheet 7 Case 11) is unchanged.

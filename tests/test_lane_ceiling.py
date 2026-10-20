@@ -182,8 +182,8 @@ def test_below_the_limit_every_surface_prints_the_entered_wording() -> None:
 FREEWAY_MIN = (
     "Drawn as 3 lanes per direction; the road has 4. Freeway lanes must be at "
     "least 11 ft (CDOT S-630-1 Sheet 7 Case 11), and at that width 4 lanes and "
-    "the 10 ft shoulder overrun the sheet's 52 ft half-road, so the device "
-    "offsets are measured against 3 lanes."
+    "the 10 ft shoulder overrun the 52 ft half-road this plan can draw, so the "
+    "device offsets are measured against 3 lanes."
 )
 
 
@@ -216,6 +216,8 @@ def test_the_i25_recovery_prints_the_freeway_minimum_on_every_surface() -> None:
     text = _page_text(body)
     assert "DRAWN AS 3 LANES PER DIRECTION; THE ROAD HAS 4." in text
     assert "FREEWAY LANES MUST BE AT" in text
+    assert "HALF-ROAD THIS PLAN CAN DRAW" in text
+    assert "SHEET'S" not in text
     assert "MEASURED AGAINST 3 LANES." in text
     assert "AT MOST" not in text
     md = client.post("/render/markdown", headers=AUTH, json=body)

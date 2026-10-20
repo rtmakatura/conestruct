@@ -225,7 +225,9 @@ def lanes_drawn_below_road(params: ScenarioParams) -> str | None:
     minimum (``freeway_max_drawable_lanes``, #335's refusal arithmetic)
     can sit below that limit.  A plan drawn at exactly that count names
     the freeway minimum as the cause: no legal lane width fits the road's
-    count, whatever width was entered.
+    count, whatever width was entered.  The 52 ft is Conestruct's drawing
+    limit (``MAX_DRAWABLE_HALF_ROAD_FT``, CHOSEN), not a CDOT value or the
+    road's width, so the sentence never calls it "the sheet's".
     """
     road = params.road_lanes_per_direction
     if road is None or road <= params.num_lanes:
@@ -240,9 +242,9 @@ def lanes_drawn_below_road(params: ScenarioParams) -> str | None:
             f"Drawn as {params.num_lanes} lanes per direction; the road has {road}. "
             f"Freeway lanes must be at least {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft "
             f"(CDOT S-630-1 Sheet 7 Case 11), and at that width {road} lanes and the "
-            f"{params.shoulder_width_ft:g} ft shoulder overrun the sheet's "
-            f"{MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft half-road, so the device offsets are "
-            f"measured against {params.num_lanes} lanes."
+            f"{params.shoulder_width_ft:g} ft shoulder overrun the "
+            f"{MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft half-road this plan can draw, so the "
+            f"device offsets are measured against {params.num_lanes} lanes."
         )
     if params.num_lanes < PLAN_MAX_LANES_PER_DIRECTION:
         return (
