@@ -1,0 +1,25 @@
+PASS  I-25 3 x 11 ft, road 4 (#345 repro)
+      audit item: ok
+      crew narrative: ok
+      page 1: ok
+      no "SHEET'S" on page 1: ok
+      audit label: Drawn as 3 lanes per direction; the road has 4. Freeway lanes must be at least 11 ft (CDOT S-630-1 Sheet 7 Case 11), and at that width 4 lanes and the 10 ft shoulder overrun the 52 ft half-road this plan can draw, so the device offsets are measured against 3 lanes.
+PASS  I-25 3 x 12 ft, road 4 (recorded run)
+      audit item: ok
+      crew narrative: ok
+      page 1: ok
+      no "SHEET'S" on page 1: ok
+      audit label: Drawn as 3 lanes per direction; the road has 4. Freeway lanes must be at least 11 ft (CDOT S-630-1 Sheet 7 Case 11), and at that width 4 lanes and the 10 ft shoulder overrun the 52 ft half-road this plan can draw, so the device offsets are measured against 3 lanes.
+PASS  Rural divided 3 x 11, road 4 (#341 control)
+      audit item: ok
+      crew narrative: ok
+      page 1: ok
+      no "SHEET'S" on page 1: ok
+      audit label: Drawn as 3 lanes per direction (entered); the road has 4. Device offsets are measured against 3 lanes.
+PASS  Rural divided 4 x 10.5, road 5 (#310 control)
+      audit item: ok
+      crew narrative: ok
+      page 1: ok
+      no "SHEET'S" on page 1: ok
+      audit label: Drawn as 4 lanes per direction; the road has 5. Plans draw at most 4 lanes per direction, so the device offsets are measured against 4 lanes.
+ALL PASS

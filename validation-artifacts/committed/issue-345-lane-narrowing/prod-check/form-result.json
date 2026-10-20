@@ -1,0 +1,46 @@
+{
+ "sideLabels": [
+  "South side · eastbound traffic"
+ ],
+ "before": {
+  "lanes": "4",
+  "width": "10.5"
+ },
+ "audits": [
+  {
+   "req": {
+    "kind": "shoulder",
+    "roadType": "freeway",
+    "lanes": 4,
+    "laneWidth": 10.5,
+    "roadLanesPerDirection": 4
+   },
+   "status": 400,
+   "note": null,
+   "detail": "{\"detail\":{\"error\":\"geometry_validation_failed\",\"message\":\"Lane width 10.5 ft is below the 11 ft minimum for freeway work zones (CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). At 11 ft the plan sheet draws at most 3 lanes in this direction beside the 10 ft shoulder (its widest half-road is 52 "
+  },
+  {
+   "req": {
+    "kind": "shoulder",
+    "roadType": "freeway",
+    "lanes": 3,
+    "laneWidth": 10.5,
+    "roadLanesPerDirection": 4
+   },
+   "status": 400,
+   "note": null,
+   "detail": "{\"detail\":{\"error\":\"geometry_validation_failed\",\"message\":\"Lane width 10.5 ft is below the 11 ft minimum for freeway work zones (CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). Increase lane width to at least 11 ft, or verify the scenario is not actually on a freeway.\",\"violations\":[{\"rule_id\":"
+  },
+  {
+   "req": {
+    "kind": "shoulder",
+    "roadType": "freeway",
+    "lanes": 3,
+    "laneWidth": 11,
+    "roadLanesPerDirection": 4
+   },
+   "status": 200,
+   "note": "Drawn as 3 lanes per direction; the road has 4. Freeway lanes must be at least 11 ft (CDOT S-630-1 Sheet 7 Case 11), and at that width 4 lanes and the 10 ft shoulder overrun the 52 ft half-road this plan can draw, so the device offsets are measured against 3 lanes."
+  }
+ ]
+}
