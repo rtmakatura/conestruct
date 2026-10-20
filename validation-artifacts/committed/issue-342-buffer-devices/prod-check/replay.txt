@@ -1,0 +1,23 @@
+== flagger-45-rural-500: PASS
+  ok  audit n_buffer_cones
+  ok  audit spacing
+  ok  audit total
+  ok  xlsx cones
+  ok  page 1 label
+  ok  page 1 summary
+  ok  crew step
+  audit: Buffer: 360 ft / 90 ft max spacing -> 3 cones at 90.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)
+  totals: audit 14 | xlsx 14 | page 1 14
+  crew: Then continue the line through the buffer space: 3 more traffic cones at 90 ft spacing, from station 500 ft up to the taper (station 860 ft), at the same offset
+== near-side-25-urban-500: PASS
+  ok  audit n_buffer_cones
+  ok  audit spacing
+  ok  audit total
+  ok  xlsx cones
+  ok  page 1 label
+  ok  page 1 summary
+  ok  crew step
+  audit: Buffer: 155 ft / 50 ft max spacing -> 3 cones at 38.8 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)
+  totals: audit 15 | xlsx 15 | page 1 15
+  crew: Then continue the line through the buffer space: 3 more traffic cones at 39 ft spacing, from station 500 ft up to the taper (station 655 ft), at the same offset
+RESULT: PASS 2/2
