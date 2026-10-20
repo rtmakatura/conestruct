@@ -2065,7 +2065,7 @@ def validate_shoulder_warning_pair(
                     "closure per CDOT S-630-1 Sheet 7 Case 11 (positions "
                     "5/6) and Sheet 14 Cases 26/27 (positions 4/6). Two "
                     "RIGHT SHOULDER CLOSED AHEAD signs are prescribed: an "
-                    "upstream sign with a NEXT XXX FT plaque and a "
+                    "upstream sign with an XXX FT plaque and a "
                     "downstream sign with a NEXT X MILES plaque so drivers "
                     "see the warning twice as they approach the closure."
                 ),

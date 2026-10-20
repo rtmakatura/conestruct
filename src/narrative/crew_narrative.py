@@ -443,7 +443,7 @@ def build_narrative_context(
     advance_signs = _advance_signs_from_placements(mainline_placements, taper_start_station, params)
     # G1 — parametric descriptions for the W21-5aR-pair plaques.
     # ``description_for("W16-2a")`` / ``description_for("W7-3a")`` return
-    # the generic ``NEXT XXX FT plaque`` / ``NEXT XX MILES plaque`` templates;
+    # the generic ``XXX FT plaque`` / ``NEXT XX MILES plaque`` templates;
     # the schedule row substitutes the values via the shared
     # ``substitute_sign_description`` helper (#51 — the same call
     # audit.sign_table makes, so the two surfaces cannot drift) and

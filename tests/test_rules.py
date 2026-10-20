@@ -969,14 +969,14 @@ def test_build_advance_warning_table_case_11_off_page_rows() -> None:
     dist_by_code = {code: round(d) for code, _desc, d in rows}
     assert dist_by_code["W20-1"] == 5200
 
-    # G1 plaque substitution: W16-2a "NEXT XXX FT" -> NEXT 2,678 FT
-    # (= sign_a_station - wz_len = 1000 + 495 + 183 + 2000 - 1000).
+    # G1 plaque substitution: W16-2a "XXX FT" -> 2,000 FT, the first
+    # W21-5aR's distance to the taper start (#364, R1).
     # W7-3a "NEXT XX MILES" -> NEXT 1 MILE (max(1, round(1000/5280))).
     w16_2a_desc = next(desc for code, desc, _d in rows if code == "W16-2a")
     assert "XXX" not in w16_2a_desc and "plaque" not in w16_2a_desc, (
-        f"W16-2a description must substitute the NEXT-FT value, got {w16_2a_desc!r}"
+        f"W16-2a description must substitute the FT value, got {w16_2a_desc!r}"
     )
-    assert "NEXT 2,678 FT" in w16_2a_desc
+    assert w16_2a_desc == "2,000 FT"
 
     w7_3a_desc = next(desc for code, desc, _d in rows if code == "W7-3a")
     assert "XX" not in w7_3a_desc and "plaque" not in w7_3a_desc, (
@@ -1240,10 +1240,11 @@ def test_case_11_pdf_renders_g1_g2_off_page_signs() -> None:
     assert "W20-2" not in text  # Case 11 shows none (#334, Q1)
 
     # G1 plaque substitution must reach the PDF — audit / crew_narrative
-    # already substitute these.  W16-2a "NEXT XXX FT" → NEXT 2,678 FT
-    # (= sign_a_station - wz_len for 55 mph freeway, wz_len=1000; #334).
+    # already substitute these.  W16-2a "XXX FT" → 2,000 FT (the first
+    # W21-5aR's distance to the taper start, #364).
     # W7-3a "NEXT XX MILES" → NEXT 1 MILE (workLen=1000 < 5280 → 1).
-    assert "NEXT 2,678 FT" in text, f"W16-2a placeholder not substituted in PDF; text: {text!r}"
+    assert "W16-2a 2,000 FT" in text, f"W16-2a placeholder not substituted in PDF; text: {text!r}"
+    assert "NEXT 2,678 FT" not in text  # #364: the old legend
     assert "NEXT 1 MILE" in text and "NEXT XX MILES" not in text, (
         f"W7-3a placeholder not substituted in PDF; text: {text!r}"
     )

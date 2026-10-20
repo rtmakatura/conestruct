@@ -1034,7 +1034,7 @@ def test_shoulder_undivided_freeway_reduced_omits_w5_1() -> None:
 # ---------------------------------------------------------------------------
 # Per CDOT S-630-1 Sheet 7 Case 11 positions 5/6 (and Sheet 14 Cases
 # 26/27 positions 4/6): two W21-5aR signs prescribed on freeway shoulder
-# closures.  Upstream sign carries a W16-2a "NEXT XXX FT" plaque;
+# closures.  Upstream sign carries a W16-2a "XXX FT" plaque (#364);
 # downstream sign (between A and the taper) carries a W7-3a "NEXT X
 # MILES" plaque.  Emission gate is freeway × shoulder regardless of
 # routing (fixture uniformity across Cases 11 / 11b / 26 / 27).  Lane

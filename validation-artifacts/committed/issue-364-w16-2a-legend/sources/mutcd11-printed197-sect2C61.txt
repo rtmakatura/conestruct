@@ -1,0 +1,10 @@
+MUTCD 11th Edition (December 2023), Page 197, extracted with pdftotext -layout from mutcd11theditionhl.pdf (#364).
+
+       Section 2C.61 Distance Plaques (W16-2 Series, W16-3 Series, W16-4P, and W7-3aP)
+         Option:
+
+       01 The Distance Ahead (W16-2 series and W16-3 series) plaques (see Figure 2C-16) may be used to inform the
+         road user of the distance to the condition indicated by the warning sign.
+
+       02 The Next Distance (W7-3aP and W16-4P) plaques (see Figures 2C-5 and 2C-16) may be used to inform road
+         users of the length of roadway over which the condition indicated by the warning sign exists.

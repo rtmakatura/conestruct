@@ -766,3 +766,47 @@ def test_work_zone_length_is_one_format_on_every_surface(
     # unit lives in the label.
     summary = _xlsx_summary(_post(api, "/render/xlsx", scenario).content, tmp_path)
     assert summary["Work zone length (ft)"] == scenario["workLen"]
+
+
+# ---------------------------------------------------------------------------
+# #364 — the W16-2a plaque is a distance to the taper start, never "NEXT"
+# ---------------------------------------------------------------------------
+
+# R1 (validation-artifacts/committed/issue-364-w16-2a-legend/rulings.md):
+# §2C.61 ¶01 (p. 197), the W16-2 series gives "the distance to the
+# condition indicated by the warning sign".  Case 11's first W21-5aR sits
+# 2,000 ft from the taper start; Sheet 14's 1,320 ft ("1/4 MILE").
+_W16_2A_LEGEND: dict[str, str] = {"case_11": "2,000 FT", "case_26": "1,320 FT"}
+
+
+@pytest.mark.parametrize("name", sorted(_W16_2A_LEGEND))
+def test_w16_2a_reads_distance_to_taper_on_every_surface(
+    name: str, api: TestClient, tmp_path: Path
+) -> None:
+    scenario = BODIES[name]
+    legend = _W16_2A_LEGEND[name]
+
+    audit = _post(api, "/render/audit", scenario).json()
+    rows = [r for r in audit["sections"]["advance"]["sign_table"] if r["Code"] == "W16-2a"]
+    assert rows and all(
+        r["Distance from Taper (ft)"] == f"{legend} (under first W21-5aR)" for r in rows
+    ), rows
+
+    page1 = _pdf_text(_post(api, "/render/pdf", scenario).content)[0]
+    assert f"W16-2a {legend}" in page1, "page 1 advance table"
+
+    md = _post(api, "/render/markdown", scenario).text
+    assert f"| W16-2a | {legend} (under upstream W21-5aR) |" in md, "crew sheet"
+
+    path = tmp_path / "devices.xlsx"
+    path.write_bytes(_post(api, "/render/xlsx", scenario).content)
+    wb = load_workbook(str(path), read_only=True)
+    cells = [str(c) for row in wb["Device List"].iter_rows(values_only=True) for c in row]
+    wb.close()
+    w16 = [c for c in cells if "W16-2a" in c]
+    assert w16 == [f"W16-2a {legend}"], w16
+
+    # G20-1 and W7-3a keep their NEXT (they state a length); W16-2a's
+    # legend follows its code on every surface.
+    for surface, text in (("pdf", page1), ("markdown", md), ("xlsx", " ".join(w16))):
+        assert not re.search(r"W16-2a[\s|]*NEXT", text), f"{surface}: W16-2a still reads NEXT"

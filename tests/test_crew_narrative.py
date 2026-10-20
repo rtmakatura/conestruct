@@ -308,8 +308,8 @@ def test_crew_narrative_non_freeway_no_reduction_omits_w5_1_row() -> None:
 # ---------------------------------------------------------------------------
 # G1 — Second W21-5aR + W16-2a / W7-3a plaque schedule rows
 # ---------------------------------------------------------------------------
-# Verifies that the W16-2a plaque row carries the computed "NEXT XXX FT"
-# text (distance from first W21-5aR to wz_start) and the W7-3a row
+# Verifies that the W16-2a plaque row carries the computed "XXX FT"
+# text (distance from first W21-5aR to the taper start, #364) and the W7-3a row
 # carries the computed "NEXT X MILES" text (work zone length / 5280,
 # floored at 1).  Rows appear on freeway shoulder closures regardless of
 # routing; absent on non-freeway.
@@ -366,7 +366,7 @@ def test_crew_narrative_plaque_values_equal_shared_helper_and_audit() -> None:
 
     audit_rows = {r["Code"]: r for r in trail["advance"]["sign_table"]}
     w16_audit = re.fullmatch(
-        r"(NEXT [\d,]+ FT) \(under first W21-5aR\)",
+        r"([\d,]+ FT) \(under first W21-5aR\)",
         audit_rows["W16-2a"]["Distance from Taper (ft)"],
     )
     w7_audit = re.fullmatch(

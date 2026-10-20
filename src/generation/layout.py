@@ -678,7 +678,7 @@ def generate_shoulder_closure_divided(
     # CDOT S-630-1 Sheet 7 Case 11 positions 5/6 and Sheet 14 Cases
     # 26/27 positions 4/6.  Two W21-5aR signs are prescribed: the
     # upstream sign (already emitted at sign_a_station above) carries a
-    # W16-2a "NEXT XXX FT" plaque; a second downstream sign sits between
+    # W16-2a "XXX FT" plaque (#364); a second downstream sign sits between
     # the first W21-5aR and the taper carrying a W7-3a "NEXT X MILES"
     # plaque.  Emission gate matches W5-1's: freeway shoulder closures
     # only (Sheet 7/14 fixtures don't prescribe second W21-5aR off
