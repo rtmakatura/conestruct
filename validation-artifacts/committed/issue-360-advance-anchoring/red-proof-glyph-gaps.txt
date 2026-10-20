@@ -1,0 +1,12 @@
+== 001ee3a (glyph-gap test, git archive)
+E       assert (106.43250274658203 - 106.73200225830078) >= 1.0
+E       assert (106.43250274658203 - 106.73200225830078) >= 1.0
+FAILED tests/s630/test_advance_anchoring_360.py::test_page1_two_column_table_text_never_touches[case-11-55-45]
+FAILED tests/s630/test_advance_anchoring_360.py::test_page1_two_column_table_text_never_touches[case-26]
+2 failed, 346 deselected in 1.82s
+== 3f1e0ab (glyph-gap test, git archive)
+E       assert (674.0814819335938 - 840.8469848632812) >= 2.0
+E       assert (106.43250274658203 - 106.73200225830078) >= 1.0
+FAILED tests/s630/test_advance_anchoring_360.py::test_page1_two_column_table_text_never_touches[case-11-55-45]
+FAILED tests/s630/test_advance_anchoring_360.py::test_page1_two_column_table_text_never_touches[case-26]
+2 failed, 346 deselected in 1.79s

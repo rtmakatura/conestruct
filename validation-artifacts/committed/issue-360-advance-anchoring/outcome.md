@@ -40,3 +40,12 @@ Page 1, before and after, for urban_high 55→45, rural 75→65, expressway 65�
 - **Misses, recorded honestly:**
   1. The step-5 in-zone G20-5P growth wasn't in the prediction. It was caught in the expressway render and resolved under Q3 (R3).
   2. The page-1 table fixes (R4) and the validator bound (R5) weren't predicted. R4 changes how Case 26/27 PDFs draw a row whose text overlapped; their placements and audit stay byte-identical.
+
+## Round 2 (Ryan's review of `001ee3a`)
+- **Stale renders:** the after PNGs (11:15) predated R4's code-column fix (11:21). All four are re-rendered from the current code, and I looked at every image: whole pages plus a crop of each notes box. Every code clears its description, every description clears its distance, and the advance title clears its headers. Case 11 55→45 shows all 14 rows.
+- **Title overlap (R6):** 1.5 pt more under the advance title in two-column mode.
+- **New rendered-output test:** `test_page1_two_column_table_text_never_touches` (Case 11 55→45, Case 26) reads glyph boxes off page 1. It checks: title descenders ≥ 1 pt above the header caps; every W21-5aR ≥ 2 pt before its description; the entrance R2-1 description ≥ 2 pt before its distance. Red proof is in `red-proof-glyph-gaps.txt`: on `001ee3a` both fail on the title (−0.30 pt); on base `3f1e0ab` Case 26 fails the same way.
+- **Rule 5 (not predicted):** `adv-shoulder` (worst-case fixture: Englewood, 45→25, three jurisdiction conflicts) used to print "+4 MORE ADVANCE SIGNS". It now shows all 9 advance rows.
+  - The mechanism: the conflict footnotes are fitted after the table and collapse to one aggregate line when the cursor is low. The extra 1.5 pt makes them collapse one step earlier, into "† 3 ADOPTED-SOURCE CONFLICTS… SEE JURISDICTION PANEL", which frees room for the rows.
+  - Both states disclose everything (Rule 10).
+  - `test_plan_sheet_footer_235.py::test_every_cut_line_names_its_codes` keeps its check but now needs ≥ 1 cut line among the fixtures (adv-flagger), not ≥ 2.

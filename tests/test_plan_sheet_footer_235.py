@@ -93,7 +93,10 @@ def test_every_cut_line_names_its_codes(client: TestClient, tmp_path: Path) -> N
         doc.close()
         assert flat.count("MORE ADVANCE SIGNS") == flat.count("MORE ADVANCE SIGNS ("), name
         seen += flat.count("MORE ADVANCE SIGNS (")
-    assert seen >= 2  # adv-flagger and adv-shoulder print a cut line today
+    # adv-flagger prints a cut line today.  #360: adv-shoulder no longer
+    # does -- its 9 advance rows all fit once its conflict notes collapse to
+    # the aggregate "ADOPTED-SOURCE CONFLICTS" line one step earlier.
+    assert seen >= 1
 
 
 def test_typical_title_blocks_keep_the_11pt_pitch() -> None:

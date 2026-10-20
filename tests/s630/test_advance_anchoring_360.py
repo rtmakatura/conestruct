@@ -23,6 +23,7 @@ from __future__ import annotations
 import itertools
 from typing import Any
 
+import pypdfium2 as pdfium
 import pytest
 from fastapi.testclient import TestClient
 
@@ -32,6 +33,7 @@ from src.generation.layout import (
     generate_shoulder_closure_undivided,
     shoulder_speed_group,
 )
+from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.devices import DeviceType
 from src.rules.spacing import advance_warning_spacing, co_construction_plaques
 from src.rules.validators import DevicePlacement, ScenarioParams
@@ -250,3 +252,59 @@ def test_in_zone_plaques_keep_their_stations(road: str, speed: int, wz: int) -> 
     in_zone = {round(st, 6) for st in _stations(placements, "G20-5P") if st <= 1000.0}
     assert set(series) <= in_zone
     assert len(in_zone - set(series)) <= 2  # the envelope's in-zone assemblies
+
+
+def _glyph_boxes(pdf_path: str) -> tuple[str, list[tuple[float, float, float, float]]]:
+    """Page 1's text and each character's (left, bottom, right, top) box."""
+    doc = pdfium.PdfDocument(pdf_path)
+    try:
+        tp = doc[0].get_textpage()
+        n = tp.count_chars()
+        return tp.get_text_range(0, n), [tp.get_charbox(i) for i in range(n)]
+    finally:
+        doc.close()
+
+
+def _span(text: str, boxes: list, needle: str, start: int = 0) -> tuple[int, tuple[float, ...]]:
+    """The first ``needle`` at or after ``start``: its index and union box,
+    ignoring spaces (whose boxes are degenerate)."""
+    i = text.index(needle, start)
+    bs = [boxes[k] for k in range(i, i + len(needle)) if not text[k].isspace()]
+    return i, (
+        min(b[0] for b in bs),
+        min(b[1] for b in bs),
+        max(b[2] for b in bs),
+        max(b[3] for b in bs),
+    )
+
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        _params("freeway", 55, 45, 1000.0, True),  # Case 11, 14 rows
+        _params("freeway", 65, 60, 1000.0, True),  # Case 26 (the overlap shipped there)
+    ],
+    ids=["case-11-55-45", "case-26"],
+)
+def test_page1_two_column_table_text_never_touches(params: ScenarioParams, tmp_path: Any) -> None:
+    """R4 + the title fix, read off the rendered glyphs (Rule 11): the code
+    clears its description, the entrance R2-1's description clears its
+    distance, and the advance title's descenders clear the column headers."""
+    pdf = str(tmp_path / "p1.pdf")
+    render_plan_sheet(generate_shoulder_closure_divided(params), params, output_path=pdf)
+    text, boxes = _glyph_boxes(pdf)
+    t0 = text.index("ADVANCE WARNING SIGNS")
+    # Title "(off-page upstream of taper)" vs the header row under it.
+    _, title = _span(text, boxes, "(off-page upstream of taper)", t0)
+    h_at, header = _span(text, boxes, "DISTANCE", t0)
+    assert title[1] - header[3] >= 1.0, (title, header)
+    # Every "W21-5aR" row: the code ends before its description starts.
+    at = h_at
+    while (at := text.find("W21-5aR", at + 1)) != -1:
+        _, code = _span(text, boxes, "W21-5aR", at)
+        _, desc = _span(text, boxes, "RIGHT SHOULDER CLOSED AHEAD", at)
+        assert desc[0] - code[2] >= 2.0, (code, desc)
+    # The entrance R2-1's description ends before its distance starts.
+    d_at, desc = _span(text, boxes, "(work-zone speed posting)", h_at)
+    dist_left = min(boxes[k][0] for k in range(d_at, text.index(" ft", d_at)) if text[k].isdigit())
+    assert dist_left - desc[2] >= 2.0, (desc, dist_left)

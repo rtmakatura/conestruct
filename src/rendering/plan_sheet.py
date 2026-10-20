@@ -3428,7 +3428,8 @@ def _notes_layout(schedule_rows: int, advance_rows: int) -> _NotesLayout:
     # footer_pads[1] is the pitch of the 6.5 pt bold footer lines: 7 pt.
     # Both on one-column tables only (Q3c: "extra spacing only on
     # one-column tables; Case 27 keeps its 4 rows") -- a two-column table
-    # keeps the tighter 10 / 6, the room its long table needs.  Two
+    # keeps the tighter 10 / 6, the room its long table needs (#360 adds
+    # 1.5 pt under the advance title alone; see its section_header call).  Two
     # columns only when the advance table itself is long (> 6 rows); a
     # short table split in two only doubled its column headers.
     total = schedule_rows + advance_rows
@@ -3741,7 +3742,7 @@ def _draw_notes(
         """
         y = [FOOTER_H - 24]
 
-        def section_header(title: str) -> None:
+        def section_header(title: str, extra_gap: float = 0.0) -> None:
             y[0] -= layout.section_header_pad[0]
             cv.setStrokeColor(colors.HexColor("#888888"))
             cv.setLineWidth(0.4)
@@ -3751,7 +3752,7 @@ def _draw_notes(
             cv.setFillColor(colors.black)
             cv.setFont("Helvetica-Bold", 7.5)
             cv.drawString(x, y[0] - 4, title)
-            y[0] -= layout.section_header_pad[1]
+            y[0] -= layout.section_header_pad[1] + extra_gap
 
         def column_header(label: str, x_pos: float, align: str = "left") -> None:
             cv.setFont("Helvetica-Bold", 6.5)
@@ -3896,7 +3897,11 @@ def _draw_notes(
                 cv.drawString(x, y[0], line)
                 y[0] -= layout.row_pitch
             return _finish(cv, y)
-        section_header(advance_section_title)
+        # #360: the advance title is the one with descenders ("(", "p",
+        # 1.56 pt at bold 7.5); two-column mode's 10 pt pad set it 6 pt above
+        # the 6.5 pt bold column headers (4.67 pt caps), so they touched.
+        # 1.5 pt more leaves 1.27 pt clear; one-column mode's 12 already does.
+        section_header(advance_section_title, 1.5 if layout.two_col_advance else 0.0)
         capped_advance = advance[:advance_cap]
         if layout.two_col_advance:
             _draw_advance_table_two_column(cv, capped_advance, x, x_right, y, layout, column_header)
