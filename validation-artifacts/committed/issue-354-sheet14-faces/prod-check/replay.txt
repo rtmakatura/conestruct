@@ -1,0 +1,19 @@
+Using CPython 3.13.1 interpreter at: C:\Python\Python313\python3.exe
+Creating virtual environment at: .venv
+Installed 113 packages in 4.04s
+1. Case 26 (65 -> 60) /render/markdown -> 200
+   present: '| W20-1 | ROAD WORK \xbd MILE | 2,640 ft upstream |'
+   present: '| G20-5P | WORK ZONE plaque | Within work zone |'
+   absent: 'ROAD WORK AHEAD'
+   absent: 'CONSTRUCTION ZONE'
+2. Case 26 (65 -> 60) /render/pdf -> 200
+   present: 'ROAD WORK \xbd MILE 2640 ft'
+   present: 'WORK ZONE plaque'
+   absent: 'ROAD WORK AHEAD'
+   absent: 'CONSTRUCTION ZONE'
+3. Case 11 (55 -> 50) /render/markdown -> 200
+   present: '| W20-1 | ROAD WORK AHEAD |'
+   present: '| G20-5P | WORK ZONE plaque |'
+   absent: '\xbd MILE'
+   absent: 'CONSTRUCTION ZONE'
+PASS 3/3
