@@ -183,6 +183,7 @@ def _spacing_blocks(spacing: dict[str, Any]) -> list[Block]:
         "tangent_count_text",
         "buffer_count_text",  # #333: shoulder buffer cones (S-630-1 Note 18b)
         "downstream_count_text",
+        "corner_count_text",  # #358: near-side closure run to the corner
     ):
         if spacing.get(key):
             blocks.append(_body(_str(spacing, key)))

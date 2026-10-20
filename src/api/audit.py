@@ -749,6 +749,10 @@ def build_audit_trail(
         if p.device_type == DeviceType.CONE and p.station_ft < 0.0
     ]
     n_ds_cones = len(ds_cone_stations)
+    # #358 — a near-side plan that runs to the corner places no downstream
+    # taper: its negative-station cones continue the closure to the upstream
+    # curb line.  The generator's own station dict says which (Rule 3).
+    corner_extension = ni is not None and bool(ni["extend_to_corner"])
     # #333/#342 — the buffer cones (``layout.buffer_cone_stations``, S-630-1
     # Note 18b), counted from the placements like the downstream run, on the
     # plans ``buffer_carries_cones`` names (not the far side's companion line).
@@ -832,13 +836,25 @@ def build_audit_trail(
         ds_spacing = ds_len / n_ds_cones
         n_tangent_actual = actual_cones - n_ds_cones - n_buffer_cones
         buffer_term = f"{n_buffer_cones} buffer + " if n_buffer_cones else ""
-        spacing_section["downstream_count_text"] = (
-            f"Downstream taper: {ds_len:g} ft at ~{ds_spacing:g} ft spacing "
-            f"-> {n_ds_cones} cones (MUTCD Sec {_SEC_TAPER}: 50-100 ft downstream taper); "
-            f"{n_tangent_actual} tangent + {buffer_term}{n_ds_cones} downstream = "
-            f"{actual_cones} cones total"
-        )
-        spacing_section["n_downstream_taper_cones"] = n_ds_cones
+        ds_cones_word = "cone" if n_ds_cones == 1 else "cones"
+        if corner_extension:
+            spacing_section["corner_count_text"] = (
+                f"Corner extension: {ds_len:g} ft past the work zone to the upstream "
+                f"curb line -> {n_ds_cones} {ds_cones_word} (no downstream taper; the "
+                f"lane reopens beyond the intersection); "
+                f"{n_tangent_actual} tangent + {buffer_term}{n_ds_cones} corner = "
+                f"{actual_cones} cones total"
+            )
+            spacing_section["n_corner_extension_cones"] = n_ds_cones
+        else:
+            spacing_section["downstream_count_text"] = (
+                f"Downstream taper: {ds_len:g} ft at ~{ds_spacing:g} ft spacing "
+                f"-> {n_ds_cones} {ds_cones_word} "
+                f"(MUTCD Sec {_SEC_TAPER}: 50-100 ft downstream taper); "
+                f"{n_tangent_actual} tangent + {buffer_term}{n_ds_cones} downstream = "
+                f"{actual_cones} cones total"
+            )
+            spacing_section["n_downstream_taper_cones"] = n_ds_cones
         spacing_section["n_cones_placed_total"] = actual_cones
     # #286 (R144 Q1) — the row's result and formula lines.  The device
     # total is the sum AuditTrail.tsx used to do itself (taper drums + tangent
@@ -854,7 +870,11 @@ def build_audit_trail(
             spacing_section["tangent_count_text"],
         ]
         + ([spacing_section["buffer_count_text"]] if n_buffer_cones else [])
-        + ([spacing_section["downstream_count_text"]] if n_ds_cones else [])
+        + (
+            [spacing_section["corner_count_text" if corner_extension else "downstream_count_text"]]
+            if n_ds_cones
+            else []
+        )
     )
 
     # ------------------------------------------------------------------

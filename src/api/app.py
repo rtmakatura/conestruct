@@ -551,6 +551,8 @@ if generate_button:
                 st.code(f"Buffer:      {sp['buffer_count_text']}", language="text")
             if sp.get("downstream_count_text"):
                 st.code(f"Downstream:  {sp['downstream_count_text']}", language="text")
+            if sp.get("corner_count_text"):
+                st.code(f"Corner:      {sp['corner_count_text']}", language="text")
             st.write(
                 f"Actual placed: {sp['n_taper_drums_actual']} drums, "
                 f"{sp['n_tangent_cones_actual']} cones."

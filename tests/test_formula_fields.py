@@ -118,8 +118,12 @@ def _common(t: dict[str, Any]) -> None:
         spacing["tangent_count_text"],
     ]
     # #333: a shoulder plan's buffer line sits between the tangent and the
-    # downstream lines.
-    rest = [spacing[k] for k in ("buffer_count_text", "downstream_count_text") if k in spacing]
+    # downstream lines (#358: or the near-side corner-extension line).
+    rest = [
+        spacing[k]
+        for k in ("buffer_count_text", "downstream_count_text", "corner_count_text")
+        if k in spacing
+    ]
     assert spacing["formula_text"][2:] == rest
     assert advance["result_text"] == f"{len(advance['sign_table'])} signs"
     assert advance["citation"] == _CITATION_ADVANCE
