@@ -158,7 +158,8 @@ def test_every_mainline_sign_is_mirrored_to_the_left_curb_at_minus_4_ft() -> Non
     assert right == left
     assert {label for label, _ in left} == set(MAINLINE_LABELS)
     assert all(p.offset_ft == -4.0 for p in signs if p.offset_ft < 0)
-    assert len(left) == 8 and len(placements) == 42
+    # #342: 42 + the near side's 3 buffer cones (S-630-1 Note 18b).
+    assert len(left) == 8 and len(placements) == 45
 
 
 def test_the_cross_street_sets_are_unchanged() -> None:
@@ -331,7 +332,7 @@ def test_a_divided_verdict_builds_one_carriageway_signed_both_sides() -> None:
     assert params.one_way_street is True and params.divided_carriageway is True
     assert params.is_divided is False
     assert _post("/render/audit", _body(divided)).content != _post("/render/audit", _body()).content
-    assert len(placements) == 42
+    assert len(placements) == 45  # #342: + 3 buffer cones
 
 
 def test_an_undecided_road_is_refused_honestly() -> None:

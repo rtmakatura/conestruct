@@ -127,6 +127,34 @@
   },
   {
     "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 399.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 498.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 597.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 696.0
+  },
+  {
+    "approach_id": "mainline",
     "device_type": "SIGN_GENERIC",
     "label": "G20-5P",
     "offset_ft": 28.0,

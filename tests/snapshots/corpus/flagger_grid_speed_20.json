@@ -178,25 +178,29 @@
       "status": "not_run"
     },
     "spacing": {
+      "buffer_cone_spacing_ft": 38.3,
+      "buffer_count_text": "Buffer: 115 ft / 40 ft max spacing -> 2 cones at 38.3 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
       "citation": {
         "cite": "MUTCD § 6K.01",
         "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
       },
-      "downstream_count_text": "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 26 tangent + 4 downstream = 30 cones total",
+      "downstream_count_text": "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 26 tangent + 2 buffer + 4 downstream = 32 cones total",
       "formula_text": [
         "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
         "1000 ft / 40 ft max spacing -> 26 cones at 40.0 ft intervals",
-        "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 26 tangent + 4 downstream = 30 cones total"
+        "Buffer: 115 ft / 40 ft max spacing -> 2 cones at 38.3 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+        "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 26 tangent + 2 buffer + 4 downstream = 32 cones total"
       ],
       "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
-      "n_cones_placed_total": 30,
+      "n_buffer_cones": 2,
+      "n_cones_placed_total": 32,
       "n_downstream_taper_cones": 4,
-      "n_tangent_cones_actual": 30,
+      "n_tangent_cones_actual": 32,
       "n_tangent_cones_required": 26,
       "n_taper_drums_actual": 6,
       "n_taper_drums_required": 6,
       "on_tangent_text": "20 mph -> 40 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
-      "result_text": "32 devices · 20/40 ft o.c.",
+      "result_text": "34 devices · 20/40 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
       "speed_mph": 20,
       "tangent_count_text": "1000 ft / 40 ft max spacing -> 26 cones at 40.0 ft intervals",

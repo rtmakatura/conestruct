@@ -696,10 +696,15 @@ def test_crew_narrative_flagger_step3_instructs_downstream_taper_cones() -> None
     context = build_narrative_context(placements, _FLAGGER_DS_PARAMS)
     markdown = _render_template(context)
     n_tangent, n_buffer, n_ds = _cone_split(placements, _FLAGGER_DS_PARAMS.work_zone_length_ft)
-    n_tangent += n_buffer  # a flagger plan places no buffer cones (#333 is shoulder only)
-    assert n_buffer == 0
+    # #342: the flagger's buffer takes centerline cones too (S-630-1 Note 18b),
+    # instructed in their own sentence.
+    assert n_buffer == 3  # 360 ft buffer at 45 mph: ceil(360 / 90) - 1
 
     assert n_ds > 2  # computed count — the 50 ft run at ~20 ft spacing exceeds 2
     assert f"Place {n_ds} traffic cones in the downstream taper" in markdown
     assert f"Then place {n_tangent} traffic cones along the centerline boundary" in markdown
-    assert context["num_ds_cones"] + context["num_tangent_cones"] == n_tangent + n_ds
+    assert f"{n_buffer} more traffic cones at 90 ft" in markdown
+    assert (
+        context["num_ds_cones"] + context["num_tangent_cones"] + context["num_buffer_cones"]
+        == n_tangent + n_buffer + n_ds
+    )

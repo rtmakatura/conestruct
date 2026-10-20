@@ -92,14 +92,17 @@ def test_no_gap_over_2s_from_the_work_zone_to_the_taper(generator, divided, spee
     assert len(buffer_cones) == len(buffer_cone_stations(wz, buf, speed)) > 0
 
 
-def test_a_lane_closure_is_not_changed() -> None:
+def test_a_lane_closure_takes_the_same_buffer_cones() -> None:
+    # #342 extended #333 to the lane closure (this test used to pin it bare).
     params = _params(55, True, closure="lane")
     placements = generate_lane_closure_divided(params)
     wz = params.work_zone_length_ft
     buf = buffer_space(55, jurisdiction="CDOT")
-    assert not [
-        p for p in placements if p.device_type == DeviceType.CONE and wz < p.station_ft < wz + buf
-    ]
+    assert [
+        p.station_ft
+        for p in placements
+        if p.device_type == DeviceType.CONE and wz < p.station_ft < wz + buf
+    ] == pytest.approx(buffer_cone_stations(wz, buf, 55))
 
 
 def _scenario() -> dict:

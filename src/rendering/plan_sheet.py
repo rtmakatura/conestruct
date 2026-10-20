@@ -39,6 +39,7 @@ from reportlab.pdfgen import canvas
 from src._dotenv import load_dotenv
 from src.api.site_scan import corrections_disclosure, not_checked_disclosure
 from src.generation.layout import (
+    buffer_carries_cones,
     lanes_drawn_below_road,
     near_intersection_stations,
     rightmost_lane_assumption_active,
@@ -5040,6 +5041,7 @@ def render_plan_sheet(
             site_scan=site_scan,
             site_lat=site_lat,
             site_lng=site_lng,
+            buffer_takes_cones=buffer_carries_cones(params, approaches),
         )
     finally:
         _TURN_BAY_FRAME.reset(frame_token)
@@ -5113,8 +5115,13 @@ def _draw_schematic_page(
     site_lat: float | None = None,
     site_lng: float | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    buffer_takes_cones: bool = False,
 ) -> None:
-    """Render the schematic page (page 1)."""
+    """Render the schematic page (page 1).
+
+    ``buffer_takes_cones`` is ``layout.buffer_carries_cones`` for this plan
+    (#342), passed in because it needs the approaches.
+    """
     bearing_deg = getattr(params, "bearing_deg", None)
 
     mapping = _make_x_mapping(placements, params, shoulder_width_ft)
@@ -5138,13 +5145,13 @@ def _draw_schematic_page(
     frame = _TURN_BAY_FRAME.get()
     closed_x_spans: list[tuple[float, float]] | None = None
     drawn_placements = placements
-    # #333 (S3): a shoulder plan's buffer cones (S-630-1 Note 18b) sit in the
+    # #333 (S3), #342 (S4): the buffer cones (S-630-1 Note 18b) sit in the
     # buffer page 1 compresses to BUFFER_VISUAL_FT, where at highway scale
     # they would pile up on the scale-break mark.  As TA-23 does for its
     # compressed stretch, they aren't drawn there; the buffer label names
     # them, and every list (summary, XLSX, quote, crew sheet) counts them.
     buffer_cones = 0
-    if frame is None and params.closure_type == "shoulder":
+    if frame is None and buffer_takes_cones:
         buf_len = buffer_space(
             params.speed_mph,
             jurisdiction=params.jurisdiction,

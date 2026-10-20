@@ -92,6 +92,27 @@
   },
   {
     "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 362.5
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 425.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 487.5
+  },
+  {
+    "approach_id": "mainline",
     "device_type": "SIGN_GENERIC",
     "label": "G20-5P",
     "offset_ft": 28.0,

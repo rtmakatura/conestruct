@@ -18,6 +18,7 @@ from typing import Any
 from src.api.schemas import MAX_DRAWABLE_HALF_ROAD_FT
 from src.api.site_scan import not_run_provenance
 from src.generation.layout import (
+    buffer_carries_cones,
     device_count_floors,
     fines_double_envelope,
     flagger_chain_stations,
@@ -709,15 +710,16 @@ def build_audit_trail(
         if p.device_type == DeviceType.CONE and p.station_ft < 0.0
     ]
     n_ds_cones = len(ds_cone_stations)
-    # #333 — a shoulder plan's buffer cones (``layout.buffer_cone_stations``,
-    # S-630-1 Note 18b), counted from the placements like the downstream run.
+    # #333/#342 — the buffer cones (``layout.buffer_cone_stations``, S-630-1
+    # Note 18b), counted from the placements like the downstream run, on the
+    # plans ``buffer_carries_cones`` names (not the far side's companion line).
     n_buffer_cones = (
         sum(
             1
             for p in mainline_placements
             if p.device_type == DeviceType.CONE and wz_len < p.station_ft < wz_len + buf
         )
-        if params.closure_type == "shoulder"
+        if buffer_carries_cones(params, approaches)
         else 0
     )
     buffer_cone_spacing = buf / (n_buffer_cones + 1) if n_buffer_cones else 0.0

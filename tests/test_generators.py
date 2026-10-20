@@ -223,6 +223,9 @@ def test_shoulder_undivided(
 # ---------------------------------------------------------------------------
 # generate_lane_closure_divided
 # ---------------------------------------------------------------------------
+# #342: every CONE count below includes the buffer's lane-line cones
+# (S-630-1 Note 18b), ceil(buffer / 2S) - 1 of them: 3 at 40-45 mph,
+# 4 at 55-65 mph, 5 at 75 mph (Table 6B-2 buffers).
 
 
 @pytest.mark.parametrize(
@@ -232,11 +235,11 @@ def test_shoulder_undivided(
         # merging taper L (= W*S^2/60 = 320 ft vs the old linear 480 ft), so
         # the taper shrinks 160 ft -> four fewer taper drums (DRUM 13 -> 9).
         # Cones and all other zones unchanged.
-        (40, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 9, "ARROW_BOARD": 1, "CONE": 13}),
-        (45, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 12}),
+        (40, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 9, "ARROW_BOARD": 1, "CONE": 16}),
+        (45, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 15}),
         # Same pick(wz_len, 2*speed) math as the shoulder_divided cases —
         # pre-fix picked floor candidates that exceeded the §6C.09 max.
-        (55, "rural", 2000.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 22}),
+        (55, "rural", 2000.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 26}),
         # Buffer conditionality (Case 26/27 fix): jurisdiction="CDOT" at
         # 65/75 mph with NO qualifying step-down uses the federal
         # posted-speed buffer (645/820 ft), not the CDOT supplement minimum
@@ -249,8 +252,8 @@ def test_shoulder_undivided(
         # spacing threshold, adding one G20-5P pair (SIGN_GENERIC 16 -> 18).
         # At 75 the +170 ft buffer shifts stations but crosses no plaque
         # threshold, so the count is unchanged (22).
-        (65, "rural", 5000.0, {"SIGN_GENERIC": 18, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 42}),
-        (75, "freeway", 8000.0, {"SIGN_GENERIC": 22, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 57}),
+        (65, "rural", 5000.0, {"SIGN_GENERIC": 18, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 46}),
+        (75, "freeway", 8000.0, {"SIGN_GENERIC": 22, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 62}),
     ],
     ids=[
         "40mph_rural_800ft",
@@ -283,6 +286,8 @@ def test_lane_closure_divided(
 # ---------------------------------------------------------------------------
 # generate_flagger_alternating_2lane
 # ---------------------------------------------------------------------------
+# #342: every CONE count below includes the buffer's centerline cones
+# (S-630-1 Note 18b): 3 at 35 and 45 mph (Table 6B-2 buffers 250 / 360 ft).
 
 
 @pytest.mark.parametrize(
@@ -298,19 +303,19 @@ def test_lane_closure_divided(
         # pedestrian_access adds 2 R9-9 → 16.
         (
             {},
-            {"SIGN_GENERIC": 14, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 17},
+            {"SIGN_GENERIC": 14, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 20},
         ),
         (
             {"afad": True},
-            {"SIGN_GENERIC": 14, "TEMPORARY_SIGNAL": 2, "DRUM": 6, "CONE": 17},
+            {"SIGN_GENERIC": 14, "TEMPORARY_SIGNAL": 2, "DRUM": 6, "CONE": 20},
         ),
         (
             {"pilot_car": True, "pedestrian_access": True},
-            {"SIGN_GENERIC": 16, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 17},
+            {"SIGN_GENERIC": 16, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 20},
         ),
         (
             {"afad": True, "pilot_car": True, "pedestrian_access": True},
-            {"SIGN_GENERIC": 16, "TEMPORARY_SIGNAL": 2, "DRUM": 6, "CONE": 17},
+            {"SIGN_GENERIC": 16, "TEMPORARY_SIGNAL": 2, "DRUM": 6, "CONE": 20},
         ),
     ],
     ids=["basic", "afad", "pilot_car_plus_pedestrian", "all_options_combined"],
@@ -344,7 +349,7 @@ def test_flagger(kwargs: dict[str, bool], expected: dict[str, int]) -> None:
             "urban_low",
             300.0,
             11.0,
-            {"SIGN_GENERIC": 13, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 10},
+            {"SIGN_GENERIC": 13, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 13},
         ),
     ],
     ids=["35mph_urban_low_300ft"],

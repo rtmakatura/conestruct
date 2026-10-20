@@ -221,15 +221,16 @@ class TestFarSide:
         assert len(ds) == 2  # the standard 2-cone downstream taper
 
     def test_near_side_has_no_companion_tangent(self) -> None:
-        # Near side: no closed-lane cones between the work zone start
-        # (300) and the taper's downstream end (660) — the buffer stays
-        # device-empty, as in every midblock closure.
+        # Near side: between the work zone start (300) and the taper's
+        # downstream end (660) sit only the midblock buffer's cones (#342,
+        # S-630-1 Note 18b: 360 ft at 45 mph, 3 cones at 90 ft), not the far
+        # side's companion tangent.
         placements, _ = _generate()
-        assert not any(
-            300.0 < p.station_ft < 660.0
+        assert [
+            p.station_ft
             for p in _mainline(placements)
-            if p.device_type == DeviceType.CONE
-        )
+            if p.device_type == DeviceType.CONE and 300.0 < p.station_ft < 660.0
+        ] == [390.0, 480.0, 570.0]
 
 
 # ---------------------------------------------------------------------------

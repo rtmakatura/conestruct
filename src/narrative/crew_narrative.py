@@ -27,6 +27,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from src.api.site_scan import correction_sentences, not_checked_disclosure
 from src.generation.layout import (
     ONE_WAY_LEFT_CURB_SIGN_OFFSET_FT,
+    buffer_carries_cones,
     device_count_floors,
     lanes_drawn_below_road,
     near_intersection_stations,
@@ -411,16 +412,16 @@ def build_narrative_context(
         if p.device_type == DeviceType.CONE and p.station_ft < 0.0
     ]
     n_ds_cones = len(ds_cone_stations)
-    # #333 — a shoulder plan's buffer cones (``layout.buffer_cone_stations``,
-    # S-630-1 Note 18b), from the placements so step 3 instructs every cone
-    # the bill counts.
+    # #333/#342 — the buffer cones (``layout.buffer_cone_stations``, S-630-1
+    # Note 18b), from the placements so step 3 instructs every cone the bill
+    # counts, on the plans ``buffer_carries_cones`` names.
     n_buffer_cones = (
         sum(
             1
             for p in mainline_placements
             if p.device_type == DeviceType.CONE and wz_len < p.station_ft < taper_end_station
         )
-        if params.closure_type == "shoulder"
+        if buffer_carries_cones(params, approaches)
         else 0
     )
     buffer_cone_spacing_ft = buf_len / (n_buffer_cones + 1) if n_buffer_cones else 0.0
@@ -700,10 +701,16 @@ def build_narrative_context(
             if p.label == "R2-10" and p.station_ft > taper_start_station
         )
         ni_lane_line_offset = (params.num_lanes - 1) * params.lane_width_ft
-        ni_companion_cones = sum(
-            1
-            for p in mainline_placements
-            if p.device_type == DeviceType.CONE and p.station_ft > wz_len
+        # #342: the near side's buffer cones are step 3's buffer sentence,
+        # not the §6N.12.12 companion closure.
+        ni_companion_cones = (
+            sum(
+                1
+                for p in mainline_placements
+                if p.device_type == DeviceType.CONE and p.station_ft > wz_len
+            )
+            if ni["side"] == "far"
+            else 0
         )
         for a in approaches or []:
             a_st = ni["approaches"][a.id]

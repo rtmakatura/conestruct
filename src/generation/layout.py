@@ -137,6 +137,29 @@ def buffer_cone_stations(wz_len: float, buf_len: float, speed: int) -> list[floa
     return [wz_len + k * spacing for k in range(1, n_intervals)]
 
 
+def buffer_carries_cones(
+    params: ScenarioParams, approaches: list[ApproachParams] | None = None
+) -> bool:
+    """#342 (R145 S2) — whether this plan's buffer takes ``buffer_cone_stations``.
+
+    The shoulder (#333), divided lane-closure, flagger and near-side
+    near-intersection generators place them.  The far side doesn't: its
+    §6N.12.12 companion tangent already runs from the taper down to the work
+    zone (TA-23's opening is empty by design, #323 R153).  Mobile and work
+    beyond the shoulder have no buffer tangent.  The one gate the audit, the
+    crew narrative and page 1 read, so they count what the generators place.
+    """
+    if params.closure_type not in ("shoulder", "lane"):
+        return False
+    if params.near_intersection:
+        return (
+            approaches is not None
+            and len(approaches) > 0
+            and (approaches[0].along_station_ft < 0.0)
+        )
+    return True
+
+
 class ClosedLaneLateral(NamedTuple):
     """Lateral landmarks of the closed/occupied travel lane (issue #176)."""
 
@@ -1260,7 +1283,16 @@ def generate_lane_closure_divided(
         )
     )
 
-    # 4. Buffer space — intentionally empty.
+    # 4. Buffer space: lane-line cones at <= 2S (#342, S-630-1 Note 18b),
+    # on the tangent line the taper ends on.
+    for station in buffer_cone_stations(wz_len, buf_len, speed):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=lane_line_offset,
+            )
+        )
 
     # 5. CONSTRUCTION ZONE plaques (G20-5P) at half-mile intervals,
     # mirrored on both sides per S-630-1 Sheet 2 General Note 8.
@@ -1858,6 +1890,13 @@ def generate_near_intersection(
                 DevicePlacement(DeviceType.CONE, station_ft=s, offset_ft=lane_line_offset)
             )
             s -= tangent_spacing_target
+    else:
+        # #342 (S-630-1 Note 18b): the near side is the midblock closure
+        # (§6N.12.08), so its buffer takes the lane-line cones at <= 2S.
+        for station in buffer_cone_stations(wz_len, st["buffer_len"], speed):
+            placements.append(
+                DevicePlacement(DeviceType.CONE, station_ft=station, offset_ft=lane_line_offset)
+            )
 
     # 5. CONSTRUCTION ZONE plaques (G20-5P), single side.
     total_zone_length = st["sign_c"]
@@ -2305,7 +2344,16 @@ def generate_flagger_alternating_2lane(
             )
         )
 
-    # 4. Buffer space — intentionally empty.
+    # 4. Buffer space: centerline cones at <= 2S (#342, S-630-1 Note 18b),
+    # where the taper ends and the work-zone tangent runs.
+    for station in buffer_cone_stations(wz_len, st["taper_end"] - wz_len, speed):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=0.0,
+            )
+        )
 
     # 5. Work-zone tangent cones along the centerline, delineating the
     # boundary between the open opposing lane and the closed work lane.

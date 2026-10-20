@@ -481,7 +481,10 @@ def test_lane_closure_drum_count() -> None:
 
 
 def test_lane_closure_cone_count() -> None:
-    """11 cones (9 tangent + 2 downstream) — same as shoulder closure.
+    """15 cones (9 tangent + 4 buffer + 2 downstream) — same as shoulder closure.
+
+    #342: the 495 ft buffer at 55 mph takes ceil(495 / 110) - 1 = 4 lane-line
+    cones (S-630-1 Note 18b), as the shoulder closure does since #333.
 
     Tangent path is the same pick_device_count(800, 110, min_count=2)
     call; see ``test_shoulder_closure_divided_cone_count`` for the math.
@@ -490,7 +493,7 @@ def test_lane_closure_cone_count() -> None:
     """
     params = _lane_closure_params()
     placements = generate_lane_closure_divided(params, shoulder_width_ft=10.0)
-    assert _count_by_type(placements, DeviceType.CONE) == 11
+    assert _count_by_type(placements, DeviceType.CONE) == 15
 
 
 def test_lane_closure_arrow_board_count() -> None:
@@ -503,7 +506,7 @@ def test_lane_closure_arrow_board_count() -> None:
 
 
 def test_lane_closure_total_devices() -> None:
-    """Total: 13 drums + 11 cones + 1 arrow board + 14 signs = 39.
+    """Total: 13 drums + 15 cones + 1 arrow board + 14 signs = 43 (#342: +4 buffer cones).
 
     Sign breakdown (each station mirrored on both sides per CO §6C.04(A)):
       3 advance (W4-2R, W20-5R, W20-1)
@@ -514,7 +517,7 @@ def test_lane_closure_total_devices() -> None:
     """
     params = _lane_closure_params()
     placements = generate_lane_closure_divided(params, shoulder_width_ft=10.0)
-    assert len(placements) == 39
+    assert len(placements) == 43
 
 
 def test_lane_closure_sign_labels_lane_specific() -> None:
@@ -598,7 +601,7 @@ def test_flagger_signs_on_both_sides() -> None:
 
 
 def test_flagger_total_devices() -> None:
-    """Total: 6 drums + 11 cones + 2 flaggers + 14 signs = 33.
+    """Total: 6 drums + 14 cones + 2 flaggers + 14 signs = 36.
 
     Hand calc (PR 2 TA-10 geometry):
       One-lane two-way taper = 100 ft (§6B.08 ¶14 band max),
@@ -609,7 +612,9 @@ def test_flagger_total_devices() -> None:
         spacing(5)=100 (out of tol [81,99]); spacing(6)=83.33 (in tol).
         winner: 6 intervals → 7 cones.
       Downstream taper: pick_device_count(50, 20, min_count=2) → 4
-        cones (was hard-coded 2).  Cones total = 7 + 4 = 11.
+        cones (was hard-coded 2).
+      Buffer (#342, S-630-1 Note 18b): 360 ft at 45 mph,
+        ceil(360 / 90) - 1 = 3 centerline cones.  Cones total = 7 + 3 + 4 = 14.
       Signs:
         4 right-direction advance (W20-7, W3-4, W20-4, W20-1 — B-11
           correction adds W20-4; W3-4 retained per locked OQ-2)
@@ -618,11 +623,11 @@ def test_flagger_total_devices() -> None:
         2 G20-2 END ROAD WORK (one per direction)
         2 G20-1 BEGIN ROAD WORK (one per direction)
         = 14 signs.
-      Total = 6 + 11 + 2 + 14 = 33.
+      Total = 6 + 14 + 2 + 14 = 36.
     """
     params = _flagger_params()
     placements = generate_flagger_alternating_2lane(params, shoulder_width_ft=8.0)
-    assert len(placements) == 33
+    assert len(placements) == 36
 
 
 # ---------------------------------------------------------------------------
