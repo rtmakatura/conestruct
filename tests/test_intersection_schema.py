@@ -209,7 +209,7 @@ def test_intersection_inside_work_zone_rejects(along: float) -> None:
 
 def test_drawable_width_bound_applies_to_mainline_only() -> None:
     # 4 lanes x 14 ft + 8 ft shoulder = 64 ft > 52 ft drawable → reject.
-    with pytest.raises(ValidationError, match="drawable half-road"):
+    with pytest.raises(ValidationError, match="half-road this plan can draw"):
         _ADAPTER.validate_python(_body(lanes=4, laneWidth=14.0))
     # The same widths on an approach are fine: the cross street is never
     # drawn under Option C (the sheet cites the plate).

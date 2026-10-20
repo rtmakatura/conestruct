@@ -676,8 +676,8 @@ class ShoulderScenario(
             max_width = (MAX_DRAWABLE_HALF_ROAD_FT - shoulder_ft) / self.lanes
             exceeds = (
                 f"{self.lanes} lanes x {self.laneWidth} ft + {shoulder_ft:.0f} ft shoulder "
-                f"= {half_road:.1f} ft exceeds the plan sheet's drawable half-road "
-                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft)."
+                f"= {half_road:.1f} ft exceeds the {MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft "
+                f"half-road this plan can draw."
             )
             # #335: on a freeway a narrower lane trips the 11 ft minimum
             # (validate_corridor_geometry), so the only recovery is fewer lanes.
@@ -686,7 +686,7 @@ class ShoulderScenario(
                 raise ValueError(
                     f"{exceeds} Freeway lanes must be at least "
                     f"{FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft (CDOT S-630-1 Sheet 7 Case 11 "
-                    f"'11' MIN.'), so the sheet draws at most {fit_lanes} lanes in this "
+                    f"'11' MIN.'), so this plan draws at most {fit_lanes} lanes in this "
                     f"direction. Reduce the lane count to {fit_lanes}."
                 )
             raise ValueError(
@@ -1063,8 +1063,8 @@ class NearIntersectionScenario(
             max_width = (MAX_DRAWABLE_HALF_ROAD_FT - shoulder_ft) / self.lanes
             raise ValueError(
                 f"{self.lanes} lanes x {self.laneWidth} ft + {shoulder_ft:.0f} ft shoulder "
-                f"= {half_road:.1f} ft exceeds the plan sheet's drawable half-road "
-                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft). Use a lane width of "
+                f"= {half_road:.1f} ft exceeds the {MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft "
+                f"half-road this plan can draw. Use a lane width of "
                 f"{max_width:.1f} ft or less, or reduce the lane count."
             )
         return self

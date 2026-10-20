@@ -1,0 +1,9 @@
+# tests/test_refusal_plan_can_draw.py on base 91c8a38 (before the reword): 4 failed
+E   assert '4 lanes x 11.0 ft + 10 ft shoulder = 54.0 ft exceeds the 52 ft half-road this plan can draw. Use a lane width of 10.5 ft or less, or reduce the lane
+tests\test_refusal_plan_can_draw.py:86: assert '4 lanes x 11.0 ft + 10 ft shoulder = 5
+E   assert 'exceeds the 52 ft half-road this plan can draw.' in '{"detail": [{"type": "value_error", "loc": ["body", "shoulder"], "msg": "Value error, 4 lanes x
+tests\test_refusal_plan_can_draw.py:95: assert 'exceeds the 52 ft half-road this plan 
+E   assert '4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the 52 ft half-road this plan can draw. Use a lane width of 11.0 ft or less, or reduce the lane 
+tests\test_refusal_plan_can_draw.py:131: assert '4 lanes x 14.0 ft + 8 ft shoulder = 6
+E   assert 'At 11 ft this plan draws at most 3 lanes in this direction beside the 10 ft shoulder (the widest half-road it can draw is 52 ft). Set lanes per dire
+tests\test_refusal_plan_can_draw.py:141: assert 'At 11 ft this plan draws at most 3 la

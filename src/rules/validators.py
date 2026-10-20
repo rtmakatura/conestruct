@@ -1906,10 +1906,10 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
         fit_lanes = freeway_max_drawable_lanes(params.shoulder_width_ft)
         if params.num_lanes > fit_lanes:
             recovery = (
-                f"At {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft the plan sheet draws at most "
+                f"At {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft this plan draws at most "
                 f"{fit_lanes} lanes in this direction beside the "
-                f"{params.shoulder_width_ft:.0f} ft shoulder (its widest half-road is "
-                f"{MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft). Set lanes per direction to "
+                f"{params.shoulder_width_ft:.0f} ft shoulder (the widest half-road it "
+                f"can draw is {MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft). Set lanes per direction to "
                 f"{fit_lanes} and lane width to {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft"
             )
         else:

@@ -292,7 +292,7 @@ def test_drawable_half_road_bound(lanes: int, lane_width: float, divided: bool) 
     if lanes * lane_width + shoulder > 52.0:
         with pytest.raises(ValidationError) as exc_info:
             _ADAPTER.validate_python(body)
-        assert any("drawable half-road" in str(e["msg"]) for e in exc_info.value.errors())
+        assert any("half-road this plan can draw" in str(e["msg"]) for e in exc_info.value.errors())
     else:
         assert _ADAPTER.validate_python(body).lanes == lanes
 
