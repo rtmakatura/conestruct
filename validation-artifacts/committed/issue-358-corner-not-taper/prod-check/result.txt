@@ -1,0 +1,5 @@
+PASS 1 corner audit 200, no Downstream taper line -- Corner extension: 48 ft past the work zone to the upstream curb line -> 1 cone (no downstream taper; the lane reopens beyond the intersection); 9 tangent + 3 buffer + 1 corner = 13 cones total
+PASS 2 corner line names 48 ft and 1 cone -- n_corner_extension_cones=1
+PASS 3 total equals the bill -- n_cones_placed_total=13 bill_cones=13
+PASS 4 midblock near side keeps its downstream taper -- Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 9 tangent + 3 buffer + 2 downstream = 14 cones total
+4/4 PASS
