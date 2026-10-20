@@ -19,3 +19,6 @@ Sources and quotes: `checkpoint.md` in this folder.
 
 ## R4 (R145 self-ruled): one predicate, every caller passes the scenario
 - `buffer_space`, `_cdot_buffer_or_none` and `_is_cdot_minimum` take keyword-only `road_type` and `closure_type`. `None` (the default) keeps the speed-only lookup for direct table calls; every `src/` call with a scenario passes both, and a sentinel test fails on one that doesn't.
+
+## Q1 (Ryan-ruled 2026-10-20): ship now
+- At 75→65 the W3-5 sits 40 ft inside the taper after this fix (`outcome.md`, Rule 5 item 2), the state 75→70 already had. Ruled: ship #355; #360 stays priority-high and fixes the anchoring.

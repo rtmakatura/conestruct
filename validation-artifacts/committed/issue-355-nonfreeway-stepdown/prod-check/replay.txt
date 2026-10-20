@@ -1,0 +1,30 @@
+1. rural_divided 65 -> 60 /render/audit -> 200
+   ok: buffer_ft = 645.0 (want 645)
+   ok: buffer source: MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).
+   ok: no divergence fields
+   ok: lookup_text says why Sheet 14 doesn't apply
+   ok: case: Case 11 (reduced work-zone speed): Shoulder closure on divided highway
+   ok: taper: CDOT S-630-1 Case 11 (right-shoulder closure on divided highway, reduced work-zone speed)
+   ok: narrative_2: CDOT S-630-1 draws no reduced-speed shoulder typical for this road. The advance signs follow MUTCD 11th Ed. Table 6B-1 at 65 mph, and the buffer follows MUTCD Table 6B-2 at the posted speed.
+   ok: no trigger_condition
+2. rural_divided 65 -> 60 /render/markdown -> 200
+   ok: no Trigger Condition section
+   ok: no Sheet 14 in the crew sheet
+3. rural_divided 75 -> 65 /render/audit -> 200
+   ok: buffer_ft = 820.0 (want 820)
+   ok: buffer source: MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).
+   ok: no divergence fields
+   ok: lookup_text says why Sheet 14 doesn't apply
+   ok: case: Case 11 (reduced work-zone speed): Shoulder closure on divided highway
+   ok: taper: CDOT S-630-1 Case 11 (right-shoulder closure on divided highway, reduced work-zone speed)
+   ok: narrative_2: CDOT S-630-1 draws no reduced-speed shoulder typical for this road. The advance signs follow MUTCD 11th Ed. Table 6B-1 at 75 mph, and the buffer follows MUTCD Table 6B-2 at the posted speed.
+   ok: no trigger_condition
+4. rural_divided 75 -> 65 /render/markdown -> 200
+   ok: no Trigger Condition section
+   ok: no Sheet 14 in the crew sheet
+5. Case 26 (freeway 65 -> 60) /render/audit -> 200
+   ok: buffer_ft = 570.0 (want 570)
+   ok: buffer source: CDOT S-630-1 Standard Plan, Sheet 14 (Case 26 at 65 mph). MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (federal baseline).
+   ok: case: Case 26 at 65 mph: Shoulder closure with reduced work-zone speed
+
+RESULT: PASS (5 requests)
