@@ -1,0 +1,35 @@
+1. rural_divided 75 -> 70, 2,000 ft of work (the issue's repro), /render/audit
+   ok: status 200
+   ok: W20-1 listed, '3,030 upstream' (expect 3,030 upstream)
+   ok: W3-5(70) listed, '2,530 upstream' (expect 2,530 upstream)
+   ok: R2-10 listed, '2,000 upstream' (expect 2,000 upstream)
+   ok: R2-1 listed, '1,500 upstream' (expect 1,500 upstream)
+   ok: R2-10 500 ft before the group
+2. the same plan, /render/markdown
+   ok: status 200
+   ok: crew R2-10 row
+   ok: crew entrance R2-1 row
+3. freeway Case 11 55 -> 45, /render/audit
+   ok: status 200
+   ok: spacing text names the group and R2-10
+   ok: R2-10 position (Case 11)
+4. urban_arterial 55 -> 45 (350 ft spacing), /render/audit
+   ok: status 200
+   ok: engineer note present
+5. freeway Case 26 (65 -> 60), /render/audit -- unchanged
+   ok: status 200
+   ok: R2-10 still Sheet 14
+   ok: R2-10 at Sheet 14's 1,580 ft
+   ok: no engineer-note key
+6. Case 11 55 -> 45, /render/pdf page 1 glyph gaps
+   ok: status 200
+   ok: title clears headers by 1.20 pt
+   ok: W21-5aR to description gaps [4.57, 4.57, 17.15] pt
+   ok: page 1 lists R2-10 at 3500 ft
+   ok: all 14 advance rows on page 1
+7. Case 26, /render/pdf page 1 glyph gaps
+   ok: status 200
+   ok: title clears headers by 1.20 pt
+   ok: W21-5aR to description gaps [4.59, 4.57, 17.15] pt
+
+PASS 26/26
