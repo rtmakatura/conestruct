@@ -1,0 +1,76 @@
+Page 798              MUTCD 11th Edition
+
+                                 CHAPTER 6H. TTC ZONE WARNING SIGNS
+
+Section 6H.01 Warning Sign Function, Design, and Application
+
+  Support:
+01 TTC zone warning signs (see Figure 6H-1) notify road users of specific situations or conditions on or adjacent
+
+  to a roadway that might not otherwise be apparent.
+  Standard:
+
+02 TTC warning signs shall comply with the Standards for warning signs presented in Part 2 and in the
+  FHWA's "Standard Highway Signs" publication (see Section 1A.05).
+
+03 The sizes for TTC warning signs shall be as shown in Table 6H-1.
+
+04 Except as provided in Paragraph 5 of this Section, TTC warning signs shall be diamond-shaped with
+  a black legend and border on an orange background, except for the Grade Crossing Advance Warning
+  (W10-1) sign, which shall have a black legend and border on a yellow background.
+  Option:
+
+05 Warning signs that are required or recommended in Parts 2 or 7 to have a fluorescent yellow-green background
+  may have that color background in TTC zones.
+
+06 Existing warning signs with a yellow background that are still applicable may remain in place.
+07 Warning signs used for TTC incident management situations may have a black legend and border on a
+
+  fluorescent pink background.
+08 Mounting or space considerations may justify a change from the standard diamond shape to a
+
+  rectangular shape.
+09 In emergencies, available warning signs having yellow backgrounds may be used if signs with orange or
+
+  fluorescent pink backgrounds are not at hand.
+  Guidance:
+
+10 Where roadway or road user conditions require greater emphasis, larger than standard size warning signs
+  should be used, with the symbol or legend enlarged approximately in proportion to the outside dimensions.
+
+11 Where any part of the roadway is obstructed or closed by work activities or incidents, advance warning signs
+  should be installed to alert road users well in advance of these obstructions or restrictions.
+
+12 Where road users include pedestrians, the provision of supplemental audible information or detectable
+  barriers or barricades should be provided for people with vision disabilities.
+  Support:
+
+13 Detectable barriers or barricades communicate very clearly to pedestrians who have vision disabilities that
+  they can no longer proceed in the direction that they are traveling.
+  Option:
+
+14 Advance warning signs may be used singly or in combination.
+15 Where distances are not displayed on warning signs as part of the message, a supplemental plaque with the
+
+  distance legend may be mounted immediately below the sign on the same support.
+
+Section 6H.02 Position of Advance Warning Signs
+  Guidance:
+
+01 Where highway conditions permit, warning signs should be placed in advance of the transition and activity
+  areas at varying distances depending on roadway type, condition, and posted speed. Table 6B-1 contains
+  information regarding the spacing of advance warning signs. Where a series of two or more advance warning
+  signs is used, the closest sign to the transition and activity areas should be placed approximately 100 feet for
+  low-speed urban streets to 1,000 feet or more for freeways and expressways.
+
+02 Where multiple advance warning signs are needed on the approach to a transition and activity area, the
+  ROAD WORK AHEAD (W20-1) sign should be the first advance warning sign encountered by road users.
+  Support:
+
+03 Various conditions, such as limited sight distance or obstructions that might require a driver to reduce speed
+  or stop, might require additional advance warning signs.
+  Option:
+
+04 As an alternative to a specific distance on advance warning signs, the word AHEAD may be used.
+
+Sect. 6H.01 to 6H.02  December 2023

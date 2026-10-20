@@ -343,13 +343,23 @@ def _is_cdot_minimum(
 # R2-1(XX) group, "2200'" more to W20-1.  Cumulative, keyed by position:
 # A2 is the second (downstream) W21-5aR, A the first, C the farthest sign.
 # Case 11 shows no W20-2 (ruling Q1).  The one producer: the generators,
-# the audit, the crew sheet and the validator read these.
+# the audit, the crew sheet and the validator read these.  #360 (Q1): on
+# a reduced-speed plan the G20-5P / R2-1(XX) group sits at its drawn
+# 3,000 ft and R2-10 "500' (MIN.)" further upstream; Sheet 12 Case 24's
+# "not more than 500'" leaves exactly 500 (``R2_10_BEFORE_SPEED_ARRAY_FT``).
 CASE_11_FREEWAY_SIGN_FT: dict[str, float] = {
     "W5-1": 500.0,
     "A2": 1000.0,
     "A": 2000.0,
+    "R2-1": 3000.0,
+    "R2-10": 3500.0,
     "C": 5200.0,
 }
+
+# #360: CDOT S-630-1 Sheet 12, Case No. 24 (PDF p. 160): "R2-10 SHALL BE
+# PLACED NOT MORE THAN 500' BEFORE THE FIRST SPEED LIMIT SIGN ARRAY."
+# Case 11 draws the same gap as "500' (MIN.)" (Sheet 7, PDF p. 155).
+R2_10_BEFORE_SPEED_ARRAY_FT = 500.0
 
 
 # #344 (ruling S1): a Case 26/27 freeway shoulder plan places its signs at

@@ -19,12 +19,14 @@ from src.api.schemas import MAX_DRAWABLE_HALF_ROAD_FT
 from src.api.site_scan import not_run_provenance
 from src.generation.layout import (
     buffer_carries_cones,
+    construction_plaque_zone_length,
     device_count_floors,
     fines_double_envelope,
     flagger_chain_stations,
     near_intersection_stations,
     second_shoulder_closed_station,
     shoulder_advance_stations,
+    shoulder_speed_group,
 )
 from src.rules.corridor import placed_downstream_taper_ft
 from src.rules.devices import DeviceType
@@ -880,7 +882,10 @@ def build_audit_trail(
     case_11 = case_11_freeway_series(params)
     # #344: a Case 26/27 plan's stations from the same producer (no W20-2).
     sheet_14 = sheet_14_freeway_series(params)
-    if case_11 or sheet_14:
+    # #360: a reduced-speed shoulder plan's W20-1 sits upstream of its speed
+    # group, from the same producer.
+    speed_group = shoulder_speed_group(params, taper_start_station)
+    if case_11 or sheet_14 or speed_group is not None:
         sign_a_station, sign_b_station, sign_c_station = shoulder_advance_stations(
             params, taper_start_station
         )
@@ -989,6 +994,15 @@ def build_audit_trail(
                 return "R2-10 (Sheet 14)"
             if label in ("G20-5P", "R2-1") and abs(station_ft - entrance_st) <= 0.5:
                 return "Speed limit group (Sheet 14)"
+        if speed_group is not None:
+            # #360: R2-10 and the speed limit group upstream of the taper.
+            where = " (Case 11)" if case_11 else ""
+            if label == "R2-10":
+                return f"R2-10{where}"
+            if label in ("G20-5P", "R2-1") and abs(station_ft - speed_group.entrance_r2_1) <= 0.5:
+                return f"Speed limit group{where}"
+            if label in ("G20-5P", "R2-6P"):
+                return "Fines Double plaque"
         if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
             return "C (furthest)"
         if (
@@ -1159,7 +1173,14 @@ def build_audit_trail(
             + ("" if is_reduced else f"W5-1 {CASE_11_FREEWAY_SIGN_FT['W5-1']:,.0f} ft, ")
             + f"second {sc} {CASE_11_FREEWAY_SIGN_FT['A2']:,.0f} ft, "
             f"first {sc} {CASE_11_FREEWAY_SIGN_FT['A']:,.0f} ft, "
-            f"W20-1 {CASE_11_FREEWAY_SIGN_FT['C']:,.0f} ft"
+            # #360 (Q1): the speed limit group and R2-10 on a reduced plan.
+            + (
+                f"speed limit group {CASE_11_FREEWAY_SIGN_FT['R2-1']:,.0f} ft, "
+                f"R2-10 {CASE_11_FREEWAY_SIGN_FT['R2-10']:,.0f} ft, "
+                if speed_group is not None
+                else ""
+            )
+            + f"W20-1 {CASE_11_FREEWAY_SIGN_FT['C']:,.0f} ft"
         )
     elif sheet_14:
         # #344 (S5): the same, from Sheet 14.
@@ -1175,6 +1196,13 @@ def build_audit_trail(
         )
     else:
         advance_spacing_text = f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft"
+        if speed_group is not None:
+            # #360 (Q2 (d)): Case 11's order upstream of the B sign.
+            advance_spacing_text += (
+                "; reduced speed: the speed limit group at A + B + C, R2-10 500 ft "
+                "upstream of it (S-630-1 Sheet 12 Case 24), each W3-5 530 ft beyond, "
+                "W20-1 one C beyond the farthest W3-5"
+            )
     advance_section = {
         "road_type_text": (
             f"Speed {speed} mph, road_type = '{params.road_type}' "
@@ -1273,7 +1301,9 @@ def build_audit_trail(
         for p in mainline_placements
         if p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-5P" and p.offset_ft > 0
     )
-    total_signed_length = sign_c_station
+    total_signed_length = construction_plaque_zone_length(
+        params, taper_start_station, sign_c_station
+    )
     plaques_required = co_construction_plaques(total_signed_length)
     plaques_section = {
         "pass": plaques_right >= plaques_required,
@@ -1514,6 +1544,13 @@ def build_audit_trail(
             "operational_notes": _SHEET_12_OPERATIONAL_NOTES,
             "source": "CDOT S-630-1 Standard Plan, Sheet 12",
         }
+        if _env.long_gaps:
+            # #360 (Q3): plaque gaps no legal spot could close, for the
+            # engineer note (pending_verification).  Present only then, so
+            # every other plan's envelope is unchanged.
+            fines_double_section["envelope"]["plaque_long_gaps_ft"] = [
+                [hi, lo] for hi, lo in _env.long_gaps
+            ]
 
     # ------------------------------------------------------------------
     # 7. S-630-1 case reference
@@ -2118,6 +2155,10 @@ LANE_CONFIDENCE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/is
 # more, the pending item keyed to this URL says so (the #176 pattern).
 LANE_CEILING_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/310"
 
+# #360 (Q3): Fines Double plaques the fill couldn't space within 2,640 ft;
+# the pending item keyed to this URL asks for the engineer's direction.
+FINES_DOUBLE_SPACING_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/360"
+
 # Tracking issue for override provenance (#177): when a user confirm/edit
 # superseded a disputed detection (the erased relays were driving a live
 # refusal or caution), the pending item keyed to this URL states both
@@ -2583,6 +2624,29 @@ def audit_projection(
                     "(items 04 and 05; 11th Ed. p. 848) and MUTCD Part 4."
                 ),
                 "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
+            }
+        )
+
+    # #360 (Q3): Fines Double plaques left more than 2,640 ft apart once no
+    # legal spot remained (S-630-1 Sheet 2 Note 4 lets the Engineer change
+    # the spacing).  One item per plan, naming each gap.
+    _fd = audit.get("fines_double") or {}
+    _long_gaps = (_fd.get("envelope") or {}).get("plaque_long_gaps_ft") or []
+    if _long_gaps:
+        gaps_text = "; ".join(
+            f"station {hi:,.0f} to {lo:,.0f} ({hi - lo:,.0f} ft)" for hi, lo in _long_gaps
+        )
+        items.append(
+            {
+                "kind": "fines_double_spacing",
+                "label": (
+                    "Engineer's direction needed: the WORK ZONE / FINES DOUBLE "
+                    "plaques are more than 2,640 ft apart between R2-10 and "
+                    f"R2-11 ({gaps_text}). No spot is at least 250 ft from the "
+                    'other signs there. S-630-1 Sheet 2 Note 4: "The spacing '
+                    'of these signs may be changed as directed by the Engineer."'
+                ),
+                "tracking_issue": FINES_DOUBLE_SPACING_ISSUE,
             }
         )
 

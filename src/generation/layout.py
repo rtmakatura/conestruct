@@ -19,6 +19,7 @@ from typing import Any, NamedTuple
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
     CASE_11_FREEWAY_SIGN_FT,
+    R2_10_BEFORE_SPEED_ARRAY_FT,
     SHEET_14_FREEWAY_SIGN_FT,
     advance_warning_spacing,
     buffer_space,
@@ -35,6 +36,7 @@ from src.rules.spacing import (
     shoulder_taper_length,
     taper_length,
 )
+from src.rules.tables import COLORADO_OVERRIDES
 from src.rules.validators import (
     FREEWAY_MIN_LANE_WIDTH_FT,
     MAX_DRAWABLE_HALF_ROAD_FT,
@@ -320,6 +322,11 @@ def shoulder_advance_stations(
     abc = advance_warning_spacing(params.speed_mph, params.road_type)
     sign_a = taper_start_station + abc["A"]
     sign_b = sign_a + abc["B"]
+    # #360 (Q2): a reduced-speed plan's W20-1 moves upstream of the speed
+    # group (``shoulder_speed_group``); A and B keep their stations.
+    group = shoulder_speed_group(params, taper_start_station)
+    if group is not None:
+        return sign_a, sign_b, group.w20_1
     return sign_a, sign_b, sign_b + abc["C"]
 
 
@@ -338,6 +345,120 @@ def second_shoulder_closed_station(params: ScenarioParams, taper_start_station: 
     return (sign_a + taper_start_station + CASE_11_FREEWAY_SIGN_FT["W5-1"]) / 2.0
 
 
+class SpeedGroup(NamedTuple):
+    """A reduced-speed shoulder plan's speed signs (``shoulder_speed_group``)."""
+
+    # The G20-5P / R2-1(XX) group: the first speed limit sign array.
+    entrance_r2_1: float
+    r2_10: float
+    # W3-5 stations, nearest R2-10 first (step k at R2-10 + 530 (k + 1)).
+    w3_5: tuple[float, ...]
+    w20_1: float
+
+
+def shoulder_speed_group(params: ScenarioParams, taper_start_station: float) -> SpeedGroup | None:
+    """Where a reduced-speed shoulder plan's speed signs go (#360).
+
+    Case 11's order, upstream first: W20-1, W3-5, R2-10, the G20-5P /
+    R2-1(XX) group, then the advance series to the taper (S-630-1 Sheet 7,
+    Case No. 11; Sheet 12, Case No. 24).  R2-10 sits 500 ft upstream of
+    the group (``R2_10_BEFORE_SPEED_ARRAY_FT``) and each W3-5 530 ft
+    beyond it (the Sheet 14 step, CHOSEN off Sheet 14).
+
+    - Case 11 plans (ruling Q1): the group at Case 11's 3,000 ft from the
+      taper start; W20-1 stays at its 5,200 ft.
+    - Every other plan (ruling Q2 (d)): the group at W20-1's Table 6B-1
+      station (A + B + C), and W20-1 one Table 6B-1 C spacing upstream of
+      the farthest W3-5, CHOSEN.  Table 6B-1's distances are minimums
+      (MUTCD 11th Ed., p. 773; §6B.04 ¶07, p. 771).
+
+    None when the plan has no reduced speed, isn't a shoulder closure, is
+    a near-intersection plan, or is a Case 26/27 plan (Sheet 14 places
+    its own, #344).  The one producer for the generators and the audit.
+    """
+    wz_speed = params.work_zone_speed_mph
+    if (
+        wz_speed is None
+        or wz_speed >= params.speed_mph
+        or params.closure_type != "shoulder"
+        or params.near_intersection
+        or sheet_14_freeway_series(params)
+    ):
+        return None
+    n_w3_5 = co_speed_reduction_signs(params.speed_mph, wz_speed)
+    if case_11_freeway_series(params):
+        entrance = taper_start_station + CASE_11_FREEWAY_SIGN_FT["R2-1"]
+        r2_10 = entrance + R2_10_BEFORE_SPEED_ARRAY_FT
+        w3_5 = tuple(r2_10 + 530.0 * (k + 1) for k in range(n_w3_5))
+        w20_1 = taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"]
+        return SpeedGroup(entrance, r2_10, w3_5, w20_1)
+    abc = advance_warning_spacing(params.speed_mph, params.road_type)
+    entrance = taper_start_station + abc["A"] + abc["B"] + abc["C"]
+    r2_10 = entrance + R2_10_BEFORE_SPEED_ARRAY_FT
+    w3_5 = tuple(r2_10 + 530.0 * (k + 1) for k in range(n_w3_5))
+    return SpeedGroup(entrance, r2_10, w3_5, w3_5[-1] + abc["C"])
+
+
+def construction_plaque_zone_length(
+    params: ScenarioParams, taper_start_station: float, sign_c_station: float
+) -> float:
+    """The signed length the in-zone G20-5P series is counted from.
+
+    W20-1's station, except on a reduced-speed plan whose W20-1 moved
+    upstream of the speed group (#360 ruling Q2): there the in-zone
+    plaques keep today's stations (ruling Q3), so the count stays keyed
+    to W20-1's former station, the group's.  The advance-area plaques
+    come from ``_fill_plaques``.  One producer for both shoulder
+    generators and the audit's plaque check.
+    """
+    group = shoulder_speed_group(params, taper_start_station)
+    if group is not None and not case_11_freeway_series(params):
+        return group.entrance_r2_1
+    return sign_c_station
+
+
+def _fill_plaques(
+    r2_10: float,
+    group: float,
+    in_zone_top: float,
+    taper_start_station: float,
+    signs: list[float],
+) -> tuple[tuple[float, ...], tuple[tuple[float, float], ...]]:
+    """Add G20-5P / R2-6P plaques upstream of the taper (#360 ruling Q3).
+
+    While a gap between consecutive plaques (R2-10 counts as one end) is
+    over 2,640 ft (S-630-1 Sheet 2 Note 4), add a plaque at the midpoint
+    of the widest gap between signs inside it (CHOSEN), the upstream gap
+    first on a tie.  A spot is legal only between the taper start and the
+    G20-5P / R2-1 group (Case 11 and Sheet 12 Case 24 draw nothing between
+    R2-10 and the group; R145 self-ruled) and at least 250 ft from every
+    other sign (Sheet 12 Fines Double Signing Note 4).  Returns the added
+    stations (upstream first) and the gaps still over 2,640 ft once no
+    legal spot remains, for the engineer note (Sheet 2 Note 4: "as
+    directed by the Engineer").
+    """
+    interval = COLORADO_OVERRIDES.construction_zone_plaque_interval_ft
+    added: list[float] = []
+    while True:
+        chain = sorted([r2_10, *added, in_zone_top], reverse=True)
+        pairs = zip(chain, chain[1:], strict=False)
+        long_gaps = [(hi, lo) for hi, lo in pairs if hi - lo > interval]
+        bounds = sorted({taper_start_station, r2_10, *signs, *added})
+        spot = None
+        for hi, lo in long_gaps:
+            spans = [
+                (b - a, (a + b) / 2.0)
+                for a, b in zip(bounds, bounds[1:], strict=False)
+                if a >= lo and b <= min(hi, group) and (b - a) / 2.0 >= 250.0
+            ]
+            if spans:
+                spot = max(spans)[1]
+                break
+        if spot is None:
+            return tuple(sorted(added, reverse=True)), tuple(long_gaps)
+        added.append(spot)
+
+
 class FinesDoubleEnvelope(NamedTuple):
     """A shoulder plan's Fines Double stations (``fines_double_envelope``)."""
 
@@ -352,6 +473,9 @@ class FinesDoubleEnvelope(NamedTuple):
     # True when the entrance R2-1 carries its own G20-5P (Sheet 14's
     # G20-5P / R2-1 group); otherwise it sits on an in-zone G20-5P plaque.
     entrance_has_own_plaque: bool
+    # #360 (Q3): plaque gaps still over 2,640 ft, (upstream, downstream)
+    # stations, for the engineer note (S-630-1 Sheet 2 Note 4).
+    long_gaps: tuple[tuple[float, float], ...] = ()
 
 
 def fines_double_envelope(
@@ -374,9 +498,43 @@ def fines_double_envelope(
     CHOSEN (#344 ruling S6): 265 ft from both, so Sheet 12 Note 4's 250 ft
     minimum holds.  The rest follow at most 2,640 ft apart to R2-11.  The
     one producer for both shoulder generators and the audit.
+
+    Any other reduced-speed shoulder plan (#360) takes R2-10 and the
+    G20-5P / R2-1 group from ``shoulder_speed_group``, upstream of the
+    taper.  The in-zone assemblies keep the generic stations, and
+    ``_fill_plaques`` adds plaques upstream of the taper until no plaque
+    gap is over 2,640 ft or no legal spot is left (``long_gaps``).
     """
     wz_len = params.work_zone_length_ft
     r2_11 = -500.0
+    group = shoulder_speed_group(params, taper_start_station)
+    if group is not None:
+        # The in-zone stations the generic formula gave before #360 (R2-10
+        # at the work zone + 500 ft).
+        span = wz_len + 1000.0
+        n_zone = max(1, math.ceil(span / 2640.0))
+        in_zone = tuple(r2_11 + (k + 0.5) * span / n_zone for k in range(n_zone))
+        sign_a, sign_b, _ = shoulder_advance_stations(params, taper_start_station)
+        signs = [sign_a, group.entrance_r2_1]
+        if sign_b is not None:
+            signs.append(sign_b)
+        if params.road_type == "freeway":
+            signs.append(second_shoulder_closed_station(params, taper_start_station))
+        added, long_gaps = _fill_plaques(
+            group.r2_10, group.entrance_r2_1, max(in_zone), taper_start_station, signs
+        )
+        assemblies = added + tuple(sorted(in_zone, reverse=True))
+        return FinesDoubleEnvelope(
+            r2_10=group.r2_10,
+            r2_11=r2_11,
+            downstream_r2_1=-1000.0,
+            length=group.r2_10 - r2_11,
+            n_assemblies=len(assemblies),
+            assemblies=assemblies,
+            entrance_r2_1=group.entrance_r2_1,
+            entrance_has_own_plaque=True,
+            long_gaps=long_gaps,
+        )
     if sheet_14_freeway_series(params):
         r2_10 = taper_start_station + SHEET_14_FREEWAY_SIGN_FT["R2-10"]
         entrance_r2_1 = taper_start_station + SHEET_14_FREEWAY_SIGN_FT["R2-1"]
@@ -640,7 +798,7 @@ def generate_shoulder_closure_divided(
     # so they do not interleave with the advance-warning A/B/C cluster
     # checked in ``validate_advance_warning_signs``.  Mirrored on both
     # sides of the divided roadway: the house mirroring (step 1).
-    total_zone_length = sign_c_station
+    total_zone_length = construction_plaque_zone_length(params, taper_start_station, sign_c_station)
     n_plaques = co_construction_plaques(total_zone_length)
     for k in range(n_plaques):
         station = (k + 0.5) * wz_len / n_plaques
@@ -1027,7 +1185,7 @@ def generate_shoulder_closure_undivided(
         )
 
     # 5. CONSTRUCTION ZONE plaques (G20-5P) at half-mile intervals.
-    total_zone_length = sign_c_station
+    total_zone_length = construction_plaque_zone_length(params, taper_start_station, sign_c_station)
     n_plaques = co_construction_plaques(total_zone_length)
     for k in range(n_plaques):
         station = (k + 0.5) * wz_len / n_plaques

@@ -1,0 +1,9 @@
+      1 FAILED tests/s630/test_advance_anchoring_360.py::test_audit_case_11_names_the_group_and_r2_10
+      1 FAILED tests/s630/test_advance_anchoring_360.py::test_audit_lists_every_placed_advance_sign
+      1 FAILED tests/s630/test_advance_anchoring_360.py::test_case_11_first_plaque_takes_the_drawn_var_slot
+      1 FAILED tests/s630/test_advance_anchoring_360.py::test_crew_sheet_places_r2_10_upstream_of_the_taper
+      2 FAILED tests/s630/test_advance_anchoring_360.py::test_in_zone_plaques_keep_their_stations
+      1 FAILED tests/s630/test_advance_anchoring_360.py::test_left_over_gap_gets_the_engineer_note
+    168 FAILED tests/s630/test_advance_anchoring_360.py::test_plaques_fill_to_2640_ft_or_report_the_gap
+    168 FAILED tests/s630/test_advance_anchoring_360.py::test_speed_signs_sit_upstream_of_the_taper_in_case_11_order
+343 failed, 3 passed in 4.26s

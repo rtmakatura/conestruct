@@ -1621,37 +1621,42 @@ def test_audit_fines_double_emitted_when_speed_reduced_shoulder_divided(
 def test_audit_fines_double_envelope_geometry_is_case_11_generic(
     client: TestClient,
 ) -> None:
-    """Envelope uses Case 11 generic 500/500 offsets uniformly — Phase B Q2."""
+    """R2-11 and the restoration R2-1 keep Case 11's generic 500/500 offsets
+    (Phase B Q2); R2-10 sits upstream of the taper since #360 (ruling Q2 (d))."""
     s = _shoulder_scenario()
     s["workZoneSpeed"] = 45  # 55 → 45
     res = client.post("/render/audit", headers=_auth_headers(), json=s)
     body = res.json()
     env = body["sections"]["fines_double"]["envelope"]
-    # 800 ft work zone: wz_start_st = 800, wz_end_st = 0
-    # R2-10 at 800 + 500 = 1300; R2-11 at 0 - 500 = -500
-    # downstream R2-1 at 0 - 1000 = -1000
-    # envelope length: 1300 - (-500) = 1800 ft
-    # n_assemblies: ceil(1800 / 2640) = 1
-    assert env["r2_10_station_ft"] == 1300.0
+    # 800 ft work zone, rural: taper start = 800 + 495 (buffer) + 183.33
+    # (L/3) = 1,478.33.  Group at A + B + C = 1,500 ft past it (2,978.33),
+    # R2-10 500 ft further (3,478.33); R2-11 at 0 - 500 = -500; downstream
+    # R2-1 at 0 - 1000 = -1000; length 3,978.33.  Assemblies: the in-zone
+    # one at 400 (unchanged), plus one filled at 2,728.33 so no plaque gap
+    # is over 2,640 ft.
+    assert env["r2_10_station_ft"] == pytest.approx(3478.333, abs=0.01)
+    assert env["entrance_r2_1_station_ft"] == pytest.approx(2978.333, abs=0.01)
     assert env["r2_11_station_ft"] == -500.0
     assert env["downstream_r2_1_station_ft"] == -1000.0
-    assert env["length_ft"] == 1800.0
-    assert env["n_assemblies"] == 1
+    assert env["length_ft"] == pytest.approx(3978.333, abs=0.01)
+    assert env["n_assemblies"] == 2
     assert env["downstream_r2_1_label"] == "SPEED LIMIT 55"
 
 
 def test_audit_fines_double_n_assemblies_scales_with_envelope_length(
     client: TestClient,
 ) -> None:
-    """Long work zone → more 2640 ft assemblies. 5000 ft wz → 6000 ft envelope
-    → ceil(6000/2640) = 3 assemblies."""
+    """Long work zone → more 2640 ft assemblies.  5000 ft wz: the in-zone
+    series keeps ceil(6000/2640) = 3 (#360 ruling Q3), and the fill adds one
+    upstream of the taper (R2-10 at 7,678.33 is 3,178 ft from the top
+    in-zone one at 4,500)."""
     s = _shoulder_scenario()
     s["workZoneSpeed"] = 45
     s["workLen"] = 5000.0
     res = client.post("/render/audit", headers=_auth_headers(), json=s)
     env = res.json()["sections"]["fines_double"]["envelope"]
-    assert env["length_ft"] == 6000.0
-    assert env["n_assemblies"] == 3
+    assert env["length_ft"] == pytest.approx(8178.333, abs=0.01)
+    assert env["n_assemblies"] == 4
 
 
 def test_audit_fines_double_absent_when_no_reduction(client: TestClient) -> None:

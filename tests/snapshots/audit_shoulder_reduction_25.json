@@ -16,14 +16,56 @@
         "cite": "MUTCD TABLE 6B-1",
         "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
       },
-      "result_text": "5 signs",
+      "result_text": "10 signs",
       "road_type_text": "Speed 55 mph, road_type = 'rural' -> Table 6B-1 category: rural",
       "sign_table": [
         {
           "Code": "W20-1",
-          "Distance from Taper (ft)": "1,500 upstream",
+          "Distance from Taper (ft)": "3,560 upstream",
           "Position": "C (furthest)",
+          "Station (ft)": "5,038"
+        },
+        {
+          "Code": "W3-5(40)",
+          "Distance from Taper (ft)": "3,060 upstream",
+          "Position": "W3-5 step 1",
+          "Station (ft)": "4,538"
+        },
+        {
+          "Code": "W3-5(30)",
+          "Distance from Taper (ft)": "2,530 upstream",
+          "Position": "W3-5 step 2",
+          "Station (ft)": "4,008"
+        },
+        {
+          "Code": "R2-10",
+          "Distance from Taper (ft)": "2,000 upstream",
+          "Position": "R2-10",
+          "Station (ft)": "3,478"
+        },
+        {
+          "Code": "R2-1",
+          "Distance from Taper (ft)": "1,500 upstream",
+          "Position": "Speed limit group",
           "Station (ft)": "2,978"
+        },
+        {
+          "Code": "G20-5P",
+          "Distance from Taper (ft)": "1,500 upstream",
+          "Position": "Speed limit group",
+          "Station (ft)": "2,978"
+        },
+        {
+          "Code": "G20-5P",
+          "Distance from Taper (ft)": "1,250 upstream",
+          "Position": "Fines Double plaque",
+          "Station (ft)": "2,728"
+        },
+        {
+          "Code": "R2-6P",
+          "Distance from Taper (ft)": "1,250 upstream",
+          "Position": "Fines Double plaque",
+          "Station (ft)": "2,728"
         },
         {
           "Code": "W20-2",
@@ -32,26 +74,14 @@
           "Station (ft)": "2,478"
         },
         {
-          "Code": "W3-5(40)",
-          "Distance from Taper (ft)": "882 upstream",
-          "Position": "W3-5 step 1",
-          "Station (ft)": "2,360"
-        },
-        {
           "Code": "W21-5aR",
           "Distance from Taper (ft)": "500 upstream",
           "Position": "A (nearest)",
           "Station (ft)": "1,978"
-        },
-        {
-          "Code": "W3-5(30)",
-          "Distance from Taper (ft)": "352 upstream",
-          "Position": "W3-5 step 2",
-          "Station (ft)": "1,830"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
-      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft; reduced speed: the speed limit group at A + B + C, R2-10 500 ft upstream of it (S-630-1 Sheet 12 Case 24), each W3-5 530 ft beyond, W20-1 one C beyond the farthest W3-5"
     },
     "buffer": {
       "buffer_ft": 495.0,
@@ -76,13 +106,13 @@
       "checks": [
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
-          "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 15 left, 15 right.",
+          "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 18 left, 18 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
-          "detail": "Zone length: 2,978 ft. Required: 2. Placed: 3.",
+          "detail": "Zone length: 2,978 ft. Required: 2. Placed: 5.",
           "label": "G20-5P Work Zone signs every 2,640 ft",
           "pass": true
         },
@@ -128,10 +158,10 @@
         "downstream_r2_1_label": "SPEED LIMIT 55",
         "downstream_r2_1_station_ft": -1000.0,
         "entrance_r2_1_label": "SPEED LIMIT 30",
-        "entrance_r2_1_station_ft": 600.0,
-        "length_ft": 1800.0,
-        "n_assemblies": 1,
-        "r2_10_station_ft": 1300.0,
+        "entrance_r2_1_station_ft": 2978.333333333333,
+        "length_ft": 3978.333333333333,
+        "n_assemblies": 2,
+        "r2_10_station_ft": 3478.333333333333,
         "r2_11_station_ft": -500.0
       },
       "operational_notes": [

@@ -16,14 +16,50 @@
         "cite": "MUTCD TABLE 6B-1",
         "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
       },
-      "result_text": "4 signs",
+      "result_text": "9 signs",
       "road_type_text": "Speed 55 mph, road_type = 'rural' -> Table 6B-1 category: rural",
       "sign_table": [
         {
           "Code": "W20-1",
-          "Distance from Taper (ft)": "1,500 upstream",
+          "Distance from Taper (ft)": "3,030 upstream",
           "Position": "C (furthest)",
+          "Station (ft)": "5,708"
+        },
+        {
+          "Code": "W3-5(45)",
+          "Distance from Taper (ft)": "2,530 upstream",
+          "Position": "W3-5 step 1",
+          "Station (ft)": "5,208"
+        },
+        {
+          "Code": "R2-10",
+          "Distance from Taper (ft)": "2,000 upstream",
+          "Position": "R2-10",
+          "Station (ft)": "4,678"
+        },
+        {
+          "Code": "R2-1",
+          "Distance from Taper (ft)": "1,500 upstream",
+          "Position": "Speed limit group",
           "Station (ft)": "4,178"
+        },
+        {
+          "Code": "G20-5P",
+          "Distance from Taper (ft)": "1,500 upstream",
+          "Position": "Speed limit group",
+          "Station (ft)": "4,178"
+        },
+        {
+          "Code": "G20-5P",
+          "Distance from Taper (ft)": "1,250 upstream",
+          "Position": "Fines Double plaque",
+          "Station (ft)": "3,928"
+        },
+        {
+          "Code": "R2-6P",
+          "Distance from Taper (ft)": "1,250 upstream",
+          "Position": "Fines Double plaque",
+          "Station (ft)": "3,928"
         },
         {
           "Code": "W20-2",
@@ -36,16 +72,10 @@
           "Distance from Taper (ft)": "500 upstream",
           "Position": "A (nearest)",
           "Station (ft)": "3,178"
-        },
-        {
-          "Code": "W3-5(45)",
-          "Distance from Taper (ft)": "352 upstream",
-          "Position": "W3-5 step 1",
-          "Station (ft)": "3,030"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
-      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft; reduced speed: the speed limit group at A + B + C, R2-10 500 ft upstream of it (S-630-1 Sheet 12 Case 24), each W3-5 530 ft beyond, W20-1 one C beyond the farthest W3-5"
     },
     "buffer": {
       "buffer_ft": 495.0,
@@ -70,13 +100,13 @@
       "checks": [
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
-          "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 16 left, 16 right.",
+          "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 19 left, 19 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
-          "detail": "Zone length: 4,178 ft. Required: 2. Placed: 4.",
+          "detail": "Zone length: 4,178 ft. Required: 2. Placed: 6.",
           "label": "G20-5P Work Zone signs every 2,640 ft",
           "pass": true
         },
@@ -122,10 +152,10 @@
         "downstream_r2_1_label": "SPEED LIMIT 55",
         "downstream_r2_1_station_ft": -1000.0,
         "entrance_r2_1_label": "SPEED LIMIT 45",
-        "entrance_r2_1_station_ft": 1500.0,
-        "length_ft": 3000.0,
-        "n_assemblies": 2,
-        "r2_10_station_ft": 2500.0,
+        "entrance_r2_1_station_ft": 4178.333333333334,
+        "length_ft": 5178.333333333334,
+        "n_assemblies": 3,
+        "r2_10_station_ft": 4678.333333333334,
         "r2_11_station_ft": -500.0
       },
       "operational_notes": [

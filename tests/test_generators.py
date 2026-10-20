@@ -536,9 +536,10 @@ def test_shoulder_divided_with_reduction_emits_mirrored_envelope() -> None:
     """Reduction on divided shoulder → mirrored R2-10/R2-11 (2 each) and
     mirrored R2-1 entrance + downstream (4 total) plus mirrored
     G20-5P/R2-6P pair per envelope assembly.
-    800 ft wz → 1800 ft envelope → ceil(1800/2640)=1 assembly →
+    800 ft wz → the in-zone assembly at 400 plus one filled upstream of
+    the taper (#360 ruling Q3: R2-10 at 3,478.33 is 3,078 ft from it) →
     2×R2-10 + 2×R2-11 + 4×R2-1 (entrance pair + downstream pair) +
-    2×G20-5P(envelope) + 2×R2-6P."""
+    4×G20-5P(envelope) + 4×R2-6P."""
     placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
     assert _count_label(placements, "R2-10") == 2
     assert _count_label(placements, "R2-11") == 2
@@ -546,7 +547,7 @@ def test_shoulder_divided_with_reduction_emits_mirrored_envelope() -> None:
     assert _count_label(placements, "R2-1") == 4
     # R2-6P is envelope-only (no intra-work-zone R2-6P emission); equals
     # 2 × n_assemblies for divided.
-    assert _count_label(placements, "R2-6P") == 2
+    assert _count_label(placements, "R2-6P") == 4
 
 
 def test_shoulder_divided_g20_5p_coexists_intra_zone_and_envelope() -> None:
@@ -558,11 +559,13 @@ def test_shoulder_divided_g20_5p_coexists_intra_zone_and_envelope() -> None:
     no_reduction = generate_shoulder_closure_divided(_shoulder_divided_params(None))
     n_no_reduction = _count_label(no_reduction, "G20-5P")
     n_with_reduction = _count_label(placements, "G20-5P")
-    # Reduction adds the envelope assembly pair: 2 × n_assemblies = 2.
-    # (wz = 800 ft → §6C.06 plaques at 200/600, envelope at 400 — distinct
-    # stations, no exact-coincidence duplicate, so the dedup pass is a no-op
-    # here and the coexistence count is preserved.)
-    assert n_with_reduction - n_no_reduction == 2
+    # Reduction adds the envelope assembly pairs (2 × n_assemblies = 4) and
+    # the speed limit group's own G20-5P pair (#360): 6.  (wz = 800 ft →
+    # §6C.06 plaques at 200/600, still counted from W20-1's former station
+    # (#360 ruling Q3); envelope at 400 and 2,728.33 — distinct stations, no
+    # exact-coincidence duplicate, so the dedup pass is a no-op here and
+    # the coexistence count is preserved.)
+    assert n_with_reduction - n_no_reduction == 6
 
 
 def test_generators_emit_no_exact_duplicate_placements() -> None:
@@ -633,8 +636,9 @@ def test_generators_emit_no_exact_duplicate_placements() -> None:
 
 
 def test_shoulder_divided_large_envelope_more_assemblies() -> None:
-    """5000 ft wz with reduction → 6000 ft envelope → ceil(6000/2640)=3
-    assemblies → 6 mirrored R2-6P, 6 mirrored envelope-G20-5P."""
+    """5000 ft wz with reduction → the in-zone series keeps ceil(6000/2640)=3
+    assemblies, and #360's fill adds one upstream of the taper → 8 mirrored
+    R2-6P, 8 mirrored envelope-G20-5P."""
     params = ScenarioParams(
         speed_mph=55,
         num_lanes=2,
@@ -648,7 +652,7 @@ def test_shoulder_divided_large_envelope_more_assemblies() -> None:
         work_zone_speed_mph=45,
     )
     placements = generate_shoulder_closure_divided(params)
-    assert _count_label(placements, "R2-6P") == 6
+    assert _count_label(placements, "R2-6P") == 8
 
 
 def test_shoulder_undivided_with_reduction_single_side() -> None:
@@ -758,21 +762,20 @@ def test_flagger_no_reduction_emits_no_envelope() -> None:
 
 
 def test_shoulder_divided_envelope_station_geometry() -> None:
-    """R2-10 sits at wz_start+500, R2-11 at wz_end-500, downstream R2-1
-    at wz_end-1000, entrance R2-1 at (n_plaques-0.5)*wz_len/n_plaques
-    (G4 — upstream-most §6C.06(A) plaque anchor, inside wz)."""
+    """R2-11 sits at wz_end-500 and downstream R2-1 at wz_end-1000.  Since
+    #360 (ruling Q2 (d)) the entrance R2-1 group sits at W20-1's former
+    Table 6B-1 station and R2-10 500 ft upstream of it."""
     placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
     r2_10_stations = sorted(p.station_ft for p in placements if p.label == "R2-10")
     r2_11_stations = sorted(p.station_ft for p in placements if p.label == "R2-11")
     r2_1_stations = sorted(p.station_ft for p in placements if p.label == "R2-1")
-    # 800 ft wz: wz_start = 800, wz_end = 0. n_plaques for the harness
-    # 55 mph rural divided shoulder yields 3 plaques over the total
-    # signed length; upstream-most plaque sits at (3-0.5)/3 * 800 = 600.
-    assert r2_10_stations == [1300.0, 1300.0]
+    # 800 ft wz, 55 mph rural: taper start = 800 + 495 + 183.33 = 1,478.33;
+    # group at + 500 + 500 + 500 = 2,978.33; R2-10 at 3,478.33.
+    assert r2_10_stations == pytest.approx([3478.333, 3478.333], abs=0.01)
     assert r2_11_stations == [-500.0, -500.0]
-    # Entrance R2-1 (2× mirrored) at 600 ft + downstream R2-1 (2× mirrored)
-    # at -1000 ft — driver-encounter order.
-    assert r2_1_stations == [-1000.0, -1000.0, 600.0, 600.0]
+    # Downstream R2-1 (2× mirrored) at -1000 ft + entrance R2-1 (2× mirrored)
+    # at the group.
+    assert r2_1_stations == pytest.approx([-1000.0, -1000.0, 2978.333, 2978.333], abs=0.01)
 
 
 # ---------------------------------------------------------------------------
@@ -904,8 +907,9 @@ def test_flagger_with_reduction_emits_w3_5_per_direction() -> None:
 def test_shoulder_divided_w3_5_station_geometry() -> None:
     """W3-5 stations follow the fixed-interval rule: rightmost (closest
     to R2-10) at r2_10_station + 530; each further upstream at +530 ft.
-    55→30 stepped (N=2, wz=800, r2_10 at 1300): k=0 at 1830 carries
-    W3-5(30); k=1 at 2360 carries W3-5(40). Mirrored, so 2 each."""
+    55→30 stepped (N=2, wz=800, r2_10 at 3,478.33 since #360): k=0 at
+    4,008.33 carries W3-5(30); k=1 at 4,538.33 carries W3-5(40). Mirrored,
+    so 2 each."""
     params = ScenarioParams(
         speed_mph=55,
         num_lanes=2,
@@ -921,8 +925,8 @@ def test_shoulder_divided_w3_5_station_geometry() -> None:
     placements = generate_shoulder_closure_divided(params)
     stations_30 = sorted(p.station_ft for p in placements if p.label == "W3-5(30)")
     stations_40 = sorted(p.station_ft for p in placements if p.label == "W3-5(40)")
-    assert stations_30 == [1830.0, 1830.0]
-    assert stations_40 == [2360.0, 2360.0]
+    assert stations_30 == pytest.approx([4008.333, 4008.333], abs=0.01)
+    assert stations_40 == pytest.approx([4538.333, 4538.333], abs=0.01)
 
 
 # ---------------------------------------------------------------------------

@@ -11,6 +11,7 @@ Authoritative sources:
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from typing import Literal
@@ -1733,18 +1734,22 @@ def validate_fines_double_envelope(
     # anchored to the Note-4 G20-5P assembly, always inside wz
     # (0 < station <= wz_len).  A Case 26/27 plan places it at Sheet 14's
     # G20-5P / R2-1 group upstream of the taper (#344), so there the
-    # bound is the envelope: downstream of R2-10.
+    # bound is the envelope: downstream of R2-10.  Since #360 every other
+    # shoulder plan does too (layout.shoulder_speed_group); a
+    # near-intersection plan keeps its own.
     entrance_upper = params.work_zone_length_ft
     entrance_where = "inside the work zone"
+    r2_10_stations = [
+        p.station_ft
+        for p in placements
+        if p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "R2-10"
+    ]
     if sheet_14_freeway_series(params):
-        entrance_upper = max(
-            (
-                p.station_ft
-                for p in placements
-                if p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "R2-10"
-            ),
-            default=0.0,
-        )
+        entrance_upper = max(r2_10_stations, default=0.0)
+        entrance_where = "inside the Fines Double envelope"
+    elif params.closure_type == "shoulder" and not params.near_intersection:
+        # A missing R2-10 is MISSING_R2_10's finding, not this one's.
+        entrance_upper = max(r2_10_stations, default=math.inf)
         entrance_where = "inside the Fines Double envelope"
     has_entrance_r2_1 = any(
         p.device_type == DeviceType.SIGN_GENERIC

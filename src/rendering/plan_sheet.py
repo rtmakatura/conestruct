@@ -4170,6 +4170,30 @@ def _draw_advance_table_one_column(
         y[0] -= layout.row_pitch
 
 
+def _draw_fitted_description(
+    c: canvas.Canvas, desc_x: float, col_x_right: float, y: float, desc: str, dist: float
+) -> None:
+    """One two-column row's DESCRIPTION and DISTANCE, never overlapping.
+
+    #360: the entrance R2-1's "SPEED LIMIT XX (work-zone speed posting)"
+    is ~141 pt at Helvetica 7, wider than the column leaves before its
+    distance (it already ran into "1060 ft" on Case 26/27 sheets).  A
+    description that doesn't fit shrinks until it clears the distance by
+    4 pt, floored at 5.5 pt; one that fits is drawn exactly as before.
+    """
+    dist_text = f"{dist:.0f} ft"
+    room = col_x_right - c.stringWidth(dist_text, "Helvetica", 7) - 4.0 - desc_x
+    size = 7.0
+    width = c.stringWidth(desc, "Helvetica", size)
+    if width > room:
+        size = max(5.5, size * room / width)
+    c.setFont("Helvetica", size)
+    c.drawString(desc_x, y, desc)
+    if size != 7.0:
+        c.setFont("Helvetica", 7)
+    c.drawRightString(col_x_right, y, dist_text)
+
+
 def _draw_advance_table_two_column(
     c: canvas.Canvas,
     advance: list[tuple[str, str, float]],
@@ -4201,8 +4225,12 @@ def _draw_advance_table_two_column(
     # Per-column DESCRIPTION x-offset is narrower than 1-col mode (30
     # vs 60) since each column is half-width; advance descriptions
     # ("RIGHT SHOULDER CLOSED AHEAD" is the longest at ~94 pt) fit
-    # comfortably in the remaining ~125 pt before DISTANCE.
-    desc_dx = 30.0
+    # comfortably in the remaining ~125 pt before DISTANCE.  #360: never
+    # less than the widest code + 4 pt ("W21-5aR" in bold 7 is ~30 pt and
+    # ran into its description); the description shrinks to fit instead.
+    desc_dx = max(
+        30.0, max(c.stringWidth(code, "Helvetica-Bold", 7) for code, _, _ in advance) + 4.0
+    )
 
     column_header("CODE", left_x)
     column_header("DESCRIPTION", left_x + desc_dx)
@@ -4225,17 +4253,13 @@ def _draw_advance_table_two_column(
             c.setFillColor(colors.black)
             c.setFont("Helvetica-Bold", 7)
             c.drawString(left_x, y[0], code)
-            c.setFont("Helvetica", 7)
-            c.drawString(left_x + desc_dx, y[0], desc)
-            c.drawRightString(left_x_right, y[0], f"{dist:.0f} ft")
+            _draw_fitted_description(c, left_x + desc_dx, left_x_right, y[0], desc, dist)
         if r_row is not None:
             code, desc, dist = r_row
             c.setFillColor(colors.black)
             c.setFont("Helvetica-Bold", 7)
             c.drawString(right_x, y[0], code)
-            c.setFont("Helvetica", 7)
-            c.drawString(right_x + desc_dx, y[0], desc)
-            c.drawRightString(right_x_right, y[0], f"{dist:.0f} ft")
+            _draw_fitted_description(c, right_x + desc_dx, right_x_right, y[0], desc, dist)
         y[0] -= layout.row_pitch
 
 

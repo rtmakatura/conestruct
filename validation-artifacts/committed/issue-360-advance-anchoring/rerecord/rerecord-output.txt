@@ -1,0 +1,7 @@
+re-recorded tests\snapshots\corpus\grid_reduced_55_50.json
+re-recorded tests\snapshots\corpus\grid_reduced_55_45.json
+re-recorded tests\snapshots\corpus\grid_reduced_65_60.json
+re-recorded tests\snapshots\corpus\grid_reduced_75_65.json
+re-recorded tests\snapshots\corpus\grid_reduced_75_70.json
+re-recorded tests\snapshots\audit_shoulder_reduction_10.json
+re-recorded tests\snapshots\audit_shoulder_reduction_25.json

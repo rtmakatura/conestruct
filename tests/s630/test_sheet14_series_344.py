@@ -167,11 +167,14 @@ def test_validator_flags_a_sheet_14_sign_short() -> None:
     [_common(65, 55), {**_common(65, 60), "roadType": "rural_divided"}],
     ids=["freeway-65-55-case-11", "rural-divided-65-60"],
 )
-def test_plans_outside_sheet_14_keep_r2_10_at_the_work_zone(
+def test_plans_outside_sheet_14_place_r2_10_upstream_of_the_taper(
     scenario: dict[str, Any],
     api: TestClient,  # noqa: F811
 ) -> None:
-    """S3: only Sheet 14 plans move R2-10; others keep work zone + 500 ft."""
+    """S3 kept work zone + 500 ft for plans outside Sheet 14; #360 (rulings
+    Q1, Q2) moves R2-10 upstream of the taper, 500 ft before the speed limit
+    group, so the advance table lists it."""
     audit = _post(api, "/render/audit", scenario).json()
     env = audit["sections"]["fines_double"]["envelope"]
-    assert env["r2_10_station_ft"] == scenario["workLen"] + 500.0
+    assert env["r2_10_station_ft"] - env["entrance_r2_1_station_ft"] == 500.0
+    assert "R2-10" in {r["Code"] for r in audit["sections"]["advance"]["sign_table"]}

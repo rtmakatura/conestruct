@@ -33,6 +33,7 @@ from src.generation.layout import (
     near_intersection_stations,
     rightmost_lane_assumption_active,
     shoulder_advance_stations,
+    shoulder_speed_group,
 )
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
@@ -568,6 +569,17 @@ def build_narrative_context(
             r2_10_distance = "500 ft upstream of work zone"
             r2_11_distance = "500 ft downstream of work zone"
             restoration_distance = "1,000 ft downstream of work zone"
+        entrance_distance = "Within work zone (paired with G20-5P plaque)"
+        if shoulder_speed_group(params, taper_start_station) is not None:
+            # #360: R2-10 and the speed limit group sit upstream of the taper
+            # (Case 11's order).  Read off the placements, so a limited sight
+            # distance shift (#331) moves the text with the signs.
+            r2_10_placed = max(p.station_ft for p in mainline_placements if p.label == "R2-10")
+            r2_10_distance = (
+                f"{r2_10_placed - taper_start_station:,.0f} ft upstream of taper "
+                "(500 ft before the speed limit group)"
+            )
+            entrance_distance = "500 ft past R2-10, on its own G20-5P plaque"
         sign_schedule.extend(
             [
                 {
@@ -575,7 +587,7 @@ def build_narrative_context(
                     "description": (
                         f"SPEED LIMIT {params.work_zone_speed_mph} (work-zone speed posting)"
                     ),
-                    "distance": "Within work zone (paired with G20-5P plaque)",
+                    "distance": entrance_distance,
                 },
                 {
                     "code": "R2-10",

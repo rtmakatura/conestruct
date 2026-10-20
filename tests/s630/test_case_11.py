@@ -231,16 +231,18 @@ def test_case_11b_no_trigger_condition(
 def test_case_11b_fines_double_envelope_geometry(
     case_11b: tuple[list[DevicePlacement], dict[str, Any]],
 ) -> None:
-    # V1-Wide Item 3 generic envelope at wz_len=1000 ft:
-    #   R2-10 at wz_start + 500 = +1500
-    #   R2-11 at wz_end   − 500 = −500
+    # #360 (Q1): Case 11's drawn stations at wz_len=1000 ft.  Taper start
+    # = 1,000 + 495 (Table 6B-2 buffer at 55) + 183.33 (L/3 = 55 x 10 / 3)
+    # = 1,678.33.
+    #   R2-10 at taper start + 3,500 = 5,178.33 (Case 11; Sheet 12 Case 24)
+    #   R2-11 at wz_end − 500 = −500
     #   downstream R2-1 at wz_end − 1000 = −1000
     _, audit = case_11b
     env = audit["fines_double"]["envelope"]
-    assert env["r2_10_station_ft"] == 1500.0
+    assert env["r2_10_station_ft"] == pytest.approx(1678.333 + 3500.0, abs=0.01)
     assert env["r2_11_station_ft"] == -500.0
     assert env["downstream_r2_1_station_ft"] == -1000.0
-    assert env["length_ft"] == 2000.0
+    assert env["length_ft"] == pytest.approx(5178.333 + 500.0, abs=0.01)
 
 
 def test_case_11b_entrance_r2_1_speed_limit_50(
@@ -250,9 +252,10 @@ def test_case_11b_entrance_r2_1_speed_limit_50(
     _, audit = case_11b
     env = audit["fines_double"]["envelope"]
     assert env["entrance_r2_1_label"] == "SPEED LIMIT 50"
-    # Entrance R2-1 co-located with the first internal G20-5P at
-    # wz_start − (wz_len / 6) = 1000 − 166.67 = 833.33 ft.
-    assert_within(env["entrance_r2_1_station_ft"], 833.33, name="entrance R2-1")
+    # #360 (Q1): the G20-5P / R2-1 group at Case 11's 3,000 ft from the
+    # taper start (1,678.33), 500 ft downstream of R2-10.
+    assert_within(env["entrance_r2_1_station_ft"], 4678.33, name="entrance R2-1")
+    assert env["r2_10_station_ft"] - env["entrance_r2_1_station_ft"] == pytest.approx(500.0)
 
 
 def test_case_11b_downstream_r2_1_speed_limit_55(

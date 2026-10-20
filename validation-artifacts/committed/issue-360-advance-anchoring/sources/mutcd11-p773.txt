@@ -1,0 +1,75 @@
+MUTCD 11th Edition                                                                                               Page 773
+
+                    Table 6B1. Recommended Advance
+                       Warning Sign Minimum Spacing
+
+                               Road Type     Distance between Signs**
+
+                    Urban (low speed)*    A           B                C
+                    Urban (high speed)*
+                    Rural                 100 feet    100 feet    100 feet
+                    Expressway / Freeway
+                                          350 feet    350 feet    350 feet
+
+                                          500 feet    500 feet    500 feet
+
+                                          1,000 feet  1,500 feet  2,640 feet
+
+                * Speed category to be determined by the highway agency or owner of site roadways open
+                  to public travel.
+
+               ** The column headings A, B, and C are the dimensions shown in Figures 6P1 through
+                  6P54 The A dimension is the distance from the transition or point of restriction to the
+                  first sign. The B dimension is the distance between the first and second signs. The C
+                  dimension is the distance between the second and third signs. (The "first sign" is the
+                  sign in a threesign series that is closest to the TTC zone. The "third sign" is the sign that
+                  is furthest upstream from the TTC zone.)
+
+Section 6B.06 Activity Area
+
+  Support:
+01 The activity area is the section of the highway where the work activity takes place. It is comprised of the work
+
+  space, the traffic space, and the buffer space.
+02 The work space is that portion of the highway closed to road users and set aside for workers, equipment, and
+
+  material, and a shadow vehicle if one is used upstream. Work spaces are usually delineated for road users by
+  channelizing devices or, to exclude vehicles and pedestrians, by temporary barriers.
+  Option:
+03 The work space may be stationary or may move as work progresses.
+  Guidance:
+
+04 Since there might be several work spaces (some even separated by several miles) within the project limits,
+  each work space should be adequately signed to inform road users and reduce confusion.
+  Support:
+
+05 The traffic space is the portion of the highway in which road users are routed through the activity area.
+06 The buffer space is a lateral and/or longitudinal area that separates road user flow from the work space or an
+
+  unsafe area, and might provide some recovery space for an errant vehicle.
+  Guidance:
+
+07 Neither work activity nor storage of equipment, vehicles, or material should occur within a buffer space.
+  Option:
+
+08 Buffer spaces may be positioned either longitudinally or laterally with respect to the direction of road user
+  flow. The activity area may contain one or more lateral or longitudinal buffer spaces.
+
+09 A longitudinal buffer space may be placed in advance of a work space.
+10 The longitudinal buffer space may also be used to separate opposing road user flows that use portions of the
+
+  same traffic lane, as shown in Figure 6B-2.
+11 If a longitudinal buffer space is used, the values shown in Table 6B-2 may be used to determine the length of
+
+  the longitudinal buffer space.
+  Support:
+12 Typically, the buffer space is formed as a traffic island and defined by channelizing devices.
+13 When a shadow vehicle, arrow board, or changeable message sign is placed in a closed lane in advance of
+  a work space, only the area upstream of the vehicle, arrow board, or changeable message sign constitutes the
+  buffer space.
+  Option:
+14 The lateral buffer space may be used to separate the traffic space from the work space, as shown in Figures
+  6B-1 and 6B-2, or such areas as excavations or pavement-edge drop-offs. A lateral buffer space also may be used
+  between two travel lanes, especially those carrying opposing flows.
+
+December 2023                                                                                                    Sect. 6B.06

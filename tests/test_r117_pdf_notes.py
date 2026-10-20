@@ -243,9 +243,11 @@ def test_case_27_keeps_its_four_two_column_rows() -> None:
     stays two columns.  It drew 4 of its 8 entries before #235 (R150 B)
     moved the legal trailer to the title block; now all 8 fit.  #334: 75 to
     40 isn't Case 27's 75 to 65 step-down, so the plan cites Case 11 and
-    places no W20-2 (Q1): 7 entries."""
+    places no W20-2 (Q1): 7 entries.  #360 (Q1, Q3): the speed limit group,
+    R2-10 and the filled plaques join the advance area, 17 entries; page 1
+    draws 13 and names the rest in the "+N MORE" line (page 1's fit loop)."""
     lines = _notes_lines(_case27_pdf())
-    assert _advance_rows(lines) == 7
-    assert not any("MORE ADVANCE SIGNS" in ln["text"] for ln in lines)
+    assert _advance_rows(lines) == 13
+    assert any(ln["text"].startswith("+4 MORE ADVANCE SIGNS (W3-5, W20-1") for ln in lines)
     assert any("DISTANCE CODE" in ln["text"] for ln in lines)  # still two columns
     assert _inside(lines)
