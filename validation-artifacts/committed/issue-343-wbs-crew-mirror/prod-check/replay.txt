@@ -1,0 +1,9 @@
+1. divided shoulder (Case 11, 55 mph) /render/markdown -> 200
+   present: Place matching sign on left side.
+   present: Place matching plaques on left side.
+   present: Place matching signs on left side at each location.
+   present: Remove both sides at each station.
+   present: posts signs on both sides of the roadway by choice
+   absent: signs go on the right side only
+2. work beyond shoulder, divided freeway /render/markdown -> 400: {"detail":"This scenario type isn't available yet. Currently supported: flagger_lane_closure, near_intersection, shoulder."}
+PASS 2/2
