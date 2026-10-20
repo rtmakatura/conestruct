@@ -102,7 +102,11 @@ def test_case_26_entrance_r2_1_speed_limit_60(
     _, audit = case_26
     env = audit["fines_double"]["envelope"]
     assert env["entrance_r2_1_label"] == "SPEED LIMIT 60"
-    assert_within(env["entrance_r2_1_station_ft"], 833.33, name="entrance R2-1")
+    # #344 (S3): at Sheet 14's 1,060 ft from the taper start, upstream of
+    # the taper (was the upstream-most in-zone G20-5P, 833.33 ft).
+    assert_within(
+        env["entrance_r2_1_station_ft"] - _taper_start(audit), 1060.0, name="entrance R2-1"
+    )
 
 
 def test_case_26_downstream_r2_1_speed_limit_65_at_minus_1000(
@@ -122,12 +126,19 @@ def test_case_26_r2_11_at_minus_500(
     assert audit["fines_double"]["envelope"]["r2_11_station_ft"] == -500.0
 
 
-def test_case_26_r2_10_at_plus_500(
+def test_case_26_r2_10_at_sheet_14_1580(
     case_26: tuple[list[DevicePlacement], dict[str, Any]],
 ) -> None:
-    # R2-10 at wz_start + 500.  wz_start = workLen = 1000 ft, so 1500.
+    # #344 (S3): R2-10 at Sheet 14's 1,580 ft from the taper start (was
+    # wz_start + 500 = 1,500 ft, downstream of the taper).
     _, audit = case_26
-    assert audit["fines_double"]["envelope"]["r2_10_station_ft"] == 1500.0
+    r2_10 = audit["fines_double"]["envelope"]["r2_10_station_ft"]
+    assert_within(r2_10 - _taper_start(audit), 1580.0, name="R2-10")
+
+
+def _taper_start(audit: dict[str, Any]) -> float:
+    """The harness plan's taper start: work zone + buffer + L/3."""
+    return 1000.0 + audit["buffer"]["buffer_ft"] + audit["taper"]["L_required_ft"]
 
 
 def test_case_26_omits_w5_1_reduced(

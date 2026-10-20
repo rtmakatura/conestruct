@@ -19,6 +19,7 @@ from typing import Any, NamedTuple
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
     CASE_11_FREEWAY_SIGN_FT,
+    SHEET_14_FREEWAY_SIGN_FT,
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
@@ -39,6 +40,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     case_11_freeway_series,
+    sheet_14_freeway_series,
     shoulder_closed_sign_code,
 )
 
@@ -250,7 +252,9 @@ def shoulder_advance_stations(
     Table 6B-1's A / A+B / A+B+C from the taper start, except on a plan
     that cites Case 11 (``case_11_freeway_series``, #334): the first
     SHOULDER CLOSED sign at Case 11's 2,000 ft, W20-1 at 5,200 ft and no
-    W20-2 (B is None; ruling Q1).  The one producer for the generators,
+    W20-2 (B is None; ruling Q1).  A Case 26/27 plan
+    (``sheet_14_freeway_series``, #344) takes Sheet 14's 1,320 ft and
+    2,640 ft, also with no W20-2.  The one producer for the generators,
     the audit and the crew sheet.
     """
     if case_11_freeway_series(params):
@@ -258,6 +262,12 @@ def shoulder_advance_stations(
             taper_start_station + CASE_11_FREEWAY_SIGN_FT["A"],
             None,
             taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"],
+        )
+    if sheet_14_freeway_series(params):
+        return (
+            taper_start_station + SHEET_14_FREEWAY_SIGN_FT["A"],
+            None,
+            taper_start_station + SHEET_14_FREEWAY_SIGN_FT["C"],
         )
     abc = advance_warning_spacing(params.speed_mph, params.road_type)
     sign_a = taper_start_station + abc["A"]
@@ -268,14 +278,86 @@ def shoulder_advance_stations(
 def second_shoulder_closed_station(params: ScenarioParams, taper_start_station: float) -> float:
     """The freeway plan's second (downstream) SHOULDER CLOSED sign station.
 
-    Case 11's 1,000 ft (#334).  A Case 26/27 plan keeps the pre-#334
-    midpoint of the first sign and the W5-1 would-be station (taper start
-    + 500 ft) until #344 builds Sheet 14's 530 ft.
+    Case 11's 1,000 ft (#334), or Sheet 14's 530 ft on a Case 26/27 plan
+    (#344).  Any other plan keeps the pre-#334 midpoint of the first sign
+    and the W5-1 would-be station (taper start + 500 ft).
     """
     if case_11_freeway_series(params):
         return taper_start_station + CASE_11_FREEWAY_SIGN_FT["A2"]
+    if sheet_14_freeway_series(params):
+        return taper_start_station + SHEET_14_FREEWAY_SIGN_FT["A2"]
     sign_a, _, _ = shoulder_advance_stations(params, taper_start_station)
     return (sign_a + taper_start_station + CASE_11_FREEWAY_SIGN_FT["W5-1"]) / 2.0
+
+
+class FinesDoubleEnvelope(NamedTuple):
+    """A shoulder plan's Fines Double stations (``fines_double_envelope``)."""
+
+    r2_10: float
+    r2_11: float
+    downstream_r2_1: float
+    length: float
+    n_assemblies: int
+    # The G20-5P / R2-6P assembly stations, upstream first on Sheet 14.
+    assemblies: tuple[float, ...]
+    entrance_r2_1: float
+    # True when the entrance R2-1 carries its own G20-5P (Sheet 14's
+    # G20-5P / R2-1 group); otherwise it sits on an in-zone G20-5P plaque.
+    entrance_has_own_plaque: bool
+
+
+def fines_double_envelope(
+    params: ScenarioParams, taper_start_station: float, sign_c_station: float
+) -> FinesDoubleEnvelope:
+    """The Fines Double envelope of a reduced-speed shoulder plan.
+
+    S-630-1 Sheet 12 Fines Double Signing Notes: R2-10 at the work zone's
+    upstream end + 500 ft, R2-11 500 ft past its downstream end, the
+    restoration R2-1 500 ft further, G20-5P / R2-6P assemblies at most
+    2,640 ft apart between R2-10 and R2-11, and the entrance R2-1 on the
+    upstream-most in-zone G20-5P plaque.  Case 11's generic 500 ft
+    offsets, used at every speed; Sheet 12 permits engineer adjustment.
+
+    A Case 26/27 plan (``sheet_14_freeway_series``, #344 ruling S3) places
+    R2-10 and the G20-5P / R2-1 group at Sheet 14's 1,580 ft and 1,060 ft
+    from the taper start.  Sheet 14 draws a G20-5P / R2-6P group inside
+    the 530 ft span between the second W21-5aR and the G20-5P / R2-1
+    group ("VAR."); the first assembly sits at that span's midpoint,
+    CHOSEN (#344 ruling S6): 265 ft from both, so Sheet 12 Note 4's 250 ft
+    minimum holds.  The rest follow at most 2,640 ft apart to R2-11.  The
+    one producer for both shoulder generators and the audit.
+    """
+    wz_len = params.work_zone_length_ft
+    r2_11 = -500.0
+    if sheet_14_freeway_series(params):
+        r2_10 = taper_start_station + SHEET_14_FREEWAY_SIGN_FT["R2-10"]
+        entrance_r2_1 = taper_start_station + SHEET_14_FREEWAY_SIGN_FT["R2-1"]
+        own_plaque = True
+    else:
+        r2_10 = wz_len + 500.0
+        n_plaques = co_construction_plaques(sign_c_station)
+        entrance_r2_1 = (n_plaques - 0.5) * wz_len / n_plaques
+        own_plaque = False
+    length = r2_10 - r2_11
+    if own_plaque:
+        first = taper_start_station + (
+            (SHEET_14_FREEWAY_SIGN_FT["A2"] + SHEET_14_FREEWAY_SIGN_FT["R2-1"]) / 2.0
+        )
+        n = max(1, math.ceil((first - r2_11) / 2640.0))
+        assemblies = tuple(first - k * (first - r2_11) / n for k in range(n))
+    else:
+        n = max(1, math.ceil(length / 2640.0))
+        assemblies = tuple(r2_11 + (k + 0.5) * length / n for k in range(n))
+    return FinesDoubleEnvelope(
+        r2_10=r2_10,
+        r2_11=r2_11,
+        downstream_r2_1=-1000.0,
+        length=length,
+        n_assemblies=n,
+        assemblies=assemblies,
+        entrance_r2_1=entrance_r2_1,
+        entrance_has_own_plaque=own_plaque,
+    )
 
 
 def generate_shoulder_closure_divided(
@@ -321,8 +403,8 @@ def generate_shoulder_closure_divided(
     taper_end_station = wz_start_station + buf_len
     taper_start_station = taper_end_station + taper_len
 
-    # Advance warning sign A/B/C (MUTCD Table 6B-1), or Case 11's
-    # distances on a freeway plan that cites it (#334)
+    # Advance warning sign A/B/C (MUTCD Table 6B-1), or Case 11's or
+    # Sheet 14's distances on a freeway plan that cites one (#334, #344)
     sign_a_station, sign_b_station, sign_c_station = shoulder_advance_stations(
         params, taper_start_station
     )
@@ -396,8 +478,8 @@ def generate_shoulder_closure_divided(
     #
     # Geometry (#334): the first W21-5aR sits at Case 11's 2,000 ft and the
     # second at its 1,000 ft from the taper start
-    # (``second_shoulder_closed_station``).  A Case 26/27 plan keeps the
-    # pre-#334 midpoint until #344.  Plaques sit at identical
+    # (``second_shoulder_closed_station``); a Case 26/27 plan's at Sheet
+    # 14's 1,320 ft and 530 ft (#344).  Plaques sit at identical
     # station + offset as their parent W21-5aR — separate DevicePlacement
     # rows per the G20-5P/R2-6P plaque-attachment precedent;
     # plan_sheet._deoverlap_signs_pairwise spreads them vertically at
@@ -610,18 +692,14 @@ def generate_shoulder_closure_divided(
 
     # 10. Fines Double envelope (V1-Wide Item 3 — S-630-1 Sheet 12 Fines
     # Double Signing Notes).  Emits only when the work-zone posted speed is
-    # reduced below the nominal posted speed.  Envelope spans
-    # wz_start+500 (R2-10) to wz_end-500 (R2-11), with G20-5P/R2-6P
-    # assemblies at 2640 ft intervals.  Downstream R2-1 restores posted
-    # speed 500 ft past R2-11.  Mirrored on both sides: the house mirroring (step 1).
-    # Case 11 generic 500 ft offsets used uniformly across
-    # speeds; Sheet 12 explicitly permits engineer adjustment.
+    # reduced below the nominal posted speed.  Stations from
+    # ``fines_double_envelope`` (Sheet 14's on a Case 26/27 plan, #344).
+    # Mirrored on both sides: the house mirroring (step 1).
     if params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph:
-        r2_10_station = wz_start_station + 500.0
-        r2_11_station = wz_end_station - 500.0
-        downstream_r2_1_station = wz_end_station - 1000.0
-        envelope_len = r2_10_station - r2_11_station
-        n_envelope_assemblies = max(1, math.ceil(envelope_len / 2640.0))
+        env = fines_double_envelope(params, taper_start_station, sign_c_station)
+        r2_10_station = env.r2_10
+        r2_11_station = env.r2_11
+        downstream_r2_1_station = env.downstream_r2_1
 
         # R2-10 BEGIN DOUBLE FINES ZONE — mirrored
         placements.append(
@@ -644,8 +722,7 @@ def generate_shoulder_closure_divided(
         # G20-5P / R2-6P assemblies — distinct placements at identical
         # station + offset; plan_sheet._deoverlap_signs_pairwise spreads
         # them vertically at render time.
-        for k in range(n_envelope_assemblies):
-            station = r2_11_station + (k + 0.5) * envelope_len / n_envelope_assemblies
+        for station in env.assemblies:
             placements.append(
                 DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="G20-5P")
             )
@@ -674,9 +751,17 @@ def generate_shoulder_closure_divided(
         # carrying the actual number as they enter the zone, not just
         # the W3-5 advisory + Fines Double envelope.  Anchored to the
         # upstream-most Note-4 (G20-5P) plaque (the first G20-5P
-        # drivers encounter); reuses an existing convention rather than
-        # inventing a new station constant.  Mirrored: the house mirroring (step 1).
-        entrance_r2_1_station = (n_plaques - 0.5) * wz_len / n_plaques
+        # drivers encounter), or on a Case 26/27 plan at Sheet 14's
+        # G20-5P / R2-1 group with its own G20-5P (#344).  Mirrored: the
+        # house mirroring (step 1).
+        entrance_r2_1_station = env.entrance_r2_1
+        if env.entrance_has_own_plaque:
+            for offset in (sign_offset_right, sign_offset_left):
+                placements.append(
+                    DevicePlacement(
+                        DeviceType.SIGN_GENERIC, entrance_r2_1_station, offset, label="G20-5P"
+                    )
+                )
         placements.append(
             DevicePlacement(
                 DeviceType.SIGN_GENERIC,
@@ -700,7 +785,8 @@ def generate_shoulder_closure_divided(
         # prior sign 530 ft further upstream steps the advisory 15 mph
         # closer to posted, rounded down to the nearest 5 mph, floored
         # at the target.  Anchored 530 ft upstream of R2-10 per Sheet 14
-        # Cases 26/27 fixture geometry.  Mirrored: the house mirroring (step 1).
+        # Cases 26/27 fixture geometry (SHEET_14_FREEWAY_SIGN_FT's W3-5).
+        # Mirrored: the house mirroring (step 1).
         n_w3_5 = co_speed_reduction_signs(speed, params.work_zone_speed_mph)
         for k in range(n_w3_5):
             w3_5_speed = max(
@@ -957,12 +1043,12 @@ def generate_shoulder_closure_undivided(
     # Double Signing Notes).  Emits only when the work-zone posted speed is
     # reduced below the nominal posted speed.  Single-side emission on
     # undivided roads — no mirror requirement under Sheet 2 Note 8.
+    # Stations from ``fines_double_envelope`` (#344).
     if params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph:
-        r2_10_station = wz_start_station + 500.0
-        r2_11_station = wz_end_station - 500.0
-        downstream_r2_1_station = wz_end_station - 1000.0
-        envelope_len = r2_10_station - r2_11_station
-        n_envelope_assemblies = max(1, math.ceil(envelope_len / 2640.0))
+        env = fines_double_envelope(params, taper_start_station, sign_c_station)
+        r2_10_station = env.r2_10
+        r2_11_station = env.r2_11
+        downstream_r2_1_station = env.downstream_r2_1
 
         placements.append(
             DevicePlacement(
@@ -974,8 +1060,7 @@ def generate_shoulder_closure_undivided(
                 DeviceType.SIGN_GENERIC, r2_11_station, sign_offset_right, label="R2-11"
             )
         )
-        for k in range(n_envelope_assemblies):
-            station = r2_11_station + (k + 0.5) * envelope_len / n_envelope_assemblies
+        for station in env.assemblies:
             placements.append(
                 DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="G20-5P")
             )
@@ -989,8 +1074,18 @@ def generate_shoulder_closure_undivided(
         )
         # Entrance R2-1 (V1-Wide G4 — S-630-1 Sheet 2 General Note 3).  Single
         # side on undivided per S-630-1 Sheet 2 Note 8; anchored to the upstream-
-        # most Note-4 (G20-5P) plaque, matching the divided generator pattern.
-        entrance_r2_1_station = (n_plaques - 0.5) * wz_len / n_plaques
+        # most Note-4 (G20-5P) plaque, matching the divided generator pattern
+        # (Sheet 14's G20-5P / R2-1 group on a Case 26/27 plan, #344).
+        entrance_r2_1_station = env.entrance_r2_1
+        if env.entrance_has_own_plaque:
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC,
+                    entrance_r2_1_station,
+                    sign_offset_right,
+                    label="G20-5P",
+                )
+            )
         placements.append(
             DevicePlacement(
                 DeviceType.SIGN_GENERIC,

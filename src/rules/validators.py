@@ -19,6 +19,7 @@ from zoneinfo import ZoneInfo
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.spacing import (
     CASE_11_FREEWAY_SIGN_FT,
+    SHEET_14_FREEWAY_SIGN_FT,
     VALID_ROAD_TYPES,
     _is_cdot_minimum,
     advance_warning_spacing,
@@ -613,6 +614,21 @@ def case_11_freeway_series(params: ScenarioParams) -> bool:
     )
 
 
+def sheet_14_freeway_series(params: ScenarioParams) -> bool:
+    """True when a plan's advance signs follow Sheet 14's distances (#344, S1).
+
+    A freeway shoulder closure with the Case 26/27 step-down
+    (``_is_cdot_minimum``): the audit cites S-630-1 Case 26 or 27 for it,
+    so its signs sit at ``SHEET_14_FREEWAY_SIGN_FT`` from the taper.  The
+    complement of ``case_11_freeway_series`` among freeway shoulder plans.
+    """
+    return (
+        params.road_type == "freeway"
+        and params.closure_type == "shoulder"
+        and _is_cdot_minimum(params.jurisdiction, params.speed_mph, params.work_zone_speed_mph)
+    )
+
+
 def _channelizer_indices(placements: list[DevicePlacement]) -> list[int]:
     return [i for i, p in enumerate(placements) if DEVICE_CATALOG[p.device_type].is_channelizer]
 
@@ -907,6 +923,8 @@ def validate_advance_warning_signs(
 
     if case_11_freeway_series(params):
         return _case_11_spacing_violations(placements, taper_upstream)
+    if sheet_14_freeway_series(params):
+        return _sheet_14_spacing_violations(placements, taper_upstream, params.speed_mph)
 
     # Use the scenario's road_type directly — every value in
     # ScenarioParams.road_type is now a Table 6B-1 category, so we
@@ -964,12 +982,70 @@ def _case_11_spacing_violations(
     plan omits it).  W5-1 is in ``_NON_ADVANCE_WARNING_SIGN_LABELS``, so the
     signs are read here without that filter.
     """
+    return _typical_spacing_violations(
+        placements,
+        taper_upstream,
+        (
+            ("W20-1", ("W20-1",), True, CASE_11_FREEWAY_SIGN_FT["C"]),
+            ("first W21-5aR", ("W21-5AR", "W21-5AL"), True, CASE_11_FREEWAY_SIGN_FT["A"]),
+            ("second W21-5aR", ("W21-5AR", "W21-5AL"), False, CASE_11_FREEWAY_SIGN_FT["A2"]),
+            ("W5-1", ("W5-1",), False, CASE_11_FREEWAY_SIGN_FT["W5-1"]),
+        ),
+        optional=frozenset({"W5-1"}),
+        case_text="CDOT S-630-1 Case 11",
+        section="CDOT S-630-1 Sheet 7 Case 11",
+    )
+
+
+def _sheet_14_spacing_violations(
+    placements: list[DevicePlacement],
+    taper_upstream: float,
+    speed_mph: int,
+) -> list[Violation]:
+    """Case 26/27 plans: each sign at least its Sheet 14 distance (#344, S4).
+
+    The same check as Case 11's (#334, S2) on Sheet 14's six positions.
+    R2-10, W3-5 and the entrance R2-1 are read here too: Sheet 14 sets
+    their distances from the taper, and only the entrance R2-1 is upstream
+    of it (the restoration R2-1 is past the work zone).
+    """
+    case = "Case 26" if speed_mph == 65 else "Case 27"
+    return _typical_spacing_violations(
+        placements,
+        taper_upstream,
+        (
+            ("W20-1", ("W20-1",), True, SHEET_14_FREEWAY_SIGN_FT["C"]),
+            ("W3-5", ("W3-5",), True, SHEET_14_FREEWAY_SIGN_FT["W3-5"]),
+            ("R2-10", ("R2-10",), True, SHEET_14_FREEWAY_SIGN_FT["R2-10"]),
+            ("first W21-5aR", ("W21-5AR", "W21-5AL"), True, SHEET_14_FREEWAY_SIGN_FT["A"]),
+            ("R2-1", ("R2-1",), True, SHEET_14_FREEWAY_SIGN_FT["R2-1"]),
+            ("second W21-5aR", ("W21-5AR", "W21-5AL"), False, SHEET_14_FREEWAY_SIGN_FT["A2"]),
+        ),
+        optional=frozenset(),
+        case_text=f"CDOT S-630-1 {case}",
+        section=f"CDOT S-630-1 Sheet 14 {case}",
+    )
+
+
+def _typical_spacing_violations(
+    placements: list[DevicePlacement],
+    taper_upstream: float,
+    checks: tuple[tuple[str, tuple[str, ...], bool, float], ...],
+    *,
+    optional: frozenset[str],
+    case_text: str,
+    section: str,
+) -> list[Violation]:
+    """Each named sign at least its typical's distance from the taper.
+
+    ``checks`` rows: (name, label keys, pick the upstream-most?, distance).
+    A missing sign is an error unless its name is in ``optional``.
+    """
     by_label: dict[str, list[int]] = {}
     for i in _sign_indices(placements):
         if placements[i].station_ft <= taper_upstream:
             continue
         by_label.setdefault(_advance_warning_label_key(placements[i].label), []).append(i)
-    shoulder_closed = by_label.get("W21-5AR", []) + by_label.get("W21-5AL", [])
 
     def _pick(idx: list[int], upstream: bool) -> int | None:
         ordered = sorted(idx, key=lambda i: placements[i].station_ft)
@@ -977,23 +1053,18 @@ def _case_11_spacing_violations(
             return None
         return ordered[-1] if upstream else ordered[0]
 
-    checks = (
-        ("W20-1", _pick(by_label.get("W20-1", []), True), CASE_11_FREEWAY_SIGN_FT["C"]),
-        ("first W21-5aR", _pick(shoulder_closed, True), CASE_11_FREEWAY_SIGN_FT["A"]),
-        ("second W21-5aR", _pick(shoulder_closed, False), CASE_11_FREEWAY_SIGN_FT["A2"]),
-        ("W5-1", _pick(by_label.get("W5-1", []), False), CASE_11_FREEWAY_SIGN_FT["W5-1"]),
-    )
     out: list[Violation] = []
-    for name, idx, expected in checks:
+    for name, keys, upstream, expected in checks:
+        idx = _pick([i for k in keys for i in by_label.get(k, [])], upstream)
         if idx is None:
-            if name == "W5-1":
+            if name in optional:
                 continue
             out.append(
                 Violation(
                     rule_id="MISSING_ADVANCE_SIGN",
                     severity="error",
-                    message=f"No {name} upstream of the taper; CDOT S-630-1 Case 11 places one.",
-                    mutcd_section="CDOT S-630-1 Sheet 7 Case 11",
+                    message=f"No {name} upstream of the taper; {case_text} places one.",
+                    mutcd_section=section,
                     device_index=None,
                 )
             )
@@ -1005,10 +1076,10 @@ def _case_11_spacing_violations(
                     rule_id="ADVANCE_SIGN_SPACING_OFF",
                     severity="warning",
                     message=(
-                        f"The {name} is {actual:.0f} ft from the taper; CDOT S-630-1 "
-                        f"Case 11 places it at least {expected:.0f} ft upstream."
+                        f"The {name} is {actual:.0f} ft from the taper; {case_text} "
+                        f"places it at least {expected:.0f} ft upstream."
                     ),
-                    mutcd_section="CDOT S-630-1 Sheet 7 Case 11",
+                    mutcd_section=section,
                     device_index=idx,
                 )
             )
@@ -1642,12 +1713,25 @@ def validate_fines_double_envelope(
     # zone (S-630-1 Sheet 2 General Note 3: R2-1 signs at the
     # typical-case locations).  Entrance R2-1 is currently
     # anchored to the Note-4 G20-5P assembly, always inside wz
-    # (0 < station <= wz_len).  If anchor changes in future, update
-    # station bounds here.
+    # (0 < station <= wz_len).  A Case 26/27 plan places it at Sheet 14's
+    # G20-5P / R2-1 group upstream of the taper (#344), so there the
+    # bound is the envelope: downstream of R2-10.
+    entrance_upper = params.work_zone_length_ft
+    entrance_where = "inside the work zone"
+    if sheet_14_freeway_series(params):
+        entrance_upper = max(
+            (
+                p.station_ft
+                for p in placements
+                if p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "R2-10"
+            ),
+            default=0.0,
+        )
+        entrance_where = "inside the Fines Double envelope"
     has_entrance_r2_1 = any(
         p.device_type == DeviceType.SIGN_GENERIC
         and (p.label or "").upper() == "R2-1"
-        and 0 < p.station_ft <= params.work_zone_length_ft
+        and 0 < p.station_ft <= entrance_upper
         for p in placements
     )
     # G5: W3-5 advisory-speed sign(s) per S-630-1 Sheet 2 General Note 3.
@@ -1704,7 +1788,7 @@ def validate_fines_double_envelope(
                 message=(
                     "Work-zone speed reduced below posted speed but no "
                     "entrance R2-1 (work-zone SPEED LIMIT posting) found "
-                    "inside the work zone. S-630-1 Sheet 2 General "
+                    f"{entrance_where}. S-630-1 Sheet 2 General "
                     "Note 3 (R2-1 signs at the typical-case locations) "
                     "and the Sheet 12 typical require the reduced limit "
                     "posted as drivers enter; without it, drivers have no "

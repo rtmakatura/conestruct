@@ -19,6 +19,7 @@ from src.api.schemas import MAX_DRAWABLE_HALF_ROAD_FT
 from src.api.site_scan import not_run_provenance
 from src.generation.layout import (
     device_count_floors,
+    fines_double_envelope,
     flagger_chain_stations,
     near_intersection_stations,
     second_shoulder_closed_station,
@@ -29,6 +30,7 @@ from src.rules.devices import DeviceType
 from src.rules.sign_codes import PLAQUE_CODES, substitute_sign_description
 from src.rules.spacing import (
     CASE_11_FREEWAY_SIGN_FT,
+    SHEET_14_FREEWAY_SIGN_FT,
     _cdot_buffer_or_none,
     advance_warning_spacing,
     buffer_space,
@@ -57,6 +59,7 @@ from src.rules.validators import (
     _is_flagger_scenario,
     approach_speed_display,
     case_11_freeway_series,
+    sheet_14_freeway_series,
     shoulder_closed_sign_code,
     shoulder_ta_reference,
     validate_corridor_geometry,
@@ -139,6 +142,22 @@ _CITATION_ADVANCE_CASE_11: dict[str, str] = {
     "cite": "CDOT S-630-1 CASE 11",
     "footer": "CDOT S-630-1 · SHEET 7 · CASE 11 · SHOULDER WORK - FREEWAY/EXPRESSWAY",
 }
+
+
+def _sheet_14_source(speed_mph: int) -> str:
+    """#344 (ruling S5): a Case 26/27 plan's advance row cites Sheet 14."""
+    return f"CDOT S-630-1 Sheet 14 Case {26 if speed_mph == 65 else 27}"
+
+
+def _citation_advance_sheet_14(speed_mph: int) -> dict[str, str]:
+    case = 26 if speed_mph == 65 else 27
+    return {
+        "cite": f"CDOT S-630-1 CASE {case}",
+        "footer": (
+            f"CDOT S-630-1 · SHEET 14 · CASE {case} · SHOULDER WORK - FREEWAY/EXPRESSWAY "
+            f"W/ {speed_mph} MPH SPEED LIMIT"
+        ),
+    }
 
 
 def _times(text: str) -> str:
@@ -820,7 +839,9 @@ def build_audit_trail(
     # #334: a Case 11 plan's stations from the generators' own producer
     # (no W20-2, so no B).
     case_11 = case_11_freeway_series(params)
-    if case_11:
+    # #344: a Case 26/27 plan's stations from the same producer (no W20-2).
+    sheet_14 = sheet_14_freeway_series(params)
+    if case_11 or sheet_14:
         sign_a_station, sign_b_station, sign_c_station = shoulder_advance_stations(
             params, taper_start_station
         )
@@ -879,8 +900,8 @@ def build_audit_trail(
     # established A/B/C vocabulary is preserved.
     #
     # The W21-5aR-pair anchor (G1): the generators' own second-sign
-    # station (Case 11's 1,000 ft, #334; the pre-#334 midpoint on a
-    # Case 26/27 plan until #344).
+    # station (Case 11's 1,000 ft, #334; Sheet 14's 530 ft on a Case
+    # 26/27 plan, #344).
     w21_5aR_downstream_st = second_shoulder_closed_station(params, taper_start_station)
 
     # #331: limited sight distance moves the whole advance series by one
@@ -912,6 +933,23 @@ def build_audit_trail(
                 return f"Second {sc} plaque"
             if label == "W5-1":
                 return "W5-1 (Case 11)"
+        if sheet_14:
+            # #344 (S5): Sheet 14's positions, not Table 6B-1's A/B/C.
+            entrance_st = taper_start_station + SHEET_14_FREEWAY_SIGN_FT["R2-1"]
+            if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
+                return "Furthest (Sheet 14)"
+            if label == sign_codes["A"] and abs(station_ft - sign_a_station) <= 0.5:
+                return f"First {sc} (Sheet 14)"
+            if label == "W16-2a" and abs(station_ft - sign_a_station) <= 0.5:
+                return f"First {sc} plaque"
+            if label == sc and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
+                return f"Second {sc} (Sheet 14)"
+            if label == "W7-3a" and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
+                return f"Second {sc} plaque"
+            if label == "R2-10":
+                return "R2-10 (Sheet 14)"
+            if label in ("G20-5P", "R2-1") and abs(station_ft - entrance_st) <= 0.5:
+                return "Speed limit group (Sheet 14)"
         if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
             return "C (furthest)"
         if (
@@ -975,7 +1013,7 @@ def build_audit_trail(
                     label, p.station_ft, params, taper_start_station=taper_start_station
                 )
                 if label == "W16-2a":
-                    host = f"first {sc}" if case_11 else f"{sc} at A"
+                    host = f"first {sc}" if case_11 or sheet_14 else f"{sc} at A"
                 else:
                     host = f"second {sc}"
                 distance_text = f"{plaque_value} (under {host})"
@@ -1046,7 +1084,7 @@ def build_audit_trail(
                         "Station (ft)": f"{sign_a_station:,.0f}",
                         "Distance from Taper (ft)": (
                             f"{w16_2a_value} (under first {sc})"
-                            if case_11
+                            if case_11 or sheet_14
                             else f"{w16_2a_value} (under {sc} at A)"
                         ),
                     },
@@ -1067,26 +1105,47 @@ def build_audit_trail(
                 ]
             )
 
-    advance_section = {
-        "road_type_text": (
-            f"Speed {speed} mph, road_type = '{params.road_type}' "
-            + (
-                f"-> {_CASE_11_SOURCE} (freeway shoulder work)"
-                if case_11
-                else f"-> Table {_TBL_ADVANCE} category: {resolved_category}"
-            )
-        ),
-        "spacing_text": (
-            # #334 (S4): the distances the plan places, from the taper.
+    advance_source = (
+        _CASE_11_SOURCE
+        if case_11
+        else _sheet_14_source(speed)
+        if sheet_14
+        else f"MUTCD 11th Ed. Table {_TBL_ADVANCE}"
+    )
+    if case_11:
+        # #334 (S4): the distances the plan places, from the taper.
+        advance_spacing_text = (
             f"{_CASE_11_SOURCE}, from the taper: "
             # W5-1 is placed only without a speed reduction (layout step 1a).
             + ("" if is_reduced else f"W5-1 {CASE_11_FREEWAY_SIGN_FT['W5-1']:,.0f} ft, ")
             + f"second {sc} {CASE_11_FREEWAY_SIGN_FT['A2']:,.0f} ft, "
             f"first {sc} {CASE_11_FREEWAY_SIGN_FT['A']:,.0f} ft, "
             f"W20-1 {CASE_11_FREEWAY_SIGN_FT['C']:,.0f} ft"
-            if case_11
-            else f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft"
         )
+    elif sheet_14:
+        # #344 (S5): the same, from Sheet 14.
+        sh14 = SHEET_14_FREEWAY_SIGN_FT
+        advance_spacing_text = (
+            f"{advance_source}, from the taper: "
+            f"second {sc} {sh14['A2']:,.0f} ft, "
+            f"G20-5P / R2-1 {sh14['R2-1']:,.0f} ft, "
+            f"first {sc} {sh14['A']:,.0f} ft, "
+            f"R2-10 {sh14['R2-10']:,.0f} ft, "
+            f"W3-5 {sh14['W3-5']:,.0f} ft, "
+            f"W20-1 {sh14['C']:,.0f} ft"
+        )
+    else:
+        advance_spacing_text = f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft"
+    advance_section = {
+        "road_type_text": (
+            f"Speed {speed} mph, road_type = '{params.road_type}' "
+            + (
+                f"-> {advance_source} (freeway shoulder work)"
+                if case_11 or sheet_14
+                else f"-> Table {_TBL_ADVANCE} category: {resolved_category}"
+            )
+        ),
+        "spacing_text": (advance_spacing_text)
         + (
             # #331: the plan's nearest sign is not at the table's A.
             f"; limited sight distance moves every advance sign {series_shift:,.0f} ft "
@@ -1095,13 +1154,19 @@ def build_audit_trail(
             else ""
         ),
         "sign_table": sign_table_rows,
-        "source": _CASE_11_SOURCE if case_11 else f"MUTCD 11th Ed. Table {_TBL_ADVANCE}",
+        "source": advance_source,
         # #286 (R144 Q1) — the row's result (the panel used to count the
         # table's rows itself) and its citation (the panel used to write
         # both strings by hand, the footer as the nonexistent "§ 6B-1").
         # No ``formula_text``: the spacing is a table lookup.
         "result_text": f"{len(sign_table_rows)} signs",
-        "citation": _CITATION_ADVANCE_CASE_11 if case_11 else _CITATION_ADVANCE,
+        "citation": (
+            _CITATION_ADVANCE_CASE_11
+            if case_11
+            else _citation_advance_sheet_14(speed)
+            if sheet_14
+            else _CITATION_ADVANCE
+        ),
     }
 
     # ------------------------------------------------------------------
@@ -1384,21 +1449,16 @@ def build_audit_trail(
             "source": "CDOT S-630-1 Standard Plan, Sheet 12",
         }
     else:
-        wz_start_st = wz_len
-        wz_end_st = 0.0
-        r2_10_st = wz_start_st + 500.0
-        r2_11_st = wz_end_st - 500.0
-        ds_r2_1_st = wz_end_st - 1000.0
-        env_len = r2_10_st - r2_11_st
-        n_asm = max(1, math.ceil(env_len / 2640.0))
-        # G4 entrance R2-1 station — mirrors the layout's anchor on the
-        # upstream-most Note-4 (G20-5P) plaque so the audit field
-        # tracks whatever the generators emit.  Re-derive ``n_plaques``
-        # against the same ``total_signed_length`` (= sign_c_station)
-        # the layout uses; ``sign_c_station`` was computed at the
+        # The shoulder generators' own producer (#344), read against the
+        # same taper start and ``sign_c_station`` computed at the
         # advance-warning section above.
-        n_plaques_for_entrance = co_construction_plaques(sign_c_station)
-        entrance_r2_1_st = (n_plaques_for_entrance - 0.5) * wz_len / n_plaques_for_entrance
+        _env = fines_double_envelope(params, taper_start_station, sign_c_station)
+        r2_10_st = _env.r2_10
+        r2_11_st = _env.r2_11
+        ds_r2_1_st = _env.downstream_r2_1
+        env_len = _env.length
+        n_asm = _env.n_assemblies
+        entrance_r2_1_st = _env.entrance_r2_1
         fines_double_section = {
             "applicable": True,
             "citation": CO_CITATIONS.fines_double,

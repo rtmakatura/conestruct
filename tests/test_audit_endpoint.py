@@ -2132,7 +2132,7 @@ def test_case_routing_cdot_reference_aligns_with_routing(client: TestClient) -> 
 
 def test_entrance_r2_1_envelope_fields_at_65mph(client: TestClient) -> None:
     """65 → 60 mph reduction → envelope carries entrance R2-1 station
-    inside wz and the reduced-limit label."""
+    inside the envelope and the reduced-limit label."""
     s = _shoulder_scenario()
     s["speed"] = 65
     s["workLen"] = 1000.0
@@ -2140,8 +2140,9 @@ def test_entrance_r2_1_envelope_fields_at_65mph(client: TestClient) -> None:
     s["roadType"] = "freeway"
     res = client.post("/render/audit", headers=_auth_headers(), json=s)
     envelope = res.json()["sections"]["fines_double"]["envelope"]
-    # Inside wz (0 < station <= wz_len=1000).
-    assert 0 < envelope["entrance_r2_1_station_ft"] <= 1000.0
+    # #344 (S3): a Case 26 plan's entrance R2-1 is Sheet 14's G20-5P / R2-1
+    # group, upstream of the work zone and downstream of R2-10.
+    assert 1000.0 < envelope["entrance_r2_1_station_ft"] < envelope["r2_10_station_ft"]
     assert envelope["entrance_r2_1_label"] == "SPEED LIMIT 60"
     # Both downstream and entrance fields coexist.
     assert envelope["downstream_r2_1_label"] == "SPEED LIMIT 65"

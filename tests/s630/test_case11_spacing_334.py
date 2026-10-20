@@ -4,8 +4,8 @@ S-630-1 Sheet 7 Case 11 (PDF p. 155; oracle O16) puts, from the start of
 the shoulder taper: W5-1 at 500 ft, the second W21-5aR (W7-3a) at 1,000 ft,
 the first W21-5aR (W16-2a) at 2,000 ft and W20-1 at 5,200 ft.  It shows no
 W20-2 (ruling Q1).  The plans used Table 6B-1 plus a midpoint rule
-(750 / 1,000 / 2,500 / 5,140 ft at 75 mph).  Case 26/27 plans keep that
-layout until #344 builds Sheet 14's (ruling Q2).
+(750 / 1,000 / 2,500 / 5,140 ft at 75 mph).  Case 26/27 plans are #344's
+(ruling Q2; ``test_sheet14_series_344.py``).
 
 Rule 11: page 1 off ``/render/pdf``, the audit off ``/render/audit``, the
 crew sheet off ``/render/markdown``, all through the real API.
@@ -26,7 +26,7 @@ from src.rules.validators import (
     validate_advance_warning_signs,
 )
 
-from ._harness import CASE_26_BODY, _common
+from ._harness import _common
 from .test_cross_surface import _pdf_text, _post, api  # noqa: F401  (``api`` is a fixture)
 
 _DIVIDED_75 = _common(75, None)
@@ -86,18 +86,6 @@ def test_page1_and_crew_sheet_print_the_same_distances(
     assert "| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 2,000 ft upstream |" in crew
     assert "| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 1,000 ft upstream |" in crew
     assert "W20-2" not in crew
-
-
-def test_case_26_plan_keeps_the_table_6b_1_series(
-    api: TestClient,  # noqa: F811
-) -> None:
-    """Q2 = A: a Case 26 plan (CDOT 65 -> 60) is #344's, untouched here."""
-    advance = _post(api, "/render/audit", CASE_26_BODY).json()["sections"]["advance"]
-    rows = {r["Position"]: r for r in advance["sign_table"]}
-    assert _distance(rows["A (nearest)"]) == 1000
-    assert rows["B (middle)"]["Code"] == "W20-2"
-    assert _distance(rows["C (furthest)"]) == 5140
-    assert _distance(rows["A2 (second W21-5aR)"]) == 750
 
 
 def test_validator_flags_a_case_11_sign_set_short() -> None:

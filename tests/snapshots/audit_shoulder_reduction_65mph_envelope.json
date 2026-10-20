@@ -13,57 +13,81 @@
   "sections": {
     "advance": {
       "citation": {
-        "cite": "MUTCD TABLE 6B-1",
-        "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+        "cite": "CDOT S-630-1 CASE 26",
+        "footer": "CDOT S-630-1 · SHEET 14 · CASE 26 · SHOULDER WORK - FREEWAY/EXPRESSWAY W/ 65 MPH SPEED LIMIT"
       },
-      "result_text": "7 signs",
-      "road_type_text": "Speed 65 mph, road_type = 'freeway' -> Table 6B-1 category: freeway",
+      "result_text": "11 signs",
+      "road_type_text": "Speed 65 mph, road_type = 'freeway' -> CDOT S-630-1 Sheet 14 Case 26 (freeway shoulder work)",
       "sign_table": [
         {
           "Code": "W20-1",
-          "Distance from Taper (ft)": "5,140 upstream",
-          "Position": "C (furthest)",
-          "Station (ft)": "6,927"
+          "Distance from Taper (ft)": "2,640 upstream",
+          "Position": "Furthest (Sheet 14)",
+          "Station (ft)": "4,427"
         },
         {
-          "Code": "W20-2",
-          "Distance from Taper (ft)": "2,500 upstream",
-          "Position": "B (middle)",
-          "Station (ft)": "4,287"
+          "Code": "W3-5(60)",
+          "Distance from Taper (ft)": "2,110 upstream",
+          "Position": "W3-5 step 1",
+          "Station (ft)": "3,897"
+        },
+        {
+          "Code": "R2-10",
+          "Distance from Taper (ft)": "1,580 upstream",
+          "Position": "R2-10 (Sheet 14)",
+          "Station (ft)": "3,367"
         },
         {
           "Code": "W21-5aR",
-          "Distance from Taper (ft)": "1,000 upstream",
-          "Position": "A (nearest)",
-          "Station (ft)": "2,787"
+          "Distance from Taper (ft)": "1,320 upstream",
+          "Position": "First W21-5aR (Sheet 14)",
+          "Station (ft)": "3,107"
         },
         {
           "Code": "W16-2a",
-          "Distance from Taper (ft)": "NEXT 1,787 FT (under W21-5aR at A)",
-          "Position": "A plaque",
-          "Station (ft)": "2,787"
+          "Distance from Taper (ft)": "NEXT 2,107 FT (under first W21-5aR)",
+          "Position": "First W21-5aR plaque",
+          "Station (ft)": "3,107"
+        },
+        {
+          "Code": "R2-1",
+          "Distance from Taper (ft)": "1,060 upstream",
+          "Position": "Speed limit group (Sheet 14)",
+          "Station (ft)": "2,847"
+        },
+        {
+          "Code": "G20-5P",
+          "Distance from Taper (ft)": "1,060 upstream",
+          "Position": "Speed limit group (Sheet 14)",
+          "Station (ft)": "2,847"
+        },
+        {
+          "Code": "G20-5P",
+          "Distance from Taper (ft)": "795 upstream",
+          "Position": "Advance (G20-5P)",
+          "Station (ft)": "2,582"
+        },
+        {
+          "Code": "R2-6P",
+          "Distance from Taper (ft)": "795 upstream",
+          "Position": "Advance (R2-6P)",
+          "Station (ft)": "2,582"
         },
         {
           "Code": "W21-5aR",
-          "Distance from Taper (ft)": "750 upstream",
-          "Position": "A2 (second W21-5aR)",
-          "Station (ft)": "2,537"
+          "Distance from Taper (ft)": "530 upstream",
+          "Position": "Second W21-5aR (Sheet 14)",
+          "Station (ft)": "2,317"
         },
         {
           "Code": "W7-3a",
           "Distance from Taper (ft)": "NEXT 1 MILE (under second W21-5aR)",
-          "Position": "A2 plaque",
-          "Station (ft)": "2,537"
-        },
-        {
-          "Code": "W3-5(60)",
-          "Distance from Taper (ft)": "243 upstream",
-          "Position": "W3-5 step 1",
-          "Station (ft)": "2,030"
+          "Position": "Second W21-5aR plaque",
+          "Station (ft)": "2,317"
         }
       ],
-      "source": "MUTCD 11th Ed. Table 6B-1",
-      "spacing_text": "A = 1000 ft, B = 1500 ft, C = 2640 ft"
+      "source": "CDOT S-630-1 Sheet 14 Case 26",
+      "spacing_text": "CDOT S-630-1 Sheet 14 Case 26, from the taper: second W21-5aR 530 ft, G20-5P / R2-1 1,060 ft, first W21-5aR 1,320 ft, R2-10 1,580 ft, W3-5 2,110 ft, W20-1 2,640 ft"
     },
     "buffer": {
       "buffer_ft": 570.0,
@@ -93,13 +117,13 @@
       "checks": [
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
-          "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 17 left, 17 right.",
+          "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 19 left, 19 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
-          "detail": "Zone length: 6,927 ft. Required: 3. Placed: 3.",
+          "detail": "Zone length: 4,427 ft. Required: 2. Placed: 5.",
           "label": "G20-5P Work Zone signs every 2,640 ft",
           "pass": true
         },
@@ -145,10 +169,10 @@
         "downstream_r2_1_label": "SPEED LIMIT 65",
         "downstream_r2_1_station_ft": -1000.0,
         "entrance_r2_1_label": "SPEED LIMIT 60",
-        "entrance_r2_1_station_ft": 833.3333333333334,
-        "length_ft": 2000.0,
-        "n_assemblies": 1,
-        "r2_10_station_ft": 1500.0,
+        "entrance_r2_1_station_ft": 2846.666666666667,
+        "length_ft": 3866.666666666667,
+        "n_assemblies": 2,
+        "r2_10_station_ft": 3366.666666666667,
         "r2_11_station_ft": -500.0
       },
       "operational_notes": [

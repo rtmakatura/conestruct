@@ -290,6 +290,26 @@ CASE_11_FREEWAY_SIGN_FT: dict[str, float] = {
 }
 
 
+# #344 (ruling S1): a Case 26/27 freeway shoulder plan places its signs at
+# Sheet 14's distances.  CDOT S-630-1 Sheet 14, Case No. 26 and Case No.
+# 27 (PDF p. 162), read on the rendered sheet; dimensions run upstream
+# from the start of the 1/3 L shoulder taper: "530'" to W21-5aR with
+# W7-3aP(X), "530'" more to the G20-5P / R2-1(XX) group, "260'" more to
+# W21-5aR with W16-2aP, "260'" more to R2-10, "530'" more to W3-5(XX),
+# "530'" more to W20-1 "ROAD WORK 1/2 MILE" (tests/fixtures/
+# cdot_s630_typicals/case_26.json, case_27.json).  Cumulative, keyed like
+# CASE_11_FREEWAY_SIGN_FT; R2-1 is the entrance speed limit group.  No
+# W20-2 and no W5-1.  W3-5 sits at R2-10 + 530 ft (the layout's W3-5 rule).
+SHEET_14_FREEWAY_SIGN_FT: dict[str, float] = {
+    "A2": 530.0,
+    "R2-1": 1060.0,
+    "A": 1320.0,
+    "R2-10": 1580.0,
+    "W3-5": 2110.0,
+    "C": 2640.0,
+}
+
+
 VALID_ROAD_TYPES: frozenset[str] = frozenset(
     {"urban_low", "urban_high", "rural", "expressway", "freeway"}
 )

@@ -132,6 +132,14 @@ _PANEL_ONLY_CITATIONS = frozenset(
         # the PDF keeps its prose ``source`` ("CDOT S-630-1 Sheet 7 Case 11").
         "CDOT S-630-1 CASE 11",
         "CDOT S-630-1 · SHEET 7 · CASE 11 · SHOULDER WORK - FREEWAY/EXPRESSWAY",
+        # #344 — the same chip on a Case 26/27 plan (``_citation_advance_sheet_14``);
+        # the PDF keeps its prose ``source`` ("CDOT S-630-1 Sheet 14 Case 26").
+        "CDOT S-630-1 CASE 26",
+        "CDOT S-630-1 · SHEET 14 · CASE 26 · SHOULDER WORK - FREEWAY/EXPRESSWAY "
+        "W/ 65 MPH SPEED LIMIT",
+        "CDOT S-630-1 CASE 27",
+        "CDOT S-630-1 · SHEET 14 · CASE 27 · SHOULDER WORK - FREEWAY/EXPRESSWAY "
+        "W/ 75 MPH SPEED LIMIT",
     }
 )
 
