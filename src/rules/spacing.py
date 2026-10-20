@@ -166,6 +166,9 @@ def buffer_space(
     speed_mph: int,
     jurisdiction: str = "CDOT",
     work_zone_speed_mph: int | None = None,
+    *,
+    road_type: str | None = None,
+    closure_type: str | None = None,
 ) -> float:
     """Longitudinal buffer space, in feet.
 
@@ -202,6 +205,12 @@ def buffer_space(
         work_zone_speed_mph: Reduced work-zone posted speed, or ``None``
             when no reduction is in effect.  Only ``(65, 60)`` and
             ``(75, 65)`` unlock the CDOT supplement minimum (Cases 26/27).
+        road_type, closure_type: The scenario's Table 6B-1 class and
+            closure type.  A shoulder closure on a road that isn't a
+            freeway or expressway never takes the supplement minimum
+            (:func:`sheet_14_road_class`, #355).  ``None`` (a direct table
+            lookup with no scenario) keeps the speed-only lookup; every
+            caller with a scenario passes both.
 
     Raises:
         ValueError: ``speed_mph`` is not in the table, or
@@ -211,7 +220,9 @@ def buffer_space(
         raise ValueError(f"Unknown jurisdiction {jurisdiction!r}; expected 'CDOT' or 'federal'.")
 
     if jurisdiction == "CDOT":
-        cdot_value = _cdot_buffer_or_none(speed_mph, work_zone_speed_mph)
+        cdot_value = _cdot_buffer_or_none(
+            speed_mph, work_zone_speed_mph, road_type=road_type, closure_type=closure_type
+        )
         if cdot_value is not None:
             return float(cdot_value)
         # No qualifying Case 26/27 step-down — fall through to federal.
@@ -228,7 +239,25 @@ def buffer_space(
     )
 
 
-def _cdot_buffer_or_none(speed_mph: int, work_zone_speed_mph: int | None = None) -> int | None:
+def sheet_14_road_class(road_type: str | None, closure_type: str | None) -> bool:
+    """False for a shoulder closure on a road that isn't a freeway or expressway (#355, R1).
+
+    S-630-1 Sheet 14's only titles are "Shoulder Work - Freeway/Expressway"
+    (Cases 26/27), so its 570/650 ft floors belong to that road class; a
+    ``rural`` or ``urban_*`` shoulder plan takes the federal posted-speed
+    buffer instead.  Lane closures are out of #355's scope (R2) and keep
+    the speed-only lookup, as does a call with no scenario (``None``).
+    """
+    return closure_type != "shoulder" or road_type is None or road_type in ("freeway", "expressway")
+
+
+def _cdot_buffer_or_none(
+    speed_mph: int,
+    work_zone_speed_mph: int | None = None,
+    *,
+    road_type: str | None = None,
+    closure_type: str | None = None,
+) -> int | None:
     """CDOT supplement minimum buffer for this scenario, or None.
 
     Returns the value posted on S-630-1 Sheet 14 (Case 26 at 65 mph,
@@ -239,10 +268,14 @@ def _cdot_buffer_or_none(speed_mph: int, work_zone_speed_mph: int | None = None)
     non-standard reduction — because the 570/650 floors are SSD at the
     reduced work-zone speed and are meaningless without that step-down.
     Sheet 7 Case 11 (buffer "VARIES", General Note 24) then governs and
-    the caller falls back to the federal posted-speed baseline.
+    the caller falls back to the federal posted-speed baseline.  So does
+    a shoulder closure off the freeway/expressway class
+    (:func:`sheet_14_road_class`, #355).
     """
     required_wz = CDOT_BUFFER_STEPDOWN.get(speed_mph)
     if required_wz is None or work_zone_speed_mph != required_wz:
+        return None
+    if not sheet_14_road_class(road_type, closure_type):
         return None
     for row in CDOT_BUFFER_SPACE:
         if row.speed_mph == speed_mph:
@@ -250,8 +283,33 @@ def _cdot_buffer_or_none(speed_mph: int, work_zone_speed_mph: int | None = None)
     return None
 
 
+def off_class_stepdown(
+    jurisdiction: str,
+    speed_mph: int,
+    work_zone_speed_mph: int | None,
+    road_type: str | None,
+    closure_type: str | None,
+) -> bool:
+    """True for the Case 26/27 step-down on a road class Sheet 14 doesn't draw (#355, R3).
+
+    A CDOT shoulder plan at exactly 65 -> 60 or 75 -> 65 whose road isn't a
+    freeway or expressway (:func:`sheet_14_road_class`).  The one producer
+    for the audit's and the crew sheet's "Sheet 14 doesn't apply" wording.
+    """
+    return (
+        jurisdiction == "CDOT"
+        and _cdot_buffer_or_none(speed_mph, work_zone_speed_mph) is not None
+        and not sheet_14_road_class(road_type, closure_type)
+    )
+
+
 def _is_cdot_minimum(
-    jurisdiction: str, speed_mph: int, work_zone_speed_mph: int | None = None
+    jurisdiction: str,
+    speed_mph: int,
+    work_zone_speed_mph: int | None = None,
+    *,
+    road_type: str | None = None,
+    closure_type: str | None = None,
 ) -> bool:
     """True when the CDOT supplement posts a hard minimum for this scenario.
 
@@ -263,7 +321,11 @@ def _is_cdot_minimum(
     the federal advisory value and carries the normal tolerance.
     """
     return (
-        jurisdiction == "CDOT" and _cdot_buffer_or_none(speed_mph, work_zone_speed_mph) is not None
+        jurisdiction == "CDOT"
+        and _cdot_buffer_or_none(
+            speed_mph, work_zone_speed_mph, road_type=road_type, closure_type=closure_type
+        )
+        is not None
     )
 
 

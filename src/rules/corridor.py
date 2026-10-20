@@ -897,7 +897,11 @@ def build_corridor(
 
     taper_ft = _resolve_taper_ft(closure_type, speed_mph, lane_width_ft, shoulder_width_ft)
     buffer_ft = buffer_space(
-        speed_mph, jurisdiction=jurisdiction, work_zone_speed_mph=work_zone_speed_mph
+        speed_mph,
+        jurisdiction=jurisdiction,
+        work_zone_speed_mph=work_zone_speed_mph,
+        road_type=road_type,
+        closure_type=closure_type,
     )
     downstream_ft = (
         downstream_taper_ft

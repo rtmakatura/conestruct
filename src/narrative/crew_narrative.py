@@ -45,6 +45,7 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    off_class_stepdown,
     one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     pick_device_count,
@@ -360,7 +361,11 @@ def build_narrative_context(
     else:
         taper_len = shoulder_taper_length(speed, shoulder_width)
     buf_len = buffer_space(
-        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        speed,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
 
     taper_end_station = wz_len + buf_len
@@ -503,8 +508,16 @@ def build_narrative_context(
     # shoulder routing (Cases 26/27). Verbatim from the case fixtures;
     # only tabulated at 65/75 mph — silent otherwise to preserve the
     # verbatim-or-nothing symmetry the audit already enforces (S1).
+    # #355 (R3): not on the Case 26/27 step-down off the freeway/expressway
+    # class — the audit doesn't cite Sheet 14 for that plan either.
     trigger_condition: str | None = None
-    if fines_double_applicable:
+    if fines_double_applicable and not off_class_stepdown(
+        params.jurisdiction,
+        params.speed_mph,
+        params.work_zone_speed_mph,
+        params.road_type,
+        params.closure_type,
+    ):
         if params.speed_mph == 65:
             trigger_condition = (
                 "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) "

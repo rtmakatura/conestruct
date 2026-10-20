@@ -1151,6 +1151,14 @@ def _shoulder_at_65() -> dict:
     return s
 
 
+def _freeway_at_65() -> dict:
+    """#355: Case 26 is drawn for freeway/expressway shoulder work only, so
+    the 65 -> 60 supplement path is exercised on a freeway."""
+    s = _shoulder_at_65()
+    s["roadType"] = "freeway"
+    return s
+
+
 def _shoulder_at_75() -> dict:
     s = _shoulder_scenario()
     s["roadType"] = "freeway"
@@ -1205,7 +1213,7 @@ def test_audit_buffer_citation_pins_general_note_24(client: TestClient) -> None:
 def test_audit_buffer_at_65_with_case_26_stepdown_diverges(client: TestClient) -> None:
     """65 -> 60 (Case 26 mandated step-down): the CDOT supplement 570 ft
     minimum applies; full divergence annotation citing Case 26."""
-    s = _shoulder_at_65()
+    s = _freeway_at_65()
     s["workZoneSpeed"] = 60
     res = client.post("/render/audit", headers=_auth_headers(), json=s)
     assert res.status_code == 200, res.text
@@ -1277,7 +1285,7 @@ def test_audit_taper_and_buffer_cite_consistent_case_at_65(client: TestClient) -
     assert "Case 26" not in taper_ref
     assert "Case 26" not in buf_src
 
-    s = _shoulder_at_65()
+    s = _freeway_at_65()
     s["workZoneSpeed"] = 60
     reduced = client.post("/render/audit", headers=_auth_headers(), json=s).json()
     assert "Case 26" in reduced["sections"]["taper"]["cdot_reference"]
@@ -1297,7 +1305,7 @@ def test_audit_taper_case_buffer_cite_same_case_across_reduction_types(client: T
         raise AssertionError(f"no Case token in: {text!r}")
 
     def scenario(speed: int, wz: int | None) -> dict:
-        s = _shoulder_at_65() if speed == 65 else _shoulder_at_75()
+        s = _freeway_at_65() if speed == 65 else _shoulder_at_75()
         if wz is not None:
             s["workZoneSpeed"] = wz
         return s
@@ -1469,7 +1477,7 @@ def test_audit_supplement_case_gated_on_cdot_jurisdiction() -> None:
             speed_mph=65,
             num_lanes=2,
             closure_type="shoulder",
-            road_type="rural",
+            road_type="freeway",  # #355: Case 26 is drawn for freeway/expressway
             work_zone_length_ft=1200.0,
             lane_width_ft=12.0,
             shoulder_width_ft=10.0,
@@ -1514,7 +1522,7 @@ def test_validate_buffer_space_cdot_minimum_enforced_strictly() -> None:
         speed_mph=65,
         num_lanes=2,
         closure_type="shoulder",
-        road_type="rural",
+        road_type="freeway",  # #355: Case 26 is drawn for freeway/expressway
         work_zone_length_ft=1000.0,
         lane_width_ft=12.0,
         shoulder_width_ft=10.0,

@@ -234,10 +234,14 @@ def test_the_request_is_bounded(client: TestClient, mapbox: list[dict[str, Any]]
 def test_the_picture_follows_the_one_layout_call(
     client: TestClient, mapbox: list[dict[str, Any]]
 ) -> None:
-    """#302: at 65->60 the band draws the 570 ft buffer the plan builds."""
-    band(client, fixture("broadway-sb", speed=65, workZoneSpeed=60), "laid_out")
+    """#302: at 65->60 the band draws the 570 ft buffer the plan builds.
+
+    #355: Sheet 14's 570 ft is a freeway/expressway buffer, so the step-down
+    is drawn on a freeway (two 12 ft lanes, the freeway lane minimum)."""
+    freeway = {"roadType": "freeway", "lanes": 2, "laneWidth": 12.0}
+    band(client, fixture("broadway-sb", speed=65, workZoneSpeed=60, **freeway), "laid_out")
     at_step_down = overlays_of(mapbox[-1]["url"])
-    band(client, fixture("broadway-sb", speed=65), "laid_out")
+    band(client, fixture("broadway-sb", speed=65, **freeway), "laid_out")
     no_reduction = overlays_of(mapbox[-1]["url"])
     buffer = f"path-4+{sa.ZONE_COLOR['buffer']}"
     assert buffer in at_step_down and at_step_down != no_reduction

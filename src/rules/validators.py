@@ -610,7 +610,13 @@ def case_11_freeway_series(params: ScenarioParams) -> bool:
     return (
         params.road_type == "freeway"
         and params.closure_type == "shoulder"
-        and not _is_cdot_minimum(params.jurisdiction, params.speed_mph, params.work_zone_speed_mph)
+        and not _is_cdot_minimum(
+            params.jurisdiction,
+            params.speed_mph,
+            params.work_zone_speed_mph,
+            road_type=params.road_type,
+            closure_type=params.closure_type,
+        )
     )
 
 
@@ -625,7 +631,13 @@ def sheet_14_freeway_series(params: ScenarioParams) -> bool:
     return (
         params.road_type == "freeway"
         and params.closure_type == "shoulder"
-        and _is_cdot_minimum(params.jurisdiction, params.speed_mph, params.work_zone_speed_mph)
+        and _is_cdot_minimum(
+            params.jurisdiction,
+            params.speed_mph,
+            params.work_zone_speed_mph,
+            road_type=params.road_type,
+            closure_type=params.closure_type,
+        )
     )
 
 
@@ -1113,9 +1125,15 @@ def validate_buffer_space(
         params.speed_mph,
         jurisdiction=params.jurisdiction,
         work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
     is_cdot_min = _is_cdot_minimum(
-        params.jurisdiction, params.speed_mph, params.work_zone_speed_mph
+        params.jurisdiction,
+        params.speed_mph,
+        params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
     tolerance = 1.0 if is_cdot_min else BUFFER_SPACE_TOLERANCE_LOW
 
@@ -1926,6 +1944,8 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
             params.speed_mph,
             jurisdiction=params.jurisdiction,
             work_zone_speed_mph=params.work_zone_speed_mph,
+            road_type=params.road_type,
+            closure_type=params.closure_type,
         )
     except ValueError as exc:
         out.append(

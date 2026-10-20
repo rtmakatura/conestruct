@@ -63,6 +63,8 @@ def _taper_bounds(params: ScenarioParams) -> tuple[float, float]:
         params.speed_mph,
         jurisdiction=params.jurisdiction,
         work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
     taper_end_station = params.work_zone_length_ft + buf_len
     if _is_flagger_scenario(params):

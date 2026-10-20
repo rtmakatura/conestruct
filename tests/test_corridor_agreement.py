@@ -150,18 +150,30 @@ def test_picker_page_two_and_band_agree(
 
 
 @pytest.mark.parametrize(
-    ("speed", "wz_speed", "built_ft"),
-    [(65, 60, 570), (75, 65, 650), (65, None, 645)],
+    ("road_type", "speed", "wz_speed", "built_ft"),
+    [
+        ("freeway", 65, 60, 570),
+        ("freeway", 75, 65, 650),
+        # #355: off the freeway/expressway class the step-down takes the
+        # federal posted-speed buffer (Table 6B-2), not Sheet 14's floor.
+        (None, 65, 60, 645),
+        (None, 75, 65, 820),
+        (None, 65, None, 645),
+    ],
 )
 def test_the_drawn_buffer_is_the_built_buffer(
     client: TestClient,
     page_two: dict[str, Any],
+    road_type: str | None,
     speed: int,
     wz_speed: int | None,
     built_ft: int,
 ) -> None:
     """#302: the buffer every surface draws is the one the plan builds."""
     overrides: dict[str, Any] = {"speed": speed}
+    if road_type is not None:
+        # A freeway plan needs 11 ft lanes and fits 3 per direction (Sheet 7 Case 11).
+        overrides.update(roadType=road_type, lanes=2, laneWidth=12.0)
     if wz_speed is not None:
         overrides["workZoneSpeed"] = wz_speed
     g, spec, drawn = _answers(client, page_two, fixture("broadway-sb", **overrides))

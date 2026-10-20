@@ -16,58 +16,47 @@
         "cite": "MUTCD TABLE 6B-1",
         "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
       },
-      "result_text": "4 signs",
+      "result_text": "3 signs",
       "road_type_text": "Speed 75 mph, road_type = 'rural' -> Table 6B-1 category: rural",
       "sign_table": [
         {
           "Code": "W20-1",
           "Distance from Taper (ft)": "1,500 upstream",
           "Position": "C (furthest)",
-          "Station (ft)": "4,400"
+          "Station (ft)": "4,570"
         },
         {
           "Code": "W20-2",
           "Distance from Taper (ft)": "1,000 upstream",
           "Position": "B (middle)",
-          "Station (ft)": "3,900"
+          "Station (ft)": "4,070"
         },
         {
           "Code": "W21-5aR",
           "Distance from Taper (ft)": "500 upstream",
           "Position": "A (nearest)",
-          "Station (ft)": "3,400"
-        },
-        {
-          "Code": "W3-5(65)",
-          "Distance from Taper (ft)": "130 upstream",
-          "Position": "W3-5 step 1",
-          "Station (ft)": "3,030"
+          "Station (ft)": "3,570"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
       "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
     },
     "buffer": {
-      "buffer_ft": 650.0,
-      "cdot_value_ft": 650,
+      "buffer_ft": 820.0,
       "citation": {
         "cite": "MUTCD § 6B.06",
         "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
       },
-      "divergence": true,
-      "jurisdiction": "CDOT",
-      "lookup_text": "CDOT supplement: 650 ft. MUTCD Table 6B-2: 820 ft. Plan uses CDOT supplement value. Note: CDOT supplement permits shorter buffer than federal table. Verify against project-specific engineering judgment.",
-      "mutcd_value_ft": 820,
-      "result_text": "B = 650 ft",
-      "source": "CDOT S-630-1 Standard Plan, Sheet 14 (Case 27 at 75 mph). MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (federal baseline).",
+      "lookup_text": "MUTCD Table 6B-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum for the Case 27 step-down (75 → 65 mph), but Sheet 14 is drawn for shoulder work on a freeway or expressway and this road is neither, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
+      "result_text": "B = 820 ft",
+      "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
       "speed_mph": 75
     },
     "case": {
-      "case": "Case 27 at 75 mph: Shoulder closure with reduced work-zone speed",
-      "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 75 → 65 mph; Fines Double envelope applies per S-630-1 Sheet 12, Fines Double Signing Notes.",
-      "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 75 mph.",
+      "case": "Case 11 (reduced work-zone speed): Shoulder closure on divided highway",
+      "narrative": "This scenario matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway, with a reduced work-zone posted speed (75 → 65 mph) that is the Case 26/27 step-down, but Sheet 14 draws Cases 26/27 for freeway/expressway only. Fines Double envelope applies per S-630-1 Sheet 12, Fines Double Signing Notes.",
+      "narrative_2": "CDOT S-630-1 draws no reduced-speed shoulder typical for this road. The advance signs follow MUTCD 11th Ed. Table 6B-1 at 75 mph, and the buffer follows MUTCD Table 6B-2 at the posted speed.",
       "routing": "shoulder_reduced_speed",
-      "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 10 FT OF TRAVEL WAY",
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
     },
     "colorado": {
@@ -81,7 +70,7 @@
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
-          "detail": "Zone length: 4,400 ft. Required: 2. Placed: 4.",
+          "detail": "Zone length: 4,570 ft. Required: 2. Placed: 4.",
           "label": "G20-5P Work Zone signs every 2,640 ft",
           "pass": true
         },
@@ -110,7 +99,7 @@
     },
     "corridor_spec": {
       "advance_warning_ft": 1500,
-      "buffer_ft": 650,
+      "buffer_ft": 820,
       "downstream_taper_ft": 50,
       "road_category": "rural",
       "taper_ft": 250
@@ -163,7 +152,7 @@
     },
     "geometry_validation": {
       "all_pass": true,
-      "buffer_ft": 650.0,
+      "buffer_ft": 820.0,
       "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
       "speed_mph": 75,
       "taper_ft": 250,
@@ -194,29 +183,29 @@
       "status": "not_run"
     },
     "spacing": {
-      "buffer_cone_spacing_ft": 130.0,
-      "buffer_count_text": "Buffer: 650 ft / 150 ft max spacing -> 4 cones at 130.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+      "buffer_cone_spacing_ft": 136.7,
+      "buffer_count_text": "Buffer: 820 ft / 150 ft max spacing -> 5 cones at 136.7 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
       "citation": {
         "cite": "MUTCD § 6K.01",
         "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
       },
-      "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 15 tangent + 4 buffer + 2 downstream = 21 cones total",
+      "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 15 tangent + 5 buffer + 2 downstream = 22 cones total",
       "formula_text": [
         "L/3 = 250 ft / 75 ft max spacing -> 5 drums at 62.5 ft intervals",
         "2000 ft / 150 ft max spacing -> 15 cones at 142.9 ft intervals",
-        "Buffer: 650 ft / 150 ft max spacing -> 4 cones at 130.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
-        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 15 tangent + 4 buffer + 2 downstream = 21 cones total"
+        "Buffer: 820 ft / 150 ft max spacing -> 5 cones at 136.7 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 15 tangent + 5 buffer + 2 downstream = 22 cones total"
       ],
       "in_taper_text": "75 mph -> 75 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
-      "n_buffer_cones": 4,
-      "n_cones_placed_total": 21,
+      "n_buffer_cones": 5,
+      "n_cones_placed_total": 22,
       "n_downstream_taper_cones": 2,
-      "n_tangent_cones_actual": 21,
+      "n_tangent_cones_actual": 22,
       "n_tangent_cones_required": 15,
       "n_taper_drums_actual": 5,
       "n_taper_drums_required": 5,
       "on_tangent_text": "75 mph -> 150 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
-      "result_text": "24 devices · 75/150 ft o.c.",
+      "result_text": "25 devices · 75/150 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 75,
       "tangent_count_text": "2000 ft / 150 ft max spacing -> 15 cones at 142.9 ft intervals",
@@ -229,7 +218,7 @@
       "L_required_label": "L/3 (shoulder taper)",
       "L_third_calc_text": "L/3 = 750 / 3 = 250 ft",
       "L_third_ft": 250,
-      "cdot_reference": "CDOT S-630-1 Case 27 (shoulder closure on freeway/expressway, 75 mph posted with reduced work-zone speed; Sheet 14)",
+      "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway, reduced work-zone speed)",
       "citation": {
         "cite": "MUTCD § 6B.08",
         "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
@@ -252,8 +241,8 @@
     }
   },
   "summary": {
-    "buffer_space_ft": 650.0,
-    "case_id": "Case 27 at 75 mph: Shoulder closure with reduced work-zone speed",
+    "buffer_space_ft": 820.0,
+    "case_id": "Case 11 (reduced work-zone speed): Shoulder closure on divided highway",
     "case_routing": "shoulder_reduced_speed",
     "cdot_sheet": "S-630-1",
     "device_spacing_tangent_ft": 150.0,
@@ -261,7 +250,6 @@
     "step_count": 14,
     "ta": "TA-3",
     "taper_label": "L/3 (shoulder taper)",
-    "taper_length_ft": 250,
-    "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 10 FT OF TRAVEL WAY"
+    "taper_length_ft": 250
   }
 }

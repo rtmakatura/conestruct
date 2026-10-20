@@ -213,7 +213,11 @@ def _make_x_mapping(
     wz_len = params.work_zone_length_ft
     taper_len = _required_taper_length(params, shoulder_width_ft)
     buf_len = buffer_space(
-        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        speed,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
     taper_start_station = wz_len + buf_len + taper_len
 
@@ -1393,6 +1397,8 @@ def _draw_site_context(
             params.speed_mph,
             jurisdiction=params.jurisdiction,
             work_zone_speed_mph=params.work_zone_speed_mph,
+            road_type=params.road_type,
+            closure_type=params.closure_type,
         )
         taper_len = _required_taper_length(params, shoulder_width_ft)
         school_station = wz_len + buf_len + taper_len + 100.0
@@ -2237,6 +2243,8 @@ def _draw_landmarks(
         params.speed_mph,
         jurisdiction=params.jurisdiction,
         work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
     taper_label = "L" if params.closure_type == "lane" else "L/3"
 
@@ -3636,7 +3644,11 @@ def _draw_notes(
     else:
         taper_len = _required_taper_length(params, shoulder_width_ft)
         buf_len = buffer_space(
-            speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+            speed,
+            jurisdiction=params.jurisdiction,
+            work_zone_speed_mph=params.work_zone_speed_mph,
+            road_type=params.road_type,
+            closure_type=params.closure_type,
         )
         if is_flagger:
             taper_label = "One-lane two-way taper"
@@ -5156,6 +5168,8 @@ def _draw_schematic_page(
             params.speed_mph,
             jurisdiction=params.jurisdiction,
             work_zone_speed_mph=params.work_zone_speed_mph,
+            road_type=params.road_type,
+            closure_type=params.closure_type,
         )
         wz_len = params.work_zone_length_ft
         in_buffer = [

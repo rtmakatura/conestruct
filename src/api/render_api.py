@@ -2093,6 +2093,8 @@ def _zone_geometry(params: ScenarioParams) -> dict[str, float]:
         params.speed_mph,
         jurisdiction=params.jurisdiction,
         work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
     # Whole-foot display precision, same convention as audit.py's ``_ft``
     # (the single source of display precision) so this block, the audit

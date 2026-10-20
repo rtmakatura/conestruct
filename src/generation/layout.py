@@ -443,7 +443,11 @@ def generate_shoulder_closure_divided(
     # Longitudinal landmarks
     taper_len = shoulder_taper_length(speed, shoulder_width_ft)
     buf_len = buffer_space(
-        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        speed,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
 
     wz_end_station = 0.0
@@ -897,7 +901,11 @@ def generate_shoulder_closure_undivided(
     # Longitudinal landmarks
     taper_len = shoulder_taper_length(speed, shoulder_width_ft)
     buf_len = buffer_space(
-        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        speed,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
 
     wz_end_station = 0.0
@@ -1211,7 +1219,11 @@ def generate_lane_closure_divided(
     # is a travel-lane closure rather than a shoulder closure.
     taper_len = taper_length(speed, params.lane_width_ft)
     buf_len = buffer_space(
-        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        speed,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
 
     wz_end_station = 0.0
@@ -1600,7 +1612,11 @@ def near_intersection_stations(
     speed = params.speed_mph
     taper_len = taper_length(speed, params.lane_width_ft)
     buf_len = buffer_space(
-        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        speed,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
 
     # Far side: §6N.12.12 — the closed lane must already be closed on
@@ -2096,7 +2112,11 @@ def flagger_chain_stations(params: ScenarioParams) -> dict[str, Any]:
 
     taper_len = one_lane_two_way_taper_length()
     buf_len = buffer_space(
-        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        speed,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     )
     ds_taper_len = downstream_taper_length(1)
     taper_start = wz_len + buf_len + taper_len

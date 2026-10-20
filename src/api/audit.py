@@ -39,6 +39,7 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    off_class_stepdown,
     one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     pick_device_count,
@@ -370,8 +371,18 @@ def build_audit_trail(
     # the jurisdiction term a federal 65->60 scenario would take a Case 26
     # label while its buffer source stayed federal Table 6B-2.  A non-standard
     # reduction (e.g. 65->55) is generic Case 11 with a reduction marker.
+    # #355 (R1): a shoulder plan off the freeway/expressway class never
+    # takes Sheet 14 — the road class is passed with the speeds.
+    _road_class = {"road_type": params.road_type, "closure_type": params.closure_type}
     is_supplement_case = (
-        params.jurisdiction == "CDOT" and _cdot_buffer_or_none(speed, wz_speed) is not None
+        params.jurisdiction == "CDOT"
+        and _cdot_buffer_or_none(speed, wz_speed, **_road_class) is not None
+    )
+    # #355 (R3): the Case 26/27 step-down itself, on a shoulder plan whose
+    # road class Sheet 14 doesn't draw.  Its own wording on the buffer and
+    # case; every other plan reads as before.
+    is_off_class_stepdown = off_class_stepdown(
+        params.jurisdiction, speed, wz_speed, params.road_type, params.closure_type
     )
 
     # ------------------------------------------------------------------
@@ -580,13 +591,15 @@ def build_audit_trail(
     # mutcd_value_ft/divergence) appear only in case A so non-divergent
     # speeds stay byte-identical to pre-Item-2 modulo the citation +
     # silent annotation.
-    buf = buffer_space(speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=wz_speed)
+    buf = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=wz_speed, **_road_class
+    )
     # The 570/650 supplement minimum is conditional: it applies only on a
     # qualifying Case 26/27 step-down (65->60, 75->65).  ``cdot_value`` is
     # None for a plain 65/75 closure or a non-standard reduction, so the
     # divergence branch (and its "Case 26/27" citation) fires only when the
     # supplement minimum actually governs.
-    cdot_value = _cdot_buffer_or_none(speed, wz_speed)
+    cdot_value = _cdot_buffer_or_none(speed, wz_speed, **_road_class)
     is_divergent = params.jurisdiction == "CDOT" and cdot_value is not None
     # True at 65/75 mph regardless of reduction: the supplement tabulates a
     # (conditional) minimum at this speed, which lets us explain *why* the
@@ -617,6 +630,30 @@ def build_audit_trail(
             "cdot_value_ft": int(buf),
             "mutcd_value_ft": int(mutcd_value),
             "divergence": True,
+            "citation": _CITATION_BUFFER,
+        }
+    elif is_off_class_stepdown:
+        # #355 (R3): the Case 26/27 step-down, but Sheet 14 is drawn for
+        # freeway/expressway shoulder work and this road is neither, so the
+        # federal posted-speed value governs as on any other reduction.
+        _supplement_case = "Case 26" if speed == 65 else "Case 27"
+        _sheet_14_min = _cdot_buffer_or_none(speed, wz_speed)
+        buffer_section = {
+            "speed_mph": speed,
+            "lookup_text": (
+                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"{_sheet_14_min:g} ft minimum for the {_supplement_case} step-down "
+                f"({speed} → {wz_speed} mph), but Sheet 14 is drawn for shoulder work on a "
+                f"freeway or expressway and this road is neither, so the federal "
+                f"posted-speed value governs (Sheet 7 Case 11: buffer VARIES per "
+                f"General Note 24)."
+            ),
+            "buffer_ft": buf,
+            "source": (
+                f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} "
+                "(stopping sight distance). "
+                "CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24)."
+            ),
             "citation": _CITATION_BUFFER,
         }
     elif supplement_speed:
@@ -1602,13 +1639,28 @@ def build_audit_trail(
         # (federal posted-speed value, Sheet 7 Case 11).  No Sheet 14
         # trigger text — that is tabulated only for the 65/75 step-downs.
         case_routing = "shoulder_reduced_speed"
+        # #355 (R3): on a road Sheet 14 doesn't draw, the step-down can be
+        # Case 26/27's own; the clause says why Sheet 14 still doesn't apply.
+        _stepdown_clause = (
+            "that is the Case 26/27 step-down, but Sheet 14 draws Cases 26/27 "
+            "for freeway/expressway only"
+            if is_off_class_stepdown
+            else "that does not match the Case 26/27 mandated step-down"
+        )
+        if is_off_class_stepdown:
+            case_narrative_2 = (
+                "CDOT S-630-1 draws no reduced-speed shoulder typical for this road. "
+                f"The advance signs follow MUTCD 11th Ed. Table {_TBL_ADVANCE} at "
+                f"{speed} mph, and the buffer follows MUTCD Table {_TBL_BUFFER} at the "
+                "posted speed."
+            )
         if params.is_divided:
             case_label = "Case 11 (reduced work-zone speed): Shoulder closure on divided highway"
             case_narrative = (
                 f"This scenario matches CDOT Standard Plan S-630-1, Case 11: "
                 f"shoulder closure on a divided highway, with a reduced work-zone "
-                f"posted speed ({speed} → {wz_speed} mph) that does not match the "
-                f"Case 26/27 mandated step-down. Fines Double envelope applies per "
+                f"posted speed ({speed} → {wz_speed} mph) {_stepdown_clause}. "
+                f"Fines Double envelope applies per "
                 f"S-630-1 Sheet 12, Fines Double Signing Notes."
             )
         else:
@@ -1624,8 +1676,7 @@ def build_audit_trail(
                 f"the general shoulder-work typical (drawn for "
                 f"freeway/expressway), applied to {_applied_signing(params)}, "
                 f"with a reduced work-zone posted speed ({speed} → "
-                f"{wz_speed} mph) that does not match the Case 26/27 "
-                f"mandated step-down. Fines Double envelope applies per "
+                f"{wz_speed} mph) {_stepdown_clause}. Fines Double envelope applies per "
                 f"S-630-1 Sheet 12, Fines Double Signing Notes."
             )
     else:
