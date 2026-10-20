@@ -360,7 +360,7 @@ def test_shoulder_closure_divided_arrow_board_count() -> None:
 def test_shoulder_closure_divided_sign_count() -> None:
     """14 SIGN_GENERIC placements — 7 sign positions × 2 sides (CO §6C.04(A)):
     - 3 advance warning (W21-5aR, W20-2, W20-1)
-    - 2 G20-5P CONSTRUCTION ZONE plaques (zone length 2978 ft → ceil(2978/2640) = 2)
+    - 2 G20-5P WORK ZONE plaques (zone length 2978 ft → ceil(2978/2640) = 2)
     - 1 G20-2 END ROAD WORK
     - 1 G20-1 BEGIN ROAD WORK
     = 7 unique stations, each mirrored on the right shoulder and the
@@ -410,7 +410,7 @@ def test_shoulder_closure_divided_sign_labels_recognized() -> None:
       W21-5aR  RIGHT SHOULDER CLOSED AHEAD
       W20-2    ROAD WORK xxx FT
       W20-1    ROAD WORK AHEAD
-      G20-5P   CONSTRUCTION ZONE plaque
+      G20-5P   WORK ZONE plaque
       G20-2    END ROAD WORK
       G20-1    BEGIN ROAD WORK
     """

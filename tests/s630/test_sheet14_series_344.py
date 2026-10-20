@@ -97,7 +97,7 @@ def test_page1_and_crew_sheet_print_the_same_distances(
     assert re.search(r"R2-10 ?BEGIN DOUBLE FINES ZONE 1580 ft", page1)
     assert "W20-2" not in page1
     crew = _post(api, "/render/markdown", scenario).text
-    assert "| W20-1 | ROAD WORK AHEAD | 2,640 ft upstream |" in crew
+    assert "| W20-1 | ROAD WORK \u00bd MILE | 2,640 ft upstream |" in crew  # #354 S1
     assert "| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 1,320 ft upstream |" in crew
     assert "| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 530 ft upstream |" in crew
     assert "W20-2" not in crew

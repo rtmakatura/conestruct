@@ -22,6 +22,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from src.rules.validators import sheet_14_freeway_series
+
 if TYPE_CHECKING:
     from src.rules.validators import ScenarioParams
 
@@ -51,7 +53,8 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "G20-1": "ROAD CONSTRUCTION (NEXT XXX FT)",
     "G20-2": "END ROAD WORK",
     "G20-4": "PILOT CAR FOLLOW ME",
-    "G20-5P": "CONSTRUCTION ZONE plaque",
+    # #354: S-630-1 Sheet 2 Note 4 "Work Zone (G20-5p)"; §6G.08 ¶01 (p. 795).
+    "G20-5P": "WORK ZONE plaque",
     # Regulatory (R-series)
     # Plain legend per §6G.10 — "USE OTHER SIDE" belongs to R9-10, which
     # asserts a walkable alternate side the tool cannot verify exists.
@@ -168,6 +171,9 @@ def substitute_sign_description(
 
     Single source for every parametric label substitution:
 
+      * ``W20-1`` → ``ROAD WORK ½ MILE`` on a Case 26/27 plan
+        (``sheet_14_freeway_series``; S-630-1 Sheet 14, #354), whose
+        W20-1 sits 2,640 ft from the taper (#344).
       * ``W20-2``  ROAD WORK XXX FT → distance from the sign back to the
         taper start (``station_ft - taper_start_station``; the taper
         start is derived from ``params`` when not supplied).
@@ -188,7 +194,10 @@ def substitute_sign_description(
     code = display_code(key)
     desc = description_for(code)
 
-    if code == "W20-2":
+    if code == "W20-1":
+        if sheet_14_freeway_series(params):
+            desc = "ROAD WORK ½ MILE"
+    elif code == "W20-2":
         if taper_start_station is None:
             taper_start_station = _taper_start_station(params)
         dist = station_ft - taper_start_station
