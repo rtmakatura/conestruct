@@ -188,8 +188,11 @@ export function setLanes(scenario: Scenario, n: number): Scenario {
     detectedLanesForward: undefined,
     detectedLanesBackward: undefined,
     detectedLanesBothWays: undefined,
-    // #310: the road's count is no longer the detection's claim either.
-    roadLanesPerDirection: undefined,
+    // #310/#345: the road's count stays unless the edit disputes the
+    // detection it came from.  An undisputed edit draws fewer lanes than
+    // the road has (#335's freeway recovery), and the backend says so.
+    // A wrong map count is corrected through the picker's override.
+    roadLanesPerDirection: disputed ? undefined : scenario.roadLanesPerDirection,
     detectionOverrides: disputed
       ? appendDetectionOverride(s.detectionOverrides, {
           via: "shoulder_lane_edit",

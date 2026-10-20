@@ -36,10 +36,13 @@ from src.rules.spacing import (
     taper_length,
 )
 from src.rules.validators import (
+    FREEWAY_MIN_LANE_WIDTH_FT,
+    MAX_DRAWABLE_HALF_ROAD_FT,
     ApproachParams,
     DevicePlacement,
     ScenarioParams,
     case_11_freeway_series,
+    freeway_max_drawable_lanes,
     sheet_14_freeway_series,
     shoulder_closed_sign_code,
 )
@@ -217,10 +220,30 @@ def lanes_drawn_below_road(params: ScenarioParams) -> str | None:
     #341: the sheet's limit is named only when it is the cause (the plan
     draws exactly the limit and the road has more); a plan drawn below
     the limit drew the entered count.
+
+    #345: on a freeway, the most lanes the sheet draws at the 11 ft
+    minimum (``freeway_max_drawable_lanes``, #335's refusal arithmetic)
+    can sit below that limit.  A plan drawn at exactly that count names
+    the freeway minimum as the cause: no legal lane width fits the road's
+    count, whatever width was entered.
     """
     road = params.road_lanes_per_direction
     if road is None or road <= params.num_lanes:
         return None
+    fit = freeway_max_drawable_lanes(params.shoulder_width_ft)
+    if (
+        params.road_type == "freeway"
+        and params.num_lanes == fit
+        and fit < PLAN_MAX_LANES_PER_DIRECTION
+    ):
+        return (
+            f"Drawn as {params.num_lanes} lanes per direction; the road has {road}. "
+            f"Freeway lanes must be at least {FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft "
+            f"(CDOT S-630-1 Sheet 7 Case 11), and at that width {road} lanes and the "
+            f"{params.shoulder_width_ft:g} ft shoulder overrun the sheet's "
+            f"{MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft half-road, so the device offsets are "
+            f"measured against {params.num_lanes} lanes."
+        )
     if params.num_lanes < PLAN_MAX_LANES_PER_DIRECTION:
         return (
             f"Drawn as {params.num_lanes} lanes per direction (entered); the road has {road}. "

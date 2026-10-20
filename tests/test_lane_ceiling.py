@@ -12,6 +12,7 @@ pattern).  Tested through the real endpoints (Rule 11).
 from __future__ import annotations
 
 import copy
+import dataclasses
 import io
 import os
 from typing import Any
@@ -173,3 +174,50 @@ def test_below_the_limit_every_surface_prints_the_entered_wording() -> None:
     md = client.post("/render/markdown", headers=AUTH, json=body)
     assert md.status_code == 200, md.text[:300]
     assert f"- Lanes: {ENTERED}" in md.text
+
+
+# #345 (R145 self-ruled S2): on a freeway the 11 ft minimum, not the 4-lane
+# limit, is why a 4-lane road draws as 3 under a 10 ft shoulder (#335's
+# recovery).  The sentence names that cause.
+FREEWAY_MIN = (
+    "Drawn as 3 lanes per direction; the road has 4. Freeway lanes must be at "
+    "least 11 ft (CDOT S-630-1 Sheet 7 Case 11), and at that width 4 lanes and "
+    "the 10 ft shoulder overrun the sheet's 52 ft half-road, so the device "
+    "offsets are measured against 3 lanes."
+)
+
+
+def _freeway(num_lanes: int, road: int | None, shoulder: float = 10.0) -> ScenarioParams:
+    return dataclasses.replace(
+        _params(num_lanes, road),
+        road_type="freeway",
+        lane_width_ft=11.0,
+        shoulder_width_ft=shoulder,
+    )
+
+
+def test_a_freeway_drawn_at_the_fit_count_names_the_freeway_minimum() -> None:
+    assert lanes_drawn_below_road(_freeway(3, 4)) == FREEWAY_MIN
+    assert "the road has 6. Freeway lanes" in (lanes_drawn_below_road(_freeway(3, 6)) or "")
+    # Below the fit count the operator chose it: #341's entered wording.
+    assert "(entered); the road has 4." in (lanes_drawn_below_road(_freeway(2, 4)) or "")
+    # A non-freeway plan at 3 of 4 keeps #341's sentence byte for byte.
+    assert lanes_drawn_below_road(_params(3, 4)) == ENTERED
+    # Under an 8 ft shoulder 4 lanes fit at 11 ft: the limit is the cause.
+    assert lanes_drawn_below_road(_freeway(4, 5, shoulder=8.0)) == SENTENCE
+
+
+def test_the_i25_recovery_prints_the_freeway_minimum_on_every_surface() -> None:
+    # #345's repro: I-25 (4 per direction) after #335's refusal, 3 x 11 ft.
+    body = _body(roadType="freeway", speed=65, lanes=3, laneWidth=11.0, roadLanesPerDirection=4)
+    r = client.post("/render/audit", headers=AUTH, json=body)
+    assert r.status_code == 200, r.text[:300]
+    assert _pending_kinds(r.json())["lanes_drawn_below_road"]["label"] == FREEWAY_MIN
+    text = _page_text(body)
+    assert "DRAWN AS 3 LANES PER DIRECTION; THE ROAD HAS 4." in text
+    assert "FREEWAY LANES MUST BE AT" in text
+    assert "MEASURED AGAINST 3 LANES." in text
+    assert "AT MOST" not in text
+    md = client.post("/render/markdown", headers=AUTH, json=body)
+    assert md.status_code == 200, md.text[:300]
+    assert f"- Lanes: {FREEWAY_MIN}" in md.text

@@ -631,8 +631,9 @@ class ShoulderScenario(
     # drives no geometry.  Sole consumer is the disclosure that the sheet
     # draws fewer lanes than the road has (``layout.lanes_drawn_below_road``,
     # on page 1, in the audit and in the crew narrative).  None / omitted:
-    # no relay, no disclosure.  The frontend clears it when the operator
-    # edits the lane count on the form.  No upper bound: the predicate needs
+    # no relay, no disclosure.  The frontend clears it when a form lane
+    # edit disputes the detection (#345: an undisputed edit keeps it, so a
+    # narrowed plan still says the road has more).  No upper bound: the predicate needs
     # none, and a large count is still what the map or the operator said.
     roadLanesPerDirection: int | None = Field(default=None, ge=1)
 
