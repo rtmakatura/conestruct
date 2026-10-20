@@ -1,0 +1,55 @@
+I-25 at 65->60 (Case 26): audit 200, pdf 200 -> PASS
+  source: CDOT S-630-1 Sheet 14 Case 26
+  Furthest (Sheet 14) | W20-1 | 2,640 upstream
+  W3-5 step 1 | W3-5(60) | 2,110 upstream
+  R2-10 (Sheet 14) | R2-10 | 1,580 upstream
+  First W21-5aR (Sheet 14) | W21-5aR | 1,320 upstream
+  First W21-5aR plaque | W16-2a | NEXT 2,107 FT (under first W21-5aR)
+  Speed limit group (Sheet 14) | R2-1 | 1,060 upstream
+  Speed limit group (Sheet 14) | G20-5P | 1,060 upstream
+  Advance (G20-5P) | G20-5P | 795 upstream
+  Advance (R2-6P) | R2-6P | 795 upstream
+  Second W21-5aR (Sheet 14) | W21-5aR | 530 upstream
+  Second W21-5aR plaque | W7-3a | NEXT 1 MILE (under second W21-5aR)
+  check Second W21-5aR (Sheet 14): True
+  check First W21-5aR (Sheet 14): True
+  check R2-10 (Sheet 14): True
+  check Furthest (Sheet 14): True
+  check no W20-2: True
+  check source Sheet 14: True
+  check validation_warnings 0: True
+  check pdf 200, no W20-2 on page 1: True
+I-25 at 75->65 (Case 27): audit 200, pdf 200 -> PASS
+  source: CDOT S-630-1 Sheet 14 Case 27
+  Furthest (Sheet 14) | W20-1 | 2,640 upstream
+  W3-5 step 1 | W3-5(65) | 2,110 upstream
+  R2-10 (Sheet 14) | R2-10 | 1,580 upstream
+  First W21-5aR (Sheet 14) | W21-5aR | 1,320 upstream
+  First W21-5aR plaque | W16-2a | NEXT 2,220 FT (under first W21-5aR)
+  Speed limit group (Sheet 14) | R2-1 | 1,060 upstream
+  Speed limit group (Sheet 14) | G20-5P | 1,060 upstream
+  Advance (G20-5P) | G20-5P | 795 upstream
+  Advance (R2-6P) | R2-6P | 795 upstream
+  Second W21-5aR (Sheet 14) | W21-5aR | 530 upstream
+  Second W21-5aR plaque | W7-3a | NEXT 1 MILE (under second W21-5aR)
+  check Second W21-5aR (Sheet 14): True
+  check First W21-5aR (Sheet 14): True
+  check R2-10 (Sheet 14): True
+  check Furthest (Sheet 14): True
+  check no W20-2: True
+  check source Sheet 14: True
+  check validation_warnings 0: True
+  check pdf 200, no W20-2 on page 1: True
+I-25 at 65, no reduction (Case 11 control): audit 200, pdf 200 -> PASS
+  source: CDOT S-630-1 Sheet 7 Case 11
+  Furthest (Case 11) | W20-1 | 5,200 upstream
+  First W21-5aR (Case 11) | W21-5aR | 2,000 upstream
+  First W21-5aR plaque | W16-2a | NEXT 2,862 FT (under first W21-5aR)
+  Second W21-5aR (Case 11) | W21-5aR | 1,000 upstream
+  Second W21-5aR plaque | W7-3a | NEXT 1 MILE (under second W21-5aR)
+  W5-1 (Case 11) | W5-1 | 500 upstream
+  check Furthest (Case 11) 5200: True
+  check source Case 11: True
+  check validation_warnings 0: True
+  check pdf 200, no W20-2 on page 1: True
+OVERALL PASS
