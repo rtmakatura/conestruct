@@ -926,6 +926,17 @@ def build_narrative_context(
         "advance_spacing_abc": spacing_abc,
         "is_night": params.is_night,
         "is_divided": params.is_divided,
+        # #343: the divided mirror lines say what the placements hold. A
+        # work-beyond-shoulder layout signs the work side only, so it gets
+        # no "matching sign on left side"; every other divided plan mirrors
+        # its signs and plaques at negative offsets.
+        "mirrored_signs": params.is_divided
+        and any(
+            p.device_type == DeviceType.SIGN_GENERIC and p.label != "G20-5P" and p.offset_ft < 0
+            for p in placements
+        ),
+        "mirrored_plaques": params.is_divided
+        and any(p.label == "G20-5P" and p.offset_ft < 0 for p in placements),
         # #309: the one-way safety line differs by closure (a shoulder
         # closure signs one side, a lane closure both).
         "closure_type": params.closure_type,

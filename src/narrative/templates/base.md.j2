@@ -47,7 +47,7 @@
 1. Position arrow board at the upstream start of the shoulder taper (station {{ "{:,.0f}".format(taper_start_station) }} ft). Set to RIGHT ARROW mode (for right shoulder closure). Activate flashing.
 {% endif %}
 
-2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station {{ "{:,.0f}".format(end_sign_station_ft) }} ft), {{ work_side_word }} side of road {{ "{:.0f}".format(sign_offset_ft) }} ft from {{ offset_origin }}.{% if is_divided %} Place matching sign on left side.{% elif left_curb_mirror %} Place matching sign on the {{ other_side_word }} curb, {{ "{:.0f}".format(left_curb_offset_ft) }} ft {{ other_side_word }} of the {{ other_side_word }} edge of the roadway.{% endif %}{% if is_flagger %} Place the opposing-direction G20-2 past the upstream end of the work zone (left side).{% endif +%}
+2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station {{ "{:,.0f}".format(end_sign_station_ft) }} ft), {{ work_side_word }} side of road {{ "{:.0f}".format(sign_offset_ft) }} ft from {{ offset_origin }}.{% if mirrored_signs %} Place matching sign on left side.{% elif left_curb_mirror %} Place matching sign on the {{ other_side_word }} curb, {{ "{:.0f}".format(left_curb_offset_ft) }} ft {{ other_side_word }} of the {{ other_side_word }} edge of the roadway.{% endif %}{% if is_flagger %} Place the opposing-direction G20-2 past the upstream end of the work zone (left side).{% endif +%}
 
 {% if is_flagger %}
 3. {% if num_ds_cones > 0 %}Place {{ num_ds_cones }} traffic cones in the downstream taper, between station -{{ "{:,.0f}".format(ds_taper_len_ft) }} ft (right lane edge) and station 0 (centerline) at {{ "{:.0f}".format(ds_spacing_ft) }} ft spacing. This taper returns right-direction traffic from the centerline back to the right lane edge past the work area (MUTCD §6B.08 ¶12; S-630-1 Case 17 annotates the run 100' MAX.). Then place{% else %}Place{% endif %} {{ num_tangent_cones }} traffic cones along the centerline boundary between the open opposing lane and the closed work lane at {{ "{:.0f}".format(tangent_spacing_ft) }} ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft.{% if num_buffer_cones > 0 %} Then continue the line through the buffer space: {{ num_buffer_cones }} more traffic cone{% if num_buffer_cones != 1 %}s{% endif %} at {{ "{:.0f}".format(buffer_cone_spacing_ft) }} ft spacing, from station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft up to the taper (station {{ "{:,.0f}".format(buffer_end_station_ft) }} ft), at the same offset. Keep the buffer itself clear of work and equipment (CDOT S-630-1 Sheet 2 General Note 18b: no more than twice the speed limit apart along the buffer space).{% endif +%}
@@ -57,7 +57,7 @@
 3. {% if num_ds_cones > 0 %}Place {{ num_ds_cones }} traffic cones in the downstream taper, between station -{{ "{:,.0f}".format(ds_taper_len_ft) }} ft (shoulder edge) and station 0 (lane edge) at {{ "{:.0f}".format(ds_spacing_ft) }} ft spacing. This taper returns traffic from the lane edge back to the shoulder edge past the work zone (MUTCD §6B.08 downstream taper). Then place{% else %}Place{% endif %} {{ num_tangent_cones }} traffic cones along the {{ work_side_word }} lane edge at {{ "{:.0f}".format(tangent_spacing_ft) }} ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft. Offset: {{ "{:.0f}".format(lane_edge_offset_ft) }} ft from {{ offset_origin }}.{% if num_buffer_cones > 0 %} Then continue the line through the buffer space: {{ num_buffer_cones }} more traffic cone{% if num_buffer_cones != 1 %}s{% endif %} at {{ "{:.0f}".format(buffer_cone_spacing_ft) }} ft spacing, from station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft up to the taper (station {{ "{:,.0f}".format(buffer_end_station_ft) }} ft), at the same offset. Keep the buffer itself clear of work and equipment (CDOT S-630-1 Sheet 2 General Note 18b: no more than twice the speed limit apart along the buffer space).{% endif +%}
 {% endif %}
 
-4. Place G20-5P WORK ZONE plaque(s) within the work zone at approximately {{ "{:,.0f}".format(plaque_interval_ft) }} ft intervals.{% if is_divided %} Place matching plaques on left side.{% endif +%}
+4. Place G20-5P WORK ZONE plaque(s) within the work zone at approximately {{ "{:,.0f}".format(plaque_interval_ft) }} ft intervals.{% if mirrored_plaques %} Place matching plaques on left side.{% endif +%}
 
 {% if is_flagger %}
 5. Place {{ num_taper_drums }} channelizing drums in the one-lane two-way taper, starting at station {{ "{:,.0f}".format(taper_end_station) }} ft and working upstream to station {{ "{:,.0f}".format(taper_start_station) }} ft. Space drums at {{ "{:.0f}".format(taper_spacing_ft) }} ft intervals (approximately 20 ft per MUTCD §6B.08. This taper stages stopped traffic behind the flagger; it must be short enough to not be mistaken for a transition). Drums transition from the right lane edge ({{ "{:.0f}".format(lane_edge_offset_ft) }} ft) to the centerline (0 ft).
@@ -69,7 +69,7 @@
 
 6. Place advance warning signs upstream of the taper:
 {{ advance_signs_setup_bullets }}
-{% if is_divided %}
+{% if mirrored_signs %}
    Place matching signs on left side at each location.
 {% endif %}
 {% if left_curb_mirror %}
@@ -105,7 +105,7 @@
 {% else %}
 **Important: Remove from upstream to downstream (with traffic flow). Remove advance warning signs first, work zone devices last.**
 
-1. Remove advance warning signs: {{ takedown_sign_sequence }}.{% if is_divided %} Remove both sides at each station.{% endif +%}
+1. Remove advance warning signs: {{ takedown_sign_sequence }}.{% if mirrored_signs %} Remove both sides at each station.{% endif +%}
 2. Remove taper drums from upstream to downstream.
 3. Deactivate and remove arrow board.
 4. Remove work zone cones from upstream to downstream.
@@ -123,7 +123,9 @@
 {% if is_night -%}
 - Nighttime operation: Ensure all devices meet retroreflectivity requirements. Flagger stations require 500W quartz illumination at minimum 8 ft height per CDOT S-630-1 Sheet 2 General Note 22.
 {% endif -%}
-{% if is_divided and closure_type == "shoulder" -%}
+{% if is_divided and closure_type == "shoulder" and not mirrored_signs -%}
+- Divided highway: signs go on the {{ work_side_word }} side only. CDOT S-630-1 Sheet 2 General Note 8 doesn't require both sides when only one shoulder is closed (Case 11 on Sheet 7).
+{% elif is_divided and closure_type == "shoulder" -%}
 - Divided highway: this plan posts signs on both sides of the roadway by choice. CDOT S-630-1 Sheet 2 General Note 8 doesn't require it when only one shoulder is closed (Case 11 on Sheet 7).
 {% elif is_divided -%}
 - Divided highway: All warning and regulatory signs must be posted on BOTH sides of the roadway per CDOT S-630-1 Sheet 2 General Note 8.
