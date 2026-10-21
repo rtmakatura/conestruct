@@ -1,0 +1,5 @@
+1000 G20-1/G20-5P stations [250, 500, 750, 1100, 2728]
+3000 G20-1/G20-5P stations [500, 750, 2250, 2500, 3100, 4728]
+5000 G20-1/G20-5P stations [500, 833, 2500, 4167, 4500, 5100, 6728]
+noted 90 fixed strict (upstream end) 0 fixed loose (any work-area spot) 28
+signs within 250 ft of the upstream end: {'G20-1': 90, 'G20-5P': 6, 'R2-6P': 6}
