@@ -1,0 +1,6 @@
+PASS 1 freeway 65->55 -- audit 200 trigger=False; crew 200 trigger=False; want False
+PASS 2 freeway 75->70 -- audit 200 trigger=False; crew 200 trigger=False; want False
+PASS 3 rural_divided 65->55 -- audit 200 trigger=False; crew 200 trigger=False; want False
+PASS 4 Case 26 freeway 65->60 -- audit 200 trigger=True; crew 200 trigger=True; want True
+PASS 5 Case 27 freeway 75->65 -- audit 200 trigger=True; crew 200 trigger=True; want True
+5/5 PASS
