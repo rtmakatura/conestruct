@@ -182,7 +182,8 @@ def substitute_sign_description(
         start is derived from ``params`` when not supplied).
       * ``W3-5(NN)`` → ``ADVISORY SPEED NN`` (suffix parsed from the label).
       * ``W16-2a`` XXX FT plaque → distance from the host W21-5aR to the
-        taper start, the condition SHOULDER CLOSED warns of (#364).
+        taper start, the condition SHOULDER CLOSED warns of (#364); a
+        Case 26/27 plan reads Sheet 14's ``¼ MILE`` (1,320 ft).
       * ``W7-3a``  NEXT XX MILES plaque → ``max(1, round(wz_len / 5280))``.
       * ``G20-1``  ROAD CONSTRUCTION (NEXT XXX FT) → work-zone length.
       * ``R2-1``   splits by station sign (see :func:`schedule_key`):
@@ -211,11 +212,15 @@ def substitute_sign_description(
     elif code == "W16-2a":
         # #364 (R1): §2C.61 ¶01 (p. 197), "the distance to the condition
         # indicated by the warning sign"; Sheet 14's "1/4 MILE" sits
-        # 1,320 ft from the taper start.
-        if taper_start_station is None:
-            taper_start_station = _taper_start_station(params)
-        w16_2a_distance_ft = int(round(station_ft - taper_start_station))
-        desc = f"{w16_2a_distance_ft:,} FT"
+        # 1,320 ft from the taper start.  A Case 26/27 plan prints Sheet
+        # 14's drawn "¼ MILE" (R2, as #354's W20-1 "ROAD WORK ½ MILE").
+        if sheet_14_freeway_series(params):
+            desc = "¼ MILE"
+        else:
+            if taper_start_station is None:
+                taper_start_station = _taper_start_station(params)
+            w16_2a_distance_ft = int(round(station_ft - taper_start_station))
+            desc = f"{w16_2a_distance_ft:,} FT"
     elif code == "W7-3a":
         w7_3a_miles = max(1, round(params.work_zone_length_ft / 5280.0))
         desc = f"NEXT {w7_3a_miles} {'MILE' if w7_3a_miles == 1 else 'MILES'}"

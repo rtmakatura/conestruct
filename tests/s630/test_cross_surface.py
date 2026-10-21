@@ -775,16 +775,24 @@ def test_work_zone_length_is_one_format_on_every_surface(
 # R1 (validation-artifacts/committed/issue-364-w16-2a-legend/rulings.md):
 # §2C.61 ¶01 (p. 197), the W16-2 series gives "the distance to the
 # condition indicated by the warning sign".  Case 11's first W21-5aR sits
-# 2,000 ft from the taper start; Sheet 14's 1,320 ft ("1/4 MILE").
-_W16_2A_LEGEND: dict[str, str] = {"case_11": "2,000 FT", "case_26": "1,320 FT"}
+# 2,000 ft from the taper start; a Case 26/27 plan prints Sheet 14's
+# drawn "¼ MILE" (1,320 ft; R2).
+_W16_2A_PLANS: list[tuple[dict[str, Any], str]] = [
+    (BODIES["case_11"], "2,000 FT"),
+    (BODIES["case_26"], "¼ MILE"),
+    (BODIES["case_27"], "¼ MILE"),
+    ({**BODIES["case_26"], "divided": False}, "¼ MILE"),
+]
 
 
-@pytest.mark.parametrize("name", sorted(_W16_2A_LEGEND))
+@pytest.mark.parametrize(
+    ("scenario", "legend"),
+    _W16_2A_PLANS,
+    ids=["case-11", "case-26", "case-27", "case-26-undivided"],
+)
 def test_w16_2a_reads_distance_to_taper_on_every_surface(
-    name: str, api: TestClient, tmp_path: Path
+    scenario: dict[str, Any], legend: str, api: TestClient, tmp_path: Path
 ) -> None:
-    scenario = BODIES[name]
-    legend = _W16_2A_LEGEND[name]
 
     audit = _post(api, "/render/audit", scenario).json()
     rows = [r for r in audit["sections"]["advance"]["sign_table"] if r["Code"] == "W16-2a"]

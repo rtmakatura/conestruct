@@ -20,3 +20,6 @@
 **Change:** `substitute_sign_description` (`src/rules/sign_codes.py`) prints W16-2a as `f"{station_ft - taper_start_station:,} FT"`. It uses the same taper start W20-2 already uses. Case 11 plans read "2,000 FT" and Sheet 14 plans read "1,320 FT". The template is "XXX FT plaque". The code stays W16-2a (Case 11's label), and the comma formatting is kept from the current W16-2a legend.
 
 **Not changed:** W7-3a's "NEXT X MILES" value, every other sign, and every station.
+
+## R2 (Ryan, 2026-10-20, before the ship): Case 26/27 plans print Sheet 14's "¼ MILE"
+On a plan where `sheet_14_freeway_series(params)` holds, W16-2a reads "¼ MILE" (U+00BC), as Sheet 14 draws it (PDF p. 162; `sources/s630-1-2026-pdf162-sheet14-case26-zoom.png`). This follows the precedent of #354's W20-1 "ROAD WORK ½ MILE". The value is the same distance R1 measures: the first W21-5aR sits at `SHEET_14_FREEWAY_SIGN_FT["A"]` = 1,320 ft from the taper start, which is ¼ mile. Every other plan, including Case 11, keeps R1's "N,NNN FT".
