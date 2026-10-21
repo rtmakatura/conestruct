@@ -84,7 +84,7 @@ function zoneFt(
   spec: CorridorSpecLengths,
   zone: CorridorZone,
   workLen: number,
-): number {
+): number | undefined {
   switch (zone) {
     case "advance_warning":
       return spec.advance_warning_ft;
@@ -95,8 +95,27 @@ function zoneFt(
     case "work_zone":
       return workLen;
     case "downstream":
-      return spec.downstream_taper_ft;
+      return spec.corner_extension_ft ?? spec.downstream_taper_ft;
   }
+}
+
+/** #365: the row label reads which key the backend sent; it decides
+ *  nothing.  A corner plan's run past the work zone is its corner
+ *  extension, not a downstream taper. */
+function zoneLabel(
+  spec: CorridorSpecLengths,
+  zone: CorridorZone,
+  label: string,
+): string {
+  return zone === "downstream" && spec.corner_extension_ft !== undefined
+    ? "Corner extension"
+    : label;
+}
+
+/** A length, or "unavailable" when the response carries none (Rule 10:
+ *  never a guessed number). */
+function ftText(ft: number | undefined): string {
+  return ft === undefined ? "unavailable" : `${ft.toLocaleString("en-US")} ft`;
 }
 
 /** R117 Q2 — the extent row's popover lines: the five zone lengths (four
@@ -124,7 +143,7 @@ export function CorridorExtentLines({
           <span className="tr-prov a-extent-head">Corridor at this length</span>
           {CORRIDOR_ROWS.map(([zone, label]) => (
             <span key={zone} className="tr-prov" data-testid={`zone-${zone}`}>
-              {label} · {zoneFt(lengths, zone, workLen).toLocaleString("en-US")} ft
+              {zoneLabel(lengths, zone, label)} · {ftText(zoneFt(lengths, zone, workLen))}
             </span>
           ))}
           {kind === "near_intersection" && (

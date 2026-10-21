@@ -104,7 +104,11 @@ export interface CorridorSpecLengths {
   taper_ft: number;
   buffer_ft: number;
   advance_warning_ft: number;
-  downstream_taper_ft: number;
+  // #365: exactly one of the two.  A near-side plan that runs to the
+  // corner places no downstream taper; the backend keys the same run
+  // `corner_extension_ft` there.
+  downstream_taper_ft?: number;
+  corner_extension_ft?: number;
   road_category: string | null;
 }
 

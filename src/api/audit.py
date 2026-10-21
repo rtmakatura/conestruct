@@ -2063,12 +2063,16 @@ def build_audit_trail(
         # per-lane floor otherwise) — ``placed_downstream_taper_ft``,
         # the one producer the plan sheet's CORRIDOR DETAILS reads too
         # (#257).  Geometry (anchor/bearing)
-        # stays with the client — this block is lengths only.
+        # stays with the client — this block is lengths only.  #365: a
+        # near-side plan that runs to the corner places no downstream
+        # taper, so the same run is keyed ``corner_extension_ft`` there.
         "corridor_spec": {
             "taper_ft": _ft(L_required),
             "buffer_ft": _ft(buf),
             "advance_warning_ft": _ft(a_ft + b_ft + c_ft),
-            "downstream_taper_ft": _ft(placed_downstream_taper_ft(mainline_placements)),
+            ("corner_extension_ft" if corner_extension else "downstream_taper_ft"): _ft(
+                placed_downstream_taper_ft(mainline_placements)
+            ),
             "road_category": resolved_category,
         },
     }

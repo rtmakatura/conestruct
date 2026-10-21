@@ -4540,12 +4540,15 @@ def _draw_corridor_details_box(
     box_h: float,
     work_start: tuple[float, float] | None = None,
     travel_bearing_deg: float | None = None,
+    corner_extension: bool = False,
 ) -> None:
     """Bordered metadata panel summarizing the corridor geometry.
 
     Rows: anchor lat/lng, bearing (or "Not specified"), total length
     (with miles), advance warning, taper, buffer, work zone,
-    downstream taper.  Styling mirrors page 1's structured title
+    downstream taper (#365: "Corner extension" on a near-side plan that
+    runs to the corner, which places no downstream taper; same length).
+    Styling mirrors page 1's structured title
     block — 8 pt bold labels, 9 pt monospace values, thin border, a
     horizontal divider beneath the title.
     """
@@ -4598,7 +4601,10 @@ def _draw_corridor_details_box(
         ("Taper", f"{corridor.taper_ft:,.0f} ft"),
         ("Buffer", f"{corridor.buffer_ft:,.0f} ft"),
         ("Work zone", f"{corridor.work_zone_ft:,.0f} ft"),
-        ("Downstream", f"{corridor.downstream_taper_ft:,.0f} ft"),
+        (
+            "Corner extension" if corner_extension else "Downstream",
+            f"{corridor.downstream_taper_ft:,.0f} ft",
+        ),
     ]
     # Centerline provenance row (#140) — rendered only when road
     # geometry is attached (its absence is the pre-#140 straight frame,
@@ -4716,6 +4722,7 @@ def _render_aerial_page(
     scale_label: str,
     corridor: WorkCorridor | None = None,
     approaches: list[tuple[str, WorkCorridor]] | None = None,
+    corner_extension: bool = False,
 ) -> None:
     """Render the dedicated aerial-context page (page 2 of 2).
 
@@ -4859,6 +4866,7 @@ def _render_aerial_page(
             AERIAL_PAGE_DETAILS_BLOCK_H,
             work_start=(lat, lng) if work_start_pin else None,
             travel_bearing_deg=getattr(params, "bearing_deg", None) if work_start_pin else None,
+            corner_extension=corner_extension,
         )
 
     # 6. Footer.
@@ -5109,6 +5117,13 @@ def render_plan_sheet(
             scale_label=scale_label,
             corridor=aerial_corridor,
             approaches=aerial_approaches,
+            # #365: the generator's own station dict says whether the run
+            # past the work zone is the corner extension (Rule 3).
+            corner_extension=bool(
+                params.near_intersection
+                and approaches
+                and near_intersection_stations(params, approaches)["extend_to_corner"]
+            ),
         )
         _draw_sheet_border(c)
         c.showPage()

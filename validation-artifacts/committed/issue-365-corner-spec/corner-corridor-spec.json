@@ -1,0 +1,16 @@
+{
+ "before": {
+  "advance_warning_ft": 1050,
+  "buffer_ft": 360,
+  "downstream_taper_ft": 48,
+  "road_category": "urban_high",
+  "taper_ft": 540
+ },
+ "after": {
+  "advance_warning_ft": 1050,
+  "buffer_ft": 360,
+  "corner_extension_ft": 48,
+  "road_category": "urban_high",
+  "taper_ft": 540
+ }
+}

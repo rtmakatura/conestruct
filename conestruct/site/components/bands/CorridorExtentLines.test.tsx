@@ -60,6 +60,35 @@ describe("CorridorExtentLines", () => {
     );
     expect(container.querySelectorAll('[data-testid^="zone-"]')).toHaveLength(0);
   });
+
+  // #365: a near-side plan that runs to the corner places no downstream
+  // taper; the backend keys the same run `corner_extension_ft`, the
+  // served corner plan's corridor_spec (evidence corner-corridor-spec.json).
+  it("on a corner plan, the last row reads the corner extension", () => {
+    const { downstream_taper_ft: _omit, ...rest } = LENGTHS;
+    const { container } = render(
+      <CorridorExtentLines
+        lengths={{ ...rest, corner_extension_ft: 48 }}
+        workLen={700}
+        kind="near_intersection"
+        note={null}
+      />,
+    );
+    expect(container.querySelector('[data-testid="zone-downstream"]')!.textContent).toBe(
+      "Corner extension · 48 ft",
+    );
+    expect(container.textContent).not.toContain("Downstream");
+  });
+
+  it("with neither length, the row says unavailable, never a number", () => {
+    const { downstream_taper_ft: _omit, ...rest } = LENGTHS;
+    const { container } = render(
+      <CorridorExtentLines lengths={rest} workLen={500} kind="shoulder" note={null} />,
+    );
+    expect(container.querySelector('[data-testid="zone-downstream"]')!.textContent).toBe(
+      "Downstream · unavailable",
+    );
+  });
 });
 
 describe("the band columns fit a 390 px band (R117 Q2 build, measured)", () => {

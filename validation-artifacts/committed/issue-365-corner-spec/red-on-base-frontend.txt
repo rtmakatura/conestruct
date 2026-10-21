@@ -1,0 +1,8 @@
+ ✓ components/bands/CorridorExtentLines.test.tsx > CorridorExtentLines > prints the five rows under 'Corridor at this length' 57ms
+ ✓ components/bands/CorridorExtentLines.test.tsx > CorridorExtentLines > on a near-intersection plan, says the approaches lay out separately 4ms
+ ✓ components/bands/CorridorExtentLines.test.tsx > CorridorExtentLines > without lengths, prints the one note it was given 6ms
+ × components/bands/CorridorExtentLines.test.tsx > CorridorExtentLines > on a corner plan, the last row reads the corner extension 23ms
+ × components/bands/CorridorExtentLines.test.tsx > CorridorExtentLines > with neither length, the row says unavailable, never a number 5ms
+ ✓ components/bands/CorridorExtentLines.test.tsx > the band columns fit a 390 px band (R117 Q2 build, measured) > a column track never exceeds the band: minmax(min(340px, 100%), 1fr) 2ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 4 passed (6)
