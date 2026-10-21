@@ -64,4 +64,4 @@ No inference from station signs.
     fed the base payload, which renders the same text as the base component (the downstream path is unchanged).
 - Found, not changed (Ryan: geometry must not move): the picker's `/render/corridor-geometry` draws the
   corner plan's downstream zone at 50 ft (the §6B.08 floor; that read has no layout), while the plan builds 48 ft
-  and page 2 draws 48. This was already true on the base. Filed separately.
+  and page 2 draws 48. This was already true on the base. Filed separately: #366 (https://github.com/rtmakatura/conestruct/issues/366).
