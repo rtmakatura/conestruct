@@ -1,0 +1,25 @@
+Using CPython 3.13.1 interpreter at: C:\Python\Python313\python3.exe
+Creating virtual environment at: .venv
+Installed 113 packages in 4.41s
+1. Case 11 (55 -> 50), expect '2,000 FT'
+   ok audit: ['2,000 FT (under first W21-5aR)']
+   ok page 1: ['W16-2a 2,000 FT', 'W16-2a 2,000 FT']
+   ok crew sheet: ['| W16-2a | 2,000 FT (under upstream W21-5aR) | 2,000 ft upstream |']
+   ok device list: ['W16-2a 2,000 FT']
+   ok no NEXT: 'absent'
+   statuses: {'audit': 200, 'pdf': 200, 'markdown': 200, 'xlsx': 200}
+2. Case 26 (65 -> 60), expect '\xbc MILE'
+   ok audit: ['\xbc MILE (under first W21-5aR)']
+   ok page 1: ['W16-2a \xbc MILE', 'W16-2a \xbc MILE']
+   ok crew sheet: ['| W16-2a | \xbc MILE (under upstream W21-5aR) | 1,320 ft upstream |']
+   ok device list: ['W16-2a \xbc MILE']
+   ok no NEXT: 'absent'
+   statuses: {'audit': 200, 'pdf': 200, 'markdown': 200, 'xlsx': 200}
+3. Case 27, expect '\xbc MILE'
+   ok audit: ['\xbc MILE (under first W21-5aR)']
+   ok page 1: ['W16-2a \xbc MILE', 'W16-2a \xbc MILE']
+   ok crew sheet: ['| W16-2a | \xbc MILE (under upstream W21-5aR) | 1,320 ft upstream |']
+   ok device list: ['W16-2a \xbc MILE']
+   ok no NEXT: 'absent'
+   statuses: {'audit': 200, 'pdf': 200, 'markdown': 200, 'xlsx': 200}
+PASS 3/3
