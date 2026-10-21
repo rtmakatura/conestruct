@@ -710,10 +710,12 @@ def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
     blocks: list[Block] = [Heading(2, _cell("Pending Verification"))]
     count = pending.get("count", 0)
     note = _str(pending, "note")
+    # #363 (R4): an item with no tracking link prints no empty link.
+    tracking = _str(pending, "tracking_issue")
     blocks.append(
         _body(
             f"{count} reference(s) pending verification. {note}".strip()
-            + f"  Tracking: {_str(pending, 'tracking_issue')}"
+            + (f"  Tracking: {tracking}" if tracking else "")
         )
     )
     items = pending.get("items", [])
@@ -723,8 +725,12 @@ def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
                 [
                     ListItem(
                         _cell(
-                            f"[{_str(it, 'kind')}] {_str(it, 'label')} "
-                            f"({_str(it, 'tracking_issue')})"
+                            f"[{_str(it, 'kind')}] {_str(it, 'label')}"
+                            + (
+                                f" ({_str(it, 'tracking_issue')})"
+                                if _str(it, "tracking_issue")
+                                else ""
+                            )
                         )
                     )
                     for it in items

@@ -1,0 +1,17 @@
+urban_arterial 55->45 L1000 (note=True): audit, audit_pdf
+urban_arterial 55->45 L5000 (note=True): audit, audit_pdf
+urban_arterial 55->50 L1000 (note=True): audit, audit_pdf
+urban_arterial 55->50 L5000 (note=True): audit, audit_pdf
+urban_arterial 65->55 L1000 (note=True): audit, audit_pdf
+urban_arterial 65->55 L5000 (note=True): audit, audit_pdf
+urban_arterial 65->60 L1000 (note=True): audit, audit_pdf
+urban_arterial 65->60 L5000 (note=True): audit, audit_pdf
+urban_arterial 75->65 L1000 (note=True): audit, audit_pdf
+urban_arterial 75->65 L200 (note=True): audit, audit_pdf
+urban_arterial 75->65 L5000 (note=True): audit, audit_pdf
+urban_arterial 75->70 L1000 (note=True): audit, audit_pdf
+urban_arterial 75->70 L200 (note=True): audit, audit_pdf
+urban_arterial 75->70 L5000 (note=True): audit, audit_pdf
+plans: 96 | with the note: 14
+moved: note=True surfaces=['audit', 'audit_pdf'] x14
+unmoved: 82

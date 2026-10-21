@@ -1592,6 +1592,16 @@ def build_audit_trail(
             fines_double_section["envelope"]["plaque_long_gaps_ft"] = [
                 [hi, lo] for hi, lo in _env.long_gaps
             ]
+            # #363 (R3): the Table 6B-1 A/B/C spacing of the signs between
+            # the speed limit group and the taper, which leaves no spot
+            # 250 ft clear.  Case 11's signs sit at their own distances, so
+            # the field is absent there and the note names no spacing.
+            if not case_11:
+                fines_double_section["envelope"]["plaque_long_gaps_sign_spacing_ft"] = [
+                    a_ft,
+                    b_ft,
+                    c_ft,
+                ]
 
     # ------------------------------------------------------------------
     # 7. S-630-1 case reference
@@ -2201,8 +2211,9 @@ LANE_CONFIDENCE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/is
 LANE_CEILING_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/310"
 
 # #360 (Q3): Fines Double plaques the fill couldn't space within 2,640 ft;
-# the pending item keyed to this URL asks for the engineer's direction.
-FINES_DOUBLE_SPACING_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/360"
+# the pending item asks for the engineer's direction.  No tracking link
+# (#363 R2): the note is the plan's true answer, not a Conestruct gap.
+FINES_DOUBLE_SPACING_ISSUE: str | None = None
 
 # Tracking issue for override provenance (#177): when a user confirm/edit
 # superseded a disputed detection (the erased relays were driving a live
@@ -2674,22 +2685,38 @@ def audit_projection(
 
     # #360 (Q3): Fines Double plaques left more than 2,640 ft apart once no
     # legal spot remained (S-630-1 Sheet 2 Note 4 lets the Engineer change
-    # the spacing).  One item per plan, naming each gap.
+    # the spacing).  One item per plan, naming each gap and (#363 R2/R3)
+    # the Table 6B-1 sign spacing that leaves no spot 250 ft clear.
     _fd = audit.get("fines_double") or {}
-    _long_gaps = (_fd.get("envelope") or {}).get("plaque_long_gaps_ft") or []
+    _fd_env = _fd.get("envelope") or {}
+    _long_gaps = _fd_env.get("plaque_long_gaps_ft") or []
     if _long_gaps:
         gaps_text = "; ".join(
             f"station {hi:,.0f} to {lo:,.0f} ({hi - lo:,.0f} ft)" for hi, lo in _long_gaps
         )
+        _abc = _fd_env.get("plaque_long_gaps_sign_spacing_ft") or []
+        if _abc:
+            _apart = (
+                f"{_abc[0]:,.0f} ft apart"
+                if len(set(_abc)) == 1
+                else f"at most {max(_abc):,.0f} ft apart"
+            )
+            spacing_text = (
+                f" Between the speed limit group and the taper the signs are {_apart} "
+                f"(MUTCD 11th Ed. Table {_TBL_ADVANCE}, p. 773)."
+            )
+        else:
+            spacing_text = ""
         items.append(
             {
                 "kind": "fines_double_spacing",
                 "label": (
                     "Engineer's direction needed: the WORK ZONE / FINES DOUBLE "
                     "plaques are more than 2,640 ft apart between R2-10 and "
-                    f"R2-11 ({gaps_text}). No spot is at least 250 ft from the "
-                    'other signs there. S-630-1 Sheet 2 Note 4: "The spacing '
-                    'of these signs may be changed as directed by the Engineer."'
+                    f"R2-11 ({gaps_text}).{spacing_text} A plaque needs 250 ft "
+                    "from every other sign (S-630-1 Sheet 12 Note 4), so no spot "
+                    'there fits. S-630-1 Sheet 2 Note 4: "The spacing of these '
+                    'signs may be changed as directed by the Engineer."'
                 ),
                 "tracking_issue": FINES_DOUBLE_SPACING_ISSUE,
             }

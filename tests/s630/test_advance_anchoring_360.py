@@ -227,7 +227,7 @@ def test_left_over_gap_gets_the_engineer_note(api: TestClient) -> None:  # noqa:
     ]
     assert len(items) == 1
     assert "as directed by the Engineer" in items[0]["label"]
-    assert items[0]["tracking_issue"].endswith("/issues/360")
+    assert items[0]["tracking_issue"] is None  # #363 R2: no tracking link
 
 
 def test_crew_sheet_places_r2_10_upstream_of_the_taper(api: TestClient) -> None:  # noqa: F811
