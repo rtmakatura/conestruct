@@ -1,0 +1,63 @@
+diff -ru before/shoulder-freeway-65-55.crew.md after/shoulder-freeway-65-55.crew.md
+--- before/shoulder-freeway-65-55.crew.md	2026-10-21 11:40:51.252495000 -0600
++++ after/shoulder-freeway-65-55.crew.md	2026-10-21 11:40:54.036061100 -0600
+@@ -100,17 +100,6 @@
+ - The Traffic Control Supervisor completes and confirms the emergency access plan for this site and coordinates notification of police, fire, and emergency medical responder agencies prior to work (TCS duties per CDOT Standard Specifications 630.11).
+ - An emergency access plan is a required minimum element of the approved Method of Handling Traffic (CDOT 630.10(a)); this section is draft input for it, not the approved plan.
+ 
+-## Trigger Condition
+-
+-CDOT S-630-1 Sheet 14. The Fines Double envelope and reduced
+-work-zone speed limit are scoped to scenarios meeting this
+-trigger condition in the field:
+-
+-> WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY
+-
+-The engineer of record determines activation; field crew should
+-follow the project-specific TCP.
+-
+ ## Fines Double Operational Rules
+ 
+ CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes. The Fines Double envelope
+diff -ru before/shoulder-freeway-75-70.crew.md after/shoulder-freeway-75-70.crew.md
+--- before/shoulder-freeway-75-70.crew.md	2026-10-21 11:40:51.325423000 -0600
++++ after/shoulder-freeway-75-70.crew.md	2026-10-21 11:40:54.110154100 -0600
+@@ -100,17 +100,6 @@
+ - The Traffic Control Supervisor completes and confirms the emergency access plan for this site and coordinates notification of police, fire, and emergency medical responder agencies prior to work (TCS duties per CDOT Standard Specifications 630.11).
+ - An emergency access plan is a required minimum element of the approved Method of Handling Traffic (CDOT 630.10(a)); this section is draft input for it, not the approved plan.
+ 
+-## Trigger Condition
+-
+-CDOT S-630-1 Sheet 14. The Fines Double envelope and reduced
+-work-zone speed limit are scoped to scenarios meeting this
+-trigger condition in the field:
+-
+-> WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 10 FT OF TRAVEL WAY
+-
+-The engineer of record determines activation; field crew should
+-follow the project-specific TCP.
+-
+ ## Fines Double Operational Rules
+ 
+ CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes. The Fines Double envelope
+diff -ru before/shoulder-rural-divided-65-55.crew.md after/shoulder-rural-divided-65-55.crew.md
+--- before/shoulder-rural-divided-65-55.crew.md	2026-10-21 11:40:51.180898200 -0600
++++ after/shoulder-rural-divided-65-55.crew.md	2026-10-21 11:40:53.959858600 -0600
+@@ -95,17 +95,6 @@
+ - The Traffic Control Supervisor completes and confirms the emergency access plan for this site and coordinates notification of police, fire, and emergency medical responder agencies prior to work (TCS duties per CDOT Standard Specifications 630.11).
+ - An emergency access plan is a required minimum element of the approved Method of Handling Traffic (CDOT 630.10(a)); this section is draft input for it, not the approved plan.
+ 
+-## Trigger Condition
+-
+-CDOT S-630-1 Sheet 14. The Fines Double envelope and reduced
+-work-zone speed limit are scoped to scenarios meeting this
+-trigger condition in the field:
+-
+-> WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY
+-
+-The engineer of record determines activation; field crew should
+-follow the project-specific TCP.
+-
+ ## Fines Double Operational Rules
+ 
+ CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes. The Fines Double envelope

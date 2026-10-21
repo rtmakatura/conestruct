@@ -634,6 +634,27 @@ def build_audit_trail(
             "divergence": True,
             "citation": _CITATION_BUFFER,
         }
+    elif is_off_class_stepdown and is_lane:
+        # #361 (R1, R3): the Case 26/27 step-down on a lane closure.  Sheet 14
+        # draws shoulder work only, so the federal posted-speed value governs.
+        # Cites Table 6B-2 alone: Sheet 7 Case 11 is a shoulder case.
+        _supplement_case = "Case 26" if speed == 65 else "Case 27"
+        _sheet_14_min = _cdot_buffer_or_none(speed, wz_speed)
+        buffer_section = {
+            "speed_mph": speed,
+            "lookup_text": (
+                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"{_sheet_14_min:g} ft minimum for the {_supplement_case} step-down "
+                f"({speed} → {wz_speed} mph), but Sheet 14 is drawn for shoulder work on a "
+                f"freeway or expressway and this plan closes a lane, so the federal "
+                f"posted-speed value governs."
+            ),
+            "buffer_ft": buf,
+            "source": (
+                f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} (stopping sight distance)."
+            ),
+            "citation": _CITATION_BUFFER,
+        }
     elif is_off_class_stepdown:
         # #355 (R3): the Case 26/27 step-down, but Sheet 14 is drawn for
         # freeway/expressway shoulder work and this road is neither, so the

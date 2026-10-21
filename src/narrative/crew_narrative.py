@@ -41,12 +41,12 @@ from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
 from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
 from src.rules.spacing import (
+    _is_cdot_minimum,
     advance_warning_spacing,
     buffer_space,
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
-    off_class_stepdown,
     one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     pick_device_count,
@@ -507,17 +507,17 @@ def build_narrative_context(
 
     # G6: Sheet 14 trigger-condition language for the reduced-speed
     # shoulder routing (Cases 26/27). Verbatim from the case fixtures;
-    # only tabulated at 65/75 mph — silent otherwise to preserve the
-    # verbatim-or-nothing symmetry the audit already enforces (S1).
-    # #355 (R3): not on the Case 26/27 step-down off the freeway/expressway
-    # class — the audit doesn't cite Sheet 14 for that plan either.
+    # silent otherwise to preserve the verbatim-or-nothing symmetry the
+    # audit already enforces (S1).  #361 (R2): the audit's own predicate,
+    # so both surfaces cite Sheet 14 on exactly the same plans — never on
+    # 65 -> 55, a lane closure, or a road Sheet 14 doesn't draw (#355).
     trigger_condition: str | None = None
-    if fines_double_applicable and not off_class_stepdown(
+    if _is_cdot_minimum(
         params.jurisdiction,
         params.speed_mph,
         params.work_zone_speed_mph,
-        params.road_type,
-        params.closure_type,
+        road_type=params.road_type,
+        closure_type=params.closure_type,
     ):
         if params.speed_mph == 65:
             trigger_condition = (

@@ -206,9 +206,9 @@ def buffer_space(
             when no reduction is in effect.  Only ``(65, 60)`` and
             ``(75, 65)`` unlock the CDOT supplement minimum (Cases 26/27).
         road_type, closure_type: The scenario's Table 6B-1 class and
-            closure type.  A shoulder closure on a road that isn't a
-            freeway or expressway never takes the supplement minimum
-            (:func:`sheet_14_road_class`, #355).  ``None`` (a direct table
+            closure type.  A lane closure, or a shoulder closure on a road
+            that isn't a freeway or expressway, never takes the supplement
+            minimum (:func:`sheet_14_road_class`, #355, #361).  ``None`` (a direct table
             lookup with no scenario) keeps the speed-only lookup; every
             caller with a scenario passes both.
 
@@ -240,15 +240,19 @@ def buffer_space(
 
 
 def sheet_14_road_class(road_type: str | None, closure_type: str | None) -> bool:
-    """False for a shoulder closure on a road that isn't a freeway or expressway (#355, R1).
+    """True only for a plan Sheet 14 draws: shoulder work on a freeway or expressway.
 
     S-630-1 Sheet 14's only titles are "Shoulder Work - Freeway/Expressway"
-    (Cases 26/27), so its 570/650 ft floors belong to that road class; a
-    ``rural`` or ``urban_*`` shoulder plan takes the federal posted-speed
-    buffer instead.  Lane closures are out of #355's scope (R2) and keep
-    the speed-only lookup, as does a call with no scenario (``None``).
+    (Cases 26/27), so its 570/650 ft floors belong to that closure and road
+    class.  A ``rural`` or ``urban_*`` shoulder plan (#355, R1) and any lane
+    closure (#361, R1) take the federal posted-speed buffer instead.  A
+    call with no scenario (``None``) keeps the speed-only lookup.
     """
-    return closure_type != "shoulder" or road_type is None or road_type in ("freeway", "expressway")
+    if closure_type is None:
+        return True
+    return closure_type == "shoulder" and (
+        road_type is None or road_type in ("freeway", "expressway")
+    )
 
 
 def _cdot_buffer_or_none(
@@ -269,8 +273,8 @@ def _cdot_buffer_or_none(
     reduced work-zone speed and are meaningless without that step-down.
     Sheet 7 Case 11 (buffer "VARIES", General Note 24) then governs and
     the caller falls back to the federal posted-speed baseline.  So does
-    a shoulder closure off the freeway/expressway class
-    (:func:`sheet_14_road_class`, #355).
+    a lane closure or a shoulder closure off the freeway/expressway class
+    (:func:`sheet_14_road_class`, #355, #361).
     """
     required_wz = CDOT_BUFFER_STEPDOWN.get(speed_mph)
     if required_wz is None or work_zone_speed_mph != required_wz:
@@ -290,11 +294,12 @@ def off_class_stepdown(
     road_type: str | None,
     closure_type: str | None,
 ) -> bool:
-    """True for the Case 26/27 step-down on a road class Sheet 14 doesn't draw (#355, R3).
+    """True for the Case 26/27 step-down on a plan Sheet 14 doesn't draw (#355, R3).
 
-    A CDOT shoulder plan at exactly 65 -> 60 or 75 -> 65 whose road isn't a
-    freeway or expressway (:func:`sheet_14_road_class`).  The one producer
-    for the audit's and the crew sheet's "Sheet 14 doesn't apply" wording.
+    A CDOT plan at exactly 65 -> 60 or 75 -> 65 that is a lane closure (#361)
+    or a shoulder closure off the freeway/expressway class
+    (:func:`sheet_14_road_class`).  The one producer for the audit's
+    "Sheet 14 doesn't apply" wording.
     """
     return (
         jurisdiction == "CDOT"

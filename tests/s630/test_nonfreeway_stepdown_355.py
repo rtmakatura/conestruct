@@ -101,8 +101,8 @@ def test_the_predicates_follow_the_road_class() -> None:
         assert off_class_stepdown("CDOT", 65, 60, road, "shoulder")
         assert not off_class_stepdown("CDOT", 65, 55, road, "shoulder")
         assert not off_class_stepdown("federal", 65, 60, road, "shoulder")
-        # R2: a lane closure keeps the speed-only lookup in this arc.
-        assert buffer_space(65, "CDOT", 60, road_type=road, closure_type="lane") == 570.0
+        # R2 deferred lane closures to #361, which gives them Table 6B-2.
+        assert buffer_space(65, "CDOT", 60, road_type=road, closure_type="lane") == 645.0
     for road in ("freeway", "expressway"):
         assert buffer_space(65, "CDOT", 60, road_type=road, closure_type="shoulder") == 570.0
         assert _is_cdot_minimum("CDOT", 75, 65, road_type=road, closure_type="shoulder")
