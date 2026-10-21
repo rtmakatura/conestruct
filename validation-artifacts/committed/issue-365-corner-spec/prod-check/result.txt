@@ -1,0 +1,5 @@
+PASS 1 corner corridor_spec keys corner_extension_ft 48, no downstream_taper_ft -- {"advance_warning_ft": 1050, "buffer_ft": 360, "corner_extension_ft": 48, "road_category": "urban_high", "taper_ft": 540}
+PASS 2 corner page 2 reads 'Corner extension: 48 ft', no 'Downstream:' row -- CORRIDOR DETAILS Anchor: 39.73997, -104.96632 Bearing: 90° Total corridor: 2,698 ft (0.51 mi) Advance warning: 1,050 ft Taper: 540 ft Buffer: 360 ft Work zone: 700 ft Corner extension: 48 ft 
+PASS 3 midblock corridor_spec keeps downstream_taper_ft 50 -- {"advance_warning_ft": 1050, "buffer_ft": 360, "downstream_taper_ft": 50, "road_category": "urban_high", "taper_ft": 540}
+PASS 4 midblock page 2 keeps 'Downstream: 50 ft' -- CORRIDOR DETAILS Anchor: 39.73997, -104.96632 Bearing: 90° Total corridor: 2,700 ft (0.51 mi) Advance warning: 1,050 ft Taper: 540 ft Buffer: 360 ft Work zone: 700 ft Downstream: 50 ft 
+4/4 PASS
