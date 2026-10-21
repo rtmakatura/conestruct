@@ -1,0 +1,21 @@
+rural_divided 65->55 L200 HTTP 400
+rural_divided 65->60 L200 HTTP 400
+rural_divided 75->65 L200 HTTP 400
+rural_divided 75->70 L200 HTTP 400
+rural_divided 65->45 L200 HTTP 400
+rural_divided 65->40 L200 HTTP 400
+rural_divided 75->55 L200 HTTP 400
+rural_divided 75->45 L200 HTTP 400
+rural_divided 75->40 L200 HTTP 400
+freeway 65->55 L200 HTTP 400
+freeway 65->60 L200 HTTP 400
+freeway 75->65 L200 HTTP 400
+freeway 75->70 L200 HTTP 400
+freeway 65->45 L200 HTTP 400
+freeway 65->40 L200 HTTP 400
+freeway 75->55 L200 HTTP 400
+freeway 75->45 L200 HTTP 400
+freeway 75->40 L200 HTTP 400
+freeway 75->40 L1000: 17 rows, draws 13, plaque rows 7, cut ['W3-5', 'W3-5', 'W3-5', 'W20-1']
+freeway 75->40 L5000: 17 rows, draws 13, plaque rows 7, cut ['W3-5', 'W3-5', 'W3-5', 'W20-1']
+150 plans; 2 cut on page 1
