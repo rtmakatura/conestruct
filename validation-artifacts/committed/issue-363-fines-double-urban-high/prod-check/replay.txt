@@ -1,0 +1,16 @@
+1. urban_arterial 55 -> 45, 1,000 ft of work, /render/audit
+   ok: HTTP 200, one fines_double_spacing item
+   label: Engineer's direction needed: the WORK ZONE / FINES DOUBLE plaques are more than 2,640 ft apart between R2-10 and R2-11 (station 3,192 to 500 (2,692 ft)). Between the speed limit group and the taper the signs are 350 ft apart (MUTCD 11th Ed. Table 6B-1, p. 773). A plaque needs 250 ft from every other sign (S-630-1 Sheet 12 Note 4), so no spot there fits. S-630-1 Sheet 2 Note 4: "The spacing of these signs may be changed as directed by the Engineer."
+   ok: names the 350 ft spacing
+   ok: names the 250 ft clearance
+   ok: quotes Sheet 2 Note 4
+   ok: no tracking link, no #360
+   ok: envelope spacing [350, 350, 350]
+2. the same plan, /render/audit-pdf
+   ok: HTTP 200, the note prints
+   ok: spacing printed, no empty link or Tracking: line
+3. rural_undivided 55 -> 45 and freeway 65 -> 55, /render/audit -- no note, no field
+   ok: rural_undivided: HTTP 200, no note, no field
+   ok: freeway: HTTP 200, no note, no field
+
+10/10 PASS
