@@ -1,0 +1,26 @@
+Using CPython 3.13.1 interpreter at: C:\Python\Python313\python3.exe
+Creating virtual environment at: .venv
+Installed 113 packages in 3.90s
+1. freeway 75 -> 40, 1,000 ft of work, /render/pdf page 1
+   ok: HTTP 200, a PDF
+   ok: the line reads +3 MORE ADVANCE SIGNS (G20-5P, R2-6P)
+   ok: page 1 shows ROAD WORK AHEAD
+   ok: page 1 shows BEGIN DOUBLE FINES ZONE
+   ok: page 1 shows ADVISORY SPEED 40
+   ok: page 1 shows ADVISORY SPEED 45
+   ok: page 1 shows ADVISORY SPEED 60
+   ok: two whole plaque pairs left (500 and 1500 ft)
+   crop: validation-artifacts/committed/issue-362-advance-table-cut/prod-check/prod-crop-freeway-75-40-L1000.png
+2. freeway 75 -> 40, 5,000 ft of work, /render/pdf page 1
+   ok: HTTP 200, a PDF
+   ok: the line reads +3 MORE ADVANCE SIGNS (G20-5P, R2-6P)
+   ok: page 1 shows ROAD WORK AHEAD
+   ok: page 1 shows BEGIN DOUBLE FINES ZONE
+   ok: page 1 shows ADVISORY SPEED 40
+   ok: page 1 shows ADVISORY SPEED 45
+   ok: page 1 shows ADVISORY SPEED 60
+   ok: two whole plaque pairs left (500 and 1500 ft)
+3. urban_arterial 55 -> 45, 1,000 ft of work (fits today), /render/pdf page 1
+   ok: HTTP 200
+   ok: no cut line; the table fits as before
+PASS 18/18
