@@ -110,8 +110,9 @@ def test_speed_signs_sit_upstream_of_the_taper_in_case_11_order(
     assert all(b - a == pytest.approx(530.0) for a, b in zip([r2_10, *w3_5], w3_5, strict=False))
     abc = advance_warning_spacing(speed, road)
     if road == "freeway":
+        # #368 (R1): W20-1 at 5,200 ft, or 1,000 ft past the last W3-5.
         assert (group.entrance_r2_1 - ts, r2_10 - ts, w20_1 - ts) == pytest.approx(
-            (3000.0, 3500.0, 5200.0)
+            (3000.0, 3500.0, max(5200.0, max(w3_5) - ts + 1000.0))
         )
     else:
         assert group.entrance_r2_1 - ts == pytest.approx(abc["A"] + abc["B"] + abc["C"])

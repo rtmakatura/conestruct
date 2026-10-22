@@ -1,0 +1,13 @@
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[divided-75-45]
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[divided-75-40]
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[divided-75-20]
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[divided-70-20]
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[undivided-75-45]
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[undivided-75-40]
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[undivided-75-20]
+FAILED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[undivided-70-20]
+FAILED tests/s630/test_w20_1_floor_368.py::test_page1_prints_the_moved_w20_1[75-40]
+FAILED tests/s630/test_w20_1_floor_368.py::test_page1_prints_the_moved_w20_1[75-20]
+PASSED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[divided-75-60]
+PASSED tests/s630/test_w20_1_floor_368.py::test_w20_1_is_first_and_clears_the_last_w3_5[undivided-75-60]
+10 failed, 2 passed in 4.54s

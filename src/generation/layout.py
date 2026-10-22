@@ -301,17 +301,19 @@ def shoulder_advance_stations(
 
     Table 6B-1's A / A+B / A+B+C from the taper start, except on a plan
     that cites Case 11 (``case_11_freeway_series``, #334): the first
-    SHOULDER CLOSED sign at Case 11's 2,000 ft, W20-1 at 5,200 ft and no
-    W20-2 (B is None; ruling Q1).  A Case 26/27 plan
-    (``sheet_14_freeway_series``, #344) takes Sheet 14's 1,320 ft and
-    2,640 ft, also with no W20-2.  The one producer for the generators,
-    the audit and the crew sheet.
+    SHOULDER CLOSED sign at Case 11's 2,000 ft, W20-1 at 5,200 ft (or
+    the speed group's, #368) and no W20-2 (B is None; ruling Q1).  A Case
+    26/27 plan (``sheet_14_freeway_series``, #344) takes Sheet 14's
+    1,320 ft and 2,640 ft, also with no W20-2.  The one producer for the
+    generators, the audit and the crew sheet.
     """
     if case_11_freeway_series(params):
+        group = shoulder_speed_group(params, taper_start_station)
+        sign_c = taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"]
         return (
             taper_start_station + CASE_11_FREEWAY_SIGN_FT["A"],
             None,
-            taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"],
+            group.w20_1 if group is not None else sign_c,
         )
     if sheet_14_freeway_series(params):
         return (
@@ -366,7 +368,9 @@ def shoulder_speed_group(params: ScenarioParams, taper_start_station: float) -> 
     beyond it (the Sheet 14 step, CHOSEN off Sheet 14).
 
     - Case 11 plans (ruling Q1): the group at Case 11's 3,000 ft from the
-      taper start; W20-1 stays at its 5,200 ft.
+      taper start; W20-1 at its 5,200 ft, or one Table 6B-1 freeway A
+      (1,000 ft) upstream of the farthest W3-5 when that is farther
+      (#368 ruling R1; Case 11 also spaces its signs 1,000 ft apart).
     - Every other plan (ruling Q2 (d)): the group at W20-1's Table 6B-1
       station (A + B + C), and W20-1 one Table 6B-1 C spacing upstream of
       the farthest W3-5, CHOSEN.  Table 6B-1's distances are minimums
@@ -390,7 +394,10 @@ def shoulder_speed_group(params: ScenarioParams, taper_start_station: float) -> 
         entrance = taper_start_station + CASE_11_FREEWAY_SIGN_FT["R2-1"]
         r2_10 = entrance + R2_10_BEFORE_SPEED_ARRAY_FT
         w3_5 = tuple(r2_10 + 530.0 * (k + 1) for k in range(n_w3_5))
-        w20_1 = taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"]
+        w20_1 = max(
+            taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"],
+            w3_5[-1] + advance_warning_spacing(params.speed_mph, "freeway")["A"],
+        )
         return SpeedGroup(entrance, r2_10, w3_5, w20_1)
     abc = advance_warning_spacing(params.speed_mph, params.road_type)
     entrance = taper_start_station + abc["A"] + abc["B"] + abc["C"]
@@ -414,6 +421,10 @@ def construction_plaque_zone_length(
     group = shoulder_speed_group(params, taper_start_station)
     if group is not None and not case_11_freeway_series(params):
         return group.entrance_r2_1
+    if group is not None:
+        # #368 (R3): Case 11's W20-1 may move past its 5,200 ft; the
+        # count stays keyed to that former station, as above.
+        return taper_start_station + CASE_11_FREEWAY_SIGN_FT["C"]
     return sign_c_station
 
 
