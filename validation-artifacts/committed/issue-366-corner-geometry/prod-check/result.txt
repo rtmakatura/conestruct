@@ -1,0 +1,7 @@
+PASS 1 corner plan at -60: picker draws 48 = audit corner_extension_ft -- status laid_out, drawn 48.0, corner_extension_ft 48
+PASS 2 corner plan at -100: picker draws 88 = audit corner_extension_ft -- status laid_out, drawn 88.0, corner_extension_ft 88
+PASS 3 non-corner plan at -600: picker still draws 50 = downstream_taper_ft -- status laid_out, drawn 50.0, downstream_taper_ft 50
+PASS 4 non-corner plan at 800: picker still draws 50 = downstream_taper_ft -- status laid_out, drawn 50.0, downstream_taper_ft 50
+PASS 5 work-start corner plan: picker draws the audit's corner_extension_ft -- status laid_out, drawn 48.0, corner_extension_ft 48
+PASS 6 band aerial for the work-start corner plan answers a decodable image -- status 200, image/png, JPEG 1280x800, 288829 bytes
+6/6 PASS
