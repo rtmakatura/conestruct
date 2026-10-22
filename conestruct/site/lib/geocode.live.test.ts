@@ -1,7 +1,8 @@
 // #347 live run: the real geocodeAddress against Mapbox for every case in
 // Ryan's 2026-10-18 ruling.  Skipped unless LIVE_GEOCODE=1 and MAPBOX_TOKEN
 // are set; the table it prints is recorded in
-// validation-artifacts/committed/issue-347-geocoder/outcome.md.
+// validation-artifacts/committed/issue-347-geocoder/outcome.md; the #352
+// rows are recorded in validation-artifacts/committed/issue-352-authority-areas/.
 import { describe, expect, it } from "vitest";
 import { geocodeAddress } from "./geocode";
 
@@ -24,7 +25,12 @@ const CASES: { input: string; jurisdictionKey?: string; note: string }[] = [
   { input: "Colfax & Williams", jurisdictionKey: "denver", note: "no city, Denver selected" },
   { input: "Colfax & Main", note: "no city, no jurisdiction" },
   { input: "Colfax & Main", jurisdictionKey: "denver", note: "no city, Denver selected" },
-  { input: "Colfax & Main", jurisdictionKey: "cdot", note: "no city, CDOT selected (no TIGER area)" },
+  { input: "Colfax & Main", jurisdictionKey: "cdot", note: "no city, CDOT selected (#352: Colorado)" },
+  { input: "US 285 & CO 9", jurisdictionKey: "cdot", note: "#352: CDOT, outside our places" },
+  { input: "I-25 & US 50", jurisdictionKey: "cdot", note: "#352: CDOT, outside our places" },
+  { input: "Academy & Platte", jurisdictionKey: "el_paso", note: "#352: El Paso County" },
+  { input: "Eisenhower & Lincoln", jurisdictionKey: "loveland", note: "#352: Loveland" },
+  { input: "Colfax & Main", jurisdictionKey: "e470", note: "#352: E-470 (no polygon)" },
   { input: "Colfax & Main, Aurora", note: "city in two states" },
   { input: "Colfax & Main, Aurora, IL", note: "city in two states, Illinois named" },
   { input: "Colfax & Kipling, Lakewood", note: "Mapbox alone ranks Lakewood NJ first" },

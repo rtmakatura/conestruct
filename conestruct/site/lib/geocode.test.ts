@@ -159,11 +159,68 @@ describe("cross streets with no city typed", () => {
     expect(r).toEqual({ ok: false, status: 422, reason: "add a city" });
   });
 
-  it("a jurisdiction with no TIGER place (cdot) is treated as none", async () => {
+});
+
+// #352: the jurisdictions with no TIGER place search their authority's
+// extent (data/boundaries/extents.json) instead of all our places.
+describe("cross streets with no city, a jurisdiction with no TIGER place", () => {
+  // A stub corner in Colorado but outside the 31 places' combined box.
+  const OUTSIDE_PLACES = {
+    center: [-106.0011, 39.2247],
+    place_type: ["address"],
+    properties: { accuracy: "intersection" },
+  };
+
+  it("cdot searches Colorado and lands a flagged corner outside our places", async () => {
+    answer = () => ({ features: [STREET, OUTSIDE_PLACES] });
+    const r = await geocodeAddress("US 285 & CO 9", undefined, { jurisdictionKey: "cdot" });
+    expect(r).toEqual({ ok: true, lat: 39.2247, lng: -106.0011, placeType: "intersection" });
+    const colorado = areaForKey("cdot")!;
+    expect(colorado.name).toBe("Colorado");
+    expect(calls[0].searchParams.get("bbox")).toBe(colorado.bbox.join(","));
+    expect(calls[0].searchParams.get("bbox")).not.toBe(COMBINED_BBOX.join(","));
+  });
+
+  it("cdot: a flagged corner outside Colorado (Plainwell, MI) is refused", async () => {
+    answer = () => ({ features: [PLAINWELL_MI] });
+    const r = await geocodeAddress("Colfax & Main", undefined, { jurisdictionKey: "cdot" });
+    expect(r).toEqual({ ok: false, status: 422, reason: "add a city" });
+  });
+
+  it("cdot with no flagged corner: 422, never the middle of Colorado", async () => {
     answer = () => ({ features: [STREET] });
     const r = await geocodeAddress("Colfax & Main", undefined, { jurisdictionKey: "cdot" });
+    expect(r).toEqual({ ok: false, status: 422, reason: "add a city" });
+  });
+
+  it("el_paso searches its TIGER county; a miss recenters on the county, coarse", async () => {
+    answer = () => ({ features: [STREET] });
+    const r = await geocodeAddress("Academy & Platte", undefined, { jurisdictionKey: "el_paso" });
+    const county = areaForKey("el_paso")!;
+    expect(county.name).toBe("El Paso County");
+    expect(calls[0].searchParams.get("bbox")).toBe(county.bbox.join(","));
+    const [lng, lat] = bboxCenter(county.bbox);
+    expect(r).toEqual({ ok: true, lat, lng, placeType: "place" });
+  });
+
+  it("loveland searches its TIGER place", async () => {
+    answer = () => ({ features: [STREET] });
+    await geocodeAddress("Eisenhower & Lincoln", undefined, { jurisdictionKey: "loveland" });
+    expect(calls[0].searchParams.get("bbox")).toBe(areaForKey("loveland")!.bbox.join(","));
+  });
+
+  it("e470 has no sourced polygon: all our places, 422 on a miss", async () => {
+    answer = () => ({ features: [STREET] });
+    const r = await geocodeAddress("Colfax & Main", undefined, { jurisdictionKey: "e470" });
+    expect(areaForKey("e470")).toBeNull();
     expect(calls[0].searchParams.get("bbox")).toBe(COMBINED_BBOX.join(","));
     expect(r).toEqual({ ok: false, status: 422, reason: "add a city" });
+  });
+
+  it("the authority areas are never matched as a typed city", () => {
+    expect(areaForName("Colorado")).toBeNull();
+    expect(areaForName("El Paso County")).toBeNull();
+    expect(areaForName("Loveland")).toBeNull();
   });
 });
 

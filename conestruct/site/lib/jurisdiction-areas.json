@@ -319,5 +319,37 @@
         39.794658
       ]
     }
+  },
+  "authority_areas": {
+    "cdot": {
+      "name": "Colorado",
+      "scope": "state",
+      "bbox": [
+        -109.060204,
+        36.992449,
+        -102.041522,
+        41.003444
+      ]
+    },
+    "el_paso": {
+      "name": "El Paso County",
+      "scope": "county",
+      "bbox": [
+        -105.072529,
+        38.51944,
+        -104.051568,
+        39.13004
+      ]
+    },
+    "loveland": {
+      "name": "Loveland",
+      "scope": "place",
+      "bbox": [
+        -105.15962,
+        40.34897,
+        -104.962329,
+        40.465664
+      ]
+    }
   }
 }

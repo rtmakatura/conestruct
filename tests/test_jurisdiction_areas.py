@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -39,6 +40,40 @@ def test_every_box_is_the_polygon_extent() -> None:
     for key, area in areas.items():
         if area["supported"]:
             assert (REPO_ROOT / "data" / "jurisdictions" / f"{key}.json").exists(), key
+
+
+def test_authority_areas_follow_each_record_authority() -> None:
+    """#352: every jurisdiction record with no TIGER place gets its
+    authority's extent; e470's toll corridor has no sourced polygon."""
+    built = _builder().build()
+    places = built["areas"]
+    authority = built["authority_areas"]
+    assert set(authority) == {"cdot", "el_paso", "loveland"}
+    for path in sorted((REPO_ROOT / "data" / "jurisdictions").glob("*.json")):
+        key = path.stem
+        if key in places:
+            assert key not in authority, key
+            continue
+        rec = json.loads(path.read_text(encoding="utf-8"))
+        scope = {"state": "state", "county": "county", "city": "place"}.get(rec["authority"])
+        if scope is None:
+            assert key not in authority, key
+        else:
+            assert authority[key]["scope"] == scope, key
+    # Colorado holds every place and the combined box.
+    co = authority["cdot"]["bbox"]
+    for b in [built["combined"], *(a["bbox"] for a in places.values())]:
+        assert co[0] <= b[0] and co[1] <= b[1] and b[2] <= co[2] and b[3] <= co[3]
+    # El Paso's box holds the county polygon in counties.geojson.
+    counties = json.loads(
+        (REPO_ROOT / "data" / "boundaries" / "counties.geojson").read_text(encoding="utf-8")
+    )
+    el_paso = next(f for f in counties["features"] if f["properties"]["name"] == "El Paso")
+    lo_lng, lo_lat, hi_lng, hi_lat = authority["el_paso"]["bbox"]
+    for poly in el_paso["geometry"]["coordinates"]:
+        for ring in poly if el_paso["geometry"]["type"] == "MultiPolygon" else [poly]:
+            for lng, lat in ring:
+                assert lo_lng <= lng <= hi_lng and lo_lat <= lat <= hi_lat
 
 
 def test_combined_box_is_the_extent_of_every_place() -> None:

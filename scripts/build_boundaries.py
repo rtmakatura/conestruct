@@ -178,6 +178,60 @@ def county_geoms() -> dict[str, object]:
     return out
 
 
+def authority_extents() -> dict[str, dict]:
+    """The search extent of each jurisdiction record with no place polygon
+    above (#352), keyed by its record's own ``authority`` and ``name``:
+    a state is the extent of every Colorado county, a county is its TIGER
+    county, a city is its TIGER place.  Any other authority (e470's toll
+    corridor) has no sourced polygon and is left out.  Unsimplified TIGER
+    extents (``shape.bbox``), so the box holds every ring."""
+    have = set(SUPPORTED) | set(UNSUPPORTED)
+    records = [
+        json.loads(p.read_text(encoding="utf-8"))
+        for p in sorted((ROOT / "data" / "jurisdictions").glob("*.json"))
+    ]
+    wanted = {r["key"]: r for r in records if r["key"] not in have}
+
+    county: dict[str, list[float]] = {}
+    reader, fields = _reader("tl_2025_us_county.zip", "tl_2025_us_county")
+    for sr in reader.iterShapeRecords():
+        rec = dict(zip(fields, sr.record, strict=False))
+        if rec["STATEFP"] != "08":
+            continue
+        county[rec["NAMELSAD"]] = list(sr.shape.bbox)
+    place: dict[str, list[list[float]]] = {}
+    reader, fields = _reader("tl_2025_08_place.zip", "tl_2025_08_place")
+    for sr in reader.iterShapeRecords():
+        rec = dict(zip(fields, sr.record, strict=False))
+        if rec["LSAD"] in INCORPORATED_LSAD:
+            place.setdefault(rec["NAME"], []).append(list(sr.shape.bbox))
+    if len(county) != 64:
+        raise SystemExit(f"GATE FAILED: TIGER extract has {len(county)} Colorado counties, not 64")
+    boxes = list(county.values())
+    state = [
+        min(b[0] for b in boxes),
+        min(b[1] for b in boxes),
+        max(b[2] for b in boxes),
+        max(b[3] for b in boxes),
+    ]
+
+    out: dict[str, dict] = {}
+    for key, r in wanted.items():
+        if r["authority"] == "state":
+            out[key] = {"name": "Colorado", "scope": "state", "bbox": state}
+        elif r["authority"] == "county":
+            if r["name"] not in county:
+                raise SystemExit(f"GATE FAILED: no Colorado county named {r['name']!r}")
+            out[key] = {"name": r["name"], "scope": "county", "bbox": county[r["name"]]}
+        elif r["authority"] == "city":
+            if len(place.get(r["name"], [])) != 1:
+                raise SystemExit(f"GATE FAILED: not one incorporated place named {r['name']!r}")
+            out[key] = {"name": r["name"], "scope": "place", "bbox": place[r["name"]][0]}
+        else:
+            print(f"note: {key} ({r['authority']}) has no TIGER polygon; no extent")
+    return out
+
+
 def feature(geom, props: dict) -> dict:
     return {"type": "Feature", "properties": props, "geometry": mapping(geom)}
 
@@ -237,6 +291,30 @@ def main() -> None:
                 "features": [feature(g, {"name": name}) for name, g in counties.items()],
             }
         ),
+        encoding="utf-8",
+    )
+
+    # Not a .geojson: the backend's boundary layer globs those (#352).
+    (OUT / "extents.json").write_text(
+        json.dumps(
+            {
+                "source": (
+                    "US Census TIGER/Line 2025: County boundaries "
+                    "(tl_2025_us_county.zip, STATEFP 08) and Place boundaries, "
+                    "Colorado (tl_2025_08_place.zip)"
+                ),
+                "vintage": "2025",
+                "retrieved": "2026-07-21",
+                "note": (
+                    "Unsimplified extents, [minLng, minLat, maxLng, maxLat], for "
+                    "the jurisdiction records with no place polygon here; the "
+                    "geocoder's search box (scripts/build_jurisdiction_areas.py)."
+                ),
+                "extents": authority_extents(),
+            },
+            indent=2,
+        )
+        + "\n",
         encoding="utf-8",
     )
 

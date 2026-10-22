@@ -6,7 +6,9 @@ form has selected, or, with neither, all of the places together.
 Mapbox takes that scope as a bounding box.  Every box here is the
 extent of US Census TIGER/Line Place polygons already in
 ``data/boundaries/`` (provenance in its ``_meta.json``), so no
-coordinate is chosen by hand (Rule 12).
+coordinate is chosen by hand (Rule 12).  The jurisdictions with no
+place (#352) take their TIGER state, county or place extent from
+``data/boundaries/extents.json``, written by ``build_boundaries.py``.
 
 Writes ``conestruct/site/lib/jurisdiction-areas.json``.  The site reads
 that copy because ``data/`` is outside the Vercel build inputs.
@@ -64,6 +66,7 @@ def build() -> dict[str, Any]:
             "bbox": _extent(feat["geometry"]),
         }
     boxes = [a["bbox"] for a in areas.values()]
+    extents = json.loads((BOUNDARY_DIR / "extents.json").read_text(encoding="utf-8"))
     return {
         "source": meta["places"]["source"],
         "vintage": meta["places"]["vintage"],
@@ -77,6 +80,11 @@ def build() -> dict[str, Any]:
             max(b[3] for b in boxes),
         ],
         "areas": dict(sorted(areas.items())),
+        # #352: the jurisdiction records with no place above, each scoped
+        # by its own authority (Colorado for cdot, El Paso County, the
+        # Loveland place), from data/boundaries/extents.json.  Searched
+        # only for a selected jurisdiction, never matched as a typed city.
+        "authority_areas": dict(sorted(extents["extents"].items())),
     }
 
 

@@ -13,6 +13,8 @@
 // as the corner (Rule 10).  With no city typed and no jurisdiction
 // selected, the area is all of our TIGER places together, and no flagged
 // hit inside it answers 422: "Add a city to search cross streets."
+// #352: a selected jurisdiction with no TIGER place searches its
+// authority's extent (cdot: Colorado, held to the same 422 rule).
 
 import {
   areaForKey,
@@ -28,7 +30,8 @@ export type GeocodeResult =
 
 export interface GeocodeOptions {
   /** The form's selected jurisdiction; scopes a cross-street pair typed
-   *  with no city.  A key with no TIGER place is ignored. */
+   *  with no city.  A key with no TIGER place uses its authority's
+   *  extent (#352); one with none (e470) is ignored. */
   jurisdictionKey?: string | null;
 }
 
@@ -90,8 +93,10 @@ async function mapbox(
 interface SearchBox {
   bbox: BBox | null;
   center: [number, number];
-  /** All TIGER places together: no city typed, no jurisdiction. */
-  combined?: true;
+  /** Too wide to recenter on: all TIGER places together (no city typed,
+   *  no jurisdiction) or a whole state (#352, cdot).  The corner must lie
+   *  inside `bbox`; a miss answers 422. */
+  strict?: true;
 }
 
 /** The box and center to search a street pair in. */
@@ -106,10 +111,13 @@ async function searchArea(
 > {
   if (cross.city === null) {
     const a = areaForKey(opts.jurisdictionKey);
-    if (a) return { ok: true, area: { bbox: a.bbox, center: bboxCenter(a.bbox) } };
+    if (a) {
+      const area: SearchBox = { bbox: a.bbox, center: bboxCenter(a.bbox) };
+      return { ok: true, area: a.statewide ? { ...area, strict: true } : area };
+    }
     return {
       ok: true,
-      area: { bbox: COMBINED_BBOX, center: bboxCenter(COMBINED_BBOX), combined: true },
+      area: { bbox: COMBINED_BBOX, center: bboxCenter(COMBINED_BBOX), strict: true },
     };
   }
   // A typed city that is one of our TIGER places, with no state or with
@@ -150,14 +158,14 @@ async function geocodeCrossStreets(
     (f) =>
       f.properties?.accuracy === "intersection" &&
       f.center?.length === 2 &&
-      // The combined area must hold the corner, not just rank it.
-      (!area.combined || inside(f.center, COMBINED_BBOX)),
+      // A strict area must hold the corner, not just rank it.
+      (!area.strict || (area.bbox !== null && inside(f.center, area.bbox))),
   );
   if (hit?.center) {
     const [lng, lat] = hit.center;
     return { ok: true, lat, lng, placeType: "intersection" };
   }
-  if (area.combined) {
+  if (area.strict) {
     return { ok: false, status: 422, reason: "add a city" };
   }
   // The corner was not found inside the area: hand back the area as a

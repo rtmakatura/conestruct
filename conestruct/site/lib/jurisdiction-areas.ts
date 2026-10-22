@@ -12,6 +12,8 @@ export interface SearchArea {
   key: string;
   name: string;
   bbox: BBox;
+  /** #352: a whole state (cdot's Colorado), too wide to recenter on. */
+  statewide?: true;
 }
 
 /** The extent of every place below together (no city, no jurisdiction). */
@@ -23,11 +25,25 @@ const AREAS: SearchArea[] = Object.entries(data.areas).map(([key, a]) => ({
   bbox: a.bbox as BBox,
 }));
 
-/** The area for a jurisdiction key, or null when the key has no TIGER
- *  place (cdot, e470 and the county records carry none). */
+// #352: the jurisdictions with no TIGER place, each scoped by its own
+// record's authority: Colorado for cdot, El Paso County, the Loveland
+// place.  e470's toll corridor has no sourced polygon and is absent.
+const AUTHORITY_AREAS: SearchArea[] = Object.entries(data.authority_areas).map(
+  ([key, a]) => ({
+    key,
+    name: a.name,
+    bbox: a.bbox as BBox,
+    ...(a.scope === "state" ? { statewide: true as const } : {}),
+  }),
+);
+
+/** The area for a jurisdiction key: its TIGER place, else its authority's
+ *  TIGER state, county or place extent, else null (e470). */
 export function areaForKey(key: string | null | undefined): SearchArea | null {
   if (!key) return null;
-  return AREAS.find((a) => a.key === key) ?? null;
+  return (
+    AREAS.find((a) => a.key === key) ?? AUTHORITY_AREAS.find((a) => a.key === key) ?? null
+  );
 }
 
 /** The area whose place name is exactly `name` (case-insensitive). */
