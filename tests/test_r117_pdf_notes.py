@@ -244,10 +244,43 @@ def test_case_27_keeps_its_four_two_column_rows() -> None:
     moved the legal trailer to the title block; now all 8 fit.  #334: 75 to
     40 isn't Case 27's 75 to 65 step-down, so the plan cites Case 11 and
     places no W20-2 (Q1): 7 entries.  #360 (Q1, Q3): the speed limit group,
-    R2-10 and the filled plaques join the advance area, 17 entries; page 1
-    draws 13 and names the rest in the "+N MORE" line (page 1's fit loop)."""
+    R2-10 and the filled plaques join the advance area, 17 entries.  #362
+    (R1): page 1's fit loop cuts the G20-5P / R2-6P plaques first, farthest
+    distance first (3000 ft, then the 2500 ft pair); it draws 14 and names
+    the 3 plaques in the "+N MORE" line."""
     lines = _notes_lines(_case27_pdf())
-    assert _advance_rows(lines) == 13
-    assert any(ln["text"].startswith("+4 MORE ADVANCE SIGNS (W3-5, W20-1") for ln in lines)
+    assert _advance_rows(lines) == 14
+    assert any(ln["text"].startswith("+3 MORE ADVANCE SIGNS (G20-5P, R2-6P)") for ln in lines)
     assert any("DISTANCE CODE" in ln["text"] for ln in lines)  # still two columns
     assert _inside(lines)
+
+
+def test_case_11_page_1_keeps_every_sign_and_cuts_plaques_first() -> None:
+    """#362 R1: on freeway Case 11 75 to 40, page 1 shows W20-1, every W3-5
+    step and R2-10; only G20-5P / R2-6P rows are cut, never half a pair."""
+    text = "\n".join(ln["text"] for ln in _notes_lines(_case27_pdf()))
+    text = text[text.index("ADVANCE WARNING") :]  # the sign schedule above lists codes too
+    for desc in ("ROAD WORK AHEAD", "BEGIN DOUBLE FINES ZONE"):
+        assert desc in text
+    for mph in (40, 45, 60):  # the three W3-5 steps
+        assert f"ADVISORY SPEED {mph}" in text
+    # The plaque pairs at 500 and 1500 ft stay whole; 2500 and 3000 ft go.
+    assert text.count("FINES DOUBLE plaque") == 2
+    assert text.count("WORK ZONE plaque") == 2
+
+
+def test_the_cut_order_falls_back_to_the_end_without_plaques() -> None:
+    """#362: with no G20-5P / R2-6P row left, the cut is the old prefix cap."""
+    advance = [("W20-1", "ROAD WORK AHEAD", float(d)) for d in range(100, 900, 100)]
+    assert ps._next_advance_cut(advance, frozenset(), True) == frozenset({6, 7})
+    assert ps._next_advance_cut(advance, frozenset({7}), False) == frozenset({6})
+    plaques = [
+        ("R2-1", "SPEED", 300.0),
+        ("G20-5P", "WZ", 300.0),
+        ("R2-6P", "FD", 200.0),
+        ("G20-5P", "WZ", 200.0),
+        ("W3-5", "ADV", 400.0),
+    ]
+    assert ps._next_advance_cut(plaques, frozenset(), True) == frozenset({1})
+    assert ps._next_advance_cut(plaques, frozenset({1}), True) == frozenset({2, 3})
+    assert ps._next_advance_cut(plaques, frozenset({1, 2, 3}), True) == frozenset({0, 4})

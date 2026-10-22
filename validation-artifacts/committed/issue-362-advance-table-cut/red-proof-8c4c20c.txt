@@ -1,0 +1,5 @@
+Red proof: the new tests/test_r117_pdf_notes.py against the source at 8c4c20c (git archive)
+FAILED tests/test_r117_pdf_notes.py::test_case_27_keeps_its_four_two_column_rows
+FAILED tests/test_r117_pdf_notes.py::test_case_11_page_1_keeps_every_sign_and_cuts_plaques_first
+FAILED tests/test_r117_pdf_notes.py::test_the_cut_order_falls_back_to_the_end_without_plaques
+3 failed, 3 passed

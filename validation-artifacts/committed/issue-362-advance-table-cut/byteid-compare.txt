@@ -1,0 +1,3 @@
+168 plans (150 rendered, 18 HTTP 400 on both runs); 2 moved
+  freeway 75->40 L1000 -> plan_pdf
+  freeway 75->40 L5000 -> plan_pdf

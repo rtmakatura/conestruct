@@ -3728,9 +3728,10 @@ def _draw_notes(
         if p.device_type == DeviceType.SIGN_GENERIC and p.label:
             key_station.setdefault(_schedule_key(p), p.station_ft)
 
-    def body(cv: canvas.Canvas, schedule_cap: int, advance_cap: int) -> float:
-        """Draw the panel's content onto ``cv`` with the list regions
-        capped at ``schedule_cap`` / ``advance_cap`` rows (an honest
+    def body(cv: canvas.Canvas, schedule_cap: int, advance_cut: frozenset[int]) -> float:
+        """Draw the panel's content onto ``cv`` with the schedule capped
+        at ``schedule_cap`` rows and the advance rows at the indices in
+        ``advance_cut`` left out (an honest
         continuation line replaces anything cut) and return the final
         cursor y.  #216 Family 1: the fixed-obligation text (conflict
         footnotes, NI citation note, rightmost-lane note; the reference
@@ -3872,7 +3873,9 @@ def _draw_notes(
             )
         else:
             advance_section_title = "ADVANCE WARNING SIGNS (off-page upstream of taper)"
-        if advance and advance_cap == 0:
+        kept_advance = [row for i, row in enumerate(advance) if i not in advance_cut]
+        cut_advance = [row for i, row in enumerate(advance) if i in advance_cut]
+        if advance and not kept_advance:
             # Every advance row was cut: one honest line names the count,
             # the codes and where the series lives, in place of the
             # section title + column headers over an empty table (rule 10).
@@ -3902,26 +3905,22 @@ def _draw_notes(
         # the 6.5 pt bold column headers (4.67 pt caps), so they touched.
         # 1.5 pt more leaves 1.27 pt clear; one-column mode's 12 already does.
         section_header(advance_section_title, 1.5 if layout.two_col_advance else 0.0)
-        capped_advance = advance[:advance_cap]
         if layout.two_col_advance:
-            _draw_advance_table_two_column(cv, capped_advance, x, x_right, y, layout, column_header)
+            _draw_advance_table_two_column(cv, kept_advance, x, x_right, y, layout, column_header)
         else:
-            _draw_advance_table_one_column(cv, capped_advance, x, x_right, y, layout, column_header)
-        if advance_cap < len(advance):
+            _draw_advance_table_one_column(cv, kept_advance, x, x_right, y, layout, column_header)
+        if cut_advance:
             # #216: the full advance series lives in the crew narrative
             # and the device list — the cut names it (rule 10).  #235
             # (Ryan, 2026-10-14): it names the cut codes too, in table
             # order; when the longer line can't fit, the caller's cut loop
             # keeps cutting until the all-cut line above prints instead.
             cut_codes = list(
-                dict.fromkeys(
-                    code for code, _d, _s in advance[advance_cap:] if code and code != "—"
-                )
+                dict.fromkeys(code for code, _d, _s in cut_advance if code and code != "—")
             )
             named = f" ({', '.join(cut_codes)})" if cut_codes else ""
             more_text = (
-                f"+{len(advance) - advance_cap} MORE ADVANCE SIGNS{named}. "
-                "SEE CREW NARRATIVE & DEVICE LIST"
+                f"+{len(cut_advance)} MORE ADVANCE SIGNS{named}. SEE CREW NARRATIVE & DEVICE LIST"
             )
             cv.setFillColor(colors.black)
             cv.setFont("Helvetica-Bold", 7)
@@ -4133,18 +4132,44 @@ def _draw_notes(
     # sequence — typical sheets byte-for-byte unchanged.
     floor_y = FOOTER_BOX_Y + 8.0
     schedule_cap = len(schedule_order or [])
-    advance_cap = len(advance)
+    advance_cut: frozenset[int] = frozenset()
     while True:
         probe = canvas.Canvas(io.BytesIO(), pagesize=(PAGE_W, PAGE_H))
-        end_y = body(probe, schedule_cap, advance_cap)
-        if end_y >= floor_y or (schedule_cap == 0 and advance_cap == 0):
+        end_y = body(probe, schedule_cap, advance_cut)
+        if end_y >= floor_y or (schedule_cap == 0 and len(advance_cut) == len(advance)):
             break
-        if advance_cap > 0:
-            # A two-column cut frees a row pitch only in pairs.
-            advance_cap = max(0, advance_cap - (2 if layout.two_col_advance else 1))
+        if len(advance_cut) < len(advance):
+            advance_cut |= _next_advance_cut(advance, advance_cut, layout.two_col_advance)
         else:
             schedule_cap -= 1
-    body(c, schedule_cap, advance_cap)
+    body(c, schedule_cap, advance_cut)
+
+
+# #362 R1 (Ryan, 2026-10-21): page 1's fit loop cuts these plaque rows
+# before any sign, so W20-1, the W3-5 steps and R2-10 stay on the sheet.
+# Not all of ``_PLAQUE_CODES``: W16-2a / W7-3a ride under W21-5aR (R2).
+_FIRST_CUT_PLAQUES: frozenset[str] = frozenset({"G20-5P", "R2-6P"})
+
+
+def _next_advance_cut(
+    advance: list[tuple[str, str, float]], cut: frozenset[int], two_col: bool
+) -> frozenset[int]:
+    """The next advance rows page 1's fit loop cuts (#362).
+
+    The farthest distance that still has a G20-5P / R2-6P row loses all of
+    them at once, so a WORK ZONE / FINES DOUBLE pair is never split.  With
+    none left, the last rows still drawn go, as before #362: two at a time
+    in two-column mode, since a two-column cut frees a row pitch only in
+    pairs.
+    """
+    plaques = [
+        i for i, (code, _d, _s) in enumerate(advance) if i not in cut and code in _FIRST_CUT_PLAQUES
+    ]
+    if plaques:
+        farthest = max(advance[i][2] for i in plaques)
+        return frozenset(i for i in plaques if advance[i][2] == farthest)
+    kept = [i for i in range(len(advance)) if i not in cut]
+    return frozenset(kept[-(2 if two_col else 1) :])
 
 
 def _draw_advance_table_one_column(
