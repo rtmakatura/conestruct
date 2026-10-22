@@ -1,0 +1,22 @@
+plan | geometry status | downstream base -> branch | result
+ni/corridor_end/corner_-100 | laid_out | 50.0 -> 88.0 | CHANGED: geometry
+ni/corridor_end/corner_-60 | laid_out | 50.0 -> 48.0 | CHANGED: geometry
+ni/corridor_end/far_800 | laid_out | 50.0 -> 50.0 | IDENTICAL
+ni/corridor_end/midblock_-600 | laid_out | 50.0 -> 50.0 | IDENTICAL
+ni/work_start/corner_560N | laid_out | 50.0 -> 48.0 | CHANGED: geometry, map_laid_out
+ni/work_start/far_300S | laid_out | 50.0 -> 50.0 | IDENTICAL
+ni/work_start/midblock_700N | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/adv-flagger | no_pin | None -> None | IDENTICAL
+worst_case/adv-near-intersection | no_pin | None -> None | IDENTICAL
+worst_case/adv-shoulder | no_pin | None -> None | IDENTICAL
+worst_case/broadway-left | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/control-typical | no_pin | None -> None | IDENTICAL
+worst_case/scanned-asserted | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/scanned-asserted-work-start | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/scanned-dismissed | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/scanned-dismissed-work-start | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/scanned-not-checked | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/scanned-not-checked-work-start | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/scanned-ok | laid_out | 50.0 -> 50.0 | IDENTICAL
+worst_case/scanned-ok-work-start | laid_out | 50.0 -> 50.0 | IDENTICAL
+17 of 20 plans byte-identical

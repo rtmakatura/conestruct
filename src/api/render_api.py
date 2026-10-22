@@ -1503,6 +1503,27 @@ def jurisdiction_suggest(req: JurisdictionSuggestRequest) -> JSONResponse:
 # this endpoint (the picker) and the plan sheet's page 2 (P11).
 
 
+def _read_placements(scenario: Scenario) -> list[Any] | None:
+    """The layout a drawn corridor reads its downstream run from (#366).
+
+    A near_intersection plan whose closure runs to the corner places no
+    downstream taper: its cones reach the cross street's upstream curb
+    line, which can sit short of the §6B.08 floor.  So the reads lay the
+    plan out and hand its placements to the one layout call, as page 2
+    does — ``placed_downstream_taper_ft`` stays the one producer (#257).
+    Every other kind places the floor, so it reads none.  ``None`` too
+    when the plan can't be generated: every deliverable refuses it, and
+    the read keeps drawing the floor, as before.
+    """
+    if scenario.kind != "near_intersection":
+        return None
+    try:
+        params, generator, kwargs = scenario_to_call(scenario)
+        return list(generator(params, **kwargs))
+    except ValueError:
+        return None
+
+
 def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
     """The side control's choices for this pin, worded and gated (#290).
 
@@ -1659,10 +1680,11 @@ def render_corridor_geometry(body: Annotated[Any, Body()]) -> JSONResponse:
 
     # #302: the one layout call every drawn corridor goes through — the
     # same argument list page 2 and the band's aerial use (the work-zone
-    # speed included).  No layout here, so the downstream taper is the
-    # §6B.08 floor the plan places.
+    # speed included), with the downstream run the layout placed (#366).
     try:
-        primary, corridors = _laid_out(params, meta.lat, meta.lng)
+        primary, corridors = _laid_out(
+            params, meta.lat, meta.lng, placements=_read_placements(scenario)
+        )
     except ValueError as exc:
         out["status"] = "corridor_unbuildable"
         out["message"] = f"{type(exc).__name__}: {exc}"
@@ -1828,7 +1850,9 @@ def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
         if params.pin_model != "work_start" or params.bearing_deg is None:
             return JSONResponse({"status": "side_not_confirmed", "message": None}, status_code=409)
         try:
-            _primary, approaches = _laid_out(params, meta.lat, meta.lng)
+            _primary, approaches = _laid_out(
+                params, meta.lat, meta.lng, placements=_read_placements(scenario)
+            )
         except ValueError as exc:
             return JSONResponse(
                 {"status": "corridor_unbuildable", "message": f"{type(exc).__name__}: {exc}"},

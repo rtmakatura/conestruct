@@ -1,0 +1,7 @@
+# New tests against the base code (e7d1548's tree + the two test files), 2026-10-22
+FAILED tests/test_corner_extension_geometry.py::test_corner_plan_draws_the_run_it_builds[-60.0-48]
+FAILED tests/test_corner_extension_geometry.py::test_corner_plan_draws_the_run_it_builds[-100.0-88]
+FAILED tests/test_corner_extension_geometry.py::test_work_start_corner_plan_draws_the_run_it_builds
+FAILED tests/test_corner_extension_geometry.py::test_the_band_aerial_draws_the_same_run
+FAILED tests/s630/test_cross_surface.py::test_corner_extension_is_one_length_on_every_surface
+5 failed, 93 passed in 14.25s

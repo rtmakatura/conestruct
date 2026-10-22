@@ -1,0 +1,3470 @@
+{
+ "ni/corridor_end/corner_-100": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.74,
+            -104.96
+           ],
+           [
+            39.7398629,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.74,
+          -104.96
+         ],
+         [
+          39.7398629,
+          -104.96
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 250.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7384924,
+            -104.96
+           ],
+           [
+            39.7378071,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7384924,
+          -104.96
+         ],
+         [
+          39.7378071,
+          -104.96
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 245.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7378071,
+            -104.96
+           ],
+           [
+            39.7371355,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7378071,
+          -104.96
+         ],
+         [
+          39.7371355,
+          -104.96
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7371355,
+            -104.96
+           ],
+           [
+            39.7363132,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7371355,
+          -104.96
+         ],
+         [
+          39.7363132,
+          -104.96
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.74,
+     -104.96
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 500.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7398629,
+         -104.96
+        ],
+        [
+         39.7384924,
+         -104.96
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7398629,
+       -104.96
+      ],
+      [
+       39.7384924,
+       -104.96
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "ni/corridor_end/corner_-60": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.74,
+            -104.96
+           ],
+           [
+            39.7398629,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.74,
+          -104.96
+         ],
+         [
+          39.7398629,
+          -104.96
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 250.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7384924,
+            -104.96
+           ],
+           [
+            39.7378071,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7384924,
+          -104.96
+         ],
+         [
+          39.7378071,
+          -104.96
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 245.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7378071,
+            -104.96
+           ],
+           [
+            39.7371355,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7378071,
+          -104.96
+         ],
+         [
+          39.7371355,
+          -104.96
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7371355,
+            -104.96
+           ],
+           [
+            39.7363132,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7371355,
+          -104.96
+         ],
+         [
+          39.7363132,
+          -104.96
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.74,
+     -104.96
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 500.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7398629,
+         -104.96
+        ],
+        [
+         39.7384924,
+         -104.96
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7398629,
+       -104.96
+      ],
+      [
+       39.7384924,
+       -104.96
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "ni/corridor_end/far_800": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.74,
+            -104.96
+           ],
+           [
+            39.7398629,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.74,
+          -104.96
+         ],
+         [
+          39.7398629,
+          -104.96
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 250.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7384924,
+            -104.96
+           ],
+           [
+            39.7378071,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7384924,
+          -104.96
+         ],
+         [
+          39.7378071,
+          -104.96
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 245.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7378071,
+            -104.96
+           ],
+           [
+            39.7371355,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7378071,
+          -104.96
+         ],
+         [
+          39.7371355,
+          -104.96
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7371355,
+            -104.96
+           ],
+           [
+            39.7363132,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7371355,
+          -104.96
+         ],
+         [
+          39.7363132,
+          -104.96
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.74,
+     -104.96
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 500.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7398629,
+         -104.96
+        ],
+        [
+         39.7384924,
+         -104.96
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7398629,
+       -104.96
+      ],
+      [
+       39.7384924,
+       -104.96
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "ni/corridor_end/midblock_-600": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.74,
+            -104.96
+           ],
+           [
+            39.7398629,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.74,
+          -104.96
+         ],
+         [
+          39.7398629,
+          -104.96
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 250.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7384924,
+            -104.96
+           ],
+           [
+            39.7378071,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7384924,
+          -104.96
+         ],
+         [
+          39.7378071,
+          -104.96
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 245.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7378071,
+            -104.96
+           ],
+           [
+            39.7371355,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7378071,
+          -104.96
+         ],
+         [
+          39.7371355,
+          -104.96
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7371355,
+            -104.96
+           ],
+           [
+            39.7363132,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7371355,
+          -104.96
+         ],
+         [
+          39.7363132,
+          -104.96
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.74,
+     -104.96
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 500.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7398629,
+         -104.96
+        ],
+        [
+         39.7384924,
+         -104.96
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7398629,
+       -104.96
+      ],
+      [
+       39.7384924,
+       -104.96
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "ni/work_start/corner_560N": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7415076,
+            -104.96
+           ],
+           [
+            39.7413706,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7415076,
+          -104.96
+         ],
+         [
+          39.7413706,
+          -104.96
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 250.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.74,
+            -104.96
+           ],
+           [
+            39.7393147,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.74,
+          -104.96
+         ],
+         [
+          39.7393147,
+          -104.96
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 245.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7393147,
+            -104.96
+           ],
+           [
+            39.7386431,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7393147,
+          -104.96
+         ],
+         [
+          39.7386431,
+          -104.96
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7386431,
+            -104.96
+           ],
+           [
+            39.7378208,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7386431,
+          -104.96
+         ],
+         [
+          39.7378208,
+          -104.96
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.74,
+     -104.96
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "East side \u00b7 traffic heads north",
+      "work": {
+       "heading": "N",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "South side \u00b7 traffic heads east",
+      "work": {
+       "heading": "E",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "West side \u00b7 traffic heads south",
+      "work": {
+       "heading": "S",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "North side \u00b7 traffic heads west",
+      "work": {
+       "heading": "W",
+       "side": "right"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 500.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7413706,
+         -104.96
+        ],
+        [
+         39.74,
+         -104.96
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7413706,
+       -104.96
+      ],
+      [
+       39.74,
+       -104.96
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(m_qqF~~r_SZ%3F),path-4+FF7A00-0.9(_vpqF~~r_ShC%3F),path-5+F3722C-0.9(uqpqF~~r_SdC%3F),path-6+FFD166-0.9(ompqF~~r_SbD%3F),path-3+1EC8A5-0.9(q~pqF~~r_SpG%3F),pin-s+E8710A(-104.960000,39.740000)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(q~pqF~~r_SpG%3F),pin-s+E8710A(-104.960000,39.740000)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ },
+ "ni/work_start/far_300S": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7415076,
+            -104.96
+           ],
+           [
+            39.7413706,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7415076,
+          -104.96
+         ],
+         [
+          39.7413706,
+          -104.96
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 250.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.74,
+            -104.96
+           ],
+           [
+            39.7393147,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.74,
+          -104.96
+         ],
+         [
+          39.7393147,
+          -104.96
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 245.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7393147,
+            -104.96
+           ],
+           [
+            39.7386431,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7393147,
+          -104.96
+         ],
+         [
+          39.7386431,
+          -104.96
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7386431,
+            -104.96
+           ],
+           [
+            39.7378208,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7386431,
+          -104.96
+         ],
+         [
+          39.7378208,
+          -104.96
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.74,
+     -104.96
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "East side \u00b7 traffic heads north",
+      "work": {
+       "heading": "N",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "South side \u00b7 traffic heads east",
+      "work": {
+       "heading": "E",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "West side \u00b7 traffic heads south",
+      "work": {
+       "heading": "S",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "North side \u00b7 traffic heads west",
+      "work": {
+       "heading": "W",
+       "side": "right"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 500.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7413706,
+         -104.96
+        ],
+        [
+         39.74,
+         -104.96
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7413706,
+       -104.96
+      ],
+      [
+       39.74,
+       -104.96
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(m_qqF~~r_SZ%3F),path-4+FF7A00-0.9(_vpqF~~r_ShC%3F),path-5+F3722C-0.9(uqpqF~~r_SdC%3F),path-6+FFD166-0.9(ompqF~~r_SbD%3F),path-3+1EC8A5-0.9(q~pqF~~r_SpG%3F),pin-s+E8710A(-104.960000,39.740000)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(q~pqF~~r_SpG%3F),pin-s+E8710A(-104.960000,39.740000)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ },
+ "ni/work_start/midblock_700N": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7415076,
+            -104.96
+           ],
+           [
+            39.7413706,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7415076,
+          -104.96
+         ],
+         [
+          39.7413706,
+          -104.96
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 250.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.74,
+            -104.96
+           ],
+           [
+            39.7393147,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.74,
+          -104.96
+         ],
+         [
+          39.7393147,
+          -104.96
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 245.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7393147,
+            -104.96
+           ],
+           [
+            39.7386431,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7393147,
+          -104.96
+         ],
+         [
+          39.7386431,
+          -104.96
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7386431,
+            -104.96
+           ],
+           [
+            39.7378208,
+            -104.96
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7386431,
+          -104.96
+         ],
+         [
+          39.7378208,
+          -104.96
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.74,
+     -104.96
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "East side \u00b7 traffic heads north",
+      "work": {
+       "heading": "N",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "South side \u00b7 traffic heads east",
+      "work": {
+       "heading": "E",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "West side \u00b7 traffic heads south",
+      "work": {
+       "heading": "S",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "North side \u00b7 traffic heads west",
+      "work": {
+       "heading": "W",
+       "side": "right"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 500.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7413706,
+         -104.96
+        ],
+        [
+         39.74,
+         -104.96
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7413706,
+       -104.96
+      ],
+      [
+       39.74,
+       -104.96
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(m_qqF~~r_SZ%3F),path-4+FF7A00-0.9(_vpqF~~r_ShC%3F),path-5+F3722C-0.9(uqpqF~~r_SdC%3F),path-6+FFD166-0.9(ompqF~~r_SbD%3F),path-3+1EC8A5-0.9(q~pqF~~r_SpG%3F),pin-s+E8710A(-104.960000,39.740000)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(q~pqF~~r_SpG%3F),pin-s+E8710A(-104.960000,39.740000)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ },
+ "worst_case/adv-flagger": {
+  "geometry": [
+   200,
+   {
+    "approaches": [],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": null,
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "no_pin",
+    "travel_bearing_deg": null,
+    "work": null
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ]
+ },
+ "worst_case/adv-near-intersection": {
+  "geometry": [
+   200,
+   {
+    "approaches": [],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": null,
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "no_pin",
+    "travel_bearing_deg": null,
+    "work": null
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ]
+ },
+ "worst_case/adv-shoulder": {
+  "geometry": [
+   200,
+   {
+    "approaches": [],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": null,
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "no_pin",
+    "travel_bearing_deg": null,
+    "work": null
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ]
+ },
+ "worst_case/broadway-left": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 180.49,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.730821,
+            -104.9874195
+           ],
+           [
+            39.7309571,
+            -104.9874187
+           ],
+           [
+            39.730958,
+            -104.9874187
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.730821,
+          -104.9874195
+         ],
+         [
+          39.7309571,
+          -104.9874187
+         ],
+         [
+          39.730958,
+          -104.9874187
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 200.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7336991,
+            -104.9874017
+           ],
+           [
+            39.7337575,
+            -104.987401
+           ],
+           [
+            39.733847,
+            -104.987401
+           ],
+           [
+            39.7339493,
+            -104.9874
+           ],
+           [
+            39.7340382,
+            -104.9874004
+           ],
+           [
+            39.7342474,
+            -104.9873997
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7336991,
+          -104.9874017
+         ],
+         [
+          39.7337575,
+          -104.987401
+         ],
+         [
+          39.733847,
+          -104.987401
+         ],
+         [
+          39.7339493,
+          -104.9874
+         ],
+         [
+          39.7340382,
+          -104.9874004
+         ],
+         [
+          39.7342474,
+          -104.9873997
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 40.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7342474,
+            -104.9873997
+           ],
+           [
+            39.734357,
+            -104.9873993
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7342474,
+          -104.9873997
+         ],
+         [
+          39.734357,
+          -104.9873993
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 300.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.734357,
+            -104.9873993
+           ],
+           [
+            39.7346616,
+            -104.9873982
+           ],
+           [
+            39.7350935,
+            -104.9873974
+           ],
+           [
+            39.7351793,
+            -104.987397
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.734357,
+          -104.9873993
+         ],
+         [
+          39.7346616,
+          -104.9873982
+         ],
+         [
+          39.7350935,
+          -104.9873974
+         ],
+         [
+          39.7351793,
+          -104.987397
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": 6602.4,
+    "coverage_start_ft": 0.0,
+    "message": null,
+    "pin": [
+     39.7337,
+     -104.98753
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "West side \u00b7 southbound traffic",
+      "work": {
+       "side": "right",
+       "travel": "with_geometry"
+      }
+     },
+     {
+      "built": true,
+      "label": "East side \u00b7 southbound traffic",
+      "work": {
+       "side": "left",
+       "travel": "with_geometry"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 180.49,
+    "work": {
+     "length_ft": 1000.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.730958,
+         -104.9874187
+        ],
+        [
+         39.7311772,
+         -104.9874174
+        ],
+        [
+         39.7312208,
+         -104.9874171
+        ],
+        [
+         39.7316826,
+         -104.9874143
+        ],
+        [
+         39.7318295,
+         -104.9874134
+        ],
+        [
+         39.7318531,
+         -104.9874132
+        ],
+        [
+         39.7319624,
+         -104.987412
+        ],
+        [
+         39.7320545,
+         -104.987412
+        ],
+        [
+         39.7321479,
+         -104.987411
+        ],
+        [
+         39.7324437,
+         -104.9874096
+        ],
+        [
+         39.7328098,
+         -104.9874073
+        ],
+        [
+         39.7333051,
+         -104.9874043
+        ],
+        [
+         39.7333704,
+         -104.9874039
+        ],
+        [
+         39.7336501,
+         -104.9874022
+        ],
+        [
+         39.7336991,
+         -104.9874017
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.730958,
+       -104.9874187
+      ],
+      [
+       39.7311772,
+       -104.9874174
+      ],
+      [
+       39.7312208,
+       -104.9874171
+      ],
+      [
+       39.7316826,
+       -104.9874143
+      ],
+      [
+       39.7318295,
+       -104.9874134
+      ],
+      [
+       39.7318531,
+       -104.9874132
+      ],
+      [
+       39.7319624,
+       -104.987412
+      ],
+      [
+       39.7320545,
+       -104.987412
+      ],
+      [
+       39.7321479,
+       -104.987411
+      ],
+      [
+       39.7324437,
+       -104.9874096
+      ],
+      [
+       39.7328098,
+       -104.9874073
+      ],
+      [
+       39.7333051,
+       -104.9874043
+      ],
+      [
+       39.7333704,
+       -104.9874039
+      ],
+      [
+       39.7336501,
+       -104.9874022
+      ],
+      [
+       39.7336991,
+       -104.9874017
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(s%7CnqFjjx_S%5B%3F%3F%3F),path-4+FF7A00-0.9(snoqFfjx_SK%3FQ%3FS%3FQ%3Fi%40%3F),path-5+F3722C-0.9(aroqFfjx_SU%3F),path-6+FFD166-0.9(wroqFfjx_S%7B%40%3FuA%3FQ%3F),path-3+1EC8A5-0.9(o%7DnqFjjx_Sk%40%3FG%3F%7BAA%5D%3FC%3FU%3FQ%3FS%3Fy%40%3FiA%3FcBAK%3Fw%40%3FI%3F),pin-s+E8710A(-104.987530,39.733700)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(o%7DnqFjjx_Sk%40%3FG%3F%7BAA%5D%3FC%3FU%3FQ%3FS%3Fy%40%3FiA%3FcBAK%3Fw%40%3FI%3F),pin-s+E8710A(-104.987530,39.733700)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ },
+ "worst_case/control-typical": {
+  "geometry": [
+   200,
+   {
+    "approaches": [],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": null,
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "no_pin",
+    "travel_bearing_deg": null,
+    "work": null
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"no_pin\",\"message\":null}"
+  ]
+ },
+ "worst_case/scanned-asserted": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7084218,
+            -105.0815
+           ],
+           [
+            39.707435,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7084218,
+          -105.0815
+         ],
+         [
+          39.707435,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.707435,
+            -105.0815
+           ],
+           [
+            39.7070238,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.707435,
+          -105.0815
+         ],
+         [
+          39.7070238,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7070238,
+            -105.0815
+           ],
+           [
+            39.7041456,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7070238,
+          -105.0815
+         ],
+         [
+          39.7041456,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.7113,
+     -105.0815
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1000.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7084218,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7084218,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "worst_case/scanned-asserted-work-start": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7084218,
+            -105.0815
+           ],
+           [
+            39.707435,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7084218,
+          -105.0815
+         ],
+         [
+          39.707435,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.707435,
+            -105.0815
+           ],
+           [
+            39.7070238,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.707435,
+          -105.0815
+         ],
+         [
+          39.7070238,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7070238,
+            -105.0815
+           ],
+           [
+            39.7041456,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7070238,
+          -105.0815
+         ],
+         [
+          39.7041456,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.708421811,
+     -105.0815
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "East side \u00b7 traffic heads north",
+      "work": {
+       "heading": "N",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "South side \u00b7 traffic heads east",
+      "work": {
+       "heading": "E",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "West side \u00b7 traffic heads south",
+      "work": {
+       "heading": "S",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "North side \u00b7 traffic heads west",
+      "work": {
+       "heading": "W",
+       "side": "right"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1000.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7084218,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7084218,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(sbkqFjvj%60SZ%3F),path-4+FF7A00-0.9(spjqFjvj%60SbE%3F),path-5+F3722C-0.9(ojjqFjvj%60SrA%3F),path-6+FFD166-0.9(%7BgjqFjvj%60S%7CP%3F),path-3+1EC8A5-0.9(wakqFjvj%60SbP%3F),pin-s+E8710A(-105.081500,39.708422)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(wakqFjvj%60SbP%3F),pin-s+E8710A(-105.081500,39.708422)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ },
+ "worst_case/scanned-dismissed": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7084218,
+            -105.0815
+           ],
+           [
+            39.707435,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7084218,
+          -105.0815
+         ],
+         [
+          39.707435,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.707435,
+            -105.0815
+           ],
+           [
+            39.7070238,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.707435,
+          -105.0815
+         ],
+         [
+          39.7070238,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7070238,
+            -105.0815
+           ],
+           [
+            39.7041456,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7070238,
+          -105.0815
+         ],
+         [
+          39.7041456,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.7113,
+     -105.0815
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1000.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7084218,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7084218,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "worst_case/scanned-dismissed-work-start": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7084218,
+            -105.0815
+           ],
+           [
+            39.707435,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7084218,
+          -105.0815
+         ],
+         [
+          39.707435,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.707435,
+            -105.0815
+           ],
+           [
+            39.7070238,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.707435,
+          -105.0815
+         ],
+         [
+          39.7070238,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7070238,
+            -105.0815
+           ],
+           [
+            39.7041456,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7070238,
+          -105.0815
+         ],
+         [
+          39.7041456,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.708421811,
+     -105.0815
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "East side \u00b7 traffic heads north",
+      "work": {
+       "heading": "N",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "South side \u00b7 traffic heads east",
+      "work": {
+       "heading": "E",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "West side \u00b7 traffic heads south",
+      "work": {
+       "heading": "S",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "North side \u00b7 traffic heads west",
+      "work": {
+       "heading": "W",
+       "side": "right"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1000.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7084218,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7084218,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(sbkqFjvj%60SZ%3F),path-4+FF7A00-0.9(spjqFjvj%60SbE%3F),path-5+F3722C-0.9(ojjqFjvj%60SrA%3F),path-6+FFD166-0.9(%7BgjqFjvj%60S%7CP%3F),path-3+1EC8A5-0.9(wakqFjvj%60SbP%3F),pin-s+E8710A(-105.081500,39.708422)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(wakqFjvj%60SbP%3F),pin-s+E8710A(-105.081500,39.708422)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ },
+ "worst_case/scanned-not-checked": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7081477,
+            -105.0815
+           ],
+           [
+            39.7071609,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7081477,
+          -105.0815
+         ],
+         [
+          39.7071609,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7071609,
+            -105.0815
+           ],
+           [
+            39.7067497,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7071609,
+          -105.0815
+         ],
+         [
+          39.7067497,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7067497,
+            -105.0815
+           ],
+           [
+            39.7038715,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7067497,
+          -105.0815
+         ],
+         [
+          39.7038715,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.7113,
+     -105.0815
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1100.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7081477,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7081477,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "worst_case/scanned-not-checked-work-start": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7081477,
+            -105.0815
+           ],
+           [
+            39.7071609,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7081477,
+          -105.0815
+         ],
+         [
+          39.7071609,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7071609,
+            -105.0815
+           ],
+           [
+            39.7067497,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7071609,
+          -105.0815
+         ],
+         [
+          39.7067497,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7067497,
+            -105.0815
+           ],
+           [
+            39.7038715,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7067497,
+          -105.0815
+         ],
+         [
+          39.7038715,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.708147698,
+     -105.0815
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "East side \u00b7 traffic heads north",
+      "work": {
+       "heading": "N",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "South side \u00b7 traffic heads east",
+      "work": {
+       "heading": "E",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "West side \u00b7 traffic heads south",
+      "work": {
+       "heading": "S",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "North side \u00b7 traffic heads west",
+      "work": {
+       "heading": "W",
+       "side": "right"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1100.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7081477,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7081477,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(sbkqFjvj%60SZ%3F),path-4+FF7A00-0.9(%7DnjqFjvj%60SdE%3F),path-5+F3722C-0.9(whjqFjvj%60SpA%3F),path-6+FFD166-0.9(efjqFjvj%60S~P%3F),path-3+1EC8A5-0.9(wakqFjvj%60SxQ%3F),pin-s+E8710A(-105.081500,39.708148)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(wakqFjvj%60SxQ%3F),pin-s+E8710A(-105.081500,39.708148)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ },
+ "worst_case/scanned-ok": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7084218,
+            -105.0815
+           ],
+           [
+            39.707435,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7084218,
+          -105.0815
+         ],
+         [
+          39.707435,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.707435,
+            -105.0815
+           ],
+           [
+            39.7070238,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.707435,
+          -105.0815
+         ],
+         [
+          39.7070238,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7070238,
+            -105.0815
+           ],
+           [
+            39.7041456,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7070238,
+          -105.0815
+         ],
+         [
+          39.7041456,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.7113,
+     -105.0815
+    ],
+    "pin_model": "corridor_end",
+    "side_options": [],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1000.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7084218,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7084218,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ],
+  "map_work": [
+   409,
+   "{\"status\":\"side_not_confirmed\",\"message\":null}"
+  ]
+ },
+ "worst_case/scanned-ok-work-start": {
+  "geometry": [
+   200,
+   {
+    "approaches": [
+     {
+      "id": "primary",
+      "travel_bearing_deg": 0.0,
+      "zones": [
+       {
+        "length_ft": 50.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7113,
+            -105.0815
+           ],
+           [
+            39.7111629,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7113,
+          -105.0815
+         ],
+         [
+          39.7111629,
+          -105.0815
+         ]
+        ],
+        "zone": "downstream"
+       },
+       {
+        "length_ft": 360.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7084218,
+            -105.0815
+           ],
+           [
+            39.707435,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7084218,
+          -105.0815
+         ],
+         [
+          39.707435,
+          -105.0815
+         ]
+        ],
+        "zone": "buffer"
+       },
+       {
+        "length_ft": 150.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.707435,
+            -105.0815
+           ],
+           [
+            39.7070238,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.707435,
+          -105.0815
+         ],
+         [
+          39.7070238,
+          -105.0815
+         ]
+        ],
+        "zone": "transition"
+       },
+       {
+        "length_ft": 1050.0,
+        "parts": [
+         {
+          "extended": false,
+          "points": [
+           [
+            39.7070238,
+            -105.0815
+           ],
+           [
+            39.7041456,
+            -105.0815
+           ]
+          ]
+         }
+        ],
+        "points": [
+         [
+          39.7070238,
+          -105.0815
+         ],
+         [
+          39.7041456,
+          -105.0815
+         ]
+        ],
+        "zone": "advance_warning"
+       }
+      ]
+     }
+    ],
+    "coverage_ft": null,
+    "coverage_start_ft": null,
+    "message": null,
+    "pin": [
+     39.708421811,
+     -105.0815
+    ],
+    "pin_model": "work_start",
+    "side_options": [
+     {
+      "built": true,
+      "label": "East side \u00b7 traffic heads north",
+      "work": {
+       "heading": "N",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "South side \u00b7 traffic heads east",
+      "work": {
+       "heading": "E",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "West side \u00b7 traffic heads south",
+      "work": {
+       "heading": "S",
+       "side": "right"
+      }
+     },
+     {
+      "built": true,
+      "label": "North side \u00b7 traffic heads west",
+      "work": {
+       "heading": "W",
+       "side": "right"
+      }
+     }
+    ],
+    "status": "laid_out",
+    "travel_bearing_deg": 0.0,
+    "work": {
+     "length_ft": 1000.0,
+     "parts": [
+      {
+       "extended": false,
+       "points": [
+        [
+         39.7111629,
+         -105.0815
+        ],
+        [
+         39.7084218,
+         -105.0815
+        ]
+       ]
+      }
+     ],
+     "points": [
+      [
+       39.7111629,
+       -105.0815
+      ],
+      [
+       39.7084218,
+       -105.0815
+      ]
+     ]
+    }
+   }
+  ],
+  "map_laid_out": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-2+8A8A8A-0.9(sbkqFjvj%60SZ%3F),path-4+FF7A00-0.9(spjqFjvj%60SbE%3F),path-5+F3722C-0.9(ojjqFjvj%60SrA%3F),path-6+FFD166-0.9(%7BgjqFjvj%60S%7CP%3F),path-3+1EC8A5-0.9(wakqFjvj%60SbP%3F),pin-s+E8710A(-105.081500,39.708422)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ],
+  "map_work": [
+   200,
+   [
+    [
+     "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/path-3+1EC8A5-0.9(wakqFjvj%60SbP%3F),pin-s+E8710A(-105.081500,39.708422)/auto/640x400@2x",
+     {
+      "padding": "60"
+     }
+    ]
+   ]
+  ]
+ }
+}

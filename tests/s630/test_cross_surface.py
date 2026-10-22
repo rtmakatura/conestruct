@@ -693,6 +693,69 @@ def test_downstream_taper_is_one_length_on_every_surface(
         assert abs(_sheet_ft(p2, "Total corridor") - rows) <= 1, "plan sheet total vs its rows"
 
 
+# #366: a near-side plan run to the corner places no downstream taper; its
+# cones reach the cross street's upstream curb line (#365 keys the run
+# ``corner_extension_ft``).  None of the fixtures above is one.
+_CORNER_PLAN: dict[str, Any] = {
+    "kind": "near_intersection",
+    "meta": {
+        "project": "s366-corner",
+        "address": "",
+        "lat": 39.73997,
+        "lng": -104.96632,
+        "bearingDeg": 90.0,
+        "siteConditions": {},
+    },
+    "roadType": "urban_arterial",
+    "speed": 45,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "divided": False,
+    "workType": "utility_cut",
+    "duration": "short",
+    "workLen": 700.0,
+    "night": False,
+    "approaches": [
+        {
+            "id": "cross_n",
+            "speed": 30,
+            "roadType": "urban_arterial",
+            "lanesPerDirection": 1,
+            "laneWidth": 12.0,
+            "signalized": False,
+            "bearingDeg": None,
+            "alongStationFt": -60.0,
+        }
+    ],
+}
+_CREW_CORNER_STATION = re.compile(r"upstream curb line of the cross street \(station -([\d,]+) ft")
+
+
+def test_corner_extension_is_one_length_on_every_surface(
+    api: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from src.api import site_scan as ss
+    from src.rules import site_detection as sd
+
+    ss.clear_memo()
+    monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda q, **_k: (None, "stub"))
+
+    spec = _post(api, "/render/audit", _CORNER_PLAN).json()["sections"]["corridor_spec"]
+    corner = int(spec["corner_extension_ft"])
+    assert corner == 48
+
+    geometry = _post(api, "/render/corridor-geometry", _CORNER_PLAN).json()
+    zones = {z["zone"]: z["length_ft"] for z in geometry["approaches"][0]["zones"]}
+    assert round(zones["downstream"]) == corner, "picker drawing vs sidebar"
+
+    m = _CREW_CORNER_STATION.search(_post(api, "/render/markdown", _CORNER_PLAN).text)
+    assert m, "crew step 3 names the upstream curb station"
+    assert int(m.group(1).replace(",", "")) == corner, "crew step 3 vs sidebar"
+
+    p2 = _pdf_text(_post(api, "/render/pdf", _CORNER_PLAN).content)[1]
+    assert _sheet_ft(p2, "Corner extension") == corner, "plan sheet p.2 vs sidebar"
+
+
 def test_placed_downstream_taper_is_the_layouts_run() -> None:
     """The helper every surface reads: the placed run when the layout
     placed downstream cones, the §6B.08 one-lane floor otherwise."""

@@ -172,7 +172,8 @@ def corridor_kwargs(params: Any, *, placements: Iterable[Any] | None = None) -> 
     caller has the layout — the downstream run the plan placed
     (:func:`~src.rules.corridor.placed_downstream_taper_ft`, #257).  Without
     placements the §6B.08 floor, which is what the layout places for every
-    enabled kind (the corridor-geometry read has no layout).
+    kind but a near_intersection plan run to the corner (the reads pass that
+    plan's placements, #366).
     """
     kwargs: dict[str, Any] = {
         "speed_mph": params.speed_mph,
