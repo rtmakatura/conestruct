@@ -1,0 +1,18 @@
+{
+ "request": {
+  "lat": 39.740144,
+  "lng": -105.1343433
+ },
+ "status": 200,
+ "response": {
+  "suggestion": "lakewood",
+  "reason": "Pin is inside Lakewood municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+  "confidence": "near_boundary",
+  "distance_to_boundary_ft": 1.9,
+  "warnings": [],
+  "boundary_source": {
+   "source": "US Census TIGER/Line Place boundaries",
+   "vintage": "2025"
+  }
+ }
+}

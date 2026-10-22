@@ -1,0 +1,18 @@
+{
+ "request": {
+  "lat": 39.7335729,
+  "lng": -104.987401
+ },
+ "status": 200,
+ "response": {
+  "suggestion": "denver",
+  "reason": "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+  "confidence": "inside",
+  "distance_to_boundary_ft": 15460.7,
+  "warnings": [],
+  "boundary_source": {
+   "source": "US Census TIGER/Line Place boundaries",
+   "vintage": "2025"
+  }
+ }
+}

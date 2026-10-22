@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "Sheridan Blvd & W 52nd Ave, Denver",
+  "jurisdiction_key": "denver"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.791054,
+  "lng": -105.053247,
+  "placeType": "intersection"
+ }
+}

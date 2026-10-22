@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "W Colfax Ave & Perry St, Denver",
+  "jurisdiction_key": "denver"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.740354,
+  "lng": -105.039328,
+  "placeType": "intersection"
+ }
+}

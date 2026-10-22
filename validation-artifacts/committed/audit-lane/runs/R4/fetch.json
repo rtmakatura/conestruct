@@ -1,0 +1,30 @@
+{
+ "row": {
+  "id": "R4",
+  "kind": "flagger_lane_closure",
+  "pin": "CO119",
+  "road_type": "rural",
+  "speed": 60,
+  "expect": "refuse",
+  "why": "60 mph"
+ },
+ "pin": {
+  "place": "CO 119, Boulder Canyon",
+  "lat": 40.00185,
+  "lng": -105.41289,
+  "road": "119",
+  "reads": "2 lanes, 45 mph, rural, undivided"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [],
+ "side_label": "not offered; sent as the row asks",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 60
+  }
+ }
+}

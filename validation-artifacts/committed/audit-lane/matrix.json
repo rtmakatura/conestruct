@@ -1,70 +1,653 @@
 {
-  "_about": "Lane-closure audit matrix (#370; plan approved by Ryan 2026-10-22 with amendments; pins confirmed on production /api/road-bearing 2026-10-22, table in pins.md). `road` is a regex the confirmed candidate's name or ref must match. Speeds are operator-set; `posted` is the pin's maxspeed when tagged. `over` are operator edits applied after the site's prefilled guesses (R108/R126), recorded in the audit as operator changes. `expect` is what the row should do. Session 3 turns each row into a scenario in fetch.py; the cross street for near-intersection rows is picked there with the site's cross-street search. Keys under `extra` and `over` describe the operator's input; fetch.py maps them to the wire fields.",
-  "pins": {
-    "OGDEN":   {"place": "Ogden St between 6th and 7th Ave, Denver", "lat": 39.72650, "lng": -104.97525, "road": "Ogden", "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver"},
-    "LOUIS":   {"place": "E Louisiana Ave at South High School, Denver", "lat": 39.69280, "lng": -104.96595, "road": "Louisiana", "reads": "two-way, 2 lanes, 30 mph, urban; denver"},
-    "W9":      {"place": "W 9th Ave, Lakewood", "lat": 39.73105, "lng": -105.10397, "road": "9th", "reads": "two-way, lanes not tagged (class default 1), urban; lakewood"},
-    "LAF":     {"place": "Lafayette St, Denver", "lat": 39.73447, "lng": -104.97067, "road": "Lafayette", "reads": "two-way, 2 lanes, urban, no maxspeed; denver"},
-    "LOOKOUT": {"place": "Lookout Mountain Rd, way 1432422179", "lat": 39.73300, "lng": -105.24000, "road": "Lookout Mountain", "reads": "two-way, 2 lanes, 20 mph, urban (place Golden / Paradise Hills); no supported jurisdiction"},
-    "CO119":   {"place": "CO 119, Boulder Canyon", "lat": 40.00185, "lng": -105.41289, "road": "119", "reads": "2 lanes, 45 mph, rural, undivided"},
-    "US24":    {"place": "US 24 at Hartsel", "lat": 39.02175, "lng": -105.79286, "road": "24", "reads": "2 lanes, rural, no maxspeed; trunk, so the site guesses divided"},
-    "US285":   {"place": "US 285 north of Fairplay", "lat": 39.26455, "lng": -105.95722, "road": "285", "reads": "2 lanes, 55 mph, rural; trunk, so the site guesses divided"},
-    "EPC":     {"place": "Black Forest Rd, El Paso County", "lat": 39.08849, "lng": -104.69514, "road": "Black Forest", "reads": "two-way, 2 lanes, 45 mph, rural; jurisdiction suggest returns null (outside_supported), county in the reason text"},
-    "LOVE":    {"place": "W 8th St, Loveland", "lat": 40.39999, "lng": -105.08671, "road": "8th", "reads": "2 lanes, no maxspeed, place Loveland; jurisdiction suggest returns null"},
-    "CTL":     {"place": "E 40th Ave, Denver", "lat": 39.77290, "lng": -104.94783, "road": "40th", "reads": "lanes 3 = 1 + 1 + lanes_both_ways 1 (center turn lane), 35 mph, urban; denver"},
-    "WCOLFAX_DEN": {"place": "W Colfax Ave, Denver", "lat": 39.74035, "lng": -105.04014, "road": "Colfax", "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby"},
-    "BWAY11":  {"place": "N Broadway at E 11th Ave, Denver (one-way)", "lat": 39.73370, "lng": -104.98753, "road": "Broadway", "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver"},
-    "ART40":   {"place": "S Colorado Blvd, Denver", "lat": 39.66100, "lng": -104.94070, "road": "Colorado", "reads": "undivided, 6 lanes (3 per direction), 40 mph; denver"},
-    "WCOLFAX_LKWD": {"place": "W Colfax Ave near Simms, Lakewood", "lat": 39.74016, "lng": -105.13048, "road": "Colfax", "reads": "undivided, 6 lanes (3 per direction), 45 mph; lakewood"},
-    "SIG45":   {"place": "Sheridan Blvd, Denver, signal 17 m", "lat": 39.79090, "lng": -105.05325, "road": "Sheridan", "reads": "undivided, 4 lanes (2 per direction), 45 mph; denver (near the boundary)"},
-    "CO67":    {"place": "CO 67 (S Robinson Ave), Florence", "lat": 38.36191, "lng": -105.10715, "road": "67", "reads": "undivided, 4 lanes (2 per direction), 55 mph, rural"},
-    "DIVIDED": {"place": "Colorado Blvd at Exposition Ave, Denver", "lat": 39.70900, "lng": -104.94070, "road": "Colorado", "reads": "one-way carriageway of a divided road, 3 lanes, 35 mph"},
-    "SINGLE":  {"place": "Gamble Gulch Rd, Gilpin County", "lat": 39.878635, "lng": -105.530885, "road": "Gamble Gulch", "reads": "two-way, 1 lane, rural"}
+ "_about": "Lane-closure audit matrix (#370; plan approved by Ryan 2026-10-22 with amendments; pins confirmed on production /api/road-bearing 2026-10-22, table in pins.md). `road` is a regex the confirmed candidate's name or ref must match. Speeds are operator-set; `posted` is the pin's maxspeed when tagged. `over` are operator edits applied after the site's prefilled guesses (R108/R126), recorded in the audit as operator changes. `expect` is what the row should do. Session 3 turns each row into a scenario in fetch.py; the cross street for near-intersection rows is picked there with the site's cross-street search. Keys under `extra` and `over` describe the operator's input; fetch.py maps them to the wire fields. Session 3 (2026-10-22): each near-intersection pin carries `cross`, the cross-street search the operator types (rulings R4); N6 and N14 changed per R4.",
+ "pins": {
+  "OGDEN": {
+   "place": "Ogden St between 6th and 7th Ave, Denver",
+   "lat": 39.7265,
+   "lng": -104.97525,
+   "road": "Ogden",
+   "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver",
+   "cross": "Ogden St & E 7th Ave, Denver",
+   "cross_juris": "denver"
   },
-  "rows": [
-    {"id": "F1",  "kind": "flagger_lane_closure", "pin": "OGDEN",   "road_type": "urban", "speed": 25, "time": "day",   "work_ft": 200, "expect": "plan"},
-    {"id": "F2",  "kind": "flagger_lane_closure", "pin": "OGDEN",   "road_type": "urban", "speed": 25, "time": "night", "work_ft": 200, "expect": "plan"},
-    {"id": "F3",  "kind": "flagger_lane_closure", "pin": "LOUIS",   "road_type": "urban", "speed": 30, "time": "day",   "work_ft": 300, "expect": "plan"},
-    {"id": "F4",  "kind": "flagger_lane_closure", "pin": "LOUIS",   "road_type": "urban", "speed": 30, "time": "night", "work_ft": 300, "extra": {"pedestrianAccess": true}, "expect": "plan", "checks": ["L20"]},
-    {"id": "F5",  "kind": "flagger_lane_closure", "pin": "W9",      "road_type": "urban", "speed": 30, "time": "day",   "work_ft": 300, "expect": "plan", "score": "INFO (Lakewood, Ryan 2026-10-22)", "note": "lanes not tagged; if the site reads 1 lane the operator sets 2 (recorded as an over)"},
-    {"id": "F6",  "kind": "flagger_lane_closure", "pin": "LAF",     "road_type": "urban", "speed": 35, "time": "day",   "work_ft": 500, "expect": "plan"},
-    {"id": "F7",  "kind": "flagger_lane_closure", "pin": "LOOKOUT", "road_type": "urban", "speed": 20, "time": "day",   "work_ft": 300, "extra": {"limitedSightDistance": true}, "expect": "plan", "checks": ["L19"], "note": "the pin reads urban 20 mph, not the planned rural 35 (rulings R3)"},
-    {"id": "F8",  "kind": "flagger_lane_closure", "pin": "LOOKOUT", "road_type": "urban", "speed": 20, "time": "night", "work_ft": 300, "extra": {"limitedSightDistance": true}, "expect": "plan", "checks": ["L19", "L8"]},
-    {"id": "F9",  "kind": "flagger_lane_closure", "pin": "CO119",   "road_type": "rural", "speed": 45, "time": "day",   "work_ft": 500, "expect": "plan"},
-    {"id": "F10", "kind": "flagger_lane_closure", "pin": "CO119",   "road_type": "rural", "speed": 55, "time": "night", "work_ft": 1000, "expect": "plan"},
-    {"id": "F11", "kind": "flagger_lane_closure", "pin": "US24",    "road_type": "rural", "speed": 55, "time": "day",   "work_ft": 1500, "over": {"divided": false}, "expect": "plan"},
-    {"id": "F12", "kind": "flagger_lane_closure", "pin": "US24",    "road_type": "rural", "speed": 55, "time": "night", "work_ft": 1500, "over": {"divided": false}, "extra": {"pilotCar": true}, "expect": "plan", "checks": ["L17"]},
-    {"id": "F13", "kind": "flagger_lane_closure", "pin": "US285",   "road_type": "rural", "speed": 55, "time": "day",   "work_ft": 2640, "over": {"divided": false}, "expect": "plan"},
-    {"id": "F14", "kind": "flagger_lane_closure", "pin": "EPC",     "road_type": "rural", "speed": 45, "time": "day",   "work_ft": 500, "over": {"jurisdiction": "el_paso_county"}, "expect": "plan"},
-    {"id": "F15", "kind": "flagger_lane_closure", "pin": "LOVE",    "road_type": "urban", "speed": 30, "time": "night", "work_ft": 300, "over": {"jurisdiction": "loveland"}, "expect": "plan"},
-    {"id": "F16", "kind": "flagger_lane_closure", "pin": "CO119",   "road_type": "rural", "speed": 45, "time": "day",   "work_ft": 500, "extra": {"afad": true}, "expect": "plan", "checks": ["L18"]},
-    {"id": "F17", "kind": "flagger_lane_closure", "pin": "OGDEN",   "road_type": "urban", "speed": 25, "time": "day",   "work_ft": 50, "expect": "plan"},
-    {"id": "F18", "kind": "flagger_lane_closure", "pin": "CTL",     "road_type": "urban", "speed": 35, "time": "day",   "work_ft": 300, "expect": "plan", "note": "two-way with a center turn lane (#86)"},
-
-    {"id": "N1",  "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "time": "day",   "side": "near", "work_start_from_cross_ft": -100, "expect": "plan", "note": "replaces E Colfax at Race (reads divided; rulings R3)"},
-    {"id": "N2",  "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "time": "day",   "side": "far",  "expect": "plan"},
-    {"id": "N3",  "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "time": "night", "side": "near", "work_start_from_cross_ft": -100, "expect": "plan"},
-    {"id": "N4",  "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "time": "day",   "side": "near", "work_start_from_cross_ft": -60, "expect": "plan", "note": "run to the corner; rechecks #358/#366"},
-    {"id": "N5",  "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "time": "day",   "side": "near", "legs": 4, "approaches": 2, "expect": "plan"},
-    {"id": "N6",  "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "time": "day",   "side": "far",  "legs": 3, "approaches": 1, "expect": "plan"},
-    {"id": "N7",  "kind": "near_intersection", "pin": "BWAY11", "road_type": "urban", "speed": 30, "time": "day", "side": "near", "lane": "right", "expect": "plan"},
-    {"id": "N8",  "kind": "near_intersection", "pin": "BWAY11", "road_type": "urban", "speed": 30, "time": "day", "side": "near", "lane": "left",  "expect": "plan", "note": "Case 18 mirrored, one-way only"},
-    {"id": "N9",  "kind": "near_intersection", "pin": "BWAY11", "road_type": "urban", "speed": 30, "time": "day", "side": "far",  "lane": "right", "expect": "plan"},
-    {"id": "N10", "kind": "near_intersection", "pin": "BWAY11", "road_type": "urban", "speed": 30, "time": "day", "side": "far",  "lane": "left", "extra": {"turnBayStorageFt": 150}, "expect": "plan", "note": "turn-bay length unsourced (oracle-sources, Not sourced)"},
-    {"id": "N11", "kind": "near_intersection", "pin": "ART40", "road_type": "urban", "speed": 40, "time": "day", "side": "far", "expect": "plan"},
-    {"id": "N12", "kind": "near_intersection", "pin": "WCOLFAX_LKWD", "road_type": "urban", "speed": 45, "time": "day", "side": "near", "expect": "plan", "score": "INFO (Lakewood, Ryan 2026-10-22)", "note": "posted 45, not the planned 35 (rulings R3)"},
-    {"id": "N13", "kind": "near_intersection", "pin": "SIG45", "road_type": "urban", "speed": 45, "time": "day", "side": "near", "extra": {"workType": "signal_work"}, "expect": "plan"},
-    {"id": "N14", "kind": "near_intersection", "pin": "CO67", "road_type": "rural", "speed": 55, "time": "day", "side": "near", "expect": "plan", "note": "rural undivided four-lane found; no urban fallback"},
-
-    {"id": "R1",  "kind": "flagger_lane_closure", "pin": "BWAY11",  "road_type": "urban", "speed": 30, "expect": "refuse", "why": "one-way road (#158)"},
-    {"id": "R2",  "kind": "flagger_lane_closure", "pin": "SINGLE",  "road_type": "rural", "speed": 25, "expect": "refuse", "why": "single-lane road"},
-    {"id": "R3",  "kind": "flagger_lane_closure", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "expect": "refuse", "why": "four-lane two-way road"},
-    {"id": "R4",  "kind": "flagger_lane_closure", "pin": "CO119",   "road_type": "rural", "speed": 60, "expect": "refuse", "why": "60 mph"},
-    {"id": "R5",  "kind": "flagger_lane_closure", "pin": "OGDEN",   "road_type": "urban", "speed": 25, "over": {"laneWidthFt": 8}, "expect": "refuse", "why": "8 ft lane"},
-    {"id": "R6",  "kind": "near_intersection", "pin": "DIVIDED", "road_type": "urban", "speed": 35, "expect": "refuse", "why": "divided=true"},
-    {"id": "R7",  "kind": "near_intersection", "pin": "OGDEN",   "road_type": "urban", "speed": 25, "expect": "refuse", "why": "one lane per direction"},
-    {"id": "R8",  "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "expect": "refuse", "why": "cross street inside the work zone"},
-    {"id": "R9",  "kind": "near_intersection", "pin": "BWAY11",  "road_type": "urban", "speed": 30, "side": "far", "lane": "left", "expect": "refuse", "why": "left lane far side without turnBayStorageFt"},
-    {"id": "R10", "kind": "near_intersection", "pin": "WCOLFAX_DEN", "road_type": "urban", "speed": 30, "expect": "refuse", "why": "approach lane tags that don't add up (#120)"}
-  ]
+  "LOUIS": {
+   "place": "E Louisiana Ave at South High School, Denver",
+   "lat": 39.6928,
+   "lng": -104.96595,
+   "road": "Louisiana",
+   "reads": "two-way, 2 lanes, 30 mph, urban; denver"
+  },
+  "W9": {
+   "place": "W 9th Ave, Lakewood",
+   "lat": 39.73105,
+   "lng": -105.10397,
+   "road": "9th",
+   "reads": "two-way, lanes not tagged (class default 1), urban; lakewood"
+  },
+  "LAF": {
+   "place": "Lafayette St, Denver",
+   "lat": 39.73447,
+   "lng": -104.97067,
+   "road": "Lafayette",
+   "reads": "two-way, 2 lanes, urban, no maxspeed; denver"
+  },
+  "LOOKOUT": {
+   "place": "Lookout Mountain Rd, way 1432422179",
+   "lat": 39.733,
+   "lng": -105.24,
+   "road": "Lookout Mountain",
+   "reads": "two-way, 2 lanes, 20 mph, urban (place Golden / Paradise Hills); no supported jurisdiction"
+  },
+  "CO119": {
+   "place": "CO 119, Boulder Canyon",
+   "lat": 40.00185,
+   "lng": -105.41289,
+   "road": "119",
+   "reads": "2 lanes, 45 mph, rural, undivided"
+  },
+  "US24": {
+   "place": "US 24 at Hartsel",
+   "lat": 39.02175,
+   "lng": -105.79286,
+   "road": "24",
+   "reads": "2 lanes, rural, no maxspeed; trunk, so the site guesses divided"
+  },
+  "US285": {
+   "place": "US 285 north of Fairplay",
+   "lat": 39.26455,
+   "lng": -105.95722,
+   "road": "285",
+   "reads": "2 lanes, 55 mph, rural; trunk, so the site guesses divided"
+  },
+  "EPC": {
+   "place": "Black Forest Rd, El Paso County",
+   "lat": 39.08849,
+   "lng": -104.69514,
+   "road": "Black Forest",
+   "reads": "two-way, 2 lanes, 45 mph, rural; jurisdiction suggest returns null (outside_supported), county in the reason text"
+  },
+  "LOVE": {
+   "place": "W 8th St, Loveland",
+   "lat": 40.39999,
+   "lng": -105.08671,
+   "road": "8th",
+   "reads": "2 lanes, no maxspeed, place Loveland; jurisdiction suggest returns null"
+  },
+  "CTL": {
+   "place": "E 40th Ave, Denver",
+   "lat": 39.7729,
+   "lng": -104.94783,
+   "road": "40th",
+   "reads": "lanes 3 = 1 + 1 + lanes_both_ways 1 (center turn lane), 35 mph, urban; denver"
+  },
+  "WCOLFAX_DEN": {
+   "place": "W Colfax Ave, Denver",
+   "lat": 39.74035,
+   "lng": -105.04014,
+   "road": "Colfax",
+   "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+   "cross": "W Colfax Ave & Perry St, Denver",
+   "cross_juris": "denver"
+  },
+  "BWAY11": {
+   "place": "N Broadway at E 11th Ave, Denver (one-way)",
+   "lat": 39.7337,
+   "lng": -104.98753,
+   "road": "Broadway",
+   "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+   "cross": "N Broadway & E 11th Ave, Denver",
+   "cross_juris": "denver"
+  },
+  "ART40": {
+   "place": "S Colorado Blvd, Denver",
+   "lat": 39.661,
+   "lng": -104.9407,
+   "road": "Colorado",
+   "reads": "undivided, 6 lanes (3 per direction), 40 mph; denver",
+   "cross": "S Colorado Blvd & E Iliff Ave, Denver",
+   "cross_juris": "denver"
+  },
+  "WCOLFAX_LKWD": {
+   "place": "W Colfax Ave near Simms, Lakewood",
+   "lat": 39.74016,
+   "lng": -105.13048,
+   "road": "Colfax",
+   "reads": "undivided, 6 lanes (3 per direction), 45 mph; lakewood",
+   "cross": "W Colfax Ave & Taft Ct, Lakewood",
+   "cross_juris": "lakewood"
+  },
+  "SIG45": {
+   "place": "Sheridan Blvd, Denver, signal 17 m",
+   "lat": 39.7909,
+   "lng": -105.05325,
+   "road": "Sheridan",
+   "reads": "undivided, 4 lanes (2 per direction), 45 mph; denver (near the boundary)",
+   "cross": "Sheridan Blvd & W 52nd Ave, Denver",
+   "cross_juris": "denver"
+  },
+  "CO67": {
+   "place": "CO 67 (S Robinson Ave), Florence",
+   "lat": 38.36191,
+   "lng": -105.10715,
+   "road": "67",
+   "reads": "undivided, 4 lanes (2 per direction), 55 mph, rural"
+  },
+  "DIVIDED": {
+   "place": "Colorado Blvd at Exposition Ave, Denver",
+   "lat": 39.709,
+   "lng": -104.9407,
+   "road": "Colorado",
+   "reads": "one-way carriageway of a divided road, 3 lanes, 35 mph",
+   "cross": "S Colorado Blvd & E Exposition Ave, Denver",
+   "cross_juris": "denver"
+  },
+  "SINGLE": {
+   "place": "Gamble Gulch Rd, Gilpin County",
+   "lat": 39.878635,
+   "lng": -105.530885,
+   "road": "Gamble Gulch",
+   "reads": "two-way, 1 lane, rural"
+  }
+ },
+ "rows": [
+  {
+   "id": "F1",
+   "kind": "flagger_lane_closure",
+   "pin": "OGDEN",
+   "road_type": "urban",
+   "speed": 25,
+   "time": "day",
+   "work_ft": 200,
+   "expect": "plan"
+  },
+  {
+   "id": "F2",
+   "kind": "flagger_lane_closure",
+   "pin": "OGDEN",
+   "road_type": "urban",
+   "speed": 25,
+   "time": "night",
+   "work_ft": 200,
+   "expect": "plan"
+  },
+  {
+   "id": "F3",
+   "kind": "flagger_lane_closure",
+   "pin": "LOUIS",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "work_ft": 300,
+   "expect": "plan"
+  },
+  {
+   "id": "F4",
+   "kind": "flagger_lane_closure",
+   "pin": "LOUIS",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "night",
+   "work_ft": 300,
+   "extra": {
+    "pedestrianAccess": true
+   },
+   "expect": "plan",
+   "checks": [
+    "L20"
+   ]
+  },
+  {
+   "id": "F5",
+   "kind": "flagger_lane_closure",
+   "pin": "W9",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "work_ft": 300,
+   "expect": "plan",
+   "score": "INFO (Lakewood, Ryan 2026-10-22)",
+   "note": "lanes not tagged; if the site reads 1 lane the operator sets 2 (recorded as an over)"
+  },
+  {
+   "id": "F6",
+   "kind": "flagger_lane_closure",
+   "pin": "LAF",
+   "road_type": "urban",
+   "speed": 35,
+   "time": "day",
+   "work_ft": 500,
+   "expect": "plan"
+  },
+  {
+   "id": "F7",
+   "kind": "flagger_lane_closure",
+   "pin": "LOOKOUT",
+   "road_type": "urban",
+   "speed": 20,
+   "time": "day",
+   "work_ft": 300,
+   "extra": {
+    "limitedSightDistance": true
+   },
+   "expect": "plan",
+   "checks": [
+    "L19"
+   ],
+   "note": "the pin reads urban 20 mph, not the planned rural 35 (rulings R3)"
+  },
+  {
+   "id": "F8",
+   "kind": "flagger_lane_closure",
+   "pin": "LOOKOUT",
+   "road_type": "urban",
+   "speed": 20,
+   "time": "night",
+   "work_ft": 300,
+   "extra": {
+    "limitedSightDistance": true
+   },
+   "expect": "plan",
+   "checks": [
+    "L19",
+    "L8"
+   ]
+  },
+  {
+   "id": "F9",
+   "kind": "flagger_lane_closure",
+   "pin": "CO119",
+   "road_type": "rural",
+   "speed": 45,
+   "time": "day",
+   "work_ft": 500,
+   "expect": "plan"
+  },
+  {
+   "id": "F10",
+   "kind": "flagger_lane_closure",
+   "pin": "CO119",
+   "road_type": "rural",
+   "speed": 55,
+   "time": "night",
+   "work_ft": 1000,
+   "expect": "plan"
+  },
+  {
+   "id": "F11",
+   "kind": "flagger_lane_closure",
+   "pin": "US24",
+   "road_type": "rural",
+   "speed": 55,
+   "time": "day",
+   "work_ft": 1500,
+   "over": {
+    "divided": false
+   },
+   "expect": "plan"
+  },
+  {
+   "id": "F12",
+   "kind": "flagger_lane_closure",
+   "pin": "US24",
+   "road_type": "rural",
+   "speed": 55,
+   "time": "night",
+   "work_ft": 1500,
+   "over": {
+    "divided": false
+   },
+   "extra": {
+    "pilotCar": true
+   },
+   "expect": "plan",
+   "checks": [
+    "L17"
+   ]
+  },
+  {
+   "id": "F13",
+   "kind": "flagger_lane_closure",
+   "pin": "US285",
+   "road_type": "rural",
+   "speed": 55,
+   "time": "day",
+   "work_ft": 2640,
+   "over": {
+    "divided": false
+   },
+   "expect": "plan"
+  },
+  {
+   "id": "F14",
+   "kind": "flagger_lane_closure",
+   "pin": "EPC",
+   "road_type": "rural",
+   "speed": 45,
+   "time": "day",
+   "work_ft": 500,
+   "over": {
+    "jurisdiction": "el_paso_county"
+   },
+   "expect": "plan"
+  },
+  {
+   "id": "F15",
+   "kind": "flagger_lane_closure",
+   "pin": "LOVE",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "night",
+   "work_ft": 300,
+   "over": {
+    "jurisdiction": "loveland"
+   },
+   "expect": "plan"
+  },
+  {
+   "id": "F16",
+   "kind": "flagger_lane_closure",
+   "pin": "CO119",
+   "road_type": "rural",
+   "speed": 45,
+   "time": "day",
+   "work_ft": 500,
+   "extra": {
+    "afad": true
+   },
+   "expect": "plan",
+   "checks": [
+    "L18"
+   ]
+  },
+  {
+   "id": "F17",
+   "kind": "flagger_lane_closure",
+   "pin": "OGDEN",
+   "road_type": "urban",
+   "speed": 25,
+   "time": "day",
+   "work_ft": 50,
+   "expect": "plan"
+  },
+  {
+   "id": "F18",
+   "kind": "flagger_lane_closure",
+   "pin": "CTL",
+   "road_type": "urban",
+   "speed": 35,
+   "time": "day",
+   "work_ft": 300,
+   "expect": "plan",
+   "note": "two-way with a center turn lane (#86)"
+  },
+  {
+   "id": "N1",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "near",
+   "work_start_from_cross_ft": -100,
+   "expect": "plan",
+   "note": "replaces E Colfax at Race (reads divided; rulings R3)"
+  },
+  {
+   "id": "N2",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "far",
+   "expect": "plan"
+  },
+  {
+   "id": "N3",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "night",
+   "side": "near",
+   "work_start_from_cross_ft": -100,
+   "expect": "plan"
+  },
+  {
+   "id": "N4",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "near",
+   "work_start_from_cross_ft": -60,
+   "expect": "plan",
+   "note": "run to the corner; rechecks #358/#366"
+  },
+  {
+   "id": "N5",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "near",
+   "legs": 4,
+   "approaches": 2,
+   "expect": "plan"
+  },
+  {
+   "id": "N6",
+   "kind": "near_intersection",
+   "pin": "BWAY11",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "far",
+   "approaches": 1,
+   "expect": "plan",
+   "cross": "N Broadway & E 14th Ave, Denver",
+   "lane": "right",
+   "note": "one approach = a one-way cross street (14th Ave); no one-way cross street on the undivided W Colfax stretch (rulings R4)"
+  },
+  {
+   "id": "N7",
+   "kind": "near_intersection",
+   "pin": "BWAY11",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "near",
+   "lane": "right",
+   "expect": "plan"
+  },
+  {
+   "id": "N8",
+   "kind": "near_intersection",
+   "pin": "BWAY11",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "near",
+   "lane": "left",
+   "expect": "plan",
+   "note": "Case 18 mirrored, one-way only"
+  },
+  {
+   "id": "N9",
+   "kind": "near_intersection",
+   "pin": "BWAY11",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "far",
+   "lane": "right",
+   "expect": "plan"
+  },
+  {
+   "id": "N10",
+   "kind": "near_intersection",
+   "pin": "BWAY11",
+   "road_type": "urban",
+   "speed": 30,
+   "time": "day",
+   "side": "far",
+   "lane": "left",
+   "extra": {
+    "turnBayStorageFt": 150
+   },
+   "expect": "plan",
+   "note": "turn-bay length unsourced (oracle-sources, Not sourced)"
+  },
+  {
+   "id": "N11",
+   "kind": "near_intersection",
+   "pin": "ART40",
+   "road_type": "urban",
+   "speed": 40,
+   "time": "day",
+   "side": "far",
+   "expect": "plan"
+  },
+  {
+   "id": "N12",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_LKWD",
+   "road_type": "urban",
+   "speed": 45,
+   "time": "day",
+   "side": "near",
+   "expect": "plan",
+   "score": "INFO (Lakewood, Ryan 2026-10-22)",
+   "note": "posted 45, not the planned 35 (rulings R3); 600 ft work zone: 500 is shorter than the 540 ft taper at 45 mph (rulings R5)",
+   "work_ft": 600
+  },
+  {
+   "id": "N13",
+   "kind": "near_intersection",
+   "pin": "SIG45",
+   "road_type": "urban",
+   "speed": 45,
+   "time": "day",
+   "side": "near",
+   "extra": {
+    "workType": "signal_work"
+   },
+   "expect": "plan",
+   "work_ft": 600,
+   "note": "600 ft work zone: 500 is shorter than the 540 ft taper at 45 mph (rulings R5)"
+  },
+  {
+   "id": "N14",
+   "kind": "near_intersection",
+   "pin": "CO67",
+   "road_type": "rural",
+   "speed": 55,
+   "time": "day",
+   "side": "near",
+   "expect": "plan",
+   "note": "pin pending (rulings R4); 600 ft work zone like N12-N13 (rulings R5)",
+   "deferred": "no crossing on CO 67's or CO 7's four-lane stretch; pin hunt in session 4 (rulings R4)",
+   "work_ft": 600
+  },
+  {
+   "id": "R1",
+   "kind": "flagger_lane_closure",
+   "pin": "BWAY11",
+   "road_type": "urban",
+   "speed": 30,
+   "expect": "refuse",
+   "why": "one-way road (#158)"
+  },
+  {
+   "id": "R2",
+   "kind": "flagger_lane_closure",
+   "pin": "SINGLE",
+   "road_type": "rural",
+   "speed": 25,
+   "expect": "refuse",
+   "why": "single-lane road"
+  },
+  {
+   "id": "R3",
+   "kind": "flagger_lane_closure",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "expect": "refuse",
+   "why": "four-lane two-way road"
+  },
+  {
+   "id": "R4",
+   "kind": "flagger_lane_closure",
+   "pin": "CO119",
+   "road_type": "rural",
+   "speed": 60,
+   "expect": "refuse",
+   "why": "60 mph"
+  },
+  {
+   "id": "R5",
+   "kind": "flagger_lane_closure",
+   "pin": "OGDEN",
+   "road_type": "urban",
+   "speed": 25,
+   "over": {
+    "laneWidthFt": 8
+   },
+   "expect": "refuse",
+   "why": "8 ft lane"
+  },
+  {
+   "id": "R6",
+   "kind": "near_intersection",
+   "pin": "DIVIDED",
+   "road_type": "urban",
+   "speed": 35,
+   "expect": "refuse",
+   "why": "divided=true",
+   "over": {
+    "divided": true
+   }
+  },
+  {
+   "id": "R7",
+   "kind": "near_intersection",
+   "pin": "OGDEN",
+   "road_type": "urban",
+   "speed": 25,
+   "expect": "refuse",
+   "why": "one lane per direction"
+  },
+  {
+   "id": "R8",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "expect": "refuse",
+   "why": "cross street inside the work zone"
+  },
+  {
+   "id": "R9",
+   "kind": "near_intersection",
+   "pin": "BWAY11",
+   "road_type": "urban",
+   "speed": 30,
+   "side": "far",
+   "lane": "left",
+   "expect": "refuse",
+   "why": "left lane far side without turnBayStorageFt"
+  },
+  {
+   "id": "R10",
+   "kind": "near_intersection",
+   "pin": "WCOLFAX_DEN",
+   "road_type": "urban",
+   "speed": 30,
+   "expect": "refuse",
+   "why": "approach lane tags that don't add up (#120)"
+  }
+ ]
 }

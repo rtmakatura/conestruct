@@ -1,0 +1,98 @@
+{
+ "row": {
+  "id": "N11",
+  "kind": "near_intersection",
+  "pin": "ART40",
+  "road_type": "urban",
+  "speed": 40,
+  "time": "day",
+  "side": "far",
+  "expect": "plan"
+ },
+ "pin": {
+  "place": "S Colorado Blvd, Denver",
+  "lat": 39.661,
+  "lng": -104.9407,
+  "road": "Colorado",
+  "reads": "undivided, 6 lanes (3 per direction), 40 mph; denver",
+  "cross": "S Colorado Blvd & E Iliff Ave, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.6745399,
+  "lng": -104.9407185,
+  "travel": "with_geometry",
+  "traffic_bearing": 179.43,
+  "tried": [
+   {
+    "traffic_bearing": 179.43,
+    "pin": [
+     39.6745399,
+     -104.9407185
+    ],
+    "snapped": "South Colorado Boulevard",
+    "way": "629732047"
+   }
+  ]
+ },
+ "cross": {
+  "address": "S Colorado Blvd & E Iliff Ave, Denver",
+  "geocode": {
+   "lat": 39.674814,
+   "lng": -104.940722,
+   "placeType": "intersection"
+  },
+  "name": "East Iliff Avenue",
+  "way": "649297142",
+  "oneway": "no"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "East side \u00b7 northbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "West side \u00b7 southbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 998794
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6862
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 9695
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 9873
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10467
+  }
+ }
+}

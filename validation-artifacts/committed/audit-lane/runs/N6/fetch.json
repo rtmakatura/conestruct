@@ -1,0 +1,102 @@
+{
+ "row": {
+  "id": "N6",
+  "kind": "near_intersection",
+  "pin": "BWAY11",
+  "road_type": "urban",
+  "speed": 30,
+  "time": "day",
+  "side": "far",
+  "approaches": 1,
+  "expect": "plan",
+  "cross": "N Broadway & E 14th Ave, Denver",
+  "lane": "right",
+  "note": "one approach = a one-way cross street (14th Ave); no one-way cross street on the undivided W Colfax stretch (rulings R4)"
+ },
+ "pin": {
+  "place": "N Broadway at E 11th Ave, Denver (one-way)",
+  "lat": 39.7337,
+  "lng": -104.98753,
+  "road": "Broadway",
+  "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+  "cross": "N Broadway & E 11th Ave, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.7381839,
+  "lng": -104.9873954,
+  "travel": "with_geometry",
+  "traffic_bearing": 179.91,
+  "tried": [
+   {
+    "traffic_bearing": 179.91,
+    "pin": [
+     39.7381839,
+     -104.9873954
+    ],
+    "snapped": "North Broadway",
+    "way": "963866755"
+   }
+  ]
+ },
+ "cross": {
+  "address": "N Broadway & E 14th Ave, Denver",
+  "geocode": {
+   "lat": 39.738458,
+   "lng": -104.987396,
+   "placeType": "intersection"
+  },
+  "name": "West 14th Avenue Parkway",
+  "way": "282445356",
+  "oneway": "yes"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "left",
+    "travel": "with_geometry"
+   },
+   "label": "East side \u00b7 southbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "West side \u00b7 southbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 862963
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6911
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 9582
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 10105
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10527
+  }
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "S Colorado Blvd & E Exposition Ave, Denver",
+  "jurisdiction_key": "denver"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.703823,
+  "lng": -104.940806,
+  "placeType": "intersection"
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "Ogden St & E 7th Ave, Denver",
+  "jurisdiction_key": "denver"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.727278,
+  "lng": -104.97526,
+  "placeType": "intersection"
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "request": {
+  "lat": 39.7054675,
+  "lng": -104.9407765
+ },
+ "status": 200,
+ "response": {
+  "suggestion": "denver",
+  "reason": "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+  "confidence": "near_boundary",
+  "distance_to_boundary_ft": 20.6,
+  "warnings": [
+   {
+    "kind": "near_boundary",
+    "message": "Pin is 21 ft from the Glendale boundary. Jurisdiction lines here are jigsawed; verify which side the work zone falls on.",
+    "source": {
+     "doc": "US Census TIGER/Line 2025 Place boundaries, Colorado (tl_2025_08_place.zip)",
+     "date": "2025",
+     "status": "verified"
+    }
+   }
+  ],
+  "boundary_source": {
+   "source": "US Census TIGER/Line Place boundaries",
+   "vintage": "2025"
+  }
+ }
+}

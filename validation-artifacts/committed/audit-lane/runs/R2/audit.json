@@ -1,0 +1,1 @@
+{"detail":"This looks like a single-lane road, which isn't supported yet. A flagger operation (TA-10) needs a lane in each direction. If the detection is wrong, confirm “Road has one lane in each direction” in the form and regenerate."}

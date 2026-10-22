@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "N Broadway & E 14th Ave, Denver",
+  "jurisdiction_key": "denver"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.738458,
+  "lng": -104.987396,
+  "placeType": "intersection"
+ }
+}

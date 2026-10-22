@@ -1,0 +1,109 @@
+{
+ "row": {
+  "id": "N5",
+  "kind": "near_intersection",
+  "pin": "WCOLFAX_DEN",
+  "road_type": "urban",
+  "speed": 30,
+  "time": "day",
+  "side": "near",
+  "legs": 4,
+  "approaches": 2,
+  "expect": "plan"
+ },
+ "pin": {
+  "place": "W Colfax Ave, Denver",
+  "lat": 39.74035,
+  "lng": -105.04014,
+  "road": "Colfax",
+  "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+  "cross": "W Colfax Ave & Perry St, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.740354,
+  "lng": -105.0414669,
+  "travel": "against_geometry",
+  "traffic_bearing": 90,
+  "tried": [
+   {
+    "traffic_bearing": 270,
+    "pin": [
+     39.740354,
+     -105.0371891
+    ],
+    "snapped": null,
+    "way": null
+   },
+   {
+    "traffic_bearing": 90,
+    "pin": [
+     39.740354,
+     -105.0414669
+    ],
+    "snapped": "West Colfax Avenue",
+    "way": "628904874"
+   }
+  ]
+ },
+ "cross": {
+  "address": "W Colfax Ave & Perry St, Denver",
+  "geocode": {
+   "lat": 39.740354,
+   "lng": -105.039328,
+   "placeType": "intersection"
+  },
+  "name": "Perry Street",
+  "way": "578866309",
+  "oneway": null
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "North side \u00b7 westbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "South side \u00b7 eastbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "South side \u00b7 eastbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 626881
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6911
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 10116
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 10220
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10530
+  }
+ }
+}

@@ -1,0 +1,1 @@
+{"detail":{"error":"generator_rejected","message":"near_intersection needs num_lanes >= 2 on the mainline (got 1): Cases 18/19 merge the closed lane into an adjacent same-direction lane.  A 1-lane-per-direction mainline is the flagger-controlled Case 19 shape, which is out of scope."}}

@@ -1,0 +1,110 @@
+{
+ "row": {
+  "id": "N12",
+  "kind": "near_intersection",
+  "pin": "WCOLFAX_LKWD",
+  "road_type": "urban",
+  "speed": 45,
+  "time": "day",
+  "side": "near",
+  "expect": "plan",
+  "score": "INFO (Lakewood, Ryan 2026-10-22)",
+  "note": "posted 45, not the planned 35 (rulings R3); 600 ft work zone: 500 is shorter than the 540 ft taper at 45 mph (rulings R5)",
+  "work_ft": 600
+ },
+ "pin": {
+  "place": "W Colfax Ave near Simms, Lakewood",
+  "lat": 39.74016,
+  "lng": -105.13048,
+  "road": "Colfax",
+  "reads": "undivided, 6 lanes (3 per direction), 45 mph; lakewood",
+  "cross": "W Colfax Ave & Taft Ct, Lakewood",
+  "cross_juris": "lakewood"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.740144,
+  "lng": -105.1343433,
+  "travel": "against_geometry",
+  "traffic_bearing": 89.97000000000003,
+  "tried": [
+   {
+    "traffic_bearing": 269.97,
+    "pin": [
+     39.740146,
+     -105.1293527
+    ],
+    "snapped": null,
+    "way": null
+   },
+   {
+    "traffic_bearing": 89.97000000000003,
+    "pin": [
+     39.740144,
+     -105.1343433
+    ],
+    "snapped": "West Colfax Avenue",
+    "way": "427813085"
+   }
+  ]
+ },
+ "cross": {
+  "address": "W Colfax Ave & Taft Ct, Lakewood",
+  "geocode": {
+   "lat": 39.740145,
+   "lng": -105.131848,
+   "placeType": "intersection"
+  },
+  "name": "Taft Street",
+  "way": "17081312",
+  "oneway": "no"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "North side \u00b7 westbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "South side \u00b7 eastbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "South side \u00b7 eastbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 720454
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6899
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 8764
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 9244
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10497
+  }
+ }
+}

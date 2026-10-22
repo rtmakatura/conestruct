@@ -1,0 +1,75 @@
+{
+ "row": {
+  "id": "F8",
+  "kind": "flagger_lane_closure",
+  "pin": "LOOKOUT",
+  "road_type": "urban",
+  "speed": 20,
+  "time": "night",
+  "work_ft": 300,
+  "extra": {
+   "limitedSightDistance": true
+  },
+  "expect": "plan",
+  "checks": [
+   "L19",
+   "L8"
+  ]
+ },
+ "pin": {
+  "place": "Lookout Mountain Rd, way 1432422179",
+  "lat": 39.733,
+  "lng": -105.24,
+  "road": "Lookout Mountain",
+  "reads": "two-way, 2 lanes, 20 mph, urban (place Golden / Paradise Hills); no supported jurisdiction"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "East side \u00b7 northbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "East side \u00b7 northbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 687756
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6942
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 8437
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 8864
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10677
+  }
+ }
+}

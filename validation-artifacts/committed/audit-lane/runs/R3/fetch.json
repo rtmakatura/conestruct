@@ -1,0 +1,49 @@
+{
+ "row": {
+  "id": "R3",
+  "kind": "flagger_lane_closure",
+  "pin": "WCOLFAX_DEN",
+  "road_type": "urban",
+  "speed": 30,
+  "expect": "refuse",
+  "why": "four-lane two-way road"
+ },
+ "pin": {
+  "place": "W Colfax Ave, Denver",
+  "lat": 39.74035,
+  "lng": -105.04014,
+  "road": "Colfax",
+  "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+  "cross": "W Colfax Ave & Perry St, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "North side \u00b7 westbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "South side \u00b7 eastbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "North side \u00b7 westbound traffic",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 249
+  }
+ }
+}

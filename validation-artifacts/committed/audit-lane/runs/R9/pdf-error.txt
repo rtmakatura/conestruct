@@ -1,0 +1,1 @@
+{"detail":{"error":"turn_bay_storage_missing","message":"Enter the left-turn bay storage length under Cross street. This cross street comes before the work, so the left lane ahead of it becomes a left-turn bay (MUTCD TA-23), and its length comes from the site's signal timing or turn counts."}}

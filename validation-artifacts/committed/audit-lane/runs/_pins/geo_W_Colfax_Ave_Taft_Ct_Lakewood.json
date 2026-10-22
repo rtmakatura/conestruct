@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "W Colfax Ave & Taft Ct, Lakewood",
+  "jurisdiction_key": "lakewood"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.740145,
+  "lng": -105.131848,
+  "placeType": "intersection"
+ }
+}

@@ -1,0 +1,71 @@
+{
+ "row": {
+  "id": "F15",
+  "kind": "flagger_lane_closure",
+  "pin": "LOVE",
+  "road_type": "urban",
+  "speed": 30,
+  "time": "night",
+  "work_ft": 300,
+  "over": {
+   "jurisdiction": "loveland"
+  },
+  "expect": "plan"
+ },
+ "pin": {
+  "place": "W 8th St, Loveland",
+  "lat": 40.39999,
+  "lng": -105.08671,
+  "road": "8th",
+  "reads": "2 lanes, no maxspeed, place Loveland; jurisdiction suggest returns null"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "South side \u00b7 eastbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "North side \u00b7 westbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "South side \u00b7 eastbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 582260
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6796
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 7415
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 8254
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10514
+  }
+ }
+}

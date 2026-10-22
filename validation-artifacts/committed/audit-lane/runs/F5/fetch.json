@@ -1,0 +1,70 @@
+{
+ "row": {
+  "id": "F5",
+  "kind": "flagger_lane_closure",
+  "pin": "W9",
+  "road_type": "urban",
+  "speed": 30,
+  "time": "day",
+  "work_ft": 300,
+  "expect": "plan",
+  "score": "INFO (Lakewood, Ryan 2026-10-22)",
+  "note": "lanes not tagged; if the site reads 1 lane the operator sets 2 (recorded as an over)"
+ },
+ "pin": {
+  "place": "W 9th Ave, Lakewood",
+  "lat": 39.73105,
+  "lng": -105.10397,
+  "road": "9th",
+  "reads": "two-way, lanes not tagged (class default 1), urban; lakewood"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "North side \u00b7 westbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "South side \u00b7 eastbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "North side \u00b7 westbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 608178
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6792
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 6890
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7999
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10406
+  }
+ }
+}

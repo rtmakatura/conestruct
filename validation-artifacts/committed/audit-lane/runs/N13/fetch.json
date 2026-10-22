@@ -1,0 +1,103 @@
+{
+ "row": {
+  "id": "N13",
+  "kind": "near_intersection",
+  "pin": "SIG45",
+  "road_type": "urban",
+  "speed": 45,
+  "time": "day",
+  "side": "near",
+  "extra": {
+   "workType": "signal_work"
+  },
+  "expect": "plan",
+  "work_ft": 600,
+  "note": "600 ft work zone: 500 is shorter than the 540 ft taper at 45 mph (rulings R5)"
+ },
+ "pin": {
+  "place": "Sheridan Blvd, Denver, signal 17 m",
+  "lat": 39.7909,
+  "lng": -105.05325,
+  "road": "Sheridan",
+  "reads": "undivided, 4 lanes (2 per direction), 45 mph; denver (near the boundary)",
+  "cross": "Sheridan Blvd & W 52nd Ave, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.7891352,
+  "lng": -105.0532518,
+  "travel": "with_geometry",
+  "traffic_bearing": 0.11,
+  "tried": [
+   {
+    "traffic_bearing": 0.11,
+    "pin": [
+     39.7891352,
+     -105.0532518
+    ],
+    "snapped": "Sheridan Boulevard",
+    "way": "39994971"
+   }
+  ]
+ },
+ "cross": {
+  "address": "Sheridan Blvd & W 52nd Ave, Denver",
+  "geocode": {
+   "lat": 39.791054,
+   "lng": -105.053247,
+   "placeType": "intersection"
+  },
+  "name": "West 52nd Avenue",
+  "way": "17081132",
+  "oneway": "no"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "East side \u00b7 northbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "East side \u00b7 northbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 917563
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6907
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 10313
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 10281
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10511
+  }
+ }
+}

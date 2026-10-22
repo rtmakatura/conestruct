@@ -1,0 +1,72 @@
+{
+ "row": {
+  "id": "R6",
+  "kind": "near_intersection",
+  "pin": "DIVIDED",
+  "road_type": "urban",
+  "speed": 35,
+  "expect": "refuse",
+  "why": "divided=true",
+  "over": {
+   "divided": true
+  }
+ },
+ "pin": {
+  "place": "Colorado Blvd at Exposition Ave, Denver",
+  "lat": 39.709,
+  "lng": -104.9407,
+  "road": "Colorado",
+  "reads": "one-way carriageway of a divided road, 3 lanes, 35 mph",
+  "cross": "S Colorado Blvd & E Exposition Ave, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.7054675,
+  "lng": -104.9407765,
+  "travel": "with_geometry",
+  "traffic_bearing": 180.79,
+  "tried": [
+   {
+    "traffic_bearing": 180.79,
+    "pin": [
+     39.7054675,
+     -104.9407765
+    ],
+    "snapped": "South Colorado Boulevard",
+    "way": "33068687"
+   }
+  ]
+ },
+ "cross": {
+  "address": "S Colorado Blvd & E Exposition Ave, Denver",
+  "geocode": {
+   "lat": 39.703823,
+   "lng": -104.940806,
+   "placeType": "intersection"
+  },
+  "name": "East Exposition Avenue",
+  "way": "550012207",
+  "oneway": "no"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "West side \u00b7 southbound traffic",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 163
+  }
+ }
+}

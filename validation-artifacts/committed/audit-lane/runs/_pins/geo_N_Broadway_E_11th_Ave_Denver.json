@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "N Broadway & E 11th Ave, Denver",
+  "jurisdiction_key": "denver"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.733847,
+  "lng": -104.987401,
+  "placeType": "intersection"
+ }
+}

@@ -1,0 +1,196 @@
+{
+ "scenario": {
+  "kind": "flagger_lane_closure",
+  "meta": {
+   "project": "Audit F4",
+   "address": "",
+   "lat": 39.6928,
+   "lng": -104.96595,
+   "pinModel": "work_start",
+   "centerline": [
+    [
+     39.6929627,
+     -104.964072
+    ],
+    [
+     39.6929595,
+     -104.9641569
+    ],
+    [
+     39.6929564,
+     -104.9642375
+    ],
+    [
+     39.6929573,
+     -104.9646608
+    ],
+    [
+     39.6929583,
+     -104.965135
+    ],
+    [
+     39.6929585,
+     -104.9652317
+    ],
+    [
+     39.6929582,
+     -104.9653233
+    ],
+    [
+     39.692958,
+     -104.9654085
+    ],
+    [
+     39.6929568,
+     -104.9658308
+    ],
+    [
+     39.6929567,
+     -104.9661151
+    ],
+    [
+     39.6929566,
+     -104.9662947
+    ],
+    [
+     39.6929566,
+     -104.9663805
+    ],
+    [
+     39.6929567,
+     -104.9664815
+    ],
+    [
+     39.692957,
+     -104.9669562
+    ]
+   ],
+   "roadName": "East Louisiana Avenue",
+   "roadRef": null,
+   "roadDirection": {
+    "osmBearingDeg": 269.97,
+    "oneway": "no"
+   },
+   "confirmedRoad": {
+    "candidate": {
+     "way_id": "231239989",
+     "highway_class": "tertiary",
+     "name": "East Louisiana Avenue",
+     "ref": null,
+     "bearing": 269.97,
+     "snap_distance_m": 17.43,
+     "snapped_lat": 39.692956758039706,
+     "snapped_lng": -104.96595009312377,
+     "tags": {
+      "oneway": "no",
+      "maxspeed": "30 mph",
+      "lanes": "2",
+      "lanes_forward": null,
+      "lanes_backward": null,
+      "lanes_both_ways": null,
+      "turn_lanes": null,
+      "turn_lanes_forward": null,
+      "turn_lanes_backward": null
+     },
+     "signal_distance_m": 36.83,
+     "geometry": [
+      [
+       39.6929627,
+       -104.964072
+      ],
+      [
+       39.6929595,
+       -104.9641569
+      ],
+      [
+       39.6929564,
+       -104.9642375
+      ],
+      [
+       39.6929573,
+       -104.9646608
+      ],
+      [
+       39.6929583,
+       -104.965135
+      ],
+      [
+       39.6929585,
+       -104.9652317
+      ],
+      [
+       39.6929582,
+       -104.9653233
+      ],
+      [
+       39.692958,
+       -104.9654085
+      ],
+      [
+       39.6929568,
+       -104.9658308
+      ],
+      [
+       39.6929567,
+       -104.9661151
+      ],
+      [
+       39.6929566,
+       -104.9662947
+      ],
+      [
+       39.6929566,
+       -104.9663805
+      ],
+      [
+       39.6929567,
+       -104.9664815
+      ],
+      [
+       39.692957,
+       -104.9669562
+      ]
+     ]
+    },
+    "method": "operator_pick",
+    "overrides": {},
+    "isUrban": true,
+    "placeName": "Platt Park",
+    "pinLat": 39.6928,
+    "pinLng": -104.96595
+   },
+   "intersection": null,
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   }
+  },
+  "workType": "utility_cut",
+  "duration": "long",
+  "pilotCar": false,
+  "afad": false,
+  "pedestrianAccess": true,
+  "roadType": "urban_arterial",
+  "speed": 30,
+  "laneWidth": 12,
+  "workLen": 300,
+  "night": true,
+  "site_scan": {
+   "proceed_if_unavailable": false
+  },
+  "oneway": "no",
+  "detectedLanesTotal": 2,
+  "signalDistanceM": 36.83,
+  "street_class": "collector",
+  "jurisdiction_key": "denver",
+  "guesses": {
+   "street_class": {
+    "highwayClass": "tertiary"
+   },
+   "jurisdiction_key": {
+    "lat": 39.6928,
+    "lng": -104.96595
+   }
+  }
+ }
+}

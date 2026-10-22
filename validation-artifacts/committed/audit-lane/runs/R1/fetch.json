@@ -1,0 +1,41 @@
+{
+ "row": {
+  "id": "R1",
+  "kind": "flagger_lane_closure",
+  "pin": "BWAY11",
+  "road_type": "urban",
+  "speed": 30,
+  "expect": "refuse",
+  "why": "one-way road (#158)"
+ },
+ "pin": {
+  "place": "N Broadway at E 11th Ave, Denver (one-way)",
+  "lat": 39.7337,
+  "lng": -104.98753,
+  "road": "Broadway",
+  "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+  "cross": "N Broadway & E 11th Ave, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "West side \u00b7 southbound traffic",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 249
+  }
+ }
+}

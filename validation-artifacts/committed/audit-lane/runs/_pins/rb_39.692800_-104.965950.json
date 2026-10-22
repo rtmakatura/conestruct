@@ -1,0 +1,95 @@
+{
+ "request": {
+  "lat": 39.6928,
+  "lng": -104.96595
+ },
+ "status": 200,
+ "response": {
+  "scan_status": "ok",
+  "candidates": [
+   {
+    "way_id": "231239989",
+    "highway_class": "tertiary",
+    "name": "East Louisiana Avenue",
+    "ref": null,
+    "bearing": 269.97,
+    "snap_distance_m": 17.43,
+    "snapped_lat": 39.692956758039706,
+    "snapped_lng": -104.96595009312377,
+    "tags": {
+     "oneway": "no",
+     "maxspeed": "30 mph",
+     "lanes": "2",
+     "lanes_forward": null,
+     "lanes_backward": null,
+     "lanes_both_ways": null,
+     "turn_lanes": null,
+     "turn_lanes_forward": null,
+     "turn_lanes_backward": null
+    },
+    "signal_distance_m": 36.83,
+    "geometry": [
+     [
+      39.6929627,
+      -104.964072
+     ],
+     [
+      39.6929595,
+      -104.9641569
+     ],
+     [
+      39.6929564,
+      -104.9642375
+     ],
+     [
+      39.6929573,
+      -104.9646608
+     ],
+     [
+      39.6929583,
+      -104.965135
+     ],
+     [
+      39.6929585,
+      -104.9652317
+     ],
+     [
+      39.6929582,
+      -104.9653233
+     ],
+     [
+      39.692958,
+      -104.9654085
+     ],
+     [
+      39.6929568,
+      -104.9658308
+     ],
+     [
+      39.6929567,
+      -104.9661151
+     ],
+     [
+      39.6929566,
+      -104.9662947
+     ],
+     [
+      39.6929566,
+      -104.9663805
+     ],
+     [
+      39.6929567,
+      -104.9664815
+     ],
+     [
+      39.692957,
+      -104.9669562
+     ]
+    ]
+   }
+  ],
+  "primary_index": 0,
+  "isUrban": true,
+  "placeName": "Platt Park"
+ }
+}

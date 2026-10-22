@@ -1,0 +1,18 @@
+{
+ "request": {
+  "lat": 39.878635,
+  "lng": -105.530885
+ },
+ "status": 200,
+ "response": {
+  "suggestion": null,
+  "reason": "Pin is outside the mapped Denver-metro boundary layer (US Census TIGER/Line, 2025 vintage).",
+  "confidence": "outside_supported",
+  "distance_to_boundary_ft": 112856.7,
+  "warnings": [],
+  "boundary_source": {
+   "source": "US Census TIGER/Line Place boundaries",
+   "vintage": "2025"
+  }
+ }
+}

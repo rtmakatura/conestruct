@@ -1,0 +1,28 @@
+{
+ "request": {
+  "lat": 40.39999,
+  "lng": -105.08671
+ },
+ "status": 200,
+ "response": {
+  "suggestion": null,
+  "reason": "Pin is in Larimer County, outside the municipal boundaries Conestruct maps (US Census TIGER/Line, 2025 vintage).",
+  "confidence": "outside_supported",
+  "distance_to_boundary_ft": 50300.2,
+  "warnings": [
+   {
+    "kind": "unsupported_area",
+    "message": "Pin is in Larimer County, outside the mapped municipal boundaries, not in the supported set. Baseline rules will apply unless you pick manually.",
+    "source": {
+     "doc": "US Census TIGER/Line 2025 County boundaries (tl_2025_us_county.zip)",
+     "date": "2025",
+     "status": "verified"
+    }
+   }
+  ],
+  "boundary_source": {
+   "source": "US Census TIGER/Line Place boundaries",
+   "vintage": "2025"
+  }
+ }
+}

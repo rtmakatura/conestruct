@@ -1,0 +1,1 @@
+{"detail":"The map data's lane counts for the cross street contradict each other (the total doesn't match the per-direction counts), so the detected lane count can't be trusted this close to an intersection. Check the through-lane count in the field or on imagery, then confirm “Lane count is right” (or set the count yourself) in the Cross street section and regenerate."}

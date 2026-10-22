@@ -1,0 +1,68 @@
+{
+ "row": {
+  "id": "F3",
+  "kind": "flagger_lane_closure",
+  "pin": "LOUIS",
+  "road_type": "urban",
+  "speed": 30,
+  "time": "day",
+  "work_ft": 300,
+  "expect": "plan"
+ },
+ "pin": {
+  "place": "E Louisiana Ave at South High School, Denver",
+  "lat": 39.6928,
+  "lng": -104.96595,
+  "road": "Louisiana",
+  "reads": "two-way, 2 lanes, 30 mph, urban; denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "North side \u00b7 westbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "South side \u00b7 eastbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "North side \u00b7 westbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 642572
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6950
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 7782
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 8398
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10583
+  }
+ }
+}

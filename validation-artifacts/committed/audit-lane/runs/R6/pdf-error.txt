@@ -1,0 +1,1 @@
+{"detail":"divided intersections aren't supported yet. Cases 18/19 are undivided/arterial plates; a divided mainline adds the median-opening question (deferred)."}

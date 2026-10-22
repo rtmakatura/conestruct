@@ -1,0 +1,99 @@
+{
+ "row": {
+  "id": "N9",
+  "kind": "near_intersection",
+  "pin": "BWAY11",
+  "road_type": "urban",
+  "speed": 30,
+  "time": "day",
+  "side": "far",
+  "lane": "right",
+  "expect": "plan"
+ },
+ "pin": {
+  "place": "N Broadway at E 11th Ave, Denver (one-way)",
+  "lat": 39.7337,
+  "lng": -104.98753,
+  "road": "Broadway",
+  "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+  "cross": "N Broadway & E 11th Ave, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.7335729,
+  "lng": -104.987401,
+  "travel": "with_geometry",
+  "traffic_bearing": 180,
+  "tried": [
+   {
+    "traffic_bearing": 180,
+    "pin": [
+     39.7335729,
+     -104.987401
+    ],
+    "snapped": "North Broadway",
+    "way": "1491844986"
+   }
+  ]
+ },
+ "cross": {
+  "address": "N Broadway & E 11th Ave, Denver",
+  "geocode": {
+   "lat": 39.733847,
+   "lng": -104.987401,
+   "placeType": "intersection"
+  },
+  "name": "East 11th Avenue",
+  "way": "332563208",
+  "oneway": "no"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "left",
+    "travel": "with_geometry"
+   },
+   "label": "East side \u00b7 southbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "West side \u00b7 southbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 879006
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6866
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 10220
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 10269
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10466
+  }
+ }
+}

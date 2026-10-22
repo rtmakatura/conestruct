@@ -1,0 +1,77 @@
+{
+ "row": {
+  "id": "R7",
+  "kind": "near_intersection",
+  "pin": "OGDEN",
+  "road_type": "urban",
+  "speed": 25,
+  "expect": "refuse",
+  "why": "one lane per direction"
+ },
+ "pin": {
+  "place": "Ogden St between 6th and 7th Ave, Denver",
+  "lat": 39.7265,
+  "lng": -104.97525,
+  "road": "Ogden",
+  "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver",
+  "cross": "Ogden St & E 7th Ave, Denver",
+  "cross_juris": "denver"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.7256333,
+  "lng": -104.9752514,
+  "travel": "with_geometry",
+  "traffic_bearing": 359.77,
+  "tried": [
+   {
+    "traffic_bearing": 359.77,
+    "pin": [
+     39.7256333,
+     -104.9752514
+    ],
+    "snapped": "Ogden Street",
+    "way": "338577483"
+   }
+  ]
+ },
+ "cross": {
+  "address": "Ogden St & E 7th Ave, Denver",
+  "geocode": {
+   "lat": 39.727278,
+   "lng": -104.97526,
+   "placeType": "intersection"
+  },
+  "name": "East 7th Avenue",
+  "way": "337216230",
+  "oneway": "no"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "East side \u00b7 northbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "East side \u00b7 northbound traffic",
+ "audit_status": 400,
+ "scan_token": false,
+ "downloads": {
+  "pdf": {
+   "status": 400,
+   "type": "application/json",
+   "bytes": 286
+  }
+ }
+}

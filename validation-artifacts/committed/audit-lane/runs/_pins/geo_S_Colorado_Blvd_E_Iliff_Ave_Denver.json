@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "S Colorado Blvd & E Iliff Ave, Denver",
+  "jurisdiction_key": "denver"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.674814,
+  "lng": -104.940722,
+  "placeType": "intersection"
+ }
+}

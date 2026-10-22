@@ -1,0 +1,71 @@
+{
+ "row": {
+  "id": "F11",
+  "kind": "flagger_lane_closure",
+  "pin": "US24",
+  "road_type": "rural",
+  "speed": 55,
+  "time": "day",
+  "work_ft": 1500,
+  "over": {
+   "divided": false
+  },
+  "expect": "plan"
+ },
+ "pin": {
+  "place": "US 24 at Hartsel",
+  "lat": 39.02175,
+  "lng": -105.79286,
+  "road": "24",
+  "reads": "2 lanes, rural, no maxspeed; trunk, so the site guesses divided"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "South side \u00b7 eastbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "North side \u00b7 westbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "South side \u00b7 eastbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 538992
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6616
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 6170
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 7289
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10227
+  }
+ }
+}

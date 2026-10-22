@@ -1,0 +1,102 @@
+{
+ "scenario": {
+  "kind": "flagger_lane_closure",
+  "meta": {
+   "project": "Audit F12",
+   "address": "",
+   "lat": 39.02175,
+   "lng": -105.79286,
+   "pinModel": "work_start",
+   "centerline": [
+    [
+     39.0214771,
+     -105.7937344
+    ],
+    [
+     39.0216102,
+     -105.7932819
+    ],
+    [
+     39.021746,
+     -105.7928637
+    ]
+   ],
+   "roadName": null,
+   "roadRef": "US 24",
+   "roadDirection": {
+    "osmBearingDeg": 64.93,
+    "oneway": null
+   },
+   "confirmedRoad": {
+    "candidate": {
+     "way_id": "17122234",
+     "highway_class": "trunk",
+     "name": null,
+     "ref": "US 24",
+     "bearing": 64.93,
+     "snap_distance_m": 0.27,
+     "snapped_lat": 39.02174782118689,
+     "snapped_lng": -105.79285868815876,
+     "tags": {
+      "oneway": null,
+      "maxspeed": null,
+      "lanes": "2",
+      "lanes_forward": null,
+      "lanes_backward": null,
+      "lanes_both_ways": null,
+      "turn_lanes": null,
+      "turn_lanes_forward": null,
+      "turn_lanes_backward": null
+     },
+     "signal_distance_m": null,
+     "geometry": [
+      [
+       39.0214771,
+       -105.7937344
+      ],
+      [
+       39.0216102,
+       -105.7932819
+      ],
+      [
+       39.021746,
+       -105.7928637
+      ]
+     ]
+    },
+    "method": "operator_pick",
+    "overrides": {},
+    "isUrban": false,
+    "placeName": "Hartsel",
+    "pinLat": 39.02175,
+    "pinLng": -105.79286
+   },
+   "intersection": null,
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   }
+  },
+  "workType": "utility_cut",
+  "duration": "long",
+  "pilotCar": true,
+  "afad": false,
+  "pedestrianAccess": false,
+  "roadType": "rural_undivided",
+  "speed": 55,
+  "laneWidth": 12,
+  "workLen": 1500,
+  "night": true,
+  "site_scan": {
+   "proceed_if_unavailable": false
+  },
+  "detectedLanesTotal": 2,
+  "street_class": "arterial",
+  "guesses": {
+   "street_class": {
+    "highwayClass": "trunk"
+   }
+  },
+  "divided": false
+ }
+}
