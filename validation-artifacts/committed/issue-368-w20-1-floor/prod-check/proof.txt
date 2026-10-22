@@ -1,0 +1,13 @@
+Using CPython 3.13.1 interpreter at: C:\Python\Python313\python3.exe
+Creating virtual environment at: .venv
+Installed 113 packages in 3.38s
+PASS freeway 75->40 L1000 audit: HTTP 200, Furthest (Case 11) = W20-1 6,090 upstream
+PASS freeway 75->40 L1000 crew sheet: HTTP 200, '| W20-1 | ROAD WORK AHEAD | 6,090 ft upstream |' present
+PASS freeway 75->40 L1000 page 1: HTTP 200, 'W20-1 ROAD WORK AHEAD 6090 ft' present
+PASS freeway 75->20 L1000 audit: HTTP 200, Furthest (Case 11) = W20-1 6,620 upstream
+PASS freeway 75->20 L1000 crew sheet: HTTP 200, '| W20-1 | ROAD WORK AHEAD | 6,620 ft upstream |' present
+PASS freeway 75->20 L1000 page 1: HTTP 200, 'W20-1 ROAD WORK AHEAD 6620 ft' present
+PASS freeway 75->60 L1000 audit: HTTP 200, Furthest (Case 11) = W20-1 5,200 upstream
+PASS freeway 75->60 L1000 crew sheet: HTTP 200, '| W20-1 | ROAD WORK AHEAD | 5,200 ft upstream |' present
+PASS freeway 75->60 L1000 page 1: HTTP 200, 'W20-1 ROAD WORK AHEAD 5200 ft' present
+9/9 PASS
