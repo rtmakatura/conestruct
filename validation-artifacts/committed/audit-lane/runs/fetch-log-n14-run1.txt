@@ -1,0 +1,7 @@
+18:19:25 /api/geocode -> 200 (0.3s)
+18:19:55 /api/road-bearing -> 200 (25.9s)
+18:20:19 /api/road-bearing -> 200 (20.0s)
+18:20:25 /api/jurisdiction/suggest -> 200 (1.3s)
+18:20:29 /api/render/corridor-geometry -> 200 (0.4s)
+18:20:33 /api/render/audit -> 400 (0.4s)
+18:20:38 /api/render/pdf -> 400 (0.5s)

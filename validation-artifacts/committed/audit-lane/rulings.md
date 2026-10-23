@@ -42,3 +42,19 @@ Each near-intersection row marks its cross street the way an operator does: the 
 - **Refusal rows:** the side is chosen before the row's edit (speed 60, an 8 ft lane, `divided: true`) applies, so the deliverables refuse, not the side read. R10's mismatched approach lane tags (4 = 1 + 1) are injected and recorded in its `fetch.json`.
 - **R6:** since #312 the site builds a divided near-intersection plan from carriageway facts, with the wire's `divided` left false. R6 sends `divided: true` as the row says, so it tests the schema refusal only. Session 4 records that.
 - **First run (2026-10-22), three reruns:** N12 and N13 were refused because the 500 ft default work zone is shorter than the 540 ft merging taper at 45 mph. An operator lengthens it, so the 45+ mph near-intersection rows (N12–N14) use 600 ft (CHOSEN, the next 100 ft step). R6 first ran without its `divided: true` edit. Through #312's carriageway path it built a TA-21 / Case 18 plan; session 4 records that as INFO. It reruns with the edit. F3's device XLSX answered 502 once, so F3 reruns.
+
+## R6 (R145 self-ruled, session 4): N14 runs on CO 2 in Commerce City at 700 ft
+No rural undivided four-lane road with a crossing turned up (R4), so N14 takes Ryan's fallback: an undivided urban arterial at 50–55 mph. CO 2 ("Highway 2") at E 104th Ave, Commerce City reads two-way, primary, 55 mph, urban (`pins.md`, session 4 note). The first run at 600 ft was refused: the 660 ft merging taper at 55 mph (12 ft × 55) is longer than the work zone. As in R5, the operator lengthens to the next 100 ft step, 700 ft (CHOSEN). The rerun built a TA-21 / Case 18 near-side plan with all five downloads (`runs/fetch-log-n14-run1.txt`, `-run2.txt`). 104th Ave is mapped as two one-way roads, so the site lays one approach for its nearest one-way piece (`cross-street.ts:221`, as in R4's N6), and the cross street lands at station −99.
+
+## R7 (R145 self-ruled, session 4): C9 is scored on Figs 6P-21/22, not L16's paraphrase
+L16's check rule says a cross street "before the work zone (upstream) is near side". The figures it quotes say the reverse: near side (Fig 6P-21) closes the lane before the intersection; far side (Fig 6P-22) has the intersection between the taper and the work. The source text governs (Rule 12), so C9 scores near = cross street downstream of the work zone, far = upstream. The correction is recorded in `oracle-sources.md`. Every N row's label matches this reading.
+
+## R8 (R145 self-ruled, session 4): what check.py scores INFO rather than FLAG
+Each follows an L item's own check rule or the "Not sourced" list:
+- **Upstream flagger offset (C7):** every flagger plan puts station #1 100 ft upstream of the taper, between the taper and W20-7, with A to W20-7 kept. Fig 6P-10 draws the flagger at the taper's upstream end; L7 gives no distance, so the offset is INFO.
+- **AFAD (F16):** the audit's flagger table is empty for AFAD rows, so C7 reads the two AFAD stations from the crew sheet. W20-7a AFAD AHEAD in the W20-7 slot is recorded, not scored: no AFAD sign is quoted (L18).
+- **Turn bay (N10):** the closed lane reopens as a TA-23 left-turn bay (cones to station 762) and the 100 ft before the taper is left open as the bay entry. No page sets the storage length, so that gap is INFO.
+- **Limited sight distance (F7, F8):** the signs move 60 ft upstream under a rule that cites §6B.04 ¶04/¶06. Those ranges aren't quoted in `oracle-sources.md`, so the move is checked but the distance isn't scored.
+- **R1:** Broadway is refused for its five lanes, which is true, but the one-way reason isn't named.
+- **Urban near-intersection gaps under A** (N2, N6, N9): INFO per S-630-1 Sheet 10 Note 1 (L5).
+- **Scan tokens:** `check.py` strips `site_scan_token` from each `audit.json`, as the shoulder audit did. Session 3's commit `a408abe` still carries them in history.

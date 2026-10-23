@@ -204,3 +204,7 @@ A fresh agent that wrote none of the oracle checked L1–L20 against their pages
 - **L19:** ¶08 is Support.
 - **L20:** §6N.04 ¶06 prints "Except for - and mobile operations", without "short-duration", and the qualifier governs the W21-5 sentence. The 48-inch sentence is now quoted on its own. The shoulder audit's O11/O15 correction added "short-duration" back; that copy is wrong the same way (recorded here, not edited: `audit-shoulder/` is closed evidence).
 - **`oracle.py`:** the 100 ft constant is renamed to the approach the drawing puts it on; `buffer_min`'s round-up to the 5 mph grid is marked chosen (Rule 12); the optional-sign comment cites the figure's "(optional)" labels.
+
+## Correction from session 4 scoring (2026-10-22)
+
+- **L16:** the check rule's wording is reversed against the figures it quotes. Fig 6P-21 ("Lane Closure on the Near Side of an Intersection", p. 901) closes the lane before the intersection, so the cross street sits downstream of the work; Fig 6P-22 (far side, p. 903, quoted in L15) runs taper, A, R3-7R, then the intersection, with the work past it, so the cross street sits upstream of the work. `check.py` scores C9 on the figures: cross street downstream of the work zone (station < 0) = near side, upstream (station > work length) = far side (rulings.md R7).

@@ -132,6 +132,14 @@
    "road": "67",
    "reads": "undivided, 4 lanes (2 per direction), 55 mph, rural"
   },
+  "CO2": {
+   "place": "CO 2 (Highway 2) at E 104th Ave, Commerce City",
+   "lat": 39.885314,
+   "lng": -104.847744,
+   "road": "Highway 2|^CO 2$",
+   "reads": "undivided (two-way), primary, 6 lanes at the intersection, 55 mph, isUrban true; no jurisdiction on record",
+   "cross": "CO 2 & E 104th Ave, Commerce City, Colorado"
+  },
   "DIVIDED": {
    "place": "Colorado Blvd at Exposition Ave, Denver",
    "lat": 39.709,
@@ -541,15 +549,14 @@
   {
    "id": "N14",
    "kind": "near_intersection",
-   "pin": "CO67",
-   "road_type": "rural",
+   "pin": "CO2",
+   "road_type": "urban",
    "speed": 55,
    "time": "day",
    "side": "near",
    "expect": "plan",
-   "note": "pin pending (rulings R4); 600 ft work zone like N12-N13 (rulings R5)",
-   "deferred": "no crossing on CO 67's or CO 7's four-lane stretch; pin hunt in session 4 (rulings R4)",
-   "work_ft": 600
+   "note": "Ryan's fallback (2026-10-22): an undivided urban arterial at 50-55 mph; CO 2 in Commerce City (rulings R6). 700 ft work zone: 600 is shorter than the 660 ft taper at 55 mph (rulings R6)",
+   "work_ft": 700
   },
   {
    "id": "R1",

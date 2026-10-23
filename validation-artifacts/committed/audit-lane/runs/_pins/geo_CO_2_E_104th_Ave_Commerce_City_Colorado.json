@@ -1,0 +1,11 @@
+{
+ "request": {
+  "address": "CO 2 & E 104th Ave, Commerce City, Colorado"
+ },
+ "status": 200,
+ "response": {
+  "lat": 39.885314,
+  "lng": -104.847744,
+  "placeType": "intersection"
+ }
+}

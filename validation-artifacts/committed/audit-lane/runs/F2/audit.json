@@ -1,1 +1,1172 @@
-{"summary":{"ta":"TA-10","cdot_sheet":"S-630-1","case_id":"MUTCD TA-10: Flagger one-lane two-way","taper_length_ft":100,"taper_label":"one-lane two-way taper","buffer_space_ft":155.0,"device_spacing_taper_ft":20.0,"device_spacing_tangent_ft":50.0,"step_count":16},"sections":{"taper":{"speed_mph":25,"closure_type":"lane","offset_label":"lane width","offset_ft":12.0,"shoulder_width_ft":12.0,"formula_choice":"Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply","formula_latex":"50 \\le L \\le 100","L_calc_text":"One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)","L_full_ft":125,"L_third_calc_text":"Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)","L_third_ft":100,"L_required_ft":100,"L_required_label":"one-lane two-way taper","source":"MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic control): 50-100 ft taper with channelizing devices at approximately 20 ft spacing. CDOT S-630-1 Case 17 warns the taper must be short enough to not be mistaken for a transition.","cdot_reference":"MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)","citation":{"cite":"MUTCD § 6B.08","footer":"MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"},"result_text":"L = 100 ft","formula_text":["One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)"]},"buffer":{"speed_mph":25,"lookup_text":"MUTCD Table 6B-2: 155 ft (CDOT supplement silent at this speed)","buffer_ft":155.0,"source":"MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)","citation":{"cite":"MUTCD § 6B.06","footer":"MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"},"result_text":"B = 155 ft"},"spacing":{"speed_mph":25,"in_taper_text":"20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)","on_tangent_text":"25 mph -> 50 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)","taper_count_text":"one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals","tangent_count_text":"200 ft / 50 ft max spacing -> 5 cones at 50.0 ft intervals","n_taper_drums_required":6,"n_taper_drums_actual":6,"n_tangent_cones_required":5,"n_tangent_cones_actual":12,"source":"MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)","citation":{"cite":"MUTCD § 6K.01","footer":"MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"},"buffer_count_text":"Buffer: 155 ft / 50 ft max spacing -> 3 cones at 38.8 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)","n_buffer_cones":3,"buffer_cone_spacing_ft":38.8,"downstream_count_text":"Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 5 tangent + 3 buffer + 4 downstream = 12 cones total","n_downstream_taper_cones":4,"n_cones_placed_total":12,"result_text":"14 devices · 20/50 ft o.c.","formula_text":["one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals","200 ft / 50 ft max spacing -> 5 cones at 50.0 ft intervals","Buffer: 155 ft / 50 ft max spacing -> 3 cones at 38.8 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)","Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 5 tangent + 3 buffer + 4 downstream = 12 cones total"]},"advance":{"road_type_text":"Speed 25 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low","spacing_text":"A = 100 ft, B = 100 ft, C = 100 ft","sign_table":[{"Position":"C (furthest)","Code":"W20-1","Station (ft)":"955","Distance from Taper (ft)":"500 upstream"},{"Position":"B (middle)","Code":"W20-4","Station (ft)":"855","Distance from Taper (ft)":"400 upstream"},{"Position":"between A and B (TA-10 note 8)","Code":"W3-4","Station (ft)":"755","Distance from Taper (ft)":"300 upstream"},{"Position":"A (nearest)","Code":"W20-7","Station (ft)":"655","Distance from Taper (ft)":"200 upstream"}],"source":"MUTCD 11th Ed. Table 6B-1","result_text":"4 signs","citation":{"cite":"MUTCD TABLE 6B-1","footer":"MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"}},"colorado":{"checks":[{"pass":true,"label":"Signs on both sides of divided highway","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 8","detail":"Required: False. Signs placed: 6 left, 9 right."},{"pass":true,"label":"G20-5P Work Zone signs every 2,640 ft","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 4","detail":"Zone length: 955 ft. Required: 1. Placed: 1."},{"pass":true,"label":"Speed reduction <= 15 mph per sign installation","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 3","detail":"No work-zone speed reduction. Posted speed 25 mph applies throughout the zone."},{"pass":false,"label":"Flagger station lighting 500W @ 8 ft","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 22","detail":"2 flagger station(s) at night. Required: flood lighting (500W min @ 8 ft min) at each station per S-630-1 Sheet 2 Note 22. Placed: 0 (V1 does not emit lighting equipment placements)."}],"info_items":[{"info":true,"label":"AADT threshold for mobile operations (<= 2,000)","citation":"CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1","detail":"Not applicable (not a mobile operation)."}],"all_pass":false,"fail_count":1},"case":{"case":"MUTCD TA-10: Flagger one-lane two-way","url":"https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf","narrative":"This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal standard for flagger-controlled alternating one-way traffic on a 2-lane undivided highway). CDOT S-630-1 does not include a general flagger one-lane two-way case; Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized.","narrative_2":"The generated plan follows the same device layout as the reference case with spacing computed for 25 mph."},"flagger":{"applicable":true,"count":2,"required":2,"table":[{"Label":"FLAGGER_1","Station (ft)":"555","Offset (ft)":"+18.0","Side":"right shoulder"},{"Label":"FLAGGER_2","Station (ft)":"-300","Offset (ft)":"-18.0","Side":"left shoulder"}],"source":"MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).","narrative":"Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.","sight_distance_ft":155,"sight_distance_citation":{"cite":"MUTCD § 6D.06","footer":"MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"},"sight_distance_result_text":"155 ft","stations_text":"2 flagger station(s)","sight_distance_formula_text":["SSD @ 25 mph = 155 ft"]},"corridor_validation":{"checked":true,"warnings":[{"flag":"no_road_at_anchor","level":"warning","message":"No motorway/trunk/primary/secondary road detected at anchor (39.72650, -104.97525) within 50 m (closest road within 50 m: 'residential').  Verify coordinates correspond to the actual work zone."}]},"geometry_validation":{"speed_mph":25,"work_zone_ft":200.0,"taper_ft":100,"taper_label":"one-lane two-way taper","buffer_ft":155.0,"violations":[],"all_pass":true,"source":"MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"},"corridor_spec":{"taper_ft":100,"buffer_ft":155,"advance_warning_ft":300,"downstream_taper_ft":50,"road_category":"urban_low"},"site_adjustments":[{"flag":"adjacent_intersection","action":"No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.","devices_added":0,"rule":"MUTCD §6N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.)","citation":"MUTCD § 6N.12 p. 848"},{"flag":"pedestrian_facility","action":"Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.","devices_added":4,"rule":"MUTCD §6C.02: pedestrian considerations in work zones","citation":"MUTCD § 6C.02"}],"site_scan":{"status":"ok","reason":null,"error":null,"mode":"corridor","measured_at":"2026-10-22T20:55:37+00:00","duration_ms":3872,"budget_s":20.0,"memo_hit":true,"mirror":"https://overpass.openstreetmap.fr/api/interpreter","overpass_remark":null,"response_bytes":32920,"element_count":165,"proceeded_anyway":false,"inputs":{"lat":39.7265,"lng":-104.97525,"bearing_deg":359.778402979827,"speed_mph":25,"work_zone_ft":200.0,"closure_type":"lane","road_type":"urban_low","lane_width_ft":12.0,"shoulder_width_ft":8.0,"centerline_vertices":88,"bbox":[39.72270878974998,-104.97643677162807,39.72959219170982,-104.97407210283393],"pin_model":"work_start","opposing_bbox":[39.723955994262404,-104.97644312942225,39.73083939733615,-104.9740781404181]},"buckets":{"intersections":{"detected":true,"count":38,"nearest_distance_m":10.3,"nearest_distance_ft":33.8,"details":["unnamed at 39.7256, -104.9741 [outside @ -235 ft, opposing approach]","unnamed at 39.7291, -104.9741 [outside @ 1038 ft, opposing approach]","unnamed at 39.7292, -104.9764 [outside @ 1073 ft, opposing approach]","unnamed at 39.7292, -104.9741 [outside @ 1074 ft, opposing approach]","unnamed at 39.7290, -104.9753 [outside @ 1007 ft, opposing approach]"],"features":[{"label":"unnamed at 39.7256, -104.9741","zone":"outside","relevant":true,"along_station_ft":-235.1,"lateral_offset_ft":325.4,"approach":"opposing","distance_to_anchor_m":141.9},{"label":"unnamed at 39.7273, -104.9741","zone":"lateral","relevant":false,"along_station_ft":17.3,"lateral_offset_ft":325.7,"approach":"primary","distance_to_anchor_m":131.0},{"label":"unnamed at 39.7291, -104.9741","zone":"outside","relevant":true,"along_station_ft":1037.6,"lateral_offset_ft":326.3,"approach":"opposing","distance_to_anchor_m":302.4},{"label":"unnamed at 39.7305, -104.9741","zone":"outside","relevant":false,"along_station_ft":-1143.0,"lateral_offset_ft":328.3,"approach":"primary","distance_to_anchor_m":450.9},{"label":"unnamed at 39.7305, -104.9741","zone":"outside","relevant":false,"along_station_ft":-1174.4,"lateral_offset_ft":328.5,"approach":"primary","distance_to_anchor_m":460.3}]},"interchanges":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[],"junction_refs":[]},"sidewalks":{"detected":true,"count":21,"nearest_distance_m":10.5,"nearest_distance_ft":34.4,"details":["unnamed at 39.7257, -104.9752 [advance_warning @ 598 ft]","unnamed at 39.7281, -104.9752 [advance_warning @ 680 ft, opposing approach]","unnamed at 39.7255, -104.9750 [lateral 69 ft off centerline]","unnamed at 39.7264, -104.9753 [buffer @ 322 ft]","unnamed at 39.7272, -104.9755 [lateral 68 ft off centerline]"],"features":[{"label":"unnamed at 39.7313, -104.9752","zone":"outside","relevant":false,"along_station_ft":-1433.5,"lateral_offset_ft":26.6,"approach":"primary","distance_to_anchor_m":528.4},{"label":"unnamed at 39.7272, -104.9738","zone":"lateral","relevant":false,"along_station_ft":47.0,"lateral_offset_ft":407.6,"approach":"primary","distance_to_anchor_m":145.7},{"label":"unnamed at 39.7257, -104.9752","zone":"advance_warning","relevant":true,"along_station_ft":597.8,"lateral_offset_ft":11.7,"approach":"primary","distance_to_anchor_m":90.8},{"label":"unnamed at 39.7313, -104.9742","zone":"outside","relevant":false,"along_station_ft":-1432.7,"lateral_offset_ft":301.1,"approach":"primary","distance_to_anchor_m":535.9},{"label":"unnamed at 39.7297, -104.9754","zone":"outside","relevant":false,"along_station_ft":-854.9,"lateral_offset_ft":23.9,"approach":"primary","distance_to_anchor_m":352.1}]},"bike_facilities":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[{"label":"East 7th Avenue","zone":"lateral","relevant":false,"along_station_ft":17.1,"lateral_offset_ft":244.0,"approach":"primary","distance_to_anchor_m":113.5},{"label":"East 7th Avenue","zone":"lateral","relevant":false,"along_station_ft":15.0,"lateral_offset_ft":326.7,"approach":"primary","distance_to_anchor_m":132.5},{"label":"North Emerson Street","zone":"outside","relevant":false,"along_station_ft":991.4,"lateral_offset_ft":329.0,"approach":"primary","distance_to_anchor_m":233.6},{"label":"North Emerson Street","zone":"outside","relevant":false,"along_station_ft":-1199.1,"lateral_offset_ft":326.3,"approach":"primary","distance_to_anchor_m":467.7}]},"schools":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"railroad_crossings":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"hospitals":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"road_curvature":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":["Road curvature analysis not implemented; assume straight."],"features":[]}},"flags":{"adjacent_intersection":true,"pedestrian_facility":true},"manual_flags_discarded":{},"disclosure":null,"corrections":[],"corrections_advisory":null}},"pending_verification":{"count":2,"note":"Flagger station lighting is required for night operations per CDOT S-630-1 Sheet 2 Note 22. V1's flagger generator does not emit lighting equipment placements; the traffic control supervisor must add flood lights per project requirements until generator support ships.","tracking_issue":"https://github.com/rtmakatura/conestruct/issues/19","items":[{"kind":"flagger_lighting_manual_handling","label":"Flagger station lighting is required for night operations per CDOT S-630-1 Sheet 2 Note 22. V1's flagger generator does not emit lighting equipment placements; the traffic control supervisor must add flood lights per project requirements until generator support ships.","tracking_issue":"https://github.com/rtmakatura/conestruct/issues/19"},{"kind":"intersection_layout_not_generated","label":"An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.","tracking_issue":"https://github.com/rtmakatura/conestruct/issues/117"}]},"plan_flags":{"validation_warnings":1,"compliance_fails":1,"v1_limitations":2,"is_clean":false},"pin":{"model":"work_start"},"input_guesses":[{"field":"street_class","value":"local","label":"Local","source":"road","evidence":"OSM highway=residential","operator_confirmed":false},{"field":"jurisdiction_key","value":"denver","label":"Denver","source":"pin","evidence":"Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).","operator_confirmed":false}],"site_scan_token":"eNqlV01z6yYU_SsM2zoKCBCSu3ldvG0XbXeZNxosoZhaRhpAzqSZ_PdeFMcfmcixnJVliXs4XO49B17waqg2Oni8fMErs9FloyrTmmD0-KrqBhvwkixwrYMyLbx8-DX-0VXQNV42qvV6gRutwuBizMMLVm1nH0sfVDCdLRuIpzKhC6z63nWqWuMl7p3ZKveMAcrAQFvpMnQl_K47V24hgLJELHCrVrqF4T-VD0iGNfpjp-2gcfwStFNt2TWN12GcJOU8AaJOt3qnIus9t_86qwFjH4FfF58yFDF2DkOWzmbI0iyRtzIsCprwWRRTxpLsSPHPzgG_n1vtfGfR38FpHaZ4Fpcy2Q3Bm1pP8LyjtChmbjfPZEzMLUyzhF3B9NcrTO26vo81-4J9pWwJMVttY-kT-LrufG-Cam8t-ziDsUCwWiv7eHP3wOd_B1uN2XS6OUP2enx_Cs3yU2w8WKu2ukYqIFYkMhXZAt1RwpNCcooe9ulAP9BdygRqwgJBSjpv7CN6361fkOiPMAWdgKGE5TNg0gNMxs9hJLsJ5iMbyWfAkAOMYOcwRE7BnO1ecMPX0hcz_aEb3nGntYXTpDi2w8VdneoLEcXi2BdvXK9qYBBrNlMKaZSLKbqSXUX3ZmGEIpRR5-ZkmJE05meK8lnBX6k8MzIMEsnZTL_hglyoCUbEFYzzq7RyirLkM_2HZyRO-E3K4hp5X2CrFTRhKA9UYmHC_CCe3U67XvlRN_eiX-71k2YAvzXOdQ7w1iH0fnl__x6QdL22frSfreqTxt2r3tyPWtw7kAGHIzfIwQYv7dC28Z_vQaF1uXoOURLASdPoLg4UGtJWl5XrfKzM79jMCLSC9cYKj-e2t8ey1vCXCcgtuMLHhR7e-PJghDDx2jyun9QzLB7wIZc2GGg0yJnV4-s9g74zMdJvzCESPpcGHhnLhZQ8Z-_MqsHtRr5TS8R_wTB0GIaUVe2zNx7ZLiCz7d946vp3BHswbDWCLVDAMyT4iux4KL_uWzYe8_Ck2s0pRkovG608mkmKHlS9G2vwSTkbDeQHEkU0ys98KKdfhGY5ud7VxLGpBEEP-55CWQEQCDoLVTG1rjVWfxae8TNTXA1Nox1wYGk6QV8e3ViIkwnzzya8wT5BKcerwAzdEaAa0-LOKDtJ-MRVIouGcptScjn3JsHF6eH3QoJZ_jldTuQlvpftUxQyyWcRLkgMmDydyC_TS-m5259Z54cGmPQjDhcwOa8u4CRWXFUXfII4IzSe5W600FzwOP8Mxkykcb7JY8pJqvlEJbM45TcMVLzGq9Pg3taxjZ6WQ0nijY6moQSpOW1WDRWrFTykXBYiz2hTV3As4wWvOQxZcZnBoZpXFdFZxnVV8zTPtNYKSG-18iAAdamAHk5JmsGS7tL0n5QshVgy-RshS0Jg5A4Ivf4PkZhxIQ.pDBIfR_V3GD4Tdt-vHm_-vuUFxsyu_KAYfN2EOy0OX8","breakdown":{"devices":[{"device":"ROAD CONSTRUCTION (NEXT 200 FT)","code":"G20-1","function":"Advance warning","qty":2},{"device":"END ROAD WORK","code":"G20-2","function":"Termination","qty":2},{"device":"WORK ZONE plaque","code":"G20-5P","function":"Advance warning","qty":1},{"device":"SIDEWALK CLOSED","code":"R9-9","function":"Regulatory","qty":2},{"device":"ROAD WORK AHEAD","code":"W20-1","function":"Advance warning","qty":2},{"device":"ONE LANE ROAD AHEAD","code":"W20-4","function":"Advance warning","qty":2},{"device":"FLAGGER AHEAD","code":"W20-7","function":"Advance warning","qty":2},{"device":"BE PREPARED TO STOP","code":"W3-4","function":"Advance warning","qty":2},{"device":"Channelizing Drum","code":"—","function":"Channelizing","qty":6},{"device":"Traffic Cone (36-inch)","code":"—","function":"Channelizing","qty":12},{"device":"Type C Warning Light (steady)","code":"—","function":"Channelizing (night)","qty":6},{"device":"Type III Barricade","code":"—","function":"Closure","qty":2},{"device":"Flagger Station","code":"—","function":"Traffic control","qty":2},{"device":"Portable Light Plant","code":"—","function":"Illumination","qty":1},{"device":"Arrow Board","code":"—","function":"Jurisdiction-required","qty":1,"jurisdiction_required":true,"jurisdiction_source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"},"jurisdiction_added":1}],"total_devices":45,"unique_types":15,"zone_geometry":{"taper_l_ft":100,"buffer_b_ft":155,"device_spacing_ft":20,"work_len_ft":200.0},"jurisdiction":{"key":"denver","name":"Denver","tcp_term":"TCP","row_term":"right-of-way","authority":"city_county","chain":[{"title":"MUTCD 2009 Rev 2 (pinned by PT-116.1, April 2022) — the statewide 11th-Ed mandate applies regardless","display_name":"MUTCD 11th (PT-116.1 pins 2009 R2)"},{"title":"DOTI PT-116.1 General Traffic Control Procedures (April 2022)","display_name":"DOTI PT-116.1"},{"title":"Rule 22.3 — Issuance of Permits by the City Traffic Engineer (2022)","display_name":"Rule 22.3"},{"title":"ROWS 2024 Consolidated Fee Schedule (eff. 2024-01-01)","display_name":"2024 Fee Sched."}],"class_required":true,"classification_map_url":null,"hours":{"shape":"work_window","windows":[{"kind":"work","days":"weekday","classes":["arterial","collector"],"start":8.5,"end":15.5,"note":"Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).","source":{"doc":"Rule 22.3","section":"IV.4","date":"2022-04-22","status":"verified"}},{"kind":"work","days":"weekday","classes":["arterial","collector"],"start":20.0,"end":24.0,"note":"Night window 8:00pm-5:00am.","source":{"doc":"Rule 22.3","section":"IV.4","date":"2022-04-22","status":"verified"}},{"kind":"work","days":"weekday","classes":["arterial","collector"],"start":0.0,"end":5.0,"note":"Night-window continuation.","source":{"doc":"Rule 22.3","section":"IV.4","date":"2022-04-22","status":"verified"}}],"holiday_rule":"none","override_note":"Sidewalk/bike blockage = lane closure (§III.1). Fees apply daily per day of occupancy (§V.1).","conflict":null},"fees":{"model":"flat","items":[{"label":"Issuance and inspection (one per application)","amount_cents":5000,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Residential — administrative review","amount_cents":12500,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Residential — street lane","amount_cents":22,"effective":"2024-01-01","note":"Rate-table unit basis not recorded in the corpus; fees apply daily per day of occupancy (Rule 22.3 §V.1).","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Residential — complete closure","amount_cents":30,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"CBD/CCA — bike lane closure","amount_cents":85,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Collector & Arterial NON-PEAK — 1st lane and parking lane","amount_cents":45,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Collector & Arterial NON-PEAK — 2nd lane","amount_cents":90,"effective":"2024-01-01","note":"The escalator is NOT a multiplier: each lane has its own rate; two lanes = $0.45 + $0.90.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Collector & Arterial NON-PEAK — 3rd lane","amount_cents":270,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Collector & Arterial NON-PEAK — 4th/5th/6th lane","amount_cents":325,"effective":"2024-01-01","note":"4th $3.25 / 5th $4.05 / 6th $6.00 (4th encoded; tiers in note).","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Collector & Arterial PEAK — 1st lane and parking lane","amount_cents":50,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Collector & Arterial PEAK — 2nd lane","amount_cents":100,"effective":"2024-01-01","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Collector & Arterial PEAK — 3rd lane","amount_cents":200,"effective":"2024-01-01","note":"ANOMALY — preserve, do not smooth: the 3rd lane is MORE expensive non-peak ($2.70) than peak ($2.00); so are the 4th-6th at some tiers ($3.00/$4.50/$6.75 peak). It is what the schedule says. Do not normalize.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Bike lane closure (residential / collector-arterial)","amount_cents":33,"effective":"2024-01-01","note":"Two fees that stack: $0.33 bike-lane rate PLUS the $0.45 (non-peak) / $0.50 (peak) lane fee — verbatim 'Bike Lane closure (plus $.45 lane fee)'. Not competing values.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"label":"Expedite (permit requested in a non-standard timeframe)","amount_cents":50000,"effective":"2024-01-01","note":"Permit Fee + $500 each.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}}],"formula":null,"note":"STALENESS RISK: this is the 2024 schedule; Denver publishes annually — 2025/2026 schedules almost certainly exist. Rate depends on road class x geographic zone (Residential / CBD-CCA / Collector-Arterial) x peak flag, with a per-lane escalator that is not a multiplier."},"meters":[{"kind":"rejection","unit":"occurrence","amount_cents":10000,"note":"TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}},{"kind":"no_permit","unit":"day","amount_cents":50000,"note":"Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}}],"applied_deltas":[{"severity":"count","rule":"Arrow board required if closing one or more lanes — Denver's trigger is >=1 lane (vs. Colorado Springs' 4+-lane roadway rule).","baseline":"arrow board optional per MUTCD for many single-lane closures","effect":{"op":"add_device","device":"arrow_board","qty":1},"trigger":{"classes":null,"closure":["lane"],"night":null},"source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"},"status":"fires","key":"denver:dbbcc32e35","device_label":"Arrow board","raised":true}],"chips":{"personnel":[{"gate":"tcs_authorship","rule":"TCP 'must be prepared by a certified Traffic Control Supervisor' (PT-116.1, Permit 116.1); Rule 22.3 §IV.4.c says 'prepared by a certified traffic control company'. Denver's own procedures name the barricade company as the TCP author for arterials, collectors, and large-scale projects; DOTI Permit Operations can provide typical TCPs for most residential areas.","source":{"doc":"DOTI PT-116.1 + Rule 22.3 §IV.4.c","date":"2022-04-01","status":"verified"},"status":"fires"},{"gate":"utc_officer","rule":"Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost.","trigger":{"classes":null,"closure":null,"night":null,"condition":"signalized intersection affected"},"source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"},"status":"conditional"}],"device":[{"rule":"Steel plates: friction coefficient >=0.35, beveled leading/trailing edges or wedges. Bike detour: M4-9c signage at all decision points.","source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"},"status":"fires"}],"hazard":[{"rule":"TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each — precisely the failure the tool exists to prevent.","meter_kind":"rejection","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"},"status":"fires","meter":{"kind":"rejection","unit":"occurrence","amount_cents":10000,"note":"TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}}},{"rule":"Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.","meter_kind":"no_permit","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"},"status":"fires","meter":{"kind":"no_permit","unit":"day","amount_cents":50000,"note":"Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.","source":{"doc":"ROWS 2024 Consolidated Fee Schedule","date":"2024-01-01","status":"verified"}}}]},"hours_eval":{"status":"unknown","violations":[],"note":"no work schedule provided"},"permit":{"tier_suggested":null,"tier_reason":"jurisdiction publishes no permit tiers","tiers":[],"notes":[{"rule":"Denver is entity-gated: Contractor Licensing issues licenses to work in the ROW (720-865-2770), and the Street Occupancy Request Form requires a Contractor's license number.","source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"}},{"rule":"Fee-design interaction (Rule 22.3 §IV.4.f, §IV.6.b): (1) maintain a temporary PAR or bike facility in the adjacent parking/travel lane -> that lane's closure fee is WAIVED; (2) fail to maintain 5 ft unobstructed width -> charged the FULL LENGTH OF A BLOCK for the sidewalk/bike closure; (3) covered walkway used as a detour with no added crossings -> reduced closure fee. The engine computes exactly the widths that decide this.","source":{"doc":"Rule 22.3","section":"IV.4.f, IV.6.b","date":"2022-04-22","status":"verified"}},{"rule":"Bus stops: temporary relocation/closure requires written approval from BOTH the City Traffic Engineer and RTD; all accommodation costs on the Permittee.","source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"}},{"rule":"Paid-parking closure -> separate parking meter permit obtained with the RSOP; meter head removal only by Transportation Operations, billed daily. Unauthorized permanent meter removal: fee = (total yearly meter revenue + citation revenue) x 15 — the largest penalty multiplier in the corpus (not renderable as a fixed meter).","source":{"doc":"Rule 22.3","section":"IV.7","date":"2022-04-22","status":"verified"}},{"rule":"Sheet requirements are the deepest in the corpus: the TCP must depict existing conditions (north arrow, speed limit, geometry, markings, lane assignments, curb lines, sidewalks, PAR, all light/utility/signal poles, all posted signage, bus stops, all parking meters and kiosks with counts, tree lawns, racks, drop boxes) plus proposed items and closure math (taper lengths, advance signage with type/placement/distances, arrow board, work zone length AND width, width of reduced travel lanes). Engine values + a site-survey layer.","source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"}},{"rule":"Conflicting permits: first-submitted, first-served; coordination with existing permits required.","source":{"doc":"Rule 22.3","date":"2022-04-22","status":"verified"}}],"multi_agency":[{"rule":"RTD approval for bus-stop changes; ROWS Construction Engineering reviews arterial/collector TCPs; Permit Operations may approve local/residential at the counter.","source":{"doc":"DOTI PT-116.1","date":"2022-04-01","status":"verified"}}],"leads":[{"label":"Standard RSOP","lead_days":5,"lead_unit":"calendar_days","note":"Published as '>=5 days' (unit as published; Rule 22.3 §IV.1).","source":{"doc":"Rule 22.3","section":"IV.1","date":"2022-04-22","status":"verified"}},{"label":"Any construction/demolition (incl. street cuts)","lead_days":10,"lead_unit":"calendar_days","note":"Published as '>=10 days'.","source":{"doc":"Rule 22.3","section":"IV.1","date":"2022-04-22","status":"verified"}},{"label":"Special Events","lead_days":60,"lead_unit":"calendar_days","source":{"doc":"Rule 22.3","section":"IV.1","date":"2022-04-22","status":"verified"}}],"notices":[{"audience":"adjacent owners, businesses, residents","rule":"Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.","lead_days":48,"lead_unit":"hours","source":{"doc":"Rule 22.3","section":"IV.3","date":"2022-04-22","status":"verified"}},{"audience":"public (full street closure)","rule":"Full street closure: >=2 weeks notice.","lead_days":14,"lead_unit":"calendar_days","source":{"doc":"Rule 22.3","section":"IV.3","date":"2022-04-22","status":"verified"}},{"audience":"press (CBD detours & emergency closures)","rule":"Press release, issued by the Permittee.","source":{"doc":"Rule 22.3","section":"IV.3","date":"2022-04-22","status":"verified"}}],"onsite":{"items":[],"digital_ok":null}},"conflicts":[],"provisional":false}}}
+{
+ "summary": {
+  "ta": "TA-10",
+  "cdot_sheet": "S-630-1",
+  "case_id": "MUTCD TA-10: Flagger one-lane two-way",
+  "taper_length_ft": 100,
+  "taper_label": "one-lane two-way taper",
+  "buffer_space_ft": 155.0,
+  "device_spacing_taper_ft": 20.0,
+  "device_spacing_tangent_ft": 50.0,
+  "step_count": 16
+ },
+ "sections": {
+  "taper": {
+   "speed_mph": 25,
+   "closure_type": "lane",
+   "offset_label": "lane width",
+   "offset_ft": 12.0,
+   "shoulder_width_ft": 12.0,
+   "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
+   "formula_latex": "50 \\le L \\le 100",
+   "L_calc_text": "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)",
+   "L_full_ft": 125,
+   "L_third_calc_text": "Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)",
+   "L_third_ft": 100,
+   "L_required_ft": 100,
+   "L_required_label": "one-lane two-way taper",
+   "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic control): 50-100 ft taper with channelizing devices at approximately 20 ft spacing. CDOT S-630-1 Case 17 warns the taper must be short enough to not be mistaken for a transition.",
+   "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
+   "citation": {
+    "cite": "MUTCD § 6B.08",
+    "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+   },
+   "result_text": "L = 100 ft",
+   "formula_text": [
+    "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)"
+   ]
+  },
+  "buffer": {
+   "speed_mph": 25,
+   "lookup_text": "MUTCD Table 6B-2: 155 ft (CDOT supplement silent at this speed)",
+   "buffer_ft": 155.0,
+   "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+   "citation": {
+    "cite": "MUTCD § 6B.06",
+    "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+   },
+   "result_text": "B = 155 ft"
+  },
+  "spacing": {
+   "speed_mph": 25,
+   "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
+   "on_tangent_text": "25 mph -> 50 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+   "taper_count_text": "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
+   "tangent_count_text": "200 ft / 50 ft max spacing -> 5 cones at 50.0 ft intervals",
+   "n_taper_drums_required": 6,
+   "n_taper_drums_actual": 6,
+   "n_tangent_cones_required": 5,
+   "n_tangent_cones_actual": 12,
+   "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
+   "citation": {
+    "cite": "MUTCD § 6K.01",
+    "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+   },
+   "buffer_count_text": "Buffer: 155 ft / 50 ft max spacing -> 3 cones at 38.8 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+   "n_buffer_cones": 3,
+   "buffer_cone_spacing_ft": 38.8,
+   "downstream_count_text": "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 5 tangent + 3 buffer + 4 downstream = 12 cones total",
+   "n_downstream_taper_cones": 4,
+   "n_cones_placed_total": 12,
+   "result_text": "14 devices · 20/50 ft o.c.",
+   "formula_text": [
+    "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
+    "200 ft / 50 ft max spacing -> 5 cones at 50.0 ft intervals",
+    "Buffer: 155 ft / 50 ft max spacing -> 3 cones at 38.8 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+    "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 5 tangent + 3 buffer + 4 downstream = 12 cones total"
+   ]
+  },
+  "advance": {
+   "road_type_text": "Speed 25 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low",
+   "spacing_text": "A = 100 ft, B = 100 ft, C = 100 ft",
+   "sign_table": [
+    {
+     "Position": "C (furthest)",
+     "Code": "W20-1",
+     "Station (ft)": "955",
+     "Distance from Taper (ft)": "500 upstream"
+    },
+    {
+     "Position": "B (middle)",
+     "Code": "W20-4",
+     "Station (ft)": "855",
+     "Distance from Taper (ft)": "400 upstream"
+    },
+    {
+     "Position": "between A and B (TA-10 note 8)",
+     "Code": "W3-4",
+     "Station (ft)": "755",
+     "Distance from Taper (ft)": "300 upstream"
+    },
+    {
+     "Position": "A (nearest)",
+     "Code": "W20-7",
+     "Station (ft)": "655",
+     "Distance from Taper (ft)": "200 upstream"
+    }
+   ],
+   "source": "MUTCD 11th Ed. Table 6B-1",
+   "result_text": "4 signs",
+   "citation": {
+    "cite": "MUTCD TABLE 6B-1",
+    "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+   }
+  },
+  "colorado": {
+   "checks": [
+    {
+     "pass": true,
+     "label": "Signs on both sides of divided highway",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+     "detail": "Required: False. Signs placed: 6 left, 9 right."
+    },
+    {
+     "pass": true,
+     "label": "G20-5P Work Zone signs every 2,640 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+     "detail": "Zone length: 955 ft. Required: 1. Placed: 1."
+    },
+    {
+     "pass": true,
+     "label": "Speed reduction <= 15 mph per sign installation",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+     "detail": "No work-zone speed reduction. Posted speed 25 mph applies throughout the zone."
+    },
+    {
+     "pass": false,
+     "label": "Flagger station lighting 500W @ 8 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+     "detail": "2 flagger station(s) at night. Required: flood lighting (500W min @ 8 ft min) at each station per S-630-1 Sheet 2 Note 22. Placed: 0 (V1 does not emit lighting equipment placements)."
+    }
+   ],
+   "info_items": [
+    {
+     "info": true,
+     "label": "AADT threshold for mobile operations (<= 2,000)",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+     "detail": "Not applicable (not a mobile operation)."
+    }
+   ],
+   "all_pass": false,
+   "fail_count": 1
+  },
+  "case": {
+   "case": "MUTCD TA-10: Flagger one-lane two-way",
+   "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+   "narrative": "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal standard for flagger-controlled alternating one-way traffic on a 2-lane undivided highway). CDOT S-630-1 does not include a general flagger one-lane two-way case; Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized.",
+   "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 25 mph."
+  },
+  "flagger": {
+   "applicable": true,
+   "count": 2,
+   "required": 2,
+   "table": [
+    {
+     "Label": "FLAGGER_1",
+     "Station (ft)": "555",
+     "Offset (ft)": "+18.0",
+     "Side": "right shoulder"
+    },
+    {
+     "Label": "FLAGGER_2",
+     "Station (ft)": "-300",
+     "Offset (ft)": "-18.0",
+     "Side": "left shoulder"
+    }
+   ],
+   "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+   "narrative": "Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
+   "sight_distance_ft": 155,
+   "sight_distance_citation": {
+    "cite": "MUTCD § 6D.06",
+    "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+   },
+   "sight_distance_result_text": "155 ft",
+   "stations_text": "2 flagger station(s)",
+   "sight_distance_formula_text": [
+    "SSD @ 25 mph = 155 ft"
+   ]
+  },
+  "corridor_validation": {
+   "checked": true,
+   "warnings": [
+    {
+     "flag": "no_road_at_anchor",
+     "level": "warning",
+     "message": "No motorway/trunk/primary/secondary road detected at anchor (39.72650, -104.97525) within 50 m (closest road within 50 m: 'residential').  Verify coordinates correspond to the actual work zone."
+    }
+   ]
+  },
+  "geometry_validation": {
+   "speed_mph": 25,
+   "work_zone_ft": 200.0,
+   "taper_ft": 100,
+   "taper_label": "one-lane two-way taper",
+   "buffer_ft": 155.0,
+   "violations": [],
+   "all_pass": true,
+   "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"
+  },
+  "corridor_spec": {
+   "taper_ft": 100,
+   "buffer_ft": 155,
+   "advance_warning_ft": 300,
+   "downstream_taper_ft": 50,
+   "road_category": "urban_low"
+  },
+  "site_adjustments": [
+   {
+    "flag": "adjacent_intersection",
+    "action": "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
+    "devices_added": 0,
+    "rule": "MUTCD §6N.12 p. 848: Work within the Traveled Way at an Intersection (11th Ed.)",
+    "citation": "MUTCD § 6N.12 p. 848"
+   },
+   {
+    "flag": "pedestrian_facility",
+    "action": "Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
+    "devices_added": 4,
+    "rule": "MUTCD §6C.02: pedestrian considerations in work zones",
+    "citation": "MUTCD § 6C.02"
+   }
+  ],
+  "site_scan": {
+   "status": "ok",
+   "reason": null,
+   "error": null,
+   "mode": "corridor",
+   "measured_at": "2026-10-22T20:55:37+00:00",
+   "duration_ms": 3872,
+   "budget_s": 20.0,
+   "memo_hit": true,
+   "mirror": "https://overpass.openstreetmap.fr/api/interpreter",
+   "overpass_remark": null,
+   "response_bytes": 32920,
+   "element_count": 165,
+   "proceeded_anyway": false,
+   "inputs": {
+    "lat": 39.7265,
+    "lng": -104.97525,
+    "bearing_deg": 359.778402979827,
+    "speed_mph": 25,
+    "work_zone_ft": 200.0,
+    "closure_type": "lane",
+    "road_type": "urban_low",
+    "lane_width_ft": 12.0,
+    "shoulder_width_ft": 8.0,
+    "centerline_vertices": 88,
+    "bbox": [
+     39.72270878974998,
+     -104.97643677162807,
+     39.72959219170982,
+     -104.97407210283393
+    ],
+    "pin_model": "work_start",
+    "opposing_bbox": [
+     39.723955994262404,
+     -104.97644312942225,
+     39.73083939733615,
+     -104.9740781404181
+    ]
+   },
+   "buckets": {
+    "intersections": {
+     "detected": true,
+     "count": 38,
+     "nearest_distance_m": 10.3,
+     "nearest_distance_ft": 33.8,
+     "details": [
+      "unnamed at 39.7256, -104.9741 [outside @ -235 ft, opposing approach]",
+      "unnamed at 39.7291, -104.9741 [outside @ 1038 ft, opposing approach]",
+      "unnamed at 39.7292, -104.9764 [outside @ 1073 ft, opposing approach]",
+      "unnamed at 39.7292, -104.9741 [outside @ 1074 ft, opposing approach]",
+      "unnamed at 39.7290, -104.9753 [outside @ 1007 ft, opposing approach]"
+     ],
+     "features": [
+      {
+       "label": "unnamed at 39.7256, -104.9741",
+       "zone": "outside",
+       "relevant": true,
+       "along_station_ft": -235.1,
+       "lateral_offset_ft": 325.4,
+       "approach": "opposing",
+       "distance_to_anchor_m": 141.9
+      },
+      {
+       "label": "unnamed at 39.7273, -104.9741",
+       "zone": "lateral",
+       "relevant": false,
+       "along_station_ft": 17.3,
+       "lateral_offset_ft": 325.7,
+       "approach": "primary",
+       "distance_to_anchor_m": 131.0
+      },
+      {
+       "label": "unnamed at 39.7291, -104.9741",
+       "zone": "outside",
+       "relevant": true,
+       "along_station_ft": 1037.6,
+       "lateral_offset_ft": 326.3,
+       "approach": "opposing",
+       "distance_to_anchor_m": 302.4
+      },
+      {
+       "label": "unnamed at 39.7305, -104.9741",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -1143.0,
+       "lateral_offset_ft": 328.3,
+       "approach": "primary",
+       "distance_to_anchor_m": 450.9
+      },
+      {
+       "label": "unnamed at 39.7305, -104.9741",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -1174.4,
+       "lateral_offset_ft": 328.5,
+       "approach": "primary",
+       "distance_to_anchor_m": 460.3
+      }
+     ]
+    },
+    "interchanges": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": [],
+     "junction_refs": []
+    },
+    "sidewalks": {
+     "detected": true,
+     "count": 21,
+     "nearest_distance_m": 10.5,
+     "nearest_distance_ft": 34.4,
+     "details": [
+      "unnamed at 39.7257, -104.9752 [advance_warning @ 598 ft]",
+      "unnamed at 39.7281, -104.9752 [advance_warning @ 680 ft, opposing approach]",
+      "unnamed at 39.7255, -104.9750 [lateral 69 ft off centerline]",
+      "unnamed at 39.7264, -104.9753 [buffer @ 322 ft]",
+      "unnamed at 39.7272, -104.9755 [lateral 68 ft off centerline]"
+     ],
+     "features": [
+      {
+       "label": "unnamed at 39.7313, -104.9752",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -1433.5,
+       "lateral_offset_ft": 26.6,
+       "approach": "primary",
+       "distance_to_anchor_m": 528.4
+      },
+      {
+       "label": "unnamed at 39.7272, -104.9738",
+       "zone": "lateral",
+       "relevant": false,
+       "along_station_ft": 47.0,
+       "lateral_offset_ft": 407.6,
+       "approach": "primary",
+       "distance_to_anchor_m": 145.7
+      },
+      {
+       "label": "unnamed at 39.7257, -104.9752",
+       "zone": "advance_warning",
+       "relevant": true,
+       "along_station_ft": 597.8,
+       "lateral_offset_ft": 11.7,
+       "approach": "primary",
+       "distance_to_anchor_m": 90.8
+      },
+      {
+       "label": "unnamed at 39.7313, -104.9742",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -1432.7,
+       "lateral_offset_ft": 301.1,
+       "approach": "primary",
+       "distance_to_anchor_m": 535.9
+      },
+      {
+       "label": "unnamed at 39.7297, -104.9754",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -854.9,
+       "lateral_offset_ft": 23.9,
+       "approach": "primary",
+       "distance_to_anchor_m": 352.1
+      }
+     ]
+    },
+    "bike_facilities": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": [
+      {
+       "label": "East 7th Avenue",
+       "zone": "lateral",
+       "relevant": false,
+       "along_station_ft": 17.1,
+       "lateral_offset_ft": 244.0,
+       "approach": "primary",
+       "distance_to_anchor_m": 113.5
+      },
+      {
+       "label": "East 7th Avenue",
+       "zone": "lateral",
+       "relevant": false,
+       "along_station_ft": 15.0,
+       "lateral_offset_ft": 326.7,
+       "approach": "primary",
+       "distance_to_anchor_m": 132.5
+      },
+      {
+       "label": "North Emerson Street",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": 991.4,
+       "lateral_offset_ft": 329.0,
+       "approach": "primary",
+       "distance_to_anchor_m": 233.6
+      },
+      {
+       "label": "North Emerson Street",
+       "zone": "outside",
+       "relevant": false,
+       "along_station_ft": -1199.1,
+       "lateral_offset_ft": 326.3,
+       "approach": "primary",
+       "distance_to_anchor_m": 467.7
+      }
+     ]
+    },
+    "schools": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "railroad_crossings": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "hospitals": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "road_curvature": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [
+      "Road curvature analysis not implemented; assume straight."
+     ],
+     "features": []
+    }
+   },
+   "flags": {
+    "adjacent_intersection": true,
+    "pedestrian_facility": true
+   },
+   "manual_flags_discarded": {},
+   "disclosure": null,
+   "corrections": [],
+   "corrections_advisory": null
+  }
+ },
+ "pending_verification": {
+  "count": 2,
+  "note": "Flagger station lighting is required for night operations per CDOT S-630-1 Sheet 2 Note 22. V1's flagger generator does not emit lighting equipment placements; the traffic control supervisor must add flood lights per project requirements until generator support ships.",
+  "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19",
+  "items": [
+   {
+    "kind": "flagger_lighting_manual_handling",
+    "label": "Flagger station lighting is required for night operations per CDOT S-630-1 Sheet 2 Note 22. V1's flagger generator does not emit lighting equipment placements; the traffic control supervisor must add flood lights per project requirements until generator support ships.",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+   },
+   {
+    "kind": "intersection_layout_not_generated",
+    "label": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+   }
+  ]
+ },
+ "plan_flags": {
+  "validation_warnings": 1,
+  "compliance_fails": 1,
+  "v1_limitations": 2,
+  "is_clean": false
+ },
+ "pin": {
+  "model": "work_start"
+ },
+ "input_guesses": [
+  {
+   "field": "street_class",
+   "value": "local",
+   "label": "Local",
+   "source": "road",
+   "evidence": "OSM highway=residential",
+   "operator_confirmed": false
+  },
+  {
+   "field": "jurisdiction_key",
+   "value": "denver",
+   "label": "Denver",
+   "source": "pin",
+   "evidence": "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+   "operator_confirmed": false
+  }
+ ],
+ "breakdown": {
+  "devices": [
+   {
+    "device": "ROAD CONSTRUCTION (NEXT 200 FT)",
+    "code": "G20-1",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "END ROAD WORK",
+    "code": "G20-2",
+    "function": "Termination",
+    "qty": 2
+   },
+   {
+    "device": "WORK ZONE plaque",
+    "code": "G20-5P",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "SIDEWALK CLOSED",
+    "code": "R9-9",
+    "function": "Regulatory",
+    "qty": 2
+   },
+   {
+    "device": "ROAD WORK AHEAD",
+    "code": "W20-1",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "ONE LANE ROAD AHEAD",
+    "code": "W20-4",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "FLAGGER AHEAD",
+    "code": "W20-7",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "BE PREPARED TO STOP",
+    "code": "W3-4",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "Channelizing Drum",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 6
+   },
+   {
+    "device": "Traffic Cone (36-inch)",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 12
+   },
+   {
+    "device": "Type C Warning Light (steady)",
+    "code": "—",
+    "function": "Channelizing (night)",
+    "qty": 6
+   },
+   {
+    "device": "Type III Barricade",
+    "code": "—",
+    "function": "Closure",
+    "qty": 2
+   },
+   {
+    "device": "Flagger Station",
+    "code": "—",
+    "function": "Traffic control",
+    "qty": 2
+   },
+   {
+    "device": "Portable Light Plant",
+    "code": "—",
+    "function": "Illumination",
+    "qty": 1
+   },
+   {
+    "device": "Arrow Board",
+    "code": "—",
+    "function": "Jurisdiction-required",
+    "qty": 1,
+    "jurisdiction_required": true,
+    "jurisdiction_source": {
+     "doc": "DOTI PT-116.1",
+     "date": "2022-04-01",
+     "status": "verified"
+    },
+    "jurisdiction_added": 1
+   }
+  ],
+  "total_devices": 45,
+  "unique_types": 15,
+  "zone_geometry": {
+   "taper_l_ft": 100,
+   "buffer_b_ft": 155,
+   "device_spacing_ft": 20,
+   "work_len_ft": 200.0
+  },
+  "jurisdiction": {
+   "key": "denver",
+   "name": "Denver",
+   "tcp_term": "TCP",
+   "row_term": "right-of-way",
+   "authority": "city_county",
+   "chain": [
+    {
+     "title": "MUTCD 2009 Rev 2 (pinned by PT-116.1, April 2022) — the statewide 11th-Ed mandate applies regardless",
+     "display_name": "MUTCD 11th (PT-116.1 pins 2009 R2)"
+    },
+    {
+     "title": "DOTI PT-116.1 General Traffic Control Procedures (April 2022)",
+     "display_name": "DOTI PT-116.1"
+    },
+    {
+     "title": "Rule 22.3 — Issuance of Permits by the City Traffic Engineer (2022)",
+     "display_name": "Rule 22.3"
+    },
+    {
+     "title": "ROWS 2024 Consolidated Fee Schedule (eff. 2024-01-01)",
+     "display_name": "2024 Fee Sched."
+    }
+   ],
+   "class_required": true,
+   "classification_map_url": null,
+   "hours": {
+    "shape": "work_window",
+    "windows": [
+     {
+      "kind": "work",
+      "days": "weekday",
+      "classes": [
+       "arterial",
+       "collector"
+      ],
+      "start": 8.5,
+      "end": 15.5,
+      "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.4",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "kind": "work",
+      "days": "weekday",
+      "classes": [
+       "arterial",
+       "collector"
+      ],
+      "start": 20.0,
+      "end": 24.0,
+      "note": "Night window 8:00pm-5:00am.",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.4",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "kind": "work",
+      "days": "weekday",
+      "classes": [
+       "arterial",
+       "collector"
+      ],
+      "start": 0.0,
+      "end": 5.0,
+      "note": "Night-window continuation.",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.4",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     }
+    ],
+    "holiday_rule": "none",
+    "override_note": "Sidewalk/bike blockage = lane closure (§III.1). Fees apply daily per day of occupancy (§V.1).",
+    "conflict": null
+   },
+   "fees": {
+    "model": "flat",
+    "items": [
+     {
+      "label": "Issuance and inspection (one per application)",
+      "amount_cents": 5000,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Residential — administrative review",
+      "amount_cents": 12500,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Residential — street lane",
+      "amount_cents": 22,
+      "effective": "2024-01-01",
+      "note": "Rate-table unit basis not recorded in the corpus; fees apply daily per day of occupancy (Rule 22.3 §V.1).",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Residential — complete closure",
+      "amount_cents": 30,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "CBD/CCA — bike lane closure",
+      "amount_cents": 85,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Collector & Arterial NON-PEAK — 1st lane and parking lane",
+      "amount_cents": 45,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Collector & Arterial NON-PEAK — 2nd lane",
+      "amount_cents": 90,
+      "effective": "2024-01-01",
+      "note": "The escalator is NOT a multiplier: each lane has its own rate; two lanes = $0.45 + $0.90.",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Collector & Arterial NON-PEAK — 3rd lane",
+      "amount_cents": 270,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Collector & Arterial NON-PEAK — 4th/5th/6th lane",
+      "amount_cents": 325,
+      "effective": "2024-01-01",
+      "note": "4th $3.25 / 5th $4.05 / 6th $6.00 (4th encoded; tiers in note).",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Collector & Arterial PEAK — 1st lane and parking lane",
+      "amount_cents": 50,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Collector & Arterial PEAK — 2nd lane",
+      "amount_cents": 100,
+      "effective": "2024-01-01",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Collector & Arterial PEAK — 3rd lane",
+      "amount_cents": 200,
+      "effective": "2024-01-01",
+      "note": "ANOMALY — preserve, do not smooth: the 3rd lane is MORE expensive non-peak ($2.70) than peak ($2.00); so are the 4th-6th at some tiers ($3.00/$4.50/$6.75 peak). It is what the schedule says. Do not normalize.",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Bike lane closure (residential / collector-arterial)",
+      "amount_cents": 33,
+      "effective": "2024-01-01",
+      "note": "Two fees that stack: $0.33 bike-lane rate PLUS the $0.45 (non-peak) / $0.50 (peak) lane fee — verbatim 'Bike Lane closure (plus $.45 lane fee)'. Not competing values.",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Expedite (permit requested in a non-standard timeframe)",
+      "amount_cents": 50000,
+      "effective": "2024-01-01",
+      "note": "Permit Fee + $500 each.",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     }
+    ],
+    "formula": null,
+    "note": "STALENESS RISK: this is the 2024 schedule; Denver publishes annually — 2025/2026 schedules almost certainly exist. Rate depends on road class x geographic zone (Residential / CBD-CCA / Collector-Arterial) x peak flag, with a per-lane escalator that is not a multiplier."
+   },
+   "meters": [
+    {
+     "kind": "rejection",
+     "unit": "occurrence",
+     "amount_cents": 10000,
+     "note": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "kind": "no_permit",
+     "unit": "day",
+     "amount_cents": 50000,
+     "note": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    }
+   ],
+   "applied_deltas": [
+    {
+     "severity": "count",
+     "rule": "Arrow board required if closing one or more lanes — Denver's trigger is >=1 lane (vs. Colorado Springs' 4+-lane roadway rule).",
+     "baseline": "arrow board optional per MUTCD for many single-lane closures",
+     "effect": {
+      "op": "add_device",
+      "device": "arrow_board",
+      "qty": 1
+     },
+     "trigger": {
+      "classes": null,
+      "closure": [
+       "lane"
+      ],
+      "night": null
+     },
+     "source": {
+      "doc": "DOTI PT-116.1",
+      "date": "2022-04-01",
+      "status": "verified"
+     },
+     "status": "fires",
+     "key": "denver:dbbcc32e35",
+     "device_label": "Arrow board",
+     "raised": true
+    }
+   ],
+   "chips": {
+    "personnel": [
+     {
+      "gate": "tcs_authorship",
+      "rule": "TCP 'must be prepared by a certified Traffic Control Supervisor' (PT-116.1, Permit 116.1); Rule 22.3 §IV.4.c says 'prepared by a certified traffic control company'. Denver's own procedures name the barricade company as the TCP author for arterials, collectors, and large-scale projects; DOTI Permit Operations can provide typical TCPs for most residential areas.",
+      "source": {
+       "doc": "DOTI PT-116.1 + Rule 22.3 §IV.4.c",
+       "date": "2022-04-01",
+       "status": "verified"
+      },
+      "status": "fires"
+     },
+     {
+      "gate": "utc_officer",
+      "rule": "Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost.",
+      "trigger": {
+       "classes": null,
+       "closure": null,
+       "night": null,
+       "condition": "signalized intersection affected"
+      },
+      "source": {
+       "doc": "DOTI PT-116.1",
+       "date": "2022-04-01",
+       "status": "verified"
+      },
+      "status": "conditional"
+     }
+    ],
+    "device": [
+     {
+      "rule": "Steel plates: friction coefficient >=0.35, beveled leading/trailing edges or wedges. Bike detour: M4-9c signage at all decision points.",
+      "source": {
+       "doc": "DOTI PT-116.1",
+       "date": "2022-04-01",
+       "status": "verified"
+      },
+      "status": "fires"
+     }
+    ],
+    "hazard": [
+     {
+      "rule": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each — precisely the failure the tool exists to prevent.",
+      "meter_kind": "rejection",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      },
+      "status": "fires",
+      "meter": {
+       "kind": "rejection",
+       "unit": "occurrence",
+       "amount_cents": 10000,
+       "note": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
+       "source": {
+        "doc": "ROWS 2024 Consolidated Fee Schedule",
+        "date": "2024-01-01",
+        "status": "verified"
+       }
+      }
+     },
+     {
+      "rule": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+      "meter_kind": "no_permit",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      },
+      "status": "fires",
+      "meter": {
+       "kind": "no_permit",
+       "unit": "day",
+       "amount_cents": 50000,
+       "note": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+       "source": {
+        "doc": "ROWS 2024 Consolidated Fee Schedule",
+        "date": "2024-01-01",
+        "status": "verified"
+       }
+      }
+     }
+    ]
+   },
+   "hours_eval": {
+    "status": "unknown",
+    "violations": [],
+    "note": "no work schedule provided"
+   },
+   "permit": {
+    "tier_suggested": null,
+    "tier_reason": "jurisdiction publishes no permit tiers",
+    "tiers": [],
+    "notes": [
+     {
+      "rule": "Denver is entity-gated: Contractor Licensing issues licenses to work in the ROW (720-865-2770), and the Street Occupancy Request Form requires a Contractor's license number.",
+      "source": {
+       "doc": "DOTI PT-116.1",
+       "date": "2022-04-01",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "Fee-design interaction (Rule 22.3 §IV.4.f, §IV.6.b): (1) maintain a temporary PAR or bike facility in the adjacent parking/travel lane -> that lane's closure fee is WAIVED; (2) fail to maintain 5 ft unobstructed width -> charged the FULL LENGTH OF A BLOCK for the sidewalk/bike closure; (3) covered walkway used as a detour with no added crossings -> reduced closure fee. The engine computes exactly the widths that decide this.",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.4.f, IV.6.b",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "Bus stops: temporary relocation/closure requires written approval from BOTH the City Traffic Engineer and RTD; all accommodation costs on the Permittee.",
+      "source": {
+       "doc": "DOTI PT-116.1",
+       "date": "2022-04-01",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "Paid-parking closure -> separate parking meter permit obtained with the RSOP; meter head removal only by Transportation Operations, billed daily. Unauthorized permanent meter removal: fee = (total yearly meter revenue + citation revenue) x 15 — the largest penalty multiplier in the corpus (not renderable as a fixed meter).",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.7",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "Sheet requirements are the deepest in the corpus: the TCP must depict existing conditions (north arrow, speed limit, geometry, markings, lane assignments, curb lines, sidewalks, PAR, all light/utility/signal poles, all posted signage, bus stops, all parking meters and kiosks with counts, tree lawns, racks, drop boxes) plus proposed items and closure math (taper lengths, advance signage with type/placement/distances, arrow board, work zone length AND width, width of reduced travel lanes). Engine values + a site-survey layer.",
+      "source": {
+       "doc": "DOTI PT-116.1",
+       "date": "2022-04-01",
+       "status": "verified"
+      }
+     },
+     {
+      "rule": "Conflicting permits: first-submitted, first-served; coordination with existing permits required.",
+      "source": {
+       "doc": "Rule 22.3",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     }
+    ],
+    "multi_agency": [
+     {
+      "rule": "RTD approval for bus-stop changes; ROWS Construction Engineering reviews arterial/collector TCPs; Permit Operations may approve local/residential at the counter.",
+      "source": {
+       "doc": "DOTI PT-116.1",
+       "date": "2022-04-01",
+       "status": "verified"
+      }
+     }
+    ],
+    "leads": [
+     {
+      "label": "Standard RSOP",
+      "lead_days": 5,
+      "lead_unit": "calendar_days",
+      "note": "Published as '>=5 days' (unit as published; Rule 22.3 §IV.1).",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.1",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Any construction/demolition (incl. street cuts)",
+      "lead_days": 10,
+      "lead_unit": "calendar_days",
+      "note": "Published as '>=10 days'.",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.1",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "label": "Special Events",
+      "lead_days": 60,
+      "lead_unit": "calendar_days",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.1",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     }
+    ],
+    "notices": [
+     {
+      "audience": "adjacent owners, businesses, residents",
+      "rule": "Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.",
+      "lead_days": 48,
+      "lead_unit": "hours",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.3",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "audience": "public (full street closure)",
+      "rule": "Full street closure: >=2 weeks notice.",
+      "lead_days": 14,
+      "lead_unit": "calendar_days",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.3",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     },
+     {
+      "audience": "press (CBD detours & emergency closures)",
+      "rule": "Press release, issued by the Permittee.",
+      "source": {
+       "doc": "Rule 22.3",
+       "section": "IV.3",
+       "date": "2022-04-22",
+       "status": "verified"
+      }
+     }
+    ],
+    "onsite": {
+     "items": [],
+     "digital_ok": null
+    }
+   },
+   "conflicts": [],
+   "provisional": false
+  }
+ }
+}

@@ -1,1 +1,409 @@
-{"summary":{"ta":"TA-10","cdot_sheet":"S-630-1","case_id":"MUTCD TA-10: Flagger one-lane two-way","taper_length_ft":100,"taper_label":"one-lane two-way taper","buffer_space_ft":360.0,"device_spacing_taper_ft":20.0,"device_spacing_tangent_ft":90.0,"step_count":16},"sections":{"taper":{"speed_mph":45,"closure_type":"lane","offset_label":"lane width","offset_ft":12.0,"shoulder_width_ft":12.0,"formula_choice":"Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply","formula_latex":"50 \\le L \\le 100","L_calc_text":"One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)","L_full_ft":540,"L_third_calc_text":"Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)","L_third_ft":100,"L_required_ft":100,"L_required_label":"one-lane two-way taper","source":"MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic control): 50-100 ft taper with channelizing devices at approximately 20 ft spacing. CDOT S-630-1 Case 17 warns the taper must be short enough to not be mistaken for a transition.","cdot_reference":"MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)","citation":{"cite":"MUTCD § 6B.08","footer":"MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"},"result_text":"L = 100 ft","formula_text":["One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)"]},"buffer":{"speed_mph":45,"lookup_text":"MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)","buffer_ft":360.0,"source":"MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)","citation":{"cite":"MUTCD § 6B.06","footer":"MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"},"result_text":"B = 360 ft"},"spacing":{"speed_mph":45,"in_taper_text":"20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)","on_tangent_text":"45 mph -> 90 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)","taper_count_text":"one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals","tangent_count_text":"500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals","n_taper_drums_required":6,"n_taper_drums_actual":6,"n_tangent_cones_required":7,"n_tangent_cones_actual":14,"source":"MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)","citation":{"cite":"MUTCD § 6K.01","footer":"MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"},"buffer_count_text":"Buffer: 360 ft / 90 ft max spacing -> 3 cones at 90.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)","n_buffer_cones":3,"buffer_cone_spacing_ft":90.0,"downstream_count_text":"Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 7 tangent + 3 buffer + 4 downstream = 14 cones total","n_downstream_taper_cones":4,"n_cones_placed_total":14,"result_text":"16 devices · 20/90 ft o.c.","formula_text":["one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals","500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals","Buffer: 360 ft / 90 ft max spacing -> 3 cones at 90.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)","Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 7 tangent + 3 buffer + 4 downstream = 14 cones total"]},"advance":{"road_type_text":"Speed 45 mph, road_type = 'rural' -> Table 6B-1 category: rural","spacing_text":"A = 500 ft, B = 500 ft, C = 500 ft","sign_table":[{"Position":"C (furthest)","Code":"W20-1","Station (ft)":"3,060","Distance from Taper (ft)":"2,100 upstream"},{"Position":"B (middle)","Code":"W20-4","Station (ft)":"2,560","Distance from Taper (ft)":"1,600 upstream"},{"Position":"between A and B (TA-10 note 8)","Code":"W3-4","Station (ft)":"2,060","Distance from Taper (ft)":"1,100 upstream"},{"Position":"Advance (W20-7a)","Code":"W20-7a","Station (ft)":"1,560","Distance from Taper (ft)":"600 upstream"}],"source":"MUTCD 11th Ed. Table 6B-1","result_text":"4 signs","citation":{"cite":"MUTCD TABLE 6B-1","footer":"MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"}},"colorado":{"checks":[{"pass":true,"label":"Signs on both sides of divided highway","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 8","detail":"Required: False. Signs placed: 6 left, 8 right."},{"pass":true,"label":"G20-5P Work Zone signs every 2,640 ft","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 4","detail":"Zone length: 3,060 ft. Required: 2. Placed: 2."},{"pass":true,"label":"Speed reduction <= 15 mph per sign installation","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 3","detail":"No work-zone speed reduction. Posted speed 45 mph applies throughout the zone."},{"pass":true,"label":"Flagger station lighting 500W @ 8 ft","citation":"CDOT S-630-1 (July 2026) Sheet 2, General Note 22","detail":"Not applicable (no flaggers)."}],"info_items":[{"info":true,"label":"AADT threshold for mobile operations (<= 2,000)","citation":"CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1","detail":"Not applicable (not a mobile operation)."}],"all_pass":true,"fail_count":0},"case":{"case":"MUTCD TA-10: Flagger one-lane two-way","url":"https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf","narrative":"This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal standard for flagger-controlled alternating one-way traffic on a 2-lane undivided highway). CDOT S-630-1 does not include a general flagger one-lane two-way case; Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized.","narrative_2":"The generated plan follows the same device layout as the reference case with spacing computed for 45 mph."},"flagger":{"applicable":true,"count":0,"required":2,"table":[],"source":"MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).","narrative":"Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.","sight_distance_ft":360,"sight_distance_citation":{"cite":"MUTCD § 6D.06","footer":"MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"},"sight_distance_result_text":"360 ft","stations_text":"2 AFAD","sight_distance_formula_text":["SSD @ 45 mph = 360 ft"]},"corridor_validation":{"checked":true,"warnings":[]},"geometry_validation":{"speed_mph":45,"work_zone_ft":500.0,"taper_ft":100,"taper_label":"one-lane two-way taper","buffer_ft":360.0,"violations":[],"all_pass":true,"source":"MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"},"corridor_spec":{"taper_ft":100,"buffer_ft":360,"advance_warning_ft":1500,"downstream_taper_ft":50,"road_category":"rural"},"site_scan":{"status":"ok","reason":null,"error":null,"mode":"corridor","measured_at":"2026-10-22T21:10:47+00:00","duration_ms":6353,"budget_s":20.0,"memo_hit":false,"mirror":"https://overpass.openstreetmap.fr/api/interpreter","overpass_remark":null,"response_bytes":5291,"element_count":0,"proceeded_anyway":false,"inputs":{"lat":40.00185,"lng":-105.41289,"bearing_deg":236.34105749065463,"speed_mph":45,"work_zone_ft":500.0,"closure_type":"lane","road_type":"rural","lane_width_ft":12.0,"shoulder_width_ft":8.0,"centerline_vertices":172,"bbox":[39.9981362170304,-105.41460549989085,40.00551222160592,-105.40389765358668],"pin_model":"work_start","opposing_bbox":[39.99608407839409,-105.41929452328407,40.003335988010626,-105.40972548196504]},"buckets":{"intersections":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"interchanges":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[],"junction_refs":[]},"sidewalks":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"bike_facilities":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"schools":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"railroad_crossings":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"hospitals":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":[],"features":[]},"road_curvature":{"detected":false,"count":0,"nearest_distance_m":null,"nearest_distance_ft":null,"details":["Road curvature analysis not implemented; assume straight."],"features":[]}},"flags":{},"manual_flags_discarded":{},"disclosure":null,"corrections":[],"corrections_advisory":null}},"pending_verification":{"count":0,"note":"","tracking_issue":"https://github.com/rtmakatura/conestruct/issues/19"},"plan_flags":{"validation_warnings":0,"compliance_fails":0,"v1_limitations":0,"is_clean":true},"pin":{"model":"work_start"},"input_guesses":[{"field":"street_class","value":"arterial","label":"Arterial","source":"road","evidence":"OSM highway=primary","operator_confirmed":false}],"site_scan_token":"eNqlU9uOmzAQ_RXk17IJtiFc-hdV36oKDWYILmBbtkkVRfvvHUg3q1aqVG3ePBefy3h8Y92qJoyBNTfW6QnbAZSeddS4p5RdTWRNlrIeI-iZkt--7wGqiD1rBpgDpmxAiKvHvfxKdW-d28o3FhSYFmdc0GwsGVVHG5yOMD_DoE1Er0Yw548LTdmP1aiorWk9Dn8gB9zzzyi0F_QOwg7x23_7DrVo761nDRtjdKE5Ht_aD9ahCdEjxgXcYfBHcPq4i3KeKD1LmccF_MQas87zFgVHUrHtrnFjL0TNid-TVG-hb5W3IWhzfsbMDtQheMLZV-V-bHukUEh5qHn6t8v3TGgfC0HEoz6PP-FK3p3XZORKjqzBPXV35KzeLoVJPy5RtdV0lKISZVGK4k2UWv1ll_ovd-wLtSWPtgQMzNegQ2JsTPTi7hKx_5zQ9NcFExo-kMR4YP8xmKBGa5_a5KB78j5PH8fYPtzqYV_khVInWciUTbiNGAoJMq8rJTjyk-qkVBRVucqrXlbdSYDishhqlJIXmJ_qquwgG0osMe94z-ltFoRAXH0LpIyJTJxeePYixFfBG541efkpy5oso84LPfrrL6VFduo.Ee1rBWyg-n_eboKRvIznF_5vBUsfDuhsHojWtL_Thwo","breakdown":{"devices":[{"device":"ROAD CONSTRUCTION (NEXT 500 FT)","code":"G20-1","function":"Advance warning","qty":2},{"device":"END ROAD WORK","code":"G20-2","function":"Termination","qty":2},{"device":"WORK ZONE plaque","code":"G20-5P","function":"Advance warning","qty":2},{"device":"ROAD WORK AHEAD","code":"W20-1","function":"Advance warning","qty":2},{"device":"ONE LANE ROAD AHEAD","code":"W20-4","function":"Advance warning","qty":2},{"device":"AFAD AHEAD","code":"W20-7a","function":"Advance warning","qty":2},{"device":"BE PREPARED TO STOP","code":"W3-4","function":"Advance warning","qty":2},{"device":"Channelizing Drum","code":"—","function":"Channelizing","qty":6},{"device":"Traffic Cone (36-inch)","code":"—","function":"Channelizing","qty":14},{"device":"Temporary Signal","code":"—","function":"Traffic control","qty":2}],"total_devices":36,"unique_types":10,"zone_geometry":{"taper_l_ft":100,"buffer_b_ft":360,"device_spacing_ft":20,"work_len_ft":500.0}}}
+{
+ "summary": {
+  "ta": "TA-10",
+  "cdot_sheet": "S-630-1",
+  "case_id": "MUTCD TA-10: Flagger one-lane two-way",
+  "taper_length_ft": 100,
+  "taper_label": "one-lane two-way taper",
+  "buffer_space_ft": 360.0,
+  "device_spacing_taper_ft": 20.0,
+  "device_spacing_tangent_ft": 90.0,
+  "step_count": 16
+ },
+ "sections": {
+  "taper": {
+   "speed_mph": 45,
+   "closure_type": "lane",
+   "offset_label": "lane width",
+   "offset_ft": 12.0,
+   "shoulder_width_ft": 12.0,
+   "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
+   "formula_latex": "50 \\le L \\le 100",
+   "L_calc_text": "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)",
+   "L_full_ft": 540,
+   "L_third_calc_text": "Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)",
+   "L_third_ft": 100,
+   "L_required_ft": 100,
+   "L_required_label": "one-lane two-way taper",
+   "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic control): 50-100 ft taper with channelizing devices at approximately 20 ft spacing. CDOT S-630-1 Case 17 warns the taper must be short enough to not be mistaken for a transition.",
+   "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
+   "citation": {
+    "cite": "MUTCD § 6B.08",
+    "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+   },
+   "result_text": "L = 100 ft",
+   "formula_text": [
+    "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)"
+   ]
+  },
+  "buffer": {
+   "speed_mph": 45,
+   "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
+   "buffer_ft": 360.0,
+   "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+   "citation": {
+    "cite": "MUTCD § 6B.06",
+    "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+   },
+   "result_text": "B = 360 ft"
+  },
+  "spacing": {
+   "speed_mph": 45,
+   "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
+   "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+   "taper_count_text": "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
+   "tangent_count_text": "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
+   "n_taper_drums_required": 6,
+   "n_taper_drums_actual": 6,
+   "n_tangent_cones_required": 7,
+   "n_tangent_cones_actual": 14,
+   "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
+   "citation": {
+    "cite": "MUTCD § 6K.01",
+    "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+   },
+   "buffer_count_text": "Buffer: 360 ft / 90 ft max spacing -> 3 cones at 90.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+   "n_buffer_cones": 3,
+   "buffer_cone_spacing_ft": 90.0,
+   "downstream_count_text": "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 7 tangent + 3 buffer + 4 downstream = 14 cones total",
+   "n_downstream_taper_cones": 4,
+   "n_cones_placed_total": 14,
+   "result_text": "16 devices · 20/90 ft o.c.",
+   "formula_text": [
+    "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
+    "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
+    "Buffer: 360 ft / 90 ft max spacing -> 3 cones at 90.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
+    "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 7 tangent + 3 buffer + 4 downstream = 14 cones total"
+   ]
+  },
+  "advance": {
+   "road_type_text": "Speed 45 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+   "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft",
+   "sign_table": [
+    {
+     "Position": "C (furthest)",
+     "Code": "W20-1",
+     "Station (ft)": "3,060",
+     "Distance from Taper (ft)": "2,100 upstream"
+    },
+    {
+     "Position": "B (middle)",
+     "Code": "W20-4",
+     "Station (ft)": "2,560",
+     "Distance from Taper (ft)": "1,600 upstream"
+    },
+    {
+     "Position": "between A and B (TA-10 note 8)",
+     "Code": "W3-4",
+     "Station (ft)": "2,060",
+     "Distance from Taper (ft)": "1,100 upstream"
+    },
+    {
+     "Position": "Advance (W20-7a)",
+     "Code": "W20-7a",
+     "Station (ft)": "1,560",
+     "Distance from Taper (ft)": "600 upstream"
+    }
+   ],
+   "source": "MUTCD 11th Ed. Table 6B-1",
+   "result_text": "4 signs",
+   "citation": {
+    "cite": "MUTCD TABLE 6B-1",
+    "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+   }
+  },
+  "colorado": {
+   "checks": [
+    {
+     "pass": true,
+     "label": "Signs on both sides of divided highway",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+     "detail": "Required: False. Signs placed: 6 left, 8 right."
+    },
+    {
+     "pass": true,
+     "label": "G20-5P Work Zone signs every 2,640 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+     "detail": "Zone length: 3,060 ft. Required: 2. Placed: 2."
+    },
+    {
+     "pass": true,
+     "label": "Speed reduction <= 15 mph per sign installation",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+     "detail": "No work-zone speed reduction. Posted speed 45 mph applies throughout the zone."
+    },
+    {
+     "pass": true,
+     "label": "Flagger station lighting 500W @ 8 ft",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+     "detail": "Not applicable (no flaggers)."
+    }
+   ],
+   "info_items": [
+    {
+     "info": true,
+     "label": "AADT threshold for mobile operations (<= 2,000)",
+     "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+     "detail": "Not applicable (not a mobile operation)."
+    }
+   ],
+   "all_pass": true,
+   "fail_count": 0
+  },
+  "case": {
+   "case": "MUTCD TA-10: Flagger one-lane two-way",
+   "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+   "narrative": "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal standard for flagger-controlled alternating one-way traffic on a 2-lane undivided highway). CDOT S-630-1 does not include a general flagger one-lane two-way case; Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized.",
+   "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 45 mph."
+  },
+  "flagger": {
+   "applicable": true,
+   "count": 0,
+   "required": 2,
+   "table": [],
+   "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+   "narrative": "Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
+   "sight_distance_ft": 360,
+   "sight_distance_citation": {
+    "cite": "MUTCD § 6D.06",
+    "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+   },
+   "sight_distance_result_text": "360 ft",
+   "stations_text": "2 AFAD",
+   "sight_distance_formula_text": [
+    "SSD @ 45 mph = 360 ft"
+   ]
+  },
+  "corridor_validation": {
+   "checked": true,
+   "warnings": []
+  },
+  "geometry_validation": {
+   "speed_mph": 45,
+   "work_zone_ft": 500.0,
+   "taper_ft": 100,
+   "taper_label": "one-lane two-way taper",
+   "buffer_ft": 360.0,
+   "violations": [],
+   "all_pass": true,
+   "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"
+  },
+  "corridor_spec": {
+   "taper_ft": 100,
+   "buffer_ft": 360,
+   "advance_warning_ft": 1500,
+   "downstream_taper_ft": 50,
+   "road_category": "rural"
+  },
+  "site_scan": {
+   "status": "ok",
+   "reason": null,
+   "error": null,
+   "mode": "corridor",
+   "measured_at": "2026-10-22T21:10:47+00:00",
+   "duration_ms": 6353,
+   "budget_s": 20.0,
+   "memo_hit": false,
+   "mirror": "https://overpass.openstreetmap.fr/api/interpreter",
+   "overpass_remark": null,
+   "response_bytes": 5291,
+   "element_count": 0,
+   "proceeded_anyway": false,
+   "inputs": {
+    "lat": 40.00185,
+    "lng": -105.41289,
+    "bearing_deg": 236.34105749065463,
+    "speed_mph": 45,
+    "work_zone_ft": 500.0,
+    "closure_type": "lane",
+    "road_type": "rural",
+    "lane_width_ft": 12.0,
+    "shoulder_width_ft": 8.0,
+    "centerline_vertices": 172,
+    "bbox": [
+     39.9981362170304,
+     -105.41460549989085,
+     40.00551222160592,
+     -105.40389765358668
+    ],
+    "pin_model": "work_start",
+    "opposing_bbox": [
+     39.99608407839409,
+     -105.41929452328407,
+     40.003335988010626,
+     -105.40972548196504
+    ]
+   },
+   "buckets": {
+    "intersections": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "interchanges": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": [],
+     "junction_refs": []
+    },
+    "sidewalks": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "bike_facilities": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "schools": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "railroad_crossings": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "hospitals": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [],
+     "features": []
+    },
+    "road_curvature": {
+     "detected": false,
+     "count": 0,
+     "nearest_distance_m": null,
+     "nearest_distance_ft": null,
+     "details": [
+      "Road curvature analysis not implemented; assume straight."
+     ],
+     "features": []
+    }
+   },
+   "flags": {},
+   "manual_flags_discarded": {},
+   "disclosure": null,
+   "corrections": [],
+   "corrections_advisory": null
+  }
+ },
+ "pending_verification": {
+  "count": 0,
+  "note": "",
+  "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+ },
+ "plan_flags": {
+  "validation_warnings": 0,
+  "compliance_fails": 0,
+  "v1_limitations": 0,
+  "is_clean": true
+ },
+ "pin": {
+  "model": "work_start"
+ },
+ "input_guesses": [
+  {
+   "field": "street_class",
+   "value": "arterial",
+   "label": "Arterial",
+   "source": "road",
+   "evidence": "OSM highway=primary",
+   "operator_confirmed": false
+  }
+ ],
+ "breakdown": {
+  "devices": [
+   {
+    "device": "ROAD CONSTRUCTION (NEXT 500 FT)",
+    "code": "G20-1",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "END ROAD WORK",
+    "code": "G20-2",
+    "function": "Termination",
+    "qty": 2
+   },
+   {
+    "device": "WORK ZONE plaque",
+    "code": "G20-5P",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "ROAD WORK AHEAD",
+    "code": "W20-1",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "ONE LANE ROAD AHEAD",
+    "code": "W20-4",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "AFAD AHEAD",
+    "code": "W20-7a",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "BE PREPARED TO STOP",
+    "code": "W3-4",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "Channelizing Drum",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 6
+   },
+   {
+    "device": "Traffic Cone (36-inch)",
+    "code": "—",
+    "function": "Channelizing",
+    "qty": 14
+   },
+   {
+    "device": "Temporary Signal",
+    "code": "—",
+    "function": "Traffic control",
+    "qty": 2
+   }
+  ],
+  "total_devices": 36,
+  "unique_types": 10,
+  "zone_geometry": {
+   "taper_l_ft": 100,
+   "buffer_b_ft": 360,
+   "device_spacing_ft": 20,
+   "work_len_ft": 500.0
+  }
+ }
+}

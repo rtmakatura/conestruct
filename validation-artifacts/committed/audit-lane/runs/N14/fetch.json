@@ -1,0 +1,99 @@
+{
+ "row": {
+  "id": "N14",
+  "kind": "near_intersection",
+  "pin": "CO2",
+  "road_type": "urban",
+  "speed": 55,
+  "time": "day",
+  "side": "near",
+  "expect": "plan",
+  "note": "Ryan's fallback (2026-10-22): an undivided urban arterial at 50-55 mph; CO 2 in Commerce City (rulings R6). 700 ft work zone: 600 is shorter than the 660 ft taper at 55 mph (rulings R6)",
+  "work_ft": 700
+ },
+ "pin": {
+  "place": "CO 2 (Highway 2) at E 104th Ave, Commerce City",
+  "lat": 39.885314,
+  "lng": -104.847744,
+  "road": "Highway 2|^CO 2$",
+  "reads": "undivided (two-way), primary, 6 lanes at the intersection, 55 mph, isUrban true; no jurisdiction on record",
+  "cross": "CO 2 & E 104th Ave, Commerce City, Colorado"
+ },
+ "healthz_sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15",
+ "placement": {
+  "lat": 39.8868813,
+  "lng": -104.8457451,
+  "travel": "with_geometry",
+  "traffic_bearing": 224.38,
+  "tried": [
+   {
+    "traffic_bearing": 224.38,
+    "pin": [
+     39.8868813,
+     -104.8457451
+    ],
+    "snapped": "Highway 2",
+    "way": "326641949"
+   }
+  ]
+ },
+ "cross": {
+  "address": "CO 2 & E 104th Ave, Commerce City, Colorado",
+  "geocode": {
+   "lat": 39.885314,
+   "lng": -104.847744,
+   "placeType": "intersection"
+  },
+  "name": "East 104th Avenue",
+  "way": "258670595",
+  "oneway": "yes"
+ },
+ "side_options": [
+  {
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   },
+   "label": "West side \u00b7 southbound traffic",
+   "built": true
+  },
+  {
+   "work": {
+    "side": "right",
+    "travel": "against_geometry"
+   },
+   "label": "East side \u00b7 northbound traffic",
+   "built": true
+  }
+ ],
+ "side_label": "West side \u00b7 southbound traffic",
+ "audit_status": 200,
+ "scan_token": true,
+ "downloads": {
+  "pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 778383
+  },
+  "xlsx": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 6843
+  },
+  "markdown": {
+   "status": 200,
+   "type": "text/markdown; charset=utf-8",
+   "bytes": 8749
+  },
+  "crew-pdf": {
+   "status": 200,
+   "type": "application/pdf",
+   "bytes": 9650
+  },
+  "quote": {
+   "status": 200,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "bytes": 10485
+  }
+ }
+}

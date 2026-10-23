@@ -1,0 +1,5152 @@
+{
+ "healthz": {
+  "status": "ok",
+  "sha": "d6d9a148028eea97a15193b5f92b8b93d5623b15"
+ },
+ "rows": [
+  {
+   "row": {
+    "id": "F1",
+    "kind": "flagger_lane_closure",
+    "pin": "OGDEN",
+    "road_type": "urban",
+    "speed": 25,
+    "time": "day",
+    "work_ft": 200,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "Ogden St between 6th and 7th Ave, Denver",
+    "lat": 39.7265,
+    "lng": -104.97525,
+    "road": "Ogden",
+    "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver",
+    "cross": "Ogden St & E 7th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Ogden Street",
+    "class": "residential",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 25,
+    "wz_speed": 25,
+    "lane": "right",
+    "workLen": 200.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 155 ft at 25 mph",
+     "plan": "page 1 label 155, page 1 notes 155, audit 155, crew sheet 155",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 25 ft, tangent (buffer + work area) ≤ 50 ft",
+     "plan": "taper 20 ft ≤ 25; cone runs at 50, 39 ft ≤ 50?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 555, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "INFO",
+     "oracle": "none, or caution mode only",
+     "plan": "present; mode not stated; page 1 1, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "arrow_board: page 1 summary 1, device XLSX 1, quote XLSX 1, crew sheet 0, audit 1",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F2",
+    "kind": "flagger_lane_closure",
+    "pin": "OGDEN",
+    "road_type": "urban",
+    "speed": 25,
+    "time": "night",
+    "work_ft": 200,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "Ogden St between 6th and 7th Ave, Denver",
+    "lat": 39.7265,
+    "lng": -104.97525,
+    "road": "Ogden",
+    "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver",
+    "cross": "Ogden St & E 7th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Ogden Street",
+    "class": "residential",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 25,
+    "wz_speed": 25,
+    "lane": "right",
+    "workLen": 200.0,
+    "night": true,
+    "jurisdiction": "denver",
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 155 ft at 25 mph",
+     "plan": "page 1 label 155, page 1 notes 155, audit 155, crew sheet 155",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 25 ft, tangent (buffer + work area) ≤ 50 ft",
+     "plan": "taper 20 ft ≤ 25; cone runs at 50, 39 ft ≤ 50?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 555, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "INFO",
+     "oracle": "none, or caution mode only",
+     "plan": "present; mode not stated; page 1 1, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "arrow_board: page 1 summary 1, device XLSX 1, quote XLSX 1, crew sheet 0, audit 1",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    },
+    {
+     "check": "C14 night cone height",
+     "status": "PASS",
+     "oracle": "≥ 36 in at night",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    },
+    {
+     "check": "C14b flagger station lighting",
+     "status": "PASS",
+     "oracle": "flagger stations illuminated at night",
+     "plan": "- 1× Portable Light Plant",
+     "source": "MUTCD §6D.06 ¶05, p. 786; S-630-1 Note 22 (L8)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F3",
+    "kind": "flagger_lane_closure",
+    "pin": "LOUIS",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "work_ft": 300,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "E Louisiana Ave at South High School, Denver",
+    "lat": 39.6928,
+    "lng": -104.96595,
+    "road": "Louisiana",
+    "reads": "two-way, 2 lanes, 30 mph, urban; denver"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "East Louisiana Avenue",
+    "class": "tertiary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 300.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 20 ft ≤ 30; cone runs at 60, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 700, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "INFO",
+     "oracle": "none, or caution mode only",
+     "plan": "present; mode not stated; page 1 1, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "arrow_board: page 1 summary 1, device XLSX 1, quote XLSX 1, crew sheet 0, audit 1",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F4",
+    "kind": "flagger_lane_closure",
+    "pin": "LOUIS",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "night",
+    "work_ft": 300,
+    "extra": {
+     "pedestrianAccess": true
+    },
+    "expect": "plan",
+    "checks": [
+     "L20"
+    ]
+   },
+   "pin": {
+    "place": "E Louisiana Ave at South High School, Denver",
+    "lat": 39.6928,
+    "lng": -104.96595,
+    "road": "Louisiana",
+    "reads": "two-way, 2 lanes, 30 mph, urban; denver"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "East Louisiana Avenue",
+    "class": "tertiary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 300.0,
+    "night": true,
+    "jurisdiction": "denver",
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 20 ft ≤ 30; cone runs at 60, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 700, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "INFO",
+     "oracle": "none, or caution mode only",
+     "plan": "present; mode not stated; page 1 1, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "arrow_board: page 1 summary 1, device XLSX 1, quote XLSX 1, crew sheet 0, audit 1",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=True, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    },
+    {
+     "check": "C14 night cone height",
+     "status": "PASS",
+     "oracle": "≥ 36 in at night",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    },
+    {
+     "check": "C14b flagger station lighting",
+     "status": "PASS",
+     "oracle": "flagger stations illuminated at night",
+     "plan": "- 1× Portable Light Plant",
+     "source": "MUTCD §6D.06 ¶05, p. 786; S-630-1 Note 22 (L8)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F5",
+    "kind": "flagger_lane_closure",
+    "pin": "W9",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "work_ft": 300,
+    "expect": "plan",
+    "score": "INFO (Lakewood, Ryan 2026-10-22)",
+    "note": "lanes not tagged; if the site reads 1 lane the operator sets 2 (recorded as an over)"
+   },
+   "pin": {
+    "place": "W 9th Ave, Lakewood",
+    "lat": 39.73105,
+    "lng": -105.10397,
+    "road": "9th",
+    "reads": "two-way, lanes not tagged (class default 1), urban; lakewood"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "West 9th Avenue",
+    "class": "residential",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": null,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 300.0,
+    "night": false,
+    "jurisdiction": "lakewood",
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 20 ft ≤ 30; cone runs at 60, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C6c Lakewood breakpoint",
+     "status": "INFO",
+     "oracle": "Lakewood's 35 mph split makes this road urban_low",
+     "plan": "plan uses urban_low",
+     "source": "data/jurisdictions/lakewood.json",
+     "note": "INFO while 02-JURISDICTION-DATA.md is missing (Ryan, 2026-10-22)"
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 700, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "38 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F6",
+    "kind": "flagger_lane_closure",
+    "pin": "LAF",
+    "road_type": "urban",
+    "speed": 35,
+    "time": "day",
+    "work_ft": 500,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "Lafayette St, Denver",
+    "lat": 39.73447,
+    "lng": -104.97067,
+    "road": "Lafayette",
+    "reads": "two-way, 2 lanes, urban, no maxspeed; denver"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Lafayette Street",
+    "class": "residential",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 35,
+    "wz_speed": 35,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 250 ft at 35 mph",
+     "plan": "page 1 label 250, page 1 notes 250, audit 250, crew sheet 250",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 35 ft, tangent (buffer + work area) ≤ 70 ft",
+     "plan": "taper 20 ft ≤ 35; cone runs at 62, 62 ft ≤ 70?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 950, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "INFO",
+     "oracle": "none, or caution mode only",
+     "plan": "present; mode not stated; page 1 1, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "arrow_board: page 1 summary 1, device XLSX 1, quote XLSX 1, crew sheet 0, audit 1",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F7",
+    "kind": "flagger_lane_closure",
+    "pin": "LOOKOUT",
+    "road_type": "urban",
+    "speed": 20,
+    "time": "day",
+    "work_ft": 300,
+    "extra": {
+     "limitedSightDistance": true
+    },
+    "expect": "plan",
+    "checks": [
+     "L19"
+    ],
+    "note": "the pin reads urban 20 mph, not the planned rural 35 (rulings R3)"
+   },
+   "pin": {
+    "place": "Lookout Mountain Rd, way 1432422179",
+    "lat": 39.733,
+    "lng": -105.24,
+    "road": "Lookout Mountain",
+    "reads": "two-way, 2 lanes, 20 mph, urban (place Golden / Paradise Hills); no supported jurisdiction"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Lookout Mountain Road CR 68",
+    "class": "tertiary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 20,
+    "wz_speed": 20,
+    "lane": "right",
+    "workLen": 300.0,
+    "night": false,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 115 ft at 20 mph",
+     "plan": "page 1 label 115, page 1 notes 115, audit 115, crew sheet 115",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 20 ft, tangent (buffer + work area) ≤ 40 ft",
+     "plan": "taper 20 ft ≤ 20; cone runs at 38, 38 ft ≤ 40?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 560 → W20-4 460 → W3-4 360 → W20-7 260; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 615, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "40 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C12 limited sight distance",
+     "status": "PASS",
+     "oracle": "each sign farther upstream than without the flag; a fixed factor cited or marked chosen",
+     "plan": "signs at 560, 460, 360, 260; without the flag [500.0, 400.0, 300.0, 200.0]; audit: \"MUTCD §6B.04: limited sight distance puts the nearest warning sign at the top of ¶04's urban or ¶06's rural range (p. 771) Moved 8 advance warning sign(s) 60 ft farther upstream. The nearest sign now \"",
+     "source": "MUTCD §6B.04 ¶04-¶08, p. 771 (L19)",
+     "note": "INFO: the cited ¶04/¶06 ranges aren't quoted in oracle-sources.md, so the distance itself isn't scored"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F8",
+    "kind": "flagger_lane_closure",
+    "pin": "LOOKOUT",
+    "road_type": "urban",
+    "speed": 20,
+    "time": "night",
+    "work_ft": 300,
+    "extra": {
+     "limitedSightDistance": true
+    },
+    "expect": "plan",
+    "checks": [
+     "L19",
+     "L8"
+    ]
+   },
+   "pin": {
+    "place": "Lookout Mountain Rd, way 1432422179",
+    "lat": 39.733,
+    "lng": -105.24,
+    "road": "Lookout Mountain",
+    "reads": "two-way, 2 lanes, 20 mph, urban (place Golden / Paradise Hills); no supported jurisdiction"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Lookout Mountain Road CR 68",
+    "class": "tertiary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 20,
+    "wz_speed": 20,
+    "lane": "right",
+    "workLen": 300.0,
+    "night": true,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 115 ft at 20 mph",
+     "plan": "page 1 label 115, page 1 notes 115, audit 115, crew sheet 115",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 20 ft, tangent (buffer + work area) ≤ 40 ft",
+     "plan": "taper 20 ft ≤ 20; cone runs at 38, 38 ft ≤ 40?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 560 → W20-4 460 → W3-4 360 → W20-7 260; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 615, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "47 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C12 limited sight distance",
+     "status": "PASS",
+     "oracle": "each sign farther upstream than without the flag; a fixed factor cited or marked chosen",
+     "plan": "signs at 560, 460, 360, 260; without the flag [500.0, 400.0, 300.0, 200.0]; audit: \"MUTCD §6B.04: limited sight distance puts the nearest warning sign at the top of ¶04's urban or ¶06's rural range (p. 771) Moved 8 advance warning sign(s) 60 ft farther upstream. The nearest sign now \"",
+     "source": "MUTCD §6B.04 ¶04-¶08, p. 771 (L19)",
+     "note": "INFO: the cited ¶04/¶06 ranges aren't quoted in oracle-sources.md, so the distance itself isn't scored"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    },
+    {
+     "check": "C14 night cone height",
+     "status": "PASS",
+     "oracle": "≥ 36 in at night",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    },
+    {
+     "check": "C14b flagger station lighting",
+     "status": "PASS",
+     "oracle": "flagger stations illuminated at night",
+     "plan": "- 1× Portable Light Plant",
+     "source": "MUTCD §6D.06 ¶05, p. 786; S-630-1 Note 22 (L8)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F9",
+    "kind": "flagger_lane_closure",
+    "pin": "CO119",
+    "road_type": "rural",
+    "speed": 45,
+    "time": "day",
+    "work_ft": 500,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "CO 119, Boulder Canyon",
+    "lat": 40.00185,
+    "lng": -105.41289,
+    "road": "119",
+    "reads": "2 lanes, 45 mph, rural, undivided"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Boulder Canyon Drive CO 119",
+    "class": "primary",
+    "roadType": "rural_undivided",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 45,
+    "wz_speed": 45,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "rural"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 360 ft at 45 mph",
+     "plan": "page 1 label 360, page 1 notes 360, audit 360, crew sheet 360",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 45 ft, tangent (buffer + work area) ≤ 90 ft",
+     "plan": "taper 20 ft ≤ 45; cone runs at 83, 90 ft ≤ 90?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 500 ft (rural)",
+     "plan": "W20-1 2100 → W20-4 1600 → W3-4 1100 → W20-7 600; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 1060, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "36 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F10",
+    "kind": "flagger_lane_closure",
+    "pin": "CO119",
+    "road_type": "rural",
+    "speed": 55,
+    "time": "night",
+    "work_ft": 1000,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "CO 119, Boulder Canyon",
+    "lat": 40.00185,
+    "lng": -105.41289,
+    "road": "119",
+    "reads": "2 lanes, 45 mph, rural, undivided"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Boulder Canyon Drive CO 119",
+    "class": "primary",
+    "roadType": "rural_undivided",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 55,
+    "wz_speed": 55,
+    "lane": "right",
+    "workLen": 1000.0,
+    "night": true,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "rural"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 495 ft at 55 mph",
+     "plan": "page 1 label 495, page 1 notes 495, audit 495, crew sheet 495",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 55 ft, tangent (buffer + work area) ≤ 110 ft",
+     "plan": "taper 20 ft ≤ 55; cone runs at 100, 99 ft ≤ 110?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch; Type 1 barricade: none",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 500 ft (rural)",
+     "plan": "W20-1 2100 → W20-4 1600 → W3-4 1100 → W20-7 600; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 1695, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "48 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 night cone height",
+     "status": "PASS",
+     "oracle": "≥ 36 in at night",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    },
+    {
+     "check": "C14b flagger station lighting",
+     "status": "PASS",
+     "oracle": "flagger stations illuminated at night",
+     "plan": "- 1× Portable Light Plant",
+     "source": "MUTCD §6D.06 ¶05, p. 786; S-630-1 Note 22 (L8)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F11",
+    "kind": "flagger_lane_closure",
+    "pin": "US24",
+    "road_type": "rural",
+    "speed": 55,
+    "time": "day",
+    "work_ft": 1500,
+    "over": {
+     "divided": false
+    },
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "US 24 at Hartsel",
+    "lat": 39.02175,
+    "lng": -105.79286,
+    "road": "24",
+    "reads": "2 lanes, rural, no maxspeed; trunk, so the site guesses divided"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "US 24",
+    "class": "trunk",
+    "roadType": "rural_undivided",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 55,
+    "wz_speed": 55,
+    "lane": "right",
+    "workLen": 1500.0,
+    "night": false,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "rural"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 495 ft at 55 mph",
+     "plan": "page 1 label 495, page 1 notes 495, audit 495, crew sheet 495",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 55 ft, tangent (buffer + work area) ≤ 110 ft",
+     "plan": "taper 20 ft ≤ 55; cone runs at 107, 99 ft ≤ 110?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch; Type 1 barricade: none",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 500 ft (rural)",
+     "plan": "W20-1 2100 → W20-4 1600 → W3-4 1100 → W20-7 600; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 2195, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "45 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F12",
+    "kind": "flagger_lane_closure",
+    "pin": "US24",
+    "road_type": "rural",
+    "speed": 55,
+    "time": "night",
+    "work_ft": 1500,
+    "over": {
+     "divided": false
+    },
+    "extra": {
+     "pilotCar": true
+    },
+    "expect": "plan",
+    "checks": [
+     "L17"
+    ]
+   },
+   "pin": {
+    "place": "US 24 at Hartsel",
+    "lat": 39.02175,
+    "lng": -105.79286,
+    "road": "24",
+    "reads": "2 lanes, rural, no maxspeed; trunk, so the site guesses divided"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "US 24",
+    "class": "trunk",
+    "roadType": "rural_undivided",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 55,
+    "wz_speed": 55,
+    "lane": "right",
+    "workLen": 1500.0,
+    "night": true,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "rural"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 495 ft at 55 mph",
+     "plan": "page 1 label 495, page 1 notes 495, audit 495, crew sheet 495",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 55 ft, tangent (buffer + work area) ≤ 110 ft",
+     "plan": "taper 20 ft ≤ 55; cone runs at 107, 99 ft ≤ 110?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch; Type 1 barricade: none",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 500 ft (rural)",
+     "plan": "W20-1 2100 → W20-4 1600 → W3-4 1100 → W20-7 600; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 2195, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C7b pilot car",
+     "status": "PASS",
+     "oracle": "G20-4 on the pilot vehicle; a flagger at each end",
+     "plan": "G20-4 named; R4-20 absent; 2 flaggers",
+     "source": "MUTCD §6E.04 ¶03-¶04, p. 787; S-630-1 Sheet 25 Case 42 (L17)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "pilot_car: page 1 summary 0, device XLSX 0, quote XLSX 0, crew sheet 1, audit 0",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 night cone height",
+     "status": "PASS",
+     "oracle": "≥ 36 in at night",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    },
+    {
+     "check": "C14b flagger station lighting",
+     "status": "PASS",
+     "oracle": "flagger stations illuminated at night",
+     "plan": "- 1× Portable Light Plant",
+     "source": "MUTCD §6D.06 ¶05, p. 786; S-630-1 Note 22 (L8)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F13",
+    "kind": "flagger_lane_closure",
+    "pin": "US285",
+    "road_type": "rural",
+    "speed": 55,
+    "time": "day",
+    "work_ft": 2640,
+    "over": {
+     "divided": false
+    },
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "US 285 north of Fairplay",
+    "lat": 39.26455,
+    "lng": -105.95722,
+    "road": "285",
+    "reads": "2 lanes, 55 mph, rural; trunk, so the site guesses divided"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "US 285",
+    "class": "trunk",
+    "roadType": "rural_undivided",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 55,
+    "wz_speed": 55,
+    "lane": "right",
+    "workLen": 2640.0,
+    "night": false,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "rural"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 495 ft at 55 mph",
+     "plan": "page 1 label 495, page 1 notes 495, audit 495, crew sheet 495",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 55 ft, tangent (buffer + work area) ≤ 110 ft",
+     "plan": "taper 20 ft ≤ 55; cone runs at 110, 99 ft ≤ 110?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch; Type 1 barricade: none",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 500 ft (rural)",
+     "plan": "W20-1 2100 → W20-4 1600 → W3-4 1100 → W20-7 600; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 3335, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "56 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F14",
+    "kind": "flagger_lane_closure",
+    "pin": "EPC",
+    "road_type": "rural",
+    "speed": 45,
+    "time": "day",
+    "work_ft": 500,
+    "over": {
+     "jurisdiction": "el_paso_county"
+    },
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "Black Forest Rd, El Paso County",
+    "lat": 39.08849,
+    "lng": -104.69514,
+    "road": "Black Forest",
+    "reads": "two-way, 2 lanes, 45 mph, rural; jurisdiction suggest returns null (outside_supported), county in the reason text"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Black Forest Road",
+    "class": "tertiary",
+    "roadType": "rural_undivided",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 45,
+    "wz_speed": 45,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "rural"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 360 ft at 45 mph",
+     "plan": "page 1 label 360, page 1 notes 360, audit 360, crew sheet 360",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 45 ft, tangent (buffer + work area) ≤ 90 ft",
+     "plan": "taper 20 ft ≤ 45; cone runs at 83, 90 ft ≤ 90?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 500 ft (rural)",
+     "plan": "W20-1 2100 → W20-4 1600 → W3-4 1100 → W20-7 600; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 1060, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "36 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F15",
+    "kind": "flagger_lane_closure",
+    "pin": "LOVE",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "night",
+    "work_ft": 300,
+    "over": {
+     "jurisdiction": "loveland"
+    },
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "W 8th St, Loveland",
+    "lat": 40.39999,
+    "lng": -105.08671,
+    "road": "8th",
+    "reads": "2 lanes, no maxspeed, place Loveland; jurisdiction suggest returns null"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "West 8th Street",
+    "class": "tertiary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 300.0,
+    "night": true,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 20 ft ≤ 30; cone runs at 60, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 700, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "PASS",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "41 devices, equal on 5 surfaces",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 night cone height",
+     "status": "PASS",
+     "oracle": "≥ 36 in at night",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    },
+    {
+     "check": "C14b flagger station lighting",
+     "status": "PASS",
+     "oracle": "flagger stations illuminated at night",
+     "plan": "- 1× Portable Light Plant",
+     "source": "MUTCD §6D.06 ¶05, p. 786; S-630-1 Note 22 (L8)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F16",
+    "kind": "flagger_lane_closure",
+    "pin": "CO119",
+    "road_type": "rural",
+    "speed": 45,
+    "time": "day",
+    "work_ft": 500,
+    "extra": {
+     "afad": true
+    },
+    "expect": "plan",
+    "checks": [
+     "L18"
+    ]
+   },
+   "pin": {
+    "place": "CO 119, Boulder Canyon",
+    "lat": 40.00185,
+    "lng": -105.41289,
+    "road": "119",
+    "reads": "2 lanes, 45 mph, rural, undivided"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "Boulder Canyon Drive CO 119",
+    "class": "primary",
+    "roadType": "rural_undivided",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 45,
+    "wz_speed": 45,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": null,
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "rural"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 360 ft at 45 mph",
+     "plan": "page 1 label 360, page 1 notes 360, audit 360, crew sheet 360",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 45 ft, tangent (buffer + work area) ≤ 90 ft",
+     "plan": "taper 20 ft ≤ 45; cone runs at 83, 90 ft ≤ 90?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 500 ft (rural)",
+     "plan": "W20-1 2100 → W20-4 1600 → W3-4 1100 → W20-7 600; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": "INFO: W20-7a AFAD AHEAD stands in the W20-7 slot (no AFAD sign is quoted, L18)"
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 1060, -300; AFAD stations from the crew sheet (the audit's flagger table is empty); upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C7c AFAD",
+     "status": "PASS",
+     "oracle": "the AFAD shown at the flagger station",
+     "plan": "- 2× W20-7a AFAD AHEAD",
+     "source": "MUTCD §6E.05 (L18)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "none, or caution mode only",
+     "plan": "none; mode not stated; page 1 0, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "afad: page 1 summary 2, device XLSX 2, quote XLSX 2, crew sheet 0, audit 0; temporary signal: page 1 summary 0, device XLSX 0, quote XLSX 0, crew sheet 0, audit 2; temporary traffic signal: page 1 summary 0, device XLSX 0, quote XLSX 0, crew sheet 2, audit 0",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "F17",
+    "kind": "flagger_lane_closure",
+    "pin": "OGDEN",
+    "road_type": "urban",
+    "speed": 25,
+    "time": "day",
+    "work_ft": 50,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "Ogden St between 6th and 7th Ave, Denver",
+    "lat": 39.7265,
+    "lng": -104.97525,
+    "road": "Ogden",
+    "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver",
+    "cross": "Ogden St & E 7th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "error": "expected a plan; audit answered 400: {\"detail\":{\"error\":\"geometry_validation_failed\",\"message\":\"Work zone length (50 ft) is shorter than the required merging taper (L) of 100 ft at 25 mph. Increase the work zone to at least 100 ft, or reduce the speed limit.\",\"violations\":[{\"rule_id\":\"WORK_ZONE_SHORTER_THAN_TAPER\",\"severity\":\"error\",\"message\":\"Work zone length (50 ft) is shorter than the required merging taper (L) of 100 ft at 25 mph. Increase the work zone to at least 100 ft, or reduce the speed limit.\",\"mutcd_section\":\"6B.08\"},{\""
+  },
+  {
+   "row": {
+    "id": "F18",
+    "kind": "flagger_lane_closure",
+    "pin": "CTL",
+    "road_type": "urban",
+    "speed": 35,
+    "time": "day",
+    "work_ft": 300,
+    "expect": "plan",
+    "note": "two-way with a center turn lane (#86)"
+   },
+   "pin": {
+    "place": "E 40th Ave, Denver",
+    "lat": 39.7729,
+    "lng": -104.94783,
+    "road": "40th",
+    "reads": "lanes 3 = 1 + 1 + lanes_both_ways 1 (center turn lane), 35 mph, urban; denver"
+   },
+   "ctx": {
+    "kind": "flagger_lane_closure",
+    "road": "East 40th Avenue",
+    "class": "tertiary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 3,
+    "laneWidth": 12.0,
+    "speed": 35,
+    "wz_speed": 35,
+    "lane": "right",
+    "workLen": 300.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-10",
+    "case": "MUTCD TA-10: Flagger one-lane two-way",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "50–100 ft one-lane two-way taper",
+     "plan": "page 1 label 100, page 1 notes 100, audit 100, audit summary 100, crew sheet 100",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶14, p. 776 (L3)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 250 ft at 35 mph",
+     "plan": "page 1 label 250, page 1 notes 250, audit 250, crew sheet 250",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "PASS",
+     "oracle": "50–100 ft, not per lane",
+     "plan": "4 cones over 50 ft",
+     "source": "MUTCD Table 6B-3, p. 775; §6B.08 ¶12, p. 776 (L4)",
+     "note": ""
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 35 ft, tangent (buffer + work area) ≤ 70 ft",
+     "plan": "taper 20 ft ≤ 35; cone runs at 60, 62 ft ≤ 70?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "6 drums on the one-lane two-way taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 flagger sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-4 → (W3-4) → W20-7 on both approaches, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 500 → W20-4 400 → W3-4 300 → W20-7 200; summary W20-1/W20-4/W20-7 = [2, 2, 2]",
+     "source": "MUTCD Fig 6P-10, p. 879; S-630-1 Sheet 9 Case 17; Table 6B-1, p. 773 (L5, L6)",
+     "note": ""
+    },
+    {
+     "check": "C7 flagger stations",
+     "status": "PASS",
+     "oracle": "a flagger at each end; the upstream one at the taper after W20-7, A to W20-7; the opposite one 200–300 ft past the work",
+     "plan": "2 stations at 750, -300; upstream flagger 100 ft before the taper (INFO: Fig 6P-10 draws it at the taper's upstream end); opposite flagger 300 ft past the work area",
+     "source": "MUTCD Fig 6P-10, p. 879; §6D.06, p. 786; §6E.02 ¶01, p. 787; S-630-1 Case 17 (L7)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "INFO",
+     "oracle": "none, or caution mode only",
+     "plan": "present; mode not stated; page 1 1, crew 0",
+     "source": "MUTCD §6L.06 ¶17-¶18, p. 833; S-630-1 Note 26 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "arrow_board: page 1 summary 1, device XLSX 1, quote XLSX 1, crew sheet 0, audit 1",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N1",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "near",
+    "work_start_from_cross_ft": -100,
+    "expect": "plan",
+    "note": "replaces E Colfax at Race (reads divided; rulings R3)"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "West Colfax Avenue I 70 BUS;US 40",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 3,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 180 ft (W=12, S=30)",
+     "plan": "page 1 label 180, page 1 notes 180, audit 180, audit summary 180, crew sheet 180",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 30 ft ≤ 30; cone runs at 56, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 880; taper starts at 880.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -100.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N2",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "far",
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "West Colfax Avenue I 70 BUS;US 40",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-22",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 180 ft (W=12, S=30)",
+     "plan": "page 1 label 180, page 1 notes 180, audit 180, audit summary 180, crew sheet 180",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 30 ft ≤ 30; 4 cones carry the line past the cross street to the taper; cone runs at 56 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "INFO",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 112",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": "gaps under A=100: W20-5R 88 (urban: INFO per Sheet 10 Note 1)"
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 892; taper starts at 892.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station 600.0 → far side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit far; page 1 / crew say neither; row asked far",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C9b far side: R3-7R or continuous channelizers",
+     "status": "PASS",
+     "oracle": "R3-7R RIGHT LANE MUST TURN RIGHT, or note 7's continuous channelizers",
+     "plan": "4 cones continue the closed-lane line from the taper to the cross street",
+     "source": "MUTCD Fig 6P-22 and note 7, pp. 902-903 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N3",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "night",
+    "side": "near",
+    "work_start_from_cross_ft": -100,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "West Colfax Avenue I 70 BUS;US 40",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 3,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": true,
+    "jurisdiction": "denver",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 180 ft (W=12, S=30)",
+     "plan": "page 1 label 180, page 1 notes 180, audit 180, audit summary 180, crew sheet 180",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 30 ft ≤ 30; cone runs at 56, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 880; taper starts at 880.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -100.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    },
+    {
+     "check": "C14 night cone height",
+     "status": "PASS",
+     "oracle": "≥ 36 in at night",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N4",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "near",
+    "work_start_from_cross_ft": -60,
+    "expect": "plan",
+    "note": "run to the corner; rechecks #358/#366"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "West Colfax Avenue I 70 BUS;US 40",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 3,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 180 ft (W=12, S=30)",
+     "plan": "page 1 label 180, page 1 notes 180, audit 180, audit summary 180, crew sheet 180",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 30 ft ≤ 30; cone runs at 56, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 880; taper starts at 880.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -60.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N5",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "near",
+    "legs": 4,
+    "approaches": 2,
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "West Colfax Avenue I 70 BUS;US 40",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 3,
+    "laneWidth": 12.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 180 ft (W=12, S=30)",
+     "plan": "page 1 label 180, page 1 notes 180, audit 180, audit summary 180, crew sheet 180",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 30 ft ≤ 30; cone runs at 56, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 880; taper starts at 880.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -100.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N6",
+    "kind": "near_intersection",
+    "pin": "BWAY11",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "far",
+    "approaches": 1,
+    "expect": "plan",
+    "cross": "N Broadway & E 14th Ave, Denver",
+    "lane": "right",
+    "note": "one approach = a one-way cross street (14th Ave); no one-way cross street on the undivided W Colfax stretch (rulings R4)"
+   },
+   "pin": {
+    "place": "N Broadway at E 11th Ave, Denver (one-way)",
+    "lat": 39.7337,
+    "lng": -104.98753,
+    "road": "Broadway",
+    "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+    "cross": "N Broadway & E 11th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "North Broadway",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 4,
+    "laneWidth": 11.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-22",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 165 ft (W=11, S=30)",
+     "plan": "page 1 label 165, page 1 notes 165, audit 165, audit summary 165, crew sheet 165",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 28 ft ≤ 30; 4 cones carry the line past the cross street to the taper; cone runs at 56 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "INFO",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 136",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": "gaps under A=100: W20-5R 64 (urban: INFO per Sheet 10 Note 1)"
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "1 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 901; taper starts at 901.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station 600.0 → far side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit far; page 1 / crew say neither; row asked far",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C9b far side: R3-7R or continuous channelizers",
+     "status": "PASS",
+     "oracle": "R3-7R RIGHT LANE MUST TURN RIGHT, or note 7's continuous channelizers",
+     "plan": "4 cones continue the closed-lane line from the taper to the cross street",
+     "source": "MUTCD Fig 6P-22 and note 7, pp. 902-903 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 2, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 2, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 2, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N7",
+    "kind": "near_intersection",
+    "pin": "BWAY11",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "near",
+    "lane": "right",
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "N Broadway at E 11th Ave, Denver (one-way)",
+    "lat": 39.7337,
+    "lng": -104.98753,
+    "road": "Broadway",
+    "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+    "cross": "N Broadway & E 11th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "North Broadway",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 4,
+    "laneWidth": 11.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 165 ft (W=11, S=30)",
+     "plan": "page 1 label 165, page 1 notes 165, audit 165, audit summary 165, crew sheet 165",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 28 ft ≤ 30; cone runs at 56, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 865; taper starts at 865.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -100.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; R2-11: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; W20-1: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N8",
+    "kind": "near_intersection",
+    "pin": "BWAY11",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "near",
+    "lane": "left",
+    "expect": "plan",
+    "note": "Case 18 mirrored, one-way only"
+   },
+   "pin": {
+    "place": "N Broadway at E 11th Ave, Denver (one-way)",
+    "lat": 39.7337,
+    "lng": -104.98753,
+    "road": "Broadway",
+    "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+    "cross": "N Broadway & E 11th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "North Broadway",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 4,
+    "laneWidth": 11.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "left",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 165 ft (W=11, S=30)",
+     "plan": "page 1 label 165, page 1 notes 165, audit 165, audit summary 165, crew sheet 165",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 28 ft ≤ 30; cone runs at 56, 50 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5L → W4-2L, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5L 200 → W4-2L 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 865; taper starts at 865.0; mode right arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -100.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; R2-11: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; W20-1: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N9",
+    "kind": "near_intersection",
+    "pin": "BWAY11",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "far",
+    "lane": "right",
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "N Broadway at E 11th Ave, Denver (one-way)",
+    "lat": 39.7337,
+    "lng": -104.98753,
+    "road": "Broadway",
+    "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+    "cross": "N Broadway & E 11th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "North Broadway",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 4,
+    "laneWidth": 11.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-22",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 165 ft (W=11, S=30)",
+     "plan": "page 1 label 165, page 1 notes 165, audit 165, audit summary 165, crew sheet 165",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 label 200, page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 28 ft ≤ 30; 4 cones carry the line past the cross street to the taper; cone runs at 56 ft ≤ 60?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "INFO",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 212 → W4-2R 112",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": "gaps under A=100: W20-1 88 (urban: INFO per Sheet 10 Note 1)"
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 877; taper starts at 877.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station 600.0 → far side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit far; page 1 / crew say neither; row asked far",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C9b far side: R3-7R or continuous channelizers",
+     "status": "PASS",
+     "oracle": "R3-7R RIGHT LANE MUST TURN RIGHT, or note 7's continuous channelizers",
+     "plan": "4 cones continue the closed-lane line from the taper to the cross street",
+     "source": "MUTCD Fig 6P-22 and note 7, pp. 902-903 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; R2-11: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; W20-1: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N10",
+    "kind": "near_intersection",
+    "pin": "BWAY11",
+    "road_type": "urban",
+    "speed": 30,
+    "time": "day",
+    "side": "far",
+    "lane": "left",
+    "extra": {
+     "turnBayStorageFt": 150
+    },
+    "expect": "plan",
+    "note": "turn-bay length unsourced (oracle-sources, Not sourced)"
+   },
+   "pin": {
+    "place": "N Broadway at E 11th Ave, Denver (one-way)",
+    "lat": 39.7337,
+    "lng": -104.98753,
+    "road": "Broadway",
+    "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+    "cross": "N Broadway & E 11th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "North Broadway",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 4,
+    "laneWidth": 11.0,
+    "speed": 30,
+    "wz_speed": 30,
+    "lane": "left",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-23",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 165 ft (W=11, S=30)",
+     "plan": "page 1 label 165, page 1 notes 165, audit 165, audit summary 165, crew sheet 165",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 200 ft at 30 mph",
+     "plan": "page 1 notes 200, audit 200, crew sheet 200",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "INFO",
+     "oracle": "taper ≤ 30 ft, tangent (buffer + work area) ≤ 60 ft",
+     "plan": "taper 28 ft ≤ 30; cone runs at 56 ft ≤ 60?; turn bay coned to station 762; 100 ft left open as the bay entry (INFO: no page sets it)",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "7 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5L → W4-2L, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5L 200 → W4-2L 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "INFO",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream end of the work zone station 500; taper starts at 1027.0; mode right arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station 600.0 → far side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit far; page 1 / crew say neither; row asked far",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C9c turn bay storage",
+     "status": "INFO",
+     "oracle": "no page sets the storage length",
+     "plan": "150 ft sent",
+     "source": "oracle-sources.md 'Not sourced'",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; R2-11: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4; W20-1: page 1 summary 2, device XLSX 4, quote XLSX 4, crew sheet 4, audit 4",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N11",
+    "kind": "near_intersection",
+    "pin": "ART40",
+    "road_type": "urban",
+    "speed": 40,
+    "time": "day",
+    "side": "far",
+    "expect": "plan"
+   },
+   "pin": {
+    "place": "S Colorado Blvd, Denver",
+    "lat": 39.661,
+    "lng": -104.9407,
+    "road": "Colorado",
+    "reads": "undivided, 6 lanes (3 per direction), 40 mph; denver",
+    "cross": "S Colorado Blvd & E Iliff Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "South Colorado Boulevard CO 2",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 3,
+    "laneWidth": 12.0,
+    "speed": 40,
+    "wz_speed": 40,
+    "lane": "right",
+    "workLen": 500.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-22",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_low"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 320 ft (W=12, S=40)",
+     "plan": "page 1 label 320, page 1 notes 320, audit 320, audit summary 320, crew sheet 320",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 305 ft at 40 mph",
+     "plan": "page 1 label 305, page 1 notes 305, audit 305, crew sheet 305",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 40 ft, tangent (buffer + work area) ≤ 80 ft",
+     "plan": "taper 40 ft ≤ 40; 5 cones carry the line past the cross street to the taper; cone runs at 71 ft ≤ 80?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "9 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 100 ft (urban_low)",
+     "plan": "W20-1 300 → W20-5R 200 → W4-2R 100",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 1125; taper starts at 1125.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station 600.0 → far side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit far; page 1 / crew say neither; row asked far",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C9b far side: R3-7R or continuous channelizers",
+     "status": "PASS",
+     "oracle": "R3-7R RIGHT LANE MUST TURN RIGHT, or note 7's continuous channelizers",
+     "plan": "5 cones continue the closed-lane line from the taper to the cross street",
+     "source": "MUTCD Fig 6P-22 and note 7, pp. 902-903 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N12",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_LKWD",
+    "road_type": "urban",
+    "speed": 45,
+    "time": "day",
+    "side": "near",
+    "expect": "plan",
+    "score": "INFO (Lakewood, Ryan 2026-10-22)",
+    "note": "posted 45, not the planned 35 (rulings R3); 600 ft work zone: 500 is shorter than the 540 ft taper at 45 mph (rulings R5)",
+    "work_ft": 600
+   },
+   "pin": {
+    "place": "W Colfax Ave near Simms, Lakewood",
+    "lat": 39.74016,
+    "lng": -105.13048,
+    "road": "Colfax",
+    "reads": "undivided, 6 lanes (3 per direction), 45 mph; lakewood",
+    "cross": "W Colfax Ave & Taft Ct, Lakewood",
+    "cross_juris": "lakewood"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "West Colfax Avenue I 70 BUS;US 40",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 45,
+    "wz_speed": 45,
+    "lane": "right",
+    "workLen": 600.0,
+    "night": false,
+    "jurisdiction": "lakewood",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_high"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 540 ft (W=12, S=45)",
+     "plan": "page 1 label 540, page 1 notes 540, audit 540, audit summary 540, crew sheet 540",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 360 ft at 45 mph",
+     "plan": "page 1 label 360, page 1 notes 360, audit 360, crew sheet 360",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 45 ft, tangent (buffer + work area) ≤ 90 ft",
+     "plan": "taper 45 ft ≤ 45; cone runs at 86, 90 ft ≤ 90?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "13 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 350 ft (urban_high)",
+     "plan": "W20-1 1050 → W20-5R 700 → W4-2R 350",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C6c Lakewood breakpoint",
+     "status": "INFO",
+     "oracle": "Lakewood's 35 mph split makes this road urban_high",
+     "plan": "plan uses urban_high",
+     "source": "data/jurisdictions/lakewood.json",
+     "note": "INFO while 02-JURISDICTION-DATA.md is missing (Ryan, 2026-10-22)"
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 1500; taper starts at 1500.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -100.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N13",
+    "kind": "near_intersection",
+    "pin": "SIG45",
+    "road_type": "urban",
+    "speed": 45,
+    "time": "day",
+    "side": "near",
+    "extra": {
+     "workType": "signal_work"
+    },
+    "expect": "plan",
+    "work_ft": 600,
+    "note": "600 ft work zone: 500 is shorter than the 540 ft taper at 45 mph (rulings R5)"
+   },
+   "pin": {
+    "place": "Sheridan Blvd, Denver, signal 17 m",
+    "lat": 39.7909,
+    "lng": -105.05325,
+    "road": "Sheridan",
+    "reads": "undivided, 4 lanes (2 per direction), 45 mph; denver (near the boundary)",
+    "cross": "Sheridan Blvd & W 52nd Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "Sheridan Boulevard CO 95",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 45,
+    "wz_speed": 45,
+    "lane": "right",
+    "workLen": 600.0,
+    "night": false,
+    "jurisdiction": "denver",
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_high"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 540 ft (W=12, S=45)",
+     "plan": "page 1 label 540, page 1 notes 540, audit 540, audit summary 540, crew sheet 540",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 360 ft at 45 mph",
+     "plan": "page 1 label 360, page 1 notes 360, audit 360, crew sheet 360",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 45 ft, tangent (buffer + work area) ≤ 90 ft",
+     "plan": "taper 45 ft ≤ 45; cone runs at 86, 90 ft ≤ 90?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "13 drums on the merging taper; drums 36-inch",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 350 ft (urban_high)",
+     "plan": "W20-1 1050 → W20-5R 700 → W4-2R 350",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "2 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 1500; taper starts at 1500.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -100.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; R2-11: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3; W20-1: page 1 summary 1, device XLSX 3, quote XLSX 3, crew sheet 3, audit 3",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "N14",
+    "kind": "near_intersection",
+    "pin": "CO2",
+    "road_type": "urban",
+    "speed": 55,
+    "time": "day",
+    "side": "near",
+    "expect": "plan",
+    "note": "Ryan's fallback (2026-10-22): an undivided urban arterial at 50-55 mph; CO 2 in Commerce City (rulings R6). 700 ft work zone: 600 is shorter than the 660 ft taper at 55 mph (rulings R6)",
+    "work_ft": 700
+   },
+   "pin": {
+    "place": "CO 2 (Highway 2) at E 104th Ave, Commerce City",
+    "lat": 39.885314,
+    "lng": -104.847744,
+    "road": "Highway 2|^CO 2$",
+    "reads": "undivided (two-way), primary, 6 lanes at the intersection, 55 mph, isUrban true; no jurisdiction on record",
+    "cross": "CO 2 & E 104th Ave, Commerce City, Colorado"
+   },
+   "ctx": {
+    "kind": "near_intersection",
+    "road": "Highway 2",
+    "class": "primary",
+    "roadType": "urban_arterial",
+    "divided": false,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "speed": 55,
+    "wz_speed": 55,
+    "lane": "right",
+    "workLen": 700.0,
+    "night": false,
+    "jurisdiction": null,
+    "ta": "TA-21",
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "category": "urban_high"
+   },
+   "checks": [
+    {
+     "check": "C1 taper",
+     "status": "PASS",
+     "oracle": "merging taper ≥ L = 660 ft (W=12, S=55)",
+     "plan": "page 1 label 660, page 1 notes 660, audit 660, audit summary 660, crew sheet 660",
+     "source": "MUTCD Table 6B-4 and 6B-3, p. 775 (L1, L2)",
+     "note": ""
+    },
+    {
+     "check": "C2 buffer",
+     "status": "PASS",
+     "oracle": "≥ 495 ft at 55 mph",
+     "plan": "page 1 label 495, page 1 notes 495, audit 495, crew sheet 495",
+     "source": "MUTCD Table 6B-2, p. 775; §6B.06 ¶11, p. 773 (L9)",
+     "note": ""
+    },
+    {
+     "check": "C3 downstream taper",
+     "status": "INFO",
+     "oracle": "flagger: ¶14 \"should be used\"; near-intersection: ¶12 \"If used\"",
+     "plan": "no downstream taper in the crew sheet",
+     "source": "MUTCD §6B.08 ¶12, ¶14, p. 776 (L4)",
+     "note": "Case 18 runs the closed lane to the corner"
+    },
+    {
+     "check": "C4 device spacing",
+     "status": "PASS",
+     "oracle": "taper ≤ 55 ft, tangent (buffer + work area) ≤ 110 ft",
+     "plan": "taper 55 ft ≤ 55; cone runs at 100, 99 ft ≤ 110?",
+     "source": "MUTCD §6K.01 ¶04, p. 815; S-630-1 Note 18 (L10)",
+     "note": ""
+    },
+    {
+     "check": "C5 device type and size",
+     "status": "PASS",
+     "oracle": "drums or vertical panels on the taper, drums ≥ 36 in; no Type 1 barricade at 55+ mph",
+     "plan": "13 drums on the merging taper; drums 36-inch; Type 1 barricade: none",
+     "source": "S-630-1 Sheet 4 legend; MUTCD §6K.06 ¶01, p. 820; S-630-1 Note 16 (L11, L13)",
+     "note": ""
+    },
+    {
+     "check": "C6 closed-approach sign series",
+     "status": "PASS",
+     "oracle": "W20-1 → W20-5R → W4-2R, gaps ≥ 350 ft (urban_high)",
+     "plan": "W20-1 1050 → W20-5R 700 → W4-2R 350",
+     "source": "S-630-1 Sheet 10 Case 18; MUTCD Figs 6P-21/22, pp. 901/903; Table 6B-1 (L5, L15)",
+     "note": ""
+    },
+    {
+     "check": "C6b cross-street W20-1",
+     "status": "PASS",
+     "oracle": "W20-1 on each drawn cross-street approach",
+     "plan": "1 approaches; all carry W20-1",
+     "source": "MUTCD Fig 6P-22, p. 903; S-630-1 Sheet 10 Case 18 (L15)",
+     "note": ""
+    },
+    {
+     "check": "C8 arrow board",
+     "status": "PASS",
+     "oracle": "if drawn, at the start of the merging taper",
+     "plan": "the upstream start of the merging taper station 1855; taper starts at 1855.0; mode left arrow",
+     "source": "MUTCD §6L.06 ¶19, p. 833 (L14)",
+     "note": ""
+    },
+    {
+     "check": "C9 near or far side",
+     "status": "PASS",
+     "oracle": "cross street at station -99.0 → near side (Fig 6P-21: closure before the intersection; Fig 6P-22: past it)",
+     "plan": "audit near; page 1 / crew say neither; row asked near",
+     "source": "MUTCD Figs 6P-21, 6P-22, pp. 901/903 (L16; rulings R7)",
+     "note": ""
+    },
+    {
+     "check": "C10 device counts agree",
+     "status": "FLAG",
+     "oracle": "same quantity of every device on every surface",
+     "plan": "R2-10: page 1 summary 1, device XLSX 2, quote XLSX 2, crew sheet 2, audit 2; R2-11: page 1 summary 1, device XLSX 2, quote XLSX 2, crew sheet 2, audit 2; W20-1: page 1 summary 1, device XLSX 2, quote XLSX 2, crew sheet 2, audit 2",
+     "source": "Rule 10 / P2 one voice per fact",
+     "note": ""
+    },
+    {
+     "check": "C10b notes match drawing",
+     "status": "PASS",
+     "oracle": "every value in NOTES equals its drawn label and the request",
+     "plan": "match",
+     "source": "Rule 10",
+     "note": ""
+    },
+    {
+     "check": "C11 containment",
+     "status": "PASS",
+     "oracle": "0/0/0",
+     "plan": "0/0/0",
+     "source": "tests/test_pdf_containment.py measure",
+     "note": ""
+    },
+    {
+     "check": "C11b edition",
+     "status": "FLAG",
+     "oracle": "MUTCD 11th Edition throughout; S-630-1 July 2026 (26 sheets)",
+     "plan": "MUTCD 11th Edition; audit links S-630-01%20(19-Page%20Set).pdf",
+     "source": "Rule 9; CLAUDE.md staleness note",
+     "note": "edition finding: goes to #265"
+    },
+    {
+     "check": "C13 pedestrian access",
+     "status": "PASS",
+     "oracle": "the closure shown (TA-28) or the limit stated",
+     "plan": "pedestrianAccess=False, scan sidewalk=True; R9-9",
+     "source": "MUTCD TA-28, pp. 914-915; §6N.04 ¶06, p. 843 (L20)",
+     "note": ""
+    },
+    {
+     "check": "C14 cone height (45+ mph)",
+     "status": "INFO",
+     "oracle": "36 in where ADT ≥ 2,000 (no ADT input)",
+     "plan": "36-inch",
+     "source": "S-630-1 Sheet 2 Note 15 (L12)",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "row": {
+    "id": "R1",
+    "kind": "flagger_lane_closure",
+    "pin": "BWAY11",
+    "road_type": "urban",
+    "speed": 30,
+    "expect": "refuse",
+    "why": "one-way road (#158)"
+   },
+   "pin": {
+    "place": "N Broadway at E 11th Ave, Denver (one-way)",
+    "lat": 39.7337,
+    "lng": -104.98753,
+    "road": "Broadway",
+    "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+    "cross": "N Broadway & E 11th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "INFO",
+    "http": 400,
+    "pdf": 400,
+    "message": "\"This road appears to carry more lanes than a flagger operation covers. TA-10 applies where one through lane runs in each direction. If detection is wrong, confirm 'Road has one through lane in each direction' in the form and regenerate.\"",
+    "why": "message doesn't name /one.?way/; refused for a reason that is also true of this road"
+   }
+  },
+  {
+   "row": {
+    "id": "R2",
+    "kind": "flagger_lane_closure",
+    "pin": "SINGLE",
+    "road_type": "rural",
+    "speed": 25,
+    "expect": "refuse",
+    "why": "single-lane road"
+   },
+   "pin": {
+    "place": "Gamble Gulch Rd, Gilpin County",
+    "lat": 39.878635,
+    "lng": -105.530885,
+    "road": "Gamble Gulch",
+    "reads": "two-way, 1 lane, rural"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "\"This looks like a single-lane road, which isn't supported yet. A flagger operation (TA-10) needs a lane in each direction. If the detection is wrong, confirm “Road has one lane in each direction” in the form and regenerate.\"",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R3",
+    "kind": "flagger_lane_closure",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "expect": "refuse",
+    "why": "four-lane two-way road"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "\"This road appears to carry more lanes than a flagger operation covers. TA-10 applies where one through lane runs in each direction. If detection is wrong, confirm 'Road has one through lane in each direction' in the form and regenerate.\"",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R4",
+    "kind": "flagger_lane_closure",
+    "pin": "CO119",
+    "road_type": "rural",
+    "speed": 60,
+    "expect": "refuse",
+    "why": "60 mph"
+   },
+   "pin": {
+    "place": "CO 119, Boulder Canyon",
+    "lat": 40.00185,
+    "lng": -105.41289,
+    "road": "119",
+    "reads": "2 lanes, 45 mph, rural, undivided"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "\"speed: Input should be less than or equal to 55\"",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R5",
+    "kind": "flagger_lane_closure",
+    "pin": "OGDEN",
+    "road_type": "urban",
+    "speed": 25,
+    "over": {
+     "laneWidthFt": 8
+    },
+    "expect": "refuse",
+    "why": "8 ft lane"
+   },
+   "pin": {
+    "place": "Ogden St between 6th and 7th Ave, Denver",
+    "lat": 39.7265,
+    "lng": -104.97525,
+    "road": "Ogden",
+    "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver",
+    "cross": "Ogden St & E 7th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "\"laneWidth: Input should be greater than or equal to 9\"",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R6",
+    "kind": "near_intersection",
+    "pin": "DIVIDED",
+    "road_type": "urban",
+    "speed": 35,
+    "expect": "refuse",
+    "why": "divided=true",
+    "over": {
+     "divided": true
+    }
+   },
+   "pin": {
+    "place": "Colorado Blvd at Exposition Ave, Denver",
+    "lat": 39.709,
+    "lng": -104.9407,
+    "road": "Colorado",
+    "reads": "one-way carriageway of a divided road, 3 lanes, 35 mph",
+    "cross": "S Colorado Blvd & E Exposition Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "\"divided intersections aren't supported yet. Cases 18/19 are undivided/arterial plates; a divided mainline adds the median-opening question (deferred).\"",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R7",
+    "kind": "near_intersection",
+    "pin": "OGDEN",
+    "road_type": "urban",
+    "speed": 25,
+    "expect": "refuse",
+    "why": "one lane per direction"
+   },
+   "pin": {
+    "place": "Ogden St between 6th and 7th Ave, Denver",
+    "lat": 39.7265,
+    "lng": -104.97525,
+    "road": "Ogden",
+    "reads": "two-way, 2 lanes, urban, no maxspeed; jurisdiction denver",
+    "cross": "Ogden St & E 7th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "{\"error\": \"generator_rejected\", \"message\": \"near_intersection needs num_lanes >= 2 on the mainline (got 1): Cases 18/19 merge the closed lane into an adjacent same-direction lane.  A 1-lane-per-direction mainline is the flagger-controlled Case 19 shape, which is out of scope.\"}",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R8",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "expect": "refuse",
+    "why": "cross street inside the work zone"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "{\"error\": \"generator_rejected\", \"message\": \"the marked cross street crosses inside the work zone (station 300 ft, work zone spans 0..500).  Work within the intersection (MUTCD Figures 6P-26/27) is not supported.\"}",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R9",
+    "kind": "near_intersection",
+    "pin": "BWAY11",
+    "road_type": "urban",
+    "speed": 30,
+    "side": "far",
+    "lane": "left",
+    "expect": "refuse",
+    "why": "left lane far side without turnBayStorageFt"
+   },
+   "pin": {
+    "place": "N Broadway at E 11th Ave, Denver (one-way)",
+    "lat": 39.7337,
+    "lng": -104.98753,
+    "road": "Broadway",
+    "reads": "one-way, 5 lanes, 30 mph, turn_lanes ||||right; denver",
+    "cross": "N Broadway & E 11th Ave, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "{\"error\": \"turn_bay_storage_missing\", \"message\": \"Enter the left-turn bay storage length under Cross street. This cross street comes before the work, so the left lane ahead of it becomes a left-turn bay (MUTCD TA-23), and its length comes from the site's signal timing or turn counts.\"}",
+    "why": ""
+   }
+  },
+  {
+   "row": {
+    "id": "R10",
+    "kind": "near_intersection",
+    "pin": "WCOLFAX_DEN",
+    "road_type": "urban",
+    "speed": 30,
+    "expect": "refuse",
+    "why": "approach lane tags that don't add up (#120)"
+   },
+   "pin": {
+    "place": "W Colfax Ave, Denver",
+    "lat": 39.74035,
+    "lng": -105.04014,
+    "road": "Colfax",
+    "reads": "undivided, 2 + 2 lanes plus a center lane, 30 mph, urban; denver; no signal nearby",
+    "cross": "W Colfax Ave & Perry St, Denver",
+    "cross_juris": "denver"
+   },
+   "refusal": {
+    "status": "PASS",
+    "http": 400,
+    "pdf": 400,
+    "message": "\"The map data's lane counts for the cross street contradict each other (the total doesn't match the per-direction counts), so the detected lane count can't be trusted this close to an intersection. Check the through-lane count in the field or on imagery, then confirm “Lane count is right” (or set the count yourself) in the Cross street section and regenerate.\"",
+    "why": ""
+   }
+  }
+ ]
+}
