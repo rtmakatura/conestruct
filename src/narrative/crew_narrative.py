@@ -38,6 +38,7 @@ from src.generation.layout import (
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
 from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
+from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
 from src.rules.spacing import (
@@ -285,6 +286,7 @@ def build_narrative_context(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -668,6 +670,28 @@ def build_narrative_context(
     setup_order = sorted(advance_signs, key=lambda d: d["distance_ft"])
     takedown_order = sorted(advance_signs, key=lambda d: -d["distance_ft"])
     device_summary = _device_summary(placements, params)
+    # #379: the arrow board a jurisdiction rule adds to a flagger plan
+    # (Denver, Englewood, Greeley, Lakewood) has no placement, so it is
+    # listed from the same rows the XLSX and page 1 print.  Only the rows
+    # with a one-mode note: other delta-only adds stay off this sheet.
+    delta_rows = [
+        r
+        for r in aggregate_device_rows_with_deltas(placements, applied_deltas, params)
+        if r.display_override is not None and r.mode_note is not None
+    ]
+    device_summary += [
+        {"label": r.display_override, "count": r.quantity, "children": []} for r in delta_rows
+    ]
+    flagger_arrow_board = next(
+        (
+            {
+                "doc": (r.jurisdiction_source or {}).get("doc", "the jurisdiction's rule"),
+                "mode_note": r.mode_note,
+            }
+            for r in delta_rows
+        ),
+        None,
+    )
     equipment_bullets = _format_equipment_bullets(device_summary)
 
     # Flagger-station positions read from the placement list (PR 3 G2 —
@@ -916,6 +940,7 @@ def build_narrative_context(
         "closure_type_display": scenario_display_name(params),
         "device_summary": device_summary,
         "equipment_bullets": equipment_bullets,
+        "flagger_arrow_board": flagger_arrow_board,
         "sign_schedule": sign_schedule,
         "advance_signs_setup_order": setup_order,
         "advance_signs_takedown_order": takedown_order,
@@ -1135,6 +1160,7 @@ def render_crew_narrative_markdown(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> str:
     """Build the crew-instructions Markdown string (no file I/O).
 
@@ -1153,6 +1179,7 @@ def render_crew_narrative_markdown(
         approaches=approaches,
         jurisdiction_key=jurisdiction_key,
         site_scan=site_scan,
+        applied_deltas=applied_deltas,
     )
     markdown = _render_template(context)
     if use_llm:
@@ -1171,6 +1198,7 @@ def generate_crew_narrative(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -1196,6 +1224,7 @@ def generate_crew_narrative(
         approaches=approaches,
         jurisdiction_key=jurisdiction_key,
         site_scan=site_scan,
+        applied_deltas=applied_deltas,
     )
     Path(output_path).write_text(markdown, encoding="utf-8")
     return output_path
@@ -1212,6 +1241,7 @@ def generate_crew_narrative_pdf(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> str:
     """Render the crew narrative as a phone-readable PDF and write it to disk.
 
@@ -1233,6 +1263,7 @@ def generate_crew_narrative_pdf(
         approaches=approaches,
         jurisdiction_key=jurisdiction_key,
         site_scan=site_scan,
+        applied_deltas=applied_deltas,
     )
     blocks = markdown_to_blocks(markdown)
     return render_document_pdf(blocks, output_path, title="Crew Instructions")

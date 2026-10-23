@@ -1,0 +1,254 @@
+{
+ "base": "48bf3aa",
+ "base_sha12": {
+  "flagger-None": {
+   "md": "9b8f2da1eb39",
+   "xlsx": "23e6d0649b24",
+   "quote": "b577cdd64d7a",
+   "breakdown": "d11cd3dd9846",
+   "audit": "016400a6248a"
+  },
+  "shoulder-None": {
+   "md": "44b67674b4ed",
+   "xlsx": "cfa3e4cd2cb7",
+   "quote": "f86f0653a580",
+   "breakdown": "8c9273d5ea6d",
+   "audit": "4544f829dfae"
+  },
+  "flagger-denver": {
+   "md": "7d6ac8221484",
+   "xlsx": "37a8fd50d5ec",
+   "quote": "96a28cff9774",
+   "breakdown": "bab8ee22240f",
+   "audit": "016400a6248a"
+  },
+  "shoulder-denver": {
+   "md": "80d73900c47e",
+   "xlsx": "3af4947545a9",
+   "quote": "f86f0653a580",
+   "breakdown": "5e569fa10ee3",
+   "audit": "4544f829dfae"
+  },
+  "flagger-englewood": {
+   "md": "016db9e04d37",
+   "xlsx": "c92e8adc53be",
+   "quote": "5d06d56e1907",
+   "breakdown": "11a7549ead6c",
+   "audit": "016400a6248a"
+  },
+  "shoulder-englewood": {
+   "md": "3755ec9828bb",
+   "xlsx": "0f81a6acb27a",
+   "quote": "f86f0653a580",
+   "breakdown": "eddc1d489f59",
+   "audit": "4544f829dfae"
+  },
+  "flagger-greeley": {
+   "md": "5538cd6a71f4",
+   "xlsx": "84502c6868bc",
+   "quote": "daa8e493ed00",
+   "breakdown": "153963254be4",
+   "audit": "016400a6248a"
+  },
+  "shoulder-greeley": {
+   "md": "6daccc66abcf",
+   "xlsx": "6dac8e3085b8",
+   "quote": "f86f0653a580",
+   "breakdown": "f8d89742c274",
+   "audit": "4544f829dfae"
+  },
+  "flagger-lakewood": {
+   "md": "0dd9f2f81fd9",
+   "xlsx": "27090e9df522",
+   "quote": "ed0699407ebc",
+   "breakdown": "f3534f5947db",
+   "audit": "016400a6248a"
+  },
+  "shoulder-lakewood": {
+   "md": "49bc28c73ffb",
+   "xlsx": "1a4732dd3cf8",
+   "quote": "f86f0653a580",
+   "breakdown": "08458d52d76d",
+   "audit": "4544f829dfae"
+  },
+  "flagger-thornton": {
+   "md": "cd536acea585",
+   "xlsx": "2e7f52bbc262",
+   "quote": "1c6a59093b4e",
+   "breakdown": "c634236a8066",
+   "audit": "016400a6248a"
+  },
+  "shoulder-thornton": {
+   "md": "3b913261841b",
+   "xlsx": "ab03abd37078",
+   "quote": "774fabe29e89",
+   "breakdown": "0cf5e4f366c3",
+   "audit": "4544f829dfae"
+  },
+  "flagger-parker": {
+   "md": "8e7eeac155db",
+   "xlsx": "c0bc039d7a3b",
+   "quote": "b577cdd64d7a",
+   "breakdown": "bbd610808752",
+   "audit": "016400a6248a"
+  },
+  "shoulder-parker": {
+   "md": "3330e76ba4b5",
+   "xlsx": "2197fd4789a3",
+   "quote": "f86f0653a580",
+   "breakdown": "503411276d14",
+   "audit": "4544f829dfae"
+  },
+  "ni-denver": {
+   "md": "e225dd8100f6",
+   "xlsx": "0b138b21a30b",
+   "quote": "392f186caeca",
+   "breakdown": "4fbdc5540c98",
+   "audit": "01a777e46d03"
+  }
+ },
+ "branch_sha12": {
+  "flagger-None": {
+   "md": "9b8f2da1eb39",
+   "xlsx": "23e6d0649b24",
+   "quote": "b577cdd64d7a",
+   "breakdown": "d11cd3dd9846",
+   "audit": "016400a6248a"
+  },
+  "shoulder-None": {
+   "md": "44b67674b4ed",
+   "xlsx": "cfa3e4cd2cb7",
+   "quote": "f86f0653a580",
+   "breakdown": "8c9273d5ea6d",
+   "audit": "4544f829dfae"
+  },
+  "flagger-denver": {
+   "md": "d01c576dcd23",
+   "xlsx": "c2e65a5ed08c",
+   "quote": "a0fbacca2abf",
+   "breakdown": "d580caa95335",
+   "audit": "016400a6248a"
+  },
+  "shoulder-denver": {
+   "md": "80d73900c47e",
+   "xlsx": "3af4947545a9",
+   "quote": "f86f0653a580",
+   "breakdown": "5e569fa10ee3",
+   "audit": "4544f829dfae"
+  },
+  "flagger-englewood": {
+   "md": "b07aac8de63f",
+   "xlsx": "2d377e829ae5",
+   "quote": "195b85787163",
+   "breakdown": "971aab87c727",
+   "audit": "016400a6248a"
+  },
+  "shoulder-englewood": {
+   "md": "3755ec9828bb",
+   "xlsx": "0f81a6acb27a",
+   "quote": "f86f0653a580",
+   "breakdown": "eddc1d489f59",
+   "audit": "4544f829dfae"
+  },
+  "flagger-greeley": {
+   "md": "d45a1b4c9f76",
+   "xlsx": "4edc4a2cb7dd",
+   "quote": "c22c585ab162",
+   "breakdown": "11811c25d200",
+   "audit": "016400a6248a"
+  },
+  "shoulder-greeley": {
+   "md": "6daccc66abcf",
+   "xlsx": "6dac8e3085b8",
+   "quote": "f86f0653a580",
+   "breakdown": "f8d89742c274",
+   "audit": "4544f829dfae"
+  },
+  "flagger-lakewood": {
+   "md": "5679c28d1176",
+   "xlsx": "1f18cc2e2f1b",
+   "quote": "799d801bd554",
+   "breakdown": "ff601dad146a",
+   "audit": "016400a6248a"
+  },
+  "shoulder-lakewood": {
+   "md": "49bc28c73ffb",
+   "xlsx": "1a4732dd3cf8",
+   "quote": "f86f0653a580",
+   "breakdown": "08458d52d76d",
+   "audit": "4544f829dfae"
+  },
+  "flagger-thornton": {
+   "md": "cd536acea585",
+   "xlsx": "2e7f52bbc262",
+   "quote": "1c6a59093b4e",
+   "breakdown": "c634236a8066",
+   "audit": "016400a6248a"
+  },
+  "shoulder-thornton": {
+   "md": "3b913261841b",
+   "xlsx": "ab03abd37078",
+   "quote": "774fabe29e89",
+   "breakdown": "0cf5e4f366c3",
+   "audit": "4544f829dfae"
+  },
+  "flagger-parker": {
+   "md": "8e7eeac155db",
+   "xlsx": "c0bc039d7a3b",
+   "quote": "b577cdd64d7a",
+   "breakdown": "bbd610808752",
+   "audit": "016400a6248a"
+  },
+  "shoulder-parker": {
+   "md": "3330e76ba4b5",
+   "xlsx": "2197fd4789a3",
+   "quote": "f86f0653a580",
+   "breakdown": "503411276d14",
+   "audit": "4544f829dfae"
+  },
+  "ni-denver": {
+   "md": "e225dd8100f6",
+   "xlsx": "0b138b21a30b",
+   "quote": "392f186caeca",
+   "breakdown": "4fbdc5540c98",
+   "audit": "01a777e46d03"
+  }
+ },
+ "changed": {
+  "flagger-None": [],
+  "shoulder-None": [],
+  "flagger-denver": [
+   "md",
+   "xlsx",
+   "quote",
+   "breakdown"
+  ],
+  "shoulder-denver": [],
+  "flagger-englewood": [
+   "md",
+   "xlsx",
+   "quote",
+   "breakdown"
+  ],
+  "shoulder-englewood": [],
+  "flagger-greeley": [
+   "md",
+   "xlsx",
+   "quote",
+   "breakdown"
+  ],
+  "shoulder-greeley": [],
+  "flagger-lakewood": [
+   "md",
+   "xlsx",
+   "quote",
+   "breakdown"
+  ],
+  "shoulder-lakewood": [],
+  "flagger-thornton": [],
+  "shoulder-thornton": [],
+  "flagger-parker": [],
+  "shoulder-parker": [],
+  "ni-denver": []
+ }
+}

@@ -291,7 +291,9 @@ def _equipment_line_for(
                 daily_rate=rate,
                 days=project_duration_days,
                 extended=_cents(qty * rate * project_duration_days),
-                note=_JURISDICTION_MAPPED_NOTE.format(doc=doc),
+                note=_JURISDICTION_MAPPED_NOTE.format(doc=doc)
+                # #379: the one-mode sentence (a flagger plan's arrow board).
+                + (f" {row.mode_note}" if row.mode_note else ""),
                 jurisdiction_required=True,
             )
         # Unmapped device id: no single daily rate.  Honest "—" line,
@@ -740,7 +742,7 @@ def generate_quote(
     ``QuoteBreakdown`` with all line items, subtotals, markup, and the final
     total — ready to drive a UI drill-down or further programmatic use.
     """
-    rows = aggregate_device_rows_with_deltas(placements, applied_deltas)
+    rows = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
 
     equipment_lines = _compute_equipment_lines(rows, params, project_duration_days)
     labor_lines = _compute_labor_lines(

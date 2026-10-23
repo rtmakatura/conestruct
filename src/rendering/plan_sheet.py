@@ -3516,7 +3516,7 @@ def _draw_device_summary(
     bid-authority line so the two surfaces never compete.  Overflow is an
     explicit pointer line, never a silent clip (rule 10).
     """
-    rows = aggregate_device_rows_with_deltas(placements, applied_deltas)
+    rows = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
 
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.6)

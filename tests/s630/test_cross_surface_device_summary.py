@@ -78,7 +78,8 @@ def test_greeley_arterial_flagger_delta_reaches_all_three_surfaces(client, tmp_p
     body["street_class"] = "arterial"
 
     rows, xlsx_total = _xlsx_device_rows(client, body)
-    arrow = [r for r in rows if r[1] == "Arrow Board (Type C)"]
+    # #379: on a flagger plan the board is caution mode only (§6L.06 ¶18).
+    arrow = [r for r in rows if r[1] == "Arrow Board (Type C, caution mode only)"]
     assert len(arrow) == 1, [r[1] for r in rows]
     # (Item#, DeviceType, Description, PayItem, Unit, Qty, Notes)
     assert arrow[0][3] == "630-80358"  # real CDOT C-type pay item, not fabricated
@@ -88,7 +89,7 @@ def test_greeley_arterial_flagger_delta_reaches_all_three_surfaces(client, tmp_p
 
     # On-sheet summary shows the same device and total.
     text = pdf_text(client, body, tmp_path)
-    assert "Arrow Board (Type C)" in text
+    assert "Arrow Board (Type C, caution mode only)" in text
 
     # Cross-surface equality: breakdown == XLSX summary == sum of XLSX qtys.
     xlsx_qty_sum = sum(int(r[5]) for r in rows)

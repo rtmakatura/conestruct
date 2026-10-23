@@ -77,6 +77,9 @@
 {% endif %}
 {% if is_flagger %}
    Repeat the series for the opposing approach (left side, negative stations; S-630-1 Case 17: "SIGN SEQUENCE IS THE SAME FOR OPPOSITE DIRECTION").
+{% if flagger_arrow_board %}
+   Arrow board ({{ flagger_arrow_board.doc }} requires one): {{ flagger_arrow_board.mode_note }} Set it to flashing caution or alternating diamond and activate it. The drawing doesn't place it, because MUTCD Fig. 6P-10 and S-630-1 Case 17 show no arrow board for a flagger closure. The Traffic Control Supervisor picks its position.
+{% endif %}
 
 7. Staff both {% if is_afad %}AFAD{% else %}flagger{% endif %} stations{% if is_afad %} (position and activate the AFADs; the operator must maintain sight of both devices){% else %} (STOP/SLOW paddles, high-visibility apparel, radio or agreed hand-signal communication between stations){% endif %}{% if is_night %}, with station flood lighting per S-630-1 Sheet 2 Note 22{% endif %}. Verify each station is visible to approaching traffic from the full advance-warning distance and has an identified escape path. Begin the alternating one-way operation.
 {% endif %}
@@ -102,6 +105,9 @@
 3. Cease the alternating one-way operation and release both {% if is_afad %}AFAD{% else %}flagger{% endif %} stations.
 4. Remove advance warning signs on both approaches: {{ takedown_sign_sequence }}.
 5. Remove G20-5P plaques and the G20-1/G20-2 BEGIN/END ROAD WORK signs.
+{% if flagger_arrow_board %}
+6. Deactivate and remove the arrow board.
+{% endif %}
 {% else %}
 **Important: Remove from upstream to downstream (with traffic flow). Remove advance warning signs first, work zone devices last.**
 

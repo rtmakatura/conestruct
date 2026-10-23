@@ -142,7 +142,9 @@ def _row_for(
                 spec.cdot_pay_item_number or "TODO",
                 spec.unit,
                 quantity,
-                _JURISDICTION_MAPPED_NOTE.format(doc=doc),
+                _JURISDICTION_MAPPED_NOTE.format(doc=doc)
+                # #379: the one-mode sentence (a flagger plan's arrow board).
+                + (f" {row.mode_note}" if row.mode_note else ""),
             )
         # Unmapped device id: honest row, no fabricated pay item.
         return (
@@ -222,7 +224,7 @@ def _populate_device_list_sheet(
     # Aggregation + ordering + fired jurisdiction count deltas live in the
     # shared helper (issue #150/#151) so the screen breakdown, this bid
     # document, and the on-sheet summary carry identical quantities.
-    aggregated = aggregate_device_rows_with_deltas(placements, applied_deltas)
+    aggregated = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
 
     for item_number, row in enumerate(aggregated, start=1):
         sheet.append(_row_for(item_number, row, params))

@@ -1439,6 +1439,9 @@ def render_markdown(scenario: Scenario) -> Response:
                     approaches=approaches,
                     # #224 phase 3 — the NOT-CHECKED disclosure surface.
                     site_scan=scan.provenance.model_dump(mode="json"),
+                    # #379: the fired count deltas the XLSX and page 1
+                    # apply, so a flagger plan's arrow board is listed.
+                    applied_deltas=_jurisdiction_eval(scenario, params)[1],
                 )
             ),
         )
@@ -1478,6 +1481,9 @@ def render_crew_pdf(scenario: Scenario) -> Response:
                     approaches=approaches,
                     # #224 phase 3 — the NOT-CHECKED disclosure surface.
                     site_scan=scan.provenance.model_dump(mode="json"),
+                    # #379: the fired count deltas the XLSX and page 1
+                    # apply, so a flagger plan's arrow board is listed.
+                    applied_deltas=_jurisdiction_eval(scenario, params)[1],
                 )
             ),
         )
@@ -2196,7 +2202,7 @@ def _jurisdiction_eval(
         # R117 Q1b / R118: with the plan's placements, each fired count rule
         # says whether it raised a count (the same row walk the counts use).
         jurisdiction["applied_deltas"] = annotate_count_effects(
-            jurisdiction["applied_deltas"], placements
+            jurisdiction["applied_deltas"], placements, params
         )
     return jurisdiction, jurisdiction["applied_deltas"]
 
@@ -2235,7 +2241,7 @@ def _breakdown_payload(scenario: Scenario, placements: list[Any], params: Any) -
     # pipeline (spec §3.2, issue #151) — the same aggregation the XLSX and
     # on-sheet summary render, never a frontend computation.
     jurisdiction, applied_deltas = _jurisdiction_eval(scenario, params, placements)
-    structured = aggregate_device_rows_with_deltas(placements, applied_deltas)
+    structured = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
     rows = [_format_breakdown_row(row, params) for row in structured]
     payload: dict[str, Any] = {
         "devices": rows,

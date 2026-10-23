@@ -332,7 +332,8 @@ def test_greeley_arterial_end_to_end_adds_arrow_board(client):
     assert r.status_code == 200
     payload = r.json()
     added = [row for row in payload["devices"] if row.get("jurisdiction_required")]
-    assert [row["device"] for row in added] == ["Arrow Board (Type C)"]
+    # #379: on a flagger plan the board is caution mode only (§6L.06 ¶18).
+    assert [row["device"] for row in added] == ["Arrow Board (Type C, caution mode only)"]
     assert payload["total_devices"] == sum(row["qty"] for row in payload["devices"])
 
 

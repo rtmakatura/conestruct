@@ -88,7 +88,8 @@ def test_denver_flagger_arrow_board_prices_on_quote_workbook(client: TestClient)
     scenario["street_class"] = "arterial"
 
     rows = _equipment_rows(client, scenario)
-    arrow = [r for r in rows if r[1] == "Arrow Board"]
+    # #379: a flagger plan's board is caution mode only (§6L.06 ¶18).
+    arrow = [r for r in rows if r[1] == "Arrow Board (caution mode only)"]
     assert len(arrow) == 1, [r[1] for r in rows]
     a = arrow[0]
     assert a[4] == 1  # qty

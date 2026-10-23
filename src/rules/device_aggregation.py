@@ -38,6 +38,9 @@ class AggregatedDeviceRow(NamedTuple):
     # 0 on a row the layout already carried enough of (the rule is met,
     # nothing was raised).
     jurisdiction_added: int = 0
+    # #379: a sentence every surface prints beside the row when the device
+    # runs in one mode only (an arrow board on a flagger plan: caution).
+    mode_note: str | None = None
 
 
 def row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:

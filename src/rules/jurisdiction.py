@@ -41,6 +41,7 @@ import jsonschema
 
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
 from src.rules.devices import DeviceType
+from src.rules.validators import ScenarioParams, _is_flagger_scenario
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 SCHEMA_PATH = REPO_ROOT / "data" / "jurisdiction.schema.json"
@@ -692,6 +693,36 @@ _DELTA_DEVICE_TYPE: dict[str, DeviceType] = {
 }
 
 
+# #379: MUTCD 11th Ed. §6L.06 ¶18 (Standard), p. 833: "for temporarily
+# closing one lane on a two-lane, two-way roadway, an arrow board shall be
+# used only in the caution mode" (S-630-1 Sheet 2 General Note 26 says the
+# same).  A jurisdiction rule that adds a board to a flagger plan (Denver's
+# >=1-lane trigger) sets the count; ¶18 still sets the mode.
+ARROW_BOARD_CAUTION_NOTE = (
+    "Caution mode only, never an arrow or chevron: one lane is closed on a "
+    "two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 "
+    "Sheet 2 General Note 26)."
+)
+
+
+def _caution_name(name: str) -> str:
+    """The device name with the mode added: "Arrow Board (caution mode
+    only)", "Arrow Board (Type C, caution mode only)"."""
+    if name.endswith(")"):
+        return f"{name[:-1]}, caution mode only)"
+    return f"{name} (caution mode only)"
+
+
+def _caution_only_board(device_id: str, params: ScenarioParams | None) -> bool:
+    """True when this delta adds an arrow board to a flagger (one lane
+    closed, two-lane two-way) plan, where ¶18 allows caution mode only."""
+    return (
+        params is not None
+        and _DELTA_DEVICE_TYPE.get(device_id) == DeviceType.ARROW_BOARD
+        and _is_flagger_scenario(params)
+    )
+
+
 def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
     """Yield ``(index, device_id, qty, source)`` for every fired count
     add-device delta (``index`` over ``applied_deltas``).
@@ -715,7 +746,9 @@ def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
 
 
 def apply_count_deltas_structured(
-    rows: list[AggregatedDeviceRow], applied_deltas: list[dict[str, Any]]
+    rows: list[AggregatedDeviceRow],
+    applied_deltas: list[dict[str, Any]],
+    params: ScenarioParams | None = None,
 ) -> list[AggregatedDeviceRow]:
     """Apply fired count deltas to the shared aggregated rows (issue #151).
 
@@ -738,12 +771,17 @@ def apply_count_deltas_structured(
     R117 Q1b: each row records how many of its quantity the rules added
     (``jurisdiction_added``); :func:`annotate_count_effects` reads the same
     walk to say whether each rule raised a count.
+
+    #379: with ``params`` given, an arrow board a delta adds to a flagger
+    plan is named and noted as caution mode only (§6L.06 ¶18).
     """
-    return _apply_count_deltas(rows, applied_deltas)[0]
+    return _apply_count_deltas(rows, applied_deltas, params)[0]
 
 
 def _apply_count_deltas(
-    rows: list[AggregatedDeviceRow], applied_deltas: list[dict[str, Any]]
+    rows: list[AggregatedDeviceRow],
+    applied_deltas: list[dict[str, Any]],
+    params: ScenarioParams | None = None,
 ) -> tuple[list[AggregatedDeviceRow], dict[int, int]]:
     """The one walk: the rows after the fired count deltas, and how much
     each delta (by index over ``applied_deltas``) added."""
@@ -768,6 +806,7 @@ def _apply_count_deltas(
             )
         else:
             added = qty
+            caution = _caution_only_board(device_id, params)
             out.append(
                 AggregatedDeviceRow(
                     device_type=dt,
@@ -776,8 +815,13 @@ def _apply_count_deltas(
                     representative=None,
                     jurisdiction_required=True,
                     jurisdiction_source=source,
-                    display_override=_display_name(device_id),
+                    display_override=(
+                        _caution_name(_display_name(device_id))
+                        if caution
+                        else _display_name(device_id)
+                    ),
                     jurisdiction_added=qty,
+                    mode_note=ARROW_BOARD_CAUTION_NOTE if caution else None,
                 )
             )
         added_by[i] = added
@@ -785,7 +829,9 @@ def _apply_count_deltas(
 
 
 def annotate_count_effects(
-    applied_deltas: list[dict[str, Any]], placements: list
+    applied_deltas: list[dict[str, Any]],
+    placements: list,
+    params: ScenarioParams | None = None,
 ) -> list[dict[str, Any]]:
     """R117 Q1b / R118 -- the applied deltas, each fired count add-device
     delta carrying ``raised`` (did it add to a count on THIS plan?), and each
@@ -796,14 +842,20 @@ def annotate_count_effects(
     disagree with the counts.  A rule the layout already meets raised
     nothing: the board was there.  Returns new dicts; the input is not
     mutated.  Deltas that change no count carry no ``raised``.
+
+    #379: a fired delta that adds an arrow board to a flagger plan names it
+    caution mode only and carries ``mode_note`` (§6L.06 ¶18).
     """
-    _, added_by = _apply_count_deltas(aggregate_device_rows(placements), applied_deltas)
+    _, added_by = _apply_count_deltas(aggregate_device_rows(placements), applied_deltas, params)
     out: list[dict[str, Any]] = []
     for i, d in enumerate(applied_deltas):
         a = dict(d)
         device = (d.get("effect") or {}).get("device")
         if device:
             a["device_label"] = device_label(device)
+            if i in added_by and _caution_only_board(device, params):
+                a["device_label"] = _caution_name(device_label(device))
+                a["mode_note"] = ARROW_BOARD_CAUTION_NOTE
         if i in added_by:
             a["raised"] = added_by[i] > 0
         out.append(a)
@@ -811,7 +863,9 @@ def annotate_count_effects(
 
 
 def aggregate_device_rows_with_deltas(
-    placements: list, applied_deltas: list[dict[str, Any]] | None
+    placements: list,
+    applied_deltas: list[dict[str, Any]] | None,
+    params: ScenarioParams | None = None,
 ) -> list[AggregatedDeviceRow]:
     """Aggregate placements, then apply any fired jurisdiction count deltas.
 
@@ -823,4 +877,4 @@ def aggregate_device_rows_with_deltas(
     rows = aggregate_device_rows(placements)
     if not applied_deltas:
         return rows
-    return apply_count_deltas_structured(rows, applied_deltas)
+    return apply_count_deltas_structured(rows, applied_deltas, params)
