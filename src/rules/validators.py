@@ -1871,13 +1871,16 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     before invoking the generator.
 
     Hard rule (``WORK_ZONE_SHORTER_THAN_TAPER`` / error): the work zone
-    must be at least as long as the required merging taper.  A taper
+    must be at least as long as the taper the plan draws (merging L,
+    shoulder L/3, or the flagger's one-lane, two-way taper).  A taper
     longer than the work zone means traffic has fully transitioned into
     the closed configuration before reaching the work area, which is
     geometrically impossible to lay out — the closure would either
     overlap the taper or extend past the actual work.  Surfaces as a
     blocking error in the render API; the user must lengthen the work
-    zone or lower the speed.
+    zone or lower the speed (a flagger taper doesn't vary with speed).
+    CHOSEN (#375): neither the MUTCD nor S-630-1 states this limit;
+    §6B.08 sources the taper lengths it compares against, not the limit.
 
     Soft rule (``WORK_ZONE_SHORT_VS_BUFFER`` / warning): the work zone
     should not be dwarfed by the buffer.  When the buffer is more than
@@ -1969,20 +1972,33 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
         return out
     work_zone_ft = params.work_zone_length_ft
 
-    taper_label = (
-        "shoulder taper (L/3)" if params.closure_type == "shoulder" else "merging taper (L)"
-    )
+    # CHOSEN (#375): the zone-at-least-the-taper limit has no MUTCD or
+    # S-630-1 source; see the docstring.
     if work_zone_ft < taper_ft:
+        if _is_flagger_scenario(params):
+            # #375: the flagger taper is the §6B.08 ¶14 one-lane, two-way
+            # taper, a fixed length, so neither the speed nor a speed
+            # recovery belongs in the message.
+            message = (
+                f"Work zone length ({work_zone_ft:.0f} ft) is shorter than the "
+                f"{taper_ft:.0f} ft one-lane, two-way taper this flagger plan draws. "
+                f"Increase the work zone to at least {taper_ft:.0f} ft."
+            )
+        else:
+            taper_label = (
+                "shoulder taper (L/3)" if params.closure_type == "shoulder" else "merging taper (L)"
+            )
+            message = (
+                f"Work zone length ({work_zone_ft:.0f} ft) is shorter than the "
+                f"required {taper_label} of {taper_ft:.0f} ft at "
+                f"{params.speed_mph} mph. Increase the work zone to at least "
+                f"{taper_ft:.0f} ft, or reduce the speed limit."
+            )
         out.append(
             Violation(
                 rule_id="WORK_ZONE_SHORTER_THAN_TAPER",
                 severity="error",
-                message=(
-                    f"Work zone length ({work_zone_ft:.0f} ft) is shorter than the "
-                    f"required {taper_label} of {taper_ft:.0f} ft at "
-                    f"{params.speed_mph} mph. Increase the work zone to at least "
-                    f"{taper_ft:.0f} ft, or reduce the speed limit."
-                ),
+                message=message,
                 mutcd_section="6B.08",
                 device_index=None,
             )
