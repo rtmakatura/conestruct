@@ -1,0 +1,46 @@
+{
+ "ran_at": "2026-10-23T18:03:08+00:00",
+ "healthz": {
+  "status": "ok",
+  "sha": "2b6c23b2542250858055cce6ce125c6c8e1a22f1"
+ },
+ "F17_audit": {
+  "status": 400,
+  "error": "geometry_validation_failed",
+  "message": "Work zone length (50 ft) is shorter than the 100 ft one-lane, two-way taper this flagger plan draws. Increase the work zone to at least 100 ft.",
+  "taper_violation": {
+   "rule_id": "WORK_ZONE_SHORTER_THAN_TAPER",
+   "severity": "error",
+   "message": "Work zone length (50 ft) is shorter than the 100 ft one-lane, two-way taper this flagger plan draws. Increase the work zone to at least 100 ft.",
+   "mutcd_section": "6B.08"
+  }
+ },
+ "F17_pdf": {
+  "status": 400,
+  "error": "geometry_validation_failed",
+  "message": "Work zone length (50 ft) is shorter than the 100 ft one-lane, two-way taper this flagger plan draws. Increase the work zone to at least 100 ft.",
+  "taper_violation": {
+   "rule_id": "WORK_ZONE_SHORTER_THAN_TAPER",
+   "severity": "error",
+   "message": "Work zone length (50 ft) is shorter than the 100 ft one-lane, two-way taper this flagger plan draws. Increase the work zone to at least 100 ft.",
+   "mutcd_section": "6B.08"
+  }
+ },
+ "F17_100ft_audit_status": 200,
+ "N1_100ft_audit": {
+  "status": 400,
+  "error": "geometry_validation_failed",
+  "message": "Work zone length (100 ft) is shorter than the required merging taper (L) of 180 ft at 30 mph. Increase the work zone to at least 180 ft, or reduce the speed limit.",
+  "taper_violation": {
+   "rule_id": "WORK_ZONE_SHORTER_THAN_TAPER",
+   "severity": "error",
+   "message": "Work zone length (100 ft) is shorter than the required merging taper (L) of 180 ft at 30 mph. Increase the work zone to at least 180 ft, or reduce the speed limit.",
+   "mutcd_section": "6B.08"
+  }
+ },
+ "verdicts": {
+  "F17": true,
+  "F17_100ft": true,
+  "N1_control": true
+ }
+}
