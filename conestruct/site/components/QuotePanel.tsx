@@ -75,7 +75,15 @@ interface EquipmentLine {
   days: number;
   extended: number;
   note: string;
+  // No single daily rate (backend EquipmentLine): the line is excluded from
+  // the total and shows "—", never $0.00 (#151/#154; #373 pilot car).
+  jurisdiction_unmapped?: boolean;
+  unpriced?: boolean;
 }
+function isUnpriced(line: EquipmentLine): boolean {
+  return Boolean(line.jurisdiction_unmapped || line.unpriced);
+}
+
 interface LaborLine {
   role: string;
   personnel: number;
@@ -515,11 +523,11 @@ export function QuotePanel({
                     <td className="py-1.5">{line.label || "—"}</td>
                     <td className="text-right py-1.5">{line.qty}</td>
                     <td className="text-right py-1.5 font-mono">
-                      {fmtCurrency(line.daily_rate)}
+                      {isUnpriced(line) ? "—" : fmtCurrency(line.daily_rate)}
                     </td>
                     <td className="text-right py-1.5">{line.days}</td>
                     <td className="text-right py-1.5 font-mono">
-                      {fmtCurrency(line.extended)}
+                      {isUnpriced(line) ? "—" : fmtCurrency(line.extended)}
                     </td>
                   </tr>
                 ))}

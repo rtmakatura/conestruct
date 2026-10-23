@@ -135,6 +135,10 @@ class EquipmentLine:
     # never read the device as free (rule 10 / 2026-07-22 ruling).
     jurisdiction_required: bool = False
     jurisdiction_unmapped: bool = False
+    # #373: field equipment with no daily rate on file (the pilot car).
+    # Same treatment as an unmapped jurisdiction row: 0.0 for the math,
+    # excluded from the total, "—" on the sheet and in the panel.
+    unpriced: bool = False
 
 
 @dataclass(frozen=True)
@@ -191,6 +195,8 @@ _JURISDICTION_MAPPED_NOTE: str = "Jurisdiction-required: {doc}."
 # reuses its "billed by SF" citation — no new citation.  The exclusion clause
 # is binding (2026-07-22 ruling): a reader must be able to tell from the sheet
 # that the grand total does NOT include this line.
+# #373: the pilot car's quote note, after the shared equipment note.
+_UNPRICED_NOTE: str = "No daily rate on file. NOT included in the quote total; price separately."
 _JURISDICTION_UNMAPPED_NOTE: str = (
     "Jurisdiction-required: {doc}. No single daily rate. NOT included in the "
     "quote total; price separately. CDOT Spec 630 bills these as individual "
@@ -274,6 +280,23 @@ def _equipment_line_for(
     """
     device_type = row.device_type
     qty = row.quantity
+
+    # Field equipment with no placement (#373, the pilot car).  No daily
+    # rate is on file for it, so the line is unpriced rather than $0.00.
+    if row.equipment_note is not None and row.display_override is not None:
+        return EquipmentLine(
+            item_number=item_number,
+            device_type=row.display_override,
+            label="",
+            description=row.display_override,
+            qty=qty,
+            unit="EACH",
+            daily_rate=0.0,
+            days=project_duration_days,
+            extended=0.0,
+            note=f"{row.equipment_note} {_UNPRICED_NOTE}",
+            unpriced=True,
+        )
 
     # Delta-only add (no backing placement).
     if row.display_override is not None:
@@ -378,8 +401,9 @@ def _populate_equipment_sheet(sheet, lines: list[EquipmentLine]) -> None:
         # (never $0.00) in the rate/extended cells so the priced document can
         # never read the device as free, and skip the currency format so the
         # dash shows literally (issue #151/#154).
-        rate_cell = "—" if line.jurisdiction_unmapped else line.daily_rate
-        extended_cell = "—" if line.jurisdiction_unmapped else line.extended
+        unpriced = line.jurisdiction_unmapped or line.unpriced
+        rate_cell = "—" if unpriced else line.daily_rate
+        extended_cell = "—" if unpriced else line.extended
         sheet.append(
             (
                 line.item_number,
@@ -395,7 +419,7 @@ def _populate_equipment_sheet(sheet, lines: list[EquipmentLine]) -> None:
             )
         )
         row_idx = line.item_number + 1
-        if not line.jurisdiction_unmapped:
+        if not unpriced:
             sheet.cell(row=row_idx, column=7).number_format = _CURRENCY_FMT
             sheet.cell(row=row_idx, column=9).number_format = _CURRENCY_FMT
 
@@ -729,6 +753,7 @@ def generate_quote(
     night_multiplier: float = 1.5,
     applied_deltas: list[dict[str, Any]] | None = None,
     rates_are_defaults: bool = False,
+    pilot_car: bool = False,
 ) -> tuple[str, QuoteBreakdown]:
     """Write a contractor pricing workbook for ``placements``.
 
@@ -738,11 +763,14 @@ def generate_quote(
     render.  Omit them (or pass ``None``) for a plain, delta-free quote —
     identical to the pre-#154 output.
 
+    ``pilot_car`` (#373): a flagger plan's pilot car is listed as one
+    unpriced equipment line (no daily rate on file).
+
     Returns ``(output_path, breakdown)`` where ``breakdown`` is a structured
     ``QuoteBreakdown`` with all line items, subtotals, markup, and the final
     total — ready to drive a UI drill-down or further programmatic use.
     """
-    rows = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
+    rows = aggregate_device_rows_with_deltas(placements, applied_deltas, params, pilot_car)
 
     equipment_lines = _compute_equipment_lines(rows, params, project_duration_days)
     labor_lines = _compute_labor_lines(

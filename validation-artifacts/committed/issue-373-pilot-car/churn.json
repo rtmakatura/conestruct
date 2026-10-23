@@ -1,0 +1,343 @@
+{
+ "base": "2a5a7fd",
+ "branch": "issue-373-pilot-car working tree",
+ "result": {
+  "flagger-None-pilotFalse": {
+   "changed": [],
+   "identical": [
+    "page1",
+    "md",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit",
+    "audit+breakdown"
+   ]
+  },
+  "flagger-None-pilotTrue": {
+   "changed": [
+    "page1",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit+breakdown"
+   ],
+   "identical": [
+    "md",
+    "audit"
+   ]
+  },
+  "shoulder-None": {
+   "changed": [],
+   "identical": [
+    "page1",
+    "md",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit",
+    "audit+breakdown"
+   ]
+  },
+  "flagger-denver-pilotFalse": {
+   "changed": [],
+   "identical": [
+    "page1",
+    "md",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit",
+    "audit+breakdown"
+   ]
+  },
+  "flagger-denver-pilotTrue": {
+   "changed": [
+    "page1",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit+breakdown"
+   ],
+   "identical": [
+    "md",
+    "audit"
+   ]
+  },
+  "shoulder-denver": {
+   "changed": [],
+   "identical": [
+    "page1",
+    "md",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit",
+    "audit+breakdown"
+   ]
+  },
+  "flagger-greeley-pilotFalse": {
+   "changed": [],
+   "identical": [
+    "page1",
+    "md",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit",
+    "audit+breakdown"
+   ]
+  },
+  "flagger-greeley-pilotTrue": {
+   "changed": [
+    "page1",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit+breakdown"
+   ],
+   "identical": [
+    "md",
+    "audit"
+   ]
+  },
+  "shoulder-greeley": {
+   "changed": [],
+   "identical": [
+    "page1",
+    "md",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit",
+    "audit+breakdown"
+   ]
+  },
+  "ni-denver": {
+   "changed": [],
+   "identical": [
+    "page1",
+    "md",
+    "xlsx",
+    "quote",
+    "quote_json",
+    "breakdown",
+    "audit",
+    "audit+breakdown"
+   ]
+  }
+ },
+ "base_hashes": {
+  "flagger-None-pilotFalse": {
+   "page1": "dde14315f1cd",
+   "md": "986b93822d3d",
+   "xlsx": "23e6d0649b24",
+   "quote": "b577cdd64d7a",
+   "quote_json": "446cf13f8eeb",
+   "breakdown": "d11cd3dd9846",
+   "audit": "016400a6248a",
+   "audit+breakdown": "e3e02b8ebf2c"
+  },
+  "flagger-None-pilotTrue": {
+   "page1": "dde14315f1cd",
+   "md": "6bcdb81f26eb",
+   "xlsx": "23e6d0649b24",
+   "quote": "b577cdd64d7a",
+   "quote_json": "446cf13f8eeb",
+   "breakdown": "d11cd3dd9846",
+   "audit": "1829d46a35cf",
+   "audit+breakdown": "4d719d973ba3"
+  },
+  "shoulder-None": {
+   "page1": "468faded3c5a",
+   "md": "55784f05ff09",
+   "xlsx": "cfa3e4cd2cb7",
+   "quote": "f86f0653a580",
+   "quote_json": "e139d5409b74",
+   "breakdown": "8c9273d5ea6d",
+   "audit": "4544f829dfae",
+   "audit+breakdown": "e7aa14ebbc30"
+  },
+  "flagger-denver-pilotFalse": {
+   "page1": "22494bd3113a",
+   "md": "8b61686e96a7",
+   "xlsx": "c2e65a5ed08c",
+   "quote": "a0fbacca2abf",
+   "quote_json": "26792847ce8b",
+   "breakdown": "d580caa95335",
+   "audit": "016400a6248a",
+   "audit+breakdown": "089fa6eccce3"
+  },
+  "flagger-denver-pilotTrue": {
+   "page1": "22494bd3113a",
+   "md": "a7701ff73bc1",
+   "xlsx": "c2e65a5ed08c",
+   "quote": "a0fbacca2abf",
+   "quote_json": "26792847ce8b",
+   "breakdown": "d580caa95335",
+   "audit": "1829d46a35cf",
+   "audit+breakdown": "565302adb7bc"
+  },
+  "shoulder-denver": {
+   "page1": "468faded3c5a",
+   "md": "f45ab7119349",
+   "xlsx": "3af4947545a9",
+   "quote": "f86f0653a580",
+   "quote_json": "e139d5409b74",
+   "breakdown": "5e569fa10ee3",
+   "audit": "4544f829dfae",
+   "audit+breakdown": "af0b88fa0270"
+  },
+  "flagger-greeley-pilotFalse": {
+   "page1": "8ac83cffba8e",
+   "md": "bf1721b25309",
+   "xlsx": "4edc4a2cb7dd",
+   "quote": "c22c585ab162",
+   "quote_json": "ac78f15e22f9",
+   "breakdown": "11811c25d200",
+   "audit": "016400a6248a",
+   "audit+breakdown": "a650cd2a62ca"
+  },
+  "flagger-greeley-pilotTrue": {
+   "page1": "8ac83cffba8e",
+   "md": "8f10cf52ffdb",
+   "xlsx": "4edc4a2cb7dd",
+   "quote": "c22c585ab162",
+   "quote_json": "ac78f15e22f9",
+   "breakdown": "11811c25d200",
+   "audit": "1829d46a35cf",
+   "audit+breakdown": "7ce3a93e30b4"
+  },
+  "shoulder-greeley": {
+   "page1": "468faded3c5a",
+   "md": "048bb3050ae5",
+   "xlsx": "6dac8e3085b8",
+   "quote": "f86f0653a580",
+   "quote_json": "e139d5409b74",
+   "breakdown": "f8d89742c274",
+   "audit": "4544f829dfae",
+   "audit+breakdown": "fe1011276224"
+  },
+  "ni-denver": {
+   "page1": "c688d60150f8",
+   "md": "66e56a3e99f2",
+   "xlsx": "0b138b21a30b",
+   "quote": "392f186caeca",
+   "quote_json": "bbe08b58f216",
+   "breakdown": "4fbdc5540c98",
+   "audit": "01a777e46d03",
+   "audit+breakdown": "d2cf01c070c6"
+  }
+ },
+ "branch_hashes": {
+  "flagger-None-pilotFalse": {
+   "page1": "dde14315f1cd",
+   "md": "986b93822d3d",
+   "xlsx": "23e6d0649b24",
+   "quote": "b577cdd64d7a",
+   "quote_json": "446cf13f8eeb",
+   "breakdown": "d11cd3dd9846",
+   "audit": "016400a6248a",
+   "audit+breakdown": "e3e02b8ebf2c"
+  },
+  "flagger-None-pilotTrue": {
+   "page1": "9c79a1993b2e",
+   "md": "6bcdb81f26eb",
+   "xlsx": "5bfa7f92b6a6",
+   "quote": "abb63fe4253c",
+   "quote_json": "ba23e0e09bbb",
+   "breakdown": "274442d4285d",
+   "audit": "1829d46a35cf",
+   "audit+breakdown": "96857c0d5d71"
+  },
+  "shoulder-None": {
+   "page1": "468faded3c5a",
+   "md": "55784f05ff09",
+   "xlsx": "cfa3e4cd2cb7",
+   "quote": "f86f0653a580",
+   "quote_json": "e139d5409b74",
+   "breakdown": "8c9273d5ea6d",
+   "audit": "4544f829dfae",
+   "audit+breakdown": "e7aa14ebbc30"
+  },
+  "flagger-denver-pilotFalse": {
+   "page1": "22494bd3113a",
+   "md": "8b61686e96a7",
+   "xlsx": "c2e65a5ed08c",
+   "quote": "a0fbacca2abf",
+   "quote_json": "26792847ce8b",
+   "breakdown": "d580caa95335",
+   "audit": "016400a6248a",
+   "audit+breakdown": "089fa6eccce3"
+  },
+  "flagger-denver-pilotTrue": {
+   "page1": "008c57ce8dc0",
+   "md": "a7701ff73bc1",
+   "xlsx": "d754149681fe",
+   "quote": "e2e5592fe420",
+   "quote_json": "0b07e8737fe4",
+   "breakdown": "8fcf18178bbb",
+   "audit": "1829d46a35cf",
+   "audit+breakdown": "56aea34a4ee7"
+  },
+  "shoulder-denver": {
+   "page1": "468faded3c5a",
+   "md": "f45ab7119349",
+   "xlsx": "3af4947545a9",
+   "quote": "f86f0653a580",
+   "quote_json": "e139d5409b74",
+   "breakdown": "5e569fa10ee3",
+   "audit": "4544f829dfae",
+   "audit+breakdown": "af0b88fa0270"
+  },
+  "flagger-greeley-pilotFalse": {
+   "page1": "8ac83cffba8e",
+   "md": "bf1721b25309",
+   "xlsx": "4edc4a2cb7dd",
+   "quote": "c22c585ab162",
+   "quote_json": "ac78f15e22f9",
+   "breakdown": "11811c25d200",
+   "audit": "016400a6248a",
+   "audit+breakdown": "a650cd2a62ca"
+  },
+  "flagger-greeley-pilotTrue": {
+   "page1": "cfb1a7a7092e",
+   "md": "8f10cf52ffdb",
+   "xlsx": "af2c2a19e861",
+   "quote": "f799bdf94f70",
+   "quote_json": "140180a15f44",
+   "breakdown": "e6ca2f925e45",
+   "audit": "1829d46a35cf",
+   "audit+breakdown": "aabe6e2e55ec"
+  },
+  "shoulder-greeley": {
+   "page1": "468faded3c5a",
+   "md": "048bb3050ae5",
+   "xlsx": "6dac8e3085b8",
+   "quote": "f86f0653a580",
+   "quote_json": "e139d5409b74",
+   "breakdown": "f8d89742c274",
+   "audit": "4544f829dfae",
+   "audit+breakdown": "fe1011276224"
+  },
+  "ni-denver": {
+   "page1": "c688d60150f8",
+   "md": "66e56a3e99f2",
+   "xlsx": "0b138b21a30b",
+   "quote": "392f186caeca",
+   "quote_json": "bbe08b58f216",
+   "breakdown": "4fbdc5540c98",
+   "audit": "01a777e46d03",
+   "audit+breakdown": "d2cf01c070c6"
+  }
+ }
+}

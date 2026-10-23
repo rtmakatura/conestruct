@@ -22,7 +22,7 @@ from src.rules.validators import DevicePlacement
 
 
 class AggregatedDeviceRow(NamedTuple):
-    device_type: DeviceType | None  # None only for an unmapped jurisdiction-required add
+    device_type: DeviceType | None  # None: unmapped jurisdiction add, or field equipment (#373)
     label: str | None  # schedule key for signs; None for other devices
     quantity: int
     representative: DevicePlacement | None  # lowest-station member; None for a delta-only row
@@ -41,6 +41,34 @@ class AggregatedDeviceRow(NamedTuple):
     # #379: a sentence every surface prints beside the row when the device
     # runs in one mode only (an arrow board on a flagger plan: caution).
     mode_note: str | None = None
+    # #373: field equipment with no placement (the flagger plan's pilot
+    # car).  The sentence every surface prints beside the row; such a row
+    # has ``device_type=None``, ``display_override`` set and no
+    # jurisdiction provenance.
+    equipment_note: str | None = None
+
+
+# #373: the pilot car is vehicle-mounted field equipment, not a placement
+# (layout.py's flagger branch places no roadside G20-4), so it joins the
+# rows here rather than the 15-class DeviceType taxonomy (devices.py's
+# get_field_only_devices).  One name and one note for every surface.
+PILOT_CAR_NAME: str = 'Pilot car with G20-4 "PILOT CAR/FOLLOW ME" sign'
+PILOT_CAR_NOTE: str = (
+    "G20-4 mounted on the rear of the vehicle (S-630-1 Sheet 26: "
+    "vehicle-mounted, not a roadside placement)."
+)
+
+
+def pilot_car_row() -> AggregatedDeviceRow:
+    """The one pilot-car row a flagger plan with ``pilotCar`` lists."""
+    return AggregatedDeviceRow(
+        device_type=None,
+        label=None,
+        quantity=1,
+        representative=None,
+        display_override=PILOT_CAR_NAME,
+        equipment_note=PILOT_CAR_NOTE,
+    )
 
 
 def row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:

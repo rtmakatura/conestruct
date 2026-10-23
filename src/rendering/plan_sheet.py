@@ -3478,7 +3478,8 @@ def _device_summary_cells(row: AggregatedDeviceRow, params: ScenarioParams) -> t
     dt = row.device_type
     # Jurisdiction count-delta add with no backing placement (#151): the
     # jurisdiction's device name, no MUTCD code — mirrors the screen
-    # breakdown's "Jurisdiction-required" row.
+    # breakdown's "Jurisdiction-required" row.  The pilot car (#373) takes
+    # the same branch: its shared name, no code.
     if row.display_override is not None:
         return ("—", row.display_override)
     # Below here the row aggregates real placements: it has a type and a
@@ -3506,6 +3507,7 @@ def _draw_device_summary(
     placements: list[DevicePlacement],
     params: ScenarioParams,
     applied_deltas: list[dict[str, Any]] | None = None,
+    pilot_car: bool = False,
 ) -> None:
     """Spec §4.1 (issue #150/#151): the on-sheet device summary.
 
@@ -3516,7 +3518,7 @@ def _draw_device_summary(
     bid-authority line so the two surfaces never compete.  Overflow is an
     explicit pointer line, never a silent clip (rule 10).
     """
-    rows = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
+    rows = aggregate_device_rows_with_deltas(placements, applied_deltas, params, pilot_car)
 
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.6)
@@ -4921,6 +4923,7 @@ def render_plan_sheet(
     jurisdiction_conflicts: list[dict[str, Any]] | None = None,
     applied_deltas: list[dict[str, Any]] | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    pilot_car: bool = False,
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
@@ -5118,6 +5121,7 @@ def render_plan_sheet(
             site_scan=site_scan,
             site_lat=site_lat,
             site_lng=site_lng,
+            pilot_car=pilot_car,
             buffer_takes_cones=buffer_carries_cones(params, approaches),
             summary_placements=summary_placements,
         )
@@ -5200,6 +5204,7 @@ def _draw_schematic_page(
     site_lat: float | None = None,
     site_lng: float | None = None,
     site_scan: Mapping[str, Any] | None = None,
+    pilot_car: bool = False,
     buffer_takes_cones: bool = False,
     summary_placements: list[DevicePlacement] | None = None,
 ) -> None:
@@ -5397,6 +5402,7 @@ def _draw_schematic_page(
             placements if summary_placements is None else summary_placements,
             params,
             applied_deltas,
+            pilot_car=pilot_car,
         )
     _draw_structured_title_block(
         c,

@@ -130,6 +130,19 @@ def _row_for(
     device_type = row.device_type
     quantity = row.quantity
 
+    # Field equipment with no placement (#373, the pilot car): no CDOT pay
+    # item in this repo's catalog, so "—" rather than a fabricated one.
+    if row.equipment_note is not None and row.display_override is not None:
+        return (
+            item_number,
+            row.display_override,
+            row.display_override,
+            "—",
+            "EACH",
+            quantity,
+            row.equipment_note,
+        )
+
     # Delta-only add (no backing placement).
     if row.display_override is not None:
         doc = _jurisdiction_doc(row.jurisdiction_source)
@@ -209,6 +222,7 @@ def _populate_device_list_sheet(
     placements: list[DevicePlacement],
     params: ScenarioParams,
     applied_deltas: list[dict[str, Any]] | None = None,
+    pilot_car: bool = False,
 ) -> list[AggregatedDeviceRow]:
     """Write the Device-List sheet and return the aggregated rows."""
     sheet.title = "Device List"
@@ -224,7 +238,7 @@ def _populate_device_list_sheet(
     # Aggregation + ordering + fired jurisdiction count deltas live in the
     # shared helper (issue #150/#151) so the screen breakdown, this bid
     # document, and the on-sheet summary carry identical quantities.
-    aggregated = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
+    aggregated = aggregate_device_rows_with_deltas(placements, applied_deltas, params, pilot_car)
 
     for item_number, row in enumerate(aggregated, start=1):
         sheet.append(_row_for(item_number, row, params))
@@ -292,6 +306,7 @@ def export_device_list(
     params: ScenarioParams,
     output_path: str = "device_list.xlsx",
     applied_deltas: list[dict[str, Any]] | None = None,
+    pilot_car: bool = False,
 ) -> str:
     """Write a CDOT-format device-list workbook for ``placements``.
 
@@ -301,11 +316,16 @@ def export_device_list(
     the on-screen breakdown.  Omit them (or pass ``None``) for a plain,
     delta-free workbook.
 
+    ``pilot_car`` (#373): a flagger plan's pilot car is listed as one
+    equipment row with no CDOT pay item.
+
     Returns the absolute or relative path written, matching ``output_path``.
     """
     workbook = Workbook()
     device_sheet = workbook.active
-    aggregated = _populate_device_list_sheet(device_sheet, placements, params, applied_deltas)
+    aggregated = _populate_device_list_sheet(
+        device_sheet, placements, params, applied_deltas, pilot_car
+    )
     summary_sheet = workbook.create_sheet("Summary")
     _populate_summary_sheet(summary_sheet, params, aggregated)
     for sheet in workbook.worksheets:

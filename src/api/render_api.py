@@ -1360,6 +1360,8 @@ def render_pdf(scenario: Scenario) -> Response:
                     # near_intersection title block (TA-21/22 by side) —
                     # same ApproachParams the generator got (#117).
                     approaches=approaches,
+                    # #373: the summary lists the pilot car.
+                    pilot_car=bool(getattr(scenario, "pilotCar", False)),
                 )
             ),
         )
@@ -1396,6 +1398,8 @@ def render_xlsx(scenario: Scenario) -> Response:
                     # via the shared aggregation (#151) — the XLSX is the
                     # bid-quantity authority, so it must carry them.
                     applied_deltas=_jurisdiction_eval(scenario, params)[1],
+                    # #373: the bid list carries the pilot car.
+                    pilot_car=bool(getattr(scenario, "pilotCar", False)),
                 )
             ),
         )
@@ -1958,6 +1962,8 @@ def _run_quote(req: QuoteRequest):
             # same shared aggregation the XLSX/PDF use (issue #151/#154), so the
             # bid document and the estimate can never disagree on device counts.
             applied_deltas=_jurisdiction_eval(req.scenario, params)[1],
+            # #373: one unpriced pilot-car line.
+            pilot_car=bool(getattr(req.scenario, "pilotCar", False)),
         )
         return path.read_bytes(), breakdown
     finally:
@@ -2056,8 +2062,17 @@ def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> d
     provenance flags.
     """
     dt = row.device_type
-    if row.display_override is not None:
+    if row.equipment_note is not None and row.display_override is not None:
+        # #373: the pilot car, field equipment with no placement.  It guides
+        # traffic through the one open lane with the flaggers.
         out: dict[str, Any] = {
+            "device": row.display_override,
+            "code": "—",
+            "function": "Traffic control",
+            "qty": row.quantity,
+        }
+    elif row.display_override is not None:
+        out = {
             "device": row.display_override,
             "code": "—",
             "function": "Jurisdiction-required",
@@ -2241,7 +2256,11 @@ def _breakdown_payload(scenario: Scenario, placements: list[Any], params: Any) -
     # pipeline (spec §3.2, issue #151) — the same aggregation the XLSX and
     # on-sheet summary render, never a frontend computation.
     jurisdiction, applied_deltas = _jurisdiction_eval(scenario, params, placements)
-    structured = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
+    # #373: the pilot car is a raw scenario fact (only the flagger kind
+    # carries it), not a placement or a ScenarioParams field.
+    structured = aggregate_device_rows_with_deltas(
+        placements, applied_deltas, params, bool(getattr(scenario, "pilotCar", False))
+    )
     rows = [_format_breakdown_row(row, params) for row in structured]
     payload: dict[str, Any] = {
         "devices": rows,
@@ -2503,6 +2522,9 @@ def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
                     "note": line.note,
                     "jurisdiction_required": line.jurisdiction_required,
                     "jurisdiction_unmapped": line.jurisdiction_unmapped,
+                    # #373: only on an unpriced line, so every other
+                    # line's JSON is unchanged.
+                    **({"unpriced": True} if line.unpriced else {}),
                 }
                 for line in breakdown.equipment_lines
             ],

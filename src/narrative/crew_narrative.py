@@ -37,6 +37,7 @@ from src.generation.layout import (
 )
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
+from src.rules.device_aggregation import PILOT_CAR_NAME
 from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.references import REFERENCE_LINE
@@ -718,10 +719,11 @@ def build_narrative_context(
     # Pilot car (PR 3): vehicle-mounted field equipment, not a
     # placement — S-630-1 Sheet 26 mounts G20-4 on the rear of the
     # pilot vehicle. Appended to Required Equipment when the scenario
-    # carries the flag.
+    # carries the flag.  #373: the name is the shared one the other
+    # surfaces list.
     if pilot_car:
         equipment_bullets += (
-            '\n- 1× Pilot car with G20-4 "PILOT CAR/FOLLOW ME" sign '
+            f"\n- 1× {PILOT_CAR_NAME} "
             "mounted on the rear of the vehicle (S-630-1 Sheet 26: "
             "vehicle-mounted, not a roadside placement)"
         )

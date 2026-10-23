@@ -39,7 +39,11 @@ from typing import Any
 
 import jsonschema
 
-from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
+from src.rules.device_aggregation import (
+    AggregatedDeviceRow,
+    aggregate_device_rows,
+    pilot_car_row,
+)
 from src.rules.devices import DeviceType
 from src.rules.validators import ScenarioParams, _is_flagger_scenario
 
@@ -866,6 +870,7 @@ def aggregate_device_rows_with_deltas(
     placements: list,
     applied_deltas: list[dict[str, Any]] | None,
     params: ScenarioParams | None = None,
+    pilot_car: bool = False,
 ) -> list[AggregatedDeviceRow]:
     """Aggregate placements, then apply any fired jurisdiction count deltas.
 
@@ -873,8 +878,13 @@ def aggregate_device_rows_with_deltas(
     disagree.  With ``applied_deltas`` empty or ``None`` this is exactly
     ``aggregate_device_rows`` — zero change for a scenario with no firing
     delta, which is the behavior-preservation contract (rule 5).
+
+    #373: ``pilot_car`` (the flagger scenario's raw ``pilotCar`` fact; it
+    is not a ScenarioParams field) appends the one pilot-car row last.
     """
     rows = aggregate_device_rows(placements)
-    if not applied_deltas:
-        return rows
-    return apply_count_deltas_structured(rows, applied_deltas, params)
+    if applied_deltas:
+        rows = apply_count_deltas_structured(rows, applied_deltas, params)
+    if pilot_car:
+        rows = [*rows, pilot_car_row()]
+    return rows
