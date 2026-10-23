@@ -1,0 +1,258 @@
+[
+  {
+    "address": "US 287 & Dillon Rd, Lafayette, CO",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#376 row 1 (was California)"
+  },
+  {
+    "address": "US 287 & Dillon Rd, Lafayette",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#376 row 2 (was Louisiana)"
+  },
+  {
+    "address": "US 287 & Dillon Rd, Lafayette",
+    "jurisdiction_key": "cdot",
+    "status": 200,
+    "body": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#376 row 3 (was Louisiana)"
+  },
+  {
+    "address": "US 287 & Dillon Rd, Lafayette, Colorado",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#376 row 4"
+  },
+  {
+    "address": "Colfax & Main, Aurora, IL",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "outside colorado",
+    "expected_status": 422,
+    "expected": "outside colorado",
+    "pass": true,
+    "source": "#376 R1 (was Aurora, Illinois)"
+  },
+  {
+    "address": "Johnston & Pinhook, Lafayette, LA",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "outside colorado",
+    "expected_status": 422,
+    "expected": "outside colorado",
+    "pass": true,
+    "source": "#376 R1"
+  },
+  {
+    "address": "US 285 & CO 9",
+    "jurisdiction_key": "cdot",
+    "status": 200,
+    "body": {
+      "lat": 39.221229,
+      "lng": -105.993766,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.221229,
+      "lng": -105.993766,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "I-25 & US 50",
+    "jurisdiction_key": "cdot",
+    "status": 200,
+    "body": {
+      "lat": 38.338098,
+      "lng": -104.619794,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 38.338098,
+      "lng": -104.619794,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "Colfax & Main",
+    "jurisdiction_key": "cdot",
+    "status": 200,
+    "body": {
+      "lat": 39.738365,
+      "lng": -104.323716,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.738365,
+      "lng": -104.323716,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "Academy & Platte",
+    "jurisdiction_key": "el_paso",
+    "status": 200,
+    "body": {
+      "lat": 38.839656,
+      "lng": -104.757338,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 38.839656,
+      "lng": -104.757338,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "Eisenhower & Lincoln",
+    "jurisdiction_key": "loveland",
+    "status": 200,
+    "body": {
+      "lat": 40.407199,
+      "lng": -105.073065,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 40.407199,
+      "lng": -105.073065,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "Colfax & Main",
+    "jurisdiction_key": "e470",
+    "status": 422,
+    "body": "add a city",
+    "expected_status": 422,
+    "expected": "add a city",
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "Colfax & Main",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "add a city",
+    "expected_status": 422,
+    "expected": "add a city",
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "Colfax & Williams",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.739964,
+      "lng": -104.966006,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.739964,
+      "lng": -104.966006,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "Colfax & Williams",
+    "jurisdiction_key": "denver",
+    "status": 200,
+    "body": {
+      "lat": 39.739964,
+      "lng": -104.966006,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.739964,
+      "lng": -104.966006,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352"
+  },
+  {
+    "address": "1437 Bannock St, Denver, CO",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "pass": true,
+    "source": "#352"
+  }
+]
