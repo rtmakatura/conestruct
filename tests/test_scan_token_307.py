@@ -16,6 +16,7 @@ import copy
 import json
 import os
 from collections.abc import Iterator
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -234,3 +235,52 @@ def test_no_scan_requested_sends_no_source_header(client: TestClient) -> None:
     res = client.post("/render/pdf", headers=AUTH, json=sc)
     assert res.status_code == 200
     assert "x-site-scan-source" not in res.headers
+
+
+# --------------------------------------------------------------------------- #
+# #371: the age limit
+# --------------------------------------------------------------------------- #
+
+
+def _aged(token: str, age_s: float) -> str:
+    """The same scan re-signed as measured ``age_s`` seconds ago."""
+    entry = st.verify_scan(token)
+    measured = datetime.now(UTC) - timedelta(seconds=age_s)
+    return st.sign_scan(
+        entry["key"],
+        entry["buckets"],
+        measured.isoformat(timespec="seconds"),
+        entry["duration_ms"],
+    )
+
+
+def test_a_token_past_the_age_limit_is_refused() -> None:
+    now = datetime(2026, 10, 22, 12, 0, tzinfo=UTC)
+    tok = st.sign_scan("k1", {}, "2026-10-22T00:00:00+00:00", 1)
+    assert st.verify_current_scan(tok, now=now)["key"] == "k1"  # exactly 12 h
+    with pytest.raises(st.ScanTokenExpired, match=r"12\.0 h old"):
+        st.verify_current_scan(tok, now=now + timedelta(seconds=1))
+    for bad_time in ("t", "2026-10-22T00:00:00"):
+        with pytest.raises(st.ScanTokenInvalid):
+            st.verify_current_scan(st.sign_scan("k1", {}, bad_time, 1), now=now)
+
+
+def test_an_expired_token_is_an_honest_400_and_a_fresh_one_serves(
+    client: TestClient, overpass: Overpass
+) -> None:
+    token = generate_token(client)
+    ss.clear_memo()
+    before = overpass.calls
+    old = client.post(
+        "/render/pdf", headers=AUTH, json=with_token(scenario(), _aged(token, 13 * 3600))
+    )
+    assert old.status_code == 400
+    detail = old.json()["detail"]
+    assert detail["error"] == "site_scan_token_invalid"
+    assert detail["reason"].startswith("the scan is 13.0 h old")
+    assert "more than 12 hours ago" in detail["message"]
+    assert "Generate the plan again" in detail["message"]
+    fresh = client.post("/render/pdf", headers=AUTH, json=with_token(scenario(), _aged(token, 60)))
+    assert fresh.status_code == 200
+    assert fresh.headers["x-site-scan-source"] == "token"
+    assert overpass.calls == before

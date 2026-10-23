@@ -242,10 +242,10 @@ def main(only: list[str]) -> None:
         audit_sc["include_breakdown"] = True
         r = p.post("/api/render/audit", {"scenario": audit_sc})
         meta["audit_status"] = r.status_code
-        (out / "audit.json").write_text(r.text, "utf-8")
-        token = None
-        if r.status_code == 200:
-            token = r.json().get("site_scan_token")
+        # #371: the token stays in memory for the downloads; it is never written.
+        body = r.json() if r.status_code == 200 else None
+        token = body.pop("site_scan_token", None) if body is not None else None
+        (out / "audit.json").write_text(r.text if body is None else json.dumps(body), "utf-8")
         meta["scan_token"] = bool(token)
         dl_sc = copy.deepcopy(sc)
         if token:

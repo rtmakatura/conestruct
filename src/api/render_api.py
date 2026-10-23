@@ -37,7 +37,13 @@ from sentry_sdk.types import Event, Hint
 
 from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
 from src.api.replication_snapshot import build_snapshot_markdown
-from src.api.scan_token import ScanTokenInvalid, sign_scan, verify_scan
+from src.api.scan_token import (
+    MAX_AGE_S,
+    ScanTokenExpired,
+    ScanTokenInvalid,
+    sign_scan,
+    verify_current_scan,
+)
 from src.api.schemas import (
     READS_CROSSING_OPTIONAL,
     CrossStreetStationError,
@@ -126,6 +132,11 @@ SITE_SCAN_TOKEN_INVALID_ERROR = "site_scan_token_invalid"
 SITE_SCAN_TOKEN_INVALID_MESSAGE = (
     "This download carried a copy of the plan's site scan that couldn't be "
     "verified. Generate the plan again, then download it."
+)
+# #371: the same 400 for a token past its age limit, in words that say so.
+SITE_SCAN_TOKEN_EXPIRED_MESSAGE = (
+    f"This download carried a copy of the plan's site scan from more than "
+    f"{MAX_AGE_S // 3600} hours ago. Generate the plan again, then download it."
 )
 
 # Mirror of conestruct/site/lib/scenarios/index.ts ENABLED_SCENARIO_KINDS.
@@ -1240,13 +1251,17 @@ def _verified_scan_token(scenario: Scenario) -> dict[str, Any] | None:
     if not token:
         return None
     try:
-        return verify_scan(token)
+        return verify_current_scan(token)
     except ScanTokenInvalid as exc:
         raise HTTPException(
             status_code=400,
             detail={
                 "error": SITE_SCAN_TOKEN_INVALID_ERROR,
-                "message": SITE_SCAN_TOKEN_INVALID_MESSAGE,
+                "message": (
+                    SITE_SCAN_TOKEN_EXPIRED_MESSAGE
+                    if isinstance(exc, ScanTokenExpired)
+                    else SITE_SCAN_TOKEN_INVALID_MESSAGE
+                ),
                 "reason": str(exc),
             },
         ) from exc

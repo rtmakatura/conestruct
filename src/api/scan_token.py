@@ -15,6 +15,10 @@ existing ``RENDER_API_SECRET`` (domain-separated, so the bearer secret is
 never used as a MAC key directly).  A client can carry a token; it cannot
 make or alter one.  Format: ``<payload>.<mac>``, both base64url without
 padding; the payload is zlib-compressed JSON.
+
+#371: a token is honoured for :data:`MAX_AGE_S` after its scan was
+measured (``verify_current_scan``); an older one is refused, never served
+as a current answer (Rule 10).
 """
 
 from __future__ import annotations
@@ -25,15 +29,25 @@ import hmac
 import json
 import os
 import zlib
+from datetime import UTC, datetime
 from typing import Any
 
 TOKEN_VERSION = 1
 _DOMAIN = b"conestruct site-scan token v1"
 _SECRET_VAR = "RENDER_API_SECRET"
 
+# CHOSEN (#371 R1): a token only has to last from a Generate to its
+# downloads, and the page drops it on any edit.  12 h covers a morning
+# Generate downloaded at the end of the shift and refuses yesterday's scan.
+MAX_AGE_S = 12 * 3600
+
 
 class ScanTokenInvalid(ValueError):
     """The token's signature, encoding or shape didn't check out."""
+
+
+class ScanTokenExpired(ScanTokenInvalid):
+    """The token checks out, but its scan is older than :data:`MAX_AGE_S`."""
 
 
 def _mac_key() -> bytes:
@@ -98,4 +112,24 @@ def verify_scan(token: str) -> dict[str, Any]:
         or not isinstance(entry.get("duration_ms"), int)
     ):
         raise ScanTokenInvalid("unexpected payload shape")
+    return entry
+
+
+def verify_current_scan(token: str, now: datetime | None = None) -> dict[str, Any]:
+    """``verify_scan``, then the age limit (#371): the entry, or
+    ``ScanTokenExpired`` when its scan was measured more than
+    :data:`MAX_AGE_S` before ``now``.  This is the check a request that
+    serves the scan uses."""
+    entry = verify_scan(token)
+    try:
+        measured = datetime.fromisoformat(entry["measured_at"])
+    except ValueError as exc:
+        raise ScanTokenInvalid("undecodable measured_at") from exc
+    if measured.tzinfo is None:
+        raise ScanTokenInvalid("measured_at has no time zone")
+    age_s = ((now or datetime.now(UTC)) - measured).total_seconds()
+    if age_s > MAX_AGE_S:
+        raise ScanTokenExpired(
+            f"the scan is {age_s / 3600:.1f} h old; a token is honoured for {MAX_AGE_S // 3600} h"
+        )
     return entry
