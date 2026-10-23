@@ -80,7 +80,7 @@ from src.rules.corridor_layout import laid_out as _laid_out
 from src.rules.corridor_layout import zone_parts as _zone_parts
 from src.rules.corridor_layout import zone_spans as _zone_spans
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
-from src.rules.devices import DeviceType, cone_display_name
+from src.rules.devices import AFAD_NAME, DeviceType, cone_display_name, is_afad
 from src.rules.jurisdiction import (
     UnknownJurisdictionError,
     aggregate_device_rows_with_deltas,
@@ -2095,6 +2095,14 @@ def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> d
             ),
             "code": "—",
             "function": "Channelizing",
+            "qty": row.quantity,
+        }
+    elif row.representative is not None and is_afad(dt, row.representative.label):
+        # #374: the flagger plan's AFADs, one name on every surface.
+        out = {
+            "device": AFAD_NAME,
+            "code": "—",
+            "function": _NON_SIGN_DISPLAY[DeviceType.TEMPORARY_SIGNAL][1],
             "qty": row.quantity,
         }
     else:

@@ -38,7 +38,7 @@ from src.generation.layout import (
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
 from src.rules.device_aggregation import PILOT_CAR_NAME
-from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
+from src.rules.devices import AFAD_NAME, DeviceType, cone_display_name, device_row_sort_key, is_afad
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
@@ -144,6 +144,11 @@ def _device_summary(
         else:
             non_sign_counts[p.device_type] += 1
 
+    # #374: the flagger plan's AFADs take the shared name when every
+    # temporary signal is one (the same rule the PDF legend uses).
+    signals = [p for p in placements if p.device_type == DeviceType.TEMPORARY_SIGNAL]
+    signals_are_afads = bool(signals) and all(is_afad(p.device_type, p.label) for p in signals)
+
     rows: list[dict[str, Any]] = []
 
     # Signs first (issue #88): one parent bullet with the sign rows nested.
@@ -178,6 +183,8 @@ def _device_summary(
                 params.speed_mph, is_night=params.is_night, road_type=params.road_type
             )
             if dt == DeviceType.CONE
+            else AFAD_NAME
+            if dt == DeviceType.TEMPORARY_SIGNAL and signals_are_afads
             else _DEVICE_HUMAN_NAMES.get(dt, dt.value)
         )
         rows.append(

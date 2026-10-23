@@ -18,7 +18,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
-from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
+from src.rules.devices import AFAD_NAME, DEVICE_CATALOG, DeviceType, cone_display_name, is_afad
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.validators import (
@@ -199,6 +199,12 @@ def _row_for(
         description = cone_display_name(
             params.speed_mph, is_night=params.is_night, road_type=params.road_type
         )
+        type_label = device_type.value
+        unit = spec.unit
+        notes = ""
+    elif representative is not None and is_afad(device_type, representative.label):
+        # #374: the flagger plan's AFADs, one name on every surface.
+        description = AFAD_NAME
         type_label = device_type.value
         unit = spec.unit
         notes = ""

@@ -20,7 +20,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 from src.rules.device_aggregation import AggregatedDeviceRow
-from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
+from src.rules.devices import AFAD_NAME, DEVICE_CATALOG, DeviceType, cone_display_name, is_afad
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.sign_codes import display_code, substitute_sign_description
 from src.rules.validators import (
@@ -234,6 +234,8 @@ def _description_for(
         return cone_display_name(
             params.speed_mph, is_night=params.is_night, road_type=params.road_type
         )
+    if representative is not None and is_afad(device_type, representative.label):
+        return AFAD_NAME  # #374
     return DEVICE_CATALOG[device_type].description
 
 

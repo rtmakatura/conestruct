@@ -120,6 +120,20 @@ def cone_display_name(speed_mph: float, *, is_night: bool, road_type: str) -> st
     return "Traffic Cone (28-inch)"
 
 
+# #374: the one name every surface prints for a flagger plan's AFADs.  MUTCD
+# Fig 6P-10 Note 5 calls them "Automated Flagger Assistance Devices"; S-630-1
+# Sheet 2 General Note 20 abbreviates "automated flagger assistance device
+# (AFAD)".  The layout places an AFAD as a TEMPORARY_SIGNAL labeled
+# AFAD_1/AFAD_2 (layout.py's ``afad`` branch); any other temporary signal
+# keeps each surface's own name.
+AFAD_NAME: str = "Automated Flagger Assistance Device (AFAD)"
+
+
+def is_afad(device_type: DeviceType | None, label: str | None) -> bool:
+    """True when a placement (or a row's representative) is an AFAD."""
+    return device_type == DeviceType.TEMPORARY_SIGNAL and (label or "").upper().startswith("AFAD")
+
+
 # ---------------------------------------------------------------------------
 # Device catalog
 # ---------------------------------------------------------------------------

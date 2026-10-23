@@ -51,7 +51,7 @@ from src.rules.corridor import (
     encode_polyline,
 )
 from src.rules.device_aggregation import AggregatedDeviceRow
-from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
+from src.rules.devices import AFAD_NAME, DEVICE_CATALOG, DeviceType, cone_display_name, is_afad
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import PLAQUE_CODES, schedule_key, substitute_sign_description
@@ -3103,6 +3103,10 @@ def _draw_legend(
         _arrow_board_display(p.label) for p in placements if p.device_type == DeviceType.ARROW_BOARD
     }
     boards_in_caution = board_displays == {"caution"}
+    # #374: the legend names the plan's temporary signals AFAD when every
+    # one is an AFAD (the flagger plan's ``afad`` branch).
+    signals = [p for p in placements if p.device_type == DeviceType.TEMPORARY_SIGNAL]
+    signals_are_afads = bool(signals) and all(is_afad(p.device_type, p.label) for p in signals)
 
     def _device_row(dt: DeviceType) -> Callable[[float], None]:
         def draw(yy: float) -> None:
@@ -3117,6 +3121,8 @@ def _draw_legend(
                 if dt == DeviceType.CONE
                 else "Arrow Board (caution mode)"
                 if dt == DeviceType.ARROW_BOARD and boards_in_caution
+                else AFAD_NAME
+                if dt == DeviceType.TEMPORARY_SIGNAL and signals_are_afads
                 else _DEVICE_DISPLAY_NAMES.get(dt, dt.value)
             )
             # #216 Family 2: row labels truncate at the box's inner
@@ -3497,6 +3503,8 @@ def _device_summary_cells(row: AggregatedDeviceRow, params: ScenarioParams) -> t
                 params.speed_mph, is_night=params.is_night, road_type=params.road_type
             ),
         )
+    if is_afad(dt, row.representative.label):
+        return ("—", AFAD_NAME)  # #374
     return ("—", DEVICE_CATALOG[dt].description)
 
 
