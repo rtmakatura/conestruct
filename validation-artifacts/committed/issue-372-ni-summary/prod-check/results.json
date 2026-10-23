@@ -1,0 +1,694 @@
+{
+ "base": "https://www.conestruct.com",
+ "checked_at": "2026-10-23T15:48:38+00:00",
+ "healthz_sha": "fa93c0ee690175e8b2b101aaa947e8b3fe6fe03d",
+ "rows": {
+  "N1": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 43
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 43
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N2": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 16",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 44
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 16",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 44
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N3": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (36-inch) 15",
+     "Type C steady-burn warning light, attached to channelizing d… 7",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1",
+     "Portable light plant for work area illumination 1"
+    ],
+    "total": 51
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (36-inch) 15",
+     "Type C steady-burn warning light, attached to channelizing device 7",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1",
+     "Portable light plant for work area illumination 1"
+    ],
+    "total": 51
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N4": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 14",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 42
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 14",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 42
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N5": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 43
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 43
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N6": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 2",
+     "W4-2R RIGHT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 16",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 49
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 2",
+     "W4-2R RIGHT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 16",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 49
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N7": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5R RIGHT LANE CLOSED AHEAD 2",
+     "W4-2R RIGHT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 51
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5R RIGHT LANE CLOSED AHEAD 2",
+     "W4-2R RIGHT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 51
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N8": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5L LEFT LANE CLOSED AHEAD 2",
+     "W4-2L LEFT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 51
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5L LEFT LANE CLOSED AHEAD 2",
+     "W4-2L LEFT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 51
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N9": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5R RIGHT LANE CLOSED AHEAD 2",
+     "W4-2R RIGHT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 16",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 50
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5R RIGHT LANE CLOSED AHEAD 2",
+     "W4-2R RIGHT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 16",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 50
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N10": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R3-7L LEFT LANE MUST TURN LEFT 2",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5L LEFT LANE CLOSED AHEAD 2",
+     "W4-2L LEFT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 18",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 54
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 4",
+     "R2-11 END DOUBLE FINES ZONE 4",
+     "R3-7L LEFT LANE MUST TURN LEFT 2",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 4",
+     "W20-5L LEFT LANE CLOSED AHEAD 2",
+     "W4-2L LEFT LANE ENDS 2",
+     "36-inch channelizing drum with alternating orange/white stripes 7",
+     "Traffic Cone (28-inch) 18",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 54
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N11": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 9",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 43
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 500 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 9",
+     "Traffic Cone (28-inch) 15",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 43
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N12": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 600 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 13",
+     "Traffic Cone (36-inch) 12",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 44
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 600 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 13",
+     "Traffic Cone (36-inch) 12",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 44
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N13": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 600 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 13",
+     "Traffic Cone (36-inch) 12",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 46
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 600 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 1",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 3",
+     "R2-11 END DOUBLE FINES ZONE 3",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 3",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 13",
+     "Traffic Cone (36-inch) 12",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 46
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N14": {
+   "kind": "near_intersection",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 700 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 2",
+     "R2-11 END DOUBLE FINES ZONE 2",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 2",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 13",
+     "Traffic Cone (36-inch) 13",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 45
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 700 FT) 1",
+     "G20-2 END ROAD WORK 1",
+     "G20-5P WORK ZONE plaque 2",
+     "M4-9a BIKE DETOUR 2",
+     "R2-10 BEGIN DOUBLE FINES ZONE 2",
+     "R2-11 END DOUBLE FINES ZONE 2",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 2",
+     "W20-5R RIGHT LANE CLOSED AHEAD 1",
+     "W4-2R RIGHT LANE ENDS 1",
+     "36-inch channelizing drum with alternating orange/white stripes 13",
+     "Traffic Cone (36-inch) 13",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 45
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F1": {
+   "kind": "flagger_lane_closure",
+   "audit_status": 200,
+   "pdf_status": 200,
+   "pdf": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 200 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 1",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 2",
+     "W20-4 ONE LANE ROAD AHEAD 2",
+     "W20-7 FLAGGER AHEAD 2",
+     "W3-4 BE PREPARED TO STOP 2",
+     "36-inch channelizing drum with alternating orange/white stripes 6",
+     "Traffic Cone (28-inch) 12",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Flagger position with STOP/SLOW paddle and PPE 2",
+     "Arrow Board (caution mode only) 1"
+    ],
+    "total": 38
+   },
+   "xlsx_status": 200,
+   "xlsx": {
+    "rows": [
+     "G20-1 ROAD CONSTRUCTION (NEXT 200 FT) 2",
+     "G20-2 END ROAD WORK 2",
+     "G20-5P WORK ZONE plaque 1",
+     "R9-9 SIDEWALK CLOSED 2",
+     "W20-1 ROAD WORK AHEAD 2",
+     "W20-4 ONE LANE ROAD AHEAD 2",
+     "W20-7 FLAGGER AHEAD 2",
+     "W3-4 BE PREPARED TO STOP 2",
+     "36-inch channelizing drum with alternating orange/white stripes 6",
+     "Traffic Cone (28-inch) 12",
+     "Type III barricade: three horizontal striped rails, full lane width 2",
+     "Flagger position with STOP/SLOW paddle and PPE 2",
+     "Trailer-mounted flashing arrow board (Type A, B, or C) 1"
+    ],
+    "total": 38
+   },
+   "fail": [],
+   "verdict": "PASS"
+  }
+ },
+ "summary": "15/15 PASS"
+}
