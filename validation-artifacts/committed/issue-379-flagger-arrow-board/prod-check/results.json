@@ -1,0 +1,353 @@
+{
+ "base": "https://www.conestruct.com",
+ "checked_at": "2026-10-23T05:20:03+00:00",
+ "healthz_sha": "951e67b70d32bb189e3e472c986dfd35ca9b9e6e",
+ "rows": {
+  "F1": {
+   "kind": "flagger_lane_closure",
+   "jurisdiction_key": "denver",
+   "audit_status": 200,
+   "audit": {
+    "breakdown_arrow_rows": [
+     {
+      "device": "Arrow Board (caution mode only)",
+      "qty": 1
+     }
+    ],
+    "arrow_rules": [
+     {
+      "device_label": "Arrow board (caution mode only)",
+      "mode_note": "Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26).",
+      "raised": true
+     }
+    ]
+   },
+   "pdf_status": 200,
+   "xlsx_status": 200,
+   "markdown_status": 200,
+   "crew-pdf_status": 200,
+   "quote_status": 200,
+   "page1_arrow_lines": [
+    "— Arrow Board (caution mode only) 1"
+   ],
+   "xlsx_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "quote_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "crew_md": {
+    "equipment_line": "- 1× Arrow Board (caution mode only)",
+    "setup_paragraph": "Arrow board (DOTI PT-116.1 requires one): Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Set it to flashing caution or alternating diamond and activate it. The drawing doesn't place it, because MUTCD Fig. 6P-10 and S-630-1 Case 17 show no arrow board for a flagger closure. The Traffic Control Supervisor picks its position.",
+    "takedown_line": "6. Deactivate and remove the arrow board.",
+    "states_arrow_mode": false
+   },
+   "crew_pdf_says_caution": true,
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F2": {
+   "kind": "flagger_lane_closure",
+   "jurisdiction_key": "denver",
+   "audit_status": 200,
+   "audit": {
+    "breakdown_arrow_rows": [
+     {
+      "device": "Arrow Board (caution mode only)",
+      "qty": 1
+     }
+    ],
+    "arrow_rules": [
+     {
+      "device_label": "Arrow board (caution mode only)",
+      "mode_note": "Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26).",
+      "raised": true
+     }
+    ]
+   },
+   "pdf_status": 200,
+   "xlsx_status": 200,
+   "markdown_status": 200,
+   "crew-pdf_status": 200,
+   "quote_status": 200,
+   "page1_arrow_lines": [
+    "— Arrow Board (caution mode only) 1"
+   ],
+   "xlsx_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "quote_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "crew_md": {
+    "equipment_line": "- 1× Arrow Board (caution mode only)",
+    "setup_paragraph": "Arrow board (DOTI PT-116.1 requires one): Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Set it to flashing caution or alternating diamond and activate it. The drawing doesn't place it, because MUTCD Fig. 6P-10 and S-630-1 Case 17 show no arrow board for a flagger closure. The Traffic Control Supervisor picks its position.",
+    "takedown_line": "6. Deactivate and remove the arrow board.",
+    "states_arrow_mode": false
+   },
+   "crew_pdf_says_caution": true,
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F3": {
+   "kind": "flagger_lane_closure",
+   "jurisdiction_key": "denver",
+   "audit_status": 200,
+   "audit": {
+    "breakdown_arrow_rows": [
+     {
+      "device": "Arrow Board (caution mode only)",
+      "qty": 1
+     }
+    ],
+    "arrow_rules": [
+     {
+      "device_label": "Arrow board (caution mode only)",
+      "mode_note": "Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26).",
+      "raised": true
+     }
+    ]
+   },
+   "pdf_status": 200,
+   "xlsx_status": 200,
+   "markdown_status": 200,
+   "crew-pdf_status": 200,
+   "quote_status": 200,
+   "page1_arrow_lines": [
+    "— Arrow Board (caution mode only) 1"
+   ],
+   "xlsx_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "quote_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "crew_md": {
+    "equipment_line": "- 1× Arrow Board (caution mode only)",
+    "setup_paragraph": "Arrow board (DOTI PT-116.1 requires one): Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Set it to flashing caution or alternating diamond and activate it. The drawing doesn't place it, because MUTCD Fig. 6P-10 and S-630-1 Case 17 show no arrow board for a flagger closure. The Traffic Control Supervisor picks its position.",
+    "takedown_line": "6. Deactivate and remove the arrow board.",
+    "states_arrow_mode": false
+   },
+   "crew_pdf_says_caution": true,
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F4": {
+   "kind": "flagger_lane_closure",
+   "jurisdiction_key": "denver",
+   "audit_status": 200,
+   "audit": {
+    "breakdown_arrow_rows": [
+     {
+      "device": "Arrow Board (caution mode only)",
+      "qty": 1
+     }
+    ],
+    "arrow_rules": [
+     {
+      "device_label": "Arrow board (caution mode only)",
+      "mode_note": "Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26).",
+      "raised": true
+     }
+    ]
+   },
+   "pdf_status": 200,
+   "xlsx_status": 200,
+   "markdown_status": 200,
+   "crew-pdf_status": 200,
+   "quote_status": 200,
+   "page1_arrow_lines": [
+    "— Arrow Board (caution mode only) 1"
+   ],
+   "xlsx_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "quote_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "crew_md": {
+    "equipment_line": "- 1× Arrow Board (caution mode only)",
+    "setup_paragraph": "Arrow board (DOTI PT-116.1 requires one): Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Set it to flashing caution or alternating diamond and activate it. The drawing doesn't place it, because MUTCD Fig. 6P-10 and S-630-1 Case 17 show no arrow board for a flagger closure. The Traffic Control Supervisor picks its position.",
+    "takedown_line": "6. Deactivate and remove the arrow board.",
+    "states_arrow_mode": false
+   },
+   "crew_pdf_says_caution": true,
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F6": {
+   "kind": "flagger_lane_closure",
+   "jurisdiction_key": "denver",
+   "audit_status": 200,
+   "audit": {
+    "breakdown_arrow_rows": [
+     {
+      "device": "Arrow Board (caution mode only)",
+      "qty": 1
+     }
+    ],
+    "arrow_rules": [
+     {
+      "device_label": "Arrow board (caution mode only)",
+      "mode_note": "Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26).",
+      "raised": true
+     }
+    ]
+   },
+   "pdf_status": 200,
+   "xlsx_status": 200,
+   "markdown_status": 200,
+   "crew-pdf_status": 200,
+   "quote_status": 200,
+   "page1_arrow_lines": [
+    "— Arrow Board (caution mode only) 1"
+   ],
+   "xlsx_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "quote_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "crew_md": {
+    "equipment_line": "- 1× Arrow Board (caution mode only)",
+    "setup_paragraph": "Arrow board (DOTI PT-116.1 requires one): Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Set it to flashing caution or alternating diamond and activate it. The drawing doesn't place it, because MUTCD Fig. 6P-10 and S-630-1 Case 17 show no arrow board for a flagger closure. The Traffic Control Supervisor picks its position.",
+    "takedown_line": "6. Deactivate and remove the arrow board.",
+    "states_arrow_mode": false
+   },
+   "crew_pdf_says_caution": true,
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F18": {
+   "kind": "flagger_lane_closure",
+   "jurisdiction_key": "denver",
+   "audit_status": 200,
+   "audit": {
+    "breakdown_arrow_rows": [
+     {
+      "device": "Arrow Board (caution mode only)",
+      "qty": 1
+     }
+    ],
+    "arrow_rules": [
+     {
+      "device_label": "Arrow board (caution mode only)",
+      "mode_note": "Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26).",
+      "raised": true
+     }
+    ]
+   },
+   "pdf_status": 200,
+   "xlsx_status": 200,
+   "markdown_status": 200,
+   "crew-pdf_status": 200,
+   "quote_status": 200,
+   "page1_arrow_lines": [
+    "— Arrow Board (caution mode only) 1"
+   ],
+   "xlsx_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "quote_arrow_rows": [
+    {
+     "name": "Arrow Board (caution mode only)",
+     "qty": 1,
+     "note": "Jurisdiction-required: DOTI PT-116.1. Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26)."
+    }
+   ],
+   "crew_md": {
+    "equipment_line": "- 1× Arrow Board (caution mode only)",
+    "setup_paragraph": "Arrow board (DOTI PT-116.1 requires one): Caution mode only, never an arrow or chevron: one lane is closed on a two-lane, two-way road (MUTCD 11th Ed. §6L.06 ¶18, p. 833; CDOT S-630-1 Sheet 2 General Note 26). Set it to flashing caution or alternating diamond and activate it. The drawing doesn't place it, because MUTCD Fig. 6P-10 and S-630-1 Case 17 show no arrow board for a flagger closure. The Traffic Control Supervisor picks its position.",
+    "takedown_line": "6. Deactivate and remove the arrow board.",
+    "states_arrow_mode": false
+   },
+   "crew_pdf_says_caution": true,
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "N1": {
+   "kind": "near_intersection",
+   "jurisdiction_key": "denver",
+   "audit_status": 200,
+   "audit": {
+    "breakdown_arrow_rows": [
+     {
+      "device": "Arrow Board",
+      "qty": 1
+     }
+    ],
+    "arrow_rules": [
+     {
+      "device_label": "Arrow board",
+      "mode_note": null,
+      "raised": false
+     }
+    ]
+   },
+   "pdf_status": 200,
+   "xlsx_status": 200,
+   "markdown_status": 200,
+   "crew-pdf_status": 200,
+   "quote_status": 200,
+   "page1_arrow_lines": [
+    "Arrow Board"
+   ],
+   "xlsx_arrow_rows": [],
+   "quote_arrow_rows": [],
+   "crew_md": {
+    "equipment_line": "- 1× Arrow Board",
+    "setup_paragraph": null,
+    "takedown_line": null,
+    "states_arrow_mode": true
+   },
+   "crew_pdf_says_caution": false,
+   "fail": [],
+   "verdict": "PASS"
+  }
+ },
+ "summary": "7/7 PASS"
+}
