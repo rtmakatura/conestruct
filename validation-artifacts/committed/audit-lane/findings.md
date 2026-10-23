@@ -2,23 +2,32 @@
 
 Production `d6d9a14`, 2026-10-22. 31 plans, 10 refusal cases, and F17 (a plan row that was refused). The full check tables and each plan's page 1 are in [index.md](index.md); the scores are in [results.json](results.json).
 
-Awaiting Ryan's review. Once confirmed, each finding is filed as its own issue, labelled `audit-lane`, and the table below gets its issue number.
+Ryan reviewed the findings on 2026-10-22 and confirmed all eight, with one change: G2 goes to high. G3 and G4 stay separate. Each is filed as its own issue, labelled `audit-lane`:
 
-| Finding | Rows | Severity |
-|---|---|---|
-| G1 near-intersection page 1 undercounts the signs | N1–N14 | medium |
-| G2 urban flagger arrow board: no mode, missing from the crew sheet | F1–F4, F6, F18 | medium |
-| G3 pilot car missing from page 1, the spreadsheets and the audit's device list | F12 | medium |
-| G4 the AFAD has three names | F16 | medium |
-| G5 a 50 ft flagger zone is refused against a "merging taper" | F17 | medium |
-| G6 the cross-street search leaves Colorado | Lafayette search | medium |
-| G7 the one-way flagger refusal doesn't say one-way | R1 | low |
-| G8 near-intersection is still described as gated or divided-unsupported | docs, R6 | low |
+| Finding | Rows | Issue | Severity |
+|---|---|---|---|
+| G2 urban flagger arrow board: no mode, missing from the crew sheet | F1–F4, F6, F18 | #379 | high |
+| G1 near-intersection page 1 undercounts the signs | N1–N14 | #372 | medium |
+| G3 pilot car missing from page 1, the spreadsheets and the audit's device list | F12 | #373 | medium |
+| G4 the AFAD has three names | F16 | #374 | medium |
+| G5 a 50 ft flagger zone is refused against a "merging taper" | F17 | #375 | medium |
+| G6 the cross-street search leaves Colorado | Lafayette search | #376 | medium |
+| G7 the one-way flagger refusal doesn't say one-way | R1 | #377 | low |
+| G8 near-intersection is still described as gated or divided-unsupported | docs, R6 | #378 | low |
+
+Also filed from the review: #371 (priority-high). A site-scan token never expires, and the audit fetch scripts committed real tokens (`a408abe`, 30 `audit.json` files). Ryan ruled an age limit, not a secret rotation, and that the scripts strip tokens before writing `audit.json`.
 
 **Severity** (as in the shoulder audit):
-- **High:** the plan tells a crew to do something the sources don't support, or describes the road wrongly. None this round.
+- **High:** the plan tells a crew to do something the sources don't support, or describes the road wrongly. G2 (Ryan, 2026-10-22): with no mode stated, a crew could run arrow mode on a two-lane road and send drivers toward oncoming traffic.
 - **Medium:** a sourced value is missed, or two documents disagree.
 - **Low:** the API or the wording.
+
+## High
+
+### G2 (#379). Urban flagger plans carry an arrow board with no mode, and the crew sheet leaves it out (C8, C10; F1–F4, F6, F18)
+- **What the plans do:** page 1, both spreadsheets and the audit list one arrow board. The crew sheet's equipment list has none. No surface says which mode it runs in. All six are Denver plans; the audit's reason is Denver's trigger: "Arrow board required if closing one or more lanes".
+- **The rule:** MUTCD §6L.06 ¶18 (Standard), p. 833: "… for temporarily closing one lane on a two-lane, two-way roadway, an arrow board shall be used only in the caution mode." S-630-1 Sheet 2 General Note 26 says the same (L14).
+- **Why it matters:** a flagger closure is exactly the case ¶18 limits. The crew sheet is what the crew carries, and it neither lists the board nor says caution mode.
 
 ## Medium
 
@@ -35,11 +44,6 @@ Awaiting Ryan's review. Once confirmed, each finding is filed as its own issue, 
 
 - **Totals (N1):** page 1 "TOTAL DEVICES 37"; the device XLSX summary "Total device count 43".
 - **Why it matters:** page 1's table is titled a summary and gives a total, so a reader counting from it is short six signs. Not drawing the cross street is a ruled choice (#117 Option C); undercounting it isn't.
-
-### G2. Urban flagger plans carry an arrow board with no mode, and the crew sheet leaves it out (C8, C10; F1–F4, F6, F18)
-- **What the plans do:** page 1, both spreadsheets and the audit list one arrow board. The crew sheet's equipment list has none. No surface says which mode it runs in. All six are Denver plans; the audit's reason is Denver's trigger: "Arrow board required if closing one or more lanes".
-- **The rule:** MUTCD §6L.06 ¶18 (Standard), p. 833: "… for temporarily closing one lane on a two-lane, two-way roadway, an arrow board shall be used only in the caution mode." S-630-1 Sheet 2 General Note 26 says the same (L14).
-- **Why it matters:** a flagger closure is exactly the case ¶18 limits. The crew sheet is what the crew carries, and it neither lists the board nor says caution mode.
 
 ### G3. The pilot car is missing from page 1's summary, both spreadsheets and the audit's device list (C10, F12)
 - **Crew sheet:** "1× Pilot car with G20-4 "PILOT CAR/FOLLOW ME" sign mounted on the rear of the vehicle" (`runs/F12/crew.md:27`).
@@ -87,7 +91,7 @@ Re-run on production `d6d9a14` on 2026-10-22 (log: `runs/fetch-log-g6-rerun.txt`
 - **`skills/cdot-s630-cases/SKILL.md:41-48`:** "Gated scenarios … (currently gated off via `ENABLED_SCENARIO_KINDS = ["shoulder"]`)", listing `flagger_lane_closure`.
 - **`src/api/schemas.py:997`** (R6's refusal): "divided intersections aren't supported yet." Since #312 the site builds a divided near-intersection plan from the carriageway facts with the wire's `divided` false (R6's first run did exactly that on Colorado Blvd). The API gives two answers for the same road.
 
-## Edition (goes to #265)
+## Edition (commented on #265)
 - **C11b, 31 of 31 plans:** every audit links the 19-page S-630-1 set, while page 1 cites the July 2026, 26-sheet edition. Same as the shoulder audit's C9d.
 
 ## Recorded, not findings

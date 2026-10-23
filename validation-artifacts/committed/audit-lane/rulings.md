@@ -66,3 +66,8 @@ Each follows an L item's own check rule or the "Not sourced" list:
 - **G3:** `check.py`'s C10 counts the audit's device list, which has no pilot car; the audit's flagger section does say "1 vehicle". `findings.md` states both.
 - **Trunk "divided" in `pins.md`** came from `fetch.py`'s classifier mirror, which predates #332. It is recorded in `findings.md` as not a finding; `pins.md` is left as the session-2 record.
 - Ryan reviews `findings.md` before any issue is filed (the session-1 plan).
+
+## Ryan, 2026-10-22: findings review
+- All eight findings confirmed. G2 goes to high: Fig 6P-10 draws no arrow board on TA-10 (`oracle-sources.md` L14: "Fig 6P-10 (p. 879) and Case 17 draw none"), and with no mode stated a crew could run arrow mode on a two-lane road (§6L.06 ¶18 allows caution only). G3 and G4 stay separate.
+- Scan tokens: add an age limit (CHOSEN; the fixing session proposes the value), no secret rotation. The audit scripts strip tokens before writing `audit.json`, with a test. Filed as #371.
+- Filed: #371, #372–#379.
