@@ -1,0 +1,137 @@
+{
+ "base": "https://www.conestruct.com",
+ "checked_at": "2026-10-23T17:17:06+00:00",
+ "healthz_sha": "001dcd1c648c714cae2b2577e4a48e9bdff4a493",
+ "rows": {
+  "F12": {
+   "kind": "flagger_lane_closure",
+   "pilotCar": true,
+   "audit_status": 200,
+   "audit_breakdown_pilot": [
+    {
+     "device": "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+     "code": "—",
+     "function": "Traffic control",
+     "qty": 1
+    }
+   ],
+   "audit_pilot_car_text": "1 vehicle",
+   "page1_status": 200,
+   "page1": {
+    "pilot_rows": [
+     "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign 1"
+    ],
+    "total": 53
+   },
+   "device_xlsx_status": 200,
+   "device_xlsx": {
+    "pilot_rows": [
+     [
+      "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+      "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+      "—",
+      "EACH",
+      1,
+      "G20-4 mounted on the rear of the vehicle (S-630-1 Sheet 26: vehicle-mounted, not a roadside placement)."
+     ]
+    ],
+    "any_pilot_text": true,
+    "total": 53
+   },
+   "quote_xlsx_status": 200,
+   "quote_xlsx": {
+    "pilot_rows": [
+     [
+      "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+      null,
+      "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+      1,
+      "EACH",
+      "—",
+      1,
+      "—",
+      "G20-4 mounted on the rear of the vehicle (S-630-1 Sheet 26: vehicle-mounted, not a roadside placement). No daily rate on file. NOT included in the quote total; price separately."
+     ]
+    ]
+   },
+   "quote_breakdown_status": 200,
+   "quote_breakdown": {
+    "pilot_lines": [
+     {
+      "item_number": 13,
+      "device_type": "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+      "label": "",
+      "description": "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+      "qty": 1,
+      "unit": "EACH",
+      "daily_rate": 0.0,
+      "days": 1,
+      "extended": 0.0,
+      "note": "G20-4 mounted on the rear of the vehicle (S-630-1 Sheet 26: vehicle-mounted, not a roadside placement). No daily rate on file. NOT included in the quote total; price separately.",
+      "jurisdiction_required": false,
+      "jurisdiction_unmapped": false,
+      "unpriced": true
+     }
+    ],
+    "equipment_total": 263.5,
+    "total": 1362.46
+   },
+   "breakdown_status": 200,
+   "breakdown": {
+    "pilot_rows": [
+     {
+      "device": "Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign",
+      "code": "—",
+      "function": "Traffic control",
+      "qty": 1
+     }
+    ],
+    "total_devices": 53
+   },
+   "crew_status": 200,
+   "crew_pilot_lines": [
+    "- 1× Pilot car with G20-4 \"PILOT CAR/FOLLOW ME\" sign mounted on the rear of the vehicle (S-630-1 Sheet 26: vehicle-mounted, not a roadside placement)"
+   ],
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F1": {
+   "kind": "flagger_lane_closure",
+   "pilotCar": false,
+   "audit_status": 200,
+   "audit_breakdown_pilot": [],
+   "audit_pilot_car_text": null,
+   "page1_status": 200,
+   "page1": {
+    "pilot_rows": [],
+    "total": 38
+   },
+   "device_xlsx_status": 200,
+   "device_xlsx": {
+    "pilot_rows": [],
+    "any_pilot_text": false,
+    "total": 38
+   },
+   "quote_xlsx_status": 200,
+   "quote_xlsx": {
+    "pilot_rows": []
+   },
+   "quote_breakdown_status": 200,
+   "quote_breakdown": {
+    "pilot_lines": [],
+    "equipment_total": 197.0,
+    "total": 1055.12
+   },
+   "breakdown_status": 200,
+   "breakdown": {
+    "pilot_rows": [],
+    "total_devices": 38
+   },
+   "crew_status": 200,
+   "crew_pilot_lines": [],
+   "fail": [],
+   "verdict": "PASS"
+  }
+ },
+ "summary": "2/2 PASS"
+}
