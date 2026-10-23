@@ -58,3 +58,11 @@ Each follows an L item's own check rule or the "Not sourced" list:
 - **R1:** Broadway is refused for its five lanes, which is true, but the one-way reason isn't named.
 - **Urban near-intersection gaps under A** (N2, N6, N9): INFO per S-630-1 Sheet 10 Note 1 (L5).
 - **Scan tokens:** `check.py` strips `site_scan_token` from each `audit.json`, as the shoulder audit did. Session 3's commit `a408abe` still carries them in history.
+
+## R9 (R145 self-ruled, session 5): findings are numbered G1–G8, and severities follow the shoulder audit's scale
+- **Numbering:** findings are G1–G8, because F1–F18 already name the flagger rows.
+- **Severity:** the shoulder audit's scale (high / medium / low, defined in `findings.md`). No finding reaches high: none tells a crew to do something the sources don't support. G2 is medium, not high, because the plans are silent on the arrow board's mode rather than stating a wrong one.
+- **G6 re-run:** the Lafayette searches were re-run on production `d6d9a14` (2026-10-22) through `fetch.py`'s paced client, so the finding cites saved answers (`runs/_pins/geo_US_287_Dillon_Rd_Lafayette*.json`), not only session 4's note. The console log and the healthz read are in `runs/fetch-log-g6-rerun.txt`.
+- **G3:** `check.py`'s C10 counts the audit's device list, which has no pilot car; the audit's flagger section does say "1 vehicle". `findings.md` states both.
+- **Trunk "divided" in `pins.md`** came from `fetch.py`'s classifier mirror, which predates #332. It is recorded in `findings.md` as not a finding; `pins.md` is left as the session-2 record.
+- Ryan reviews `findings.md` before any issue is filed (the session-1 plan).

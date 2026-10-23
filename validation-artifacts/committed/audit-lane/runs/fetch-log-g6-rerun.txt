@@ -1,0 +1,6 @@
+# G6 re-run, 2026-10-22, session 5 (rulings R9). fetch.Paced (paced, gated) against https://www.conestruct.com.
+# Backend healthz checked right after: {"status":"ok","sha":"d6d9a148028eea97a15193b5f92b8b93d5623b15"}
+19:33:01 /api/geocode -> 200 (1.5s)   "US 287 & Dillon Rd, Lafayette, CO"        -> place 37.891883, -122.120302
+19:33:05 /api/geocode -> 200 (0.2s)   "US 287 & Dillon Rd, Lafayette"            -> place 30.222907, -92.018777
+19:33:09 /api/geocode -> 200 (0.2s)   "US 287 & Dillon Rd, Lafayette, Colorado"  -> intersection 39.957998, -105.090397
+19:33:13 /api/geocode -> 200 (0.2s)   "US 287 & Dillon Rd, Lafayette" + cdot     -> place 30.222907, -92.018777

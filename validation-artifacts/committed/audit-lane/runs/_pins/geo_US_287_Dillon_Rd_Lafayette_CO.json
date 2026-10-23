@@ -1,0 +1,11 @@
+{
+ "request": {
+  "address": "US 287 & Dillon Rd, Lafayette, CO"
+ },
+ "status": 200,
+ "response": {
+  "lat": 37.891883,
+  "lng": -122.120302,
+  "placeType": "place"
+ }
+}

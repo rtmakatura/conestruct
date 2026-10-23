@@ -1,0 +1,12 @@
+{
+ "request": {
+  "address": "US 287 & Dillon Rd, Lafayette",
+  "jurisdiction_key": "cdot"
+ },
+ "status": 200,
+ "response": {
+  "lat": 30.222907,
+  "lng": -92.018777,
+  "placeType": "place"
+ }
+}
