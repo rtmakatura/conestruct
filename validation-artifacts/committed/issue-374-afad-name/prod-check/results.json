@@ -1,0 +1,139 @@
+{
+ "base": "https://www.conestruct.com",
+ "checked_at": "2026-10-23T20:02:07+00:00",
+ "healthz_sha": "5249455cd12826de57f52b43d35a64ed49d09816",
+ "rows": {
+  "F16": {
+   "kind": "flagger_lane_closure",
+   "afad": true,
+   "audit_status": 200,
+   "audit_breakdown_afad": [
+    {
+     "device": "Automated Flagger Assistance Device (AFAD)",
+     "code": "—",
+     "function": "Traffic control",
+     "qty": 2
+    }
+   ],
+   "audit_breakdown_old": [],
+   "audit_stations_text": "2 AFAD",
+   "page1_status": 200,
+   "page1": {
+    "summary_afad_rows": [
+     "Automated Flagger Assistance Device (AFAD) 2"
+    ],
+    "legend_afad_lines": [
+     "Automated Flagger Assistance Device (AFAD)"
+    ],
+    "old_name_lines": []
+   },
+   "device_xlsx_status": 200,
+   "device_xlsx": {
+    "signal_rows": [
+     [
+      "TEMPORARY_SIGNAL",
+      "Automated Flagger Assistance Device (AFAD)",
+      "630-86810",
+      "EACH",
+      2,
+      null
+     ]
+    ],
+    "old_name_cells": []
+   },
+   "quote_xlsx_status": 200,
+   "quote_xlsx": {
+    "signal_rows": [
+     [
+      "TEMPORARY_SIGNAL",
+      null,
+      "Automated Flagger Assistance Device (AFAD)",
+      2,
+      "EACH",
+      200,
+      1,
+      400,
+      null
+     ]
+    ],
+    "old_name_cells": []
+   },
+   "quote_breakdown_status": 200,
+   "quote_breakdown": {
+    "signal_lines": [
+     {
+      "description": "Automated Flagger Assistance Device (AFAD)",
+      "qty": 2,
+      "unit": "EACH",
+      "daily_rate": 200.0,
+      "extended": 400.0
+     }
+    ],
+    "old_names": []
+   },
+   "breakdown_status": 200,
+   "breakdown": {
+    "afad_rows": [
+     {
+      "device": "Automated Flagger Assistance Device (AFAD)",
+      "code": "—",
+      "function": "Traffic control",
+      "qty": 2
+     }
+    ],
+    "old_names": []
+   },
+   "crew_status": 200,
+   "crew": {
+    "afad_lines": [
+     "- 2× Automated Flagger Assistance Device (AFAD)"
+    ],
+    "old_name_lines": []
+   },
+   "fail": [],
+   "verdict": "PASS"
+  },
+  "F1": {
+   "kind": "flagger_lane_closure",
+   "afad": false,
+   "audit_status": 200,
+   "audit_breakdown_afad": [],
+   "audit_breakdown_old": [],
+   "audit_stations_text": "2 flagger station(s)",
+   "page1_status": 200,
+   "page1": {
+    "summary_afad_rows": [],
+    "legend_afad_lines": [],
+    "old_name_lines": []
+   },
+   "device_xlsx_status": 200,
+   "device_xlsx": {
+    "signal_rows": [],
+    "old_name_cells": []
+   },
+   "quote_xlsx_status": 200,
+   "quote_xlsx": {
+    "signal_rows": [],
+    "old_name_cells": []
+   },
+   "quote_breakdown_status": 200,
+   "quote_breakdown": {
+    "signal_lines": [],
+    "old_names": []
+   },
+   "breakdown_status": 200,
+   "breakdown": {
+    "afad_rows": [],
+    "old_names": []
+   },
+   "crew_status": 200,
+   "crew": {
+    "afad_lines": [],
+    "old_name_lines": []
+   },
+   "fail": [],
+   "verdict": "PASS"
+  }
+ },
+ "summary": "2/2 PASS"
+}
