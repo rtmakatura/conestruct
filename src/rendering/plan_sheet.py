@@ -4966,6 +4966,9 @@ def render_plan_sheet(
     # Cross-street control is tabulated (device list / quote / crew
     # narrative / audit); the notes panel carries the S-630-1 Sheet 10
     # Cases 18/19 citation note in place of a cross-street drawing.
+    # The device summary still counts every placement, cross street
+    # included, so its quantities and total equal the device list (#372).
+    summary_placements = placements
     ta_override: str | None = None
     if params.near_intersection:
         if not approaches:
@@ -5116,6 +5119,7 @@ def render_plan_sheet(
             site_lat=site_lat,
             site_lng=site_lng,
             buffer_takes_cones=buffer_carries_cones(params, approaches),
+            summary_placements=summary_placements,
         )
     finally:
         _TURN_BAY_FRAME.reset(frame_token)
@@ -5197,11 +5201,15 @@ def _draw_schematic_page(
     site_lng: float | None = None,
     site_scan: Mapping[str, Any] | None = None,
     buffer_takes_cones: bool = False,
+    summary_placements: list[DevicePlacement] | None = None,
 ) -> None:
     """Render the schematic page (page 1).
 
     ``buffer_takes_cones`` is ``layout.buffer_carries_cones`` for this plan
     (#342), passed in because it needs the approaches.
+
+    ``summary_placements`` is every placement the device list counts,
+    cross street included (#372); ``None`` means ``placements``.
     """
     bearing_deg = getattr(params, "bearing_deg", None)
 
@@ -5382,7 +5390,14 @@ def _draw_schematic_page(
         limited_sight=bool((site_flags or {}).get("limited_sight_distance")),
     )
     if geom.device_x is not None and geom.device_w is not None:
-        _draw_device_summary(c, geom.device_x, geom.device_w, placements, params, applied_deltas)
+        _draw_device_summary(
+            c,
+            geom.device_x,
+            geom.device_w,
+            placements if summary_placements is None else summary_placements,
+            params,
+            applied_deltas,
+        )
     _draw_structured_title_block(
         c,
         params,

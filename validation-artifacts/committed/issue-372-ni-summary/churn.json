@@ -1,0 +1,514 @@
+{
+ "N1": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   37,
+   43
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N2": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   38,
+   44
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N3": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   45,
+   51
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N4": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   36,
+   42
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N5": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   37,
+   43
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N6": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   46,
+   49
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 2",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 2",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 2",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N7": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   45,
+   51
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 2",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 2",
+    "R2-11 END DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 2",
+    "W20-1 ROAD WORK AHEAD | 4"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N8": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   45,
+   51
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 2",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 2",
+    "R2-11 END DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 2",
+    "W20-1 ROAD WORK AHEAD | 4"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N9": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   44,
+   50
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 2",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 2",
+    "R2-11 END DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 2",
+    "W20-1 ROAD WORK AHEAD | 4"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N10": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   48,
+   54
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 2",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 2",
+    "R2-11 END DOUBLE FINES ZONE | 4"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 2",
+    "W20-1 ROAD WORK AHEAD | 4"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N11": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   37,
+   43
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N12": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   38,
+   44
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N13": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   40,
+   46
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 3"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 3"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "N14": {
+  "page1_text_identical": false,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   42,
+   45
+  ],
+  "changed_rows": [
+   [
+    "R2-10 BEGIN DOUBLE FINES ZONE | 1",
+    "R2-10 BEGIN DOUBLE FINES ZONE | 2"
+   ],
+   [
+    "R2-11 END DOUBLE FINES ZONE | 1",
+    "R2-11 END DOUBLE FINES ZONE | 2"
+   ],
+   [
+    "W20-1 ROAD WORK AHEAD | 1",
+    "W20-1 ROAD WORK AHEAD | 2"
+   ]
+  ],
+  "agree_before_after": [
+   false,
+   true
+  ]
+ },
+ "flagger-None": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   42,
+   42
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ },
+ "shoulder-None": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   35,
+   35
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ },
+ "flagger-denver": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   43,
+   43
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ },
+ "shoulder-denver": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   35,
+   35
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ },
+ "flagger-greeley": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   43,
+   43
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ },
+ "shoulder-greeley": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   35,
+   35
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ },
+ "flagger-thornton": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   43,
+   43
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ },
+ "shoulder-thornton": {
+  "page1_text_identical": true,
+  "page1_outside_summary_identical": true,
+  "summary_row_names_identical": true,
+  "xlsx_identical": true,
+  "total": [
+   36,
+   36
+  ],
+  "changed_rows": [],
+  "agree_before_after": [
+   true,
+   true
+  ]
+ }
+}
