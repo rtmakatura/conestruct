@@ -98,6 +98,7 @@ let geocodeResponse: {
   placeType: string | null;
 } | null = null;
 let geocodeFailStatus = 404;
+let geocodeFailReason = "";
 let geocodeBodies: Array<{ address: string; jurisdiction_key: string | null }> = [];
 
 function installFetch() {
@@ -121,6 +122,7 @@ function installFetch() {
             ok: false,
             status: geocodeFailStatus,
             json: async () => ({}),
+            text: async () => geocodeFailReason,
           });
         }
         return Promise.resolve({
@@ -186,6 +188,7 @@ beforeEach(() => {
   geocodeResponse = null;
   geocodeBodies = [];
   geocodeFailStatus = 404;
+  geocodeFailReason = "";
   installFetch();
 });
 
@@ -311,6 +314,18 @@ describe("#347 cross-street search", () => {
 
     await screen.findByText("Add a city to search cross streets.");
     expect(geocodeBodies).toEqual([{ address: "Colfax & Main", jurisdiction_key: null }]);
+    expect(pendingDetects).toHaveLength(0);
+    expect(saveButton().disabled).toBe(true);
+  });
+
+  it("#376: a typed city outside Colorado reads the route's reason: Colorado roads only, no pin", async () => {
+    geocodeResponse = null;
+    geocodeFailStatus = 422;
+    geocodeFailReason = "outside colorado";
+    mountModal();
+    search("Colfax & Main, Aurora, IL");
+
+    await screen.findByText("Plans cover Colorado roads only.");
     expect(pendingDetects).toHaveLength(0);
     expect(saveButton().disabled).toBe(true);
   });

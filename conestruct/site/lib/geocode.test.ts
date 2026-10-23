@@ -4,7 +4,13 @@
 // run of the same cases is lib/geocode.live.test.ts.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { geocodeAddress, parseCrossStreets } from "./geocode";
-import { areaForKey, areaForName, bboxCenter, COMBINED_BBOX } from "./jurisdiction-areas";
+import {
+  areaForKey,
+  areaForName,
+  bboxCenter,
+  COLORADO_BBOX,
+  COMBINED_BBOX,
+} from "./jurisdiction-areas";
 
 const CORNER = {
   center: [-104.966006, 39.739964],
@@ -108,15 +114,6 @@ describe("cross streets with a city typed", () => {
     expect(calls[0].searchParams.get("bbox")).toBe(aurora.bbox.join(","));
   });
 
-  it("Colfax & Main, Aurora, IL: another state named ⇒ Mapbox resolves the city", async () => {
-    const IL = { center: [-88.32, 41.76], bbox: [-88.4, 41.69, -88.2, 41.82], place_type: ["place"] };
-    answer = (u) => ({ features: query(u) === "Aurora, IL" ? [IL] : [] });
-    const r = await geocodeAddress("Colfax & Main, Aurora, IL");
-    expect(query(calls[0])).toBe("Aurora, IL");
-    expect(calls[0].searchParams.get("types")).toBe("place,locality");
-    expect(calls[1].searchParams.get("bbox")).toBe(IL.bbox.join(","));
-    expect(r).toEqual({ ok: true, lat: 41.76, lng: -88.32, placeType: "place" });
-  });
 
   it("an unknown city Mapbox cannot place ⇒ 404", async () => {
     answer = () => ({ features: [] });
@@ -230,5 +227,82 @@ it("Mapbox unreachable on the cross-street path is still a 502", async () => {
     ok: false,
     status: 502,
     reason: "mapbox unreachable",
+  });
+});
+
+// #376 (R1, reverses #347 ruling 2): a typed city resolves only inside
+// Colorado.  The stub answers the city lookup the way Mapbox did on
+// 2026-10-23 (checkpoint.md): inside the Colorado box with the Colorado
+// place, with no box with the place Mapbox ranks first anywhere.
+describe("#376 a typed city resolves only inside Colorado", () => {
+  const place = (center: number[], relevance: number) => ({
+    center,
+    bbox: [center[0] - 0.05, center[1] - 0.05, center[0] + 0.05, center[1] + 0.05],
+    place_type: ["place"],
+    relevance,
+  });
+  const LAFAYETTE_CO = place([-105.090462, 39.998235], 1);
+  const LAFAYETTE_LA = place([-92.018777, 30.222907], 1);
+  const LAFAYETTE_CA = place([-122.120302, 37.891883], 1);
+  const DILLON_CORNER = {
+    center: [-105.090397, 39.957998],
+    place_type: ["address"],
+    properties: { accuracy: "intersection" },
+  };
+  const COLORADO = COLORADO_BBOX.join(",");
+  const boxed = (u: URL) => u.searchParams.get("bbox") === COLORADO;
+
+  function lafayette(u: URL) {
+    if (u.searchParams.get("types") === "address") return { features: [DILLON_CORNER] };
+    if (boxed(u)) return { features: [LAFAYETTE_CO] };
+    // Mapbox with no box: "CO" read as California, no state as Louisiana.
+    return { features: [query(u).endsWith(", CO") ? LAFAYETTE_CA : LAFAYETTE_LA] };
+  }
+
+  it.each([
+    ["US 287 & Dillon Rd, Lafayette, CO", null, "Lafayette, Colorado"],
+    ["US 287 & Dillon Rd, Lafayette", null, "Lafayette"],
+    ["US 287 & Dillon Rd, Lafayette", "cdot", "Lafayette"],
+    ["US 287 & Dillon Rd, Lafayette, Colorado", null, "Lafayette, Colorado"],
+  ])("%s (jurisdiction %s): the Colorado corner, one city lookup held to Colorado", async (q, jk, lookup) => {
+    answer = lafayette;
+    const r = await geocodeAddress(q, undefined, { jurisdictionKey: jk });
+    expect(r).toEqual({ ok: true, lat: 39.957998, lng: -105.090397, placeType: "intersection" });
+    expect(calls).toHaveLength(2);
+    expect(query(calls[0])).toBe(lookup);
+    expect(calls[0].searchParams.get("bbox")).toBe(COLORADO);
+    expect(calls[1].searchParams.get("bbox")).toBe(LAFAYETTE_CO.bbox.join(","));
+  });
+
+  it.each([
+    ["Colfax & Main, Aurora, IL", place([-104.830668, 39.740328], 0.5), place([-88.315002, 41.758194], 1)],
+    ["Johnston & Pinhook, Lafayette, LA", place([-105.090462, 39.998235], 0.5), LAFAYETTE_LA],
+  ])("%s: another state named ⇒ 422 outside colorado, never the Colorado namesake", async (q, inCo, anywhere) => {
+    answer = (u) => ({ features: [boxed(u) ? inCo : anywhere] });
+    const r = await geocodeAddress(q);
+    expect(r).toEqual({ ok: false, status: 422, reason: "outside colorado" });
+    expect(calls).toHaveLength(2); // no street search
+  });
+
+  it("nothing in Colorado and Mapbox's best answer elsewhere, even partial ⇒ 422 outside colorado", async () => {
+    answer = (u) => ({ features: boxed(u) ? [] : [place([-92.0, 30.2], 0.5)] });
+    const r = await geocodeAddress("Main & 1st, Breaux Bridge");
+    expect(r).toEqual({ ok: false, status: 422, reason: "outside colorado" });
+  });
+
+  it("a partial match inside Colorado ⇒ 404 check spelling", async () => {
+    answer = (u) => ({
+      features: [boxed(u) ? place([-105.090462, 39.998235], 0.67) : place([-92.018777, 30.222907], 0.67)],
+    });
+    const r = await geocodeAddress("US 287 & Dillon Rd, Lafayete");
+    expect(r).toEqual({ ok: false, status: 404, reason: "check spelling" });
+  });
+
+  it("a Colorado place with no extent: a flagged corner outside Colorado (Plainwell, MI) is refused", async () => {
+    const NO_EXTENT = { center: [-105.2, 39.6], place_type: ["locality"], relevance: 1 };
+    answer = (u) => ({ features: u.searchParams.get("types") === "address" ? [PLAINWELL_MI] : [NO_EXTENT] });
+    const r = await geocodeAddress("Main & 1st, Somewhere");
+    expect(calls[1].searchParams.get("bbox")).toBeNull();
+    expect(r).toEqual({ ok: true, lat: 39.6, lng: -105.2, placeType: "place" });
   });
 });

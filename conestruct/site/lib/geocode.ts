@@ -15,11 +15,16 @@
 // hit inside it answers 422: "Add a city to search cross streets."
 // #352: a selected jurisdiction with no TIGER place searches its
 // authority's extent (cdot: Colorado, held to the same 422 rule).
+// #376 (R1, reverses #347 ruling 2): a typed city resolves only inside
+// Colorado.  One that names a place elsewhere answers 422 "outside
+// colorado"; a partial match inside Colorado answers 404 "check spelling".
+// Every corner must lie inside Colorado, whatever the area.
 
 import {
   areaForKey,
   areaForName,
   bboxCenter,
+  COLORADO_BBOX,
   COMBINED_BBOX,
   type BBox,
 } from "@/lib/jurisdiction-areas";
@@ -40,6 +45,8 @@ interface MapboxFeature {
   place_type?: string[];
   bbox?: BBox;
   properties?: { accuracy?: string };
+  /** 1 when every word of the query matched. */
+  relevance?: number;
 }
 
 type Fetched =
@@ -128,14 +135,33 @@ async function searchArea(
   if (known && (state.length === 0 || COLORADO.test(state.join(" ")))) {
     return { ok: true, area: { bbox: known.bbox, center: bboxCenter(known.bbox) } };
   }
-  const r = await mapbox(cross.city, "&types=place,locality&limit=1", token, signal);
+  // #376: Mapbox reads "Lafayette, CO" as California; the state is
+  // spelled out, and the lookup is held to Colorado.
+  const city = state.length && COLORADO.test(state.join(" ")) ? `${name}, Colorado` : cross.city;
+  const params = "&types=place,locality&limit=1";
+  const r = await mapbox(city, `${params}&bbox=${COLORADO_BBOX.join(",")}`, token, signal);
   if (!r.ok) return r;
-  const place = r.features[0];
-  if (!place?.center || place.center.length !== 2) {
-    return { ok: false, status: 404, reason: "no match" };
+  const place = located(r.features[0]);
+  if (place && place.relevance === 1 && inside(place.center, COLORADO_BBOX)) {
+    // A place with no extent still scopes by nearness to its center.
+    return { ok: true, area: { bbox: place.bbox ?? null, center: place.center } };
   }
-  // A place with no extent still scopes by nearness to its center.
-  return { ok: true, area: { bbox: place.bbox ?? null, center: place.center } };
+  // Not a full match in Colorado: Mapbox's best answer anywhere tells a
+  // place elsewhere ("Aurora, IL") from a misspelling.
+  const any = await mapbox(city, params, token, signal);
+  if (!any.ok) return any;
+  const best = located(any.features[0]);
+  if (best && !inside(best.center, COLORADO_BBOX) && (best.relevance === 1 || !place)) {
+    return { ok: false, status: 422, reason: "outside colorado" };
+  }
+  if (place) return { ok: false, status: 404, reason: "check spelling" };
+  return { ok: false, status: 404, reason: "no match" };
+}
+
+function located(
+  f: MapboxFeature | undefined,
+): (MapboxFeature & { center: [number, number] }) | null {
+  return f?.center?.length === 2 ? (f as MapboxFeature & { center: [number, number] }) : null;
 }
 
 function inside([lng, lat]: [number, number], b: BBox): boolean {
@@ -158,6 +184,8 @@ async function geocodeCrossStreets(
     (f) =>
       f.properties?.accuracy === "intersection" &&
       f.center?.length === 2 &&
+      // #376: never a corner outside Colorado, whatever the area.
+      inside(f.center, COLORADO_BBOX) &&
       // A strict area must hold the corner, not just rank it.
       (!area.strict || (area.bbox !== null && inside(f.center, area.bbox))),
   );

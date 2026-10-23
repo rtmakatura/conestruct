@@ -1,0 +1,27 @@
+# #376 live run, 2026-10-23T20:38Z, lib/geocode.live.test.ts (LIVE_GEOCODE=1) on the branch's code, real Mapbox
+| Search | Jurisdiction | Answer | placeType | from E Colfax & Williams | Note |
+|---|---|---|---|---|---|
+| `Colfax & Williams, Denver` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 1 (was Nebraska) |
+| `Colfax and Williams` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 2 |
+| `E Colfax Ave and N Williams St` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 3 |
+| `E Colfax Ave & N Race St, Denver` | none | 39.739962, -104.963485 | intersection | 0.13 mi | issue input 4 |
+| `Colfax & Williams` | none | 39.739964, -104.966006 | intersection | 0.00 mi | no city, no jurisdiction |
+| `Colfax & Williams` | denver | 39.739964, -104.966006 | intersection | 0.00 mi | no city, Denver selected |
+| `Colfax & Main` | none | HTTP 422 add a city | |  | no city, no jurisdiction |
+| `Colfax & Main` | denver | 39.764245, -104.854753 | place | 6.14 mi | no city, Denver selected |
+| `Colfax & Main` | cdot | 39.738365, -104.323716 | intersection | 34.13 mi | no city, CDOT selected (#352: Colorado) |
+| `US 285 & CO 9` | cdot | 39.221229, -105.993766 | intersection | 65.49 mi | #352: CDOT, outside our places |
+| `I-25 & US 50` | cdot | 38.338098, -104.619794 | intersection | 98.63 mi | #352: CDOT, outside our places |
+| `Academy & Platte` | el_paso | 38.839656, -104.757338 | intersection | 63.20 mi | #352: El Paso County |
+| `Eisenhower & Lincoln` | loveland | 40.407199, -105.073065 | intersection | 46.45 mi | #352: Loveland |
+| `Colfax & Main` | e470 | HTTP 422 add a city | |  | #352: E-470 (no polygon) |
+| `Colfax & Main, Aurora` | none | 39.688880, -104.687806 | place | 15.20 mi | city in two states |
+| `Colfax & Main, Aurora, IL` | none | HTTP 422 outside colorado | |  | city in two states, Illinois named |
+| `Colfax & Kipling, Lakewood` | none | 39.740123, -105.109456 | intersection | 7.62 mi | Mapbox alone ranks Lakewood NJ first |
+| `1437 Bannock St, Denver, CO` | none | 39.739247, -104.990970 | address | 1.33 mi | plain street address (unchanged path) |
+| `US 287 & Dillon Rd, Lafayette, CO` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: was Lafayette, California |
+| `US 287 & Dillon Rd, Lafayette` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: was Lafayette, Louisiana |
+| `US 287 & Dillon Rd, Lafayette` | cdot | 39.957998, -105.090397 | intersection | 16.45 mi | #376: CDOT, was Louisiana |
+| `US 287 & Dillon Rd, Lafayette, Colorado` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: the Colorado corner |
+| `Johnston & Pinhook, Lafayette, LA` | none | HTTP 422 outside colorado | |  | #376: Louisiana named |
+| `US 287 & Dillon Rd, Lafayete` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: misspelled |

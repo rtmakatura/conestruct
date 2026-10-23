@@ -19,6 +19,10 @@ export interface SearchArea {
 /** The extent of every place below together (no city, no jurisdiction). */
 export const COMBINED_BBOX = data.combined as BBox;
 
+/** #376: Colorado's TIGER extent (cdot's authority area).  Every
+ *  cross-street answer must lie inside it. */
+export const COLORADO_BBOX = data.authority_areas.cdot.bbox as BBox;
+
 const AREAS: SearchArea[] = Object.entries(data.areas).map(([key, a]) => ({
   key,
   name: a.name,

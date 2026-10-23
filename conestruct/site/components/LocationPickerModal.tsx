@@ -17,7 +17,7 @@ import type {
   RoadClassification,
   RoadDetectResponse,
 } from "@/lib/road-detection/types";
-import { geocodeErrorMessage, isPreciseGeocode } from "@/lib/geocode-precision";
+import { geocodeFailureMessage, isPreciseGeocode } from "@/lib/geocode-precision";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import {
   deriveCrossStreet,
@@ -1207,10 +1207,9 @@ export function LocationPickerModal({
                 });
               }
             } else {
-              setSearchStatus({
-                state: "error",
-                message: geocodeErrorMessage(r.status),
-              });
+              const message = await geocodeFailureMessage(r);
+              if (cancelled) return;
+              setSearchStatus({ state: "error", message });
             }
           } catch (err) {
             if (!cancelled) {
@@ -1378,10 +1377,7 @@ export function LocationPickerModal({
           }),
         });
         if (!r.ok) {
-          setSearchStatus({
-            state: "error",
-            message: geocodeErrorMessage(r.status),
-          });
+          setSearchStatus({ state: "error", message: await geocodeFailureMessage(r) });
           return;
         }
         const j = (await r.json()) as {

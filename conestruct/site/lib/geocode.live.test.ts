@@ -2,7 +2,8 @@
 // Ryan's 2026-10-18 ruling.  Skipped unless LIVE_GEOCODE=1 and MAPBOX_TOKEN
 // are set; the table it prints is recorded in
 // validation-artifacts/committed/issue-347-geocoder/outcome.md; the #352
-// rows are recorded in validation-artifacts/committed/issue-352-authority-areas/.
+// rows are recorded in validation-artifacts/committed/issue-352-authority-areas/,
+// the #376 run in validation-artifacts/committed/issue-376-geocode-colorado/.
 import { describe, expect, it } from "vitest";
 import { geocodeAddress } from "./geocode";
 
@@ -35,6 +36,12 @@ const CASES: { input: string; jurisdictionKey?: string; note: string }[] = [
   { input: "Colfax & Main, Aurora, IL", note: "city in two states, Illinois named" },
   { input: "Colfax & Kipling, Lakewood", note: "Mapbox alone ranks Lakewood NJ first" },
   { input: "1437 Bannock St, Denver, CO", note: "plain street address (unchanged path)" },
+  { input: "US 287 & Dillon Rd, Lafayette, CO", note: "#376: was Lafayette, California" },
+  { input: "US 287 & Dillon Rd, Lafayette", note: "#376: was Lafayette, Louisiana" },
+  { input: "US 287 & Dillon Rd, Lafayette", jurisdictionKey: "cdot", note: "#376: CDOT, was Louisiana" },
+  { input: "US 287 & Dillon Rd, Lafayette, Colorado", note: "#376: the Colorado corner" },
+  { input: "Johnston & Pinhook, Lafayette, LA", note: "#376: Louisiana named" },
+  { input: "US 287 & Dillon Rd, Lafayete", note: "#376: misspelled" },
 ];
 
 describe.skipIf(!process.env.LIVE_GEOCODE)("#347 live geocoder run", () => {
