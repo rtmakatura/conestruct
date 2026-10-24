@@ -35,6 +35,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from src.api.render_api import app  # noqa: E402
 from src.rendering import plan_sheet as ps  # noqa: E402
+from tests._worst_case_scan import stub_worst_case_scan  # noqa: E402
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "pdf_worst_case"
 HEADERS = {"Authorization": "Bearer test-secret-do-not-deploy"}
@@ -82,30 +83,18 @@ BASELINE = {
     "broadway-left": {"edge": 0, "box_cross": 0, "collisions": 0},
 }
 
-SCAN_PAYLOAD = Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json"
-
 
 @pytest.fixture(autouse=True)
 def _scan_stub(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch):
-    """Route the scanned fixtures' Overpass trip to a stub; the network is
-    never reached.  Memo cleared around every case so no fixture serves
-    another's scan."""
+    """Route the scanned fixtures' Overpass trip to a stub
+    (tests/_worst_case_scan.py, #383); the network is never reached.
+    Memo cleared around every case so no fixture serves another's scan."""
     from src.api import site_scan as ss
-    from src.rules import site_detection as sd
 
     ss.clear_memo()
     name = getattr(getattr(request.node, "callspec", None), "params", {}).get("name")
-    mode = None
     if name:
-        prov = json.loads((FIXTURE_DIR / f"{name}.json").read_text(encoding="utf-8"))
-        mode = prov.get("_provenance", {}).get("overpass")
-    if mode == "recorded":
-        payload = json.loads(SCAN_PAYLOAD.read_text(encoding="utf-8"))
-        monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda q, **_k: (payload, None))
-    elif mode == "down":
-        monkeypatch.setattr(
-            sd, "_overpass_request_with_fallback", lambda q, **_k: (None, "stub: mirrors down")
-        )
+        stub_worst_case_scan(name, monkeypatch)
     yield
     ss.clear_memo()
 

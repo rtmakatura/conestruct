@@ -22,6 +22,7 @@ os.environ.setdefault("RENDER_API_SECRET", "test-secret-do-not-deploy")
 
 from src.api.render_api import app  # noqa: E402
 from src.rendering import plan_sheet as ps  # noqa: E402
+from tests._worst_case_scan import stub_worst_case_scan  # noqa: E402
 from tests.test_pdf_containment import _words, measure_containment  # noqa: E402
 
 HEADERS = {"Authorization": "Bearer test-secret-do-not-deploy"}
@@ -43,6 +44,17 @@ def _render(client: TestClient, tmp_path: Path, body: dict[str, Any], name: str)
 
 def _in(box: tuple[float, float], w: tuple[float, float, float, float, str]) -> bool:
     return box[0] <= w[0] and w[2] <= box[0] + box[1]
+
+
+@pytest.fixture(autouse=True)
+def _scan_stub(monkeypatch: pytest.MonkeyPatch):
+    """broadway-left's Overpass trip goes to its stub ("mirrors down"), so
+    the page is the fixture's stated plan, not live Overpass's (#383)."""
+    from src.api import site_scan as ss
+
+    stub_worst_case_scan(FIXTURE.stem, monkeypatch)
+    yield
+    ss.clear_memo()
 
 
 @pytest.fixture(scope="module")
@@ -87,7 +99,11 @@ def test_every_cut_line_names_its_codes(client: TestClient, tmp_path: Path) -> N
     seen = 0
     for name in sorted(BASELINE):
         body = json.loads((FIXTURE_DIR / f"{name}.json").read_text(encoding="utf-8"))
-        pdf = _render(client, tmp_path, body["scenario"], name)
+        # Each fixture gets its own stub (#383); the live network is never
+        # asked, so a slow Overpass can't turn this red.
+        with pytest.MonkeyPatch.context() as mp:
+            stub_worst_case_scan(name, mp)
+            pdf = _render(client, tmp_path, body["scenario"], name)
         doc = pdfium.PdfDocument(str(pdf))
         flat = " ".join(doc[0].get_textpage().get_text_range().split())
         doc.close()

@@ -48,6 +48,7 @@ from src.rules.validators import (
     scenario_display_name,
     scenario_display_name_short,
 )
+from tests._worst_case_scan import stub_worst_case_scan
 
 from ._harness import (
     CASE_11_GENERAL_BODY,
@@ -456,7 +457,6 @@ def test_narrative_rural_road_type_makes_no_lane_claim() -> None:
 
 _FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
 _WORST_CASE_DIR = _FIXTURES / "pdf_worst_case"
-_SCAN_PAYLOAD = _FIXTURES / "site_scan" / "lakewood_overpass.json"
 _WORST_CASE = sorted(p.stem for p in _WORST_CASE_DIR.glob("*.json"))
 _API_HEADERS = {"Authorization": "Bearer test-secret-do-not-deploy"}
 
@@ -465,23 +465,10 @@ def _worst_case(name: str) -> dict[str, Any]:
     return json.loads((_WORST_CASE_DIR / f"{name}.json").read_text(encoding="utf-8"))["scenario"]
 
 
-def _stub_scan(name: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The scanned fixtures' Overpass trip goes to a stub (recorded payload
-    or mirrors down, per the fixture's ``_provenance.overpass``); the
-    network is never reached.  Mirrors test_pdf_containment's stub."""
-    from src.api import site_scan as ss
-    from src.rules import site_detection as sd
-
-    ss.clear_memo()
-    prov = json.loads((_WORST_CASE_DIR / f"{name}.json").read_text(encoding="utf-8"))
-    mode = prov.get("_provenance", {}).get("overpass")
-    if mode == "recorded":
-        payload = json.loads(_SCAN_PAYLOAD.read_text(encoding="utf-8"))
-        monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda q, **_k: (payload, None))
-    elif mode == "down":
-        monkeypatch.setattr(
-            sd, "_overpass_request_with_fallback", lambda q, **_k: (None, "stub: mirrors down")
-        )
+# The scanned fixtures' Overpass trip goes to a stub (recorded payload or
+# mirrors down, per the fixture's ``_provenance.overpass``); the network
+# is never reached.  One shared helper since #383.
+_stub_scan = stub_worst_case_scan
 
 
 def _tiny_png_bytes() -> bytes:
