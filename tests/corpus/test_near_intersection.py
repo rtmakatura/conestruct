@@ -240,15 +240,14 @@ def test_valid_body_renders_200_post_enablement(
 ) -> None:
     # Arc 11 flip (Refs #117): the gate opened, so the REAL pipeline
     # answers this body now.  The boundary body's 300-ft work zone was
-    # crafted only to clear the schema — behind the gate it never met
-    # the geometry validator; today that validator refuses it honestly
-    # (zone shorter than the 540-ft taper at 45 mph).  The pin is that
-    # the gated-kind 400 is gone and the pipeline's own gate speaks.
+    # crafted only to clear the schema.  The geometry validator refused it
+    # (zone shorter than the 540-ft taper at 45 mph) until #382 dropped
+    # that limit, so the pipeline now builds it.  The pin is that the
+    # gated-kind 400 is gone.
     res = client.post("/render/audit", headers=auth_headers, json=_body("ni-gate-pin"))
-    assert res.status_code == 400, res.text
+    assert res.status_code == 200, res.text
     # The gated-kind 400's wording, anchored to its source so a future copy
     # change fails here loudly instead of leaving the absence check vacuous.
     gated = "This scenario type isn't available yet"
     assert gated in inspect.getsource(render_api._ensure_scenario_enabled)
     assert gated not in res.text
-    assert res.json()["detail"]["error"] == "geometry_validation_failed"

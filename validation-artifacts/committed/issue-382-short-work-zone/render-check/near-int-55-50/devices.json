@@ -1,0 +1,84 @@
+{
+ "devices": [
+  {
+   "device": "ROAD CONSTRUCTION (NEXT 50 FT)",
+   "code": "G20-1",
+   "function": "Advance warning",
+   "qty": 1
+  },
+  {
+   "device": "END ROAD WORK",
+   "code": "G20-2",
+   "function": "Termination",
+   "qty": 1
+  },
+  {
+   "device": "WORK ZONE plaque",
+   "code": "G20-5P",
+   "function": "Advance warning",
+   "qty": 1
+  },
+  {
+   "device": "BIKE DETOUR",
+   "code": "M4-9a",
+   "function": "Guide",
+   "qty": 2
+  },
+  {
+   "device": "BEGIN DOUBLE FINES ZONE",
+   "code": "R2-10",
+   "function": "Regulatory",
+   "qty": 2
+  },
+  {
+   "device": "END DOUBLE FINES ZONE",
+   "code": "R2-11",
+   "function": "Regulatory",
+   "qty": 2
+  },
+  {
+   "device": "ROAD WORK AHEAD",
+   "code": "W20-1",
+   "function": "Advance warning",
+   "qty": 2
+  },
+  {
+   "device": "RIGHT LANE CLOSED AHEAD",
+   "code": "W20-5R",
+   "function": "Advance warning",
+   "qty": 1
+  },
+  {
+   "device": "RIGHT LANE ENDS",
+   "code": "W4-2R",
+   "function": "Advance warning",
+   "qty": 1
+  },
+  {
+   "device": "Channelizing Drum",
+   "code": "\u2014",
+   "function": "Channelizing",
+   "qty": 13
+  },
+  {
+   "device": "Traffic Cone (36-inch)",
+   "code": "\u2014",
+   "function": "Channelizing",
+   "qty": 9
+  },
+  {
+   "device": "Arrow Board",
+   "code": "\u2014",
+   "function": "Lane closure indication",
+   "qty": 1
+  }
+ ],
+ "total_devices": 36,
+ "unique_types": 12,
+ "zone_geometry": {
+  "taper_l_ft": 660,
+  "buffer_b_ft": 495,
+  "device_spacing_ft": 55,
+  "work_len_ft": 50.0
+ }
+}

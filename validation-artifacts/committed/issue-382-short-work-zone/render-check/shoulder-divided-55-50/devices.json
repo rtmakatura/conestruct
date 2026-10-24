@@ -1,0 +1,66 @@
+{
+ "devices": [
+  {
+   "device": "ROAD CONSTRUCTION (NEXT 50 FT)",
+   "code": "G20-1",
+   "function": "Advance warning",
+   "qty": 2
+  },
+  {
+   "device": "END ROAD WORK",
+   "code": "G20-2",
+   "function": "Termination",
+   "qty": 2
+  },
+  {
+   "device": "WORK ZONE plaque",
+   "code": "G20-5P",
+   "function": "Advance warning",
+   "qty": 2
+  },
+  {
+   "device": "ROAD WORK AHEAD",
+   "code": "W20-1",
+   "function": "Advance warning",
+   "qty": 2
+  },
+  {
+   "device": "ROAD WORK 1000 FT",
+   "code": "W20-2",
+   "function": "Advance warning",
+   "qty": 2
+  },
+  {
+   "device": "RIGHT SHOULDER CLOSED AHEAD",
+   "code": "W21-5aR",
+   "function": "Advance warning",
+   "qty": 2
+  },
+  {
+   "device": "Channelizing Drum",
+   "code": "\u2014",
+   "function": "Channelizing",
+   "qty": 5
+  },
+  {
+   "device": "Traffic Cone (36-inch)",
+   "code": "\u2014",
+   "function": "Channelizing",
+   "qty": 8
+  },
+  {
+   "device": "Arrow Board",
+   "code": "\u2014",
+   "function": "Lane closure indication",
+   "qty": 1
+  }
+ ],
+ "total_devices": 26,
+ "unique_types": 9,
+ "zone_geometry": {
+  "taper_l_ft": 183,
+  "buffer_b_ft": 495,
+  "device_spacing_ft": 55,
+  "work_len_ft": 50.0
+ }
+}

@@ -165,8 +165,9 @@ def test_snapshot_invalid_geometry_survives_as_refused(client: TestClient) -> No
     """#178 item 1: a geometry-refused scenario produces a snapshot that
     says so instead of a 400 — the diagnostic must not die in exactly the
     states it exists to document.  (Inverts the pre-#178 pin that
-    asserted the 400 passed through.)"""
-    body = {**_shoulder_body(), "workLen": 10}
+    asserted the 400 passed through.)  #382: refused on the freeway lane
+    width, since a short work zone no longer is."""
+    body = {**_shoulder_body(), "laneWidth": 10}
     res = _post_snapshot(client, body=body)
     assert res.status_code == 200, res.text
     assert "## 3 GENERATION REFUSED" in res.text

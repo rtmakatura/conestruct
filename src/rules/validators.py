@@ -1870,17 +1870,13 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     render pipeline can short-circuit a geometrically nonsensical request
     before invoking the generator.
 
-    Hard rule (``WORK_ZONE_SHORTER_THAN_TAPER`` / error): the work zone
-    must be at least as long as the taper the plan draws (merging L,
-    shoulder L/3, or the flagger's one-lane, two-way taper).  A taper
-    longer than the work zone means traffic has fully transitioned into
-    the closed configuration before reaching the work area, which is
-    geometrically impossible to lay out — the closure would either
-    overlap the taper or extend past the actual work.  Surfaces as a
-    blocking error in the render API; the user must lengthen the work
-    zone or lower the speed (a flagger taper doesn't vary with speed).
-    CHOSEN (#375): neither the MUTCD nor S-630-1 states this limit;
-    §6B.08 sources the taper lengths it compares against, not the limit.
+    No work-zone-vs-taper rule (#382 R1, ruled by Ryan 2026-10-24).
+    The ``WORK_ZONE_SHORTER_THAN_TAPER`` error that refused a work zone
+    shorter than its taper is gone.  Neither the MUTCD (§6B.06, §6B.08)
+    nor S-630-1 states a minimum work-area length, and a short zone isn't
+    impossible to lay out: every generator stacks the taper upstream of
+    the buffer, which is upstream of the work zone, so the taper never
+    overlaps the work whatever its length.
 
     Soft rule (``WORK_ZONE_SHORT_VS_BUFFER`` / warning): the work zone
     should not be dwarfed by the buffer.  When the buffer is more than
@@ -1896,9 +1892,9 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     non-compliant whether the work zone is a fixed taper, mobile op,
     or work beyond the shoulder.
 
-    Mobile and off-road closures are exempt from the taper/buffer rules:
-    they use a moving TMA or operate beyond the shoulder respectively,
-    so a fixed merging taper is not part of the geometry.  The freeway
+    Mobile and off-road closures are exempt from the buffer rule: they
+    use a moving TMA or operate beyond the shoulder respectively, so a
+    fixed taper and buffer are not part of the geometry.  The freeway
     lane-width rule still applies.
     """
     out: list[Violation] = []
@@ -1936,12 +1932,6 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     if params.closure_type in ("mobile", "off_road"):
         return out
 
-    if _is_flagger_scenario(params):
-        taper_ft = one_lane_two_way_taper_length()
-    elif params.closure_type == "shoulder":
-        taper_ft = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
-    else:
-        taper_ft = taper_length(params.speed_mph, params.lane_width_ft)
     # The buffer table covers multiples of 5 in 20..75 mph only.  The
     # API schema already rejects out-of-domain speeds (audit fix B-04),
     # but direct ScenarioParams callers (scripts, tests) bypass the
@@ -1972,37 +1962,6 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
         return out
     work_zone_ft = params.work_zone_length_ft
 
-    # CHOSEN (#375): the zone-at-least-the-taper limit has no MUTCD or
-    # S-630-1 source; see the docstring.
-    if work_zone_ft < taper_ft:
-        if _is_flagger_scenario(params):
-            # #375: the flagger taper is the §6B.08 ¶14 one-lane, two-way
-            # taper, a fixed length, so neither the speed nor a speed
-            # recovery belongs in the message.
-            message = (
-                f"Work zone length ({work_zone_ft:.0f} ft) is shorter than the "
-                f"{taper_ft:.0f} ft one-lane, two-way taper this flagger plan draws. "
-                f"Increase the work zone to at least {taper_ft:.0f} ft."
-            )
-        else:
-            taper_label = (
-                "shoulder taper (L/3)" if params.closure_type == "shoulder" else "merging taper (L)"
-            )
-            message = (
-                f"Work zone length ({work_zone_ft:.0f} ft) is shorter than the "
-                f"required {taper_label} of {taper_ft:.0f} ft at "
-                f"{params.speed_mph} mph. Increase the work zone to at least "
-                f"{taper_ft:.0f} ft, or reduce the speed limit."
-            )
-        out.append(
-            Violation(
-                rule_id="WORK_ZONE_SHORTER_THAN_TAPER",
-                severity="error",
-                message=message,
-                mutcd_section="6B.08",
-                device_index=None,
-            )
-        )
     if work_zone_ft < buffer_ft / 2.0:
         out.append(
             Violation(

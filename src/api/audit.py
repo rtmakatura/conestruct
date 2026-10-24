@@ -1963,10 +1963,12 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     # 10. Geometry validation (work zone vs taper / buffer)
     # ------------------------------------------------------------------
-    # Pre-generation sanity check.  When the work zone is shorter than
-    # the required taper, the layout is geometrically impossible; the
-    # render API blocks plan generation on this rule.  The buffer-vs-
-    # work-zone soft rule is informational.
+    # Pre-generation sanity check.  A work zone shorter than its taper
+    # is not refused (#382 R1): the generators stack the taper upstream
+    # of the buffer and work zone, so they never overlap.  taper_ft is
+    # reported for reference.  The buffer-vs-work-zone soft rule is
+    # informational; the render API blocks only on the freeway lane-width
+    # and speed-domain errors.
     geo_violations = validate_corridor_geometry(params)
     geo_section = {
         "speed_mph": speed,

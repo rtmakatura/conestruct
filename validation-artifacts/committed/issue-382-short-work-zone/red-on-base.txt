@@ -1,0 +1,11 @@
+New and changed tests run against base 44b5af4 (git archive), 2026-10-24:
+FAILED tests/test_short_work_zone.py::test_short_work_zone_builds[flagger] - ...
+FAILED tests/test_short_work_zone.py::test_short_work_zone_builds[near_intersection_45]
+FAILED tests/test_short_work_zone.py::test_short_work_zone_builds[near_intersection_55]
+FAILED tests/test_short_work_zone.py::test_short_work_zone_builds[shoulder_55]
+FAILED tests/test_rules.py::test_geometry_validator_allows_work_zone_shorter_than_taper
+FAILED tests/test_rules.py::test_geometry_validator_allows_short_lane_closure
+FAILED tests/corpus/test_boundary.py::test_boundary_status_and_error[boundary_workzone_shorter_than_taper_accepted]
+FAILED tests/corpus/test_near_intersection.py::test_valid_body_renders_200_post_enablement
+8 failed, 148 passed in 4.53s
+Each failure is the old 400 WORK_ZONE_SHORTER_THAN_TAPER. tests/test_replication_snapshot.py passes on base too (its refused case is now the freeway lane width, refused before and after).

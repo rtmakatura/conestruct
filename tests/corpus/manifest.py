@@ -364,14 +364,6 @@ _BOUNDARY_CASES_BUILT: tuple[CorpusCase, ...] = (
     _boundary("boundary_wzs_exceeds_speed", speed=55, workZoneSpeed=60, status=422),
     # 400 — validate_corridor_geometry rejects an impossible corridor.
     _boundary(
-        "boundary_workzone_shorter_than_taper",
-        roadType="freeway",
-        speed=70,
-        workLen=10,  # < required shoulder taper L/3 at 70 mph
-        status=400,
-        error="WORK_ZONE_SHORTER_THAN_TAPER",
-    ),
-    _boundary(
         "boundary_lanewidth_below_freeway_min",
         roadType="freeway",
         speed=70,
@@ -383,6 +375,15 @@ _BOUNDARY_CASES_BUILT: tuple[CorpusCase, ...] = (
     # other side, so a future over-tightening of validation gets caught).
     _boundary("boundary_speed_20_accepted", speed=20, status=200),
     _boundary("boundary_speed_75_accepted", speed=75, status=200),
+    # #382 R1: a work zone shorter than its taper builds (10 ft against the
+    # 70 mph shoulder taper L/3; was a 400 WORK_ZONE_SHORTER_THAN_TAPER).
+    _boundary(
+        "boundary_workzone_shorter_than_taper_accepted",
+        roadType="freeway",
+        speed=70,
+        workLen=10,
+        status=200,
+    ),
 )
 
 

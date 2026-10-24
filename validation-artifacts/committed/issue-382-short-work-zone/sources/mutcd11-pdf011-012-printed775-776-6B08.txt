@@ -1,0 +1,137 @@
+MUTCD 11th Edition                                                                                     Page 775
+
+  Guidance:                                                   Table 6B2. Stopping Sight Distance
+                                                                        as a Function of Speed
+15 The width of a lateral buffer space should be
+  determined by engineering judgment.                                           Speed*   Distance
+  Option:
+                                                                                 20 mph    115 feet
+16 When work occurs on a high-volume, highly-                                    25 mph    155 feet
+  congested facility, a vehicle storage or staging space may                     30 mph    200 feet
+  be provided for incident response and emergency vehicles                       35 mph    250 feet
+  (for example, tow trucks and fire apparatus) so that these                     40 mph    305 feet
+  vehicles can respond quickly to road user incidents.                           45 mph    360 feet
+                                                                                 50 mph    425 feet
+Section 6B.07 Termination Area                                                   55 mph    495 feet
+                                                                                 60 mph    570 feet
+  Support:                                                                       65 mph    645 feet
+01 The termination area is the section of the highway                            70 mph    730 feet
+                                                                                 75 mph    820 feet
+  where road users are returned to their normal driving
+  path. The termination area extends from the downstream      * Posted speed, offpeak 85thpercentile speed prior
+  end of the work area to the last TTC device such as          to work starting, or the anticipated operating speed
+  END ROAD WORK signs, if posted.
+  Option:
+02 An END ROAD WORK sign, a Speed Limit sign, or
+  other signs may be used to inform road users that they can
+  resume normal operations.
+03 A longitudinal buffer space may be used between the
+  work space and the beginning of the downstream taper.
+
+Section 6B.08 Tapers
+
+Option:
+
+01 Tapers may be used in both the transition and termination areas. Whenever tapers are to be used in close
+  proximity to an interchange ramp, crossroads, curves, or other influencing factors, the length of the tapers may
+  be adjusted.
+
+  Support:                                           Table 6B3. Taper Length Criteria for
+02 Tapers are created by using a                        Temporary Traffic Control Zones
+
+  series of channelizing devices and/or
+pavement markings to move traffic out
+                                                     Type of Taper                       Taper Length
+
+  of or into the normal path. Types of                   Merging Taper                             at least L
+  tapers are shown in Figure 6B-2.                       Shifting Taper                         at least 0.5 L
+03 Longer tapers are not necessarily                     Shoulder Taper                        at least 0.33 L
+  better than shorter tapers (particularly  OneLane, TwoWay Traffic Taper       50 feet minimum, 100 feet maximum
+  in urban areas with characteristics such            Downstream Taper          50 feet minimum, 100 feet maximum
+  as short block lengths or driveways)
+because extended tapers tend to
+encourage sluggish operation and to         Note: Use Table 6B4 to calculate L
+
+encourage drivers to delay lane changes
+unnecessarily. The test concerning
+adequate lengths of tapers involves                           Table 6B4. Formulas for Determining
+observation of driver performance after                                         Taper Length
+
+TTC plans are put into effect.                                Speed (S)                  Taper Length (L) in feet
+
+  Guidance:                                                   40 mph or less             L = WS2
+04 The appropriate taper length (L) should                                                    60
+
+be determined using the criteria shown in                     45 mph or more             L = WS
+
+  Tables 6B-3 and 6B-4.                              Where: L = taper length in feet
+  Support:                                                      W = width of offset in feet
+05 A merging taper requires the longest distance                 S = posted speed limit, or offpeak 85thpercentile speed
+  because drivers are required to merge into common                    prior to work starting, or the anticipated operating
+                                                                       speed in mph
+
+road space.
+
+December 2023                                                                                     Sect. 6B.06 to 6B.08
+Page 776              MUTCD 11th Edition
+
+  Guidance:
+
+06 A merging taper should be long enough to enable merging drivers to have adequate advance warning
+  and sufficient length to adjust their speeds and merge into an adjacent lane before the downstream end of
+  the transition.
+  Support:
+
+07 A shifting taper is used when a lateral shift is needed. When more space is available, a longer than minimum
+  taper distance can be beneficial. Changes in alignment can also be accomplished by using horizontal curves
+  designed for normal highway speeds.
+  Guidance:
+
+08 A shifting taper should have a length of approximately ½ L (see Tables 6B-3 and 6B-4).
+  Support:
+
+09 A shoulder taper might be beneficial on a high-speed roadway where shoulders are part of the activity area and
+  are closed, or when improved shoulders might be mistaken as a driving lane. In these instances, the same type, but
+  abbreviated, closure procedures used on a normal portion of the roadway can be used.
+  Guidance:
+
+10 If used, shoulder tapers should have a length of approximately ¹/3 L (see Tables 6B-3 and 6B-4). If a shoulder
+  is used as a travel lane, either through practice or during a TTC activity, a normal merging or shifting taper
+  should be used.
+  Support:
+
+11 A downstream taper might be useful in termination areas to provide a visual cue to the driver that access is
+  available back into the original lane or path that was closed.
+  Guidance:
+
+12 If used, a downstream taper should have a minimum length of 50 feet and a maximum length of 100 feet with
+  devices placed at a spacing of approximately 20 feet.
+  Support:
+
+13 The one-lane, two-way taper is used in advance of an activity area that occupies part of a two-way roadway in
+  such a manner that a portion of the road is used alternately by traffic in each direction.
+  Guidance:
+
+14 A taper having a minimum length of 50 feet and a maximum length of 100 feet with channelizing devices at
+  approximately 20-foot spacing should be used to guide traffic into the one-lane section, and a downstream taper
+  should be used to guide traffic back into their original lane.
+  Support:
+
+15 An example of a one-lane, two-way traffic taper is shown in Figure 6B-3.
+
+Section 6B.09 Detours and Diversions
+
+  Support:
+01 A detour is a temporary rerouting of road users onto an existing highway in order to avoid a TTC zone.
+
+  Guidance:
+
+02 Detours should be clearly signed over their entire length so that road users can easily use existing highways
+  to return to the original highway.
+  Support:
+
+03 A diversion is a temporary rerouting of road users onto a temporary highway or alignment placed around the
+  work area.
+
+Sect. 6B.08 to 6B.09  December 2023
+

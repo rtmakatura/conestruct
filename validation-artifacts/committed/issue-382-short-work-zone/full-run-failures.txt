@@ -1,0 +1,4 @@
+Full run 1 (after the change), 2026-10-24: 2 failed, 3552 passed, 2 skipped
+FAILED tests/corpus/test_near_intersection.py::test_valid_body_renders_200_post_enablement
+FAILED tests/test_replication_snapshot.py::test_snapshot_invalid_geometry_survives_as_refused
+Rerun alone: both still fail (deterministic, not flakes). Both used a work zone shorter than its taper as their refused case; that request now builds under #382 R1, so it is predicted churn and the tests are updated.
