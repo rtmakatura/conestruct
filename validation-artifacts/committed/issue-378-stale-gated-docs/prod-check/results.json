@@ -1,0 +1,50 @@
+{
+ "healthz_sha": "777e3e75245492b9f21f708b728b5f433b1c550f",
+ "rows": [
+  {
+   "case": "R6 replay (divided true)",
+   "endpoint": "audit",
+   "status": 400,
+   "expect_status": 400,
+   "expect": "new text",
+   "detail": "divided must be false on a near-intersection plan. For a divided road, send the road's carriageway facts in carriageway, as /sandbox does, or set carriageway.confirmed to \"divided\". The plan is then built for the one carriageway the work is on.",
+   "pass": true
+  },
+  {
+   "case": "R6 replay (divided true)",
+   "endpoint": "pdf",
+   "status": 400,
+   "expect_status": 400,
+   "expect": "new text",
+   "detail": "divided must be false on a near-intersection plan. For a divided road, send the road's carriageway facts in carriageway, as /sandbox does, or set carriageway.confirmed to \"divided\". The plan is then built for the one carriageway the work is on.",
+   "pass": true
+  },
+  {
+   "case": "R6, divided false, carriageway facts as sent",
+   "endpoint": "audit",
+   "status": 200,
+   "expect_status": 200,
+   "expect": "ok",
+   "detail": "",
+   "pass": true
+  },
+  {
+   "case": "R6, divided false, carriageway facts as sent",
+   "endpoint": "pdf",
+   "status": 200,
+   "expect_status": 200,
+   "expect": "ok",
+   "detail": "",
+   "pass": true
+  },
+  {
+   "case": "R6, divided false, carriageway.confirmed divided",
+   "endpoint": "audit",
+   "status": 200,
+   "expect_status": 200,
+   "expect": "ok",
+   "detail": "",
+   "pass": true
+  }
+ ]
+}
