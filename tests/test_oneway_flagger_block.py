@@ -61,27 +61,57 @@ def test_oneway_multilane_flagger_blocked_400(client: TestClient) -> None:
     single-lane gate could never catch (detectedLanesTotal != 1).
 
     The fixture carries BOTH refusal signals (detectedLanesTotal=5 and
-    oneway="yes"); ``_ensure_lane_eligible`` runs before
-    ``_ensure_direction_eligible`` at the chokepoint, so by current order
-    the #86 multi-lane refusal answers first (#86 Amendment 1: no gate
-    reorder).  The one-way-only refusal is pinned separately below by
-    ``test_all_one_directional_tags_blocked``."""
+    oneway="yes").  Since #377 ``_ensure_direction_eligible`` runs before
+    ``_ensure_lane_eligible`` at the chokepoint (settling the question #86
+    Amendment 1 left open), so the one-way refusal answers, and the
+    lane-count remedy ("one through lane in each direction"), wrong on a
+    one-way road, is never shown."""
     resp = client.post("/render/pdf", json=BROADWAY_ONEWAY_MULTILANE, headers=AUTH)
     assert resp.status_code == 400, resp.text
     detail = resp.json()["detail"]
-    assert "more lanes than a flagger operation covers" in detail
+    assert "one-way street" in detail
     # The remedy names the recovery control that actually exists on the
-    # flagger form (issue #86 affordance).
-    assert "Road has one through lane in each direction" in detail
+    # flagger form (issue #158 affordance).
+    assert "Road carries two-way traffic" in detail
+    assert "more lanes than a flagger operation covers" not in detail
+    assert "one through lane in each direction" not in detail
 
 
 def test_oneway_flagger_blocks_device_breakdown_too(client: TestClient) -> None:
     """The StatusBar path (/render/device-breakdown) blocks identically —
     the gate lives at the shared chokepoint, not one endpoint.  Same
-    both-signals fixture: the lane gate answers first (#86 Amendment 1)."""
+    both-signals fixture: the one-way gate answers first (#377)."""
     resp = client.post("/render/device-breakdown", json=BROADWAY_ONEWAY_MULTILANE, headers=AUTH)
     assert resp.status_code == 400, resp.text
-    assert "more lanes than a flagger operation covers" in resp.json()["detail"]
+    assert "one-way street" in resp.json()["detail"]
+
+
+def test_oneway_single_lane_flagger_names_one_way(client: TestClient) -> None:
+    """A one-lane one-way street (detectedLanesTotal=1, oneway="yes") gets
+    the one-way refusal too (#377), not the single-lane one, whose remedy
+    ("one lane in each direction") is wrong on a one-way road."""
+    body = {**copy.deepcopy(FLAGGER_BODY), "oneway": "yes", "detectedLanesTotal": 1}
+    resp = client.post("/render/pdf", json=body, headers=AUTH)
+    assert resp.status_code == 400, resp.text
+    detail = resp.json()["detail"]
+    assert "one-way street" in detail
+    assert "single-lane road" not in detail
+
+
+def test_two_way_multilane_flagger_keeps_lane_message(client: TestClient) -> None:
+    """Once the operator confirms two-way traffic (the relay is cleared),
+    the same 5-lane road answers with the #86 lane-count refusal,
+    byte-identical (#377 keeps it for two-way roads)."""
+    body = {**copy.deepcopy(BROADWAY_ONEWAY_MULTILANE), "oneway": "no"}
+    resp = client.post("/render/pdf", json=body, headers=AUTH)
+    assert resp.status_code == 400, resp.text
+    assert resp.json()["detail"] == (
+        "This road appears to carry more lanes than a flagger "
+        "operation covers. TA-10 applies where one through lane "
+        "runs in each direction. If detection is wrong, confirm "
+        "'Road has one through lane in each direction' in the "
+        "form and regenerate."
+    )
 
 
 @pytest.mark.parametrize("tag", ["yes", "-1", "reversible"])

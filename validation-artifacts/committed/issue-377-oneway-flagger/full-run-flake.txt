@@ -1,0 +1,8 @@
+Full vitest run 1 (2026-10-23 23:23, run concurrently with npm ci and a second pytest process): 9 failed | 2522 passed | 1 skipped.
+The default dot reporter printed no test names, so the names were not captured before re-run (recorded honestly; R154 asks for names first).
+Full vitest run 2 (same tree, no concurrent load, JSON reporter): 0 failed | 2531 passed. None of the 9 failures repeated.
+Likely the #353 local full-run load flake. Backend full run: 3552 passed, 2 skipped.
+
+diff-verifier full pytest run (concurrent with its own vitest run): 1 failed, 3553 passed, 2 skipped.
+FAILED tests/test_overspan_mirror.py::test_a_slow_overspan_lets_the_free_mirrors_in_after_its_head_start (timing-sensitive; file not touched by this diff).
+On its own: 1 failed then 3 runs of 5 passed. The builder's own full pytest run: 3552 passed, 2 skipped.

@@ -241,8 +241,9 @@ describe("applyClassification detectedLanesTotal relay (issue #136)", () => {
 // #180 — one refusal, one voice: the matcher associates a backend gate
 // 400 with its confirm affordance WITHOUT string-matching message text.
 // Predicates and evaluation order replicate the backend gates
-// (render_api._placements_for: #86 high → #136 single-lane → #158
-// one-way), so the first true predicate names the gate that fired.
+// (render_api._placements_for: #158 one-way → #86 high → #136
+// single-lane, one-way first since #377), so the first true predicate
+// names the gate that fired.
 describe("matchRefusalAffordance (issue #180)", () => {
   const FLAGGER: FlaggerLaneClosureScenario = {
     kind: "flagger_lane_closure",
@@ -280,14 +281,32 @@ describe("matchRefusalAffordance (issue #180)", () => {
     }
   });
 
-  it("both-signals: lane gate answers first, matching backend gate order (#86 Amendment 1)", () => {
+  it("both-signals: one-way answers first, matching backend gate order (#377)", () => {
     // Broadway fixture shape: one-way AND multilane.  The backend fires
-    // the lane gate first (test_oneway_flagger_block.py pins the 400
-    // message), so the pointer must name the multilane row.
+    // the one-way gate first (test_oneway_flagger_block.py pins the 400
+    // message), so the pointer must name the two-way row.
     const m = matchRefusalAffordance({
       ...FLAGGER,
       detectedLanesTotal: 4,
       oneway: "yes",
+    });
+    expect(m?.code).toBe("flagger_oneway");
+  });
+
+  it("one-way AND single-lane: the one-way row is named (#377)", () => {
+    const m = matchRefusalAffordance({
+      ...FLAGGER,
+      detectedLanesTotal: 1,
+      oneway: "yes",
+    });
+    expect(m?.code).toBe("flagger_oneway");
+  });
+
+  it("two-way multilane keeps the multilane row (#377)", () => {
+    const m = matchRefusalAffordance({
+      ...FLAGGER,
+      detectedLanesTotal: 4,
+      oneway: "no",
     });
     expect(m?.code).toBe("flagger_multilane");
   });

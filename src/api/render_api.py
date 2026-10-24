@@ -1083,10 +1083,13 @@ def _placements_for(
     # operator answers before anything is drawn (ruling R83).  First, so
     # the single-lane gate below reads a decided carriageway.
     _ensure_carriageway_decided(scenario)
-    _ensure_lane_eligible(scenario)
     # Directionality eligibility gate (issue #158) — refuse a flagger plan on
     # a one-way road at the same chokepoint, for the same uniform coverage.
+    # Before the lane gate (#377, settling #86 Amendment 1's open question):
+    # on a one-way road the lane-count remedy ("one lane in each direction")
+    # is wrong, and no lane-count edit lifts the block.
     _ensure_direction_eligible(scenario)
+    _ensure_lane_eligible(scenario)
     # Lane-count consistency gate (issue #120; extended by #173) — refuse a
     # near_intersection plan whose approach lane tags contradict each other,
     # and a shoulder/flagger plan whose mainline tags do the same within

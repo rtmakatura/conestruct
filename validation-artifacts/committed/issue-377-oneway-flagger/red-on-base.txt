@@ -1,0 +1,10 @@
+Red on base (git archive of 25418af + this branch's tests/test_oneway_flagger_block.py), 2026-10-23:
+FAILED tests/test_oneway_flagger_block.py::test_oneway_multilane_flagger_blocked_400
+FAILED tests/test_oneway_flagger_block.py::test_oneway_flagger_blocks_device_breakdown_too
+FAILED tests/test_oneway_flagger_block.py::test_oneway_single_lane_flagger_names_one_way
+3 failed, 8 passed (test_two_way_multilane_flagger_keeps_lane_message passes on base: the two-way message is unchanged)
+
+Frontend red on base (HEAD auto-apply.ts copied beside this branch's auto-apply.test.ts, temp files removed after):
+FAIL matchRefusalAffordance (issue #180) > both-signals: one-way answers first, matching backend gate order (#377)
+FAIL matchRefusalAffordance (issue #180) > one-way AND single-lane: the one-way row is named (#377)
+2 failed | 45 passed (two-way multilane keeps the multilane row passes on base: unchanged)

@@ -98,10 +98,10 @@ export function lanesArithmeticMismatch(
 //      signalProximityLaneConfidence ↔ the #173 branch of
 //      _ensure_lane_confidence).
 //   2. The evaluation ORDER below replicates the backend gate order in
-//      render_api._placements_for (#86 high → #136 single-lane → #158
-//      one-way → #120/#173 lane-confidence, all before geometry
-//      validation), so the first true predicate names the gate that
-//      actually fired.
+//      render_api._placements_for (#158 one-way → #86 high → #136
+//      single-lane → #120/#173 lane-confidence, all before geometry
+//      validation; one-way first since #377), so the first true
+//      predicate names the gate that actually fired.
 //
 // Drift is fail-safe: a future gate shipped WITHOUT a mirror row matches
 // nothing here, so the banner renders that gate's full 400 once (the
@@ -286,6 +286,14 @@ export function matchRefusalAffordance(
       : null;
   }
   if (scenario.kind !== "flagger_lane_closure") return null;
+  // #377: one-way first, matching the backend (#158 runs before #86/#136).
+  if (scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway)) {
+    return {
+      code: "flagger_oneway",
+      pointer:
+        "Detection saw a one-way street. Confirm two-way traffic in the Road section to proceed.",
+    };
+  }
   if (
     flaggerLaneIneligibleHigh(
       scenario.detectedLanesTotal,
@@ -307,14 +315,7 @@ export function matchRefusalAffordance(
         "Detection saw a single-lane road. Confirm the lane count in the Road section to proceed.",
     };
   }
-  if (scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway)) {
-    return {
-      code: "flagger_oneway",
-      pointer:
-        "Detection saw a one-way street. Confirm two-way traffic in the Road section to proceed.",
-    };
-  }
-  // #173: after the #86/#136/#158 rows, matching the backend gate order
+  // #173: after the #158/#86/#136 rows, matching the backend gate order
   // (_ensure_lane_confidence runs last at the chokepoint).  The remedy
   // is the "Lane count is right" confirm row, which clears the relays.
   if (signalProximityLaneConfidence(scenario)) {
