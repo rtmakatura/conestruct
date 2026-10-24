@@ -90,13 +90,16 @@ export type { AutoApplyDelta } from "./auto-apply";
 // workbench or switches scenario kind.  Inlined from the deleted per-scenario
 // .ts files (previously DEFAULT_SHOULDER lived in shoulder.ts, etc.).
 //
-// Reachability follows ENABLED_SCENARIO_KINDS (shoulder and
-// flagger_lane_closure live today; near_intersection flips with #117).
-// Gated kinds' defaults are kept as the canonical starting points for
-// when those scenarios enable; per #26, each default is verified
-// against its own backend bounds as a pre-enablement check (the
-// near_intersection check lives in
-// tests/test_near_intersection_endpoints.py::test_default_scenario_clears_every_backend_rejection).
+// Reachability follows ENABLED_SCENARIO_KINDS (shoulder,
+// flagger_lane_closure and near_intersection are live; near_intersection
+// enabled in Arc 11, #117).  Gated kinds' defaults (lane_closure_divided,
+// work_beyond_shoulder and the two mobile operations) are kept as the
+// canonical starting points for when those scenarios enable; per #26,
+// each default is verified against its own backend bounds as a
+// pre-enablement check (the near_intersection check, run before its
+// enablement, lives in
+// tests/test_near_intersection_endpoints.py::
+// test_default_scenario_clears_every_backend_rejection).
 // ---------------------------------------------------------------------------
 
 export const DEFAULT_SHOULDER: ShoulderScenario = {
@@ -200,9 +203,8 @@ export const DEFAULT_MOBILE_OP_MULTILANE: MobileOpMultilaneScenario = {
   secondTMA: false,
 };
 
-// GATED (near_intersection, #117): the picker never offers this kind
-// while it is absent from ENABLED_SCENARIO_KINDS; the default exists so
-// tests and the eventual enablement have a canonical starting point.
+// near_intersection is live since Arc 11 (#117); this is the form's
+// starting point when the operator picks the kind.
 // Values clear every backend rejection: speed within 25-55, 2 lanes per
 // direction (the layout requires >= 2).  #290: no alongStationFt — under
 // the work-start model the backend places the cross street from the
