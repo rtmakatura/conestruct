@@ -53,7 +53,7 @@ def _no_network(monkeypatch: pytest.MonkeyPatch) -> None:
         sd, "_overpass_request_with_fallback", lambda *a, **k: ({"elements": []}, None)
     )
     monkeypatch.setenv("MAPBOX_TOKEN", "test")
-    monkeypatch.setattr(ra._static_aerial, "fetch_png", lambda *a, **k: b"\x89PNG-test")
+    monkeypatch.setattr(ra._static_aerial, "fetch_image", lambda *a, **k: b"\x89PNG\r\n\x1a\n-test")
 
 
 @pytest.fixture()

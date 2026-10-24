@@ -226,6 +226,47 @@ def test_no_pin_no_token_and_a_failed_fetch_answer_in_words(
     assert (r.status_code, r.json()["status"]) == (502, "unavailable")
 
 
+def _jpeg() -> bytes:
+    from PIL import Image
+
+    buf = io.BytesIO()
+    Image.new("RGB", (4, 4), (128, 128, 128)).save(buf, format="JPEG")
+    return buf.getvalue()
+
+
+@pytest.mark.parametrize("stage", ["pin", "laid_out"])
+def test_the_header_names_the_bytes_mapbox_sent(
+    client: TestClient,
+    mapbox: list[dict[str, Any]],
+    monkeypatch: pytest.MonkeyPatch,
+    stage: str,
+) -> None:
+    """#369: satellite-streets-v12 answers JPEG; the band said image/png.
+
+    The served content-type now matches the served bytes' signature, and
+    the bytes pass through unchanged."""
+    jpeg = _jpeg()
+    assert jpeg[:3] == b"\xff\xd8\xff"
+    monkeypatch.setattr(_Png, "content", jpeg)
+    r = band(client, fixture("broadway-sb"), stage)
+    assert r.status_code == 200
+    assert r.headers["content-type"] == "image/jpeg"
+    assert r.content == jpeg
+    assert sa.image_media_type(r.content) == r.headers["content-type"]
+
+
+def test_bytes_that_are_no_image_are_refused_not_relabelled(
+    client: TestClient, mapbox: list[dict[str, Any]], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#369 / Rule 10: neither a PNG nor a JPEG signature answers 502."""
+    monkeypatch.setattr(_Png, "content", b"<html>not an image</html>")
+    r = band(client, fixture("broadway-sb"), "laid_out")
+    assert (r.status_code, r.json()) == (
+        502,
+        {"status": "unavailable", "message": "the aerial image was not a PNG or JPEG"},
+    )
+
+
 def test_the_request_is_bounded(client: TestClient, mapbox: list[dict[str, Any]]) -> None:
     assert band(client, fixture("broadway-sb"), "laid_out", w=2000).status_code == 422
     assert band(client, fixture("broadway-sb"), "everything").status_code == 422

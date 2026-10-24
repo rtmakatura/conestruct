@@ -248,8 +248,27 @@ def band_image_url(
     return f"{base}{overlays}{centre[1]:.6f},{centre[0]:.6f},{z:.2f},0/{size}", {}
 
 
-def fetch_png(url: str, query: dict[str, str], token: str) -> bytes:
-    """GET the image.  Raises ``httpx.HTTPError`` on any failure."""
+# The formats the Static Images API answers, by their leading bytes (#369).
+# satellite-streets-v12 comes back as JPEG, not PNG.
+_SIGNATURES: tuple[tuple[bytes, str], ...] = (
+    (b"\x89PNG\r\n\x1a\n", "image/png"),
+    (b"\xff\xd8\xff", "image/jpeg"),
+)
+
+
+def image_media_type(data: bytes) -> str | None:
+    """The media type the bytes' signature names; None when neither."""
+    for signature, media_type in _SIGNATURES:
+        if data.startswith(signature):
+            return media_type
+    return None
+
+
+def fetch_image(url: str, query: dict[str, str], token: str) -> bytes:
+    """GET the image, as Mapbox encodes it (JPEG for :data:`STYLE`).
+
+    Raises ``httpx.HTTPError`` on any failure.
+    """
     r = httpx.get(url, params={**query, "access_token": token}, timeout=15.0)
     r.raise_for_status()
     return r.content

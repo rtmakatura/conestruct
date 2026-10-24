@@ -134,8 +134,8 @@ def test_the_band_aerial_draws_the_same_run(client, monkeypatch):
     fetched: list[str] = []
     monkeypatch.setattr(
         render_api._static_aerial,
-        "fetch_png",
-        lambda url, query, token: fetched.append(url) or b"png",
+        "fetch_image",
+        lambda url, query, token: fetched.append(url) or b"\x89PNG\r\n\x1a\n",
     )
     body = _work_start(cross_ft=760.0)
     resp = client.post(

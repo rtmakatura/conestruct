@@ -1831,7 +1831,10 @@ def render_nearest_intersection(body: Annotated[Any, Body()]) -> JSONResponse:
 
 @app.post("/render/corridor-map")
 def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
-    """The WHERE band's aerial: the laid-out corridor as a PNG (#301 piece 1).
+    """The WHERE band's aerial: the laid-out corridor (#301 piece 1).
+
+    #369: the route sends Mapbox's image as it comes (PNG or JPEG; the
+    satellite style is JPEG), labelled by its own bytes' signature.
 
     Ruling 1 on the #301 checkpoint: "Option (a), scenario in, PNG out,
     drawn on the backend, thin Next proxy."  The corridor is
@@ -1848,7 +1851,8 @@ def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
     * 409 ``no_pin`` / ``side_not_confirmed`` / ``corridor_unbuildable``
       (with the backend's ``message``) — the geometry read says the same;
     * 503 ``unavailable`` — no map token configured;
-    * 502 ``unavailable`` — the image fetch failed.
+    * 502 ``unavailable`` — the image fetch failed, or the bytes were
+      neither a PNG nor a JPEG (#369).
 
     #315 (R125 Q2): a stored left side the backend refuses reads as no side
     (:func:`_read_scenario`), so the band shows the pin picture.
@@ -1901,16 +1905,25 @@ def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
         zoom=req.zoom,
     )
     try:
-        png = _static_aerial.fetch_png(url, query, token)
+        image = _static_aerial.fetch_image(url, query, token)
     except httpx.HTTPError as exc:
         print(f"[mapbox] band aerial fetch failed: {type(exc).__name__}")
         return JSONResponse(
             {"status": "unavailable", "message": "the aerial image could not be fetched"},
             status_code=502,
         )
+    # #369: the header names the bytes' own format (the satellite style is
+    # JPEG); bytes that are neither PNG nor JPEG are refused, not relabelled.
+    media_type = _static_aerial.image_media_type(image)
+    if media_type is None:
+        print("[mapbox] band aerial answered neither PNG nor JPEG")
+        return JSONResponse(
+            {"status": "unavailable", "message": "the aerial image was not a PNG or JPEG"},
+            status_code=502,
+        )
     return Response(
-        content=png,
-        media_type="image/png",
+        content=image,
+        media_type=media_type,
         headers={"cache-control": "private, max-age=600"},
     )
 
