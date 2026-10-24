@@ -225,4 +225,17 @@ def test_a_two_way_plan_carries_none_of_the_divided_words(client: TestClient) ->
 def test_the_wire_s_own_divided_true_is_still_refused(client: TestClient) -> None:
     r = client.post("/render/audit", headers=AUTH, json=body(divided=True))
     assert r.status_code == 422
-    assert "divided intersections aren't supported yet" in r.text
+    # #378 R1: the refusal names the carriageway path instead of calling
+    # divided roads unsupported.
+    assert "divided must be false on a near-intersection plan" in r.text
+    assert 'set carriageway.confirmed to \\"divided\\"' in r.text
+    assert "aren't supported" not in r.text
+
+
+def test_the_refusal_s_advice_builds_the_divided_plan(client: TestClient) -> None:
+    # #378 R1: what the refusal says to send (divided false, the operator's
+    # carriageway answer) gives #312's divided plan.
+    b = body({"confirmed": "divided"})
+    _, params = plan(b)
+    assert params.divided_carriageway
+    assert client.post("/render/audit", headers=AUTH, json=b).status_code == 200

@@ -1,0 +1,4 @@
+diff-verifier full run (2026-10-24): 1 failed, 3554 passed, 2 skipped
+FAILED tests/test_overspan_mirror.py::test_a_slow_overspan_lets_the_free_mirrors_in_after_its_head_start
+  re-run on its own: passed (timing flake, outside the diff; same test flaked in #377's full-run-flake.txt)
+Builder full run, same code: 3555 passed, 2 skipped (baseline 3554 passed, 2 skipped).

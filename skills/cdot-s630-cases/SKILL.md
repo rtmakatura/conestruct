@@ -38,16 +38,17 @@ taper citation cannot drift (`CDOT_BUFFER_STEPDOWN = {65:60, 75:65}` in
 the exact mandated step-down; any other reduction routes to the Case 11
 reduced variant.
 
-## Gated scenarios — outside V1 verification (built, not enabled)
+## Other scenario kinds — outside the shoulder table
 
-These case labels are emitted only when their scenario kinds are enabled
-(currently gated off via `ENABLED_SCENARIO_KINDS = ["shoulder"]`). They are
-grouped here by enablement, not by standard plan — each row keeps its own
-plan citation (the flagger label is S-630-1 Sheets 9/25; only Case 10 is
-S-630-3). They are NOT part of the S-630-1 shoulder table above and sit
-outside the #30/#51 PDF pass; the flagger's S-630-1 citations are separately
-unverified under #71. Listed for completeness so the reference matches the
-code's full vocabulary.
+Three kinds are enabled: `shoulder`, `flagger_lane_closure` and
+`near_intersection` (`ENABLED_SCENARIOS` in `src/api/render_api.py`, mirrored by
+`ENABLED_SCENARIO_KINDS` in `conestruct/site/lib/scenarios/index.ts`).
+`lane_closure_divided` is built but gated, so its Case 10 label is never
+emitted. The rows below are grouped by kind, not by standard plan; each keeps
+its own plan citation (the flagger label is S-630-1 Sheets 9/25; only Case 10
+is S-630-3). They are NOT part of the S-630-1 shoulder table above and sit
+outside the #30/#51 PDF pass. The near-intersection kind (S-630-1 Sheet 10
+Case 18, per the `render_api.py` comment) is not covered by this file.
 
 | Case label (verbatim) | Trigger | Standard plan (per code) | Code ref | Scenario kind |
 |---|---|---|---|---|
@@ -64,7 +65,7 @@ code's full vocabulary.
 
 ## Referenced analogs (not emitted as case IDs)
 
-These appear in layout/narrative comments to justify dimensions on the gated
+These appear in layout/narrative comments to justify dimensions on the
 flagger path, but the tool never labels a plan with them:
 
 | Case | Sheet | Used for | Code ref |

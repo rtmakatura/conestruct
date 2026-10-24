@@ -932,8 +932,8 @@ class NearIntersectionScenario(
 ):
     """Work near (not within) an intersection — S-630-1 Cases 18/19.
 
-    GATED: absent from ``ENABLED_SCENARIOS`` (render_api.py) and from
-    the frontend mirror; requests return the standard gated-kind 400.
+    Enabled: in ``ENABLED_SCENARIOS`` (render_api.py) and the frontend
+    mirror since the Arc 11 flip (#117).
     Option C (#117): cross-street control is computed into the device
     list / quote / narrative / audit; the plan sheet cites the S-630-1
     plate instead of drawing the intersection.  The kind name is
@@ -953,7 +953,7 @@ class NearIntersectionScenario(
     speed: int = Field(ge=25, le=55, multiple_of=5)
     lanes: int = Field(ge=1, le=PLAN_MAX_LANES_PER_DIRECTION)  # per direction, as everywhere
     laneWidth: float = Field(ge=9.0, le=14.0)
-    divided: bool  # Phase 1: must be False (validator below)
+    divided: bool  # must be False (validator below); #312 reads divided from ``carriageway``
 
     workType: IntersectionWorkType
     duration: Duration
@@ -972,8 +972,8 @@ class NearIntersectionScenario(
     # kind relays them; the backend recomputes the verdict with the one
     # producer (``src/rules/carriageway.py``).  ``one_way_street`` builds
     # the S-630-1 Sheet 2 Note 8 both-sides signing; ``undecided`` is
-    # refused at the chokepoint (R114 Q4); ``divided`` keeps today's plan
-    # (R114 Q3 (a): divided near-intersection plans are a follow-up).
+    # refused at the chokepoint (R114 Q4); ``divided`` builds #312's
+    # one-carriageway plan (R134 Q1 (a)).
     # None ⇒ no signal, byte-identical to every plan before #309.
     carriageway: CarriagewayFacts | None = None
     # #323 R153 — the left-turn bay's storage length (TA-23's channelizer run
@@ -992,11 +992,15 @@ class NearIntersectionScenario(
 
     @model_validator(mode="after")
     def _check_not_divided(self) -> Self:
+        # #378 R1: the flag stays refused (#312 reads divided from the
+        # carriageway facts, the one producer); the words name that path.
         if self.divided:
             raise ValueError(
-                "divided intersections aren't supported yet. Cases 18/19 "
-                "are undivided/arterial plates; a divided mainline adds the "
-                "median-opening question (deferred)."
+                "divided must be false on a near-intersection plan. For a "
+                "divided road, send the road's carriageway facts in "
+                "carriageway, as /sandbox does, or set carriageway.confirmed "
+                'to "divided". The plan is then built for the one carriageway '
+                "the work is on."
             )
         return self
 
