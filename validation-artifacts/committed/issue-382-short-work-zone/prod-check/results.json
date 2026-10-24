@@ -1,0 +1,61 @@
+{
+ "healthz_sha": "f506935b7072fd9dea95efbd68d58ad6b88061ab",
+ "rows": [
+  {
+   "case": "F17 flagger, 50 ft",
+   "endpoint": "audit",
+   "status": 200,
+   "expect_status": 200,
+   "note": "all_pass=True violations=['WORK_ZONE_SHORT_VS_BUFFER']",
+   "pass": true
+  },
+  {
+   "case": "F17 flagger, 50 ft",
+   "endpoint": "pdf",
+   "status": 200,
+   "expect_status": 200,
+   "note": "application/pdf 884993 bytes",
+   "pass": true
+  },
+  {
+   "case": "N12 near-intersection 45 mph, 50 ft",
+   "endpoint": "audit",
+   "status": 200,
+   "expect_status": 200,
+   "note": "all_pass=True violations=['WORK_ZONE_SHORT_VS_BUFFER']",
+   "pass": true
+  },
+  {
+   "case": "N12 near-intersection 45 mph, 50 ft",
+   "endpoint": "pdf",
+   "status": 200,
+   "expect_status": 200,
+   "note": "application/pdf 755495 bytes",
+   "pass": true
+  },
+  {
+   "case": "N14 near-intersection 55 mph, 50 ft",
+   "endpoint": "audit",
+   "status": 200,
+   "expect_status": 200,
+   "note": "all_pass=True violations=['WORK_ZONE_SHORT_VS_BUFFER']",
+   "pass": true
+  },
+  {
+   "case": "N14 near-intersection 55 mph, 50 ft",
+   "endpoint": "pdf",
+   "status": 200,
+   "expect_status": 200,
+   "note": "application/pdf 704785 bytes",
+   "pass": true
+  },
+  {
+   "case": "freeway shoulder, 10 ft lanes (control)",
+   "endpoint": "audit",
+   "status": 400,
+   "expect_status": 400,
+   "note": "{\"detail\":{\"error\":\"geometry_validation_failed\",\"message\":\"Lane width 10.0 ft is below the 11 ft minimum for freeway work zones (CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). Increase lane width to at least 11 ft, or verify the scenario is not actually on a freeway.\",\"violations\":[{\"rule_id\":",
+   "pass": true
+  }
+ ]
+}
