@@ -1,0 +1,226 @@
+[
+  {
+    "address": "100 Main St, Lafayette, CO",
+    "jurisdiction_key": null,
+    "status": 404,
+    "body": "check address",
+    "expected_status": 404,
+    "expected": "check address",
+    "pass": true,
+    "source": "#384 issue (was Wisconsin)"
+  },
+  {
+    "address": "100 Main St, Lafayette",
+    "jurisdiction_key": null,
+    "status": 404,
+    "body": "check address",
+    "expected_status": 404,
+    "expected": "check address",
+    "pass": true,
+    "source": "#384 issue (was Indiana)"
+  },
+  {
+    "address": "100 Main St, Aurora",
+    "jurisdiction_key": null,
+    "status": 404,
+    "body": "check address",
+    "expected_status": 404,
+    "expected": "check address",
+    "pass": true,
+    "source": "#384 R1 (was Indiana)"
+  },
+  {
+    "address": "350 5th Ave, New York, NY",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "outside colorado",
+    "expected_status": 422,
+    "expected": "outside colorado",
+    "pass": true,
+    "source": "#384 another state named"
+  },
+  {
+    "address": "1600 Pennsylvania Ave, Washington, DC",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "outside colorado",
+    "expected_status": 422,
+    "expected": "outside colorado",
+    "pass": true,
+    "source": "#384 another state named"
+  },
+  {
+    "address": "Lafayette, LA",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "outside colorado",
+    "expected_status": 422,
+    "expected": "outside colorado",
+    "pass": true,
+    "source": "#384 R2 (box: a Leadville street)"
+  },
+  {
+    "address": "Denver, PA",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "outside colorado",
+    "expected_status": 422,
+    "expected": "outside colorado",
+    "pass": true,
+    "source": "#384 R2 (box: Parkfield, Denver)"
+  },
+  {
+    "address": "200 S Public Rd, Lafayette",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.997225,
+      "lng": -105.090456,
+      "placeType": "address"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.997225,
+      "lng": -105.090456,
+      "placeType": "address"
+    },
+    "pass": true,
+    "source": "#384 unchanged"
+  },
+  {
+    "address": "1 Main St, Longmont, CO 80501",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 40.159755,
+      "lng": -105.103291,
+      "placeType": "address"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 40.159755,
+      "lng": -105.103291,
+      "placeType": "address"
+    },
+    "pass": true,
+    "source": "#384 partial match, typed city"
+  },
+  {
+    "address": "1437 Banock St, Denver",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "pass": true,
+    "source": "#384 misspelled street, typed city"
+  },
+  {
+    "address": "1437 Bannock St, Denver",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "pass": true,
+    "source": "#384 full match, no state typed"
+  },
+  {
+    "address": "1437 Bannock St, Denver, CO",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "placeType": "address"
+    },
+    "pass": true,
+    "source": "#352 / #384 boxed, same answer"
+  },
+  {
+    "address": "US 287 & Dillon Rd, Lafayette, CO",
+    "jurisdiction_key": null,
+    "status": 200,
+    "body": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#376 unchanged"
+  },
+  {
+    "address": "US 287 & Dillon Rd, Lafayette",
+    "jurisdiction_key": "cdot",
+    "status": 200,
+    "body": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.957998,
+      "lng": -105.090397,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#376 unchanged"
+  },
+  {
+    "address": "Colfax & Main, Aurora, IL",
+    "jurisdiction_key": null,
+    "status": 422,
+    "body": "outside colorado",
+    "expected_status": 422,
+    "expected": "outside colorado",
+    "pass": true,
+    "source": "#376 unchanged"
+  },
+  {
+    "address": "Colfax & Williams",
+    "jurisdiction_key": "denver",
+    "status": 200,
+    "body": {
+      "lat": 39.739964,
+      "lng": -104.966006,
+      "placeType": "intersection"
+    },
+    "expected_status": 200,
+    "expected": {
+      "lat": 39.739964,
+      "lng": -104.966006,
+      "placeType": "intersection"
+    },
+    "pass": true,
+    "source": "#352 unchanged"
+  }
+]
