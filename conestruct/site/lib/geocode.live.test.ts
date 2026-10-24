@@ -3,7 +3,8 @@
 // are set; the table it prints is recorded in
 // validation-artifacts/committed/issue-347-geocoder/outcome.md; the #352
 // rows are recorded in validation-artifacts/committed/issue-352-authority-areas/,
-// the #376 run in validation-artifacts/committed/issue-376-geocode-colorado/.
+// the #376 run in validation-artifacts/committed/issue-376-geocode-colorado/,
+// the #384 run in validation-artifacts/committed/issue-384-address-colorado/.
 import { describe, expect, it } from "vitest";
 import { geocodeAddress } from "./geocode";
 
@@ -35,13 +36,24 @@ const CASES: { input: string; jurisdictionKey?: string; note: string }[] = [
   { input: "Colfax & Main, Aurora", note: "city in two states" },
   { input: "Colfax & Main, Aurora, IL", note: "city in two states, Illinois named" },
   { input: "Colfax & Kipling, Lakewood", note: "Mapbox alone ranks Lakewood NJ first" },
-  { input: "1437 Bannock St, Denver, CO", note: "plain street address (unchanged path)" },
+  { input: "1437 Bannock St, Denver, CO", note: "plain street address (#384: boxed, same answer)" },
   { input: "US 287 & Dillon Rd, Lafayette, CO", note: "#376: was Lafayette, California" },
   { input: "US 287 & Dillon Rd, Lafayette", note: "#376: was Lafayette, Louisiana" },
   { input: "US 287 & Dillon Rd, Lafayette", jurisdictionKey: "cdot", note: "#376: CDOT, was Louisiana" },
   { input: "US 287 & Dillon Rd, Lafayette, Colorado", note: "#376: the Colorado corner" },
   { input: "Johnston & Pinhook, Lafayette, LA", note: "#376: Louisiana named" },
   { input: "US 287 & Dillon Rd, Lafayete", note: "#376: misspelled" },
+  { input: "100 Main St, Lafayette", note: "#384: was Lafayette, Indiana" },
+  { input: "100 Main St, Lafayette, CO", note: "#384: was Darlington, Wisconsin" },
+  { input: "100 Main St, Aurora", note: "#384 (R1): was Aurora, Indiana" },
+  { input: "200 S Public Rd, Lafayette", note: "#384: unchanged" },
+  { input: "1 Main St, Longmont, CO 80501", note: "#384: partial match in the typed city" },
+  { input: "1437 Banock St, Denver", note: "#384: misspelled street, typed city" },
+  { input: "350 5th Ave, New York, NY", note: "#384: another state named" },
+  { input: "1600 Pennsylvania Ave, Washington, DC", note: "#384: another state named" },
+  { input: "Lafayette, LA", note: "#384: a plain city, another state named" },
+  { input: "Denver, PA", note: "#384: a plain city, another state named" },
+  { input: "1437 Bannock St, Denver", note: "#384: full match, no state typed" },
 ];
 
 describe.skipIf(!process.env.LIVE_GEOCODE)("#347 live geocoder run", () => {

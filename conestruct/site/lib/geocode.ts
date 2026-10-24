@@ -40,11 +40,22 @@ export interface GeocodeOptions {
   jurisdictionKey?: string | null;
 }
 
+interface MapboxContext {
+  id?: string;
+  text?: string;
+  short_code?: string;
+}
+
 interface MapboxFeature {
+  id?: string;
+  text?: string;
   center?: [number, number];
   place_type?: string[];
   bbox?: BBox;
-  properties?: { accuracy?: string };
+  /** The house number, when the hit carries one. */
+  address?: string;
+  context?: MapboxContext[];
+  properties?: { accuracy?: string; short_code?: string };
   /** 1 when every word of the query matched. */
   relevance?: number;
 }
@@ -220,19 +231,82 @@ export async function geocodeAddress(
   const cross = parseCrossStreets(trimmed);
   if (cross) return geocodeCrossStreets(cross, opts, token, signal);
 
-  const r = await mapbox(trimmed, "&limit=1", token, signal);
-  if (!r.ok) return r;
-  const feature = r.features[0];
-  const center = feature?.center;
-  if (!center || center.length !== 2) {
-    return { ok: false, status: 404, reason: "no match" };
-  }
-
-  const [lng, lat] = center;
+  const plain = await geocodePlain(trimmed, token, signal);
+  if (!plain.ok) return plain;
+  const [lng, lat] = plain.feature.center;
   // Mapbox's precision class for the match ("address", "place",
   // "locality", …).  Surfaced so the client can tell a street-level hit
   // from a whole-town centroid — road detection at a town centroid
   // produces a confidently wrong road (lib/geocode-precision.ts).
-  const placeType = feature?.place_type?.[0] ?? null;
+  const placeType = plain.feature.place_type?.[0] ?? null;
   return { ok: true, lat, lng, placeType };
+}
+
+// #384 (R1 Ryan): a plain address resolves only inside Colorado.  The
+// boxed answer stands when every word matched, or when it lies in a city
+// the operator typed and carries the house number they typed.  422
+// "outside colorado" only when the text names another state or nothing
+// in Colorado came back; any other partial match answers 404 "check
+// address".
+async function geocodePlain(
+  text: string,
+  token: string,
+  signal?: AbortSignal,
+): Promise<
+  | { ok: true; feature: MapboxFeature & { center: [number, number] } }
+  | { ok: false; status: number; reason: string }
+> {
+  // Mapbox reads a trailing "CO" as any state; spelled out, it stays.
+  const segs = text.split(",").map((s) => s.trim());
+  const last = segs[segs.length - 1];
+  const endsColorado = segs.length > 1 && COLORADO.test(last);
+  if (endsColorado) segs[segs.length - 1] = last.replace(/^(co|colorado)/i, "Colorado");
+  const query = segs.join(", ");
+  const r = await mapbox(query, `&limit=1&bbox=${COLORADO_BBOX.join(",")}`, token, signal);
+  if (!r.ok) return r;
+  const boxed = located(r.features[0]);
+  // Inside the box Mapbox fully matches "Lafayette, LA" to a Leadville
+  // street, so a full match stands at once only with no other place last.
+  const full = boxed?.relevance === 1;
+  if (full && (segs.length === 1 || endsColorado)) return { ok: true, feature: boxed };
+  // Mapbox's best answer anywhere tells another state named from a
+  // match here.
+  const any = await mapbox(query, "&limit=1", token, signal);
+  if (!any.ok) return any;
+  const best = located(any.features[0]);
+  const elsewhere = best && !inside(best.center, COLORADO_BBOX) ? best : null;
+  if (elsewhere && (!boxed || namesState(segs, elsewhere))) {
+    return { ok: false, status: 422, reason: "outside colorado" };
+  }
+  if (!boxed) return { ok: false, status: 404, reason: "no match" };
+  if (full) return { ok: true, feature: boxed };
+  if (inTypedCity(text, boxed) && (!/^\d/.test(text) || boxed.address)) {
+    return { ok: true, feature: boxed };
+  }
+  return { ok: false, status: 404, reason: "check address" };
+}
+
+function contextOf(f: MapboxFeature, kind: string): { text?: string; short_code?: string } | null {
+  if (f.id?.startsWith(`${kind}.`)) return { text: f.text, short_code: f.properties?.short_code };
+  return f.context?.find((c) => c.id?.startsWith(`${kind}.`)) ?? null;
+}
+
+/** The last comma part, zip dropped, is the answer's state by name or
+ *  postal code ("New York, NY", "Lafayette, LA"). */
+function namesState(segs: string[], f: MapboxFeature): boolean {
+  if (segs.length < 2) return false;
+  const region = contextOf(f, "region");
+  const typed = segs[segs.length - 1].replace(/\s+\d{5}(-\d{4})?$/, "").toLowerCase();
+  return (
+    !!region &&
+    (typed === region.text?.toLowerCase() ||
+      typed === region.short_code?.replace(/^us-/i, "").toLowerCase())
+  );
+}
+
+function inTypedCity(text: string, f: MapboxFeature): boolean {
+  const city = contextOf(f, "place")?.text;
+  if (!city) return false;
+  const escaped = city.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\b${escaped}\\b`, "i").test(text);
 }

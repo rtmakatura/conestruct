@@ -1,0 +1,36 @@
+| `Colfax & Williams, Denver` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 1 (was Nebraska) |
+| `Colfax and Williams` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 2 |
+| `E Colfax Ave and N Williams St` | none | 39.739964, -104.966006 | intersection | 0.00 mi | issue input 3 |
+| `E Colfax Ave & N Race St, Denver` | none | 39.739962, -104.963485 | intersection | 0.13 mi | issue input 4 |
+| `Colfax & Williams` | none | 39.739964, -104.966006 | intersection | 0.00 mi | no city, no jurisdiction |
+| `Colfax & Williams` | denver | 39.739964, -104.966006 | intersection | 0.00 mi | no city, Denver selected |
+| `Colfax & Main` | none | HTTP 422 add a city | |  | no city, no jurisdiction |
+| `Colfax & Main` | denver | 39.764245, -104.854753 | place | 6.14 mi | no city, Denver selected |
+| `Colfax & Main` | cdot | 39.738365, -104.323716 | intersection | 34.13 mi | no city, CDOT selected (#352: Colorado) |
+| `US 285 & CO 9` | cdot | 39.221229, -105.993766 | intersection | 65.49 mi | #352: CDOT, outside our places |
+| `I-25 & US 50` | cdot | 38.338098, -104.619794 | intersection | 98.63 mi | #352: CDOT, outside our places |
+| `Academy & Platte` | el_paso | 38.839656, -104.757338 | intersection | 63.20 mi | #352: El Paso County |
+| `Eisenhower & Lincoln` | loveland | 40.407199, -105.073065 | intersection | 46.45 mi | #352: Loveland |
+| `Colfax & Main` | e470 | HTTP 422 add a city | |  | #352: E-470 (no polygon) |
+| `Colfax & Main, Aurora` | none | 39.688880, -104.687806 | place | 15.20 mi | city in two states |
+| `Colfax & Main, Aurora, IL` | none | HTTP 422 outside colorado | |  | city in two states, Illinois named |
+| `Colfax & Kipling, Lakewood` | none | 39.740123, -105.109456 | intersection | 7.62 mi | Mapbox alone ranks Lakewood NJ first |
+| `1437 Bannock St, Denver, CO` | none | 39.739247, -104.990970 | address | 1.33 mi | plain street address (#384: boxed, same answer) |
+| `US 287 & Dillon Rd, Lafayette, CO` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: was Lafayette, California |
+| `US 287 & Dillon Rd, Lafayette` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: was Lafayette, Louisiana |
+| `US 287 & Dillon Rd, Lafayette` | cdot | 39.957998, -105.090397 | intersection | 16.45 mi | #376: CDOT, was Louisiana |
+| `US 287 & Dillon Rd, Lafayette, Colorado` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: the Colorado corner |
+| `Johnston & Pinhook, Lafayette, LA` | none | HTTP 422 outside colorado | |  | #376: Louisiana named |
+| `US 287 & Dillon Rd, Lafayete` | none | 39.957998, -105.090397 | intersection | 16.45 mi | #376: misspelled |
+| `100 Main St, Lafayette` | none | HTTP 404 check address | |  | #384: was Lafayette, Indiana |
+| `100 Main St, Lafayette, CO` | none | HTTP 404 check address | |  | #384: was Darlington, Wisconsin |
+| `100 Main St, Aurora` | none | HTTP 404 check address | |  | #384 (R1): was Aurora, Indiana |
+| `200 S Public Rd, Lafayette` | none | 39.997225, -105.090456 | address | 18.96 mi | #384: unchanged |
+| `1 Main St, Longmont, CO 80501` | none | 40.159755, -105.103291 | address | 29.90 mi | #384: partial match in the typed city |
+| `1437 Banock St, Denver` | none | 39.739247, -104.990970 | address | 1.33 mi | #384: misspelled street, typed city |
+| `350 5th Ave, New York, NY` | none | HTTP 422 outside colorado | |  | #384: another state named |
+| `1600 Pennsylvania Ave, Washington, DC` | none | HTTP 422 outside colorado | |  | #384: another state named |
+| `Lafayette, LA` | none | HTTP 422 outside colorado | |  | #384: a plain city, another state named |
+| `Denver, PA` | none | HTTP 422 outside colorado | |  | #384: a plain city, another state named |
+| `1437 Bannock St, Denver` | none | 39.739247, -104.990970 | address | 1.33 mi | #384: full match, no state typed |
+      Tests  1 passed (1)

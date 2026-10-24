@@ -34,6 +34,9 @@ export function geocodeErrorMessage(status: number, reason = ""): string {
   if (status === 404 && reason === "check spelling") {
     return "No match in Colorado for that city. Check the spelling.";
   }
+  if (status === 404 && reason === "check address") {
+    return "No match in Colorado for that address. Check the spelling.";
+  }
   if (status === 503) return "Geocoding not configured";
   if (status === 404) return "No match for that address";
   if (status === 422) return "Add a city to search cross streets.";

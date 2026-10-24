@@ -1,0 +1,40 @@
+# Mapbox v5 probe, 2026-10-23: limit=1, with the Colorado box (BOX, -109.060204,36.992449,-102.041522,41.003444) and without (ANY)
+# box | query | place_type | relevance | place_name | lng,lat
+BOX | 100 Main St, Lafayette | address | rel 0.805556 | 100 Main Street, Broomfield, Colorado 80020, United States | -105.0718,39.9160
+ANY | 100 Main St, Lafayette | address | rel 1 | 100 Main Street, Lafayette, Indiana 47901, United States | -86.8959,40.4193
+BOX | 100 Main St, Lafayette, Colorado | address | rel 0.862963 | 100 Main Street, Broomfield, Colorado 80020, United States | -105.0718,39.9160
+ANY | 100 Main St, Lafayette, Colorado | address | rel 0.725926 | 100 Main Street, Lafayette, Indiana 47901, United States | -86.8959,40.4193
+BOX | 100 Main St, Lafayette, CO | address | rel 0.955556 | 100 Main Street, Broomfield, Colorado 80020, United States | -105.0718,39.9160
+ANY | 100 Main St, Lafayette, CO | address | rel 1 | 100 Galena Street, Darlington, Wisconsin 53530, United States | -90.1184,42.6769
+BOX | 100 Main St, Aurora | address | rel 0.872889 | S Main St, Aurora, Colorado 80015, United States | -104.7585,39.6150
+ANY | 100 Main St, Aurora | address | rel 1 | 100 Main Street, Aurora, Indiana 47001, United States | -84.8994,39.0574
+BOX | 200 S Public Rd, Lafayette | address | rel 1 | 200 South Public Road, Lafayette, Colorado 80026, United States | -105.0905,39.9972
+ANY | 200 S Public Rd, Lafayette | address | rel 1 | 200 South Public Road, Lafayette, Colorado 80026, United States | -105.0905,39.9972
+BOX | 1437 Bannock St, Denver, CO | address | rel 1 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+ANY | 1437 Bannock St, Denver, CO | address | rel 1 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+BOX | 1437 Bannock St, Denver, Colorado | address | rel 1 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+ANY | 1437 Bannock St, Denver, Colorado | address | rel 1 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+BOX | 1437 Bannock St Denver | address | rel 1 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+ANY | 1437 Bannock St Denver | address | rel 1 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+BOX | 1437 Banock St, Denver | address | rel 0.988175 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+ANY | 1437 Banock St, Denver | address | rel 0.988175 | 1437 Bannock Street, Denver, Colorado 80202, United States | -104.9910,39.7392
+BOX | 1600 Pennsylvania Ave, Washington, DC | address | rel 0.544444 | 1600 Pennsylvania Avenue, Boulder, Colorado 80302, United States | -105.2764,40.0087
+ANY | 1600 Pennsylvania Ave, Washington, DC | address | rel 0.90963 | 1600 Pennsylvania Avenue Northwest, Washington, District of Columbia 20500, United States | -77.0366,38.8977
+BOX | 350 5th Ave, New York, NY | address | rel 0.407407 | 350 West 5th Avenue, Antonito, Colorado 81120, United States | -106.0112,37.0760
+ANY | 350 5th Ave, New York, NY | address | rel 1 | 350 Fifth Avenue, Brooklyn, New York 11215, United States | -73.9846,40.6722
+BOX | Union Station, Denver | neighborhood | rel 1 | Union Station, Denver, Colorado, United States | -104.9980,39.7515
+ANY | Union Station, Denver | neighborhood | rel 1 | Union Station, Denver, Colorado, United States | -104.9980,39.7515
+BOX | Lafayette, CO | place | rel 1 | Lafayette, Colorado, United States | -105.0905,39.9982
+ANY | Lafayette, CO | place | rel 1 | Lafayette, California, United States | -122.1203,37.8919
+BOX | Denver | place | rel 1 | Denver, Colorado, United States | -104.9861,39.7417
+ANY | Denver | place | rel 1 | Denver, Colorado, United States | -104.9861,39.7417
+BOX | 80202 | postcode | rel 1 | Denver, Colorado 80202, United States | -104.9874,39.7400
+ANY | 80202 | postcode | rel 1 | Denver, Colorado 80202, United States | -104.9874,39.7400
+BOX | 2000 E Colfax Ave | address | rel 1 | 2000 East Colfax Avenue, Denver, Colorado 80206, United States | -104.9631,39.7397
+ANY | 2000 E Colfax Ave | address | rel 1 | 2000 East Colfax Avenue, Denver, Colorado 80206, United States | -104.9631,39.7397
+BOX | 123 Fake St, Springfield | address | rel 0.583333 | 123 Wake Street, Frederick, Colorado 80530, United States | -104.9303,40.1040
+ANY | 123 Fake St, Springfield | address | rel 0.611111 | 123 Fake Street, Austin, Texas 78758, United States | -97.7037,30.3871
+BOX | 1 Main St, Longmont, CO 80501 | address | rel 0.927778 | 1 South Main Street, Longmont, Colorado 80501, United States | -105.1033,40.1598
+ANY | 1 Main St, Longmont, CO 80501 | address | rel 0.927778 | 1 South Main Street, Longmont, Colorado 80501, United States | -105.1033,40.1598
+BOX | 13th Ave, Denver | address | rel 1 | 13th Ave, Denver, Colorado 80215, United States | -105.0940,39.7367
+ANY | 13th Ave, Denver | address | rel 1 | 13th Ave, Denver, Colorado 80215, United States | -105.0940,39.7367

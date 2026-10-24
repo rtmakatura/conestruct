@@ -45,6 +45,7 @@ describe("#376: the reason body picks the line", () => {
   it.each([
     [422, "outside colorado", "Plans cover Colorado roads only."],
     [404, "check spelling", "No match in Colorado for that city. Check the spelling."],
+    [404, "check address", "No match in Colorado for that address. Check the spelling."],
     [422, "add a city", "Add a city to search cross streets."],
     [404, "no match", "No match for that address"],
     [404, "outside colorado", "No match for that address"],
