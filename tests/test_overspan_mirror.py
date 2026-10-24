@@ -157,7 +157,12 @@ def test_a_slow_overspan_lets_the_free_mirrors_in_after_its_head_start(
     payload, error = site_detection._overpass_request_with_fallback("[out:json];", 5.0, meta)
     assert error is None and payload == {"elements": [{"id": 1}]}
     free_starts = [t for url, _d, _h, t in w.calls if url != OVERSPAN]
-    assert len(free_starts) == 2 and min(free_starts) >= 0.3
+    # asyncio runs a timer up to one clock tick early (base_events._run_once
+    # fires anything due before time() + _clock_resolution), and the wire's
+    # stamps are monotonic ticks too. On Windows a tick is 15.625 ms, so
+    # the bound allows one tick; on Linux it is a nanosecond. (#380)
+    tick = time.get_clock_info("monotonic").resolution
+    assert len(free_starts) == 2 and min(free_starts) >= 0.3 - tick
     assert meta["mirror"] in FREE
 
 
