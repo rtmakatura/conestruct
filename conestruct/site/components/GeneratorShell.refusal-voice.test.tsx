@@ -46,9 +46,9 @@ const MULTILANE_400 =
 // The backend's geometry floor message (validators.py phrasing) — a
 // refusal with NO confirm affordance.
 const FLOOR_400 =
-  "Work zone length (50 ft) is shorter than the required shoulder taper " +
-  "(L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, " +
-  "or reduce the speed limit.";
+  "Lane width 10.0 ft is below the 11 ft minimum for freeway work zones " +
+  "(CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). Increase lane " +
+  "width to at least 11 ft, or verify the scenario is not actually on a freeway.";
 
 // The audit trail panel's own declined line (TieredReference).  Asserted
 // ONCE where the panel renders it (the last test below), so the zero-count

@@ -1164,10 +1164,10 @@ describe("geometry validation verdict is the backend's all_pass (PR A sentinel)"
     mutcd_section: "6C.06",
   };
   const ERROR = {
-    rule_id: "WORK_ZONE_SHORTER_THAN_TAPER",
+    rule_id: "LANE_WIDTH_BELOW_FREEWAY_MIN",
     severity: "error",
-    message: "Work zone shorter than the required taper.",
-    mutcd_section: "6C.08",
+    message: "Lane width 10.0 ft is below the 11 ft minimum for freeway work zones.",
+    mutcd_section: "CDOT S-630-1 Sheet 7 (Case 11)",
   };
 
   it("all_pass=false → FAILED, even when no row carries error severity", () => {

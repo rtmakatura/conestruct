@@ -1400,8 +1400,8 @@ export function GeneratorShell({
   // showed its inline form error while the strip contradicted it with
   // VERIFICATION UNAVAILABLE (the 422's old 502 collapse).  MUTCD math
   // stays the backend's: the geometry 400 from the per-change audit
-  // fetch is THE source for the taper-floor verdict and its message
-  // (validators.py WORK_ZONE_SHORTER_THAN_TAPER).  Non-400 audit errors
+  // fetch is THE source for a geometry verdict and its message
+  // (validators.py validate_corridor_geometry).  Non-400 audit errors
   // stay "verification unavailable" inside StatusBar.  Reads
   // ``stripAudit`` so a 400 for an already-edited input can't show
   // INVALID INPUT against the new one.

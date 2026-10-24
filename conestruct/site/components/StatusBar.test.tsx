@@ -183,9 +183,9 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   // #180 — one refusal, one voice: a backend 400 is DECLINED, not broken
   // and not invalid input.
   const FLOOR_400 =
-    "Work zone length (50 ft) is shorter than the required shoulder taper " +
-    "(L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, " +
-    "or reduce the speed limit.";
+    "Lane width 10.0 ft is below the 11 ft minimum for freeway work zones " +
+    "(CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). Increase lane " +
+    "width to at least 11 ft, or verify the scenario is not actually on a freeway.";
 
   it("refusal without an affordance renders the full 400 with declined vocabulary", () => {
     const html = renderToStaticMarkup(
@@ -197,7 +197,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     );
     expect(html).toContain("status-bar fail");
     expect(html).toContain("PLAN DECLINED");
-    expect(html).toContain("at least 184 ft");
+    expect(html).toContain("at least 11 ft");
     expect(html).toContain("NEEDS INPUT");
     // The error-framing vocabulary is retired on this surface.
     expect(html).not.toContain("INVALID INPUT");

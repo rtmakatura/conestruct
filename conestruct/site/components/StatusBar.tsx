@@ -20,7 +20,7 @@ import { symClass } from "@/lib/design/symbols";
 //                            Client bounds ONLY since #180; a backend
 //                            400 is the next state, not this one.
 //   1b. plan declined      → red PLAN DECLINED (#180) — any backend 400
-//                            (gate refusals, the geometry taper floor).
+//                            (gate refusals, the geometry rules).
 //                            With a confirm affordance on screen the
 //                            line is a short pointer to it; without one
 //                            it is the full 400, rendered exactly once.

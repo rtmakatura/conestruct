@@ -2,10 +2,10 @@
 // UX-21).  Mirrors the backend SCHEMA bounds only (Pydantic ``gt=0`` /
 // ``le=WORK_LEN_MAX_FT`` on ``workLen``, the lanes bounds) so the UI can
 // refuse a payload the render API would 422 — instantly, without a round
-// trip.  The MUTCD taper floor (WORK_ZONE_SHORTER_THAN_TAPER) is NOT
-// mirrored here: it is MUTCD math, owned by the backend
-// (validate_corridor_geometry), and reaches the UI as the audit fetch's
-// HTTP 400 (engine-removal PR D — rule 3, no parallel frontend
+// trip.  MUTCD geometry rules are NOT mirrored here: they are MUTCD math,
+// owned by the backend (validate_corridor_geometry; the taper floor that
+// used to be one is gone since #382), and reach the UI as the audit
+// fetch's HTTP 400 (engine-removal PR D — rule 3, no parallel frontend
 // computation).  Mapbox-free by design — unit-tested via vitest like
 // lib/scenarios/overrides.ts.
 
@@ -162,9 +162,10 @@ export interface WorkZoneValidation {
 }
 
 // Schema-bound checks only (Pydantic gt=0 / le=WORK_LEN_MAX_FT).  The
-// MUTCD taper floor that used to live here (engine-removal PR D) is the
-// backend's: validate_corridor_geometry raises HTTP 400
-// (WORK_ZONE_SHORTER_THAN_TAPER) on the audit fetch that already fires
+// MUTCD taper floor that used to live here left in engine-removal PR D,
+// and the backend dropped its own in #382.  Geometry rules are the
+// backend's: validate_corridor_geometry raises HTTP 400 (e.g.
+// LANE_WIDTH_BELOW_FREEWAY_MIN) on the audit fetch that already fires
 // per change, and GeneratorShell surfaces that message as the strip's
 // INVALID INPUT + the Generate gate.  No client-side floor may return —
 // a value computed here is one the audit trail can disagree with.

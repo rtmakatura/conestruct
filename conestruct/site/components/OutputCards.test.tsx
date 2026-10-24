@@ -351,7 +351,7 @@ describe("OutputCards download cards", () => {
 // input-identity stamp and renders only while its scenario is on screen.
 describe("download errors carry their input identity (#197)", () => {
   const FLOOR_400 =
-    "Work zone length (50 ft) is shorter than the required shoulder taper.";
+    "Lane width 10.0 ft is below the 11 ft minimum for freeway work zones.";
 
   function fail400() {
     vi.stubGlobal(

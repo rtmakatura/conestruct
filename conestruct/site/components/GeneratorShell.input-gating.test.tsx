@@ -5,8 +5,9 @@ import type { AuditResponse } from "@/lib/render-types";
 
 // Engine-removal PR D (mounted-flow, the layer-11 wiring test): the
 // frontend taper-floor mirror is deleted; the ONLY source of the
-// invalid-input verdict for a short work zone is the backend's HTTP 400
-// on the audit fetch (validators.py WORK_ZONE_SHORTER_THAN_TAPER).
+// invalid-input verdict for a geometry error is the backend's HTTP 400
+// on the audit fetch (validators.py's geometry errors; since #382 the
+// mocked one is LANE_WIDTH_BELOW_FREEWAY_MIN).
 // This file mounts the REAL shell + REAL StatusBar + REAL sidebar (the
 // Generate button under test lives there) with releasable fetches and
 // asserts:
@@ -34,12 +35,12 @@ import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 
-// The backend's own floor message (validators.py:1490-1496 phrasing) —
-// what the deleted client mirror used to preempt.
+// A geometry 400 the backend still sends (validators.py
+// LANE_WIDTH_BELOW_FREEWAY_MIN, the string #382's production check saw).
 const BACKEND_FLOOR_MSG =
-  "Work zone length (50 ft) is shorter than the required shoulder taper " +
-  "(L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, " +
-  "or reduce the speed limit.";
+  "Lane width 10.0 ft is below the 11 ft minimum for freeway work zones " +
+  "(CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). Increase lane " +
+  "width to at least 11 ft, or verify the scenario is not actually on a freeway.";
 
 const CLEAN_AUDIT: AuditResponse = {
   summary: {

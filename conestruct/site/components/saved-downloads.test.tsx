@@ -76,13 +76,13 @@ describe("saved-plan download cards (#203)", () => {
 
   it("a 400 prints the backend's message", async () => {
     respond(
-      new Response(JSON.stringify({ detail: { message: "Work zone shorter than the taper." } }), {
+      new Response(JSON.stringify({ detail: { message: "Lane width 10.0 ft is below the 11 ft minimum for freeway work zones." } }), {
         status: 400,
       }),
     );
     const { container } = render(cards({ kind: "saved", planId: "plan-1" }));
     fireEvent.click(firstButton(container));
-    expect(await screen.findByText("Work zone shorter than the taper.")).toBeTruthy();
+    expect(await screen.findByText("Lane width 10.0 ft is below the 11 ft minimum for freeway work zones.")).toBeTruthy();
   });
 
   it("a thrown fetch prints Network error", async () => {

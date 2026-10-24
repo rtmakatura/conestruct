@@ -67,10 +67,10 @@ describe("validateLanes — near_intersection mainline", () => {
 });
 
 describe("validateWorkZone — near_intersection", () => {
-  it("no client-side merging-taper floor (engine-removal PR D — backend 400 owns it)", () => {
+  it("no client-side merging-taper floor (engine-removal PR D; the backend dropped its own in #382)", () => {
     // 35 mph, 12-ft lane: the old mirror floored at L = 12 * 35^2 / 60
-    // = 245 ft.  The floor now lives only in validate_corridor_geometry
-    // (backend); the client accepts any positive in-ceiling length.
+    // = 245 ft.  validate_corridor_geometry no longer floors it either
+    // (#382); the client accepts any positive in-ceiling length.
     expect(validateWorkZone(scenario({ workLen: 244 })).ok).toBe(true);
     expect(validateWorkZone(scenario({ workLen: 245 })).ok).toBe(true);
     expect(validateWorkZone(scenario({ workLen: 0 })).ok).toBe(false);

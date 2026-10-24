@@ -115,11 +115,11 @@ export const DEFAULT_SHOULDER: ShoulderScenario = {
   divided: true,
   workType: "utility_locate",
   duration: "short",
-  // workLen: minimum 1000 ft to clear the backend's
-  // WORK_ZONE_SHORTER_THAN_TAPER hard rule (shoulder taper at 65 mph with
-  // 10-ft shoulder = 217 ft) and the WORK_ZONE_SHORT_VS_BUFFER soft rule
-  // (buffer/2 at 65 mph = 322 ft).  Default scenarios must render cleanly
-  // through /render/audit on first paint — no validation banner.
+  // workLen: 1000 ft clears the backend's WORK_ZONE_SHORT_VS_BUFFER soft
+  // rule (buffer/2 at 65 mph = 322 ft).  The taper hard rule this comment
+  // also named is gone since #382; a shorter zone builds.  Default
+  // scenarios must render cleanly through /render/audit on first paint —
+  // no validation banner.
   workLen: 1000,
   night: false,
 };

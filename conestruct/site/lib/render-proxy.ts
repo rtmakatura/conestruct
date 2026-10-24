@@ -39,7 +39,7 @@ const EXT: Record<RenderKind, string> = {
 // validation it is, not as an outage.  Two upstream shapes qualify:
 //
 //   400 — an HTTPException the render API raised deliberately (gate
-//   refusals, the geometry taper floor).  Forwarded body-intact, as the
+//   refusals, the geometry rules).  Forwarded body-intact, as the
 //   audit/device/download paths always have.
 //
 //   422 — FastAPI's automatic Pydantic rejection (schema bounds and the

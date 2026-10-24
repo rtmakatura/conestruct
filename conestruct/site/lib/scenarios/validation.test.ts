@@ -1,8 +1,8 @@
 // PR 7 (UX audit finding UX-21), narrowed by engine-removal PR D:
 // validateWorkZone mirrors the backend SCHEMA bounds only (Pydantic
-// gt=0 / le=WORK_LEN_MAX_FT).  The MUTCD taper floor
-// (WORK_ZONE_SHORTER_THAN_TAPER) is backend-owned and reaches the UI
-// as the audit fetch's HTTP 400 — the negative guards below pin that
+// gt=0 / le=WORK_LEN_MAX_FT).  MUTCD geometry rules are backend-owned
+// and reach the UI as the audit fetch's HTTP 400 (the taper floor among
+// them is gone since #382) — the negative guards below pin that
 // no client-side floor quietly returns.
 
 import { describe, expect, it } from "vitest";
@@ -44,8 +44,8 @@ describe("validateWorkZone — schema bounds only (gt=0 mirror)", () => {
 });
 
 // Engine-removal PR D negative guards: a short-but-positive work zone
-// is CLIENT-VALID.  The taper floor is the backend's 400 on the audit
-// fetch; a computed floor reappearing here would recreate the retired
+// is CLIENT-VALID.  The backend dropped its taper floor too (#382); a
+// computed floor reappearing here would recreate the retired
 // frontend engine (rule 3).  These lengths are all below the floors the
 // deleted mirror enforced (flagger 100 ft; shoulder L/3 = 184/147 ft at
 // 55 mph) — if any of these start failing, someone re-added the mirror.

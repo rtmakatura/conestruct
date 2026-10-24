@@ -40,8 +40,8 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
 
   // UX-21: inline schema-bound validation on the work-zone field
   // (required / 20,000-ft ceiling; blur-gated error text — live button
-  // gating lives in GeneratorSidebar).  The MUTCD taper floor is
-  // backend-owned (engine-removal PR D): it surfaces via the StatusBar's
+  // gating lives in GeneratorSidebar).  MUTCD geometry rules are
+  // backend-owned (engine-removal PR D): a geometry 400 surfaces via the StatusBar's
   // INVALID INPUT and the Generate gate, not inline here.
 
   // #179: each confirm row is two-state now — armed (the relay is

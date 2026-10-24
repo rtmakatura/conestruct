@@ -127,7 +127,7 @@ const declined400 = () =>
     status: 400,
     json: async () => ({
       detail:
-        "Work zone length (50 ft) is shorter than the required shoulder taper.",
+        "Lane width 10.0 ft is below the 11 ft minimum for freeway work zones.",
     }),
   }) as unknown as Response;
 const failed500 = () =>
