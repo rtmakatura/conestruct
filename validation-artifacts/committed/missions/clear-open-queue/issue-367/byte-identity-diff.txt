@@ -1,0 +1,60 @@
+diff -ru before/lane-65-55.audit.json after/lane-65-55.audit.json
+--- before/lane-65-55.audit.json
++++ after/lane-65-55.audit.json
+@@ -35,9 +35,9 @@
+    "cite": "MUTCD \u00a7 6B.06",
+    "footer": "MUTCD \u00a7 6B.06 \u00b7 STOPPING SIGHT DISTANCE"
+   },
+-  "lookup_text": "MUTCD Table 6B-2: 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum at 65 mph, but only as part of the Case 26 mandatory speed step-down (65 \u2192 60 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
++  "lookup_text": "MUTCD Table 6B-2: 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum at 65 mph, but only as part of the Case 26 mandatory speed step-down (65 \u2192 60 mph), and Sheet 14 is drawn for shoulder work on a freeway or expressway; this plan closes a lane, so the federal posted-speed value governs.",
+   "result_text": "B = 645 ft",
+-  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
++  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance).",
+   "speed_mph": 65
+  },
+  "case": {
+diff -ru before/lane-65.audit.json after/lane-65.audit.json
+--- before/lane-65.audit.json
++++ after/lane-65.audit.json
+@@ -35,9 +35,9 @@
+    "cite": "MUTCD \u00a7 6B.06",
+    "footer": "MUTCD \u00a7 6B.06 \u00b7 STOPPING SIGHT DISTANCE"
+   },
+-  "lookup_text": "MUTCD Table 6B-2: 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum at 65 mph, but only as part of the Case 26 mandatory speed step-down (65 \u2192 60 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
++  "lookup_text": "MUTCD Table 6B-2: 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum at 65 mph, but only as part of the Case 26 mandatory speed step-down (65 \u2192 60 mph), and Sheet 14 is drawn for shoulder work on a freeway or expressway; this plan closes a lane, so the federal posted-speed value governs.",
+   "result_text": "B = 645 ft",
+-  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
++  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance).",
+   "speed_mph": 65
+  },
+  "case": {
+diff -ru before/lane-75-70.audit.json after/lane-75-70.audit.json
+--- before/lane-75-70.audit.json
++++ after/lane-75-70.audit.json
+@@ -35,9 +35,9 @@
+    "cite": "MUTCD \u00a7 6B.06",
+    "footer": "MUTCD \u00a7 6B.06 \u00b7 STOPPING SIGHT DISTANCE"
+   },
+-  "lookup_text": "MUTCD Table 6B-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 \u2192 65 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
++  "lookup_text": "MUTCD Table 6B-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 \u2192 65 mph), and Sheet 14 is drawn for shoulder work on a freeway or expressway; this plan closes a lane, so the federal posted-speed value governs.",
+   "result_text": "B = 820 ft",
+-  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
++  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance).",
+   "speed_mph": 75
+  },
+  "case": {
+diff -ru before/lane-75.audit.json after/lane-75.audit.json
+--- before/lane-75.audit.json
++++ after/lane-75.audit.json
+@@ -35,9 +35,9 @@
+    "cite": "MUTCD \u00a7 6B.06",
+    "footer": "MUTCD \u00a7 6B.06 \u00b7 STOPPING SIGHT DISTANCE"
+   },
+-  "lookup_text": "MUTCD Table 6B-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 \u2192 65 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
++  "lookup_text": "MUTCD Table 6B-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 \u2192 65 mph), and Sheet 14 is drawn for shoulder work on a freeway or expressway; this plan closes a lane, so the federal posted-speed value governs.",
+   "result_text": "B = 820 ft",
+-  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
++  "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance).",
+   "speed_mph": 75
+  },
+  "case": {

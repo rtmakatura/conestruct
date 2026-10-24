@@ -679,6 +679,29 @@ def build_audit_trail(
             ),
             "citation": _CITATION_BUFFER,
         }
+    elif supplement_speed and is_lane:
+        # #367 (R1, R2): a lane closure at 65/75 mph without the step-down.
+        # Cites Table 6B-2 alone, as #361 R3: Sheet 7 Case 11 is a shoulder
+        # case, and nothing sources a Note 24 reading for lane closures.
+        required_wz = CDOT_BUFFER_STEPDOWN[speed]
+        supplement_min = _cdot_buffer_or_none(speed, required_wz)
+        _supplement_case = "Case 26" if speed == 65 else "Case 27"
+        buffer_section = {
+            "speed_mph": speed,
+            "lookup_text": (
+                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"{supplement_min:g} ft minimum at {speed} mph, but only as part of the "
+                f"{_supplement_case} mandatory speed step-down "
+                f"({speed} → {required_wz} mph), and Sheet 14 is drawn for shoulder "
+                f"work on a freeway or expressway; this plan closes a lane, so the "
+                f"federal posted-speed value governs."
+            ),
+            "buffer_ft": buf,
+            "source": (
+                f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} (stopping sight distance)."
+            ),
+            "citation": _CITATION_BUFFER,
+        }
     elif supplement_speed:
         # CDOT 65/75 mph but no qualifying Case 26/27 step-down: the
         # supplement minimum is SSD at the reduced work-zone speed, which is
