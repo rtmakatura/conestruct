@@ -39,7 +39,7 @@ from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
 from src.rules.device_aggregation import PILOT_CAR_NAME
 from src.rules.devices import AFAD_NAME, DeviceType, cone_display_name, device_row_sort_key, is_afad
-from src.rules.jurisdiction import aggregate_device_rows_with_deltas
+from src.rules.jurisdiction import aggregate_device_rows_with_deltas, delta_row_name
 from src.rules.references import REFERENCE_LINE
 from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
 from src.rules.spacing import (
@@ -110,7 +110,9 @@ _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
 
 
 def _device_summary(
-    placements: list[DevicePlacement], params: ScenarioParams
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+    rule_added: dict[DeviceType, int] | None = None,
 ) -> list[dict[str, Any]]:
     """Bullet-list aggregation: signs nested beneath one parent, then non-signs.
 
@@ -128,6 +130,9 @@ def _device_summary(
     alphabetical by display name — rather than a per-surface hand-matched
     sort.  The XLSX device list and the UI breakdown route through the
     same helper, so all three reorder identically by construction.
+
+    #381: ``rule_added`` is how many of a placed device a jurisdiction rule
+    added (the XLSX row's ``jurisdiction_added``), keyed by device type.
     """
     non_sign_counts: Counter[DeviceType] = Counter()
     sign_counts: Counter[str] = Counter()
@@ -143,6 +148,7 @@ def _device_summary(
                 sign_reps[key] = p
         else:
             non_sign_counts[p.device_type] += 1
+    non_sign_counts.update(rule_added or {})
 
     # #374: the flagger plan's AFADs take the shared name when every
     # temporary signal is one (the same rule the PDF legend uses).
@@ -195,6 +201,21 @@ def _device_summary(
             }
         )
     return rows
+
+
+def _rule_cite(source: dict[str, Any] | None) -> str:
+    """#381: "<doc>, <section>" for a jurisdiction rule's source."""
+    src = source or {}
+    doc = src.get("doc", "the jurisdiction's rule")
+    return f"{doc}, {src['section']}" if src.get("section") else doc
+
+
+def _rule_text(applied_deltas: list[dict[str, Any]] | None, source: Any) -> str | None:
+    """#381: the record's own rule sentence for the delta with ``source``."""
+    return next(
+        (d.get("rule") for d in applied_deltas or [] if d.get("source") == source),
+        None,
+    )
 
 
 def _format_equipment_bullets(rows: list[dict[str, Any]]) -> str:
@@ -677,19 +698,23 @@ def build_narrative_context(
     # and pulls the farthest sign (C) first.
     setup_order = sorted(advance_signs, key=lambda d: d["distance_ft"])
     takedown_order = sorted(advance_signs, key=lambda d: -d["distance_ft"])
-    device_summary = _device_summary(placements, params)
-    # #379: the arrow board a jurisdiction rule adds to a flagger plan
-    # (Denver, Englewood, Greeley, Lakewood) has no placement, so it is
-    # listed from the same rows the XLSX and page 1 print.  Only the rows
-    # with a one-mode note: other delta-only adds stay off this sheet.
-    delta_rows = [
-        r
-        for r in aggregate_device_rows_with_deltas(placements, applied_deltas, params)
-        if r.display_override is not None and r.mode_note is not None
-    ]
+    # #381: the equipment list is built from the rows the device XLSX
+    # prints (the same walk page 1 and the quote apply).  A rule that
+    # raises a placed device's count sets that count here; a device a rule
+    # adds with no placement is listed under the XLSX's name for it.
+    rows = aggregate_device_rows_with_deltas(placements, applied_deltas, params)
+    rule_added = {
+        r.device_type: r.jurisdiction_added
+        for r in rows
+        if r.display_override is None and r.jurisdiction_added > 0 and r.device_type
+    }
+    device_summary = _device_summary(placements, params, rule_added)
+    delta_rows = [r for r in rows if r.display_override is not None]
     device_summary += [
-        {"label": r.display_override, "count": r.quantity, "children": []} for r in delta_rows
+        {"label": delta_row_name(r), "count": r.quantity, "children": []} for r in delta_rows
     ]
+    # #379: the arrow board a jurisdiction rule adds to a flagger plan
+    # (Denver, Englewood, Greeley, Lakewood): the one row with a mode note.
     flagger_arrow_board = next(
         (
             {
@@ -697,9 +722,22 @@ def build_narrative_context(
                 "mode_note": r.mode_note,
             }
             for r in delta_rows
+            if r.mode_note is not None
         ),
         None,
     )
+    # #381: every other delta-only row (Thornton's advance warning signs)
+    # has no placement and no sourced position.  The setup step quotes the
+    # rule and leaves the position to the supervisor (Rule 10).
+    unplaced_rule_devices = [
+        {
+            "name": delta_row_name(r),
+            "cite": _rule_cite(r.jurisdiction_source),
+            "rule": _rule_text(applied_deltas, r.jurisdiction_source),
+        }
+        for r in delta_rows
+        if r.mode_note is None
+    ]
     equipment_bullets = _format_equipment_bullets(device_summary)
 
     # Flagger-station positions read from the placement list (PR 3 G2 —
@@ -950,6 +988,7 @@ def build_narrative_context(
         "device_summary": device_summary,
         "equipment_bullets": equipment_bullets,
         "flagger_arrow_board": flagger_arrow_board,
+        "unplaced_rule_devices": unplaced_rule_devices,
         "sign_schedule": sign_schedule,
         "advance_signs_setup_order": setup_order,
         "advance_signs_takedown_order": takedown_order,

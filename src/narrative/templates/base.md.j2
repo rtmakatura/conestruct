@@ -75,6 +75,9 @@
 {% if left_curb_mirror %}
    Place matching signs on the {{ other_side_word }} curb at each location, {{ "{:.0f}".format(left_curb_offset_ft) }} ft {{ other_side_word }} of the {{ other_side_word }} edge of the roadway (CDOT S-630-1 Sheet 2 General Note 8: both sides on {{ "a divided highway" if divided_carriageway else "a one-way street" }}).
 {% endif %}
+{% for d in unplaced_rule_devices %}
+   {{ d.name }}. {{ d.cite }}{% if d.rule %}: "{{ d.rule }}"{% else %}.{% endif %} Not placed on the drawing: the rule gives no position. The Traffic Control Supervisor sets the position per the permit.
+{% endfor %}
 {% if is_flagger %}
    Repeat the series for the opposing approach (left side, negative stations; S-630-1 Case 17: "SIGN SEQUENCE IS THE SAME FOR OPPOSITE DIRECTION").
 {% if flagger_arrow_board %}
@@ -103,7 +106,7 @@
 1. Complete work and clear all personnel and equipment from the work area.
 2. Under continued flagger control, remove the work-zone cones and the taper drums (restoring the closed lane).
 3. Cease the alternating one-way operation and release both {% if is_afad %}AFAD{% else %}flagger{% endif %} stations.
-4. Remove advance warning signs on both approaches: {{ takedown_sign_sequence }}.
+4. Remove advance warning signs on both approaches: {{ takedown_sign_sequence }}.{% for d in unplaced_rule_devices %} Also remove the {{ d.name }}.{% endfor +%}
 5. Remove G20-5P plaques and the G20-1/G20-2 BEGIN/END ROAD WORK signs.
 {% if flagger_arrow_board %}
 6. Deactivate and remove the arrow board.
@@ -111,7 +114,7 @@
 {% else %}
 **Important: Remove from upstream to downstream (with traffic flow). Remove advance warning signs first, work zone devices last.**
 
-1. Remove advance warning signs: {{ takedown_sign_sequence }}.{% if mirrored_signs %} Remove both sides at each station.{% endif +%}
+1. Remove advance warning signs: {{ takedown_sign_sequence }}.{% if mirrored_signs %} Remove both sides at each station.{% endif %}{% for d in unplaced_rule_devices %} Also remove the {{ d.name }}.{% endfor +%}
 2. Remove taper drums from upstream to downstream.
 3. Deactivate and remove arrow board.
 4. Remove work zone cones from upstream to downstream.

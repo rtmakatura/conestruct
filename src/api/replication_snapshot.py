@@ -62,7 +62,12 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
     """
     from openpyxl import load_workbook
 
-    from src.api.render_api import _audit_projection_for, _placements_for, _run_quote
+    from src.api.render_api import (
+        _audit_projection_for,
+        _jurisdiction_eval,
+        _placements_for,
+        _run_quote,
+    )
     from src.export.device_list import export_device_list
     from src.narrative.crew_narrative import render_crew_narrative_markdown
 
@@ -190,12 +195,24 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
         )
     )
 
+    # #381: the fired count deltas /render/xlsx and /render/markdown
+    # apply, and the pilot car /render/xlsx lists, so sections 5 and 6
+    # match the shipped files.
+    applied_deltas = _jurisdiction_eval(scenario, params)[1]
+    pilot_car = bool(getattr(scenario, "pilotCar", False))
+
     # Section 5 — the shipped Device List workbook, read back verbatim.
     fd, raw_path = tempfile.mkstemp(suffix=".xlsx")
     os.close(fd)
     xlsx_path = Path(raw_path)
     try:
-        export_device_list(placements, params, output_path=str(xlsx_path))
+        export_device_list(
+            placements,
+            params,
+            output_path=str(xlsx_path),
+            applied_deltas=applied_deltas,
+            pilot_car=pilot_car,
+        )
         workbook = load_workbook(str(xlsx_path), read_only=True)
         try:
             sheet_rows = list(workbook["Device List"].iter_rows(values_only=True))
@@ -221,6 +238,7 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
         # #125: jurisdiction-scoped ped/bike rules — must match the
         # /render/markdown output verbatim (snapshot contract, #102).
         jurisdiction_key=getattr(scenario, "jurisdiction_key", None),
+        applied_deltas=applied_deltas,
     )
 
     return "\n".join(

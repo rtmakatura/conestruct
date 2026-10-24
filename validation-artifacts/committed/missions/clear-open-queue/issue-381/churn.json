@@ -1,0 +1,2978 @@
+{
+ "base": "486a364",
+ "bodies": 344,
+ "changed": {
+  "flagger-denver-None-day": [
+   "snapshot"
+  ],
+  "flagger-denver-None-night": [
+   "snapshot"
+  ],
+  "flagger-denver-arterial-day": [
+   "snapshot"
+  ],
+  "flagger-denver-arterial-night": [
+   "snapshot"
+  ],
+  "flagger-denver-collector-day": [
+   "snapshot"
+  ],
+  "flagger-denver-collector-night": [
+   "snapshot"
+  ],
+  "flagger-denver-local-day": [
+   "snapshot"
+  ],
+  "flagger-denver-local-night": [
+   "snapshot"
+  ],
+  "flagger-englewood-arterial-day": [
+   "snapshot"
+  ],
+  "flagger-englewood-arterial-night": [
+   "snapshot"
+  ],
+  "flagger-englewood-collector-day": [
+   "snapshot"
+  ],
+  "flagger-englewood-collector-night": [
+   "snapshot"
+  ],
+  "flagger-greeley-arterial-day": [
+   "snapshot"
+  ],
+  "flagger-greeley-arterial-night": [
+   "snapshot"
+  ],
+  "flagger-greeley-collector-day": [
+   "snapshot"
+  ],
+  "flagger-greeley-collector-night": [
+   "snapshot"
+  ],
+  "flagger-lakewood-arterial-day": [
+   "snapshot"
+  ],
+  "flagger-lakewood-arterial-night": [
+   "snapshot"
+  ],
+  "flagger-pilotcar-None": [
+   "snapshot"
+  ],
+  "flagger-pilotcar-thornton": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-None-day": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-None-night": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-arterial-day": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-arterial-night": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-collector-day": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-collector-night": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-local-day": [
+   "md",
+   "snapshot"
+  ],
+  "flagger-thornton-local-night": [
+   "md",
+   "snapshot"
+  ],
+  "ni-denver-None-day": [
+   "snapshot"
+  ],
+  "ni-denver-None-night": [
+   "snapshot"
+  ],
+  "ni-denver-arterial-day": [
+   "snapshot"
+  ],
+  "ni-denver-arterial-night": [
+   "snapshot"
+  ],
+  "ni-denver-collector-day": [
+   "snapshot"
+  ],
+  "ni-denver-collector-night": [
+   "snapshot"
+  ],
+  "ni-denver-local-day": [
+   "snapshot"
+  ],
+  "ni-denver-local-night": [
+   "snapshot"
+  ],
+  "ni-englewood-arterial-day": [
+   "snapshot"
+  ],
+  "ni-englewood-arterial-night": [
+   "snapshot"
+  ],
+  "ni-englewood-collector-day": [
+   "snapshot"
+  ],
+  "ni-englewood-collector-night": [
+   "snapshot"
+  ],
+  "ni-greeley-arterial-day": [
+   "snapshot"
+  ],
+  "ni-greeley-arterial-night": [
+   "snapshot"
+  ],
+  "ni-greeley-collector-day": [
+   "snapshot"
+  ],
+  "ni-greeley-collector-night": [
+   "snapshot"
+  ],
+  "ni-lakewood-arterial-day": [
+   "snapshot"
+  ],
+  "ni-lakewood-arterial-night": [
+   "snapshot"
+  ],
+  "ni-thornton-None-day": [
+   "md",
+   "snapshot"
+  ],
+  "ni-thornton-None-night": [
+   "md",
+   "snapshot"
+  ],
+  "ni-thornton-arterial-day": [
+   "md",
+   "snapshot"
+  ],
+  "ni-thornton-arterial-night": [
+   "md",
+   "snapshot"
+  ],
+  "ni-thornton-collector-day": [
+   "md",
+   "snapshot"
+  ],
+  "ni-thornton-collector-night": [
+   "md",
+   "snapshot"
+  ],
+  "ni-thornton-local-day": [
+   "md",
+   "snapshot"
+  ],
+  "ni-thornton-local-night": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-None-day": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-None-night": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-arterial-day": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-arterial-night": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-collector-day": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-collector-night": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-local-day": [
+   "md",
+   "snapshot"
+  ],
+  "shoulder-thornton-local-night": [
+   "md",
+   "snapshot"
+  ]
+ },
+ "hashes": {
+  "base": {
+   "flagger-None-None-day": {
+    "md": "200:f6a02661e72f",
+    "snapshot": "200:743546f3a5cc"
+   },
+   "flagger-None-None-night": {
+    "md": "200:7bc3f9bab6a3",
+    "snapshot": "200:d3683dc6dce5"
+   },
+   "flagger-castle_rock-None-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-None-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-castle_rock-arterial-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-arterial-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-castle_rock-collector-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-collector-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-castle_rock-local-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-local-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-cdot-None-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-None-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-cdot-arterial-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-arterial-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-cdot-collector-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-collector-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-cdot-local-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-local-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-centennial-None-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-None-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-centennial-arterial-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-arterial-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-centennial-collector-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-collector-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-centennial-local-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-local-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-denver-None-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:3129b610cb5c"
+   },
+   "flagger-denver-None-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:f854cf21bd94"
+   },
+   "flagger-denver-arterial-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:3129b610cb5c"
+   },
+   "flagger-denver-arterial-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:f854cf21bd94"
+   },
+   "flagger-denver-collector-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:3129b610cb5c"
+   },
+   "flagger-denver-collector-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:f854cf21bd94"
+   },
+   "flagger-denver-local-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:3129b610cb5c"
+   },
+   "flagger-denver-local-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:f854cf21bd94"
+   },
+   "flagger-e470-None-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-None-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-e470-arterial-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-arterial-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-e470-collector-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-collector-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-e470-local-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-local-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-el_paso-None-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-None-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-el_paso-arterial-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-arterial-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-el_paso-collector-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-collector-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-el_paso-local-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-local-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-englewood-None-day": {
+    "md": "200:a789bb920d6b",
+    "snapshot": "200:d3c2c145492b"
+   },
+   "flagger-englewood-None-night": {
+    "md": "200:6e21ce35ef0e",
+    "snapshot": "200:10a0eaa0e023"
+   },
+   "flagger-englewood-arterial-day": {
+    "md": "200:137d242cc55d",
+    "snapshot": "200:1366efca1370"
+   },
+   "flagger-englewood-arterial-night": {
+    "md": "200:fe40659bf257",
+    "snapshot": "200:d99c64158aab"
+   },
+   "flagger-englewood-collector-day": {
+    "md": "200:137d242cc55d",
+    "snapshot": "200:1366efca1370"
+   },
+   "flagger-englewood-collector-night": {
+    "md": "200:fe40659bf257",
+    "snapshot": "200:d99c64158aab"
+   },
+   "flagger-englewood-local-day": {
+    "md": "200:a789bb920d6b",
+    "snapshot": "200:d3c2c145492b"
+   },
+   "flagger-englewood-local-night": {
+    "md": "200:6e21ce35ef0e",
+    "snapshot": "200:10a0eaa0e023"
+   },
+   "flagger-greeley-None-day": {
+    "md": "200:3e4742103b7a",
+    "snapshot": "200:49edae095c7f"
+   },
+   "flagger-greeley-None-night": {
+    "md": "200:f8d082b2ea93",
+    "snapshot": "200:cbce40560cf5"
+   },
+   "flagger-greeley-arterial-day": {
+    "md": "200:6997bb45aa60",
+    "snapshot": "200:fa6be41f49bf"
+   },
+   "flagger-greeley-arterial-night": {
+    "md": "200:847075d07615",
+    "snapshot": "200:f576357279f6"
+   },
+   "flagger-greeley-collector-day": {
+    "md": "200:6997bb45aa60",
+    "snapshot": "200:fa6be41f49bf"
+   },
+   "flagger-greeley-collector-night": {
+    "md": "200:847075d07615",
+    "snapshot": "200:f576357279f6"
+   },
+   "flagger-greeley-local-day": {
+    "md": "200:3e4742103b7a",
+    "snapshot": "200:49edae095c7f"
+   },
+   "flagger-greeley-local-night": {
+    "md": "200:f8d082b2ea93",
+    "snapshot": "200:cbce40560cf5"
+   },
+   "flagger-lakewood-None-day": {
+    "md": "200:06b7e1f6913f",
+    "snapshot": "200:6d48b3b61b87"
+   },
+   "flagger-lakewood-None-night": {
+    "md": "200:8b45b2517744",
+    "snapshot": "200:2ea4602520cd"
+   },
+   "flagger-lakewood-arterial-day": {
+    "md": "200:7039c32914fc",
+    "snapshot": "200:b193462acbfd"
+   },
+   "flagger-lakewood-arterial-night": {
+    "md": "200:a6db73d2f741",
+    "snapshot": "200:725d7022b7fc"
+   },
+   "flagger-lakewood-collector-day": {
+    "md": "200:06b7e1f6913f",
+    "snapshot": "200:6d48b3b61b87"
+   },
+   "flagger-lakewood-collector-night": {
+    "md": "200:8b45b2517744",
+    "snapshot": "200:2ea4602520cd"
+   },
+   "flagger-lakewood-local-day": {
+    "md": "200:06b7e1f6913f",
+    "snapshot": "200:6d48b3b61b87"
+   },
+   "flagger-lakewood-local-night": {
+    "md": "200:8b45b2517744",
+    "snapshot": "200:2ea4602520cd"
+   },
+   "flagger-littleton-None-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-None-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-littleton-arterial-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-arterial-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-littleton-collector-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-collector-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-littleton-local-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-local-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-loveland-None-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-None-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-loveland-arterial-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-arterial-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-loveland-collector-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-collector-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-loveland-local-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-local-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-parker-None-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-None-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-parker-arterial-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-arterial-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-parker-collector-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-collector-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-parker-local-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-local-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-pilotcar-None": {
+    "md": "200:a32717d68f2c",
+    "snapshot": "200:d3abbab0be86"
+   },
+   "flagger-pilotcar-thornton": {
+    "md": "200:a47426dd2994",
+    "snapshot": "200:075c708038b0"
+   },
+   "flagger-thornton-None-day": {
+    "md": "200:96795cfaf126",
+    "snapshot": "200:6c6838029932"
+   },
+   "flagger-thornton-None-night": {
+    "md": "200:833e9db0fccc",
+    "snapshot": "200:a0a04136dc7e"
+   },
+   "flagger-thornton-arterial-day": {
+    "md": "200:96795cfaf126",
+    "snapshot": "200:6c6838029932"
+   },
+   "flagger-thornton-arterial-night": {
+    "md": "200:833e9db0fccc",
+    "snapshot": "200:a0a04136dc7e"
+   },
+   "flagger-thornton-collector-day": {
+    "md": "200:96795cfaf126",
+    "snapshot": "200:6c6838029932"
+   },
+   "flagger-thornton-collector-night": {
+    "md": "200:833e9db0fccc",
+    "snapshot": "200:a0a04136dc7e"
+   },
+   "flagger-thornton-local-day": {
+    "md": "200:96795cfaf126",
+    "snapshot": "200:6c6838029932"
+   },
+   "flagger-thornton-local-night": {
+    "md": "200:833e9db0fccc",
+    "snapshot": "200:a0a04136dc7e"
+   },
+   "flagger-westminster-None-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-None-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "flagger-westminster-arterial-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-arterial-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "flagger-westminster-collector-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-collector-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "flagger-westminster-local-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-local-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "ni-None-None-day": {
+    "md": "200:d8e0253ab05e",
+    "snapshot": "200:5780ec3e4734"
+   },
+   "ni-None-None-night": {
+    "md": "200:be301924e2a4",
+    "snapshot": "200:85a0519844e4"
+   },
+   "ni-castle_rock-None-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-None-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-castle_rock-arterial-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-arterial-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-castle_rock-collector-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-collector-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-castle_rock-local-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-local-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-cdot-None-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-None-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-cdot-arterial-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-arterial-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-cdot-collector-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-collector-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-cdot-local-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-local-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-centennial-None-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-None-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-centennial-arterial-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-arterial-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-centennial-collector-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-collector-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-centennial-local-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-local-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-denver-None-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:bfebacf01d6b"
+   },
+   "ni-denver-None-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:ec90dc695311"
+   },
+   "ni-denver-arterial-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:bfebacf01d6b"
+   },
+   "ni-denver-arterial-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:ec90dc695311"
+   },
+   "ni-denver-collector-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:bfebacf01d6b"
+   },
+   "ni-denver-collector-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:ec90dc695311"
+   },
+   "ni-denver-local-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:bfebacf01d6b"
+   },
+   "ni-denver-local-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:ec90dc695311"
+   },
+   "ni-e470-None-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-None-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-e470-arterial-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-arterial-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-e470-collector-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-collector-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-e470-local-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-local-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-el_paso-None-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-None-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-el_paso-arterial-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-arterial-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-el_paso-collector-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-collector-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-el_paso-local-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-local-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-englewood-None-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:150ac0b29ad6"
+   },
+   "ni-englewood-None-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:1f4c20a68c7c"
+   },
+   "ni-englewood-arterial-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:63fb76741f1c"
+   },
+   "ni-englewood-arterial-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:affd0fdcab64"
+   },
+   "ni-englewood-collector-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:63fb76741f1c"
+   },
+   "ni-englewood-collector-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:affd0fdcab64"
+   },
+   "ni-englewood-local-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:150ac0b29ad6"
+   },
+   "ni-englewood-local-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:1f4c20a68c7c"
+   },
+   "ni-greeley-None-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:e59f2eef573b"
+   },
+   "ni-greeley-None-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:d10e0c17f5a5"
+   },
+   "ni-greeley-arterial-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:3d515161c5a0"
+   },
+   "ni-greeley-arterial-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:04054b9df751"
+   },
+   "ni-greeley-collector-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:3d515161c5a0"
+   },
+   "ni-greeley-collector-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:04054b9df751"
+   },
+   "ni-greeley-local-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:e59f2eef573b"
+   },
+   "ni-greeley-local-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:d10e0c17f5a5"
+   },
+   "ni-lakewood-None-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:1149e7180d0e"
+   },
+   "ni-lakewood-None-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:db88171ade37"
+   },
+   "ni-lakewood-arterial-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:1bad1cd29df2"
+   },
+   "ni-lakewood-arterial-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:36f0df52fb69"
+   },
+   "ni-lakewood-collector-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:1149e7180d0e"
+   },
+   "ni-lakewood-collector-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:db88171ade37"
+   },
+   "ni-lakewood-local-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:1149e7180d0e"
+   },
+   "ni-lakewood-local-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:db88171ade37"
+   },
+   "ni-littleton-None-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-None-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-littleton-arterial-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-arterial-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-littleton-collector-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-collector-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-littleton-local-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-local-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-loveland-None-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-None-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-loveland-arterial-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-arterial-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-loveland-collector-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-collector-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-loveland-local-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-local-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-parker-None-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-None-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-parker-arterial-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-arterial-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-parker-collector-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-collector-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-parker-local-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-local-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-thornton-None-day": {
+    "md": "200:24b22eba457e",
+    "snapshot": "200:0b0ca9a37ecd"
+   },
+   "ni-thornton-None-night": {
+    "md": "200:d552e0034a4f",
+    "snapshot": "200:605173223bfc"
+   },
+   "ni-thornton-arterial-day": {
+    "md": "200:24b22eba457e",
+    "snapshot": "200:0b0ca9a37ecd"
+   },
+   "ni-thornton-arterial-night": {
+    "md": "200:d552e0034a4f",
+    "snapshot": "200:605173223bfc"
+   },
+   "ni-thornton-collector-day": {
+    "md": "200:24b22eba457e",
+    "snapshot": "200:0b0ca9a37ecd"
+   },
+   "ni-thornton-collector-night": {
+    "md": "200:d552e0034a4f",
+    "snapshot": "200:605173223bfc"
+   },
+   "ni-thornton-local-day": {
+    "md": "200:24b22eba457e",
+    "snapshot": "200:0b0ca9a37ecd"
+   },
+   "ni-thornton-local-night": {
+    "md": "200:d552e0034a4f",
+    "snapshot": "200:605173223bfc"
+   },
+   "ni-westminster-None-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-None-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "ni-westminster-arterial-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-arterial-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "ni-westminster-collector-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-collector-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "ni-westminster-local-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-local-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "shoulder-None-None-day": {
+    "md": "200:775c90c7a9f2",
+    "snapshot": "200:52cd404a5b0c"
+   },
+   "shoulder-None-None-night": {
+    "md": "200:0d86161f9830",
+    "snapshot": "200:c7b427043fab"
+   },
+   "shoulder-castle_rock-None-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-None-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-castle_rock-arterial-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-arterial-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-castle_rock-collector-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-collector-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-castle_rock-local-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-local-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-cdot-None-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-None-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-cdot-arterial-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-arterial-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-cdot-collector-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-collector-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-cdot-local-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-local-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-centennial-None-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-None-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-centennial-arterial-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-arterial-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-centennial-collector-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-collector-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-centennial-local-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-local-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-denver-None-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-None-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-denver-arterial-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-arterial-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-denver-collector-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-collector-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-denver-local-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-local-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-e470-None-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-None-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-e470-arterial-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-arterial-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-e470-collector-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-collector-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-e470-local-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-local-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-el_paso-None-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-None-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-el_paso-arterial-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-arterial-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-el_paso-collector-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-collector-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-el_paso-local-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-local-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-englewood-None-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-None-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-englewood-arterial-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-arterial-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-englewood-collector-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-collector-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-englewood-local-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-local-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-greeley-None-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-None-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-greeley-arterial-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-arterial-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-greeley-collector-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-collector-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-greeley-local-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-local-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-lakewood-None-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-None-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-lakewood-arterial-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-arterial-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-lakewood-collector-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-collector-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-lakewood-local-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-local-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-littleton-None-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-None-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-littleton-arterial-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-arterial-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-littleton-collector-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-collector-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-littleton-local-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-local-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-loveland-None-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-None-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-loveland-arterial-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-arterial-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-loveland-collector-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-collector-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-loveland-local-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-local-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-parker-None-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-None-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-parker-arterial-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-arterial-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-parker-collector-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-collector-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-parker-local-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-local-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-thornton-None-day": {
+    "md": "200:222c8ad61fc3",
+    "snapshot": "200:5357d14c7ddd"
+   },
+   "shoulder-thornton-None-night": {
+    "md": "200:14116e03cfcc",
+    "snapshot": "200:b6a846c6ef6f"
+   },
+   "shoulder-thornton-arterial-day": {
+    "md": "200:222c8ad61fc3",
+    "snapshot": "200:5357d14c7ddd"
+   },
+   "shoulder-thornton-arterial-night": {
+    "md": "200:14116e03cfcc",
+    "snapshot": "200:b6a846c6ef6f"
+   },
+   "shoulder-thornton-collector-day": {
+    "md": "200:222c8ad61fc3",
+    "snapshot": "200:5357d14c7ddd"
+   },
+   "shoulder-thornton-collector-night": {
+    "md": "200:14116e03cfcc",
+    "snapshot": "200:b6a846c6ef6f"
+   },
+   "shoulder-thornton-local-day": {
+    "md": "200:222c8ad61fc3",
+    "snapshot": "200:5357d14c7ddd"
+   },
+   "shoulder-thornton-local-night": {
+    "md": "200:14116e03cfcc",
+    "snapshot": "200:b6a846c6ef6f"
+   },
+   "shoulder-westminster-None-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-None-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   },
+   "shoulder-westminster-arterial-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-arterial-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   },
+   "shoulder-westminster-collector-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-collector-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   },
+   "shoulder-westminster-local-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-local-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   }
+  },
+  "branch": {
+   "flagger-None-None-day": {
+    "md": "200:f6a02661e72f",
+    "snapshot": "200:743546f3a5cc"
+   },
+   "flagger-None-None-night": {
+    "md": "200:7bc3f9bab6a3",
+    "snapshot": "200:d3683dc6dce5"
+   },
+   "flagger-castle_rock-None-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-None-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-castle_rock-arterial-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-arterial-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-castle_rock-collector-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-collector-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-castle_rock-local-day": {
+    "md": "200:776bd1dd81d3",
+    "snapshot": "200:e2d4db7c2e91"
+   },
+   "flagger-castle_rock-local-night": {
+    "md": "200:3c258dd62d94",
+    "snapshot": "200:c82cb8b04371"
+   },
+   "flagger-cdot-None-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-None-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-cdot-arterial-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-arterial-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-cdot-collector-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-collector-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-cdot-local-day": {
+    "md": "200:99e54d4637fd",
+    "snapshot": "200:2ba009f24c83"
+   },
+   "flagger-cdot-local-night": {
+    "md": "200:61c7764e19e2",
+    "snapshot": "200:74530fab58fd"
+   },
+   "flagger-centennial-None-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-None-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-centennial-arterial-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-arterial-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-centennial-collector-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-collector-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-centennial-local-day": {
+    "md": "200:14ece0031a28",
+    "snapshot": "200:4df06b795e8e"
+   },
+   "flagger-centennial-local-night": {
+    "md": "200:925f4c5a418e",
+    "snapshot": "200:0fc23b43d242"
+   },
+   "flagger-denver-None-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:714af8fa7e2f"
+   },
+   "flagger-denver-None-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:5f7eef28fb9d"
+   },
+   "flagger-denver-arterial-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:714af8fa7e2f"
+   },
+   "flagger-denver-arterial-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:5f7eef28fb9d"
+   },
+   "flagger-denver-collector-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:714af8fa7e2f"
+   },
+   "flagger-denver-collector-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:5f7eef28fb9d"
+   },
+   "flagger-denver-local-day": {
+    "md": "200:045e0f59c36d",
+    "snapshot": "200:714af8fa7e2f"
+   },
+   "flagger-denver-local-night": {
+    "md": "200:0ce9b801cf72",
+    "snapshot": "200:5f7eef28fb9d"
+   },
+   "flagger-e470-None-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-None-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-e470-arterial-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-arterial-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-e470-collector-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-collector-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-e470-local-day": {
+    "md": "200:853691c56f80",
+    "snapshot": "200:9e6f852e9ac9"
+   },
+   "flagger-e470-local-night": {
+    "md": "200:231616e9003e",
+    "snapshot": "200:413e7ab426c2"
+   },
+   "flagger-el_paso-None-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-None-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-el_paso-arterial-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-arterial-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-el_paso-collector-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-collector-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-el_paso-local-day": {
+    "md": "200:aed0c8375968",
+    "snapshot": "200:3d7eab91cfbe"
+   },
+   "flagger-el_paso-local-night": {
+    "md": "200:03be2a884712",
+    "snapshot": "200:72dda3fc152d"
+   },
+   "flagger-englewood-None-day": {
+    "md": "200:a789bb920d6b",
+    "snapshot": "200:d3c2c145492b"
+   },
+   "flagger-englewood-None-night": {
+    "md": "200:6e21ce35ef0e",
+    "snapshot": "200:10a0eaa0e023"
+   },
+   "flagger-englewood-arterial-day": {
+    "md": "200:137d242cc55d",
+    "snapshot": "200:fc5ba141f24b"
+   },
+   "flagger-englewood-arterial-night": {
+    "md": "200:fe40659bf257",
+    "snapshot": "200:2db443529e4d"
+   },
+   "flagger-englewood-collector-day": {
+    "md": "200:137d242cc55d",
+    "snapshot": "200:fc5ba141f24b"
+   },
+   "flagger-englewood-collector-night": {
+    "md": "200:fe40659bf257",
+    "snapshot": "200:2db443529e4d"
+   },
+   "flagger-englewood-local-day": {
+    "md": "200:a789bb920d6b",
+    "snapshot": "200:d3c2c145492b"
+   },
+   "flagger-englewood-local-night": {
+    "md": "200:6e21ce35ef0e",
+    "snapshot": "200:10a0eaa0e023"
+   },
+   "flagger-greeley-None-day": {
+    "md": "200:3e4742103b7a",
+    "snapshot": "200:49edae095c7f"
+   },
+   "flagger-greeley-None-night": {
+    "md": "200:f8d082b2ea93",
+    "snapshot": "200:cbce40560cf5"
+   },
+   "flagger-greeley-arterial-day": {
+    "md": "200:6997bb45aa60",
+    "snapshot": "200:3d9ac800244e"
+   },
+   "flagger-greeley-arterial-night": {
+    "md": "200:847075d07615",
+    "snapshot": "200:53e59ecef22f"
+   },
+   "flagger-greeley-collector-day": {
+    "md": "200:6997bb45aa60",
+    "snapshot": "200:3d9ac800244e"
+   },
+   "flagger-greeley-collector-night": {
+    "md": "200:847075d07615",
+    "snapshot": "200:53e59ecef22f"
+   },
+   "flagger-greeley-local-day": {
+    "md": "200:3e4742103b7a",
+    "snapshot": "200:49edae095c7f"
+   },
+   "flagger-greeley-local-night": {
+    "md": "200:f8d082b2ea93",
+    "snapshot": "200:cbce40560cf5"
+   },
+   "flagger-lakewood-None-day": {
+    "md": "200:06b7e1f6913f",
+    "snapshot": "200:6d48b3b61b87"
+   },
+   "flagger-lakewood-None-night": {
+    "md": "200:8b45b2517744",
+    "snapshot": "200:2ea4602520cd"
+   },
+   "flagger-lakewood-arterial-day": {
+    "md": "200:7039c32914fc",
+    "snapshot": "200:0b12837eedff"
+   },
+   "flagger-lakewood-arterial-night": {
+    "md": "200:a6db73d2f741",
+    "snapshot": "200:b37cbaec3b9d"
+   },
+   "flagger-lakewood-collector-day": {
+    "md": "200:06b7e1f6913f",
+    "snapshot": "200:6d48b3b61b87"
+   },
+   "flagger-lakewood-collector-night": {
+    "md": "200:8b45b2517744",
+    "snapshot": "200:2ea4602520cd"
+   },
+   "flagger-lakewood-local-day": {
+    "md": "200:06b7e1f6913f",
+    "snapshot": "200:6d48b3b61b87"
+   },
+   "flagger-lakewood-local-night": {
+    "md": "200:8b45b2517744",
+    "snapshot": "200:2ea4602520cd"
+   },
+   "flagger-littleton-None-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-None-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-littleton-arterial-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-arterial-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-littleton-collector-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-collector-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-littleton-local-day": {
+    "md": "200:15864f063d7b",
+    "snapshot": "200:20309e8ee5f0"
+   },
+   "flagger-littleton-local-night": {
+    "md": "200:e0d1426e9531",
+    "snapshot": "200:c8d7032072cf"
+   },
+   "flagger-loveland-None-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-None-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-loveland-arterial-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-arterial-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-loveland-collector-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-collector-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-loveland-local-day": {
+    "md": "200:331cebb1f2c8",
+    "snapshot": "200:9f6b7c3e8e85"
+   },
+   "flagger-loveland-local-night": {
+    "md": "200:1ad373a89470",
+    "snapshot": "200:12d6a541ded6"
+   },
+   "flagger-parker-None-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-None-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-parker-arterial-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-arterial-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-parker-collector-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-collector-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-parker-local-day": {
+    "md": "200:d7fbd1b6fbd9",
+    "snapshot": "200:7989f7e63ab7"
+   },
+   "flagger-parker-local-night": {
+    "md": "200:046e15afc684",
+    "snapshot": "200:c9d5cd14d4cd"
+   },
+   "flagger-pilotcar-None": {
+    "md": "200:a32717d68f2c",
+    "snapshot": "200:2c705a70fa2e"
+   },
+   "flagger-pilotcar-thornton": {
+    "md": "200:1016718f5e73",
+    "snapshot": "200:cb68e5818793"
+   },
+   "flagger-thornton-None-day": {
+    "md": "200:218dfba274d9",
+    "snapshot": "200:42d1c9085658"
+   },
+   "flagger-thornton-None-night": {
+    "md": "200:7bb7d094a814",
+    "snapshot": "200:d560d8689895"
+   },
+   "flagger-thornton-arterial-day": {
+    "md": "200:218dfba274d9",
+    "snapshot": "200:42d1c9085658"
+   },
+   "flagger-thornton-arterial-night": {
+    "md": "200:7bb7d094a814",
+    "snapshot": "200:d560d8689895"
+   },
+   "flagger-thornton-collector-day": {
+    "md": "200:218dfba274d9",
+    "snapshot": "200:42d1c9085658"
+   },
+   "flagger-thornton-collector-night": {
+    "md": "200:7bb7d094a814",
+    "snapshot": "200:d560d8689895"
+   },
+   "flagger-thornton-local-day": {
+    "md": "200:218dfba274d9",
+    "snapshot": "200:42d1c9085658"
+   },
+   "flagger-thornton-local-night": {
+    "md": "200:7bb7d094a814",
+    "snapshot": "200:d560d8689895"
+   },
+   "flagger-westminster-None-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-None-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "flagger-westminster-arterial-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-arterial-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "flagger-westminster-collector-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-collector-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "flagger-westminster-local-day": {
+    "md": "200:7cc04340b138",
+    "snapshot": "200:4de46f517ad6"
+   },
+   "flagger-westminster-local-night": {
+    "md": "200:b8c93a97304d",
+    "snapshot": "200:dcc60c7a9df6"
+   },
+   "ni-None-None-day": {
+    "md": "200:d8e0253ab05e",
+    "snapshot": "200:5780ec3e4734"
+   },
+   "ni-None-None-night": {
+    "md": "200:be301924e2a4",
+    "snapshot": "200:85a0519844e4"
+   },
+   "ni-castle_rock-None-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-None-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-castle_rock-arterial-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-arterial-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-castle_rock-collector-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-collector-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-castle_rock-local-day": {
+    "md": "200:4669fd104bae",
+    "snapshot": "200:af4a7e5d244f"
+   },
+   "ni-castle_rock-local-night": {
+    "md": "200:629a6aba1c14",
+    "snapshot": "200:d1df7f309692"
+   },
+   "ni-cdot-None-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-None-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-cdot-arterial-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-arterial-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-cdot-collector-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-collector-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-cdot-local-day": {
+    "md": "200:2e78a58cd6e3",
+    "snapshot": "200:174d06e9deef"
+   },
+   "ni-cdot-local-night": {
+    "md": "200:c818d5405348",
+    "snapshot": "200:50d6b64d69d0"
+   },
+   "ni-centennial-None-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-None-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-centennial-arterial-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-arterial-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-centennial-collector-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-collector-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-centennial-local-day": {
+    "md": "200:cc57d2ebd291",
+    "snapshot": "200:7dc935ec40a9"
+   },
+   "ni-centennial-local-night": {
+    "md": "200:6e01e7e2f406",
+    "snapshot": "200:f3e9780bd7c1"
+   },
+   "ni-denver-None-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:57fa950eedc2"
+   },
+   "ni-denver-None-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:7ac9eec3484f"
+   },
+   "ni-denver-arterial-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:57fa950eedc2"
+   },
+   "ni-denver-arterial-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:7ac9eec3484f"
+   },
+   "ni-denver-collector-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:57fa950eedc2"
+   },
+   "ni-denver-collector-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:7ac9eec3484f"
+   },
+   "ni-denver-local-day": {
+    "md": "200:93337e23f6d8",
+    "snapshot": "200:57fa950eedc2"
+   },
+   "ni-denver-local-night": {
+    "md": "200:bbfe4c24ce4b",
+    "snapshot": "200:7ac9eec3484f"
+   },
+   "ni-e470-None-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-None-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-e470-arterial-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-arterial-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-e470-collector-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-collector-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-e470-local-day": {
+    "md": "200:5cece507fd1e",
+    "snapshot": "200:eb282a2aed5a"
+   },
+   "ni-e470-local-night": {
+    "md": "200:79234b5db3e1",
+    "snapshot": "200:6dca104eeb49"
+   },
+   "ni-el_paso-None-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-None-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-el_paso-arterial-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-arterial-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-el_paso-collector-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-collector-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-el_paso-local-day": {
+    "md": "200:433ba0ea7c1e",
+    "snapshot": "200:b5fac9dde54d"
+   },
+   "ni-el_paso-local-night": {
+    "md": "200:ddde89c9a236",
+    "snapshot": "200:e79e59a77dee"
+   },
+   "ni-englewood-None-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:150ac0b29ad6"
+   },
+   "ni-englewood-None-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:1f4c20a68c7c"
+   },
+   "ni-englewood-arterial-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:d8dd497ff5d8"
+   },
+   "ni-englewood-arterial-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:50e17291ad02"
+   },
+   "ni-englewood-collector-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:d8dd497ff5d8"
+   },
+   "ni-englewood-collector-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:50e17291ad02"
+   },
+   "ni-englewood-local-day": {
+    "md": "200:f080162ee868",
+    "snapshot": "200:150ac0b29ad6"
+   },
+   "ni-englewood-local-night": {
+    "md": "200:82e3fd0a95d6",
+    "snapshot": "200:1f4c20a68c7c"
+   },
+   "ni-greeley-None-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:e59f2eef573b"
+   },
+   "ni-greeley-None-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:d10e0c17f5a5"
+   },
+   "ni-greeley-arterial-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:7060a80f10fd"
+   },
+   "ni-greeley-arterial-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:394da5f74cef"
+   },
+   "ni-greeley-collector-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:7060a80f10fd"
+   },
+   "ni-greeley-collector-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:394da5f74cef"
+   },
+   "ni-greeley-local-day": {
+    "md": "200:98ac56a34755",
+    "snapshot": "200:e59f2eef573b"
+   },
+   "ni-greeley-local-night": {
+    "md": "200:34c82114b2f5",
+    "snapshot": "200:d10e0c17f5a5"
+   },
+   "ni-lakewood-None-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:1149e7180d0e"
+   },
+   "ni-lakewood-None-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:db88171ade37"
+   },
+   "ni-lakewood-arterial-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:d161126abe91"
+   },
+   "ni-lakewood-arterial-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:24ae69669b03"
+   },
+   "ni-lakewood-collector-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:1149e7180d0e"
+   },
+   "ni-lakewood-collector-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:db88171ade37"
+   },
+   "ni-lakewood-local-day": {
+    "md": "200:0cd687e3e18f",
+    "snapshot": "200:1149e7180d0e"
+   },
+   "ni-lakewood-local-night": {
+    "md": "200:fe64f77bb994",
+    "snapshot": "200:db88171ade37"
+   },
+   "ni-littleton-None-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-None-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-littleton-arterial-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-arterial-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-littleton-collector-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-collector-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-littleton-local-day": {
+    "md": "200:e4ab70c843a4",
+    "snapshot": "200:dfd1224c42ae"
+   },
+   "ni-littleton-local-night": {
+    "md": "200:f00eaf9c0924",
+    "snapshot": "200:4edac9fd36ff"
+   },
+   "ni-loveland-None-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-None-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-loveland-arterial-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-arterial-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-loveland-collector-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-collector-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-loveland-local-day": {
+    "md": "200:c8716de224fe",
+    "snapshot": "200:adf29abc8402"
+   },
+   "ni-loveland-local-night": {
+    "md": "200:785b629206ec",
+    "snapshot": "200:c345a4d06507"
+   },
+   "ni-parker-None-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-None-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-parker-arterial-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-arterial-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-parker-collector-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-collector-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-parker-local-day": {
+    "md": "200:1c837083b6ae",
+    "snapshot": "200:d41f0a950379"
+   },
+   "ni-parker-local-night": {
+    "md": "200:7a84149ad0d9",
+    "snapshot": "200:32de7be3fcea"
+   },
+   "ni-thornton-None-day": {
+    "md": "200:810f5049ce5e",
+    "snapshot": "200:a1408399b870"
+   },
+   "ni-thornton-None-night": {
+    "md": "200:63bc5e06faff",
+    "snapshot": "200:b2800d50e34e"
+   },
+   "ni-thornton-arterial-day": {
+    "md": "200:810f5049ce5e",
+    "snapshot": "200:a1408399b870"
+   },
+   "ni-thornton-arterial-night": {
+    "md": "200:63bc5e06faff",
+    "snapshot": "200:b2800d50e34e"
+   },
+   "ni-thornton-collector-day": {
+    "md": "200:810f5049ce5e",
+    "snapshot": "200:a1408399b870"
+   },
+   "ni-thornton-collector-night": {
+    "md": "200:63bc5e06faff",
+    "snapshot": "200:b2800d50e34e"
+   },
+   "ni-thornton-local-day": {
+    "md": "200:810f5049ce5e",
+    "snapshot": "200:a1408399b870"
+   },
+   "ni-thornton-local-night": {
+    "md": "200:63bc5e06faff",
+    "snapshot": "200:b2800d50e34e"
+   },
+   "ni-westminster-None-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-None-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "ni-westminster-arterial-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-arterial-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "ni-westminster-collector-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-collector-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "ni-westminster-local-day": {
+    "md": "200:e87d69d84eb6",
+    "snapshot": "200:891ec222f9b8"
+   },
+   "ni-westminster-local-night": {
+    "md": "200:e8cc1c6949ad",
+    "snapshot": "200:bcdb95df1133"
+   },
+   "shoulder-None-None-day": {
+    "md": "200:775c90c7a9f2",
+    "snapshot": "200:52cd404a5b0c"
+   },
+   "shoulder-None-None-night": {
+    "md": "200:0d86161f9830",
+    "snapshot": "200:c7b427043fab"
+   },
+   "shoulder-castle_rock-None-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-None-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-castle_rock-arterial-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-arterial-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-castle_rock-collector-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-collector-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-castle_rock-local-day": {
+    "md": "200:a5b1d9298518",
+    "snapshot": "200:2704e9fbd28f"
+   },
+   "shoulder-castle_rock-local-night": {
+    "md": "200:97afc0aac32d",
+    "snapshot": "200:c783f408c2c5"
+   },
+   "shoulder-cdot-None-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-None-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-cdot-arterial-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-arterial-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-cdot-collector-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-collector-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-cdot-local-day": {
+    "md": "200:0578cc448aeb",
+    "snapshot": "200:11cf9c5915ea"
+   },
+   "shoulder-cdot-local-night": {
+    "md": "200:53304b931f8a",
+    "snapshot": "200:48f3f3c5e4fd"
+   },
+   "shoulder-centennial-None-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-None-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-centennial-arterial-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-arterial-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-centennial-collector-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-collector-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-centennial-local-day": {
+    "md": "200:312b397fed10",
+    "snapshot": "200:878f2a403f80"
+   },
+   "shoulder-centennial-local-night": {
+    "md": "200:26c9c94899cf",
+    "snapshot": "200:a3ff82702a1a"
+   },
+   "shoulder-denver-None-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-None-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-denver-arterial-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-arterial-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-denver-collector-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-collector-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-denver-local-day": {
+    "md": "200:6c49806f6930",
+    "snapshot": "200:968bb0e93e59"
+   },
+   "shoulder-denver-local-night": {
+    "md": "200:bd5b2cc1c969",
+    "snapshot": "200:55be822ddc31"
+   },
+   "shoulder-e470-None-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-None-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-e470-arterial-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-arterial-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-e470-collector-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-collector-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-e470-local-day": {
+    "md": "200:0e8e696731a4",
+    "snapshot": "200:01f16e28e2a1"
+   },
+   "shoulder-e470-local-night": {
+    "md": "200:fa6881e0435b",
+    "snapshot": "200:fbac8e2811cb"
+   },
+   "shoulder-el_paso-None-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-None-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-el_paso-arterial-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-arterial-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-el_paso-collector-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-collector-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-el_paso-local-day": {
+    "md": "200:265fb4ce1429",
+    "snapshot": "200:8f67f4786ad5"
+   },
+   "shoulder-el_paso-local-night": {
+    "md": "200:e5ad72dfd4d0",
+    "snapshot": "200:451f8eb563a4"
+   },
+   "shoulder-englewood-None-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-None-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-englewood-arterial-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-arterial-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-englewood-collector-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-collector-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-englewood-local-day": {
+    "md": "200:076486741376",
+    "snapshot": "200:3267aaa97a99"
+   },
+   "shoulder-englewood-local-night": {
+    "md": "200:76703fd2db2d",
+    "snapshot": "200:5acf874ccc17"
+   },
+   "shoulder-greeley-None-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-None-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-greeley-arterial-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-arterial-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-greeley-collector-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-collector-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-greeley-local-day": {
+    "md": "200:458d7f63601c",
+    "snapshot": "200:03beb2d8d8cc"
+   },
+   "shoulder-greeley-local-night": {
+    "md": "200:6842a9c4b4f2",
+    "snapshot": "200:80a18772a8c6"
+   },
+   "shoulder-lakewood-None-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-None-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-lakewood-arterial-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-arterial-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-lakewood-collector-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-collector-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-lakewood-local-day": {
+    "md": "200:3c332aa861af",
+    "snapshot": "200:a447993c7604"
+   },
+   "shoulder-lakewood-local-night": {
+    "md": "200:213339e7598c",
+    "snapshot": "200:7abfcfbc92b5"
+   },
+   "shoulder-littleton-None-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-None-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-littleton-arterial-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-arterial-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-littleton-collector-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-collector-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-littleton-local-day": {
+    "md": "200:4f7e910807c7",
+    "snapshot": "200:5fe53a406b43"
+   },
+   "shoulder-littleton-local-night": {
+    "md": "200:fbefb19f054e",
+    "snapshot": "200:0090625d1924"
+   },
+   "shoulder-loveland-None-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-None-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-loveland-arterial-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-arterial-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-loveland-collector-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-collector-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-loveland-local-day": {
+    "md": "200:64060b5e618b",
+    "snapshot": "200:37b64294a880"
+   },
+   "shoulder-loveland-local-night": {
+    "md": "200:932f62d22fdb",
+    "snapshot": "200:d6d4a9759b5f"
+   },
+   "shoulder-parker-None-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-None-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-parker-arterial-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-arterial-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-parker-collector-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-collector-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-parker-local-day": {
+    "md": "200:9921de6c2fb3",
+    "snapshot": "200:6d0e8852ff42"
+   },
+   "shoulder-parker-local-night": {
+    "md": "200:acf0dbf01b52",
+    "snapshot": "200:e73e706dcf42"
+   },
+   "shoulder-thornton-None-day": {
+    "md": "200:b42f4d29a808",
+    "snapshot": "200:7081299c3ed5"
+   },
+   "shoulder-thornton-None-night": {
+    "md": "200:64243c3a7cd0",
+    "snapshot": "200:ca00e2717dff"
+   },
+   "shoulder-thornton-arterial-day": {
+    "md": "200:b42f4d29a808",
+    "snapshot": "200:7081299c3ed5"
+   },
+   "shoulder-thornton-arterial-night": {
+    "md": "200:64243c3a7cd0",
+    "snapshot": "200:ca00e2717dff"
+   },
+   "shoulder-thornton-collector-day": {
+    "md": "200:b42f4d29a808",
+    "snapshot": "200:7081299c3ed5"
+   },
+   "shoulder-thornton-collector-night": {
+    "md": "200:64243c3a7cd0",
+    "snapshot": "200:ca00e2717dff"
+   },
+   "shoulder-thornton-local-day": {
+    "md": "200:b42f4d29a808",
+    "snapshot": "200:7081299c3ed5"
+   },
+   "shoulder-thornton-local-night": {
+    "md": "200:64243c3a7cd0",
+    "snapshot": "200:ca00e2717dff"
+   },
+   "shoulder-westminster-None-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-None-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   },
+   "shoulder-westminster-arterial-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-arterial-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   },
+   "shoulder-westminster-collector-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-collector-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   },
+   "shoulder-westminster-local-day": {
+    "md": "200:7f936e920427",
+    "snapshot": "200:ce2c222c46d0"
+   },
+   "shoulder-westminster-local-night": {
+    "md": "200:5f6bb06b8cb9",
+    "snapshot": "200:a87fcbf1abcc"
+   }
+  }
+ },
+ "identical": 282,
+ "non_200": [],
+ "note": "hashes are status:sha256[:12] of /render/markdown and /render/replication-snapshot (dates and GIT_SHA masked); every body answered 200 on both trees"
+}

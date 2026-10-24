@@ -866,6 +866,17 @@ def annotate_count_effects(
     return out
 
 
+def delta_row_name(row: AggregatedDeviceRow) -> str:
+    """#381: the name a delta-only row (``display_override`` set) is listed
+    under.  A device with no pay item (``device_type`` None) carries
+    "(jurisdiction-required)".  The one producer for the device XLSX and
+    quote "Device type" column and the crew sheet's equipment list."""
+    assert row.display_override is not None
+    if row.device_type is None:
+        return f"{row.display_override} (jurisdiction-required)"
+    return row.display_override
+
+
 def aggregate_device_rows_with_deltas(
     placements: list,
     applied_deltas: list[dict[str, Any]] | None,

@@ -21,7 +21,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 from src.rules.device_aggregation import AggregatedDeviceRow
 from src.rules.devices import AFAD_NAME, DEVICE_CATALOG, DeviceType, cone_display_name, is_afad
-from src.rules.jurisdiction import aggregate_device_rows_with_deltas
+from src.rules.jurisdiction import aggregate_device_rows_with_deltas, delta_row_name
 from src.rules.sign_codes import display_code, substitute_sign_description
 from src.rules.validators import (
     DevicePlacement,
@@ -326,7 +326,7 @@ def _equipment_line_for(
         # the sheet renders "—").
         return EquipmentLine(
             item_number=item_number,
-            device_type=f"{row.display_override} (jurisdiction-required)",
+            device_type=delta_row_name(row),
             label="",
             description=row.display_override,
             qty=qty,

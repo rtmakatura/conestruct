@@ -19,7 +19,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
 from src.rules.devices import AFAD_NAME, DEVICE_CATALOG, DeviceType, cone_display_name, is_afad
-from src.rules.jurisdiction import aggregate_device_rows_with_deltas
+from src.rules.jurisdiction import aggregate_device_rows_with_deltas, delta_row_name
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.validators import (
     SPEED_GUESSED_CLAUSE,
@@ -162,7 +162,7 @@ def _row_for(
         # Unmapped device id: honest row, no fabricated pay item.
         return (
             item_number,
-            f"{row.display_override} (jurisdiction-required)",
+            delta_row_name(row),
             row.display_override,
             "—",
             "EACH",

@@ -1,0 +1,1418 @@
+{
+ "flagger-None-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-None-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-castle_rock-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-cdot-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-centennial-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-denver-None-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-denver-None-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-denver-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-denver-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-denver-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-denver-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-denver-local-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-denver-local-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-e470-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-e470-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-e470-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-e470-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-e470-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-e470-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-e470-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-e470-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-el_paso-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-englewood-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-englewood-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-englewood-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-englewood-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-englewood-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-englewood-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-englewood-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-englewood-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-greeley-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-greeley-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-greeley-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-greeley-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-greeley-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-greeley-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-greeley-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-greeley-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-lakewood-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-lakewood-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-lakewood-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-lakewood-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "flagger-lakewood-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-lakewood-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-lakewood-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-lakewood-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-littleton-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-loveland-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-parker-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-thornton-None-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-thornton-None-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-thornton-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-thornton-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-thornton-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-thornton-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-thornton-local-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-thornton-local-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "flagger-westminster-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-westminster-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-westminster-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-westminster-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-westminster-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-westminster-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-westminster-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "flagger-westminster-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-None-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-None-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-castle_rock-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-cdot-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-centennial-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-denver-None-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-denver-None-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-denver-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-denver-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-denver-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-denver-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-denver-local-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-denver-local-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-e470-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-e470-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-e470-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-e470-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-e470-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-e470-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-e470-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-e470-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-el_paso-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-englewood-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-englewood-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-englewood-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-englewood-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-englewood-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-englewood-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-englewood-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-englewood-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-greeley-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-greeley-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-greeley-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-greeley-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-greeley-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-greeley-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-greeley-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-greeley-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-lakewood-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-lakewood-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-lakewood-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-lakewood-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": []
+ },
+ "ni-lakewood-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-lakewood-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-lakewood-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-lakewood-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-littleton-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-loveland-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-parker-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-thornton-None-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-thornton-None-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-thornton-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-thornton-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-thornton-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-thornton-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-thornton-local-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-thornton-local-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "ni-westminster-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-westminster-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-westminster-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-westminster-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-westminster-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-westminster-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-westminster-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "ni-westminster-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-None-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-None-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-castle_rock-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-cdot-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-centennial-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-denver-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-e470-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-el_paso-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-englewood-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-greeley-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-lakewood-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-littleton-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-loveland-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-parker-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-thornton-None-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-thornton-None-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-thornton-arterial-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-thornton-arterial-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-thornton-collector-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-thornton-collector-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-thornton-local-day": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-thornton-local-night": {
+  "any_fired_count_add": true,
+  "crew_changes": [
+   "Advance Warning Signs"
+  ]
+ },
+ "shoulder-westminster-None-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-westminster-None-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-westminster-arterial-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-westminster-arterial-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-westminster-collector-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-westminster-collector-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-westminster-local-day": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ },
+ "shoulder-westminster-local-night": {
+  "any_fired_count_add": false,
+  "crew_changes": []
+ }
+}
