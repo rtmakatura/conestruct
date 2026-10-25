@@ -1,0 +1,1035 @@
+{
+ "360": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()"
+   ],
+   "pageErrors": [],
+   "httpErrors": {
+    "400 www.conestruct.com/api/render/audit": 2
+   },
+   "roadBearing": [
+    200
+   ]
+  },
+  "head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 31,
+    "y": 183,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 167,
+    "w": 330,
+    "h": 61
+   },
+   "scrollWidth": 360,
+   "innerWidth": 360
+  },
+  "nav": {
+   "navWidth": 360,
+   "borderedCells": [],
+   "wordmark": {
+    "text": "conestruct.",
+    "borderRight": "0px",
+    "w": 119
+   }
+  },
+  "located_head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 31,
+    "y": 183,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 167,
+    "w": 330,
+    "h": 171
+   },
+   "scrollWidth": 360,
+   "innerWidth": 360
+  },
+  "chipUnpressed": {
+   "pressed": "false",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.59,
+   "chipW": 298,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "hidden",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(44, 62, 83)",
+   "vrect": [
+    31,
+    358.4375,
+    298,
+    63.25
+   ]
+  },
+  "chipPressed": {
+   "pressed": "true",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.59,
+   "chipW": 298,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "visible",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(52, 169, 232)",
+   "vrect": [
+    31,
+    358.4375,
+    298,
+    63.25
+   ]
+  },
+  "chipCentreDelta": 0,
+  "settleChips": {
+   "waitedMs": 2113,
+   "inflightAtShot": 0
+  },
+  "hoverPressed": "rgb(52, 169, 232)",
+  "hoverUnpressed": {
+   "hovered": "rgb(41, 64, 86)"
+  },
+  "restUnpressed": "rgb(44, 62, 83)",
+  "what_head": {
+   "stepText": "STEP 2 OF 4",
+   "step": {
+    "x": 31,
+    "y": 406,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 390,
+    "w": 330,
+    "h": 76
+   },
+   "scrollWidth": 360,
+   "innerWidth": 360
+  },
+  "segBefore": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "true",
+    "labelTextCentreX": 74.49,
+    "buttonCentreX": 74.5,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     31,
+     368.1875,
+     149,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "false",
+    "labelTextCentreX": 75,
+    "buttonCentreX": 74.5,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     180,
+     368.1875,
+     149,
+     44
+    ]
+   }
+  },
+  "segAfter": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "false",
+    "labelTextCentreX": 74.49,
+    "buttonCentreX": 74.5,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     31,
+     368.1875,
+     149,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "true",
+    "labelTextCentreX": 75,
+    "buttonCentreX": 74.5,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     180,
+     368.1875,
+     149,
+     44
+    ]
+   }
+  },
+  "segCentreDelta": {
+   "Night": 0,
+   "Daytime": 0
+  },
+  "selects": [
+   {
+    "rect": [
+     31,
+     368,
+     298,
+     44
+    ],
+    "label": "what-speed",
+    "value": "30 mph",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     184,
+     483,
+     145,
+     44
+    ],
+    "label": "Lane width",
+    "value": "12 ft",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     31,
+     598,
+     298,
+     44
+    ],
+    "label": "what-road-type",
+    "value": "Urban street",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     31,
+     862,
+     298,
+     44
+    ],
+    "label": "pd-work-type",
+    "value": "Utility cut",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   }
+  ]
+ },
+ "390": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()"
+   ],
+   "pageErrors": [],
+   "httpErrors": {
+    "400 www.conestruct.com/api/render/audit": 2
+   },
+   "roadBearing": [
+    200
+   ]
+  },
+  "head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 31,
+    "y": 183,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 167,
+    "w": 360,
+    "h": 61
+   },
+   "scrollWidth": 390,
+   "innerWidth": 390
+  },
+  "nav": {
+   "navWidth": 390,
+   "borderedCells": [],
+   "wordmark": {
+    "text": "conestruct.",
+    "borderRight": "0px",
+    "w": 119
+   }
+  },
+  "located_head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 31,
+    "y": 183,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 167,
+    "w": 360,
+    "h": 155
+   },
+   "scrollWidth": 390,
+   "innerWidth": 390
+  },
+  "chipUnpressed": {
+   "pressed": "false",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.59,
+   "chipW": 328,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "hidden",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(44, 62, 83)",
+   "vrect": [
+    31,
+    390.125,
+    328,
+    63.25
+   ]
+  },
+  "chipPressed": {
+   "pressed": "true",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.59,
+   "chipW": 328,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "visible",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(52, 169, 232)",
+   "vrect": [
+    31,
+    336.125,
+    328,
+    63.25
+   ]
+  },
+  "chipCentreDelta": 0,
+  "settleChips": {
+   "waitedMs": 2027,
+   "inflightAtShot": 0
+  },
+  "hoverPressed": "rgb(52, 169, 232)",
+  "hoverUnpressed": {
+   "hovered": "rgb(41, 64, 86)"
+  },
+  "restUnpressed": "rgb(44, 62, 83)",
+  "what_head": {
+   "stepText": "STEP 2 OF 4",
+   "step": {
+    "x": 31,
+    "y": 370,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 354,
+    "w": 360,
+    "h": 61
+   },
+   "scrollWidth": 390,
+   "innerWidth": 390
+  },
+  "segBefore": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "true",
+    "labelTextCentreX": 81.99,
+    "buttonCentreX": 82,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     31,
+     399.625,
+     164,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "false",
+    "labelTextCentreX": 82.5,
+    "buttonCentreX": 82,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     195,
+     399.625,
+     164,
+     44
+    ]
+   }
+  },
+  "segAfter": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "false",
+    "labelTextCentreX": 81.99,
+    "buttonCentreX": 82,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     31,
+     399.625,
+     164,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "true",
+    "labelTextCentreX": 82.5,
+    "buttonCentreX": 82,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     195,
+     399.625,
+     164,
+     44
+    ]
+   }
+  },
+  "segCentreDelta": {
+   "Night": 0,
+   "Daytime": 0
+  },
+  "selects": [
+   {
+    "rect": [
+     31,
+     400,
+     328,
+     44
+    ],
+    "label": "what-speed",
+    "value": "30 mph",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     199,
+     515,
+     160,
+     44
+    ],
+    "label": "Lane width",
+    "value": "12 ft",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     31,
+     630,
+     328,
+     44
+    ],
+    "label": "what-road-type",
+    "value": "Urban street",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     31,
+     894,
+     328,
+     44
+    ],
+    "label": "pd-work-type",
+    "value": "Utility cut",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   }
+  ]
+ },
+ "1440": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()"
+   ],
+   "pageErrors": [],
+   "httpErrors": {
+    "400 www.conestruct.com/api/render/audit": 2
+   },
+   "roadBearing": [
+    200
+   ]
+  },
+  "head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 297,
+    "y": 170,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 281,
+    "y": 154,
+    "w": 878,
+    "h": 45
+   },
+   "scrollWidth": 1440,
+   "innerWidth": 1440
+  },
+  "nav": {
+   "navWidth": 1440,
+   "borderedCells": [
+    {
+     "tag": "A",
+     "text": "conestruct.",
+     "x": 0,
+     "w": 120,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    },
+    {
+     "tag": "SPAN",
+     "text": "DEMO\n/\nMUTCD PLAN GENERATOR",
+     "x": 120,
+     "w": 247,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    },
+    {
+     "tag": "SPAN",
+     "text": "MUTCD 2023 · CDOT",
+     "x": 1270,
+     "w": 170,
+     "borderRight": "0px",
+     "borderLeft": "1px"
+    }
+   ],
+   "wordmark": {
+    "text": "conestruct.",
+    "borderRight": "1px",
+    "w": 120
+   }
+  },
+  "located_head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 297,
+    "y": 170,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 281,
+    "y": 154,
+    "w": 878,
+    "h": 61
+   },
+   "scrollWidth": 1440,
+   "innerWidth": 1440
+  },
+  "chipUnpressed": {
+   "pressed": "false",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.59,
+   "chipW": 275.34,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "hidden",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(44, 62, 83)",
+   "vrect": [
+    582.328125,
+    418.0625,
+    275.34375,
+    63.25
+   ]
+  },
+  "chipPressed": {
+   "pressed": "true",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.59,
+   "chipW": 275.34,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "visible",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(52, 169, 232)",
+   "vrect": [
+    582.328125,
+    418.0625,
+    275.34375,
+    63.25
+   ]
+  },
+  "chipCentreDelta": 0,
+  "settleChips": {
+   "waitedMs": 2047,
+   "inflightAtShot": 0
+  },
+  "hoverPressed": "rgb(52, 169, 232)",
+  "hoverUnpressed": {
+   "hovered": "rgb(41, 64, 86)"
+  },
+  "restUnpressed": "rgb(44, 62, 83)",
+  "what_head": {
+   "stepText": "STEP 2 OF 4",
+   "step": {
+    "x": 297,
+    "y": 256,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 281,
+    "y": 240,
+    "w": 878,
+    "h": 45
+   },
+   "scrollWidth": 1440,
+   "innerWidth": 1440
+  },
+  "segBefore": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "true",
+    "labelTextCentreX": 65.74,
+    "buttonCentreX": 65.75,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     880,
+     459.5,
+     131.5,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "false",
+    "labelTextCentreX": 66.25,
+    "buttonCentreX": 65.75,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     1011.5,
+     459.5,
+     131.5,
+     44
+    ]
+   }
+  },
+  "segAfter": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "false",
+    "labelTextCentreX": 65.74,
+    "buttonCentreX": 65.75,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     880,
+     459.5,
+     131.5,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "true",
+    "labelTextCentreX": 66.25,
+    "buttonCentreX": 65.75,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     1011.5,
+     459.5,
+     131.5,
+     44
+    ]
+   }
+  },
+  "segCentreDelta": {
+   "Night": 0,
+   "Daytime": 0
+  },
+  "selects": [
+   {
+    "rect": [
+     441,
+     395,
+     263,
+     44
+    ],
+    "label": "what-speed",
+    "value": "30 mph",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     577,
+     460,
+     128,
+     44
+    ],
+    "label": "Lane width",
+    "value": "12 ft",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     441,
+     525,
+     263,
+     44
+    ],
+    "label": "what-road-type",
+    "value": "Urban street",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     880,
+     395,
+     263,
+     44
+    ],
+    "label": "pd-work-type",
+    "value": "Utility cut",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   }
+  ]
+ },
+ "390-webkit": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()"
+   ],
+   "pageErrors": [],
+   "httpErrors": {
+    "400 www.conestruct.com/api/render/audit": 2
+   },
+   "roadBearing": [
+    200
+   ]
+  },
+  "head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 31,
+    "y": 183,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 167,
+    "w": 360,
+    "h": 61
+   },
+   "scrollWidth": 390,
+   "innerWidth": 390
+  },
+  "nav": {
+   "navWidth": 390,
+   "borderedCells": [],
+   "wordmark": {
+    "text": "conestruct.",
+    "borderRight": "0px",
+    "w": 119
+   }
+  },
+  "located_head": {
+   "stepText": "STEP 1 OF 4",
+   "step": {
+    "x": 31,
+    "y": 183,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 167,
+    "w": 360,
+    "h": 155
+   },
+   "scrollWidth": 390,
+   "innerWidth": 390
+  },
+  "chipUnpressed": {
+   "pressed": "false",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.58,
+   "chipW": 328,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "hidden",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(44, 62, 83)",
+   "vrect": [
+    31,
+    435.8125,
+    328,
+    63.25
+   ]
+  },
+  "chipPressed": {
+   "pressed": "true",
+   "labelTextLeftX": 14,
+   "labelTextCentreX": 74.58,
+   "chipW": 328,
+   "checkContent": "\" ✓\" / \"\"",
+   "checkVisibility": "visible",
+   "checkColor": "rgb(52, 169, 232)",
+   "borderColor": "rgb(52, 169, 232)",
+   "vrect": [
+    31,
+    336.3125,
+    328,
+    63.25
+   ]
+  },
+  "chipCentreDelta": 0,
+  "settleChips": {
+   "waitedMs": 2040,
+   "inflightAtShot": 0
+  },
+  "hoverPressed": "rgb(52, 169, 232)",
+  "hoverUnpressed": {
+   "hovered": "rgb(41, 64, 86)"
+  },
+  "restUnpressed": "rgb(44, 62, 83)",
+  "what_head": {
+   "stepText": "STEP 2 OF 4",
+   "step": {
+    "x": 31,
+    "y": 372,
+    "w": 79,
+    "h": 12
+   },
+   "stepLineHeight": 12,
+   "stepLinesByHeight": 1,
+   "stepLinesByRects": 1,
+   "head": {
+    "x": 15,
+    "y": 355,
+    "w": 360,
+    "h": 61
+   },
+   "scrollWidth": 390,
+   "innerWidth": 390
+  },
+  "segBefore": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "true",
+    "labelTextCentreX": 82,
+    "buttonCentreX": 82,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     31,
+     399.15625,
+     164,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "false",
+    "labelTextCentreX": 82.5,
+    "buttonCentreX": 82,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     195,
+     399.15625,
+     164,
+     44
+    ]
+   }
+  },
+  "segAfter": {
+   "Daytime": {
+    "label": "Daytime",
+    "pressed": "false",
+    "labelTextCentreX": 82,
+    "buttonCentreX": 82,
+    "checkContent": "none",
+    "checkPosition": "static",
+    "checkColor": "rgb(200, 209, 221)",
+    "vrect": [
+     31,
+     399.15625,
+     164,
+     44
+    ]
+   },
+   "Night": {
+    "label": "Night",
+    "pressed": "true",
+    "labelTextCentreX": 82.5,
+    "buttonCentreX": 82,
+    "checkContent": "\"✓ \" / \"\"",
+    "checkPosition": "absolute",
+    "checkColor": "rgb(52, 169, 232)",
+    "vrect": [
+     195,
+     399.15625,
+     164,
+     44
+    ]
+   }
+  },
+  "segCentreDelta": {
+   "Night": 0,
+   "Daytime": 0
+  },
+  "selects": [
+   {
+    "rect": [
+     31,
+     399,
+     328,
+     44
+    ],
+    "label": "what-speed",
+    "value": "30 mph",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     199,
+     514,
+     160,
+     44
+    ],
+    "label": "Lane width",
+    "value": "12 ft",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     31,
+     629,
+     328,
+     44
+    ],
+    "label": "what-road-type",
+    "value": "Urban street",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   },
+   {
+    "rect": [
+     31,
+     893,
+     328,
+     44
+    ],
+    "label": "pd-work-type",
+    "value": "Utility cut",
+    "color": "rgb(234, 240, 247)",
+    "bg": "rgb(22, 35, 47)",
+    "colorScheme": "dark"
+   }
+  ]
+ }
+}

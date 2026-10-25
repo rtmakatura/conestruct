@@ -1,0 +1,938 @@
+{
+ "360": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "roadBearing": [
+    200
+   ]
+  },
+  "settle": {
+   "detecting": {
+    "waitedMs": 6313,
+    "inflightAtShot": 0
+   },
+   "roads": {
+    "waitedMs": 2040,
+    "inflightAtShot": 0
+   }
+  },
+  "detectingStillShown": true,
+  "detecting": {
+   "viewport": [
+    360,
+    780
+   ],
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 360,
+    "h": 780,
+    "bottom": 780
+   },
+   "dialogGap": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+   },
+   "header": {
+    "x": 1,
+    "y": 1,
+    "w": 358,
+    "h": 109.5,
+    "bottom": 110.5
+   },
+   "footer": {
+    "x": 1,
+    "y": 668,
+    "w": 358,
+    "h": 111,
+    "bottom": 779
+   },
+   "footerText": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 206.34,
+     "y": 723,
+     "w": 128.66,
+     "h": 44,
+     "bottom": 767
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 360,
+    "innerWidth": 360
+   }
+  },
+  "frameDetecting": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 352
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 195,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 468,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 351.5,
+     "y": 195,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 351.5,
+     "y": 468,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 108,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 216,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  },
+  "roads": {
+   "viewport": [
+    360,
+    780
+   ],
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 360,
+    "h": 780,
+    "bottom": 780
+   },
+   "dialogGap": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+   },
+   "header": {
+    "x": 1,
+    "y": 1,
+    "w": 358,
+    "h": 109.5,
+    "bottom": 110.5
+   },
+   "footer": {
+    "x": 1,
+    "y": 710,
+    "w": 358,
+    "h": 69,
+    "bottom": 779
+   },
+   "footerText": "Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 206.34,
+     "y": 723,
+     "w": 128.66,
+     "h": 44,
+     "bottom": 767
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 360,
+    "innerWidth": 360
+   }
+  },
+  "frameRoads": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 352
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 195,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 468,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 351.5,
+     "y": 195,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 351.5,
+     "y": 468,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 108,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 216,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  }
+ },
+ "390": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "roadBearing": [
+    200
+   ]
+  },
+  "settle": {
+   "detecting": {
+    "waitedMs": 7294,
+    "inflightAtShot": 0
+   },
+   "roads": {
+    "waitedMs": 2027,
+    "inflightAtShot": 0
+   }
+  },
+  "detectingStillShown": true,
+  "detecting": {
+   "viewport": [
+    390,
+    844
+   ],
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 390,
+    "h": 844,
+    "bottom": 844
+   },
+   "dialogGap": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+   },
+   "header": {
+    "x": 1,
+    "y": 1,
+    "w": 388,
+    "h": 91.5,
+    "bottom": 92.5
+   },
+   "footer": {
+    "x": 1,
+    "y": 732,
+    "w": 388,
+    "h": 111,
+    "bottom": 843
+   },
+   "footerText": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 236.34,
+     "y": 787,
+     "w": 128.66,
+     "h": 44,
+     "bottom": 831
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 390,
+    "innerWidth": 390
+   }
+  },
+  "frameDetecting": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 382
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 117,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 234,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  },
+  "roads": {
+   "viewport": [
+    390,
+    844
+   ],
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 390,
+    "h": 844,
+    "bottom": 844
+   },
+   "dialogGap": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+   },
+   "header": {
+    "x": 1,
+    "y": 1,
+    "w": 388,
+    "h": 91.5,
+    "bottom": 92.5
+   },
+   "footer": {
+    "x": 1,
+    "y": 774,
+    "w": 388,
+    "h": 69,
+    "bottom": 843
+   },
+   "footerText": "Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 236.34,
+     "y": 787,
+     "w": 128.66,
+     "h": 44,
+     "bottom": 831
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 390,
+    "innerWidth": 390
+   }
+  },
+  "frameRoads": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 382
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 117,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 234,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  }
+ },
+ "1440": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "roadBearing": [
+    200
+   ]
+  },
+  "settle": {
+   "detecting": {
+    "waitedMs": 8016,
+    "inflightAtShot": 0
+   },
+   "roads": {
+    "waitedMs": 2031,
+    "inflightAtShot": 0
+   }
+  },
+  "detectingStillShown": true,
+  "detecting": {
+   "viewport": [
+    1440,
+    900
+   ],
+   "dialog": {
+    "x": 80,
+    "y": 45,
+    "w": 1280,
+    "h": 810,
+    "bottom": 855
+   },
+   "dialogGap": {
+    "top": 45,
+    "bottom": 45,
+    "left": 80,
+    "right": 80
+   },
+   "header": {
+    "x": 81,
+    "y": 46,
+    "w": 1278,
+    "h": 91.5,
+    "bottom": 137.5
+   },
+   "footer": {
+    "x": 81,
+    "y": 793.5,
+    "w": 1278,
+    "h": 60.5,
+    "bottom": 854
+   },
+   "footerText": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 1206.34,
+     "y": 806.5,
+     "w": 128.66,
+     "h": 35.5,
+     "bottom": 842
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   }
+  },
+  "frameDetecting": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 1432
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 225,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 540,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "right",
+     "x": 1431.5,
+     "y": 225,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "right",
+     "x": 1431.5,
+     "y": 540,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "top",
+     "x": 432,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "top",
+     "x": 864,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": false
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  },
+  "roads": {
+   "viewport": [
+    1440,
+    900
+   ],
+   "dialog": {
+    "x": 80,
+    "y": 45,
+    "w": 1280,
+    "h": 810,
+    "bottom": 855
+   },
+   "dialogGap": {
+    "top": 45,
+    "bottom": 45,
+    "left": 80,
+    "right": 80
+   },
+   "header": {
+    "x": 81,
+    "y": 46,
+    "w": 1278,
+    "h": 91.5,
+    "bottom": 137.5
+   },
+   "footer": {
+    "x": 81,
+    "y": 793.5,
+    "w": 1278,
+    "h": 60.5,
+    "bottom": 854
+   },
+   "footerText": "Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 1206.34,
+     "y": 806.5,
+     "w": 128.66,
+     "h": 35.5,
+     "bottom": 842
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   }
+  },
+  "frameRoads": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 1432
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 225,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 540,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "right",
+     "x": 1431.5,
+     "y": 225,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "right",
+     "x": 1431.5,
+     "y": 540,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "top",
+     "x": 432,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": false
+    },
+    {
+     "side": "top",
+     "x": 864,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": false
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  }
+ },
+ "390-webkit": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: Could not resolve hostname"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "roadBearing": [
+    200
+   ]
+  },
+  "settle": {
+   "detecting": {
+    "waitedMs": 6860,
+    "inflightAtShot": 0
+   },
+   "roads": {
+    "waitedMs": 2028,
+    "inflightAtShot": 0
+   }
+  },
+  "detectingStillShown": true,
+  "detecting": {
+   "viewport": [
+    390,
+    844
+   ],
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 390,
+    "h": 844,
+    "bottom": 844
+   },
+   "dialogGap": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+   },
+   "header": {
+    "x": 1,
+    "y": 1,
+    "w": 388,
+    "h": 91.5,
+    "bottom": 92.5
+   },
+   "footer": {
+    "x": 1,
+    "y": 732,
+    "w": 388,
+    "h": 111,
+    "bottom": 843
+   },
+   "footerText": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 236.34,
+     "y": 787,
+     "w": 128.66,
+     "h": 44,
+     "bottom": 831
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 390,
+    "innerWidth": 390
+   }
+  },
+  "frameDetecting": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 382
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 117,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 234,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  },
+  "roads": {
+   "viewport": [
+    390,
+    844
+   ],
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 390,
+    "h": 844,
+    "bottom": 844
+   },
+   "dialogGap": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+   },
+   "header": {
+    "x": 1,
+    "y": 1,
+    "w": 388,
+    "h": 91.5,
+    "bottom": 92.5
+   },
+   "footer": {
+    "x": 1,
+    "y": 774,
+    "w": 388,
+    "h": 69,
+    "bottom": 843
+   },
+   "footerText": "Cancel Save & Close",
+   "save": {
+    "rect": {
+     "x": 236.34,
+     "y": 787,
+     "w": 128.66,
+     "h": 44,
+     "bottom": 831
+    },
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "docScroll": {
+    "scrollWidth": 390,
+    "innerWidth": 390
+   }
+  },
+  "frameRoads": {
+   "frame": true,
+   "frameRect": {
+    "x": 8,
+    "y": 8,
+    "right": 382
+   },
+   "zFrame": "60",
+   "zPicker": "65",
+   "probes": [
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "left",
+     "x": 8.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 211,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "right",
+     "x": 381.5,
+     "y": 506.4,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 117,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    },
+    {
+     "side": "top",
+     "x": 234,
+     "y": 8.5,
+     "frameOnTop": false,
+     "insideDialog": true
+    }
+   ],
+   "frameOnTopInsideDialog": 0
+  }
+ }
+}

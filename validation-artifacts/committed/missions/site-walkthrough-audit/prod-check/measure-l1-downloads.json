@@ -1,0 +1,177 @@
+{
+ "390": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 ()"
+   ],
+   "pageErrors": [],
+   "httpErrors": {
+    "400 www.conestruct.com/api/render/audit": 1
+   },
+   "roadBearing": [
+    200
+   ]
+  },
+  "fresh": {
+   "w20": [
+    "Set a location first: use Pick on map to find the site."
+   ],
+   "w7": [],
+   "w6": [],
+   "declinedStrip": [],
+   "stripRect": null,
+   "generateDisabled": true
+  },
+  "declined": {
+   "w20": [],
+   "w7": [
+    "Generation declined. The PLAN DECLINED notice says why."
+   ],
+   "w6": [
+    "not evaluated: the check didn't answer; the option shown stands"
+   ],
+   "declinedStrip": [
+    "PLAN DECLINED · DETECTION SAW A ONE-WAY STREET. CONFIRM TWO-WAY TRAFFIC IN THE ROAD SECTION TO PROCEED."
+   ],
+   "stripRect": {
+    "x": 51,
+    "y": 82,
+    "w": 309,
+    "h": 50,
+    "visible": true
+   },
+   "generateDisabled": true
+  }
+ },
+ "1440": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 ()"
+   ],
+   "pageErrors": [],
+   "httpErrors": {
+    "400 www.conestruct.com/api/render/audit": 1
+   },
+   "roadBearing": [
+    200
+   ]
+  },
+  "fresh": {
+   "w20": [
+    "Set a location first: use Pick on map to find the site."
+   ],
+   "w7": [],
+   "w6": [],
+   "declinedStrip": [],
+   "stripRect": null,
+   "generateDisabled": true
+  },
+  "declined": {
+   "w20": [],
+   "w7": [
+    "Generation declined. The PLAN DECLINED notice says why."
+   ],
+   "w6": [
+    "not evaluated: the check didn't answer; the option shown stands"
+   ],
+   "declinedStrip": [
+    "PLAN DECLINED · DETECTION SAW A ONE-WAY STREET. CONFIRM TWO-WAY TRAFFIC IN THE ROAD SECTION TO PROCEED."
+   ],
+   "stripRect": {
+    "x": 317,
+    "y": 97,
+    "w": 720,
+    "h": 33,
+    "visible": true
+   },
+   "generateDisabled": true
+  }
+ },
+ "downloads": {
+  "log": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "roadBearing": [
+    200
+   ]
+  },
+  "files": [
+   {
+    "i": 0,
+    "label": "↓ ALL (.ZIP)",
+    "status": 200,
+    "route": "/api/render/bundle",
+    "contentType": "application/zip",
+    "filename": "plan_mht_package.zip",
+    "bytes": 817354,
+    "ms": 6115
+   },
+   {
+    "i": 1,
+    "label": "Download PDF ↓",
+    "status": 200,
+    "route": "/api/render/pdf",
+    "contentType": "application/pdf",
+    "filename": "plan.pdf",
+    "bytes": 793347,
+    "ms": 3934
+   },
+   {
+    "i": 2,
+    "label": "Download XLSX ↓",
+    "status": 200,
+    "route": "/api/render/xlsx",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "filename": "plan.xlsx",
+    "bytes": 6789,
+    "ms": 595
+   },
+   {
+    "i": 3,
+    "label": "Download crew instructions PDF",
+    "status": 200,
+    "route": "/api/render/crew-pdf",
+    "contentType": "application/pdf",
+    "filename": "plan.crew.pdf",
+    "bytes": 7913,
+    "ms": 889
+   },
+   {
+    "i": 4,
+    "label": "Download crew instructions .md",
+    "status": 200,
+    "route": "/api/render/markdown",
+    "contentType": "text/markdown; charset=utf-8",
+    "filename": "plan.md",
+    "bytes": 6762,
+    "ms": 737
+   },
+   {
+    "i": 5,
+    "label": "Download PDF ↓",
+    "status": 200,
+    "route": "/api/render/audit-pdf",
+    "contentType": "application/pdf",
+    "filename": "plan.audit.pdf",
+    "bytes": 10209,
+    "ms": 566
+   }
+  ],
+  "generateMs": 2943,
+  "banner": "VERIFIED · 2 PLAN FLAGS"
+ }
+}
