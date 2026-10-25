@@ -1,0 +1,72 @@
+{
+ "healthz_sha": "0ea3e8aa5e95c4a4518af08fadf60d715717aa40",
+ "origin_main": "0ea3e8aa5e95c4a4518af08fadf60d715717aa40",
+ "rows": [
+  {
+   "check": "#385 #383 #380",
+   "case": "healthz sha == origin/main",
+   "pass": true,
+   "observed": "healthz 0ea3e8aa5e95c4a4518af08fadf60d715717aa40 / origin/main 0ea3e8aa5e95c4a4518af08fadf60d715717aa40"
+  },
+  {
+   "check": "#381",
+   "case": "Thornton flagger",
+   "pass": true,
+   "observed": "200; equipment lists '1× Advance Warning Signs (jurisdiction-required)': True; stipulation 6 quoted verbatim: True"
+  },
+  {
+   "check": "#381",
+   "case": "Thornton shoulder",
+   "pass": true,
+   "observed": "200; equipment lists '1× Advance Warning Signs (jurisdiction-required)': True; stipulation 6 quoted verbatim: True"
+  },
+  {
+   "check": "#381",
+   "case": "CDOT flagger (jurisdiction_key cdot)",
+   "pass": true,
+   "observed": "200; no jurisdiction-required row: True"
+  },
+  {
+   "check": "#381",
+   "case": "CDOT shoulder (jurisdiction_key cdot)",
+   "pass": true,
+   "observed": "200; no jurisdiction-required row: True"
+  },
+  {
+   "check": "#381",
+   "case": "flagger, no jurisdiction (CDOT default)",
+   "pass": true,
+   "observed": "200; no jurisdiction-required row: True"
+  },
+  {
+   "check": "#369",
+   "case": "broadway-sb laid_out 600x300",
+   "pass": true,
+   "observed": "200; content-type image/jpeg; first bytes FF D8 FF; 205714 bytes"
+  },
+  {
+   "check": "#367",
+   "case": "CDOT lane closure 65 mph, no WZ speed",
+   "pass": null,
+   "observed": "400 (lane_closure_divided is gated on the API, Rule 8): {\"detail\":\"This scenario type isn't available yet. Currently supported: flagger_lane_closure, near_intersection, shoulder.\"}"
+  },
+  {
+   "check": "#367",
+   "case": "CDOT lane closure 75 mph, no WZ speed",
+   "pass": null,
+   "observed": "400 (lane_closure_divided is gated on the API, Rule 8): {\"detail\":\"This scenario type isn't available yet. Currently supported: flagger_lane_closure, near_intersection, shoulder.\"}"
+  },
+  {
+   "check": "#367",
+   "case": "CDOT freeway shoulder 65 mph, no WZ speed (control)",
+   "pass": true,
+   "observed": "200; buffer_ft 645.0; source 'MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).'"
+  },
+  {
+   "check": "#367",
+   "case": "CDOT freeway shoulder 75 mph, no WZ speed (control)",
+   "pass": true,
+   "observed": "200; buffer_ft 820.0; source 'MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).'"
+  }
+ ]
+}
