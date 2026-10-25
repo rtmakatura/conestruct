@@ -12,10 +12,10 @@ One path still carries long labels on a shared row: signed-out saved mode uses `
 
 | ID | Width | Class | Finding | Source | Disposition |
 |---|---|---|---|---|---|
-| W1 | both | FILE | Work length shows "1,000 ft · typed" / "✓ yours" for the default, never typed (Rule 10) | `lib/scenarios/index.ts:126`; `lib/move-ledger.ts:182`; `components/bands/WhereBand.tsx:762-768` | #397 |
+| W1 | both | FILE | Work length shows "1,000 ft · typed" / "✓ yours" for the default, never typed (Rule 10) | `lib/scenarios/index.ts:126`; `lib/scenarios/move-ledger.ts:182`; `components/bands/WhereBand.tsx:762-768` | #397 |
 | W2 | both | FILE | Work type shows "✓ yours" on a default never chosen | `components/bands/PlanDetails.tsx:205-209` | #397 |
 | W3 | both | FILE | Lanes shows "⚠ yours" / "OSM · withdrawn · operator-set" untouched; the same road read 2/12 ft one visit, 4/10.5 ft the next | `lib/road-detection/detected-rows.ts:237-261` | #397 |
-| W4 | both | FILE | "◌ previous answer, refreshing…" stays up 40 s+ after Generate settles | `components/GeneratorShell.tsx:446-457`, `:1547` | #398 |
+| W4 | both | FILE | "◌ previous answer, refreshing…" stays up 40 s+ after Generate settles | `components/GeneratorShell.tsx:2249` (the cue), `:1547-1548` (its condition, `tiersRefreshing`) | #398 |
 | W5 | both | FILE | "Windows · ◌ loading" never ends after a declined plan | `components/ScheduleField.tsx:202-204` | #398 |
 | W6 | both | LIGHT | After a decline, "the option you picked stands" is said of a jurisdiction filled from the pin, in red | `components/bands/WhatBand.tsx:393` | L1 |
 | W7 | both | LIGHT | "Generation declined. See the notice below." — the notice is at the top of the page | `lib/scenarios/rail.ts:139` | L1 |
