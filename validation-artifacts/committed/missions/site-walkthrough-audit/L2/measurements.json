@@ -1,0 +1,2595 @@
+{
+ "method": "Local next dev of the worktree; Playwright Chromium and WebKit at DPR 2; /api/road-bearing stubbed with one two-way East Colfax Avenue candidate (Overpass unavailable 2026-10-25), everything else live. Pointer parked at the viewport's bottom-right corner before every measure and screenshot. Grounds are sampled from screenshot pixels 4 px inside the element's bottom-left corner (the rendered ground, not the computed style, since WebKit ignores the select's background); inks are computed styles (the check is var(--act) = rgb(52,169,232)). Contrast is WCAG 2.x relative luminance. Label centre x is the text node's client-rect centre minus the button/chip's left edge.",
+ "note": "Playwright WebKit is not a real iPhone; iOS Safari is unchecked.",
+ "before": {
+  "360": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "localhost:3412 net::ERR_ABORTED": 1,
+    "events.mapbox.com net::ERR_NAME_NOT_RESOLVED": 4,
+    "api.mapbox.com net::ERR_ABORTED": 48
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 68,
+     "h": 24
+    },
+    "stepLineHeight": 12,
+    "stepLines": 2,
+    "scrollWidth": 360,
+    "innerWidth": 360
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 183,
+     "w": 29,
+     "h": 36
+    },
+    "stepLineHeight": 12,
+    "stepLines": 3,
+    "scrollWidth": 360,
+    "innerWidth": 360
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 31,
+     "y": 76,
+     "w": 48,
+     "h": 24
+    },
+    "stepLineHeight": 12,
+    "stepLines": 2,
+    "scrollWidth": 360,
+    "innerWidth": 360
+   },
+   "nav_bordered_cells": [
+    {
+     "tag": "A",
+     "text": "conestruct.",
+     "x": 0,
+     "w": 120,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    }
+   ],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      298,
+      63
+     ],
+     "label": [
+      14,
+      270,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      298,
+      63
+     ],
+     "label": [
+      14,
+      270,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.59,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      298,
+      63
+     ],
+     "label": [
+      14,
+      270,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.4,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 99,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 49.66,
+       "buttonCentreX": 49.66
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 99,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 50.16,
+       "buttonCentreX": 49.66
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 99,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 50.16,
+       "buttonCentreX": 49.67
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 149,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 74.49,
+       "buttonCentreX": 74.5
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 149,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 75,
+       "buttonCentreX": 74.5
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     60
+    ],
+    "ratio": 5.61
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      31,
+      309,
+      298,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      184,
+      424,
+      145,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      539,
+      298,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      803,
+      298,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "sampled": "off-screen"
+    }
+   ]
+  },
+  "390": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "events.mapbox.com net::ERR_NAME_NOT_RESOLVED": 2,
+    "api.mapbox.com net::ERR_ABORTED": 31,
+    "localhost:3412 net::ERR_ABORTED": 2
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 77,
+     "h": 24
+    },
+    "stepLineHeight": 12,
+    "stepLines": 2,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 183,
+     "w": 29,
+     "h": 36
+    },
+    "stepLineHeight": 12,
+    "stepLines": 3,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 54,
+     "h": 24
+    },
+    "stepLineHeight": 12,
+    "stepLines": 2,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "nav_bordered_cells": [
+    {
+     "tag": "A",
+     "text": "conestruct.",
+     "x": 0,
+     "w": 120,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    }
+   ],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.59,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.4,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 54.66,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.67
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 164,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 81.99,
+       "buttonCentreX": 82
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 164,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 82.5,
+       "buttonCentreX": 82
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     60
+    ],
+    "ratio": 5.61
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      31,
+      294,
+      328,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      199,
+      409,
+      160,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      524,
+      328,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      788,
+      328,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    }
+   ]
+  },
+  "1440": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "events.mapbox.com net::ERR_NAME_NOT_RESOLVED": 4,
+    "api.mapbox.com net::ERR_ABORTED": 80,
+    "localhost:3412 net::ERR_ABORTED": 2
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 297,
+     "y": 170,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 297,
+     "y": 170,
+     "w": 72,
+     "h": 24
+    },
+    "stepLineHeight": 12,
+    "stepLines": 2,
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 297,
+     "y": 77,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   },
+   "nav_bordered_cells": [
+    {
+     "tag": "A",
+     "text": "conestruct.",
+     "x": 0,
+     "w": 120,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    },
+    {
+     "tag": "SPAN",
+     "text": "DEMO\n/\nMUTCD PLAN GENERATOR",
+     "x": 120,
+     "w": 247,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    },
+    {
+     "tag": "SPAN",
+     "text": "MUTCD 2023 \u00c2\u00b7 CDOT",
+     "x": 1270,
+     "w": 170,
+     "borderRight": "0px",
+     "borderLeft": "1px"
+    }
+   ],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      275,
+      63
+     ],
+     "label": [
+      14,
+      247,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      275,
+      63
+     ],
+     "label": [
+      14,
+      247,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.59,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      275,
+      63
+     ],
+     "label": [
+      14,
+      247,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.4,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 88,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 43.83,
+       "buttonCentreX": 43.83
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 88,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 44.34,
+       "buttonCentreX": 43.84
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 88,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 44.32,
+       "buttonCentreX": 43.83
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 132,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 65.74,
+       "buttonCentreX": 65.75
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 132,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 66.25,
+       "buttonCentreX": 65.75
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     60
+    ],
+    "ratio": 5.61
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    },
+    {
+     "option": "Daytime",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      441,
+      216,
+      263,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      577,
+      281,
+      128,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      441,
+      346,
+      263,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      880,
+      216,
+      263,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    }
+   ]
+  },
+  "390-webkit": {
+   "consoleErrors": [
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "events.mapbox.com Could not resolve hostname": 4,
+    "api.mapbox.com Load request cancelled": 39,
+    "localhost:3412 Load request cancelled": 2
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 77,
+     "h": 24
+    },
+    "stepLineHeight": 12,
+    "stepLines": 2,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 183,
+     "w": 29,
+     "h": 36
+    },
+    "stepLineHeight": 12,
+    "stepLines": 3,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 31,
+     "y": 78,
+     "w": 54,
+     "h": 24
+    },
+    "stepLineHeight": 12,
+    "stepLines": 2,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "nav_bordered_cells": [
+    {
+     "tag": "A",
+     "text": "conestruct.",
+     "x": 0,
+     "w": 120,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    }
+   ],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.58,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "none",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(234, 240, 247)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.39,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 54.66,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.66
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 164,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 82,
+       "buttonCentreX": 82
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 164,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 82.5,
+       "buttonCentreX": 82
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     61
+    ],
+    "ratio": 5.6
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      25,
+      48,
+      66
+     ],
+     "ratio": 5.18
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      31,
+      294,
+      328,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      244,
+      244,
+      244
+     ],
+     "inkOnRenderedGround": 1.04
+    },
+    {
+     "rect": [
+      199,
+      409,
+      160,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      244,
+      244,
+      244
+     ],
+     "inkOnRenderedGround": 1.04
+    },
+    {
+     "rect": [
+      31,
+      524,
+      328,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      244,
+      244,
+      244
+     ],
+     "inkOnRenderedGround": 1.04
+    },
+    {
+     "rect": [
+      31,
+      788,
+      328,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "normal",
+     "appearance": "auto",
+     "renderedGround": [
+      244,
+      244,
+      244
+     ],
+     "inkOnRenderedGround": 1.04
+    }
+   ]
+  }
+ },
+ "after": {
+  "360": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "localhost:3412 net::ERR_ABORTED": 1,
+    "events.mapbox.com net::ERR_NAME_NOT_RESOLVED": 2,
+    "api.mapbox.com net::ERR_ABORTED": 51
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 360,
+    "innerWidth": 360
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 183,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 360,
+    "innerWidth": 360
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 360,
+    "innerWidth": 360
+   },
+   "nav_bordered_cells": [],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      298,
+      63
+     ],
+     "label": [
+      14,
+      270,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      298,
+      63
+     ],
+     "label": [
+      14,
+      270,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.59,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      298,
+      63
+     ],
+     "label": [
+      14,
+      270,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.4,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 99,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 49.66,
+       "buttonCentreX": 49.66
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 99,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 50.16,
+       "buttonCentreX": 49.66
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 99,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 50.16,
+       "buttonCentreX": 49.67
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 149,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 74.49,
+       "buttonCentreX": 74.5
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 149,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 75,
+       "buttonCentreX": 74.5
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     60
+    ],
+    "ratio": 5.61
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      31,
+      326,
+      298,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      184,
+      441,
+      145,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      556,
+      298,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      820,
+      298,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "sampled": "off-screen"
+    }
+   ]
+  },
+  "390": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "events.mapbox.com net::ERR_NAME_NOT_RESOLVED": 4,
+    "api.mapbox.com net::ERR_ABORTED": 56,
+    "localhost:3412 net::ERR_ABORTED": 2
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 183,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "nav_bordered_cells": [],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.59,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.4,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 54.66,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 109,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.67
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 164,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 81.99,
+       "buttonCentreX": 82
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 164,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 82.5,
+       "buttonCentreX": 82
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     60
+    ],
+    "ratio": 5.61
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      31,
+      294,
+      328,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      199,
+      409,
+      160,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      524,
+      328,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      31,
+      788,
+      328,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    }
+   ]
+  },
+  "1440": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "localhost:3412 net::ERR_ABORTED": 4,
+    "events.mapbox.com net::ERR_NAME_NOT_RESOLVED": 4,
+    "api.mapbox.com net::ERR_ABORTED": 96
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 297,
+     "y": 170,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 297,
+     "y": 170,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 297,
+     "y": 77,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 1440,
+    "innerWidth": 1440
+   },
+   "nav_bordered_cells": [
+    {
+     "tag": "A",
+     "text": "conestruct.",
+     "x": 0,
+     "w": 120,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    },
+    {
+     "tag": "SPAN",
+     "text": "DEMO\n/\nMUTCD PLAN GENERATOR",
+     "x": 120,
+     "w": 247,
+     "borderRight": "1px",
+     "borderLeft": "0px"
+    },
+    {
+     "tag": "SPAN",
+     "text": "MUTCD 2023 \u00c2\u00b7 CDOT",
+     "x": 1270,
+     "w": 170,
+     "borderRight": "0px",
+     "borderLeft": "1px"
+    }
+   ],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      275,
+      63
+     ],
+     "label": [
+      14,
+      247,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      275,
+      63
+     ],
+     "label": [
+      14,
+      247,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.59,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      275,
+      63
+     ],
+     "label": [
+      14,
+      247,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.4,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 88,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 43.83,
+       "buttonCentreX": 43.83
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 88,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 44.34,
+       "buttonCentreX": 43.84
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 88,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 44.32,
+       "buttonCentreX": 43.83
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 132,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 65.74,
+       "buttonCentreX": 65.75
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 132,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 66.25,
+       "buttonCentreX": 65.75
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     60
+    ],
+    "ratio": 5.61
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    },
+    {
+     "option": "Daytime",
+     "ground": [
+      24,
+      48,
+      66
+     ],
+     "ratio": 5.19
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      441,
+      216,
+      263,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      577,
+      281,
+      128,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      441,
+      346,
+      263,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    },
+    {
+     "rect": [
+      880,
+      216,
+      263,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      22,
+      35,
+      47
+     ],
+     "inkOnRenderedGround": 13.91
+    }
+   ]
+  },
+  "390-webkit": {
+   "consoleErrors": [
+    "Failed to load resource: Could not resolve hostname",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+   ],
+   "pageErrors": [],
+   "devOverlay": [
+    [
+     "after selects",
+     null
+    ]
+   ],
+   "httpErrors": {
+    "400 localhost:3412/api/render/audit": 1
+   },
+   "failedHosts": {
+    "events.mapbox.com Could not resolve hostname": 2,
+    "api.mapbox.com Load request cancelled": 51,
+    "localhost:3412 Load request cancelled": 3
+   },
+   "head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 77,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "located_head": {
+    "stepText": "STEP 1 OF 4",
+    "step": {
+     "x": 31,
+     "y": 183,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "what_head": {
+    "stepText": "STEP 2 OF 4",
+    "step": {
+     "x": 31,
+     "y": 78,
+     "w": 79,
+     "h": 12
+    },
+    "stepLineHeight": 12,
+    "stepLines": 1,
+    "scrollWidth": 390,
+    "innerWidth": 390
+   },
+   "nav_bordered_cells": [],
+   "kind_chips": [
+    {
+     "id": "kind-chip-shoulder",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 57.39,
+     "borderColor": "rgb(44, 62, 83)"
+    },
+    {
+     "id": "kind-chip-flagger_lane_closure",
+     "pressed": "true",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "visible",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 74.58,
+     "borderColor": "rgb(52, 169, 232)"
+    },
+    {
+     "id": "kind-chip-near_intersection",
+     "pressed": "false",
+     "chip": [
+      328,
+      63
+     ],
+     "label": [
+      14,
+      300,
+      18
+     ],
+     "afterContent": "\"\u00c2\u00a0\u00e2\u0153\u201c\" / \"\"",
+     "afterVisibility": "hidden",
+     "afterColor": "rgb(52, 169, 232)",
+     "labelTextLeftX": 14,
+     "labelTextCentreX": 104.39,
+     "borderColor": "rgb(44, 62, 83)"
+    }
+   ],
+   "segmented": [
+    {
+     "name": "Street class",
+     "opts": [
+      {
+       "t": "Local",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 54.66,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Collector",
+       "pressed": "false",
+       "w": 109,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.66
+      },
+      {
+       "t": "Arterial",
+       "pressed": "true",
+       "w": 109,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 55.16,
+       "buttonCentreX": 54.66
+      }
+     ]
+    },
+    {
+     "name": "Hours",
+     "opts": [
+      {
+       "t": "Daytime",
+       "pressed": "true",
+       "w": 164,
+       "h": 44,
+       "checkContent": "\"\u00e2\u0153\u201c\u00c2\u00a0\" / \"\"",
+       "checkPosition": "absolute",
+       "labelTextCentreX": 82,
+       "buttonCentreX": 82
+      },
+      {
+       "t": "Night",
+       "pressed": "false",
+       "w": 164,
+       "h": 44,
+       "checkContent": "none",
+       "checkPosition": "static",
+       "labelTextCentreX": 82.5,
+       "buttonCentreX": 82
+      }
+     ]
+    }
+   ],
+   "check_on_pressed_kind_chip": {
+    "ground": [
+     19,
+     42,
+     61
+    ],
+    "ratio": 5.6
+   },
+   "check_on_pressed_toggle": [
+    {
+     "option": "Arterial",
+     "ground": [
+      25,
+      48,
+      66
+     ],
+     "ratio": 5.18
+    }
+   ],
+   "selects": [
+    {
+     "rect": [
+      31,
+      294,
+      328,
+      44
+     ],
+     "label": "what-speed",
+     "value": "30 mph",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      52,
+      52,
+      52
+     ],
+     "inkOnRenderedGround": 10.85
+    },
+    {
+     "rect": [
+      199,
+      409,
+      160,
+      44
+     ],
+     "label": "Lane width",
+     "value": "12 ft",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      52,
+      52,
+      52
+     ],
+     "inkOnRenderedGround": 10.85
+    },
+    {
+     "rect": [
+      31,
+      524,
+      328,
+      44
+     ],
+     "label": "what-road-type",
+     "value": "Urban street",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      52,
+      52,
+      52
+     ],
+     "inkOnRenderedGround": 10.85
+    },
+    {
+     "rect": [
+      31,
+      788,
+      328,
+      44
+     ],
+     "label": "pd-work-type",
+     "value": "Utility cut",
+     "color": "rgb(234, 240, 247)",
+     "bg": "rgb(22, 35, 47)",
+     "colorScheme": "dark",
+     "appearance": "auto",
+     "renderedGround": [
+      52,
+      52,
+      52
+     ],
+     "inkOnRenderedGround": 10.85
+    }
+   ]
+  }
+ },
+ "label_centre_x_before_after": {
+  "360": {
+   "kind-chip-shoulder": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 57.39,
+    "centreX_after": 57.39,
+    "delta": 0.0
+   },
+   "kind-chip-flagger_lane_closure (pressed)": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 74.59,
+    "centreX_after": 74.59,
+    "delta": 0.0
+   },
+   "kind-chip-near_intersection": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 104.4,
+    "centreX_after": 104.4,
+    "delta": 0.0
+   },
+   "Street class: Local": {
+    "centreX_before": 49.66,
+    "centreX_after": 49.66,
+    "buttonCentreX": 49.66,
+    "delta": 0.0
+   },
+   "Street class: Collector": {
+    "centreX_before": 50.16,
+    "centreX_after": 50.16,
+    "buttonCentreX": 49.66,
+    "delta": 0.0
+   },
+   "Street class: Arterial (pressed)": {
+    "centreX_before": 50.16,
+    "centreX_after": 50.16,
+    "buttonCentreX": 49.67,
+    "delta": 0.0
+   },
+   "Hours: Daytime (pressed)": {
+    "centreX_before": 74.49,
+    "centreX_after": 74.49,
+    "buttonCentreX": 74.5,
+    "delta": 0.0
+   },
+   "Hours: Night": {
+    "centreX_before": 75,
+    "centreX_after": 75,
+    "buttonCentreX": 74.5,
+    "delta": 0
+   }
+  },
+  "390": {
+   "kind-chip-shoulder": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 57.39,
+    "centreX_after": 57.39,
+    "delta": 0.0
+   },
+   "kind-chip-flagger_lane_closure (pressed)": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 74.59,
+    "centreX_after": 74.59,
+    "delta": 0.0
+   },
+   "kind-chip-near_intersection": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 104.4,
+    "centreX_after": 104.4,
+    "delta": 0.0
+   },
+   "Street class: Local": {
+    "centreX_before": 54.66,
+    "centreX_after": 54.66,
+    "buttonCentreX": 54.66,
+    "delta": 0.0
+   },
+   "Street class: Collector": {
+    "centreX_before": 55.16,
+    "centreX_after": 55.16,
+    "buttonCentreX": 54.66,
+    "delta": 0.0
+   },
+   "Street class: Arterial (pressed)": {
+    "centreX_before": 55.16,
+    "centreX_after": 55.16,
+    "buttonCentreX": 54.67,
+    "delta": 0.0
+   },
+   "Hours: Daytime (pressed)": {
+    "centreX_before": 81.99,
+    "centreX_after": 81.99,
+    "buttonCentreX": 82,
+    "delta": 0.0
+   },
+   "Hours: Night": {
+    "centreX_before": 82.5,
+    "centreX_after": 82.5,
+    "buttonCentreX": 82,
+    "delta": 0.0
+   }
+  },
+  "1440": {
+   "kind-chip-shoulder": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 57.39,
+    "centreX_after": 57.39,
+    "delta": 0.0
+   },
+   "kind-chip-flagger_lane_closure (pressed)": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 74.59,
+    "centreX_after": 74.59,
+    "delta": 0.0
+   },
+   "kind-chip-near_intersection": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 104.4,
+    "centreX_after": 104.4,
+    "delta": 0.0
+   },
+   "Street class: Local": {
+    "centreX_before": 43.83,
+    "centreX_after": 43.83,
+    "buttonCentreX": 43.83,
+    "delta": 0.0
+   },
+   "Street class: Collector": {
+    "centreX_before": 44.34,
+    "centreX_after": 44.34,
+    "buttonCentreX": 43.84,
+    "delta": 0.0
+   },
+   "Street class: Arterial (pressed)": {
+    "centreX_before": 44.32,
+    "centreX_after": 44.32,
+    "buttonCentreX": 43.83,
+    "delta": 0.0
+   },
+   "Hours: Daytime (pressed)": {
+    "centreX_before": 65.74,
+    "centreX_after": 65.74,
+    "buttonCentreX": 65.75,
+    "delta": 0.0
+   },
+   "Hours: Night": {
+    "centreX_before": 66.25,
+    "centreX_after": 66.25,
+    "buttonCentreX": 65.75,
+    "delta": 0.0
+   }
+  },
+  "390-webkit": {
+   "kind-chip-shoulder": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 57.39,
+    "centreX_after": 57.39,
+    "delta": 0.0
+   },
+   "kind-chip-flagger_lane_closure (pressed)": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 74.58,
+    "centreX_after": 74.58,
+    "delta": 0.0
+   },
+   "kind-chip-near_intersection": {
+    "textLeftX": [
+     14,
+     14
+    ],
+    "centreX_before": 104.39,
+    "centreX_after": 104.39,
+    "delta": 0.0
+   },
+   "Street class: Local": {
+    "centreX_before": 54.66,
+    "centreX_after": 54.66,
+    "buttonCentreX": 54.66,
+    "delta": 0.0
+   },
+   "Street class: Collector": {
+    "centreX_before": 55.16,
+    "centreX_after": 55.16,
+    "buttonCentreX": 54.66,
+    "delta": 0.0
+   },
+   "Street class: Arterial (pressed)": {
+    "centreX_before": 55.16,
+    "centreX_after": 55.16,
+    "buttonCentreX": 54.66,
+    "delta": 0.0
+   },
+   "Hours: Daytime (pressed)": {
+    "centreX_before": 82,
+    "centreX_after": 82,
+    "buttonCentreX": 82,
+    "delta": 0
+   },
+   "Hours: Night": {
+    "centreX_before": 82.5,
+    "centreX_after": 82.5,
+    "buttonCentreX": 82,
+    "delta": 0.0
+   }
+  }
+ }
+}

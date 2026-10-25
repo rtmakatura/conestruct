@@ -48,7 +48,7 @@ export function AppNav({
   const newVersion = useNewVersion();
   return (
     <nav className="sticky top-0 z-[var(--z-nav)] flex items-stretch justify-between h-[var(--nav-h)] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
-      <div className="flex items-stretch">
+      <div className="flex items-stretch max-md:[&>a:first-child]:border-r-0">
         {/* #289 fidelity F4 — Part 2 rule 22: the wordmark, then nav
             items.  The drawing lives in Wordmark.tsx, shared with the
             public chrome (coming-soon-gate C-Q8). */}

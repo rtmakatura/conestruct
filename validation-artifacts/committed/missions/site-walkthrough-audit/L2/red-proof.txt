@@ -1,0 +1,8 @@
+   × W12 — a pressed option carries a ✓, not the blue alone (Rule 13) > the kind chip reserves a trailing ✓ slot, shown only when pressed, and keeps its border under the pointer 11ms
+   × W12 — a pressed option carries a ✓, not the blue alone (Rule 13) > the segmented ✓ hangs outside the text flow, so the centred label doesn't move 16ms
+   × W13 — native selects draw in the dark palette > .a-fld declares color-scheme: dark beside its own ground and ink 1ms
+   × W15 — the step label stays on one line > the open band's step and head don't wrap; the provenance takes the wrap 1ms
+   × W21 — no empty bordered cell beside the wordmark at phone width > AppNav's left group drops the wordmark's right border below md only 15ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  5 failed (5)

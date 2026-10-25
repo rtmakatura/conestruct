@@ -6,7 +6,7 @@ Live site www.conestruct.com at `c431ceb`, walked 2026-10-25 headless (Playwrigh
 
 **Not reproduced on the live build.** The committed screenshots show every download button on one line at 1440 (Chromium), 1024 (Firefox) and 390 (Chromium and WebKit), and the crew card's shared row reads "PDF" / ".md", as it has since #329 (`28b49a8`; `components/OutputCards.tsx:106-117`, chosen at `:380-385`; padding `app/globals.css:3618-3627`). See `before/1440-sandbox-shoulder-generated.png`, `before/390-sandbox-downloads.png`, `before/390-chromium-downloads.png`, `before/1024-firefox-downloads.png`. The walk also measured each button at 44 px at widths down to 360 in three engines, but that output wasn't saved, so only the screenshots back it.
 
-One path still carries long labels on a shared row: signed-out saved mode uses `SIGNUP_LABELS` ("Sign up to download PDF", "Sign up to download .md") ahead of the shared short labels (`OutputCards.tsx:120-126`, `:380-385`). The walk couldn't reach it without an account. Fixed in the light lane (item L1).
+The walk flagged one more path, saved mode without a plan id, which uses `SIGNUP_LABELS` ("Sign up to download PDF", "Sign up to download .md"). It doesn't put them on a shared row: that mode renders one link per card at full card width (`OutputCards.tsx:509-514`), and it is reachable only signed in (`/app/plans/…` needs a session). So nothing wraps and no signed-out user sees it. No change was made in L1; the "Sign up" wording for a signed-in user is noted on #204 (`L1/rulings.md` R145-4).
 
 ## Findings
 

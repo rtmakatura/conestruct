@@ -4725,6 +4725,14 @@ input[type="number"] {
 .workbench .a-open .a-head .a-prov {
   margin-left: auto;
   text-align: right;
+  min-width: 0;
+}
+/* #396 L2 (W15): "STEP 1 OF 4" and the one-word head never break; the
+   provenance beside them is the part that wraps (it was the step label,
+   two lines at 390 and under a long provenance at 1440). */
+.workbench .a-open .a-head .tr-step,
+.workbench .a-open .a-head .tr-section {
+  white-space: nowrap;
 }
 .workbench .a-open .a-body {
   padding: 18px 16px;
@@ -4854,7 +4862,39 @@ input[type="number"] {
 .workbench .a-chip-check {
   color: var(--act);
 }
-.workbench .a-chip:hover {
+/* #396 L2 (W12, Rule 13): the pressed kind chip and the pressed
+   segmented option carry the side chip's ✓ in the accent, so the choice
+   is not carried by the blue alone.  The slot is reserved on every option
+   and only shown when pressed, so pressing moves nothing (P1).  The
+   kind chip ends its label with it, so the label keeps the citation
+   line's left edge (P4).  The segmented option's label is centred, so
+   its ✓ hangs outside the text flow, just left of the label, and the
+   label stays centred.  Empty alt text: aria-pressed is what is
+   announced (the side chip's ✓ is aria-hidden for the same reason); the
+   first `content` is the fallback for engines without the alt syntax. */
+.workbench .a-chip[aria-pressed] > .tr-field::after {
+  content: "\00a0✓";
+  content: "\00a0✓" / "";
+  visibility: hidden;
+  color: var(--act);
+}
+.workbench .a-chip[aria-pressed="true"] > .tr-field::after {
+  visibility: visible;
+}
+.workbench .a-seg-label {
+  position: relative;
+}
+.workbench .a-seg > button[aria-pressed="true"] > .a-seg-label::before {
+  content: "✓\00a0";
+  content: "✓\00a0" / "";
+  position: absolute;
+  right: 100%;
+  top: 0;
+  color: var(--act);
+}
+/* #396 L2 fold-in: a pressed or checked chip under the pointer keeps its
+   accent border; hover only lifts an unchosen chip. */
+.workbench .a-chip:not([aria-pressed="true"]):not([aria-checked="true"]):hover {
   border-color: var(--raise-hi);
 }
 
@@ -5227,6 +5267,10 @@ input[type="number"] {
   /* Rule 136's field, at rule 8's body value (#283's token). */
   font-size: var(--fs-body-value);
   color: var(--ink);
+  /* #396 L2 (W13): WebKit draws a native select in the light system
+     palette and ignores the ground above, leaving the ink on white; the
+     dark scheme gives the control and its option list the dark palette. */
+  color-scheme: dark;
 }
 .workbench .a-fld:focus-visible {
   border-color: var(--act);

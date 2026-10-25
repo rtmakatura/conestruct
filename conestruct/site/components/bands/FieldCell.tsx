@@ -215,7 +215,9 @@ export function Segmented<V extends string | boolean>({
             if (!locked && value !== o.v) onChange(o.v);
           }}
         >
-          {o.l}
+          {/* #396 L2 (W12): the label's own box, so the pressed ✓ can
+              hang beside it without moving it off centre. */}
+          <span className="a-seg-label">{o.l}</span>
         </button>
       ))}
     </div>
