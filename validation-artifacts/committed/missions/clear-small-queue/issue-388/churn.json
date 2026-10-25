@@ -1,0 +1,62 @@
+{
+ "bodies": 516,
+ "thornton_bodies": 36,
+ "moved": {
+  "breakdown": {
+   "count": 36,
+   "not_thornton": []
+  },
+  "md": {
+   "count": 36,
+   "not_thornton": []
+  },
+  "pdf_p1": {
+   "count": 36,
+   "not_thornton": []
+  },
+  "quote": {
+   "count": 36,
+   "not_thornton": []
+  },
+  "snapshot": {
+   "count": 36,
+   "not_thornton": []
+  },
+  "xlsx": {
+   "count": 36,
+   "not_thornton": []
+  }
+ },
+ "unmoved_surfaces": [
+  "audit"
+ ],
+ "thornton_counts_base": [
+  "flagger {\"xlsx\": [11, 1], \"quote\": [11, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "flagger {\"xlsx\": [13, 1], \"quote\": [13, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "ni {\"xlsx\": [12, 1], \"quote\": [12, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "ni {\"xlsx\": [14, 1], \"quote\": [14, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "ni1way {\"xlsx\": [12, 1], \"quote\": [12, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "ni1way {\"xlsx\": [14, 1], \"quote\": [14, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "shoulder {\"xlsx\": [10, 1], \"quote\": [10, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "shoulder {\"xlsx\": [12, 1], \"quote\": [12, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "shoulder1way {\"xlsx\": [10, 1], \"quote\": [10, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "shoulder1way {\"xlsx\": [12, 1], \"quote\": [12, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "shoulder2way {\"xlsx\": [10, 1], \"quote\": [10, 1, 1], \"breakdown\": [1], \"md\": \"1\"}",
+  "shoulder2way {\"xlsx\": [12, 1], \"quote\": [12, 1, 1], \"breakdown\": [1], \"md\": \"1\"}"
+ ],
+ "thornton_counts_branch": [
+  "flagger {\"xlsx\": [11, 4], \"quote\": [11, 4, 1], \"breakdown\": [4], \"md\": \"4\"}",
+  "flagger {\"xlsx\": [13, 4], \"quote\": [13, 4, 1], \"breakdown\": [4], \"md\": \"4\"}",
+  "ni {\"xlsx\": [12, 6], \"quote\": [12, 6, 1], \"breakdown\": [6], \"md\": \"6\"}",
+  "ni {\"xlsx\": [14, 6], \"quote\": [14, 6, 1], \"breakdown\": [6], \"md\": \"6\"}",
+  "ni1way {\"xlsx\": [12, 4], \"quote\": [12, 4, 1], \"breakdown\": [4], \"md\": \"4\"}",
+  "ni1way {\"xlsx\": [14, 4], \"quote\": [14, 4, 1], \"breakdown\": [4], \"md\": \"4\"}",
+  "shoulder {\"xlsx\": [10, 2], \"quote\": [10, 2, 1], \"breakdown\": [2], \"md\": \"2\"}",
+  "shoulder {\"xlsx\": [12, 2], \"quote\": [12, 2, 1], \"breakdown\": [2], \"md\": \"2\"}",
+  "shoulder1way {\"xlsx\": [10, 2], \"quote\": [10, 2, 1], \"breakdown\": [2], \"md\": \"2\"}",
+  "shoulder1way {\"xlsx\": [12, 2], \"quote\": [12, 2, 1], \"breakdown\": [2], \"md\": \"2\"}",
+  "shoulder2way {\"xlsx\": [10, 4], \"quote\": [10, 4, 1], \"breakdown\": [4], \"md\": \"4\"}",
+  "shoulder2way {\"xlsx\": [12, 4], \"quote\": [12, 4, 1], \"breakdown\": [4], \"md\": \"4\"}"
+ ],
+ "non_200_branch": []
+}

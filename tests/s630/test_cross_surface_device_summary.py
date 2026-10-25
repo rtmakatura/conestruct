@@ -123,7 +123,8 @@ def test_thornton_night_lane_multi_delta_maps_and_honest_unmapped(client, tmp_pa
     aws = [r for r in rows if str(r[1]).startswith("Advance Warning Signs")]
     assert len(aws) == 1
     assert aws[0][3] == "—"  # no single CDOT pay item
-    assert aws[0][5] == 1
+    # #388 R1/R3: two signs per direction; a flagger plan affects both.
+    assert aws[0][5] == 4
     assert "no single pay item" in aws[0][6]
     assert "jurisdiction-required" in aws[0][1]
 

@@ -508,6 +508,12 @@
           "required": [
             "op"
           ],
+          "not": {
+            "required": [
+              "qty",
+              "qty_per_direction"
+            ]
+          },
           "properties": {
             "op": {
               "enum": [
@@ -523,6 +529,11 @@
             },
             "qty": {
               "type": "integer"
+            },
+            "qty_per_direction": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "#388: the count for each direction of travel the plan affects; the plan's direction count multiplies it (Thornton stipulation 6)."
             },
             "note": {
               "type": "string"

@@ -1,0 +1,9 @@
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[flagger]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[near_intersection-1-leg]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[near_intersection-2-legs]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[shoulder]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[shoulder-night]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_a_plan_with_no_direction_count_refuses
+6 failed, 3 passed in 7.31s
+
+Frontend red proof: with the JurisdictionSection.tsx change reversed, JurisdictionSection.per-direction-388.test.tsx: 1 failed | 1 passed (the "+4" case); with it applied: 2 passed.

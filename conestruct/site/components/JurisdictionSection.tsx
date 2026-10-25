@@ -275,7 +275,11 @@ function deltaImpact(d: AppliedDelta): { main: string; unit?: string } {
     // words on an older wire).
     if (d.effect.op === "swap_device")
       return { main: "→ swap", unit: d.device_label ?? d.effect.device?.replace(/_/g, " ") };
-    const qty = d.effect.qty ?? 1;
+    // #388 R5: the backend's per-plan count first (Rule 3).  A rule
+    // counted per direction with no plan count shows no number (Rule 10).
+    if (d.qty === undefined && d.effect.qty_per_direction !== undefined)
+      return { main: "—", unit: "per direction" };
+    const qty = d.qty ?? d.effect.qty ?? 1;
     return { main: `+${qty}`, unit: qty === 1 ? "device" : "devices" };
   }
   return { main: d.severity === "op" ? "method" : "admin" };

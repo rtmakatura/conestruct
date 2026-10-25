@@ -75,7 +75,15 @@ export interface AppliedDelta {
   severity: "count" | "op" | "admin";
   rule: string;
   baseline?: string;
-  effect: { op: string; device?: string; qty?: number; note?: string };
+  effect: {
+    op: string;
+    device?: string;
+    qty?: number;
+    /** #388: the count per direction of travel affected (Thornton
+     *  stipulation 6); the plan's count arrives as `qty` below. */
+    qty_per_direction?: number;
+    note?: string;
+  };
   status: TriggerStatus;
   source: SourceRef;
   conflict?: ConflictBlock;
@@ -85,6 +93,10 @@ export interface AppliedDelta {
    *  plan.  `false`: the layout already met it (R118: checked, not
    *  changed).  Absent on every other rule, and on older wires. */
   raised?: boolean;
+  /** #388 R5: on a fired rule counted per direction of travel (Thornton
+   *  stipulation 6), the count it requires on this plan (backend-owned,
+   *  Rule 3).  Absent on every other rule. */
+  qty?: number;
   /** #297: the delta's stable key, "<jurisdiction>:<10 hex>" (a hash of
    *  its own record; src/rules/jurisdiction.py `delta_key`).  Absent on a
    *  recorded block that predates it. */

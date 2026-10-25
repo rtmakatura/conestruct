@@ -121,7 +121,8 @@ def test_thornton_crew_pdf_lists_the_rule_row(client, tmp_path) -> None:
         text = " ".join(p.get_textpage().get_text_range() for p in pdf)
     finally:
         pdf.close()
-    assert re.search(r"1× Advance Warning Signs\s+\(jurisdiction-required\)", text)
+    # #388: two signs for the one direction a shoulder plan affects.
+    assert re.search(r"2× Advance Warning Signs\s+\(jurisdiction-required\)", text)
 
 
 def test_a_topped_up_count_matches_the_xlsx(tmp_path) -> None:

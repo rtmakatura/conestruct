@@ -1,0 +1,11162 @@
+{
+ "flagger-None-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:4077639ea234",
+   null
+  ],
+  "md": [
+   "200:429e32eb14e6",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:743546f3a5cc",
+  "xlsx": [
+   "200:517211978555",
+   null
+  ]
+ },
+ "flagger-None-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:1bcad7fd832b",
+   null
+  ],
+  "md": [
+   "200:49f34401f4d4",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:d3683dc6dce5",
+  "xlsx": [
+   "200:fe831c28315b",
+   null
+  ]
+ },
+ "flagger-castle_rock-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:f947794d7c53",
+   null
+  ],
+  "md": [
+   "200:8f9aa964f347",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:e2d4db7c2e91",
+  "xlsx": [
+   "200:5e7f7faabe24",
+   null
+  ]
+ },
+ "flagger-castle_rock-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:41ff65946b95",
+   null
+  ],
+  "md": [
+   "200:bd5b4940011f",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c82cb8b04371",
+  "xlsx": [
+   "200:b5fe16265cb9",
+   null
+  ]
+ },
+ "flagger-castle_rock-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:f947794d7c53",
+   null
+  ],
+  "md": [
+   "200:8f9aa964f347",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:e2d4db7c2e91",
+  "xlsx": [
+   "200:5e7f7faabe24",
+   null
+  ]
+ },
+ "flagger-castle_rock-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:41ff65946b95",
+   null
+  ],
+  "md": [
+   "200:bd5b4940011f",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c82cb8b04371",
+  "xlsx": [
+   "200:b5fe16265cb9",
+   null
+  ]
+ },
+ "flagger-castle_rock-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:f947794d7c53",
+   null
+  ],
+  "md": [
+   "200:8f9aa964f347",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:e2d4db7c2e91",
+  "xlsx": [
+   "200:5e7f7faabe24",
+   null
+  ]
+ },
+ "flagger-castle_rock-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:41ff65946b95",
+   null
+  ],
+  "md": [
+   "200:bd5b4940011f",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c82cb8b04371",
+  "xlsx": [
+   "200:b5fe16265cb9",
+   null
+  ]
+ },
+ "flagger-cdot-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:ad840315aaf0",
+   null
+  ],
+  "md": [
+   "200:6c019972c3a4",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:2ba009f24c83",
+  "xlsx": [
+   "200:d90f419e3b9b",
+   null
+  ]
+ },
+ "flagger-cdot-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:69588da07dc0",
+   null
+  ],
+  "md": [
+   "200:e4cdf516b146",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:74530fab58fd",
+  "xlsx": [
+   "200:08ae8e6dd1a6",
+   null
+  ]
+ },
+ "flagger-cdot-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:ad840315aaf0",
+   null
+  ],
+  "md": [
+   "200:6c019972c3a4",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:2ba009f24c83",
+  "xlsx": [
+   "200:d90f419e3b9b",
+   null
+  ]
+ },
+ "flagger-cdot-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:69588da07dc0",
+   null
+  ],
+  "md": [
+   "200:e4cdf516b146",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:74530fab58fd",
+  "xlsx": [
+   "200:08ae8e6dd1a6",
+   null
+  ]
+ },
+ "flagger-cdot-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:ad840315aaf0",
+   null
+  ],
+  "md": [
+   "200:6c019972c3a4",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:2ba009f24c83",
+  "xlsx": [
+   "200:d90f419e3b9b",
+   null
+  ]
+ },
+ "flagger-cdot-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:69588da07dc0",
+   null
+  ],
+  "md": [
+   "200:e4cdf516b146",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:74530fab58fd",
+  "xlsx": [
+   "200:08ae8e6dd1a6",
+   null
+  ]
+ },
+ "flagger-centennial-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:9e2789088957",
+   null
+  ],
+  "md": [
+   "200:529f8974168d",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:4df06b795e8e",
+  "xlsx": [
+   "200:3159bc6a2d6a",
+   null
+  ]
+ },
+ "flagger-centennial-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:5f554f79ca38",
+   null
+  ],
+  "md": [
+   "200:dd3af43e2cb3",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:0fc23b43d242",
+  "xlsx": [
+   "200:ec1dfe2da560",
+   null
+  ]
+ },
+ "flagger-centennial-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:ee1c902ebf8a",
+   null
+  ],
+  "md": [
+   "200:529f8974168d",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:4df06b795e8e",
+  "xlsx": [
+   "200:3159bc6a2d6a",
+   null
+  ]
+ },
+ "flagger-centennial-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:d479824ab57f",
+   null
+  ],
+  "md": [
+   "200:dd3af43e2cb3",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:0fc23b43d242",
+  "xlsx": [
+   "200:ec1dfe2da560",
+   null
+  ]
+ },
+ "flagger-centennial-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:718ec7c44442",
+   null
+  ],
+  "md": [
+   "200:529f8974168d",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:4df06b795e8e",
+  "xlsx": [
+   "200:3159bc6a2d6a",
+   null
+  ]
+ },
+ "flagger-centennial-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:88ee9db87fb0",
+   null
+  ],
+  "md": [
+   "200:dd3af43e2cb3",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:0fc23b43d242",
+  "xlsx": [
+   "200:ec1dfe2da560",
+   null
+  ]
+ },
+ "flagger-denver-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:8bb870c6243a",
+   null
+  ],
+  "md": [
+   "200:c6f3ba316b7a",
+   null
+  ],
+  "pdf_p1": "200:99c4a6ff83ce",
+  "quote": [
+   "200:7952f5cab149",
+   null
+  ],
+  "snapshot": "200:714af8fa7e2f",
+  "xlsx": [
+   "200:3d2b19f89000",
+   null
+  ]
+ },
+ "flagger-denver-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:810a19a28c67",
+   null
+  ],
+  "md": [
+   "200:3f4957e7ea17",
+   null
+  ],
+  "pdf_p1": "200:70e084656e43",
+  "quote": [
+   "200:5f08655678f7",
+   null
+  ],
+  "snapshot": "200:5f7eef28fb9d",
+  "xlsx": [
+   "200:0a03990c8130",
+   null
+  ]
+ },
+ "flagger-denver-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:8bb870c6243a",
+   null
+  ],
+  "md": [
+   "200:c6f3ba316b7a",
+   null
+  ],
+  "pdf_p1": "200:99c4a6ff83ce",
+  "quote": [
+   "200:7952f5cab149",
+   null
+  ],
+  "snapshot": "200:714af8fa7e2f",
+  "xlsx": [
+   "200:3d2b19f89000",
+   null
+  ]
+ },
+ "flagger-denver-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:810a19a28c67",
+   null
+  ],
+  "md": [
+   "200:3f4957e7ea17",
+   null
+  ],
+  "pdf_p1": "200:70e084656e43",
+  "quote": [
+   "200:5f08655678f7",
+   null
+  ],
+  "snapshot": "200:5f7eef28fb9d",
+  "xlsx": [
+   "200:0a03990c8130",
+   null
+  ]
+ },
+ "flagger-denver-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:8bb870c6243a",
+   null
+  ],
+  "md": [
+   "200:c6f3ba316b7a",
+   null
+  ],
+  "pdf_p1": "200:99c4a6ff83ce",
+  "quote": [
+   "200:7952f5cab149",
+   null
+  ],
+  "snapshot": "200:714af8fa7e2f",
+  "xlsx": [
+   "200:3d2b19f89000",
+   null
+  ]
+ },
+ "flagger-denver-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:810a19a28c67",
+   null
+  ],
+  "md": [
+   "200:3f4957e7ea17",
+   null
+  ],
+  "pdf_p1": "200:70e084656e43",
+  "quote": [
+   "200:5f08655678f7",
+   null
+  ],
+  "snapshot": "200:5f7eef28fb9d",
+  "xlsx": [
+   "200:0a03990c8130",
+   null
+  ]
+ },
+ "flagger-e470-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:155579437ead",
+   null
+  ],
+  "md": [
+   "200:9f77f8e6b8fc",
+   null
+  ],
+  "pdf_p1": "200:c631aa43b367",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:9e6f852e9ac9",
+  "xlsx": [
+   "200:60e537db809a",
+   null
+  ]
+ },
+ "flagger-e470-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:01dfb0e194fd",
+   null
+  ],
+  "md": [
+   "200:da6c199f3560",
+   null
+  ],
+  "pdf_p1": "200:14930e60d5f4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:413e7ab426c2",
+  "xlsx": [
+   "200:fd9834aad25c",
+   null
+  ]
+ },
+ "flagger-e470-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:155579437ead",
+   null
+  ],
+  "md": [
+   "200:9f77f8e6b8fc",
+   null
+  ],
+  "pdf_p1": "200:c631aa43b367",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:9e6f852e9ac9",
+  "xlsx": [
+   "200:60e537db809a",
+   null
+  ]
+ },
+ "flagger-e470-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:01dfb0e194fd",
+   null
+  ],
+  "md": [
+   "200:da6c199f3560",
+   null
+  ],
+  "pdf_p1": "200:14930e60d5f4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:413e7ab426c2",
+  "xlsx": [
+   "200:fd9834aad25c",
+   null
+  ]
+ },
+ "flagger-e470-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:155579437ead",
+   null
+  ],
+  "md": [
+   "200:9f77f8e6b8fc",
+   null
+  ],
+  "pdf_p1": "200:c631aa43b367",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:9e6f852e9ac9",
+  "xlsx": [
+   "200:60e537db809a",
+   null
+  ]
+ },
+ "flagger-e470-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:01dfb0e194fd",
+   null
+  ],
+  "md": [
+   "200:da6c199f3560",
+   null
+  ],
+  "pdf_p1": "200:14930e60d5f4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:413e7ab426c2",
+  "xlsx": [
+   "200:fd9834aad25c",
+   null
+  ]
+ },
+ "flagger-el_paso-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:ddb0160958a2",
+   null
+  ],
+  "md": [
+   "200:e3d5677aa163",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:3d7eab91cfbe",
+  "xlsx": [
+   "200:4dedcf7e1469",
+   null
+  ]
+ },
+ "flagger-el_paso-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:b596c85b3eca",
+   null
+  ],
+  "md": [
+   "200:67e62f3b768b",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:72dda3fc152d",
+  "xlsx": [
+   "200:fe5d7134d3fe",
+   null
+  ]
+ },
+ "flagger-el_paso-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:ddb0160958a2",
+   null
+  ],
+  "md": [
+   "200:e3d5677aa163",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:3d7eab91cfbe",
+  "xlsx": [
+   "200:4dedcf7e1469",
+   null
+  ]
+ },
+ "flagger-el_paso-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:b596c85b3eca",
+   null
+  ],
+  "md": [
+   "200:67e62f3b768b",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:72dda3fc152d",
+  "xlsx": [
+   "200:fe5d7134d3fe",
+   null
+  ]
+ },
+ "flagger-el_paso-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:ddb0160958a2",
+   null
+  ],
+  "md": [
+   "200:e3d5677aa163",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:3d7eab91cfbe",
+  "xlsx": [
+   "200:4dedcf7e1469",
+   null
+  ]
+ },
+ "flagger-el_paso-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:b596c85b3eca",
+   null
+  ],
+  "md": [
+   "200:67e62f3b768b",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:72dda3fc152d",
+  "xlsx": [
+   "200:fe5d7134d3fe",
+   null
+  ]
+ },
+ "flagger-englewood-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:18ad3a9025cc",
+   null
+  ],
+  "md": [
+   "200:f0ae8f4137c0",
+   null
+  ],
+  "pdf_p1": "200:87e9b7aeec6b",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:d3c2c145492b",
+  "xlsx": [
+   "200:56bdfa965f1e",
+   null
+  ]
+ },
+ "flagger-englewood-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:4fc910f1992c",
+   null
+  ],
+  "md": [
+   "200:4a9a849bb68c",
+   null
+  ],
+  "pdf_p1": "200:81b09a9b8ff5",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:10a0eaa0e023",
+  "xlsx": [
+   "200:8bc4e12e3273",
+   null
+  ]
+ },
+ "flagger-englewood-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:265f7b610f02",
+   null
+  ],
+  "md": [
+   "200:66cd8ba83d57",
+   null
+  ],
+  "pdf_p1": "200:58ee68bede74",
+  "quote": [
+   "200:4fd496c15983",
+   null
+  ],
+  "snapshot": "200:fc5ba141f24b",
+  "xlsx": [
+   "200:1fd270dc8815",
+   null
+  ]
+ },
+ "flagger-englewood-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:eca0d0030d22",
+   null
+  ],
+  "md": [
+   "200:2f8ccacdb1b8",
+   null
+  ],
+  "pdf_p1": "200:36314ec0f00e",
+  "quote": [
+   "200:360070d9a7aa",
+   null
+  ],
+  "snapshot": "200:2db443529e4d",
+  "xlsx": [
+   "200:a56bf6de812d",
+   null
+  ]
+ },
+ "flagger-englewood-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:b7bd73b17d06",
+   null
+  ],
+  "md": [
+   "200:f0ae8f4137c0",
+   null
+  ],
+  "pdf_p1": "200:87e9b7aeec6b",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:d3c2c145492b",
+  "xlsx": [
+   "200:56bdfa965f1e",
+   null
+  ]
+ },
+ "flagger-englewood-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:5d3c738cafaa",
+   null
+  ],
+  "md": [
+   "200:4a9a849bb68c",
+   null
+  ],
+  "pdf_p1": "200:81b09a9b8ff5",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:10a0eaa0e023",
+  "xlsx": [
+   "200:8bc4e12e3273",
+   null
+  ]
+ },
+ "flagger-greeley-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:3d9b84215ef1",
+   null
+  ],
+  "md": [
+   "200:7fc31aca5c88",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:49edae095c7f",
+  "xlsx": [
+   "200:22467d90de9a",
+   null
+  ]
+ },
+ "flagger-greeley-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:eea954ba3667",
+   null
+  ],
+  "md": [
+   "200:2e35e3745079",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:cbce40560cf5",
+  "xlsx": [
+   "200:7eea644de48a",
+   null
+  ]
+ },
+ "flagger-greeley-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:93cff592fb57",
+   null
+  ],
+  "md": [
+   "200:26c3e493aacf",
+   null
+  ],
+  "pdf_p1": "200:e7cc7da8e4c1",
+  "quote": [
+   "200:cc44ac2554c7",
+   null
+  ],
+  "snapshot": "200:3d9ac800244e",
+  "xlsx": [
+   "200:468670938021",
+   null
+  ]
+ },
+ "flagger-greeley-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:cec6fe6beaae",
+   null
+  ],
+  "md": [
+   "200:f009913cb338",
+   null
+  ],
+  "pdf_p1": "200:5e5cba96fd90",
+  "quote": [
+   "200:4d08d6acbe7a",
+   null
+  ],
+  "snapshot": "200:53e59ecef22f",
+  "xlsx": [
+   "200:695b7200273a",
+   null
+  ]
+ },
+ "flagger-greeley-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:8c447e16e5a6",
+   null
+  ],
+  "md": [
+   "200:7fc31aca5c88",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:49edae095c7f",
+  "xlsx": [
+   "200:22467d90de9a",
+   null
+  ]
+ },
+ "flagger-greeley-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:b184cf951e3f",
+   null
+  ],
+  "md": [
+   "200:2e35e3745079",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:cbce40560cf5",
+  "xlsx": [
+   "200:7eea644de48a",
+   null
+  ]
+ },
+ "flagger-lakewood-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:3e8cdf348adc",
+   null
+  ],
+  "md": [
+   "200:42f9864fcf8a",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:6d48b3b61b87",
+  "xlsx": [
+   "200:53e365c2aa27",
+   null
+  ]
+ },
+ "flagger-lakewood-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:3eee2efae696",
+   null
+  ],
+  "md": [
+   "200:bb968ca0d473",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:2ea4602520cd",
+  "xlsx": [
+   "200:8aeb227b6b21",
+   null
+  ]
+ },
+ "flagger-lakewood-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:03924eca68fb",
+   null
+  ],
+  "md": [
+   "200:6fe2182a3d88",
+   null
+  ],
+  "pdf_p1": "200:99c4a6ff83ce",
+  "quote": [
+   "200:e045abdcf678",
+   null
+  ],
+  "snapshot": "200:0b12837eedff",
+  "xlsx": [
+   "200:cd5fcd6a9c95",
+   null
+  ]
+ },
+ "flagger-lakewood-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:2f61bd475abe",
+   null
+  ],
+  "md": [
+   "200:e694c66c6a66",
+   null
+  ],
+  "pdf_p1": "200:70e084656e43",
+  "quote": [
+   "200:674f7ad91a6d",
+   null
+  ],
+  "snapshot": "200:b37cbaec3b9d",
+  "xlsx": [
+   "200:799f5a737b73",
+   null
+  ]
+ },
+ "flagger-lakewood-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:d3fcbb00c78d",
+   null
+  ],
+  "md": [
+   "200:42f9864fcf8a",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:6d48b3b61b87",
+  "xlsx": [
+   "200:53e365c2aa27",
+   null
+  ]
+ },
+ "flagger-lakewood-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:21b1dc214bc4",
+   null
+  ],
+  "md": [
+   "200:bb968ca0d473",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:2ea4602520cd",
+  "xlsx": [
+   "200:8aeb227b6b21",
+   null
+  ]
+ },
+ "flagger-littleton-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:1ad245423b75",
+   null
+  ],
+  "md": [
+   "200:c02557a2aba1",
+   null
+  ],
+  "pdf_p1": "200:e46dfdbbc91a",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:20309e8ee5f0",
+  "xlsx": [
+   "200:c371f9323115",
+   null
+  ]
+ },
+ "flagger-littleton-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:01d9bbae516a",
+   null
+  ],
+  "md": [
+   "200:e7623cef7daa",
+   null
+  ],
+  "pdf_p1": "200:de14872e9725",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c8d7032072cf",
+  "xlsx": [
+   "200:fe489026099b",
+   null
+  ]
+ },
+ "flagger-littleton-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:1ad245423b75",
+   null
+  ],
+  "md": [
+   "200:c02557a2aba1",
+   null
+  ],
+  "pdf_p1": "200:e46dfdbbc91a",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:20309e8ee5f0",
+  "xlsx": [
+   "200:c371f9323115",
+   null
+  ]
+ },
+ "flagger-littleton-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:01d9bbae516a",
+   null
+  ],
+  "md": [
+   "200:e7623cef7daa",
+   null
+  ],
+  "pdf_p1": "200:de14872e9725",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c8d7032072cf",
+  "xlsx": [
+   "200:fe489026099b",
+   null
+  ]
+ },
+ "flagger-littleton-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:1ad245423b75",
+   null
+  ],
+  "md": [
+   "200:c02557a2aba1",
+   null
+  ],
+  "pdf_p1": "200:e46dfdbbc91a",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:20309e8ee5f0",
+  "xlsx": [
+   "200:c371f9323115",
+   null
+  ]
+ },
+ "flagger-littleton-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:01d9bbae516a",
+   null
+  ],
+  "md": [
+   "200:e7623cef7daa",
+   null
+  ],
+  "pdf_p1": "200:de14872e9725",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c8d7032072cf",
+  "xlsx": [
+   "200:fe489026099b",
+   null
+  ]
+ },
+ "flagger-loveland-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:f096179c8625",
+   null
+  ],
+  "md": [
+   "200:4895201eb5eb",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:9f6b7c3e8e85",
+  "xlsx": [
+   "200:55b12eaadd8b",
+   null
+  ]
+ },
+ "flagger-loveland-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:5686e3e4448f",
+   null
+  ],
+  "md": [
+   "200:4fbde8f4eb6c",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:12d6a541ded6",
+  "xlsx": [
+   "200:da079a686f8b",
+   null
+  ]
+ },
+ "flagger-loveland-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:648ef1dd6196",
+   null
+  ],
+  "md": [
+   "200:4895201eb5eb",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:9f6b7c3e8e85",
+  "xlsx": [
+   "200:55b12eaadd8b",
+   null
+  ]
+ },
+ "flagger-loveland-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:6eab9eb610a7",
+   null
+  ],
+  "md": [
+   "200:4fbde8f4eb6c",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:12d6a541ded6",
+  "xlsx": [
+   "200:da079a686f8b",
+   null
+  ]
+ },
+ "flagger-loveland-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:e547b771719b",
+   null
+  ],
+  "md": [
+   "200:4895201eb5eb",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:9f6b7c3e8e85",
+  "xlsx": [
+   "200:55b12eaadd8b",
+   null
+  ]
+ },
+ "flagger-loveland-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:a3646ce37e42",
+   null
+  ],
+  "md": [
+   "200:4fbde8f4eb6c",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:12d6a541ded6",
+  "xlsx": [
+   "200:da079a686f8b",
+   null
+  ]
+ },
+ "flagger-parker-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:cac7f8fc319f",
+   null
+  ],
+  "md": [
+   "200:cf34a361acc3",
+   null
+  ],
+  "pdf_p1": "200:4ff17eb9692c",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:7989f7e63ab7",
+  "xlsx": [
+   "200:dc78b236610b",
+   null
+  ]
+ },
+ "flagger-parker-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:46b7e63e3787",
+   null
+  ],
+  "md": [
+   "200:8dd5116e5a30",
+   null
+  ],
+  "pdf_p1": "200:cd380b942d73",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c9d5cd14d4cd",
+  "xlsx": [
+   "200:ce89ad11d5a1",
+   null
+  ]
+ },
+ "flagger-parker-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:cac7f8fc319f",
+   null
+  ],
+  "md": [
+   "200:cf34a361acc3",
+   null
+  ],
+  "pdf_p1": "200:4ff17eb9692c",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:7989f7e63ab7",
+  "xlsx": [
+   "200:dc78b236610b",
+   null
+  ]
+ },
+ "flagger-parker-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:46b7e63e3787",
+   null
+  ],
+  "md": [
+   "200:8dd5116e5a30",
+   null
+  ],
+  "pdf_p1": "200:cd380b942d73",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c9d5cd14d4cd",
+  "xlsx": [
+   "200:ce89ad11d5a1",
+   null
+  ]
+ },
+ "flagger-parker-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:cac7f8fc319f",
+   null
+  ],
+  "md": [
+   "200:cf34a361acc3",
+   null
+  ],
+  "pdf_p1": "200:4ff17eb9692c",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:7989f7e63ab7",
+  "xlsx": [
+   "200:dc78b236610b",
+   null
+  ]
+ },
+ "flagger-parker-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:46b7e63e3787",
+   null
+  ],
+  "md": [
+   "200:8dd5116e5a30",
+   null
+  ],
+  "pdf_p1": "200:cd380b942d73",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:c9d5cd14d4cd",
+  "xlsx": [
+   "200:ce89ad11d5a1",
+   null
+  ]
+ },
+ "flagger-thornton-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:56c79b8eb8fd",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:f1ebc9ca429e",
+   "1"
+  ],
+  "pdf_p1": "200:78492225e899",
+  "quote": [
+   "200:fb4930a3b56a",
+   [
+    11,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:42d1c9085658",
+  "xlsx": [
+   "200:03bea7a6a89c",
+   [
+    11,
+    1
+   ]
+  ]
+ },
+ "flagger-thornton-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:928658056e57",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:1754ac6e4236",
+   "1"
+  ],
+  "pdf_p1": "200:f12336e3db90",
+  "quote": [
+   "200:ba8064aa452f",
+   [
+    13,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:d560d8689895",
+  "xlsx": [
+   "200:5ce3e2069435",
+   [
+    13,
+    1
+   ]
+  ]
+ },
+ "flagger-thornton-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:56c79b8eb8fd",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:f1ebc9ca429e",
+   "1"
+  ],
+  "pdf_p1": "200:78492225e899",
+  "quote": [
+   "200:fb4930a3b56a",
+   [
+    11,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:42d1c9085658",
+  "xlsx": [
+   "200:03bea7a6a89c",
+   [
+    11,
+    1
+   ]
+  ]
+ },
+ "flagger-thornton-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:928658056e57",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:1754ac6e4236",
+   "1"
+  ],
+  "pdf_p1": "200:f12336e3db90",
+  "quote": [
+   "200:ba8064aa452f",
+   [
+    13,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:d560d8689895",
+  "xlsx": [
+   "200:5ce3e2069435",
+   [
+    13,
+    1
+   ]
+  ]
+ },
+ "flagger-thornton-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:56c79b8eb8fd",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:f1ebc9ca429e",
+   "1"
+  ],
+  "pdf_p1": "200:78492225e899",
+  "quote": [
+   "200:fb4930a3b56a",
+   [
+    11,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:42d1c9085658",
+  "xlsx": [
+   "200:03bea7a6a89c",
+   [
+    11,
+    1
+   ]
+  ]
+ },
+ "flagger-thornton-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:928658056e57",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:1754ac6e4236",
+   "1"
+  ],
+  "pdf_p1": "200:f12336e3db90",
+  "quote": [
+   "200:ba8064aa452f",
+   [
+    13,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:d560d8689895",
+  "xlsx": [
+   "200:5ce3e2069435",
+   [
+    13,
+    1
+   ]
+  ]
+ },
+ "flagger-westminster-None-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:f59ec6c1c4b2",
+   null
+  ],
+  "md": [
+   "200:713ddd68b1c4",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:4de46f517ad6",
+  "xlsx": [
+   "200:fa3f3c5db68b",
+   null
+  ]
+ },
+ "flagger-westminster-None-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:9044e48a7c8e",
+   null
+  ],
+  "md": [
+   "200:84b356fb06ba",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:dcc60c7a9df6",
+  "xlsx": [
+   "200:a862efb490e1",
+   null
+  ]
+ },
+ "flagger-westminster-arterial-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:f95fd732d63b",
+   null
+  ],
+  "md": [
+   "200:713ddd68b1c4",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:4de46f517ad6",
+  "xlsx": [
+   "200:fa3f3c5db68b",
+   null
+  ]
+ },
+ "flagger-westminster-arterial-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:1535fd0fd59d",
+   null
+  ],
+  "md": [
+   "200:84b356fb06ba",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:dcc60c7a9df6",
+  "xlsx": [
+   "200:a862efb490e1",
+   null
+  ]
+ },
+ "flagger-westminster-local-day": {
+  "audit": "200:016400a6248a",
+  "breakdown": [
+   "200:faf0432b4588",
+   null
+  ],
+  "md": [
+   "200:713ddd68b1c4",
+   null
+  ],
+  "pdf_p1": "200:ebef39ae4bb7",
+  "quote": [
+   "200:3c7536374b24",
+   null
+  ],
+  "snapshot": "200:4de46f517ad6",
+  "xlsx": [
+   "200:fa3f3c5db68b",
+   null
+  ]
+ },
+ "flagger-westminster-local-night": {
+  "audit": "200:33672f6457e4",
+  "breakdown": [
+   "200:7cfcfd4ebacd",
+   null
+  ],
+  "md": [
+   "200:84b356fb06ba",
+   null
+  ],
+  "pdf_p1": "200:561d74f09aa4",
+  "quote": [
+   "200:65aac9d79cf7",
+   null
+  ],
+  "snapshot": "200:dcc60c7a9df6",
+  "xlsx": [
+   "200:a862efb490e1",
+   null
+  ]
+ },
+ "ni-None-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:25bcbaaef289",
+   null
+  ],
+  "md": [
+   "200:2c5284771892",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:5780ec3e4734",
+  "xlsx": [
+   "200:c0b3a8864901",
+   null
+  ]
+ },
+ "ni-None-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:96e003afffb5",
+   null
+  ],
+  "md": [
+   "200:332202ffb6a5",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:85a0519844e4",
+  "xlsx": [
+   "200:7cec223093d4",
+   null
+  ]
+ },
+ "ni-castle_rock-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:3f28772aad3a",
+   null
+  ],
+  "md": [
+   "200:9b808cca6039",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:af4a7e5d244f",
+  "xlsx": [
+   "200:0009795889d6",
+   null
+  ]
+ },
+ "ni-castle_rock-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:7780b8669f45",
+   null
+  ],
+  "md": [
+   "200:4a8fb000cc74",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:d1df7f309692",
+  "xlsx": [
+   "200:ab1424b62cd0",
+   null
+  ]
+ },
+ "ni-castle_rock-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:3f28772aad3a",
+   null
+  ],
+  "md": [
+   "200:9b808cca6039",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:af4a7e5d244f",
+  "xlsx": [
+   "200:0009795889d6",
+   null
+  ]
+ },
+ "ni-castle_rock-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:7780b8669f45",
+   null
+  ],
+  "md": [
+   "200:4a8fb000cc74",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:d1df7f309692",
+  "xlsx": [
+   "200:ab1424b62cd0",
+   null
+  ]
+ },
+ "ni-castle_rock-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:3f28772aad3a",
+   null
+  ],
+  "md": [
+   "200:9b808cca6039",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:af4a7e5d244f",
+  "xlsx": [
+   "200:0009795889d6",
+   null
+  ]
+ },
+ "ni-castle_rock-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:7780b8669f45",
+   null
+  ],
+  "md": [
+   "200:4a8fb000cc74",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:d1df7f309692",
+  "xlsx": [
+   "200:ab1424b62cd0",
+   null
+  ]
+ },
+ "ni-cdot-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:cf0a0c702926",
+   null
+  ],
+  "md": [
+   "200:096a32114fd6",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:174d06e9deef",
+  "xlsx": [
+   "200:82b5667e3a65",
+   null
+  ]
+ },
+ "ni-cdot-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:0f468fe76cee",
+   null
+  ],
+  "md": [
+   "200:751ab9074163",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:50d6b64d69d0",
+  "xlsx": [
+   "200:3f14b5a2fa80",
+   null
+  ]
+ },
+ "ni-cdot-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:cf0a0c702926",
+   null
+  ],
+  "md": [
+   "200:096a32114fd6",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:174d06e9deef",
+  "xlsx": [
+   "200:82b5667e3a65",
+   null
+  ]
+ },
+ "ni-cdot-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:0f468fe76cee",
+   null
+  ],
+  "md": [
+   "200:751ab9074163",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:50d6b64d69d0",
+  "xlsx": [
+   "200:3f14b5a2fa80",
+   null
+  ]
+ },
+ "ni-cdot-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:cf0a0c702926",
+   null
+  ],
+  "md": [
+   "200:096a32114fd6",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:174d06e9deef",
+  "xlsx": [
+   "200:82b5667e3a65",
+   null
+  ]
+ },
+ "ni-cdot-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:0f468fe76cee",
+   null
+  ],
+  "md": [
+   "200:751ab9074163",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:50d6b64d69d0",
+  "xlsx": [
+   "200:3f14b5a2fa80",
+   null
+  ]
+ },
+ "ni-centennial-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:7efc09110174",
+   null
+  ],
+  "md": [
+   "200:912334211ed1",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:7dc935ec40a9",
+  "xlsx": [
+   "200:388d87873c75",
+   null
+  ]
+ },
+ "ni-centennial-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:c8f3b2796ccd",
+   null
+  ],
+  "md": [
+   "200:a589f6985d21",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:f3e9780bd7c1",
+  "xlsx": [
+   "200:57acd4a869c2",
+   null
+  ]
+ },
+ "ni-centennial-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:cc2947e20ac7",
+   null
+  ],
+  "md": [
+   "200:912334211ed1",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:7dc935ec40a9",
+  "xlsx": [
+   "200:388d87873c75",
+   null
+  ]
+ },
+ "ni-centennial-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:bbe4f011275a",
+   null
+  ],
+  "md": [
+   "200:a589f6985d21",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:f3e9780bd7c1",
+  "xlsx": [
+   "200:57acd4a869c2",
+   null
+  ]
+ },
+ "ni-centennial-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:a9bd73b1c7dc",
+   null
+  ],
+  "md": [
+   "200:912334211ed1",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:7dc935ec40a9",
+  "xlsx": [
+   "200:388d87873c75",
+   null
+  ]
+ },
+ "ni-centennial-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:52abf17bde96",
+   null
+  ],
+  "md": [
+   "200:a589f6985d21",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:f3e9780bd7c1",
+  "xlsx": [
+   "200:57acd4a869c2",
+   null
+  ]
+ },
+ "ni-denver-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:be0da1ea0bfc",
+   null
+  ],
+  "md": [
+   "200:53163c373aab",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e90ecdf9e989",
+   null
+  ],
+  "snapshot": "200:57fa950eedc2",
+  "xlsx": [
+   "200:1f53eea36e8a",
+   null
+  ]
+ },
+ "ni-denver-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:6a549fce1a3d",
+   null
+  ],
+  "md": [
+   "200:7c08461a2926",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:e9e19183d1e9",
+   null
+  ],
+  "snapshot": "200:7ac9eec3484f",
+  "xlsx": [
+   "200:c5803bc44094",
+   null
+  ]
+ },
+ "ni-denver-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:be0da1ea0bfc",
+   null
+  ],
+  "md": [
+   "200:53163c373aab",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e90ecdf9e989",
+   null
+  ],
+  "snapshot": "200:57fa950eedc2",
+  "xlsx": [
+   "200:1f53eea36e8a",
+   null
+  ]
+ },
+ "ni-denver-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:6a549fce1a3d",
+   null
+  ],
+  "md": [
+   "200:7c08461a2926",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:e9e19183d1e9",
+   null
+  ],
+  "snapshot": "200:7ac9eec3484f",
+  "xlsx": [
+   "200:c5803bc44094",
+   null
+  ]
+ },
+ "ni-denver-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:be0da1ea0bfc",
+   null
+  ],
+  "md": [
+   "200:53163c373aab",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e90ecdf9e989",
+   null
+  ],
+  "snapshot": "200:57fa950eedc2",
+  "xlsx": [
+   "200:1f53eea36e8a",
+   null
+  ]
+ },
+ "ni-denver-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:6a549fce1a3d",
+   null
+  ],
+  "md": [
+   "200:7c08461a2926",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:e9e19183d1e9",
+   null
+  ],
+  "snapshot": "200:7ac9eec3484f",
+  "xlsx": [
+   "200:c5803bc44094",
+   null
+  ]
+ },
+ "ni-e470-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:85ace11df70c",
+   null
+  ],
+  "md": [
+   "200:7fd1c8f2de3e",
+   null
+  ],
+  "pdf_p1": "200:03cdbf505d12",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:eb282a2aed5a",
+  "xlsx": [
+   "200:b360cdaaeb49",
+   null
+  ]
+ },
+ "ni-e470-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:ea555f3d240f",
+   null
+  ],
+  "md": [
+   "200:c89698ebaeaf",
+   null
+  ],
+  "pdf_p1": "200:ba77c0704513",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:6dca104eeb49",
+  "xlsx": [
+   "200:eff4b91d0e4e",
+   null
+  ]
+ },
+ "ni-e470-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:85ace11df70c",
+   null
+  ],
+  "md": [
+   "200:7fd1c8f2de3e",
+   null
+  ],
+  "pdf_p1": "200:03cdbf505d12",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:eb282a2aed5a",
+  "xlsx": [
+   "200:b360cdaaeb49",
+   null
+  ]
+ },
+ "ni-e470-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:ea555f3d240f",
+   null
+  ],
+  "md": [
+   "200:c89698ebaeaf",
+   null
+  ],
+  "pdf_p1": "200:ba77c0704513",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:6dca104eeb49",
+  "xlsx": [
+   "200:eff4b91d0e4e",
+   null
+  ]
+ },
+ "ni-e470-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:85ace11df70c",
+   null
+  ],
+  "md": [
+   "200:7fd1c8f2de3e",
+   null
+  ],
+  "pdf_p1": "200:03cdbf505d12",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:eb282a2aed5a",
+  "xlsx": [
+   "200:b360cdaaeb49",
+   null
+  ]
+ },
+ "ni-e470-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:ea555f3d240f",
+   null
+  ],
+  "md": [
+   "200:c89698ebaeaf",
+   null
+  ],
+  "pdf_p1": "200:ba77c0704513",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:6dca104eeb49",
+  "xlsx": [
+   "200:eff4b91d0e4e",
+   null
+  ]
+ },
+ "ni-el_paso-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:eaba7e465839",
+   null
+  ],
+  "md": [
+   "200:d30eac5a53bd",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:b5fac9dde54d",
+  "xlsx": [
+   "200:f1261e9be309",
+   null
+  ]
+ },
+ "ni-el_paso-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:f66d8e309785",
+   null
+  ],
+  "md": [
+   "200:0facba680655",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:e79e59a77dee",
+  "xlsx": [
+   "200:eb2b38be8ab0",
+   null
+  ]
+ },
+ "ni-el_paso-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:eaba7e465839",
+   null
+  ],
+  "md": [
+   "200:d30eac5a53bd",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:b5fac9dde54d",
+  "xlsx": [
+   "200:f1261e9be309",
+   null
+  ]
+ },
+ "ni-el_paso-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:f66d8e309785",
+   null
+  ],
+  "md": [
+   "200:0facba680655",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:e79e59a77dee",
+  "xlsx": [
+   "200:eb2b38be8ab0",
+   null
+  ]
+ },
+ "ni-el_paso-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:eaba7e465839",
+   null
+  ],
+  "md": [
+   "200:d30eac5a53bd",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:b5fac9dde54d",
+  "xlsx": [
+   "200:f1261e9be309",
+   null
+  ]
+ },
+ "ni-el_paso-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:f66d8e309785",
+   null
+  ],
+  "md": [
+   "200:0facba680655",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:e79e59a77dee",
+  "xlsx": [
+   "200:eb2b38be8ab0",
+   null
+  ]
+ },
+ "ni-englewood-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:33120246c7a9",
+   null
+  ],
+  "md": [
+   "200:9a0175ef691d",
+   null
+  ],
+  "pdf_p1": "200:1e373615b1f7",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:150ac0b29ad6",
+  "xlsx": [
+   "200:fd1b72e51c48",
+   null
+  ]
+ },
+ "ni-englewood-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:3fa34616b9ec",
+   null
+  ],
+  "md": [
+   "200:ffc44276f887",
+   null
+  ],
+  "pdf_p1": "200:993c2a10e640",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:1f4c20a68c7c",
+  "xlsx": [
+   "200:2ac81256dd6d",
+   null
+  ]
+ },
+ "ni-englewood-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:544fd0349c70",
+   null
+  ],
+  "md": [
+   "200:9a0175ef691d",
+   null
+  ],
+  "pdf_p1": "200:1e373615b1f7",
+  "quote": [
+   "200:30c18134f41d",
+   null
+  ],
+  "snapshot": "200:d8dd497ff5d8",
+  "xlsx": [
+   "200:6c24ae0b3b56",
+   null
+  ]
+ },
+ "ni-englewood-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:38b242ec9e50",
+   null
+  ],
+  "md": [
+   "200:ffc44276f887",
+   null
+  ],
+  "pdf_p1": "200:993c2a10e640",
+  "quote": [
+   "200:6fb065c97cc4",
+   null
+  ],
+  "snapshot": "200:50e17291ad02",
+  "xlsx": [
+   "200:60f13ad8bf75",
+   null
+  ]
+ },
+ "ni-englewood-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:50f33279d5f2",
+   null
+  ],
+  "md": [
+   "200:9a0175ef691d",
+   null
+  ],
+  "pdf_p1": "200:1e373615b1f7",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:150ac0b29ad6",
+  "xlsx": [
+   "200:fd1b72e51c48",
+   null
+  ]
+ },
+ "ni-englewood-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:ec13afcb4841",
+   null
+  ],
+  "md": [
+   "200:ffc44276f887",
+   null
+  ],
+  "pdf_p1": "200:993c2a10e640",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:1f4c20a68c7c",
+  "xlsx": [
+   "200:2ac81256dd6d",
+   null
+  ]
+ },
+ "ni-greeley-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:6a3e2353b6a1",
+   null
+  ],
+  "md": [
+   "200:d9557e3a0176",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:e59f2eef573b",
+  "xlsx": [
+   "200:03b279a2f99a",
+   null
+  ]
+ },
+ "ni-greeley-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:33374e788693",
+   null
+  ],
+  "md": [
+   "200:b77ede5d7db7",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:d10e0c17f5a5",
+  "xlsx": [
+   "200:98b17b35e0b8",
+   null
+  ]
+ },
+ "ni-greeley-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:a000d10b6fc3",
+   null
+  ],
+  "md": [
+   "200:d9557e3a0176",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:7c01ef775711",
+   null
+  ],
+  "snapshot": "200:7060a80f10fd",
+  "xlsx": [
+   "200:cfb678295e3a",
+   null
+  ]
+ },
+ "ni-greeley-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:418a891cb756",
+   null
+  ],
+  "md": [
+   "200:b77ede5d7db7",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:744af93db8e9",
+   null
+  ],
+  "snapshot": "200:394da5f74cef",
+  "xlsx": [
+   "200:f46817dcaab7",
+   null
+  ]
+ },
+ "ni-greeley-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:3a2279eadc4d",
+   null
+  ],
+  "md": [
+   "200:d9557e3a0176",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:e59f2eef573b",
+  "xlsx": [
+   "200:03b279a2f99a",
+   null
+  ]
+ },
+ "ni-greeley-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:7bb8b053fd87",
+   null
+  ],
+  "md": [
+   "200:b77ede5d7db7",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:d10e0c17f5a5",
+  "xlsx": [
+   "200:98b17b35e0b8",
+   null
+  ]
+ },
+ "ni-lakewood-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:3ce26ee45c42",
+   null
+  ],
+  "md": [
+   "200:eaa77352480e",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:1149e7180d0e",
+  "xlsx": [
+   "200:f1054400c324",
+   null
+  ]
+ },
+ "ni-lakewood-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:67470a6be9e5",
+   null
+  ],
+  "md": [
+   "200:7c8fafc892ad",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:db88171ade37",
+  "xlsx": [
+   "200:efc37325a14c",
+   null
+  ]
+ },
+ "ni-lakewood-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:886e348d5a33",
+   null
+  ],
+  "md": [
+   "200:eaa77352480e",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:5a9a4d71fe87",
+   null
+  ],
+  "snapshot": "200:d161126abe91",
+  "xlsx": [
+   "200:942ca477c1f4",
+   null
+  ]
+ },
+ "ni-lakewood-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:8fac5a0a2e16",
+   null
+  ],
+  "md": [
+   "200:7c8fafc892ad",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:88a25e3e2a02",
+   null
+  ],
+  "snapshot": "200:24ae69669b03",
+  "xlsx": [
+   "200:31e359f71b4c",
+   null
+  ]
+ },
+ "ni-lakewood-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:c3c1282c676c",
+   null
+  ],
+  "md": [
+   "200:eaa77352480e",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:1149e7180d0e",
+  "xlsx": [
+   "200:f1054400c324",
+   null
+  ]
+ },
+ "ni-lakewood-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:77a05e7b27ae",
+   null
+  ],
+  "md": [
+   "200:7c8fafc892ad",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:db88171ade37",
+  "xlsx": [
+   "200:efc37325a14c",
+   null
+  ]
+ },
+ "ni-littleton-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:9408f7307131",
+   null
+  ],
+  "md": [
+   "200:906cff14ac05",
+   null
+  ],
+  "pdf_p1": "200:173b932b20fe",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:dfd1224c42ae",
+  "xlsx": [
+   "200:02ce0490ca97",
+   null
+  ]
+ },
+ "ni-littleton-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:92bf56b9502d",
+   null
+  ],
+  "md": [
+   "200:45a49528a379",
+   null
+  ],
+  "pdf_p1": "200:a9e65d5d4cbd",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:4edac9fd36ff",
+  "xlsx": [
+   "200:e576c39d9ac6",
+   null
+  ]
+ },
+ "ni-littleton-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:9408f7307131",
+   null
+  ],
+  "md": [
+   "200:906cff14ac05",
+   null
+  ],
+  "pdf_p1": "200:173b932b20fe",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:dfd1224c42ae",
+  "xlsx": [
+   "200:02ce0490ca97",
+   null
+  ]
+ },
+ "ni-littleton-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:92bf56b9502d",
+   null
+  ],
+  "md": [
+   "200:45a49528a379",
+   null
+  ],
+  "pdf_p1": "200:a9e65d5d4cbd",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:4edac9fd36ff",
+  "xlsx": [
+   "200:e576c39d9ac6",
+   null
+  ]
+ },
+ "ni-littleton-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:9408f7307131",
+   null
+  ],
+  "md": [
+   "200:906cff14ac05",
+   null
+  ],
+  "pdf_p1": "200:173b932b20fe",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:dfd1224c42ae",
+  "xlsx": [
+   "200:02ce0490ca97",
+   null
+  ]
+ },
+ "ni-littleton-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:92bf56b9502d",
+   null
+  ],
+  "md": [
+   "200:45a49528a379",
+   null
+  ],
+  "pdf_p1": "200:a9e65d5d4cbd",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:4edac9fd36ff",
+  "xlsx": [
+   "200:e576c39d9ac6",
+   null
+  ]
+ },
+ "ni-loveland-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:659f6ec7f561",
+   null
+  ],
+  "md": [
+   "200:1384d104c0af",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:adf29abc8402",
+  "xlsx": [
+   "200:7959ccbaec3b",
+   null
+  ]
+ },
+ "ni-loveland-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:95f989a5b078",
+   null
+  ],
+  "md": [
+   "200:8c046be216d8",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:c345a4d06507",
+  "xlsx": [
+   "200:b60a8835e1e7",
+   null
+  ]
+ },
+ "ni-loveland-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:958f4170d9c5",
+   null
+  ],
+  "md": [
+   "200:1384d104c0af",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:adf29abc8402",
+  "xlsx": [
+   "200:7959ccbaec3b",
+   null
+  ]
+ },
+ "ni-loveland-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:682856d5d0e1",
+   null
+  ],
+  "md": [
+   "200:8c046be216d8",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:c345a4d06507",
+  "xlsx": [
+   "200:b60a8835e1e7",
+   null
+  ]
+ },
+ "ni-loveland-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:8f4cb66394da",
+   null
+  ],
+  "md": [
+   "200:1384d104c0af",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:adf29abc8402",
+  "xlsx": [
+   "200:7959ccbaec3b",
+   null
+  ]
+ },
+ "ni-loveland-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:1248bf985ef0",
+   null
+  ],
+  "md": [
+   "200:8c046be216d8",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:c345a4d06507",
+  "xlsx": [
+   "200:b60a8835e1e7",
+   null
+  ]
+ },
+ "ni-parker-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:96056727fd8d",
+   null
+  ],
+  "md": [
+   "200:056752e2896c",
+   null
+  ],
+  "pdf_p1": "200:5fd9d0d93e55",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:d41f0a950379",
+  "xlsx": [
+   "200:97bb3cb663a5",
+   null
+  ]
+ },
+ "ni-parker-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:5b66c9812242",
+   null
+  ],
+  "md": [
+   "200:a8b250139b5b",
+   null
+  ],
+  "pdf_p1": "200:0dc9c54b31eb",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:32de7be3fcea",
+  "xlsx": [
+   "200:b0a280aeb998",
+   null
+  ]
+ },
+ "ni-parker-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:96056727fd8d",
+   null
+  ],
+  "md": [
+   "200:056752e2896c",
+   null
+  ],
+  "pdf_p1": "200:5fd9d0d93e55",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:d41f0a950379",
+  "xlsx": [
+   "200:97bb3cb663a5",
+   null
+  ]
+ },
+ "ni-parker-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:5b66c9812242",
+   null
+  ],
+  "md": [
+   "200:a8b250139b5b",
+   null
+  ],
+  "pdf_p1": "200:0dc9c54b31eb",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:32de7be3fcea",
+  "xlsx": [
+   "200:b0a280aeb998",
+   null
+  ]
+ },
+ "ni-parker-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:96056727fd8d",
+   null
+  ],
+  "md": [
+   "200:056752e2896c",
+   null
+  ],
+  "pdf_p1": "200:5fd9d0d93e55",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:d41f0a950379",
+  "xlsx": [
+   "200:97bb3cb663a5",
+   null
+  ]
+ },
+ "ni-parker-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:5b66c9812242",
+   null
+  ],
+  "md": [
+   "200:a8b250139b5b",
+   null
+  ],
+  "pdf_p1": "200:0dc9c54b31eb",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:32de7be3fcea",
+  "xlsx": [
+   "200:b0a280aeb998",
+   null
+  ]
+ },
+ "ni-thornton-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:59ffe0de4b3f",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:2ca9e53bde74",
+   "1"
+  ],
+  "pdf_p1": "200:b77e87b72d6f",
+  "quote": [
+   "200:40f79efddda3",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:a1408399b870",
+  "xlsx": [
+   "200:5ff09ac461cc",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "ni-thornton-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:191a06af627c",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:6f98deadf9b5",
+   "1"
+  ],
+  "pdf_p1": "200:ff93dba5fbbc",
+  "quote": [
+   "200:3c1eedc13d69",
+   [
+    14,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:b2800d50e34e",
+  "xlsx": [
+   "200:1501aa3ce709",
+   [
+    14,
+    1
+   ]
+  ]
+ },
+ "ni-thornton-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:59ffe0de4b3f",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:2ca9e53bde74",
+   "1"
+  ],
+  "pdf_p1": "200:b77e87b72d6f",
+  "quote": [
+   "200:40f79efddda3",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:a1408399b870",
+  "xlsx": [
+   "200:5ff09ac461cc",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "ni-thornton-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:191a06af627c",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:6f98deadf9b5",
+   "1"
+  ],
+  "pdf_p1": "200:ff93dba5fbbc",
+  "quote": [
+   "200:3c1eedc13d69",
+   [
+    14,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:b2800d50e34e",
+  "xlsx": [
+   "200:1501aa3ce709",
+   [
+    14,
+    1
+   ]
+  ]
+ },
+ "ni-thornton-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:59ffe0de4b3f",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:2ca9e53bde74",
+   "1"
+  ],
+  "pdf_p1": "200:b77e87b72d6f",
+  "quote": [
+   "200:40f79efddda3",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:a1408399b870",
+  "xlsx": [
+   "200:5ff09ac461cc",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "ni-thornton-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:191a06af627c",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:6f98deadf9b5",
+   "1"
+  ],
+  "pdf_p1": "200:ff93dba5fbbc",
+  "quote": [
+   "200:3c1eedc13d69",
+   [
+    14,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:b2800d50e34e",
+  "xlsx": [
+   "200:1501aa3ce709",
+   [
+    14,
+    1
+   ]
+  ]
+ },
+ "ni-westminster-None-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:718adb3993a3",
+   null
+  ],
+  "md": [
+   "200:5ec8de75b5c6",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:891ec222f9b8",
+  "xlsx": [
+   "200:21b9133290d8",
+   null
+  ]
+ },
+ "ni-westminster-None-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:a8aa6b27d55f",
+   null
+  ],
+  "md": [
+   "200:e3e9d51b7c2c",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:bcdb95df1133",
+  "xlsx": [
+   "200:05e71b95a37f",
+   null
+  ]
+ },
+ "ni-westminster-arterial-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:9381f1036257",
+   null
+  ],
+  "md": [
+   "200:5ec8de75b5c6",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:891ec222f9b8",
+  "xlsx": [
+   "200:21b9133290d8",
+   null
+  ]
+ },
+ "ni-westminster-arterial-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:5d2af35bdd8d",
+   null
+  ],
+  "md": [
+   "200:e3e9d51b7c2c",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:bcdb95df1133",
+  "xlsx": [
+   "200:05e71b95a37f",
+   null
+  ]
+ },
+ "ni-westminster-local-day": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:a17352e25747",
+   null
+  ],
+  "md": [
+   "200:5ec8de75b5c6",
+   null
+  ],
+  "pdf_p1": "200:a47792c800ef",
+  "quote": [
+   "200:e6945ae35f0f",
+   null
+  ],
+  "snapshot": "200:891ec222f9b8",
+  "xlsx": [
+   "200:21b9133290d8",
+   null
+  ]
+ },
+ "ni-westminster-local-night": {
+  "audit": "200:01a777e46d03",
+  "breakdown": [
+   "200:81b288ee193a",
+   null
+  ],
+  "md": [
+   "200:e3e9d51b7c2c",
+   null
+  ],
+  "pdf_p1": "200:2933144a875f",
+  "quote": [
+   "200:69b50dc58822",
+   null
+  ],
+  "snapshot": "200:bcdb95df1133",
+  "xlsx": [
+   "200:05e71b95a37f",
+   null
+  ]
+ },
+ "ni1way-None-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:f7fdb92c8f1f",
+   null
+  ],
+  "md": [
+   "200:f1f1e66fe4d7",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:808a2e0aae52",
+  "xlsx": [
+   "200:bc9740e974b1",
+   null
+  ]
+ },
+ "ni1way-None-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:fe84baf130ad",
+   null
+  ],
+  "md": [
+   "200:7281f26bee46",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:157f3dee627e",
+  "xlsx": [
+   "200:fa75934020fc",
+   null
+  ]
+ },
+ "ni1way-castle_rock-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:32c005c8e829",
+   null
+  ],
+  "md": [
+   "200:73294852a3d3",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:7216cfd894d5",
+  "xlsx": [
+   "200:085a853f24b9",
+   null
+  ]
+ },
+ "ni1way-castle_rock-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:cf4ecdca68fe",
+   null
+  ],
+  "md": [
+   "200:2a32e96cf0d0",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:1b82d83e3097",
+  "xlsx": [
+   "200:36f92cd1b140",
+   null
+  ]
+ },
+ "ni1way-castle_rock-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:32c005c8e829",
+   null
+  ],
+  "md": [
+   "200:73294852a3d3",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:7216cfd894d5",
+  "xlsx": [
+   "200:085a853f24b9",
+   null
+  ]
+ },
+ "ni1way-castle_rock-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:cf4ecdca68fe",
+   null
+  ],
+  "md": [
+   "200:2a32e96cf0d0",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:1b82d83e3097",
+  "xlsx": [
+   "200:36f92cd1b140",
+   null
+  ]
+ },
+ "ni1way-castle_rock-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:32c005c8e829",
+   null
+  ],
+  "md": [
+   "200:73294852a3d3",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:7216cfd894d5",
+  "xlsx": [
+   "200:085a853f24b9",
+   null
+  ]
+ },
+ "ni1way-castle_rock-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:cf4ecdca68fe",
+   null
+  ],
+  "md": [
+   "200:2a32e96cf0d0",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:1b82d83e3097",
+  "xlsx": [
+   "200:36f92cd1b140",
+   null
+  ]
+ },
+ "ni1way-cdot-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:af4d4466e6c4",
+   null
+  ],
+  "md": [
+   "200:334cdd7ed6f7",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:cd7a013cc085",
+  "xlsx": [
+   "200:e1c31abe39a5",
+   null
+  ]
+ },
+ "ni1way-cdot-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:9ecc83e53251",
+   null
+  ],
+  "md": [
+   "200:05b35341cc12",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:747ddfa8d011",
+  "xlsx": [
+   "200:a26ad8b2b9da",
+   null
+  ]
+ },
+ "ni1way-cdot-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:af4d4466e6c4",
+   null
+  ],
+  "md": [
+   "200:334cdd7ed6f7",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:cd7a013cc085",
+  "xlsx": [
+   "200:e1c31abe39a5",
+   null
+  ]
+ },
+ "ni1way-cdot-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:9ecc83e53251",
+   null
+  ],
+  "md": [
+   "200:05b35341cc12",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:747ddfa8d011",
+  "xlsx": [
+   "200:a26ad8b2b9da",
+   null
+  ]
+ },
+ "ni1way-cdot-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:af4d4466e6c4",
+   null
+  ],
+  "md": [
+   "200:334cdd7ed6f7",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:cd7a013cc085",
+  "xlsx": [
+   "200:e1c31abe39a5",
+   null
+  ]
+ },
+ "ni1way-cdot-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:9ecc83e53251",
+   null
+  ],
+  "md": [
+   "200:05b35341cc12",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:747ddfa8d011",
+  "xlsx": [
+   "200:a26ad8b2b9da",
+   null
+  ]
+ },
+ "ni1way-centennial-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:e029c2eba959",
+   null
+  ],
+  "md": [
+   "200:bd93d2108d47",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:30a53045b6ed",
+  "xlsx": [
+   "200:cb2536f95b20",
+   null
+  ]
+ },
+ "ni1way-centennial-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:d39ddc8ae557",
+   null
+  ],
+  "md": [
+   "200:0ce34c580460",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:297bb5e9193f",
+  "xlsx": [
+   "200:99a66901ddaf",
+   null
+  ]
+ },
+ "ni1way-centennial-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:494b7586ff0e",
+   null
+  ],
+  "md": [
+   "200:bd93d2108d47",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:30a53045b6ed",
+  "xlsx": [
+   "200:cb2536f95b20",
+   null
+  ]
+ },
+ "ni1way-centennial-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:70457c0a0a1d",
+   null
+  ],
+  "md": [
+   "200:0ce34c580460",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:297bb5e9193f",
+  "xlsx": [
+   "200:99a66901ddaf",
+   null
+  ]
+ },
+ "ni1way-centennial-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:58ab9c087a95",
+   null
+  ],
+  "md": [
+   "200:bd93d2108d47",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:30a53045b6ed",
+  "xlsx": [
+   "200:cb2536f95b20",
+   null
+  ]
+ },
+ "ni1way-centennial-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:f6d2f4a61c3c",
+   null
+  ],
+  "md": [
+   "200:0ce34c580460",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:297bb5e9193f",
+  "xlsx": [
+   "200:99a66901ddaf",
+   null
+  ]
+ },
+ "ni1way-denver-None-day": {
+  "audit": "200:469c93b478c0",
+  "breakdown": [
+   "200:cc93c30cf2ce",
+   null
+  ],
+  "md": [
+   "200:391a2f42001f",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:e5533f65bd7e",
+   null
+  ],
+  "snapshot": "200:f3020f963afa",
+  "xlsx": [
+   "200:bc1fd31cb648",
+   null
+  ]
+ },
+ "ni1way-denver-None-night": {
+  "audit": "200:469c93b478c0",
+  "breakdown": [
+   "200:1037611d4de0",
+   null
+  ],
+  "md": [
+   "200:029b13d33d6b",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:1ed1f583c582",
+   null
+  ],
+  "snapshot": "200:b41b1c04702a",
+  "xlsx": [
+   "200:7f2d40652ec5",
+   null
+  ]
+ },
+ "ni1way-denver-arterial-day": {
+  "audit": "200:469c93b478c0",
+  "breakdown": [
+   "200:cc93c30cf2ce",
+   null
+  ],
+  "md": [
+   "200:391a2f42001f",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:e5533f65bd7e",
+   null
+  ],
+  "snapshot": "200:f3020f963afa",
+  "xlsx": [
+   "200:bc1fd31cb648",
+   null
+  ]
+ },
+ "ni1way-denver-arterial-night": {
+  "audit": "200:469c93b478c0",
+  "breakdown": [
+   "200:1037611d4de0",
+   null
+  ],
+  "md": [
+   "200:029b13d33d6b",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:1ed1f583c582",
+   null
+  ],
+  "snapshot": "200:b41b1c04702a",
+  "xlsx": [
+   "200:7f2d40652ec5",
+   null
+  ]
+ },
+ "ni1way-denver-local-day": {
+  "audit": "200:469c93b478c0",
+  "breakdown": [
+   "200:cc93c30cf2ce",
+   null
+  ],
+  "md": [
+   "200:391a2f42001f",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:e5533f65bd7e",
+   null
+  ],
+  "snapshot": "200:f3020f963afa",
+  "xlsx": [
+   "200:bc1fd31cb648",
+   null
+  ]
+ },
+ "ni1way-denver-local-night": {
+  "audit": "200:469c93b478c0",
+  "breakdown": [
+   "200:1037611d4de0",
+   null
+  ],
+  "md": [
+   "200:029b13d33d6b",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:1ed1f583c582",
+   null
+  ],
+  "snapshot": "200:b41b1c04702a",
+  "xlsx": [
+   "200:7f2d40652ec5",
+   null
+  ]
+ },
+ "ni1way-e470-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:4d36692365a9",
+   null
+  ],
+  "md": [
+   "200:334eb91bfe3b",
+   null
+  ],
+  "pdf_p1": "200:7997aa58b465",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:5bc41594d51a",
+  "xlsx": [
+   "200:bd010104e5a5",
+   null
+  ]
+ },
+ "ni1way-e470-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6820dde49c2c",
+   null
+  ],
+  "md": [
+   "200:5e5124886cf2",
+   null
+  ],
+  "pdf_p1": "200:515899aceb50",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:052efbabde01",
+  "xlsx": [
+   "200:b9ead705e032",
+   null
+  ]
+ },
+ "ni1way-e470-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:4d36692365a9",
+   null
+  ],
+  "md": [
+   "200:334eb91bfe3b",
+   null
+  ],
+  "pdf_p1": "200:7997aa58b465",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:5bc41594d51a",
+  "xlsx": [
+   "200:bd010104e5a5",
+   null
+  ]
+ },
+ "ni1way-e470-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6820dde49c2c",
+   null
+  ],
+  "md": [
+   "200:5e5124886cf2",
+   null
+  ],
+  "pdf_p1": "200:515899aceb50",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:052efbabde01",
+  "xlsx": [
+   "200:b9ead705e032",
+   null
+  ]
+ },
+ "ni1way-e470-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:4d36692365a9",
+   null
+  ],
+  "md": [
+   "200:334eb91bfe3b",
+   null
+  ],
+  "pdf_p1": "200:7997aa58b465",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:5bc41594d51a",
+  "xlsx": [
+   "200:bd010104e5a5",
+   null
+  ]
+ },
+ "ni1way-e470-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6820dde49c2c",
+   null
+  ],
+  "md": [
+   "200:5e5124886cf2",
+   null
+  ],
+  "pdf_p1": "200:515899aceb50",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:052efbabde01",
+  "xlsx": [
+   "200:b9ead705e032",
+   null
+  ]
+ },
+ "ni1way-el_paso-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:3d9878acaf1e",
+   null
+  ],
+  "md": [
+   "200:4c0d751d15af",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:3f8d4a7e92fb",
+  "xlsx": [
+   "200:b8dd84946730",
+   null
+  ]
+ },
+ "ni1way-el_paso-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:1a190bbe7a4d",
+   null
+  ],
+  "md": [
+   "200:627c1779c941",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:0464b7ecb900",
+  "xlsx": [
+   "200:52666f02b1cc",
+   null
+  ]
+ },
+ "ni1way-el_paso-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:3d9878acaf1e",
+   null
+  ],
+  "md": [
+   "200:4c0d751d15af",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:3f8d4a7e92fb",
+  "xlsx": [
+   "200:b8dd84946730",
+   null
+  ]
+ },
+ "ni1way-el_paso-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:1a190bbe7a4d",
+   null
+  ],
+  "md": [
+   "200:627c1779c941",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:0464b7ecb900",
+  "xlsx": [
+   "200:52666f02b1cc",
+   null
+  ]
+ },
+ "ni1way-el_paso-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:3d9878acaf1e",
+   null
+  ],
+  "md": [
+   "200:4c0d751d15af",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:3f8d4a7e92fb",
+  "xlsx": [
+   "200:b8dd84946730",
+   null
+  ]
+ },
+ "ni1way-el_paso-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:1a190bbe7a4d",
+   null
+  ],
+  "md": [
+   "200:627c1779c941",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:0464b7ecb900",
+  "xlsx": [
+   "200:52666f02b1cc",
+   null
+  ]
+ },
+ "ni1way-englewood-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:65b44d3a85b4",
+   null
+  ],
+  "md": [
+   "200:48d5135be156",
+   null
+  ],
+  "pdf_p1": "200:5ff58a80c898",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:f5ac6a95e698",
+  "xlsx": [
+   "200:fff4ee3693bb",
+   null
+  ]
+ },
+ "ni1way-englewood-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:d30eb63efd2b",
+   null
+  ],
+  "md": [
+   "200:05211098ad03",
+   null
+  ],
+  "pdf_p1": "200:f55a0f2bd9b8",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:fbe9e21c2b00",
+  "xlsx": [
+   "200:3f2bf50b1960",
+   null
+  ]
+ },
+ "ni1way-englewood-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:7f5c3d595dde",
+   null
+  ],
+  "md": [
+   "200:48d5135be156",
+   null
+  ],
+  "pdf_p1": "200:5ff58a80c898",
+  "quote": [
+   "200:2677d734e97f",
+   null
+  ],
+  "snapshot": "200:9b027b79608d",
+  "xlsx": [
+   "200:2c5096a9cbf6",
+   null
+  ]
+ },
+ "ni1way-englewood-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:f1c43522200d",
+   null
+  ],
+  "md": [
+   "200:05211098ad03",
+   null
+  ],
+  "pdf_p1": "200:f55a0f2bd9b8",
+  "quote": [
+   "200:72ddd3ccebf6",
+   null
+  ],
+  "snapshot": "200:13084bed1919",
+  "xlsx": [
+   "200:c16e6802382a",
+   null
+  ]
+ },
+ "ni1way-englewood-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6e582f79a85a",
+   null
+  ],
+  "md": [
+   "200:48d5135be156",
+   null
+  ],
+  "pdf_p1": "200:5ff58a80c898",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:f5ac6a95e698",
+  "xlsx": [
+   "200:fff4ee3693bb",
+   null
+  ]
+ },
+ "ni1way-englewood-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:2b4cb750e366",
+   null
+  ],
+  "md": [
+   "200:05211098ad03",
+   null
+  ],
+  "pdf_p1": "200:f55a0f2bd9b8",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:fbe9e21c2b00",
+  "xlsx": [
+   "200:3f2bf50b1960",
+   null
+  ]
+ },
+ "ni1way-greeley-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:3b3ab416bada",
+   null
+  ],
+  "md": [
+   "200:62d65a222cdd",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:61238a5d1214",
+  "xlsx": [
+   "200:124c462e075d",
+   null
+  ]
+ },
+ "ni1way-greeley-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:dcac0238dc43",
+   null
+  ],
+  "md": [
+   "200:9172212233b5",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:6fe2e2785204",
+  "xlsx": [
+   "200:87b5f603646f",
+   null
+  ]
+ },
+ "ni1way-greeley-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:ca811b809941",
+   null
+  ],
+  "md": [
+   "200:62d65a222cdd",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:686c9c71c2e7",
+   null
+  ],
+  "snapshot": "200:0684028dd90f",
+  "xlsx": [
+   "200:1ed3beb8ef79",
+   null
+  ]
+ },
+ "ni1way-greeley-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:499a43b8cafb",
+   null
+  ],
+  "md": [
+   "200:9172212233b5",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:e813bb8cbfb8",
+   null
+  ],
+  "snapshot": "200:c0322b7574f1",
+  "xlsx": [
+   "200:41ea5c2e7858",
+   null
+  ]
+ },
+ "ni1way-greeley-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:217f757317fb",
+   null
+  ],
+  "md": [
+   "200:62d65a222cdd",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:61238a5d1214",
+  "xlsx": [
+   "200:124c462e075d",
+   null
+  ]
+ },
+ "ni1way-greeley-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:17ad807f064a",
+   null
+  ],
+  "md": [
+   "200:9172212233b5",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:6fe2e2785204",
+  "xlsx": [
+   "200:87b5f603646f",
+   null
+  ]
+ },
+ "ni1way-lakewood-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:88567230e220",
+   null
+  ],
+  "md": [
+   "200:cf40bc2f88ad",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:265ff3219f84",
+  "xlsx": [
+   "200:318fb13489c0",
+   null
+  ]
+ },
+ "ni1way-lakewood-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:bbc9e6c3ccae",
+   null
+  ],
+  "md": [
+   "200:c489d8be9e0f",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:200eb161e8e1",
+  "xlsx": [
+   "200:388685672819",
+   null
+  ]
+ },
+ "ni1way-lakewood-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:a9a92cd63319",
+   null
+  ],
+  "md": [
+   "200:cf40bc2f88ad",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:f0a58aa612a6",
+   null
+  ],
+  "snapshot": "200:329d42eb863a",
+  "xlsx": [
+   "200:71b9c372792a",
+   null
+  ]
+ },
+ "ni1way-lakewood-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:096f1bc52b6f",
+   null
+  ],
+  "md": [
+   "200:c489d8be9e0f",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:915aa9aee3d2",
+   null
+  ],
+  "snapshot": "200:ce57279b83e3",
+  "xlsx": [
+   "200:4e0f259c2ac6",
+   null
+  ]
+ },
+ "ni1way-lakewood-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:c8638eedc080",
+   null
+  ],
+  "md": [
+   "200:cf40bc2f88ad",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:265ff3219f84",
+  "xlsx": [
+   "200:318fb13489c0",
+   null
+  ]
+ },
+ "ni1way-lakewood-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:0e4ef4ff7085",
+   null
+  ],
+  "md": [
+   "200:c489d8be9e0f",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:200eb161e8e1",
+  "xlsx": [
+   "200:388685672819",
+   null
+  ]
+ },
+ "ni1way-littleton-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:8b9d751bf6ea",
+   null
+  ],
+  "md": [
+   "200:bb30d9145b93",
+   null
+  ],
+  "pdf_p1": "200:1aa80527de35",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:5d035da74f95",
+  "xlsx": [
+   "200:d1423b66ad60",
+   null
+  ]
+ },
+ "ni1way-littleton-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:5c3a228799ac",
+   null
+  ],
+  "md": [
+   "200:d04887a6e5ee",
+   null
+  ],
+  "pdf_p1": "200:3ddb15935e02",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:78d4843c4dc6",
+  "xlsx": [
+   "200:9c8c8e62c90d",
+   null
+  ]
+ },
+ "ni1way-littleton-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:8b9d751bf6ea",
+   null
+  ],
+  "md": [
+   "200:bb30d9145b93",
+   null
+  ],
+  "pdf_p1": "200:1aa80527de35",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:5d035da74f95",
+  "xlsx": [
+   "200:d1423b66ad60",
+   null
+  ]
+ },
+ "ni1way-littleton-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:5c3a228799ac",
+   null
+  ],
+  "md": [
+   "200:d04887a6e5ee",
+   null
+  ],
+  "pdf_p1": "200:3ddb15935e02",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:78d4843c4dc6",
+  "xlsx": [
+   "200:9c8c8e62c90d",
+   null
+  ]
+ },
+ "ni1way-littleton-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:8b9d751bf6ea",
+   null
+  ],
+  "md": [
+   "200:bb30d9145b93",
+   null
+  ],
+  "pdf_p1": "200:1aa80527de35",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:5d035da74f95",
+  "xlsx": [
+   "200:d1423b66ad60",
+   null
+  ]
+ },
+ "ni1way-littleton-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:5c3a228799ac",
+   null
+  ],
+  "md": [
+   "200:d04887a6e5ee",
+   null
+  ],
+  "pdf_p1": "200:3ddb15935e02",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:78d4843c4dc6",
+  "xlsx": [
+   "200:9c8c8e62c90d",
+   null
+  ]
+ },
+ "ni1way-loveland-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:82c5cd28cd62",
+   null
+  ],
+  "md": [
+   "200:9fd96bded51f",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:091c84be1cfb",
+  "xlsx": [
+   "200:942999eb11a2",
+   null
+  ]
+ },
+ "ni1way-loveland-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:3380d51cc5af",
+   null
+  ],
+  "md": [
+   "200:6e5658e916e7",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:914f8637b4ce",
+  "xlsx": [
+   "200:c455f9b815fe",
+   null
+  ]
+ },
+ "ni1way-loveland-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:d05927ce513a",
+   null
+  ],
+  "md": [
+   "200:9fd96bded51f",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:091c84be1cfb",
+  "xlsx": [
+   "200:942999eb11a2",
+   null
+  ]
+ },
+ "ni1way-loveland-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:34342272bf18",
+   null
+  ],
+  "md": [
+   "200:6e5658e916e7",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:914f8637b4ce",
+  "xlsx": [
+   "200:c455f9b815fe",
+   null
+  ]
+ },
+ "ni1way-loveland-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:76d86d7dc80b",
+   null
+  ],
+  "md": [
+   "200:9fd96bded51f",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:091c84be1cfb",
+  "xlsx": [
+   "200:942999eb11a2",
+   null
+  ]
+ },
+ "ni1way-loveland-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6350e785c6d4",
+   null
+  ],
+  "md": [
+   "200:6e5658e916e7",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:914f8637b4ce",
+  "xlsx": [
+   "200:c455f9b815fe",
+   null
+  ]
+ },
+ "ni1way-parker-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:c0f0bae41b22",
+   null
+  ],
+  "md": [
+   "200:8480356986ac",
+   null
+  ],
+  "pdf_p1": "200:f7857a984e17",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:256690002032",
+  "xlsx": [
+   "200:7c517ebefb08",
+   null
+  ]
+ },
+ "ni1way-parker-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6b857caed185",
+   null
+  ],
+  "md": [
+   "200:82d455b97d95",
+   null
+  ],
+  "pdf_p1": "200:b1813a45056c",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:53df8c998868",
+  "xlsx": [
+   "200:de7dc85b4b38",
+   null
+  ]
+ },
+ "ni1way-parker-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:c0f0bae41b22",
+   null
+  ],
+  "md": [
+   "200:8480356986ac",
+   null
+  ],
+  "pdf_p1": "200:f7857a984e17",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:256690002032",
+  "xlsx": [
+   "200:7c517ebefb08",
+   null
+  ]
+ },
+ "ni1way-parker-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6b857caed185",
+   null
+  ],
+  "md": [
+   "200:82d455b97d95",
+   null
+  ],
+  "pdf_p1": "200:b1813a45056c",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:53df8c998868",
+  "xlsx": [
+   "200:de7dc85b4b38",
+   null
+  ]
+ },
+ "ni1way-parker-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:c0f0bae41b22",
+   null
+  ],
+  "md": [
+   "200:8480356986ac",
+   null
+  ],
+  "pdf_p1": "200:f7857a984e17",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:256690002032",
+  "xlsx": [
+   "200:7c517ebefb08",
+   null
+  ]
+ },
+ "ni1way-parker-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6b857caed185",
+   null
+  ],
+  "md": [
+   "200:82d455b97d95",
+   null
+  ],
+  "pdf_p1": "200:b1813a45056c",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:53df8c998868",
+  "xlsx": [
+   "200:de7dc85b4b38",
+   null
+  ]
+ },
+ "ni1way-thornton-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:1f612ef87a8d",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:0c5d6a17299e",
+   "1"
+  ],
+  "pdf_p1": "200:cf7d5eb1a620",
+  "quote": [
+   "200:75950d4a8a6c",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:0b59e1b8d075",
+  "xlsx": [
+   "200:e22358ea2707",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "ni1way-thornton-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:e6c9ae9ba0df",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:8dbfaac15311",
+   "1"
+  ],
+  "pdf_p1": "200:b66eb14ed7f4",
+  "quote": [
+   "200:ca3937b580f7",
+   [
+    14,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:d04e433cb70b",
+  "xlsx": [
+   "200:b8448ffe5dc5",
+   [
+    14,
+    1
+   ]
+  ]
+ },
+ "ni1way-thornton-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:1f612ef87a8d",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:0c5d6a17299e",
+   "1"
+  ],
+  "pdf_p1": "200:cf7d5eb1a620",
+  "quote": [
+   "200:75950d4a8a6c",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:0b59e1b8d075",
+  "xlsx": [
+   "200:e22358ea2707",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "ni1way-thornton-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:e6c9ae9ba0df",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:8dbfaac15311",
+   "1"
+  ],
+  "pdf_p1": "200:b66eb14ed7f4",
+  "quote": [
+   "200:ca3937b580f7",
+   [
+    14,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:d04e433cb70b",
+  "xlsx": [
+   "200:b8448ffe5dc5",
+   [
+    14,
+    1
+   ]
+  ]
+ },
+ "ni1way-thornton-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:1f612ef87a8d",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:0c5d6a17299e",
+   "1"
+  ],
+  "pdf_p1": "200:cf7d5eb1a620",
+  "quote": [
+   "200:75950d4a8a6c",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:0b59e1b8d075",
+  "xlsx": [
+   "200:e22358ea2707",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "ni1way-thornton-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:e6c9ae9ba0df",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:8dbfaac15311",
+   "1"
+  ],
+  "pdf_p1": "200:b66eb14ed7f4",
+  "quote": [
+   "200:ca3937b580f7",
+   [
+    14,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:d04e433cb70b",
+  "xlsx": [
+   "200:b8448ffe5dc5",
+   [
+    14,
+    1
+   ]
+  ]
+ },
+ "ni1way-westminster-None-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:3abd5783f992",
+   null
+  ],
+  "md": [
+   "200:05755dbe796b",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:d33fc0fc69f3",
+  "xlsx": [
+   "200:265cf9ad05b1",
+   null
+  ]
+ },
+ "ni1way-westminster-None-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:2a528140ec06",
+   null
+  ],
+  "md": [
+   "200:9864d3e62232",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:fd761867e7a2",
+  "xlsx": [
+   "200:4ccab2b21109",
+   null
+  ]
+ },
+ "ni1way-westminster-arterial-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:1f274a64863a",
+   null
+  ],
+  "md": [
+   "200:05755dbe796b",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:d33fc0fc69f3",
+  "xlsx": [
+   "200:265cf9ad05b1",
+   null
+  ]
+ },
+ "ni1way-westminster-arterial-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:e5801e168308",
+   null
+  ],
+  "md": [
+   "200:9864d3e62232",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:fd761867e7a2",
+  "xlsx": [
+   "200:4ccab2b21109",
+   null
+  ]
+ },
+ "ni1way-westminster-local-day": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:4c025bdacd56",
+   null
+  ],
+  "md": [
+   "200:05755dbe796b",
+   null
+  ],
+  "pdf_p1": "200:5ed961873702",
+  "quote": [
+   "200:ba3516aed71f",
+   null
+  ],
+  "snapshot": "200:d33fc0fc69f3",
+  "xlsx": [
+   "200:265cf9ad05b1",
+   null
+  ]
+ },
+ "ni1way-westminster-local-night": {
+  "audit": "200:546cf20ac213",
+  "breakdown": [
+   "200:6a8b9d241ec8",
+   null
+  ],
+  "md": [
+   "200:9864d3e62232",
+   null
+  ],
+  "pdf_p1": "200:7ee3327554a3",
+  "quote": [
+   "200:8313b9d4ba6a",
+   null
+  ],
+  "snapshot": "200:fd761867e7a2",
+  "xlsx": [
+   "200:4ccab2b21109",
+   null
+  ]
+ },
+ "shoulder-None-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:5540a18e237b",
+   null
+  ],
+  "md": [
+   "200:73b5cd957d6b",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:52cd404a5b0c",
+  "xlsx": [
+   "200:260b4ebb37b9",
+   null
+  ]
+ },
+ "shoulder-None-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:01b5f61d3b3f",
+   null
+  ],
+  "md": [
+   "200:0ba3ace50932",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:c7b427043fab",
+  "xlsx": [
+   "200:ee3cddd61e5a",
+   null
+  ]
+ },
+ "shoulder-castle_rock-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:a33278894ec0",
+   null
+  ],
+  "md": [
+   "200:f11c154f1c04",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:2704e9fbd28f",
+  "xlsx": [
+   "200:d3ecd1f60c8f",
+   null
+  ]
+ },
+ "shoulder-castle_rock-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:7f31f07b7c7c",
+   null
+  ],
+  "md": [
+   "200:4043fff1faa0",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:c783f408c2c5",
+  "xlsx": [
+   "200:849cc22b335b",
+   null
+  ]
+ },
+ "shoulder-castle_rock-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:a33278894ec0",
+   null
+  ],
+  "md": [
+   "200:f11c154f1c04",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:2704e9fbd28f",
+  "xlsx": [
+   "200:d3ecd1f60c8f",
+   null
+  ]
+ },
+ "shoulder-castle_rock-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:7f31f07b7c7c",
+   null
+  ],
+  "md": [
+   "200:4043fff1faa0",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:c783f408c2c5",
+  "xlsx": [
+   "200:849cc22b335b",
+   null
+  ]
+ },
+ "shoulder-castle_rock-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:a33278894ec0",
+   null
+  ],
+  "md": [
+   "200:f11c154f1c04",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:2704e9fbd28f",
+  "xlsx": [
+   "200:d3ecd1f60c8f",
+   null
+  ]
+ },
+ "shoulder-castle_rock-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:7f31f07b7c7c",
+   null
+  ],
+  "md": [
+   "200:4043fff1faa0",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:c783f408c2c5",
+  "xlsx": [
+   "200:849cc22b335b",
+   null
+  ]
+ },
+ "shoulder-cdot-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:205ee01b56cc",
+   null
+  ],
+  "md": [
+   "200:5065f44f84cd",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:11cf9c5915ea",
+  "xlsx": [
+   "200:d24aa3fc2aa7",
+   null
+  ]
+ },
+ "shoulder-cdot-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ce9b4ae6e9fe",
+   null
+  ],
+  "md": [
+   "200:aebce1d5057c",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:48f3f3c5e4fd",
+  "xlsx": [
+   "200:3abd8881dcc4",
+   null
+  ]
+ },
+ "shoulder-cdot-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:205ee01b56cc",
+   null
+  ],
+  "md": [
+   "200:5065f44f84cd",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:11cf9c5915ea",
+  "xlsx": [
+   "200:d24aa3fc2aa7",
+   null
+  ]
+ },
+ "shoulder-cdot-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ce9b4ae6e9fe",
+   null
+  ],
+  "md": [
+   "200:aebce1d5057c",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:48f3f3c5e4fd",
+  "xlsx": [
+   "200:3abd8881dcc4",
+   null
+  ]
+ },
+ "shoulder-cdot-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:205ee01b56cc",
+   null
+  ],
+  "md": [
+   "200:5065f44f84cd",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:11cf9c5915ea",
+  "xlsx": [
+   "200:d24aa3fc2aa7",
+   null
+  ]
+ },
+ "shoulder-cdot-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ce9b4ae6e9fe",
+   null
+  ],
+  "md": [
+   "200:aebce1d5057c",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:48f3f3c5e4fd",
+  "xlsx": [
+   "200:3abd8881dcc4",
+   null
+  ]
+ },
+ "shoulder-centennial-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:5ae96b5b52f0",
+   null
+  ],
+  "md": [
+   "200:ffb3ecbca71e",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:878f2a403f80",
+  "xlsx": [
+   "200:c582fff7fc16",
+   null
+  ]
+ },
+ "shoulder-centennial-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:30c33358cae2",
+   null
+  ],
+  "md": [
+   "200:517a28a538ed",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:a3ff82702a1a",
+  "xlsx": [
+   "200:df35812efea4",
+   null
+  ]
+ },
+ "shoulder-centennial-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:3f99adaff794",
+   null
+  ],
+  "md": [
+   "200:ffb3ecbca71e",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:878f2a403f80",
+  "xlsx": [
+   "200:c582fff7fc16",
+   null
+  ]
+ },
+ "shoulder-centennial-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:557d766d2e9d",
+   null
+  ],
+  "md": [
+   "200:517a28a538ed",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:a3ff82702a1a",
+  "xlsx": [
+   "200:df35812efea4",
+   null
+  ]
+ },
+ "shoulder-centennial-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:d51e7c1d460d",
+   null
+  ],
+  "md": [
+   "200:ffb3ecbca71e",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:878f2a403f80",
+  "xlsx": [
+   "200:c582fff7fc16",
+   null
+  ]
+ },
+ "shoulder-centennial-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:16f1ceabefee",
+   null
+  ],
+  "md": [
+   "200:517a28a538ed",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:a3ff82702a1a",
+  "xlsx": [
+   "200:df35812efea4",
+   null
+  ]
+ },
+ "shoulder-denver-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ab2879f7e4c1",
+   null
+  ],
+  "md": [
+   "200:71a09584d837",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:968bb0e93e59",
+  "xlsx": [
+   "200:f67fc66cc348",
+   null
+  ]
+ },
+ "shoulder-denver-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:fa36f40b8c83",
+   null
+  ],
+  "md": [
+   "200:e1d8f0baf654",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:55be822ddc31",
+  "xlsx": [
+   "200:34eee4997b39",
+   null
+  ]
+ },
+ "shoulder-denver-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ab2879f7e4c1",
+   null
+  ],
+  "md": [
+   "200:71a09584d837",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:968bb0e93e59",
+  "xlsx": [
+   "200:f67fc66cc348",
+   null
+  ]
+ },
+ "shoulder-denver-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:fa36f40b8c83",
+   null
+  ],
+  "md": [
+   "200:e1d8f0baf654",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:55be822ddc31",
+  "xlsx": [
+   "200:34eee4997b39",
+   null
+  ]
+ },
+ "shoulder-denver-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ab2879f7e4c1",
+   null
+  ],
+  "md": [
+   "200:71a09584d837",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:968bb0e93e59",
+  "xlsx": [
+   "200:f67fc66cc348",
+   null
+  ]
+ },
+ "shoulder-denver-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:fa36f40b8c83",
+   null
+  ],
+  "md": [
+   "200:e1d8f0baf654",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:55be822ddc31",
+  "xlsx": [
+   "200:34eee4997b39",
+   null
+  ]
+ },
+ "shoulder-e470-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:cfdd898cfd3b",
+   null
+  ],
+  "md": [
+   "200:18c47d287b8b",
+   null
+  ],
+  "pdf_p1": "200:f7551e7b9da3",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:01f16e28e2a1",
+  "xlsx": [
+   "200:cc069043cad8",
+   null
+  ]
+ },
+ "shoulder-e470-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f45314f319be",
+   null
+  ],
+  "md": [
+   "200:ec541c4bae60",
+   null
+  ],
+  "pdf_p1": "200:b090364d9a27",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:fbac8e2811cb",
+  "xlsx": [
+   "200:b0d21532a997",
+   null
+  ]
+ },
+ "shoulder-e470-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:cfdd898cfd3b",
+   null
+  ],
+  "md": [
+   "200:18c47d287b8b",
+   null
+  ],
+  "pdf_p1": "200:f7551e7b9da3",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:01f16e28e2a1",
+  "xlsx": [
+   "200:cc069043cad8",
+   null
+  ]
+ },
+ "shoulder-e470-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f45314f319be",
+   null
+  ],
+  "md": [
+   "200:ec541c4bae60",
+   null
+  ],
+  "pdf_p1": "200:b090364d9a27",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:fbac8e2811cb",
+  "xlsx": [
+   "200:b0d21532a997",
+   null
+  ]
+ },
+ "shoulder-e470-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:cfdd898cfd3b",
+   null
+  ],
+  "md": [
+   "200:18c47d287b8b",
+   null
+  ],
+  "pdf_p1": "200:f7551e7b9da3",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:01f16e28e2a1",
+  "xlsx": [
+   "200:cc069043cad8",
+   null
+  ]
+ },
+ "shoulder-e470-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f45314f319be",
+   null
+  ],
+  "md": [
+   "200:ec541c4bae60",
+   null
+  ],
+  "pdf_p1": "200:b090364d9a27",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:fbac8e2811cb",
+  "xlsx": [
+   "200:b0d21532a997",
+   null
+  ]
+ },
+ "shoulder-el_paso-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f4c51be0438f",
+   null
+  ],
+  "md": [
+   "200:22eb353367d7",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:8f67f4786ad5",
+  "xlsx": [
+   "200:277fc2890bd8",
+   null
+  ]
+ },
+ "shoulder-el_paso-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:73d512f6b14c",
+   null
+  ],
+  "md": [
+   "200:535a720fb337",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:451f8eb563a4",
+  "xlsx": [
+   "200:71d8f1aecc49",
+   null
+  ]
+ },
+ "shoulder-el_paso-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f4c51be0438f",
+   null
+  ],
+  "md": [
+   "200:22eb353367d7",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:8f67f4786ad5",
+  "xlsx": [
+   "200:277fc2890bd8",
+   null
+  ]
+ },
+ "shoulder-el_paso-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:73d512f6b14c",
+   null
+  ],
+  "md": [
+   "200:535a720fb337",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:451f8eb563a4",
+  "xlsx": [
+   "200:71d8f1aecc49",
+   null
+  ]
+ },
+ "shoulder-el_paso-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f4c51be0438f",
+   null
+  ],
+  "md": [
+   "200:22eb353367d7",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:8f67f4786ad5",
+  "xlsx": [
+   "200:277fc2890bd8",
+   null
+  ]
+ },
+ "shoulder-el_paso-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:73d512f6b14c",
+   null
+  ],
+  "md": [
+   "200:535a720fb337",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:451f8eb563a4",
+  "xlsx": [
+   "200:71d8f1aecc49",
+   null
+  ]
+ },
+ "shoulder-englewood-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:4e8194a673db",
+   null
+  ],
+  "md": [
+   "200:d684e9d87dc1",
+   null
+  ],
+  "pdf_p1": "200:39121d84bc1b",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:3267aaa97a99",
+  "xlsx": [
+   "200:0bd1b33a7e50",
+   null
+  ]
+ },
+ "shoulder-englewood-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:01d6eacb8f65",
+   null
+  ],
+  "md": [
+   "200:4e02ab07be47",
+   null
+  ],
+  "pdf_p1": "200:61d7421e97ac",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:5acf874ccc17",
+  "xlsx": [
+   "200:67661cca19bf",
+   null
+  ]
+ },
+ "shoulder-englewood-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:4e8194a673db",
+   null
+  ],
+  "md": [
+   "200:d684e9d87dc1",
+   null
+  ],
+  "pdf_p1": "200:39121d84bc1b",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:3267aaa97a99",
+  "xlsx": [
+   "200:0bd1b33a7e50",
+   null
+  ]
+ },
+ "shoulder-englewood-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:01d6eacb8f65",
+   null
+  ],
+  "md": [
+   "200:4e02ab07be47",
+   null
+  ],
+  "pdf_p1": "200:61d7421e97ac",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:5acf874ccc17",
+  "xlsx": [
+   "200:67661cca19bf",
+   null
+  ]
+ },
+ "shoulder-englewood-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:4e8194a673db",
+   null
+  ],
+  "md": [
+   "200:d684e9d87dc1",
+   null
+  ],
+  "pdf_p1": "200:39121d84bc1b",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:3267aaa97a99",
+  "xlsx": [
+   "200:0bd1b33a7e50",
+   null
+  ]
+ },
+ "shoulder-englewood-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:01d6eacb8f65",
+   null
+  ],
+  "md": [
+   "200:4e02ab07be47",
+   null
+  ],
+  "pdf_p1": "200:61d7421e97ac",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:5acf874ccc17",
+  "xlsx": [
+   "200:67661cca19bf",
+   null
+  ]
+ },
+ "shoulder-greeley-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:9b66d1904705",
+   null
+  ],
+  "md": [
+   "200:f579ac317e36",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:03beb2d8d8cc",
+  "xlsx": [
+   "200:379cfc270775",
+   null
+  ]
+ },
+ "shoulder-greeley-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:1a482933ab44",
+   null
+  ],
+  "md": [
+   "200:3764fd914c23",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:80a18772a8c6",
+  "xlsx": [
+   "200:b26ff910c080",
+   null
+  ]
+ },
+ "shoulder-greeley-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:9b66d1904705",
+   null
+  ],
+  "md": [
+   "200:f579ac317e36",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:03beb2d8d8cc",
+  "xlsx": [
+   "200:379cfc270775",
+   null
+  ]
+ },
+ "shoulder-greeley-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:1a482933ab44",
+   null
+  ],
+  "md": [
+   "200:3764fd914c23",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:80a18772a8c6",
+  "xlsx": [
+   "200:b26ff910c080",
+   null
+  ]
+ },
+ "shoulder-greeley-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:9b66d1904705",
+   null
+  ],
+  "md": [
+   "200:f579ac317e36",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:03beb2d8d8cc",
+  "xlsx": [
+   "200:379cfc270775",
+   null
+  ]
+ },
+ "shoulder-greeley-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:1a482933ab44",
+   null
+  ],
+  "md": [
+   "200:3764fd914c23",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:80a18772a8c6",
+  "xlsx": [
+   "200:b26ff910c080",
+   null
+  ]
+ },
+ "shoulder-lakewood-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:15618e595f1f",
+   null
+  ],
+  "md": [
+   "200:3df7b4fbf64c",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:a447993c7604",
+  "xlsx": [
+   "200:415819616b27",
+   null
+  ]
+ },
+ "shoulder-lakewood-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:2043d4ac3114",
+   null
+  ],
+  "md": [
+   "200:40454466658a",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:7abfcfbc92b5",
+  "xlsx": [
+   "200:4580cf40f1c0",
+   null
+  ]
+ },
+ "shoulder-lakewood-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:15618e595f1f",
+   null
+  ],
+  "md": [
+   "200:3df7b4fbf64c",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:a447993c7604",
+  "xlsx": [
+   "200:415819616b27",
+   null
+  ]
+ },
+ "shoulder-lakewood-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:2043d4ac3114",
+   null
+  ],
+  "md": [
+   "200:40454466658a",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:7abfcfbc92b5",
+  "xlsx": [
+   "200:4580cf40f1c0",
+   null
+  ]
+ },
+ "shoulder-lakewood-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:15618e595f1f",
+   null
+  ],
+  "md": [
+   "200:3df7b4fbf64c",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:a447993c7604",
+  "xlsx": [
+   "200:415819616b27",
+   null
+  ]
+ },
+ "shoulder-lakewood-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:2043d4ac3114",
+   null
+  ],
+  "md": [
+   "200:40454466658a",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:7abfcfbc92b5",
+  "xlsx": [
+   "200:4580cf40f1c0",
+   null
+  ]
+ },
+ "shoulder-littleton-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:6de02c8bf0b1",
+   null
+  ],
+  "md": [
+   "200:aee4f9d11ab2",
+   null
+  ],
+  "pdf_p1": "200:ba246a0a55bf",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:5fe53a406b43",
+  "xlsx": [
+   "200:4f6265df7a17",
+   null
+  ]
+ },
+ "shoulder-littleton-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f1fadb6671e1",
+   null
+  ],
+  "md": [
+   "200:8e3cebcfc490",
+   null
+  ],
+  "pdf_p1": "200:14ab3afe8fb3",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:0090625d1924",
+  "xlsx": [
+   "200:893f0f3b9125",
+   null
+  ]
+ },
+ "shoulder-littleton-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:6de02c8bf0b1",
+   null
+  ],
+  "md": [
+   "200:aee4f9d11ab2",
+   null
+  ],
+  "pdf_p1": "200:ba246a0a55bf",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:5fe53a406b43",
+  "xlsx": [
+   "200:4f6265df7a17",
+   null
+  ]
+ },
+ "shoulder-littleton-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f1fadb6671e1",
+   null
+  ],
+  "md": [
+   "200:8e3cebcfc490",
+   null
+  ],
+  "pdf_p1": "200:14ab3afe8fb3",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:0090625d1924",
+  "xlsx": [
+   "200:893f0f3b9125",
+   null
+  ]
+ },
+ "shoulder-littleton-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:6de02c8bf0b1",
+   null
+  ],
+  "md": [
+   "200:aee4f9d11ab2",
+   null
+  ],
+  "pdf_p1": "200:ba246a0a55bf",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:5fe53a406b43",
+  "xlsx": [
+   "200:4f6265df7a17",
+   null
+  ]
+ },
+ "shoulder-littleton-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f1fadb6671e1",
+   null
+  ],
+  "md": [
+   "200:8e3cebcfc490",
+   null
+  ],
+  "pdf_p1": "200:14ab3afe8fb3",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:0090625d1924",
+  "xlsx": [
+   "200:893f0f3b9125",
+   null
+  ]
+ },
+ "shoulder-loveland-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:879e0472251d",
+   null
+  ],
+  "md": [
+   "200:9369853fd5bc",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:37b64294a880",
+  "xlsx": [
+   "200:20308af59df4",
+   null
+  ]
+ },
+ "shoulder-loveland-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:e5b2c7c7ec56",
+   null
+  ],
+  "md": [
+   "200:e50ea303ab27",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:d6d4a9759b5f",
+  "xlsx": [
+   "200:4253dbe1037e",
+   null
+  ]
+ },
+ "shoulder-loveland-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:9f0d49eeb010",
+   null
+  ],
+  "md": [
+   "200:9369853fd5bc",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:37b64294a880",
+  "xlsx": [
+   "200:20308af59df4",
+   null
+  ]
+ },
+ "shoulder-loveland-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:38819d204443",
+   null
+  ],
+  "md": [
+   "200:e50ea303ab27",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:d6d4a9759b5f",
+  "xlsx": [
+   "200:4253dbe1037e",
+   null
+  ]
+ },
+ "shoulder-loveland-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:38601da1e054",
+   null
+  ],
+  "md": [
+   "200:9369853fd5bc",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:37b64294a880",
+  "xlsx": [
+   "200:20308af59df4",
+   null
+  ]
+ },
+ "shoulder-loveland-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:f52127c06129",
+   null
+  ],
+  "md": [
+   "200:e50ea303ab27",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:d6d4a9759b5f",
+  "xlsx": [
+   "200:4253dbe1037e",
+   null
+  ]
+ },
+ "shoulder-parker-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:7765296af2d2",
+   null
+  ],
+  "md": [
+   "200:d6c708a9bfd0",
+   null
+  ],
+  "pdf_p1": "200:a577074572bd",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:6d0e8852ff42",
+  "xlsx": [
+   "200:87e5fdc224c5",
+   null
+  ]
+ },
+ "shoulder-parker-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ec7bf01b4752",
+   null
+  ],
+  "md": [
+   "200:a0c444d3c2c3",
+   null
+  ],
+  "pdf_p1": "200:01eb66dd3a59",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:e73e706dcf42",
+  "xlsx": [
+   "200:9d3f1cf8971b",
+   null
+  ]
+ },
+ "shoulder-parker-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:7765296af2d2",
+   null
+  ],
+  "md": [
+   "200:d6c708a9bfd0",
+   null
+  ],
+  "pdf_p1": "200:a577074572bd",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:6d0e8852ff42",
+  "xlsx": [
+   "200:87e5fdc224c5",
+   null
+  ]
+ },
+ "shoulder-parker-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ec7bf01b4752",
+   null
+  ],
+  "md": [
+   "200:a0c444d3c2c3",
+   null
+  ],
+  "pdf_p1": "200:01eb66dd3a59",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:e73e706dcf42",
+  "xlsx": [
+   "200:9d3f1cf8971b",
+   null
+  ]
+ },
+ "shoulder-parker-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:7765296af2d2",
+   null
+  ],
+  "md": [
+   "200:d6c708a9bfd0",
+   null
+  ],
+  "pdf_p1": "200:a577074572bd",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:6d0e8852ff42",
+  "xlsx": [
+   "200:87e5fdc224c5",
+   null
+  ]
+ },
+ "shoulder-parker-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:ec7bf01b4752",
+   null
+  ],
+  "md": [
+   "200:a0c444d3c2c3",
+   null
+  ],
+  "pdf_p1": "200:01eb66dd3a59",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:e73e706dcf42",
+  "xlsx": [
+   "200:9d3f1cf8971b",
+   null
+  ]
+ },
+ "shoulder-thornton-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:574c581c25ea",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:b3ec5348a3e8",
+   "1"
+  ],
+  "pdf_p1": "200:097fdba504a8",
+  "quote": [
+   "200:0969e7b12578",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:7081299c3ed5",
+  "xlsx": [
+   "200:1c0292b2aea7",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder-thornton-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:176a2d2f7d14",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:acb2eebabc08",
+   "1"
+  ],
+  "pdf_p1": "200:8513449cbb71",
+  "quote": [
+   "200:294a4a94d714",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:ca00e2717dff",
+  "xlsx": [
+   "200:9bf4b21f1d8f",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder-thornton-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:574c581c25ea",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:b3ec5348a3e8",
+   "1"
+  ],
+  "pdf_p1": "200:097fdba504a8",
+  "quote": [
+   "200:0969e7b12578",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:7081299c3ed5",
+  "xlsx": [
+   "200:1c0292b2aea7",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder-thornton-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:176a2d2f7d14",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:acb2eebabc08",
+   "1"
+  ],
+  "pdf_p1": "200:8513449cbb71",
+  "quote": [
+   "200:294a4a94d714",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:ca00e2717dff",
+  "xlsx": [
+   "200:9bf4b21f1d8f",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder-thornton-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:574c581c25ea",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:b3ec5348a3e8",
+   "1"
+  ],
+  "pdf_p1": "200:097fdba504a8",
+  "quote": [
+   "200:0969e7b12578",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:7081299c3ed5",
+  "xlsx": [
+   "200:1c0292b2aea7",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder-thornton-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:176a2d2f7d14",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:acb2eebabc08",
+   "1"
+  ],
+  "pdf_p1": "200:8513449cbb71",
+  "quote": [
+   "200:294a4a94d714",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:ca00e2717dff",
+  "xlsx": [
+   "200:9bf4b21f1d8f",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder-westminster-None-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:9fb82487b8a0",
+   null
+  ],
+  "md": [
+   "200:36efef8144cd",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:ce2c222c46d0",
+  "xlsx": [
+   "200:9c0b0a47135e",
+   null
+  ]
+ },
+ "shoulder-westminster-None-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:e49f06d810f6",
+   null
+  ],
+  "md": [
+   "200:70ae4cbe6746",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:a87fcbf1abcc",
+  "xlsx": [
+   "200:0be7f78cfaf4",
+   null
+  ]
+ },
+ "shoulder-westminster-arterial-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:24b33ed8b721",
+   null
+  ],
+  "md": [
+   "200:36efef8144cd",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:ce2c222c46d0",
+  "xlsx": [
+   "200:9c0b0a47135e",
+   null
+  ]
+ },
+ "shoulder-westminster-arterial-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:15de6469bd8d",
+   null
+  ],
+  "md": [
+   "200:70ae4cbe6746",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:a87fcbf1abcc",
+  "xlsx": [
+   "200:0be7f78cfaf4",
+   null
+  ]
+ },
+ "shoulder-westminster-local-day": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:24b33ed8b721",
+   null
+  ],
+  "md": [
+   "200:36efef8144cd",
+   null
+  ],
+  "pdf_p1": "200:d3be56163492",
+  "quote": [
+   "200:c99e4d9ffe80",
+   null
+  ],
+  "snapshot": "200:ce2c222c46d0",
+  "xlsx": [
+   "200:9c0b0a47135e",
+   null
+  ]
+ },
+ "shoulder-westminster-local-night": {
+  "audit": "200:4544f829dfae",
+  "breakdown": [
+   "200:15de6469bd8d",
+   null
+  ],
+  "md": [
+   "200:70ae4cbe6746",
+   null
+  ],
+  "pdf_p1": "200:c1c7e8e08e13",
+  "quote": [
+   "200:609ceafdcd8b",
+   null
+  ],
+  "snapshot": "200:a87fcbf1abcc",
+  "xlsx": [
+   "200:0be7f78cfaf4",
+   null
+  ]
+ },
+ "shoulder1way-None-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:27a6dbdabf6c",
+   null
+  ],
+  "md": [
+   "200:3a3fe567bd07",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:5c754d6c147d",
+  "xlsx": [
+   "200:823d1f7a2b60",
+   null
+  ]
+ },
+ "shoulder1way-None-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:0657efba1622",
+   null
+  ],
+  "md": [
+   "200:9f9fa040e370",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:be44f79fab51",
+  "xlsx": [
+   "200:d7652aee60bc",
+   null
+  ]
+ },
+ "shoulder1way-castle_rock-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:05bde647468b",
+   null
+  ],
+  "md": [
+   "200:be38317b3b8f",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:5512037e94eb",
+  "xlsx": [
+   "200:4e114b300693",
+   null
+  ]
+ },
+ "shoulder1way-castle_rock-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:fdadfd0283df",
+   null
+  ],
+  "md": [
+   "200:ddcd55f4e0bc",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:d103e5f133f1",
+  "xlsx": [
+   "200:3a0428117398",
+   null
+  ]
+ },
+ "shoulder1way-castle_rock-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:05bde647468b",
+   null
+  ],
+  "md": [
+   "200:be38317b3b8f",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:5512037e94eb",
+  "xlsx": [
+   "200:4e114b300693",
+   null
+  ]
+ },
+ "shoulder1way-castle_rock-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:fdadfd0283df",
+   null
+  ],
+  "md": [
+   "200:ddcd55f4e0bc",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:d103e5f133f1",
+  "xlsx": [
+   "200:3a0428117398",
+   null
+  ]
+ },
+ "shoulder1way-castle_rock-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:05bde647468b",
+   null
+  ],
+  "md": [
+   "200:be38317b3b8f",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:5512037e94eb",
+  "xlsx": [
+   "200:4e114b300693",
+   null
+  ]
+ },
+ "shoulder1way-castle_rock-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:fdadfd0283df",
+   null
+  ],
+  "md": [
+   "200:ddcd55f4e0bc",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:d103e5f133f1",
+  "xlsx": [
+   "200:3a0428117398",
+   null
+  ]
+ },
+ "shoulder1way-cdot-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:5e644b03f8f7",
+   null
+  ],
+  "md": [
+   "200:f041b4c41b93",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:17b5aa8b719b",
+  "xlsx": [
+   "200:47277896f55a",
+   null
+  ]
+ },
+ "shoulder1way-cdot-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:9d6a2cb791e1",
+   null
+  ],
+  "md": [
+   "200:250e6b09e9ff",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:2f8918bd1cb9",
+  "xlsx": [
+   "200:b16390c9ccee",
+   null
+  ]
+ },
+ "shoulder1way-cdot-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:5e644b03f8f7",
+   null
+  ],
+  "md": [
+   "200:f041b4c41b93",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:17b5aa8b719b",
+  "xlsx": [
+   "200:47277896f55a",
+   null
+  ]
+ },
+ "shoulder1way-cdot-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:9d6a2cb791e1",
+   null
+  ],
+  "md": [
+   "200:250e6b09e9ff",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:2f8918bd1cb9",
+  "xlsx": [
+   "200:b16390c9ccee",
+   null
+  ]
+ },
+ "shoulder1way-cdot-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:5e644b03f8f7",
+   null
+  ],
+  "md": [
+   "200:f041b4c41b93",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:17b5aa8b719b",
+  "xlsx": [
+   "200:47277896f55a",
+   null
+  ]
+ },
+ "shoulder1way-cdot-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:9d6a2cb791e1",
+   null
+  ],
+  "md": [
+   "200:250e6b09e9ff",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:2f8918bd1cb9",
+  "xlsx": [
+   "200:b16390c9ccee",
+   null
+  ]
+ },
+ "shoulder1way-centennial-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:c1a1d25bfc8c",
+   null
+  ],
+  "md": [
+   "200:0471a892c000",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:cf4d81948b7f",
+  "xlsx": [
+   "200:dfd1ec813a64",
+   null
+  ]
+ },
+ "shoulder1way-centennial-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:a53f5dd0cb1d",
+   null
+  ],
+  "md": [
+   "200:63acc246de19",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:7cfde3d91b66",
+  "xlsx": [
+   "200:0eb6efdd4161",
+   null
+  ]
+ },
+ "shoulder1way-centennial-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:1bf596d78345",
+   null
+  ],
+  "md": [
+   "200:0471a892c000",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:cf4d81948b7f",
+  "xlsx": [
+   "200:dfd1ec813a64",
+   null
+  ]
+ },
+ "shoulder1way-centennial-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:7ae0fc1629ac",
+   null
+  ],
+  "md": [
+   "200:63acc246de19",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:7cfde3d91b66",
+  "xlsx": [
+   "200:0eb6efdd4161",
+   null
+  ]
+ },
+ "shoulder1way-centennial-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:a9c325cac5f6",
+   null
+  ],
+  "md": [
+   "200:0471a892c000",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:cf4d81948b7f",
+  "xlsx": [
+   "200:dfd1ec813a64",
+   null
+  ]
+ },
+ "shoulder1way-centennial-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:77b068bf3b81",
+   null
+  ],
+  "md": [
+   "200:63acc246de19",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:7cfde3d91b66",
+  "xlsx": [
+   "200:0eb6efdd4161",
+   null
+  ]
+ },
+ "shoulder1way-denver-None-day": {
+  "audit": "200:af187d42396b",
+  "breakdown": [
+   "200:4b6862139c87",
+   null
+  ],
+  "md": [
+   "200:04a24bf8ecc9",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:82779c1daafd",
+  "xlsx": [
+   "200:cf3eb78a8308",
+   null
+  ]
+ },
+ "shoulder1way-denver-None-night": {
+  "audit": "200:af187d42396b",
+  "breakdown": [
+   "200:7ccabd97743d",
+   null
+  ],
+  "md": [
+   "200:62ba9c0e9a58",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:fe0843b85b77",
+  "xlsx": [
+   "200:7cbc47769168",
+   null
+  ]
+ },
+ "shoulder1way-denver-arterial-day": {
+  "audit": "200:af187d42396b",
+  "breakdown": [
+   "200:4b6862139c87",
+   null
+  ],
+  "md": [
+   "200:04a24bf8ecc9",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:82779c1daafd",
+  "xlsx": [
+   "200:cf3eb78a8308",
+   null
+  ]
+ },
+ "shoulder1way-denver-arterial-night": {
+  "audit": "200:af187d42396b",
+  "breakdown": [
+   "200:7ccabd97743d",
+   null
+  ],
+  "md": [
+   "200:62ba9c0e9a58",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:fe0843b85b77",
+  "xlsx": [
+   "200:7cbc47769168",
+   null
+  ]
+ },
+ "shoulder1way-denver-local-day": {
+  "audit": "200:af187d42396b",
+  "breakdown": [
+   "200:4b6862139c87",
+   null
+  ],
+  "md": [
+   "200:04a24bf8ecc9",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:82779c1daafd",
+  "xlsx": [
+   "200:cf3eb78a8308",
+   null
+  ]
+ },
+ "shoulder1way-denver-local-night": {
+  "audit": "200:af187d42396b",
+  "breakdown": [
+   "200:7ccabd97743d",
+   null
+  ],
+  "md": [
+   "200:62ba9c0e9a58",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:fe0843b85b77",
+  "xlsx": [
+   "200:7cbc47769168",
+   null
+  ]
+ },
+ "shoulder1way-e470-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:f8a2f883fbdd",
+   null
+  ],
+  "md": [
+   "200:618bc689c690",
+   null
+  ],
+  "pdf_p1": "200:b68352f527af",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:2077dd457808",
+  "xlsx": [
+   "200:1411b253ece5",
+   null
+  ]
+ },
+ "shoulder1way-e470-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:bee680666c16",
+   null
+  ],
+  "md": [
+   "200:ef62a43f5a7d",
+   null
+  ],
+  "pdf_p1": "200:2225f0286324",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:cbc42a83a893",
+  "xlsx": [
+   "200:0ab67d7893c0",
+   null
+  ]
+ },
+ "shoulder1way-e470-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:f8a2f883fbdd",
+   null
+  ],
+  "md": [
+   "200:618bc689c690",
+   null
+  ],
+  "pdf_p1": "200:b68352f527af",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:2077dd457808",
+  "xlsx": [
+   "200:1411b253ece5",
+   null
+  ]
+ },
+ "shoulder1way-e470-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:bee680666c16",
+   null
+  ],
+  "md": [
+   "200:ef62a43f5a7d",
+   null
+  ],
+  "pdf_p1": "200:2225f0286324",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:cbc42a83a893",
+  "xlsx": [
+   "200:0ab67d7893c0",
+   null
+  ]
+ },
+ "shoulder1way-e470-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:f8a2f883fbdd",
+   null
+  ],
+  "md": [
+   "200:618bc689c690",
+   null
+  ],
+  "pdf_p1": "200:b68352f527af",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:2077dd457808",
+  "xlsx": [
+   "200:1411b253ece5",
+   null
+  ]
+ },
+ "shoulder1way-e470-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:bee680666c16",
+   null
+  ],
+  "md": [
+   "200:ef62a43f5a7d",
+   null
+  ],
+  "pdf_p1": "200:2225f0286324",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:cbc42a83a893",
+  "xlsx": [
+   "200:0ab67d7893c0",
+   null
+  ]
+ },
+ "shoulder1way-el_paso-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:d6f4033120f4",
+   null
+  ],
+  "md": [
+   "200:e757f682c442",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6489e9033238",
+  "xlsx": [
+   "200:70608cdf27b5",
+   null
+  ]
+ },
+ "shoulder1way-el_paso-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:591cd9317041",
+   null
+  ],
+  "md": [
+   "200:1aabfcdf2c3e",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:d526f297537e",
+  "xlsx": [
+   "200:f0f8cf2786eb",
+   null
+  ]
+ },
+ "shoulder1way-el_paso-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:d6f4033120f4",
+   null
+  ],
+  "md": [
+   "200:e757f682c442",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6489e9033238",
+  "xlsx": [
+   "200:70608cdf27b5",
+   null
+  ]
+ },
+ "shoulder1way-el_paso-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:591cd9317041",
+   null
+  ],
+  "md": [
+   "200:1aabfcdf2c3e",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:d526f297537e",
+  "xlsx": [
+   "200:f0f8cf2786eb",
+   null
+  ]
+ },
+ "shoulder1way-el_paso-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:d6f4033120f4",
+   null
+  ],
+  "md": [
+   "200:e757f682c442",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6489e9033238",
+  "xlsx": [
+   "200:70608cdf27b5",
+   null
+  ]
+ },
+ "shoulder1way-el_paso-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:591cd9317041",
+   null
+  ],
+  "md": [
+   "200:1aabfcdf2c3e",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:d526f297537e",
+  "xlsx": [
+   "200:f0f8cf2786eb",
+   null
+  ]
+ },
+ "shoulder1way-englewood-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:7127645e4263",
+   null
+  ],
+  "md": [
+   "200:386ebfbd0229",
+   null
+  ],
+  "pdf_p1": "200:55159b15178d",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:1453f636f9a3",
+  "xlsx": [
+   "200:ca352d368c5f",
+   null
+  ]
+ },
+ "shoulder1way-englewood-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:65f55274e56b",
+   null
+  ],
+  "md": [
+   "200:8a8cc3eb1a74",
+   null
+  ],
+  "pdf_p1": "200:920df242b107",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:1026d238a0a7",
+  "xlsx": [
+   "200:0fbc78651393",
+   null
+  ]
+ },
+ "shoulder1way-englewood-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:7127645e4263",
+   null
+  ],
+  "md": [
+   "200:386ebfbd0229",
+   null
+  ],
+  "pdf_p1": "200:55159b15178d",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:1453f636f9a3",
+  "xlsx": [
+   "200:ca352d368c5f",
+   null
+  ]
+ },
+ "shoulder1way-englewood-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:65f55274e56b",
+   null
+  ],
+  "md": [
+   "200:8a8cc3eb1a74",
+   null
+  ],
+  "pdf_p1": "200:920df242b107",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:1026d238a0a7",
+  "xlsx": [
+   "200:0fbc78651393",
+   null
+  ]
+ },
+ "shoulder1way-englewood-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:7127645e4263",
+   null
+  ],
+  "md": [
+   "200:386ebfbd0229",
+   null
+  ],
+  "pdf_p1": "200:55159b15178d",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:1453f636f9a3",
+  "xlsx": [
+   "200:ca352d368c5f",
+   null
+  ]
+ },
+ "shoulder1way-englewood-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:65f55274e56b",
+   null
+  ],
+  "md": [
+   "200:8a8cc3eb1a74",
+   null
+  ],
+  "pdf_p1": "200:920df242b107",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:1026d238a0a7",
+  "xlsx": [
+   "200:0fbc78651393",
+   null
+  ]
+ },
+ "shoulder1way-greeley-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:53e3fd4b44ce",
+   null
+  ],
+  "md": [
+   "200:2d1cc026b9e7",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:f5b504d9407c",
+  "xlsx": [
+   "200:95228c1e8f09",
+   null
+  ]
+ },
+ "shoulder1way-greeley-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:c5a77376ca34",
+   null
+  ],
+  "md": [
+   "200:354ff910ac9f",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:a85dcb051c9c",
+  "xlsx": [
+   "200:e1f823da3a94",
+   null
+  ]
+ },
+ "shoulder1way-greeley-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:53e3fd4b44ce",
+   null
+  ],
+  "md": [
+   "200:2d1cc026b9e7",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:f5b504d9407c",
+  "xlsx": [
+   "200:95228c1e8f09",
+   null
+  ]
+ },
+ "shoulder1way-greeley-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:c5a77376ca34",
+   null
+  ],
+  "md": [
+   "200:354ff910ac9f",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:a85dcb051c9c",
+  "xlsx": [
+   "200:e1f823da3a94",
+   null
+  ]
+ },
+ "shoulder1way-greeley-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:53e3fd4b44ce",
+   null
+  ],
+  "md": [
+   "200:2d1cc026b9e7",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:f5b504d9407c",
+  "xlsx": [
+   "200:95228c1e8f09",
+   null
+  ]
+ },
+ "shoulder1way-greeley-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:c5a77376ca34",
+   null
+  ],
+  "md": [
+   "200:354ff910ac9f",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:a85dcb051c9c",
+  "xlsx": [
+   "200:e1f823da3a94",
+   null
+  ]
+ },
+ "shoulder1way-lakewood-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:51081b2d478f",
+   null
+  ],
+  "md": [
+   "200:5a6bf98e2fb9",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6f5cd4a68207",
+  "xlsx": [
+   "200:848e34c011c4",
+   null
+  ]
+ },
+ "shoulder1way-lakewood-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:6d261840bfa5",
+   null
+  ],
+  "md": [
+   "200:8afd3d3efffe",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:f7265c7f106a",
+  "xlsx": [
+   "200:13d2b2546717",
+   null
+  ]
+ },
+ "shoulder1way-lakewood-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:51081b2d478f",
+   null
+  ],
+  "md": [
+   "200:5a6bf98e2fb9",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6f5cd4a68207",
+  "xlsx": [
+   "200:848e34c011c4",
+   null
+  ]
+ },
+ "shoulder1way-lakewood-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:6d261840bfa5",
+   null
+  ],
+  "md": [
+   "200:8afd3d3efffe",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:f7265c7f106a",
+  "xlsx": [
+   "200:13d2b2546717",
+   null
+  ]
+ },
+ "shoulder1way-lakewood-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:51081b2d478f",
+   null
+  ],
+  "md": [
+   "200:5a6bf98e2fb9",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6f5cd4a68207",
+  "xlsx": [
+   "200:848e34c011c4",
+   null
+  ]
+ },
+ "shoulder1way-lakewood-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:6d261840bfa5",
+   null
+  ],
+  "md": [
+   "200:8afd3d3efffe",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:f7265c7f106a",
+  "xlsx": [
+   "200:13d2b2546717",
+   null
+  ]
+ },
+ "shoulder1way-littleton-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:3bb57134edb6",
+   null
+  ],
+  "md": [
+   "200:0e37b99f06dd",
+   null
+  ],
+  "pdf_p1": "200:c5e07b5f5dbd",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6641ce06aa58",
+  "xlsx": [
+   "200:643876cc08a7",
+   null
+  ]
+ },
+ "shoulder1way-littleton-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:a894a84adcfa",
+   null
+  ],
+  "md": [
+   "200:65228351b6ad",
+   null
+  ],
+  "pdf_p1": "200:3a1770f5816f",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:c0c15080182d",
+  "xlsx": [
+   "200:d4613adc7e56",
+   null
+  ]
+ },
+ "shoulder1way-littleton-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:3bb57134edb6",
+   null
+  ],
+  "md": [
+   "200:0e37b99f06dd",
+   null
+  ],
+  "pdf_p1": "200:c5e07b5f5dbd",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6641ce06aa58",
+  "xlsx": [
+   "200:643876cc08a7",
+   null
+  ]
+ },
+ "shoulder1way-littleton-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:a894a84adcfa",
+   null
+  ],
+  "md": [
+   "200:65228351b6ad",
+   null
+  ],
+  "pdf_p1": "200:3a1770f5816f",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:c0c15080182d",
+  "xlsx": [
+   "200:d4613adc7e56",
+   null
+  ]
+ },
+ "shoulder1way-littleton-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:3bb57134edb6",
+   null
+  ],
+  "md": [
+   "200:0e37b99f06dd",
+   null
+  ],
+  "pdf_p1": "200:c5e07b5f5dbd",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:6641ce06aa58",
+  "xlsx": [
+   "200:643876cc08a7",
+   null
+  ]
+ },
+ "shoulder1way-littleton-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:a894a84adcfa",
+   null
+  ],
+  "md": [
+   "200:65228351b6ad",
+   null
+  ],
+  "pdf_p1": "200:3a1770f5816f",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:c0c15080182d",
+  "xlsx": [
+   "200:d4613adc7e56",
+   null
+  ]
+ },
+ "shoulder1way-loveland-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:bc8e25e1a4f0",
+   null
+  ],
+  "md": [
+   "200:431566be7273",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:c1f38483caf3",
+  "xlsx": [
+   "200:51a7c0f30a4d",
+   null
+  ]
+ },
+ "shoulder1way-loveland-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:4a2407299d89",
+   null
+  ],
+  "md": [
+   "200:4ce45b14087c",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:5008e8c174ca",
+  "xlsx": [
+   "200:aef9bb0ad48c",
+   null
+  ]
+ },
+ "shoulder1way-loveland-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:bb52bd9eb28b",
+   null
+  ],
+  "md": [
+   "200:431566be7273",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:c1f38483caf3",
+  "xlsx": [
+   "200:51a7c0f30a4d",
+   null
+  ]
+ },
+ "shoulder1way-loveland-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:c0127f0e8de5",
+   null
+  ],
+  "md": [
+   "200:4ce45b14087c",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:5008e8c174ca",
+  "xlsx": [
+   "200:aef9bb0ad48c",
+   null
+  ]
+ },
+ "shoulder1way-loveland-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:a1ac79b744cb",
+   null
+  ],
+  "md": [
+   "200:431566be7273",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:c1f38483caf3",
+  "xlsx": [
+   "200:51a7c0f30a4d",
+   null
+  ]
+ },
+ "shoulder1way-loveland-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:70c437f0cf95",
+   null
+  ],
+  "md": [
+   "200:4ce45b14087c",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:5008e8c174ca",
+  "xlsx": [
+   "200:aef9bb0ad48c",
+   null
+  ]
+ },
+ "shoulder1way-parker-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:9fccf427a182",
+   null
+  ],
+  "md": [
+   "200:8a5c8bd15880",
+   null
+  ],
+  "pdf_p1": "200:9abe21743e71",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:efa2bb976e18",
+  "xlsx": [
+   "200:2fed6db4d847",
+   null
+  ]
+ },
+ "shoulder1way-parker-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:8c6fa779de2a",
+   null
+  ],
+  "md": [
+   "200:90c188afac22",
+   null
+  ],
+  "pdf_p1": "200:ac193b1b0c76",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:822432046105",
+  "xlsx": [
+   "200:3c8d22f35681",
+   null
+  ]
+ },
+ "shoulder1way-parker-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:9fccf427a182",
+   null
+  ],
+  "md": [
+   "200:8a5c8bd15880",
+   null
+  ],
+  "pdf_p1": "200:9abe21743e71",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:efa2bb976e18",
+  "xlsx": [
+   "200:2fed6db4d847",
+   null
+  ]
+ },
+ "shoulder1way-parker-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:8c6fa779de2a",
+   null
+  ],
+  "md": [
+   "200:90c188afac22",
+   null
+  ],
+  "pdf_p1": "200:ac193b1b0c76",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:822432046105",
+  "xlsx": [
+   "200:3c8d22f35681",
+   null
+  ]
+ },
+ "shoulder1way-parker-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:9fccf427a182",
+   null
+  ],
+  "md": [
+   "200:8a5c8bd15880",
+   null
+  ],
+  "pdf_p1": "200:9abe21743e71",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:efa2bb976e18",
+  "xlsx": [
+   "200:2fed6db4d847",
+   null
+  ]
+ },
+ "shoulder1way-parker-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:8c6fa779de2a",
+   null
+  ],
+  "md": [
+   "200:90c188afac22",
+   null
+  ],
+  "pdf_p1": "200:ac193b1b0c76",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:822432046105",
+  "xlsx": [
+   "200:3c8d22f35681",
+   null
+  ]
+ },
+ "shoulder1way-thornton-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:d405538ed506",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:84d2e6fe5dac",
+   "1"
+  ],
+  "pdf_p1": "200:9d5f51d3e6f8",
+  "quote": [
+   "200:8f5765c9e034",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:f1b3650ac7a5",
+  "xlsx": [
+   "200:b63c5a0e027a",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder1way-thornton-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:6388619673fc",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:73e895f06fa9",
+   "1"
+  ],
+  "pdf_p1": "200:c782d1312136",
+  "quote": [
+   "200:8caa07384599",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:ded826531b8f",
+  "xlsx": [
+   "200:c4a6d9337b2e",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder1way-thornton-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:d405538ed506",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:84d2e6fe5dac",
+   "1"
+  ],
+  "pdf_p1": "200:9d5f51d3e6f8",
+  "quote": [
+   "200:8f5765c9e034",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:f1b3650ac7a5",
+  "xlsx": [
+   "200:b63c5a0e027a",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder1way-thornton-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:6388619673fc",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:73e895f06fa9",
+   "1"
+  ],
+  "pdf_p1": "200:c782d1312136",
+  "quote": [
+   "200:8caa07384599",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:ded826531b8f",
+  "xlsx": [
+   "200:c4a6d9337b2e",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder1way-thornton-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:d405538ed506",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:84d2e6fe5dac",
+   "1"
+  ],
+  "pdf_p1": "200:9d5f51d3e6f8",
+  "quote": [
+   "200:8f5765c9e034",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:f1b3650ac7a5",
+  "xlsx": [
+   "200:b63c5a0e027a",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder1way-thornton-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:6388619673fc",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:73e895f06fa9",
+   "1"
+  ],
+  "pdf_p1": "200:c782d1312136",
+  "quote": [
+   "200:8caa07384599",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:ded826531b8f",
+  "xlsx": [
+   "200:c4a6d9337b2e",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder1way-westminster-None-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:b11672d09b48",
+   null
+  ],
+  "md": [
+   "200:e152ae400787",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:2bf7327b3b37",
+  "xlsx": [
+   "200:4de3f360d69a",
+   null
+  ]
+ },
+ "shoulder1way-westminster-None-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:e76e0433b8a4",
+   null
+  ],
+  "md": [
+   "200:cd9e70957246",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:79940aa28257",
+  "xlsx": [
+   "200:8b6ec341061b",
+   null
+  ]
+ },
+ "shoulder1way-westminster-arterial-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:cb4955c4dc16",
+   null
+  ],
+  "md": [
+   "200:e152ae400787",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:2bf7327b3b37",
+  "xlsx": [
+   "200:4de3f360d69a",
+   null
+  ]
+ },
+ "shoulder1way-westminster-arterial-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:5ada60b79d2e",
+   null
+  ],
+  "md": [
+   "200:cd9e70957246",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:79940aa28257",
+  "xlsx": [
+   "200:8b6ec341061b",
+   null
+  ]
+ },
+ "shoulder1way-westminster-local-day": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:cb4955c4dc16",
+   null
+  ],
+  "md": [
+   "200:e152ae400787",
+   null
+  ],
+  "pdf_p1": "200:978a0bc4aba4",
+  "quote": [
+   "200:64b2f747278e",
+   null
+  ],
+  "snapshot": "200:2bf7327b3b37",
+  "xlsx": [
+   "200:4de3f360d69a",
+   null
+  ]
+ },
+ "shoulder1way-westminster-local-night": {
+  "audit": "200:94ae2058f572",
+  "breakdown": [
+   "200:5ada60b79d2e",
+   null
+  ],
+  "md": [
+   "200:cd9e70957246",
+   null
+  ],
+  "pdf_p1": "200:04914faf45d5",
+  "quote": [
+   "200:fe5d1af99fc8",
+   null
+  ],
+  "snapshot": "200:79940aa28257",
+  "xlsx": [
+   "200:8b6ec341061b",
+   null
+  ]
+ },
+ "shoulder2way-None-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:e304466bff29",
+   null
+  ],
+  "md": [
+   "200:45410827b0bc",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:e1419a85af79",
+  "xlsx": [
+   "200:fd83af7e918f",
+   null
+  ]
+ },
+ "shoulder2way-None-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:0f288c080736",
+   null
+  ],
+  "md": [
+   "200:19d325a6aa59",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:2cda45546916",
+  "xlsx": [
+   "200:75c910709719",
+   null
+  ]
+ },
+ "shoulder2way-castle_rock-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:6ff6386a37be",
+   null
+  ],
+  "md": [
+   "200:8b0d8cf68a30",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:812168250af2",
+  "xlsx": [
+   "200:f4d32e999e68",
+   null
+  ]
+ },
+ "shoulder2way-castle_rock-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:f2089992570c",
+   null
+  ],
+  "md": [
+   "200:6c6bc4864780",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:6fff3176cdcb",
+  "xlsx": [
+   "200:8d1ebe9aa348",
+   null
+  ]
+ },
+ "shoulder2way-castle_rock-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:6ff6386a37be",
+   null
+  ],
+  "md": [
+   "200:8b0d8cf68a30",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:812168250af2",
+  "xlsx": [
+   "200:f4d32e999e68",
+   null
+  ]
+ },
+ "shoulder2way-castle_rock-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:f2089992570c",
+   null
+  ],
+  "md": [
+   "200:6c6bc4864780",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:6fff3176cdcb",
+  "xlsx": [
+   "200:8d1ebe9aa348",
+   null
+  ]
+ },
+ "shoulder2way-castle_rock-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:6ff6386a37be",
+   null
+  ],
+  "md": [
+   "200:8b0d8cf68a30",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:812168250af2",
+  "xlsx": [
+   "200:f4d32e999e68",
+   null
+  ]
+ },
+ "shoulder2way-castle_rock-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:f2089992570c",
+   null
+  ],
+  "md": [
+   "200:6c6bc4864780",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:6fff3176cdcb",
+  "xlsx": [
+   "200:8d1ebe9aa348",
+   null
+  ]
+ },
+ "shoulder2way-cdot-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:273746d2ccbe",
+   null
+  ],
+  "md": [
+   "200:df77c97704ce",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:52bf746f42b7",
+  "xlsx": [
+   "200:2ac4370484e1",
+   null
+  ]
+ },
+ "shoulder2way-cdot-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:eecf4a33c7f6",
+   null
+  ],
+  "md": [
+   "200:35593aaeb498",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:79aa520ba1b9",
+  "xlsx": [
+   "200:182a638c364c",
+   null
+  ]
+ },
+ "shoulder2way-cdot-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:273746d2ccbe",
+   null
+  ],
+  "md": [
+   "200:df77c97704ce",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:52bf746f42b7",
+  "xlsx": [
+   "200:2ac4370484e1",
+   null
+  ]
+ },
+ "shoulder2way-cdot-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:eecf4a33c7f6",
+   null
+  ],
+  "md": [
+   "200:35593aaeb498",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:79aa520ba1b9",
+  "xlsx": [
+   "200:182a638c364c",
+   null
+  ]
+ },
+ "shoulder2way-cdot-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:273746d2ccbe",
+   null
+  ],
+  "md": [
+   "200:df77c97704ce",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:52bf746f42b7",
+  "xlsx": [
+   "200:2ac4370484e1",
+   null
+  ]
+ },
+ "shoulder2way-cdot-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:eecf4a33c7f6",
+   null
+  ],
+  "md": [
+   "200:35593aaeb498",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:79aa520ba1b9",
+  "xlsx": [
+   "200:182a638c364c",
+   null
+  ]
+ },
+ "shoulder2way-centennial-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:bd47c2f93dea",
+   null
+  ],
+  "md": [
+   "200:1a0ab59309be",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:14bc23ea8394",
+  "xlsx": [
+   "200:8c555e9490b8",
+   null
+  ]
+ },
+ "shoulder2way-centennial-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ee17fc6b5e0b",
+   null
+  ],
+  "md": [
+   "200:0e199e305f2a",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:504ef6aaeef0",
+  "xlsx": [
+   "200:ae249224dc54",
+   null
+  ]
+ },
+ "shoulder2way-centennial-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:28cd4875e574",
+   null
+  ],
+  "md": [
+   "200:1a0ab59309be",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:14bc23ea8394",
+  "xlsx": [
+   "200:8c555e9490b8",
+   null
+  ]
+ },
+ "shoulder2way-centennial-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:033f9d6c9929",
+   null
+  ],
+  "md": [
+   "200:0e199e305f2a",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:504ef6aaeef0",
+  "xlsx": [
+   "200:ae249224dc54",
+   null
+  ]
+ },
+ "shoulder2way-centennial-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:5f1b3922135c",
+   null
+  ],
+  "md": [
+   "200:1a0ab59309be",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:14bc23ea8394",
+  "xlsx": [
+   "200:8c555e9490b8",
+   null
+  ]
+ },
+ "shoulder2way-centennial-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ece15804767a",
+   null
+  ],
+  "md": [
+   "200:0e199e305f2a",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:504ef6aaeef0",
+  "xlsx": [
+   "200:ae249224dc54",
+   null
+  ]
+ },
+ "shoulder2way-denver-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:8056953e09ef",
+   null
+  ],
+  "md": [
+   "200:ca271592d30a",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:da6a6e7361eb",
+  "xlsx": [
+   "200:e5d275b04d64",
+   null
+  ]
+ },
+ "shoulder2way-denver-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:de198f758a83",
+   null
+  ],
+  "md": [
+   "200:b914a076a3e7",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:d4dd78c1d74c",
+  "xlsx": [
+   "200:dc3b4b6938df",
+   null
+  ]
+ },
+ "shoulder2way-denver-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:8056953e09ef",
+   null
+  ],
+  "md": [
+   "200:ca271592d30a",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:da6a6e7361eb",
+  "xlsx": [
+   "200:e5d275b04d64",
+   null
+  ]
+ },
+ "shoulder2way-denver-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:de198f758a83",
+   null
+  ],
+  "md": [
+   "200:b914a076a3e7",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:d4dd78c1d74c",
+  "xlsx": [
+   "200:dc3b4b6938df",
+   null
+  ]
+ },
+ "shoulder2way-denver-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:8056953e09ef",
+   null
+  ],
+  "md": [
+   "200:ca271592d30a",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:da6a6e7361eb",
+  "xlsx": [
+   "200:e5d275b04d64",
+   null
+  ]
+ },
+ "shoulder2way-denver-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:de198f758a83",
+   null
+  ],
+  "md": [
+   "200:b914a076a3e7",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:d4dd78c1d74c",
+  "xlsx": [
+   "200:dc3b4b6938df",
+   null
+  ]
+ },
+ "shoulder2way-e470-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:c3583e94add8",
+   null
+  ],
+  "md": [
+   "200:ecd980c0c638",
+   null
+  ],
+  "pdf_p1": "200:8f95015e3add",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:c9f49809dcbf",
+  "xlsx": [
+   "200:41f693f98e7d",
+   null
+  ]
+ },
+ "shoulder2way-e470-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ecb8c1a4ccee",
+   null
+  ],
+  "md": [
+   "200:4ddc703f7f0a",
+   null
+  ],
+  "pdf_p1": "200:6e8873438326",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7add41320972",
+  "xlsx": [
+   "200:7b55f8ab16cd",
+   null
+  ]
+ },
+ "shoulder2way-e470-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:c3583e94add8",
+   null
+  ],
+  "md": [
+   "200:ecd980c0c638",
+   null
+  ],
+  "pdf_p1": "200:8f95015e3add",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:c9f49809dcbf",
+  "xlsx": [
+   "200:41f693f98e7d",
+   null
+  ]
+ },
+ "shoulder2way-e470-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ecb8c1a4ccee",
+   null
+  ],
+  "md": [
+   "200:4ddc703f7f0a",
+   null
+  ],
+  "pdf_p1": "200:6e8873438326",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7add41320972",
+  "xlsx": [
+   "200:7b55f8ab16cd",
+   null
+  ]
+ },
+ "shoulder2way-e470-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:c3583e94add8",
+   null
+  ],
+  "md": [
+   "200:ecd980c0c638",
+   null
+  ],
+  "pdf_p1": "200:8f95015e3add",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:c9f49809dcbf",
+  "xlsx": [
+   "200:41f693f98e7d",
+   null
+  ]
+ },
+ "shoulder2way-e470-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ecb8c1a4ccee",
+   null
+  ],
+  "md": [
+   "200:4ddc703f7f0a",
+   null
+  ],
+  "pdf_p1": "200:6e8873438326",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7add41320972",
+  "xlsx": [
+   "200:7b55f8ab16cd",
+   null
+  ]
+ },
+ "shoulder2way-el_paso-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:4557d672ed69",
+   null
+  ],
+  "md": [
+   "200:30a1adfe855c",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:079a2eb0b9c1",
+  "xlsx": [
+   "200:a5cd49c70e71",
+   null
+  ]
+ },
+ "shoulder2way-el_paso-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:598adf27e79d",
+   null
+  ],
+  "md": [
+   "200:174550c64684",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7208d40dc3e8",
+  "xlsx": [
+   "200:a96d1eb4c7fc",
+   null
+  ]
+ },
+ "shoulder2way-el_paso-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:4557d672ed69",
+   null
+  ],
+  "md": [
+   "200:30a1adfe855c",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:079a2eb0b9c1",
+  "xlsx": [
+   "200:a5cd49c70e71",
+   null
+  ]
+ },
+ "shoulder2way-el_paso-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:598adf27e79d",
+   null
+  ],
+  "md": [
+   "200:174550c64684",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7208d40dc3e8",
+  "xlsx": [
+   "200:a96d1eb4c7fc",
+   null
+  ]
+ },
+ "shoulder2way-el_paso-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:4557d672ed69",
+   null
+  ],
+  "md": [
+   "200:30a1adfe855c",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:079a2eb0b9c1",
+  "xlsx": [
+   "200:a5cd49c70e71",
+   null
+  ]
+ },
+ "shoulder2way-el_paso-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:598adf27e79d",
+   null
+  ],
+  "md": [
+   "200:174550c64684",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7208d40dc3e8",
+  "xlsx": [
+   "200:a96d1eb4c7fc",
+   null
+  ]
+ },
+ "shoulder2way-englewood-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:f54ac9310ed2",
+   null
+  ],
+  "md": [
+   "200:3b3085833e18",
+   null
+  ],
+  "pdf_p1": "200:6279d6751f26",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:ee9aa309d330",
+  "xlsx": [
+   "200:e741e0b64f7e",
+   null
+  ]
+ },
+ "shoulder2way-englewood-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:42f156dc4fd1",
+   null
+  ],
+  "md": [
+   "200:fb0e518079d4",
+   null
+  ],
+  "pdf_p1": "200:c61ae97a125f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:c21ef139d9c8",
+  "xlsx": [
+   "200:8f3e696b15a0",
+   null
+  ]
+ },
+ "shoulder2way-englewood-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:f54ac9310ed2",
+   null
+  ],
+  "md": [
+   "200:3b3085833e18",
+   null
+  ],
+  "pdf_p1": "200:6279d6751f26",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:ee9aa309d330",
+  "xlsx": [
+   "200:e741e0b64f7e",
+   null
+  ]
+ },
+ "shoulder2way-englewood-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:42f156dc4fd1",
+   null
+  ],
+  "md": [
+   "200:fb0e518079d4",
+   null
+  ],
+  "pdf_p1": "200:c61ae97a125f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:c21ef139d9c8",
+  "xlsx": [
+   "200:8f3e696b15a0",
+   null
+  ]
+ },
+ "shoulder2way-englewood-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:f54ac9310ed2",
+   null
+  ],
+  "md": [
+   "200:3b3085833e18",
+   null
+  ],
+  "pdf_p1": "200:6279d6751f26",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:ee9aa309d330",
+  "xlsx": [
+   "200:e741e0b64f7e",
+   null
+  ]
+ },
+ "shoulder2way-englewood-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:42f156dc4fd1",
+   null
+  ],
+  "md": [
+   "200:fb0e518079d4",
+   null
+  ],
+  "pdf_p1": "200:c61ae97a125f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:c21ef139d9c8",
+  "xlsx": [
+   "200:8f3e696b15a0",
+   null
+  ]
+ },
+ "shoulder2way-greeley-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:c389e3202b29",
+   null
+  ],
+  "md": [
+   "200:33bc957c5968",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:9186f12429be",
+  "xlsx": [
+   "200:08527fe4da6a",
+   null
+  ]
+ },
+ "shoulder2way-greeley-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ef3b5ed55f3a",
+   null
+  ],
+  "md": [
+   "200:eb59b113db5b",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:1180cf39606f",
+  "xlsx": [
+   "200:2a75516cdfff",
+   null
+  ]
+ },
+ "shoulder2way-greeley-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:c389e3202b29",
+   null
+  ],
+  "md": [
+   "200:33bc957c5968",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:9186f12429be",
+  "xlsx": [
+   "200:08527fe4da6a",
+   null
+  ]
+ },
+ "shoulder2way-greeley-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ef3b5ed55f3a",
+   null
+  ],
+  "md": [
+   "200:eb59b113db5b",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:1180cf39606f",
+  "xlsx": [
+   "200:2a75516cdfff",
+   null
+  ]
+ },
+ "shoulder2way-greeley-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:c389e3202b29",
+   null
+  ],
+  "md": [
+   "200:33bc957c5968",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:9186f12429be",
+  "xlsx": [
+   "200:08527fe4da6a",
+   null
+  ]
+ },
+ "shoulder2way-greeley-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ef3b5ed55f3a",
+   null
+  ],
+  "md": [
+   "200:eb59b113db5b",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:1180cf39606f",
+  "xlsx": [
+   "200:2a75516cdfff",
+   null
+  ]
+ },
+ "shoulder2way-lakewood-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:41765efd9d01",
+   null
+  ],
+  "md": [
+   "200:7127e9f85569",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:40f2ad723dd1",
+  "xlsx": [
+   "200:9b83f761cc09",
+   null
+  ]
+ },
+ "shoulder2way-lakewood-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:05a50f59dd1c",
+   null
+  ],
+  "md": [
+   "200:f4a3c9bafb34",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7c8adb589ae7",
+  "xlsx": [
+   "200:546711f85690",
+   null
+  ]
+ },
+ "shoulder2way-lakewood-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:41765efd9d01",
+   null
+  ],
+  "md": [
+   "200:7127e9f85569",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:40f2ad723dd1",
+  "xlsx": [
+   "200:9b83f761cc09",
+   null
+  ]
+ },
+ "shoulder2way-lakewood-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:05a50f59dd1c",
+   null
+  ],
+  "md": [
+   "200:f4a3c9bafb34",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7c8adb589ae7",
+  "xlsx": [
+   "200:546711f85690",
+   null
+  ]
+ },
+ "shoulder2way-lakewood-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:41765efd9d01",
+   null
+  ],
+  "md": [
+   "200:7127e9f85569",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:40f2ad723dd1",
+  "xlsx": [
+   "200:9b83f761cc09",
+   null
+  ]
+ },
+ "shoulder2way-lakewood-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:05a50f59dd1c",
+   null
+  ],
+  "md": [
+   "200:f4a3c9bafb34",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:7c8adb589ae7",
+  "xlsx": [
+   "200:546711f85690",
+   null
+  ]
+ },
+ "shoulder2way-littleton-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:88586846f167",
+   null
+  ],
+  "md": [
+   "200:437b6809f74f",
+   null
+  ],
+  "pdf_p1": "200:c99474525b7b",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:cf7f4b4e821a",
+  "xlsx": [
+   "200:1901651bd1bb",
+   null
+  ]
+ },
+ "shoulder2way-littleton-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:434c9de99bbf",
+   null
+  ],
+  "md": [
+   "200:ac7b050d8328",
+   null
+  ],
+  "pdf_p1": "200:f6322293b97c",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:65de599d8c70",
+  "xlsx": [
+   "200:5cbf8cf07fec",
+   null
+  ]
+ },
+ "shoulder2way-littleton-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:88586846f167",
+   null
+  ],
+  "md": [
+   "200:437b6809f74f",
+   null
+  ],
+  "pdf_p1": "200:c99474525b7b",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:cf7f4b4e821a",
+  "xlsx": [
+   "200:1901651bd1bb",
+   null
+  ]
+ },
+ "shoulder2way-littleton-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:434c9de99bbf",
+   null
+  ],
+  "md": [
+   "200:ac7b050d8328",
+   null
+  ],
+  "pdf_p1": "200:f6322293b97c",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:65de599d8c70",
+  "xlsx": [
+   "200:5cbf8cf07fec",
+   null
+  ]
+ },
+ "shoulder2way-littleton-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:88586846f167",
+   null
+  ],
+  "md": [
+   "200:437b6809f74f",
+   null
+  ],
+  "pdf_p1": "200:c99474525b7b",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:cf7f4b4e821a",
+  "xlsx": [
+   "200:1901651bd1bb",
+   null
+  ]
+ },
+ "shoulder2way-littleton-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:434c9de99bbf",
+   null
+  ],
+  "md": [
+   "200:ac7b050d8328",
+   null
+  ],
+  "pdf_p1": "200:f6322293b97c",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:65de599d8c70",
+  "xlsx": [
+   "200:5cbf8cf07fec",
+   null
+  ]
+ },
+ "shoulder2way-loveland-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:5d5d92060dbc",
+   null
+  ],
+  "md": [
+   "200:cf6cc492d972",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:9f17dc111d61",
+  "xlsx": [
+   "200:ca2679a4584f",
+   null
+  ]
+ },
+ "shoulder2way-loveland-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:d6b5988c8588",
+   null
+  ],
+  "md": [
+   "200:9b10101825fc",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:a8227db4be97",
+  "xlsx": [
+   "200:8ae741c85fe8",
+   null
+  ]
+ },
+ "shoulder2way-loveland-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:94e800c3e2e9",
+   null
+  ],
+  "md": [
+   "200:cf6cc492d972",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:9f17dc111d61",
+  "xlsx": [
+   "200:ca2679a4584f",
+   null
+  ]
+ },
+ "shoulder2way-loveland-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:f4964a493d99",
+   null
+  ],
+  "md": [
+   "200:9b10101825fc",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:a8227db4be97",
+  "xlsx": [
+   "200:8ae741c85fe8",
+   null
+  ]
+ },
+ "shoulder2way-loveland-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:592a60329ea5",
+   null
+  ],
+  "md": [
+   "200:cf6cc492d972",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:9f17dc111d61",
+  "xlsx": [
+   "200:ca2679a4584f",
+   null
+  ]
+ },
+ "shoulder2way-loveland-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:ac72df57df72",
+   null
+  ],
+  "md": [
+   "200:9b10101825fc",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:a8227db4be97",
+  "xlsx": [
+   "200:8ae741c85fe8",
+   null
+  ]
+ },
+ "shoulder2way-parker-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:7932f4386f35",
+   null
+  ],
+  "md": [
+   "200:28e9575a4158",
+   null
+  ],
+  "pdf_p1": "200:917e67064580",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:ab39d79faec9",
+  "xlsx": [
+   "200:57ad18342ae4",
+   null
+  ]
+ },
+ "shoulder2way-parker-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:98bfa2b9ec51",
+   null
+  ],
+  "md": [
+   "200:12e0eed0dd13",
+   null
+  ],
+  "pdf_p1": "200:4486d2123bf5",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:8e8d7b2c81d9",
+  "xlsx": [
+   "200:d9dc12698bea",
+   null
+  ]
+ },
+ "shoulder2way-parker-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:7932f4386f35",
+   null
+  ],
+  "md": [
+   "200:28e9575a4158",
+   null
+  ],
+  "pdf_p1": "200:917e67064580",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:ab39d79faec9",
+  "xlsx": [
+   "200:57ad18342ae4",
+   null
+  ]
+ },
+ "shoulder2way-parker-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:98bfa2b9ec51",
+   null
+  ],
+  "md": [
+   "200:12e0eed0dd13",
+   null
+  ],
+  "pdf_p1": "200:4486d2123bf5",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:8e8d7b2c81d9",
+  "xlsx": [
+   "200:d9dc12698bea",
+   null
+  ]
+ },
+ "shoulder2way-parker-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:7932f4386f35",
+   null
+  ],
+  "md": [
+   "200:28e9575a4158",
+   null
+  ],
+  "pdf_p1": "200:917e67064580",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:ab39d79faec9",
+  "xlsx": [
+   "200:57ad18342ae4",
+   null
+  ]
+ },
+ "shoulder2way-parker-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:98bfa2b9ec51",
+   null
+  ],
+  "md": [
+   "200:12e0eed0dd13",
+   null
+  ],
+  "pdf_p1": "200:4486d2123bf5",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:8e8d7b2c81d9",
+  "xlsx": [
+   "200:d9dc12698bea",
+   null
+  ]
+ },
+ "shoulder2way-thornton-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:a911be7cc920",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:493eec6b9775",
+   "1"
+  ],
+  "pdf_p1": "200:190a6a199c0a",
+  "quote": [
+   "200:0fe79656f13a",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:df5582f4e839",
+  "xlsx": [
+   "200:aa0d6700a136",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder2way-thornton-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:a0e672a2d31f",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:57f391812517",
+   "1"
+  ],
+  "pdf_p1": "200:9926be9233f3",
+  "quote": [
+   "200:1fc34d72231d",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:4762c7eba2f0",
+  "xlsx": [
+   "200:49f76ed15ece",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder2way-thornton-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:a911be7cc920",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:493eec6b9775",
+   "1"
+  ],
+  "pdf_p1": "200:190a6a199c0a",
+  "quote": [
+   "200:0fe79656f13a",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:df5582f4e839",
+  "xlsx": [
+   "200:aa0d6700a136",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder2way-thornton-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:a0e672a2d31f",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:57f391812517",
+   "1"
+  ],
+  "pdf_p1": "200:9926be9233f3",
+  "quote": [
+   "200:1fc34d72231d",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:4762c7eba2f0",
+  "xlsx": [
+   "200:49f76ed15ece",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder2way-thornton-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:a911be7cc920",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:493eec6b9775",
+   "1"
+  ],
+  "pdf_p1": "200:190a6a199c0a",
+  "quote": [
+   "200:0fe79656f13a",
+   [
+    10,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:df5582f4e839",
+  "xlsx": [
+   "200:aa0d6700a136",
+   [
+    10,
+    1
+   ]
+  ]
+ },
+ "shoulder2way-thornton-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:a0e672a2d31f",
+   [
+    1
+   ]
+  ],
+  "md": [
+   "200:57f391812517",
+   "1"
+  ],
+  "pdf_p1": "200:9926be9233f3",
+  "quote": [
+   "200:1fc34d72231d",
+   [
+    12,
+    1,
+    1
+   ]
+  ],
+  "snapshot": "200:4762c7eba2f0",
+  "xlsx": [
+   "200:49f76ed15ece",
+   [
+    12,
+    1
+   ]
+  ]
+ },
+ "shoulder2way-westminster-None-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:59f0a9feb896",
+   null
+  ],
+  "md": [
+   "200:9fd93ca494a8",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:bf86d01033f5",
+  "xlsx": [
+   "200:8d4916adefaf",
+   null
+  ]
+ },
+ "shoulder2way-westminster-None-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:3d4b70be41dc",
+   null
+  ],
+  "md": [
+   "200:00d284fae095",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:f1dc5799ca44",
+  "xlsx": [
+   "200:8278ff6bad6d",
+   null
+  ]
+ },
+ "shoulder2way-westminster-arterial-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:2770d309b821",
+   null
+  ],
+  "md": [
+   "200:9fd93ca494a8",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:bf86d01033f5",
+  "xlsx": [
+   "200:8d4916adefaf",
+   null
+  ]
+ },
+ "shoulder2way-westminster-arterial-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:d319add6409a",
+   null
+  ],
+  "md": [
+   "200:00d284fae095",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:f1dc5799ca44",
+  "xlsx": [
+   "200:8278ff6bad6d",
+   null
+  ]
+ },
+ "shoulder2way-westminster-local-day": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:2770d309b821",
+   null
+  ],
+  "md": [
+   "200:9fd93ca494a8",
+   null
+  ],
+  "pdf_p1": "200:2d42623dfd36",
+  "quote": [
+   "200:095ed4fdc6e5",
+   null
+  ],
+  "snapshot": "200:bf86d01033f5",
+  "xlsx": [
+   "200:8d4916adefaf",
+   null
+  ]
+ },
+ "shoulder2way-westminster-local-night": {
+  "audit": "200:c7555486b0ed",
+  "breakdown": [
+   "200:d319add6409a",
+   null
+  ],
+  "md": [
+   "200:00d284fae095",
+   null
+  ],
+  "pdf_p1": "200:0f682136bd0f",
+  "quote": [
+   "200:8253618f3500",
+   null
+  ],
+  "snapshot": "200:f1dc5799ca44",
+  "xlsx": [
+   "200:8278ff6bad6d",
+   null
+  ]
+ }
+}

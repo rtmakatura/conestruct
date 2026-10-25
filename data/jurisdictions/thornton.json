@@ -54,6 +54,7 @@
       "effect": {
         "op": "add_device",
         "device": "advance_warning_signs",
+        "qty_per_direction": 2,
         "note": "per affected direction"
       },
       "trigger": {

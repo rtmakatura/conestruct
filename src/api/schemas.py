@@ -1408,6 +1408,25 @@ def plan_shoulder_width_ft(
     return 8.0
 
 
+def mainline_directions_of_travel(*, one_way: bool | None) -> int | None:
+    """#388 R7: how many directions of travel pass the work on the plan's
+    carriageway, from the road facts the plan is built on -- 1 on a one-way
+    street or one carriageway of a divided road, 2 on a two-way undivided
+    road, None when the facts don't decide (an ``undecided`` carriageway
+    verdict, which the request gate refuses anyway).  A count of the
+    jurisdiction's required signs (Thornton stipulation 6), never a
+    placement: the layout does not read it."""
+    if one_way is None:
+        return None
+    return 1 if one_way else 2
+
+
+def _plus_legs(mainline: int | None, legs: int) -> int | None:
+    """#388 R7: a near_intersection plan's directions -- the mainline's plus
+    every cross-street leg it signs; None when the mainline's is unknown."""
+    return None if mainline is None else mainline + legs
+
+
 # #323 R153: a left-lane plan whose cross street comes before the work is
 # TA-23's left-turn bay, whose storage length only the operator knows.
 # Until it is entered the plan refuses and names the field (Rule 10).
@@ -1548,6 +1567,14 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             ),
             # #310: the road's lanes per direction, relayed raw.
             road_lanes_per_direction=scenario.roadLanesPerDirection,
+            # #388 R7: the directions whose traffic passes the work on its
+            # carriageway -- 1 on a one-way street or one carriageway of a
+            # divided road, 2 on a two-way undivided road.
+            directions_of_travel_affected=mainline_directions_of_travel(
+                one_way=None
+                if scenario.carriageway_verdict() == "undecided"
+                else (one_way_street or divided)
+            ),
             **meta_kw,
         )
         # A one-way street signs one side, the closed shoulder's (R90:
@@ -1574,6 +1601,9 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             is_night=scenario.night,
             is_divided=False,
             jurisdiction="CDOT",
+            # #388 R7: a two-lane two-way road (a one-way road is refused
+            # upstream, #158); both directions pass the work.
+            directions_of_travel_affected=mainline_directions_of_travel(one_way=False),
             **meta_kw,
         )
         kwargs = {
@@ -1705,6 +1735,18 @@ def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> 
             # stays False: no median is drawn and nothing is re-spaced.
             one_way_street=scenario.carriageway_verdict() in ("one_way_street", "divided"),
             divided_carriageway=scenario.carriageway_verdict() == "divided",
+            # #388 R7: the mainline's directions by its road facts (a
+            # one-way street or one carriageway of a divided road: 1; a
+            # two-way undivided road: 2) plus every cross-street leg the
+            # plan signs (generate_near_intersection, §6N.12.06).
+            directions_of_travel_affected=_plus_legs(
+                mainline_directions_of_travel(
+                    one_way=None
+                    if scenario.carriageway_verdict() == "undecided"
+                    else scenario.carriageway_verdict() in ("one_way_street", "divided")
+                ),
+                len(scenario.approaches),
+            ),
             # #323: the left lane of a one-way street (the request gate has
             # already refused "left" unless ``left_side_built`` holds; the
             # far side needs the bay's storage length, checked below).

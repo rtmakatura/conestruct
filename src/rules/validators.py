@@ -318,6 +318,17 @@ class ScenarioParams:
     # every other plan.  Appended with a default so every existing
     # constructor is untouched.
     turn_bay_storage_ft: float | None = None
+    # #388 (R1, R7) — how many directions of travel pass the work on its
+    # carriageway, from the plan's own road facts (``scenario_to_call``,
+    # ``mainline_directions_of_travel``): 1 on a one-way street or one
+    # carriageway of a divided road, 2 on a two-way undivided road (every
+    # flagger plan); a near_intersection plan adds each cross-street leg.
+    # A rule counted per direction (Thornton stipulation 6) multiplies by
+    # it; nothing is placed from it.  None on the gated kinds, an undecided
+    # carriageway and any other constructor: such a rule then refuses
+    # (Rule 10).  Appended with a default so every existing constructor is
+    # untouched.
+    directions_of_travel_affected: int | None = None
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,13 @@
+Repair cycle 1 red proof (new test file against git archive of base 7266a62):
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[flagger]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[near_intersection-one-way-1-leg]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[near_intersection-two-way-1-leg]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[near_intersection-two-way-2-legs]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[shoulder-divided]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[shoulder-divided-night]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[shoulder-one-way]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_every_surface_counts_two_per_direction[shoulder-two-way]
+FAILED tests/test_thornton_stipulation6_count_388.py::test_a_plan_with_no_direction_count_refuses
+FAILED tests/test_thornton_stipulation6_count_388.py::test_the_schema_refuses_qty_with_qty_per_direction
+10 failed, 3 passed in 8.30s
+Frontend, cycle 1: with the JurisdictionSection.tsx change reversed, per-direction-388.test.tsx: 2 failed | 1 passed (the "+4" and "per direction" cases); applied: 3 passed.

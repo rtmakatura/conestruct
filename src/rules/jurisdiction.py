@@ -727,7 +727,32 @@ def _caution_only_board(device_id: str, params: ScenarioParams | None) -> bool:
     )
 
 
-def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
+def _effect_qty(delta: dict[str, Any], params: ScenarioParams | None) -> int:
+    """The count a fired add-device delta requires on this plan.
+
+    #388 (R1, R2): a rule counted per direction of travel affected
+    (``effect.qty_per_direction``, Thornton stipulation 6: two signs for
+    each direction) multiplies by the plan's
+    ``directions_of_travel_affected``.  A plan with no direction count
+    (a gated kind, or a caller with no params) refuses rather than guess
+    one (Rule 10).  Any other rule keeps ``qty``, default 1.
+    """
+    effect = delta.get("effect", {})
+    per_direction = effect.get("qty_per_direction")
+    if per_direction is None:
+        return effect.get("qty", 1)
+    directions = params.directions_of_travel_affected if params is not None else None
+    if directions is None:
+        raise ValueError(
+            f"{delta.get('rule')!r} is counted per direction of travel affected, "
+            "and this plan has no direction count"
+        )
+    return per_direction * directions
+
+
+def _iter_fired_count_adds(
+    applied_deltas: list[dict[str, Any]], params: ScenarioParams | None = None
+):
     """Yield ``(index, device_id, qty, source)`` for every fired count
     add-device delta (``index`` over ``applied_deltas``).
 
@@ -735,7 +760,8 @@ def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
     ``fires``-status ``count``-severity deltas whose effect is a concrete
     ``add_device`` / ``add_accessory`` change quantities.  Conditional and
     unknown deltas surface elsewhere in the jurisdiction block but never
-    touch device counts (rule 10 — no silently-guessed counts).
+    touch device counts (rule 10 — no silently-guessed counts).  #388: the
+    qty is :func:`_effect_qty`'s.
     """
     for i, delta in enumerate(applied_deltas):
         if delta.get("severity") != "count" or delta.get("status") != FIRES:
@@ -746,7 +772,7 @@ def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
         device_id = effect.get("device")
         if not device_id:
             continue
-        yield i, device_id, effect.get("qty", 1), delta["source"]
+        yield i, device_id, _effect_qty(delta, params), delta["source"]
 
 
 def apply_count_deltas_structured(
@@ -791,7 +817,7 @@ def _apply_count_deltas(
     each delta (by index over ``applied_deltas``) added."""
     out = list(rows)
     added_by: dict[int, int] = {}
-    for i, device_id, qty, source in _iter_fired_count_adds(applied_deltas):
+    for i, device_id, qty, source in _iter_fired_count_adds(applied_deltas, params):
         dt = _DELTA_DEVICE_TYPE.get(device_id)
         match_idx = None
         if dt is not None:
@@ -862,6 +888,11 @@ def annotate_count_effects(
                 a["mode_note"] = ARROW_BOARD_CAUTION_NOTE
         if i in added_by:
             a["raised"] = added_by[i] > 0
+            # #388 R5: a rule counted per direction carries the count it
+            # required on this plan, so the delta panel never shows a
+            # second answer.  Other rules carry no new key.
+            if (d.get("effect") or {}).get("qty_per_direction") is not None:
+                a["qty"] = _effect_qty(d, params)
         out.append(a)
     return out
 
