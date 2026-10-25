@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { beforeAll, describe, it, expect } from "vitest";
 
 // Route-level pin for the redirects declared in next.config.mjs.
 // The archived marketing page at app/(archived)/landing/page.tsx was
@@ -23,9 +23,28 @@ async function redirects(): Promise<
   return cfg.redirects();
 }
 
+type Redirect = { source: string; destination: string; permanent: boolean };
+
+// #353: the first import of next.config.mjs loads @sentry/nextjs (about
+// 0.5 s in plain node, about 1 s with vitest running this file alone,
+// 1.2-1.4 s in a full local run).  Inside the first test that load counted
+// against the test's 5 s default budget.  The likely cause of #353's
+// full-run failure (never reproduced; see validation-artifacts/committed/
+// missions/clear-small-queue/issue-353/evidence.md) is that load running
+// past 5 s under heavy parallel load.  The load happens once here, in a
+// hook with its own timeout, so neither test pays for it.
+// CHOSEN: 30 s, about 20x the slowest measured full-run load (1.37 s);
+// a hung import still fails within a minute.
+const CONFIG_LOAD_TIMEOUT_MS = 30_000;
+let table: Redirect[] = [];
+
+beforeAll(async () => {
+  table = await redirects();
+}, CONFIG_LOAD_TIMEOUT_MS);
+
 describe("next.config redirects", () => {
-  it("/landing redirects to / as a 307 (C-Q5)", async () => {
-    const entry = (await redirects()).find((r) => r.source === "/landing");
+  it("/landing redirects to / as a 307 (C-Q5)", () => {
+    const entry = table.find((r) => r.source === "/landing");
     expect(entry).toEqual({
       source: "/landing",
       destination: "/",
@@ -33,8 +52,8 @@ describe("next.config redirects", () => {
     });
   });
 
-  it("/try redirects to / as a 307 (C-Q5)", async () => {
-    const entry = (await redirects()).find((r) => r.source === "/try");
+  it("/try redirects to / as a 307 (C-Q5)", () => {
+    const entry = table.find((r) => r.source === "/try");
     expect(entry).toEqual({ source: "/try", destination: "/", permanent: false });
   });
 });
