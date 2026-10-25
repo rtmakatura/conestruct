@@ -47,7 +47,7 @@ describe("markerOf", () => {
   it("an error stays a full line", () => {
     expect(markerOf("4 lanes need a 12 ft lane at most", { error: true })).toBeNull();
     expect(
-      markerOf("not evaluated: the check didn't answer; the option you picked stands", { error: true }),
+      markerOf("not evaluated: the check didn't answer; the option shown stands", { error: true }),
     ).toBeNull();
   });
 

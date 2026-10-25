@@ -1,0 +1,11 @@
+      Tests  9 failed | 89 passed (98)
+ FAIL  components/GeneratorShell.input-gating.test.tsx > input gating rides the backend 400 (engine-removal PR D) > audit 400 → red PLAN DECLINED with the backend's message exactly once, Generate disabled
+ FAIL  components/GeneratorShell.live-speakers.test.tsx > #260 (2) — one live speaker for the location gate > fresh session: exactly one live region carries the gate sentence — the CTA reason; the strip says AWAITING LOCATION · no site chosen; the rail blocker is aria-hidden; the quiet band is not live
+ FAIL  components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > fresh load: AWAITING LOCATION, no verdict, Generate disabled with the stated reason
+ FAIL  components/GeneratorShell.rail-single-source.test.tsx > rail blocker === CTA disabled-reason (one export) > a no-affordance 400: the decline pointer rides the CTA, once
+ FAIL  components/GeneratorShell.rail-single-source.test.tsx > rail blocker === CTA disabled-reason (one export) > pre-pin: the missing-location reason renders once, on the CTA
+ FAIL  components/GeneratorShell.refusal-voice.test.tsx > one refusal, one voice (#180) > with-affordance refusal: row note primary, short pointer, verbatim 400 renders zero times
+ FAIL  components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > an evaluation that failed keeps its error line on show over the guess (P3)
+ FAIL  lib/scenarios/rail.test.ts > #228 vocabulary — fields on the derivation, purity > aria strings are the pre-arc component strings, byte-identical
+ FAIL  lib/scenarios/rail.test.ts > the extracted CTA chain — strings and rank (behavior pin) > pins the four moved literals byte-identically
+ Test Files  7 failed | 1 passed (8)

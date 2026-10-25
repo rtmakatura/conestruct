@@ -69,12 +69,12 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
     expect(HOLD_BLOCKER).toBe(
       "Confirm the cross-street lane count first. It was filled from map data.",
     );
-    expect(REFUSAL_BLOCKER).toBe("Generation declined. See the notice below.");
+    expect(REFUSAL_BLOCKER).toBe("Generation declined. The PLAN DECLINED notice says why.");
     expect(RECHECK_BLOCKER).toBe(
       "Re-checking the declined input. Generate comes back when the verdict settles.",
     );
     expect(LOCATION_BLOCKER).toBe(
-      "Set a location first: pick it on the map or enter it manually.",
+      "Set a location first: use Pick on map to find the site.",
     );
   });
 
@@ -380,7 +380,7 @@ describe("#228 vocabulary — fields on the derivation, purity", () => {
   it("aria strings are the pre-arc component strings, byte-identical", () => {
     const pre = deriveRail(input(DEFAULT_SHOULDER));
     expect(entryById(pre, "location").aria).toBe(
-      "Location: needs attention. Set a location first: pick it on the map or enter it manually. (current blocker)",
+      "Location: needs attention. Set a location first: use Pick on map to find the site. (current blocker)",
     );
     expect(entryById(pre, "road").aria).toBe(
       "Road: pending, set a location first",

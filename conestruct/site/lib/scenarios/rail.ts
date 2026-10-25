@@ -136,11 +136,11 @@ export interface RailInput {
 // and the rail both read deriveRail().
 export const HOLD_BLOCKER =
   "Confirm the cross-street lane count first. It was filled from map data.";
-export const REFUSAL_BLOCKER = "Generation declined. See the notice below.";
+export const REFUSAL_BLOCKER = "Generation declined. The PLAN DECLINED notice says why.";
 export const RECHECK_BLOCKER =
   "Re-checking the declined input. Generate comes back when the verdict settles.";
 export const LOCATION_BLOCKER =
-  "Set a location first: pick it on the map or enter it manually.";
+  "Set a location first: use Pick on map to find the site.";
 /** #289 hand-check, 2026-09-23, defect 1 — Ryan's words for the reason.
  *  One string on the WHERE primary, the WHAT pending line and the
  *  Generate frame (rule 139: one derivation, every surface). */

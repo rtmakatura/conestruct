@@ -169,7 +169,7 @@ describe("one refusal, one voice (#180)", () => {
         .getAllByRole("alert")
         .some((el) =>
           (el.textContent ?? "").includes(
-            "Generation declined. See the notice below.",
+            "Generation declined. The PLAN DECLINED notice says why.",
           ),
         ),
     ).toBe(true);

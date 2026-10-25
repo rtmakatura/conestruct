@@ -49,7 +49,7 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 
-const GATE = "Set a location first: pick it on the map or enter it manually.";
+const GATE = "Set a location first: use Pick on map to find the site.";
 
 const CLEAN_AUDIT = {
   summary: {},

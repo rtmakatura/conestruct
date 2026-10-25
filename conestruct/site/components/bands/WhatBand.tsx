@@ -390,7 +390,7 @@ export function WhatBand({
   // row's details then, so nothing it said is lost.
   const jurisdictionProv =
     jState === "not-evaluated"
-      ? "not evaluated: the check didn't answer; the option you picked stands"
+      ? "not evaluated: the check didn't answer; the option shown stands"
       : jurisdictionGuessed
         ? "guessed, not confirmed · from the pin"
         : jState === "unset"
