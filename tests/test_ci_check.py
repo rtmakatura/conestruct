@@ -290,16 +290,20 @@ def test_a_missing_run_stops_at_once_even_when_waiting(tmp_path: Path) -> None:
 
 @needs_ps
 def test_still_running_at_the_limit_stops_and_says_how_long(tmp_path: Path) -> None:
-    # 0.02 min = 1.2 s of waiting, one read a second.
+    # 0.1 min = 6 s of waiting, one read a second.  CHOSEN (#391): the script
+    # prints "waiting" only when its first read (two stand-in gh runs) beats
+    # the limit.  One read takes about 0.5 s warm on Windows and ran past the
+    # old 0.02 min (1.2 s) under full-suite load; 6 s is about 12x the warm
+    # read and still keeps the test to a few seconds.
     code, out, _ = run_check(
         tmp_path,
         "python-running.json",
         "frontend-green.json",
-        wait=["-WaitMin", "0.02", "-PollSec", "1"],
+        wait=["-WaitMin", "0.1", "-PollSec", "1"],
     )
     assert code == 1, out
     assert "waiting" in out, out
-    assert "CI CHECK FAILED: Python tests is still running on 884081c (waited 0.02 min)" in out, out
+    assert "CI CHECK FAILED: Python tests is still running on 884081c (waited 0.1 min)" in out, out
 
 
 def test_the_ship_waits_up_to_15_minutes_for_a_running_ci() -> None:
