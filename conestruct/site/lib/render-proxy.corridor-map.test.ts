@@ -37,11 +37,13 @@ afterEach(() => {
 const picture = { stage: "laid_out" as const, width: 600, height: 300 };
 
 describe("fetchCorridorMap", () => {
-  it("posts the scenario and the picture to /render/corridor-map and relays the PNG", async () => {
+  // #390: production answers JPEG for the satellite style (#369), so the
+  // stub does too; the header reaches the caller as the backend named it.
+  it("posts the scenario and the picture to /render/corridor-map and relays the image", async () => {
     answer = () =>
-      new Response(new Uint8Array([137, 80, 78, 71]), {
+      new Response(new Uint8Array([0xff, 0xd8, 0xff, 0xe0]), {
         status: 200,
-        headers: { "content-type": "image/png", "cache-control": "private, max-age=600" },
+        headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=600" },
       });
     const res = await fetchCorridorMap(DEFAULT_SHOULDER, picture);
     expect(calls[0].url).toBe("https://modal.example/render/corridor-map");
@@ -49,9 +51,30 @@ describe("fetchCorridorMap", () => {
     expect(body).toEqual({ scenario: DEFAULT_SHOULDER, ...picture });
     expect(JSON.stringify(body)).not.toMatch(/token/i);
     expect(res.status).toBe(200);
-    expect(res.headers.get("content-type")).toBe("image/png");
+    expect(res.headers.get("content-type")).toBe("image/jpeg");
     expect(res.headers.get("cache-control")).toBe("private, max-age=600");
-    expect(new Uint8Array(await res.arrayBuffer())).toEqual(new Uint8Array([137, 80, 78, 71]));
+    expect(new Uint8Array(await res.arrayBuffer())).toEqual(new Uint8Array([0xff, 0xd8, 0xff, 0xe0]));
+  });
+
+  it("relays a PNG as image/png", async () => {
+    answer = () =>
+      new Response(new Uint8Array([137, 80, 78, 71]), {
+        status: 200,
+        headers: { "content-type": "image/png" },
+      });
+    const res = await fetchCorridorMap(DEFAULT_SHOULDER, picture);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toBe("image/png");
+  });
+
+  // #390 (Rule 10): a 200 that doesn't name its bytes is not guessed as a PNG.
+  it("a 200 with no content-type is a plain failure, not relabelled image/png", async () => {
+    answer = () => new Response(new Uint8Array([0xff, 0xd8, 0xff, 0xe0]), { status: 200 });
+    expect(answer().headers.get("content-type")).toBeNull();
+    const res = await fetchCorridorMap(DEFAULT_SHOULDER, picture);
+    expect(res.status).toBe(502);
+    expect(res.headers.get("content-type")).not.toBe("image/png");
+    expect(await res.text()).toBe("Corridor map failed");
   });
 
   it("relays the backend's worded refusal (409 / 502 / 503) as-is", async () => {

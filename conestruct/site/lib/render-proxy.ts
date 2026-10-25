@@ -366,7 +366,7 @@ export async function fetchNearestIntersection(
 }
 
 // #301 piece 1 — the WHERE band's aerial (POST /render/corridor-map on
-// Modal): the scenario and the picture asked for in, a PNG out.  The
+// Modal): the scenario and the picture asked for in, an image out.  The
 // backend draws it (the one layout call, page 2's overlay) and holds the
 // Mapbox token; this relays the bytes.  When there is nothing to draw the
 // backend answers JSON with a ``status`` (no_pin, side_not_confirmed,
@@ -414,8 +414,16 @@ export async function fetchCorridorMap(
     return new Response("Corridor map failed", { status: 502 });
   }
 
+  // #390 (Rule 10): the backend names the bytes' format (#369: image/jpeg
+  // for the satellite style, image/png for a PNG); relay it as-is.  A 200
+  // that names none is refused rather than guessed as a PNG.
+  if (!contentType) {
+    await upstream.body?.cancel().catch(() => {});
+    console.error("corridor map upstream 200 with no content-type");
+    return new Response("Corridor map failed", { status: 502 });
+  }
   const headers = new Headers();
-  headers.set("content-type", contentType || "image/png");
+  headers.set("content-type", contentType);
   headers.set("cache-control", upstream.headers.get("cache-control") ?? "private, max-age=600");
   return new Response(upstream.body, { status: 200, headers });
 }
