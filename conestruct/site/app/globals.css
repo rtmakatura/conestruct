@@ -828,6 +828,10 @@ body {
   --z-strip: 30;
   --z-nav: 40;
   --z-frame: 60;
+  /* #396 W14: the location picker fills the phone screen, so it sits
+     above the frame (its rule would cross the dialog 8 px in) and
+     below the working band, which kept that order over z-50. */
+  --z-modal: 65;
   --z-band: 70;
 
   /* dark canvas (fix-spec-02 surface set) */

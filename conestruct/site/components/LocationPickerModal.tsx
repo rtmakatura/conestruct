@@ -1498,7 +1498,7 @@ export function LocationPickerModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"
+      className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-6"
       onClick={onCancel}
     >
       <div
@@ -1854,16 +1854,19 @@ export function LocationPickerModal({
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-[color:var(--rule)] px-6 py-3 flex-shrink-0">
+        {/* Footer.  Below md (#396 W14) the warning takes its own line
+            and Cancel / Save sit under it, so "Save & Close" never wraps
+            at 390 or 360; at md and up it is one row, as before (no
+            wrap, so the row gap never applies). */}
+        <div className="flex flex-wrap md:flex-nowrap items-center justify-end gap-3 border-t border-[color:var(--rule)] px-6 py-3 flex-shrink-0">
           {roadUnresolved && (
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)]">
+            <span className="basis-full md:basis-auto font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)]">
               <span aria-hidden="true">⚠ </span>
               Pick a road to continue
             </span>
           )}
           {classify.state === "resolving" && (
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+            <span className="basis-full md:basis-auto font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
               Detecting road… Save turns on once detection settles
             </span>
           )}
@@ -1878,7 +1881,7 @@ export function LocationPickerModal({
             type="button"
             onClick={onClickSave}
             disabled={!canSave}
-            className="tap-44 px-6 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="tap-44 whitespace-nowrap px-6 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Save &amp; Close
           </button>

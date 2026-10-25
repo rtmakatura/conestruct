@@ -1,0 +1,4229 @@
+{
+ "method": "Local next dev of this worktree; Playwright Chromium (1440x900, 390x844, 360x780) and WebKit (390x844), DPR 2. /api/road-bearing stubbed with four one-way candidates (Overpass unavailable 2026-10-25) and held until the 'Detecting road�' footer was measured; geocode and the rest live. Pointer parked at the viewport's bottom-right corner before every measure and shot. Rects are getBoundingClientRect in CSS px; lines = distinct client-rect tops of the element's text. edgePoints: elementFromPoint at y in {1,4,vh-4,vh-1} x x in {1,vw/2,vw-1}; 'outside' counts points not inside the dialog. reach: each road row scrolled into view (block nearest) in its scroller, then its centre and bottom edge hit-tested and its bottom compared with the footer's top.",
+ "note": "Playwright WebKit is not a real iPhone; iOS Safari is unchecked.",
+ "before": {
+  "360": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 344,
+     "h": 764,
+     "bottom": 772
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 342,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 671.5,
+     "w": 342,
+     "h": 99.5,
+     "bottom": 771
+    },
+    "save": {
+     "rect": {
+      "x": 246.86,
+      "y": 684.5,
+      "w": 80.14,
+      "h": 74.5,
+      "bottom": 759
+     },
+     "lines": 3,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 185.88,
+      "y": 699.75,
+      "w": 48.98,
+      "h": 44,
+      "bottom": 743.75
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 33,
+       "y": 699.25,
+       "w": 140.88,
+       "h": 45,
+       "bottom": 744.25
+      },
+      "lines": 3
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 360,
+     "innerWidth": 360
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 344,
+     "h": 764,
+     "bottom": 772
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 342,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 691,
+     "w": 342,
+     "h": 80,
+     "bottom": 771
+    },
+    "save": {
+     "rect": {
+      "x": 227.22,
+      "y": 704,
+      "w": 99.78,
+      "h": 55,
+      "bottom": 759
+     },
+     "lines": 2,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 155.84,
+      "y": 709.5,
+      "w": 59.38,
+      "h": 44,
+      "bottom": 753.5
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 33,
+       "y": 716.5,
+       "w": 110.84,
+       "h": 30,
+       "bottom": 746.5
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 9,
+      "y": 118.5,
+      "w": 342,
+      "h": 572.5,
+      "bottom": 691
+     },
+     "scrollTop": 0,
+     "scrollHeight": 951,
+     "clientHeight": 573
+    },
+    "docScroll": {
+     "scrollWidth": 360,
+     "innerWidth": 360
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 344,
+     "h": 764,
+     "bottom": 772
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 342,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 691,
+     "w": 342,
+     "h": 80,
+     "bottom": 771
+    },
+    "save": {
+     "rect": {
+      "x": 227.22,
+      "y": 704,
+      "w": 99.78,
+      "h": 55,
+      "bottom": 759
+     },
+     "lines": 2,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 155.84,
+      "y": 709.5,
+      "w": 59.38,
+      "h": 44,
+      "bottom": 753.5
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 33,
+       "y": 716.5,
+       "w": 110.84,
+       "h": 30,
+       "bottom": 746.5
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 9,
+      "y": 118.5,
+      "w": 342,
+      "h": 572.5,
+      "bottom": 691
+     },
+     "scrollTop": 378,
+     "scrollHeight": 951,
+     "clientHeight": 573
+    },
+    "docScroll": {
+     "scrollWidth": 360,
+     "innerWidth": 360
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 624.69,
+     "bottom": 686.69,
+     "footerTop": 691,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 628.69,
+     "bottom": 690.69,
+     "footerTop": 691,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 628.69,
+     "bottom": 690.69,
+     "footerTop": 691,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 628.69,
+     "bottom": 690.69,
+     "footerTop": 691,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 6345,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2109,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2110,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 352
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 195,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 468,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 195,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 468,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 108,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 216,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 352
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 195,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 468,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 195,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 468,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 108,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 216,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 352
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 195,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 468,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 195,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 468,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 108,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 216,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    }
+   }
+  },
+  "390": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 374,
+     "h": 828,
+     "bottom": 836
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 372,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 735.5,
+     "w": 372,
+     "h": 99.5,
+     "bottom": 835
+    },
+    "save": {
+     "rect": {
+      "x": 271.8,
+      "y": 748.5,
+      "w": 85.2,
+      "h": 74.5,
+      "bottom": 823
+     },
+     "lines": 3,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 208.13,
+      "y": 763.75,
+      "w": 51.67,
+      "h": 44,
+      "bottom": 807.75
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 33,
+       "y": 763.25,
+       "w": 163.13,
+       "h": 45,
+       "bottom": 808.25
+      },
+      "lines": 3
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 374,
+     "h": 828,
+     "bottom": 836
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 372,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 755,
+     "w": 372,
+     "h": 80,
+     "bottom": 835
+    },
+    "save": {
+     "rect": {
+      "x": 249.03,
+      "y": 768,
+      "w": 107.97,
+      "h": 55,
+      "bottom": 823
+     },
+     "lines": 2,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 173.33,
+      "y": 773.5,
+      "w": 63.7,
+      "h": 44,
+      "bottom": 817.5
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 33,
+       "y": 780.5,
+       "w": 128.33,
+       "h": 30,
+       "bottom": 810.5
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 9,
+      "y": 118.5,
+      "w": 372,
+      "h": 636.5,
+      "bottom": 755
+     },
+     "scrollTop": 0,
+     "scrollHeight": 979,
+     "clientHeight": 637
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 374,
+     "h": 828,
+     "bottom": 836
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 372,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 755,
+     "w": 372,
+     "h": 80,
+     "bottom": 835
+    },
+    "save": {
+     "rect": {
+      "x": 249.03,
+      "y": 768,
+      "w": 107.97,
+      "h": 55,
+      "bottom": 823
+     },
+     "lines": 2,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 173.33,
+      "y": 773.5,
+      "w": 63.7,
+      "h": 44,
+      "bottom": 817.5
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 33,
+       "y": 780.5,
+       "w": 128.33,
+       "h": 30,
+       "bottom": 810.5
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 9,
+      "y": 118.5,
+      "w": 372,
+      "h": 636.5,
+      "bottom": 755
+     },
+     "scrollTop": 342,
+     "scrollHeight": 979,
+     "clientHeight": 637
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 652.86,
+     "bottom": 714.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 692.86,
+     "bottom": 754.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 692.86,
+     "bottom": 754.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 692.86,
+     "bottom": 754.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 6122,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2109,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2110,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    }
+   }
+  },
+  "1440": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 80,
+     "y": 45,
+     "w": 1280,
+     "h": 810,
+     "bottom": 855
+    },
+    "dialogGap": {
+     "top": 45,
+     "bottom": 45,
+     "left": 80,
+     "right": 80
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 81,
+     "y": 46,
+     "w": 1278,
+     "h": 91.5,
+     "bottom": 137.5
+    },
+    "footer": {
+     "x": 81,
+     "y": 793.5,
+     "w": 1278,
+     "h": 60.5,
+     "bottom": 854
+    },
+    "save": {
+     "rect": {
+      "x": 1206.34,
+      "y": 806.5,
+      "w": 128.66,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 1119.7,
+      "y": 806.5,
+      "w": 74.64,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 754.09,
+       "y": 816.75,
+       "w": 353.61,
+       "h": 15,
+       "bottom": 831.75
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 1440,
+     "innerWidth": 1440
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 80,
+     "y": 45,
+     "w": 1280,
+     "h": 810,
+     "bottom": 855
+    },
+    "dialogGap": {
+     "top": 45,
+     "bottom": 45,
+     "left": 80,
+     "right": 80
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 81,
+     "y": 46,
+     "w": 1278,
+     "h": 91.5,
+     "bottom": 137.5
+    },
+    "footer": {
+     "x": 81,
+     "y": 793.5,
+     "w": 1278,
+     "h": 60.5,
+     "bottom": 854
+    },
+    "save": {
+     "rect": {
+      "x": 1206.34,
+      "y": 806.5,
+      "w": 128.66,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 1119.7,
+      "y": 806.5,
+      "w": 74.64,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 935.08,
+       "y": 816.75,
+       "w": 172.63,
+       "h": 15,
+       "bottom": 831.75
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 904,
+      "y": 137.5,
+      "w": 455,
+      "h": 656,
+      "bottom": 793.5
+     },
+     "scrollTop": 0,
+     "scrollHeight": 656,
+     "clientHeight": 656
+    },
+    "docScroll": {
+     "scrollWidth": 1440,
+     "innerWidth": 1440
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 80,
+     "y": 45,
+     "w": 1280,
+     "h": 810,
+     "bottom": 855
+    },
+    "dialogGap": {
+     "top": 45,
+     "bottom": 45,
+     "left": 80,
+     "right": 80
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 81,
+     "y": 46,
+     "w": 1278,
+     "h": 91.5,
+     "bottom": 137.5
+    },
+    "footer": {
+     "x": 81,
+     "y": 793.5,
+     "w": 1278,
+     "h": 60.5,
+     "bottom": 854
+    },
+    "save": {
+     "rect": {
+      "x": 1206.34,
+      "y": 806.5,
+      "w": 128.66,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 1119.7,
+      "y": 806.5,
+      "w": 74.64,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 935.08,
+       "y": 816.75,
+       "w": 172.63,
+       "h": 15,
+       "bottom": 831.75
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 904,
+      "y": 137.5,
+      "w": 455,
+      "h": 656,
+      "bottom": 793.5
+     },
+     "scrollTop": 0,
+     "scrollHeight": 656,
+     "clientHeight": 656
+    },
+    "docScroll": {
+     "scrollWidth": 1440,
+     "innerWidth": 1440
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 181.5,
+     "bottom": 227,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 233,
+     "bottom": 278.5,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 284.5,
+     "bottom": 330,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 336,
+     "bottom": 381.5,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 6264,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2109,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2109,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 1432
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 225,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 540,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 225,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 540,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 432,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 864,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 1432
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 225,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 540,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 225,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 540,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 432,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 864,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 1432
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 225,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 540,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 225,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 540,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 432,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 864,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    }
+   }
+  },
+  "390-webkit": {
+   "consoleErrors": [
+    "Failed to load resource: Could not resolve hostname"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 374,
+     "h": 828,
+     "bottom": 836
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 372,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 735.5,
+     "w": 372,
+     "h": 99.5,
+     "bottom": 835
+    },
+    "save": {
+     "rect": {
+      "x": 271.8,
+      "y": 748.5,
+      "w": 85.2,
+      "h": 74.5,
+      "bottom": 823
+     },
+     "lines": 3,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 208.13,
+      "y": 763.75,
+      "w": 51.67,
+      "h": 44,
+      "bottom": 807.75
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 33,
+       "y": 763.25,
+       "w": 163.13,
+       "h": 45,
+       "bottom": 808.25
+      },
+      "lines": 3
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 374,
+     "h": 828,
+     "bottom": 836
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 372,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 755,
+     "w": 372,
+     "h": 80,
+     "bottom": 835
+    },
+    "save": {
+     "rect": {
+      "x": 250.06,
+      "y": 768,
+      "w": 106.94,
+      "h": 55,
+      "bottom": 823
+     },
+     "lines": 2,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 174.91,
+      "y": 773.5,
+      "w": 63.16,
+      "h": 44,
+      "bottom": 817.5
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 33.02,
+       "y": 780.5,
+       "w": 129.89,
+       "h": 30,
+       "bottom": 810.5
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 9,
+      "y": 118.5,
+      "w": 372,
+      "h": 636.5,
+      "bottom": 755
+     },
+     "scrollTop": 0,
+     "scrollHeight": 979,
+     "clientHeight": 637
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 8,
+     "y": 8,
+     "w": 374,
+     "h": 828,
+     "bottom": 836
+    },
+    "dialogGap": {
+     "top": 8,
+     "bottom": 8,
+     "left": 8,
+     "right": 8
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 9,
+     "y": 9,
+     "w": 372,
+     "h": 109.5,
+     "bottom": 118.5
+    },
+    "footer": {
+     "x": 9,
+     "y": 755,
+     "w": 372,
+     "h": 80,
+     "bottom": 835
+    },
+    "save": {
+     "rect": {
+      "x": 250.06,
+      "y": 768,
+      "w": 106.94,
+      "h": 55,
+      "bottom": 823
+     },
+     "lines": 2,
+     "whiteSpace": "normal"
+    },
+    "cancel": {
+     "rect": {
+      "x": 174.91,
+      "y": 773.5,
+      "w": 63.16,
+      "h": 44,
+      "bottom": 817.5
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 33.02,
+       "y": 780.5,
+       "w": 129.89,
+       "h": 30,
+       "bottom": 810.5
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 9,
+      "y": 118.5,
+      "w": 372,
+      "h": 636.5,
+      "bottom": 755
+     },
+     "scrollTop": 342,
+     "scrollHeight": 979,
+     "clientHeight": 637
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 652.86,
+     "bottom": 714.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 692.86,
+     "bottom": 754.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 692.86,
+     "bottom": 754.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 692.86,
+     "bottom": 754.86,
+     "footerTop": 755,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 6128,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2110,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2113,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "50",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": true,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    }
+   }
+  }
+ },
+ "after": {
+  "360": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 360,
+     "h": 780,
+     "bottom": 780
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 358,
+     "h": 109.5,
+     "bottom": 110.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 668,
+     "w": 358,
+     "h": 111,
+     "bottom": 779
+    },
+    "save": {
+     "rect": {
+      "x": 206.34,
+      "y": 723,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 767
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 119.7,
+      "y": 723,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 767
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 25,
+       "y": 681,
+       "w": 310,
+       "h": 30,
+       "bottom": 711
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 360,
+     "innerWidth": 360
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 360,
+     "h": 780,
+     "bottom": 780
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 358,
+     "h": 109.5,
+     "bottom": 110.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 683,
+     "w": 358,
+     "h": 96,
+     "bottom": 779
+    },
+    "save": {
+     "rect": {
+      "x": 206.34,
+      "y": 723,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 767
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 119.7,
+      "y": 723,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 767
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 25,
+       "y": 696,
+       "w": 310,
+       "h": 15,
+       "bottom": 711
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 1,
+      "y": 110.5,
+      "w": 358,
+      "h": 572.5,
+      "bottom": 683
+     },
+     "scrollTop": 0,
+     "scrollHeight": 951,
+     "clientHeight": 573
+    },
+    "docScroll": {
+     "scrollWidth": 360,
+     "innerWidth": 360
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 360,
+     "h": 780,
+     "bottom": 780
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 358,
+     "h": 109.5,
+     "bottom": 110.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 683,
+     "w": 358,
+     "h": 96,
+     "bottom": 779
+    },
+    "save": {
+     "rect": {
+      "x": 206.34,
+      "y": 723,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 767
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 119.7,
+      "y": 723,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 767
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 25,
+       "y": 696,
+       "w": 310,
+       "h": 15,
+       "bottom": 711
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 1,
+      "y": 110.5,
+      "w": 358,
+      "h": 572.5,
+      "bottom": 683
+     },
+     "scrollTop": 378,
+     "scrollHeight": 951,
+     "clientHeight": 573
+    },
+    "docScroll": {
+     "scrollWidth": 360,
+     "innerWidth": 360
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 616.69,
+     "bottom": 678.69,
+     "footerTop": 683,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 620.69,
+     "bottom": 682.69,
+     "footerTop": 683,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 620.69,
+     "bottom": 682.69,
+     "footerTop": 683,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 620.69,
+     "bottom": 682.69,
+     "footerTop": 683,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 6165,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2110,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2112,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 352
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 195,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 468,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 195,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 468,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 108,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 216,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 406,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1280,
+       "ruleColoured": 0
+      }
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 352
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 195,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 468,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 195,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 468,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 108,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 216,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 406,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1280,
+       "ruleColoured": 0
+      }
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 352
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 195,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 468,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 195,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 351.5,
+       "y": 468,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 108,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 216,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 406,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1280,
+       "ruleColoured": 0
+      }
+     }
+    }
+   }
+  },
+  "390": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 390,
+     "h": 844,
+     "bottom": 844
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 388,
+     "h": 91.5,
+     "bottom": 92.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 732,
+     "w": 388,
+     "h": 111,
+     "bottom": 843
+    },
+    "save": {
+     "rect": {
+      "x": 236.34,
+      "y": 787,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 149.7,
+      "y": 787,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 25,
+       "y": 745,
+       "w": 340,
+       "h": 30,
+       "bottom": 775
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 390,
+     "h": 844,
+     "bottom": 844
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 388,
+     "h": 91.5,
+     "bottom": 92.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 747,
+     "w": 388,
+     "h": 96,
+     "bottom": 843
+    },
+    "save": {
+     "rect": {
+      "x": 236.34,
+      "y": 787,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 149.7,
+      "y": 787,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 25,
+       "y": 760,
+       "w": 340,
+       "h": 15,
+       "bottom": 775
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 1,
+      "y": 92.5,
+      "w": 388,
+      "h": 654.5,
+      "bottom": 747
+     },
+     "scrollTop": 0,
+     "scrollHeight": 979,
+     "clientHeight": 655
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 390,
+     "h": 844,
+     "bottom": 844
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 388,
+     "h": 91.5,
+     "bottom": 92.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 747,
+     "w": 388,
+     "h": 96,
+     "bottom": 843
+    },
+    "save": {
+     "rect": {
+      "x": 236.34,
+      "y": 787,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 149.7,
+      "y": 787,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 25,
+       "y": 760,
+       "w": 340,
+       "h": 15,
+       "bottom": 775
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 1,
+      "y": 92.5,
+      "w": 388,
+      "h": 654.5,
+      "bottom": 747
+     },
+     "scrollTop": 324,
+     "scrollHeight": 979,
+     "clientHeight": 655
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 626.86,
+     "bottom": 688.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 684.86,
+     "bottom": 746.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 684.86,
+     "bottom": 746.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 684.86,
+     "bottom": 746.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 6168,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2108,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2108,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 334,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1400,
+       "ruleColoured": 0
+      }
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 334,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1400,
+       "ruleColoured": 0
+      }
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 334,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1400,
+       "ruleColoured": 0
+      }
+     }
+    }
+   }
+  },
+  "1440": {
+   "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 80,
+     "y": 45,
+     "w": 1280,
+     "h": 810,
+     "bottom": 855
+    },
+    "dialogGap": {
+     "top": 45,
+     "bottom": 45,
+     "left": 80,
+     "right": 80
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 81,
+     "y": 46,
+     "w": 1278,
+     "h": 91.5,
+     "bottom": 137.5
+    },
+    "footer": {
+     "x": 81,
+     "y": 793.5,
+     "w": 1278,
+     "h": 60.5,
+     "bottom": 854
+    },
+    "save": {
+     "rect": {
+      "x": 1206.34,
+      "y": 806.5,
+      "w": 128.66,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 1119.7,
+      "y": 806.5,
+      "w": 74.64,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 754.09,
+       "y": 816.75,
+       "w": 353.61,
+       "h": 15,
+       "bottom": 831.75
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 1440,
+     "innerWidth": 1440
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 80,
+     "y": 45,
+     "w": 1280,
+     "h": 810,
+     "bottom": 855
+    },
+    "dialogGap": {
+     "top": 45,
+     "bottom": 45,
+     "left": 80,
+     "right": 80
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 81,
+     "y": 46,
+     "w": 1278,
+     "h": 91.5,
+     "bottom": 137.5
+    },
+    "footer": {
+     "x": 81,
+     "y": 793.5,
+     "w": 1278,
+     "h": 60.5,
+     "bottom": 854
+    },
+    "save": {
+     "rect": {
+      "x": 1206.34,
+      "y": 806.5,
+      "w": 128.66,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 1119.7,
+      "y": 806.5,
+      "w": 74.64,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 935.08,
+       "y": 816.75,
+       "w": 172.63,
+       "h": 15,
+       "bottom": 831.75
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 904,
+      "y": 137.5,
+      "w": 455,
+      "h": 656,
+      "bottom": 793.5
+     },
+     "scrollTop": 0,
+     "scrollHeight": 656,
+     "clientHeight": 656
+    },
+    "docScroll": {
+     "scrollWidth": 1440,
+     "innerWidth": 1440
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 80,
+     "y": 45,
+     "w": 1280,
+     "h": 810,
+     "bottom": 855
+    },
+    "dialogGap": {
+     "top": 45,
+     "bottom": 45,
+     "left": 80,
+     "right": 80
+    },
+    "edgePointsOutsideDialog": 12,
+    "header": {
+     "x": 81,
+     "y": 46,
+     "w": 1278,
+     "h": 91.5,
+     "bottom": 137.5
+    },
+    "footer": {
+     "x": 81,
+     "y": 793.5,
+     "w": 1278,
+     "h": 60.5,
+     "bottom": 854
+    },
+    "save": {
+     "rect": {
+      "x": 1206.34,
+      "y": 806.5,
+      "w": 128.66,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 1119.7,
+      "y": 806.5,
+      "w": 74.64,
+      "h": 35.5,
+      "bottom": 842
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 935.08,
+       "y": 816.75,
+       "w": 172.63,
+       "h": 15,
+       "bottom": 831.75
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 904,
+      "y": 137.5,
+      "w": 455,
+      "h": 656,
+      "bottom": 793.5
+     },
+     "scrollTop": 0,
+     "scrollHeight": 656,
+     "clientHeight": 656
+    },
+    "docScroll": {
+     "scrollWidth": 1440,
+     "innerWidth": 1440
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 181.5,
+     "bottom": 227,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 233,
+     "bottom": 278.5,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 284.5,
+     "bottom": 330,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 336,
+     "bottom": 381.5,
+     "footerTop": 793.5,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 5873,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2111,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2110,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 1432
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 225,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 540,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 225,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 540,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 432,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 864,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 1432
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 225,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 540,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 225,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 540,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 432,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 864,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 1432
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 225,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 540,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 225,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "right",
+       "x": 1431.5,
+       "y": 540,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 432,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": false
+      },
+      {
+       "side": "top",
+       "x": 864,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": false
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": "not inside the dialog",
+      "topLine": "not inside the dialog"
+     }
+    }
+   }
+  },
+  "390-webkit": {
+   "consoleErrors": [
+    "Failed to load resource: Could not resolve hostname"
+   ],
+   "pageErrors": [],
+   "httpErrors": {},
+   "detecting": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 390,
+     "h": 844,
+     "bottom": 844
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 388,
+     "h": 91.5,
+     "bottom": 92.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 732,
+     "w": 388,
+     "h": 111,
+     "bottom": 843
+    },
+    "save": {
+     "rect": {
+      "x": 236.34,
+      "y": 787,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 149.7,
+      "y": 787,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "DETECTING ROAD… SAVE TURNS ON ONCE DETECTION SETTLES",
+      "rect": {
+       "x": 25,
+       "y": 745,
+       "w": 340,
+       "h": 30,
+       "bottom": 775
+      },
+      "lines": 2
+     }
+    ],
+    "scroller": null,
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roads": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 390,
+     "h": 844,
+     "bottom": 844
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 388,
+     "h": 91.5,
+     "bottom": 92.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 747,
+     "w": 388,
+     "h": 96,
+     "bottom": 843
+    },
+    "save": {
+     "rect": {
+      "x": 236.34,
+      "y": 787,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 149.7,
+      "y": 787,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 25,
+       "y": 760,
+       "w": 340,
+       "h": 15,
+       "bottom": 775
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 1,
+      "y": 92.5,
+      "w": 388,
+      "h": 654.5,
+      "bottom": 747
+     },
+     "scrollTop": 0,
+     "scrollHeight": 979,
+     "clientHeight": 655
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "roadsEnd": {
+    "dialog": {
+     "x": 0,
+     "y": 0,
+     "w": 390,
+     "h": 844,
+     "bottom": 844
+    },
+    "dialogGap": {
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0
+    },
+    "edgePointsOutsideDialog": 0,
+    "header": {
+     "x": 1,
+     "y": 1,
+     "w": 388,
+     "h": 91.5,
+     "bottom": 92.5
+    },
+    "footer": {
+     "x": 1,
+     "y": 747,
+     "w": 388,
+     "h": 96,
+     "bottom": 843
+    },
+    "save": {
+     "rect": {
+      "x": 236.34,
+      "y": 787,
+      "w": 128.66,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1,
+     "whiteSpace": "nowrap"
+    },
+    "cancel": {
+     "rect": {
+      "x": 149.7,
+      "y": 787,
+      "w": 74.64,
+      "h": 44,
+      "bottom": 831
+     },
+     "lines": 1
+    },
+    "status": [
+     {
+      "text": "⚠ PICK A ROAD TO CONTINUE",
+      "rect": {
+       "x": 25,
+       "y": 760,
+       "w": 340,
+       "h": 15,
+       "bottom": 775
+      },
+      "lines": 1
+     }
+    ],
+    "scroller": {
+     "rect": {
+      "x": 1,
+      "y": 92.5,
+      "w": 388,
+      "h": 654.5,
+      "bottom": 747
+     },
+     "scrollTop": 324,
+     "scrollHeight": 979,
+     "clientHeight": 655
+    },
+    "docScroll": {
+     "scrollWidth": 390,
+     "innerWidth": 390
+    }
+   },
+   "reach": [
+    {
+     "text": "FRANKLIN STREET SOUTHBOUND (RESIDENTIAL,",
+     "top": 626.86,
+     "bottom": 688.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 9",
+     "top": 684.86,
+     "bottom": 746.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 2",
+     "top": 684.86,
+     "bottom": 746.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    },
+    {
+     "text": "FRANKLIN STREET NORTHBOUND (RESIDENTIAL,",
+     "top": 684.86,
+     "bottom": 746.86,
+     "footerTop": 747,
+     "endsAboveFooter": true,
+     "centreHitsRow": true,
+     "bottomEdgeHitsRow": true
+    }
+   ],
+   "settle": {
+    "detecting": {
+     "waitedMs": 6144,
+     "inflightAtShot": 0
+    },
+    "roads": {
+     "waitedMs": 2109,
+     "inflightAtShot": 0
+    },
+    "roadsEnd": {
+     "waitedMs": 2107,
+     "inflightAtShot": 0
+    }
+   },
+   "frame": {
+    "detecting": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 334,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1400,
+       "ruleColoured": 0
+      }
+     }
+    },
+    "roads": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 334,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1400,
+       "ruleColoured": 0
+      }
+     }
+    },
+    "roadsEnd": {
+     "frame": true,
+     "frameRect": {
+      "x": 8,
+      "y": 8,
+      "right": 382
+     },
+     "zFrame": "60",
+     "zPicker": "65",
+     "probes": [
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "left",
+       "x": 8.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 211,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "right",
+       "x": 381.5,
+       "y": 506.4,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 117,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      },
+      {
+       "side": "top",
+       "x": 234,
+       "y": 8.5,
+       "frameOnTop": false,
+       "insideDialog": true
+      }
+     ],
+     "frameOnTopInsideDialog": 0,
+     "pixels": {
+      "leftLine": {
+       "devicePx": 334,
+       "ruleColoured": 0
+      },
+      "topLine": {
+       "devicePx": 1400,
+       "ruleColoured": 0
+      }
+     }
+    }
+   }
+  }
+ },
+ "regression_probe": {
+  "what": "The first-pass fix (p-0, picker still z-50) at 390 Chromium, shot to show the stacking and pixel checks catch the frame through the dialog. Shots in probe/.",
+  "390": {
+   "detecting": {
+    "frame": true,
+    "frameRect": {
+     "x": 8,
+     "y": 8,
+     "right": 382
+    },
+    "zFrame": "60",
+    "zPicker": "50",
+    "probes": [
+     {
+      "side": "left",
+      "x": 8.5,
+      "y": 211,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "left",
+      "x": 8.5,
+      "y": 506.4,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "right",
+      "x": 381.5,
+      "y": 211,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "right",
+      "x": 381.5,
+      "y": 506.4,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "top",
+      "x": 117,
+      "y": 8.5,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "top",
+      "x": 234,
+      "y": 8.5,
+      "frameOnTop": true,
+      "insideDialog": true
+     }
+    ],
+    "frameOnTopInsideDialog": 6,
+    "pixels": {
+     "leftLine": {
+      "devicePx": 334,
+      "ruleColoured": 322
+     },
+     "topLine": {
+      "devicePx": 1400,
+      "ruleColoured": 1400
+     }
+    }
+   },
+   "roads": {
+    "frame": true,
+    "frameRect": {
+     "x": 8,
+     "y": 8,
+     "right": 382
+    },
+    "zFrame": "60",
+    "zPicker": "50",
+    "probes": [
+     {
+      "side": "left",
+      "x": 8.5,
+      "y": 211,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "left",
+      "x": 8.5,
+      "y": 506.4,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "right",
+      "x": 381.5,
+      "y": 211,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "right",
+      "x": 381.5,
+      "y": 506.4,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "top",
+      "x": 117,
+      "y": 8.5,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "top",
+      "x": 234,
+      "y": 8.5,
+      "frameOnTop": true,
+      "insideDialog": true
+     }
+    ],
+    "frameOnTopInsideDialog": 6,
+    "pixels": {
+     "leftLine": {
+      "devicePx": 334,
+      "ruleColoured": 322
+     },
+     "topLine": {
+      "devicePx": 1400,
+      "ruleColoured": 1400
+     }
+    }
+   },
+   "roadsEnd": {
+    "frame": true,
+    "frameRect": {
+     "x": 8,
+     "y": 8,
+     "right": 382
+    },
+    "zFrame": "60",
+    "zPicker": "50",
+    "probes": [
+     {
+      "side": "left",
+      "x": 8.5,
+      "y": 211,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "left",
+      "x": 8.5,
+      "y": 506.4,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "right",
+      "x": 381.5,
+      "y": 211,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "right",
+      "x": 381.5,
+      "y": 506.4,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "top",
+      "x": 117,
+      "y": 8.5,
+      "frameOnTop": true,
+      "insideDialog": true
+     },
+     {
+      "side": "top",
+      "x": 234,
+      "y": 8.5,
+      "frameOnTop": true,
+      "insideDialog": true
+     }
+    ],
+    "frameOnTopInsideDialog": 6,
+    "pixels": {
+     "leftLine": {
+      "devicePx": 334,
+      "ruleColoured": 322
+     },
+     "topLine": {
+      "devicePx": 1400,
+      "ruleColoured": 1400
+     }
+    }
+   }
+  }
+ },
+ "desktop_1440_rect_deltas": {
+  "detecting": {
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0
+   },
+   "header": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0.0
+   },
+   "footer": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0.0
+   },
+   "save.rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0.0
+   },
+   "cancel.rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0.0
+   },
+   "status[0].rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0
+   }
+  },
+  "roads": {
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0
+   },
+   "header": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0.0
+   },
+   "footer": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0.0
+   },
+   "save.rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0.0
+   },
+   "cancel.rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0.0
+   },
+   "status[0].rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0
+   },
+   "scroller.rect": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0
+   },
+   "rows[0].rect": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0.0
+   },
+   "rows[1].rect": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0.0
+   },
+   "rows[2].rect": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0.0
+   },
+   "rows[3].rect": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0.0
+   }
+  },
+  "roadsEnd": {
+   "dialog": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0
+   },
+   "header": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0.0
+   },
+   "footer": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0.0
+   },
+   "save.rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0.0
+   },
+   "cancel.rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0.0
+   },
+   "status[0].rect": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 0.0,
+    "h": 0
+   },
+   "scroller.rect": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0
+   },
+   "rows[0].rect": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0.0
+   },
+   "rows[1].rect": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0.0
+   },
+   "rows[2].rect": {
+    "x": 0,
+    "y": 0.0,
+    "w": 0,
+    "h": 0.0
+   },
+   "rows[3].rect": {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0.0
+   }
+  },
+  "reach": [
+   {
+    "top": 0.0,
+    "bottom": 0,
+    "footerTop": 0.0
+   },
+   {
+    "top": 0,
+    "bottom": 0.0,
+    "footerTop": 0.0
+   },
+   {
+    "top": 0.0,
+    "bottom": 0,
+    "footerTop": 0.0
+   },
+   {
+    "top": 0,
+    "bottom": 0.0,
+    "footerTop": 0.0
+   }
+  ]
+ },
+ "desktop_1440_max_abs_delta_px": 0,
+ "desktop_1440_footer_pixels": {
+  "detecting": {
+   "footerBoxDevicePx": [
+    162,
+    1587,
+    2718,
+    1708
+   ],
+   "pixelsDiffering": 0,
+   "pixelsTotal": 309276
+  },
+  "roads": {
+   "footerBoxDevicePx": [
+    162,
+    1587,
+    2718,
+    1708
+   ],
+   "pixelsDiffering": 0,
+   "pixelsTotal": 309276
+  },
+  "roads-end": {
+   "footerBoxDevicePx": [
+    162,
+    1587,
+    2718,
+    1708
+   ],
+   "pixelsDiffering": 0,
+   "pixelsTotal": 309276
+  }
+ }
+}

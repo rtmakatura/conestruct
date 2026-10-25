@@ -1,0 +1,8 @@
+Red proof (repair cycle 1): the final lib/design/walkthrough-l3-picker.test.ts against the base LocationPickerModal.tsx and globals.css (68f2321, swapped in from git show HEAD:), before the fix.
+   × W14 — the location picker at phone width > the backdrop has no padding below md, so the dialog covers the page; desktop keeps md:p-6 7ms
+   × W14 — the location picker at phone width > the footer wraps below md only, and each status line takes a full line there 3ms
+   × W14 — the location picker at phone width > Save & Close never breaks its label 1ms
+   × W14 — the location picker at phone width > the picker stacks above the workbench frame and below the working band 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  4 failed (4)

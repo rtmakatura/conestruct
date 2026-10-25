@@ -25,7 +25,7 @@ The walk flagged one more path, saved mode without a plan id, which uses `SIGNUP
 | W11 | both | FILE | Every download is named `plan.*` / `plan_mht_package.zip`, so two plans collide (touches an API route) | `components/OutputCards.tsx:152-158`; `components/GeneratorShell.tsx:1114`; `app/api/render/bundle/route.ts:68` | #401 |
 | W12 | both | LIGHT | Selected kind chips and toggles differ by blue border/tint only, no ✓ (Rule 13) | `app/globals.css:4836-4840`, `:5507-5511` | L2 |
 | W13 | 390 | LIGHT | Phone (WebKit): dropdowns render white with near-invisible text; real iPhone unchecked | `app/globals.css:5220` | L2 |
-| W14 | 390 | LIGHT | Picker: "Save &amp; Close" wraps, the road list is clipped behind the footer, page text shows below the modal | `components/LocationPickerModal.tsx:1870-1883` | L3 |
+| W14 | 390 | LIGHT | Picker: "Save &amp; Close" wraps, the road list looks cut off at the footer, page text shows below the modal (L3 measured the list: not hidden; every row scrolls fully above the footer on the base, and the visible cut is the scroll edge at rest) | `components/LocationPickerModal.tsx:1870-1883` | L3 |
 | W15 | both | LIGHT | "STEP 1 OF 4" wraps to two lines (1440 with a long subtitle; 390 always) | `components/bands/BandPrimitives.tsx:115`; `app/globals.css:4718` | L2 |
 | W16 | both | FILE | Picker still says "⚠ WHICH ROAD?" after a pick, truncates the road name, asks for a side it has no control for | `components/LocationPickerModal.tsx:2136`, `:2249` | #402 |
 | W17 | both | FILE | Length "-5" says "Work zone length is required." (validation logic) | `lib/scenarios/validation.ts:175-179` | #403 |

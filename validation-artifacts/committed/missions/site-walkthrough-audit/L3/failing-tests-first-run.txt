@@ -1,0 +1,2 @@
+Full run after the fix, first pass (2026-10-25): 1 failed | 2555 passed | 1 skipped (2557)
+FAIL components/LocationPickerModal.spacing.test.ts > LocationPickerModal stays on the spacing scale (#166) > every margin/padding/gap token is a scale step
