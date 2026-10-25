@@ -96,6 +96,15 @@ export function validationPassthrough(
   });
 }
 
+// #395 (Rule 10): the JSON routes relay the backend's content-type as-is.
+// An answer that names none is relayed with none, not labelled
+// application/json on the backend's behalf (the download path at
+// renderScenarioToResponse does the same).
+function relayContentType(upstream: Response, headers: Headers): void {
+  const contentType = upstream.headers.get("content-type");
+  if (contentType) headers.set("content-type", contentType);
+}
+
 function safeFilename(name: string, ext: string): string {
   const cleaned = name
     .trim()
@@ -215,10 +224,7 @@ export async function fetchQuoteBreakdown(
   }
 
   const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
+  relayContentType(upstream, headers);
   headers.set("cache-control", "private, no-store");
   return new Response(upstream.body, { status: 200, headers });
 }
@@ -259,10 +265,7 @@ export async function fetchDeviceBreakdown(
   }
 
   const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
+  relayContentType(upstream, headers);
   headers.set("cache-control", "private, no-store");
   return new Response(upstream.body, { status: 200, headers });
 }
@@ -308,10 +311,7 @@ export async function fetchCorridorGeometry(
   }
 
   const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
+  relayContentType(upstream, headers);
   headers.set("cache-control", "private, no-store");
   return new Response(upstream.body, { status: 200, headers });
 }
@@ -357,10 +357,7 @@ export async function fetchNearestIntersection(
   }
 
   const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
+  relayContentType(upstream, headers);
   headers.set("cache-control", "private, no-store");
   return new Response(upstream.body, { status: 200, headers });
 }
@@ -461,10 +458,7 @@ export async function fetchAuditTrail(
   }
 
   const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
+  relayContentType(upstream, headers);
   headers.set("cache-control", "private, no-store");
   return new Response(upstream.body, { status: 200, headers });
 }
@@ -566,10 +560,7 @@ export async function fetchJurisdictionSuggest(body: {
   }
 
   const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
+  relayContentType(upstream, headers);
   headers.set("cache-control", "private, no-store");
   return new Response(upstream.body, { status: 200, headers });
 }

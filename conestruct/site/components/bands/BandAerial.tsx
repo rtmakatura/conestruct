@@ -163,7 +163,7 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
     <div className="a-aerial" data-testid="band-aerial" data-read data-stage={stage ?? "none"}>
       <div ref={frameRef} className="a-aerial-frame">
         {shown && (
-          // The source is an object URL of a PNG the backend drew at this
+          // The source is an object URL of an image the backend drew at this
           // frame's exact size — there is nothing for next/image to
           // optimise or resize, and it cannot load a blob: URL through its
           // loader.
