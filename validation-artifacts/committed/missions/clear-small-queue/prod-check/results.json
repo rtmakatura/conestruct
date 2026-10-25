@@ -1,0 +1,194 @@
+{
+ "healthz_sha": "bc3b7d4da50579d54c2d1c0c71ce0d9376a3e750",
+ "rows": [
+  {
+   "check": "#389 #391 #353",
+   "case": "healthz sha == bc3b7d4",
+   "pass": true,
+   "observed": "healthz bc3b7d4da50579d54c2d1c0c71ce0d9376a3e750"
+  },
+  {
+   "check": "#388",
+   "case": "Thornton shoulder, two-way undivided (expect 4)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": 4,
+     "quote": 4,
+     "breakdown": 4,
+     "crew_sheet": 4
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "Thornton shoulder, divided (expect 2)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": 2,
+     "quote": 2,
+     "breakdown": 2,
+     "crew_sheet": 2
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "Thornton shoulder, one-way (expect 2)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": 2,
+     "quote": 2,
+     "breakdown": 2,
+     "crew_sheet": 2
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "Thornton flagger_lane_closure (expect 4)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": 4,
+     "quote": 4,
+     "breakdown": 4,
+     "crew_sheet": 4
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "Thornton near_intersection, two-way, 1 leg (expect 6)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": 6,
+     "quote": 6,
+     "breakdown": 6,
+     "crew_sheet": 6
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "CDOT shoulder, two-way undivided (control) (expect None)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": null,
+     "quote": null,
+     "breakdown": null,
+     "crew_sheet": null
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "Lakewood shoulder, two-way undivided (control) (expect None)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": null,
+     "quote": null,
+     "breakdown": null,
+     "crew_sheet": null
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "no jurisdiction shoulder, two-way undivided (control) (expect None)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": null,
+     "quote": null,
+     "breakdown": null,
+     "crew_sheet": null
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#388",
+   "case": "CDOT flagger (control) (expect None)",
+   "pass": true,
+   "observed": {
+    "counts": {
+     "xlsx": null,
+     "quote": null,
+     "breakdown": null,
+     "crew_sheet": null
+    },
+    "status": {
+     "xlsx": 200,
+     "quote": 200,
+     "breakdown": 200,
+     "crew_sheet": 200
+    }
+   }
+  },
+  {
+   "check": "#390",
+   "case": "backend /render/corridor-map broadway-sb laid_out 600x300",
+   "pass": true,
+   "observed": "200; content-type image/jpeg; first bytes FF D8 FF; 205686 bytes"
+  },
+  {
+   "check": "#390",
+   "case": "proxy: 200 with no content-type answers 502",
+   "pass": null,
+   "observed": "unreachable in production (the backend always sends a content-type); tests only"
+  }
+ ]
+}

@@ -1,0 +1,349 @@
+{
+ "Thornton shoulder, two-way undivided": {
+  "xlsx": {
+   "status": 200,
+   "row": [
+    10,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    "—",
+    "EACH",
+    4,
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. Unit is EACH for V1; CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type; no single pay item."
+   ]
+  },
+  "quote": {
+   "status": 200,
+   "row": [
+    10,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    4,
+    "EACH",
+    "—",
+    1,
+    "—",
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. No single daily rate. NOT included in the quote total; price separately. CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type."
+   ]
+  },
+  "breakdown": {
+   "status": 200,
+   "row": [
+    {
+     "device": "Advance Warning Signs",
+     "code": "—",
+     "function": "Jurisdiction-required",
+     "qty": 4,
+     "jurisdiction_required": true,
+     "jurisdiction_source": {
+      "doc": "Thornton Construction & TC Permit handout",
+      "section": "stipulation 6",
+      "status": "verified"
+     },
+     "jurisdiction_added": 4
+    }
+   ]
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": [
+    [
+     "4",
+     "Advance Warning Signs (jurisdiction-required)"
+    ]
+   ]
+  }
+ },
+ "Thornton shoulder, divided": {
+  "xlsx": {
+   "status": 200,
+   "row": [
+    10,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    "—",
+    "EACH",
+    2,
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. Unit is EACH for V1; CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type; no single pay item."
+   ]
+  },
+  "quote": {
+   "status": 200,
+   "row": [
+    10,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    2,
+    "EACH",
+    "—",
+    1,
+    "—",
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. No single daily rate. NOT included in the quote total; price separately. CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type."
+   ]
+  },
+  "breakdown": {
+   "status": 200,
+   "row": [
+    {
+     "device": "Advance Warning Signs",
+     "code": "—",
+     "function": "Jurisdiction-required",
+     "qty": 2,
+     "jurisdiction_required": true,
+     "jurisdiction_source": {
+      "doc": "Thornton Construction & TC Permit handout",
+      "section": "stipulation 6",
+      "status": "verified"
+     },
+     "jurisdiction_added": 2
+    }
+   ]
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": [
+    [
+     "2",
+     "Advance Warning Signs (jurisdiction-required)"
+    ]
+   ]
+  }
+ },
+ "Thornton shoulder, one-way": {
+  "xlsx": {
+   "status": 200,
+   "row": [
+    10,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    "—",
+    "EACH",
+    2,
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. Unit is EACH for V1; CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type; no single pay item."
+   ]
+  },
+  "quote": {
+   "status": 200,
+   "row": [
+    10,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    2,
+    "EACH",
+    "—",
+    1,
+    "—",
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. No single daily rate. NOT included in the quote total; price separately. CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type."
+   ]
+  },
+  "breakdown": {
+   "status": 200,
+   "row": [
+    {
+     "device": "Advance Warning Signs",
+     "code": "—",
+     "function": "Jurisdiction-required",
+     "qty": 2,
+     "jurisdiction_required": true,
+     "jurisdiction_source": {
+      "doc": "Thornton Construction & TC Permit handout",
+      "section": "stipulation 6",
+      "status": "verified"
+     },
+     "jurisdiction_added": 2
+    }
+   ]
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": [
+    [
+     "2",
+     "Advance Warning Signs (jurisdiction-required)"
+    ]
+   ]
+  }
+ },
+ "Thornton flagger_lane_closure": {
+  "xlsx": {
+   "status": 200,
+   "row": [
+    11,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    "—",
+    "EACH",
+    4,
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. Unit is EACH for V1; CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type; no single pay item."
+   ]
+  },
+  "quote": {
+   "status": 200,
+   "row": [
+    11,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    4,
+    "EACH",
+    "—",
+    1,
+    "—",
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. No single daily rate. NOT included in the quote total; price separately. CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type."
+   ]
+  },
+  "breakdown": {
+   "status": 200,
+   "row": [
+    {
+     "device": "Advance Warning Signs",
+     "code": "—",
+     "function": "Jurisdiction-required",
+     "qty": 4,
+     "jurisdiction_required": true,
+     "jurisdiction_source": {
+      "doc": "Thornton Construction & TC Permit handout",
+      "section": "stipulation 6",
+      "status": "verified"
+     },
+     "jurisdiction_added": 4
+    }
+   ]
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": [
+    [
+     "4",
+     "Advance Warning Signs (jurisdiction-required)"
+    ]
+   ]
+  }
+ },
+ "Thornton near_intersection, two-way, 1 leg": {
+  "xlsx": {
+   "status": 200,
+   "row": [
+    12,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    "—",
+    "EACH",
+    6,
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. Unit is EACH for V1; CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type; no single pay item."
+   ]
+  },
+  "quote": {
+   "status": 200,
+   "row": [
+    12,
+    "Advance Warning Signs (jurisdiction-required)",
+    "Advance Warning Signs",
+    6,
+    "EACH",
+    "—",
+    1,
+    "—",
+    "Jurisdiction-required: Thornton Construction & TC Permit handout. No single daily rate. NOT included in the quote total; price separately. CDOT Spec 630 bills these as individual W-series signs by SF. Itemize per sign type."
+   ]
+  },
+  "breakdown": {
+   "status": 200,
+   "row": [
+    {
+     "device": "Advance Warning Signs",
+     "code": "—",
+     "function": "Jurisdiction-required",
+     "qty": 6,
+     "jurisdiction_required": true,
+     "jurisdiction_source": {
+      "doc": "Thornton Construction & TC Permit handout",
+      "section": "stipulation 6",
+      "status": "verified"
+     },
+     "jurisdiction_added": 6
+    }
+   ]
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": [
+    [
+     "6",
+     "Advance Warning Signs (jurisdiction-required)"
+    ]
+   ]
+  }
+ },
+ "CDOT shoulder, two-way undivided (control)": {
+  "xlsx": {
+   "status": 200,
+   "row": null
+  },
+  "quote": {
+   "status": 200,
+   "row": null
+  },
+  "breakdown": {
+   "status": 200,
+   "row": null
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": null
+  }
+ },
+ "Lakewood shoulder, two-way undivided (control)": {
+  "xlsx": {
+   "status": 200,
+   "row": null
+  },
+  "quote": {
+   "status": 200,
+   "row": null
+  },
+  "breakdown": {
+   "status": 200,
+   "row": null
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": null
+  }
+ },
+ "no jurisdiction shoulder, two-way undivided (control)": {
+  "xlsx": {
+   "status": 200,
+   "row": null
+  },
+  "quote": {
+   "status": 200,
+   "row": null
+  },
+  "breakdown": {
+   "status": 200,
+   "row": null
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": null
+  }
+ },
+ "CDOT flagger (control)": {
+  "xlsx": {
+   "status": 200,
+   "row": null
+  },
+  "quote": {
+   "status": 200,
+   "row": null
+  },
+  "breakdown": {
+   "status": 200,
+   "row": null
+  },
+  "crew_sheet": {
+   "status": 200,
+   "row": null
+  }
+ }
+}
