@@ -4,7 +4,7 @@ Live site www.conestruct.com at `c431ceb`, walked 2026-10-25 headless (Playwrigh
 
 ## Ryan's note: "Download PDF" and "Download .md" wrap onto two lines
 
-**Not reproduced on the live build.** After Generate, every download button measured 44 px tall (one line) at widths from 1440 down to 360, in Chromium, Firefox and WebKit. The crew card's shared row has said "PDF" / ".md" since #329 (`28b49a8`; `components/OutputCards.tsx:106-117`, chosen at `:380-385`; padding `app/globals.css:3618-3627`). See `before/1440-sandbox-shoulder-generated.png`, `before/390-sandbox-downloads.png`, `before/1024-firefox-downloads.png`.
+**Not reproduced on the live build.** The committed screenshots show every download button on one line at 1440 (Chromium), 1024 (Firefox) and 390 (Chromium and WebKit), and the crew card's shared row reads "PDF" / ".md", as it has since #329 (`28b49a8`; `components/OutputCards.tsx:106-117`, chosen at `:380-385`; padding `app/globals.css:3618-3627`). See `before/1440-sandbox-shoulder-generated.png`, `before/390-sandbox-downloads.png`, `before/390-chromium-downloads.png`, `before/1024-firefox-downloads.png`. The walk also measured each button at 44 px at widths down to 360 in three engines, but that output wasn't saved, so only the screenshots back it.
 
 One path still carries long labels on a shared row: signed-out saved mode uses `SIGNUP_LABELS` ("Sign up to download PDF", "Sign up to download .md") ahead of the shared short labels (`OutputCards.tsx:120-126`, `:380-385`). The walk couldn't reach it without an account. Fixed in the light lane (item L1).
 
@@ -15,7 +15,7 @@ One path still carries long labels on a shared row: signed-out saved mode uses `
 | W1 | both | FILE | Work length shows "1,000 ft · typed" / "✓ yours" for the default, never typed (Rule 10) | `lib/scenarios/index.ts:126`; `lib/scenarios/move-ledger.ts:182`; `components/bands/WhereBand.tsx:762-768` | #397 |
 | W2 | both | FILE | Work type shows "✓ yours" on a default never chosen | `components/bands/PlanDetails.tsx:205-209` | #397 |
 | W3 | both | FILE | Lanes shows "⚠ yours" / "OSM · withdrawn · operator-set" untouched; the same road read 2/12 ft one visit, 4/10.5 ft the next | `lib/road-detection/detected-rows.ts:237-261` | #397 |
-| W4 | both | FILE | "◌ previous answer, refreshing…" stays up 40 s+ after Generate settles | `components/GeneratorShell.tsx:2249` (the cue), `:1547-1548` (its condition, `tiersRefreshing`) | #398 |
+| W4 | both | FILE | "◌ previous answer, refreshing…" stays up after Generate settles (seen on every generated screenshot; the 40 s+ duration was observed, not recorded) | `components/GeneratorShell.tsx:2249` (the cue), `:1547-1548` (its condition, `tiersRefreshing`) | #398 |
 | W5 | both | FILE | "Windows · ◌ loading" never ends after a declined plan | `components/ScheduleField.tsx:202-204` | #398 |
 | W6 | both | LIGHT | After a decline, "the option you picked stands" is said of a jurisdiction filled from the pin, in red | `components/bands/WhatBand.tsx:393` | L1 |
 | W7 | both | LIGHT | "Generation declined. See the notice below." — the notice is at the top of the page | `lib/scenarios/rail.ts:139` | L1 |
@@ -30,7 +30,7 @@ One path still carries long labels on a shared row: signed-out saved mode uses `
 | W16 | both | FILE | Picker still says "⚠ WHICH ROAD?" after a pick, truncates the road name, asks for a side it has no control for | `components/LocationPickerModal.tsx:2136`, `:2249` | #402 |
 | W17 | both | FILE | Length "-5" says "Work zone length is required." (validation logic) | `lib/scenarios/validation.ts:175-179` | #403 |
 | W18 | both | FILE | Flagger form repeats speed and lane width as sliders beside the step-2 selects | `components/FlaggerForm.tsx`; `components/bands/WhatBand.tsx:475-530` | #404 |
-| W19 | both | FILE | Road detection takes 22–27 s per search | `/api/road-bearing` | #405 |
+| W19 | both | FILE | Road detection takes 22–27 s per search (timed during the walk; the timings weren't saved) | `/api/road-bearing` | #405 |
 | W20 | both | FILE + LIGHT | Enter in the address field does nothing (#402); "enter it manually" names a control the band doesn't have (copy, L1) | `components/bands/WhereBand.tsx:598-608` | #402, L1 |
 | W21 | 390 | LIGHT | Phone nav has an empty bordered cell next to the logo | `components/AppNav.tsx:60-112` | L2 |
 
@@ -38,7 +38,9 @@ One path still carries long labels on a shared row: signed-out saved mode uses `
 
 - **Public pages:** `/`, `/terms`, `/privacy`, and a 404 at 1440 and 390: no horizontal scroll, axe 0, no `docs/style.md` violations. Contact form not submitted.
 - **Sandbox, three ways in:** address, cross street, a CDOT road (Wadsworth).
-- **Forms:** shoulder, flagger, near-intersection, each generated on Colfax and on Wadsworth.
+- **Forms:** shoulder, flagger and near-intersection generated on Colfax; shoulder generated on Wadsworth; near-intersection on Wadsworth declined (W8) and was not generated; flagger not run on Wadsworth.
 - **Refusals hit:** one-way flagger (recovered by ticking two-way), blank / too-long / negative length, missing cross street, unconfirmed cross-street lanes, cross street inside the zone.
-- **Downloads:** all six controls on five runs, 30 files, every one HTTP 200 with the right content type and opening cleanly. Zip 0.6–0.9 MB; plan PDF 2 pages; XLSX has Device List and Summary sheets; crew PDF 3–4 pages; .md `text/markdown`; audit PDF 4–5 pages.
+- **Downloads:** all six controls on five runs, 30 files, every one HTTP 200 with the right content type and opening cleanly (observed during the walk; the per-file log wasn't saved). Zip 0.6–0.9 MB; plan PDF 2 pages; XLSX has Device List and Summary sheets; crew PDF 3–4 pages; .md `text/markdown`; audit PDF 4–5 pages.
+- **Evidence limits:** `before/` holds 28 PNGs plus `public-pages.json`. `script/repl.mjs` is an interactive harness whose session wasn't saved, and `script/run.sh` points at a session scratchpad, so the scripts show how the walk was driven but don't re-run the measurements above as committed. `before/1440-near-int-unnamed-cross.png` actually shows a named cross street (West 10th Avenue).
+- **Counts:** 21 findings: 7 LIGHT, 13 FILE and 1 both (W20); the FILE ones went into 9 issues, #397–#405. This corrects `e96e530`'s message ("11 light, 10 filed", "29 before screenshots").
 - **Not walked:** signed-in and saved-plan views (no account); real iOS Safari (W13).
