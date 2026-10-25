@@ -311,7 +311,11 @@ def test_proceeded_after_outage_applies_asserts_and_moots_dismisses(
     assert "pedestrian_facility" not in _fired(audit)
 
 
-def test_not_run_applies_asserts_too(client: TestClient, auth: dict[str, str]) -> None:
+def test_not_run_applies_asserts_too(
+    client: TestClient, auth: dict[str, str], overpass_down: None
+) -> None:
+    # #389: no scan runs, but the audit's corridor-vs-OSM bearing check
+    # still asks Overpass; ``overpass_down`` keeps it off the wire.
     sc = scenario([ASSERT_SCHOOL])
     del sc["site_scan"]
     audit = _audit(client, auth, sc)

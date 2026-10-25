@@ -281,6 +281,11 @@ def test_generate_anyway_after_a_scan_fault_renders_with_the_disclosure(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(ss, "detect_along_corridor", _boom)
+    # #389: the audit's corridor-vs-OSM bearing check still asks Overpass
+    # once the scan has faulted; answer it "down", off the wire.
+    monkeypatch.setattr(
+        sd, "_overpass_request_with_fallback", lambda *_a, **_k: (None, "stub: mirrors down")
+    )
     body = {**REQUEST, "site_scan": {"proceed_if_unavailable": True}}
     r = client.post("/render/audit", json=body, headers={"Authorization": f"Bearer {_TEST_SECRET}"})
     assert r.status_code == 200, r.text[:300]
