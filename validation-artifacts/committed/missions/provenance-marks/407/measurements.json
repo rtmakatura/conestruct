@@ -1,0 +1,184 @@
+{
+ "about": "#407 mark measurements, local next dev of this worktree (before = base 7678d0b sources, after = this diff), Playwright Chromium DPR 2, /api/road-bearing stubbed (East Colfax Avenue, way 600545936). contrast = WCAG ratio of the mark colour (computed, pseudo-element for kind/segmented) against the pressed ground composited from every ancestor background. label.textLeft = where the label words start (px). Script: script/shoot.mjs.",
+ "AA_floor": 4.5,
+ "before": {
+  "390": {
+   "side": {
+    "glyph": "✓ ",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 45,
+     "width": 300,
+     "textLeft": 57.72,
+     "text": "✓ East side · traffic heads north"
+    }
+   },
+   "kind": {
+    "glyph": "\" ✓\" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 45,
+     "width": 300,
+     "textLeft": 45,
+     "text": "Shoulder work"
+    }
+   },
+   "segmented": {
+    "glyph": "\"✓ \" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(25.0, 48.4, 65.5)",
+    "contrast": 5.16,
+    "label": {
+     "left": 86.84,
+     "width": 52.3,
+     "textLeft": 86.84,
+     "text": "Daytime"
+    }
+   }
+  },
+  "1440": {
+   "side": {
+    "glyph": "✓ ",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 311,
+     "width": 390,
+     "textLeft": 323.72,
+     "text": "✓ East side · traffic heads north"
+    }
+   },
+   "kind": {
+    "glyph": "\" ✓\" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 311,
+     "width": 247.33,
+     "textLeft": 311,
+     "text": "Shoulder work"
+    }
+   },
+   "segmented": {
+    "glyph": "\"✓ \" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(25.0, 48.4, 65.5)",
+    "contrast": 5.16,
+    "label": {
+     "left": 919.59,
+     "width": 52.3,
+     "textLeft": 919.59,
+     "text": "Daytime"
+    }
+   }
+  }
+ },
+ "after": {
+  "390": {
+   "side": {
+    "glyph": "● ",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 45,
+     "width": 300,
+     "textLeft": 56.44,
+     "text": "● East side · traffic heads north"
+    }
+   },
+   "kind": {
+    "glyph": "\" ●\" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 45,
+     "width": 300,
+     "textLeft": 45,
+     "text": "Shoulder work"
+    }
+   },
+   "segmented": {
+    "glyph": "\"● \" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(25.0, 48.4, 65.5)",
+    "contrast": 5.16,
+    "label": {
+     "left": 86.84,
+     "width": 52.3,
+     "textLeft": 86.84,
+     "text": "Daytime"
+    }
+   }
+  },
+  "1440": {
+   "side": {
+    "glyph": "● ",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 311,
+     "width": 390,
+     "textLeft": 322.44,
+     "text": "● East side · traffic heads north"
+    }
+   },
+   "kind": {
+    "glyph": "\" ●\" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "contrast": 5.6,
+    "label": {
+     "left": 311,
+     "width": 247.33,
+     "textLeft": 311,
+     "text": "Shoulder work"
+    }
+   },
+   "segmented": {
+    "glyph": "\"● \" / \"\"",
+    "visibility": "visible",
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(25.0, 48.4, 65.5)",
+    "contrast": 5.16,
+    "label": {
+     "left": 919.59,
+     "width": 52.3,
+     "textLeft": 919.59,
+     "text": "Daytime"
+    }
+   }
+  }
+ },
+ "labelShiftPx": {
+  "390": {
+   "side": -1.28,
+   "kind": 0,
+   "segmented": 0
+  },
+  "1440": {
+   "side": -1.28,
+   "kind": 0,
+   "segmented": 0
+  }
+ }
+}

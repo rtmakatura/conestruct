@@ -1,0 +1,141 @@
+{
+ "390": {
+  "reasonChip": {
+   "plain": {
+    "paintedAncestors": [
+     {
+      "el": "label.reason-chip.chosen",
+      "bg": "rgba(52, 169, 232, 0.14)"
+     },
+     {
+      "el": "section.needs-you.jump-anchor.outline-none",
+      "bg": "rgb(16, 28, 41)"
+     },
+     {
+      "el": "div.workbench.min-h-screen",
+      "bg": "rgb(20, 32, 46)"
+     },
+     {
+      "el": "body.font-sans.bg-beige.text-ink.antialiased.blueprint-grid",
+      "bg": "rgb(245, 240, 235)"
+     }
+    ],
+    "ground": "rgb(21.0, 47.7, 67.7)",
+    "glyphColor": "rgb(52, 169, 232)",
+    "contrastGlyph": 5.21,
+    "contrastActOnGround": 5.21,
+    "contrastActBrightOnGround": 6.44
+   },
+   "ownsPrimary": {
+    "paintedAncestors": [
+     {
+      "el": "label.reason-chip.chosen",
+      "bg": "rgba(52, 169, 232, 0.14)"
+     },
+     {
+      "el": "section.needs-you.jump-anchor.outline-none.owns-primary",
+      "bg": "rgb(16, 28, 41)"
+     },
+     {
+      "el": "div.workbench.min-h-screen",
+      "bg": "rgb(20, 32, 46)"
+     },
+     {
+      "el": "body.font-sans.bg-beige.text-ink.antialiased.blueprint-grid",
+      "bg": "rgb(245, 240, 235)"
+     }
+    ],
+    "ground": "rgb(21.0, 47.7, 67.7)",
+    "glyphColor": "rgb(52, 169, 232)",
+    "contrastGlyph": 5.21,
+    "contrastActOnGround": 5.21,
+    "contrastActBrightOnGround": 6.44
+   }
+  },
+  "segInk": {
+   "dpr2": {
+    "mark": {
+     "top": 9,
+     "bottom": 28
+    },
+    "label": {
+     "top": 7,
+     "bottom": 31
+    }
+   },
+   "markCentrePx": 9.25,
+   "labelCentrePx": 9.5,
+   "offsetPx": -0.25
+  }
+ },
+ "1440": {
+  "reasonChip": {
+   "plain": {
+    "paintedAncestors": [
+     {
+      "el": "label.reason-chip.chosen",
+      "bg": "rgba(52, 169, 232, 0.14)"
+     },
+     {
+      "el": "section.needs-you.jump-anchor.outline-none",
+      "bg": "rgb(16, 28, 41)"
+     },
+     {
+      "el": "div.workbench.min-h-screen",
+      "bg": "rgb(20, 32, 46)"
+     },
+     {
+      "el": "body.font-sans.bg-beige.text-ink.antialiased.blueprint-grid",
+      "bg": "rgb(245, 240, 235)"
+     }
+    ],
+    "ground": "rgb(21.0, 47.7, 67.7)",
+    "glyphColor": "rgb(52, 169, 232)",
+    "contrastGlyph": 5.21,
+    "contrastActOnGround": 5.21,
+    "contrastActBrightOnGround": 6.44
+   },
+   "ownsPrimary": {
+    "paintedAncestors": [
+     {
+      "el": "label.reason-chip.chosen",
+      "bg": "rgba(52, 169, 232, 0.14)"
+     },
+     {
+      "el": "section.needs-you.jump-anchor.outline-none.owns-primary",
+      "bg": "rgb(16, 28, 41)"
+     },
+     {
+      "el": "div.workbench.min-h-screen",
+      "bg": "rgb(20, 32, 46)"
+     },
+     {
+      "el": "body.font-sans.bg-beige.text-ink.antialiased.blueprint-grid",
+      "bg": "rgb(245, 240, 235)"
+     }
+    ],
+    "ground": "rgb(21.0, 47.7, 67.7)",
+    "glyphColor": "rgb(52, 169, 232)",
+    "contrastGlyph": 5.21,
+    "contrastActOnGround": 5.21,
+    "contrastActBrightOnGround": 6.44
+   }
+  },
+  "segInk": {
+   "dpr2": {
+    "mark": {
+     "top": 5,
+     "bottom": 30
+    },
+    "label": {
+     "top": 5,
+     "bottom": 30
+    }
+   },
+   "markCentrePx": 8.75,
+   "labelCentrePx": 8.75,
+   "offsetPx": 0
+  }
+ },
+ "about": "#407 repair 1, this branch. reasonChip: the chosen dismiss-reason chip injected where NeedsYou mounts (inside .zone.results) with NeedsYou's own element structure; paintedAncestors are the computed backgrounds up the chain. segInk: pixel rows of the pressed Hours option's ● (blue) and label (light) ink, DPR 2, clip = the label box widened 24 px each side; label ink includes the D cap and the y descender. Script: script/probe-repair1.mjs"
+}

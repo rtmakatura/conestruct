@@ -58,6 +58,7 @@ import {
 } from "@/lib/corridor-geometry";
 import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import { KIND_BLOCKER } from "@/lib/scenarios/rail";
+import { symClass } from "@/lib/design/symbols";
 import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
 import { OpenBand } from "./BandPrimitives";
 import { BandAerial } from "./BandAerial";
@@ -325,8 +326,9 @@ function SideControl({
         // `.chip` — whose `is-on` no rule styled (the choice was invisible)
         // and whose row set the options edge to edge.  `.a-chip` gives the
         // 10 px gap and the 44 px target; checked takes the pressed kind
-        // chip's accent border and wash, and a leading ✓ (rule 17's glyph,
-        // as text, aria-hidden — `aria-checked` is what is announced).
+        // chip's accent border and wash, and a leading ● (#407, Ryan
+        // 2026-10-25: the selection glyph, never ✓; as text, aria-hidden —
+        // `aria-checked` is what is announced).
         <div className="a-chips a-chips-side" role="radiogroup" aria-label="Occupied side">
           {options.map((o) => {
             const on = selected === o;
@@ -347,8 +349,8 @@ function SideControl({
               >
                 <span className="tr-field">
                   {on && (
-                    <span className="a-chip-check" aria-hidden="true">
-                      ✓{" "}
+                    <span className={symClass("●")} aria-hidden="true">
+                      ●{" "}
                     </span>
                   )}
                   {o.label}

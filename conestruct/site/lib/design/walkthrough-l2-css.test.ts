@@ -23,13 +23,13 @@ function ruleFor(sel: string): string {
   return m ? m[1] : "";
 }
 
-describe("W12 — a pressed option carries a ✓, not the blue alone (Rule 13)", () => {
-  it("the kind chip reserves a trailing ✓ slot, shown only when pressed, and keeps its border under the pointer", () => {
+describe("W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●)", () => {
+  it("the kind chip reserves a trailing ● slot, shown only when pressed, and keeps its border under the pointer", () => {
     // Trailing, so the label keeps the citation line's left edge (P4);
     // reserved on every chip, so pressing moves nothing (P1).
     const sel = ".workbench .a-chip[aria-pressed] > .tr-field::after";
     const body = ruleFor(sel);
-    expect(body, sel).toMatch(/content:\s*"\\00a0✓"\s*\/\s*"";/);
+    expect(body, sel).toMatch(/content:\s*"\\00a0●"\s*\/\s*"";/);
     expect(body, sel).toMatch(/visibility:\s*hidden;/);
     expect(body, sel).toMatch(/color:\s*var\(--act\);/);
     expect(ruleFor('.workbench .a-chip[aria-pressed="true"] > .tr-field::after')).toMatch(
@@ -42,12 +42,12 @@ describe("W12 — a pressed option carries a ✓, not the blue alone (Rule 13)",
     ).toMatch(/border-color:\s*var\(--raise-hi\);/);
   });
 
-  it("the segmented ✓ hangs outside the text flow, so the centred label doesn't move", () => {
+  it("the segmented ● hangs outside the text flow, so the centred label doesn't move", () => {
     expect(fieldCell).toContain('<span className="a-seg-label">{o.l}</span>');
     expect(ruleFor(".workbench .a-seg-label")).toMatch(/position:\s*relative;/);
     const sel = '.workbench .a-seg > button[aria-pressed="true"] > .a-seg-label::before';
     const body = ruleFor(sel);
-    expect(body, sel).toMatch(/content:\s*"✓\\00a0"\s*\/\s*"";/);
+    expect(body, sel).toMatch(/content:\s*"●\\00a0"\s*\/\s*"";/);
     expect(body, sel).toMatch(/position:\s*absolute;/);
     expect(body, sel).toMatch(/right:\s*100%;/);
     expect(body, sel).toMatch(/color:\s*var\(--act\);/);

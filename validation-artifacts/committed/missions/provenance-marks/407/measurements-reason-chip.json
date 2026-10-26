@@ -1,0 +1,44 @@
+{
+ "390": {
+  "before": {
+   "glyph": "✓",
+   "color": "rgb(86, 188, 242)",
+   "label": "rgb(86, 188, 242)",
+   "ground": "rgb(21.0, 47.7, 67.7)",
+   "contrast": 6.44,
+   "glyphCellWidth": 10,
+   "labelLeftInChip": 23
+  },
+  "after": {
+   "glyph": "●",
+   "color": "rgb(52, 169, 232)",
+   "label": "rgb(86, 188, 242)",
+   "ground": "rgb(21.0, 47.7, 67.7)",
+   "contrast": 5.21,
+   "glyphCellWidth": 10,
+   "labelLeftInChip": 23
+  }
+ },
+ "1440": {
+  "before": {
+   "glyph": "✓",
+   "color": "rgb(86, 188, 242)",
+   "label": "rgb(86, 188, 242)",
+   "ground": "rgb(21.0, 47.7, 67.7)",
+   "contrast": 6.44,
+   "glyphCellWidth": 10,
+   "labelLeftInChip": 26
+  },
+  "after": {
+   "glyph": "●",
+   "color": "rgb(52, 169, 232)",
+   "label": "rgb(86, 188, 242)",
+   "ground": "rgb(21.0, 47.7, 67.7)",
+   "contrast": 5.21,
+   "glyphCellWidth": 10,
+   "labelLeftInChip": 26
+  }
+ },
+ "about": "Replica of the chosen dismiss-reason chip injected into the live .workbench (see script/measure-reason.mjs); not a captured live chip.",
+ "AA_floor": 4.5
+}

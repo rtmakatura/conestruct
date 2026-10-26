@@ -306,7 +306,7 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     ]);
   });
 
-  it("#245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ✓ glyph", async () => {
+  it("#245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ● glyph (#407)", async () => {
     const user = userEvent.setup();
     mount(ok());
     const sidewalk = within(block()!).getByText("Pedestrian sidewalks").closest(".site-correction-row")!;
@@ -327,7 +327,10 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
     await user.click(within(group).getByRole("radio", { name: "Removed" }));
     const chosen = group.querySelectorAll(".reason-chip.chosen");
     expect(chosen).toHaveLength(1);
-    expect(chosen[0].querySelector(".reason-glyph")?.textContent).toBe("✓");
+    // #407 (Ryan, 2026-10-25): the selection mark is ●, never ✓.
+    expect(chosen[0].querySelector(".reason-glyph")?.textContent).toBe("●");
+    expect(chosen[0].querySelector(".reason-glyph")?.classList.contains("sym-select")).toBe(true);
+    expect(group.textContent).not.toContain("✓");
     expect(chosen[0].querySelector(".reason-text")?.textContent).toBe("Removed");
     expect((within(group).getByRole("radio", { name: "Removed" }) as HTMLInputElement).checked).toBe(true);
     // #255 (P1): the note slot is ALWAYS mounted — void until Other:

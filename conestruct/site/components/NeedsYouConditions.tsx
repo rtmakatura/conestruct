@@ -119,6 +119,7 @@ import {
   type FlagStaged,
 } from "@/lib/scenarios/site-corrections";
 import { applyStagedFields } from "@/lib/scenarios/what-writes";
+import { symClass } from "@/lib/design/symbols";
 import type {
   ManualSiteFlag,
   ScannedSiteFlag,
@@ -407,7 +408,8 @@ export function SiteConditionRows({
           native <select> — the UA's white field under the
           inherited light ink measured 1.54:1 and its popup renders
           outside the DOM where nothing measures it.  The chosen
-          state is border + wash + ink + a ✓ glyph + the native
+          state is border + wash + ink + a ● glyph (#407: the
+          selection mark, never ✓) + the native
           :checked state (rule 13, never hue alone); no aria-pressed
           (a radio carries its own checked semantics).  The legend
           keeps the accessible name. */}
@@ -434,8 +436,11 @@ export function SiteConditionRows({
                       setNoteInvalid(false);
                     }}
                   />
-                  <span className="reason-glyph" aria-hidden>
-                    {chosen ? "✓" : ""}
+                  {/* #407 (Ryan, 2026-10-25): a chosen chip takes the
+                      selection mark ●, never ✓ (✓ is provenance), in
+                      ●'s one hue (.sym-select) rather than the label's. */}
+                  <span className={`reason-glyph ${symClass("●")}`} aria-hidden>
+                    {chosen ? "●" : ""}
                   </span>
                   <span className="reason-text">{r.l}</span>
                 </label>

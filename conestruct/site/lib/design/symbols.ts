@@ -10,6 +10,14 @@
 // "proposed — a suggestion awaiting Confirm/Dismiss", --ink-on-dark.
 // Part 2 rule 17's list omitted it (ruled 2026-09-23, fidelity Q5).
 //
+// ● is the eighth, for one meaning only: "the option chosen on this
+// control" (a pressed chip or toggle option, the checked side), in the
+// accent --act like the pressed border it sits in.  Ryan, 2026-10-25
+// (#407, https://github.com/rtmakatura/conestruct/issues/407#issuecomment-6403916392):
+// "No exception to Rule 18 ... ✓ stays a provenance mark only ... A
+// selected chip or toggle gets its own mark, for example a filled dot,
+// and never a ✓."
+//
 // A component renders a glyph with `symClass(glyph)` and the hue follows
 // from the glyph alone — which is rule 18's "never by context" made
 // structural: there is no prop a caller could pass to colour it
@@ -24,6 +32,7 @@ const SYMBOL_CLASS: Readonly<Record<string, string>> = {
   "×": "sym-fail",
   i: "sym-info",
   "⌁": "sym-proposed",
+  "●": "sym-select",
 };
 
 /** The rule-18 hue class for a glyph, or "" for a character outside the

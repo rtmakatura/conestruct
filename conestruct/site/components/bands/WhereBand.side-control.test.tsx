@@ -101,13 +101,14 @@ describe("the side control offers only the sides a plan can be built for", () =>
 // treatment — accent border, the wash, a ✓ — so the choice is visible.
 // Fix the spacing between options."
 describe("the chosen side is visible, and the options are spaced", () => {
-  it("clicking a side checks it: aria-checked, a leading ✓, the kind chip's class", async () => {
+  it("clicking a side checks it: aria-checked, a leading ●, the kind chip's class", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
     await openWhere();
     const [option] = await waitForOptions();
     expect(option.className).toBe("a-chip a-chip-side");
     expect(option.getAttribute("aria-checked")).toBe("false");
     expect(option.textContent).not.toContain("✓");
+    expect(option.textContent).not.toContain("●");
     await act(async () => {
       option.click();
     });
@@ -123,9 +124,11 @@ describe("the chosen side is visible, and the options are spaced", () => {
     const checked = document.querySelector<HTMLElement>(
       '[data-testid="side-option"][aria-checked="true"]',
     );
-    expect(checked?.textContent).toBe("✓ West side · southbound traffic");
+    expect(checked?.textContent).toBe("● West side · southbound traffic");
     // The glyph is decoration; aria-checked is what is announced.
-    expect(checked?.querySelector(".a-chip-check")?.getAttribute("aria-hidden")).toBe("true");
+    expect(checked?.querySelector(".sym-select")?.getAttribute("aria-hidden")).toBe("true");
+    // #407 (Ryan, 2026-10-25): the selection mark is ●, never ✓.
+    expect(checked?.textContent).not.toContain("✓");
   });
 
   it("the checked radio shares the pressed kind chip's accent border and wash; the row keeps rule 135's gap", async () => {
@@ -139,6 +142,6 @@ describe("the chosen side is visible, and the options are spaced", () => {
     expect(block![1]).toMatch(/border-color:\s*var\(--act\)/);
     expect(block![1]).toMatch(/background:\s*rgba\(52, 169, 232, 0\.1\)/);
     expect(css).toMatch(/\.workbench \.a-chips \{[^}]*gap:\s*10px/);
-    expect(css).toMatch(/\.workbench \.a-chip-check \{[^}]*color:\s*var\(--act\)/);
+    expect(css).toMatch(/\.workbench \.sym-select \{[^}]*color:\s*var\(--act\)/);
   });
 });

@@ -144,6 +144,7 @@ The tier set (#219) plus the two #227 marks; the PDF's `!` maps to
 | `i` | reference (tier set) | neutral |
 | `⌁` | proposed — a suggestion awaiting Confirm/Dismiss | `--ink-on-dark` CHOSEN (chromaless; the buttons are the interactive surface — `--act` stays interactive-only) |
 | `×` | dismissed — a recorded decision, not a verdict | `--none` |
+| `●` | selected — the option chosen on a chip, radio or segmented control; never a verdict or a provenance | `--act` (the pressed border's accent; `.sym-select`) — adopted by Ryan's 2026-10-25 ruling on #407, for selection only: "✓ stays a provenance mark only … A selected chip or toggle gets its own mark, for example a filled dot, and never a ✓" (https://github.com/rtmakatura/conestruct/issues/407#issuecomment-6403916392) |
 
 The corridor extent rows **dropped their hard-prefixed `✓`** (GO
 ruling 5): they carry no verdict, and `✓` is reserved.
@@ -258,7 +259,9 @@ component).
   Location.
 - **The references' ● and — glyphs do not land**: neither is in the
   reconciled vocabulary; the count subline replaces ●'s "in progress"
-  reading and "optional · not set" replaces the — row.
+  reading and "optional · not set" replaces the — row.  (● has since
+  been adopted for one other meaning only, "selected", by Ryan's
+  2026-10-25 ruling on #407; it still never means "in progress".)
 - **Dismiss-honesty** (PDF p. 4 corollary): dismissing without
   choosing removes only the count line -- no state moves, no ✓ is
   manufactured (asserted mounted).

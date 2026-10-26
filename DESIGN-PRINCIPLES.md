@@ -58,9 +58,9 @@ While the system works: say so once, in one place, on screen; disable what would
 - **Measure:** band present iff a request is open (fake-timer test); scroll and expanders work under lock.
 
 ## P9 — Every state has a symbol and a word
-No state is carried by colour alone, by position alone, or by an icon alone. Symbol + word, from the fixed vocabulary (▲ ✓ × ⚠ ◌ ⌁), each glyph with one meaning and one colour. Decorative colour is exempt and must be labelled decorative.
+No state is carried by colour alone, by position alone, or by an icon alone. Symbol + word, from the fixed vocabulary (▲ ✓ × ⚠ ◌ ⌁, and ● for a selected option only: Ryan, 2026-10-25, #407), each glyph with one meaning and one colour. Decorative colour is exempt and must be labelled decorative.
 - **Source:** WCAG 1.4.1 (use of colour) and 1.4.3 (contrast); house Rule 13; DESIGN-SPACING vocabulary table.
-- **Origin here:** the ●/○ glyphs a spec proposed (rejected — not in vocabulary, ◌ misread as "none"); ◌ doing double duty (ruled: "pending", one colour).
+- **Origin here:** the ●/○ glyphs a spec proposed (rejected — not in vocabulary, ◌ misread as "none"; ● has since been adopted for one other meaning only, "selected", by Ryan's 2026-10-25 ruling on #407); ◌ doing double duty (ruled: "pending", one colour).
 - **Measure:** contrast measured per pair on the actual surface; glyph audit against the table.
 
 ## P10 — Targets are sized for the hand that uses them

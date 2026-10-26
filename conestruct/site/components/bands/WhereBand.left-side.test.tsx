@@ -124,7 +124,7 @@ describe("#300: the side control on a one-way street", () => {
     const checked = document.querySelector<HTMLElement>(
       '[data-testid="side-option"][aria-checked="true"]',
     );
-    expect(checked?.textContent).toBe("✓ East side · southbound traffic");
+    expect(checked?.textContent).toBe("● East side · southbound traffic");
     expect(document.querySelector('[data-testid="side-control-stale"]')).toBeNull();
   });
 
@@ -159,7 +159,7 @@ describe("#300: the side control on a one-way street", () => {
     const checked = document.querySelector<HTMLElement>(
       '[data-testid="side-option"][aria-checked="true"]',
     );
-    expect(checked?.textContent).toBe("✓ West side · southbound traffic");
+    expect(checked?.textContent).toBe("● West side · southbound traffic");
     expect(document.querySelector('[data-testid="side-control-stale"]')).toBeNull();
   });
 

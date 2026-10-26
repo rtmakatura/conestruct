@@ -1,0 +1,28 @@
+# #407 red proof: the branch's four changed/new test files run against base 7678d0b sources (git archive 7678d0b conestruct/site; tests copied in; node_modules junctioned).
+# command: npx vitest run lib/design/symbols.test.ts lib/design/walkthrough-l2-css.test.ts components/bands/WhereBand.side-control.test.tsx components/bands/WhereBand.left-side.test.tsx --reporter=verbose
+ × lib/design/walkthrough-l2-css.test.ts > W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) > the kind chip reserves a trailing ● slot, shown only when pressed, and keeps its border under the pointer 7ms
+ × lib/design/walkthrough-l2-css.test.ts > W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) > the segmented ● hangs outside the text flow, so the centred label doesn't move 1ms
+ ✓ lib/design/walkthrough-l2-css.test.ts > W13 — native selects draw in the dark palette > .a-fld declares color-scheme: dark beside its own ground and ink 1ms
+ ✓ lib/design/walkthrough-l2-css.test.ts > W15 — the step label stays on one line > the open band's step and head don't wrap; the provenance takes the wrap 1ms
+ ✓ lib/design/walkthrough-l2-css.test.ts > W21 — no empty bordered cell beside the wordmark at phone width > AppNav's left group drops the wordmark's right border below md only 0ms
+ × lib/design/symbols.test.ts > rule 18 — every symbol has one fixed hue, from the glyph alone > rule 17's six plus ⌁ (DESIGN-SPACING's 'proposed', ruled 2026-09-23 Q5) and ● (selection, Ryan 2026-10-25, #407) 9ms
+ × lib/design/symbols.test.ts > rule 18 — every symbol has one fixed hue, from the glyph alone > each glyph maps to its rule-18 token 2ms
+ × lib/design/symbols.test.ts > rule 18 — every symbol has one fixed hue, from the glyph alone > #407: ● is the selection mark, and its class names selection, not a verdict 1ms
+ ✓ lib/design/symbols.test.ts > rule 18 — every symbol has one fixed hue, from the glyph alone > a character outside the vocabulary gets no hue — never a guessed one 0ms
+ × lib/design/symbols.test.ts > #407 — a chosen option is marked ●, never ✓ (Ryan, 2026-10-25) > no selection rule draws a ✓ 3ms
+ × lib/design/symbols.test.ts > #407 — a chosen option is marked ●, never ✓ (Ryan, 2026-10-25) > every selection rule that draws a glyph draws ● in .sym-select's token 1ms
+ × lib/design/symbols.test.ts > #407 — a chosen option is marked ●, never ✓ (Ryan, 2026-10-25) > the side chip's one-off .a-chip-check rule is gone; its ● takes symClass 3ms
+ ✓ components/bands/WhereBand.side-control.test.tsx > the side control offers only the sides a plan can be built for > an unbuildable (median / left) side is not rendered — not greyed, not named 371ms
+ × components/bands/WhereBand.left-side.test.tsx > #300: the side control on a one-way street > renders both curbs the backend offers, and the left one is choosable 418ms
+ × components/bands/WhereBand.side-control.test.tsx > the chosen side is visible, and the options are spaced > clicking a side checks it: aria-checked, a leading ●, the kind chip's class 365ms
+ × components/bands/WhereBand.side-control.test.tsx > the chosen side is visible, and the options are spaced > the checked radio shares the pressed kind chip's accent border and wash; the row keeps rule 135's gap 5ms
+ × components/bands/WhereBand.left-side.test.tsx > #300: the side control on a one-way street > a stored left side the backend refuses shows the built curb and the backend's line; nothing is reset 961ms
+ ✓ components/bands/WhereBand.left-side.test.tsx > #300: the side control on a one-way street > the line is the backend's call: no side_refused, no line, even with a left side stored 340ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+   ✓ confirmed = --pass; × dismissed = chromeless --none (a dismissal
+      Tests  12 failed | 6 passed (18)
+
+# fold-in (prediction amendment): components/NeedsYouConditions.test.tsx against base 7678d0b sources
+ × components/NeedsYouConditions.test.tsx > NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) > #245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ● glyph (#407) 130ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 17 passed (18)
