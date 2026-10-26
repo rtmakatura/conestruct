@@ -123,6 +123,9 @@ export const DEFAULT_SHOULDER: ShoulderScenario = {
   // also named is gone since #382; a shorter zone builds.  Default
   // scenarios must render cleanly through /render/audit on first paint —
   // no validation banner.
+  // #397: CHOSEN, not sourced (Rule 12).  It reads "default" in the
+  // ledger and the length field until the operator commits a length
+  // (workLenIsDefault).
   workLen: 1000,
   night: false,
 };
@@ -390,6 +393,24 @@ export function defaultFor(kind: ScenarioKind): Scenario {
   }
 }
 
+/** #397: is the length still the session's starting value?  True until
+ *  the operator commits a length (the `workLen` record), and only while
+ *  the value is that start: a plan saved before the record existed with
+ *  another length is the operator's.  The 1,000 ft is CHOSEN, not sourced
+ *  (see DEFAULT_SHOULDER), so it never reads "typed" or "yours". */
+export function workLenIsDefault(s: Scenario): boolean {
+  return !isOperatorSet(s, "workLen") && s.workLen === DEFAULT_SCENARIO.workLen;
+}
+
+/** #397: does `field` still hold the kind's own default, with no record
+ *  that the operator wrote it?  (R110 Q8's rule: a value away from the
+ *  default is the operator's even on a plan saved before the record.) */
+export function isKindDefault(s: Scenario, field: "workType" | "lanes"): boolean {
+  if (isOperatorSet(s, field)) return false;
+  const d = defaultFor(s.kind) as unknown as Record<string, unknown>;
+  return (s as unknown as Record<string, unknown>)[field] === d[field];
+}
+
 export function carryMeta(prev: Scenario, next: Scenario): Scenario {
   return { ...next, meta: prev.meta } as Scenario;
 }
@@ -436,6 +457,10 @@ export function carryAcrossKinds(prev: Scenario, next: Scenario): Scenario {
         : narrowed;
   }
   carried = withoutOperatorSet(withoutOperatorSet(carried, "laneWidth"), "workZoneSpeed");
+  // #397: the work type and the lane count start from the new kind's
+  // defaults, so their records go too; the length is carried, and its
+  // record with it.
+  carried = withoutOperatorSet(withoutOperatorSet(carried, "workType"), "lanes");
   // Override provenance (#177) rides along only where the target kind
   // declares the field — attaching it to a kind whose schema (and TS
   // shape) lacks it would put an undeclared key on the wire.

@@ -27,6 +27,7 @@ import { useState } from "react";
 import type { Scenario, ScenarioMeta } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import { withPin } from "@/lib/scenarios/site-corrections";
+import { setWorkLen } from "@/lib/scenarios/what-writes";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
 
 export function ManualFallback({
@@ -92,10 +93,8 @@ export function ManualFallback({
             placeholder="e.g., 200"
             onChange={(e) => {
               const n = parseInt(e.target.value, 10);
-              setScenario({
-                ...scenario,
-                workLen: Number.isFinite(n) ? n : 0,
-              } as Scenario);
+              // #397: the operator's length, recorded (setWorkLen).
+              setScenario(setWorkLen(scenario, Number.isFinite(n) ? n : 0));
             }}
             onBlur={() => setWzTouched(true)}
           />

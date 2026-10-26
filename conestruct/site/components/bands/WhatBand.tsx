@@ -33,6 +33,7 @@
 
 import { useState, type ReactNode } from "react";
 import type { Scenario, ScenarioMeta, RoadType } from "@/lib/scenarios";
+import { isKindDefault } from "@/lib/scenarios";
 import { JURISDICTION_OPTIONS, type JurisdictionBlock } from "@/lib/jurisdiction";
 import { validateLanes } from "@/lib/scenarios/validation";
 import {
@@ -106,6 +107,7 @@ function Cell({
   provenance,
   amber = false,
   error = false,
+  plainDefault = false,
   notes = [],
   lines = [],
   detail = null,
@@ -118,6 +120,8 @@ function Cell({
   provenance: string;
   amber?: boolean;
   error?: boolean;
+  /** #397: a default on this row reads plain "default", no mark. */
+  plainDefault?: boolean;
   /** #289 hand-check, correction 3: the picker's handoff sentences for
    *  THIS field.  Each renders as its own ⚠ line in the field's details —
    *  one text node per sentence, #198's byte-identity contract. */
@@ -152,7 +156,7 @@ function Cell({
       }
       // R98: the line as one quiet marker, the line itself one click
       // away; an error keeps its line under the control (P3).
-      marker={markerOf(provenance, { amber, error })}
+      marker={markerOf(provenance, { amber, error, plainDefault })}
       alert={alert}
       info={
         hasDetail ? (
@@ -189,17 +193,20 @@ function Cell({
   );
 }
 
-/** The clause for a field detection reports, or the operator-set clause
- *  for one it does not.  One producer (provenance.ts); this only chooses
- *  which row to ask about. */
+/** The clause for a field detection reports, or `fallback` for one it
+ *  does not.  One producer (provenance.ts); this only chooses which row
+ *  to ask about. */
 function clauseFor(
   model: DetectedModel | null,
   label: DetectedRowLabel,
+  // Rule 137's own example for a field with no detection behind it.
+  // #397: a caller whose field can still hold its default passes the
+  // default line instead, so an untouched value never reads "yours".
+  fallback = "your change · operator-set from here on",
 ): { text: string; amber: boolean } {
   const row = detectedRow(model, label);
   if (!row) {
-    // Rule 137's own example for a field with no detection behind it.
-    return { text: "your change · operator-set from here on", amber: false };
+    return { text: fallback, amber: false };
   }
   return {
     text: provenanceClause({
@@ -218,7 +225,9 @@ export function whatHeader(guesses: number, detected: boolean): string {
   if (guesses > 0) {
     return `${guesses} ${guesses === 1 ? "guess" : "guesses"} marked ⚠ · change any that are wrong`;
   }
-  return detected ? "prefilled from the road" : "nothing detected; every value here is yours";
+  // #397: with nothing detected, the rows hold defaults as well as the
+  // operator's values, so the line no longer says they are all "yours".
+  return detected ? "prefilled from the road" : "nothing detected; set what the plan needs";
 }
 
 /** The windows check's footer line (ScheduleField `windowsSummary`). */
@@ -421,8 +430,66 @@ export function WhatBand({
     : !speedIsSet
       ? { text: "not set · operator-set when picked", amber: false }
       : clauseFor(detected, "Speed limit");
-  const lanesClause = clauseFor(detected, "Lanes per direction");
-  const roadTypeClause = clauseFor(detected, "Road type");
+  // #397: "yours" only for a count the operator picked.  The near-
+  // intersection kind never takes the map's count (a mirror of
+  // auto-apply.ts's near_intersection branch: turn lanes can inflate OSM
+  // counts near an intersection, so the kind keeps its default and the
+  // operator sets it), so its row says that rather than reading the
+  // never-written relay as "withdrawn · operator-set".
+  const YOURS = "your change · operator-set from here on";
+  // The shoulder count is judged by its record alone (repair 2): its value
+  // also moves without an edit (setRoadType's divided reset), so a value
+  // away from the default proves nothing there.
+  // (Only the shoulder and near-intersection kinds carry a count.)
+  const lanesMine =
+    scenario.kind === "shoulder"
+      ? isOperatorSet(scenario, "lanes")
+      : "lanes" in scenario && !isKindDefault(scenario, "lanes");
+  const mapLanes = detected ? scenario.meta.confirmedRoad?.classification.lanesPerDirection : undefined;
+  const lanesClause =
+    scenario.kind === "near_intersection"
+      ? // Untouched, the row reads plain "default" (Ryan, 2026-10-26:
+        // https://github.com/rtmakatura/conestruct/issues/397#issuecomment-6428707399);
+        // the tool's doubt about it is its own ⚠ line (lanesDoubt).
+        lanesMine
+        ? { text: YOURS, amber: false }
+        : { text: "default · set the real count", amber: false }
+      : clauseFor(
+          detected,
+          "Lanes per direction",
+          // #397 (repair 3): without a record the count is one the tool
+          // set (the start, a divided reset, or an earlier road's map
+          // count), so the line says only what is true of all three; with
+          // no road read at all it names no map.
+          lanesMine
+            ? YOURS
+            : detected
+              ? "default · not from this road; the map has no count here; set the real count"
+              : "default · set the real count",
+        );
+  // #397, Ryan's ruling above: the ⚠ sits on the doubt, in the row's
+  // details, not on the default.  It is not among the header's N, which
+  // counts the ⚠ marks the rows show (P2).
+  const lanesDoubt =
+    scenario.kind === "near_intersection" && !lanesMine && mapLanes !== undefined
+      ? [
+          {
+            key: "lanes-doubt",
+            text: `not confirmed · the map reads ${mapLanes} per side, but turn lanes can inflate counts near an intersection`,
+            amber: true,
+          },
+        ]
+      : [];
+  // #275's withdrawn state, in plain words (#397): the operator's edit set
+  // the map's count aside.
+  const lanesWithdrawn =
+    scenario.kind !== "near_intersection" &&
+    detectedRow(detected, "Lanes per direction")?.detected === null;
+  const roadTypeClause = clauseFor(
+    detected,
+    "Road type",
+    isOperatorSet(scenario, "roadType") ? YOURS : "default · the plan's starting road type",
+  );
   // R110 Q7: lane width's own source.  Detection never measures a width
   // (the classifier carries `laneWidthFt` as the kind's standard lane, not
   // a measurement); the plan starts from that default until the operator
@@ -441,9 +508,9 @@ export function WhatBand({
   const warnMarkers = [
     markerOf(speedClause.text, { amber: speedClause.amber }),
     table.lanes && lanesValidation.ok
-      ? markerOf(lanesClause.text, { amber: lanesClause.amber })
+      ? markerOf(lanesClause.text, { amber: lanesClause.amber, plainDefault: true })
       : null,
-    markerOf(roadTypeClause.text, { amber: roadTypeClause.amber }),
+    markerOf(roadTypeClause.text, { amber: roadTypeClause.amber, plainDefault: true }),
     markerOf(classProv.text, { amber: classProv.amber }),
     dividedClause ? markerOf(dividedClause.text, { amber: dividedClause.amber }) : null,
     // #316 (R129 Q4): the cross-street speed's row renders in this band.
@@ -516,11 +583,23 @@ export function WhatBand({
             }
             amber={Boolean(table.lanes) && lanesValidation.ok && lanesClause.amber}
             error={Boolean(table.lanes) && !lanesValidation.ok}
+            // #397: the count's default reads plain "default" (Ryan,
+            // 2026-10-26); a kind with no count shows the width's line,
+            // which is #411's.
+            plainDefault={Boolean(table.lanes)}
+            lines={lanesDoubt}
             notes={[...(notes["lanes"] ?? []), ...(notes["lane-width"] ?? [])]}
             detail={
-              <span className="tr-prov" data-testid="prov-lane-width">
-                Lane width · {laneWidthProv}
-              </span>
+              <>
+                {lanesWithdrawn && (
+                  <span className="tr-prov" data-testid="prov-lanes-withdrawn">
+                    withdrawn · you changed the count, so the plan no longer uses the map&apos;s
+                  </span>
+                )}
+                <span className="tr-prov" data-testid="prov-lane-width">
+                  Lane width · {laneWidthProv}
+                </span>
+              </>
             }
             testid="lanes"
           >
@@ -578,6 +657,8 @@ export function WhatBand({
             htmlFor="what-road-type"
             provenance={roadTypeClause.text}
             amber={roadTypeClause.amber}
+            // #397: this row's "default" (no detection) is this item's own.
+            plainDefault
             notes={notes["road-type"]}
             lines={roadTypeLines}
             detail={

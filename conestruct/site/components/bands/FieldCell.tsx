@@ -119,7 +119,7 @@ export function FieldCell({
       data-testid={`info-toggle-${id}`}
       className={`a-mark tr-prov is-${m.tone}`}
     >
-      <span aria-hidden>{`${m.glyph} ${m.word}`}</span>
+      <span aria-hidden>{m.glyph === null ? m.word : `${m.glyph} ${m.word}`}</span>
     </button>
   );
 

@@ -1,0 +1,20 @@
+{
+ "390": {
+  "ledger": "✓ Found the spot East Colfax Avenue Eastbound CHANGE ✓ Work starts East Colfax Avenue Eastbound MOVE ✓ Extent 1,000 ft · default CHANGE ⚠ Which side is occupied? needs you Say which side is occupied to lay out the work ⚠ Kind of work: confirm below needs you ◌ See the plan grow pending approaches lay out after you confirm",
+  "worklen": "Work zone length (ft) default",
+  "workType": "Work type default Utility locate Survey crew Signal cabinet Guardrail repair Other",
+  "lanes": "Lanes ⚠ default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft ⚠ not confirmed · the map reads 4 per side, but turn lanes inflate counts near an intersection; set the real count · default Lane width · default · the plan's standard lane; detection doesn't measure width | ⚠ not confirmed · the map reads 4 per side, but turn lanes inflate counts near an intersection; set the real count · default Lane width · default · the plan's standard lane; detection doesn't measure width",
+  "guessMarkers": [],
+  "whatHeader": "STEP 2 OF 4 WHAT nothing detected; set what the plan needs",
+  "noDetectionLanes": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width"
+ },
+ "1440": {
+  "ledger": "✓ Found the spot East Colfax Avenue Eastbound CHANGE ✓ Work starts East Colfax Avenue Eastbound MOVE ✓ Extent 1,000 ft · default CHANGE ⚠ Which side is occupied? needs you Say which side is occupied to lay out the work ⚠ Kind of work: confirm below needs you ◌ See the plan grow pending approaches lay out after you confirm",
+  "worklen": "Work zone length (ft) default",
+  "workType": "Work type default Utility locate Survey crew Signal cabinet Guardrail repair Other",
+  "lanes": "Lanes ⚠ default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft ⚠ not confirmed · the map reads 4 per side, but turn lanes inflate counts near an intersection; set the real count · default Lane width · default · the plan's standard lane; detection doesn't measure width | ⚠ not confirmed · the map reads 4 per side, but turn lanes inflate counts near an intersection; set the real count · default Lane width · default · the plan's standard lane; detection doesn't measure width",
+  "guessMarkers": [],
+  "whatHeader": "STEP 2 OF 4 WHAT nothing detected; set what the plan needs",
+  "noDetectionLanes": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width"
+ }
+}

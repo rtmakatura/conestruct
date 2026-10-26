@@ -1,0 +1,97 @@
+#397 red proof (repair cycle 3, against the new base 525c2e4)
+
+Method: `git archive` of the base into the scratchpad (not a scratch worktree), the branch's test file
+components/bands/untouched-provenance.test.tsx copied in, node_modules joined from the issue worktree,
+`npx vitest run` on that one file (JSON reporter). The same again for the cycle-2 tree (the parked work
+as rebased onto 525c2e4, commit 58394fc, a temporary WIP commit since reset; it never left the worktree),
+to show which tests cycle 3 turns green.
+
+Base 525c2e4:           Tests 19 failed | 1 passed (20)
+Cycle-2 tree (58394fc): Tests 11 failed | 9 passed (20)
+This diff:              Tests 20 passed (20)
+
+The one test green on the base, "a divided flip that resets the count drops the operator's record of it",
+is a guard (the base never records a shoulder count, so there is no record to drop).
+On the cycle-2 tree, the two "finding 3" tests pass: they pin cycle-2 behaviour that cycle 3 states
+rather than changes. They are red on the base. The 11 red there are the plain-"default" assertions
+(Ryan, 2026-10-26) and findings 1, 4 and 5.
+
+Per test (status on base, then on the cycle-2 tree):
+- FAIL / FAIL  W1: the starting 1,000 ft reads 'default' until the operator commits a length mounted flow: ledger and field say 'default' after the pin and side; typing a length flips both
+- FAIL / FAIL  W1: the starting 1,000 ft reads 'default' until the operator commits a length mounted flow: typing 1000 over the starting 1,000 is the operator's answer too
+- FAIL / FAIL  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) shoulder: the kind's own default reads plain 'default', no mark
+- FAIL / FAIL  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) flagger: the kind's own default reads plain 'default', no mark
+- FAIL / FAIL  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) near-intersection: the kind's own default reads plain 'default', no mark
+- FAIL / PASS  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) a pick is recorded and reads '✓ yours', even a pick back to the default
+- FAIL / PASS  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) a kind switch starts the new kind's work type fresh, so its record goes
+- FAIL / PASS  W3: Lanes never read 'operator-set' for a count nobody picked near-intersection on Wadsworth: the kind's 2 reads '⚠ default' and says why the map's 4 isn't used
+- FAIL / PASS  W3: Lanes never read 'operator-set' for a count nobody picked near-intersection: the operator's count is recorded and reads '✓ yours'
+- FAIL / PASS  W3: Lanes never read 'operator-set' for a count nobody picked shoulder after the operator's edit: 'withdrawn' is said in plain words in the row's details
+- FAIL / FAIL  W3: Lanes never read 'operator-set' for a count nobody picked shoulder on a road with no lane count: the untouched count reads plain 'default', not '✓ yours'
+- FAIL / PASS  W3: Lanes never read 'operator-set' for a count nobody picked shoulder on a road with no lane count: a deliberate pick of 2 (the default) reads '✓ yours'
+- PASS / PASS  W3: Lanes never read 'operator-set' for a count nobody picked shoulder: a divided flip that resets the count drops the operator's record of it
+- FAIL / FAIL  Repair 3: no false 'yours', no map where none was read finding 1: with nothing detected the WHAT header doesn't call every value 'yours'
+- FAIL / FAIL  Repair 3: no false 'yours', no map where none was read finding 5: a shoulder plan with no detection names no map on its lanes line
+- FAIL / FAIL  Repair 3: no false 'yours', no map where none was read finding 4: a count a road lookup wrote never reads 'yours' after a re-pick onto a road with no count
+- FAIL / PASS  Repair 3: no false 'yours', no map where none was read finding 3a (stated): an edited near-intersection count is '✓ yours' and leaves the guesses, so N drops by one
+- FAIL / PASS  Repair 3: no false 'yours', no map where none was read finding 3b (stated): a near-intersection way with lanes:forward and no total reads '⚠ default'
+- FAIL / FAIL  Repair 3: no false 'yours', no map where none was read a near-intersection plan with no map count reads plain 'default'
+- FAIL / FAIL  Repair 3: no false 'yours', no map where none was read Ryan 2026-10-26: no '✓ default' on the length, work type, lanes or road-type rows
+
+## Cycle 4 (against the new base 8b0a73f)
+
+Method as above: `git archive` of 8b0a73f into the scratchpad (no scratch worktree), node_modules joined from the issue
+worktree, the cycle-4 test file copied in, `npx vitest run` on that one file (JSON reporter). The same for the cycle-3
+tree (8b0a73f plus the parked cycle-3 diff, applied from the backup patch).
+
+Base 8b0a73f:   Tests 19 failed | 1 passed (20)
+Cycle-3 tree:   Tests 3 failed | 17 passed (20)
+This diff:      Tests 20 passed (20)
+
+The three red on the cycle-3 tree are the near-intersection tests this cycle changes (Ryan's 2026-10-26 ruling on #397).
+The strengthened finding-4 re-pick test (finding 5 of the reviewer's list) is green on the cycle-3 tree: it pins behaviour
+cycle 3 already had, and now proves the plan's count is 4 instead of forcing it. Red on the base.
+
+Per test, base:
+FAILED  W1: the starting 1,000 ft reads 'default' until the operator commits a length mounted flow: ledger and field say 'default' after the pin and side; typing a length flips both
+FAILED  W1: the starting 1,000 ft reads 'default' until the operator commits a length mounted flow: typing 1000 over the starting 1,000 is the operator's answer too
+FAILED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) shoulder: the kind's own default reads plain 'default', no mark
+FAILED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) flagger: the kind's own default reads plain 'default', no mark
+FAILED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) near-intersection: the kind's own default reads plain 'default', no mark
+FAILED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) a pick is recorded and reads '✓ yours', even a pick back to the default
+FAILED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) a kind switch starts the new kind's work type fresh, so its record goes
+FAILED  W3: Lanes never read 'operator-set' for a count nobody picked near-intersection on Wadsworth: the kind's 2 reads plain 'default', and the ⚠ sits on the line saying why the map's 4 isn't used
+FAILED  W3: Lanes never read 'operator-set' for a count nobody picked near-intersection: the operator's count is recorded and reads '✓ yours'
+FAILED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder after the operator's edit: 'withdrawn' is said in plain words in the row's details
+FAILED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder on a road with no lane count: the untouched count reads plain 'default', not '✓ yours'
+FAILED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder on a road with no lane count: a deliberate pick of 2 (the default) reads '✓ yours'
+PASSED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder: a divided flip that resets the count drops the operator's record of it
+FAILED  Repair 3: no false 'yours', no map where none was read finding 1: with nothing detected the WHAT header doesn't call every value 'yours'
+FAILED  Repair 3: no false 'yours', no map where none was read finding 5: a shoulder plan with no detection names no map on its lanes line
+FAILED  Repair 3: no false 'yours', no map where none was read finding 4: a count a road lookup wrote never reads 'yours' after a re-pick onto a road with no count
+FAILED  Repair 3: no false 'yours', no map where none was read finding 3a (stated): an edited near-intersection count is '✓ yours', its doubt line goes, and N doesn't change
+FAILED  Repair 3: no false 'yours', no map where none was read finding 3b (stated): a near-intersection way with lanes:forward and no total reads 'default' with the doubt line
+FAILED  Repair 3: no false 'yours', no map where none was read a near-intersection plan with no map count reads plain 'default'
+FAILED  Repair 3: no false 'yours', no map where none was read Ryan 2026-10-26: no '✓ default' on the lanes or road-type rows
+
+Per test, cycle-3 tree:
+PASSED  W1: the starting 1,000 ft reads 'default' until the operator commits a length mounted flow: ledger and field say 'default' after the pin and side; typing a length flips both
+PASSED  W1: the starting 1,000 ft reads 'default' until the operator commits a length mounted flow: typing 1000 over the starting 1,000 is the operator's answer too
+PASSED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) shoulder: the kind's own default reads plain 'default', no mark
+PASSED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) flagger: the kind's own default reads plain 'default', no mark
+PASSED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) near-intersection: the kind's own default reads plain 'default', no mark
+PASSED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) a pick is recorded and reads '✓ yours', even a pick back to the default
+PASSED  W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) a kind switch starts the new kind's work type fresh, so its record goes
+FAILED  W3: Lanes never read 'operator-set' for a count nobody picked near-intersection on Wadsworth: the kind's 2 reads plain 'default', and the ⚠ sits on the line saying why the map's 4 isn't used
+PASSED  W3: Lanes never read 'operator-set' for a count nobody picked near-intersection: the operator's count is recorded and reads '✓ yours'
+PASSED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder after the operator's edit: 'withdrawn' is said in plain words in the row's details
+PASSED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder on a road with no lane count: the untouched count reads plain 'default', not '✓ yours'
+PASSED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder on a road with no lane count: a deliberate pick of 2 (the default) reads '✓ yours'
+PASSED  W3: Lanes never read 'operator-set' for a count nobody picked shoulder: a divided flip that resets the count drops the operator's record of it
+PASSED  Repair 3: no false 'yours', no map where none was read finding 1: with nothing detected the WHAT header doesn't call every value 'yours'
+PASSED  Repair 3: no false 'yours', no map where none was read finding 5: a shoulder plan with no detection names no map on its lanes line
+PASSED  Repair 3: no false 'yours', no map where none was read finding 4: a count a road lookup wrote never reads 'yours' after a re-pick onto a road with no count
+FAILED  Repair 3: no false 'yours', no map where none was read finding 3a (stated): an edited near-intersection count is '✓ yours', its doubt line goes, and N doesn't change
+FAILED  Repair 3: no false 'yours', no map where none was read finding 3b (stated): a near-intersection way with lanes:forward and no total reads 'default' with the doubt line
+PASSED  Repair 3: no false 'yours', no map where none was read a near-intersection plan with no map count reads plain 'default'
+PASSED  Repair 3: no false 'yours', no map where none was read Ryan 2026-10-26: no '✓ default' on the lanes or road-type rows

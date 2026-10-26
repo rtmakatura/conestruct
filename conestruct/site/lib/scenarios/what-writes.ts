@@ -25,7 +25,7 @@ import {
   lanesArithmeticMismatch,
 } from "./auto-apply";
 import { applyRoadTypeOverride, dividedForShoulderRoadType } from "./overrides";
-import { markOperatorSet, setJurisdictionByOperator } from "./guesses";
+import { markOperatorSet, setJurisdictionByOperator, withoutOperatorSet } from "./guesses";
 import { isFieldStaged } from "./site-corrections";
 import type {
   DetectionOverride,
@@ -109,8 +109,11 @@ export function setRoadType(scenario: Scenario, rt: RoadType): Scenario {
   const mine = narrowed === scenario ? scenario : markOperatorSet(narrowed, "roadType");
   if (mine.kind !== "shoulder") return mine;
   const nextDivided = dividedForShoulderRoadType(mine.roadType, mine.divided);
+  // #397: a divided flip resets the count (below), so the operator's
+  // record of it goes with it.
+  const base = (nextDivided !== mine.divided ? withoutOperatorSet(mine, "lanes") : mine) as typeof mine;
   return {
-    ...mine,
+    ...base,
     divided: nextDivided,
     ...(nextDivided !== mine.divided ? { lanes: nextDivided ? 2 : 1 } : {}),
   };
@@ -123,6 +126,18 @@ export function setRoadType(scenario: Scenario, rt: RoadType): Scenario {
  */
 export function setLaneWidth(scenario: Scenario, ft: number): Scenario {
   return markOperatorSet({ ...scenario, laneWidth: ft } as Scenario, "laneWidth");
+}
+
+/** #397: the work-zone length the operator committed.  Until this record
+ *  exists the length is the session's starting value and reads
+ *  "default" (ledger and field), never "typed" or "yours". */
+export function setWorkLen(scenario: Scenario, ft: number): Scenario {
+  return markOperatorSet({ ...scenario, workLen: ft } as Scenario, "workLen");
+}
+
+/** #397: the work type (plain "default" until changed). */
+export function setWorkType(scenario: Scenario, workType: string): Scenario {
+  return markOperatorSet({ ...scenario, workType } as Scenario, "workType");
 }
 
 /** Hours (R107's label; R110 Q8: "✓ default" until changed). */
@@ -168,7 +183,10 @@ export function setWorkZoneSpeed(scenario: Scenario, mph: number | undefined): S
 export function setLanes(scenario: Scenario, n: number): Scenario {
   const s = scenario as Scenario & LaneRelayFields;
   if (scenario.kind !== "shoulder") {
-    return { ...s, lanes: n } as Scenario;
+    // #397: detection never writes this kind's count, so the record is
+    // what tells the operator's count from the kind's default ("✓ yours"
+    // vs "default").  The shoulder count records it too (below).
+    return markOperatorSet({ ...s, lanes: n } as Scenario, "lanes");
   }
   const disputed =
     s.detectedLanesTotal === 1 ||
@@ -178,7 +196,7 @@ export function setLanes(scenario: Scenario, n: number): Scenario {
       s.detectedLanesBackward,
       s.detectedLanesBothWays,
     );
-  return {
+  const edited = {
     ...s,
     lanes: n,
     // Editing the count takes ownership of it: clear the #136
@@ -204,6 +222,12 @@ export function setLanes(scenario: Scenario, n: number): Scenario {
         })
       : s.detectionOverrides,
   } as Scenario;
+  // #397 (repair 2): the pick is recorded on the shoulder too.  It is read
+  // only where no lane detection speaks for the row (WhatBand's fallback),
+  // so a deliberate 2 on a road with no lanes tag reads "✓ yours", not
+  // "default".  A detection that writes the count drops the record
+  // (applyClassification).
+  return markOperatorSet(edited, "lanes");
 }
 
 /**

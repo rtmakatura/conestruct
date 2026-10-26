@@ -31,7 +31,7 @@
 //   · Move 5, "See the plan grow", is laid out once move 4 is answered —
 //     the approaches render on the picker's aerial.
 
-import { hasConfirmedSide, hasLocation } from "./index";
+import { hasConfirmedSide, hasLocation, workLenIsDefault } from "./index";
 import { SIDE_BLOCKER } from "./rail";
 import type { Scenario } from "./types";
 import { confirmedRoadLabel, kindLabel } from "./band-facts";
@@ -179,7 +179,11 @@ export function deriveMoveLedger(
       // column's own separator between a value and the producer that set
       // it, the same one the fact lines use.  A comma read as part of
       // the number.
-      value: extent ? `${scenario.workLen.toLocaleString("en-US")} ft · typed` : null,
+      // #397: "typed" only for a length the operator committed; the
+      // session's starting length says "default" (Rule 10).
+      value: extent
+        ? `${scenario.workLen.toLocaleString("en-US")} ft · ${workLenIsDefault(scenario) ? "default" : "typed"}`
+        : null,
       // Rule 68's invariant, caught by this arc's own sentinel: a row
       // offers a link OR a word, never neither.  A set extent offers
       // CHANGE (Part 1 §4.3's own verb).  It opens the picker like every

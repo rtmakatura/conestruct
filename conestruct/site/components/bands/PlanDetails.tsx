@@ -27,7 +27,8 @@ import type { Scenario, ScenarioKind, ShoulderScenario } from "@/lib/scenarios";
 import type { JurisdictionBlock, StreetClass } from "@/lib/jurisdiction";
 import { PLAN_DETAILS } from "@/lib/scenarios/what-cells";
 import { laneWidthCeilingFt } from "@/lib/scenarios/validation";
-import { setNight, setWorkZoneSpeed } from "@/lib/scenarios/what-writes";
+import { isKindDefault } from "@/lib/scenarios";
+import { setNight, setWorkType, setWorkZoneSpeed } from "@/lib/scenarios/what-writes";
 import {
   isGuessed,
   isOperatorSet,
@@ -110,6 +111,7 @@ function Cell({
   htmlFor,
   provenance,
   amber = false,
+  plainDefault = false,
   line = null,
   detail = null,
   children,
@@ -119,6 +121,8 @@ function Cell({
   htmlFor?: string;
   provenance: string;
   amber?: boolean;
+  /** #397: a default on this row reads plain "default", no mark. */
+  plainDefault?: boolean;
   /** A detection fact about THIS field (fix 3), behind its marker. */
   line?: { key: string; text: string; amber: boolean } | null;
   /** Anything else about the field (street class's evidence). */
@@ -141,7 +145,7 @@ function Cell({
         </span>
       }
       // R98: the line as one quiet marker; "⚠ needs you" stays a line.
-      marker={markerOf(provenance, { amber })}
+      marker={markerOf(provenance, { amber, plainDefault })}
       info={
         hasDetail ? (
           <>
@@ -205,7 +209,14 @@ export function PlanDetailCells({
         <Cell
           label="Work type"
           htmlFor="pd-work-type"
-          provenance="your change · operator-set from here on"
+          // #397: the kind's own default reads plain "default" until
+          // changed (Ryan, 2026-10-26, amending R110 Q8); never "✓ yours"
+          // for a value nobody picked (Rule 10).
+          provenance={defaultOrYours(
+            !isKindDefault(scenario, "workType"),
+            "default · this kind's usual job; change it if the job differs",
+          )}
+          plainDefault
           testid="work-type"
         >
           <select
@@ -215,7 +226,7 @@ export function PlanDetailCells({
             disabled={locked}
             value={(scenario as { workType: string }).workType}
             onChange={(e) =>
-              setScenario({ ...scenario, workType: e.target.value } as Scenario)
+              setScenario(setWorkType(scenario, e.target.value))
             }
           >
             {table.workTypes.map((w) => (

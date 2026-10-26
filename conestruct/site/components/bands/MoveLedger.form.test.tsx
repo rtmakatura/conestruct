@@ -185,7 +185,9 @@ describe("rule 68's values (correction 3)", () => {
   });
 
   it("'Extent' separates the value from its producer with the column's middle dot", () => {
-    expect(row(CONFIRMED, "extent").value).toBe("1,000 ft · typed");
+    // #397: CONFIRMED's 1,000 ft is the untouched starting length, so its
+    // producer is "default"; "typed" is the operator's (untouched-provenance).
+    expect(row(CONFIRMED, "extent").value).toBe("1,000 ft · default");
   });
 
   it("every row still offers a link OR a word, never neither (rule 68)", () => {

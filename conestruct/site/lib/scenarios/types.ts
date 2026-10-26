@@ -423,7 +423,15 @@ export type OperatorSetField =
   | "workZoneSpeed"
   | "speed"
   // #316: the cross street's approach speed (near_intersection).
-  | "approachSpeed";
+  | "approachSpeed"
+  // #397: the work-zone length, the work type and the lane count:
+  // "default" until one of these records says the operator wrote it.
+  // `lanes` is recorded on every kind with a count.  On the shoulder kind
+  // a detection that reports a count still rewrites it and drops this
+  // record (applyClassification), so the row speaks from that detection.
+  | "workLen"
+  | "workType"
+  | "lanes";
 
 /** #234 — the marked intersection, as the picker saves it; #316 adds the
  *  cross street's own facts from its detection (`highwayClass`, and the

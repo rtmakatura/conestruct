@@ -59,7 +59,9 @@ import {
 import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 import { symClass } from "@/lib/design/symbols";
-import { hasConfirmedSide, hasLocation } from "@/lib/scenarios";
+import { hasConfirmedSide, hasLocation, workLenIsDefault } from "@/lib/scenarios";
+import { setWorkLen } from "@/lib/scenarios/what-writes";
+import { isOperatorSet } from "@/lib/scenarios/guesses";
 import { OpenBand } from "./BandPrimitives";
 import { BandAerial } from "./BandAerial";
 import { ManualFallback } from "./ManualFallback";
@@ -574,8 +576,13 @@ export function WhereBand({
     if (wzDraft === null) return;
     const n = parseInt(wzDraft, 10);
     const next = Number.isFinite(n) ? n : 0;
-    if (next !== scenario.workLen) {
-      setScenario({ ...scenario, workLen: next } as Scenario);
+    // #397: a committed length is the operator's ("typed", "✓ yours"),
+    // recorded so the starting length can say "default" until then.  A
+    // committed draft that repeats the value (1000 typed over the starting
+    // 1,000) is still the operator's answer: it writes the record once
+    // (stated: that one write opens one request, as any edit does).
+    if (next !== scenario.workLen || !isOperatorSet(scenario, "workLen")) {
+      setScenario(setWorkLen(scenario, next));
     }
     setWzDraft(null);
   };
@@ -760,15 +767,21 @@ export function WhereBand({
                 testid="worklen"
                 provenance={
                   <span className="tr-prov" data-testid="prov-worklen">
-                    {scenario.workLen > 0
-                      ? "your answer · the extent the plan is built for"
-                      : "not set · the extent the plan is built for"}
+                    {scenario.workLen <= 0
+                      ? "not set · the extent the plan is built for"
+                      : workLenIsDefault(scenario)
+                        ? // #397: the starting length, not an answer (Rule 10).
+                          "default · the plan's starting length; enter the real one"
+                        : "your answer · the extent the plan is built for"}
                   </span>
                 }
                 marker={
-                  scenario.workLen > 0
-                    ? { glyph: "✓", word: "yours", tone: "ok" }
-                    : { glyph: "◌", word: "not set", tone: "pending" }
+                  scenario.workLen <= 0
+                    ? { glyph: "◌", word: "not set", tone: "pending" }
+                    : workLenIsDefault(scenario)
+                      ? // Plain "default", no mark (Ryan, 2026-10-26).
+                        { glyph: null, word: "default", tone: "plain" }
+                      : { glyph: "✓", word: "yours", tone: "ok" }
                 }
                 alert={wzTouched && !wz.ok ? <FieldErrorLine>{wz.message}</FieldErrorLine> : null}
                 info={

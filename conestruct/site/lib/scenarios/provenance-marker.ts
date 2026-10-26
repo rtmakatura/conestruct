@@ -20,9 +20,11 @@
 // the marker.
 
 export interface ProvenanceMarker {
-  glyph: "✓" | "⚠" | "◌" | "i";
+  /** null: the word alone, no mark (#397: Ryan's 2026-10-26 ruling, a
+   *  default reads plain "default"). */
+  glyph: "✓" | "⚠" | "◌" | "i" | null;
   word: string;
-  tone: "ok" | "guess" | "pending" | "info";
+  tone: "ok" | "guess" | "pending" | "info" | "plain";
 }
 
 const OSM_WORDS: Record<string, { word: string; glyph: ProvenanceMarker["glyph"] }> = {
@@ -37,7 +39,7 @@ const OSM_WORDS: Record<string, { word: string; glyph: ProvenanceMarker["glyph"]
   withdrawn: { word: "withdrawn", glyph: "◌" },
 };
 
-const TONE: Record<ProvenanceMarker["glyph"], ProvenanceMarker["tone"]> = {
+const TONE: Record<NonNullable<ProvenanceMarker["glyph"]>, ProvenanceMarker["tone"]> = {
   "✓": "ok",
   "⚠": "guess",
   "◌": "pending",
@@ -45,12 +47,17 @@ const TONE: Record<ProvenanceMarker["glyph"], ProvenanceMarker["tone"]> = {
 };
 
 function mk(glyph: ProvenanceMarker["glyph"], word: string): ProvenanceMarker {
-  return { glyph, word, tone: TONE[glyph] };
+  return { glyph, word, tone: glyph === null ? "plain" : TONE[glyph] };
 }
 
+/** `plainDefault` (#397): the row's default reads plain "default", no
+ *  mark (Ryan, 2026-10-26, amending R110 Q8:
+ *  https://github.com/rtmakatura/conestruct/issues/411#issuecomment-6410071272).
+ *  #397 passes it for its rows (length, work type, lanes); the other
+ *  "✓ default" rows are #411's. */
 export function markerOf(
   line: string,
-  opts: { amber?: boolean; error?: boolean } = {},
+  opts: { amber?: boolean; error?: boolean; plainDefault?: boolean } = {},
 ): ProvenanceMarker | null {
   if (opts.error || line.startsWith("⚠")) return null;
   if (line.startsWith("OSM · ")) {
@@ -63,7 +70,7 @@ export function markerOf(
   if (opts.amber) return mk("⚠", line.split(" · ").pop() ?? line);
   if (/^(your change|your answer|operator-set)\b/.test(line)) return mk("✓", "yours");
   // R110 Q7 / Q8: the value the plan started from, until changed.
-  if (/^default\b/.test(line)) return mk("✓", "default");
+  if (/^default\b/.test(line)) return mk(opts.plainDefault ? null : "✓", "default");
   if (/^(not set|optional)\b/.test(line) || line === "MUTCD + Colorado Supplement only") {
     return mk("◌", "not set");
   }

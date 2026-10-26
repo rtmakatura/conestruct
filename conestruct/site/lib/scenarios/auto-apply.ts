@@ -559,6 +559,13 @@ export function applyClassification(
   ) {
     next = withoutOperatorSet(next, "laneWidth");
   }
+  // #397 (repair 3): on the shoulder kind a detection that reports a count
+  // rewrites it, so the operator's record of the old count goes with it
+  // (Q7's rule for the width); otherwise a later road with no count would
+  // show this road's count as "yours".
+  if (next.kind === "shoulder" && delta.lanesApplied && isOperatorSet(next, "lanes")) {
+    next = withoutOperatorSet(next, "lanes");
+  }
   return { scenario: next, delta };
 }
 
