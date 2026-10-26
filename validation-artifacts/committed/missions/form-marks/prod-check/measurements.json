@@ -1,0 +1,311 @@
+{
+ "issue": 412,
+ "mission": "form-marks",
+ "tracking": 413,
+ "servedSha": "5b5144a5810bbf46a31f7df4fae6283357654398",
+ "backendHealthzSha": "5b5144a5810bbf46a31f7df4fae6283357654398",
+ "checkedOn": "2026-10-26",
+ "site": "https://www.conestruct.com/sandbox",
+ "method": "Same method as ../412/measurements.json (probe412.mjs), run against the live site with real interaction: Playwright Chromium, DPR 2, viewports 1440x900 and 390x844; real address search '1600 E Colfax Ave, Denver', real /api/road-bearing (no stub), the Colfax candidate picked, first side chip and the 'Shoulder work' kind chip chosen, Confirm, the chosen night toggle (Daytime); then Generate and the first real site-scan row's Dismiss, first reason chip chosen (no injection). Mark ink = pixels that change when the mark is forced transparent; reference band = x-height band of the label's words swapped for x's (cap-height on the uppercased dismiss-reason chip). Primary offset = ink-weighted centroid, mark minus band, CSS px, + = mark lower; extent offset kept for reference. Ink threshold > 24 summed channel levels CHOSEN. PASS = |centroid offset| <= 0.5 px (CHOSEN tolerance, as #412) and contrast >= 4.5:1 (WCAG AA). The gate bypass header was sent only on first-party conestruct.com requests and is not recorded here.",
+ "tolerancePx": 0.5,
+ "contrastFloor": 4.5,
+ "counts": {
+  "PASS": 8,
+  "FAIL": 0,
+  "N/A": 0
+ },
+ "results": {
+  "1440": {
+   "sideChip": {
+    "verdict": "PASS",
+    "label": "South side · eastbound traffic",
+    "offsetCentroidPx": -0.36,
+    "offsetExtentPx": -0.25,
+    "mark": {
+     "topPx": 27,
+     "bottomPx": 33.5,
+     "leftPx": 23,
+     "rightPx": 29,
+     "centrePx": 30.25,
+     "centroidPx": 30.186781765699035
+    },
+    "band": {
+     "topPx": 27,
+     "bottomPx": 34,
+     "leftPx": 33.5,
+     "rightPx": 228,
+     "centrePx": 30.5,
+     "centroidPx": 30.542847982557
+    },
+    "controlBox": {
+     "x": 297,
+     "y": 428.06,
+     "w": 846,
+     "h": 44
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(19.6, 42.1, 60.1)",
+     "ratio": 5.6
+    },
+    "injected": false,
+    "shot": "prod-1440-side-chip.png"
+   },
+   "kindChip": {
+    "verdict": "PASS",
+    "label": "Shoulder work",
+    "offsetCentroidPx": -0.35,
+    "offsetExtentPx": -0.25,
+    "mark": {
+     "topPx": 27,
+     "bottomPx": 33.5,
+     "leftPx": 113,
+     "rightPx": 119.5,
+     "centrePx": 30.25,
+     "centroidPx": 30.19184905557524
+    },
+    "band": {
+     "topPx": 27,
+     "bottomPx": 34,
+     "leftPx": 22,
+     "rightPx": 109,
+     "centrePx": 30.5,
+     "centroidPx": 30.542469616408674
+    },
+    "controlBox": {
+     "x": 297,
+     "y": 488.06,
+     "w": 275.33,
+     "h": 63.25
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(19.6, 42.1, 60.1)",
+     "ratio": 5.6
+    },
+    "injected": false,
+    "shot": "prod-1440-kind-chip.png"
+   },
+   "segmented": {
+    "verdict": "PASS",
+    "label": "Daytime",
+    "offsetCentroidPx": -0.35,
+    "offsetExtentPx": -0.5,
+    "mark": {
+     "topPx": 27.5,
+     "bottomPx": 34,
+     "leftPx": 36,
+     "rightPx": 43,
+     "centrePx": 30.75,
+     "centroidPx": 30.906414281087276
+    },
+    "band": {
+     "topPx": 27.5,
+     "bottomPx": 35,
+     "leftPx": 48,
+     "rightPx": 99.5,
+     "centrePx": 31.25,
+     "centroidPx": 31.26114970128348
+    },
+    "controlBox": {
+     "x": 880,
+     "y": 281,
+     "w": 131.5,
+     "h": 44
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(25.0, 48.4, 65.5)",
+     "ratio": 5.16
+    },
+    "injected": false,
+    "shot": "prod-1440-segmented.png"
+   },
+   "reasonChip": {
+    "verdict": "PASS",
+    "label": "Fenced off",
+    "offsetCentroidPx": -0.12,
+    "offsetExtentPx": 0,
+    "mark": {
+     "topPx": 20.5,
+     "bottomPx": 27,
+     "leftPx": 20.5,
+     "rightPx": 27,
+     "centrePx": 23.75,
+     "centroidPx": 23.692010787363376
+    },
+    "band": {
+     "topPx": 20,
+     "bottomPx": 27.5,
+     "leftPx": 34,
+     "rightPx": 99,
+     "centrePx": 23.75,
+     "centroidPx": 23.810200141456235
+    },
+    "controlBox": {
+     "x": 332,
+     "y": 560.25,
+     "w": 118,
+     "h": 32
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(21.0, 47.7, 67.7)",
+     "ratio": 5.21
+    },
+    "injected": false,
+    "shot": "prod-1440-reason-chip.png"
+   },
+   "siteScan": {
+    "dismissButtons": 3,
+    "needsYouExcerpt": "NEEDS YOU\n\nchanged the plan, or waiting on your word · 1 needs attention · 3 site conditions\n\n4\n⚠\nSite corridor validation\n\nneeds attention\n\nOpenStreetMap\n▲\nAdjacent at-grade intersection\n\ndetected · 50 found · nearest 73.2 ft\n\nno devices added\n\nMUTCD § 6N.12 p. 848 · OPENSTREETMAP\nDISMISS\n▲\nPedestr"
+   }
+  },
+  "390": {
+   "sideChip": {
+    "verdict": "PASS",
+    "label": "South side · eastbound traffic",
+    "offsetCentroidPx": -0.36,
+    "offsetExtentPx": -0.25,
+    "mark": {
+     "topPx": 27,
+     "bottomPx": 33.5,
+     "leftPx": 23,
+     "rightPx": 29,
+     "centrePx": 30.25,
+     "centroidPx": 30.186781765699035
+    },
+    "band": {
+     "topPx": 27,
+     "bottomPx": 34,
+     "leftPx": 33.5,
+     "rightPx": 228,
+     "centrePx": 30.5,
+     "centroidPx": 30.542847982557
+    },
+    "controlBox": {
+     "x": 31,
+     "y": 399.88,
+     "w": 328,
+     "h": 44
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(19.6, 42.1, 60.1)",
+     "ratio": 5.6
+    },
+    "injected": false,
+    "shot": "prod-390-side-chip.png"
+   },
+   "kindChip": {
+    "verdict": "PASS",
+    "label": "Shoulder work",
+    "offsetCentroidPx": -0.35,
+    "offsetExtentPx": -0.25,
+    "mark": {
+     "topPx": 27,
+     "bottomPx": 33.5,
+     "leftPx": 113,
+     "rightPx": 119.5,
+     "centrePx": 30.25,
+     "centroidPx": 30.19184905557524
+    },
+    "band": {
+     "topPx": 27,
+     "bottomPx": 34,
+     "leftPx": 22,
+     "rightPx": 109,
+     "centrePx": 30.5,
+     "centroidPx": 30.542469616408674
+    },
+    "controlBox": {
+     "x": 31,
+     "y": 459.88,
+     "w": 328,
+     "h": 63.25
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(19.6, 42.1, 60.1)",
+     "ratio": 5.6
+    },
+    "injected": false,
+    "shot": "prod-390-kind-chip.png"
+   },
+   "segmented": {
+    "verdict": "PASS",
+    "label": "Daytime",
+    "offsetCentroidPx": -0.36,
+    "offsetExtentPx": -0.5,
+    "mark": {
+     "topPx": 27,
+     "bottomPx": 33.5,
+     "leftPx": 52.5,
+     "rightPx": 59,
+     "centrePx": 30.25,
+     "centroidPx": 30.401194624191138
+    },
+    "band": {
+     "topPx": 27,
+     "bottomPx": 34.5,
+     "leftPx": 64.5,
+     "rightPx": 115.5,
+     "centrePx": 30.75,
+     "centroidPx": 30.760819094672797
+    },
+    "controlBox": {
+     "x": 31,
+     "y": 400.38,
+     "w": 164,
+     "h": 44
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(25.0, 48.4, 65.5)",
+     "ratio": 5.16
+    },
+    "injected": false,
+    "shot": "prod-390-segmented.png"
+   },
+   "reasonChip": {
+    "verdict": "PASS",
+    "label": "Fenced off",
+    "offsetCentroidPx": -0.12,
+    "offsetExtentPx": 0,
+    "mark": {
+     "topPx": 26.5,
+     "bottomPx": 33,
+     "leftPx": 17.5,
+     "rightPx": 24,
+     "centrePx": 29.75,
+     "centroidPx": 29.692010787363376
+    },
+    "band": {
+     "topPx": 26,
+     "bottomPx": 33.5,
+     "leftPx": 31,
+     "rightPx": 96,
+     "centrePx": 29.75,
+     "centroidPx": 29.810200141456235
+    },
+    "controlBox": {
+     "x": 64,
+     "y": 400.25,
+     "w": 112,
+     "h": 44
+    },
+    "contrast": {
+     "color": "rgb(52, 169, 232)",
+     "ground": "rgb(21.0, 47.7, 67.7)",
+     "ratio": 5.21
+    },
+    "injected": false,
+    "shot": "prod-390-reason-chip.png"
+   },
+   "siteScan": {
+    "dismissButtons": 3,
+    "needsYouExcerpt": "NEEDS YOU\n\nchanged the plan, or waiting on your word · 1 needs attention · 3 site conditions\n\n4\n⚠\nSite corridor validation\n\nneeds attention\n\nOpenStreetMap\n▲\nAdjacent at-grade intersection\n\ndetected · 50 found · nearest 73.2 ft\n\nno devices added\n\nMUTCD § 6N.12 p. 848 · OPENSTREETMAP\nDISMISS\n▲\nPedestr"
+   }
+  }
+ }
+}
