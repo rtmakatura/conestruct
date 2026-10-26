@@ -1,0 +1,336 @@
+{
+ "390": {
+  "sideChip": {
+   "clipTopPx": 437.13,
+   "mark": {
+    "topPx": 27,
+    "bottomPx": 33.5,
+    "leftPx": 23,
+    "rightPx": 29,
+    "centrePx": 30.25,
+    "centroidPx": 30.186781765699035
+   },
+   "band": {
+    "topPx": 27,
+    "bottomPx": 34,
+    "leftPx": 33.5,
+    "rightPx": 231,
+    "centrePx": 30.5,
+    "centroidPx": 30.542871952410124
+   },
+   "offsetPx": -0.25,
+   "offsetCentroidPx": -0.36,
+   "markLeftAbsPx": 46,
+   "markTopAbsPx": 464.13,
+   "label": {
+    "text": "East side · traffic heads north",
+    "left": 56.44,
+    "top": 459.38,
+    "relTop": 14.25,
+    "relLeft": 25.44
+   },
+   "controlBox": {
+    "x": 31,
+    "y": 445.13,
+    "w": 328,
+    "h": 44
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "ratio": 5.6
+   }
+  },
+  "kindChip": {
+   "clipTopPx": 659.13,
+   "mark": {
+    "topPx": 27,
+    "bottomPx": 33.5,
+    "leftPx": 113,
+    "rightPx": 119.5,
+    "centrePx": 30.25,
+    "centroidPx": 30.19184905557524
+   },
+   "band": {
+    "topPx": 27,
+    "bottomPx": 34,
+    "leftPx": 22,
+    "rightPx": 109,
+    "centrePx": 30.5,
+    "centroidPx": 30.542469616408674
+   },
+   "offsetPx": -0.25,
+   "offsetCentroidPx": -0.35,
+   "markLeftAbsPx": 136,
+   "markTopAbsPx": 686.13,
+   "label": {
+    "text": "Shoulder work",
+    "left": 45,
+    "top": 681.13,
+    "relTop": 14,
+    "relLeft": 14
+   },
+   "controlBox": {
+    "x": 31,
+    "y": 667.13,
+    "w": 328,
+    "h": 63.25
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "ratio": 5.6
+   }
+  },
+  "segmented": {
+   "clipTopPx": 391.63,
+   "mark": {
+    "topPx": 28,
+    "bottomPx": 34.5,
+    "leftPx": 52.5,
+    "rightPx": 59,
+    "centrePx": 31.25,
+    "centroidPx": 31.401194624191138
+   },
+   "band": {
+    "topPx": 28,
+    "bottomPx": 35.5,
+    "leftPx": 64.5,
+    "rightPx": 115.5,
+    "centrePx": 31.75,
+    "centroidPx": 31.760819094672797
+   },
+   "offsetPx": -0.5,
+   "offsetCentroidPx": -0.36,
+   "markLeftAbsPx": 75.5,
+   "markTopAbsPx": 419.63,
+   "label": {
+    "text": "Daytime",
+    "left": 86.84,
+    "top": 413.5,
+    "relTop": 13.88,
+    "relLeft": 55.84
+   },
+   "controlBox": {
+    "x": 31,
+    "y": 399.63,
+    "w": 164,
+    "h": 44
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(25.0, 48.4, 65.5)",
+    "ratio": 5.16
+   }
+  },
+  "reasonChip": {
+   "clipTopPx": 530.38,
+   "mark": {
+    "topPx": 26.5,
+    "bottomPx": 33,
+    "leftPx": 17.5,
+    "rightPx": 24,
+    "centrePx": 29.75,
+    "centroidPx": 29.692010787363376
+   },
+   "band": {
+    "topPx": 26,
+    "bottomPx": 33.5,
+    "leftPx": 31,
+    "rightPx": 76.5,
+    "centrePx": 29.75,
+    "centroidPx": 29.80982507002113
+   },
+   "offsetPx": 0,
+   "offsetCentroidPx": -0.12,
+   "markLeftAbsPx": 73.5,
+   "markTopAbsPx": 556.88,
+   "label": {
+    "text": "Removed",
+    "left": 87,
+    "top": 553.88,
+    "relTop": 15.5,
+    "relLeft": 23
+   },
+   "controlBox": {
+    "x": 64,
+    "y": 538.38,
+    "w": 92.2,
+    "h": 44
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(21.0, 47.7, 67.7)",
+    "ratio": 5.21
+   },
+   "injected": true
+  }
+ },
+ "1440": {
+  "sideChip": {
+   "clipTopPx": 420.06,
+   "mark": {
+    "topPx": 27,
+    "bottomPx": 33.5,
+    "leftPx": 23,
+    "rightPx": 29,
+    "centrePx": 30.25,
+    "centroidPx": 30.186781765699035
+   },
+   "band": {
+    "topPx": 27,
+    "bottomPx": 34,
+    "leftPx": 33.5,
+    "rightPx": 231,
+    "centrePx": 30.5,
+    "centroidPx": 30.542871952410124
+   },
+   "offsetPx": -0.25,
+   "offsetCentroidPx": -0.36,
+   "markLeftAbsPx": 312,
+   "markTopAbsPx": 447.06,
+   "label": {
+    "text": "East side · traffic heads north",
+    "left": 322.44,
+    "top": 442.31,
+    "relTop": 14.25,
+    "relLeft": 25.44
+   },
+   "controlBox": {
+    "x": 297,
+    "y": 428.06,
+    "w": 418,
+    "h": 44
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "ratio": 5.6
+   }
+  },
+  "kindChip": {
+   "clipTopPx": 534.06,
+   "mark": {
+    "topPx": 27,
+    "bottomPx": 33.5,
+    "leftPx": 113,
+    "rightPx": 119.5,
+    "centrePx": 30.25,
+    "centroidPx": 30.19184905557524
+   },
+   "band": {
+    "topPx": 27,
+    "bottomPx": 34,
+    "leftPx": 22,
+    "rightPx": 109,
+    "centrePx": 30.5,
+    "centroidPx": 30.542469616408674
+   },
+   "offsetPx": -0.25,
+   "offsetCentroidPx": -0.35,
+   "markLeftAbsPx": 402,
+   "markTopAbsPx": 561.06,
+   "label": {
+    "text": "Shoulder work",
+    "left": 311,
+    "top": 556.06,
+    "relTop": 14,
+    "relLeft": 14
+   },
+   "controlBox": {
+    "x": 297,
+    "y": 542.06,
+    "w": 275.33,
+    "h": 63.25
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(19.6, 42.1, 60.1)",
+    "ratio": 5.6
+   }
+  },
+  "segmented": {
+   "clipTopPx": 272.5,
+   "mark": {
+    "topPx": 27,
+    "bottomPx": 33.5,
+    "leftPx": 36,
+    "rightPx": 43,
+    "centrePx": 30.25,
+    "centroidPx": 30.406414281087276
+   },
+   "band": {
+    "topPx": 27,
+    "bottomPx": 34.5,
+    "leftPx": 48,
+    "rightPx": 99.5,
+    "centrePx": 30.75,
+    "centroidPx": 30.76114970128348
+   },
+   "offsetPx": -0.5,
+   "offsetCentroidPx": -0.35,
+   "markLeftAbsPx": 908,
+   "markTopAbsPx": 299.5,
+   "label": {
+    "text": "Daytime",
+    "left": 919.59,
+    "top": 294.38,
+    "relTop": 13.88,
+    "relLeft": 39.59
+   },
+   "controlBox": {
+    "x": 880,
+    "y": 280.5,
+    "w": 131.5,
+    "h": 44
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(25.0, 48.4, 65.5)",
+    "ratio": 5.16
+   }
+  },
+  "reasonChip": {
+   "clipTopPx": 655.75,
+   "mark": {
+    "topPx": 20,
+    "bottomPx": 26.5,
+    "leftPx": 20.5,
+    "rightPx": 27,
+    "centrePx": 23.25,
+    "centroidPx": 23.192010787363376
+   },
+   "band": {
+    "topPx": 19.5,
+    "bottomPx": 27,
+    "leftPx": 34,
+    "rightPx": 79.5,
+    "centrePx": 23.25,
+    "centroidPx": 23.30982507002113
+   },
+   "offsetPx": 0,
+   "offsetCentroidPx": -0.12,
+   "markLeftAbsPx": 344.5,
+   "markTopAbsPx": 675.75,
+   "label": {
+    "text": "Removed",
+    "left": 358,
+    "top": 673.25,
+    "relTop": 9.5,
+    "relLeft": 26
+   },
+   "controlBox": {
+    "x": 332,
+    "y": 663.75,
+    "w": 98.2,
+    "h": 32
+   },
+   "contrast": {
+    "color": "rgb(52, 169, 232)",
+    "ground": "rgb(21.0, 47.7, 67.7)",
+    "ratio": 5.21
+   },
+   "injected": true
+  }
+ }
+}

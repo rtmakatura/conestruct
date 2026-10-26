@@ -4876,12 +4876,19 @@ input[type="number"] {
    and only shown when pressed, so pressing moves nothing (P1).  The
    kind chip ends its label with it, so the label keeps the citation
    line's left edge (P4).  The segmented option's label is centred, so
-   its mark hangs outside the text flow, just left of the label, and the
+   its mark hangs just left of the label, taking no width (#412), and the
    label stays centred.  Empty alt text: aria-pressed is what is
    announced (the side chip's mark is aria-hidden for the same reason);
    the first `content` is the fallback for engines without the alt syntax.
    #407 (Ryan, 2026-10-25): the mark is ●, the selection glyph
-   (symbols.ts), never ✓; its colour is .sym-select's token. */
+   (symbols.ts), never ✓; its colour is .sym-select's token.
+   #412: all four selection marks (side, kind, segmented, dismiss reason)
+   sit on their label's baseline in the label's font, so each ●'s centre
+   lands at the label's x-height middle the same way (measured in
+   validation-artifacts/committed/missions/form-marks/412/).  The
+   segmented ● was absolute at `top: 0`, 1.5 px low; it now hangs in the
+   text flow as an inline-block whose negative left margin equals its
+   width, so the line advances by 0 and the centred label doesn't move. */
 .workbench .a-chip[aria-pressed] > .tr-field::after {
   content: "\00a0●";
   content: "\00a0●" / "";
@@ -4891,15 +4898,13 @@ input[type="number"] {
 .workbench .a-chip[aria-pressed="true"] > .tr-field::after {
   visibility: visible;
 }
-.workbench .a-seg-label {
-  position: relative;
-}
 .workbench .a-seg > button[aria-pressed="true"] > .a-seg-label::before {
   content: "●\00a0";
   content: "●\00a0" / "";
-  position: absolute;
-  right: 100%;
-  top: 0;
+  display: inline-block;
+  width: 2em;
+  margin-left: calc(-1 * 2em);
+  text-align: right;
   color: var(--act);
 }
 /* #396 L2 fold-in: a pressed or checked chip under the pointer keeps its

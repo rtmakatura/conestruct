@@ -1,0 +1,15 @@
+# #412 red proof: the amended and new CSS tests against the base sources
+# base origin/mission-pm-prod-check 525c2e4; app/globals.css and FieldCell.tsx byte-identical to base at this run:
+git diff --quiet 525c2e4 -- app/globals.css components/bands/FieldCell.tsx: identical
+ ✓ lib/design/walkthrough-l2-css.test.ts > W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) > the kind chip reserves a trailing ● slot, shown only when pressed, and keeps its border under the pointer 2ms
+ × lib/design/walkthrough-l2-css.test.ts > W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) > the segmented ● hangs left of the label in its text flow, taking no width, so the centred label doesn't move 5ms
+ × lib/design/walkthrough-l2-css.test.ts > W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) > #412: every selection ● sits on its label's baseline, in the label's font (one vertical rule for all four) 2ms
+ ✓ lib/design/walkthrough-l2-css.test.ts > W13 — native selects draw in the dark palette > .a-fld declares color-scheme: dark beside its own ground and ink 0ms
+ ✓ lib/design/walkthrough-l2-css.test.ts > W15 — the step label stays on one line > the open band's step and head don't wrap; the provenance takes the wrap 1ms
+ ✓ lib/design/walkthrough-l2-css.test.ts > W21 — no empty bordered cell beside the wordmark at phone width > AppNav's left group drops the wordmark's right border below md only 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  lib/design/walkthrough-l2-css.test.ts > W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) > the segmented ● hangs left of the label in its text flow, taking no width, so the centred label doesn't move
+AssertionError: .workbench .a-seg > button[aria-pressed="true"] > .a-seg-label::before: expected '\r\n  content: "●\00a0";\r\n  content…' to match /display:\s*inline-block;/
+ FAIL  lib/design/walkthrough-l2-css.test.ts > W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) > #412: every selection ● sits on its label's baseline, in the label's font (one vertical rule for all four)
+AssertionError: .workbench .a-seg > button[aria-pressed="true"] > .a-seg-label::before: expected '\r\n  content: "●\00a0";\r\n  content…' not to match /position:\s*absolute|(?:^|;)\s*(?:top…/
+      Tests  2 failed | 4 passed (6)

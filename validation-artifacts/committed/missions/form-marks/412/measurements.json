@@ -1,0 +1,277 @@
+{
+ "method": "Playwright Chromium, DPR 2, local next dev of the worktree (before = base 525c2e4 sources, after = the fix). Mark ink = pixels that change when the mark is forced transparent; reference band = pixels that change when the label (its words swapped for x of the same length, same font and line) is forced transparent: the x-height band, or the cap-height band on the uppercased dismiss-reason chip. offset = mark centre - band centre, CSS px, + = mark lower. centroid = ink-weighted mean row (primary: robust to the half-device-px rounding of the extent); extent = (top+bottom)/2 of rows over the ink threshold. Ink threshold > 24 summed channel levels CHOSEN (separates glyph ink from rasterisation noise). Tolerance CHOSEN: |offset| <= 0.5 CSS px (1 device px at DPR 2, the smallest step the raster can show) on each control, and the four offsets within 0.5 px of each other. The dismiss-reason chip renders only after a live site-scan hit, so it is injected where NeedsYou mounts (.zone.results) with NeedsYou s element chain, as #407 did.",
+ "tolerancePx": 0.5,
+ "results": {
+  "390": {
+   "sideChip": {
+    "label": "East side · traffic heads north",
+    "injected": false,
+    "offsetCentroidPx": {
+     "before": -0.36,
+     "after": -0.36
+    },
+    "offsetExtentPx": {
+     "before": -0.25,
+     "after": -0.25
+    },
+    "moves": {
+     "markDyPx": -0.5,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     }
+    }
+   },
+   "kindChip": {
+    "label": "Shoulder work",
+    "injected": false,
+    "offsetCentroidPx": {
+     "before": -0.35,
+     "after": -0.35
+    },
+    "offsetExtentPx": {
+     "before": -0.25,
+     "after": -0.25
+    },
+    "moves": {
+     "markDyPx": 0,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     }
+    }
+   },
+   "segmented": {
+    "label": "Daytime",
+    "injected": false,
+    "offsetCentroidPx": {
+     "before": 1.64,
+     "after": -0.36
+    },
+    "offsetExtentPx": {
+     "before": 1.5,
+     "after": -0.5
+    },
+    "moves": {
+     "markDyPx": -2,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(25.0, 48.4, 65.5)",
+      "ratio": 5.16
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(25.0, 48.4, 65.5)",
+      "ratio": 5.16
+     }
+    }
+   },
+   "reasonChip": {
+    "label": "Removed",
+    "injected": true,
+    "offsetCentroidPx": {
+     "before": -0.12,
+     "after": -0.12
+    },
+    "offsetExtentPx": {
+     "before": 0,
+     "after": 0
+    },
+    "moves": {
+     "markDyPx": 0,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(21.0, 47.7, 67.7)",
+      "ratio": 5.21
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(21.0, 47.7, 67.7)",
+      "ratio": 5.21
+     }
+    }
+   }
+  },
+  "1440": {
+   "sideChip": {
+    "label": "East side · traffic heads north",
+    "injected": false,
+    "offsetCentroidPx": {
+     "before": -0.36,
+     "after": -0.36
+    },
+    "offsetExtentPx": {
+     "before": -0.25,
+     "after": -0.25
+    },
+    "moves": {
+     "markDyPx": 0,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     }
+    }
+   },
+   "kindChip": {
+    "label": "Shoulder work",
+    "injected": false,
+    "offsetCentroidPx": {
+     "before": -0.35,
+     "after": -0.35
+    },
+    "offsetExtentPx": {
+     "before": -0.25,
+     "after": -0.25
+    },
+    "moves": {
+     "markDyPx": 0,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(19.6, 42.1, 60.1)",
+      "ratio": 5.6
+     }
+    }
+   },
+   "segmented": {
+    "label": "Daytime",
+    "injected": false,
+    "offsetCentroidPx": {
+     "before": 1.65,
+     "after": -0.35
+    },
+    "offsetExtentPx": {
+     "before": 1.5,
+     "after": -0.5
+    },
+    "moves": {
+     "markDyPx": -2,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(25.0, 48.4, 65.5)",
+      "ratio": 5.16
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(25.0, 48.4, 65.5)",
+      "ratio": 5.16
+     }
+    }
+   },
+   "reasonChip": {
+    "label": "Removed",
+    "injected": true,
+    "offsetCentroidPx": {
+     "before": -0.12,
+     "after": -0.12
+    },
+    "offsetExtentPx": {
+     "before": 0,
+     "after": 0
+    },
+    "moves": {
+     "markDyPx": 0,
+     "markDxPx": 0,
+     "labelDxPx": 0,
+     "labelDyPx": 0,
+     "controlSizeUnchanged": true
+    },
+    "contrast": {
+     "before": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(21.0, 47.7, 67.7)",
+      "ratio": 5.21
+     },
+     "after": {
+      "color": "rgb(52, 169, 232)",
+      "ground": "rgb(21.0, 47.7, 67.7)",
+      "ratio": 5.21
+     }
+    }
+   }
+  }
+ },
+ "check": {
+  "afterCentroidOffsets": [
+   -0.36,
+   -0.35,
+   -0.36,
+   -0.12,
+   -0.36,
+   -0.35,
+   -0.35,
+   -0.12
+  ],
+  "maxAbs": 0.36,
+  "spread": 0.24,
+  "pass": true
+ },
+ "notes": [
+  "390 sideChip markDyPx -0.5 is raster snapping, not a move: the page scrolled the chip to y 399.63 (before) and 445.13 (after), so its rows rasterise half a device px apart; the mark and the x band moved together (offset -0.36 both runs, label top 14.25 px in the control both runs) and no side-chip source changed.",
+  "Contrast: hue (--act) and ground unchanged on all four, re-measured: side and kind 5.60:1, segmented 5.16:1, dismiss-reason 5.21:1, all >= AA 4.5:1."
+ ]
+}
