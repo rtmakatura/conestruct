@@ -1,0 +1,3 @@
+Full vitest run on the #409 branch (first run, before any re-run):
+FAIL lib/render-proxy.corridor-map.test.ts > fetchCorridorMap > posts the scenario and the picture to /render/corridor-map and relays the image
+Alone: it failed again (deterministic, not flaky). Cause, confirmed: its exact-body assertion sent DEFAULT_SHOULDER, whose untouched 1,000 ft now carries guesses.work_length on the wire, the stated behaviour change. The expectation was updated to include it; the next full run passed (246 files, 2618 tests, 1 skipped).

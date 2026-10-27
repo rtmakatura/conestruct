@@ -408,6 +408,10 @@ export interface ScenarioGuesses {
    *  Urban/rural is a guess off nearby places; the record lets the audit
    *  list it as guessed, not confirmed. */
   road_type?: { highwayClass: string; urban: boolean; divided: boolean };
+  /** #409: the length is still the session's starting value and the
+   *  operator never entered one.  Wire-only: the render proxy relays it
+   *  (`withRelayedWorkLenDefault`); scenario state never holds it. */
+  work_length?: { startFt: number };
 }
 
 /** R110 Q4 / Q7 / Q8 — fields the OPERATOR has written, so a fresh

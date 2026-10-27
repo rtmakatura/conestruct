@@ -705,7 +705,46 @@ def input_guesses(scenario: Scenario) -> list[dict[str, Any]]:
                 "operator_confirmed": False,
             }
         )
+
+    wl = guesses.work_length
+    if wl is not None:
+        # #409: the session's starting length, never entered by the
+        # operator.  The start is the backend's (WORK_LEN_START_FT, CHOSEN);
+        # recorded as defaulted, not confirmed.
+        from src.api.schemas import WORK_LEN_START_FT
+
+        if wl.startFt != WORK_LEN_START_FT:
+            raise _work_length_refusal(
+                f"the starting length it names ({wl.startFt:g} ft) isn't the tool's "
+                f"({WORK_LEN_START_FT:,.0f} ft)"
+            )
+        if scenario.workLen != WORK_LEN_START_FT:
+            raise _work_length_refusal("this plan carries another length")
+        records.append(
+            {
+                "field": "work_length",
+                "value": WORK_LEN_START_FT,
+                "label": f"{WORK_LEN_START_FT:,.0f} ft",
+                "source": "default",
+                "evidence": "nobody entered a length for this plan",
+                "operator_confirmed": False,
+            }
+        )
     return records
+
+
+def _work_length_refusal(why: str) -> HTTPException:
+    """#409: a stale default-length claim, refused like a stale guess."""
+    return HTTPException(
+        status_code=400,
+        detail={
+            "error": "guess_stale",
+            "message": (
+                f"The work zone length is marked as the starting length, but {why}. "
+                "Enter the work zone length, then generate again."
+            ),
+        },
+    )
 
 
 # #291: the road type's words, as the WHAT band's select says them

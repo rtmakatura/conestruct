@@ -48,7 +48,11 @@ describe("fetchCorridorMap", () => {
     const res = await fetchCorridorMap(DEFAULT_SHOULDER, picture);
     expect(calls[0].url).toBe("https://modal.example/render/corridor-map");
     const body = JSON.parse(String(calls[0].init.body));
-    expect(body).toEqual({ scenario: DEFAULT_SHOULDER, ...picture });
+    // #409: the untouched starting length rides the wire as a default.
+    expect(body).toEqual({
+      scenario: { ...DEFAULT_SHOULDER, guesses: { work_length: { startFt: 1000 } } },
+      ...picture,
+    });
     expect(JSON.stringify(body)).not.toMatch(/token/i);
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toBe("image/jpeg");

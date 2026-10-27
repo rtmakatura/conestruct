@@ -1,0 +1,32 @@
+#409 red proof. Base: issue-398-wait-cues 4301b86, extracted with `git archive 4301b86` into the scratchpad;
+this branch's two new test files copied in and run there.
+
+Backend: tests/test_work_length_default.py
+- As written, the file fails to collect on the base:
+  E   ImportError: cannot import name 'WORK_LEN_START_FT' from 'src.api.schemas'
+- With that one import replaced by a local 1000.0 in the base copy only:
+  FAILED tests/test_work_length_default.py::test_a_defaulted_length_is_recorded_in_the_audit
+  FAILED tests/test_work_length_default.py::test_the_default_does_not_touch_the_rest_of_the_audit
+  FAILED tests/test_work_length_default.py::test_it_sits_after_the_guesses
+  FAILED tests/test_work_length_default.py::test_a_length_that_moved_is_refused
+  FAILED tests/test_work_length_default.py::test_a_start_the_backend_does_not_know_is_refused
+  FAILED tests/test_work_length_default.py::test_the_audit_pdf_line
+  FAILED tests/test_work_length_default.py::test_the_heading_with_guesses_and_a_default
+  7 failed, 3 passed
+  The 3 that pass on the base are guards: the start constant, an entered length is not recorded, and the
+  audit-pdf route answers 200.
+
+Frontend: conestruct/site/lib/render-proxy.work-length.test.ts (vitest, the base copy using this worktree's node_modules)
+  x the audit request carries it while the length is the untouched start
+    AssertionError: expected undefined to deeply equal { work_length: { startFt: 1000 } }
+  x the PDF and the corridor read carry it too
+    AssertionError: expected undefined to deeply equal { work_length: { startFt: 1000 } }
+  x the zipped bundle parts carry it
+    AssertionError: expected undefined to deeply equal { work_length: { startFt: 1000 } }
+  ok an entered length carries nothing, even at 1,000 ft
+  ok a length away from the start carries nothing
+  x keeps the other guesses, and drops a stale entry from state
+    AssertionError: expected { ...(2) } to deeply equal { speed: { highwayClass: 'trunk' } }
+  4 failed, 2 passed (the 2 that pass are guards)
+
+On this branch: all 10 backend and all 6 frontend tests pass.

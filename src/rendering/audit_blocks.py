@@ -637,7 +637,13 @@ _GUESS_FIELD = {
     "approach_speed": "Cross-street speed",
     # #291 (R148).
     "road_type": "Road type",
+    # #409.
+    "work_length": "Work zone length",
 }
+# #409: a default's source and caveat.  Its line says "Defaulted to", not
+# "Guessed from".
+_DEFAULT_SOURCE = {"default": "the tool's starting length"}
+_DEFAULT_CAVEAT = {"work_length": "Confirm the work zone length on site."}
 _GUESS_SOURCE = {
     "pin": "the pin",
     "road": "the road",
@@ -648,20 +654,48 @@ _GUESS_SOURCE = {
 
 def _input_guesses_blocks(guesses: list[dict[str, Any]]) -> list[Block]:
     """One line per untouched guess (R108): the value, its source and that
-    the operator did not confirm it.  No guesses, no block."""
+    the operator did not confirm it.  No guesses, no block.  #409: a
+    defaulted value reads "Defaulted to", and the heading names what the
+    block holds."""
     if not guesses:
         return []
-    lines = [
+    lines = [_default_line(g) if _is_default(g) else _guess_line(g) for g in guesses]
+    defaults = sum(1 for g in guesses if _is_default(g))
+    heading = (
+        "Guessed inputs"
+        if defaults == 0
+        else "Defaulted inputs"
+        if defaults == len(guesses)
+        else "Guessed and defaulted inputs"
+    )
+    return [
+        Heading(2, _cell(heading)),
+        Bullets([ListItem(_cell(line)) for line in lines]),
+    ]
+
+
+def _is_default(g: dict[str, Any]) -> bool:
+    return g.get("source") in _DEFAULT_SOURCE
+
+
+def _guess_line(g: dict[str, Any]) -> str:
+    return (
         f"{_GUESS_FIELD.get(g.get('field', ''), _str(g, 'field'))}: {_str(g, 'label')}. "
         f"Guessed from {_GUESS_SOURCE.get(g.get('source', ''), _str(g, 'source'))} "
         f"({_str(g, 'evidence')}). The operator did not confirm it. "
         f"{_GUESS_CAVEAT.get(g.get('source', ''), '')}".rstrip()
-        for g in guesses
-    ]
-    return [
-        Heading(2, _cell("Guessed inputs")),
-        Bullets([ListItem(_cell(line)) for line in lines]),
-    ]
+    )
+
+
+def _default_line(g: dict[str, Any]) -> str:
+    """#409: "Work zone length: 1,000 ft. Defaulted to the tool's starting
+    length (nobody entered a length for this plan). ..."."""
+    return (
+        f"{_GUESS_FIELD.get(g.get('field', ''), _str(g, 'field'))}: {_str(g, 'label')}. "
+        f"Defaulted to {_DEFAULT_SOURCE[_str(g, 'source')]} "
+        f"({_str(g, 'evidence')}). The operator did not confirm it. "
+        f"{_DEFAULT_CAVEAT.get(g.get('field', ''), '')}".rstrip()
+    )
 
 
 def _kind_proposal_blocks(record: dict[str, Any] | None) -> list[Block]:

@@ -1,0 +1,16 @@
+TestClient /render/audit, DEFAULT_SHOULDER's values, workLen 1000
+no relay (an entered length): input_guesses in audit: False
+with guesses.work_length = {startFt: 1000}: input_guesses =
+[
+  {
+    "field": "work_length",
+    "value": 1000.0,
+    "label": "1,000 ft",
+    "source": "default",
+    "evidence": "nobody entered a length for this plan",
+    "operator_confirmed": false
+  }
+]
+every other key identical to the no-relay audit: True
+audit PDF block: Heading(level=2, text='Defaulted inputs')
+audit PDF block: Bullets(items=[ListItem(text="Work zone length: 1,000 ft. Defaulted to the tool's starting length (nobody entered a length for this plan). The operator did not confirm it. Confirm the work zone length on site.", children=[])])

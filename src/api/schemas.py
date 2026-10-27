@@ -57,6 +57,12 @@ from src.rules.validators import (
 # conestruct/site/lib/scenarios/validation.ts (MAX_WORK_LEN_FT).
 WORK_LEN_MAX_FT = 20000.0
 
+# #409: the work-zone length a session starts on before the operator
+# enters one.  CHOSEN, not sourced (Rule 12): it was picked to clear the
+# buffer/2 soft rule at 65 mph (#397 R145-1).  The backend owns it (Rule 3);
+# conestruct/site/lib/scenarios/index.ts DEFAULT_SHOULDER.workLen mirrors it.
+WORK_LEN_START_FT = 1000.0
+
 # MAX_DRAWABLE_HALF_ROAD_FT, the widest half-road the plan sheet can
 # draw, is defined in src/rules/validators.py since #335 (imported
 # above); importers keep reading it from this module.
@@ -423,6 +429,16 @@ class SpeedGuess(BaseModel):
     highwayClass: str = Field(min_length=1, max_length=40)
 
 
+class WorkLengthDefault(BaseModel):
+    """#409: the work-zone length is still the session's starting value,
+    and the operator never entered one.  ``startFt`` is the start the
+    frontend relays; the backend checks it against ``WORK_LEN_START_FT``
+    and the plan's ``workLen``, and records the length as defaulted, not
+    confirmed."""
+
+    startFt: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)
+
+
 class Guesses(BaseModel):
     """R108 / R110 Q1 — which jurisdiction-layer values are untouched
     guesses, each with the raw fact it came from (the relay-fact pattern).
@@ -444,6 +460,8 @@ class Guesses(BaseModel):
     approach_speed: SpeedGuess | None = None
     # #291 (R148): the inferred road type's urban/rural call.
     road_type: RoadTypeGuess | None = None
+    # #409: the starting work-zone length, never entered by the operator.
+    work_length: WorkLengthDefault | None = None
 
 
 class JurisdictionScenarioFields(BaseModel):

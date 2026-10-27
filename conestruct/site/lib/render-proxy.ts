@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { getDb, plans } from "@/db";
-import { toScenario } from "@/lib/scenarios";
+import { toScenario, withRelayedWorkLenDefault } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
 import { withRelayedCenterline } from "@/lib/scenarios/centerline-relay";
 import { BUNDLE_PART_KINDS } from "@/lib/render-types";
@@ -10,6 +10,13 @@ import {
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
 } from "@/lib/quote-settings";
+
+/** The outgoing scenario: #140's centerline and #409's defaulted-length
+ *  record, both derived at the wire boundary.  Every upstream POST in this
+ *  module sends this. */
+function toWire<S extends Scenario>(scenario: S): S {
+  return withRelayedWorkLenDefault(withRelayedCenterline(scenario));
+}
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -132,7 +139,7 @@ export async function renderScenarioToResponse(
 
   // #140: materialize meta.centerline from the confirmed road at the
   // wire boundary (same at every upstream POST site in this module).
-  const wireScenario = withRelayedCenterline(scenario);
+  const wireScenario = toWire(scenario);
   const requestBody =
     kind === "quote"
       ? {
@@ -204,7 +211,7 @@ export async function fetchQuoteBreakdown(
           "content-type": "application/json",
           authorization: `Bearer ${secret}`,
         },
-        body: JSON.stringify({ scenario: withRelayedCenterline(scenario), settings }),
+        body: JSON.stringify({ scenario: toWire(scenario), settings }),
       },
     );
   } catch (err) {
@@ -248,7 +255,7 @@ export async function fetchDeviceBreakdown(
           "content-type": "application/json",
           authorization: `Bearer ${secret}`,
         },
-        body: JSON.stringify(withRelayedCenterline(scenario)),
+        body: JSON.stringify(toWire(scenario)),
       },
     );
   } catch (err) {
@@ -294,7 +301,7 @@ export async function fetchCorridorGeometry(
           "content-type": "application/json",
           authorization: `Bearer ${secret}`,
         },
-        body: JSON.stringify(withRelayedCenterline(scenario)),
+        body: JSON.stringify(toWire(scenario)),
       },
     );
   } catch (err) {
@@ -340,7 +347,7 @@ export async function fetchNearestIntersection(
           "content-type": "application/json",
           authorization: `Bearer ${secret}`,
         },
-        body: JSON.stringify(withRelayedCenterline(scenario)),
+        body: JSON.stringify(toWire(scenario)),
       },
     );
   } catch (err) {
@@ -389,7 +396,7 @@ export async function fetchCorridorMap(
         "content-type": "application/json",
         authorization: `Bearer ${secret}`,
       },
-      body: JSON.stringify({ scenario: withRelayedCenterline(scenario), ...picture }),
+      body: JSON.stringify({ scenario: toWire(scenario), ...picture }),
     });
   } catch (err) {
     console.error("corridor map fetch failed", err);
@@ -442,7 +449,7 @@ export async function fetchAuditTrail(
         "content-type": "application/json",
         authorization: `Bearer ${secret}`,
       },
-      body: JSON.stringify(withRelayedCenterline(scenario)),
+      body: JSON.stringify(toWire(scenario)),
     });
   } catch (err) {
     console.error("audit trail fetch failed", err);
@@ -477,7 +484,7 @@ async function fetchPartFromModal(
   // was the one sender that shipped the raw scenario, so its plan sheet
   // drew the straight frame while the same plan's direct download
   // followed the road.
-  const wireScenario = withRelayedCenterline(scenario);
+  const wireScenario = toWire(scenario);
   const requestBody =
     kind === "quote" ? { scenario: wireScenario, settings: quoteSettings } : wireScenario;
   const upstream = await fetch(`${url.replace(/\/$/, "")}/render/${kind}`, {

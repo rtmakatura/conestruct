@@ -34,6 +34,7 @@ import type {
   NearIntersectionWorkType,
   RoadType,
   Scenario,
+  ScenarioGuesses,
   ScenarioKind,
   ScenarioMeta,
   ShoulderScenario,
@@ -125,7 +126,8 @@ export const DEFAULT_SHOULDER: ShoulderScenario = {
   // no validation banner.
   // #397: CHOSEN, not sourced (Rule 12).  It reads "default" in the
   // ledger and the length field until the operator commits a length
-  // (workLenIsDefault).
+  // (workLenIsDefault).  #409: mirror of the backend's WORK_LEN_START_FT
+  // (src/api/schemas.py), which is authoritative.
   workLen: 1000,
   night: false,
 };
@@ -400,6 +402,23 @@ export function defaultFor(kind: ScenarioKind): Scenario {
  *  (see DEFAULT_SHOULDER), so it never reads "typed" or "yours". */
 export function workLenIsDefault(s: Scenario): boolean {
   return !isOperatorSet(s, "workLen") && s.workLen === DEFAULT_SCENARIO.workLen;
+}
+
+/** #409: the wire's record of a defaulted length.  The render proxy calls
+ *  this at serialization time (as #140 relays the centerline), so the
+ *  record is derived from `workLenIsDefault` and never held in state; an
+ *  entered length drops any stale entry.  The backend checks `startFt`
+ *  against its own WORK_LEN_START_FT and the plan's length, and the audit
+ *  lists the length as defaulted, not confirmed. */
+export function withRelayedWorkLenDefault<S extends Scenario>(s: S): S {
+  const g: ScenarioGuesses = { ...(s.guesses ?? {}) };
+  delete g.work_length;
+  if (workLenIsDefault(s)) g.work_length = { startFt: DEFAULT_SCENARIO.workLen };
+  if (g.work_length === undefined && s.guesses?.work_length === undefined) return s;
+  const next = { ...s } as Record<string, unknown>;
+  if (Object.keys(g).length === 0) delete next.guesses;
+  else next.guesses = g;
+  return next as unknown as S;
 }
 
 /** #397: does `field` still hold the kind's own default, with no record
