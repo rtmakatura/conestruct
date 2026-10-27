@@ -1,0 +1,23 @@
+# #405 red proof
+
+Base: 6e43fa4 (origin/lane-doubt-prod-check), via `git archive 6e43fa4 conestruct/site src/rules/site_detection.py` into a scratch folder (not a worktree), node_modules junctioned from the issue worktree.
+
+The new route tests import `OVERPASS_MIRRORS` and `resetMirrorRest` from lib/road-detection/overpass.ts, which the base lacks. To let them run against the base's route, a shim was added in the scratch copy only: it exports the two-URL list (so the stub sends overpass-api.de's calls to `queue` and every other mirror's, the base's kumi and .fr, to `frQueue`) and a no-op `resetMirrorRest`. The shim holds no race; the base's route.ts runs unchanged.
+
+`npx vitest run app/api/road-bearing --reporter=verbose`, the failing tests (route.test.ts):
+
+ × app/api/road-bearing/route.test.ts > scan failure vs measured absence (#213) > a 4xx from both mirrors is unavailable, and both were asked 6ms
+ × app/api/road-bearing/route.test.ts > scan failure vs measured absence (#213) > a 400 from the first mirror leaves the second mirror's answer in play (#405) 2ms
+ × app/api/road-bearing/route.test.ts > scan failure vs measured absence (#213) > a 406 from the first mirror leaves the second mirror's answer in play (#405) 1ms
+ × app/api/road-bearing/route.test.ts > scan failure vs measured absence (#213) > a 429 from the first mirror leaves the second mirror's answer in play (#405) 1ms
+ × app/api/road-bearing/route.test.ts > scan failure vs measured absence (#213) > a stalled first mirror doesn't hold the second mirror's answer 5007ms
+ × app/api/road-bearing/route.test.ts > scan failure vs measured absence (#213) > a remark is that mirror's failure, never a measured empty 1ms
+ × app/api/road-bearing/route.test.ts > scan failure vs measured absence (#213) > a remark from one mirror leaves the other's answer in play 4ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  7 failed | 14 passed (21)
+
+Not red, as expected: "a 5xx from one mirror and an answer from the other completes" passes on the base too (a 5xx already fell through); route.twin.test.ts passes (5 of 5).
+route.null-points.test.ts did not load in the scratch copy (its fixtures under tests/fixtures/ were outside the archived paths); it is not one of the new tests.
+lib/road-detection/overpass.test.ts tests `overpassRace`, which does not exist on the base, so it cannot import there: red by absence.
+
+On the branch: all of the above pass (see the report's test lines).

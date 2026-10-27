@@ -25,6 +25,7 @@ const PRIMARY = readFileSync(resolve(FIXTURES, "federal_primary.json"), "utf-8")
 const PIN = { lat: 39.7342642691076, lng: -105.02504468168067 };
 
 function serve(payload: string): void {
+  vi.spyOn(console, "info").mockImplementation(() => {}); // #405's per-trip mirror log
   vi.stubGlobal(
     "fetch",
     vi.fn(async () => new Response(payload, { status: 200, headers: { "content-type": "application/json" } })),

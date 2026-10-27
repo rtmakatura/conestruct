@@ -1,0 +1,20 @@
+# #405 final test runs (issue-405-road-detection worktree, uncommitted tree, 2026-10-27)
+
+conestruct/site, after the vercel-ignore.sh fold:
+  npx vitest run --reporter=dot
+    Test Files  244 passed | 1 skipped (245)
+    Tests  2607 passed | 1 skipped (2608)
+  npx tsc --noEmit -p .
+    clean (no output)
+
+Backend: no Python file changed. Baseline on 6e43fa4 in this worktree:
+  uv run --extra dev pytest -q
+    3593 passed, 2 skipped
+mypy and ruff were not run (no Python change).
+
+Re-run after the review round 2 comment fix (overpass.ts lines 10-12, comment only; file now 213 lines):
+  npx vitest run --reporter=dot
+    Test Files  244 passed | 1 skipped (245)
+    Tests  2607 passed | 1 skipped (2608)
+  npx tsc --noEmit -p .
+    clean (no output)

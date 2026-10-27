@@ -22,6 +22,7 @@ import {
   truncateAtReversal,
 } from "@/lib/road-detection/stitch";
 import { nearestOppositeTwinM } from "@/lib/road-detection/twin";
+import { overpassRace } from "@/lib/road-detection/overpass";
 import { hasCoords, usableWays, validRuns } from "@/lib/road-detection/usable-ways";
 import type {
   RoadCandidate,
@@ -105,15 +106,6 @@ const URBAN_PLACE_CLASSES: ReadonlySet<string> = new Set([
   "neighbourhood",
 ]);
 
-const OVERPASS_MIRRORS: readonly string[] = [
-  "https://overpass-api.de/api/interpreter",
-  "https://overpass.kumi.systems/api/interpreter",
-  "https://overpass.openstreetmap.fr/api/interpreter",
-];
-const OVERPASS_TIMEOUT_MS = 6000;
-const OVERPASS_USER_AGENT =
-  "conestruct-traffic-control-tool/0.2 (+https://conestruct.com; hello@conestruct.com)";
-
 interface OverpassNode {
   lat: number;
   lon: number;
@@ -171,40 +163,7 @@ async function overpassQuery(
   lng: number,
   signal: AbortSignal | undefined,
 ): Promise<OverpassResponse | null> {
-  return overpassPost(buildQuery(lat, lng), signal);
-}
-
-async function overpassPost(
-  data: string,
-  signal: AbortSignal | undefined,
-): Promise<OverpassResponse | null> {
-  for (const url of OVERPASS_MIRRORS) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), OVERPASS_TIMEOUT_MS);
-    const onAbort = () => controller.abort();
-    signal?.addEventListener("abort", onAbort, { once: true });
-    try {
-      const r = await fetch(url, {
-        method: "POST",
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
-          "user-agent": OVERPASS_USER_AGENT,
-        },
-        body: `data=${encodeURIComponent(data)}`,
-        signal: controller.signal,
-      });
-      if (r.status >= 400 && r.status < 500) return null;
-      if (!r.ok) continue;
-      return (await r.json()) as OverpassResponse;
-    } catch (err) {
-      if ((err as Error).name === "AbortError" && signal?.aborted) throw err;
-      continue;
-    } finally {
-      clearTimeout(timer);
-      signal?.removeEventListener("abort", onAbort);
-    }
-  }
-  return null;
+  return overpassRace<OverpassResponse>(buildQuery(lat, lng), signal, "roads");
 }
 
 function toRad(deg: number): number {
@@ -324,7 +283,8 @@ function emptyResponse(isUrban: boolean, placeName: string | null): RoadDetectOk
   return { scan_status: "ok", candidates: [], primary_index: null, isUrban, placeName };
 }
 
-// The scan never completed (#213): every mirror failed or 4xx'd.  The
+// The scan never completed (#213): every mirror failed, or none answered by
+// the deadline (#405, lib/road-detection/overpass.ts).  The
 // body claims nothing — no candidates, no isUrban (the old computed
 // `false` here was the silent rural default), no placeName.
 function unavailableResponse(): RoadDetectUnavailable {
@@ -518,7 +478,11 @@ async function extendCandidateGeometry(
         `way(around:${GEOMETRY_RADIUS_M.toFixed(0)},${lat},${lng})["highway"]${f};`,
     )
     .join("");
-  const payload = await overpassPost(`[out:json][timeout:10];(${parts});out geom tags;`, signal);
+  const payload = await overpassRace<OverpassResponse>(
+    `[out:json][timeout:10];(${parts});out geom tags;`,
+    signal,
+    "geometry",
+  );
   if (payload === null) return null;
   // #305: (d) as above at GEOMETRY_RADIUS_M; and the stitcher reads each
   // way as one polyline, so a way with any unresolved point stays out of
@@ -614,7 +578,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (payload === null) {
-    // #213: all mirrors failed (or the query 4xx'd) — the scan never
+    // #213: every mirror failed or the deadline passed (#405) — the scan never
     // ran, so this is an honest "unavailable", never the fabricated
     // empty measurement it used to serialize as.  Still HTTP 200: the
     // route worked; the upstream did not.

@@ -24,6 +24,7 @@ SITE_INPUTS=(
   "../../tests/fixtures/site_scan"
   "../../scripts/gate.cjs"
   "../../scripts/modal-healthz-probe.mjs"
+  "../../src/rules/site_detection.py"
 )
 # END SITE_INPUTS
 

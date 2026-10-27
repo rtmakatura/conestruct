@@ -13,6 +13,7 @@ vi.mock("@/lib/rate-limit", () => ({
   rateLimitOr429: vi.fn(async () => null),
 }));
 
+import { OVERPASS_MIRRORS } from "@/lib/road-detection/overpass";
 import { POST } from "./route";
 
 const PIN = { lat: 39.7337, lng: -104.98753 };
@@ -48,9 +49,13 @@ let queue: Scripted[];
 
 beforeEach(() => {
   queue = [];
+  vi.spyOn(console, "info").mockImplementation(() => {}); // #405's per-trip mirror log
   vi.stubGlobal(
     "fetch",
-    vi.fn(async () => {
+    // #405: the mirrors are asked at once; the first (overpass-api.de)
+    // plays the queue and the other is down.
+    vi.fn(async (url: unknown) => {
+      if (url !== OVERPASS_MIRRORS[0]) throw new TypeError("fetch failed");
       const next = queue.shift() ?? { kind: "reject" as const };
       if (next.kind === "reject") throw new TypeError("fetch failed");
       return { ok: true, status: 200, json: async () => ({ elements: next.elements }) };

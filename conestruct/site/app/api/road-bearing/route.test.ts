@@ -20,6 +20,7 @@ vi.mock("@/lib/rate-limit", () => ({
   rateLimitOr429: vi.fn(async () => null),
 }));
 
+import { OVERPASS_MIRRORS, resetMirrorRest } from "@/lib/road-detection/overpass";
 import { POST } from "./route";
 
 // The #213 pin: E Bayaud Ave / S Colorado Blvd (the recorded
@@ -67,17 +68,23 @@ const PLACE_NODE = {
   tags: { place: "suburb", name: "Glendale" },
 };
 
-// Queue-driven Overpass stub.  The route awaits mirrors strictly in
-// order, so a FIFO of scripted outcomes models "mirror 1 down, mirror
-// 2 answers" exactly.  An exhausted queue rejects (network error) —
-// the safe default for round trips a test doesn't care about (the
-// best-effort extension query degrades silently by design).
+// Queue-driven Overpass stub, one FIFO per mirror (#405: the mirrors are
+// asked at once, so call order no longer says which mirror a call was).
+// `queue` scripts the first mirror (overpass-api.de), round trip by round
+// trip; `frQueue` scripts the second (overpass.openstreetmap.fr).  An
+// exhausted queue rejects (network error) — the safe default for round
+// trips a test doesn't care about (the best-effort extension query
+// degrades silently by design).  `hang` never answers until the request
+// is aborted.
 type Scripted =
   | { kind: "reject" }
+  | { kind: "hang" }
   | { kind: "status"; status: number }
+  | { kind: "remark"; remark: string }
   | { kind: "ok"; elements: unknown[] };
 
 let queue: Scripted[];
+let frQueue: Scripted[];
 let fetchMock: ReturnType<typeof vi.fn>;
 // Every Overpass query body the route actually sent, decoded from the
 // `data=` form encoding.  The radius constants are observable ONLY here:
@@ -86,14 +93,29 @@ let fetchMock: ReturnType<typeof vi.fn>;
 let sentQueries: string[];
 
 function stubOverpass() {
-  fetchMock = vi.fn(async (_url: unknown, init?: { body?: string }) => {
+  fetchMock = vi.fn(async (url: unknown, init?: { body?: string; signal?: AbortSignal }) => {
     if (typeof init?.body === "string" && init.body.startsWith("data=")) {
       sentQueries.push(decodeURIComponent(init.body.slice("data=".length)));
     }
-    const next = queue.shift() ?? { kind: "reject" as const };
+    const q = url === OVERPASS_MIRRORS[0] ? queue : frQueue;
+    const next = q.shift() ?? { kind: "reject" as const };
     if (next.kind === "reject") throw new TypeError("fetch failed");
+    if (next.kind === "hang") {
+      return new Promise((_resolve, reject) =>
+        init?.signal?.addEventListener("abort", () =>
+          reject(Object.assign(new Error("Aborted"), { name: "AbortError" })),
+        ),
+      );
+    }
     if (next.kind === "status") {
       return { ok: false, status: next.status, json: async () => ({}) };
+    }
+    if (next.kind === "remark") {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ elements: [], remark: next.remark }),
+      };
     }
     return {
       ok: true,
@@ -106,7 +128,10 @@ function stubOverpass() {
 
 beforeEach(() => {
   queue = [];
+  frQueue = [];
   sentQueries = [];
+  resetMirrorRest();
+  vi.spyOn(console, "info").mockImplementation(() => {});
   stubOverpass();
 });
 
@@ -173,26 +198,71 @@ describe("scan failure vs measured absence (#213)", () => {
     expect(body.placeName).toBe("Glendale");
   });
 
-  it("a 4xx is unavailable, and a hard stop (no second mirror)", async () => {
+  // #405 (Rule 5, stated): a 4xx is that mirror's failure, not the
+  // chain's (the backend's R74).  It used to be a hard stop, so one 429
+  // from overpass-api.de read as "Detection service unavailable" with
+  // overpass.openstreetmap.fr never asked.
+  it("a 4xx from both mirrors is unavailable, and both were asked", async () => {
     queue = [{ kind: "status", status: 400 }];
+    frQueue = [{ kind: "status", status: 400 }];
     const body = await (await POST(request(PIN))).json();
     expect(body.scan_status).toBe("unavailable");
-    // 4xx means the query itself was rejected — retrying another
-    // mirror would repeat it, so exactly one fetch fires.
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it("a 5xx falls through to the next mirror and still completes", async () => {
-    queue = [
-      { kind: "status", status: 504 },
-      { kind: "ok", elements: [way(7, { highway: "residential" })] },
-    ];
+  it.each([400, 406, 429])(
+    "a %i from the first mirror leaves the second mirror's answer in play (#405)",
+    async (status) => {
+      queue = [{ kind: "status", status }];
+      frQueue = [{ kind: "ok", elements: [way(7, { highway: "residential" })] }];
+      const body = await (await POST(request(PIN))).json();
+      expect(body.scan_status).toBe("ok");
+      expect(body.candidates).toHaveLength(1);
+    },
+  );
+
+  it("a 5xx from one mirror and an answer from the other completes", async () => {
+    queue = [{ kind: "status", status: 504 }];
+    frQueue = [{ kind: "ok", elements: [way(7, { highway: "residential" })] }];
     const body = await (await POST(request(PIN))).json();
     expect(body.scan_status).toBe("ok");
     expect(body.candidates).toHaveLength(1);
-    // Unnamed candidate → no extension round trip → exactly the two
-    // main-query attempts.
+    // Unnamed candidate → no extension round trip → one call per mirror.
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  // #405: the measured stall.  overpass-api.de answered nothing in 25 s on
+  // 6 of 10 probes; the old chain waited out its 6 s (and kumi's) before
+  // asking .fr.  Now .fr is asked at the same moment, and the stalled
+  // request is aborted once .fr answers.
+  it("a stalled first mirror doesn't hold the second mirror's answer", async () => {
+    queue = [{ kind: "hang" }];
+    frQueue = [{ kind: "ok", elements: [way(7, { highway: "residential" })] }];
+    const t0 = Date.now();
+    const body = await (await POST(request(PIN))).json();
+    expect(Date.now() - t0).toBeLessThan(1000);
+    expect(body.scan_status).toBe("ok");
+    expect(body.candidates).toHaveLength(1);
+    const deCall = fetchMock.mock.calls.find((c) => c[0] === OVERPASS_MIRRORS[0]);
+    expect((deCall?.[1] as { signal: AbortSignal }).signal.aborted).toBe(true);
+  });
+
+  // #405 (#251's rule, ported): a 200 whose body carries a `remark` didn't
+  // complete.  Before, it was read as a payload, so a timed-out query came
+  // back as a measured "no road within 30 m" (Rule 10).
+  it("a remark is that mirror's failure, never a measured empty", async () => {
+    queue = [{ kind: "remark", remark: "runtime error: Query timed out" }];
+    const body = await (await POST(request(PIN))).json();
+    expect(body.scan_status).toBe("unavailable");
+    expect(body.isUrban).toBeNull();
+  });
+
+  it("a remark from one mirror leaves the other's answer in play", async () => {
+    queue = [{ kind: "remark", remark: "runtime error: out of memory" }];
+    frQueue = [{ kind: "ok", elements: [way(7, { highway: "residential" })] }];
+    const body = await (await POST(request(PIN))).json();
+    expect(body.scan_status).toBe("ok");
+    expect(body.candidates).toHaveLength(1);
   });
 });
 

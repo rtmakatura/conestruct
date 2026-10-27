@@ -1,0 +1,180 @@
+{
+  "label": "before-2",
+  "rows": [
+    {
+      "search": "1600 E Colfax Ave, Denver",
+      "lat": 39.739781,
+      "lng": -104.968249,
+      "at": "2026-10-27T17:23:36.649Z",
+      "mirrors": [
+        {
+          "mirror": "overpass-api.de",
+          "ms": 25008,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.kumi.systems",
+          "ms": 25006,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.openstreetmap.fr",
+          "ms": 1814,
+          "status": 200,
+          "bytes": 28888,
+          "remark": null,
+          "elements": 67,
+          "scan": null
+        }
+      ],
+      "live": {
+        "ms": 28202,
+        "status": 200,
+        "scan": "ok:4",
+        "bytes": 12611
+      }
+    },
+    {
+      "search": "Colfax & Williams, Denver",
+      "lat": 39.74003,
+      "lng": -104.96555,
+      "at": "2026-10-27T17:24:17.113Z",
+      "mirrors": [
+        {
+          "mirror": "overpass-api.de",
+          "ms": 507,
+          "status": 502,
+          "bytes": 534,
+          "remark": null,
+          "elements": null,
+          "scan": null,
+          "body": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a"
+        },
+        {
+          "mirror": "overpass.kumi.systems",
+          "ms": 25009,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.openstreetmap.fr",
+          "ms": 2097,
+          "status": 200,
+          "bytes": 23716,
+          "remark": null,
+          "elements": 57,
+          "scan": null
+        }
+      ],
+      "live": {
+        "ms": 15453,
+        "status": 200,
+        "scan": "ok:2",
+        "bytes": 9788
+      }
+    },
+    {
+      "search": "Wadsworth Blvd & W 10th Ave, Lakewood, CO",
+      "lat": 39.732988,
+      "lng": -105.081392,
+      "at": "2026-10-27T17:24:57.184Z",
+      "mirrors": [
+        {
+          "mirror": "overpass-api.de",
+          "ms": 499,
+          "status": 502,
+          "bytes": 534,
+          "remark": null,
+          "elements": null,
+          "scan": null,
+          "body": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a"
+        },
+        {
+          "mirror": "overpass.kumi.systems",
+          "ms": 25002,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.openstreetmap.fr",
+          "ms": 1414,
+          "status": 200,
+          "bytes": 9759,
+          "remark": null,
+          "elements": 24,
+          "scan": null
+        }
+      ],
+      "live": {
+        "ms": 14817,
+        "status": 200,
+        "scan": "ok:4",
+        "bytes": 13489
+      }
+    },
+    {
+      "search": "1600 E Colfax Ave, Denver",
+      "lat": 39.739781,
+      "lng": -104.968249,
+      "at": "2026-10-27T17:25:47.449Z",
+      "mirrors": [
+        {
+          "mirror": "overpass-api.de",
+          "ms": 25005,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.kumi.systems",
+          "ms": 25005,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.openstreetmap.fr",
+          "ms": 2630,
+          "status": 200,
+          "bytes": 28888,
+          "remark": null,
+          "elements": 67,
+          "scan": null
+        }
+      ],
+      "live": {
+        "ms": 25261,
+        "status": 200,
+        "scan": "ok:4",
+        "bytes": 12611
+      }
+    },
+    {
+      "search": "1600 E Colfax Ave, Denver",
+      "lat": 39.739781,
+      "lng": -104.968249,
+      "at": "2026-10-27T17:26:31.907Z",
+      "mirrors": [
+        {
+          "mirror": "overpass-api.de",
+          "ms": 25010,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.kumi.systems",
+          "ms": 25010,
+          "error": "no answer in 25000 ms"
+        },
+        {
+          "mirror": "overpass.openstreetmap.fr",
+          "ms": 7972,
+          "status": 200,
+          "bytes": 28888,
+          "remark": null,
+          "elements": 67,
+          "scan": null
+        }
+      ],
+      "live": {
+        "ms": 19446,
+        "status": 200,
+        "scan": "ok:4",
+        "bytes": 12611
+      }
+    }
+  ]
+}
