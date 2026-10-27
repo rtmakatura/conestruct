@@ -107,7 +107,6 @@ function Cell({
   provenance,
   amber = false,
   error = false,
-  plainDefault = false,
   notes = [],
   lines = [],
   detail = null,
@@ -120,8 +119,6 @@ function Cell({
   provenance: string;
   amber?: boolean;
   error?: boolean;
-  /** #397: a default on this row reads plain "default", no mark. */
-  plainDefault?: boolean;
   /** #289 hand-check, correction 3: the picker's handoff sentences for
    *  THIS field.  Each renders as its own ⚠ line in the field's details —
    *  one text node per sentence, #198's byte-identity contract. */
@@ -156,7 +153,7 @@ function Cell({
       }
       // R98: the line as one quiet marker, the line itself one click
       // away; an error keeps its line under the control (P3).
-      marker={markerOf(provenance, { amber, error, plainDefault })}
+      marker={markerOf(provenance, { amber, error })}
       alert={alert}
       info={
         hasDetail ? (
@@ -508,9 +505,9 @@ export function WhatBand({
   const warnMarkers = [
     markerOf(speedClause.text, { amber: speedClause.amber }),
     table.lanes && lanesValidation.ok
-      ? markerOf(lanesClause.text, { amber: lanesClause.amber, plainDefault: true })
+      ? markerOf(lanesClause.text, { amber: lanesClause.amber })
       : null,
-    markerOf(roadTypeClause.text, { amber: roadTypeClause.amber, plainDefault: true }),
+    markerOf(roadTypeClause.text, { amber: roadTypeClause.amber }),
     markerOf(classProv.text, { amber: classProv.amber }),
     dividedClause ? markerOf(dividedClause.text, { amber: dividedClause.amber }) : null,
     // #316 (R129 Q4): the cross-street speed's row renders in this band.
@@ -583,10 +580,6 @@ export function WhatBand({
             }
             amber={Boolean(table.lanes) && lanesValidation.ok && lanesClause.amber}
             error={Boolean(table.lanes) && !lanesValidation.ok}
-            // #397: the count's default reads plain "default" (Ryan,
-            // 2026-10-26); a kind with no count shows the width's line,
-            // which is #411's.
-            plainDefault={Boolean(table.lanes)}
             lines={lanesDoubt}
             notes={[...(notes["lanes"] ?? []), ...(notes["lane-width"] ?? [])]}
             detail={
@@ -657,8 +650,6 @@ export function WhatBand({
             htmlFor="what-road-type"
             provenance={roadTypeClause.text}
             amber={roadTypeClause.amber}
-            // #397: this row's "default" (no detection) is this item's own.
-            plainDefault
             notes={notes["road-type"]}
             lines={roadTypeLines}
             detail={

@@ -253,17 +253,18 @@ describe("street class is a row of The road, marked when guessed", () => {
   });
 });
 
-// R110 Q8 — Hours and Speed reduction: "✓ default" until changed, then
+// R110 Q8 (amended 2026-10-26) — Hours and Speed reduction: plain "default" until changed, then
 // "✓ yours".
 describe("hours and the speed reduction say whose value they show", () => {
   it("default until changed", () => {
     mount(DEFAULT_SHOULDER);
     expect(screen.getByTestId("cell-night").querySelector(".tr-field")!.textContent).toBe("Hours");
-    expect(screen.getByTestId("info-toggle-night").textContent).toBe("✓ default");
+    // #411 (Ryan, 2026-10-26, amending R110 Q8): plain "default", no mark.
+    expect(screen.getByTestId("info-toggle-night").textContent).toBe("default");
     expect(
       screen.getByTestId("cell-reduction").querySelector(".tr-field")!.textContent,
     ).toBe("Speed reduction");
-    expect(screen.getByTestId("info-toggle-reduction").textContent).toBe("✓ default");
+    expect(screen.getByTestId("info-toggle-reduction").textContent).toBe("default");
   });
 
   it("yours once the operator has written it, even back to the default", () => {

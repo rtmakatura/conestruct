@@ -189,7 +189,8 @@ describe("R126: one marker per row, none of them 'i about'", () => {
     mount(URBAN);
     const cell = document.querySelector('[data-testid="cell-divided"]')!;
     expect(cell.querySelector(".tr-field")!.textContent).toBe("Carriageway");
-    expect(screen.getByTestId("info-toggle-divided").textContent).toBe("✓ default");
+    // #411 (Ryan, 2026-10-26): plain "default", no mark.
+    expect(screen.getByTestId("info-toggle-divided").textContent).toBe("default");
     expect(screen.getByTestId("prov-divided").textContent).toBe(
       "default · undivided until you say otherwise",
     );

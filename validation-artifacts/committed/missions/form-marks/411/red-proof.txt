@@ -1,0 +1,24 @@
+# #411 red proof (repair cycle 3): the 9 new and amended test files against the base sources
+# base issue-397-untouched-provenance 04b76f5, extracted with git archive into the scratchpad; only the test files copied in from the branch
+# (supersedes the cycle-2 proof against ca80d16; the base moved to #397's commit)
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/WhatBand.declutter.test.tsx > one quiet marker per field (R98, P9) > at rest each field shows a symbol + word, not its sentence
+ FAIL  components/WhatBand.step2-layout.test.tsx > R126: one marker per row, none of them 'i about' > Carriageway: the label, and default-or-yours with no detection behind it
+ FAIL  lib/scenarios/provenance-marker.test.ts > markerOf > default · the plan's standard lane; detection doesn't measure width → the word alone, no mark
+ FAIL  lib/scenarios/provenance-marker.test.ts > markerOf > default · daytime; night work adds retroreflective devices → the word alone, no mark
+ FAIL  lib/scenarios/provenance-marker.test.ts > markerOf > default · no lower limit through the zone → the word alone, no mark
+ FAIL  lib/scenarios/provenance-marker.test.ts > markerOf > default · undivided until you say otherwise → the word alone, no mark
+ FAIL  lib/scenarios/provenance-marker.test.ts > markerOf > default · the plan's starting road type → the word alone, no mark
+ FAIL  components/bands/FieldCell.marks.test.tsx > #411: the marker's glyph in its own hue > OSM · 30 mph · measured → ✓ carries symClass
+ FAIL  components/bands/FieldCell.marks.test.tsx > #411: the marker's glyph in its own hue > your change · operator-set from here on → ✓ carries symClass
+ FAIL  components/bands/FieldCell.marks.test.tsx > #411: the marker's glyph in its own hue > not set · operator-set when picked → ◌ carries symClass
+ FAIL  components/bands/FieldCell.marks.test.tsx > #411: the marker's glyph in its own hue > median present · every other road type sets this itself (#85) → i carries symClass
+ FAIL  components/bands/FieldCell.marks.test.tsx > #411: the marker's glyph in its own hue > a plain default is the word alone: no glyph, no hue class
+ FAIL  components/bands/PlanDetails.test.tsx > hours and the speed reduction say whose value they show > default until changed
+ FAIL  components/bands/WhereBand.kind-proposal.test.tsx > #284: the proposed kind > marks the proposed chip and prints the backend's reason, pressing nothing
+ FAIL  components/bands/WhereBand.kind-proposal.test.tsx > #284: the proposed kind > once the proposed chip is picked, its '⚠ proposed' and the note go
+ FAIL  components/bands/WhereBand.left-side.test.tsx > #300: the side control on a one-way street > a stored left side the backend refuses shows the built curb and the backend's line; nothing is reset
+ FAIL  components/bands/WhereBand.no-crossing.test.tsx > #317: no crossing marked > the side control shows the backend's line with ⚠ and Mark on map, and no chips (Q1)
+ Test Files  8 failed | 1 passed (9)
+      Tests  17 failed | 93 passed (110)
+# Green on base, as expected: operator-set.test.ts (one comment line changed, no assertion), and the unchanged tests in the other files.

@@ -140,7 +140,7 @@ export function setWorkType(scenario: Scenario, workType: string): Scenario {
   return markOperatorSet({ ...scenario, workType } as Scenario, "workType");
 }
 
-/** Hours (R107's label; R110 Q8: "✓ default" until changed). */
+/** Hours (R107's label; R110 Q8 as amended 2026-10-26: plain "default" until changed). */
 export function setNight(scenario: Scenario, night: boolean): Scenario {
   return markOperatorSet({ ...scenario, night } as Scenario, "night");
 }

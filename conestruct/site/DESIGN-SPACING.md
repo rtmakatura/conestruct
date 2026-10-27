@@ -138,16 +138,29 @@ The tier set (#219) plus the two #227 marks; the PDF's `!` maps to
 | Glyph | Meaning | Color |
 |---|---|---|
 | `▲` | delta / count-affecting (tier set) | `--dim` |
-| `⚠` | changed / needs attention / conflicts | `--warn` |
+| `⚠` | changed / needs attention / conflicts; a guess to check (from the road, proposed — #411) | `--warn` |
 | `✓` | confirmed or passing | `--pass` |
 | `◌` | unevaluated / not set / pending — never a verdict | `--none` |
-| `i` | reference (tier set) | neutral |
-| `⌁` | proposed — a suggestion awaiting Confirm/Dismiss | `--ink-on-dark` CHOSEN (chromaless; the buttons are the interactive surface — `--act` stays interactive-only) |
+| `i` | reference (tier set) | `--act` (#34a9e8): Rule 18, quoted at `lib/design/symbols.ts:5-6`, "i #34a9e8" (was "neutral"; corrected #411) |
+| `⌁` | proposed — a suggestion awaiting Confirm/Dismiss; unused on the form (the ⌁ rows are gone, below; the proposed kind reads "⚠ proposed", #411) | `--ink-on-dark` CHOSEN (chromaless; the buttons are the interactive surface — `--act` stays interactive-only) |
 | `×` | dismissed — a recorded decision, not a verdict | `--none` |
 | `●` | selected — the option chosen on a chip, radio or segmented control; never a verdict or a provenance | `--act` (the pressed border's accent; `.sym-select`) — adopted by Ryan's 2026-10-25 ruling on #407, for selection only: "✓ stays a provenance mark only … A selected chip or toggle gets its own mark, for example a filled dot, and never a ✓" (https://github.com/rtmakatura/conestruct/issues/407#issuecomment-6403916392) |
 
 The corridor extent rows **dropped their hard-prefixed `✓`** (GO
 ruling 5): they carry no verdict, and `✓` is reserved.
+
+**#411 (Ryan, 2026-10-26).** A value the plan started from reads the
+plain word "default", with no glyph (amends R110 Q8; "i" already means
+"about"). The proposed kind reads "⚠ proposed" (amends #284): `⚠` is "a
+guess, check it". Once the operator picks that chip, "⚠ proposed" and
+its note go, and `●` alone says "chosen" (Ryan, 2026-10-26, amends #284:
+https://github.com/rtmakatura/conestruct/issues/411#issuecomment-6428707756).
+The form renders no `⌁` (already true on the base:
+the ⌁ proposal rows are gone, below, and the proposed kind used `✓`). The
+provenance marker's glyph takes its `symClass` hue, as Rule 18 requires;
+its word keeps the marker's own ink: faint (`--ink-faint`, `.a-mark`)
+on every tone but the guess, whose word stays amber (`.a-mark.is-guess`,
+`--warn`).
 
 ### Sizing tokens (CHOSEN, unsheeted — GO ruling 4)
 

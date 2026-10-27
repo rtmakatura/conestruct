@@ -412,7 +412,7 @@ export interface ScenarioGuesses {
 
 /** R110 Q4 / Q7 / Q8 — fields the OPERATOR has written, so a fresh
  *  detection never overwrites them (Q4) and their marker reads "✓ yours"
- *  rather than "✓ default" (Q7, Q8).  Frontend bookkeeping like
+ *  rather than plain "default" (Q7, Q8; #411).  Frontend bookkeeping like
  *  `confirmedRoad`: it rides the saved plan and the backend ignores it. */
 /** R127 Q1 (b): "speed" — the operator picked it (WHAT or a staged S7
  *  correction), so a detection never overwrites it and it counts as set. */

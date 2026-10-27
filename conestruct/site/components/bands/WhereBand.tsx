@@ -295,7 +295,10 @@ function SideControl({
       {notMarked !== null ? (
         <>
           <div className="tr-prov mt-1" data-testid="side-control-not-marked">
-            <span aria-hidden="true">⚠ </span>
+            {/* #411 (Rule 18): ⚠ in its own hue, not the line's ink. */}
+            <span className={symClass("⚠")} aria-hidden="true">
+              ⚠{" "}
+            </span>
             {notMarked}
           </div>
           {onMarkIntersection && (
@@ -364,8 +367,11 @@ function SideControl({
       )}
       {refused && (
         <div className="tr-prov mt-1" data-testid="side-control-stale">
-          {/* R125 Q3 (P9): the needs-you glyph leads the line. */}
-          <span aria-hidden="true">⚠ </span>
+          {/* R125 Q3 (P9): the needs-you glyph leads the line, in its own
+              hue (#411, Rule 18). */}
+          <span className={symClass("⚠")} aria-hidden="true">
+            ⚠{" "}
+          </span>
           {refused.message}
         </div>
       )}
@@ -384,11 +390,12 @@ function SideControl({
  * absence renders as an absence rather than as nothing at all, and #277's
  * surviving bullet wants the gate named.  One line does both.
  *
- * Suggest-never-set: a chip CONFIRMS the kind.  #284 gives the "✓
- * proposed" citation suffix its producer: the corridor-geometry answer's
+ * Suggest-never-set: a chip CONFIRMS the kind.  #284 gives the "⚠
+ * proposed" (amended #411) citation suffix its producer: the corridor-geometry answer's
  * `kind_proposal`, present only when the road facts leave exactly one live
- * kind (src/rules/kind_proposal.py).  It marks that chip and prints the
- * backend's reason under the row; it never presses the chip (Ryan,
+ * kind (src/rules/kind_proposal.py).  Until that chip is picked, it marks
+ * the chip and prints the backend's reason under the row (Ryan,
+ * 2026-10-26, amending #284); it never presses the chip (Ryan,
  * 2026-10-14: "never pre-selected").  The click is still the person's.
  *
  * #289 hand-check, 2026-09-23, defect 1: `value` is null until a person
@@ -410,6 +417,10 @@ function KindChips({
 }) {
   const live = SCENARIO_KINDS.filter((k) => isScenarioKindEnabled(k.v));
   const gated = SCENARIO_KINDS.length - live.length;
+  // Ryan, 2026-10-26 (amends #284): once the proposed chip is the one
+  // pressed, its "⚠ proposed" and the note go, and ● alone says "chosen".
+  // Another kind pressed leaves the proposal unanswered, so it shows.
+  const open = proposal !== null && value !== proposal.kind ? proposal : null;
   return (
     <div>
       <div className="a-chips" role="group" aria-label="Kind of work">
@@ -429,16 +440,23 @@ function KindChips({
             <span className="tr-field">{k.l}</span>
             <span className="tr-prov">
               {kindCitation(k.v)}
-              {proposal?.kind === k.v && (
-                <span data-testid="kind-proposed-mark"> · ✓ proposed</span>
+              {open?.kind === k.v && (
+                // #411: "⚠ proposed" (Ryan, 2026-10-26, amending #284's
+                // "✓ proposed"): ⚠ is "a guess, check it"; ✓ is only
+                // "measured" or "yours".
+                <span data-testid="kind-proposed-mark">
+                  {" · "}
+                  <span className={symClass("⚠")}>⚠</span> proposed
+                </span>
               )}
             </span>
           </button>
         ))}
       </div>
-      {proposal && live.some((k) => k.v === proposal.kind) && (
+      {open && live.some((k) => k.v === open.kind) && (
         <div className="tr-prov mt-2" data-testid="kind-proposal-note">
-          ✓ proposed: {proposal.basis} Pick it to use it.
+          <span className={symClass("⚠")}>⚠</span> proposed: {open.basis} Pick it to
+          use it.
         </div>
       )}
       {gated > 0 && (

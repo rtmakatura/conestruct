@@ -9,8 +9,12 @@
 //
 // The marker READS the line every cell already produces (provenance.ts's
 // clause, or the cell's own fixed sentence); it decides nothing new and
-// computes no value.  The vocabulary is the fixed one (P9): ✓ settled,
-// ⚠ a guess to check, ◌ not set / pending, i about.  A line that needs the
+// computes no value.  The vocabulary is the fixed one (P9): ✓ measured or
+// yours, ⚠ a guess to check, ◌ not set / pending, i about.  "default" has
+// no glyph at all (#397, #411):
+// Ryan, 2026-10-26, "'✓ default' becomes plain 'default', with no mark"
+// (amends R110 Q8) — the plan's starting value is neither measured nor
+// the operator's, and "i" already means "about".  A line that needs the
 // operator NOW — an error, or a "⚠ needs you" — returns null and stays a
 // full line under the field (P3): hiding it behind a click would hide the
 // next thing to do.
@@ -20,14 +24,13 @@
 // the marker.
 
 export interface ProvenanceMarker {
-  /** null: the word alone, no mark (#397: Ryan's 2026-10-26 ruling, a
-   *  default reads plain "default"). */
+  /** null: the word alone, with no mark (plain "default"). */
   glyph: "✓" | "⚠" | "◌" | "i" | null;
   word: string;
   tone: "ok" | "guess" | "pending" | "info" | "plain";
 }
 
-const OSM_WORDS: Record<string, { word: string; glyph: ProvenanceMarker["glyph"] }> = {
+const OSM_WORDS: Record<string, { word: string; glyph: NonNullable<ProvenanceMarker["glyph"]> }> = {
   measured: { word: "measured", glyph: "✓" },
   // R108 / WhatC5.dc.html: a value inferred off the road is a guess "from
   // the road", the words the street class's guess uses too.
@@ -39,25 +42,25 @@ const OSM_WORDS: Record<string, { word: string; glyph: ProvenanceMarker["glyph"]
   withdrawn: { word: "withdrawn", glyph: "◌" },
 };
 
-const TONE: Record<NonNullable<ProvenanceMarker["glyph"]>, ProvenanceMarker["tone"]> = {
+type Glyph = NonNullable<ProvenanceMarker["glyph"]>;
+
+const TONE: Record<Glyph, ProvenanceMarker["tone"]> = {
   "✓": "ok",
   "⚠": "guess",
   "◌": "pending",
   i: "info",
 };
 
-function mk(glyph: ProvenanceMarker["glyph"], word: string): ProvenanceMarker {
-  return { glyph, word, tone: glyph === null ? "plain" : TONE[glyph] };
+function mk(glyph: Glyph, word: string): ProvenanceMarker {
+  return { glyph, word, tone: TONE[glyph] };
 }
 
-/** `plainDefault` (#397): the row's default reads plain "default", no
- *  mark (Ryan, 2026-10-26, amending R110 Q8:
- *  https://github.com/rtmakatura/conestruct/issues/411#issuecomment-6410071272).
- *  #397 passes it for its rows (length, work type, lanes); the other
- *  "✓ default" rows are #411's. */
+/** A "default" line reads plain "default", no mark, on every row (Ryan,
+ *  2026-10-26, amending R110 Q8:
+ *  https://github.com/rtmakatura/conestruct/issues/411#issuecomment-6410071272). */
 export function markerOf(
   line: string,
-  opts: { amber?: boolean; error?: boolean; plainDefault?: boolean } = {},
+  opts: { amber?: boolean; error?: boolean } = {},
 ): ProvenanceMarker | null {
   if (opts.error || line.startsWith("⚠")) return null;
   if (line.startsWith("OSM · ")) {
@@ -69,8 +72,9 @@ export function markerOf(
   }
   if (opts.amber) return mk("⚠", line.split(" · ").pop() ?? line);
   if (/^(your change|your answer|operator-set)\b/.test(line)) return mk("✓", "yours");
-  // R110 Q7 / Q8: the value the plan started from, until changed.
-  if (/^default\b/.test(line)) return mk(opts.plainDefault ? null : "✓", "default");
+  // R110 Q7 / Q8: the value the plan started from, until changed.  Ryan,
+  // 2026-10-26: plain "default", no mark.
+  if (/^default\b/.test(line)) return { glyph: null, word: "default", tone: "plain" };
   if (/^(not set|optional)\b/.test(line) || line === "MUTCD + Colorado Supplement only") {
     return mk("◌", "not set");
   }

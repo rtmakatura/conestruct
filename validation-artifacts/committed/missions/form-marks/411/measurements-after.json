@@ -1,0 +1,338 @@
+{
+ "390": {
+  "proposedMarkUnpressed": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17
+  },
+  "proposalNote": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17
+  },
+  "xProposedMark": {
+   "glyphLeftPx": 20.17,
+   "wordLeftPx": 36.36
+  },
+  "xProposalNote": {
+   "glyphLeftPx": 0,
+   "wordLeftPx": 16.19
+  },
+  "sideWarnLine": {
+   "text": "⚠ ",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17
+  },
+  "kindBlockUnpressed": {
+   "hostHeight": 320.25,
+   "gateNoteTopFromHost": 273,
+   "noteHeight": 47.25,
+   "noteMarginTop": "8px"
+  },
+  "proposedMarkPressed": null,
+  "kindChipPressedText": "Shoulder workTA-3/TA-5 · S-630-1",
+  "kindPressedHasMark": 0,
+  "kindPressedHasNote": 0,
+  "kindBlockPressed": {
+   "hostHeight": 265,
+   "gateNoteTopFromHost": 217.75,
+   "noteHeight": null,
+   "noteMarginTop": null
+  },
+  "marker-speed-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15.031,
+   "triggerWidthPx": 68.797
+  },
+  "marker-speed": {
+   "text": "✓",
+   "color": "rgb(79, 215, 135)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 9.35,
+   "trigger": "✓ measured"
+  },
+  "marker-speed-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 290.2,
+    "w": 68.8
+   }
+  },
+  "marker-night-wordx": {
+   "text": "default",
+   "wordLeftPx": null
+  },
+  "marker-night": null,
+  "marker-night-word": {
+   "text": "default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 311.95,
+    "w": 47.05
+   }
+  },
+  "marker-reduction-wordx": {
+   "text": "default",
+   "wordLeftPx": null
+  },
+  "marker-reduction": null,
+  "marker-reduction-word": {
+   "text": "default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 311.95,
+    "w": 47.05
+   }
+  },
+  "marker-lanes-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15.031,
+   "triggerWidthPx": 68.797
+  },
+  "marker-lanes": {
+   "text": "✓",
+   "color": "rgb(79, 215, 135)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 9.35,
+   "trigger": "✓ measured"
+  },
+  "marker-lanes-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 290.2,
+    "w": 68.8
+   }
+  },
+  "marker-road-type-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.203,
+   "triggerWidthPx": 103.578
+  },
+  "marker-road-type": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-road-type-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 255.42,
+    "w": 103.58
+   }
+  },
+  "marker-street-class-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.203,
+   "triggerWidthPx": 103.578
+  },
+  "marker-street-class": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-street-class-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 255.42,
+    "w": 103.58
+   }
+  },
+  "markerAbout": {
+   "text": "i",
+   "color": "rgb(52, 169, 232)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.55
+  }
+ },
+ "1440": {
+  "proposedMarkUnpressed": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17
+  },
+  "proposalNote": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17
+  },
+  "xProposedMark": {
+   "glyphLeftPx": 20.17,
+   "wordLeftPx": 36.36
+  },
+  "xProposalNote": {
+   "glyphLeftPx": 0,
+   "wordLeftPx": 16.19
+  },
+  "sideWarnLine": {
+   "text": "⚠ ",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17
+  },
+  "kindBlockUnpressed": {
+   "hostHeight": 110.75,
+   "gateNoteTopFromHost": 95,
+   "noteHeight": 15.75,
+   "noteMarginTop": "8px"
+  },
+  "proposedMarkPressed": null,
+  "kindChipPressedText": "Shoulder workTA-3/TA-5 · S-630-1",
+  "kindPressedHasMark": 0,
+  "kindPressedHasNote": 0,
+  "kindBlockPressed": {
+   "hostHeight": 87,
+   "gateNoteTopFromHost": 71.25,
+   "noteHeight": null,
+   "noteMarginTop": null
+  },
+  "marker-speed-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15.031,
+   "triggerWidthPx": 68.797
+  },
+  "marker-speed": {
+   "text": "✓",
+   "color": "rgb(79, 215, 135)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 9.35,
+   "trigger": "✓ measured"
+  },
+  "marker-speed-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 297,
+    "w": 68.8
+   }
+  },
+  "marker-night-wordx": {
+   "text": "default",
+   "wordLeftPx": null
+  },
+  "marker-night": null,
+  "marker-night-word": {
+   "text": "default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 736,
+    "w": 47.05
+   }
+  },
+  "marker-reduction-wordx": {
+   "text": "default",
+   "wordLeftPx": null
+  },
+  "marker-reduction": null,
+  "marker-reduction-word": {
+   "text": "default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 736,
+    "w": 47.05
+   }
+  },
+  "marker-lanes-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15.031,
+   "triggerWidthPx": 68.797
+  },
+  "marker-lanes": {
+   "text": "✓",
+   "color": "rgb(79, 215, 135)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 9.35,
+   "trigger": "✓ measured"
+  },
+  "marker-lanes-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 297,
+    "w": 68.8
+   }
+  },
+  "marker-road-type-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.203,
+   "triggerWidthPx": 103.578
+  },
+  "marker-road-type": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-road-type-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 297,
+    "w": 103.58
+   }
+  },
+  "marker-street-class-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.203,
+   "triggerWidthPx": 103.578
+  },
+  "marker-street-class": {
+   "text": "⚠",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-street-class-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 297,
+    "w": 103.58
+   }
+  },
+  "markerAbout": {
+   "text": "i",
+   "color": "rgb(52, 169, 232)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.55
+  }
+ }
+}

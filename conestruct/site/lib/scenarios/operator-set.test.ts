@@ -3,7 +3,7 @@
 // Authority: validation-artifacts/committed/setup-what-redesign/rulings.md.
 // Q4: "Never overwrite a value the operator set, road type included."
 // Q7: lane width carries "its own source"; Q8: Hours and Speed reduction
-// read "✓ default" until changed, then "✓ yours".  One record serves all
+// read plain "default" until changed (amended 2026-10-26), then "✓ yours".  One record serves all
 // four: `meta.operatorSet`, written by the operator's writers only.
 
 import { describe, expect, it } from "vitest";

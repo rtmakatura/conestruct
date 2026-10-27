@@ -1,0 +1,30 @@
+# #411 full vitest runs that failed, and each failing test's own result
+
+## Run 1 (after the plain "default" / "⚠ proposed" / marker-hue edits, before any test was amended)
+4 failed | 2558 passed | 1 skipped. All four pin the old marks this change replaces (expected; amended in this diff, not flakes):
+- components/WhatBand.declutter.test.tsx > one quiet marker per field (R98, P9) > at rest each field shows a symbol + word, not its sentence
+- components/WhatBand.step2-layout.test.tsx > R126: one marker per row, none of them 'i about' > Carriageway: the label, and default-or-yours with no detection behind it
+- components/bands/PlanDetails.test.tsx > hours and the speed reduction say whose value they show > default until changed
+- components/bands/WhereBand.kind-proposal.test.tsx > #284: the proposed kind > marks the proposed chip and prints the backend's reason, pressing nothing
+
+## Run 2 (after the ✓-verdict edits, before those tests were amended)
+6 failed | 2565 passed | 1 skipped. All six pin the ✓ verdict glyphs those edits removed. They are not flakes, and they were NOT amended: the edits were withdrawn (rulings.md, call 6), so each test runs on unchanged sources.
+- components/GeneratorShell.needs-you.test.tsx > #288 step 3 — NEEDS YOU mounted in the results stack > R99: the header count equals the rows listed; what passed folds behind a labelled count
+- components/NeedsYouConditions.test.tsx > NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) > rules 74–77: every row is glyph / body+provenance / citation+action, one button in the action track
+- components/NeedsYouConditions.test.tsx > NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) > #248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none)
+- components/ScheduleField.windows-block.test.tsx > #227 schedule window reference block > evaluated: same rows, same order, same labels — only glyph and value change
+- components/WhatBand.step2-layout.test.tsx > R127 Q5: the windows footer line, in the check's own words > inside
+- components/bands/RevisionPanel.test.tsx > #289 fidelity F7 — rules 90–95.4 and 121 > rule 95.4: 7c's status row leads with ✓ in rule 18's hue
+
+Edits withdrawn; each passes on unchanged sources (final run). Each one run alone on the branch (repair cycle 2, `npx vitest run <file> -t "<name>"`):
+- GeneratorShell.needs-you.test.tsx > R99: the header count equals the rows listed ... : 1 passed
+- NeedsYouConditions.test.tsx > rules 74–77: every row is glyph ... : 1 passed
+- NeedsYouConditions.test.tsx > #248: details[0] is not printed ... : 1 passed
+- ScheduleField.windows-block.test.tsx > evaluated: same rows, same order ... : 1 passed
+- WhatBand.step2-layout.test.tsx > R127 Q5 ... > inside : 1 passed
+- bands/RevisionPanel.test.tsx > rule 95.4: 7c's status row ... : 1 passed
+These six test files are byte-identical to the base on this branch. The withdrawn behaviour is filed as #414.
+
+# Run 3 (repair cycle 3, 2026-10-26), full vitest on the cycle-3 tree: 1 failed | 2589 passed | 1 skipped
+components/landing/Landing.test.tsx > landing v2 — the forms send (#346) > the job form posts exactly the route's keys, then is replaced by its confirmation
+# Alone: Landing.test.tsx 31 of 31 passed. A file this branch does not touch (landing form); timing flake under the full run.

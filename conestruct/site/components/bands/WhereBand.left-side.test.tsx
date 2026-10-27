@@ -146,6 +146,8 @@ describe("#300: the side control on a one-way street", () => {
     expect(options.map((o) => o.getAttribute("aria-checked"))).toEqual(["false"]);
     const line = document.querySelector('[data-testid="side-control-stale"]');
     expect(line?.textContent).toBe(`⚠ ${NOT_SHOULDER}`);
+    // #411 (Rule 18): the ⚠ in its own hue, not the line's faint ink.
+    expect(line?.querySelector(".sym-warn")?.textContent).toBe("⚠ ");
     expect(document.querySelector('[data-testid="side-control-note"]')).toBeNull();
     // Picking the offered curb writes it, and the line goes.
     await act(async () => {

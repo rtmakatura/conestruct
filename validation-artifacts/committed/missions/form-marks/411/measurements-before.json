@@ -1,0 +1,376 @@
+{
+ "390": {
+  "proposedMarkUnpressed": {
+   "text": " · ✓ proposed",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  },
+  "proposalNote": {
+   "text": "✓ proposed: One lane each way leaves shoulder work as the only kind this road can take. Pick it to use it.",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  },
+  "xProposedMark": {
+   "glyphLeftPx": 20.16,
+   "wordLeftPx": 35.16
+  },
+  "xProposalNote": {
+   "glyphLeftPx": 0,
+   "wordLeftPx": 15
+  },
+  "sideWarnLine": {
+   "text": "⚠ ",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  },
+  "kindBlockUnpressed": {
+   "hostHeight": 320.25,
+   "gateNoteTopFromHost": 273,
+   "noteHeight": 47.25,
+   "noteMarginTop": "8px"
+  },
+  "proposedMarkPressed": {
+   "text": " · ✓ proposed",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(19.6, 42.1, 60.1)",
+   "ratio": 5.53
+  },
+  "kindChipPressedText": "Shoulder workTA-3/TA-5 · S-630-1 · ✓ proposed",
+  "kindPressedHasMark": 1,
+  "kindPressedHasNote": 1,
+  "kindBlockPressed": {
+   "hostHeight": 320.25,
+   "gateNoteTopFromHost": 273,
+   "noteHeight": 47.25,
+   "noteMarginTop": "8px"
+  },
+  "marker-speed-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 68.766
+  },
+  "marker-speed": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ measured"
+  },
+  "marker-speed-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 290.23,
+    "w": 68.77
+   }
+  },
+  "marker-night-wordx": {
+   "text": "✓ default",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 62.047
+  },
+  "marker-night": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ default"
+  },
+  "marker-night-word": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 296.95,
+    "w": 62.05
+   }
+  },
+  "marker-reduction-wordx": {
+   "text": "✓ default",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 62.047
+  },
+  "marker-reduction": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ default"
+  },
+  "marker-reduction-word": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 296.95,
+    "w": 62.05
+   }
+  },
+  "marker-lanes-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 68.766
+  },
+  "marker-lanes": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ measured"
+  },
+  "marker-lanes-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 290.23,
+    "w": 68.77
+   }
+  },
+  "marker-road-type-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.172,
+   "triggerWidthPx": 103.547
+  },
+  "marker-road-type": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-road-type-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 255.45,
+    "w": 103.55
+   }
+  },
+  "marker-street-class-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.172,
+   "triggerWidthPx": 103.547
+  },
+  "marker-street-class": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-street-class-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 255.45,
+    "w": 103.55
+   }
+  },
+  "markerAbout": {
+   "text": "i about",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  }
+ },
+ "1440": {
+  "proposedMarkUnpressed": {
+   "text": " · ✓ proposed",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  },
+  "proposalNote": {
+   "text": "✓ proposed: One lane each way leaves shoulder work as the only kind this road can take. Pick it to use it.",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  },
+  "xProposedMark": {
+   "glyphLeftPx": 20.16,
+   "wordLeftPx": 35.16
+  },
+  "xProposalNote": {
+   "glyphLeftPx": 0,
+   "wordLeftPx": 15
+  },
+  "sideWarnLine": {
+   "text": "⚠ ",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  },
+  "kindBlockUnpressed": {
+   "hostHeight": 110.75,
+   "gateNoteTopFromHost": 95,
+   "noteHeight": 15.75,
+   "noteMarginTop": "8px"
+  },
+  "proposedMarkPressed": {
+   "text": " · ✓ proposed",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(19.6, 42.1, 60.1)",
+   "ratio": 5.53
+  },
+  "kindChipPressedText": "Shoulder workTA-3/TA-5 · S-630-1 · ✓ proposed",
+  "kindPressedHasMark": 1,
+  "kindPressedHasNote": 1,
+  "kindBlockPressed": {
+   "hostHeight": 110.75,
+   "gateNoteTopFromHost": 95,
+   "noteHeight": 15.75,
+   "noteMarginTop": "8px"
+  },
+  "marker-speed-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 68.766
+  },
+  "marker-speed": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ measured"
+  },
+  "marker-speed-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 297,
+    "w": 68.77
+   }
+  },
+  "marker-night-wordx": {
+   "text": "✓ default",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 62.047
+  },
+  "marker-night": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ default"
+  },
+  "marker-night-word": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 736,
+    "w": 62.05
+   }
+  },
+  "marker-reduction-wordx": {
+   "text": "✓ default",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 62.047
+  },
+  "marker-reduction": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ default"
+  },
+  "marker-reduction-word": {
+   "text": "✓ default",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 736,
+    "w": 62.05
+   }
+  },
+  "marker-lanes-wordx": {
+   "text": "✓ measured",
+   "wordLeftPx": 15,
+   "triggerWidthPx": 68.766
+  },
+  "marker-lanes": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "trigger": "✓ measured"
+  },
+  "marker-lanes-word": {
+   "text": "✓ measured",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47,
+   "box": {
+    "x": 297,
+    "w": 68.77
+   }
+  },
+  "marker-road-type-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.172,
+   "triggerWidthPx": 103.547
+  },
+  "marker-road-type": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-road-type-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 297,
+    "w": 103.55
+   }
+  },
+  "marker-street-class-wordx": {
+   "text": "⚠ from the road",
+   "wordLeftPx": 16.172,
+   "triggerWidthPx": 103.547
+  },
+  "marker-street-class": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "trigger": "⚠ from the road"
+  },
+  "marker-street-class-word": {
+   "text": "⚠ from the road",
+   "color": "rgb(244, 192, 32)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 10.17,
+   "box": {
+    "x": 297,
+    "w": 103.55
+   }
+  },
+  "markerAbout": {
+   "text": "i about",
+   "color": "rgb(147, 160, 176)",
+   "ground": "rgb(16.0, 28.0, 41.0)",
+   "ratio": 6.47
+  }
+ }
+}

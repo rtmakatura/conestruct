@@ -33,10 +33,6 @@ describe("markerOf", () => {
     // R108: the two guesses.
     ["guessed, not confirmed · OSM highway=primary · from the road", true, "⚠", "from the road", "guess"],
     ["guessed, not confirmed · from the pin", true, "⚠", "from the pin", "guess"],
-    // R110 Q7 / Q8: a value the plan started from, until the operator changes it.
-    ["default · the plan's standard lane; detection doesn't measure width", false, "✓", "default", "ok"],
-    ["default · daytime; night work adds retroreflective devices", false, "✓", "default", "ok"],
-    ["default · no lower limit through the zone", false, "✓", "default", "ok"],
     // R108: the pin's lookup in flight, for an empty jurisdiction.
     ["checking the pin's boundary data", false, "◌", "checking", "pending"],
     ["median present · every other road type sets this itself (#85)", false, "i", "about", "info"],
@@ -49,6 +45,18 @@ describe("markerOf", () => {
     expect(
       markerOf("not evaluated: the check didn't answer; the option shown stands", { error: true }),
     ).toBeNull();
+  });
+
+  // R110 Q7 / Q8, amended by Ryan 2026-10-26: "'✓ default' becomes plain
+  // 'default', with no mark", on every row (#411 cycle 3: no opt-in).
+  it.each([
+    "default · the plan's standard lane; detection doesn't measure width",
+    "default · daytime; night work adds retroreflective devices",
+    "default · no lower limit through the zone",
+    "default · undivided until you say otherwise",
+    "default · the plan's starting road type",
+  ])("%s → the word alone, no mark", (text) => {
+    expect(markerOf(text)).toEqual({ glyph: null, word: "default", tone: "plain" });
   });
 
   it("a line that needs the operator now stays a full line", () => {

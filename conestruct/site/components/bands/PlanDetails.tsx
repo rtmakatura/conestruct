@@ -7,9 +7,10 @@
 // class, Carriageway (One-way / Divided), Hours and Speed reduction", each
 // a segmented control split evenly (R107: "this fixes the empty gap after
 // 'Arterial'").  R108: the street class is prefilled from the road and
-// marked as a guess; there is no Confirm.  R110 Q8: Hours and Speed
-// reduction read "✓ default" until changed, then "✓ yours"; the
-// reduction's off option reads "None".
+// marked as a guess; there is no Confirm.  R110 Q8 as amended by Ryan,
+// 2026-10-26 (#411): Hours and Speed reduction read plain "default", with
+// no mark, until changed, then "✓ yours"; the reduction's off option
+// reads "None".
 //
 // Earlier rulings this keeps (each still stands):
 //   #289 hand-check, correction 1 — the flagger's four recovery confirms
@@ -96,7 +97,8 @@ export function streetClassProvenance(scenario: Scenario): { text: string; amber
     : { text: "not set · operator-set when picked", amber: false };
 }
 
-/** R110 Q8 — "✓ default" until changed, then "✓ yours".  A value away
+/** R110 Q8 (amended 2026-10-26, #411) — plain "default" until changed,
+ *  then "✓ yours".  A value away
  *  from the default is the operator's even on a plan saved before the
  *  record existed. */
 function defaultOrYours(mine: boolean, defaultLine: string): string {
@@ -111,7 +113,6 @@ function Cell({
   htmlFor,
   provenance,
   amber = false,
-  plainDefault = false,
   line = null,
   detail = null,
   children,
@@ -121,8 +122,6 @@ function Cell({
   htmlFor?: string;
   provenance: string;
   amber?: boolean;
-  /** #397: a default on this row reads plain "default", no mark. */
-  plainDefault?: boolean;
   /** A detection fact about THIS field (fix 3), behind its marker. */
   line?: { key: string; text: string; amber: boolean } | null;
   /** Anything else about the field (street class's evidence). */
@@ -145,7 +144,7 @@ function Cell({
         </span>
       }
       // R98: the line as one quiet marker; "⚠ needs you" stays a line.
-      marker={markerOf(provenance, { amber, plainDefault })}
+      marker={markerOf(provenance, { amber })}
       info={
         hasDetail ? (
           <>
@@ -216,7 +215,6 @@ export function PlanDetailCells({
             !isKindDefault(scenario, "workType"),
             "default · this kind's usual job; change it if the job differs",
           )}
-          plainDefault
           testid="work-type"
         >
           <select

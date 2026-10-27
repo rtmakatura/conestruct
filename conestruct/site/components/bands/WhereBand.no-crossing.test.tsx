@@ -97,6 +97,8 @@ describe("#317: no crossing marked", () => {
     await openWhere();
     const line = await waitFor('[data-testid="side-control-not-marked"]');
     expect(line?.textContent).toBe(`⚠ ${LINE}`);
+    // #411 (Rule 18): the ⚠ in its own hue, not the line's faint ink.
+    expect(line?.querySelector(".sym-warn")?.textContent).toBe("⚠ ");
     expect(document.querySelectorAll('[data-testid="side-option"]')).toHaveLength(0);
     expect(document.querySelector('[data-testid="side-control-note"]')).toBeNull();
     expect(document.body.textContent).not.toContain("the road's sides are unavailable");

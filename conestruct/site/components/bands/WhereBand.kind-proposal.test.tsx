@@ -2,8 +2,8 @@
 //
 // #284: the proposed kind.  The corridor-geometry answer carries
 // `kind_proposal` only when the road leaves exactly one live kind.  The
-// chip says "✓ proposed" and the backend's reason prints under the row,
-// but nothing is pressed until a person clicks (Ryan, 2026-10-14: "never
+// chip says "⚠ proposed" (#411) and the backend's reason prints under the
+// row until the chip is picked (Ryan, 2026-10-26), but nothing is pressed until a person clicks (Ryan, 2026-10-14: "never
 // pre-selected"), and the scenario's kind is the click's, not the
 // proposal's (suggest-never-set).
 
@@ -94,11 +94,14 @@ describe("#284: the proposed kind", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER} />);
     await openWhere();
     const mark = await waitFor('[data-testid="kind-proposed-mark"]');
-    expect(mark?.textContent).toBe(" · ✓ proposed");
+    // #411 (Ryan, 2026-10-26, amending #284): "⚠ proposed", the ⚠ in its
+    // rule-18 hue.
+    expect(mark?.textContent).toBe(" · ⚠ proposed");
+    expect(mark?.querySelector(".sym-warn")?.textContent).toBe("⚠");
     expect(chip("shoulder").contains(mark)).toBe(true);
-    expect(document.querySelector('[data-testid="kind-proposal-note"]')?.textContent).toBe(
-      `✓ proposed: ${BASIS} Pick it to use it.`,
-    );
+    const note = document.querySelector('[data-testid="kind-proposal-note"]');
+    expect(note?.textContent).toBe(`⚠ proposed: ${BASIS} Pick it to use it.`);
+    expect(note?.querySelector(".sym-warn")?.textContent).toBe("⚠");
     expect(chip("shoulder").getAttribute("aria-pressed")).toBe("false");
     expect(chip("flagger_lane_closure").getAttribute("aria-pressed")).toBe("true");
     expect(chip("near_intersection").getAttribute("aria-pressed")).toBe("false");
@@ -113,6 +116,32 @@ describe("#284: the proposed kind", () => {
     });
     expect(chip("shoulder").getAttribute("aria-pressed")).toBe("true");
     expect(chip("flagger_lane_closure").getAttribute("aria-pressed")).toBe("false");
+  });
+
+  // Ryan, 2026-10-26 (#411, amends #284): "Once the operator picks the
+  // proposed kind chip, '⚠ proposed' and its note go away, and ● alone
+  // says 'chosen'."
+  it("once the proposed chip is picked, its '⚠ proposed' and the note go", async () => {
+    render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER} />);
+    await openWhere();
+    await waitFor('[data-testid="kind-proposed-mark"]');
+    await act(async () => {
+      chip("shoulder").click();
+    });
+    expect(chip("shoulder").getAttribute("aria-pressed")).toBe("true");
+    expect(document.querySelector('[data-testid="kind-proposed-mark"]')).toBeNull();
+    expect(document.querySelector('[data-testid="kind-proposal-note"]')).toBeNull();
+    expect(chip("shoulder").textContent).not.toContain("⚠");
+    expect(chip("shoulder").textContent).not.toContain("proposed");
+    // Another kind picked: the proposal is unanswered again, so it shows.
+    await act(async () => {
+      chip("flagger_lane_closure").click();
+    });
+    expect(chip("shoulder").getAttribute("aria-pressed")).toBe("false");
+    expect(
+      document.querySelector('[data-testid="kind-proposed-mark"]')?.textContent,
+    ).toBe(" · ⚠ proposed");
+    expect(document.querySelector('[data-testid="kind-proposal-note"]')).not.toBeNull();
   });
 
   it("no proposal: no mark, no note, the chips as before", async () => {

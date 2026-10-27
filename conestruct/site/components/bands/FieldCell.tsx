@@ -119,7 +119,17 @@ export function FieldCell({
       data-testid={`info-toggle-${id}`}
       className={`a-mark tr-prov is-${m.tone}`}
     >
-      <span aria-hidden>{m.glyph === null ? m.word : `${m.glyph} ${m.word}`}</span>
+      {/* #411: the glyph takes its rule-18 hue from symClass (the word
+          keeps the marker's own ink: faint, except the guess tone, whose
+          word stays amber via .a-mark.is-guess); a null glyph is the word
+          alone (plain "default", Ryan 2026-10-26). */}
+      {m.glyph === null ? (
+        <span aria-hidden>{m.word}</span>
+      ) : (
+        <span aria-hidden>
+          <span className={symClass(m.glyph)}>{m.glyph}</span> {m.word}
+        </span>
+      )}
     </button>
   );
 

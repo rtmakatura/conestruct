@@ -185,9 +185,9 @@ describe("one quiet marker per field (R98, P9)", () => {
     expect(trigger("street-class").textContent).toBe("◌ not set");
     expect(trigger("jurisdiction").textContent).toBe("◌ not set");
     expect(trigger("work-dates").textContent).toBe("◌ not set");
-    // R110 Q8.
-    expect(trigger("night").textContent).toBe("✓ default");
-    expect(trigger("reduction").textContent).toBe("✓ default");
+    // R110 Q8, amended by Ryan 2026-10-26 (#411): plain "default", no mark.
+    expect(trigger("night").textContent).toBe("default");
+    expect(trigger("reduction").textContent).toBe("default");
     // The full line is in the closed popover, one click away.
     expect(panel("speed").hasAttribute("hidden")).toBe(true);
     expect(panel("speed").querySelector('[data-testid="prov-speed"]')!.textContent).toBe(
