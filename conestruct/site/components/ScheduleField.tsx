@@ -190,16 +190,31 @@ export function windowsSummary({
   scenario,
   jurisdiction = null,
   verifying = false,
+  declined = false,
+  errored = false,
 }: {
   scenario: Scenario;
   jurisdiction?: JurisdictionBlock | null;
   verifying?: boolean;
+  /** #398: the plan's check answered with a decline (400), so no block
+   *  is coming until the input changes. */
+  declined?: boolean;
+  /** #398: the check failed without a decline; no block is coming. */
+  errored?: boolean;
 }): { head: string; glyph: string; text: string; tone: string } {
   const none = "text-[color:var(--none)]";
   if (!scenario.jurisdiction_key) {
     return { head: "Windows", glyph: "", text: "select a jurisdiction to check", tone: none };
   }
   if (!jurisdiction) {
+    // #398 (Rule 10): "loading" only while a check is open.  An answer
+    // with no block says the windows weren't checked, and why.
+    if (declined) {
+      return { head: "Windows", glyph: "", text: "not checked: the plan was declined", tone: none };
+    }
+    if (errored) {
+      return { head: "Windows", glyph: "", text: "not checked: the check didn't answer", tone: none };
+    }
     return { head: "Windows", glyph: "◌", text: "loading", tone: none };
   }
   const head = `${jurisdiction.name} windows`;

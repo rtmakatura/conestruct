@@ -922,7 +922,11 @@ export function GeneratorShell({
   // answer's verdict as current for up to 350 ms (rule 10).  Same
   // identity comparison as the #197 stamps (every writer spread-replaces).
   // Content surfaces keep #187's loading-only stale-while-revalidate.
-  const fetchDeferred = scenario !== fetchScenario;
+  // #398: against the WIRE scenario, which is what `fetchScenario`
+  // debounces.  Once generated the wire is `withSiteScan(scenario)`, a
+  // different object, so comparing the live `scenario` never matched
+  // again and a held block read as revalidating with nothing in flight.
+  const fetchDeferred = wireScenario !== fetchScenario;
   const breakdownInFlight =
     deviceBreakdown.state === "loading" ||
     (deviceBreakdown.state === "ready" && fetchDeferred);
@@ -1872,6 +1876,9 @@ export function GeneratorShell({
                 // band the only pre-generate home for that verdict.
                 jurisdictionRevalidating={jurisdictionRevalidating}
                 jurisdictionErrored={deviceBreakdown.state === "error"}
+                jurisdictionDeclined={
+                  deviceBreakdown.state === "error" && deviceBreakdown.httpStatus === 400
+                }
                 // R108: the pin lookup, for the jurisdiction cell's
                 // evidence and its warnings (the guess itself is already
                 // the scenario's value).

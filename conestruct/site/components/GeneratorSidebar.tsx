@@ -85,6 +85,9 @@ interface Props {
    *  current (rule 10).  Passed straight through to ScheduleField. */
   jurisdictionRevalidating?: boolean;
   jurisdictionErrored?: boolean;
+  /** #398: the error is the plan's decline (400); the windows line says
+   *  so rather than "loading". */
+  jurisdictionDeclined?: boolean;
   // R108: the pin's boundary lookup, for the WHAT band's jurisdiction
   // cell (its evidence and warnings).  The guess itself is already the
   // scenario's value; nothing here confirms anything.
@@ -147,6 +150,7 @@ export function GeneratorSidebar({
   jurisdictionLoading = false,
   jurisdictionRevalidating = false,
   jurisdictionErrored = false,
+  jurisdictionDeclined = false,
   jurisdictionLookup,
   onClassification,
   kindState = "confirmed",
@@ -511,6 +515,8 @@ export function GeneratorSidebar({
           scenario,
           jurisdiction: jurisdictionBlock ?? null,
           verifying: jurisdictionRevalidating,
+          declined: jurisdictionDeclined,
+          errored: jurisdictionErrored,
         })}
       />
       {/* #193: the picker's close-restore fallback target.  The opener is

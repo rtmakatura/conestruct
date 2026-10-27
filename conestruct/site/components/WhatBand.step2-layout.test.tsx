@@ -88,6 +88,18 @@ describe("R127 Q5: the windows footer line, in the check's own words", () => {
   it("the block not loaded yet", () => {
     expect(said(windowsSummary({ scenario: sc(denver), jurisdiction: null }))).toBe("Windows · ◌ loading");
   });
+  it("#398: a declined plan, and a check that didn't answer, never read 'loading'", () => {
+    expect(
+      said(windowsSummary({ scenario: sc(denver), jurisdiction: null, declined: true, errored: true })),
+    ).toBe("Windows · not checked: the plan was declined");
+    expect(said(windowsSummary({ scenario: sc(denver), jurisdiction: null, errored: true }))).toBe(
+      "Windows · not checked: the check didn't answer",
+    );
+    // A block on screen wins: the flags only speak to its absence.
+    expect(
+      said(windowsSummary({ scenario: sc(denver), jurisdiction: block(UNKNOWN), declined: true })),
+    ).toBe("Denver windows · set dates to check");
+  });
   it("none published", () => {
     expect(
       said(windowsSummary({ scenario: sc(denver), jurisdiction: block(UNKNOWN, "none") })),

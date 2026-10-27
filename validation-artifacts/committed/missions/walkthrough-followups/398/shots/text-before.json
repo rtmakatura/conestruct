@@ -1,0 +1,42 @@
+{
+ "390": {
+  "shoulderOpenRequests": [],
+  "cue": "◌ previous answer, refreshing…",
+  "cueSlot": {
+   "text": "◌ previous answer, refreshing…",
+   "width": 362,
+   "height": 16.75
+  },
+  "cueBlock": {
+   "text": "TOTAL DEVICES 40 on the plan sheet UNIQUE TYPES 12 distinct device types to source ↓ ALL (.ZIP) 4 files › ◌ previous answer, refreshing…",
+   "width": 362,
+   "height": 286.25
+  },
+  "flaggerOpenRequests": [],
+  "declinedWindowsLine": {
+   "text": "Windows · ◌ loading",
+   "width": 129.83,
+   "height": 44
+  }
+ },
+ "1440": {
+  "shoulderOpenRequests": [],
+  "cue": "◌ previous answer, refreshing…",
+  "cueSlot": {
+   "text": "◌ previous answer, refreshing…",
+   "width": 880,
+   "height": 16.75
+  },
+  "cueBlock": {
+   "text": "TOTAL DEVICES 40 on the plan sheet UNIQUE TYPES 12 distinct device types to source Denver · TCP Taper L 40 ft Buffer B 200 ft Device spacing 30 ft o.c. Work zone 1,000 ft 4 files ↓ ALL (.ZIP) Plan sheet PDF 11×17 · TA-3 · S-630-1 40 devices Download PDF ↓ Device list XLSX CDOT BID-READY 12 types Download XLSX ↓ Crew instructions PDF + MD SETUP + TAKEDOWN 14 steps PDF ↓ .md ↓ Audit trail PDF EVERY CHECK CITED 13 checks Download PDF ↓ ◌ previous answer, refreshing…",
+   "width": 880,
+   "height": 391.5
+  },
+  "flaggerOpenRequests": [],
+  "declinedWindowsLine": {
+   "text": "Windows · ◌ loading",
+   "width": 129.83,
+   "height": 32
+  }
+ }
+}

@@ -1,0 +1,13 @@
+# #398 red proof: the branch's two test files run against a git archive of the base 63f2d42 (conestruct/site), node_modules joined from the worktree.
+# 4 tests red on the base; 15 pass (14 others in WhatBand.step2-layout.test.tsx, plus the answered-plan case in GeneratorShell.wait-cues.test.tsx).
+# Repair cycle 1: the W4 test now asserts the /api/distance call was made (an added guard). On the base it passes that guard and still fails on the empty-slot assertion, the right reason.
+   × R127 Q5: the windows footer line, in the check's own words > #398: a declined plan, and a check that didn't answer, never read 'loading' 6ms
+     → expected 'Windows · ◌ loading' to be 'Windows · not checked: the plan was d…' // Object.is equality
+   × #398 W4 — the refreshing cue ends when the answer lands > after Generate settles on a plan with a jurisdiction, the cue's slot is empty, with /api/distance landing after the audit 1481ms
+     → and is empty: no request is open (P8): expected '◌ previous answer, refreshing…' to be '' // Object.is equality
+   × #398 W5 — the windows line on a plan with no answer > a declined plan says the windows weren't checked, never 'loading' 860ms
+     → expected 'Windows · ◌ loading' to be 'Windows · not checked: the plan was d…' // Object.is equality
+   × #398 W5 — the windows line on a plan with no answer > a failed check (not a decline) says it didn't answer, never 'loading' 855ms
+     → expected 'Windows · ◌ loading' to be 'Windows · not checked: the check didn…' // Object.is equality
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 15 passed (19)
