@@ -1,0 +1,118 @@
+{
+ "390": {
+  "colfax": {
+   "picker": " SEARCH + OR ENTER COORDINATES MANUALLY STREETS ⚠ WHICH ROAD? · 4 DETECTED FRANKLIN STREET SOUTHBOUND (RESIDENTIAL, 180°",
+   "ledgerUntouched": "✓ Found the spot East Colfax Avenue Eastbound CHANGE ✓ Work starts 60 ft E of Park Avenue MOVE ✓ Extent 1,000 ft · default CHANGE ✓ Which side is occupied? South side · eastbound traffic confirmed ⚠ Kind of work: confirm below needs you ◌ See the plan grow pending approaches lay out after you confirm",
+   "worklenUntouched": "Work zone length (ft) default",
+   "step1ClaimsUntouched": {
+    "yours": 0,
+    "operatorSet": 0,
+    "typed": 0,
+    "where": []
+   },
+   "ledgerTyped": "✓ Found the spot East Colfax Avenue Eastbound CHANGE ✓ Work starts 60 ft E of Park Avenue MOVE ✓ Extent 800 ft · typed CHANGE ✓ Which side is occupied? South side · eastbound traffic confirmed ⚠ Kind of work: confirm below needs you ◌ See the plan grow pending approaches lay out after you confirm",
+   "worklenTyped": "Work zone length (ft) ✓ yours your answer · the extent the plan is built for corridor lengths wait on the kind of work",
+   "workType": "Work type default Utility locate Survey crew Signal cabinet Guardrail repair Other",
+   "step2Header": "STEP 2 OF 4 WHAT 3 guesses marked ⚠ · change any that are wrong",
+   "step2ClaimsUntouched": {
+    "yours": 0,
+    "operatorSet": 0,
+    "typed": 0,
+    "where": []
+   }
+  },
+  "wadsworth": {
+   "picker": " SEARCH + OR ENTER COORDINATES MANUALLY STREETS ⚠ WHICH ROAD? · 4 DETECTED WADSWORTH BOULEVARD NORTHBOUND (PRIMARY, 1°) ",
+   "guessMarkers": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "whatHeader": "STEP 2 OF 4 WHAT 2 guesses marked ⚠ · change any that are wrong",
+   "lanesMarker": "default",
+   "lanes": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection",
+   "claimsExceptLength": {
+    "yours": 0,
+    "operatorSet": 1,
+    "typed": 0,
+    "where": [
+     "C SIGNAL PRESENT CROSS-STREET TYPE Rural, undivided Urban street Cross-street speed◌ not set Not set 25 mph 30 mph 35 mph 40 mph 45 mph 50 mph 55 mph not set · operator-set when picked CROSS-STREET LANE WIDTH 12 FT CROSS"
+    ]
+   }
+  },
+  "none": {
+   "picker": "No road detected",
+   "guessMarkersBefore": [
+    "⚠ from the pin"
+   ],
+   "headerBefore": "STEP 2 OF 4 WHAT 1 guess marked ⚠ · change any that are wrong",
+   "guessMarkers": [],
+   "whatHeader": "STEP 2 OF 4 WHAT nothing detected; set what the plan needs",
+   "lanesMarker": "default",
+   "lanes": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width",
+   "claimsUntouched": {
+    "yours": 0,
+    "operatorSet": 0,
+    "typed": 0,
+    "where": []
+   }
+  }
+ },
+ "1440": {
+  "colfax": {
+   "picker": " SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ⚠ WHICH ROAD? · 4 DETE",
+   "ledgerUntouched": "✓ Found the spot East Colfax Avenue Eastbound CHANGE ✓ Work starts 60 ft E of Park Avenue MOVE ✓ Extent 1,000 ft · default CHANGE ✓ Which side is occupied? South side · eastbound traffic confirmed ⚠ Kind of work: confirm below needs you ◌ See the plan grow pending approaches lay out after you confirm",
+   "worklenUntouched": "Work zone length (ft) default",
+   "step1ClaimsUntouched": {
+    "yours": 0,
+    "operatorSet": 0,
+    "typed": 0,
+    "where": []
+   },
+   "ledgerTyped": "✓ Found the spot East Colfax Avenue Eastbound CHANGE ✓ Work starts 60 ft E of Park Avenue MOVE ✓ Extent 800 ft · typed CHANGE ✓ Which side is occupied? South side · eastbound traffic confirmed ⚠ Kind of work: confirm below needs you ◌ See the plan grow pending approaches lay out after you confirm",
+   "worklenTyped": "Work zone length (ft) ✓ yours your answer · the extent the plan is built for corridor lengths wait on the kind of work",
+   "workType": "Work type default Utility locate Survey crew Signal cabinet Guardrail repair Other",
+   "step2Header": "STEP 2 OF 4 WHAT 3 guesses marked ⚠ · change any that are wrong",
+   "step2ClaimsUntouched": {
+    "yours": 0,
+    "operatorSet": 0,
+    "typed": 0,
+    "where": []
+   }
+  },
+  "wadsworth": {
+   "picker": " SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ⚠ WHICH ROAD? · 4 DETE",
+   "guessMarkers": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "whatHeader": "STEP 2 OF 4 WHAT 2 guesses marked ⚠ · change any that are wrong",
+   "lanesMarker": "default",
+   "lanes": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection",
+   "claimsExceptLength": {
+    "yours": 0,
+    "operatorSet": 1,
+    "typed": 0,
+    "where": [
+     "C SIGNAL PRESENT CROSS-STREET TYPE Rural, undivided Urban street Cross-street speed◌ not set Not set 25 mph 30 mph 35 mph 40 mph 45 mph 50 mph 55 mph not set · operator-set when picked CROSS-STREET LANE WIDTH 12 FT CROSS"
+    ]
+   }
+  },
+  "none": {
+   "picker": "No road detected",
+   "guessMarkersBefore": [
+    "⚠ from the pin"
+   ],
+   "headerBefore": "STEP 2 OF 4 WHAT 1 guess marked ⚠ · change any that are wrong",
+   "guessMarkers": [],
+   "whatHeader": "STEP 2 OF 4 WHAT nothing detected; set what the plan needs",
+   "lanesMarker": "default",
+   "lanes": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width",
+   "claimsUntouched": {
+    "yours": 0,
+    "operatorSet": 0,
+    "typed": 0,
+    "where": []
+   }
+  }
+ }
+}
