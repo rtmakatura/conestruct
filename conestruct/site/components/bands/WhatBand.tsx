@@ -465,8 +465,8 @@ export function WhatBand({
               : "default · set the real count",
         );
   // #397, Ryan's ruling above: the ⚠ sits on the doubt, in the row's
-  // details, not on the default.  It is not among the header's N, which
-  // counts the ⚠ marks the rows show (P2).
+  // details, not on the default.  It counts among the header's N (Ryan,
+  // 2026-10-27, #420: the count isn't from the road, Rule 10).
   const lanesDoubt =
     scenario.kind === "near_intersection" && !lanesMine && mapLanes !== undefined
       ? [
@@ -501,8 +501,9 @@ export function WhatBand({
   const dividedClause =
     showsDivided && detectedRow(detected, "Divided") ? clauseFor(detected, "Divided") : null;
 
-  // R108's N: the ⚠ markers on show, from the rows' own lines.
-  const warnMarkers = [
+  // R108's N: the ⚠ markers on show, from the rows' own lines, plus the
+  // near-intersection lane doubt (#420, replacing #397's R145-14).
+  const rowWarnMarkers = [
     markerOf(speedClause.text, { amber: speedClause.amber }),
     table.lanes && lanesValidation.ok
       ? markerOf(lanesClause.text, { amber: lanesClause.amber })
@@ -516,6 +517,7 @@ export function WhatBand({
       : null,
     markerOf(jurisdictionProv, { amber: jurisdictionAmber, error: jState === "not-evaluated" }),
   ].filter((m) => m?.glyph === "⚠").length;
+  const warnMarkers = rowWarnMarkers + lanesDoubt.length;
 
   return (
     <OpenBand

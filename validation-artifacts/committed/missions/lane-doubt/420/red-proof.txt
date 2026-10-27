@@ -1,0 +1,23 @@
+# #420 red proof: the amended untouched-provenance.test.tsx against base 8f9ba12
+# method: git archive 8f9ba12 conestruct/site into the scratchpad, this branch's test file copied in, WhatBand.tsx left at base; npx vitest run components/bands/untouched-provenance.test.tsx
+# Expected/Received lines cut to their header part
+
+   × W3: Lanes never read 'operator-set' for a count nobody picked > near-intersection on Wadsworth: the kind's 2 reads plain 'default', and the ⚠ sits on the line saying why the map's 4 isn't used 31ms
+   × W3: Lanes never read 'operator-set' for a count nobody picked > #420: the lane doubt adds to the row guesses (a speed guess and the doubt read '2 guesses') 17ms
+   × Repair 3: no false 'yours', no map where none was read > finding 3a (stated, #420): an edited near-intersection count is '✓ yours', its doubt line goes, and the header's N drops by the doubt 15ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > near-intersection on Wadsworth: the kind's 2 reads plain 'default', and the ⚠ sits on the line saying why the map's 4 isn't used
+AssertionError: expected 'STEP 2 OF 4WHATprefilled from the roa…' to contain '1 guess marked ⚠ · change any that ar…'
+Expected: "1 guess marked ⚠ · change any that are wrong"
+ FAIL  components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > #420: the lane doubt adds to the row guesses (a speed guess and the doubt read '2 guesses')
+AssertionError: expected 'STEP 2 OF 4WHAT1 guess marked ⚠ · cha…' to contain '2 guesses marked ⚠ · change any that …'
+Expected: "2 guesses marked ⚠ · change any that are wrong"
+ FAIL  components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > finding 3a (stated, #420): an edited near-intersection count is '✓ yours', its doubt line goes, and the header's N drops by the doubt
+AssertionError: expected 'STEP 2 OF 4WHATprefilled from the roa…' to contain '1 guess marked ⚠ · change any that ar…'
+Expected: "1 guess marked ⚠ · change any that are wrong"
+      Tests  3 failed | 18 passed (21)
+Received: "STEP 2 OF 4WHATprefilled from the roadAnything we got wrong?Everythin
+Received: "STEP 2 OF 4WHAT1 guess marked ⚠ · change any that are wrongAnythin
+Received: "STEP 2 OF 4WHATprefilled from the roadAnything we got wrong?Everythin
+
+# on this branch: Tests  21 passed (21)

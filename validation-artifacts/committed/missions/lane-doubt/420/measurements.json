@@ -1,0 +1,47 @@
+{
+ "method": "local next dev of git archive 8f9ba12 (before) and the same archive with this branch's WhatBand.tsx (after); script/shoot.mjs (from #397's, Wadsworth only); Playwright Chromium DPR 2; /api/road-bearing stubbed with Wadsworth Boulevard way 427683596, lanes=4, one-way, maxspeed 45 mph; work length 500; near_intersection kind; local-only gate token, made up and not printed; .env.local copied into the scratch copies for the run and deleted after",
+ "widths": {
+  "1440": {
+   "header_before": {
+    "text": "STEP 2 OF 4 WHAT 2 guesses marked ⚠ · change any that are wrong",
+    "width": 878,
+    "height": 44.75
+   },
+   "header_after": {
+    "text": "STEP 2 OF 4 WHAT 3 guesses marked ⚠ · change any that are wrong",
+    "width": 878,
+    "height": 44.75
+   },
+   "row_guess_markers_before": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "row_guess_markers_after": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "lanes_row_text_identical": true
+  },
+  "390": {
+   "header_before": {
+    "text": "STEP 2 OF 4 WHAT 2 guesses marked ⚠ · change any that are wrong",
+    "width": 360,
+    "height": 60.5
+   },
+   "header_after": {
+    "text": "STEP 2 OF 4 WHAT 3 guesses marked ⚠ · change any that are wrong",
+    "width": 360,
+    "height": 60.5
+   },
+   "row_guess_markers_before": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "row_guess_markers_after": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "lanes_row_text_identical": true
+  }
+ }
+}

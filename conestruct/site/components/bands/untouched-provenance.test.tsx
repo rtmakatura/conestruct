@@ -292,14 +292,29 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
     );
     expect(lanesText()).not.toMatch(FALSE_CLAIMS);
     expect(lanesText()).not.toContain("withdrawn");
-    // The header's N equals the ⚠ markers on show (P2); Lanes shows none.
-    const warned = Array.from(document.querySelectorAll('[data-testid^="info-toggle-"]')).filter(
-      (e) => e.textContent!.startsWith("⚠"),
-    ).length;
-    // On this fixture nothing else is a guess, so the header has none to
-    // count (it read "1 guess marked ⚠" while Lanes carried the ⚠).
-    expect(warned).toBe(0);
-    expect(document.body.textContent).toContain(whatHeader(warned, true));
+    // Ryan 2026-10-27 (#420, replacing R145-14): the header counts the
+    // lane doubt as a guess (Rule 10: the count isn't from the road).  No
+    // row marker is a ⚠ on this fixture, so the doubt is the header's one.
+    expect(guessesOnShow()).toBe(0);
+    expect(document.body.textContent).toContain(whatHeader(1, true));
+    expect(document.body.textContent).toContain("1 guess marked ⚠ · change any that are wrong");
+    expect(document.body.textContent).not.toContain("prefilled from the road");
+  });
+
+  it("#420: the lane doubt adds to the row guesses (a speed guess and the doubt read '2 guesses')", () => {
+    const r = road(4, 8);
+    const noSpeed = {
+      ...r,
+      candidate: { ...r.candidate, tags: { ...r.candidate.tags, maxspeed: null } },
+    } as unknown as ConfirmedRoad;
+    mountWhat(
+      pinned(DEFAULT_NEAR_INTERSECTION, noSpeed, {
+        guesses: { speed: { highwayClass: "primary" } },
+      }),
+    );
+    expect(guessesOnShow()).toBe(1);
+    expect(screen.getByTestId("detect-lanes-doubt")).toBeTruthy();
+    expect(document.body.textContent).toContain("2 guesses marked ⚠ · change any that are wrong");
   });
 
   it("near-intersection: the operator's count is recorded and reads '✓ yours'", () => {
@@ -405,16 +420,19 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
     expect(lanesText()).not.toMatch(FALSE_CLAIMS);
   });
 
-  it("finding 3a (stated): an edited near-intersection count is '✓ yours', its doubt line goes, and N doesn't change", () => {
+  it("finding 3a (stated, #420): an edited near-intersection count is '✓ yours', its doubt line goes, and the header's N drops by the doubt", () => {
     const base = pinned(DEFAULT_NEAR_INTERSECTION, road(4, 8));
     mountWhat(base);
     const before = guessesOnShow();
     expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
+    expect(document.body.textContent).toContain(whatHeader(before + 1, true));
     cleanup();
     mountWhat(setLanes(base, 3));
     expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("✓ yours");
     expect(screen.queryByTestId("detect-lanes-doubt")).toBeNull();
+    // The row markers don't change; the doubt and its guess go together.
     expect(guessesOnShow()).toBe(before);
+    expect(document.body.textContent).toContain(whatHeader(before, true));
   });
 
   it("finding 3b (stated): a near-intersection way with lanes:forward and no total reads 'default' with the doubt line", () => {
@@ -433,6 +451,8 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
     expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
     expect(screen.getByTestId("prov-lanes").textContent).toBe("default · set the real count");
     expect(screen.queryByTestId("detect-lanes-doubt")).toBeNull();
+    // #420: no doubt on show, so no lane guess in the header.
+    expect(document.body.textContent).toContain(whatHeader(guessesOnShow(), false));
   });
 
   // The length and work type rows are W1's and W2's.
