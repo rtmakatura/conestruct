@@ -1,0 +1,434 @@
+{
+ "390": {
+  "clarkson": {
+   "axe": {
+    "proposalUnpressed": [],
+    "proposalPressed": [],
+    "step2": []
+   },
+   "picker": " SEARCH − HIDE COORDINATE ENTRY LAT / LNG DECIMAL DEGREES STREETS ⚠ WHICH ROAD? · 2 DETECTED CLARKSON STREET NORTHBOUND (TERTIARY, 0°) 0 M FROM PIN · WAY 449328",
+   "tokens": {
+    "--pass": "#4fd787",
+    "--act": "#34a9e8",
+    "--warn": "#f4c020",
+    "--none": "#93a0b0",
+    "--ink-faint": "#93a0b0"
+   },
+   "proposalShown": true,
+   "chipUnpressed": "Shoulder work TA-3/TA-5 · S-630-1 · ⚠ proposed",
+   "note": "⚠ proposed: Only shoulder work fits this road: it is one-way, so a flagger has no opposing traffic to hold; and it has one lane in total. Pick it to use it.",
+   "markGlyph": {
+    "text": "⚠",
+    "cls": "sym-warn",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 10.17
+   },
+   "noteGlyph": {
+    "text": "⚠",
+    "cls": "sym-warn",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 10.17
+   },
+   "markWord": {
+    "text": "· ⚠ proposed",
+    "cls": null,
+    "color": "rgb(147, 160, 176)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 6.47
+   },
+   "noteWord": {
+    "text": "⚠ proposed: Only shoulder work fits this road: it is one-way, so a flagger has no opposing traffic to hold; and it has one lane in total. Pi",
+    "cls": "tr-prov mt-2",
+    "color": "rgb(147, 160, 176)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 6.47
+   },
+   "chipPressed": "Shoulder work TA-3/TA-5 · S-630-1",
+   "kindBlockPressed": "Shoulder work TA-3/TA-5 · S-630-1 Flagger lane closure TA-10 · S-630-1 Lane closure near intersection Cases 18/19 · S-630-1 4 more kinds aren't enabled yet. Each waits until its typical sheet is validated against the generator.",
+   "pressedChipAriaPressed": "true",
+   "pressedMarkCount": 0,
+   "pressedNoteCount": 0,
+   "header": "STEP 2 OF 4 WHAT 4 guesses marked ⚠ · change any that are wrong",
+   "hours": "Hours default Daytime Night",
+   "reduction": "Speed reduction default None Reduced",
+   "markerHours": {
+    "text": "default",
+    "cls": "a-mark tr-prov is-plain",
+    "glyphSpans": 0,
+    "glyph": null,
+    "word": {
+     "text": "default",
+     "cls": "a-mark tr-prov is-plain",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "markerReduction": {
+    "text": "default",
+    "cls": "a-mark tr-prov is-plain",
+    "glyphSpans": 0,
+    "glyph": null,
+    "word": {
+     "text": "default",
+     "cls": "a-mark tr-prov is-plain",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "allMarkers": [
+    "speed: ⚠ from the road",
+    "lanes: ✓ measured",
+    "road-type: ⚠ from the road",
+    "street-class: ⚠ from the road",
+    "carriageway: ✓ detected",
+    "work-type: default",
+    "night: default",
+    "reduction: default",
+    "jurisdiction: ⚠ from the pin",
+    "work-dates: ◌ not set"
+   ]
+  },
+  "colfax": {
+   "axe": {
+    "typedLength": [],
+    "sideNotMarked": []
+   },
+   "picker": " SEARCH + OR ENTER COORDINATES MANUALLY STREETS ⚠ WHICH ROAD? · 4 DETECTED FRANKLIN STREET SOUTHBOUND (RESIDENTIAL, 180°) 18 M FROM PIN · WAY 589340254 EAST COL",
+   "tokens": {
+    "--pass": "#4fd787",
+    "--act": "#34a9e8",
+    "--warn": "#f4c020",
+    "--none": "#93a0b0",
+    "--ink-faint": "#93a0b0"
+   },
+   "worklen": "Work zone length (ft) ✓ yours",
+   "markerWorklen": {
+    "text": "✓ yours",
+    "cls": "a-mark tr-prov is-ok",
+    "glyphSpans": 1,
+    "glyph": {
+     "text": "✓",
+     "cls": "sym-pass",
+     "color": "rgb(79, 215, 135)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 9.35
+    },
+    "word": {
+     "text": "✓ yours",
+     "cls": "a-mark tr-prov is-ok",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "sideNotMarked": "⚠ Mark the cross street on the map to lay out the sides.",
+   "sideNotMarkedGlyph": {
+    "text": "⚠",
+    "cls": "sym-warn",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 10.17
+   },
+   "sideNotMarkedLine": {
+    "text": "⚠ Mark the cross street on the map to lay out the sides.",
+    "cls": "tr-prov mt-1",
+    "color": "rgb(147, 160, 176)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 6.47
+   },
+   "sideStaleCount": 0
+  },
+  "wadsworth": {
+   "axe": {
+    "untouched": [],
+    "edited": []
+   },
+   "picker": " SEARCH + OR ENTER COORDINATES MANUALLY STREETS ⚠ WHICH ROAD? · 4 DETECTED WADSWORTH BOULEVARD NORTHBOUND (PRIMARY, 1°) 0 M FROM PIN · WAY 427683596 WEST 10TH A",
+   "tokens": {
+    "--pass": "#4fd787",
+    "--act": "#34a9e8",
+    "--warn": "#f4c020",
+    "--none": "#93a0b0",
+    "--ink-faint": "#93a0b0"
+   },
+   "guessMarkers": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "whatHeader": "STEP 2 OF 4 WHAT 3 guesses marked ⚠ · change any that are wrong",
+   "guessMarker": {
+    "id": "road-type",
+    "text": "⚠ from the road",
+    "cls": "a-mark tr-prov is-guess",
+    "glyphSpans": 1,
+    "glyph": {
+     "text": "⚠",
+     "cls": "sym-warn",
+     "color": "rgb(244, 192, 32)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 10.17
+    },
+    "word": {
+     "text": "⚠ from the road",
+     "cls": "a-mark tr-prov is-guess",
+     "color": "rgb(244, 192, 32)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 10.17
+    }
+   },
+   "lanesMarker": {
+    "text": "default",
+    "cls": "a-mark tr-prov is-plain",
+    "glyphSpans": 0,
+    "glyph": null,
+    "word": {
+     "text": "default",
+     "cls": "a-mark tr-prov is-plain",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "lanes": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection",
+   "doubtGlyph": null,
+   "doubtLine": {
+    "text": "⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection",
+    "cls": "tr-prov is-amber",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(34.0, 52.0, 74.0)",
+    "ratio": 7.48
+   },
+   "lanesBefore": "2",
+   "lanesAfter": "3",
+   "guessMarkersEdited": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "whatHeaderEdited": "STEP 2 OF 4 WHAT 2 guesses marked ⚠ · change any that are wrong",
+   "lanesMarkerEdited": "✓ yours",
+   "lanesEdited": "Lanes ✓ yours 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft your change · operator-set from here on Lane width · default · the plan's standard lane; detection doesn't measure width | your change · operator-set from here on Lane width · default · the plan's standard lane; detection doesn't measure width"
+  }
+ },
+ "1440": {
+  "clarkson": {
+   "axe": {
+    "proposalUnpressed": [],
+    "proposalPressed": [],
+    "step2": []
+   },
+   "picker": " SEARCH − HIDE COORDINATE ENTRY LAT / LNG DECIMAL DEGREES STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ⚠ WHICH ROAD? · 2 DETECTED CLARKSON STREET N",
+   "tokens": {
+    "--pass": "#4fd787",
+    "--act": "#34a9e8",
+    "--warn": "#f4c020",
+    "--none": "#93a0b0",
+    "--ink-faint": "#93a0b0"
+   },
+   "proposalShown": true,
+   "chipUnpressed": "Shoulder work TA-3/TA-5 · S-630-1 · ⚠ proposed",
+   "note": "⚠ proposed: Only shoulder work fits this road: it is one-way, so a flagger has no opposing traffic to hold; and it has one lane in total. Pick it to use it.",
+   "markGlyph": {
+    "text": "⚠",
+    "cls": "sym-warn",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 10.17
+   },
+   "noteGlyph": {
+    "text": "⚠",
+    "cls": "sym-warn",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 10.17
+   },
+   "markWord": {
+    "text": "· ⚠ proposed",
+    "cls": null,
+    "color": "rgb(147, 160, 176)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 6.47
+   },
+   "noteWord": {
+    "text": "⚠ proposed: Only shoulder work fits this road: it is one-way, so a flagger has no opposing traffic to hold; and it has one lane in total. Pi",
+    "cls": "tr-prov mt-2",
+    "color": "rgb(147, 160, 176)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 6.47
+   },
+   "chipPressed": "Shoulder work TA-3/TA-5 · S-630-1",
+   "kindBlockPressed": "Shoulder work TA-3/TA-5 · S-630-1 Flagger lane closure TA-10 · S-630-1 Lane closure near intersection Cases 18/19 · S-630-1 4 more kinds aren't enabled yet. Each waits until its typical sheet is validated against the generator.",
+   "pressedChipAriaPressed": "true",
+   "pressedMarkCount": 0,
+   "pressedNoteCount": 0,
+   "header": "STEP 2 OF 4 WHAT 4 guesses marked ⚠ · change any that are wrong",
+   "hours": "Hours default Daytime Night",
+   "reduction": "Speed reduction default None Reduced",
+   "markerHours": {
+    "text": "default",
+    "cls": "a-mark tr-prov is-plain",
+    "glyphSpans": 0,
+    "glyph": null,
+    "word": {
+     "text": "default",
+     "cls": "a-mark tr-prov is-plain",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "markerReduction": {
+    "text": "default",
+    "cls": "a-mark tr-prov is-plain",
+    "glyphSpans": 0,
+    "glyph": null,
+    "word": {
+     "text": "default",
+     "cls": "a-mark tr-prov is-plain",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "allMarkers": [
+    "speed: ⚠ from the road",
+    "lanes: ✓ measured",
+    "road-type: ⚠ from the road",
+    "street-class: ⚠ from the road",
+    "carriageway: ✓ detected",
+    "work-type: default",
+    "night: default",
+    "reduction: default",
+    "jurisdiction: ⚠ from the pin",
+    "work-dates: ◌ not set"
+   ]
+  },
+  "colfax": {
+   "axe": {},
+   "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog').getByRole('button', { name: /Colfax/i }).first()\u001b[22m\n"
+  },
+  "wadsworth": {
+   "axe": {
+    "untouched": [],
+    "edited": []
+   },
+   "picker": " SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ⚠ WHICH ROAD? · 4 DETECTED WADSWORTH BOULEVARD NORTHBOUND (PRI",
+   "tokens": {
+    "--pass": "#4fd787",
+    "--act": "#34a9e8",
+    "--warn": "#f4c020",
+    "--none": "#93a0b0",
+    "--ink-faint": "#93a0b0"
+   },
+   "guessMarkers": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "whatHeader": "STEP 2 OF 4 WHAT 3 guesses marked ⚠ · change any that are wrong",
+   "guessMarker": {
+    "id": "road-type",
+    "text": "⚠ from the road",
+    "cls": "a-mark tr-prov is-guess",
+    "glyphSpans": 1,
+    "glyph": {
+     "text": "⚠",
+     "cls": "sym-warn",
+     "color": "rgb(244, 192, 32)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 10.17
+    },
+    "word": {
+     "text": "⚠ from the road",
+     "cls": "a-mark tr-prov is-guess",
+     "color": "rgb(244, 192, 32)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 10.17
+    }
+   },
+   "lanesMarker": {
+    "text": "default",
+    "cls": "a-mark tr-prov is-plain",
+    "glyphSpans": 0,
+    "glyph": null,
+    "word": {
+     "text": "default",
+     "cls": "a-mark tr-prov is-plain",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "lanes": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection | default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection",
+   "doubtGlyph": null,
+   "doubtLine": {
+    "text": "⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection",
+    "cls": "tr-prov is-amber",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(34.0, 52.0, 74.0)",
+    "ratio": 7.48
+   },
+   "lanesBefore": "2",
+   "lanesAfter": "3",
+   "guessMarkersEdited": [
+    "⚠ from the road",
+    "⚠ from the road"
+   ],
+   "whatHeaderEdited": "STEP 2 OF 4 WHAT 2 guesses marked ⚠ · change any that are wrong",
+   "lanesMarkerEdited": "✓ yours",
+   "lanesEdited": "Lanes ✓ yours 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft your change · operator-set from here on Lane width · default · the plan's standard lane; detection doesn't measure width | your change · operator-set from here on Lane width · default · the plan's standard lane; detection doesn't measure width"
+  },
+  "colfaxPin": {
+   "axe": {
+    "typedLength": [],
+    "sideNotMarked": []
+   },
+   "picker": " SEARCH − HIDE COORDINATE ENTRY LAT / LNG DECIMAL DEGREES STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ⚠ WHICH ROAD? · 2 DETECTED EAST COLFAX AVENU",
+   "tokens": {
+    "--pass": "#4fd787",
+    "--act": "#34a9e8",
+    "--warn": "#f4c020",
+    "--none": "#93a0b0",
+    "--ink-faint": "#93a0b0"
+   },
+   "worklen": "Work zone length (ft) ✓ yours",
+   "markerWorklen": {
+    "text": "✓ yours",
+    "cls": "a-mark tr-prov is-ok",
+    "glyphSpans": 1,
+    "glyph": {
+     "text": "✓",
+     "cls": "sym-pass",
+     "color": "rgb(79, 215, 135)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 9.35
+    },
+    "word": {
+     "text": "✓ yours",
+     "cls": "a-mark tr-prov is-ok",
+     "color": "rgb(147, 160, 176)",
+     "ground": "rgb(16.0, 28.0, 41.0)",
+     "ratio": 6.47
+    }
+   },
+   "sideNotMarked": "⚠ Mark the cross street on the map to lay out the sides.",
+   "sideNotMarkedGlyph": {
+    "text": "⚠",
+    "cls": "sym-warn",
+    "color": "rgb(244, 192, 32)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 10.17
+   },
+   "sideNotMarkedLine": {
+    "text": "⚠ Mark the cross street on the map to lay out the sides.",
+    "cls": "tr-prov mt-1",
+    "color": "rgb(147, 160, 176)",
+    "ground": "rgb(16.0, 28.0, 41.0)",
+    "ratio": 6.47
+   },
+   "sideStaleCount": 0
+  }
+ }
+}
