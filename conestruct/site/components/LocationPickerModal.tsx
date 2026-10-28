@@ -2142,10 +2142,30 @@ function WhichRoadCard({
     selectedIdx !== null ? (candidates[selectedIdx] ?? null) : null;
   return (
     <div className="border-b border-[color:var(--rule)] px-6 py-3">
-      <div className="border border-[color:var(--warn)] bg-[color:var(--warn-soft)] px-3 py-2">
-        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--warn)]">
-          <span aria-hidden="true">⚠ </span>
-          Which road? · {candidates.length} detected
+      {/* #402 (P9): once a road is picked the question is answered, so
+          the head takes the single-match card's form, "✓ Road picked",
+          on the neutral frame; the amber ⚠ stays for the unanswered pick.
+          It stays ✓ while CHANGE has the list open: the pick still stands. */}
+      <div
+        className={
+          picked
+            ? "border border-[color:var(--rule)] px-3 py-2"
+            : "border border-[color:var(--warn)] bg-[color:var(--warn-soft)] px-3 py-2"
+        }
+      >
+        <div
+          className={`font-mono text-[10px] uppercase tracking-[0.12em] ${
+            picked
+              ? "text-[color:var(--ink-on-dark-faint)]"
+              : "text-[color:var(--warn)]"
+          }`}
+        >
+          {picked ? (
+            <span aria-hidden="true" className="text-[color:var(--pass)]">✓ </span>
+          ) : (
+            <span aria-hidden="true">⚠ </span>
+          )}
+          {picked ? "Road picked" : "Which road?"} · {candidates.length} detected
         </div>
         {expanded ? (
           <div className="mt-2">
@@ -2161,7 +2181,9 @@ function WhichRoadCard({
         ) : (
           picked && (
             <div className="mt-1.5 flex items-center justify-between gap-3">
-              <span className="min-w-0 truncate font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark)]">
+              {/* #402: wraps, never truncates; the direction the operator
+                  just picked was the part cut off. */}
+              <span className="min-w-0 break-words font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark)]">
                 <CandidateCaption candidate={picked} />
               </span>
               {/* act-bright, not act: on the amber-tinted card bg the

@@ -1,0 +1,88 @@
+{
+ "390": {
+  "geocodeBodies": [
+   "{\"address\":\"1600 E Colfax Ave, Denver\",\"jurisdiction_key\":null}"
+  ],
+  "dialogAfterEnter": false,
+  "findrow": {
+   "width": 328,
+   "height": 102
+  },
+  "searchBox": "1600 E Colfax Ave, Denver",
+  "unpicked": {
+   "width": 340,
+   "height": 307,
+   "head": "⚠ WHICH ROAD? · 4 DETECTED",
+   "headColor": "rgb(244, 192, 32)",
+   "glyphColor": "rgb(244, 192, 32)",
+   "frameBorder": "rgb(244, 192, 32)",
+   "frameBg": "rgba(244, 192, 32, 0.15)",
+   "line": null,
+   "lineRendered": null,
+   "lineBox": null,
+   "lineClipped": null,
+   "text": "⚠ WHICH ROAD? · 4 DETECTED EAST COLFAX AVENUE EASTBOUND (PRIMARY, 90°) 3 M FROM PIN · WAY 600545936 EAST COLFAX AVENUE WESTBOUND (PRIMARY, 270°) 9 M FROM PIN · WAY 600545937 NORTH GILPIN STREET NORTHBOUND (RESIDENTIAL, 0°) 21 M FROM PIN · WAY 600545938 NORTH GILPIN STREET SOUTHBOUND (RESIDENTIAL, 180°) 24 M FROM PIN · WAY 600545939"
+  },
+  "picked": {
+   "width": 340,
+   "height": 83,
+   "head": "⚠ WHICH ROAD? · 4 DETECTED",
+   "headColor": "rgb(244, 192, 32)",
+   "glyphColor": "rgb(244, 192, 32)",
+   "frameBorder": "rgb(244, 192, 32)",
+   "frameBg": "rgba(244, 192, 32, 0.15)",
+   "line": "Detected from OSM: 90° (East Colfax Avenue eastbound, primary) · way 600545936",
+   "lineRendered": "DETECTED FROM OSM: 90° (EAST COLFAX AVENUE EASTBOUND, PRIMARY) · WAY 600545936",
+   "lineBox": {
+    "width": 243.19,
+    "height": 15
+   },
+   "lineClipped": true,
+   "text": "⚠ WHICH ROAD? · 4 DETECTED DETECTED FROM OSM: 90° (EAST COLFAX AVENUE EASTBOUND, PRIMARY) · WAY 600545936 CHANGE"
+  },
+  "sideSentence": "Say which side is occupied to lay out the work"
+ },
+ "1440": {
+  "geocodeBodies": [
+   "{\"address\":\"1600 E Colfax Ave, Denver\",\"jurisdiction_key\":null}"
+  ],
+  "dialogAfterEnter": false,
+  "findrow": {
+   "width": 846,
+   "height": 44
+  },
+  "searchBox": "1600 E Colfax Ave, Denver",
+  "unpicked": {
+   "width": 407,
+   "height": 257.5,
+   "head": "⚠ WHICH ROAD? · 4 DETECTED",
+   "headColor": "rgb(244, 192, 32)",
+   "glyphColor": "rgb(244, 192, 32)",
+   "frameBorder": "rgb(244, 192, 32)",
+   "frameBg": "rgba(244, 192, 32, 0.15)",
+   "line": null,
+   "lineRendered": null,
+   "lineBox": null,
+   "lineClipped": null,
+   "text": "⚠ WHICH ROAD? · 4 DETECTED EAST COLFAX AVENUE EASTBOUND (PRIMARY, 90°) 3 M FROM PIN · WAY 600545936 EAST COLFAX AVENUE WESTBOUND (PRIMARY, 270°) 9 M FROM PIN · WAY 600545937 NORTH GILPIN STREET NORTHBOUND (RESIDENTIAL, 0°) 21 M FROM PIN · WAY 600545938 NORTH GILPIN STREET SOUTHBOUND (RESIDENTIAL, 180°) 24 M FROM PIN · WAY 600545939"
+  },
+  "picked": {
+   "width": 407,
+   "height": 64,
+   "head": "⚠ WHICH ROAD? · 4 DETECTED",
+   "headColor": "rgb(244, 192, 32)",
+   "glyphColor": "rgb(244, 192, 32)",
+   "frameBorder": "rgb(244, 192, 32)",
+   "frameBg": "rgba(244, 192, 32, 0.15)",
+   "line": "Detected from OSM: 90° (East Colfax Avenue eastbound, primary) · way 600545936",
+   "lineRendered": "DETECTED FROM OSM: 90° (EAST COLFAX AVENUE EASTBOUND, PRIMARY) · WAY 600545936",
+   "lineBox": {
+    "width": 310.19,
+    "height": 15
+   },
+   "lineClipped": true,
+   "text": "⚠ WHICH ROAD? · 4 DETECTED DETECTED FROM OSM: 90° (EAST COLFAX AVENUE EASTBOUND, PRIMARY) · WAY 600545936 CHANGE"
+  },
+  "sideSentence": "Say which side is occupied to lay out the work"
+ }
+}

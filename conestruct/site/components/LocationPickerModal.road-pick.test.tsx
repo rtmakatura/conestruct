@@ -306,3 +306,74 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(saveButton().disabled).toBe(true); // unresolved gates Save
   });
 });
+
+// #402: after a pick in a multi-road detection the card's head kept
+// "⚠ Which road? · N detected" on the amber frame, and the picked line was
+// one `truncate` span, so a long road name cut its direction off at 1440
+// ("EAST COLFAX AVENUE EAS…").  Read from the mounted picker (Rule 11): the
+// head's glyph and words, its frame, and the picked line's whole text.
+describe("#402: the picked road's head and line", () => {
+  const COLFAX_EB = candidate({
+    way_id: "222001",
+    highway_class: "primary",
+    name: "East Colfax Avenue",
+    ref: null,
+    bearing: 90,
+  });
+  const COLFAX_WB = candidate({
+    way_id: "222002",
+    highway_class: "primary",
+    name: "East Colfax Avenue",
+    ref: null,
+    bearing: 270,
+    snap_distance_m: 14.6,
+  });
+  // Found by their words, not a test id, so the same test reads the base.
+  const head = () => screen.getByText(/· 2 detected/i);
+  const frame = () => head().parentElement as HTMLElement;
+
+  it("unpicked: the head asks, amber, with ⚠", async () => {
+    stubDetection(detection([COLFAX_EB, COLFAX_WB]));
+    mountModal();
+    typeCoords();
+    await screen.findByText(/Which road\? · 2 detected/i);
+    expect(head().textContent).toBe("⚠ Which road? · 2 detected");
+    expect(frame().className).toContain("border-[color:var(--warn)]");
+  });
+
+  it("picked: the head reads ✓ Road picked, no ⚠, on the neutral frame (P9)", async () => {
+    stubDetection(detection([COLFAX_EB, COLFAX_WB]));
+    mountModal();
+    typeCoords();
+    await screen.findByText(/Which road\? · 2 detected/i);
+    fireEvent.click(screen.getByRole("button", { name: /eastbound/i }));
+
+    expect(head().textContent).toBe("✓ Road picked · 2 detected");
+    expect(head().textContent).not.toContain("⚠");
+    expect(screen.queryByText(/Which road\?/i)).toBeNull();
+    const glyph = head().querySelector("span");
+    expect(glyph?.textContent?.trim()).toBe("✓");
+    expect(glyph?.className).toContain("text-[color:var(--pass)]");
+    expect(frame().className).toContain("border-[color:var(--rule)]");
+    expect(frame().className).not.toContain("--warn");
+
+    // CHANGE re-opens the list; the pick still stands, so the head stays ✓.
+    fireEvent.click(screen.getByRole("button", { name: "Change" }));
+    expect(head().textContent).toBe("✓ Road picked · 2 detected");
+  });
+
+  it("picked: the line carries the whole caption, direction included, and wraps instead of truncating", async () => {
+    stubDetection(detection([COLFAX_EB, COLFAX_WB]));
+    mountModal();
+    typeCoords();
+    await screen.findByText(/Which road\? · 2 detected/i);
+    fireEvent.click(screen.getByRole("button", { name: /westbound/i }));
+
+    const line = screen.getByText(/^Detected from OSM:/);
+    expect(line.textContent).toBe(
+      "Detected from OSM: 270° (East Colfax Avenue westbound, primary) · way 222002",
+    );
+    expect(line.className).not.toMatch(/\btruncate\b/);
+    expect(line.className).toContain("break-words");
+  });
+});

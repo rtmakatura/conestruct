@@ -1,0 +1,27 @@
+# #402 red proof: the branch's new tests run on the base 90ab1fb
+# Source: git archive 90ab1fb conestruct/site, with this branch's two test files copied in
+# (components/LocationPickerModal.road-pick.test.tsx, components/bands/WhereBand.address-enter.test.tsx).
+# Command: npx vitest run components/LocationPickerModal.road-pick.test.tsx components/bands/WhereBand.address-enter.test.tsx
+# 3 red on the base, by design green there: the unpicked-head control, the button control, the IME/other-key control.
+
+   ✓ multi-candidate road pick gates Save (#139) > two candidates: Save disabled with the footer hint until a road is picked 83ms
+   ✓ multi-candidate road pick gates Save (#139) > payload: Save after a pick carries the picked road and its classification — and no bearing (#290) 37ms
+   ✓ multi-candidate road pick gates Save (#139) > Change re-expands the picker and a re-pick updates the payload 37ms
+   ✓ multi-candidate road pick gates Save (#139) > single candidate: confirmed card with the pre-selected row, no amber hint, Save enabled (#152 A) 34ms
+   ✓ multi-candidate road pick gates Save (#139) > #301 (R123 Q1): no road-property editor; WHAT is the one place they are set; Re-detect stays 32ms
+   ✓ multi-candidate road pick gates Save (#139) > #290: the typed direction is retired — no field, no Use Detected, no Flip, no length 31ms
+   ✓ multi-candidate road pick gates Save (#139) > zero candidates: explicit empty-state card, Save stays enabled, null classification (accepted boundary) 29ms
+   ✓ multi-candidate road pick gates Save (#139) > detection error: explicit empty-state card, Save stays enabled (manual fallback) 30ms
+   ✓ multi-candidate road pick gates Save (#139) > detection in flight: the outcome card shows the skeleton, never nothing (#152 A) 22ms
+   ✓ multi-candidate road pick gates Save (#139) > a moved pin to an unresolved location clears the stale road pick (#149) 42ms
+   ✓ #402: the picked road's head and line > unpicked: the head asks, amber, with ⚠ 19ms
+   × #402: the picked road's head and line > picked: the head reads ✓ Road picked, no ⚠, on the neutral frame (P9) 34ms
+     → expected '⚠ Which road? · 2 detected' to be '✓ Road picked · 2 detected' // Object.is equality
+   × #402: the picked road's head and line > picked: the line carries the whole caption, direction included, and wraps instead of truncating 25ms
+     → expected 'min-w-0 truncate font-mono text-[10px…' not to match /\btruncate\b/
+   × #402: Enter in the band's address field > opens the picker with the typed text as its address 535ms
+     → expected null not to be null
+   ✓ #402: Enter in the band's address field > is the same door as Pick on map (button unchanged)  509ms
+   ✓ #402: Enter in the band's address field > does nothing while an input method is composing, or for other keys  436ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 13 passed (16)

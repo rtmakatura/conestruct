@@ -638,6 +638,15 @@ export function WhereBand({
           value={scenario.meta.address}
           disabled={locked}
           onChange={(e) => setMeta({ ...scenario.meta, address: e.target.value })}
+          onKeyDown={(e) => {
+            // #402: Enter is the field's "go".  It opens the same picker
+            // the button opens (one door onto the pin), which is handed
+            // the typed text and searches it on open when the plan has
+            // no pin yet.  Not while an input method is composing.
+            if (e.key !== "Enter" || e.nativeEvent.isComposing || locked) return;
+            e.preventDefault();
+            onOpenPicker();
+          }}
         />
         <button
           type="button"

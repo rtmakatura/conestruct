@@ -1,0 +1,10 @@
+# #402 tests (conestruct/site), on the branch working tree over 90ab1fb
+# Baseline on 90ab1fb: npx vitest run --reporter=dot
+ Test Files  252 passed | 1 skipped (253)
+      Tests  2659 passed | 1 skipped (2660)
+# Branch, first full run: 3 type-census failures from the first draft (full-run-fails.txt)
+# Branch, full run after the fix to the draft: npx vitest run --reporter=dot
+ Test Files  253 passed | 1 skipped (254)
+      Tests  2665 passed | 1 skipped (2666)
+# npx tsc --noEmit: exit 0, no output
+# No backend change: pytest, mypy, ruff not run.

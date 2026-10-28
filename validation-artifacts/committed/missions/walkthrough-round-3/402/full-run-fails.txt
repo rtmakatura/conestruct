@@ -1,0 +1,15 @@
+# #402 full vitest run failures (first full run after the fix, before any re-run)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  lib/design/type-census.test.ts > #263 type census — Tailwind size classes in components/ and app/ > every (file, class, count) is declared exactly — a new class, file, or extra use fails
+ FAIL  lib/design/type-census.test.ts > #263 type census — Tailwind size classes in components/ and app/ > every declared Tailwind row still exists
+ FAIL  lib/design/type-census.test.ts > #263 type census — the exceptions are the ruled set and the pins are the sources' figures > CENSUS_PINS equal the figures read from the sources (the README quotes these)
+ Test Files  1 failed | 252 passed | 1 skipped (254)
+      Tests  3 failed | 2662 passed | 1 skipped (2666)
+
+# Cause: not a flake.  The first draft of the head rendered two elements, one per state, each
+# with `text-[10px]`, so LocationPickerModal.tsx counted 31 sites of that class against the
+# census's declared 30 ("components/LocationPickerModal.tsx text-[10px] ×31").  The head was
+# rewritten as one element whose colour class and words switch on the pick (no new size site).
+# Re-run on its own after that change, with the picker suite:
+#   npx vitest run lib/design/type-census.test.ts components/LocationPickerModal.road-pick.test.tsx
+#   Tests  25 passed (25)   (all 3 census tests pass)
