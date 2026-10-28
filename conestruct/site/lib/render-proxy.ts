@@ -528,9 +528,7 @@ export const RENDER_PART_FILENAMES: Record<RenderKind, string> = {
   xlsx: "device_list.xlsx",
   markdown: "crew_narrative.md",
   quote: "quote.xlsx",
-  // Not bundle parts (fetchAllRenderParts renders the four above); the
-  // crew and audit PDFs are standalone downloads. Named here only to
-  // satisfy the RenderKind record.
+  // #401: bundle parts too, so the zip holds every card's file.
   "crew-pdf": "crew_narrative.pdf",
   "audit-pdf": "audit_trail.pdf",
 };

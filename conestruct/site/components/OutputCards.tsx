@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Scenario } from "@/lib/scenarios";
-import { BUNDLE_PART_KINDS, type AuditSummary } from "@/lib/render-types";
+import { bundleLabel, type AuditSummary } from "@/lib/render-types";
 import type { PrimaryOwner } from "@/lib/results-primary";
 import { stampMatches } from "@/lib/answer-stamp";
 import { downloadSavedPart, extractValidationMessage } from "@/lib/download-error";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 import { useRenderRequest, useWriteLock } from "./WriteLock";
+import { planFilename } from "@/lib/download-name";
 
 type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf" | "audit-pdf";
 
@@ -147,14 +148,6 @@ const EXT: Record<RenderKind, string> = {
   "audit-pdf": "audit.pdf",
 };
 
-function safeFilename(name: string | undefined, ext: string): string {
-  const cleaned = (name ?? "")
-    .trim()
-    .replace(/[^a-zA-Z0-9 _-]+/g, "_")
-    .replace(/\s+/g, "_");
-  return `${cleaned || "plan"}.${ext}`;
-}
-
 
 export function OutputCards({
   summary,
@@ -169,7 +162,7 @@ export function OutputCards({
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
   // Rule 168 (R137 Q1, R145 self-ruled): at the phone width the four cards
-  // sit closed behind the "4 files" line under the zip.  Closed by default.
+  // sit closed behind the file-count line under the zip.  Closed by default.
   const [filesOpen, setFilesOpen] = useState(false);
   if (!generated) {
     // #289 hand-check, 2026-09-22, correction 4 — NO RESULTS ZONE BEFORE
@@ -225,7 +218,7 @@ export function OutputCards({
     },
     // #261 (P11): the audit PDF wears the same card and button as every
     // other download — it was a mono text link inside a collapsed tier.
-    // Not in the zip (BUNDLE_PART_KINDS), so the header count is unmoved.
+    // #401: in the zip (BUNDLE_PART_KINDS), so the count includes it.
     {
       title: "Audit trail",
       spec: "EVERY CHECK CITED",
@@ -244,18 +237,18 @@ export function OutputCards({
   // as a gap in the arc README, not as a decision.  It lands here,
   // beside the control it describes, and it is counted from
   // BUNDLE_PART_KINDS — the zip's own parts (Rule 12: the number traces
-  // to the thing it names, never to a literal).  The audit PDF is NOT in
-  // the bundle, which is why four cards render above a count of four
-  // parts and the two numbers are about different things.
-  const zipLabel = `${BUNDLE_PART_KINDS.length} files`;
+  // to the thing it names, never to a literal).  #401: the zip holds every
+  // card's file plus the quote, which no card offers, so the label names
+  // it: "6 files, with the quote" (bundleLabel, lib/render-types.ts).
+  const zipLabel = bundleLabel();
   const zipIsPrimary = primary === "download-all";
-  // Rule 168 (R137 Q1): the phone hides the cards behind a "4 files" line
-  // under the zip.  R145 self-ruled (phase4-380-arc/rulings.md): the line
-  // is a disclosure that opens onto the cards, because the zip doesn't
-  // hold everything the cards offer (the crew PDF and the audit PDF are
-  // not bundle parts), so hiding them outright would take two downloads
-  // off the phone (Rule 10).  Only where the zip renders: a saved plan has
-  // no zip, and its cards stay.  At the desk the line is hidden by CSS and
+  // Rule 168 (R137 Q1): the phone hides the cards behind the file-count
+  // line under the zip.  R145 self-ruled (phase4-380-arc/rulings.md): the
+  // line is a disclosure that opens onto the cards.  It was ruled when the
+  // crew PDF and the audit PDF were not bundle parts; since #401 they are,
+  // and the disclosure stays, so each file can still be saved on its own.
+  // Only where the zip renders: a saved plan has no zip, and its cards
+  // stay.  At the desk the line is hidden by CSS and
   // the count stays beside the zip; at the phone the count beside the zip
   // is hidden and the line carries it, so it's stated once either way.
   const hasZip = mode.kind === "public" && Boolean(onDownloadAll);
@@ -284,7 +277,10 @@ export function OutputCards({
             type="button"
             data-write=""
             onClick={onDownloadAll}
-            disabled={bundling || locked}
+            // #401: the zip holds the audit PDF, so it waits on the audit
+            // the way the audit card does: an audit that has not answered
+            // (or failed) has no PDF, and the zip would fail whole.
+            disabled={bundling || locked || auditChecked === null}
             className={zipIsPrimary ? "pri" : "act tr-step"}
           >
             <span className="font-mono">↓</span> All (.zip)
@@ -421,7 +417,7 @@ function DlCard({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = safeFilename(mode.scenario.meta?.project, EXT[dlKind]);
+      a.download = planFilename(mode.scenario, EXT[dlKind]); // #401
       document.body.appendChild(a);
       a.click();
       a.remove();

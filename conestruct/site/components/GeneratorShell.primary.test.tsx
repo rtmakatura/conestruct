@@ -34,7 +34,7 @@ vi.mock("./GeneratorSidebar", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
-import { BUNDLE_PART_KINDS } from "@/lib/render-types";
+import { BUNDLE_PART_KINDS, bundleLabel } from "@/lib/render-types";
 
 const SECTIONS_CLEAN = {
   taper: {},
@@ -257,10 +257,12 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
   it("the count appears exactly once on the settled page, and it is the bundle's own", async () => {
     served = AUDIT_WITH_ITEMS;
     await generate();
-    const label = `${BUNDLE_PART_KINDS.length} files`;
-    expect(BUNDLE_PART_KINDS.length).toBe(4);
+    const label = bundleLabel();
+    // #401: every card's file plus the quote.
+    expect(BUNDLE_PART_KINDS.length).toBe(6);
+    expect(label).toBe("6 files, with the quote");
     // Rule 168 (R137 Q1): the count has two homes in the markup, one per
-    // width: beside the zip at the desk, and as the "4 files" line under
+    // width: beside the zip at the desk, and as the file-count line under
     // it at the phone.  CSS shows exactly one of them at each width
     // (components/rule-168.test.tsx pins both rules), so it's stated once
     // on screen.  Anything past those two is a restatement.
@@ -275,7 +277,7 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
   it("it is stated once in the OTHER state too — the count does not follow the primary", async () => {
     served = AUDIT_CLEAN;
     await generate();
-    const label = `${BUNDLE_PART_KINDS.length} files`;
+    const label = bundleLabel();
     // The same two homes, one per width (above).
     expect((document.body.textContent ?? "").split(label).length - 1).toBe(2);
   });
@@ -288,9 +290,11 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
     // the strip and kept the once-only rule.  Nothing should restate it.
     expect(text).not.toMatch(/FILES READY/i);
     // No \b after "files": textContent runs adjacent elements together
-    // ("4 filesPlan sheet"), so a word boundary never lands there.  The
-    // claim is about how many times a file COUNT is printed, not about
-    // what follows it.  Rule 168: two homes, one shown per width (above).
+    // (it read "4 filesPlan sheet" before #401), so a word boundary can't
+    // be relied on.  Since #401 the label reads "6 files, with the quote",
+    // and the pattern matches its "6 files" in each home.  The claim is
+    // about how many times a file COUNT is printed, not what follows it.
+    // Rule 168: two homes, one shown per width (above).
     expect(text.match(/\d+ files/gi) ?? []).toHaveLength(2);
   });
 });

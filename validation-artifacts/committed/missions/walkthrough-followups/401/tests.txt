@@ -1,0 +1,5 @@
+#401 after repair cycle 2, in conestruct/site: npx vitest run --reporter=dot (summary) and npx tsc --noEmit
+ Test Files  248 passed | 1 skipped (249)
+      Tests  2631 passed | 1 skipped (2632)
+tsc --noEmit: clean
+No Python change on this branch; pytest baseline on 982c544 in this worktree: 3612 passed, 2 skipped

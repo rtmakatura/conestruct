@@ -12,6 +12,7 @@ import { type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 import { stampMatches, type AnswerStamp } from "@/lib/answer-stamp";
 import { downloadSavedPart } from "@/lib/download-error";
+import { planFilename } from "@/lib/download-name";
 import { useRenderRequest, useWriteLock } from "./WriteLock";
 
 // Lifted to GeneratorShell (restage): the pricing card unmounts across
@@ -137,14 +138,6 @@ const fmtTotal = (n: number) =>
 // A stored fraction (0.1) shown as a percent (10). Round to 2 decimals so
 // 0.1 * 100 doesn't surface its float dust (10.000000000000002) in the input.
 const pctToDisplay = (frac: number) => Math.round(frac * 10000) / 100;
-
-function safeFilename(name: string | undefined, ext: string): string {
-  const cleaned = (name ?? "")
-    .trim()
-    .replace(/[^a-zA-Z0-9 _-]+/g, "_")
-    .replace(/\s+/g, "_");
-  return `${cleaned || "plan"}.${ext}`;
-}
 
 export function QuotePanel({
   mode,
@@ -295,7 +288,8 @@ export function QuotePanel({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = safeFilename(mode.scenario.meta?.project, "xlsx");
+      // #401: ".quote.xlsx", apart from the device list's ".xlsx".
+      a.download = planFilename(mode.scenario, "quote.xlsx");
       document.body.appendChild(a);
       a.click();
       a.remove();

@@ -21,6 +21,7 @@ import {
   type QuoteSettings,
 } from "@/lib/quote-settings";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
+import { planFilename } from "@/lib/download-name";
 import type {
   DeliveryStatus,
   FlaggerSource,
@@ -167,6 +168,28 @@ describe("quote breakdown invalidates on settings edits (#185)", () => {
       settings: { overhead_pct: number };
     };
     expect(body.settings.overhead_pct).toBeCloseTo(0.2, 10);
+  });
+
+  // #401: the quote's XLSX and the device list's XLSX are two files of
+  // one plan; the quote saves as ".quote.xlsx" so they don't collide.
+  it("the quote saves as <plan>.quote.xlsx, apart from the device list's <plan>.xlsx", async () => {
+    URL.createObjectURL = () => "blob:x";
+    URL.revokeObjectURL = () => {};
+    const names: string[] = [];
+    const spy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(function (this: HTMLAnchorElement) {
+        names.push(this.download);
+      });
+    await openAndPreview();
+    fireEvent.click(
+      screen.getByRole("button", { name: /Download Quote \(XLSX\)/ }),
+    );
+    await vi.waitFor(() => expect(names).toHaveLength(1));
+    spy.mockRestore();
+    expect(names[0]).toMatch(/\.quote\.xlsx$/);
+    expect(names[0]).toBe(planFilename(DEFAULT_SCENARIO as Scenario, "quote.xlsx"));
+    expect(names[0]).not.toBe(planFilename(DEFAULT_SCENARIO as Scenario, "xlsx"));
   });
 
   it("an unchanged input keeps the previewed figures (no over-invalidation)", async () => {

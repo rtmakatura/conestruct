@@ -164,7 +164,7 @@ const FLOORED = [
   // (asserted below).
   "a-setupcell",
   "a-setupcell-part",
-  // Rule 168 (R137 Q1): the "4 files" line under the zip — 44 px in the
+  // Rule 168 (R137 Q1): the file-count line under the zip — 44 px in the
   // ≤480 block, and not displayed at the desk (components/rule-168.test.tsx).
   "dl-files",
 ];

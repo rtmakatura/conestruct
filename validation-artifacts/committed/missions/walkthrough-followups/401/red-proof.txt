@@ -1,0 +1,34 @@
+#401 red proof. The branch's new and changed test files, copied into a `git archive 982c544 conestruct/site`
+(the base; node_modules joined from the issue worktree), run with
+`npx vitest run lib/download-name.test.ts app/api/render/bundle components/OutputCards.test.tsx components/GeneratorShell.primary.test.tsx components/rule-168.test.tsx`.
+
+Test Files  5 failed (5)
+     Tests  7 failed | 30 passed (37)
+
+ FAIL  lib/download-name.test.ts                (no lib/download-name.ts on the base: every plan saves as plan.*)
+ FAIL  components/rule-168.test.tsx             (no bundleLabel on the base: the label was `${BUNDLE_PART_KINDS.length} files`)
+ FAIL  app/api/render/bundle/route.test.ts > holds every card's file plus the quote, and the label counts them
+ FAIL  app/api/render/bundle/route.test.ts > a sandbox plan's zip is named for its road, kind and day, with no 'mht'
+ FAIL  app/api/render/bundle/route.test.ts > a plan with a project name keeps it   (base names it Test_Job_mht_package.zip)
+ FAIL  components/OutputCards.test.tsx > OutputCards download cards > #289 fidelity F4 (X8): ... the zip carries 6 parts
+ FAIL  components/OutputCards.test.tsx > sandbox filenames (#401) > every card's file is named road_kind_day when the plan has no project name
+ FAIL  components/GeneratorShell.primary.test.tsx > #288 clause 3 ... > the count appears exactly once on the settled page, and it is the bundle's own
+ FAIL  components/GeneratorShell.primary.test.tsx > #288 clause 3 ... > it is stated once in the OTHER state too
+
+The same files on the branch: all pass (see the report's vitest line).
+
+--- Repair cycle 1 (fingerprint in the names, .quote.xlsx, the zip waits on the audit) ---
+The same procedure with the cycle-1 test files (QuotePanel.invalidation.test.tsx added):
+
+Test Files  6 failed (6)
+     Tests  2 failed | 8 passed (10)
+
+ FAIL  lib/download-name.test.ts                    (whole file: no lib/download-name.ts on the base)
+ FAIL  components/OutputCards.test.tsx              (whole file: it now imports planFingerprint from lib/download-name)
+ FAIL  components/QuotePanel.invalidation.test.tsx  (whole file: it now imports planFilename from lib/download-name)
+ FAIL  components/rule-168.test.tsx                 (whole file: no bundleLabel on the base)
+ FAIL  app/api/render/bundle/route.test.ts          (whole file: imports planFingerprint)
+ FAIL  components/GeneratorShell.primary.test.tsx > #288 clause 3 ... > the count appears exactly once ... (2 tests)
+Whole-file failures at import hide the per-test results in this run; the first run above shows the per-test
+failures of the cycle-0 tests on the base. The cycle-1 tests (two plans that differ by side or length, the
+quote's .quote.xlsx, the zip disabled with no settled audit) are new behaviour, and they pass on the branch.

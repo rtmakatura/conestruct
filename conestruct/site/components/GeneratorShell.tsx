@@ -126,6 +126,7 @@ type Mode = "sandbox" | "workbench";
 // test that has to be edited to follow a file move is a test that stopped
 // asserting the thing it was written for.
 import { armLandingCheck, type LandingCheck } from "@/lib/landing";
+import { packageFilename } from "@/lib/download-name";
 export { armLandingCheck };
 export type { LandingCheck };
 
@@ -945,14 +946,6 @@ export function GeneratorShell({
     breakdownInFlight &&
     jurisdictionBlock === null;
 
-  const safeFilename = (name: string | undefined): string => {
-    const cleaned = (name ?? "")
-      .trim()
-      .replace(/[^a-zA-Z0-9 _-]+/g, "_")
-      .replace(/\s+/g, "_");
-    return cleaned || "plan";
-  };
-
   // Generator restage: Generate stages the page (pre → generating →
   // post); it no longer auto-downloads the zip.  The bundle download
   // moved to Zone 2's "All (.zip)" — same endpoint, same
@@ -1081,8 +1074,8 @@ export function GeneratorShell({
   };
 
   // Sandbox/public mode: build the deliverable zip on demand by hitting
-  // /api/render/bundle (which fans out to all four Modal renderers in
-  // parallel and zips the bytes server-side).  Saved/workbench mode just
+  // /api/render/bundle (which fans out to every Modal renderer in
+  // BUNDLE_PART_KINDS in parallel and zips the bytes server-side).  Saved/workbench mode just
   // re-uses the existing per-file download links exposed in OutputCards.
   const onDownloadBundle = async () => {
     if (bundling) return;
@@ -1115,7 +1108,9 @@ export function GeneratorShell({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${safeFilename(scenario.meta?.project)}_mht_package.zip`;
+      // #401: project name, else road + kind + day + fingerprint of the
+      // plan sent (downloadScenario, as the cards name theirs); no "mht".
+      a.download = packageFilename(downloadScenario);
       document.body.appendChild(a);
       a.click();
       a.remove();

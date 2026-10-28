@@ -5,7 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { OutputCards } from "./OutputCards";
-import { BUNDLE_PART_KINDS } from "@/lib/render-types";
+import { BUNDLE_PART_KINDS, bundleLabel } from "@/lib/render-types";
+import { planFingerprint } from "@/lib/download-name";
 import type { AuditSummary } from "@/lib/render-types";
 import type { Scenario } from "@/lib/scenarios";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
@@ -89,21 +90,21 @@ describe("OutputCards download cards", () => {
     expect(audit.textContent).toContain("checks");
   });
 
-  it("#289 fidelity F4 (X8): no MHT PACKAGE heading — the file count is stated ONCE, beside the zip (ruling 193); the zip still carries 4 parts", () => {
+  it("#289 fidelity F4 (X8): no MHT PACKAGE heading — the file count is stated ONCE, beside the zip (ruling 193); the zip carries 6 parts", () => {
     // The zip (and the count riding it) renders only in public mode with
     // a download-all handler — pass one so the count is on the page.
     renderPublic({ onDownloadAll: () => {} });
-    // The zip carries quote.xlsx in addition to the three cards; the
+    // #401: the zip carries every card's file plus quote.xlsx; the
     // count is stated ONCE (#253 / ruling 193).  The "MHT PACKAGE"
     // heading was the old results head's — rules 84–86 make the row the
     // four cards — so it is gone, and the count sits beside the zip it
     // counts.
-    expect(BUNDLE_PART_KINDS.length).toBe(4);
+    expect(BUNDLE_PART_KINDS.length).toBe(6);
     expect(screen.queryByText("MHT PACKAGE")).toBeNull();
     // Rule 168 (R137 Q1): two homes in the markup, beside the zip (the
-    // desk) and the "4 files" line under it (the phone); CSS shows one
+    // desk) and the file-count line under it (the phone); CSS shows one
     // per width (components/rule-168.test.tsx).
-    const homes = screen.getAllByText(`${BUNDLE_PART_KINDS.length} files`);
+    const homes = screen.getAllByText(bundleLabel());
     expect(homes).toHaveLength(2);
     expect(homes[0].classList.contains("dl-all-count")).toBe(true);
     expect(homes[1].closest(".dl-files")).not.toBeNull();
@@ -527,6 +528,78 @@ describe("the action row (#261a)", () => {
 // for the input on screen — first load, or failed) prints an EMPTY
 // quantity line of reserved height (P1/P16: no placeholder number) and
 // disables the button: an audit that has not answered has no PDF.
+// #401 (W11): a sandbox plan has no project name, and every card saved
+// as plan.*, so two plans collided as "plan (1).pdf".  Clicked through the
+// mounted cards: each file is named for the road, the kind, the day and a
+// fingerprint of the plan, so two different plans never share a name.
+describe("sandbox filenames (#401)", () => {
+  const COLFAX = {
+    kind: "shoulder",
+    workLen: 500,
+    meta: {
+      project: "",
+      work: { side: "right" },
+      confirmedRoad: { candidate: { name: "East Colfax Avenue", ref: null } },
+    },
+  } as unknown as Scenario;
+
+  async function savedNames(scenario: Scenario): Promise<string[]> {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(2026, 9, 27, 12, 0));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({ ok: true, status: 200, blob: async () => new Blob(["x"]) })),
+    );
+    URL.createObjectURL = () => "blob:x";
+    URL.revokeObjectURL = () => {};
+    const downloads: string[] = [];
+    const spy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(function (this: HTMLAnchorElement) {
+        downloads.push(this.download);
+      });
+    const { container, unmount } = renderPublic({ mode: { kind: "public", scenario } });
+    const buttons = Array.from(container.querySelectorAll<HTMLButtonElement>(".dl-btn"));
+    for (const [i, b] of buttons.entries()) {
+      fireEvent.click(b);
+      await vi.waitFor(() => expect(downloads).toHaveLength(i + 1));
+    }
+    unmount();
+    spy.mockRestore();
+    vi.useRealTimers();
+    return downloads;
+  }
+
+  it("every card's file is named road_kind_day_fingerprint when the plan has no project name", async () => {
+    const base = `East-Colfax-Avenue_shoulder_2026-10-27_${planFingerprint(COLFAX)}`;
+    expect(await savedNames(COLFAX)).toEqual([
+      `${base}.pdf`,
+      `${base}.xlsx`,
+      `${base}.crew.pdf`,
+      `${base}.md`,
+      `${base}.audit.pdf`,
+    ]);
+  });
+
+  it("two plans that differ only by side, or only by length, save under different names", async () => {
+    const left = { ...COLFAX, meta: { ...COLFAX.meta, work: { side: "left" } } } as Scenario;
+    const longer = { ...COLFAX, workLen: 800 } as Scenario;
+    const [a, b, c] = [await savedNames(COLFAX), await savedNames(left), await savedNames(longer)];
+    for (let i = 0; i < a.length; i += 1) {
+      expect(new Set([a[i], b[i], c[i]]).size).toBe(3);
+    }
+  });
+
+  it("the zip waits on the audit, as the audit card does (its PDF is in the zip)", () => {
+    const { container } = renderPublic({ onDownloadAll: () => {}, auditChecked: null });
+    const zip = container.querySelector<HTMLButtonElement>(".dl-all button")!;
+    expect(zip.disabled).toBe(true);
+    cleanup();
+    const ready = renderPublic({ onDownloadAll: () => {}, auditChecked: 13 });
+    expect(ready.container.querySelector<HTMLButtonElement>(".dl-all button")!.disabled).toBe(false);
+  });
+});
+
 describe("the audit card (#261b)", () => {
   it("clicking Download on the audit card POSTs { scenario } to /api/render/audit-pdf and saves <project>.audit.pdf", async () => {
     const fetchMock = vi.fn(async () => ({

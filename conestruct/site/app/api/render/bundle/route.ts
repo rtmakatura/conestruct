@@ -7,20 +7,13 @@ import {
 import { coerceQuoteSettings } from "@/lib/quote-settings";
 import { isScenario } from "@/lib/scenarios";
 import { rateLimitOr429 } from "@/lib/rate-limit";
+import { packageFilename } from "@/lib/download-name";
 
 // #122: give cold-start / heavy renders headroom under Vercel's function
 // limit (60s < the backend's 120s cap) instead of an opaque NetworkError.
 export const maxDuration = 60;
 
 const MAX_BODY_BYTES = 32 * 1024;
-
-function safeFilename(name: string | undefined): string {
-  const cleaned = (name ?? "")
-    .trim()
-    .replace(/[^a-zA-Z0-9 _-]+/g, "_")
-    .replace(/\s+/g, "_");
-  return cleaned || "plan";
-}
 
 export async function POST(req: NextRequest) {
   const over = await rateLimitOr429(req, "render-bundle", 10);
@@ -60,12 +53,15 @@ export async function POST(req: NextRequest) {
   }
   const zipBytes = await zip.generateAsync({ type: "uint8array" });
 
-  const baseName = safeFilename(scenario.meta?.project);
+  // #401: the zip button's name for the same plan, except the day: here
+  // it is the server's local day (UTC on Vercel), there the browser's.
+  // The browser saves under the button's name (a.download), so this
+  // header only names a zip fetched outside the page.
   const headers = new Headers();
   headers.set("content-type", "application/zip");
   headers.set(
     "content-disposition",
-    `attachment; filename="${baseName}_mht_package.zip"`,
+    `attachment; filename="${packageFilename(scenario)}"`,
   );
   headers.set("cache-control", "private, no-store");
   return new Response(zipBytes, { status: 200, headers });

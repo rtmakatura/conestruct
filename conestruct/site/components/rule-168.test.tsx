@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 // Rule 168 (R137 Q1, R145 self-ruled): at the phone width the four download
-// cards sit closed behind a "4 files" line under the zip, a disclosure that
-// opens onto them (the zip lacks the crew and audit PDFs, so the cards
-// stay reachable).  Only where the zip renders; a saved plan keeps its
-// cards.  The widths are CSS, pinned below; the fit itself is measured in a
+// cards sit closed behind the file-count line under the zip, a disclosure
+// that opens onto them (ruled when the zip lacked the crew and audit PDFs;
+// since #401 it holds them, and each card's file stays reachable alone).
+// Only where the zip renders; a saved plan keeps its cards.  The widths are CSS, pinned below; the fit itself is measured in a
 // real browser by scripts/verify-phone-fit.cjs.
 
 import { readFileSync } from "node:fs";
@@ -12,7 +12,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 
 import { OutputCards } from "./OutputCards";
-import { BUNDLE_PART_KINDS, type AuditSummary } from "@/lib/render-types";
+import { bundleLabel, type AuditSummary } from "@/lib/render-types";
 import type { Scenario } from "@/lib/scenarios";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 
@@ -34,11 +34,11 @@ const READY: DeviceBreakdownState = {
   data: { devices: [], total_devices: 42, unique_types: 6 },
 };
 const SCENARIO = { meta: { project: "Test Job" } } as unknown as Scenario;
-const LABEL = `${BUNDLE_PART_KINDS.length} files`;
+const LABEL = bundleLabel();
 
 afterEach(cleanup);
 
-describe("rule 168: the '4 files' line under the zip", () => {
+describe("rule 168: the file-count line under the zip", () => {
   it("in the sandbox, closes the cards behind a disclosure that opens onto all four", () => {
     const { container } = render(
       <OutputCards

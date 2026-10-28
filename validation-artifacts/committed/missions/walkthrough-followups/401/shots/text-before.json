@@ -1,0 +1,49 @@
+{
+ "390": {
+  "filesLine": {
+   "text": "4 files ›",
+   "width": 362,
+   "height": 44
+  },
+  "zipRow": {
+   "text": "↓ ALL (.ZIP)",
+   "width": 354,
+   "height": 44
+  },
+  "zipName": "plan_mht_package.zip",
+  "zipEntries": [
+   "plan_sheet.pdf",
+   "device_list.xlsx",
+   "crew_narrative.md",
+   "quote.xlsx"
+  ],
+  "cardNames": [
+   "plan.pdf",
+   "plan.xlsx",
+   "plan.crew.pdf",
+   "plan.md",
+   "plan.audit.pdf"
+  ]
+ },
+ "1440": {
+  "zipRow": {
+   "text": "4 files ↓ ALL (.ZIP)",
+   "width": 167.42,
+   "height": 32
+  },
+  "zipName": "plan_mht_package.zip",
+  "zipEntries": [
+   "plan_sheet.pdf",
+   "device_list.xlsx",
+   "crew_narrative.md",
+   "quote.xlsx"
+  ],
+  "cardNames": [
+   "plan.pdf",
+   "plan.xlsx",
+   "plan.crew.pdf",
+   "plan.md",
+   "plan.audit.pdf"
+  ]
+ }
+}

@@ -12,14 +12,31 @@
  * safety on a one-way data flow.
  */
 
-// The files inside the "download all" MHT-package zip, in bundle order.
+// The files inside the "download all" zip, in bundle order.
 // /api/render/bundle renders exactly these kinds (fetchAllRenderParts
-// spreads this list), and OutputCards derives its "MHT PACKAGE · N FILES"
-// header count from its length — one source, so the label can never
-// drift from what the zip actually contains.  Lives here rather than in
-// render-proxy.ts because render-proxy imports server-only modules
-// (Clerk, the DB) and can't be pulled into a client component.
-export const BUNDLE_PART_KINDS = ["pdf", "xlsx", "markdown", "quote"] as const;
+// spreads this list), and OutputCards prints bundleLabel() beside the zip,
+// counted from this list — one source, so the label can never drift from
+// what the zip actually contains.  #401 (R145 self-ruled, rulings.md call
+// 1): every card's file is in it (plan PDF, device XLSX, crew PDF + MD,
+// audit PDF), plus the quote, which no card offers, so the label names it.
+// Lives here rather than in render-proxy.ts because render-proxy imports
+// server-only modules (Clerk, the DB) and can't be pulled into a client
+// component.
+export const BUNDLE_PART_KINDS = [
+  "pdf",
+  "xlsx",
+  "crew-pdf",
+  "markdown",
+  "audit-pdf",
+  "quote",
+] as const;
+
+// "6 files, with the quote": the count and the one file no card names.
+export function bundleLabel(): string {
+  const kinds: readonly string[] = BUNDLE_PART_KINDS;
+  const count = `${kinds.length} files`;
+  return kinds.includes("quote") ? `${count}, with the quote` : count;
+}
 
 export interface AuditSummary {
   ta: string;
