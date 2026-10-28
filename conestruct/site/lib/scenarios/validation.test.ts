@@ -41,6 +41,27 @@ describe("validateWorkZone — schema bounds only (gt=0 mirror)", () => {
     const v = validateWorkZone({ ...DEFAULT_FLAGGER, workLen: NaN });
     expect(v.ok).toBe(false);
   });
+
+  // #403: a negative length is a number, not a missing one.  The message
+  // names the backend's bound (gt=0.0, src/api/schemas.py); 0 and NaN
+  // stay "required" (0 is the cleared field, shown empty).
+  it("a negative length says it must be more than 0 ft (#403)", () => {
+    for (const workLen of [-5, -1, -0.5]) {
+      expect(validateWorkZone({ ...DEFAULT_FLAGGER, workLen })).toEqual({
+        ok: false,
+        message: "Work zone length must be more than 0 ft.",
+      });
+    }
+  });
+
+  it("0 and NaN still say required (#403)", () => {
+    expect(validateWorkZone({ ...DEFAULT_FLAGGER, workLen: 0 }).message).toBe(
+      "Work zone length is required.",
+    );
+    expect(validateWorkZone({ ...DEFAULT_FLAGGER, workLen: NaN }).message).toBe(
+      "Work zone length is required.",
+    );
+  });
 });
 
 // Engine-removal PR D negative guards: a short-but-positive work zone

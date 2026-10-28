@@ -207,6 +207,25 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
   });
 });
 
+describe("#403: a negative work-zone length is refused as one, not as missing", () => {
+  it("the blocker and the work entry say it must be more than 0 ft", () => {
+    const s: Scenario = { ...pinned(DEFAULT_SHOULDER), workLen: -5 };
+    const rail = deriveRail(input(s));
+    expect(rail.blocker).toEqual({
+      message: "Work zone length must be more than 0 ft.",
+      entryId: "work",
+    });
+    expect(entryById(rail, "work").issues).toEqual([
+      { text: "Work zone length must be more than 0 ft." },
+    ]);
+  });
+
+  it("an empty length (0) still says required", () => {
+    const s: Scenario = { ...pinned(DEFAULT_SHOULDER), workLen: 0 };
+    expect(deriveRail(input(s)).blocker?.message).toBe("Work zone length is required.");
+  });
+});
+
 describe("entries — every simultaneous blocker visible (rule 10)", () => {
   it("the invisible-queue case: wz=0 on top of a pending hold shows BOTH", () => {
     const s: NearIntersectionScenario = {

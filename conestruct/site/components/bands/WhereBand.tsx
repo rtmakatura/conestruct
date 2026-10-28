@@ -785,7 +785,7 @@ export function WhereBand({
                 testid="worklen"
                 provenance={
                   <span className="tr-prov" data-testid="prov-worklen">
-                    {scenario.workLen <= 0
+                    {scenario.workLen === 0
                       ? "not set · the extent the plan is built for"
                       : workLenIsDefault(scenario)
                         ? // #397: the starting length, not an answer (Rule 10).
@@ -794,12 +794,15 @@ export function WhereBand({
                   </span>
                 }
                 marker={
-                  scenario.workLen <= 0
+                  scenario.workLen === 0
                     ? { glyph: "◌", word: "not set", tone: "pending" }
-                    : workLenIsDefault(scenario)
-                      ? // Plain "default", no mark (Ryan, 2026-10-26).
-                        { glyph: null, word: "default", tone: "plain" }
-                      : { glyph: "✓", word: "yours", tone: "ok" }
+                    : scenario.workLen < 0
+                      ? // #403: the operator's, but refused; no ✓ on it.
+                        { glyph: null, word: "yours", tone: "plain" }
+                      : workLenIsDefault(scenario)
+                        ? // Plain "default", no mark (Ryan, 2026-10-26).
+                          { glyph: null, word: "default", tone: "plain" }
+                        : { glyph: "✓", word: "yours", tone: "ok" }
                 }
                 alert={wzTouched && !wz.ok ? <FieldErrorLine>{wz.message}</FieldErrorLine> : null}
                 info={

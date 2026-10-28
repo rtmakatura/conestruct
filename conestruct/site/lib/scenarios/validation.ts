@@ -172,10 +172,21 @@ export interface WorkZoneValidation {
 export function validateWorkZone(scenario: Scenario): WorkZoneValidation {
   const wz = scenario.workLen;
 
-  if (!Number.isFinite(wz) || wz <= 0) {
+  // 0 is the cleared field (commitWorkLen writes 0 for an empty draft, and
+  // the field shows 0 as empty), so 0 and NaN read "required".
+  if (!Number.isFinite(wz) || wz === 0) {
     return {
       ok: false,
       message: "Work zone length is required.",
+    };
+  }
+  // #403: a negative length is a number, not a missing one.  Mirror of the
+  // backend's `workLen: float = Field(gt=0.0, ...)` (src/api/schemas.py),
+  // which is authoritative; the message names that bound (Rule 10).
+  if (wz < 0) {
+    return {
+      ok: false,
+      message: "Work zone length must be more than 0 ft.",
     };
   }
   if (wz > MAX_WORK_LEN_FT) {

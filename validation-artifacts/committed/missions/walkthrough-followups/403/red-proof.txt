@@ -1,0 +1,16 @@
+#403 red proof. The branch's new and changed test files (components/bands/WhereBand.work-length.test.tsx,
+lib/scenarios/rail.test.ts, lib/scenarios/validation.test.ts) copied into a `git archive 27f69c2 conestruct/site`
+(the base; node_modules joined from the issue worktree), run with
+`npx vitest run components/bands/WhereBand.work-length.test.tsx lib/scenarios/rail.test.ts lib/scenarios/validation.test.ts`.
+
+ Test Files  3 failed (3)
+      Tests  3 failed | 63 passed (66)
+
+ FAIL  lib/scenarios/validation.test.ts > validateWorkZone — schema bounds only (gt=0 mirror) > a negative length says it must be more than 0 ft (#403)
+ FAIL  lib/scenarios/rail.test.ts > #403: a negative work-zone length is refused as one, not as missing > the blocker and the work entry say it must be more than 0 ft
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > -5: the box keeps -5, the marker is the operator's word with no mark, and both lines say 'more than 0 ft'
+       (Expected: "⚠ Work zone length must be more than 0 ft."  Received: "⚠ Work zone length is required.")
+
+The controls pass on the base, as they should: 0 and NaN say required, a cleared field and a typed 0
+read "◌ not set" and required, and 99999 gets the 20,000 ft cap message.
+The same files on the branch: all pass (tests.txt).

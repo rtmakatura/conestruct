@@ -1,0 +1,6 @@
+#403 after the fix, in conestruct/site: npx vitest run --reporter=dot (summary) and npx tsc --noEmit
+ Test Files  249 passed | 1 skipped (250)
+      Tests  2639 passed | 1 skipped (2640)
+tsc --noEmit: clean
+Baseline on 27f69c2 in this worktree: vitest 2631 passed, 1 skipped (248 files passed, 1 skipped); pytest 3612 passed, 2 skipped.
+No Python change on this branch (pytest not re-run; mypy and ruff untouched).

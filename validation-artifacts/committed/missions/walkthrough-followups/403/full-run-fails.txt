@@ -1,0 +1,6 @@
+Full vitest run 1 (after the fix, before the tsc repair), one failure:
+ components/GeneratorShell.a11y-announce.test.tsx > generation announcements (#193) > clears at the click so a repeat Generate with identical counts re-announces
+Re-run together with the new test file, not alone: passed (npx vitest run components/GeneratorShell.a11y-announce.test.tsx components/bands/WhereBand.work-length.test.tsx: 2 files passed, 12 tests). Next full run: 249 passed | 1 skipped files, no failures.
+Run alone (npx vitest run components/GeneratorShell.a11y-announce.test.tsx, that file only): passed.
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
