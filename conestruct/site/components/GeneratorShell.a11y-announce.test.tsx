@@ -55,6 +55,10 @@ const BREAKDOWN = {
 type Deferred = { resolve: (r: Response) => void };
 let breakdownCalls: Deferred[] = [];
 let bundleFails = false;
+// #426: when set, the next bundle request is held open until the test
+// releases it, so the working band's label can be read while it renders.
+let holdBundle = false;
+let releaseBundle: (() => void) | null = null;
 // #258: the audit refuses the scan (the prod-captured 400 shape) while
 // the breakdown may still answer — the declined pair must never
 // announce "Plan generated".
@@ -109,6 +113,17 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   if (url.includes("/api/render/device-breakdown")) {
     return new Promise<Response>((resolve) => {
       breakdownCalls.push({ resolve });
+    });
+  }
+  if (url.includes("/api/render/bundle") && holdBundle) {
+    return new Promise<Response>((resolve) => {
+      releaseBundle = () =>
+        resolve({
+          ok: true,
+          status: 200,
+          blob: async () => new Blob(["x"]),
+          json: async () => ({}),
+        } as unknown as Response);
     });
   }
   if (url.includes("/api/render/bundle")) {
@@ -186,6 +201,8 @@ function statusRegion(): HTMLElement {
 beforeEach(() => {
   breakdownCalls = [];
   bundleFails = false;
+  holdBundle = false;
+  releaseBundle = null;
   auditRefuses = false;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
@@ -394,6 +411,43 @@ describe("generation announcements (#193)", () => {
     expect(
       alerts.some((a) => a.textContent?.includes("Bundle failed (500)")),
     ).toBe(true);
+  });
+
+  it("#426: the package wording spells MHT out once, in the working band; the announcement says MHT alone", async () => {
+    // Ryan's ruling (2026-10-28): keep "MHT", spelled out once as
+    // "Method of Handling Traffic (MHT)".  The band is the package
+    // string every reader meets (visible, and its own live region); the
+    // sr-only announcement carries package wording only when the counts
+    // are missing, so it keeps "MHT" alone (rulings.md call 1).
+    holdBundle = true;
+    const noCounts = {
+      ok: true,
+      status: 200,
+      json: async () => ({ ...BREAKDOWN, total_devices: null, unique_types: null }),
+    } as unknown as Response;
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await release(0, okBreakdown());
+    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, noCounts);
+    await flushDebounce();
+    expect(statusRegion().textContent).toBe("Plan generated. MHT package ready.");
+
+    await user.click(screen.getByRole("button", { name: /All \(\.zip\)/ }));
+    const bandRow = document.querySelector(".working-band [role=status]");
+    expect(bandRow).not.toBeNull();
+    expect(bandRow!.querySelector(".wb-object")!.textContent).toBe(
+      "Method of Handling Traffic (MHT) package ZIP",
+    );
+    // Spelled out once: the long form is in the band only.
+    expect(document.body.textContent!.match(/Method of Handling Traffic \(MHT\)/g)).toHaveLength(1);
+    expect(statusRegion().textContent).not.toContain("Method of Handling Traffic");
+    await act(async () => {
+      releaseBundle!();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
   });
 
   it("the stale ribbon stays visual-only (the band's region announces the flight, #252)", async () => {

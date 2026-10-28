@@ -1,0 +1,13 @@
+# #426 tests (branch issue-426-mht-spelled-out on 5661100), conestruct/site
+# baseline on 5661100 (see rulings.md § Baseline):
+#   run 1, vitest --reporter=dot:  Test Files 1 failed | 249 passed | 1 skipped (251); Tests 9 failed | 2640 passed | 1 skipped (2650)  (names not saved)
+#   run 2, vitest --reporter=json: 2649 passed, 0 failed
+#   tsc --noEmit: clean
+# branch, the two changed test files:
+#   Test Files  2 passed (2)
+#        Tests  12 passed (12)
+# branch, full suite:
+#   Test Files  250 passed | 1 skipped (251)
+#        Tests  2650 passed | 1 skipped (2651)
+# branch, tsc --noEmit: clean (exit 0)
+# backend: not touched; pytest not run (no backend change).

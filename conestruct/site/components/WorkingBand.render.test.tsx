@@ -194,7 +194,7 @@ describe("#252 — RENDERING: a file render raises the band and the lock", () =>
   it("the zip, the quote preview, the quote XLSX and the audit PDF each name their file", async () => {
     const user = await generate();
     await user.click(screen.getByRole("button", { name: /All \(\.zip\)/ }));
-    expect(object()).toBe("MHT package ZIP");
+    expect(object()).toBe("Method of Handling Traffic (MHT) package ZIP");
     await releaseRender("bundle");
     expect(band()).toBeNull();
 

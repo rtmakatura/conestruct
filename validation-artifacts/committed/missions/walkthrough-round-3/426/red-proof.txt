@@ -1,0 +1,26 @@
+# #426 red proof: the branch's two test files run against a git archive of the base (5661100, issue-430-preview-refusal)
+# git archive 5661100 conestruct/site | tar -x; the two test files copied in; node_modules joined from the worktree
+# npx vitest run components/GeneratorShell.a11y-announce.test.tsx components/WorkingBand.render.test.tsx
+# The #426 test's first assertion (the announcement reads "Plan generated. MHT package ready.") passes on the base; it fails at the band label.
+
+   ✓ #252 — RENDERING: a file render raises the band and the lock > a per-file render says RENDERING · {file}, locks the page, and the band leaves with the response; the button never says 'Rendering…'  1416ms
+   × #252 — RENDERING: a file render raises the band and the lock > the zip, the quote preview, the quote XLSX and the audit PDF each name their file 1115ms
+   ✓ #252 — RENDERING: a file render raises the band and the lock > a render closing hands the page back; the next plan request speaks in its own voice (precedence over an open render is the unit test's)  2026ms
+   ✓ generation announcements (#193) > announces the generated package with the counts the hero renders  1200ms
+   ✓ generation announcements (#193) > clears at the click so a repeat Generate with identical counts re-announces  1865ms
+   ✓ generation announcements (#193) > a background settle never writes the status region  607ms
+   ✓ generation announcements (#193) > a failed generation announces via the alert ribbon, not the status region  538ms
+   ✓ generation announcements (#193) > #258: a refused pair never writes the status region — even when the breakdown answered; the role=alert container speaks  910ms
+   ✓ generation announcements (#193) > #258: a Retry that settles clean announces the recovered plan, once  1776ms
+   ✓ generation announcements (#193) > a bundle failure announces via role=alert  646ms
+   × generation announcements (#193) > #426: the package wording spells MHT out once, in the working band; the announcement says MHT alone 1057ms
+   ✓ generation announcements (#193) > the stale ribbon stays visual-only (the band's region announces the flight, #252)  968ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.a11y-announce.test.tsx > generation announcements (#193) > #426: the package wording spells MHT out once, in the working band; the announcement says MHT alone
+Expected: "Method of Handling Traffic (MHT) package ZIP"
+Received: "MHT package ZIP"
+ FAIL  components/WorkingBand.render.test.tsx > #252 — RENDERING: a file render raises the band and the lock > the zip, the quote preview, the quote XLSX and the audit PDF each name their file
+Expected: "Method of Handling Traffic (MHT) package ZIP"
+Received: "MHT package ZIP"
+ Test Files  2 failed (2)
+      Tests  2 failed | 10 passed (12)

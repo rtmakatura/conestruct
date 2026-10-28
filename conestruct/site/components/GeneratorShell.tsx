@@ -1089,7 +1089,10 @@ export function GeneratorShell({
       return;
     }
 
-    const endRender = beginRender("MHT package ZIP");
+    // #426 (Ryan, 2026-10-28): "MHT" is spelled out once in the package
+    // wording, here; the band is the package string every reader meets.
+    // The Generate announcement below says "MHT" alone.
+    const endRender = beginRender("Method of Handling Traffic (MHT) package ZIP");
     try {
       const res = await fetch("/api/render/bundle", {
         method: "POST",

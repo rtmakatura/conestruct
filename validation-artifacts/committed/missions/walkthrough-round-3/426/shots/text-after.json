@@ -1,0 +1,65 @@
+{
+  "phase": "after",
+  "at1440": {
+    "heldBundleRequests": 1,
+    "band": {
+      "x": 0,
+      "y": 858.875,
+      "width": 1440,
+      "height": 41.13,
+      "text": "◌RENDERINGMethod of Handling Traffic (MHT) package ZIP⚠ CONTROLS LOCKED"
+    },
+    "row": {
+      "x": 130,
+      "y": 859.875,
+      "width": 1180,
+      "height": 40.13,
+      "text": "◌RENDERINGMethod of Handling Traffic (MHT) package ZIP⚠ CONTROLS LOCKED"
+    },
+    "object": {
+      "x": 262.40625,
+      "y": 870.875,
+      "width": 888.83,
+      "height": 18.13,
+      "text": "Method of Handling Traffic (MHT) package ZIP"
+    },
+    "lock": {
+      "x": 1165.234375,
+      "y": 873.875,
+      "width": 118.77,
+      "height": 14.25,
+      "text": "⚠ CONTROLS LOCKED"
+    }
+  },
+  "at390": {
+    "heldBundleRequests": 1,
+    "band": {
+      "x": 0,
+      "y": 764.5,
+      "width": 390,
+      "height": 79.5,
+      "text": "◌RENDERINGMethod of Handling Traffic (MHT) package ZIP⚠ CONTROLS LOCKED"
+    },
+    "row": {
+      "x": 0,
+      "y": 765.5,
+      "width": 390,
+      "height": 78.5,
+      "text": "◌RENDERINGMethod of Handling Traffic (MHT) package ZIP⚠ CONTROLS LOCKED"
+    },
+    "object": {
+      "x": 132.40625,
+      "y": 776.5,
+      "width": 231.59,
+      "height": 36.25,
+      "text": "Method of Handling Traffic (MHT) package ZIP"
+    },
+    "lock": {
+      "x": 26,
+      "y": 818.75,
+      "width": 118.77,
+      "height": 14.25,
+      "text": "⚠ CONTROLS LOCKED"
+    }
+  }
+}
