@@ -1,0 +1,159 @@
+{
+ "flow": "gen",
+ "width": 1440,
+ "started": "2026-10-28T20:12:03.821Z",
+ "corridorAnswers": [
+  {
+   "at": 1793218330691,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218333804,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218334518,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218336933,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218339571,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218343339,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218356966,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218358949,
+   "status": 200,
+   "meta": {
+    "lat": 39.739964,
+    "lng": -104.966006
+   },
+   "body": null
+  },
+  {
+   "at": 1793218366832,
+   "status": 200,
+   "meta": {
+    "lat": 39.73996639140151,
+    "lng": -104.9659275903327
+   },
+   "body": null
+  }
+ ],
+ "answeredOneWay": true,
+ "status": "⚠ VERIFIED · 3 PLAN FLAGS REVIEW FLAGS",
+ "bandObject": "Method of Handling Traffic (MHT) package ZIP",
+ "bandBox": {
+  "y": 858.875,
+  "height": 41.125
+ },
+ "zipMs": 2235,
+ "bundleStatus": 200,
+ "zipName": "East-Colfax-Avenue_shoulder_2026-10-28_b18045_package.zip",
+ "bandTexts": [
+  "◌ RENDERING Method of Handling Traffic (MHT) package ZIP ⚠ CONTROLS LOCKED"
+ ],
+ "buttonsAfterGenerate": [
+  "setup-link-location|ROAD East Colfax Avenue Eastbound",
+  "setup-link-kind|WORK Shoulder work",
+  "setup-link-extent|LENGTH 1,000 ft",
+  "setup-link-speed|SPEED 30 mph",
+  "setup-link-lanes|LANES 2 ×",
+  "setup-link-laneWidth|12 ft",
+  "setup-link-roadType|ROAD TYPE Urban street",
+  "setup-link-jurisdiction|JURISDICTION Denver",
+  "setup-link-dates|DATES ◌ not set",
+  "|DISMISS",
+  "|DISMISS",
+  "|SHOW 5",
+  "|APPLY 0 CORRECTIONS",
+  "|↓ ALL (.ZIP)",
+  "|Download PDF ↓",
+  "|Download XLSX ↓",
+  "|PDF ↓",
+  "|.md ↓",
+  "|Download PDF ↓",
+  "|i Pricing quote FYI: contractor estimate, not a permit fee. Expand to configure and preview. ›",
+  "|✓ Checked & passed 14 each cited ›",
+  "|◌ Pending / not verified 3 ›",
+  "|i Reference Denver · Arterial · MUTCD 11th (PT-116.1 pins 2009 R2) › DOTI PT-116.1 › Rule 22.3 › 2024 Fee Sched. ›"
+ ],
+ "openedVia": "setup-link-location",
+ "factLinks": [
+  "fact-link-what"
+ ],
+ "panelBeforeMove": "CORRIDOR EXTENT CENTERLINE OSM, FULL CORRIDOR",
+ "moveClick": {
+  "x": 395,
+  "y": 519.5,
+  "dxPx": 9,
+  "pinCentre": {
+   "x": 386,
+   "y": 519.5
+  }
+ },
+ "afterMoveCard": "WHICH ROAD? · 3 DETECTED",
+ "repicked": "East Colfax Avenue eastbound",
+ "panelAfterMove": "CORRIDOR EXTENT SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK.",
+ "answersAfterMove": [
+  {
+   "at": 1793218366832,
+   "status": 200,
+   "meta": {
+    "lat": 39.73996639140151,
+    "lng": -104.9659275903327
+   },
+   "body": null
+  }
+ ],
+ "movedFt": 22,
+ "couldntReach": false,
+ "declinedLine": null,
+ "refusedLine": null,
+ "panelShot": null
+}

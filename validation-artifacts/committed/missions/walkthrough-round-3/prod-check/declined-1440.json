@@ -1,0 +1,88 @@
+{
+ "flow": "declined",
+ "width": 1440,
+ "started": "2026-10-28T20:01:04.200Z",
+ "geocodeBodies": [
+  "{\"address\":\"E Colfax Ave & N Williams St, Denver, CO\",\"jurisdiction_key\":null}"
+ ],
+ "dialogBeforeEnter": false,
+ "dialogAfterEnter": true,
+ "searchBox": "E Colfax Ave & N Williams St, Denver, CO",
+ "enterToResultMs": 4247,
+ "geocodeAfterEnter": [
+  "{\"address\":\"E Colfax Ave & N Williams St, Denver, CO\",\"jurisdiction_key\":null}"
+ ],
+ "unpicked": {
+  "width": 407,
+  "height": 189.5,
+  "head": "⚠ WHICH ROAD? · 3 DETECTED",
+  "headColor": "rgb(244, 192, 32)",
+  "glyph": "⚠ ",
+  "glyphColor": "rgb(244, 192, 32)",
+  "frameBorder": "rgb(244, 192, 32)",
+  "frameBg": "rgba(244, 192, 32, 0.15)",
+  "line": null,
+  "lineRendered": null,
+  "lineClass": null,
+  "lineBox": null,
+  "lineScroll": null,
+  "lineLines": null,
+  "lineClipped": null,
+  "text": "⚠ WHICH ROAD? · 3 DETECTED WILLIAMS STREET NORTHBOUND (RESIDENTIAL, 0°) 0 M FROM PIN · WAY 128949366 EAST COLFAX AVENUE EASTBOUND (PRIMARY, 90°) 0 M FROM PIN · WAY 600545931 EAST COLFAX AVENUE WESTBOUND (PRIMARY, 269°) 12 M FROM PIN · WAY 1547338997",
+  "shot": "shots/card-1440-unpicked.png"
+ },
+ "picked": {
+  "width": 407,
+  "height": 69,
+  "head": "✓ ROAD PICKED · 3 DETECTED",
+  "headColor": "rgb(147, 160, 176)",
+  "glyph": "✓ ",
+  "glyphColor": "rgb(79, 215, 135)",
+  "frameBorder": "rgb(44, 62, 83)",
+  "frameBg": "rgba(0, 0, 0, 0)",
+  "line": "Detected from OSM: 269° (East Colfax Avenue westbound, primary) · way 1547338997",
+  "lineRendered": "DETECTED FROM OSM: 269° (EAST COLFAX AVENUE WESTBOUND, PRIMARY) · WAY 1547338997",
+  "lineClass": "min-w-0 break-words font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark)]",
+  "lineBox": {
+   "width": 310.19,
+   "height": 30
+  },
+  "lineScroll": {
+   "scrollWidth": 310,
+   "clientWidth": 310,
+   "scrollHeight": 30,
+   "clientHeight": 30
+  },
+  "lineLines": 2,
+  "lineClipped": false,
+  "text": "✓ ROAD PICKED · 3 DETECTED DETECTED FROM OSM: 269° (EAST COLFAX AVENUE WESTBOUND, PRIMARY) · WAY 1547338997 CHANGE",
+  "shot": "shots/card-1440-picked.png"
+ },
+ "sideAnswer": "● North side · westbound traffic",
+ "planDeclined": true,
+ "jurisdiction": {
+  "state": "declined",
+  "cellBox": {
+   "width": 407,
+   "height": 65
+  },
+  "cellText": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470",
+  "line": "⚠ guessed, not confirmed · from the pin",
+  "lineClass": "tr-prov is-amber",
+  "lineOnShow": false,
+  "lineColor": "rgb(244, 192, 32)",
+  "marker": "⚠ from the pin",
+  "markerClass": "a-mark tr-prov is-guess",
+  "markerWordColor": "rgb(244, 192, 32)",
+  "glyphColor": "rgb(244, 192, 32)",
+  "markerBg": "rgb(16, 28, 41)",
+  "didntAnswerAnywhere": false,
+  "windowsLine": "Windows · not checked: the plan was declined"
+ },
+ "jurisdictionShot": {
+  "text": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470",
+  "width": 407,
+  "height": 65,
+  "shot": "shots/declined-1440-jurisdiction-cell.png"
+ }
+}

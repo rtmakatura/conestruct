@@ -1,0 +1,45 @@
+{
+ "flow": "zero",
+ "width": 1440,
+ "started": "2026-10-28T20:03:12.433Z",
+ "typed0": {
+  "fieldValue": "0",
+  "marker": "yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "cellText": "Work zone length (ft) yours ⚠ WORK ZONE LENGTH MUST BE MORE THAN 0 FT.",
+  "cell": {
+   "text": "Work zone length (ft) yours ⚠ WORK ZONE LENGTH MUST BE MORE THAN 0 FT.",
+   "width": 846,
+   "height": 92,
+   "shot": "shots/zero-1440-typed0-cell.png"
+  },
+  "ctaReason": "Work zone length must be more than 0 ft.",
+  "generateEnabled": false,
+  "generate": {
+   "text": "Generate plan Work zone length must be more than 0 ft. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5,
+   "shot": "shots/zero-1440-typed0-generate.png"
+  }
+ },
+ "cleared": {
+  "fieldValue": "",
+  "marker": "◌ not set",
+  "provenance": "not set · the extent the plan is built for",
+  "cellText": "Work zone length (ft) ◌ not set ⚠ WORK ZONE LENGTH IS REQUIRED.",
+  "cell": {
+   "text": "Work zone length (ft) ◌ not set ⚠ WORK ZONE LENGTH IS REQUIRED.",
+   "width": 846,
+   "height": 92,
+   "shot": "shots/zero-1440-cleared-cell.png"
+  },
+  "ctaReason": "Work zone length is required.",
+  "generateEnabled": false,
+  "generate": {
+   "text": "Generate plan Work zone length is required. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5,
+   "shot": "shots/zero-1440-cleared-generate.png"
+  }
+ }
+}
