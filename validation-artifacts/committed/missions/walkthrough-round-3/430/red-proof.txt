@@ -1,0 +1,25 @@
+#430 red proof: this branch's test file run against bda17e5's code.
+Re-run in repair cycle 2: `git archive bda17e5 conestruct/site` extracted to the session scratchpad, the
+branch's LocationPickerModal.preview-refusal.test.tsx copied in, node_modules linked from the issue
+worktree (removed after the run).
+
+npx vitest run components/LocationPickerModal.preview-refusal.test.tsx
+
+  x  moving the pin ... > the preview at the moved pin drops the old pin's guess, and the corridor lays out
+       (the panel reads "Corridor preview unavailable. Couldn't reach the layout service. ..." after the
+       stub's 400 guess_stale, the backend's pin check: the issue's bug)
+  ok an unmoved pin still sends the guess as it is (byte-identical payload)                  [control]
+  ok an operator-set jurisdiction is kept at a moved pin                                    [control]
+  x  a 400 shows the backend's message, not 'Couldn't reach the layout service'
+  x  a 400 with a string detail shows that string                  (asserts the whole line since cycle 2)
+  x  a 400 with no readable message says the preview was declined, naming no answerer
+                                                                   (renamed in cycle 1; was "... says the layout service declined it")
+  ok a network failure still says 'Couldn't reach the layout service'                       [control]
+  ok a 502 from the proxy still says 'Couldn't reach the layout service'                    [control]
+  x  asSentence > adds a period to a message with no closing punctuation        (helper absent on the base)
+  x  asSentence > leaves a message that already ends a sentence as it is         (helper absent on the base)
+
+Tests  6 failed | 4 passed (10)
+
+The first run (before cycles 1 and 2) was 4 failed | 4 passed (8), the same four mounted tests under
+their earlier names.

@@ -230,7 +230,34 @@ export type GeometryFetch =
   | { state: "idle"; geometry: null }
   | { state: "loading"; geometry: CorridorGeometry | null }
   | { state: "ready"; geometry: CorridorGeometry }
-  | { state: "error"; geometry: null };
+  | {
+      state: "error";
+      geometry: null;
+      /** #430: present when the layout service ANSWERED (an HTTP status),
+       *  absent when the request never got an answer (a thrown fetch).
+       *  400 is the backend refusing the question (Rule 10: a refusal is
+       *  not an outage); the DeviceBreakdown precedent. */
+      httpStatus?: number;
+      /** The backend's own words for a 400, when the body carries them. */
+      message?: string | null;
+    };
+
+/** #430: a quoted message as a sentence, so the line after it doesn't run
+ *  on: a closing period is added when it ends in none of . ! ? */
+export function asSentence(message: string): string {
+  const t = message.trim();
+  return /[.!?]$/.test(t) ? t : `${t}.`;
+}
+
+/** #430: the backend's message in a refusal body: `detail.message` (the
+ *  `{error, message}` refusals, e.g. guess_stale) or a string `detail`
+ *  (HTTPException strings; the proxy's 422 mapping).  Null otherwise. */
+export function refusalMessage(body: unknown): string | null {
+  const detail = (body as { detail?: unknown } | null)?.detail;
+  if (typeof detail === "string") return detail.trim() || null;
+  const message = (detail as { message?: unknown } | null | undefined)?.message;
+  return typeof message === "string" && message.trim() ? message.trim() : null;
+}
 
 /**
  * Fetch the backend's geometry for ``scenario`` (null: nothing to ask),
@@ -262,7 +289,10 @@ export function useCorridorGeometry(scenario: Scenario | null): GeometryFetch {
         });
         if (tokenRef.current !== token) return;
         if (!r.ok) {
-          setResult({ state: "error", geometry: null });
+          const message =
+            r.status === 400 ? refusalMessage(await r.json().catch(() => null)) : null;
+          if (tokenRef.current !== token) return;
+          setResult({ state: "error", geometry: null, httpStatus: r.status, message });
           return;
         }
         const g = (await r.json()) as CorridorGeometry;

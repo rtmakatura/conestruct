@@ -1,0 +1,5 @@
+#430 first full vitest run after the fix (before any re-run): 3 failed | 2644 passed | 1 skipped
+  lib/design/type-census.test.ts > #263 type census - Tailwind size classes in components/ and app/ > every (file, class, count) is declared exactly - a new class, file, or extra use fails
+  lib/design/type-census.test.ts > #263 type census - Tailwind size classes in components/ and app/ > every declared Tailwind row still exists
+  lib/design/type-census.test.ts > #263 type census - the exceptions are the ruled set and the pins are the sources' figures > CENSUS_PINS equal the figures read from the sources (the README quotes these)
+Cause: the new "declined" line adds one text-[10px] use in components/LocationPickerModal.tsx, which the census counts exactly. Not flakes; real, caused by this diff.

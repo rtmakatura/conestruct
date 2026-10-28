@@ -1,0 +1,26 @@
+#430 test summary (issue-430-preview-refusal on bda17e5)
+
+Baseline on bda17e5:
+  vitest  2639 passed | 1 skipped
+  pytest  3612 passed, 2 skipped
+
+New file, on the base code, first run (before repair cycles 1 and 2): 4 failed | 4 passed (8); the final file's run on the base is 6 failed | 4 passed (10), in red-proof.txt
+New file, after the fix: 8 passed (8)
+
+Full vitest after the fix:
+  first run: 3 failed | 2644 passed | 1 skipped (lib/design/type-census.test.ts, caused by the diff; full-run-fails.txt)
+  after the census update: 2647 passed | 1 skipped (2648)
+  lib/design/type-census.test.ts alone: 12 passed (12)
+tsc --noEmit: clean
+pytest: not re-run; no backend file changed (baseline 3612 passed, 2 skipped)
+
+Repair cycle 1 (no-message line names no answerer):
+  new file: 8 passed (8)
+  full vitest: 2647 passed | 1 skipped (2648)
+  tsc --noEmit: clean
+
+Repair cycle 2 (asSentence; whole-line string-detail assertion):
+  new file on bda17e5 (git archive): 6 failed | 4 passed (10) (red-proof.txt)
+  new file after the fix: 10 passed (10)
+  full vitest: 2649 passed | 1 skipped (2650)
+  tsc --noEmit: clean

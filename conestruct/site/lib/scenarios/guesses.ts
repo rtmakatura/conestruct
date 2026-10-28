@@ -128,7 +128,11 @@ function reconcileStreetClass(s: Scenario, prev?: Scenario): Scenario {
   });
 }
 
-function reconcileJurisdiction(s: Scenario): Scenario {
+/** #430: the jurisdiction half of `withCurrentGuesses`, on its own.  The
+ *  picker's corridor preview moves the pin without a shell write, so it
+ *  runs this to ask the question Save & Close will write: a guess made at
+ *  another pin goes, field and record, and the backend never sees it. */
+export function reconcileJurisdiction(s: Scenario): Scenario {
   const entry = s.guesses?.jurisdiction_key;
   if (!entry) return s;
   // The operator cleared or replaced it through a generic write: the

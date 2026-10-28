@@ -37,9 +37,11 @@ import {
 import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
 import type { Scenario } from "@/lib/scenarios";
 import type { IntersectionRecord } from "@/lib/scenarios/types";
+import { reconcileJurisdiction } from "@/lib/scenarios/guesses";
 import {
   geometryToPolyline,
   refusalReason,
+  asSentence,
   useCorridorGeometry,
   type GeometryFetch,
 } from "@/lib/corridor-geometry";
@@ -486,7 +488,11 @@ export function LocationPickerModal({
       (pickedCandidate?.way_id ?? null);
     const { bearingDeg: _typed, work, ...meta } = baseScenario.meta;
     void _typed;
-    return {
+    // #430: the shell drops a jurisdiction guess in the write that moves
+    // its pin (guesses.ts, R110 Q1); the preview moves the pin with no
+    // write, so it applies the same rule, or the backend refuses the
+    // stale guess (400 guess_stale).
+    return reconcileJurisdiction({
       ...baseScenario,
       meta: {
         ...meta,
@@ -499,7 +505,7 @@ export function LocationPickerModal({
           ? ({ candidate: pickedCandidate, pinLat: lat, pinLng: lng } as ConfirmedRoad)
           : null,
       },
-    } as Scenario;
+    } as Scenario);
   }, [baseScenario, hasPin, lat, lng, pickedCandidate]);
 
   // #186/#211: while detection is resolving or a multi-candidate pick is
@@ -1835,7 +1841,9 @@ export function LocationPickerModal({
                     !baseScenario
                       ? "idle"
                       : geometry.state === "error"
-                        ? "error"
+                        ? geometry.httpStatus === 400
+                          ? "declined"
+                          : "error"
                         : geometry.state === "loading" && !laidOut
                           ? "loading"
                           : awaitingSide
@@ -1848,6 +1856,7 @@ export function LocationPickerModal({
                   }
                   pendingPick={pendingPick}
                   refusal={refusal}
+                  declined={geometry.state === "error" ? (geometry.message ?? null) : null}
                 />
               </div>
             </div>
@@ -2245,7 +2254,15 @@ function CandidatePicker({
 /** #290 — the geometry answer's state as this panel speaks it.  "side":
  *  the side is not confirmed (nothing directional exists).  "kind" (#289
  *  finding 1): the work is drawn, the approaches wait on the kind. */
-type PreviewStatus = "idle" | "loading" | "ready" | "error" | "side" | "kind" | "refused";
+type PreviewStatus =
+  | "idle"
+  | "loading"
+  | "ready"
+  | "error"
+  | "declined"
+  | "side"
+  | "kind"
+  | "refused";
 
 /** The pre-side ruling's sentence, verbatim — one string for the map and
  *  the panel.  (The same words as the rail's SIDE_BLOCKER.) */
@@ -2257,6 +2274,7 @@ function CorridorPreviewPanel({
   status,
   pendingPick,
   refusal,
+  declined,
 }: {
   corridor: CorridorPolyline | null;
   hasPin: boolean;
@@ -2270,6 +2288,9 @@ function CorridorPreviewPanel({
   pendingPick: boolean;
   /** The backend's reason it could not lay the corridor out ("refused"). */
   refusal: string | null;
+  /** #430: the backend's message when it refused the preview (a 400,
+   *  "declined"); null when the refusal carried none. */
+  declined: string | null;
 }) {
   const coverageStart = corridor?.coverageStartFt ?? 0;
   return (
@@ -2294,6 +2315,20 @@ function CorridorPreviewPanel({
             Corridor preview unavailable. Couldn&apos;t reach the layout
             service. You can still save; the plan is validated when
             generated.
+          </div>
+        )}
+        {hasPin && status === "declined" && (
+          <div
+            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1"
+            data-testid="picker-corridor-declined"
+          >
+            {/* #430 (Rule 10): a 400 is a refusal, not an outage.  Only the
+                backend's own message is quoted; with none, no answerer is
+                named (the route's own 400s come before the backend). */}
+            {declined
+              ? `Corridor preview declined: ${asSentence(declined)}`
+              : "Corridor preview declined."}{" "}
+            You can still save; the plan is validated when generated.
           </div>
         )}
         {hasPin && status === "refused" && (
