@@ -15,6 +15,7 @@ generator callable that the rules engine consumes.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable
 from dataclasses import replace
 from typing import Annotated, Literal, Self
@@ -24,6 +25,7 @@ from pydantic import BaseModel, Field, ValidationInfo, model_validator
 from src.api.site_scan import SiteScanRequest
 from src.generation.layout import (
     PLAN_MAX_LANES_PER_DIRECTION,
+    cross_street_half_width_ft,
     generate_flagger_alternating_2lane,
     generate_lane_closure_divided,
     generate_mobile_op_2lane,
@@ -1069,7 +1071,9 @@ class NearIntersectionScenario(
                     f"approach {a.id!r}: the cross street crosses inside the "
                     f"work zone (alongStationFt={a.alongStationFt:g}, work "
                     f"zone spans 0..{self.workLen:g}).  Work within the "
-                    f"intersection (MUTCD Figures 6P-26/27) is not supported."
+                    f"intersection (MUTCD Figures 6P-26/27) is not supported.  "
+                    f"Move the work zone or change alongStationFt so the cross "
+                    f"street falls outside 0..{self.workLen:g}."
                 )
         return self
 
@@ -1509,17 +1513,48 @@ def work_start_cross_station(scenario: NearIntersectionScenario, params: Scenari
     )
     station = round(corridor.along_station_ft(cross.lat, cross.lng) - corridor.downstream_taper_ft)
     if 0.0 <= station <= params.work_zone_length_ft:
-        raise CrossStreetStationError(
-            f"the marked cross street crosses inside the work zone (station {station:g} ft, "
-            f"work zone spans 0..{params.work_zone_length_ft:g}).  Work within the "
-            "intersection (MUTCD Figures 6P-26/27) is not supported."
-        )
+        raise CrossStreetStationError(_inside_work_zone_message(scenario, station, params))
     if abs(station) > WORK_LEN_MAX_FT:
         raise CrossStreetStationError(
-            f"the marked cross street is {abs(station):,.0f} ft from the work along the road, "
-            "too far for a near-intersection plan."
+            f"The marked cross street is {abs(station):,.0f} ft from the work along the road, "
+            "too far for a near-intersection plan. Mark the cross street closest to the work "
+            f"with Mark on map. It has to be within {WORK_LEN_MAX_FT:,.0f} ft."
         )
     return float(station)
+
+
+def _inside_work_zone_message(
+    scenario: NearIntersectionScenario, station: float, params: ScenarioParams
+) -> str:
+    """#399: the inside-the-work-zone refusal in the operator's terms.
+
+    ``station`` is in the layout frame (0 = the work's downstream end,
+    growing upstream), where the work-start pin sits at the work zone's
+    length, so it is never printed: the operator sees the cross street's
+    distance from where the work starts.  The two moves (each counted
+    from the pin's present place) clear the cross street's pavement too (the
+    generator's own curb-box half-width), so the suggested move doesn't
+    land on the generator's curb-line refusal next.
+    """
+    length = params.work_zone_length_ft
+    into = length - station  # from the work-start pin, in the direction of travel
+    half = cross_street_half_width_ft(
+        (a.lanesPerDirection, a.laneWidth) for a in scenario.approaches
+    )
+    where = (
+        "at the pin where the work starts"
+        if into == 0
+        else f"{into:,.0f} ft past the pin where the work starts"
+    )
+    # #399 R145 (tightened): four sentences, the place, the rule, the move,
+    # the mis-mark; the "back" distance already says how far the work runs on.
+    return (
+        f"The marked cross street is inside the work zone, {where}. "
+        "Work inside an intersection (MUTCD Figures 6P-26/27) isn't supported. "
+        f"Move that pin more than {math.ceil(into + half):,} ft with traffic, past the cross "
+        f"street, or more than {math.ceil(station + half):,} ft against traffic, so the work "
+        "ends before it. If the mark is off, mark it again with Mark on map."
+    )
 
 
 def scenario_to_call(scenario: Scenario, *, place_cross_street: bool = True) -> GeneratorCall:

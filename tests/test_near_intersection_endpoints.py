@@ -156,6 +156,37 @@ def test_curb_box_overlap_is_an_honest_400(client, along, expected_fragment):
     assert expected_fragment in detail["message"]
 
 
+@pytest.mark.parametrize(
+    ("along", "move", "moved_along"),
+    [
+        # Near side: the upstream curb (-30 + 48) is 18 ft inside the work
+        # zone's downstream end; moving the work zone 19 ft back puts the
+        # cross street at -49, its curb at -1.
+        (-30.0, "Move the work zone more than 18 ft back against traffic", -49.0),
+        # Far side: the downstream curb (730 - 48 = 682) is 18 ft inside the
+        # 700 ft zone's upstream end; 19 ft further on puts it at 701.
+        (730.0, "Move the work zone more than 18 ft further in the direction of travel", 749.0),
+    ],
+    ids=["near", "far"],
+)
+def test_curb_box_refusal_names_the_move_that_clears_it(client, along, move, moved_along):
+    """#399: the refusal names a move, and the move it names clears it."""
+    resp = client.post(
+        "/render/markdown",
+        json=_ni_body(alongStationFt=along, lanesPerDirection=4),
+        headers=AUTH,
+    )
+    message = resp.json()["detail"]["message"]
+    assert move in message
+    assert "0..700" not in message  # no layout-frame station
+    resp = client.post(
+        "/render/markdown",
+        json=_ni_body(alongStationFt=moved_along, lanesPerDirection=4),
+        headers=AUTH,
+    )
+    assert resp.status_code == 200, resp.text[:300]
+
+
 def test_generator_rejection_reaches_the_audit_surface_too(client):
     """Same chokepoint, same honest 400 on the verdict-driving path."""
     body = _ni_body()

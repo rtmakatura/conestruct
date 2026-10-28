@@ -1,0 +1,1 @@
+{"status": 400, "body": {"detail": {"error": "generator_rejected", "message": "the marked cross street crosses inside the work zone (station 487 ft, work zone spans 0..500).  Work within the intersection (MUTCD Figures 6P-26/27) is not supported."}}}

@@ -14,6 +14,7 @@ Authoritative sources:
 from __future__ import annotations
 
 import math
+from collections.abc import Iterable
 from typing import Any, NamedTuple
 
 from src.rules.devices import DeviceType
@@ -1687,6 +1688,22 @@ _TA23_BAY_OPENING_FT: float = 100.0
 _INTERSECTION_R2_11_SETBACK_FT: float = 100.0
 
 
+def cross_street_half_width_ft(legs: Iterable[tuple[int, float]]) -> float:
+    """The cross street's curb-to-curb half-width on the mainline station
+    axis: the widest leg's lanes-per-direction x lane width, assuming a
+    symmetric two-way cross street (conservative: the widest leg governs
+    both sides).  Derived, not an input.  ``legs`` is (lanes, lane width)
+    per approach.  One formula for the curb-box check below and the
+    work-start refusal's suggested move (#399, schemas.py)."""
+    return max(lanes * width for lanes, width in legs)
+
+
+def _clear_by_ft(overlap_ft: float) -> str:
+    """#399: a move that clears an overlap of ``overlap_ft``, as the
+    refusal prints it: rounded up, so "more than N ft" always clears."""
+    return f"{math.ceil(overlap_ft):,}"
+
+
 def near_intersection_stations(
     params: ScenarioParams,
     approaches: list[ApproachParams],
@@ -1748,34 +1765,42 @@ def near_intersection_stations(
     # axis.  Derived, not an input: half-width = the widest approach's
     # lanes-per-direction x lane width, assuming a symmetric two-way
     # cross street.  Conservative (widest leg governs both sides).
-    half_cross_ft = max(a.num_lanes * a.lane_width_ft for a in approaches)
+    half_cross_ft = cross_street_half_width_ft((a.num_lanes, a.lane_width_ft) for a in approaches)
     upstream_curb = along + half_cross_ft
     downstream_curb = along - half_cross_ft
 
+    # #399: each refusal says where the pavement sits against the work
+    # zone in the operator's terms (no layout-frame station) and names the
+    # move that clears it.  The generator doesn't know the pin model, so
+    # the move is the work zone's.
     if along < 0.0:
         side = "near"
         if upstream_curb > 0.0:
             raise ValueError(
-                f"the cross street's upstream curb line ({upstream_curb:g} ft) "
-                f"reaches into the work zone (0..{wz_len:g}): work inside the "
-                f"intersection's curb-to-curb box is in-intersection work "
-                f"(MUTCD Figures 6P-26/27), not supported."
+                f"The cross street's upstream curb line is {_clear_by_ft(upstream_curb)} ft "
+                "inside the downstream end of the work zone. Work inside the intersection's "
+                "curb-to-curb box (MUTCD Figures 6P-26/27) isn't supported. Move the work zone "
+                f"more than {_clear_by_ft(upstream_curb)} ft back against traffic, away from "
+                "the cross street."
             )
     elif along > wz_len:
         side = "far"
         if downstream_curb < wz_len:
+            overlap = wz_len - downstream_curb
             raise ValueError(
-                f"the cross street's downstream curb line ({downstream_curb:g} ft) "
-                f"reaches into the work zone (0..{wz_len:g}): work inside the "
-                f"intersection's curb-to-curb box is in-intersection work "
-                f"(MUTCD Figures 6P-26/27), not supported."
+                f"The cross street's downstream curb line is {_clear_by_ft(overlap)} ft "
+                "inside the upstream end of the work zone. Work inside the intersection's "
+                "curb-to-curb box (MUTCD Figures 6P-26/27) isn't supported. Move the work zone "
+                f"more than {_clear_by_ft(overlap)} ft further in the direction of travel, "
+                "away from the cross street."
             )
     else:
         # The schema rejects [0, workLen]; direct callers get the same
         # honesty here.
         raise ValueError(
             f"along_station_ft={along:g} lies inside the work zone "
-            f"(0..{wz_len:g}). In-intersection work isn't supported."
+            f"(0..{wz_len:g}). In-intersection work isn't supported. Move the work zone "
+            "so the cross street and its pavement fall outside it."
         )
 
     speed = params.speed_mph

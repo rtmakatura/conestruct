@@ -1,0 +1,26 @@
+{
+ "390": {
+  "markClick": {
+   "x": 195,
+   "y": 388.5
+  },
+  "pickerLine": null,
+  "banner": {
+   "text": "× PLAN DECLINED · THE MARKED CROSS STREET CROSSES INSIDE THE WORK ZONE (STATION 475 FT, WORK ZONE SPANS 0..500). WORK WITHIN THE INTERSECTION (MUTCD FIGURES 6P-26/27) IS NOT SUPPORTED. NEEDS INPUT",
+   "width": 362,
+   "height": 161.75
+  }
+ },
+ "1440": {
+  "markClick": {
+   "x": 492,
+   "y": 501.5
+  },
+  "pickerLine": null,
+  "banner": {
+   "text": "× PLAN DECLINED · THE MARKED CROSS STREET CROSSES INSIDE THE WORK ZONE (STATION 474 FT, WORK ZONE SPANS 0..500). WORK WITHIN THE INTERSECTION (MUTCD FIGURES 6P-26/27) IS NOT SUPPORTED. NEEDS INPUT",
+   "width": 880,
+   "height": 70.5
+  }
+ }
+}

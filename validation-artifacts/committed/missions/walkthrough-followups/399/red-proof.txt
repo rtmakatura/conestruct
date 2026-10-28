@@ -1,0 +1,11 @@
+# #399 red proof: the new tests from this branch run against a git archive of the base 994d2ee
+# (git archive 994d2ee | tar -x; tests/test_work_start_near_intersection.py and tests/test_near_intersection_endpoints.py copied in; uv run --extra dev pytest -q)
+FAILED tests/test_work_start_near_intersection.py::test_the_refusal_measures_from_the_work_start_pin
+FAILED tests/test_work_start_near_intersection.py::test_a_cross_street_at_the_pin_reads_at_the_pin
+FAILED tests/test_work_start_near_intersection.py::test_the_refusal_names_both_moves
+FAILED tests/test_work_start_near_intersection.py::test_too_far_names_the_move
+FAILED tests/test_near_intersection_endpoints.py::test_curb_box_refusal_names_the_move_that_clears_it[near]
+FAILED tests/test_near_intersection_endpoints.py::test_curb_box_refusal_names_the_move_that_clears_it[far]
+6 failed, 31 passed in 3.50s
+
+# Passing on the base by design: test_a_cross_street_at_the_work_start_pin_is_at_station_length (the confirmed cause: the station math is unchanged) and test_the_named_moves_clear_the_refusal[forward-26|back-500] (the predicates are unchanged).
