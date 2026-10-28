@@ -1,0 +1,23 @@
+End-of-mission full pytest on issue-402-picker-states (877b93b), 2026-10-28:
+1 failed, 3611 passed, 2 skipped in 262.61s
+FAILED tests/test_vercel_env_check.py::test_every_cite_is_real_and_one_names_the_variable
+
+Run alone before the fix (uv run --extra dev pytest -q tests/test_vercel_env_check.py, 877b93b): 1 failed, 13 passed -- the failure is not order-dependent.
+
+Churn prediction (Rule 5, written before the edit): scripts/production-env.txt ~+1/-1 (line 26, the NEXT_PUBLIC_MAPBOX_TOKEN cites only).
+
+Cause, confirmed by subject: the test needs every cite to exist and at least one of a name's cites to contain the name. On 877b93b, `process.env.NEXT_PUBLIC_MAPBOX_TOKEN` is at components/LocationPickerModal.tsx:322 (`const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";`; :320 on 0de3917, moved +2 by #430's import, 5661100) and components/bands/WhereBand.tsx:573 (`const mapboxToken = (process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "").length > 0;`). The WhereBand cite (:532) was already stale on 0de3917 and passed only because the LocationPickerModal cite named the variable.
+Fix: scripts/production-env.txt:26 now cites LocationPickerModal.tsx:322 and WhereBand.tsx:573.
+Other cites checked: of the files production-env.txt cites, only LocationPickerModal.tsx and WhereBand.tsx are in `git diff bda17e5..HEAD`; no other cite points into a file this chain changed. (Seen in passing, not caused by this chain and not changed: lib/render-proxy.ts:101/102 read `status: 400,` / `headers: ...`, not MODAL_RENDER_URL / MODAL_RENDER_SECRET; those names pass on their app/api/replication-snapshot/route.ts:41/42 cites.)
+Churn (predicted -> actual): scripts/production-env.txt ~+1/-1 -> +1/-1.
+After the fix: uv run --extra dev pytest -q tests/test_vercel_env_check.py -> 14 passed.
+
+Fold (R154 fold test: same file, no ruling, tiny), prediction amended BEFORE the edit (Rule 5): every cite checked against its variable on 877b93b. Three more are stale, all stale on main 0de3917 with the same line numbers and in files this chain didn't touch (lib/render-proxy.ts and components/coming-soon/ComingSoon.tsx are identical on 0de3917 and 877b93b), so this chain didn't cause them:
+  MODAL_RENDER_URL     lib/render-proxy.ts:101 (`status: 400,`) -> :134 (`const url = process.env.MODAL_RENDER_URL;`, the file's first read)
+  MODAL_RENDER_SECRET  lib/render-proxy.ts:102 (`headers: { "content-type": "application/json" },`) -> :135 (`const secret = process.env.MODAL_RENDER_SECRET;`)
+  NEXT_PUBLIC_SHEET_REVISED  components/coming-soon/ComingSoon.tsx:60 (`export function titleBlock()...`) -> :61 (`const revised = process.env.NEXT_PUBLIC_SHEET_REVISED;`)
+  The Clerk wiring cites (middleware.ts:69 `clerkMiddleware`, app/layout.tsx:44 `<ClerkProvider`) don't contain the names by design (file header, lines 10-12; the name-bearing cite is .env.example) and are the wiring lines they claim; unchanged. Every other cite contains its name.
+Amended churn prediction: scripts/production-env.txt ~+1/-1 -> ~+4/-4 (lines 23, 24, 26, 38).
+Fold applied: lines 23, 24 and 38 now cite lib/render-proxy.ts:134, lib/render-proxy.ts:135 and components/coming-soon/ComingSoon.tsx:61 (supersedes the "not changed" note above). Re-check: every cite in the file contains its variable on 877b93b, except the designed Clerk wiring cites.
+Churn, whole fix (amended prediction -> actual): scripts/production-env.txt ~+4/-4 -> +4/-4.
+After the fold: uv run --extra dev pytest -q tests/test_vercel_env_check.py -> 14 passed.
