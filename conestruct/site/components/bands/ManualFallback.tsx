@@ -25,9 +25,9 @@
 
 import { useState } from "react";
 import type { Scenario, ScenarioMeta } from "@/lib/scenarios";
-import { validateWorkZone } from "@/lib/scenarios/validation";
+import { validateWorkZone, workLenIsEmpty } from "@/lib/scenarios/validation";
 import { withPin } from "@/lib/scenarios/site-corrections";
-import { setWorkLen } from "@/lib/scenarios/what-writes";
+import { clearWorkLen, setWorkLen } from "@/lib/scenarios/what-writes";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
 
 export function ManualFallback({
@@ -89,12 +89,14 @@ export function ManualFallback({
             min="0"
             data-write=""
             className="field-input w-full"
-            value={scenario.workLen || ""}
+            // #428: only an empty box shows empty; a typed 0 shows 0.
+            value={workLenIsEmpty(scenario) ? "" : scenario.workLen}
             placeholder="e.g., 200"
             onChange={(e) => {
               const n = parseInt(e.target.value, 10);
               // #397: the operator's length, recorded (setWorkLen).
-              setScenario(setWorkLen(scenario, Number.isFinite(n) ? n : 0));
+              // #428: an emptied box is no length (clearWorkLen).
+              setScenario(Number.isFinite(n) ? setWorkLen(scenario, n) : clearWorkLen(scenario));
             }}
             onBlur={() => setWzTouched(true)}
           />

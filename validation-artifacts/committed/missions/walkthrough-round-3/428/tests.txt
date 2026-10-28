@@ -1,0 +1,24 @@
+# #428 test runs (conestruct/site, worktree issue-428)
+
+Baseline on 1a0f7d1 (before any change):
+  npx vitest run --reporter=dot
+  Test Files  251 passed | 1 skipped (252)
+  Tests  2656 passed | 1 skipped (2657)
+
+After the fix, full run 1 (failure saved in full-run-fails.txt before any re-run):
+  Test Files  1 failed | 251 passed | 1 skipped (253)
+  Tests  1 failed | 2658 passed | 1 skipped (2660)
+  failed: GeneratorShell.a11y-announce.test.tsx; it passed alone, 9/9
+
+After the fix, full run 2:
+  Test Files  252 passed | 1 skipped (253)
+  Tests  2659 passed | 1 skipped (2660)
+
+npx tsc --noEmit -p .   clean (no output)
+
+Targeted:
+  lib/scenarios/validation.test.ts                       26 passed
+  components/bands/WhereBand.work-length.test.tsx         5 passed
+  components/bands/ManualFallback.work-length.test.tsx    1 passed
+
+Backend: not touched (no pytest, mypy or ruff run on this branch).

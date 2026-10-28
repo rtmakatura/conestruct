@@ -34,7 +34,7 @@ import {
   SCENARIO_KINDS,
   isScenarioKindEnabled,
 } from "@/lib/scenarios";
-import { validateWorkZone } from "@/lib/scenarios/validation";
+import { validateWorkZone, workLenIsEmpty } from "@/lib/scenarios/validation";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
   CORRIDOR_ZONES,
@@ -60,7 +60,7 @@ import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 import { symClass } from "@/lib/design/symbols";
 import { hasConfirmedSide, hasLocation, workLenIsDefault } from "@/lib/scenarios";
-import { setWorkLen } from "@/lib/scenarios/what-writes";
+import { clearWorkLen, setWorkLen } from "@/lib/scenarios/what-writes";
 import { isOperatorSet } from "@/lib/scenarios/guesses";
 import { OpenBand } from "./BandPrimitives";
 import { BandAerial } from "./BandAerial";
@@ -593,7 +593,14 @@ export function WhereBand({
     setWzTouched(true);
     if (wzDraft === null) return;
     const n = parseInt(wzDraft, 10);
-    const next = Number.isFinite(n) ? n : 0;
+    // #428: an emptied box is no length (0, the record dropped), apart
+    // from a typed 0, which is the operator's number and stays in the box.
+    if (!Number.isFinite(n)) {
+      if (!workLenIsEmpty(scenario)) setScenario(clearWorkLen(scenario));
+      setWzDraft(null);
+      return;
+    }
+    const next = n;
     // #397: a committed length is the operator's ("typed", "✓ yours"),
     // recorded so the starting length can say "default" until then.  A
     // committed draft that repeats the value (1000 typed over the starting
@@ -785,7 +792,7 @@ export function WhereBand({
                 testid="worklen"
                 provenance={
                   <span className="tr-prov" data-testid="prov-worklen">
-                    {scenario.workLen === 0
+                    {workLenIsEmpty(scenario)
                       ? "not set · the extent the plan is built for"
                       : workLenIsDefault(scenario)
                         ? // #397: the starting length, not an answer (Rule 10).
@@ -794,10 +801,11 @@ export function WhereBand({
                   </span>
                 }
                 marker={
-                  scenario.workLen === 0
+                  workLenIsEmpty(scenario)
                     ? { glyph: "◌", word: "not set", tone: "pending" }
-                    : scenario.workLen < 0
+                    : scenario.workLen <= 0
                       ? // #403: the operator's, but refused; no ✓ on it.
+                        // #428: a typed 0 too (#429 holds this form).
                         { glyph: null, word: "yours", tone: "plain" }
                       : workLenIsDefault(scenario)
                         ? // Plain "default", no mark (Ryan, 2026-10-26).
@@ -836,7 +844,8 @@ export function WhereBand({
                   className="a-fld"
                   data-write=""
                   disabled={locked}
-                  value={wzDraft ?? (scenario.workLen || "")}
+                  // #428: only an empty box shows empty; a typed 0 shows 0.
+                  value={wzDraft ?? (workLenIsEmpty(scenario) ? "" : scenario.workLen)}
                   onChange={(e) => setWzDraft(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") commitWorkLen();

@@ -135,6 +135,13 @@ export function setWorkLen(scenario: Scenario, ft: number): Scenario {
   return markOperatorSet({ ...scenario, workLen: ft } as Scenario, "workLen");
 }
 
+/** #428: the operator emptied the length box.  The length is 0 and
+ *  nobody's ("◌ not set", "required"), so a typed 0, which keeps the
+ *  record, can read as the operator's number. */
+export function clearWorkLen(scenario: Scenario): Scenario {
+  return withoutOperatorSet({ ...scenario, workLen: 0 } as Scenario, "workLen");
+}
+
 /** #397: the work type (plain "default" until changed). */
 export function setWorkType(scenario: Scenario, workType: string): Scenario {
   return markOperatorSet({ ...scenario, workType } as Scenario, "workType");

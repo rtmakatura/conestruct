@@ -20,7 +20,9 @@ import {
   MAX_WORK_LEN_FT,
   validateLanes,
   validateWorkZone,
+  workLenIsEmpty,
 } from "./validation";
+import { clearWorkLen, setWorkLen } from "./what-writes";
 
 describe("validateWorkZone — schema bounds only (gt=0 mirror)", () => {
   it("accepts the live defaults", () => {
@@ -44,7 +46,8 @@ describe("validateWorkZone — schema bounds only (gt=0 mirror)", () => {
 
   // #403: a negative length is a number, not a missing one.  The message
   // names the backend's bound (gt=0.0, src/api/schemas.py); 0 and NaN
-  // stay "required" (0 is the cleared field, shown empty).
+  // stay "required" (0 is the cleared field, shown empty).  #428: only
+  // the empty box's 0 (no `workLen` record); a typed 0 is below.
   it("a negative length says it must be more than 0 ft (#403)", () => {
     for (const workLen of [-5, -1, -0.5]) {
       expect(validateWorkZone({ ...DEFAULT_FLAGGER, workLen })).toEqual({
@@ -61,6 +64,25 @@ describe("validateWorkZone — schema bounds only (gt=0 mirror)", () => {
     expect(validateWorkZone({ ...DEFAULT_FLAGGER, workLen: NaN }).message).toBe(
       "Work zone length is required.",
     );
+  });
+
+  // #428: a typed 0 carries the operator's record (setWorkLen), so it is a
+  // number the backend refuses (gt=0.0), not an empty box.
+  it("a typed 0 says it must be more than 0 ft; an emptied box says required (#428)", () => {
+    const typed = setWorkLen(DEFAULT_FLAGGER, 0);
+    expect(workLenIsEmpty(typed)).toBe(false);
+    expect(validateWorkZone(typed)).toEqual({
+      ok: false,
+      message: "Work zone length must be more than 0 ft.",
+    });
+    const emptied = clearWorkLen(typed);
+    expect(emptied.workLen).toBe(0);
+    expect(emptied.meta.operatorSet ?? []).not.toContain("workLen");
+    expect(workLenIsEmpty(emptied)).toBe(true);
+    expect(validateWorkZone(emptied).message).toBe("Work zone length is required.");
+    // A typed length after an emptied box is the operator's again.
+    expect(validateWorkZone(setWorkLen(emptied, 500)).ok).toBe(true);
+    expect(workLenIsEmpty(setWorkLen(emptied, 500))).toBe(false);
   });
 });
 

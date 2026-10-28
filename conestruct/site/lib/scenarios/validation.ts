@@ -155,6 +155,15 @@ export function validateLanes(scenario: Scenario): LanesValidation {
   return { ok: true, message: null };
 }
 
+/** #428: is the work-zone length box empty?  An emptied box writes 0 and
+ *  drops the operator's `workLen` record (clearWorkLen); a typed 0 is the
+ *  operator's (setWorkLen keeps the record).  The record check is
+ *  isOperatorSet's (guesses.ts), inlined because guesses.ts imports this
+ *  module through auto-apply.ts. */
+export function workLenIsEmpty(s: Scenario): boolean {
+  return s.workLen === 0 && !(s.meta.operatorSet?.includes("workLen") ?? false);
+}
+
 export interface WorkZoneValidation {
   ok: boolean;
   /** Inline error message; null when ok. */
@@ -172,18 +181,19 @@ export interface WorkZoneValidation {
 export function validateWorkZone(scenario: Scenario): WorkZoneValidation {
   const wz = scenario.workLen;
 
-  // 0 is the cleared field (commitWorkLen writes 0 for an empty draft, and
-  // the field shows 0 as empty), so 0 and NaN read "required".
-  if (!Number.isFinite(wz) || wz === 0) {
+  // #428: an empty box (workLenIsEmpty) and NaN read "required"; a typed 0
+  // is a number, below.
+  if (!Number.isFinite(wz) || workLenIsEmpty(scenario)) {
     return {
       ok: false,
       message: "Work zone length is required.",
     };
   }
-  // #403: a negative length is a number, not a missing one.  Mirror of the
-  // backend's `workLen: float = Field(gt=0.0, ...)` (src/api/schemas.py),
-  // which is authoritative; the message names that bound (Rule 10).
-  if (wz < 0) {
+  // #403 / #428: a negative or typed 0 length is a number, not a missing
+  // one.  Mirror of the backend's `workLen: float = Field(gt=0.0, ...)`
+  // (src/api/schemas.py), which is authoritative; the message names that
+  // bound (Rule 10).
+  if (wz <= 0) {
     return {
       ok: false,
       message: "Work zone length must be more than 0 ft.",

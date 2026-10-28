@@ -1,0 +1,20 @@
+# #428 red proof: the branch's tests run against the base 1a0f7d1
+
+Base extracted with `git archive 1a0f7d1 conestruct/site` into the scratchpad, the three test files copied in from the branch, node_modules joined from the worktree. Command: npx vitest run lib/scenarios/validation.test.ts components/bands/WhereBand.work-length.test.tsx components/bands/ManualFallback.work-length.test.tsx
+
+4 of the 4 new #428 tests fail on the base; every other test in the three files passes. (The validation.test.ts case fails at the call: `setWorkLen` exists on the base, `clearWorkLen` and `workLenIsEmpty` don't, so the case throws TypeError.)
+
+   × validateWorkZone — schema bounds only (gt=0 mirror) > a typed 0 says it must be more than 0 ft; an emptied box says required (#428) 4ms
+   × #428: the manual panel keeps a typed 0 > a typed 0 stays in the box and reads 'more than 0 ft'; an emptied box reads 'required' 164ms
+   × #403: the work-zone length field says what is wrong > #428: a typed 0 stays in the box and both lines say 'more than 0 ft', with the refused-length marker 1633ms
+   × #403: the work-zone length field says what is wrong > #428: a typed 0, then an emptied box, reads required and '◌ not set' again; a real length clears both 1607ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/ManualFallback.work-length.test.tsx > #428: the manual panel keeps a typed 0 > a typed 0 stays in the box and reads 'more than 0 ft'; an emptied box reads 'required'
+AssertionError: expected '' to be '0' // Object.is equality
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > #428: a typed 0 stays in the box and both lines say 'more than 0 ft', with the refused-length marker
+AssertionError: expected '⚠ Work zone length is required.' to be '⚠ Work zone length must be more than …' // Object.is equality
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > #428: a typed 0, then an emptied box, reads required and '◌ not set' again; a real length clears both
+AssertionError: expected '⚠ Work zone length is required.' to be '⚠ Work zone length must be more than …' // Object.is equality
+ FAIL  lib/scenarios/validation.test.ts > validateWorkZone — schema bounds only (gt=0 mirror) > a typed 0 says it must be more than 0 ft; an emptied box says required (#428)
+
+validation.test.ts run alone on the base: "TypeError: (0 , workLenIsEmpty) is not a function"; Tests  1 failed | 25 passed (26)

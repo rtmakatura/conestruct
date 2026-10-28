@@ -9,6 +9,10 @@
 // backend's (`workLen: float = Field(gt=0.0, ...)`, src/api/schemas.py);
 // the message names it.  A cleared field (written as 0) still reads
 // "required", and the 20,000 ft cap keeps its own message.
+//
+// #428: a typed 0 used to vanish from the box and read as the cleared
+// field ("◌ not set", "required").  It now stays in the box as 0 and
+// reads "more than 0 ft"; only an emptied box reads "required".
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -128,13 +132,42 @@ describe("#403: the work-zone length field says what is wrong", () => {
     expect(ctaReason()).toBe(REQUIRED);
   });
 
-  it("a typed 0 shows an empty box, so it reads as the cleared field: required, '◌ not set'", async () => {
+  it("#428: a typed 0 stays in the box and both lines say 'more than 0 ft', with the refused-length marker", async () => {
     const user = await mountAndPin();
     const field = await commitLength(user, "0");
+    await waitFor(() => expect(fieldAlert()).toBe(`⚠ ${MORE_THAN_0}`));
+    expect(field.value).toBe("0");
+    // The marker #403 gives a negative length (#429 holds that form).
+    expect(marker()).toBe("yours");
+    expect(marker()).not.toMatch(/not set|✓|◌/);
+    expect(screen.getByTestId("prov-worklen").textContent).toBe(
+      "your answer · the extent the plan is built for",
+    );
+    expect(ctaReason()).toBe(MORE_THAN_0);
+    expect(document.body.textContent).not.toContain(REQUIRED);
+  });
+
+  it("#428: a typed 0, then an emptied box, reads required and '◌ not set' again; a real length clears both", async () => {
+    const user = await mountAndPin();
+    await commitLength(user, "0");
+    await waitFor(() => expect(fieldAlert()).toBe(`⚠ ${MORE_THAN_0}`));
+    const field = await commitLength(user, "");
     await waitFor(() => expect(fieldAlert()).toBe(`⚠ ${REQUIRED}`));
     expect(field.value).toBe("");
     expect(marker()).toBe("◌ not set");
+    expect(screen.getByTestId("prov-worklen").textContent).toBe(
+      "not set · the extent the plan is built for",
+    );
     expect(ctaReason()).toBe(REQUIRED);
+    await commitLength(user, "0");
+    await waitFor(() => expect(fieldAlert()).toBe(`⚠ ${MORE_THAN_0}`));
+    expect(field.value).toBe("0");
+    await commitLength(user, "500");
+    await waitFor(() => expect(fieldAlert()).toBeNull());
+    expect(field.value).toBe("500");
+    expect(marker()).toBe("✓ yours");
+    expect(document.body.textContent).not.toContain(MORE_THAN_0);
+    expect(document.body.textContent).not.toContain(REQUIRED);
   });
 
   it("the 20,000 ft cap keeps its own message", async () => {

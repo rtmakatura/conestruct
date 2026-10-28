@@ -1,0 +1,8 @@
+# #428 full-run failures (saved before any re-run)
+
+Full vitest run after the fix: Test Files 1 failed | 251 passed | 1 skipped (253); Tests 1 failed | 2658 passed | 1 skipped (2660).
+
+Failed:
+- components/GeneratorShell.a11y-announce.test.tsx > generation announcements (#193) > clears at the click so a repeat Generate with identical counts re-announces
+
+Run alone (npx vitest run components/GeneratorShell.a11y-announce.test.tsx): Test Files 1 passed (1); Tests 9 passed (9). The same file failed once in a full run on #403 and passed alone there (walkthrough-followups/403/full-run-fails.txt). This branch does not touch the file or the Generate path it tests.

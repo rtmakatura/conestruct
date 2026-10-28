@@ -1,0 +1,34 @@
+{
+ "390": {
+  "fieldValue": "",
+  "marker": "◌ not set",
+  "provenance": "not set · the extent the plan is built for",
+  "cell": {
+   "text": "Work zone length (ft) ◌ not set ⚠ WORK ZONE LENGTH IS REQUIRED.",
+   "width": 328,
+   "height": 142
+  },
+  "ctaReason": "Work zone length is required.",
+  "generate": {
+   "text": "Generate plan Work zone length is required. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 362,
+   "height": 169.25
+  }
+ },
+ "1440": {
+  "fieldValue": "",
+  "marker": "◌ not set",
+  "provenance": "not set · the extent the plan is built for",
+  "cell": {
+   "text": "Work zone length (ft) ◌ not set ⚠ WORK ZONE LENGTH IS REQUIRED.",
+   "width": 846,
+   "height": 92
+  },
+  "ctaReason": "Work zone length is required.",
+  "generate": {
+   "text": "Generate plan Work zone length is required. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5
+  }
+ }
+}
