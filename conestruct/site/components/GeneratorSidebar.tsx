@@ -493,6 +493,7 @@ export function GeneratorSidebar({
         jurisdictionBlock={jurisdictionBlock}
         jurisdictionLoading={jurisdictionLoading}
         jurisdictionErrored={jurisdictionErrored}
+        jurisdictionDeclined={jurisdictionDeclined}
         jurisdictionName={jurisdictionName}
         jurisdictionLookup={jurisdictionLookup}
         kindFields={kindFields}

@@ -70,6 +70,7 @@ export interface BandStackProps {
   jurisdictionBlock: JurisdictionBlock | null;
   jurisdictionLoading: boolean;
   jurisdictionErrored: boolean;
+  jurisdictionDeclined?: boolean;
   jurisdictionName: string | null;
   /** The kind's own fields, in the shape they already have (see
    *  WhatBand's header). */
@@ -121,6 +122,7 @@ export function BandStack(props: BandStackProps) {
     jurisdictionBlock,
     jurisdictionLoading,
     jurisdictionErrored,
+    jurisdictionDeclined = false,
     jurisdictionName,
     kindFields,
     scheduleCells,
@@ -258,6 +260,7 @@ export function BandStack(props: BandStackProps) {
         jurisdictionBlock={jurisdictionBlock}
         jurisdictionLoading={jurisdictionLoading}
         jurisdictionErrored={jurisdictionErrored}
+        jurisdictionDeclined={jurisdictionDeclined}
         stepIndex={model.stepIndex}
         kindFields={kindFields}
         scheduleCells={scheduleCells}

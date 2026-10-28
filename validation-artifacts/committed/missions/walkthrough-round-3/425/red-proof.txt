@@ -1,0 +1,30 @@
+# Red proof: components/GeneratorShell.declined-jurisdiction.test.tsx (final version) on a0c666d
+Run from a git archive of a0c666d (conestruct/site) with the new test file copied in and node_modules linked; npx vitest run components/GeneratorShell.declined-jurisdiction.test.tsx
+
+   × #425 / #406 — a declined plan's Jurisdiction cell > says the plan was declined, not that the check didn't answer, in the windows line's words 1045ms
+   × #425 / #406 — a declined plan's Jurisdiction cell > is not an error: no is-error, and the line sits behind a ◌ marker (Rule 13: glyph and word) 892ms
+   × #425 / #406 — a declined plan's Jurisdiction cell > a pin guess keeps '⚠ from the pin', with the decline in its details 886ms
+   × #425 / #406 — a check that failed without a decline > still says the check didn't answer, red and on show, with the band's one verb 893ms
+   × #425 / #406 — a check that failed without a decline > wins over a pin guess (P3, unchanged) 868ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > says the plan was declined, not that the check didn't answer, in the windows line's words
+AssertionError: expected 'not-evaluated' to be 'declined' // Object.is equality
+Expected: "declined"
+Received: "not-evaluated"
+ FAIL  components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > is not an error: no is-error, and the line sits behind a ◌ marker (Rule 13: glyph and word)
+AssertionError: expected true to be false // Object.is equality
+ FAIL  components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > a pin guess keeps '⚠ from the pin', with the decline in its details
+AssertionError: expected 'not-evaluated' to be 'declined' // Object.is equality
+Expected: "declined"
+Received: "not-evaluated"
+ FAIL  components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a check that failed without a decline > still says the check didn't answer, red and on show, with the band's one verb
+AssertionError: expected 'not evaluated: the check didn\'t answ…' to be 'not checked: the check didn\'t answer…' // Object.is equality
+Expected: "not checked: the check didn't answer; the option shown stands"
+Received: "not evaluated: the check didn't answer; the option shown stands"
+ FAIL  components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a check that failed without a decline > wins over a pin guess (P3, unchanged)
+AssertionError: expected 'not evaluated: the check didn\'t answ…' to be 'not checked: the check didn\'t answer…' // Object.is equality
+Expected: "not checked: the check didn't answer; the option shown stands"
+Received: "not evaluated: the check didn't answer; the option shown stands"
+      Tests  5 failed (5)
+
+The two 500 tests fail only on the verb (call 2: 'not evaluated' -> 'not checked'); their red/on-show/no-marker assertions hold on the base, as they should.

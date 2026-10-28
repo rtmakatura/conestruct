@@ -77,13 +77,16 @@ import {
 import { useWriteLock } from "../WriteLock";
 
 /** The three states ruling 196 gives the jurisdiction field, plus the
- *  in-flight presentation of "not yet evaluated".  Never a skeleton
- *  (rule 14) and never a height change (§8.31's reserve transfers as the
- *  provenance line's own floor, in CSS). */
+ *  in-flight presentation of "not yet evaluated", plus #425's "declined"
+ *  (the check answered with a 400, so no block is coming until the input
+ *  changes).  Never a skeleton (rule 14) and never a height change
+ *  (§8.31's reserve transfers as the provenance line's own floor, in
+ *  CSS). */
 export type JurisdictionCellState =
   | "unset"
   | "evaluated"
   | "evaluating"
+  | "declined"
   | "not-evaluated";
 
 export function jurisdictionCellState(opts: {
@@ -91,10 +94,14 @@ export function jurisdictionCellState(opts: {
   block: JurisdictionBlock | null;
   loading: boolean;
   errored: boolean;
+  /** #425 / #406: the error is the plan's decline (Rule 10: a decline is
+   *  an answer, so the cell never says the check didn't answer). */
+  declined?: boolean;
 }): JurisdictionCellState {
   if (!opts.key) return "unset";
   if (opts.block) return "evaluated";
   if (opts.loading) return "evaluating";
+  if (opts.declined) return "declined";
   return opts.errored ? "not-evaluated" : "evaluating";
 }
 
@@ -303,6 +310,7 @@ export function WhatBand({
   jurisdictionBlock,
   jurisdictionLoading,
   jurisdictionErrored,
+  jurisdictionDeclined = false,
   jurisdictionLookup = { status: "idle", data: null },
   stepIndex,
   kindFields,
@@ -317,6 +325,9 @@ export function WhatBand({
   jurisdictionBlock: JurisdictionBlock | null;
   jurisdictionLoading: boolean;
   jurisdictionErrored: boolean;
+  /** #425: the breakdown's error is a 400 decline (the windows line's
+   *  source, #398 call 3). */
+  jurisdictionDeclined?: boolean;
   /** R108: the pin's boundary lookup — the jurisdiction row's evidence
    *  and warnings.  The guess itself is already the scenario's value. */
   jurisdictionLookup?: JurisdictionLookup;
@@ -375,6 +386,7 @@ export function WhatBand({
     block: jurisdictionBlock,
     loading: jurisdictionLoading,
     errored: jurisdictionErrored,
+    declined: jurisdictionDeclined,
   });
   // #276, ruled 196: the static option label is what the operator (or the
   // pin) PICKED; the provenance line says which of the two you are looking
@@ -393,13 +405,19 @@ export function WhatBand({
   // R108: an untouched pin guess reads as one — its own line, "⚠ from the
   // pin" — unless the evaluation failed, which needs the operator now and
   // keeps its error line (P3).  The evaluation's sentence moves to the
-  // row's details then, so nothing it said is lost.
+  // row's details then, so nothing it said is lost.  #425: one verb,
+  // "not checked", with the windows line (ScheduleField's windowsSummary);
+  // a decline is not an error, so a guess keeps its line and the decline
+  // goes to the details.
+  const declinedLine = "not checked: the plan was declined; the option shown stands";
   const jurisdictionProv =
     jState === "not-evaluated"
-      ? "not evaluated: the check didn't answer; the option shown stands"
+      ? "not checked: the check didn't answer; the option shown stands"
       : jurisdictionGuessed
         ? "guessed, not confirmed · from the pin"
-        : jState === "unset"
+        : jState === "declined"
+          ? declinedLine
+          : jState === "unset"
           ? jurisdictionLookup.status === "loading"
             ? "checking the pin's boundary data"
             : "MUTCD + Colorado Supplement only"
@@ -709,6 +727,9 @@ export function WhatBand({
                     actually returned. */}
                 {jurisdictionGuessed && evaluatedLine && (
                   <span className="tr-prov">{evaluatedLine}</span>
+                )}
+                {jurisdictionGuessed && jState === "declined" && (
+                  <span className="tr-prov">{declinedLine}</span>
                 )}
                 {jState === "evaluated" && jurisdictionValue !== pickedLabel && (
                   <span className="tr-prov">evaluated as {jurisdictionValue}</span>

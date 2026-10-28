@@ -1,0 +1,138 @@
+{
+ "390": {
+  "declined": {
+   "state": "declined",
+   "cellBox": {
+    "width": 328,
+    "height": 115
+   },
+   "line": "⚠ guessed, not confirmed · from the pin",
+   "lineClass": "tr-prov is-amber",
+   "lineOnShow": false,
+   "lineBox": {
+    "width": 0,
+    "height": 0
+   },
+   "lineColor": "rgb(244, 192, 32)",
+   "lineBg": "rgb(16, 28, 41)",
+   "marker": "⚠ from the pin",
+   "markerClass": "a-mark tr-prov is-guess",
+   "markerWordColor": "rgb(244, 192, 32)",
+   "glyphColor": "rgb(244, 192, 32)",
+   "markerBg": "rgb(16, 28, 41)",
+   "windowsLine": "Windows · not checked: the plan was declined",
+   "shot": {
+    "text": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470",
+    "width": 328,
+    "height": 115
+   },
+   "details": "⚠ guessed, not confirmed · from the pin not checked: the plan was declined; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+   "openShot": {
+    "text": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 ⚠ guessed, not confirmed · from the pin not checked: the plan was declined; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+    "width": 328,
+    "height": 115
+   }
+  },
+  "failed": {
+   "state": "not-evaluated",
+   "cellBox": {
+    "width": 328,
+    "height": 152.5
+   },
+   "line": "not checked: the check didn't answer; the option shown stands",
+   "lineClass": "tr-prov is-error",
+   "lineOnShow": true,
+   "lineBox": {
+    "width": 328,
+    "height": 31.5
+   },
+   "lineColor": "rgb(255, 122, 122)",
+   "lineBg": "rgb(16, 28, 41)",
+   "marker": null,
+   "markerClass": null,
+   "markerWordColor": null,
+   "glyphColor": null,
+   "markerBg": null,
+   "windowsLine": "Windows · not checked: the check didn't answer",
+   "shot": {
+    "text": "Jurisdiction i DETAILS Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 not checked: the check didn't answer; the option shown stands",
+    "width": 328,
+    "height": 152.5
+   },
+   "details": "The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+   "openShot": {
+    "text": "Jurisdiction i DETAILS Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 not checked: the check didn't answer; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+    "width": 328,
+    "height": 152.5
+   }
+  }
+ },
+ "1440": {
+  "declined": {
+   "state": "declined",
+   "cellBox": {
+    "width": 407,
+    "height": 65
+   },
+   "line": "⚠ guessed, not confirmed · from the pin",
+   "lineClass": "tr-prov is-amber",
+   "lineOnShow": false,
+   "lineBox": {
+    "width": 0,
+    "height": 0
+   },
+   "lineColor": "rgb(244, 192, 32)",
+   "lineBg": "rgb(16, 28, 41)",
+   "marker": "⚠ from the pin",
+   "markerClass": "a-mark tr-prov is-guess",
+   "markerWordColor": "rgb(244, 192, 32)",
+   "glyphColor": "rgb(244, 192, 32)",
+   "markerBg": "rgb(16, 28, 41)",
+   "windowsLine": "Windows · not checked: the plan was declined",
+   "shot": {
+    "text": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470",
+    "width": 407,
+    "height": 65
+   },
+   "details": "⚠ guessed, not confirmed · from the pin not checked: the plan was declined; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+   "openShot": {
+    "text": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 ⚠ guessed, not confirmed · from the pin not checked: the plan was declined; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+    "width": 407,
+    "height": 65
+   }
+  },
+  "failed": {
+   "state": "not-evaluated",
+   "cellBox": {
+    "width": 407,
+    "height": 102.5
+   },
+   "line": "not checked: the check didn't answer; the option shown stands",
+   "lineClass": "tr-prov is-error",
+   "lineOnShow": true,
+   "lineBox": {
+    "width": 263,
+    "height": 31.5
+   },
+   "lineColor": "rgb(255, 122, 122)",
+   "lineBg": "rgb(16, 28, 41)",
+   "marker": null,
+   "markerClass": null,
+   "markerWordColor": null,
+   "glyphColor": null,
+   "markerBg": null,
+   "windowsLine": "Windows · not checked: the check didn't answer",
+   "shot": {
+    "text": "Jurisdiction i DETAILS Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 not checked: the check didn't answer; the option shown stands",
+    "width": 407,
+    "height": 102.5
+   },
+   "details": "The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+   "openShot": {
+    "text": "Jurisdiction i DETAILS Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 not checked: the check didn't answer; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+    "width": 407,
+    "height": 102.5
+   }
+  }
+ }
+}

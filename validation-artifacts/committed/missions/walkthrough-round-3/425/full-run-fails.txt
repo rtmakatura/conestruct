@@ -1,0 +1,14 @@
+# Baseline full run on a0c666d (issue-426-mht-spelled-out), before any change
+Test Files 1 failed | 249 passed | 1 skipped (251); Tests 9 failed | 2641 passed | 1 skipped (2651)
+Failing tests (saved before any re-run):
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — a staged field opens S7 on THAT field > PAYLOAD: road type, lane width and jurisdiction each stage themselves
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — a staged field opens S7 on THAT field > pressing a second value while revising moves to that field and KEEPS the first staged
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > CHANGE SOMETHING ELSE is retired — S7 offers DISCARD only
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > dates → the column, WHAT open, no request
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > extent → the column, WHERE open, no request
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > from S7, a value link is the way out — and the staged set survives it, as the retired link's did
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > kind → the column, WHERE open, no request
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > location → the column, WHERE open, no request
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > the kind link lands on the chips, the kind still pressed (already confirmed)
+
+Re-run alone: npx vitest run components/GeneratorShell.value-links.test.tsx -> Tests 13 passed (13). All 9 passed on their own: a load-timing failure under the full run (first error: 'Test timed out in 5000ms'; then 'no Generate plan button'), not this change (the run was on the unchanged base).

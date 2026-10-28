@@ -43,8 +43,16 @@ describe("markerOf", () => {
   it("an error stays a full line", () => {
     expect(markerOf("4 lanes need a 12 ft lane at most", { error: true })).toBeNull();
     expect(
-      markerOf("not evaluated: the check didn't answer; the option shown stands", { error: true }),
+      markerOf("not checked: the check didn't answer; the option shown stands", { error: true }),
     ).toBeNull();
+  });
+
+  it("#425: a declined plan's jurisdiction reads ◌ not checked", () => {
+    expect(markerOf("not checked: the plan was declined; the option shown stands")).toEqual({
+      glyph: "◌",
+      word: "not checked",
+      tone: "pending",
+    });
   });
 
   // R110 Q7 / Q8, amended by Ryan 2026-10-26: "'✓ default' becomes plain

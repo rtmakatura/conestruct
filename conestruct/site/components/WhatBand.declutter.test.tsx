@@ -284,7 +284,7 @@ describe("guesses are marked, never confirmed (R108)", () => {
     mount({ guessed: true, errored: true });
     const line = cell("jurisdiction").querySelector('[data-testid="prov-jurisdiction"]')!;
     expect(line.textContent).toBe(
-      "not evaluated: the check didn't answer; the option shown stands",
+      "not checked: the check didn't answer; the option shown stands",
     );
     expect(line.closest(".a-info")).toBeNull();
   });

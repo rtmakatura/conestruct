@@ -1,0 +1,6 @@
+# Tests on issue-425-declined-jurisdiction (base a0c666d), conestruct/site
+vitest (npx vitest run --reporter=dot): Test Files 251 passed | 1 skipped (252); Tests 2656 passed | 1 skipped (2657)
+baseline on a0c666d: Tests 9 failed | 2641 passed | 1 skipped (2651); the 9 (GeneratorShell.value-links.test.tsx) passed alone, 13/13 (full-run-fails.txt)
+new: GeneratorShell.declined-jurisdiction.test.tsx 5 tests; provenance-marker.test.ts +1 test
+tsc (npx tsc --noEmit -p .): clean
+backend: not touched (no pytest/mypy/ruff run)
