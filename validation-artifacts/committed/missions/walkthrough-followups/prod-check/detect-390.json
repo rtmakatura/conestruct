@@ -1,0 +1,59 @@
+{
+ "flow": "detect",
+ "width": 390,
+ "started": "2026-10-28T16:19:10.343Z",
+ "lookups": [
+  {
+   "search": "1600 E Colfax Ave, Denver",
+   "ms": 2630,
+   "ok": true,
+   "roadBearingStatus": 200,
+   "candidateButtons": 7,
+   "unavailable": false,
+   "result": "⚠ WHICH ROAD? · 4 DETECTED"
+  },
+  {
+   "search": "Colfax & Williams, Denver",
+   "ms": 2716,
+   "ok": true,
+   "roadBearingStatus": 200,
+   "candidateButtons": 6,
+   "unavailable": false,
+   "result": "⚠ WHICH ROAD? · 3 DETECTED"
+  },
+  {
+   "search": "Wadsworth Blvd & W 10th Ave, Lakewood, CO",
+   "ms": 2238,
+   "ok": true,
+   "roadBearingStatus": 200,
+   "candidateButtons": 7,
+   "unavailable": false,
+   "result": "⚠ WHICH ROAD? · 4 DETECTED"
+  },
+  {
+   "search": "1600 E Colfax Ave, Denver",
+   "ms": 3120,
+   "ok": true,
+   "roadBearingStatus": 200,
+   "candidateButtons": 7,
+   "unavailable": false,
+   "result": "⚠ WHICH ROAD? · 4 DETECTED"
+  },
+  {
+   "search": "1600 E Colfax Ave, Denver",
+   "ms": 2609,
+   "ok": true,
+   "roadBearingStatus": 200,
+   "candidateButtons": 7,
+   "unavailable": false,
+   "result": "⚠ WHICH ROAD? · 4 DETECTED"
+  }
+ ],
+ "firstResult": {
+  "text": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ⚠ WHICH ROAD? · 4 DETECTED FRANKLIN STREET SOUTHBOUND (RESIDENTIAL, 180°) 18 M FROM PIN · WAY 589340254 EAST COLFAX AVENUE EASTBOUND (PRIMARY, 90°) 21 M FROM PIN · WAY 600545936 PARK AVENUE NORTHWEST (SECONDARY, 313°) 27 M FROM PIN · WAY 791808876 FRANKLIN STREET NORTHBOUND (RESIDENTIAL, 0°) 27 M FROM PIN · WAY 791808882 ↻ RE-DETECT ROADS CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. ⚠ PICK A ROAD TO CONTINUE Cancel Save & Close",
+  "width": 390,
+  "height": 844,
+  "shot": "shots/detect-390-first.png"
+ },
+ "medianMs": 2630
+}

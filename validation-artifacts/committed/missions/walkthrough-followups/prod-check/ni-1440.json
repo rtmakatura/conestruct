@@ -1,0 +1,40 @@
+{
+ "flow": "ni",
+ "width": 1440,
+ "started": "2026-10-28T16:15:39.959Z",
+ "pinCentre": {
+  "x": 492,
+  "y": 509.5
+ },
+ "markClick": {
+  "x": 492,
+  "y": 503.5
+ },
+ "pickerLine": "",
+ "banner": {
+  "text": "× PLAN DECLINED · THE MARKED CROSS STREET IS INSIDE THE WORK ZONE, 20 FT PAST THE PIN WHERE THE WORK STARTS. WORK INSIDE AN INTERSECTION (MUTCD FIGURES 6P-26/27) ISN'T SUPPORTED. MOVE THAT PIN MORE THAN 32 FT WITH TRAFFIC, PAST THE CROSS STREET, OR MORE THAN 492 FT AGAINST TRAFFIC, SO THE WORK ENDS BEFORE IT. IF THE MARK IS OFF, MARK IT AGAIN WITH MARK ON MAP. NEEDS INPUT",
+  "width": 880,
+  "height": 94,
+  "shot": "shots/ni-1440-declined-banner.png"
+ },
+ "forwardFt": 32,
+ "moveFt": 47,
+ "zoom": null,
+ "moveClick": {
+  "x": 492,
+  "y": 383.5,
+  "dyPx": 16
+ },
+ "pickerAfterMove": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD DETECTED · 1 MATCH WADSWORTH BOULEVARD NORTHBOUND (PRIMARY, 0°) 0 M FROM PIN · WAY 427683596 ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear Unnamed road: marked at your last save. Move the intersection pin to look it up again. CORRIDOR EXTENT CORRIDOR PREVIEW UNAVAILABLE. COULDN'T REACH THE LAYOUT SERVICE. YOU CAN STILL SAVE; THE PLAN IS VALIDATED WHEN GENERATED. Cancel Save & Close",
+ "ctaAfterMove": "Say which side is occupied to lay out the work",
+ "sideReanswered": true,
+ "ctaBeforeGenerate": "",
+ "generateEnabledAfterMove": true,
+ "afterMove": "generated",
+ "afterMoveStatus": {
+  "text": "⚠ VERIFIED · 1 PLAN FLAG REVIEW FLAGS",
+  "width": 880,
+  "height": 57,
+  "shot": "shots/ni-1440-after-move-status.png"
+ }
+}

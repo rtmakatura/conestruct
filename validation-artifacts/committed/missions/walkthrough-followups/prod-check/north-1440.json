@@ -1,0 +1,18 @@
+{
+ "flow": "north",
+ "width": 1440,
+ "started": "2026-10-28T16:04:22.225Z",
+ "cardNames": [
+  "East-Colfax-Avenue_shoulder_2026-10-28_a1e0e7.pdf",
+  "East-Colfax-Avenue_shoulder_2026-10-28_a1e0e7.xlsx",
+  "East-Colfax-Avenue_shoulder_2026-10-28_a1e0e7.crew.pdf",
+  "East-Colfax-Avenue_shoulder_2026-10-28_a1e0e7.md",
+  "East-Colfax-Avenue_shoulder_2026-10-28_a1e0e7.audit.pdf"
+ ],
+ "auditCard": {
+  "hasDefaultedHeading": false,
+  "hasGuessedAndDefaulted": true,
+  "defaultedLine": "Work zone length: 1,000 ft. Defaulted to the tool's starting length (nobody entered a length for this plan). The operator did not confirm it. Confirm the work zone length on site.",
+  "anyWorkLengthDefault": true
+ }
+}

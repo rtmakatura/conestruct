@@ -1,0 +1,31 @@
+{
+ "sha": "0de39178c1bab01708636ae69667814aa276ee7d",
+ "healthz": "healthz.json",
+ "date": "2026-10-28",
+ "issue405": {
+  "pickerSearchToCandidateMs": {
+   "1440": [3840, 2565, 2732, 3038, 2649],
+   "390": [2630, 2716, 2238, 3120, 2609],
+   "medianAllTen": 2682.5,
+   "median1440": 2732,
+   "median390": 2630
+  },
+  "routeProbeMs": [3483, 14372, 2270, 2520, 2480],
+  "routeProbeMedianMs": 2520,
+  "detectionServiceUnavailable": 0,
+  "targetMs": 8000
+ },
+ "issue401": {
+  "zipClickToDownloadMs": { "1440": 1951, "390": 3389 },
+  "serverLimitMs": 60000,
+  "zipEntries": ["plan_sheet.pdf", "device_list.xlsx", "crew_narrative.pdf", "crew_narrative.md", "audit_trail.pdf", "quote.xlsx"],
+  "fingerprintSouth": "746f0e",
+  "fingerprintNorth": "a1e0e7",
+  "fingerprintTyped1200": "ac758e"
+ },
+ "issue399": {
+  "bannerBox": { "1440": [880, 94], "390": [362, 244.25] },
+  "forwardMoveFt": { "1440": 32, "390": 31 },
+  "afterForwardMove": "generated at both widths"
+ }
+}

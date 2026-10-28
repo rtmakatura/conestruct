@@ -1,0 +1,65 @@
+{
+ "flow": "neg",
+ "width": 1440,
+ "started": "2026-10-28T16:04:22.234Z",
+ "minus5": {
+  "fieldValue": "-5",
+  "marker": "yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "cellText": "Work zone length (ft) yours ⚠ WORK ZONE LENGTH MUST BE MORE THAN 0 FT.",
+  "cell": {
+   "text": "Work zone length (ft) yours ⚠ WORK ZONE LENGTH MUST BE MORE THAN 0 FT.",
+   "width": 846,
+   "height": 92,
+   "shot": "shots/neg-1440-minus5-cell.png"
+  },
+  "ctaReason": "Work zone length must be more than 0 ft.",
+  "generateEnabled": false,
+  "generate": {
+   "text": "Generate plan Work zone length must be more than 0 ft. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5,
+   "shot": "shots/neg-1440-minus5-generate.png"
+  }
+ },
+ "cleared": {
+  "fieldValue": "",
+  "marker": "◌ not set",
+  "provenance": "not set · the extent the plan is built for",
+  "cellText": "Work zone length (ft) ◌ not set ⚠ WORK ZONE LENGTH IS REQUIRED.",
+  "cell": {
+   "text": "Work zone length (ft) ◌ not set ⚠ WORK ZONE LENGTH IS REQUIRED.",
+   "width": 846,
+   "height": 92,
+   "shot": "shots/neg-1440-cleared-cell.png"
+  },
+  "ctaReason": "Work zone length is required.",
+  "generateEnabled": false,
+  "generate": {
+   "text": "Generate plan Work zone length is required. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5,
+   "shot": "shots/neg-1440-cleared-generate.png"
+  }
+ },
+ "over": {
+  "fieldValue": "99999",
+  "marker": "✓ yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "cellText": "Work zone length (ft) ✓ yours ⚠ WORK ZONE CAN'T EXCEED 20,000 FT (ABOUT 3.8 MILES) ON A SINGLE PLAN. SPLIT A LONGER PROJECT INTO MULTIPLE PLANS.",
+  "cell": {
+   "text": "Work zone length (ft) ✓ yours ⚠ WORK ZONE CAN'T EXCEED 20,000 FT (ABOUT 3.8 MILES) ON A SINGLE PLAN. SPLIT A LONGER PROJECT INTO MULTIPLE PLANS.",
+   "width": 846,
+   "height": 107,
+   "shot": "shots/neg-1440-99999-cell.png"
+  },
+  "ctaReason": "Work zone can't exceed 20,000 ft (about 3.8 miles) on a single plan. Split a longer project into multiple plans.",
+  "generateEnabled": false,
+  "generate": {
+   "text": "Generate plan Work zone can't exceed 20,000 ft (about 3.8 miles) on a single plan. Split a longer project into multiple plans. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5,
+   "shot": "shots/neg-1440-99999-generate.png"
+  }
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "flow": "gen",
+ "width": 390,
+ "started": "2026-10-28T16:02:35.561Z",
+ "openRequests": [],
+ "cue": "",
+ "cueShot": {
+  "text": "",
+  "width": 362,
+  "height": 15,
+  "shot": "shots/gen-390-cue-slot.png"
+ },
+ "tierStack": {
+  "text": "TOTAL DEVICES 40 on the plan sheet UNIQUE TYPES 12 distinct device types to source ↓ ALL (.ZIP) 6 files, with the quote ›",
+  "width": 362,
+  "height": 284.5,
+  "shot": "shots/gen-390-tier-stack.png"
+ },
+ "jurisdictionText": "JURISDICTION Denver",
+ "refreshingVisible": false,
+ "zipRow": {
+  "text": "↓ ALL (.ZIP)",
+  "width": 354,
+  "height": 44,
+  "shot": "shots/gen-390-zip-row.png"
+ },
+ "filesLine": {
+  "text": "6 files, with the quote ›",
+  "width": 362,
+  "height": 44,
+  "shot": "shots/gen-390-files-line.png"
+ },
+ "zipMs": 3389,
+ "bundleStatus": 200,
+ "zipName": "East-Colfax-Avenue_shoulder_2026-10-28_746f0e_package.zip",
+ "zipEntries": [
+  "plan_sheet.pdf",
+  "device_list.xlsx",
+  "crew_narrative.pdf",
+  "crew_narrative.md",
+  "audit_trail.pdf",
+  "quote.xlsx"
+ ],
+ "auditZip": {
+  "hasDefaultedHeading": false,
+  "hasGuessedAndDefaulted": true,
+  "defaultedLine": "Work zone length: 1,000 ft. Defaulted to the tool's starting length (nobody entered a length for this plan). The operator did not confirm it. Confirm the work zone length on site.",
+  "anyWorkLengthDefault": true
+ },
+ "cardNames": [
+  "East-Colfax-Avenue_shoulder_2026-10-28_746f0e.pdf",
+  "East-Colfax-Avenue_shoulder_2026-10-28_746f0e.xlsx",
+  "East-Colfax-Avenue_shoulder_2026-10-28_746f0e.crew.pdf",
+  "East-Colfax-Avenue_shoulder_2026-10-28_746f0e.md",
+  "East-Colfax-Avenue_shoulder_2026-10-28_746f0e.audit.pdf"
+ ],
+ "auditCard": {
+  "hasDefaultedHeading": false,
+  "hasGuessedAndDefaulted": true,
+  "defaultedLine": "Work zone length: 1,000 ft. Defaulted to the tool's starting length (nobody entered a length for this plan). The operator did not confirm it. Confirm the work zone length on site.",
+  "anyWorkLengthDefault": true
+ },
+ "quoteName": "East-Colfax-Avenue_shoulder_2026-10-28_746f0e.quote.xlsx"
+}
