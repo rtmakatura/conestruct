@@ -1,0 +1,25 @@
+# Red proof: the #418 tests on 8fc833d (the base)
+Run from a git archive of 8fc833d (conestruct/site) with the changed test file
+copied in and node_modules linked (junction);
+npx vitest run components/bands/untouched-provenance.test.tsx
+
+ × Repair 3 > finding 4: a count a road lookup wrote never reads 'yours' after a re-pick onto a road with no count
+   → expected 'default' to be '⚠ from an earlier road'
+ × #418 > (a) after a re-pick onto a road with no count, the kept 4 reads '⚠ from an earlier road', amber, and counts in the header
+   → expected 'default' to be '⚠ from an earlier road'
+ ✓ #418 > (a) the operator's pick over the kept count reads '✓ yours'
+ × #418 > (a, c) a fresh plan on a road with no count keeps plain 'default' and says it once
+   → expected 'default · not from this road; the map…' to be 'default · the map has no count here; …'
+ ✓ #418 > (a) a count the divided reset set (1 undivided) keeps plain 'default'
+ ✓ #418 > (a) control: a count this road's map wrote reads the map's, not 'from an earlier road'
+ × #418 > (b) near-intersection: a map reading 1 per side (not above the plan's 2) gives no turn-lane reason
+   → the base's line ends "..., but turn lanes can inflate counts near an intersection"
+ × #418 > (b) near-intersection: a map reading 2 per side (not above the plan's 2) gives no turn-lane reason
+   → the same
+ ✓ #418 > (b) control: a map reading 3 per side keeps the turn-lane reason
+ Test Files  1 failed (1)
+      Tests  5 failed | 24 passed (29)
+
+5 red, one per gap: (a) twice (the stated flip of #397's finding 4 and the new
+re-pick test), (c) once, (b) twice. The four controls and the 20 other #397/#420
+tests in the file are green on the base, as predicted.

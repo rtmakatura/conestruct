@@ -1,0 +1,8 @@
+# #418 tests (issue-418 worktree, conestruct/site)
+Baseline on 8fc833d: vitest 2678 passed, 1 skipped; pytest 3612 passed, 2 skipped.
+npx vitest run components/bands/untouched-provenance.test.tsx  ->  Tests 29 passed (29)
+npx vitest run (full)  ->  Test Files 254 passed | 1 skipped (255); Tests 2686 passed | 1 skipped (2687)
+npx tsc --noEmit -p .  ->  clean
+No backend change (pytest, mypy and ruff are not affected).
+Red proof on 8fc833d: red-proof.txt (5 red, 4 controls green).
+Live shots: script/shoot.mjs on local next dev, before (git archive of 8fc833d, port 3418) and after (this worktree, port 3419); shots/ and text-before.json / text-after.json.

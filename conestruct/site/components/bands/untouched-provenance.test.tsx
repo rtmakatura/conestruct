@@ -413,9 +413,11 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
     expect((again as { lanes: number }).lanes).toBe(4);
     mountWhat(pinned(again as typeof DEFAULT_SHOULDER, bare));
     expect((document.getElementById("what-lanes") as HTMLSelectElement).value).toBe("4");
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
+    // #418 (stated): the kept 4 is neither the kind's default nor this
+    // road's, so it reads as a guess to check, not "default".
+    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("⚠ from an earlier road");
     expect(screen.getByTestId("prov-lanes").textContent).toBe(
-      "default · not from this road; the map has no count here; set the real count",
+      "⚠ not confirmed · set the real count · from an earlier road",
     );
     expect(lanesText()).not.toMatch(FALSE_CLAIMS);
   });
@@ -463,5 +465,77 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
       expect(t).not.toBe("✓ default");
     }
     expect(screen.getByTestId("info-toggle-road-type").textContent).toBe("default");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// #418: a kept count from an earlier road isn't "default"; the turn-lane
+// reason only for a map count above the plan's; one clause per fact.
+
+describe("#418: the Lanes row's carried count, doubt reason and one-clause line", () => {
+  const counted = road(4, 8);
+  const bare = withoutLaneCount(counted);
+  const repicked = () => {
+    const onCounted = applyClassification(pinned(DEFAULT_SHOULDER, bare), counted.classification).scenario;
+    expect((onCounted as { lanes: number }).lanes).toBe(4);
+    const again = applyClassification(onCounted, bare.classification).scenario;
+    return pinned(again as typeof DEFAULT_SHOULDER, bare);
+  };
+
+  it("(a) after a re-pick onto a road with no count, the kept 4 reads '⚠ from an earlier road', amber, and counts in the header", () => {
+    mountWhat(repicked());
+    const toggle = screen.getByTestId("info-toggle-lanes");
+    expect(toggle.textContent).toBe("⚠ from an earlier road");
+    expect(toggle.textContent).not.toContain("default");
+    expect(lanesText()).not.toMatch(FALSE_CLAIMS);
+    expect(screen.getByTestId("prov-lanes").className).toContain("is-amber");
+    const n = guessesOnShow();
+    expect(n).toBeGreaterThanOrEqual(1);
+    expect(document.body.textContent).toContain(whatHeader(n, true));
+  });
+
+  it("(a) the operator's pick over the kept count reads '✓ yours'", () => {
+    mountWhat(setLanes(repicked(), 4));
+    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("✓ yours");
+  });
+
+  it("(a, c) a fresh plan on a road with no count keeps plain 'default' and says it once", () => {
+    mountWhat(pinned(DEFAULT_SHOULDER, bare));
+    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
+    expect(screen.getByTestId("prov-lanes").textContent).toBe(
+      "default · the map has no count here; set the real count",
+    );
+  });
+
+  it("(a) a count the divided reset set (1 undivided) keeps plain 'default'", () => {
+    const flipped = setRoadType(pinned(DEFAULT_SHOULDER, bare, { roadType: "rural_divided", divided: true }), "rural_undivided");
+    expect((flipped as { lanes: number }).lanes).toBe(1);
+    mountWhat(flipped);
+    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
+  });
+
+  it("(a) control: a count this road's map wrote reads the map's, not 'from an earlier road'", () => {
+    mountWhat(pinned(DEFAULT_SHOULDER, counted, { lanes: 4 }));
+    expect(lanesText()).not.toContain("earlier road");
+    expect(screen.getByTestId("info-toggle-lanes").textContent).not.toBe("default");
+  });
+
+  it.each([
+    [1, 2],
+    [2, 4],
+  ])("(b) near-intersection: a map reading %i per side (not above the plan's 2) gives no turn-lane reason", (perSide, total) => {
+    mountWhat(pinned(DEFAULT_NEAR_INTERSECTION, road(perSide, total)));
+    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
+    expect(screen.getByTestId("detect-lanes-doubt").textContent).toBe(
+      `⚠ not confirmed · the map reads ${perSide} per side`,
+    );
+    expect(lanesText()).not.toContain("turn lanes");
+  });
+
+  it("(b) control: a map reading 3 per side keeps the turn-lane reason", () => {
+    mountWhat(pinned(DEFAULT_NEAR_INTERSECTION, road(3, 6)));
+    expect(screen.getByTestId("detect-lanes-doubt").textContent).toBe(
+      "⚠ not confirmed · the map reads 3 per side, but turn lanes can inflate counts near an intersection",
+    );
   });
 });

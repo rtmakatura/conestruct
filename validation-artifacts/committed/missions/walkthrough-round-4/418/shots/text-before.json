@@ -1,0 +1,130 @@
+{
+ "a-1440": {
+  "firstMarker": "✓ measured",
+  "firstValue": "4",
+  "marker": "default",
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-plain",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   }
+  ],
+  "header": "3 guesses marked ⚠ · change any that are wrong",
+  "closed": {
+   "text": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft",
+   "width": 407,
+   "height": 65
+  },
+  "provenance": "default · not from this road; the map has no count here; set the real count",
+  "provClass": "tr-prov",
+  "provColor": "rgb(147, 160, 176)",
+  "doubt": null,
+  "open": {
+   "text": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · not from this road; the map has no count here; set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ Lane width 11 ft (narrowed from 12 ft: 4 lanes × 12 ft + 8 ft shoulder is wider than the plan sheet can draw at 52 ft per direction).",
+   "width": 407,
+   "height": 213.25
+  },
+  "value": "4"
+ },
+ "a-390": {
+  "firstMarker": "✓ measured",
+  "firstValue": "4",
+  "marker": "default",
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-plain",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   }
+  ],
+  "header": "3 guesses marked ⚠ · change any that are wrong",
+  "closed": {
+   "text": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft",
+   "width": 328,
+   "height": 115
+  },
+  "provenance": "default · not from this road; the map has no count here; set the real count",
+  "provClass": "tr-prov",
+  "provColor": "rgb(147, 160, 176)",
+  "doubt": null,
+  "open": {
+   "text": "Lanes default 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · not from this road; the map has no count here; set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ Lane width 11 ft (narrowed from 12 ft: 4 lanes × 12 ft + 8 ft shoulder is wider than the plan sheet can draw at 52 ft per direction).",
+   "width": 328,
+   "height": 279
+  },
+  "value": "4"
+ },
+ "b-1440": {
+  "marker": "default",
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-plain",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   }
+  ],
+  "header": "4 guesses marked ⚠ · change any that are wrong",
+  "closed": {
+   "text": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft",
+   "width": 407,
+   "height": 65
+  },
+  "provenance": "default · set the real count",
+  "provClass": "tr-prov",
+  "provColor": "rgb(147, 160, 176)",
+  "doubt": "⚠ not confirmed · the map reads 1 per side, but turn lanes can inflate counts near an intersection",
+  "open": {
+   "text": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 1 per side, but turn lanes can inflate counts near an intersection",
+   "width": 407,
+   "height": 197.5
+  },
+  "value": "2"
+ },
+ "b-390": {
+  "marker": "default",
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-plain",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "default"
+   }
+  ],
+  "header": "4 guesses marked ⚠ · change any that are wrong",
+  "closed": {
+   "text": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft",
+   "width": 328,
+   "height": 115
+  },
+  "provenance": "default · set the real count",
+  "provClass": "tr-prov",
+  "provColor": "rgb(147, 160, 176)",
+  "doubt": "⚠ not confirmed · the map reads 1 per side, but turn lanes can inflate counts near an intersection",
+  "open": {
+   "text": "Lanes default 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft default · set the real count Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ not confirmed · the map reads 1 per side, but turn lanes can inflate counts near an intersection",
+   "width": 328,
+   "height": 247.5
+  },
+  "value": "2"
+ }
+}

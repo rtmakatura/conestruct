@@ -33,7 +33,7 @@
 
 import { useState, type ReactNode } from "react";
 import type { Scenario, ScenarioMeta, RoadType } from "@/lib/scenarios";
-import { isKindDefault } from "@/lib/scenarios";
+import { DEFAULT_SHOULDER, isKindDefault } from "@/lib/scenarios";
 import { JURISDICTION_OPTIONS, type JurisdictionBlock } from "@/lib/jurisdiction";
 import { validateLanes } from "@/lib/scenarios/validation";
 import {
@@ -42,6 +42,7 @@ import {
   setRoadType,
   setSpeed,
   setWorkDates,
+  shoulderRoadClassLanes,
 } from "@/lib/scenarios/what-writes";
 import {
   WHAT_CELLS,
@@ -463,6 +464,19 @@ export function WhatBand({
       ? isOperatorSet(scenario, "lanes")
       : "lanes" in scenario && !isKindDefault(scenario, "lanes");
   const mapLanes = detected ? scenario.meta.confirmedRoad?.classification.lanesPerDirection : undefined;
+  // #418: with no map count behind the row, an untouched shoulder count
+  // that is none of the counts the tool starts or resets to (the kind's
+  // default, the divided reset) can only be an earlier road's map count,
+  // kept by a re-pick onto a road with no count (auto-apply.ts
+  // `nextLanes`).  It is not this road's, so it reads as a guess to check,
+  // not "default" (Rule 10).  A kept count equal to a default reads
+  // "default": the value is the default's.
+  const lanesCarried =
+    scenario.kind === "shoulder" &&
+    !lanesMine &&
+    !detectedRow(detected, "Lanes per direction") &&
+    scenario.lanes !== DEFAULT_SHOULDER.lanes &&
+    scenario.lanes !== shoulderRoadClassLanes(scenario.divided);
   const lanesClause =
     scenario.kind === "near_intersection"
       ? // Untouched, the row reads plain "default" (Ryan, 2026-10-26:
@@ -471,19 +485,22 @@ export function WhatBand({
         lanesMine
         ? { text: YOURS, amber: false }
         : { text: "default · set the real count", amber: false }
-      : clauseFor(
-          detected,
-          "Lanes per direction",
-          // #397 (repair 3): without a record the count is one the tool
-          // set (the start, a divided reset, or an earlier road's map
-          // count), so the line says only what is true of all three; with
-          // no road read at all it names no map.
-          lanesMine
-            ? YOURS
-            : detected
-              ? "default · not from this road; the map has no count here; set the real count"
-              : "default · set the real count",
-        );
+      : lanesCarried
+        ? // The marker reads the last segment (markerOf's amber path),
+          // as the speed guess's "from the road" does.
+          { text: "not confirmed · set the real count · from an earlier road", amber: true }
+        : clauseFor(
+            detected,
+            "Lanes per direction",
+            // #397 (repair 3): without a record, and not carried (#418),
+            // the count is a default the tool set; with no road read at
+            // all the line names no map.  #418: one fact, then the action.
+            lanesMine
+              ? YOURS
+              : detected
+                ? "default · the map has no count here; set the real count"
+                : "default · set the real count",
+          );
   // #397, Ryan's ruling above: the ⚠ sits on the doubt, in the row's
   // details, not on the default.  It counts among the header's N (Ryan,
   // 2026-10-27, #420: the count isn't from the road, Rule 10).
@@ -492,7 +509,11 @@ export function WhatBand({
       ? [
           {
             key: "lanes-doubt",
-            text: `not confirmed · the map reads ${mapLanes} per side, but turn lanes can inflate counts near an intersection`,
+            // #418: turn lanes explain only a map count above the plan's.
+            text:
+              mapLanes > scenario.lanes
+                ? `not confirmed · the map reads ${mapLanes} per side, but turn lanes can inflate counts near an intersection`
+                : `not confirmed · the map reads ${mapLanes} per side`,
             amber: true,
           },
         ]

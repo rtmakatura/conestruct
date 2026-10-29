@@ -115,8 +115,15 @@ export function setRoadType(scenario: Scenario, rt: RoadType): Scenario {
   return {
     ...base,
     divided: nextDivided,
-    ...(nextDivided !== mine.divided ? { lanes: nextDivided ? 2 : 1 } : {}),
+    ...(nextDivided !== mine.divided ? { lanes: shoulderRoadClassLanes(nextDivided) } : {}),
   };
+}
+
+/** The shoulder count a divided flip resets to (the road-class default
+ *  above).  #418: the Lanes row reads it, with the kind's own default, as
+ *  a count the tool set rather than one carried from an earlier road. */
+export function shoulderRoadClassLanes(divided: boolean): number {
+  return divided ? 2 : 1;
 }
 
 /**
