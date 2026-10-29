@@ -1,0 +1,32 @@
+# Production check of 1605c02 (mission walkthrough-round-4, #433)
+
+Run 2026-10-29 against https://www.conestruct.com. Healthz serves `1605c02c` (healthz.json).
+
+Each check ran in headless Playwright Chromium at 1440x900 and 390x844, DPR 2 (script/check.mjs). Road detection, geocode, audit and renders were live. The one exception is check 1's failed case, where a browser route answered `/api/render/audit` with a 500, so that call never reached the backend. Nothing was saved to an account.
+
+## Counts
+
+| | PASS | FAIL | N/A |
+|---|---|---|---|
+| Checks (6 checks x 2 widths) | 12 | 0 | 0 |
+
+## Results
+
+| # | Check | 1440 | 390 | What was read | Evidence |
+|---|---|---|---|---|---|
+| 1a | #425: a failed Jurisdiction check reads "◌ check failed", gray | PASS | PASS | Colfax & Williams, East Colfax Avenue westbound, "● North side · westbound traffic", flagger lane closure. The audit answered 500 three times (route). With Parker picked: `data-jurisdiction-state="check-failed"`, marker "◌ check failed", `a-mark tr-prov is-pending`. The glyph and word are rgb(147, 160, 176) on rgb(16, 28, 41). No element in the cell is the red rgb(255, 122, 122). The line "check failed: the check didn't answer; the option shown stands" is `tr-prov`, in the details and not on show. The windows line reads "Windows · check failed: the check didn't answer". On the pin's guess (Denver), the marker stays "⚠ from the pin" (`is-guess`, rgb(244, 192, 32)), and the details hold the guess line and then the check-failed line. The cell measured 407 x 65 at 1440 and 328 x 115 at 390, the same as #425's after values. | failed-*.json, shots/failed-*-picked-cell(-open).png, shots/failed-*-guess-cell(-open).png |
+| 1b | #425: a declined plan keeps "◌ not checked" | PASS | PASS | Same plan, live audit answered 400 twice, PLAN DECLINED. With Parker picked: state `declined`, marker "◌ not checked", `is-pending`, rgb(147, 160, 176). The line reads "not checked: the plan was declined; the option shown stands". The windows line reads "Windows · not checked: the plan was declined". On the pin's guess the marker is "⚠ from the pin", as in round 3. No red. Cell 407 x 65 / 328 x 115. | declined-*.json (guess, picked), shots/declined-*-*-cell(-open).png |
+| 2 | #402: with a pin dropped, the picker reads "Save, then say which side is occupied." on the overlay and in the panel | PASS | PASS | After picking East Colfax Avenue westbound from "WHICH ROAD? · 3 DETECTED", `picker-side-sentence` (map overlay) and `picker-corridor-note` (panel) both have the textContent "Save, then say which side is occupied.", rendered uppercase. The overlay is white on black/70, 334 x 32 at 1440 and 194 x 52 at 390 (two lines). The panel is rgb(147, 160, 176), 407 x 23 at 1440 and 340 x 23 at 390. | declined-*.json (sentence), shots/side-*-overlay.png, side-*-panel.png, side-*-picker.png |
+| 3 | #429: 99999 in "Work zone length (ft)" reads a plain "yours" | PASS | PASS | Shoulder plan on East Colfax Avenue eastbound. The box reads 99999. The marker reads "yours" with no glyph, `a-mark tr-prov is-plain`. The field reads "⚠ WORK ZONE CAN'T EXCEED 20,000 FT (ABOUT 3.8 MILES) ON A SINGLE PLAN. …". Generate is disabled. The cell measured 846 x 107 / 328 x 172, the same as #429's values. | len-*.json (overCap), shots/len-*-99999-cell.png, -generate.png |
+| 4 | #432: 512.5 stays, "Use whole feet for the work zone length." | PASS | PASS | The box keeps "512.5". The field reads "⚠ USE WHOLE FEET FOR THE WORK ZONE LENGTH.". The marker reads "yours" (`is-plain`). The Generate blocker (`cta-reason`) reads "Use whole feet for the work zone length.". Generate is disabled. The cell measured 846 x 92 / 328 x 142, the same as #432's after values. | len-*.json (decimal), shots/len-*-512-5-cell.png, -generate.png |
+| 5 | #410: landing step 1 copy | PASS | PASS | Step 1's paragraph on `/` reads "Drop a pin where the work starts. Conestruct finds the road and the direction. You enter the work zone length." The step does not contain "extent". The step box measured 360 x 339.66 at 1440 and 340 x 328.41 at 390, the same as #410's after values. | landing-*.json, shots/landing-*-step1.png |
+| 6a | #418: a shoulder re-pick from a 4-per-side road onto a road with no count reads "⚠ from an earlier road" | PASS | PASS | First pick: North Lincoln Street northbound, way 1122659187 (live OSM `oneway=yes`, `lanes=4`). Lanes read 4 per side, "✓ measured", "OSM · 4 · measured". Then "Edit on map" and a re-pick onto Acoma Street northbound, way 131232821 (live OSM, no `lanes` tag). Lanes keep 4 and read "⚠ from an earlier road" (`a-mark tr-prov is-guess`, rgb(244, 192, 32)). The details line is "⚠ not confirmed · set the real count · from an earlier road" (`tr-prov is-amber`). The row measured 407 x 65 / 328 x 115. The WHAT header went from "3 guesses marked ⚠" to "6 guesses marked ⚠", because the re-pick also changed other rows on the residential road. | lanesA-*.json (first, after, detections), shots/lanesA-*-first-lanes-*.png, lanesA-*-repick-lanes-*.png |
+| 6b | #418: near intersection, the map reads fewer lanes than the plan, so the doubt line gives no turn-lane reason | PASS | PASS | Near-intersection kind on Pearl Street northbound, way 337135341 (live OSM `lanes=2`, `lanes:forward=1`, `lanes:backward=1`), at E 14th Ave. The plan's count is 2 per side, marker "default". The doubt line reads "⚠ not confirmed · the map reads 1 per side", with no "turn lanes" clause. | lanesB-*.json, shots/lanesB-*-lanes-*.png |
+
+## Notes
+
+a. Check 6 used live OSM roads, found through the live `/api/road-bearing`. The local #418 run had stubbed detection and used Wadsworth. Live, Wadsworth reads 3 and 5 per side, so Lincoln and Acoma were used in its place.
+
+b. Run history. The first lanes runs hit Overpass coming back empty: the 1440 near-intersection run, and the 390 re-pick's second detection. In that 390 run the re-pick saved with no road read. It still showed "⚠ from an earlier road", through #418 call 7, but that was not the case being checked. At 1440 the re-pick's Save stayed disabled. The script now waits for the wanted road's button and re-detects up to three times. The recorded runs needed no re-detect (`redetects: 0`), and every recorded detection lists the roads above. These were script and Overpass issues, not site faults.
+
+c. In check 1a, "didn't answer" appears on the page, in the windows line and the details. That is #425's wording ("check failed: the check didn't answer"), not the old red line.

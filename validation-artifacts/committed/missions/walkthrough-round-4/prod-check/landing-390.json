@@ -1,0 +1,13 @@
+{
+ "flow": "landing",
+ "width": 390,
+ "started": "2026-10-29T19:25:16.392Z",
+ "body": "Drop a pin where the work starts. Conestruct finds the road and the direction. You enter the work zone length.",
+ "extentAnywhere": false,
+ "step": {
+  "text": "1,000 FT 1 Mark the work. Drop a pin where the work starts. Conestruct finds the road and the direction. You enter the work zone length.",
+  "width": 340,
+  "height": 328.41,
+  "shot": "shots/landing-390-step1.png"
+ }
+}

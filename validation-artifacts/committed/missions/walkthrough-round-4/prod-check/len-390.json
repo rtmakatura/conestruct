@@ -1,0 +1,54 @@
+{
+ "flow": "len",
+ "width": 390,
+ "started": "2026-10-29T19:28:31.549Z",
+ "detected": "WHICH ROAD? · 3 DETECTED",
+ "pickButtons": [
+  "STREETS",
+  "WILLIAMS STREET NORTHBOUND (RESIDENTIAL, 0°) 0 M FROM PIN · WAY 128949366",
+  "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 90°) 0 M FROM PIN · WAY 600545931",
+  "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 269°) 12 M FROM PIN · WAY 1547338997",
+  "↻ RE-DETECT ROADS"
+ ],
+ "side": "● South side · eastbound traffic",
+ "overCap": {
+  "fieldValue": "99999",
+  "marker": "yours",
+  "markerClass": "a-mark tr-prov is-plain",
+  "fieldError": "⚠ WORK ZONE CAN'T EXCEED 20,000 FT (ABOUT 3.8 MILES) ON A SINGLE PLAN. SPLIT A LONGER PROJECT INTO MULTIPLE PLANS.",
+  "ctaReason": "Work zone can't exceed 20,000 ft (about 3.8 miles) on a single plan. Split a longer project into multiple plans.",
+  "generateEnabled": false,
+  "cell": {
+   "text": "Work zone length (ft) yours ⚠ WORK ZONE CAN'T EXCEED 20,000 FT (ABOUT 3.8 MILES) ON A SINGLE PLAN. SPLIT A LONGER PROJECT INTO MULTIPLE PLANS.",
+   "width": 328,
+   "height": 172,
+   "shot": "shots/len-390-99999-cell.png"
+  },
+  "generate": {
+   "text": "Generate plan Work zone can't exceed 20,000 ft (about 3.8 miles) on a single plan. Split a longer project into multiple plans. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 362,
+   "height": 200.75,
+   "shot": "shots/len-390-99999-generate.png"
+  }
+ },
+ "decimal": {
+  "fieldValue": "512.5",
+  "marker": "yours",
+  "markerClass": "a-mark tr-prov is-plain",
+  "fieldError": "⚠ USE WHOLE FEET FOR THE WORK ZONE LENGTH.",
+  "ctaReason": "Use whole feet for the work zone length.",
+  "generateEnabled": false,
+  "cell": {
+   "text": "Work zone length (ft) yours ⚠ USE WHOLE FEET FOR THE WORK ZONE LENGTH.",
+   "width": 328,
+   "height": 142,
+   "shot": "shots/len-390-512-5-cell.png"
+  },
+  "generate": {
+   "text": "Generate plan Use whole feet for the work zone length. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 362,
+   "height": 169.25,
+   "shot": "shots/len-390-512-5-generate.png"
+  }
+ }
+}

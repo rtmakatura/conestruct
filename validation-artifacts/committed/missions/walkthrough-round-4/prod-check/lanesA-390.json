@@ -1,0 +1,80 @@
+{
+ "flow": "lanesA",
+ "width": 390,
+ "started": "2026-10-29T19:35:49.211Z",
+ "detections": [
+  [
+   "East 11th Avenue|w628677791|oneway=no|lanes=2",
+   "North Lincoln Street|w1122659187|oneway=yes|lanes=4"
+  ],
+  [
+   "West 11th Avenue|w589281710|oneway=no|lanes=2",
+   "Acoma Street|w131232821|oneway=null|lanes=null",
+   "Acoma Street|w131232820|oneway=no|lanes=null"
+  ]
+ ],
+ "redetects": 0,
+ "detected": "WHICH ROAD? · 3 DETECTED",
+ "pickButtons": [
+  "STREETS",
+  "WEST 11TH AVENUE EASTBOUND (TERTIARY, 90°) 18 M FROM PIN · WAY 589281710",
+  "ACOMA STREET NORTHBOUND (RESIDENTIAL, 0°) 23 M FROM PIN · WAY 131232821",
+  "ACOMA STREET SOUTHBOUND (RESIDENTIAL, 180°) 29 M FROM PIN · WAY 131232820",
+  "↻ RE-DETECT ROADS"
+ ],
+ "pickedRoad": "ACOMA STREET NORTHBOUND (RESIDENTIAL, 0°) 23 M FROM PIN · WAY 131232821",
+ "side": "● East side · northbound traffic",
+ "firstRoad": "NORTH LINCOLN STREET NORTHBOUND (PRIMARY, 0°) 0 M FROM PIN · WAY 1122659187",
+ "first": {
+  "value": "4",
+  "marker": "✓ measured",
+  "markerClass": "a-mark tr-prov is-ok",
+  "markerColor": "rgb(147, 160, 176)",
+  "header": "3 guesses marked ⚠ · change any that are wrong",
+  "closed": {
+   "text": "Lanes ✓ measured 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/lanesA-390-first-lanes-closed.png"
+  },
+  "provenance": "OSM · 4 · measured",
+  "provClass": "tr-prov",
+  "provColor": "rgb(147, 160, 176)",
+  "doubt": null,
+  "details": "OSM · 4 · measured Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ Lanes set to 4/direction (OSM detection, was 2). ⚠ Lane width 11 ft (narrowed from 12 ft: 4 lanes × 12 ft + 8 ft shoulder is wider than the plan sheet can draw at 52 ft per direction).",
+  "open": {
+   "text": "Lanes ✓ measured 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft OSM · 4 · measured Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ Lanes set to 4/direction (OSM detection, was 2). ⚠ Lane width 11 ft (narrowed from 12 ft: 4 lanes × 12 ft + 8 ft shoulder is wider than the plan sheet can draw at 52 ft per direction).",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/lanesA-390-first-lanes-open.png"
+  }
+ },
+ "repickDetected": "WHICH ROAD? · 3 DETECTED",
+ "repickRoad": "ACOMA STREET NORTHBOUND (RESIDENTIAL, 0°) 23 M FROM PIN · WAY 131232821",
+ "reansweredSide": true,
+ "reconfirmed": true,
+ "after": {
+  "value": "4",
+  "marker": "⚠ from an earlier road",
+  "markerClass": "a-mark tr-prov is-guess",
+  "markerColor": "rgb(244, 192, 32)",
+  "header": "6 guesses marked ⚠ · change any that are wrong",
+  "closed": {
+   "text": "Lanes ⚠ from an earlier road 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/lanesA-390-repick-lanes-closed.png"
+  },
+  "provenance": "⚠ not confirmed · set the real count · from an earlier road",
+  "provClass": "tr-prov is-amber",
+  "provColor": "rgb(244, 192, 32)",
+  "doubt": null,
+  "details": "⚠ not confirmed · set the real count · from an earlier road Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ Lane width 11 ft (narrowed from 12 ft: 4 lanes × 12 ft + 8 ft shoulder is wider than the plan sheet can draw at 52 ft per direction).",
+  "open": {
+   "text": "Lanes ⚠ from an earlier road 1 per side 2 per side 3 per side 4 per side 9 ft 9.5 ft 10 ft 10.5 ft 11 ft 11.5 ft 12 ft 12.5 ft 13 ft 13.5 ft 14 ft ⚠ not confirmed · set the real count · from an earlier road Lane width · default · the plan's standard lane; detection doesn't measure width ⚠ Lane width 11 ft (narrowed from 12 ft: 4 lanes × 12 ft + 8 ft shoulder is wider than the plan sheet can draw at 52 ft per direction).",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/lanesA-390-repick-lanes-open.png"
+  }
+ }
+}

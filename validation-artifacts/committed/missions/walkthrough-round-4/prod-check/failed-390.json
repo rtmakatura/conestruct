@@ -1,0 +1,79 @@
+{
+ "flow": "failed",
+ "width": 390,
+ "started": "2026-10-29T19:27:33.583Z",
+ "auditAnswers": [
+  500,
+  500,
+  500
+ ],
+ "detected": "WHICH ROAD? · 3 DETECTED",
+ "pickButtons": [
+  "STREETS",
+  "WILLIAMS STREET NORTHBOUND (RESIDENTIAL, 0°) 0 M FROM PIN · WAY 128949366",
+  "EAST COLFAX AVENUE EASTBOUND (PRIMARY, 90°) 0 M FROM PIN · WAY 600545931",
+  "EAST COLFAX AVENUE WESTBOUND (PRIMARY, 269°) 12 M FROM PIN · WAY 1547338997",
+  "↻ RE-DETECT ROADS"
+ ],
+ "side": "● North side · westbound traffic",
+ "guess": {
+  "state": "check-failed",
+  "value": "denver",
+  "line": "⚠ guessed, not confirmed · from the pin",
+  "lineClass": "tr-prov is-amber",
+  "lineOnShow": false,
+  "lineColor": "rgb(244, 192, 32)",
+  "marker": "⚠ from the pin",
+  "markerClass": "a-mark tr-prov is-guess",
+  "markerWordColor": "rgb(244, 192, 32)",
+  "glyphColor": "rgb(244, 192, 32)",
+  "markerBg": "rgb(16, 28, 41)",
+  "redAnywhereInCell": false,
+  "didntAnswerOnShow": true,
+  "windowsLine": "Windows · check failed: the check didn't answer",
+  "planDeclined": false,
+  "shot": {
+   "text": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/failed-390-guess-cell.png"
+  },
+  "details": "⚠ guessed, not confirmed · from the pin check failed: the check didn't answer; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+  "openShot": {
+   "text": "Jurisdiction ⚠ from the pin Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 ⚠ guessed, not confirmed · from the pin check failed: the check didn't answer; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/failed-390-guess-cell-open.png"
+  }
+ },
+ "picked": {
+  "state": "check-failed",
+  "value": "parker",
+  "line": "check failed: the check didn't answer; the option shown stands",
+  "lineClass": "tr-prov",
+  "lineOnShow": false,
+  "lineColor": "rgb(147, 160, 176)",
+  "marker": "◌ check failed",
+  "markerClass": "a-mark tr-prov is-pending",
+  "markerWordColor": "rgb(147, 160, 176)",
+  "glyphColor": "rgb(147, 160, 176)",
+  "markerBg": "rgb(16, 28, 41)",
+  "redAnywhereInCell": false,
+  "didntAnswerOnShow": true,
+  "windowsLine": "Windows · check failed: the check didn't answer",
+  "planDeclined": false,
+  "shot": {
+   "text": "Jurisdiction ◌ check failed Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/failed-390-picked-cell.png"
+  },
+  "details": "check failed: the check didn't answer; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+  "openShot": {
+   "text": "Jurisdiction ◌ check failed Not set: MUTCD + CDOT only CDOT (state highway) Denver Lakewood Englewood Littleton Centennial Parker Greeley Thornton E-470 check failed: the check didn't answer; the option shown stands The pin is in Denver. Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage). Boundary data is approximate (US Census TIGER/Line Place boundaries, 2025). Confirm the jurisdiction with the permitting authority.",
+   "width": 328,
+   "height": 115,
+   "shot": "shots/failed-390-picked-cell-open.png"
+  }
+ }
+}
