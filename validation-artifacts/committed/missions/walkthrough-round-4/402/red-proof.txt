@@ -1,0 +1,14 @@
+# Red proof: the round-4 #402 test on 74cb1b5 (the base)
+Run from a git archive of 74cb1b5 (conestruct/site) with the new
+components/LocationPickerModal.side-sentence.test.tsx copied in and node_modules linked (junction);
+npx vitest run components/LocationPickerModal.side-sentence.test.tsx
+
+   × #402 ruling 2: the picker's side sentence > a pin waiting on its side: the map overlay and the panel both read the ruled sentence 341ms
+     → expected 'Say which side is occupied to lay out…' to be 'Save, then say which side is occupied.' // Object.is equality
+AssertionError: expected 'Say which side is occupied to lay out…' to be 'Save, then say which side is occupied.' // Object.is equality
+Expected: "Save, then say which side is occupied."
+Received: "Say which side is occupied to lay out the work"
+      Tests  1 failed (1)
+
+1 red: the map overlay (picker-side-sentence) reads the #290 sentence on the base. The overlay was
+found (the stubbed map pane renders it), so the failure is the words, not the mount.

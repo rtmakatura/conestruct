@@ -1,0 +1,38 @@
+{
+ "390": {
+  "overlay": {
+   "text": "Say which side is occupied to lay out the work",
+   "rendered": "SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK",
+   "color": "rgb(255, 255, 255)",
+   "bg": "rgba(0, 0, 0, 0.7)",
+   "width": 194,
+   "height": 72
+  },
+  "panel": {
+   "text": "Say which side is occupied to lay out the work.",
+   "rendered": "SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK.",
+   "color": "rgb(147, 160, 176)",
+   "bg": "rgba(0, 0, 0, 0)",
+   "width": 340,
+   "height": 23
+  }
+ },
+ "1440": {
+  "overlay": {
+   "text": "Say which side is occupied to lay out the work",
+   "rendered": "SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK",
+   "color": "rgb(255, 255, 255)",
+   "bg": "rgba(0, 0, 0, 0.7)",
+   "width": 399.38,
+   "height": 32
+  },
+  "panel": {
+   "text": "Say which side is occupied to lay out the work.",
+   "rendered": "SAY WHICH SIDE IS OCCUPIED TO LAY OUT THE WORK.",
+   "color": "rgb(147, 160, 176)",
+   "bg": "rgba(0, 0, 0, 0)",
+   "width": 407,
+   "height": 23
+  }
+ }
+}

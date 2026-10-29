@@ -1680,7 +1680,9 @@ export function LocationPickerModal({
                 {/* #290, the pre-side ruling: "before the side is
                     confirmed, the picker draws the pin and the sentence
                     'Say which side is occupied to lay out the work' — no
-                    segment, and no direction-free circle". */}
+                    segment, and no direction-free circle".  The pin-only
+                    drawing stands; the sentence is superseded here by
+                    Ryan's #402 ruling 2 (2026-10-29), SIDE_SENTENCE. */}
                 {hasPin && awaitingSide && (
                   <div
                     className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none"
@@ -2286,9 +2288,14 @@ type PreviewStatus =
   | "kind"
   | "refused";
 
-/** The pre-side ruling's sentence, verbatim — one string for the map and
- *  the panel.  (The same words as the rail's SIDE_BLOCKER.) */
-const SIDE_SENTENCE = "Say which side is occupied to lay out the work";
+/** The pre-side sentence, one string for the map and the panel.  Ryan's
+ *  #402 ruling 2 (2026-10-29), verbatim with its period: "#402 side
+ *  sentence: "Save, then say which side is occupied." in the picker only."
+ *  It supersedes #290's "Say which side is occupied to lay out the work"
+ *  here only: the picker has no side control, so it says to save first.
+ *  The rail's SIDE_BLOCKER (the band, where the control is) keeps the #290
+ *  words, so the two strings differ on purpose. */
+const SIDE_SENTENCE = "Save, then say which side is occupied.";
 
 function CorridorPreviewPanel({
   corridor,
@@ -2375,7 +2382,7 @@ function CorridorPreviewPanel({
                 the #263 type census counts elements, and this is the
                 same note in the same register. */}
             {status === "side"
-              ? `${SIDE_SENTENCE}.`
+              ? SIDE_SENTENCE
               : status === "kind"
                 ? "Corridor lengths wait on the kind of work. Choose it after you save."
                 : "Save the pin; the corridor lays out on the band."}

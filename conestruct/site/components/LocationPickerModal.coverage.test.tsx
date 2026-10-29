@@ -276,12 +276,14 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
 });
 
 describe("#290 — what the panel says before the answers it waits on", () => {
+  // #402 ruling 2 (Ryan, 2026-10-29) supersedes the #290 sentence in the
+  // picker: "Save, then say which side is occupied." (the band keeps #290's).
   it("side unconfirmed: the pre-side ruling's sentence, and no extent", async () => {
     stubFetches(detection([ROAD]), SIDE_NOT_CONFIRMED);
     mountModal();
     typeCoords();
     expect(
-      await screen.findByText("Say which side is occupied to lay out the work.", undefined, {
+      await screen.findByText("Save, then say which side is occupied.", undefined, {
         timeout: 3000,
       }),
     ).toBeTruthy();
@@ -326,7 +328,7 @@ describe("#290 — the geometry request: the modal's live pin and road, never a 
     stubFetches(detection([ROAD]), SIDE_NOT_CONFIRMED);
     mountModal();
     typeCoords(PIN[0] + 0.001, PIN[1]);
-    await screen.findByText("Say which side is occupied to lay out the work.", undefined, {
+    await screen.findByText("Save, then say which side is occupied.", undefined, {
       timeout: 3000,
     });
     const body = geometryBodies().at(-1)!;

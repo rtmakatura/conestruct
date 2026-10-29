@@ -1,0 +1,38 @@
+{
+ "390": {
+  "overlay": {
+   "text": "Save, then say which side is occupied.",
+   "rendered": "SAVE, THEN SAY WHICH SIDE IS OCCUPIED.",
+   "color": "rgb(255, 255, 255)",
+   "bg": "rgba(0, 0, 0, 0.7)",
+   "width": 194,
+   "height": 52
+  },
+  "panel": {
+   "text": "Save, then say which side is occupied.",
+   "rendered": "SAVE, THEN SAY WHICH SIDE IS OCCUPIED.",
+   "color": "rgb(147, 160, 176)",
+   "bg": "rgba(0, 0, 0, 0)",
+   "width": 340,
+   "height": 23
+  }
+ },
+ "1440": {
+  "overlay": {
+   "text": "Save, then say which side is occupied.",
+   "rendered": "SAVE, THEN SAY WHICH SIDE IS OCCUPIED.",
+   "color": "rgb(255, 255, 255)",
+   "bg": "rgba(0, 0, 0, 0.7)",
+   "width": 334.09,
+   "height": 32
+  },
+  "panel": {
+   "text": "Save, then say which side is occupied.",
+   "rendered": "SAVE, THEN SAY WHICH SIDE IS OCCUPIED.",
+   "color": "rgb(147, 160, 176)",
+   "bg": "rgba(0, 0, 0, 0)",
+   "width": 407,
+   "height": 23
+  }
+ }
+}

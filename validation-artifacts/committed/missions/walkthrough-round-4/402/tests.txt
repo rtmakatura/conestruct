@@ -1,0 +1,12 @@
+# Tests, issue-402-side-sentence on 74cb1b5 (conestruct/site, quiet)
+Baseline on 74cb1b5: vitest 253 files passed, 1 skipped; 2667 passed, 1 skipped. pytest 3612 passed, 2 skipped.
+
+Targeted: npx vitest run components/LocationPickerModal.side-sentence.test.tsx components/LocationPickerModal.coverage.test.tsx
+      Tests  12 passed (12)
+
+Full: npx vitest run --reporter=dot
+ Test Files  254 passed | 1 skipped (255)
+      Tests  2668 passed | 1 skipped (2669)
+
+npx tsc --noEmit: clean (exit 0)
+No backend change.
