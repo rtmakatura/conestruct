@@ -1,0 +1,32 @@
+{
+  "390": {
+    "step": {
+      "width": 340,
+      "height": 328.41
+    },
+    "paragraph": {
+      "text": "Drop a pin where the work starts. Conestruct finds the road and the direction. You enter the work zone length.",
+      "color": "rgb(200, 209, 221)",
+      "lineHeight": "25.6px",
+      "opacity": "1",
+      "width": 340,
+      "height": 76.78,
+      "lines": 3
+    }
+  },
+  "1440": {
+    "step": {
+      "width": 360,
+      "height": 339.66
+    },
+    "paragraph": {
+      "text": "Drop a pin where the work starts. Conestruct finds the road and the direction. You enter the work zone length.",
+      "color": "rgb(200, 209, 221)",
+      "lineHeight": "25.6px",
+      "opacity": "1",
+      "width": 360,
+      "height": 76.78,
+      "lines": 3
+    }
+  }
+}

@@ -160,7 +160,7 @@ export function Landing() {
               <Step
                 n="1"
                 title="Mark the work."
-                body="Drop a pin where the work starts. Conestruct finds the road, the direction and the extent."
+                body="Drop a pin where the work starts. Conestruct finds the road and the direction. You enter the work zone length."
                 delay="0.1s"
               >
                 <StepPin />

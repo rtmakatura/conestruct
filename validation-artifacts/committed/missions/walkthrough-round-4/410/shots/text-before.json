@@ -1,0 +1,32 @@
+{
+  "390": {
+    "step": {
+      "width": 340,
+      "height": 302.81
+    },
+    "paragraph": {
+      "text": "Drop a pin where the work starts. Conestruct finds the road, the direction and the extent.",
+      "color": "rgb(200, 209, 221)",
+      "lineHeight": "25.6px",
+      "opacity": "1",
+      "width": 340,
+      "height": 51.19,
+      "lines": 2
+    }
+  },
+  "1440": {
+    "step": {
+      "width": 360,
+      "height": 339.66
+    },
+    "paragraph": {
+      "text": "Drop a pin where the work starts. Conestruct finds the road, the direction and the extent.",
+      "color": "rgb(200, 209, 221)",
+      "lineHeight": "25.6px",
+      "opacity": "1",
+      "width": 360,
+      "height": 51.19,
+      "lines": 2
+    }
+  }
+}

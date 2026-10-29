@@ -332,6 +332,17 @@ describe("landing v2 — links and held items", () => {
     }
   });
 
+  it("step 1 claims only the road and the direction; the operator enters the length (#410)", () => {
+    // The picker finds the road and its direction; the work zone length is
+    // typed in the WHERE band ("Work zone length (ft)"), never found (Rule 10).
+    const step1 = mount().querySelectorAll("#how .lv-step")[0];
+    expect(step1.querySelector("h3")?.textContent).toBe("1Mark the work.");
+    expect(step1.querySelector("p")?.textContent).toBe(
+      "Drop a pin where the work starts. Conestruct finds the road and the direction. You enter the work zone length.",
+    );
+    expect(step1.textContent).not.toMatch(/extent/i);
+  });
+
   it("the file tiles are plain cards until the sample is confirmed (#350): no link, no hover class", () => {
     const tiles = [...mount().querySelectorAll("#files .lv-ft")];
     expect(tiles.map((t) => t.querySelector(".lv-ft-title")?.textContent)).toEqual([

@@ -1,0 +1,12 @@
+# Red proof: the round-4 #410 test on 28b2d17 (the base)
+Run from a git archive of 28b2d17 (conestruct/site) with the changed test file
+copied in and node_modules linked (junction);
+npx vitest run components/landing/Landing.test.tsx
+
+   × landing v2 — links and held items > step 1 claims only the road and the direction; the operator enters the length (#410)
+     → expected 'Drop a pin where the work starts. Con…' to be 'Drop a pin where the work starts. Con…' // Object.is equality
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 passed (32)
+
+1 red: on the base, step 1's paragraph reads "... Conestruct finds the road, the direction
+and the extent." The other 31 landing tests are green on the base, as predicted.

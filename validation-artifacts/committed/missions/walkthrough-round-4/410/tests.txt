@@ -1,0 +1,16 @@
+# #410 (round 4) test runs, summary lines only
+
+## Baseline on 28b2d17 (before any change)
+vitest:  Test Files  254 passed | 1 skipped (255)
+         Tests  2677 passed | 1 skipped (2678)
+pytest:  3612 passed, 2 skipped in 287.10s
+
+## Red proof on 28b2d17 (red-proof.txt)
+components/landing/Landing.test.tsx: Tests  1 failed | 31 passed (32)
+
+## After (this branch)
+components/landing/Landing.test.tsx: Tests  32 passed (32)
+vitest (full):  Test Files  254 passed | 1 skipped (255)
+                Tests  2678 passed | 1 skipped (2679)
+tsc --noEmit: clean
+No backend change; pytest not re-run.
