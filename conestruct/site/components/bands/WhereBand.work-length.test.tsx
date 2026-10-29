@@ -179,4 +179,20 @@ describe("#403: the work-zone length field says what is wrong", () => {
     await waitFor(() => expect(fieldAlert()).toBe(`⚠ ${cap}`));
     expect(ctaReason()).toBe(cap);
   });
+
+  // #429 (Ryan, 2026-10-29): "#429 yes (plain "yours", over-cap too)."
+  it("#429: a length over the cap reads the refused-length marker, plain 'yours'; 20,000 itself keeps '✓ yours'", async () => {
+    const user = await mountAndPin();
+    const field = await commitLength(user, "99999");
+    await waitFor(() => expect(fieldAlert()).toMatch(/can't exceed 20,000 ft/));
+    expect(field.value).toBe("99999");
+    expect(marker()).toBe("yours");
+    expect(marker()).not.toMatch(/not set|✓|◌/);
+    expect(screen.getByTestId("prov-worklen").textContent).toBe(
+      "your answer · the extent the plan is built for",
+    );
+    await commitLength(user, "20000");
+    await waitFor(() => expect(fieldAlert()).toBeNull());
+    expect(marker()).toBe("✓ yours");
+  });
 });

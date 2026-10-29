@@ -51,3 +51,19 @@ describe("#428: the manual panel keeps a typed 0", () => {
     expect(alertText()).toBeNull();
   });
 });
+
+// #429: the manual panel draws no provenance marker, so an over-cap length
+// there carries no ✓; it reads the cap message from the same validator the
+// WHERE band's marker reads (workLenIsRefused derives from it).
+describe("#429: the manual panel refuses an over-cap length without a ✓", () => {
+  it("99999 reads the cap message and no ✓ in the panel", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Harness />);
+    await user.clear(box());
+    await user.type(box(), "99999");
+    await user.tab();
+    expect(box().value).toBe("99999");
+    expect(alertText()).toMatch(/^⚠ Work zone can't exceed 20,000 ft/);
+    expect(container.textContent).not.toContain("✓");
+  });
+});

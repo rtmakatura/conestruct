@@ -211,6 +211,17 @@ export function validateWorkZone(scenario: Scenario): WorkZoneValidation {
   return { ok: true, message: null };
 }
 
+/** #429 (Ryan, 2026-10-29: "#429 yes (plain "yours", over-cap too)."): is
+ *  the work-zone length the operator's number, refused by the form?  A
+ *  negative, a typed 0 or a length over MAX_WORK_LEN_FT: a number
+ *  validateWorkZone rejects, as against an empty box (workLenIsEmpty) or
+ *  NaN, which it calls "required".  Derived from the validator, so the
+ *  bounds stay in one place.  The WHERE band's marker reads it (plain
+ *  "yours", no ✓). */
+export function workLenIsRefused(s: Scenario): boolean {
+  return Number.isFinite(s.workLen) && !workLenIsEmpty(s) && !validateWorkZone(s).ok;
+}
+
 // ---------------------------------------------------------------------------
 // near_intersection approaches — mirrors both validation layers on the
 // backend: the schema 422s (src/api/schemas.py IntersectionApproach /

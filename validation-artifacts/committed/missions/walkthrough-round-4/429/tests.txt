@@ -1,0 +1,20 @@
+# #429 tests on issue-429-refused-length-marker (worktree, conestruct/site)
+
+Baseline on 2490b73 (before any change):
+      Tests  2668 passed | 1 skipped (2669)
+
+Targeted (validation.test.ts, WhereBand.work-length.test.tsx, ManualFallback.work-length.test.tsx):
+ Test Files  3 passed (3)
+      Tests  36 passed (36)
+
+Full run after the change (npx vitest run --reporter=dot):
+ Test Files  254 passed | 1 skipped (255)
+      Tests  2672 passed | 1 skipped (2673)
+
+npx tsc --noEmit -p . : exit 0
+
+New tests (4): workLenIsRefused true/false (unit, 2); the mounted GeneratorShell WHERE-band test
+types 99999 and reads the marker "yours" (no ✓ / ◌), the box value and the provenance line, then
+20000 and reads "✓ yours"; the mounted ManualFallback control types 99999 and reads the cap
+message and no ✓ in the panel. Red on 2490b73: 3 (red-proof.txt); the control is green there.
+No backend change.

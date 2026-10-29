@@ -34,7 +34,7 @@ import {
   SCENARIO_KINDS,
   isScenarioKindEnabled,
 } from "@/lib/scenarios";
-import { validateWorkZone, workLenIsEmpty } from "@/lib/scenarios/validation";
+import { validateWorkZone, workLenIsEmpty, workLenIsRefused } from "@/lib/scenarios/validation";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
   CORRIDOR_ZONES,
@@ -812,9 +812,10 @@ export function WhereBand({
                 marker={
                   workLenIsEmpty(scenario)
                     ? { glyph: "◌", word: "not set", tone: "pending" }
-                    : scenario.workLen <= 0
+                    : workLenIsRefused(scenario)
                       ? // #403: the operator's, but refused; no ✓ on it.
-                        // #428: a typed 0 too (#429 holds this form).
+                        // #428: a typed 0 too.  #429 (Ryan, 2026-10-29):
+                        // over the cap too; DESIGN-SPACING.md records it.
                         { glyph: null, word: "yours", tone: "plain" }
                       : workLenIsDefault(scenario)
                         ? // Plain "default", no mark (Ryan, 2026-10-26).

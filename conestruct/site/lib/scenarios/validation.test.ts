@@ -21,6 +21,7 @@ import {
   validateLanes,
   validateWorkZone,
   workLenIsEmpty,
+  workLenIsRefused,
 } from "./validation";
 import { clearWorkLen, setWorkLen } from "./what-writes";
 
@@ -83,6 +84,27 @@ describe("validateWorkZone — schema bounds only (gt=0 mirror)", () => {
     // A typed length after an emptied box is the operator's again.
     expect(validateWorkZone(setWorkLen(emptied, 500)).ok).toBe(true);
     expect(workLenIsEmpty(setWorkLen(emptied, 500))).toBe(false);
+  });
+});
+
+// #429 (Ryan, 2026-10-29): "#429 yes (plain "yours", over-cap too)."  A
+// refused length is the operator's number the validator rejects: negative,
+// a typed 0, or over the cap.  An emptied box is no number.
+describe("workLenIsRefused (#429)", () => {
+  it("is true for a negative, a typed 0 and a length over the cap", () => {
+    expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, -5))).toBe(true);
+    expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, 0))).toBe(true);
+    expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, MAX_WORK_LEN_FT + 1))).toBe(true);
+    expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, 99999))).toBe(true);
+  });
+
+  it("is false for an emptied box, NaN, the default and every accepted length", () => {
+    expect(workLenIsRefused(clearWorkLen(setWorkLen(DEFAULT_FLAGGER, 0)))).toBe(false);
+    expect(workLenIsRefused({ ...DEFAULT_FLAGGER, workLen: NaN })).toBe(false);
+    expect(workLenIsRefused(DEFAULT_FLAGGER)).toBe(false);
+    expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, 500))).toBe(false);
+    // The cap itself is accepted (le=, not lt=).
+    expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, MAX_WORK_LEN_FT))).toBe(false);
   });
 });
 

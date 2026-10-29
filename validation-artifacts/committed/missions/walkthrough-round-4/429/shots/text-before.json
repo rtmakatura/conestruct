@@ -1,0 +1,66 @@
+{
+ "390": {
+  "fieldValue": "99999",
+  "marker": "✓ yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "fieldError": "⚠ Work zone can't exceed 20,000 ft (about 3.8 miles) on a single plan. Split a longer project into multiple plans.",
+  "markerBox": {
+   "width": 48.64,
+   "height": 44
+  },
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-ok",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "sym-pass",
+    "color": "rgb(79, 215, 135)",
+    "text": "✓"
+   }
+  ],
+  "cell": {
+   "text": "Work zone length (ft) ✓ yours ⚠ WORK ZONE CAN'T EXCEED 20,000 FT (ABOUT 3.8 MILES) ON A SINGLE PLAN. SPLIT A LONGER PROJECT INTO MULTIPLE PLANS.",
+   "width": 328,
+   "height": 172
+  }
+ },
+ "1440": {
+  "fieldValue": "99999",
+  "marker": "✓ yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "fieldError": "⚠ Work zone can't exceed 20,000 ft (about 3.8 miles) on a single plan. Split a longer project into multiple plans.",
+  "markerBox": {
+   "width": 48.64,
+   "height": 32
+  },
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-ok",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "sym-pass",
+    "color": "rgb(79, 215, 135)",
+    "text": "✓"
+   }
+  ],
+  "cell": {
+   "text": "Work zone length (ft) ✓ yours ⚠ WORK ZONE CAN'T EXCEED 20,000 FT (ABOUT 3.8 MILES) ON A SINGLE PLAN. SPLIT A LONGER PROJECT INTO MULTIPLE PLANS.",
+   "width": 846,
+   "height": 107
+  }
+ }
+}

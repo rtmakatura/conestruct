@@ -1,0 +1,18 @@
+# Red proof: the round-4 #429 tests on 2490b73 (the base)
+Run from a git archive of 2490b73 (conestruct/site) with the three changed test files
+copied in and node_modules linked (junction);
+npx vitest run components/bands/ManualFallback.work-length.test.tsx components/bands/WhereBand.work-length.test.tsx lib/scenarios/validation.test.ts
+
+   × workLenIsRefused (#429) > is true for a negative, a typed 0 and a length over the cap 5ms
+     → (0 , workLenIsRefused) is not a function
+   × workLenIsRefused (#429) > is false for an emptied box, NaN, the default and every accepted length 1ms
+     → (0 , workLenIsRefused) is not a function
+   × #403: the work-zone length field says what is wrong > #429: a length over the cap reads the refused-length marker, plain 'yours'; 20,000 itself keeps '✓ yours' 658ms
+     → expected '✓ yours' to be 'yours' // Object.is equality
+ Test Files  2 failed | 1 passed (3)
+      Tests  3 failed | 33 passed (36)
+
+3 red: the predicate doesn't exist on the base (2), and the mounted WHERE band reads "✓ yours"
+for 99999 on the base (1): the bug, at the marker. The ManualFallback control
+("99999 reads the cap message and no ✓ in the panel") is green on the base, as predicted
+(the panel has no marker; rulings.md call 2).
