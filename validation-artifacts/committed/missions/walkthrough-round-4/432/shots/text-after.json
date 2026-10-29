@@ -1,0 +1,68 @@
+{
+ "390": {
+  "fieldValue": "512.5",
+  "marker": "yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "fieldError": "⚠ Use whole feet for the work zone length.",
+  "markerBox": {
+   "width": 33.61,
+   "height": 44
+  },
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-plain",
+    "color": "rgb(147, 160, 176)",
+    "text": "yours"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "yours"
+   }
+  ],
+  "cell": {
+   "text": "Work zone length (ft) yours ⚠ USE WHOLE FEET FOR THE WORK ZONE LENGTH.",
+   "width": 328,
+   "height": 142
+  },
+  "ctaReason": "Use whole feet for the work zone length.",
+  "generate": {
+   "text": "Generate plan Use whole feet for the work zone length. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 362,
+   "height": 169.25
+  }
+ },
+ "1440": {
+  "fieldValue": "512.5",
+  "marker": "yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "fieldError": "⚠ Use whole feet for the work zone length.",
+  "markerBox": {
+   "width": 33.61,
+   "height": 32
+  },
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-plain",
+    "color": "rgb(147, 160, 176)",
+    "text": "yours"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "yours"
+   }
+  ],
+  "cell": {
+   "text": "Work zone length (ft) yours ⚠ USE WHOLE FEET FOR THE WORK ZONE LENGTH.",
+   "width": 846,
+   "height": 92
+  },
+  "ctaReason": "Use whole feet for the work zone length.",
+  "generate": {
+   "text": "Generate plan Use whole feet for the work zone length. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5
+  }
+ }
+}

@@ -279,3 +279,30 @@ describe("clampLanesToDomain", () => {
     expect(clampLanesToDomain(6)).toBe(MAX_LANES_PER_DIRECTION);
   });
 });
+
+// #432 (Ryan, 2026-10-29): "#432: refuse decimals with "Use whole feet"
+// instead of truncating."  A frontend product rule: the backend takes a
+// float (`workLen: float`, src/api/schemas.py).  The bounds come first.
+describe("whole feet (#432)", () => {
+  const WHOLE_FEET = "Use whole feet for the work zone length.";
+  it("refuses a decimal inside the bounds with 'Use whole feet'", () => {
+    for (const ft of [512.5, 0.5, 19999.9]) {
+      expect(validateWorkZone(setWorkLen(DEFAULT_FLAGGER, ft))).toEqual({
+        ok: false,
+        message: WHOLE_FEET,
+      });
+      expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, ft))).toBe(true);
+    }
+  });
+
+  it("keeps the bounds' messages for a decimal outside them, and passes a whole length", () => {
+    expect(validateWorkZone(setWorkLen(DEFAULT_FLAGGER, -0.5)).message).toBe(
+      "Work zone length must be more than 0 ft.",
+    );
+    expect(validateWorkZone(setWorkLen(DEFAULT_FLAGGER, MAX_WORK_LEN_FT + 0.5)).message).toMatch(
+      /can't exceed 20,000 ft/,
+    );
+    expect(validateWorkZone(setWorkLen(DEFAULT_FLAGGER, 512)).ok).toBe(true);
+    expect(workLenIsRefused(setWorkLen(DEFAULT_FLAGGER, 512))).toBe(false);
+  });
+});

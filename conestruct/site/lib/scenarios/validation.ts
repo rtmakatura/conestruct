@@ -208,12 +208,23 @@ export function validateWorkZone(scenario: Scenario): WorkZoneValidation {
         `multiple plans.`,
     };
   }
+  // #432 (Ryan, 2026-10-29): "#432: refuse decimals with "Use whole feet"
+  // instead of truncating."  A product rule of the form, not a mirror: the
+  // backend takes a float (`workLen: float`, src/api/schemas.py).  After
+  // the bounds, so a decimal outside them reads the bound's message.
+  if (!Number.isInteger(wz)) {
+    return {
+      ok: false,
+      message: "Use whole feet for the work zone length.",
+    };
+  }
   return { ok: true, message: null };
 }
 
 /** #429 (Ryan, 2026-10-29: "#429 yes (plain "yours", over-cap too)."): is
  *  the work-zone length the operator's number, refused by the form?  A
- *  negative, a typed 0 or a length over MAX_WORK_LEN_FT: a number
+ *  negative, a typed 0, a length over MAX_WORK_LEN_FT or (#432) a
+ *  decimal: a number
  *  validateWorkZone rejects, as against an empty box (workLenIsEmpty) or
  *  NaN, which it calls "required".  Derived from the validator, so the
  *  bounds stay in one place.  The WHERE band's marker reads it (plain

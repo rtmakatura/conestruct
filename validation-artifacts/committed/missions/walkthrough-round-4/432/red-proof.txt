@@ -1,0 +1,20 @@
+# Red proof: the round-4 #432 tests on e536579 (the base)
+Run from a git archive of e536579 (conestruct/site) with the three changed test files
+copied in and node_modules linked (junction);
+npx vitest run components/bands/ManualFallback.work-length.test.tsx components/bands/WhereBand.work-length.test.tsx lib/scenarios/validation.test.ts
+
+   × whole feet (#432) > refuses a decimal inside the bounds with 'Use whole feet'
+     → expected { ok: true, message: null } to deeply equal { ok: false, …(1) }
+   × #432: the manual panel keeps a typed decimal and says 'Use whole feet' > 512.5 stays 512.5 and reads 'Use whole feet'; 512 clears the line
+     → expected '512' to be '512.5' // Object.is equality
+   × #432: a typed decimal stays in the box and the field says 'Use whole feet' > 512.5 stays 512.5, reads 'Use whole feet' in the field and the blocker, plain 'yours'; 512 clears both
+     → expected null to be '⚠ Use whole feet for the work zone le…' // Object.is equality
+   × #432: a typed decimal stays in the box and the field says 'Use whole feet' > 0.5 stays 0.5 and reads 'Use whole feet', not 'more than 0 ft'
+     → expected '⚠ Work zone length must be more than …' to be '⚠ Use whole feet for the work zone le…' // Object.is equality
+ Test Files  3 failed (3)
+      Tests  4 failed | 37 passed (41)
+
+4 red: the validator passes 512.5 on the base (1); the manual panel turns 512.5 into 512 (1);
+the mounted WHERE band shows no alert for 512.5 (parseInt wrote 512) and reads "more than 0 ft"
+for 0.5 (parseInt wrote 0) (2): the bug, in both doors. The control "keeps the bounds' messages
+for a decimal outside them, and passes a whole length" is green on the base, as predicted.

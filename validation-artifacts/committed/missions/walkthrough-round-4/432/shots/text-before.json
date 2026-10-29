@@ -1,0 +1,78 @@
+{
+ "390": {
+  "fieldValue": "512",
+  "marker": "✓ yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "fieldError": null,
+  "markerBox": {
+   "width": 48.64,
+   "height": 44
+  },
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-ok",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "sym-pass",
+    "color": "rgb(79, 215, 135)",
+    "text": "✓"
+   }
+  ],
+  "cell": {
+   "text": "Work zone length (ft) ✓ yours",
+   "width": 328,
+   "height": 115
+  },
+  "ctaReason": "Generation declined. The PLAN DECLINED notice says why.",
+  "generate": {
+   "text": "Generate plan Generation declined. The PLAN DECLINED notice says why. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 362,
+   "height": 185
+  }
+ },
+ "1440": {
+  "fieldValue": "512",
+  "marker": "✓ yours",
+  "provenance": "your answer · the extent the plan is built for",
+  "fieldError": null,
+  "markerBox": {
+   "width": 48.64,
+   "height": 32
+  },
+  "markerParts": [
+   {
+    "cls": "a-mark tr-prov is-ok",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "",
+    "color": "rgb(147, 160, 176)",
+    "text": "✓ yours"
+   },
+   {
+    "cls": "sym-pass",
+    "color": "rgb(79, 215, 135)",
+    "text": "✓"
+   }
+  ],
+  "cell": {
+   "text": "Work zone length (ft) ✓ yours",
+   "width": 846,
+   "height": 65
+  },
+  "ctaReason": "Generation declined. The PLAN DECLINED notice says why.",
+  "generate": {
+   "text": "Generate plan Generation declined. The PLAN DECLINED notice says why. Output requires TCS review · every dimension cited to MUTCD or CDOT",
+   "width": 880,
+   "height": 153.5
+  }
+ }
+}

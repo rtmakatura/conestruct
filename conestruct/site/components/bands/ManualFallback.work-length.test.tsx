@@ -67,3 +67,25 @@ describe("#429: the manual panel refuses an over-cap length without a ✓", () =
     expect(container.textContent).not.toContain("✓");
   });
 });
+
+// #432 (Ryan, 2026-10-29): "#432: refuse decimals with "Use whole feet"
+// instead of truncating."  The panel's box writes per keystroke; the
+// decimal stays and the line under it refuses it.
+describe("#432: the manual panel keeps a typed decimal and says 'Use whole feet'", () => {
+  it("512.5 stays 512.5 and reads 'Use whole feet'; 512 clears the line", async () => {
+    const user = userEvent.setup();
+    render(<Harness />);
+    await user.clear(box());
+    await user.type(box(), "512.5");
+    await user.tab();
+    expect(box().value).toBe("512.5");
+    expect(alertText()).toBe("⚠ Use whole feet for the work zone length.");
+
+    await user.clear(box());
+    await user.type(box(), "512");
+    await user.tab();
+    expect(box().value).toBe("512");
+    expect(alertText()).toBeNull();
+  });
+});
+

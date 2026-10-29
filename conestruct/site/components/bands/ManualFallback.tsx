@@ -93,7 +93,8 @@ export function ManualFallback({
             value={workLenIsEmpty(scenario) ? "" : scenario.workLen}
             placeholder="e.g., 200"
             onChange={(e) => {
-              const n = parseInt(e.target.value, 10);
+              // #432: parseFloat, so a typed decimal stays and is refused.
+              const n = parseFloat(e.target.value);
               // #397: the operator's length, recorded (setWorkLen).
               // #428: an emptied box is no length (clearWorkLen).
               setScenario(Number.isFinite(n) ? setWorkLen(scenario, n) : clearWorkLen(scenario));

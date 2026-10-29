@@ -165,8 +165,8 @@ on every tone but the guess, whose word stays amber (`.a-mark.is-guess`,
 **#429 (Ryan, 2026-10-29).** A work-zone length the operator entered
 that the form refuses reads the plain word "yours", with no glyph: "#429
 yes (plain "yours", over-cap too)." A `✓` would pass a value the form
-refuses. That is a negative, a typed 0 or a length over the 20,000 ft cap
-(`workLenIsRefused`, `lib/scenarios/validation.ts`, derived from the
+refuses. That is a negative, a typed 0, a length over the 20,000 ft cap
+or a decimal (#432, "Use whole feet") (`workLenIsRefused`, `lib/scenarios/validation.ts`, derived from the
 field's validator); the field's error line and the Generate blocker say
 why. An emptied box holds no value and keeps "◌ not set". This form is
 the work-zone length's only: a refused row whose marker comes from

@@ -1,0 +1,17 @@
+# Tests, issue-432-whole-feet (worktree .claude/worktrees/issue-432)
+
+Baseline on e536579 (before any change):
+  vitest:  Tests  2672 passed | 1 skipped (2673)
+  pytest:  3612 passed, 2 skipped
+
+Red proof on e536579: red-proof.txt (4 red, 1 control green).
+
+After the change:
+  npx vitest run components/bands/ManualFallback.work-length.test.tsx components/bands/WhereBand.work-length.test.tsx lib/scenarios/validation.test.ts
+    Test Files  3 passed (3)
+         Tests  41 passed (41)
+  npx vitest run (full)
+    Test Files  254 passed | 1 skipped (255)
+         Tests  2677 passed | 1 skipped (2678)
+  npx tsc --noEmit: clean
+  No backend change (pytest baseline above stands).

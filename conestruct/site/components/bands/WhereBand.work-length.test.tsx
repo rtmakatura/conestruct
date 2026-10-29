@@ -196,3 +196,35 @@ describe("#403: the work-zone length field says what is wrong", () => {
     expect(marker()).toBe("✓ yours");
   });
 });
+
+// #432 (Ryan, 2026-10-29): "#432: refuse decimals with "Use whole feet"
+// instead of truncating."  The box keeps the typed decimal; the field and
+// the Generate blocker refuse it; the marker is the refused-length one.
+describe("#432: a typed decimal stays in the box and the field says 'Use whole feet'", () => {
+  const WHOLE_FEET = "Use whole feet for the work zone length.";
+  it("512.5 stays 512.5, reads 'Use whole feet' in the field and the blocker, plain 'yours'; 512 clears both", async () => {
+    const user = await mountAndPin();
+    const field = await commitLength(user, "512.5");
+    await waitFor(() => expect(fieldAlert()).toBe(`⚠ ${WHOLE_FEET}`));
+    expect(field.value).toBe("512.5");
+    expect(ctaReason()).toBe(WHOLE_FEET);
+    expect(marker()).toBe("yours");
+    expect(marker()).not.toMatch(/✓|◌/);
+
+    await commitLength(user, "512");
+    await waitFor(() => expect(fieldAlert()).toBeNull());
+    expect(field.value).toBe("512");
+    expect(marker()).toBe("✓ yours");
+    expect(document.body.textContent).not.toContain(WHOLE_FEET);
+  });
+
+  it("0.5 stays 0.5 and reads 'Use whole feet', not 'more than 0 ft'", async () => {
+    const user = await mountAndPin();
+    const field = await commitLength(user, "0.5");
+    await waitFor(() => expect(fieldAlert()).toBe(`⚠ ${WHOLE_FEET}`));
+    expect(field.value).toBe("0.5");
+    expect(ctaReason()).toBe(WHOLE_FEET);
+    expect(document.body.textContent).not.toContain(MORE_THAN_0);
+  });
+});
+

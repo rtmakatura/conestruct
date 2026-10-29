@@ -592,7 +592,9 @@ export function WhereBand({
   const commitWorkLen = () => {
     setWzTouched(true);
     if (wzDraft === null) return;
-    const n = parseInt(wzDraft, 10);
+    // #432: parseFloat, not parseInt, so a typed decimal reaches the
+    // validator ("Use whole feet") instead of being cut to a whole number.
+    const n = parseFloat(wzDraft);
     // #428: an emptied box is no length (0, the record dropped), apart
     // from a typed 0, which is the operator's number and stays in the box.
     if (!Number.isFinite(n)) {
