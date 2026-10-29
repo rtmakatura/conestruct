@@ -280,13 +280,14 @@ describe("guesses are marked, never confirmed (R108)", () => {
     expect(w.closest(".a-info")).toBeNull();
   });
 
-  it("an evaluation that failed keeps its error line on show over the guess (P3)", () => {
+  it("an evaluation that failed is not an error: a guess keeps its line, the failure in its details (#425 ruling 3)", () => {
     mount({ guessed: true, errored: true });
     const line = cell("jurisdiction").querySelector('[data-testid="prov-jurisdiction"]')!;
-    expect(line.textContent).toBe(
-      "not checked: the check didn't answer; the option shown stands",
+    expect(line.textContent).toBe("⚠ guessed, not confirmed · from the pin");
+    expect(line.classList.contains("is-error")).toBe(false);
+    expect(cell("jurisdiction").querySelector(".a-info")?.textContent).toContain(
+      "check failed: the check didn't answer; the option shown stands",
     );
-    expect(line.closest(".a-info")).toBeNull();
   });
 
   it("nothing guessed off a road: the header reads 'prefilled from the road' (R110 Q5)", () => {

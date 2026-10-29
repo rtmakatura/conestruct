@@ -150,12 +150,12 @@ describe("#398 W5 — the windows line on a plan with no answer", () => {
     expect(windowsLine()).not.toContain("loading");
   });
 
-  it("a failed check (not a decline) says it didn't answer, never 'loading'", async () => {
+  it("a failed check (not a decline) says check failed, never 'loading'", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER} />);
     await settle();
     await answer(auditCalls, 0, failed500());
     await settle();
-    expect(windowsLine()).toBe("Windows · not checked: the check didn't answer");
+    expect(windowsLine()).toBe("Windows · check failed: the check didn't answer");
   });
 
   it("a plan that answers still reads the jurisdiction's verdict line", async () => {

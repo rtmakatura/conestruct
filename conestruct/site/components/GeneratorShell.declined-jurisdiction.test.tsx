@@ -10,8 +10,12 @@
 // "the check didn't answer" in error red with its marker dropped.  A
 // decline is an answer (Rule 10): the cell now says the plan was
 // declined, in the windows line's words, with the ◌ marker, and a pin
-// guess keeps "⚠ from the pin".  A failed check that isn't a decline
-// keeps its red, on-show line, with the same verb.
+// guess keeps "⚠ from the pin".
+//
+// Round 4 (Ryan, 2026-10-29, #425 ruling 3): "not checked" only when no
+// check ran; a check that ran and failed (5xx, network) reads "check
+// failed", no red: a ◌ marker, chromaless (Rule 13: no verdict), and a
+// pin guess keeps "⚠ from the pin" with the failed line in its details.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
@@ -93,7 +97,7 @@ const state = () =>
 const windowsLine = () => screen.getByTestId("what-windows-line").textContent;
 
 const DECLINED_LINE = "not checked: the plan was declined; the option shown stands";
-const FAILED_LINE = "not checked: the check didn't answer; the option shown stands";
+const FAILED_LINE = "check failed: the check didn't answer; the option shown stands";
 
 beforeEach(() => {
   auditCalls = [];
@@ -138,27 +142,45 @@ describe("#425 / #406 — a declined plan's Jurisdiction cell", () => {
     expect(line().classList.contains("is-error")).toBe(false);
     expect(line().classList.contains("is-amber")).toBe(true);
     expect(details().textContent).toContain(DECLINED_LINE);
-    // (The pin lookup's own evidence may say the boundary lookup didn't
+    // (The pin lookup's own evidence may say the boundary check failed;
     // answer; that is a different check, so only the cell's words count.)
     expect(details().textContent).not.toContain("the check didn't answer");
   });
 });
 
-describe("#425 / #406 — a check that failed without a decline", () => {
-  it("still says the check didn't answer, red and on show, with the band's one verb", async () => {
+describe("#425 round 4 — a check that ran and failed reads \"check failed\", no red", () => {
+  it("says check failed behind a ◌ marker, not red, and the windows line says the same", async () => {
     await mountAndAnswer(PICKED, failed500);
-    expect(state()).toBe("not-evaluated");
+    expect(state()).toBe("check-failed");
     expect(line().textContent).toBe(FAILED_LINE);
-    expect(line().classList.contains("is-error")).toBe(true);
-    expect(marker(), "an error stays a full line (P3)").toBeNull();
-    expect(line().closest('[data-testid="info-jurisdiction"]')).toBeNull();
-    expect(windowsLine()).toBe("Windows · not checked: the check didn't answer");
+    expect(line().textContent).not.toContain("not checked");
+    expect(line().classList.contains("is-error")).toBe(false);
+    expect(line().classList.contains("is-amber")).toBe(false);
+    const m = marker();
+    expect(m, "the row has a marker").not.toBeNull();
+    expect(m!.textContent).toBe("◌ check failed");
+    expect(m!.classList.contains("is-pending")).toBe(true);
+    // R98: the line is one click away, in the row's details.
+    expect(line().closest('[data-testid="info-jurisdiction"]')).not.toBeNull();
+    expect(windowsLine()).toBe("Windows · check failed: the check didn't answer");
   });
 
-  it("wins over a pin guess (P3, unchanged)", async () => {
+  it("a pin guess keeps '⚠ from the pin', with the failed check in its details", async () => {
     await mountAndAnswer(GUESSED, failed500);
-    expect(line().textContent).toBe(FAILED_LINE);
-    expect(line().classList.contains("is-error")).toBe(true);
-    expect(marker()).toBeNull();
+    expect(state()).toBe("check-failed");
+    const m = marker();
+    expect(m, "the guess keeps its marker").not.toBeNull();
+    expect(m!.textContent).toBe("⚠ from the pin");
+    expect(line().textContent).toBe("⚠ guessed, not confirmed · from the pin");
+    expect(line().classList.contains("is-error")).toBe(false);
+    expect(line().classList.contains("is-amber")).toBe(true);
+    expect(details().textContent).toContain(FAILED_LINE);
+    expect(details().textContent).not.toContain(DECLINED_LINE);
+  });
+
+  it("a decline still reads not checked, never check failed", async () => {
+    await mountAndAnswer(PICKED, declined400);
+    expect(line().textContent).not.toContain("check failed");
+    expect(windowsLine()).not.toContain("check failed");
   });
 });

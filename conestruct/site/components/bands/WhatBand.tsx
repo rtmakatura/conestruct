@@ -87,7 +87,7 @@ export type JurisdictionCellState =
   | "evaluated"
   | "evaluating"
   | "declined"
-  | "not-evaluated";
+  | "check-failed";
 
 export function jurisdictionCellState(opts: {
   key: string | null;
@@ -102,7 +102,9 @@ export function jurisdictionCellState(opts: {
   if (opts.block) return "evaluated";
   if (opts.loading) return "evaluating";
   if (opts.declined) return "declined";
-  return opts.errored ? "not-evaluated" : "evaluating";
+  // Ryan, 2026-10-29 (#425 ruling 3): a check that ran and failed is
+  // "check failed", never "not checked".
+  return opts.errored ? "check-failed" : "evaluating";
 }
 
 /** One row: label and marker, control, and the popover (FieldCell).  The
@@ -403,18 +405,18 @@ export function WhatBand({
       : null;
   const jurisdictionGuessed = isGuessed(scenario, "jurisdiction_key");
   // R108: an untouched pin guess reads as one — its own line, "⚠ from the
-  // pin" — unless the evaluation failed, which needs the operator now and
-  // keeps its error line (P3).  The evaluation's sentence moves to the
-  // row's details then, so nothing it said is lost.  #425: one verb,
-  // "not checked", with the windows line (ScheduleField's windowsSummary);
-  // a decline is not an error, so a guess keeps its line and the decline
-  // goes to the details.
+  // pin".  The evaluation's sentence moves to the row's details then, so
+  // nothing it said is lost.  #425 (Ryan, 2026-10-29, ruling 3): "not
+  // checked" only when no check ran (the decline); a check that ran and
+  // failed reads "check failed", no red.  Neither is an error, so a guess
+  // keeps its line and either sentence goes to the details.
   const declinedLine = "not checked: the plan was declined; the option shown stands";
+  const failedLine = "check failed: the check didn't answer; the option shown stands";
   const jurisdictionProv =
-    jState === "not-evaluated"
-      ? "not checked: the check didn't answer; the option shown stands"
-      : jurisdictionGuessed
-        ? "guessed, not confirmed · from the pin"
+    jurisdictionGuessed
+      ? "guessed, not confirmed · from the pin"
+      : jState === "check-failed"
+        ? failedLine
         : jState === "declined"
           ? declinedLine
           : jState === "unset"
@@ -424,7 +426,7 @@ export function WhatBand({
           : jState === "evaluated"
             ? (evaluatedLine as string)
             : "evaluating: the option you picked, not yet confirmed for this plan";
-  const jurisdictionAmber = jurisdictionGuessed && jState !== "not-evaluated";
+  const jurisdictionAmber = jurisdictionGuessed;
 
   const schedule = scenario.schedule ?? null;
   // Fix 1: the dates ARE the mode, so the row reads them directly.
@@ -533,7 +535,7 @@ export function WhatBand({
     scenario.kind === "near_intersection"
       ? markerOf(approachLine.text, { amber: approachLine.amber })
       : null,
-    markerOf(jurisdictionProv, { amber: jurisdictionAmber, error: jState === "not-evaluated" }),
+    markerOf(jurisdictionProv, { amber: jurisdictionAmber }),
   ].filter((m) => m?.glyph === "⚠").length;
   const warnMarkers = rowWarnMarkers + lanesDoubt.length;
 
@@ -717,7 +719,6 @@ export function WhatBand({
             htmlFor="what-jurisdiction"
             provenance={jurisdictionProv}
             amber={jurisdictionAmber}
-            error={jState === "not-evaluated"}
             alert={<JurisdictionWarnings lookup={jurisdictionLookup} />}
             detail={
               <>
@@ -730,6 +731,9 @@ export function WhatBand({
                 )}
                 {jurisdictionGuessed && jState === "declined" && (
                   <span className="tr-prov">{declinedLine}</span>
+                )}
+                {jurisdictionGuessed && jState === "check-failed" && (
+                  <span className="tr-prov">{failedLine}</span>
                 )}
                 {jState === "evaluated" && jurisdictionValue !== pickedLabel && (
                   <span className="tr-prov">evaluated as {jurisdictionValue}</span>

@@ -152,7 +152,7 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     ).toBe("denver");
     const prov = document.querySelector('[data-testid="prov-jurisdiction"]')!;
     expect(prov.textContent).not.toContain("evaluated ·");
-    expect(prov.textContent).toMatch(/not checked|evaluating/);
+    expect(prov.textContent).toMatch(/check failed|evaluating/);
   });
 });
 

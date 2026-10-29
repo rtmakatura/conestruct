@@ -213,7 +213,8 @@ export function windowsSummary({
       return { head: "Windows", glyph: "", text: "not checked: the plan was declined", tone: none };
     }
     if (errored) {
-      return { head: "Windows", glyph: "", text: "not checked: the check didn't answer", tone: none };
+      // #425 (Ryan, 2026-10-29): a check that ran and failed.
+      return { head: "Windows", glyph: "", text: "check failed: the check didn't answer", tone: none };
     }
     return { head: "Windows", glyph: "◌", text: "loading", tone: none };
   }

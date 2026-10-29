@@ -93,7 +93,7 @@ describe("R127 Q5: the windows footer line, in the check's own words", () => {
       said(windowsSummary({ scenario: sc(denver), jurisdiction: null, declined: true, errored: true })),
     ).toBe("Windows · not checked: the plan was declined");
     expect(said(windowsSummary({ scenario: sc(denver), jurisdiction: null, errored: true }))).toBe(
-      "Windows · not checked: the check didn't answer",
+      "Windows · check failed: the check didn't answer",
     );
     // A block on screen wins: the flags only speak to its absence.
     expect(

@@ -1,0 +1,9 @@
+# Tests, issue-425-check-failed (on afb8b4c)
+Baseline on afb8b4c (this worktree before the diff): npx vitest run --reporter=dot
+  Test Files  253 passed | 1 skipped (254)
+       Tests  2665 passed | 1 skipped (2666)
+After the fix: npx vitest run --reporter=dot
+  Test Files  253 passed | 1 skipped (254)
+       Tests  2667 passed | 1 skipped (2668)
+npx tsc --noEmit -p .  -> exit 0, no output
+No backend change (pytest, mypy, ruff not affected).

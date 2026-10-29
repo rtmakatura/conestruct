@@ -42,9 +42,14 @@ describe("markerOf", () => {
 
   it("an error stays a full line", () => {
     expect(markerOf("4 lanes need a 12 ft lane at most", { error: true })).toBeNull();
-    expect(
-      markerOf("not checked: the check didn't answer; the option shown stands", { error: true }),
-    ).toBeNull();
+  });
+
+  it("#425 ruling 3: a check that ran and failed reads ◌ check failed", () => {
+    expect(markerOf("check failed: the check didn't answer; the option shown stands")).toEqual({
+      glyph: "◌",
+      word: "check failed",
+      tone: "pending",
+    });
   });
 
   it("#425: a declined plan's jurisdiction reads ◌ not checked", () => {

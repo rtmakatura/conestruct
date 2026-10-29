@@ -415,9 +415,10 @@ describe("class-switch stability (#152 D)", () => {
       text: async () => "boom",
     } as unknown as Response);
     // Ruling 196's fourth state: the check did not answer, and the cell
-    // says exactly that instead of holding Parker's block as current.
-    expect(jurisdictionState()).toBe("not-evaluated");
-    expect(jurisdictionProv()).toContain("the check didn't answer");
+    // says exactly that instead of holding Parker's block as current
+    // (#425 ruling 3: "check failed").
+    expect(jurisdictionState()).toBe("check-failed");
+    expect(jurisdictionProv()).toContain("check failed: the check didn't answer");
     expect(windowsBlock()).not.toContain("PARKER WINDOWS");
   });
 });

@@ -176,7 +176,7 @@ export function JurisdictionEvidence({ lookup }: { lookup: JurisdictionLookup })
     return (
       <div className="jbar-suggest quiet">
         <span aria-hidden>◌</span>
-        <span>The boundary lookup didn&apos;t answer, so nothing was filled in from the pin.</span>
+        <span>The boundary check failed, so nothing was filled in from the pin.</span>
       </div>
     );
   }

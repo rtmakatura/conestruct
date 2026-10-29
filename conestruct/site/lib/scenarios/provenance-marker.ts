@@ -81,6 +81,8 @@ export function markerOf(
   if (line.startsWith("evaluating")) return mk("◌", "evaluating");
   // #425: a check that answered with the plan's decline; ◌ is "unevaluated".
   if (line.startsWith("not checked")) return mk("◌", "not checked");
+  // #425 (Ryan, 2026-10-29): a check that ran and failed; no verdict, so ◌.
+  if (line.startsWith("check failed")) return mk("◌", "check failed");
   // R108: the pin's lookup in flight, for an empty jurisdiction.
   if (line.startsWith("checking")) return mk("◌", "checking");
   if (line.startsWith("evaluated")) return mk("✓", "evaluated");

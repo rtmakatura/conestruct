@@ -195,7 +195,7 @@ describe("the jurisdiction guess's evidence (R108)", () => {
   it("a failed lookup says nothing was filled in from the pin", () => {
     render(<JurisdictionEvidence lookup={{ status: "error", data: null }} />);
     expect(
-      screen.getByText("The boundary lookup didn't answer, so nothing was filled in from the pin."),
+      screen.getByText("The boundary check failed, so nothing was filled in from the pin."),
     ).toBeTruthy();
   });
 

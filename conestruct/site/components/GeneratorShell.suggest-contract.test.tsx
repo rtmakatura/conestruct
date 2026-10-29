@@ -233,7 +233,7 @@ describe("the pin guesses the jurisdiction (R108)", () => {
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
     await waitFor(() => expect(screen.queryByText(/Checking boundary data/)).toBeNull());
-    expect(screen.getByText(/The boundary lookup didn't answer/)).toBeTruthy();
+    expect(screen.getByText(/The boundary check failed/)).toBeTruthy();
     expect(select().value).toBe("");
     await user.selectOptions(select(), "parker");
     await waitFor(() => expect(last()?.jurisdiction_key).toBe("parker"));

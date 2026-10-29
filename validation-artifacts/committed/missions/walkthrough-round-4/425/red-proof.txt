@@ -1,0 +1,24 @@
+# Red proof: the round-4 tests on afb8b4c (the base)
+Run from a git archive of afb8b4c (conestruct/site) with the new GeneratorShell.declined-jurisdiction.test.tsx and provenance-marker.test.ts copied in and node_modules linked (junction); npx vitest run components/GeneratorShell.declined-jurisdiction.test.tsx lib/scenarios/provenance-marker.test.ts
+
+   × markerOf > #425 ruling 3: a check that ran and failed reads ◌ check failed 7ms
+   ✓ #425 / #406 — a declined plan's Jurisdiction cell > says the plan was declined, not that the check didn't answer, in the windows line's words  909ms
+   ✓ #425 / #406 — a declined plan's Jurisdiction cell > is not an error: no is-error, and the line sits behind a ◌ marker (Rule 13: glyph and word)  850ms
+   ✓ #425 / #406 — a declined plan's Jurisdiction cell > a pin guess keeps '⚠ from the pin', with the decline in its details  833ms
+   × #425 round 4 — a check that ran and failed reads "check failed", no red > says check failed behind a ◌ marker, not red, and the windows line says the same 851ms
+   × #425 round 4 — a check that ran and failed reads "check failed", no red > a pin guess keeps '⚠ from the pin', with the failed check in its details 842ms
+   ✓ #425 round 4 — a check that ran and failed reads "check failed", no red > a decline still reads not checked, never check failed  846ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > says check failed behind a ◌ marker, not red, and the windows line says the same
+AssertionError: expected 'not-evaluated' to be 'check-failed' // Object.is equality
+Expected: "check-failed"
+Received: "not-evaluated"
+ FAIL  components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > a pin guess keeps '⚠ from the pin', with the failed check in its details
+AssertionError: expected 'not-evaluated' to be 'check-failed' // Object.is equality
+Expected: "check-failed"
+Received: "not-evaluated"
+ FAIL  lib/scenarios/provenance-marker.test.ts > markerOf > #425 ruling 3: a check that ran and failed reads ◌ check failed
+AssertionError: expected { glyph: 'i', word: 'about', …(1) } to deeply equal { glyph: '◌', …(2) }
+      Tests  3 failed | 36 passed (39)
+
+3 red: the marker word, and both 500 tests (the base reads 'not-evaluated' / the red 'not checked: ...' line). Controls green on the base: the three declined tests and 'a decline still reads not checked, never check failed'.
