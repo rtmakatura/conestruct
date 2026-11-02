@@ -15,21 +15,14 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { symClass } from "@/lib/design/symbols";
 
-export function InfoToggle({
-  label,
-  testid,
-  className = "",
-  children,
-}: {
-  /** What the details are for: "Details for {label}". */
-  label: string;
-  testid: string;
-  className?: string;
-  children: ReactNode;
-}) {
+// #436 (call D3): the open state, the outside-click close and the
+// capture-phase Escape, shared by InfoToggle and the picked-road row's
+// "Details" text button.  `boxRef` goes on the element a click must land
+// outside of to close; `triggerRef` on the opener, which takes focus back.
+export function useDetailsToggle<B extends HTMLElement>() {
   const [open, setOpen] = useState(false);
   const panelId = useId();
-  const boxRef = useRef<HTMLSpanElement | null>(null);
+  const boxRef = useRef<B | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
@@ -51,6 +44,24 @@ export function InfoToggle({
       document.removeEventListener("keydown", onKey, true);
     };
   }, [open]);
+
+  return { open, setOpen, panelId, boxRef, triggerRef };
+}
+
+export function InfoToggle({
+  label,
+  testid,
+  className = "",
+  children,
+}: {
+  /** What the details are for: "Details for {label}". */
+  label: string;
+  testid: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  const { open, setOpen, panelId, boxRef, triggerRef } =
+    useDetailsToggle<HTMLSpanElement>();
 
   return (
     <span ref={boxRef} className={`info-toggle-box ${className}`.trim()}>

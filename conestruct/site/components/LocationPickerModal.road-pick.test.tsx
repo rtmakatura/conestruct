@@ -143,7 +143,12 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     fireEvent.click(screen.getByRole("radio", { name: /eastbound/i }));
     expect(saveButton().disabled).toBe(false);
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
-    expect(screen.queryByText(/8 m from your pin/)).toBeNull();
+    // #436 ruling 2: the picked row's line 3 keeps the plain-words class
+    // and distance; the picker rows' copy of it is gone.
+    expect(screen.queryAllByText(/8 m from your pin/)).toHaveLength(1);
+    expect(screen.getByTestId("road-picked").textContent).toContain(
+      "Highway · 8 m from your pin · Details",
+    );
     expect(screen.getByRole("button", { name: "Change" })).toBeTruthy();
     expect(screen.getByTestId("road-picked")).toBeTruthy();
   });
@@ -196,6 +201,10 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     // Change (no other road to change to); the way ID rides "i details".
     expect(screen.getByTestId("road-picked").textContent).toContain("ROAD");
     expect(screen.queryByRole("button", { name: "Change" })).toBeNull();
+    // #436 ruling 4: the same three lines, line 1 without Change.
+    const one = screen.getByTestId("road-picked");
+    expect(one.querySelector(".road-picked-head")?.textContent).toBe("✓ROAD");
+    expect(one.querySelector(".road-picked-sub")?.textContent).toMatch(/ m from your pin · Details$/);
     expect(screen.getByTestId("info-road-picked").textContent).toContain("way 111001");
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
@@ -377,7 +386,12 @@ describe("#402: the picked road's head and line", () => {
     fireEvent.click(screen.getByRole("radio", { name: /eastbound/i }));
 
     const row = screen.getByTestId("road-picked");
-    expect(row.textContent).toContain("✓ROADEast Colfax Avenue, eastbound");
+    // #436 ruling 1: line 1 is ✓, ROAD and Change; the name is line 2.
+    const line1 = row.querySelector(".road-picked-head") as HTMLElement;
+    expect(line1.textContent).toBe("✓ROADChange");
+    expect(row.querySelector(".road-picked-name")?.textContent).toBe(
+      "East Colfax Avenue, eastbound",
+    );
     expect(row.textContent).not.toContain("⚠");
     expect(screen.queryByText(/PICK THE ROAD/)).toBeNull();
 
@@ -407,5 +421,37 @@ describe("#402: the picked road's head and line", () => {
     expect(info.hidden).toBe(true);
     expect(screen.getByTestId("road-picked")).toBeTruthy();
     expect(onCancel).not.toHaveBeenCalled();
+  });
+
+  // #436 rulings 1, 2 and 5: three lines; "Details" is a text button in
+  // line 3 whose block opens under it and closes on a second click; the
+  // mono "i details" leaves the row and stays in the picker's header.
+  it("#436: Details is a text button in line 3; click opens and closes the block; no i details in the row", async () => {
+    stubDetection(detection([COLFAX_EB, COLFAX_WB]));
+    mountModal();
+    typeCoords();
+    await screen.findByText(/PICK THE ROAD · 2 FOUND/);
+    fireEvent.click(screen.getByRole("radio", { name: /westbound/i }));
+
+    const row = screen.getByTestId("road-picked");
+    expect(row.querySelector(".a-info-toggle")).toBeNull();
+    const line3 = row.querySelector(".road-picked-sub") as HTMLElement;
+    const toggle = screen.getByTestId("info-toggle-road-picked");
+    expect(line3.contains(toggle)).toBe(true);
+    expect(toggle.textContent).toBe("Details");
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+
+    const info = screen.getByTestId("info-road-picked");
+    expect(info.parentElement).toBe(line3.parentElement);
+    expect(line3.nextElementSibling).toBe(info);
+    fireEvent.click(toggle);
+    expect(info.hidden).toBe(false);
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    fireEvent.click(toggle);
+    expect(info.hidden).toBe(true);
+
+    // Change re-opens the picker, whose header keeps its own i details.
+    fireEvent.click(screen.getByRole("button", { name: "Change" }));
+    expect(screen.getByTestId("info-toggle-road-pick")).toBeTruthy();
   });
 });

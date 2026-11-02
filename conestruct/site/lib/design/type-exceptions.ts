@@ -288,15 +288,17 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   },
   {
     name: "the tool page's text rules (#435)",
-    sizes: ["var(--fs-field-label)", "var(--fs-body-value)"],
+    sizes: ["var(--fs-field-label)", "var(--fs-body-value)", "var(--fs-refusal)"],
     reason:
-      "#435 ruling 2 (Ryan, 2026-11-02): sentences leave mono for Inter 13.5 / 12.5.  Five sites that are not a whole role: the plain-words disclosure count (.tr-note's size on the count span), and the road picker's glyph, road name (Inter 13.5 / 600), second line (Inter 12.5 --ink-mute, ruling 4) and Change label (13.5, ruling 5).  Both sizes are existing tokens: no size joins the census",
+      "#435 ruling 2 (Ryan, 2026-11-02): sentences leave mono for Inter 13.5 / 12.5.  Five sites that are not a whole role: the plain-words disclosure count (.tr-note's size on the count span), and the road picker's glyph, road name (Inter 13.5 / 600), second line (Inter 12.5 --ink-mute, ruling 4) and Change label (13.5, ruling 5).  Both sizes are existing tokens: no size joins the census.  #436 rulings 1-2 (Ryan, 2026-11-02) split the road-picked row into three lines: its name is Inter 15 / 600 on the existing --fs-refusal token (15px is already a census size, landing v2) and its plain-words line Inter 12.5",
     css: [
       { selector: ".workbench .tr-note.disc-count", size: "var(--fs-field-label)" },
       { selector: ".workbench .road-pick-glyph", size: "var(--fs-field-label)" },
       { selector: ".workbench .road-pick-name", size: "var(--fs-body-value)" },
       { selector: ".workbench .road-pick-sub", size: "var(--fs-field-label)" },
       { selector: ".workbench .road-pick-change", size: "var(--fs-body-value)" },
+      { selector: ".workbench .road-picked-name", size: "var(--fs-refusal)" },
+      { selector: ".workbench .road-picked-sub", size: "var(--fs-field-label)" },
     ],
     tsx: [],
   },
@@ -731,7 +733,9 @@ export const CENSUS_PINS = {
   // The lean landing page (design/landing-v2/lean-page/): sections 02-06
   // and the form's legends, notes and pilot panel go (35 declarations),
   // the lean sections add 10.  195 -> 170.
-  cssDeclarations: 177, // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five sites of the text-rules exception row
+  // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
+  // sites of the text-rules exception row.  170 -> 177.
+  cssDeclarations: 179, // #436: +2 — the road-picked row's name and plain-words line
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
@@ -753,7 +757,10 @@ export const CENSUS_PINS = {
   // The lean landing page: its three display clamps (the statement, the
   // pain heads, the close heading) leave with their sections; every size
   // the lean sections use was already in the sheet.  35 -> 32.
-  cssSizes: 32,
+  // #436: the road-picked name reads `var(--fs-refusal)`, a token NAME new
+  // to the census (the #289 Phase 2 precedent); its 15px is already in
+  // the sheet, so no pixel value enters.  32 -> 33.
+  cssSizes: 33,
   // Correction 3 again: the "Applied from picker" BOX is deleted (its
   // sentences are now provenance lines under the WHAT cells they
   // describe), and its one text-[12px] goes with it — one use, one site

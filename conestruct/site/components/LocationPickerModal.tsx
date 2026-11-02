@@ -26,7 +26,7 @@ import {
 } from "@/lib/road-detection/cross-street";
 import { candidateLabel, crossStreetLabel, plainRoadClass } from "@/lib/road-detection/labels";
 import { symClass } from "@/lib/design/symbols";
-import { InfoToggle } from "./InfoToggle";
+import { InfoToggle, useDetailsToggle } from "./InfoToggle";
 import type { ScenarioKind } from "@/lib/scenarios";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
 import {
@@ -2176,9 +2176,12 @@ function WhichRoadCard({
   );
 }
 
-// #435 ruling 5: the road-picked summary, one row: ✓, the mono ROAD
-// label, the road name, "i details" holding the detected-from line, and
-// a 44 px Change (absent when only one road was found).
+// #436 rulings 1-5 (Ryan, 2026-11-02, Option A): the road-picked summary
+// in three lines.  Line 1: ✓, the mono ROAD label and Change, a borderless
+// --act text button with a 44 px hit area (absent when only one road was
+// found).  Line 2, 24 px in: the road name, Inter 15 / 600.  Line 3: the
+// road class in plain words, the distance from the pin and a "Details"
+// text button that opens the detected-from line in a block under it.
 function RoadPickedRow({
   candidate,
   onChange,
@@ -2186,27 +2189,54 @@ function RoadPickedRow({
   candidate: RoadCandidate;
   onChange?: () => void;
 }) {
+  const { open, setOpen, panelId, boxRef, triggerRef } =
+    useDetailsToggle<HTMLDivElement>();
   return (
-    <div className="road-picked" data-testid="road-picked">
-      <span aria-hidden="true" className={`road-pick-glyph ${symClass("✓")}`}>
-        ✓
-      </span>
-      <span className="road-picked-text">
+    <div ref={boxRef} className="road-picked" data-testid="road-picked">
+      <div className="road-picked-head">
+        <span aria-hidden="true" className={`road-pick-glyph ${symClass("✓")}`}>
+          ✓
+        </span>
         <span className="tr-step">ROAD</span>
-        <span className="road-pick-name">{roadName(candidate)}</span>
-      </span>
-      <InfoToggle label="the picked road" testid="road-picked" className="road-pick-info">
-        <CandidateCaption candidate={candidate} />
-      </InfoToggle>
-      {onChange && (
-        <button
-          type="button"
-          onClick={onChange}
-          className="tap-44 road-pick-change"
+        {onChange && (
+          <button
+            type="button"
+            onClick={onChange}
+            className="tap-44 road-pick-change"
+          >
+            Change
+          </button>
+        )}
+      </div>
+      <div className="road-picked-body">
+        <span className="road-picked-name">{roadName(candidate)}</span>
+        <span className="road-picked-sub">
+          {plainRoadClass(candidate.highway_class)} ·{" "}
+          {candidate.snap_distance_m.toFixed(0)} m from your pin ·{" "}
+          <button
+            ref={triggerRef}
+            type="button"
+            aria-expanded={open}
+            aria-controls={panelId}
+            aria-label="Details for the picked road"
+            onClick={() => setOpen((o) => !o)}
+            data-testid="info-toggle-road-picked"
+            className="road-picked-details-toggle"
+          >
+            Details
+          </button>
+        </span>
+        <div
+          id={panelId}
+          className="road-picked-details tr-note"
+          role="group"
+          aria-label="Details for the picked road"
+          hidden={!open}
+          data-testid="info-road-picked"
         >
-          Change
-        </button>
-      )}
+          <CandidateCaption candidate={candidate} />
+        </div>
+      </div>
     </div>
   );
 }
@@ -2218,8 +2248,8 @@ function roadName(c: RoadCandidate): string {
   return `${lbl.primary}, ${lbl.direction.toLowerCase()}`;
 }
 
-// The detected-from line, now behind "i details" (#435 rulings 4–5).
-// Used by the road-picked row; the words are unchanged.
+// The detected-from line, behind the road-picked row's "Details" (#436
+// ruling 2; #435 rulings 4–5); the words are unchanged.
 function CandidateCaption({ candidate }: { candidate: RoadCandidate }) {
   const lbl = candidateLabel(candidate);
   const brg = normaliseBearing(candidate.bearing);

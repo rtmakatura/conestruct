@@ -292,6 +292,9 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // and body-value tokens again (no new size).
         "var(--fs-field-label)",
         "var(--fs-body-value)",
+        // #436 ruling 1: the road-picked name, Inter 15 / 600, on the
+        // existing --fs-refusal token (15px is already a census size).
+        "var(--fs-refusal)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",
