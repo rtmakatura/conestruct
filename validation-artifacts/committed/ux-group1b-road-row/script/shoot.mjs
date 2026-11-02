@@ -1,5 +1,8 @@
 // #436 (UX group 1b) evidence for the picked-road row.
-// usage: node shoot.mjs <outdir> <port>
+// usage: node shoot.mjs <outdir> <port | base URL>
+// Production check: pass https://www.conestruct.com as the second argument;
+// SHOT_TOKEN then carries the gate token from conestruct/site/.env.local
+// (read by the shell, never printed).  AXE_PATH overrides the axe source.
 // Local `next dev` of the ux-group1b worktree with a local-only
 // GATE_BYPASS_TOKEN (SHOT_TOKEN here); no real token is read or printed.
 // Playwright Chromium at DPR 2, 1440x900 and 390x844.  /api/road-bearing
@@ -12,10 +15,10 @@ import { createRequire } from 'module';
 import fs from 'fs';
 const require = createRequire('C:/Users/rtmak/Documents/traffic-control-tool/package.json');
 const { chromium } = require('playwright');
-const AXE = fs.readFileSync(new URL('../../../../conestruct/site/node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
+const AXE = fs.readFileSync(process.env.AXE_PATH ?? new URL('../../../../conestruct/site/node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
 const [OUT, PORT] = process.argv.slice(2);
 const TOK = process.env.SHOT_TOKEN ?? '';
-const BASE = `http://localhost:${PORT}`;
+const BASE = /^https?:/.test(PORT) ? PORT : `http://localhost:${PORT}`;
 fs.mkdirSync(OUT, { recursive: true });
 
 const NOTAGS = { lanes_forward: null, lanes_backward: null, lanes_both_ways: null, turn_lanes: null, turn_lanes_forward: null, turn_lanes_backward: null };

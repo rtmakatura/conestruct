@@ -1,0 +1,176 @@
+{
+  "390": {
+    "two": {
+      "closed": {
+        "row": {
+          "width": 340,
+          "height": 100.5,
+          "padding": "12px 16px"
+        },
+        "name": {
+          "text": "East Colfax Avenue, westbound",
+          "lines": 1,
+          "font": "__Inter_176161 15px/600",
+          "color": "rgb(234, 240, 247)",
+          "left": 41
+        },
+        "gapHeadToName": 8,
+        "gapNameToSub": 4,
+        "headHeight": 24,
+        "sub": {
+          "text": "Primary road · 1 m from your pin · Details",
+          "size": "12.5px",
+          "color": "rgb(174, 187, 204)"
+        },
+        "change": {
+          "text": "Change",
+          "height": 44,
+          "border": "0px",
+          "color": "rgb(52, 169, 232)",
+          "font": "13.5px/600",
+          "insideRow": true
+        },
+        "details": {
+          "text": "Details",
+          "underline": "underline",
+          "color": "rgb(52, 169, 232)"
+        },
+        "monoToggleInRow": false
+      },
+      "axeClosed": [],
+      "openedVisible": true,
+      "openedText": "Detected from OSM: 271° (East Colfax Avenue westbound, primary) · way 1547338992",
+      "axeOpen": [],
+      "closedByClick": true,
+      "closedByEscape": true,
+      "dialogOpenAfterEscape": true,
+      "changeReopensPicker": true,
+      "headerInfoToggle": true
+    },
+    "one": {
+      "closed": {
+        "row": {
+          "width": 340,
+          "height": 100.5,
+          "padding": "12px 16px"
+        },
+        "name": {
+          "text": "East Colfax Avenue, westbound",
+          "lines": 1,
+          "font": "__Inter_176161 15px/600",
+          "color": "rgb(234, 240, 247)",
+          "left": 41
+        },
+        "gapHeadToName": 8,
+        "gapNameToSub": 4,
+        "headHeight": 24,
+        "sub": {
+          "text": "Primary road · 1 m from your pin · Details",
+          "size": "12.5px",
+          "color": "rgb(174, 187, 204)"
+        },
+        "change": null,
+        "details": {
+          "text": "Details",
+          "underline": "underline",
+          "color": "rgb(52, 169, 232)"
+        },
+        "monoToggleInRow": false
+      },
+      "axeClosed": [],
+      "openedVisible": true,
+      "openedText": "Detected from OSM: 271° (East Colfax Avenue westbound, primary) · way 1547338992",
+      "axeOpen": [],
+      "closedByClick": true,
+      "closedByEscape": true,
+      "dialogOpenAfterEscape": true
+    }
+  },
+  "1440": {
+    "two": {
+      "closed": {
+        "row": {
+          "width": 407,
+          "height": 100.5,
+          "padding": "12px 16px"
+        },
+        "name": {
+          "text": "East Colfax Avenue, westbound",
+          "lines": 1,
+          "font": "__Inter_176161 15px/600",
+          "color": "rgb(234, 240, 247)",
+          "left": 41
+        },
+        "gapHeadToName": 8,
+        "gapNameToSub": 4,
+        "headHeight": 24,
+        "sub": {
+          "text": "Primary road · 1 m from your pin · Details",
+          "size": "12.5px",
+          "color": "rgb(174, 187, 204)"
+        },
+        "change": {
+          "text": "Change",
+          "height": 44,
+          "border": "0px",
+          "color": "rgb(52, 169, 232)",
+          "font": "13.5px/600",
+          "insideRow": true
+        },
+        "details": {
+          "text": "Details",
+          "underline": "underline",
+          "color": "rgb(52, 169, 232)"
+        },
+        "monoToggleInRow": false
+      },
+      "axeClosed": [],
+      "openedVisible": true,
+      "openedText": "Detected from OSM: 271° (East Colfax Avenue westbound, primary) · way 1547338992",
+      "axeOpen": [],
+      "closedByClick": true,
+      "closedByEscape": true,
+      "dialogOpenAfterEscape": true,
+      "changeReopensPicker": true,
+      "headerInfoToggle": true
+    },
+    "one": {
+      "closed": {
+        "row": {
+          "width": 407,
+          "height": 100.5,
+          "padding": "12px 16px"
+        },
+        "name": {
+          "text": "East Colfax Avenue, westbound",
+          "lines": 1,
+          "font": "__Inter_176161 15px/600",
+          "color": "rgb(234, 240, 247)",
+          "left": 41
+        },
+        "gapHeadToName": 8,
+        "gapNameToSub": 4,
+        "headHeight": 24,
+        "sub": {
+          "text": "Primary road · 1 m from your pin · Details",
+          "size": "12.5px",
+          "color": "rgb(174, 187, 204)"
+        },
+        "change": null,
+        "details": {
+          "text": "Details",
+          "underline": "underline",
+          "color": "rgb(52, 169, 232)"
+        },
+        "monoToggleInRow": false
+      },
+      "axeClosed": [],
+      "openedVisible": true,
+      "openedText": "Detected from OSM: 271° (East Colfax Avenue westbound, primary) · way 1547338992",
+      "axeOpen": [],
+      "closedByClick": true,
+      "closedByEscape": true,
+      "dialogOpenAfterEscape": true
+    }
+  }
+}
