@@ -6,7 +6,7 @@
 //
 //   (2) Before this arc the gate had three speakers: the rail blocker
 //       (visible), the CTA reason (role=alert — the control's own text,
-//       ruled the one export in #228) and the strip ("AWAITING LOCATION ·
+//       ruled the one export in #228) and the strip ("NO SITE CHOSEN YET ·
 //       pick a location on the map …", aria-live=polite) — and the quiet
 //       jurisdiction band announced its own empty state.  Now: the CTA
 //       reason is the ONE live region carrying the instruction; the strip
@@ -49,7 +49,7 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 
-const GATE = "Set a location first: use Pick on map to find the site.";
+const GATE = "Type an address or pick on map first, then Generate turns on.";
 
 const CLEAN_AUDIT = {
   summary: {},
@@ -102,7 +102,7 @@ const liveRegions = () =>
   Array.from(document.querySelectorAll("[aria-live], [role=status], [role=alert]"));
 
 describe("#260 (2) — one live speaker for the location gate", () => {
-  it("fresh session: exactly one live region carries the gate sentence — the CTA reason; the strip says AWAITING LOCATION · no site chosen; the rail blocker is aria-hidden; the quiet band is not live", async () => {
+  it("fresh session: exactly one live region carries the gate sentence — the CTA reason; the strip says NO SITE CHOSEN YET; the rail blocker is aria-hidden; the quiet band is not live", async () => {
     render(<GeneratorShell mode="sandbox" />);
     await settle();
 
@@ -117,7 +117,7 @@ describe("#260 (2) — one live speaker for the location gate", () => {
     // as TEXT (rule 17) where an 8 px square used to sit.  The SENTENCE
     // is unchanged, which is what #260 (2) is about; the glyph is
     // aria-hidden, so what this region SPEAKS is unchanged too.
-    expect(strip.textContent).toBe("◌" + "AWAITING LOCATION · no site chosen");
+    expect(strip.textContent).toBe("◌" + "NO SITE CHOSEN YET");
     expect(
       strip.querySelector(".status-glyph")!.getAttribute("aria-hidden"),
     ).toBe("true");

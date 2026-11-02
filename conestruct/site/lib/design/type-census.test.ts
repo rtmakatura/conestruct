@@ -288,6 +288,10 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // coming-soon-gate R24: the founders' placeholder initial, mono at
         // role 5's size — the token's second owner.
         "var(--fs-step-question)",
+        // #435 ruling 2: the tool page's text rules read the field-label
+        // and body-value tokens again (no new size).
+        "var(--fs-field-label)",
+        "var(--fs-body-value)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",

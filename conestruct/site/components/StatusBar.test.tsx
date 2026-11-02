@@ -239,7 +239,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   });
 
   // #186 — no site chosen: never a verdict for a location nobody set.
-  it("locationUnset renders AWAITING LOCATION — chromeless, no verdict, even over a clean audit", () => {
+  it("locationUnset renders NO SITE CHOSEN YET — chromeless, no verdict, even over a clean audit", () => {
     const html = renderToStaticMarkup(
       <StatusBar
         inputError={null}
@@ -247,10 +247,10 @@ describe("StatusBar (UX-21/22 derived states)", () => {
         audit={ready(makeAudit())}
       />,
     );
-    expect(html).toContain("AWAITING LOCATION");
+    expect(html).toContain("NO SITE CHOSEN YET");
     // #260 (P2): the strip names the state, not the instruction — the
     // CTA reason is the gate's one live speaker.
-    expect(html).toContain("AWAITING LOCATION · no site chosen");
+    expect(html).toContain("NO SITE CHOSEN YET");
     expect(html).not.toContain("pick a location");
     // Chromeless neutral (rule 13 no-verdict), not an error voice.
     expect(html).toContain("status-bar idle unavail");
@@ -296,7 +296,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
         audit={{ state: "loading", lastReady: null }}
       />,
     );
-    expect(html).toContain("AWAITING LOCATION");
+    expect(html).toContain("NO SITE CHOSEN YET");
     expect(html).not.toContain("VERIFYING");
   });
 
@@ -309,7 +309,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
       />,
     );
     expect(html).toContain("INVALID INPUT");
-    expect(html).not.toContain("AWAITING LOCATION");
+    expect(html).not.toContain("NO SITE CHOSEN YET");
   });
 
   it("a refusal outranks the missing pin", () => {
@@ -322,7 +322,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
       />,
     );
     expect(html).toContain("PLAN DECLINED");
-    expect(html).not.toContain("AWAITING LOCATION");
+    expect(html).not.toContain("NO SITE CHOSEN YET");
   });
 
   it("first load shows VERIFYING, not a verdict", () => {

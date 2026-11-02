@@ -67,7 +67,9 @@ export function FactLine({
           {fact.verb}
         </button>
       ) : (
-        <span className="tr-prov a-fact-prov">
+        // #435 ruling 2: the pending line is a sentence, so it reads in
+        // .tr-note (Inter 12.5); "locked" stays a provenance word.
+        <span className={`${locked ? "tr-prov" : "tr-note"} a-fact-prov`}>
           {locked ? "locked" : fact.pending}
         </span>
       )}
@@ -114,7 +116,9 @@ export function OpenBand({
       <div className="a-head">
         <span className="tr-step">{stepIndex}</span>
         <span className="tr-section">{head}</span>
-        <span className="tr-prov a-prov">{provenance}</span>
+        {/* #435 ruling 7: the WHERE hint is dropped before a location, so
+            an empty provenance renders no element (Rule 10). */}
+        {provenance ? <span className="tr-prov a-prov">{provenance}</span> : null}
       </div>
       <div className="a-body">
         {/* Type role 5, the step question (#283, ruling 180).  The
@@ -122,7 +126,9 @@ export function OpenBand({
             nowhere else, asserted."  This is the only element in the
             product that carries the class. */}
         <p className="tr-question a-question">{question}</p>
-        <p className="tr-prov a-question-prov">{questionProvenance}</p>
+        {/* #435 ruling 2: the helper under the question is the band's main
+            helper line, Inter 13.5 (.tr-help), in every band. */}
+        <p className="tr-help a-question-prov">{questionProvenance}</p>
         {children}
       </div>
     </section>

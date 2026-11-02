@@ -74,7 +74,7 @@ describe("the extracted CTA chain — strings and rank (behavior pin)", () => {
       "Re-checking the declined input. Generate comes back when the verdict settles.",
     );
     expect(LOCATION_BLOCKER).toBe(
-      "Set a location first: use Pick on map to find the site.",
+      "Type an address or pick on map first, then Generate turns on.",
     );
   });
 
@@ -399,7 +399,7 @@ describe("#228 vocabulary — fields on the derivation, purity", () => {
   it("aria strings are the pre-arc component strings, byte-identical", () => {
     const pre = deriveRail(input(DEFAULT_SHOULDER));
     expect(entryById(pre, "location").aria).toBe(
-      "Location: needs attention. Set a location first: use Pick on map to find the site. (current blocker)",
+      "Location: needs attention. Type an address or pick on map first, then Generate turns on. (current blocker)",
     );
     expect(entryById(pre, "road").aria).toBe(
       "Road: pending, set a location first",

@@ -78,6 +78,8 @@ export function ReferenceDisclosure({
       name="Reference"
       count={null}
       provenance={summary ?? "jurisdiction rules · permit · audit trail"}
+      // #435 ruling 6: the uncounted tier's words read in .tr-note.
+      plainWords
       open={open}
       onToggle={() => setOpen((o) => !o)}
     >

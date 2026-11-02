@@ -623,7 +623,7 @@ export function WhereBand({
       questionProvenance={
         located
           ? "The segment below is what the plan is built from. Change what is wrong; the map is in the picker."
-          : "An address or a cross-street pair, the way an 811 ticket describes it. You can also drop a pin."
+          : "Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map."
       }
     >
       {/* Rule 114's producer row: the field and its 132 px button, both

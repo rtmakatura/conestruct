@@ -13,6 +13,27 @@ equivalents.
 | **block** | 16 | `4` | gap between blocks inside a zone; card inset; banner inset x |
 | **section** | 24 | `6` | gap between numbered zones (01/02/03) and their peers (context bar, status strip); large-panel gutter (setup panel, hero cells) |
 
+## The tool page's three gaps and two sentence roles (#435, ruled 2026-11-02)
+
+On the tool page's band column, the status strip, the footer line, the road
+picker and the disclosure headers, three vertical gaps are allowed, as
+`.workbench` tokens: `--space-tight` 8 px (a label to the line it labels),
+`--space-block` 16 px (inside a band: padding, block to block) and
+`--space-section` 24 px (between bands, from the strip to the first band, and
+from the last band to the footer line). Header rows (the band head, a
+collapsed band, the strip, a disclosure head, the picker's head) are padded
+12 / 16. Ryan's checkpoint ruling 3 retires #289 Part 2 rule 26's 18 px
+strip gap.
+
+Mono is only for short caps labels (step, section, strip and four-word
+field-group labels). Full sentences use two roles (type-roles.ts):
+`.tr-help` (Inter 13.5 `--ink-on-dark`) for a band's main helper line and
+the Generate reason, and `.tr-note` (Inter 12.5 `--ink-faint`) for secondary
+lines, a counted disclosure's words and the footer line. Controls in these
+bands are 44 px; road-picker rows have a 56 px floor. NEEDS YOU, the WHERE
+checklist, the cross-street flow, the reference bodies, the WHAT grid and
+the wait state adopt these rules when their groups land.
+
 Two banner tiers: **page-level banners** (status strip, draft note, error
 ribbons) inset `12×16`; **in-form notes** inset `8×12`.
 

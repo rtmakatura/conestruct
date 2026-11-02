@@ -52,6 +52,7 @@ function TierDisclosure({
   name,
   count,
   provenance,
+  countWords,
   tier,
   tierProps,
   defaultOpen = false,
@@ -60,6 +61,7 @@ function TierDisclosure({
   name: string;
   count: number;
   provenance?: string;
+  countWords: { one: string; many: string };
   tier: "checked" | "pending";
   tierProps: TierProps;
   defaultOpen?: boolean;
@@ -71,6 +73,7 @@ function TierDisclosure({
       name={name}
       count={count}
       provenance={provenance}
+      countWords={countWords}
       open={open}
       onToggle={() => setOpen((o) => !o)}
     >
@@ -98,6 +101,8 @@ export function CheckedDisclosure({
       name="Checked & passed"
       count={count}
       provenance={cited ? "each cited" : undefined}
+      // #435 ruling 6: "15 checks, each cited".
+      countWords={{ one: "check", many: "checks" }}
       tier="checked"
       tierProps={tierProps}
     />
@@ -117,6 +122,8 @@ export function PendingDisclosure({
       symbol="◌"
       name="Pending / not verified"
       count={count}
+      // #435 ruling 6 (checkpoint call C8): "3 not verified yet".
+      countWords={{ one: "not verified yet", many: "not verified yet" }}
       tier="pending"
       tierProps={tierProps}
     />

@@ -1,0 +1,30 @@
+# First full vitest run after the build, before updating expectations (2026-11-02): 29 failed | 2670 passed | 1 skipped
+ FAIL  components/GeneratorShell.disclosures.test.tsx > #288 clause 4 — the stack's disclosure rows > rule 89: the COUNTED tiers show their number; the quote and the reference show none
+ FAIL  components/GeneratorShell.disclosures.test.tsx > #288 clause 4 — the stack's disclosure rows > the draft notice is the column's LAST line, below the group (§8.12, rule 29)
+ FAIL  components/GeneratorShell.live-speakers.test.tsx > #260 (2) — one live speaker for the location gate > fresh session: exactly one live region carries the gate sentence — the CTA reason; the strip says AWAITING LOCATION · no site chosen; the rail blocker is aria-hidden; the quiet band is not live
+ FAIL  components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > fresh load: AWAITING LOCATION, no verdict, Generate disabled with the stated reason
+ FAIL  components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces
+ FAIL  components/GeneratorShell.rail-single-source.test.tsx > rail blocker === CTA disabled-reason (one export) > pre-pin: the missing-location reason renders once, on the CTA
+ FAIL  components/GeneratorShell.zone-headings.test.tsx > #288 clause 5 — §8.30: the intro is dropped, the draft notice kept > rule 29: the draft notice is one provenance line in rule 29's words
+ FAIL  components/GeneratorSidebar.prepin-gating.test.tsx > pre-pin gating (#222), as the column does it > NI pre-pin: one band open, the rest pending lines with the reason in them
+ FAIL  components/GeneratorSidebar.prepin-gating.test.tsx > pre-pin gating (#222), as the column does it > the gate's own sentence is on screen, once, on the disabled primary
+ FAIL  components/LocationPickerModal.coverage.test.tsx > the Centerline provenance row (#211), on the backend's geometry > pending multi-candidate pick: no Centerline row, and no geometry asked
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > #402: the picked road's head and line > picked: the head reads ✓ Road picked, no ⚠, on the neutral frame (P9)
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > #402: the picked road's head and line > picked: the line carries the whole caption, direction included, and wraps instead of truncating
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > #402: the picked road's head and line > unpicked: the head asks, amber, with ⚠
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > multi-candidate road pick gates Save (#139) > Change re-expands the picker and a re-pick updates the payload
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > multi-candidate road pick gates Save (#139) > a moved pin to an unresolved location clears the stale road pick (#149)
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > multi-candidate road pick gates Save (#139) > payload: Save after a pick carries the picked road and its classification — and no bearing (#290)
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > multi-candidate road pick gates Save (#139) > single candidate: confirmed card with the pre-selected row, no amber hint, Save enabled (#152 A)
+ FAIL  components/LocationPickerModal.road-pick.test.tsx > multi-candidate road pick gates Save (#139) > two candidates: Save disabled with the footer hint until a road is picked
+ FAIL  components/LocationPickerModal.scan-honesty.test.tsx > unavailable scan renders as unavailable (#213) > retry re-runs detection and recovers to a real result
+ FAIL  components/LocationPickerModal.spacing.test.ts > LocationPickerModal stays on the spacing scale (#166) > keeps finding the modal's spacing tokens (guard is non-vacuous)
+ FAIL  components/LocationPickerModal.state-contract.test.tsx > lost confirmations: reopen restores, pin move re-arms > a fresh operator pick records method 'operator_pick'; a sole candidate 'auto_single'
+ FAIL  components/LocationPickerModal.state-contract.test.tsx > stale suggestions: pin moves invalidate instantly > a pin move clears the candidate list AND the selection while the new detect is in flight
+ FAIL  components/StatusBar.test.tsx > StatusBar (UX-21/22 derived states) > locationUnset outranks a pending verification — no verdict, no VERIFYING, for a site nobody chose
+ FAIL  components/StatusBar.test.tsx > StatusBar (UX-21/22 derived states) > locationUnset renders AWAITING LOCATION — chromeless, no verdict, even over a clean audit
+ FAIL  components/controls-fidelity.test.tsx > rule 131 — Generate, the XL primary > the label is the string as written, and the reason reads in the provenance role — not red, not uppercase
+ FAIL  components/controls-fidelity.test.tsx > rule 29 — the draft notice > 18 px above it
+ FAIL  components/shell-chrome.test.tsx > #250 f2 — the verdict strip's reserved slot > .status-slot reserves the strip's height and owns the gap — 18 px since #289 Phase 2; the strip's margin is zero inside it
+ FAIL  lib/scenarios/rail.test.ts > #228 vocabulary — fields on the derivation, purity > aria strings are the pre-arc component strings, byte-identical
+ FAIL  lib/scenarios/rail.test.ts > the extracted CTA chain — strings and rank (behavior pin) > pins the four moved literals byte-identically

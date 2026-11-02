@@ -1,0 +1,55 @@
+# Red proof (2026-11-02): this branch's new and rewritten tests run on a git archive of the base d1c415f (node_modules junctioned from the worktree).
+# Files: components/GeneratorShell.ux-group1.test.tsx, components/DisclosureRow.test.tsx, lib/road-detection/labels.test.ts, components/LocationPickerModal.road-pick.test.tsx
+# Every new #435 test is red on the base; the one green new test is the stated control ('without either prop the row is unchanged').
+   ✓ bearingToDirectionLabel > returns *bound for cardinal directions
+   ✓ bearingToDirectionLabel > returns compass-form for intercardinals (no awkward *-bound)
+   ✓ humanizeHighwayClass > maps OSM classes to display labels
+   ✓ humanizeHighwayClass > falls back to the raw class for unknown values
+   ✓ candidateLabel > uses name when present
+   ✓ candidateLabel > falls back to ref when name is missing
+   ✓ candidateLabel > falls back to "Unnamed <class>" when both name and ref are missing
+   × plainRoadClass > names the class in a field rep's words
+   × plainRoadClass > keeps an unmapped class as its raw tag (Rule 10: no invented word)
+   ✓ DisclosureRow (rules 87–89) > rule 88: symbol → name → count → provenance → caret, caret last
+   ✓ DisclosureRow (rules 87–89) > rule 89: a counted tier shows its number
+   ✓ DisclosureRow (rules 87–89) > rule 89: the UNCOUNTED reference tier renders no numeral — not a zero
+   ✓ DisclosureRow (rules 87–89) > absent provenance renders nothing, not an empty element
+   ✓ DisclosureRow (rules 87–89) > closed: the panel is not in the DOM at all
+   ✓ DisclosureRow (rules 87–89) > open: the panel renders in place, below the header
+   ✓ DisclosureRow (rules 87–89) > rule 129: the control is a READ — disclosing is not a write
+   ✓ DisclosureRow (rules 87–89) > announces its own state and owns its panel
+   ✓ DisclosureRow (rules 87–89) > rule 88: the name carries its own declared treatment, not an inherited one
+   ✓ DisclosureRow (rules 87–89) > nested rows take the lifted ground (rule 87)
+   × DisclosureRow — #435 plain-words count > countWords: the numeral, its noun and the provenance are one .tr-note phrase
+   × DisclosureRow — #435 plain-words count > countWords: singular at 1, and no provenance clause when there is none
+   × DisclosureRow — #435 plain-words count > plainWords: an uncounted tier's words read in .tr-note, not the mono role
+   ✓ DisclosureRow — #435 plain-words count > without either prop the row is unchanged (the quote and the outputs)
+   × #435 ruling 7 — the landing's copy > the strip reads NO SITE CHOSEN YET
+   × #435 ruling 7 — the landing's copy > WHERE: the helper is the ruled sentence in .tr-help, and the header has no hint
+   × #435 ruling 7 — the landing's copy > WHAT, collapsed: the right side reads 'Opens after you find the work' in .tr-note
+   × #435 ruling 7 — the landing's copy > GENERATE: one line, the ruled reason in .tr-help; the TCS caption is gone
+   × #435 ruling 7 — the landing's copy > the footer line is Ryan's checkpoint wording in .tr-note
+   × #435 ruling 2 — the two sentence roles > .tr-help is Inter 13.5 --ink-on-dark; .tr-note is Inter 12.5 --ink-faint
+   × #435 ruling 1 — three vertical gaps > the tokens are 8 / 16 / 24
+   × #435 ruling 1 — three vertical gaps > 24 between bands, from the strip to the first band, and from the last band to the footer line
+   × #435 ruling 1 — three vertical gaps > header rows are 12 / 16: the band head, the collapsed band, the strip, the disclosure head
+   × #435 ruling 1 — three vertical gaps > 16 inside a band: the body, the generate frame, an opened disclosure; 8 between a question and its line and between a disclosure's paragraphs
+   × multi-candidate road pick gates Save (#139) > two candidates: Save disabled with the footer hint until a road is picked
+   × multi-candidate road pick gates Save (#139) > payload: Save after a pick carries the picked road and its classification — and no bearing (#290)
+   × multi-candidate road pick gates Save (#139) > Change re-expands the picker and a re-pick updates the payload
+   × multi-candidate road pick gates Save (#139) > single candidate: confirmed card with the pre-selected row, no amber hint, Save enabled (#152 A)
+   × multi-candidate road pick gates Save (#139) > #301 (R123 Q1): no road-property editor; WHAT is the one place they are set; Re-detect stays
+   × multi-candidate road pick gates Save (#139) > #290: the typed direction is retired — no field, no Use Detected, no Flip, no length
+   ✓ multi-candidate road pick gates Save (#139) > zero candidates: explicit empty-state card, Save stays enabled, null classification (accepted boundary)
+   ✓ multi-candidate road pick gates Save (#139) > detection error: explicit empty-state card, Save stays enabled (manual fallback)
+   ✓ multi-candidate road pick gates Save (#139) > detection in flight: the outcome card shows the skeleton, never nothing (#152 A)
+   × multi-candidate road pick gates Save (#139) > a moved pin to an unresolved location clears the stale road pick (#149)
+   × #402: the picked road's head and line > unpicked: a neutral panel whose header asks with ⚠, and the rows are radios
+   × #402: the picked road's head and line > picked: the road-picked row, ✓ and ROAD, no ⚠; Change re-opens the list with ✓ and the pick checked (P9)
+   × #402: the picked road's head and line > picked: the detected-from caption is whole, behind the row's i details
+⎯⎯⎯⎯⎯⎯ Failed Tests 25 ⎯⎯⎯⎯⎯⎯⎯
+   ✓ confirmed = --pass; × dismissed = chromeless --none (a dismissal
+ FAIL  lib/road-detection/labels.test.ts > plainRoadClass > names the class in a field rep's words
+ FAIL  lib/road-detection/labels.test.ts > plainRoadClass > keeps an unmapped class as its raw tag (Rule 10: no invented word)
+ Test Files  4 failed (4)
+      Tests  25 failed | 21 passed (46)

@@ -845,6 +845,13 @@ body {
      palette at once.  Rule 5: those two shift one step darker too. */
   --canvas-tint: #16232f;
   --rule: #2c3e53;
+  /* #435 ruling 1 (Ryan, 2026-11-02): the tool page's three vertical
+     gaps.  tight = a label to the line it labels; block = inside a band
+     (padding, block to block); section = between bands, and from the
+     last band to the footer line.  DESIGN-SPACING.md names the steps. */
+  --space-tight: 8px;
+  --space-block: 16px;
+  --space-section: 24px;
   --rule-soft: #223244;
   --raise: #22344a;
   --raise-hi: #294056;
@@ -1273,9 +1280,10 @@ body {
    child margin collapsing through, so the gap would otherwise double. */
 .workbench .status-slot {
   min-height: var(--status-h);
-  /* Issue 289, Part 2 rule 26: 18 px between the verdict strip and the
-     first band.  Was 24 — a figure that predates Part 2. */
-  margin-bottom: 18px;
+  /* #435 ruling 1 + Ryan's checkpoint ruling 3 (2026-11-02): 24 px
+     between the strip and the first band, replacing #289 Part 2 rule
+     26's 18. */
+  margin-bottom: var(--space-section);
 }
 .workbench .status-slot > .status-bar,
 .workbench .status-slot > .status-details {
@@ -1307,7 +1315,8 @@ body {
 .workbench .status-bar {
   min-height: var(--status-h);
   gap: 12px;
-  padding: 13px 16px;
+  /* #435 ruling 1: a header row, 12 / 16 (was 13 / 16). */
+  padding: 12px 16px;
   border: 1px solid var(--da-hair);
   background: var(--da-ground);
   color: var(--ink);
@@ -1714,6 +1723,12 @@ input[type="number"] {
    gap.  The zone keeps its container-type for the 519 px queries below. */
 .workbench .zone.results {
   container-type: inline-size;
+  /* #435 ruling 1: the results zone is the column's last zone, and the
+     footer line sits 24 below the last band.  Its own 24 stacked on the
+     setup zone's at landing (an sr-only line between them stops the
+     collapse: 48 measured), so the zone gives it up; its last block
+     (.results-disc) carries the 24 after a Generate. */
+  margin-bottom: 0;
 }
 /* #288 Phase 1 deviation from rule 28 (Ryan's hand-check at f44377e):
    `.results-head-slot` is DELETED.  The slot reserved 44 px for the setup
@@ -2881,6 +2896,28 @@ input[type="number"] {
   text-transform: none;
   color: var(--ink-on-dark-faint);
 }
+/* #435 ruling 2: every full sentence leaves mono.  .tr-help is the main
+   helper line (Inter 13.5 --ink-on-dark); .tr-note a secondary line and
+   the footer line (Inter 12.5 --ink-faint).  Both read existing size
+   tokens: no size joins the census. */
+.workbench .tr-help {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--fs-body-value);
+  line-height: 1.5;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+}
+.workbench .tr-note {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--fs-field-label);
+  line-height: 1.5;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-faint);
+}
 /* #283 / #281 ruling 180 — role 5, the step question.  Part 2 rule 7.
    NOTHING CONSUMES THIS CLASS YET: the band stack that mounts it is
    Phase 2 (#289).  It ships here, with its token, so the nine sizes land
@@ -3714,7 +3751,8 @@ input[type="number"] {
   flex-direction: column;
   gap: 10px;
   margin-top: 12px;
-  margin-bottom: 16px;
+  /* #435 ruling 1: the last block above the footer line, 24 (was 16). */
+  margin-bottom: var(--space-section);
 }
 /* The last previewed backend total — a generated number, so it takes the
    output accent every generated numeral takes (rule 10's `--gen`).  It is
@@ -4399,7 +4437,8 @@ input[type="number"] {
   gap: 12px;
   width: 100%;
   min-height: 48px;
-  padding: 0 16px;
+  /* #435 rulings 1 + 6: the header row's 12 / 16. */
+  padding: 12px 16px;
   background: transparent;
   border: 0;
   text-align: left;
@@ -4412,6 +4451,13 @@ input[type="number"] {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--ink-on-dark);
+}
+/* #435 ruling 6: a counted tier that says its count in words ("15
+   checks, each cited") sets the phrase as one .tr-note span. */
+.workbench .tr-note.disc-count {
+  font-family: var(--font-sans);
+  font-size: var(--fs-field-label);
+  color: var(--ink-faint);
 }
 .workbench .disc-name {
   /* Rule 88: the name is Inter 500 13px on --ink.  13px is not one of
@@ -4442,8 +4488,13 @@ input[type="number"] {
   /* Rule 89: expands downward, in place.  No independent scroll — rule
      32 makes the page the only scroll container, so no max-height and
      no overflow here, deliberately. */
-  padding: 0 16px 16px;
+  /* #435 ruling 6: 16 all round (the top was 0, so the body sat flush
+     under the header) and 8 between its paragraphs. */
+  padding: var(--space-block);
   border-top: 1px solid var(--da-hair);
+}
+.workbench .disc-panel > * + * {
+  margin-top: var(--space-tight);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -4471,7 +4522,8 @@ input[type="number"] {
 .workbench .band-stack {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  /* #435 ruling 1: 24 between bands (was rule 26's 12). */
+  gap: var(--space-section);
   outline: none;
 }
 
@@ -4481,7 +4533,8 @@ input[type="number"] {
   grid-template-columns: 20px minmax(0, 1fr) auto;
   column-gap: 14px;
   align-items: baseline;
-  padding: 13px 16px;
+  /* #435 ruling 1: a collapsed band is a header row, 12 / 16. */
+  padding: 12px 16px;
   border: 1px solid var(--rule);
   background: var(--canvas-tint);
   /* R9, ruled 2026-09-22: a FLOOR, not a height.  Rule 56's "44 px at
@@ -4729,7 +4782,8 @@ input[type="number"] {
   display: flex;
   align-items: baseline;
   gap: 14px;
-  padding: 14px 16px;
+  /* #435 ruling 1: the band header row, 12 / 16 (was 14 / 16). */
+  padding: 12px 16px;
   border-bottom: 1px solid var(--da-hair);
 }
 .workbench .a-open .a-head .a-prov {
@@ -4745,15 +4799,17 @@ input[type="number"] {
   white-space: nowrap;
 }
 .workbench .a-open .a-body {
-  padding: 18px 16px;
+  /* #435 ruling 1: band padding 16 (was 18 / 16). */
+  padding: var(--space-block);
 }
 /* Rule 64's body order is a DOM order, not a CSS one; what CSS owns is
    the 16 px below the question's provenance paragraph. */
 .workbench .a-open .a-body > .a-question-prov {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-block);
 }
+/* #435 ruling 1: the question labels its helper line, 8 (was 6). */
 .workbench .a-open .a-question {
-  margin: 0 0 6px;
+  margin: 0 0 var(--space-tight);
 }
 
 /* ─── C5 · the move ledger (rules 67–71) ─── */
@@ -5421,6 +5477,155 @@ input[type="number"] {
   border: 1px solid var(--act);
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.4);
 }
+/* #435 rulings 3–5 — the road picker (map window).  A neutral band panel:
+   the band ground and border, a header row padded 12 / 16 over the
+   band hairline, then the rows 16 in and 8 apart.  Rows are radios with
+   a 56 px floor (two lines); the picked row takes the --act border and a
+   filled marker with a 2 px inset gap, the others a --pri-off-ink
+   outline.  The name is Inter 13.5 / 600, the second line Inter 12.5
+   --ink-mute.  All sizes read existing tokens. */
+.workbench .road-pick-panel {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .road-pick-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .road-pick-glyph {
+  width: 16px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-field-label);
+  line-height: 1;
+}
+/* The header and the ROAD label are the step role (.tr-step, mono 10
+   .12em, written in caps); the open question reads in --ink. */
+.workbench .road-pick-head .tr-step {
+  color: var(--ink);
+}
+.workbench .road-pick-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: var(--space-block);
+}
+.workbench .road-pick-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  cursor: pointer;
+}
+.workbench .road-pick-row:hover {
+  border-color: var(--act);
+}
+.workbench .road-pick-row.is-picked {
+  border-color: var(--act);
+}
+.workbench .road-pick-mark {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border: 2px solid var(--pri-off-ink);
+}
+.workbench .road-pick-row.is-picked .road-pick-mark {
+  border-color: var(--act);
+  background: var(--act);
+  box-shadow: inset 0 0 0 2px var(--canvas-tint);
+}
+.workbench .road-pick-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.workbench .road-pick-name {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.workbench .road-pick-sub {
+  font-family: var(--font-sans);
+  font-size: var(--fs-field-label);
+  line-height: 1.4;
+  color: var(--ink-mute);
+}
+.workbench .road-picked {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  padding: 12px 16px;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .road-picked-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.workbench .road-pick-change {
+  flex: none;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--act);
+  background: transparent;
+  color: var(--act);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+}
+.workbench .road-pick-change:hover {
+  background: var(--act);
+  color: var(--on-act);
+}
+/* The standalone "i details" toggle (InfoToggle.tsx): FieldCell's
+   overhang margins are for a label row, so they go; the box keeps
+   rule 15's 32 px, 44 at 480 and under (rule 163). */
+.workbench .info-toggle-box {
+  flex: none;
+}
+.workbench .road-pick-head .info-toggle-box {
+  margin-left: auto;
+}
+.workbench .a-info-toggle.is-standalone {
+  align-items: center;
+  min-height: 32px;
+  margin: 0;
+}
+@media (max-width: 480px) {
+  .workbench .a-info-toggle.is-standalone {
+    min-height: 44px;
+    margin: 0;
+  }
+}
+.workbench .info-toggle-box .a-info.a-pop {
+  left: auto;
+  right: 16px;
+}
+.workbench .road-pick-details {
+  display: grid;
+  gap: var(--space-tight);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
 .workbench .a-filedetails {
   margin-top: 18px;
   padding-top: 12px;
@@ -5632,11 +5837,9 @@ input[type="number"] {
 .workbench .a-genframe {
   border: 1px solid var(--rule);
   background: var(--da-ground);
-  padding: 18px 16px;
-}
-.workbench .a-genframe .a-gencap {
-  margin-top: 10px;
-  text-align: center;
+  /* #435 ruling 1: band padding 16 (was 18 / 16).  The caption under
+     the button (.a-gencap) is gone: it folds into the draft line. */
+  padding: var(--space-block);
 }
 .workbench .a-pri {
   width: 100%;
@@ -5672,9 +5875,12 @@ input[type="number"] {
 .workbench .a-pri[aria-disabled="true"]:hover {
   background: var(--pri-off);
 }
-/* Rule 29: the draft notice — provenance role (.tr-prov), 18 px above. */
+/* #435 rulings 1 + 2: the footer line, .tr-note, 24 below the last
+   band (was rule 29's provenance role, 18 above).  The 24 belongs to what
+   sits above it: the setup zone's bottom margin at landing, .results-disc's
+   after a Generate (measured 24 at both; a margin here stacked to 48). */
 .workbench .draft-notice {
-  margin-top: 18px;
+  margin-top: 0;
 }
 /* Rule 115: S2's confirm primary sits 14 px under the chips. */
 .workbench .a-pri.a-confirm {
@@ -5738,7 +5944,9 @@ input[type="number"] {
   /* Rule 164 — a field and its button stack; no 1fr/auto grid survives. */
   .workbench .a-findrow {
     grid-template-columns: 1fr;
-    gap: 10px;
+    /* #435 ruling 1: the field and its button are one control group,
+       8 (was 10). */
+    gap: var(--space-tight);
   }
   /* Rule 166 — fact lines become 2-track; the value drops under the
      label and the link takes its own row in column 2. */

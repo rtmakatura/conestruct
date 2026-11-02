@@ -4,6 +4,7 @@ import {
   bearingToDirectionLabel,
   candidateLabel,
   humanizeHighwayClass,
+  plainRoadClass,
 } from "@/lib/road-detection/labels";
 import type { RoadCandidate } from "@/lib/road-detection/types";
 
@@ -87,5 +88,25 @@ describe("candidateLabel", () => {
     expect(l.primary).toBe("Unnamed residential");
     expect(l.sub).toBe("Residential");
     expect(l.direction).toBe("Eastbound");
+  });
+});
+
+// #435 ruling 4 (checkpoint call C1): the picker's road class in plain
+// words; humanizeHighwayClass above is unchanged.
+describe("plainRoadClass", () => {
+  it("names the class in a field rep's words", () => {
+    expect(plainRoadClass("primary")).toBe("Primary road");
+    expect(plainRoadClass("residential")).toBe("Residential street");
+    expect(plainRoadClass("living_street")).toBe("Residential street");
+    expect(plainRoadClass("trunk")).toBe("Highway");
+    expect(plainRoadClass("motorway")).toBe("Freeway");
+    expect(plainRoadClass("tertiary")).toBe("Minor road");
+    expect(plainRoadClass("secondary_link")).toBe("Secondary road ramp");
+    expect(plainRoadClass("unclassified")).toBe("Local road");
+    expect(plainRoadClass("service")).toBe("Service road");
+  });
+
+  it("keeps an unmapped class as its raw tag (Rule 10: no invented word)", () => {
+    expect(plainRoadClass("track")).toBe("track");
   });
 });

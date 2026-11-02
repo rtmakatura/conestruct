@@ -84,7 +84,8 @@ describe("rule 131 — Generate, the XL primary", () => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     const reason = doc.querySelector('[data-testid="cta-reason"]')!;
     expect(reason.getAttribute("role")).toBe("alert");
-    expect(reason.classList.contains("tr-prov")).toBe(true);
+    // #435 ruling 2: the reason is the band's helper sentence, .tr-help.
+    expect(reason.classList.contains("tr-help")).toBe(true);
     expect(reason.className).not.toMatch(/uppercase|--fail/);
   });
 });
@@ -155,8 +156,11 @@ describe("rule 130 busy — the motion is the working band's, never the button's
   });
 });
 
-describe("rule 29 — the draft notice", () => {
-  it("18 px above it", () => {
-    expect(rule(".workbench .draft-notice")).toMatch(/margin-top:\s*18px/);
+describe("#435 rulings 1-2 — the draft notice (was rule 29's 18 px)", () => {
+  it("24 px above it, owned by what sits above (the setup zone at landing, the disclosure group after a Generate)", () => {
+    expect(rule(".workbench .draft-notice")).toMatch(/margin-top:\s*0;/);
+    expect(rule(".workbench .zone")).toMatch(/margin-bottom:\s*24px/);
+    expect(rule(".workbench .zone.results")).toMatch(/margin-bottom:\s*0;/);
+    expect(rule(".workbench .results-disc")).toMatch(/margin-bottom:\s*var\(--space-section\)/);
   });
 });

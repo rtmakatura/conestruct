@@ -18,6 +18,30 @@ Ruled 2026-11-02 by Ryan (chose Option C on the "Tool page: spacing and text" de
    - The WHERE header's right-hand hint "the work, not the first sign" is dropped.
 
 
-## Arc calls (R145 self-ruled)
+## Ryan's checkpoint rulings, 2026-11-02 (quoted verbatim; issue #435)
 
-*None yet. Added after the checkpoint.*
+> 1. Draft line: use this wording instead of the one in the prompt. It keeps "engineering reference" because that phrase limits what the plan claims to be:
+> "Draft, not a sealed plan. This is engineering reference, with every dimension cited to MUTCD or CDOT. A licensed PE must review and seal it before field use."
+> Leave the site footer, the public / page and the PDF strings alone.
+>
+> 2. Change it at the source (rail.ts:143), but keep the how:
+> "Type an address or pick on map first, then Generate turns on."
+>
+> 3. Yes. 24 px replaces the 18 px #289 ruling.
+>
+> Your nine calls are all approved, including the plain-words road types, the "i details" placement and the one-road case.
+>
+> Issue: ignore the prompt on that point. Post it yourself per R146, then build.
+
+So: ruling 7's draft line and Generate line are replaced by the two lines above. Checkpoint calls C1-C9 are approved as written (checkpoint.md), and so are the type-role and spacing-token calls. Issue posted: https://github.com/rtmakatura/conestruct/issues/435
+
+## Arc calls made during the build (R145 self-ruled)
+
+- **B1. InfoToggle is its own small component; FieldCell keeps its copy** (this narrows C3). FieldCell's popover has two openers sharing one open state (the marker triggers and the toggle), so pulling the toggle out would restructure the WHAT cell. `components/InfoToggle.tsx` renders the same classes and DOM shape (`a-lk a-info-toggle` → `a-info a-pop`) and closes on a click outside or Escape. Its Escape handler runs in the capture phase and stops there, so it doesn't also cancel the picker (pinned by a test).
+- **B2. One element, one role.** The band question's helper line (`OpenBand`) is `.tr-help` in every band, and a collapsed band's pending line (`FactLine`) is `.tr-note` in every band. They are the same element as the in-scope WHERE helper and WHAT line; "locked" stays a provenance word. The WHERE hint is dropped by returning "" from `whereProvenance` with no location, and OpenBand renders no element for an empty provenance (Rule 10).
+- **B3. The footer line's 24 belongs to what sits above it.** A `margin-top` of 24 on `.draft-notice` measured 48 at landing: the setup zone's 24 plus its own, with an sr-only line between them stopping the collapse. After a Generate it measured 40. So `.draft-notice` takes `margin-top: 0`, the results zone (the column's last zone) gives up its 24, and `.results-disc` (the last block above the line) takes 24, up from 16. Measured 24 at both widths, landing and after Generate.
+- **B4. "i details" is 32 px at desktop and 44 at 480 and under.** That's rule 15 / rule 163, the WHAT band's `.a-lk` sizing. Ruling 3's 44 px list doesn't name it.
+- **B5. The picker's mono header and the ROAD label use the existing `.tr-step` role** (mono 10, .12em, written in caps; the open question reads in `--ink`), so no new size site. The marker is a CSS box, so no glyph enters the P9 vocabulary. The Change button is Inter 13.5 / 600, sentence case, in `--act` on the neutral ground. The old amber-ground reason for `--act-bright` is gone.
+- **B6. Type-role pairs.** `.tr-note` and `.tr-field` share family, casing, size and tracking, because ruling 2 sets the note at the label's size in Inter. They differ in colour and weight, and the pair is recorded as the second ruled one-axis exception in type-roles.test.ts. Sizes are compared as displayed: each token maps to the px it equals.
+- **B7. A counted tier's words.** `DisclosureRow` gains `countWords` and `plainWords`. The quote and the output cards pass neither and are unchanged. The Pricing quote row's mono provenance is untouched: it isn't one of the three headers ruling 6 names.
+- **B8. The picker's spacing guard** (`LocationPickerModal.spacing.test.ts`) was non-vacuous at more than 100 Tailwind spacing tokens. The picker card moved to CSS (115 → 100), so the floor is now more than 90.

@@ -117,7 +117,7 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
   it("#260: .status-bar carries min-height: var(--status-h) — one height across the pre-generate states", () => {
     expect(rule(".workbench .status-bar")).toMatch(/min-height:\s*var\(--status-h\)/);
   });
-  it(".status-slot reserves the strip's height and owns the gap — 18 px since #289 Phase 2; the strip's margin is zero inside it", () => {
+  it(".status-slot reserves the strip's height and owns the gap — 24 px since #435 (Ryan, 2026-11-02; was #289 rule 26's 18); the strip's margin is zero inside it", () => {
     const slot = rule(".workbench .status-slot");
     expect(slot).toMatch(/min-height:\s*var\(--status-h\)/);
     // #289 Phase 2 — 24 -> 18.  The slot still OWNS the gap, which is
@@ -126,7 +126,7 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
     // a number that predated Part 2.  The strip moved above the band
     // stack in the same commit (Part 1 §1.2's source order), so the gap
     // it owns is the one rule 26 names.
-    expect(slot).toMatch(/margin-bottom:\s*18px/);
+    expect(slot).toMatch(/margin-bottom:\s*var\(--space-section\)/);
     expect(rule(".workbench .status-slot > .status-bar,\n.workbench .status-slot > .status-details")).toMatch(
       /margin-bottom:\s*0/,
     );

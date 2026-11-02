@@ -204,8 +204,8 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     typeCoords();
     await respond(pendingDetects[0], detection([EASTBOUND, WESTBOUND]));
 
-    await screen.findByText(/Which road\? · 2 detected/i);
-    fireEvent.click(screen.getByRole("button", { name: /eastbound/i }));
+    await screen.findByText(/PICK THE ROAD · 2 FOUND/);
+    fireEvent.click(screen.getByRole("radio", { name: /eastbound/i }));
     // Appears in both the collapsed card summary and the bearing caption.
     expect(screen.getAllByText(/way 111001/).length).toBeGreaterThan(0);
 
@@ -217,9 +217,9 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
       target: { value: "40.1000" },
     });
     expect(pendingDetects).toHaveLength(2);
-    expect(screen.queryByText(/Which road\?/i)).toBeNull();
+    expect(screen.queryByText(/PICK THE ROAD/)).toBeNull();
     expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.queryByText(/Road detected · 1 match|Detected from OSM:/)).toBeNull();
+    expect(screen.queryByTestId("road-picked")).toBeNull();
     expect(screen.getByText(/Detecting roads at pin…/)).toBeTruthy();
   });
 
@@ -237,7 +237,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
 
     // The old pin's response arrives late — dropped by the token guard.
     await respond(pendingDetects[0], detection([EASTBOUND, WESTBOUND]));
-    expect(screen.queryByText(/Which road\?/i)).toBeNull();
+    expect(screen.queryByText(/PICK THE ROAD/)).toBeNull();
     expect(screen.queryByText(/way 111001/)).toBeNull();
     expect(screen.getAllByText(/way 222001/).length).toBeGreaterThan(0);
   });
@@ -349,7 +349,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     // The confirmed road is on screen as-is: selection caption, road
     // properties, Save enabled — and no network round trip happened.
     expect(screen.getAllByText(/way 111001/).length).toBeGreaterThan(0);
-    expect(screen.getByText(/Road detected · 1 match|Detected from OSM:/)).toBeTruthy();
+    expect(screen.getByTestId("road-picked")).toBeTruthy();
     expect(saveButton().disabled).toBe(false);
     expect(pendingDetects).toHaveLength(0);
 
@@ -371,7 +371,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     // No restored selection; tokenless env runs no auto-detect either,
     // so the panel sits at idle — but nothing claims a confirmed road.
     expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.queryByText(/Road detected · 1 match|Detected from OSM:/)).toBeNull();
+    expect(screen.queryByTestId("road-picked")).toBeNull();
   });
 
   it("'Re-detect roads' is the explicit fresh-analysis path at an unmoved pin", async () => {
@@ -419,8 +419,8 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     mountModal();
     typeCoords();
     await respond(pendingDetects[0], detection([EASTBOUND, WESTBOUND]));
-    await screen.findByText(/Which road\?/i);
-    fireEvent.click(screen.getByRole("button", { name: /westbound/i }));
+    await screen.findByText(/PICK THE ROAD/);
+    fireEvent.click(screen.getByRole("radio", { name: /westbound/i }));
     fireEvent.click(saveButton());
     expect(onSave.mock.calls[0][0].confirmedRoad.method).toBe("operator_pick");
     expect(onSave.mock.calls[0][0].confirmedRoad.candidate.way_id).toBe(
@@ -433,7 +433,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     mountModal();
     typeCoords();
     await respond(pendingDetects[0], detection([EASTBOUND]));
-    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
+    await screen.findByTestId("road-picked");
     fireEvent.click(saveButton());
     expect(onSave.mock.calls[0][0].confirmedRoad.method).toBe("auto_single");
   });
@@ -460,7 +460,7 @@ describe("in-flight detection gates Save (#189)", () => {
     expect(screen.getByText(/Detecting road…/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([EASTBOUND]));
-    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
+    await screen.findByTestId("road-picked");
     expect(saveButton().disabled).toBe(false);
     expect(screen.queryByText(/Detecting road…/)).toBeNull();
   });

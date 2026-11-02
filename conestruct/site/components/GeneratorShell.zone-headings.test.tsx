@@ -155,12 +155,14 @@ describe("#288 clause 5 — §8.30: the intro is dropped, the draft notice kept"
   // #289 fidelity F6 (X12, ruled Q6 2026-09-23): rule 29 whole — the
   // provenance role and rule 29's two sentences verbatim, replacing
   // §8.12's "same two sentences" and the amber callout.
-  it("rule 29: the draft notice is one provenance line in rule 29's words", async () => {
+  // #435: the line is .tr-note (ruling 2) in Ryan's checkpoint wording
+  // (2026-11-02), which replaced rule 29's.
+  it("#435: the draft notice is one .tr-note line in Ryan's checkpoint wording", async () => {
     await generate();
     const draft = screen.getByTestId("draft-notice");
-    expect(draft.classList.contains("tr-prov")).toBe(true);
+    expect(draft.classList.contains("tr-note")).toBe(true);
     expect(draft.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Draft: not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
+      "Draft, not a sealed plan. This is engineering reference, with every dimension cited to MUTCD or CDOT. A licensed PE must review and seal it before field use.",
     );
     expect(document.body.textContent).not.toContain("licensed Professional Engineer prior to field use");
   });

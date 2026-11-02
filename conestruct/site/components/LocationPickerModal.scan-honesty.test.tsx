@@ -150,7 +150,7 @@ describe("unavailable scan renders as unavailable (#213)", () => {
     await screen.findByText(/Road detection is unavailable right now/i);
     fireEvent.click(screen.getByRole("button", { name: /Re-detect roads/i }));
 
-    await screen.findByText(/Road detected · 1 match/i);
+    await screen.findByTestId("road-picked");
     expect(
       screen.queryByText(/Road detection is unavailable right now/i),
     ).toBeNull();

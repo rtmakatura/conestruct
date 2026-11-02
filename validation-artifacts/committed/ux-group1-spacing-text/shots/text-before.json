@@ -1,0 +1,669 @@
+{
+ "390": {
+  "landing": {
+   "width": 362,
+   "height": 794.75
+  },
+  "landingMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 18
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 12
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 12
+    },
+    {
+     "from": "DIV",
+     "to": "tr-prov",
+     "px": 48
+    }
+   ],
+   "padding": {
+    "head": "14px 16px 14px 16px",
+    "body": "18px 16px 18px 16px",
+    "genframe": "18px 16px 18px 16px",
+    "fact": "13px 16px 13px 16px",
+    "strip": "13px 16px 13px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [
+    {
+     "text": "AWAITING LOCATION · no site chosen",
+     "size": 11,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "the work, not the first sign",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "An address or a cross-street pair, the way an 811 ticket describes it. You can a",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "kind of work, extent, side · pending: find the work first",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Set a location first: use Pick on map to find the site.",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Output requires TCS review · every dimension cited to MUTCD or CDOT",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Draft: not a sealed plan. Output is engineering reference; requires review and s",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   ],
+   "targets": [
+    {
+     "name": "Address or cross streets",
+     "w": 328,
+     "h": 44
+    },
+    {
+     "name": "Pick on map",
+     "w": 328,
+     "h": 48
+    },
+    {
+     "name": "Generate plan",
+     "w": 328,
+     "h": 66
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "reason": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "landingAxe": [],
+  "pickerUnpicked": {
+   "width": 340,
+   "height": 239
+  },
+  "pickerText": "⚠ WHICH ROAD? · 3 DETECTED EAST COLFAX AVENUE WESTBOUND (PRIMARY, 271°) 1 M FROM PIN · WAY 1547338992 EAST COLFAX AVENUE EASTBOUND (PRIMARY, 91°) 6 M FROM PIN · WAY 628643782 PENNSYLVANIA STREET NORTHBOUND (RESIDENTIAL, 359°) 24 M FROM PIN · WAY 596451653",
+  "pickerMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 18
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 12
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 12
+    },
+    {
+     "from": "DIV",
+     "to": "tr-prov",
+     "px": 48
+    }
+   ],
+   "padding": {
+    "head": "14px 16px 14px 16px",
+    "body": "18px 16px 18px 16px",
+    "genframe": "18px 16px 18px 16px",
+    "fact": "13px 16px 13px 16px",
+    "strip": "13px 16px 13px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "East Colfax Avenue westbound (primary, 271°)1 m fr",
+     "w": 314,
+     "h": 62
+    },
+    {
+     "name": "East Colfax Avenue eastbound (primary, 91°)6 m fro",
+     "w": 314,
+     "h": 62
+    },
+    {
+     "name": "Pennsylvania Street northbound (residential, 359°)",
+     "w": 314,
+     "h": 62
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "reason": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "pickerAxe": [],
+  "picked": {
+   "width": 340,
+   "height": 84
+  },
+  "pickedText": "✓ ROAD PICKED · 3 DETECTED DETECTED FROM OSM: 271° (EAST COLFAX AVENUE WESTBOUND, PRIMARY) · WAY 1547338992 CHANGE",
+  "discHeads": [
+   "i Pricing quote FYI: contractor estimate, not a permit fee. Expand to configure and preview. ›",
+   "✓ Checked & passed 13 each cited ›",
+   "◌ Pending / not verified 3 ›",
+   "i Reference Denver · Arterial · MUTCD 11th (PT-116.1 pins 2009 R2) › DOTI PT-116.1 › Rule 22.3 › 2024 Fee Sched. ›"
+  ],
+  "discClosed": {
+   "width": 362,
+   "height": 245
+  },
+  "checkedOpen": {
+   "width": 362,
+   "height": 1947.88
+  },
+  "referenceOpenTop": {
+   "panelPadTop": "0px",
+   "firstChildOffset": 1
+  },
+  "referenceOpen": {
+   "width": 360,
+   "height": 63
+  },
+  "discMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "tr-prov",
+     "px": 3215.25
+    }
+   ],
+   "padding": {
+    "head": null,
+    "body": null,
+    "genframe": null,
+    "fact": null,
+    "strip": "13px 16px 13px 16px",
+    "discHead": "0px 16px 0px 16px",
+    "discPanel": "0px 16px 16px 16px",
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [
+    {
+     "text": "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Denver · Arterial · MUTCD 11th (PT-116.1 pins 2009 R2) › DOTI PT-116.1 › Rule 22",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   ],
+   "targets": [
+    {
+     "name": "iPricing quoteFYI: contractor estimate, not a perm",
+     "w": 360,
+     "h": 48
+    },
+    {
+     "name": "✓Checked & passed13each cited›",
+     "w": 360,
+     "h": 48
+    },
+    {
+     "name": "◌Pending / not verified3›",
+     "w": 360,
+     "h": 48
+    },
+    {
+     "name": "iReferenceDenver · Arterial · MUTCD 11th (PT-116.1",
+     "w": 360,
+     "h": 63
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 9.84,
+     "ink": "rgb(244, 192, 32)",
+     "size": "8.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "discCount": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "discProv": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "discAxe": [
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "nodes": 1,
+    "first": "#needs-you-h"
+   }
+  ],
+  "footerGap": 40
+ },
+ "1440": {
+  "landing": {
+   "width": 880,
+   "height": 572.25
+  },
+  "landingMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 18
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 12
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 12
+    },
+    {
+     "from": "DIV",
+     "to": "tr-prov",
+     "px": 48
+    }
+   ],
+   "padding": {
+    "head": "14px 16px 14px 16px",
+    "body": "18px 16px 18px 16px",
+    "genframe": "18px 16px 18px 16px",
+    "fact": "13px 16px 13px 16px",
+    "strip": "13px 16px 13px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [
+    {
+     "text": "AWAITING LOCATION · no site chosen",
+     "size": 11,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "the work, not the first sign",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "An address or a cross-street pair, the way an 811 ticket describes it. You can a",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "kind of work, extent, side · pending: find the work first",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Set a location first: use Pick on map to find the site.",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Output requires TCS review · every dimension cited to MUTCD or CDOT",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Draft: not a sealed plan. Output is engineering reference; requires review and s",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   ],
+   "targets": [
+    {
+     "name": "Address or cross streets",
+     "w": 702,
+     "h": 44
+    },
+    {
+     "name": "Pick on map",
+     "w": 132,
+     "h": 44
+    },
+    {
+     "name": "Generate plan",
+     "w": 846,
+     "h": 66
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "reason": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "landingAxe": [],
+  "pickerUnpicked": {
+   "width": 407,
+   "height": 206
+  },
+  "pickerText": "⚠ WHICH ROAD? · 3 DETECTED EAST COLFAX AVENUE WESTBOUND (PRIMARY, 271°) 1 M FROM PIN · WAY 1547338992 EAST COLFAX AVENUE EASTBOUND (PRIMARY, 91°) 6 M FROM PIN · WAY 628643782 PENNSYLVANIA STREET NORTHBOUND (RESIDENTIAL, 359°) 24 M FROM PIN · WAY 596451653",
+  "pickerMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 18
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 12
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 12
+    },
+    {
+     "from": "DIV",
+     "to": "tr-prov",
+     "px": 48
+    }
+   ],
+   "padding": {
+    "head": "14px 16px 14px 16px",
+    "body": "18px 16px 18px 16px",
+    "genframe": "18px 16px 18px 16px",
+    "fact": "13px 16px 13px 16px",
+    "strip": "13px 16px 13px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "East Colfax Avenue westbound (primary, 271°)1 m fr",
+     "w": 381,
+     "h": 45.5
+    },
+    {
+     "name": "East Colfax Avenue eastbound (primary, 91°)6 m fro",
+     "w": 381,
+     "h": 45.5
+    },
+    {
+     "name": "Pennsylvania Street northbound (residential, 359°)",
+     "w": 381,
+     "h": 62
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "reason": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "pickerAxe": [],
+  "picked": {
+   "width": 407,
+   "height": 69
+  },
+  "pickedText": "✓ ROAD PICKED · 3 DETECTED DETECTED FROM OSM: 271° (EAST COLFAX AVENUE WESTBOUND, PRIMARY) · WAY 1547338992 CHANGE",
+  "discHeads": [
+   "i Reference Denver · Arterial · MUTCD 11th (PT-116.1 pins 2009 R2) › DOTI PT-116.1 › Rule 22.3 › 2024 Fee Sched. ›"
+  ],
+  "discClosed": {
+   "width": 880,
+   "height": 50
+  },
+  "checkedOpen": {
+   "width": 880,
+   "height": 1145.75
+  },
+  "referenceOpenTop": {
+   "panelPadTop": "0px",
+   "firstChildOffset": 1
+  },
+  "referenceOpen": {
+   "width": 878,
+   "height": 48
+  },
+  "discMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "tr-prov",
+     "px": 2325.5
+    }
+   ],
+   "padding": {
+    "head": null,
+    "body": null,
+    "genframe": null,
+    "fact": null,
+    "strip": "13px 16px 13px 16px",
+    "discHead": "0px 16px 0px 16px",
+    "discPanel": "0px 16px 16px 16px",
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [
+    {
+     "text": "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    {
+     "text": "Denver · Arterial · MUTCD 11th (PT-116.1 pins 2009 R2) › DOTI PT-116.1 › Rule 22",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   ],
+   "targets": [
+    {
+     "name": "iPricing quoteFYI: contractor estimate, not a perm",
+     "w": 878,
+     "h": 48
+    },
+    {
+     "name": "✓Checked & passed13each cited›",
+     "w": 878,
+     "h": 48
+    },
+    {
+     "name": "◌Pending / not verified3›",
+     "w": 878,
+     "h": 48
+    },
+    {
+     "name": "iReferenceDenver · Arterial · MUTCD 11th (PT-116.1",
+     "w": 878,
+     "h": 48
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 9.84,
+     "ink": "rgb(244, 192, 32)",
+     "size": "9.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "discCount": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "discProv": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "discAxe": [
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "nodes": 1,
+    "first": "#needs-you-h"
+   }
+  ],
+  "footerGap": 40
+ }
+}

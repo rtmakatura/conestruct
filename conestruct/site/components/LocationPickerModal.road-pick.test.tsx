@@ -79,14 +79,16 @@ function detection(candidates: RoadCandidate[]): RoadDetectResponse {
 }
 
 let onSave: ReturnType<typeof vi.fn>;
+let onCancel: ReturnType<typeof vi.fn>;
 
 function mountModal() {
   onSave = vi.fn();
+  onCancel = vi.fn();
   return render(
     <LocationPickerModal
       open
       initial={{ scenarioKind: "shoulder" }}
-      onCancel={() => {}}
+      onCancel={onCancel}
       onSave={onSave}
     />,
   );
@@ -128,20 +130,22 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     // The Which-road card renders off the data, rows carry the
     // disambiguation meta, and Save is blocked with words + glyph —
     // not a silently disabled button.
-    await screen.findByText(/Which road\? · 2 detected/i);
-    expect(screen.getByText(/8 m from pin · way 111001/i)).toBeTruthy();
+    await screen.findByText(/PICK THE ROAD · 2 FOUND/);
+    // #435 ruling 4: the row's second line is the class in plain words
+    // and the distance; the way ID moved behind "i details".
+    expect(screen.getByText("Highway · 8 m from your pin")).toBeTruthy();
     expect(saveButton().disabled).toBe(true);
     expect(screen.getByText("Pick a road to continue")).toBeTruthy();
     expect(screen.queryByText("Pick Road")).toBeNull();
 
     // Picking a road resolves the block: Save enables, the hint leaves,
     // the card collapses to a summary, and road properties load.
-    fireEvent.click(screen.getByRole("button", { name: /eastbound/i }));
+    fireEvent.click(screen.getByRole("radio", { name: /eastbound/i }));
     expect(saveButton().disabled).toBe(false);
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
-    expect(screen.queryByText(/8 m from pin · way 111001/i)).toBeNull();
+    expect(screen.queryByText(/8 m from your pin/)).toBeNull();
     expect(screen.getByRole("button", { name: "Change" })).toBeTruthy();
-    expect(screen.getByText(/Road detected · 1 match|Detected from OSM:/)).toBeTruthy();
+    expect(screen.getByTestId("road-picked")).toBeTruthy();
   });
 
   it("payload: Save after a pick carries the picked road and its classification — and no bearing (#290)", async () => {
@@ -149,8 +153,8 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText(/Which road\?/i);
-    fireEvent.click(screen.getByRole("button", { name: /westbound/i }));
+    await screen.findByText(/PICK THE ROAD/);
+    fireEvent.click(screen.getByRole("radio", { name: /westbound/i }));
     fireEvent.click(saveButton());
 
     expect(onSave).toHaveBeenCalledTimes(1);
@@ -170,10 +174,10 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText(/Which road\?/i);
-    fireEvent.click(screen.getByRole("button", { name: /eastbound/i }));
+    await screen.findByText(/PICK THE ROAD/);
+    fireEvent.click(screen.getByRole("radio", { name: /eastbound/i }));
     fireEvent.click(screen.getByRole("button", { name: "Change" }));
-    fireEvent.click(screen.getByRole("button", { name: /westbound/i }));
+    fireEvent.click(screen.getByRole("radio", { name: /westbound/i }));
     fireEvent.click(saveButton());
 
     expect(onSave.mock.calls[0][0].confirmedRoad.candidate.way_id).toBe("111002");
@@ -184,12 +188,15 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
+    await screen.findByTestId("road-picked");
     // The rail-top card shows the resolved outcome — a silent single
     // match read as a hang before.
-    expect(screen.getByText(/Road detected · 1 match/i)).toBeTruthy();
-    expect(screen.queryByText(/Which road\?/i)).toBeNull();
-    expect(screen.getByText(/8 m from pin · way 111001/i)).toBeTruthy();
+    expect(screen.queryByText(/PICK THE ROAD/)).toBeNull();
+    // #435 ruling 5 (checkpoint call C6): the road-picked row, with no
+    // Change (no other road to change to); the way ID rides "i details".
+    expect(screen.getByTestId("road-picked").textContent).toContain("ROAD");
+    expect(screen.queryByRole("button", { name: "Change" })).toBeNull();
+    expect(screen.getByTestId("info-road-picked").textContent).toContain("way 111001");
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
   });
@@ -198,7 +205,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     stubDetection(detection([EASTBOUND]));
     mountModal();
     typeCoords();
-    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
+    await screen.findByTestId("road-picked");
     expect(screen.queryByText(/Road properties/i)).toBeNull();
     expect(screen.queryByText(/Speed limit \(mph\)|Lanes per direction/)).toBeNull();
     expect(screen.queryByRole("combobox", { name: "Road type" })).toBeNull();
@@ -216,7 +223,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     stubDetection(detection([EASTBOUND]));
     mountModal();
     typeCoords();
-    await screen.findByText(/Road detected · 1 match|Detected from OSM:/);
+    await screen.findByTestId("road-picked");
     expect(screen.queryByLabelText("Direction of travel in degrees")).toBeNull();
     expect(screen.queryByRole("button", { name: /Use Detected|Detected \(in use\)/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /Flip/ })).toBeNull();
@@ -294,20 +301,20 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText(/Road detected · 1 match/i);
+    await screen.findByTestId("road-picked");
 
     phase = 1;
     fireEvent.change(screen.getByLabelText("Latitude"), {
       target: { value: "40.1000" },
     });
 
-    await screen.findByText(/Which road\?/i);
-    expect(screen.queryByText(/Road detected · 1 match/i)).toBeNull();
+    await screen.findByText(/PICK THE ROAD/);
+    expect(screen.queryByTestId("road-picked")).toBeNull();
     expect(saveButton().disabled).toBe(true); // unresolved gates Save
   });
 });
 
-// #402: after a pick in a multi-road detection the card's head kept
+// #402 (now under #435's picker): after a pick in a multi-road detection the card's head kept
 // "⚠ Which road? · N detected" on the amber frame, and the picked line was
 // one `truncate` span, so a long road name cut its direction off at 1440
 // ("EAST COLFAX AVENUE EAS…").  Read from the mounted picker (Rule 11): the
@@ -328,52 +335,77 @@ describe("#402: the picked road's head and line", () => {
     bearing: 270,
     snap_distance_m: 14.6,
   });
-  // Found by their words, not a test id, so the same test reads the base.
-  const head = () => screen.getByText(/· 2 detected/i);
-  const frame = () => head().parentElement as HTMLElement;
+  // #435 rulings 4-5 replace #402's frame and caption line: the open
+  // question is a neutral panel with "⚠ PICK THE ROAD · N FOUND"; a pick
+  // collapses it to the road-picked row, its caption behind "i details".
+  const head = () => screen.getByText(/PICK THE ROAD · 2 FOUND/);
 
-  it("unpicked: the head asks, amber, with ⚠", async () => {
+  it("unpicked: a neutral panel whose header asks with ⚠, and the rows are radios", async () => {
     stubDetection(detection([COLFAX_EB, COLFAX_WB]));
     mountModal();
     typeCoords();
-    await screen.findByText(/Which road\? · 2 detected/i);
-    expect(head().textContent).toBe("⚠ Which road? · 2 detected");
-    expect(frame().className).toContain("border-[color:var(--warn)]");
+    await screen.findByText(/PICK THE ROAD · 2 FOUND/);
+    const panel = screen.getByTestId("road-pick-panel");
+    expect(panel.className).toBe("road-pick-panel");
+    expect(panel.className).not.toContain("--warn");
+    const glyph = head().previousElementSibling as HTMLElement;
+    expect(glyph.textContent).toBe("⚠");
+    const group = screen.getByRole("radiogroup", { name: "PICK THE ROAD · 2 FOUND" });
+    const rows = group.querySelectorAll('[role="radio"]');
+    expect(rows).toHaveLength(2);
+    expect(rows[0].textContent).toBe(
+      "East Colfax Avenue, eastboundPrimary road · 8 m from your pin",
+    );
+    expect(rows[1].textContent).toBe(
+      "East Colfax Avenue, westboundPrimary road · 15 m from your pin",
+    );
+    for (const r of rows) expect(r.getAttribute("aria-checked")).toBe("false");
+    // P19: way ID, bearing and source are one click away, not on the rows.
+    expect(group.textContent).not.toMatch(/way|°|OSM/);
+    const details = screen.getByTestId("info-road-pick");
+    expect(details.hidden).toBe(true);
+    fireEvent.click(screen.getByTestId("info-toggle-road-pick"));
+    expect(details.hidden).toBe(false);
+    expect(details.textContent).toContain("East Colfax Avenue, westbound · 270° · way 222002 · from OSM");
   });
 
-  it("picked: the head reads ✓ Road picked, no ⚠, on the neutral frame (P9)", async () => {
+  it("picked: the road-picked row, ✓ and ROAD, no ⚠; Change re-opens the list with ✓ and the pick checked (P9)", async () => {
     stubDetection(detection([COLFAX_EB, COLFAX_WB]));
     mountModal();
     typeCoords();
-    await screen.findByText(/Which road\? · 2 detected/i);
-    fireEvent.click(screen.getByRole("button", { name: /eastbound/i }));
+    await screen.findByText(/PICK THE ROAD · 2 FOUND/);
+    fireEvent.click(screen.getByRole("radio", { name: /eastbound/i }));
 
-    expect(head().textContent).toBe("✓ Road picked · 2 detected");
-    expect(head().textContent).not.toContain("⚠");
-    expect(screen.queryByText(/Which road\?/i)).toBeNull();
-    const glyph = head().querySelector("span");
-    expect(glyph?.textContent?.trim()).toBe("✓");
-    expect(glyph?.className).toContain("text-[color:var(--pass)]");
-    expect(frame().className).toContain("border-[color:var(--rule)]");
-    expect(frame().className).not.toContain("--warn");
+    const row = screen.getByTestId("road-picked");
+    expect(row.textContent).toContain("✓ROADEast Colfax Avenue, eastbound");
+    expect(row.textContent).not.toContain("⚠");
+    expect(screen.queryByText(/PICK THE ROAD/)).toBeNull();
 
-    // CHANGE re-opens the list; the pick still stands, so the head stays ✓.
+    // CHANGE re-opens the list; the pick still stands, so the head is ✓.
     fireEvent.click(screen.getByRole("button", { name: "Change" }));
-    expect(head().textContent).toBe("✓ Road picked · 2 detected");
+    expect((head().previousElementSibling as HTMLElement).textContent).toBe("✓");
+    expect(screen.getByRole("radio", { name: /eastbound/i }).getAttribute("aria-checked")).toBe("true");
+    expect(screen.getByRole("radio", { name: /eastbound/i }).className).toContain("is-picked");
   });
 
-  it("picked: the line carries the whole caption, direction included, and wraps instead of truncating", async () => {
+  it("picked: the detected-from caption is whole, behind the row's i details", async () => {
     stubDetection(detection([COLFAX_EB, COLFAX_WB]));
     mountModal();
     typeCoords();
-    await screen.findByText(/Which road\? · 2 detected/i);
-    fireEvent.click(screen.getByRole("button", { name: /westbound/i }));
+    await screen.findByText(/PICK THE ROAD · 2 FOUND/);
+    fireEvent.click(screen.getByRole("radio", { name: /westbound/i }));
 
-    const line = screen.getByText(/^Detected from OSM:/);
-    expect(line.textContent).toBe(
+    const info = screen.getByTestId("info-road-picked");
+    expect(info.hidden).toBe(true);
+    expect(info.textContent).toBe(
       "Detected from OSM: 270° (East Colfax Avenue westbound, primary) · way 222002",
     );
-    expect(line.className).not.toMatch(/\btruncate\b/);
-    expect(line.className).toContain("break-words");
+    fireEvent.click(screen.getByTestId("info-toggle-road-picked"));
+    expect(info.hidden).toBe(false);
+    // Escape closes the details and leaves the picker open.
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(info.hidden).toBe(true);
+    expect(screen.getByTestId("road-picked")).toBeTruthy();
+    expect(onCancel).not.toHaveBeenCalled();
   });
 });

@@ -256,7 +256,7 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
     );
     mountModal();
     typeCoords();
-    await screen.findByText(/Which road\? · 2 detected/i, undefined, { timeout: 3000 });
+    await screen.findByText(/PICK THE ROAD · 2 FOUND/, undefined, { timeout: 3000 });
     expect(screen.queryByText("Centerline")).toBeNull();
     await new Promise((r) => setTimeout(r, 400));
     expect(geometryBodies()).toEqual([]);

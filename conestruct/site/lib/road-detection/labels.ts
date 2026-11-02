@@ -39,6 +39,32 @@ export function humanizeHighwayClass(cls: string): string {
   }
 }
 
+// #435 ruling 4 (checkpoint call C1): the road class in plain words for
+// the picker's second line ("Primary road · 1 m from your pin").  A
+// field rep's words, not OSM's.  `humanizeHighwayClass` stays as it is:
+// candidateLabel, the WHERE provenance and the confirmed-road label read
+// it.  A class with no entry keeps its raw tag (Rule 10: no invented
+// word).
+export function plainRoadClass(cls: string): string {
+  switch (cls) {
+    case "motorway": return "Freeway";
+    case "motorway_link": return "Freeway ramp";
+    case "trunk": return "Highway";
+    case "trunk_link": return "Highway ramp";
+    case "primary": return "Primary road";
+    case "primary_link": return "Primary road ramp";
+    case "secondary": return "Secondary road";
+    case "secondary_link": return "Secondary road ramp";
+    case "tertiary": return "Minor road";
+    case "tertiary_link": return "Minor road ramp";
+    case "unclassified": return "Local road";
+    case "residential": return "Residential street";
+    case "living_street": return "Residential street";
+    case "service": return "Service road";
+    default: return cls;
+  }
+}
+
 // Build the visible label for a candidate in the picker.  `primary` is
 // the road identifier (name → ref → "Unnamed <class>"), `sub` is the
 // humanized highway class, `direction` is the cardinal/intercardinal

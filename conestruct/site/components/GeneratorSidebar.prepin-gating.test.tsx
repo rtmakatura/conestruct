@@ -98,7 +98,8 @@ describe("pre-pin gating (#222), as the column does it", () => {
     const what = document.querySelector('[data-testid="fact-what"]')!;
     expect(what.getAttribute("data-fact-state")).toBe("pending");
     expect(what.querySelector("button")).toBeNull();
-    expect(what.textContent).toContain("find the work first");
+    // #435 ruling 7: "Opens after you find the work".
+    expect(what.textContent).toContain("Opens after you find the work");
     // The road facts detection would overwrite are not on screen at all,
     // which is #222's whole point, reached without an inert body.
     expect(document.querySelector("#what-speed")).toBeNull();
@@ -134,7 +135,7 @@ describe("pre-pin gating (#222), as the column does it", () => {
     // chain says the same thing in the words rule 139 single-sources, and
     // #260 makes the CTA reason the one surface that carries it.
     const reason = document.querySelector('[data-testid="cta-reason"]')!;
-    expect(reason.textContent).toContain("Set a location first");
+    expect(reason.textContent).toContain("pick on map first");
   });
 });
 

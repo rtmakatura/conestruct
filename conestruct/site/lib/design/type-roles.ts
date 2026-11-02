@@ -169,6 +169,33 @@ export const TYPE_ROLES = {
     color: "var(--ink)", // TRACED — Part 2 rule 7 names `--ink` (#eaf0f7 in workbench scope)
     decoration: "none",
   },
+  /** #435 ruling 2 (Ryan, 2026-11-02): "Every full sentence moves to
+   *  Inter: 13.5 px `--ink-on-dark` for the main helper line".  Reads the
+   *  body-value token: no new size. */
+  help: {
+    cssClass: "tr-help",
+    family: "sans",
+    weight: 400,
+    casing: "sentence",
+    size: "var(--fs-body-value)",
+    lineHeight: "1.5",
+    tracking: "0",
+    color: "var(--ink-on-dark)", // TRACED — #435 ruling 2, #c8d1dd
+    decoration: "none",
+  },
+  /** #435 ruling 2: "12.5 px `--ink-faint` for secondary lines and the
+   *  footer".  Reads the field-label token: no new size. */
+  note: {
+    cssClass: "tr-note",
+    family: "sans",
+    weight: 400,
+    casing: "sentence",
+    size: "var(--fs-field-label)",
+    lineHeight: "1.5",
+    tracking: "0",
+    color: "var(--ink-faint)", // TRACED — #435 ruling 2, #93a0b0 in workbench scope
+    decoration: "none",
+  },
 } as const satisfies Record<string, TypeRole>;
 
 export type TypeRoleName = keyof typeof TYPE_ROLES;

@@ -140,7 +140,11 @@ const rowByName = (name: string) =>
   Array.from(document.querySelectorAll(".disc")).find(
     (d) => d.querySelector(".disc-name")?.textContent === name,
   ) as HTMLElement | undefined;
+// #435 ruling 6: a counted tier says its count in words ("15 checks,
+// each cited"); the numeral is the phrase's leading figure.
 const countOf = (name: string) =>
+  rowByName(name)?.querySelector(".disc-count")?.textContent?.match(/^\d+/)?.[0] ?? null;
+const countPhrase = (name: string) =>
   rowByName(name)?.querySelector(".disc-count")?.textContent ?? null;
 
 describe("#288 clause 4 — the stack's disclosure rows", () => {
@@ -174,9 +178,10 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     const draft = screen.getByTestId("draft-notice");
     const group = document.querySelector(".results-disc")!;
     expect(all.indexOf(draft)).toBeGreaterThan(all.indexOf(group));
-    // #289 fidelity F6 (ruled Q6, 2026-09-23): rule 29's words, verbatim.
+    // #435: Ryan's checkpoint wording (2026-11-02), verbatim; it replaced
+    // rule 29's (#289 fidelity F6, Q6 2026-09-23).
     expect(draft.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Draft: not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
+      "Draft, not a sealed plan. This is engineering reference, with every dimension cited to MUTCD or CDOT. A licensed PE must review and seal it before field use.",
     );
   });
 
@@ -204,6 +209,10 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     expect(cardQty, "the card and the row read one ledger").toBe(checked);
     // ◌ is counted too — its own tier, never buried (#219).
     expect(countOf("Pending / not verified")).toMatch(/^\d+$/);
+    // #435 ruling 6: the words, in .tr-note.
+    expect(countPhrase("Checked & passed")).toMatch(/^\d+ checks?(, each cited)?$/);
+    expect(countPhrase("Pending / not verified")).toMatch(/^\d+ not verified yet$/);
+    expect(rowByName("Checked & passed")!.querySelector(".disc-count")!.classList.contains("tr-note")).toBe(true);
     // Uncounted: a numeral here would have to be a sum across kinds that
     // do not add up to anything the operator acts on.
     expect(countOf("Reference")).toBeNull();

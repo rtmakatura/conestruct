@@ -2349,9 +2349,14 @@ export function GeneratorShell({
               The amber rule and heading were a callout Direction A does
               not draw.  The PDF's draft lines are their own strings
               (src/rendering/plan_sheet.py), untouched by this. */}
-          <p className="tr-prov draft-notice mb-6" data-testid="draft-notice">
-            Draft: not a sealed plan. Output is engineering reference;
-            requires review and seal by a licensed PE prior to field use.
+          {/* #435 ruling 7 as amended by Ryan at the checkpoint
+              (2026-11-02): the line keeps "engineering reference" (it limits
+              what the plan claims to be) and takes the Generate caption's
+              citation claim; .tr-note, 24 below the last band. */}
+          <p className="tr-note draft-notice mb-6" data-testid="draft-notice">
+            Draft, not a sealed plan. This is engineering reference, with
+            every dimension cited to MUTCD or CDOT. A licensed PE must review
+            and seal it before field use.
           </p>
         </main>
       </div>

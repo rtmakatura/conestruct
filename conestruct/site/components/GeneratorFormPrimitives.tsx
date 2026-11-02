@@ -227,15 +227,15 @@ export function GenerateButton({
             literal) — the working band's track is the page's motion. */}
         {generating ? "Generating plan…" : "Generate plan"}
       </button>
-      {/* #289 fidelity F6 (rule 116's "centred provenance caption"): the
-          reason reads in the provenance role — mono 10.5, #93a0b0,
-          sentence case — not red uppercase.  A blocker is not an error;
+      {/* #289 fidelity F6: not red uppercase.  #435 ruling 2: the reason
+          is the band's one helper sentence, so it reads in .tr-help
+          (Inter 13.5 --ink-on-dark), no longer the provenance role.  A blocker is not an error;
           #260's one live speaker (role="alert") is unchanged. */}
       {!generating && disabled && disabledReason && (
         <div
           role="alert"
           data-testid="cta-reason"
-          className="cta-reason tr-prov mt-2 text-center"
+          className="cta-reason tr-help mt-2 text-center"
         >
           {disabledReason}
         </div>

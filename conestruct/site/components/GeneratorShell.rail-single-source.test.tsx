@@ -85,7 +85,7 @@ function blockerOccurrences(text: string): number {
 describe("rail blocker === CTA disabled-reason (one export)", () => {
   it("pre-pin: the missing-location reason renders once, on the CTA", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-    const REASON = "Set a location first: use Pick on map to find the site.";
+    const REASON = "Type an address or pick on map first, then Generate turns on.";
     expect(ctaReason()).toBe(REASON);
     // Once.  The rail used to be the sanctioned second surface; with the
     // rail gone, a second occurrence is a second voice.

@@ -39,6 +39,13 @@ export interface DisclosureRowProps {
    *  really on the page — #185's "the collapsed headline shows the
    *  number" stopped being measurable the moment it was concatenated. */
   provenance?: ReactNode;
+  /** #435 ruling 6: a counted tier that says its count in plain words.
+   *  The numeral, its noun and the provenance render as ONE .tr-note
+   *  phrase ("15 checks, each cited"); rule 89's numeral is still there. */
+  countWords?: { one: string; many: string };
+  /** #435 ruling 6: the provenance is plain words in .tr-note (Inter
+   *  12.5), not the mono provenance role.  Implied by `countWords`. */
+  plainWords?: boolean;
   open: boolean;
   onToggle: () => void;
   /** Nested inside an already-open disclosure (rule 87's lifted ground). */
@@ -67,6 +74,8 @@ export function DisclosureRow({
   name,
   count,
   provenance,
+  countWords,
+  plainWords = false,
   open,
   onToggle,
   nested = false,
@@ -95,8 +104,21 @@ export function DisclosureRow({
         {/* Rule 89: a number only where the tier is counted.  The
             uncounted reference tier renders no numeral at all rather
             than a zero — a zero would read as "nothing in here". */}
-        {count !== null && <span className="disc-count">{count}</span>}
-        {provenance ? <span className="disc-prov tr-prov">{provenance}</span> : null}
+        {count !== null && countWords ? (
+          <span className="disc-count tr-note">
+            {count} {count === 1 ? countWords.one : countWords.many}
+            {provenance ? <>, {provenance}</> : null}
+          </span>
+        ) : (
+          <>
+            {count !== null && <span className="disc-count">{count}</span>}
+            {provenance ? (
+              <span className={`disc-prov ${plainWords ? "tr-note" : "tr-prov"}`}>
+                {provenance}
+              </span>
+            ) : null}
+          </>
+        )}
         <span className="disc-caret" aria-hidden="true">
           ›
         </span>

@@ -139,8 +139,11 @@ export const HOLD_BLOCKER =
 export const REFUSAL_BLOCKER = "Generation declined. The PLAN DECLINED notice says why.";
 export const RECHECK_BLOCKER =
   "Re-checking the declined input. Generate comes back when the verdict settles.";
+/** #435, Ryan's checkpoint ruling 2 (2026-11-02): changed here, at the
+ *  source, so the Generate frame, the live region and the rail all say
+ *  it; it keeps the how ("type an address or pick on map"). */
 export const LOCATION_BLOCKER =
-  "Set a location first: use Pick on map to find the site.";
+  "Type an address or pick on map first, then Generate turns on.";
 /** #289 hand-check, 2026-09-23, defect 1 — Ryan's words for the reason.
  *  One string on the WHERE primary, the WHAT pending line and the
  *  Generate frame (rule 139: one derivation, every surface). */

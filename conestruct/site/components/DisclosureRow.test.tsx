@@ -105,3 +105,32 @@ describe("DisclosureRow (rules 87–89)", () => {
     expect(container.querySelector(".disc")!.className).toContain("is-nested");
   });
 });
+
+// #435 ruling 6: the count in plain words, Inter 12.5 (.tr-note).
+describe("DisclosureRow — #435 plain-words count", () => {
+  it("countWords: the numeral, its noun and the provenance are one .tr-note phrase", () => {
+    const { container } = row({ count: 15, countWords: { one: "check", many: "checks" }, provenance: "each cited" });
+    const count = container.querySelector(".disc-count")!;
+    expect(count.textContent).toBe("15 checks, each cited");
+    expect(count.classList.contains("tr-note")).toBe(true);
+    expect(container.querySelector(".disc-prov")).toBeNull();
+  });
+
+  it("countWords: singular at 1, and no provenance clause when there is none", () => {
+    const { container } = row({ count: 1, countWords: { one: "check", many: "checks" } });
+    expect(container.querySelector(".disc-count")!.textContent).toBe("1 check");
+  });
+
+  it("plainWords: an uncounted tier's words read in .tr-note, not the mono role", () => {
+    const { container } = row({ count: null, provenance: "jurisdiction rules · permit · audit trail", plainWords: true });
+    const prov = container.querySelector(".disc-prov")!;
+    expect(prov.classList.contains("tr-note")).toBe(true);
+    expect(prov.classList.contains("tr-prov")).toBe(false);
+  });
+
+  it("without either prop the row is unchanged (the quote and the outputs)", () => {
+    const { container } = row({ count: 12, provenance: "each cited" });
+    expect(container.querySelector(".disc-count")!.textContent).toBe("12");
+    expect(container.querySelector(".disc-prov")!.classList.contains("tr-prov")).toBe(true);
+  });
+});

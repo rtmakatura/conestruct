@@ -5,6 +5,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useId,
   useState,
   type ClipboardEvent,
   type RefObject,
@@ -23,7 +24,9 @@ import {
   deriveCrossStreet,
   type CrossStreetCandidate,
 } from "@/lib/road-detection/cross-street";
-import { candidateLabel, crossStreetLabel } from "@/lib/road-detection/labels";
+import { candidateLabel, crossStreetLabel, plainRoadClass } from "@/lib/road-detection/labels";
+import { symClass } from "@/lib/design/symbols";
+import { InfoToggle } from "./InfoToggle";
 import type { ScenarioKind } from "@/lib/scenarios";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
 import {
@@ -2086,26 +2089,12 @@ function DetectionOutcomeCard({
     );
   }
   if (candidates.length === 1) {
+    // #435 ruling 5 (checkpoint call C6): one road found reads as the
+    // road-picked summary row; no Change, because there is no other road
+    // to change to.  The sole match is already applied (auto-adopted).
     return (
       <div className="border-b border-[color:var(--rule)] px-6 py-3">
-        <div className="border border-[color:var(--rule)] px-3 py-2">
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)]">
-            <span aria-hidden className="text-[color:var(--pass)]">
-              ✓{" "}
-            </span>
-            Road detected · 1 match
-          </div>
-          <div className="mt-2">
-            {/* Same row affordance as the multi-list, pre-selected —
-                clicking re-applies the sole candidate's bearing and
-                properties (idempotent). */}
-            <CandidatePicker
-              candidates={candidates}
-              selectedIdx={selectedIdx ?? 0}
-              onPick={onPick}
-            />
-          </div>
-        </div>
+        <RoadPickedRow candidate={candidates[0]} />
       </div>
     );
   }
@@ -2120,12 +2109,10 @@ function DetectionOutcomeCard({
 
 // Multi-candidate disambiguation card (Concept A inc-3).  Rendered by
 // DetectionOutcomeCard when detection returned more than one candidate
-// road.  Unpicked, it holds the full picker, framed as the blocking
-// decision it is: amber warning treatment with a glyph and words, never
-// hue alone (rule 13) — and amber, not orange, because in the workbench
-// orange means generated output and this card is entirely controls.
-// Once picked it collapses to a one-line confirmed summary (reusing
-// CandidateCaption) with an explicit Change affordance.
+// road.  #435 ruling 4: a neutral band panel (the --da-ground band
+// ground and --rule border, not the amber frame), its header row "⚠ PICK
+// THE ROAD · N FOUND".  Once picked it collapses to the ruling-5 summary
+// row with a Change affordance.
 function WhichRoadCard({
   candidates,
   selectedIdx,
@@ -2142,73 +2129,97 @@ function WhichRoadCard({
   const expanded = selectedIdx === null || reExpanded;
   const picked =
     selectedIdx !== null ? (candidates[selectedIdx] ?? null) : null;
+  const headId = useId();
   return (
     <div className="border-b border-[color:var(--rule)] px-6 py-3">
-      {/* #402 (P9): once a road is picked the question is answered, so
-          the head takes the single-match card's form, "✓ Road picked",
-          on the neutral frame; the amber ⚠ stays for the unanswered pick.
-          It stays ✓ while CHANGE has the list open: the pick still stands. */}
-      <div
-        className={
-          picked
-            ? "border border-[color:var(--rule)] px-3 py-2"
-            : "border border-[color:var(--warn)] bg-[color:var(--warn-soft)] px-3 py-2"
-        }
-      >
-        <div
-          className={`font-mono text-[10px] uppercase tracking-[0.12em] ${
-            picked
-              ? "text-[color:var(--ink-on-dark-faint)]"
-              : "text-[color:var(--warn)]"
-          }`}
-        >
-          {picked ? (
-            <span aria-hidden="true" className="text-[color:var(--pass)]">✓ </span>
-          ) : (
-            <span aria-hidden="true">⚠ </span>
-          )}
-          {picked ? "Road picked" : "Which road?"} · {candidates.length} detected
-        </div>
-        {expanded ? (
-          <div className="mt-2">
-            <CandidatePicker
-              candidates={candidates}
-              selectedIdx={selectedIdx}
-              onPick={(idx) => {
-                setReExpanded(false);
-                onPick(idx);
-              }}
-            />
+      {expanded ? (
+        <div className="road-pick-panel" data-testid="road-pick-panel">
+          <div className="road-pick-head">
+            {/* #402 (P9): the ⚠ asks the open question; once a road is
+                picked the question is answered, and it stays ✓ while
+                Change has the list open: the pick still stands. */}
+            <span
+              aria-hidden="true"
+              className={`road-pick-glyph ${symClass(picked ? "✓" : "⚠")}`}
+            >
+              {picked ? "✓" : "⚠"}
+            </span>
+            <span id={headId} className="tr-step">
+              PICK THE ROAD · {candidates.length} FOUND
+            </span>
+            <InfoToggle label="the roads found" testid="road-pick" className="road-pick-info">
+              <ul className="road-pick-details">
+                {candidates.map((c, idx) => (
+                  <li key={`${c.way_id}-${idx}`}>
+                    <RoadDetails candidate={c} />
+                  </li>
+                ))}
+              </ul>
+            </InfoToggle>
           </div>
-        ) : (
-          picked && (
-            <div className="mt-1.5 flex items-center justify-between gap-3">
-              {/* #402: wraps, never truncates; the direction the operator
-                  just picked was the part cut off. */}
-              <span className="min-w-0 break-words font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark)]">
-                <CandidateCaption candidate={picked} />
-              </span>
-              {/* act-bright, not act: on the amber-tinted card bg the
-                  base cyan measures 4.09:1 — under the 4.5 AA text
-                  floor.  act-bright measures 5.06:1 (hover fill 7.73). */}
-              <button
-                type="button"
-                onClick={() => setReExpanded(true)}
-                className="tap-44 flex-shrink-0 border border-[color:var(--act-bright)] bg-transparent text-[color:var(--act-bright)] font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-1 hover:bg-[color:var(--act-bright)] hover:text-[color:var(--on-act)] transition-colors"
-              >
-                Change
-              </button>
-            </div>
-          )
-        )}
-      </div>
+          <CandidatePicker
+            candidates={candidates}
+            selectedIdx={selectedIdx}
+            labelledBy={headId}
+            onPick={(idx) => {
+              setReExpanded(false);
+              onPick(idx);
+            }}
+          />
+        </div>
+      ) : (
+        picked && (
+          <RoadPickedRow candidate={picked} onChange={() => setReExpanded(true)} />
+        )
+      )}
     </div>
   );
 }
 
-// One-line caption summarising the selected candidate.  Used both in
-// the unambiguous case (single road found) and after the operator picks
-// one in the multi-candidate case.
+// #435 ruling 5: the road-picked summary, one row: ✓, the mono ROAD
+// label, the road name, "i details" holding the detected-from line, and
+// a 44 px Change (absent when only one road was found).
+function RoadPickedRow({
+  candidate,
+  onChange,
+}: {
+  candidate: RoadCandidate;
+  onChange?: () => void;
+}) {
+  return (
+    <div className="road-picked" data-testid="road-picked">
+      <span aria-hidden="true" className={`road-pick-glyph ${symClass("✓")}`}>
+        ✓
+      </span>
+      <span className="road-picked-text">
+        <span className="tr-step">ROAD</span>
+        <span className="road-pick-name">{roadName(candidate)}</span>
+      </span>
+      <InfoToggle label="the picked road" testid="road-picked" className="road-pick-info">
+        <CandidateCaption candidate={candidate} />
+      </InfoToggle>
+      {onChange && (
+        <button
+          type="button"
+          onClick={onChange}
+          className="tap-44 road-pick-change"
+        >
+          Change
+        </button>
+      )}
+    </div>
+  );
+}
+
+/** #435 ruling 4: "East Colfax Avenue, westbound", sentence case; the
+ *  OSM name keeps its own case. */
+function roadName(c: RoadCandidate): string {
+  const lbl = candidateLabel(c);
+  return `${lbl.primary}, ${lbl.direction.toLowerCase()}`;
+}
+
+// The detected-from line, now behind "i details" (#435 rulings 4–5).
+// Used by the road-picked row; the words are unchanged.
 function CandidateCaption({ candidate }: { candidate: RoadCandidate }) {
   const lbl = candidateLabel(candidate);
   const brg = normaliseBearing(candidate.bearing);
@@ -2220,51 +2231,56 @@ function CandidateCaption({ candidate }: { candidate: RoadCandidate }) {
   );
 }
 
-// Picker rows shown inside the Which-road card when /api/road-bearing
+// One road's detail line in the panel's "i details": the way ID, the
+// bearing and the source the default view no longer shows (P19).
+function RoadDetails({ candidate }: { candidate: RoadCandidate }) {
+  const brg = normaliseBearing(candidate.bearing);
+  return (
+    <>
+      {roadName(candidate)} · {brg}° · way {candidate.way_id} · from OSM
+    </>
+  );
+}
+
+// Picker rows shown inside the pick-the-road panel when /api/road-bearing
 // returns multiple candidates within snap range (the divided-highway
-// case).  Each candidate is a button: clicking sets the bearing field,
-// the arrow, AND the road-property panel (via classifyFromCandidate in
-// the parent applyCandidate handler).  Snap distance + way id ride
-// visibly on each row so the operator can tell the carriageways apart
-// (previously tooltip-only).
+// case).  Clicking a row sets the bearing field, the arrow, AND the
+// road-property panel (via classifyFromCandidate in the parent
+// applyCandidate handler).  #435 ruling 4 (checkpoint call C4): each row
+// is a radio in a radiogroup named by the header, so the picked state is
+// in words (aria-checked) as well as in the filled marker and the --act
+// border (Rule 13); the road class reads in plain words and the distance
+// from the pin rides the second line, so the carriageways stay apart.
 function CandidatePicker({
   candidates,
   selectedIdx,
+  labelledBy,
   onPick,
 }: {
   candidates: RoadCandidate[];
   selectedIdx: number | null;
+  labelledBy: string;
   onPick: (idx: number) => void;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div role="radiogroup" aria-labelledby={labelledBy} className="road-pick-rows">
       {candidates.map((c, idx) => {
-        const lbl = candidateLabel(c);
-        const brg = normaliseBearing(c.bearing);
         const selected = idx === selectedIdx;
         return (
           <button
             key={`${c.way_id}-${idx}`}
             type="button"
+            role="radio"
+            aria-checked={selected}
             onClick={() => onPick(idx)}
-            className={`text-left px-2 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] border transition-colors ${
-              selected
-                ? "border-[color:var(--act-bright)] bg-[color:var(--act)]/15 text-white"
-                : // faint border, not --rule: on the amber-tinted card bg
-                  // --rule measures 1.02:1 (invisible); faint is 4.04:1.
-                  // act-bright on hover/selected: 5.06:1 vs act's 4.09.
-                  "border-[color:var(--ink-on-dark-faint)] text-[color:var(--ink-on-dark)] hover:border-[color:var(--act-bright)] hover:text-white"
-            }`}
+            className={`road-pick-row${selected ? " is-picked" : ""}`}
           >
-            <span className="text-white">
-              {lbl.primary} {lbl.direction.toLowerCase()}
-            </span>
-            <span className="opacity-70">
-              {" "}
-              ({lbl.sub.toLowerCase()}, {brg}°)
-            </span>
-            <span className="block text-[10px] tracking-[0.04em] opacity-70">
-              {c.snap_distance_m.toFixed(0)} m from pin · way {c.way_id}
+            <span className="road-pick-mark" aria-hidden="true" />
+            <span className="road-pick-label">
+              <span className="road-pick-name">{roadName(c)}</span>
+              <span className="road-pick-sub">
+                {plainRoadClass(c.highway_class)} · {c.snap_distance_m.toFixed(0)} m from your pin
+              </span>
             </span>
           </button>
         );

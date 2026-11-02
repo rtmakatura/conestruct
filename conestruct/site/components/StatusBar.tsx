@@ -349,7 +349,8 @@ function StatusBarState({
             reader was told nothing at all.  aria-hidden because the
             words beside it say the same thing (the house idiom). */}
         <Sym g="◌" />
-        <span>AWAITING LOCATION · no site chosen</span>
+        {/* #435 ruling 7 (Ryan, 2026-11-02). */}
+        <span>NO SITE CHOSEN YET</span>
       </div>
     );
   }

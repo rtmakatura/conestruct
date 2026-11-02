@@ -59,6 +59,10 @@ export const ROLE_CLASSES = [
   // not one: the base and its ≤519px container variant, both reading
   // :root tokens rather than literals (GO ruling d).
   "tr-question",
+  // #435 ruling 2 — the two sentence roles, Inter 13.5 and 12.5, read
+  // from the existing tokens.
+  "tr-help",
+  "tr-note",
 ] as const;
 
 export const TYPE_EXCEPTIONS: readonly TypeException[] = [
@@ -279,6 +283,20 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
           ".workbench .a-sym, .workbench .ny-glyph, .workbench .disc-glyph, .workbench .status-glyph, .workbench .sw-glyph, .workbench .sugg-glyph, .workbench .wb-glyph",
         size: "var(--fs-field-label)",
       },
+    ],
+    tsx: [],
+  },
+  {
+    name: "the tool page's text rules (#435)",
+    sizes: ["var(--fs-field-label)", "var(--fs-body-value)"],
+    reason:
+      "#435 ruling 2 (Ryan, 2026-11-02): sentences leave mono for Inter 13.5 / 12.5.  Five sites that are not a whole role: the plain-words disclosure count (.tr-note's size on the count span), and the road picker's glyph, road name (Inter 13.5 / 600), second line (Inter 12.5 --ink-mute, ruling 4) and Change label (13.5, ruling 5).  Both sizes are existing tokens: no size joins the census",
+    css: [
+      { selector: ".workbench .tr-note.disc-count", size: "var(--fs-field-label)" },
+      { selector: ".workbench .road-pick-glyph", size: "var(--fs-field-label)" },
+      { selector: ".workbench .road-pick-name", size: "var(--fs-body-value)" },
+      { selector: ".workbench .road-pick-sub", size: "var(--fs-field-label)" },
+      { selector: ".workbench .road-pick-change", size: "var(--fs-body-value)" },
     ],
     tsx: [],
   },
@@ -576,8 +594,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — the picker modal (#166 sizing)",
     css: [],
     tsx: [
-      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 30 }, // #430: +1, the declined-preview line; #301 piece 3 (R123 Q1): -12, the road-properties panel (its header, state lines, row captions, editors and the UX-02 accept); #209: +1, the numeric editor's range alert; #290: -7, the retired work-zone panel (typed length + direction of travel); #290 hand-check: +1, the refused-corridor note; #301 piece 2: -1, the extent panel's "Total" label
-      { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 8 }, // #234: +1, the restored-intersection line
+      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 25 }, // #435: -5, the picker card's header, caption, Change and row second line (the panel, rows and summary read CSS classes now); #430: +1, the declined-preview line; #301 piece 3 (R123 Q1): -12, the road-properties panel (its header, state lines, row captions, editors and the UX-02 accept); #209: +1, the numeric editor's range alert; #290: -7, the retired work-zone panel (typed length + direction of travel); #290 hand-check: +1, the refused-corridor note; #301 piece 2: -1, the extent panel's "Total" label
+      { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 7 }, // #435: -1, the candidate rows; #234: +1, the restored-intersection line
       { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 5 }, // #301 piece 3: -2, the panel's editors; #290: +1, the pre-side ruling's sentence on the map (the "drop a pin" overlay's own treatment); #301 piece 2: -2, the per-zone length rows (label + value) — the band's rows are the one speaker
       { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 3 }, // #301 piece 3: -1, the panel's row label; #290: -2, the retired work-zone panel's two inputs
       { file: "components/LocationPickerModal.tsx", cls: "text-[17px]", count: 1 },
@@ -713,7 +731,7 @@ export const CENSUS_PINS = {
   // The lean landing page (design/landing-v2/lean-page/): sections 02-06
   // and the form's legends, notes and pilot panel go (35 declarations),
   // the lean sections add 10.  195 -> 170.
-  cssDeclarations: 170,
+  cssDeclarations: 177, // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five sites of the text-rules exception row
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
@@ -771,6 +789,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 206, // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxUses: 200, // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
   tsxFiles: 25, // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;

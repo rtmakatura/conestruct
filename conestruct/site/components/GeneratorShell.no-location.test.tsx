@@ -3,7 +3,7 @@
 // #186 — no location, no certification (mounted).
 //
 // A fresh session has never chosen a site: meta.lat/lng sit at the 0/0
-// unset sentinel.  The strip renders AWAITING LOCATION — no verdict, no
+// unset sentinel.  The strip renders NO SITE CHOSEN YET — no verdict, no
 // green READY — and Generate is disabled with a stated reason.  Setting a
 // location (here through the manual-entry fallback, the same setMeta
 // writer the picker uses) flips both surfaces; everything downstream is
@@ -149,19 +149,19 @@ describe("hasLocation (#186)", () => {
 });
 
 describe("no location, no certification (#186)", () => {
-  it("fresh load: AWAITING LOCATION, no verdict, Generate disabled with the stated reason", async () => {
+  it("fresh load: NO SITE CHOSEN YET, no verdict, Generate disabled with the stated reason", async () => {
     render(<GeneratorShell mode="sandbox" />);
     await settle();
 
     const text = document.body.textContent ?? "";
-    expect(text).toContain("AWAITING LOCATION");
+    expect(text).toContain("NO SITE CHOSEN YET");
     // #260 (P2): the strip's line is the state alone; the instruction
     // below is the CTA reason's (one speaker).  #289 hand-check,
     // 2026-09-22: rule 18's ◌ leads it, as TEXT (rule 17) and
     // aria-hidden, so the SENTENCE and what the region speaks are both
     // unchanged.
     expect(document.querySelector(".status-bar")?.textContent).toBe(
-      "◌" + "AWAITING LOCATION · no site chosen",
+      "◌" + "NO SITE CHOSEN YET",
     );
     expect(text).not.toContain("READY FOR TCS REVIEW");
     expect(text).not.toContain("VERIFIED");
@@ -174,7 +174,7 @@ describe("no location, no certification (#186)", () => {
     }) as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
     expect(text).toContain(
-      "Set a location first: use Pick on map to find the site.",
+      "Type an address or pick on map first, then Generate turns on.",
     );
 
     // A click on the gated CTA must not flip the stage: no results hero
@@ -196,7 +196,7 @@ describe("no location, no certification (#186)", () => {
     await settle();
 
     const text = document.body.textContent ?? "";
-    expect(text).not.toContain("AWAITING LOCATION");
+    expect(text).not.toContain("NO SITE CHOSEN YET");
     expect(text).toContain("READY FOR TCS REVIEW");
     const btn = screen.getByRole("button", {
       name: /Generate plan/,
@@ -207,7 +207,7 @@ describe("no location, no certification (#186)", () => {
   it("typing coordinates in the manual fallback enables both surfaces", async () => {
     render(<GeneratorShell mode="sandbox" />);
     await settle();
-    expect(document.body.textContent).toContain("AWAITING LOCATION");
+    expect(document.body.textContent).toContain("NO SITE CHOSEN YET");
 
     // No Mapbox token in the test env → the manual fallback is already
     // open.  The two step="0.000001" number inputs are lat, then lng.
@@ -228,7 +228,7 @@ describe("no location, no certification (#186)", () => {
     // band has no such flip — the manual fallback is a disclosure the
     // operator opened and nothing closes it under them — so the inputs
     // are still there.  One fewer surprise, and one fewer click.
-    expect(document.body.textContent).toContain("AWAITING LOCATION");
+    expect(document.body.textContent).toContain("NO SITE CHOSEN YET");
     const lngInput = coords()[1];
     expect(lngInput).toBeTruthy();
     await act(async () => {
@@ -238,7 +238,7 @@ describe("no location, no certification (#186)", () => {
     await settle();
 
     const text = document.body.textContent ?? "";
-    expect(text).not.toContain("AWAITING LOCATION");
+    expect(text).not.toContain("NO SITE CHOSEN YET");
     // #289 finding 1 (Rule 10): with the pin down and no kind confirmed,
     // the strip names the state — no verdict.  This line used to read
     // READY FOR TCS REVIEW here: a verdict for the placeholder kind nobody
@@ -312,6 +312,6 @@ describe("no location, no certification (#186)", () => {
 
     const text = document.body.textContent ?? "";
     expect(text).toContain("INVALID INPUT");
-    expect(text).not.toContain("AWAITING LOCATION");
+    expect(text).not.toContain("NO SITE CHOSEN YET");
   });
 });

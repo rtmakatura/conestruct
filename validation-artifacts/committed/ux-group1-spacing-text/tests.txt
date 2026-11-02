@@ -1,0 +1,6 @@
+# Tests, 2026-11-02, on the build (before commit)
+vitest (conestruct/site): Tests  2715 passed | 1 skipped (2716)
+vitest files: Test Files  255 passed | 1 skipped (256)
+baseline on d1c415f: Tests 2686 passed | 1 skipped (2687); +29 = the new #435 tests (10 landing/CSS, 4 DisclosureRow, 2 labels, 13 picker rewritten/added net)
+tsc --noEmit: clean
+first full run after the build: 29 failed (first-run-fails.txt), all expectation flips or picker structure; each updated and stated in the commit; none re-run to pass unchanged

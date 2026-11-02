@@ -71,16 +71,17 @@ export function GenerateFrame({
           screen reader knows this control by.  (#289 fidelity F6: rule
           130 renders it as written — the CSS caps it once wore are
           gone.) */}
-      <div className="a-genframe mt-4" data-testid="generate-frame">
+      {/* #435 ruling 1: no mt-4; the band stack's 24 is the only gap. */}
+      <div className="a-genframe" data-testid="generate-frame">
         <GenerateButton
           generating={generating}
           onGenerate={onGenerate}
           disabled={disabled}
           disabledReason={blockerReason ?? undefined}
         />
-        <div className="tr-prov a-gencap" data-testid="generate-caption">
-          Output requires TCS review · every dimension cited to MUTCD or CDOT
-        </div>
+        {/* #435 ruling 7: the caption ("Output requires TCS review ·
+            every dimension cited to MUTCD or CDOT") folds into the draft
+            line at the foot of the column. */}
       </div>
     </div>
   );

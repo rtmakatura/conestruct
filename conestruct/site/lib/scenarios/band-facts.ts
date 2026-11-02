@@ -201,7 +201,9 @@ export function whereProvenance(
    *  ("cross street from OSM node 3397108608 · searched 1,700 m"). */
   crossStreetProvenance: string | null = null,
 ): string {
-  if (!hasLocation(scenario.meta)) return "the work, not the first sign";
+  // #435 ruling 7: "the work, not the first sign" is dropped; with no
+  // location the WHERE header has no hint (OpenBand renders none).
+  if (!hasLocation(scenario.meta)) return "";
   const road = scenario.meta.confirmedRoad;
   const coords = `${scenario.meta.lat.toFixed(5)}, ${scenario.meta.lng.toFixed(5)}`;
   if (!road) return `pin at ${coords}`;
@@ -466,7 +468,8 @@ export function deriveBands({
           : // Part 1 §2.2's own string once a road exists; §2.1's before.
             scenario.meta.confirmedRoad
             ? `road facts prefill from ${confirmedRoadLabel(scenario)}`
-            : "kind of work, extent, side · pending: find the work first",
+            : // #435 ruling 7 (Ryan, 2026-11-02).
+              "Opens after you find the work",
       glyph: whatReady ? "✓" : "◌",
     },
     {

@@ -26,8 +26,9 @@ describe("two-axis rule — any two label roles differ on ≥2 of the six axes (
     for (let j = i + 1; j < ROLE_NAMES.length; j++)
       pairs.push([ROLE_NAMES[i], ROLE_NAMES[j]]);
 
-  it("enumerates exactly the ten role pairs", () => {
-    expect(pairs).toHaveLength(10);
+  it("enumerates exactly the twenty-one role pairs", () => {
+    // #435: seven roles (help and note join), 7 × 6 / 2 = 21.
+    expect(pairs).toHaveLength(21);
   });
 
   // #289 F2: casing is compared as the reader SEES it.  Part 2 rule 4
@@ -35,8 +36,19 @@ describe("two-axis rule — any two label roles differ on ≥2 of the six axes (
   // section header uppercases by CSS — both display in capitals, so
   // counting them as different casing would claim a difference nobody
   // can see.  The rule must hold on the other axes, and it does.
+  // #435: a size is compared as the reader sees it too: the two size
+  // tokens the sentence roles read are the label sizes they equal
+  // (tokens.test.ts pins --fs-field-label 12.5px, --fs-body-value 13.5px).
+  const SIZE_TOKENS: Record<string, string> = {
+    "var(--fs-field-label)": "12.5px",
+    "var(--fs-body-value)": "13.5px",
+  };
   const displayed = (r: (typeof TYPE_ROLES)[TypeRoleName], axis: (typeof TYPE_AXES)[number]) =>
-    axis === "casing" && r.casing === "caps-voice" ? "uppercase" : r[axis];
+    axis === "casing" && r.casing === "caps-voice"
+      ? "uppercase"
+      : axis === "size"
+        ? (SIZE_TOKENS[r.size] ?? r.size)
+        : r[axis];
 
   // #289 fidelity F2 — ONE recorded exception, and why.  Part 2 gives the
   // field label (rule 5) and the step question (rule 7) the same family
@@ -48,14 +60,29 @@ describe("two-axis rule — any two label roles differ on ≥2 of the six axes (
   // at #283 and is not a label (see type-roles.ts, `question`).  So the
   // pair is named here: it must still differ on one axis and in weight,
   // and no OTHER pair may use this exception.
+  // #435 ruling 2 adds a second: the note line (Inter 12.5 --ink-faint)
+  // and the field label (Inter 12.5 --ink) share family, casing, size and
+  // tracking because Ryan's ruling sets the note at the label's size in
+  // Inter; they differ in colour and weight (400 vs 500).
   const RULED_ONE_AXIS: ReadonlyArray<readonly [TypeRoleName, TypeRoleName]> = [
     ["field", "question"],
+    ["field", "note"],
   ];
   const isRuled = (a: TypeRoleName, b: TypeRoleName) =>
     RULED_ONE_AXIS.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
 
-  it("the one-axis exception is exactly field ↔ question, and they still differ in size and weight", () => {
-    expect(RULED_ONE_AXIS).toEqual([["field", "question"]]);
+  it("field ↔ note (#435) differ in colour and weight, and only those", () => {
+    const f = TYPE_ROLES.field;
+    const n = TYPE_ROLES.note;
+    expect(TYPE_AXES.filter((axis) => displayed(f, axis) !== displayed(n, axis))).toEqual(["color"]);
+    expect(f.weight).not.toBe(n.weight);
+  });
+
+  it("the one-axis exceptions are exactly field ↔ question and field ↔ note, and field ↔ question still differ in size and weight", () => {
+    expect(RULED_ONE_AXIS).toEqual([
+      ["field", "question"],
+      ["field", "note"],
+    ]);
     const f = TYPE_ROLES.field;
     const q = TYPE_ROLES.question;
     expect(TYPE_AXES.filter((axis) => displayed(f, axis) !== displayed(q, axis))).toEqual(["size"]);

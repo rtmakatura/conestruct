@@ -1,0 +1,839 @@
+{
+ "390": {
+  "landing": {
+   "width": 362,
+   "height": 708.25
+  },
+  "landingMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 24
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 24
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 24
+    },
+    {
+     "from": "DIV",
+     "to": "tr-note",
+     "px": 24
+    }
+   ],
+   "padding": {
+    "head": "12px 16px 12px 16px",
+    "body": "16px 16px 16px 16px",
+    "genframe": "16px 16px 16px 16px",
+    "fact": "12px 16px 12px 16px",
+    "strip": "12px 16px 12px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "Address or cross streets",
+     "w": 328,
+     "h": 44
+    },
+    {
+     "name": "Pick on map",
+     "w": 328,
+     "h": 48
+    },
+    {
+     "name": "Generate plan",
+     "w": 328,
+     "h": 66
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "reason": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    }
+   }
+  },
+  "landingAxe": [],
+  "pickerUnpicked": {
+   "width": 340,
+   "height": 294.17
+  },
+  "pickerText": "⚠ PICK THE ROAD · 3 FOUND i DETAILS East Colfax Avenue, westbound Primary road · 1 m from your pin East Colfax Avenue, eastbound Primary road · 6 m from your pin Pennsylvania Street, northbound Residential street · 24 m from your pin",
+  "pickerMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 24
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 24
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 24
+    },
+    {
+     "from": "DIV",
+     "to": "tr-note",
+     "px": 24
+    }
+   ],
+   "padding": {
+    "head": "12px 16px 12px 16px",
+    "body": "16px 16px 16px 16px",
+    "genframe": "16px 16px 16px 16px",
+    "fact": "12px 16px 12px 16px",
+    "strip": "12px 16px 12px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": "12px 16px 12px 16px",
+    "picked": null
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "Details for the roads found",
+     "w": 62.72,
+     "h": 44
+    },
+    {
+     "name": "East Colfax Avenue, westboundPrimary road · 1 m fr",
+     "w": 306,
+     "h": 58.39
+    },
+    {
+     "name": "East Colfax Avenue, eastboundPrimary road · 6 m fr",
+     "w": 306,
+     "h": 58.39
+    },
+    {
+     "name": "Pennsylvania Street, northboundResidential street ",
+     "w": 306,
+     "h": 58.39
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "reason": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "pickTitle": {
+     "ratio": 15,
+     "ink": "rgb(234, 240, 247)",
+     "size": "10px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "pickName": {
+     "ratio": 13.91,
+     "ink": "rgb(234, 240, 247)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "pickSub": {
+     "ratio": 8.19,
+     "ink": "rgb(174, 187, 204)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "markOutline": {
+     "ratio": 3.75,
+     "ink": "rgb(110, 124, 142)",
+     "note": "non-text, 3:1 floor"
+    }
+   }
+  },
+  "pickerAxe": [],
+  "pickerDetails": {
+   "width": 355,
+   "height": 294.17
+  },
+  "pickerDetailsText": "East Colfax Avenue, westbound · 271° · way 1547338992 · from OSM East Colfax Avenue, eastbound · 91° · way 628643782 · from OSM Pennsylvania Street, northbound · 359° · way 596451653 · from OSM",
+  "dialogOpenAfterEscape": true,
+  "picked": {
+   "width": 340,
+   "height": 98.67
+  },
+  "pickedText": "✓ ROAD East Colfax Avenue, westbound i DETAILS Change",
+  "pickedMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 24
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 24
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 24
+    },
+    {
+     "from": "DIV",
+     "to": "tr-note",
+     "px": 24
+    }
+   ],
+   "padding": {
+    "head": "12px 16px 12px 16px",
+    "body": "16px 16px 16px 16px",
+    "genframe": "16px 16px 16px 16px",
+    "fact": "12px 16px 12px 16px",
+    "strip": "12px 16px 12px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": "12px 16px 12px 16px"
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "Details for the picked road",
+     "w": 62.72,
+     "h": 44
+    },
+    {
+     "name": "Change",
+     "w": 84.66,
+     "h": 44
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "reason": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "pickedLabel": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "change": {
+     "ratio": 6.55,
+     "ink": "rgb(52, 169, 232)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    }
+   }
+  },
+  "discHeads": [
+   "i Pricing quote FYI: contractor estimate, not a permit fee. Expand to configure and preview. ›",
+   "✓ Checked & passed 13 checks, each cited ›",
+   "◌ Pending / not verified 3 not verified yet ›",
+   "i Reference Denver · Arterial · MUTCD 11th (PT-116.1 pins 2009 R2) › DOTI PT-116.1 › Rule 22.3 › 2024 Fee Sched. ›"
+  ],
+  "discClosed": {
+   "width": 362,
+   "height": 285.5
+  },
+  "checkedOpen": {
+   "width": 362,
+   "height": 1963.88
+  },
+  "referenceOpenTop": {
+   "panelPadTop": "16px",
+   "firstChildOffset": 17
+  },
+  "referenceOpen": {
+   "width": 360,
+   "height": 80.25
+  },
+  "discMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "tr-note",
+     "px": 3255.75
+    }
+   ],
+   "padding": {
+    "head": null,
+    "body": null,
+    "genframe": null,
+    "fact": null,
+    "strip": "12px 16px 12px 16px",
+    "discHead": "12px 16px 12px 16px",
+    "discPanel": "16px 16px 16px 16px",
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [
+    {
+     "text": "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   ],
+   "targets": [
+    {
+     "name": "iPricing quoteFYI: contractor estimate, not a perm",
+     "w": 360,
+     "h": 71.25
+    },
+    {
+     "name": "✓Checked & passed13 checks, each cited›",
+     "w": 360,
+     "h": 48
+    },
+    {
+     "name": "◌Pending / not verified3 not verified yet›",
+     "w": 360,
+     "h": 48
+    },
+    {
+     "name": "iReferenceDenver · Arterial · MUTCD 11th (PT-116.1",
+     "w": 360,
+     "h": 80.25
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 9.84,
+     "ink": "rgb(244, 192, 32)",
+     "size": "8.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "discCount": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "discProv": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "discAxe": [
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "nodes": 1,
+    "first": "#needs-you-h"
+   }
+  ],
+  "footerGap": 24
+ },
+ "1440": {
+  "landing": {
+   "width": 880,
+   "height": 553.5
+  },
+  "landingMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 24
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 24
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 24
+    },
+    {
+     "from": "DIV",
+     "to": "tr-note",
+     "px": 24
+    }
+   ],
+   "padding": {
+    "head": "12px 16px 12px 16px",
+    "body": "16px 16px 16px 16px",
+    "genframe": "16px 16px 16px 16px",
+    "fact": "12px 16px 12px 16px",
+    "strip": "12px 16px 12px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "Address or cross streets",
+     "w": 702,
+     "h": 44
+    },
+    {
+     "name": "Pick on map",
+     "w": 132,
+     "h": 44
+    },
+    {
+     "name": "Generate plan",
+     "w": 846,
+     "h": 66
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "reason": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    }
+   }
+  },
+  "landingAxe": [],
+  "pickerUnpicked": {
+   "width": 407,
+   "height": 282.17
+  },
+  "pickerText": "⚠ PICK THE ROAD · 3 FOUND i DETAILS East Colfax Avenue, westbound Primary road · 1 m from your pin East Colfax Avenue, eastbound Primary road · 6 m from your pin Pennsylvania Street, northbound Residential street · 24 m from your pin",
+  "pickerMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 24
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 24
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 24
+    },
+    {
+     "from": "DIV",
+     "to": "tr-note",
+     "px": 24
+    }
+   ],
+   "padding": {
+    "head": "12px 16px 12px 16px",
+    "body": "16px 16px 16px 16px",
+    "genframe": "16px 16px 16px 16px",
+    "fact": "12px 16px 12px 16px",
+    "strip": "12px 16px 12px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": "12px 16px 12px 16px",
+    "picked": null
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "Details for the roads found",
+     "w": 62.72,
+     "h": 32
+    },
+    {
+     "name": "East Colfax Avenue, westboundPrimary road · 1 m fr",
+     "w": 373,
+     "h": 58.39
+    },
+    {
+     "name": "East Colfax Avenue, eastboundPrimary road · 6 m fr",
+     "w": 373,
+     "h": 58.39
+    },
+    {
+     "name": "Pennsylvania Street, northboundResidential street ",
+     "w": 373,
+     "h": 58.39
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "reason": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "pickTitle": {
+     "ratio": 15,
+     "ink": "rgb(234, 240, 247)",
+     "size": "10px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "pickName": {
+     "ratio": 13.91,
+     "ink": "rgb(234, 240, 247)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "pickSub": {
+     "ratio": 8.19,
+     "ink": "rgb(174, 187, 204)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "markOutline": {
+     "ratio": 3.75,
+     "ink": "rgb(110, 124, 142)",
+     "note": "non-text, 3:1 floor"
+    }
+   }
+  },
+  "pickerAxe": [],
+  "pickerDetails": {
+   "width": 407,
+   "height": 282.17
+  },
+  "pickerDetailsText": "East Colfax Avenue, westbound · 271° · way 1547338992 · from OSM East Colfax Avenue, eastbound · 91° · way 628643782 · from OSM Pennsylvania Street, northbound · 359° · way 596451653 · from OSM",
+  "dialogOpenAfterEscape": true,
+  "picked": {
+   "width": 407,
+   "height": 79.78
+  },
+  "pickedText": "✓ ROAD East Colfax Avenue, westbound i DETAILS Change",
+  "pickedMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "outline-none",
+     "px": 24
+    },
+    {
+     "from": "outline-none",
+     "to": "a-fact",
+     "px": 24
+    },
+    {
+     "from": "a-fact",
+     "to": "DIV",
+     "px": 24
+    },
+    {
+     "from": "DIV",
+     "to": "tr-note",
+     "px": 24
+    }
+   ],
+   "padding": {
+    "head": "12px 16px 12px 16px",
+    "body": "16px 16px 16px 16px",
+    "genframe": "16px 16px 16px 16px",
+    "fact": "12px 16px 12px 16px",
+    "strip": "12px 16px 12px 16px",
+    "discHead": null,
+    "discPanel": null,
+    "pickHead": null,
+    "picked": "12px 16px 12px 16px"
+   },
+   "smallText": [],
+   "targets": [
+    {
+     "name": "Details for the picked road",
+     "w": 62.72,
+     "h": 32
+    },
+    {
+     "name": "Change",
+     "w": 84.66,
+     "h": 44
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "11px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "help": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "factNote": {
+     "ratio": 6,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "reason": {
+     "ratio": 11.16,
+     "ink": "rgb(200, 209, 221)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "pickedLabel": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "change": {
+     "ratio": 6.55,
+     "ink": "rgb(52, 169, 232)",
+     "size": "13.5px",
+     "family": "__Inter_176161"
+    }
+   }
+  },
+  "discHeads": [
+   "i Reference Denver · Arterial · MUTCD 11th (PT-116.1 pins 2009 R2) › DOTI PT-116.1 › Rule 22.3 › 2024 Fee Sched. ›"
+  ],
+  "discClosed": {
+   "width": 880,
+   "height": 50
+  },
+  "checkedOpen": {
+   "width": 880,
+   "height": 1161.75
+  },
+  "referenceOpenTop": {
+   "panelPadTop": "16px",
+   "firstChildOffset": 17
+  },
+  "referenceOpen": {
+   "width": 878,
+   "height": 48
+  },
+  "discMeasure": {
+   "gaps": [
+    {
+     "from": "status-slot",
+     "to": "tr-note",
+     "px": 2325.5
+    }
+   ],
+   "padding": {
+    "head": null,
+    "body": null,
+    "genframe": null,
+    "fact": null,
+    "strip": "12px 16px 12px 16px",
+    "discHead": "12px 16px 12px 16px",
+    "discPanel": "16px 16px 16px 16px",
+    "pickHead": null,
+    "picked": null
+   },
+   "smallText": [
+    {
+     "text": "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
+     "size": 10.5,
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   ],
+   "targets": [
+    {
+     "name": "iPricing quoteFYI: contractor estimate, not a perm",
+     "w": 878,
+     "h": 48
+    },
+    {
+     "name": "✓Checked & passed13 checks, each cited›",
+     "w": 878,
+     "h": 48
+    },
+    {
+     "name": "◌Pending / not verified3 not verified yet›",
+     "w": 878,
+     "h": 48
+    },
+    {
+     "name": "iReferenceDenver · Arterial · MUTCD 11th (PT-116.1",
+     "w": 878,
+     "h": 48
+    }
+   ],
+   "contrast": {
+    "strip": {
+     "ratio": 9.84,
+     "ink": "rgb(244, 192, 32)",
+     "size": "9.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    },
+    "footer": {
+     "ratio": 6.19,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "discCount": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "12.5px",
+     "family": "__Inter_176161"
+    },
+    "discProv": {
+     "ratio": 6.47,
+     "ink": "rgb(147, 160, 176)",
+     "size": "10.5px",
+     "family": "__JetBrains_Mono_5f34dc"
+    }
+   }
+  },
+  "discAxe": [
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "nodes": 1,
+    "first": "#needs-you-h"
+   }
+  ],
+  "footerGap": 24
+ }
+}
