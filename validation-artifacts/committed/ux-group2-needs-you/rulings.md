@@ -21,4 +21,18 @@ Ruled 2026-11-02 by Ryan: Option B on the "Tool page: Needs you" design canvas (
 
 ## Ryan's checkpoint rulings
 
-(pending: checkpoint.md stops S1-S5)
+Ruled 2026-11-02 by Ryan at the checkpoint, quoted verbatim:
+
+> S1. Add a real "confirm" action on the backend, in the same backend change as S2. "Yes" records it, so it shows in the audit trail and survives a reload. The button stays "Apply answers" in every case.
+>
+> S2. Yes: add a "not there" dismiss reason on the backend. "No" sends it. No reason chips, no auto-typed "other" note.
+>
+> S3. Approved, with "TCS" in place of "supervisor": "No devices change. Your answer goes in the audit trail for the TCS to check."
+>
+> S4. Drop the total clause. "The 4 devices come off the plan." only. No follow-up issue for now.
+>
+> S5. Approved as you recommended: N counts scanned conditions only; the rest show under "Also on this plan" with their citation and today's Acknowledge.
+>
+> Size: three stacked branches under one issue, one ship go: (1) backend confirm + "not there", (2) strip, NEEDS YOU, new order, (3) Setup, Your plan, Downloads.
+>
+> Your ten D1–D10 calls are approved. Post the issue yourself (R146).
