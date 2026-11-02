@@ -1,0 +1,9 @@
+{
+ "strip": "◌NO SITE CHOSEN YET",
+ "whereHelper": "Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map.",
+ "whereHeaderHint": null,
+ "whatLine": "Opens after you find the work",
+ "generateReason": "Type an address or pick on map first, then Generate turns on.",
+ "generateCaption": null,
+ "footerLine": "Draft, not a sealed plan. This is engineering reference, with every dimension cited to MUTCD or CDOT. A licensed PE must review and seal it before field use."
+}
