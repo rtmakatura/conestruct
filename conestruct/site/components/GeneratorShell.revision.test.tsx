@@ -274,7 +274,12 @@ describe("a preview writes nothing — no band, no lock, no memo (#289 acceptanc
       expect(document.querySelector(".workbench")!.classList.contains("ws-locked")).toBe(false);
       // The field stays editable while its preview is in flight.
       expect((document.getElementById("revise-speed") as HTMLSelectElement).disabled).toBe(false);
-      const writers = Array.from(document.querySelectorAll<HTMLElement>("[data-write]"));
+      // #437 ruling 6: the question card's Next is off for its own reason
+      // until the question has an answer (its title says so); every other
+      // write is live.
+      const writers = Array.from(document.querySelectorAll<HTMLElement>("[data-write]")).filter(
+        (w) => w.getAttribute("title") !== "choose an answer first",
+      );
       expect(writers.length).toBeGreaterThan(0);
       for (const w of writers) {
         expect((w as HTMLButtonElement).disabled ?? false, w.outerHTML.slice(0, 80)).toBe(false);

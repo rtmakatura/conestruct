@@ -8888,3 +8888,241 @@ input[type="number"] {
     }
   }
 }
+
+/* ── #437 UX group 2 (Option B): NEEDS YOU, one question at a time ──────
+   Authority: validation-artifacts/committed/ux-group2-needs-you/rulings.md
+   rulings 3, 5-8.  Gaps are #435's three (8 / 16 / 24); controls are 44.
+   Sizes read existing tokens: 19 = --fs-step-question-520 (D1), 13.5 =
+   --fs-body-value, 12.5 rides .tr-note.  Colours are Direction A tokens. */
+.workbench .needs-you.has-questions {
+  border: 1px solid var(--warn);
+}
+.workbench .nyq-head {
+  align-items: center;
+}
+.workbench .nyq-count {
+  flex: 1;
+  margin: 0;
+}
+.workbench .nyq-segs {
+  display: flex;
+  gap: 4px;
+}
+.workbench .nyq-seg {
+  width: 24px;
+  height: 4px;
+  background: var(--rule);
+}
+.workbench .nyq-seg.is-current,
+.workbench .nyq-seg.is-done {
+  background: var(--warn);
+}
+.workbench .nyq-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block);
+  padding: var(--space-section) var(--space-block);
+}
+.workbench .nyq-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+.workbench .nyq-q {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-step-question-520);
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--ink);
+}
+.workbench .nyq-why {
+  margin: 0;
+}
+.workbench .nyq-answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.workbench .nyq-answer {
+  position: relative;
+  min-height: 56px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  cursor: pointer;
+}
+.workbench .nyq-answer.chosen {
+  border-color: var(--act);
+}
+.workbench .nyq-answer:focus-within {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+/* The native radio stays in the tree (keyboard, checked state) and is
+   drawn by the square marker beside it. */
+.workbench .nyq-radio {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.workbench .nyq-radio:disabled {
+  cursor: default;
+}
+/* Ruling 5: Option C's 14 px square — chosen = --act fill with an inset
+   gap and its border; not chosen = --pri-off-ink outline. */
+.workbench .nyq-mark {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border: 2px solid var(--pri-off-ink);
+}
+.workbench .nyq-answer.chosen .nyq-mark {
+  border-color: var(--act);
+  background: var(--act);
+  box-shadow: inset 0 0 0 2px var(--canvas-tint);
+}
+.workbench .nyq-answer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.workbench .nyq-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  color: var(--ink);
+}
+.workbench .nyq-consequence {
+  color: var(--ink-mute);
+}
+.workbench .nyq-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-block);
+}
+.workbench .nyq-source {
+  flex: 1;
+  margin: 0;
+}
+.workbench .nyq-details-btn,
+.workbench .ny-other-toggle {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--act);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.workbench .nyq-details-btn:focus-visible,
+.workbench .ny-other-toggle:focus-visible,
+.workbench .nyq-row-btn:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .needs-you .act.nyq-next-btn {
+  min-height: 44px;
+  padding: 0 24px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.workbench .needs-you.owns-primary .act.nyq-next-btn.is-on {
+  background: var(--act);
+  border-color: var(--act);
+  color: var(--on-act);
+}
+.workbench .nyq-details {
+  margin: 0;
+}
+.workbench .nyq-rows {
+  border-top: 1px solid var(--da-hair);
+}
+.workbench .nyq-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  padding: 0 var(--space-block);
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .nyq-row:last-child {
+  border-bottom: 0;
+}
+.workbench .nyq-row-btn {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.workbench .nyq-glyph,
+.workbench .ny-other-glyph {
+  width: 16px;
+  text-align: center;
+}
+.workbench .nyq-row.nyq-apply {
+  justify-content: space-between;
+  min-height: 56px;
+}
+.workbench .needs-you .act.nyq-undo {
+  min-height: 44px;
+}
+.workbench .ny-also {
+  margin: 0;
+  padding: var(--space-tight) var(--space-block) 0;
+  border-top: 1px solid var(--da-hair);
+}
+.workbench .ny-advisory {
+  margin: 0;
+  padding: var(--space-tight) var(--space-block);
+  border-top: 1px solid var(--da-hair);
+}
+/* Ruling 8: the other conditions, one row, its own box. */
+.workbench .ny-other {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+  margin-bottom: var(--space-section);
+}
+.workbench .ny-other-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  padding: 0 var(--space-block);
+  min-height: 44px;
+}
+.workbench .ny-other-text {
+  flex: 1;
+}
+.workbench .ny-other-rows {
+  border-top: 1px solid var(--da-hair);
+}
+/* Ruling 2: the strip's sentence in Inter 13.5 / 600 (D2). */
+.workbench .status-bar .status-questions {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}

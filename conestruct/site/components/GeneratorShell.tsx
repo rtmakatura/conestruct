@@ -36,9 +36,9 @@ import {
 import { AppNav } from "./AppNav";
 import { SITE_ADJUSTMENT_DETAIL } from "./AuditTrail";
 import { deriveTierSources } from "@/lib/tier-sources";
-import { buildNeedsYouItems } from "@/lib/needs-you-items";
+import { buildNeedsYouItems, buildQuestions, openQuestionCount } from "@/lib/needs-you-items";
 import { deriveNeedsYou, type NeedsYouAction } from "@/lib/needs-you";
-import { conditionRows, mergeConditions, primaryCount } from "@/lib/needs-you-conditions";
+import { conditionRows, isListed, mergeConditions, primaryCount } from "@/lib/needs-you-conditions";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { StatusBar } from "./StatusBar";
 import { WorkingBand } from "./WorkingBand";
@@ -79,7 +79,8 @@ import { derivePrimaryOwner } from "@/lib/results-primary";
 import { referenceSummary } from "@/lib/reference-summary";
 import { NeedsYou } from "./NeedsYou";
 import { CheckedDisclosure, PendingDisclosure } from "./ResultsDisclosures";
-import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
+import { OtherConditions, SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
+import { QuestionFlow } from "./NeedsYouQuestion";
 import { ReferenceDisclosure } from "./ReferenceDisclosure";
 import { ResultsHead } from "./ResultsHead";
 import { SiteNotChecked } from "./SiteNotChecked";
@@ -1507,6 +1508,29 @@ export function GeneratorShell({
   const needsYouAdjustments =
     (stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections
       ?.site_adjustments ?? [];
+  // #437 ruling 3 / S5: the detected conditions as yes/no questions, in
+  // ruling 4's order, from the one producer (lib/needs-you-items.ts).
+  const needsYouQuestions = buildQuestions(
+    needsYouRows,
+    needsYouAdjustments,
+    needsYouScan?.corrections ?? [],
+  );
+  const questionFlags = new Set<string>(needsYouQuestions.map((q) => q.flag));
+  // The listed condition rows the question flow does not own (applied or
+  // staged asserts, asserted manual keys): NEEDS YOU mounts for them too.
+  const hasOtherListed = needsYouRows.some((r) => isListed(r) && !questionFlags.has(r.flag));
+  // Ruling 2: the verdict strip's N, the questions still waiting on the
+  // plan.  Zero before the results show (no question is on screen).
+  const openQuestions = resultsVisible ? openQuestionCount(needsYouQuestions) : 0;
+  // #437 ruling 6: the question flow's Apply.  The same write the
+  // condition block's Apply made (#254): the staged fields and corrections
+  // in one setScenario, which re-generates once.
+  const applyAnswers = () => {
+    if (staged.length === 0) return;
+    const withFields = applyStagedFields(scenario, staged);
+    setScenario({ ...withFields, meta: applyStaged(withFields.meta, staged) } as Scenario);
+    setStaged([]);
+  };
   // R103: the primary goes to NEEDS YOU only when an item changed the plan
   // or waits on a decision that would; an all-advisory block leaves it
   // with the downloads (lib/needs-you-conditions.ts `primaryCount`).
@@ -1717,6 +1741,7 @@ export function GeneratorShell({
             // "retry from the panel below" pointer would name a panel
             // that does not exist.  Pre-generate the retry IS Generate.
             preGenerate={preGenerate}
+            questions={openQuestions}
           />
 
           {/* ——— Zone 1 · Setup ——— */}
@@ -1974,14 +1999,10 @@ export function GeneratorShell({
                 28's own predicate (mounted from the Generate click,
                 released under a decline); `settled` is what tells the
                 floor from its occupant. */}
-            <ResultsHead
-              reserve={genState !== "pre"}
-              declined={planDeclined}
-              settled={resultsVisible}
-              scenario={scenario}
-              jurisdictionName={jurisdictionBlock?.name ?? null}
-              onChangeValue={onChangeValue}
-            />
+            {/* #437 ruling 1: Setup moved below NEEDS YOU and the other-
+                conditions row (verdict strip → NEEDS YOU → other
+                conditions → Setup → Your plan → Downloads → the
+                disclosures).  Rule 28's reserved row moves with it. */}
             {/* #289 Phase 2 — the NOT-CHECKED disclosure, which the setup
                 strip carried (§8.27 deletes the strip).  It sits beside
                 the refusal container because they are the two halves of
@@ -2098,31 +2119,50 @@ export function GeneratorShell({
                 model={needsYouModel}
                 inFlight={scanInFlight}
                 primary={primaryOwner}
+                flow={
+                  // #437 ruling 3: the detected conditions, one at a time.
+                  needsYouQuestions.length > 0 ? (
+                    <QuestionFlow
+                      questions={needsYouQuestions}
+                      staged={staged}
+                      setStaged={setStaged}
+                      onApply={applyAnswers}
+                      siteScan={needsYouScan}
+                      inFlight={scanInFlight}
+                      ownsPrimary={primaryOwner === "needs-you"}
+                    />
+                  ) : null
+                }
                 conditions={
-                  // Clause 1: the corrections block's rows, as NEEDS YOU's
-                  // item rows.  Spec 34's scan choice is unchanged and moved
-                  // with them — the STAMPED view when settled, the held
-                  // (last ready) scan while a re-generation is in flight,
-                  // nothing on a first generate or an error.
-                  needsYouScan && hasConditionRows(needsYouScan) ? (
+                  // The listed condition rows that are not questions.  Spec
+                  // 34's scan choice is unchanged: the STAMPED view when
+                  // settled, the held (last ready) scan while a
+                  // re-generation is in flight.
+                  needsYouScan && hasOtherListed ? (
                     <SiteConditionRows
                       scenario={scenario}
-                      setScenario={setScenario}
                       siteScan={needsYouScan}
                       inFlight={scanInFlight}
                       staged={staged}
                       setStaged={setStaged}
-                      ownsPrimary={primaryOwner === "needs-you"}
                       adjustments={needsYouAdjustments}
+                      questionFlags={questionFlags}
                     />
                   ) : null
                 }
+                advisory={
+                  needsYouQuestions.length > 0 &&
+                  typeof needsYouScan?.corrections_advisory === "string" &&
+                  needsYouScan.corrections_advisory
+                    ? needsYouScan.corrections_advisory
+                    : null
+                }
                 onAction={onNeedsYouAction}
                 applyRow={
-                  // #297: without condition rows there is no Apply row, so
-                  // a staged acknowledgement gets this one: the same
-                  // sentence, the same one write (applyStagedAll).
-                  staged.length > 0 ? (
+                  // #297: with no question flow to carry it, a staged
+                  // intent gets this row: the same sentence, the same one
+                  // write.
+                  staged.length > 0 && needsYouQuestions.length === 0 ? (
                     <li key="apply" className="ny-item ny-apply sc-apply" data-testid="ny-ack-apply">
                       <span className="ny-glyph" aria-hidden />
                       <div className="ny-mid">
@@ -2146,6 +2186,26 @@ export function GeneratorShell({
                 }
               />
             )}
+            {/* #437 ruling 8: the conditions that need nothing, as one row. */}
+            {resultsVisible && needsYouScan && hasConditionRows(needsYouScan) ? (
+              <OtherConditions
+                scenario={scenario}
+                siteScan={needsYouScan}
+                inFlight={scanInFlight}
+                staged={staged}
+                setStaged={setStaged}
+                adjustments={needsYouAdjustments}
+                nothingElse={needsYouModel.items.length === 0}
+              />
+            ) : null}
+            <ResultsHead
+              reserve={genState !== "pre"}
+              declined={planDeclined}
+              settled={resultsVisible}
+              scenario={scenario}
+              jurisdictionName={jurisdictionBlock?.name ?? null}
+              onChangeValue={onChangeValue}
+            />
             {/* #252: the "Generating…" empty state (a first Generate with
                 no prior breakdown to hold) is gone — the band is the one
                 working voice; the zone holds the pre-generate cards

@@ -451,7 +451,8 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     expect(html).toContain("status-bar caution");
     expect(html).toContain("VERIFIED · 1 plan flag");
     expect(html).not.toContain("1 plan flags");
-    expect(html).toContain("REVIEW FLAGS");
+    // #437 ruling 2: the REVIEW FLAGS chip is removed; the words stay.
+    expect(html).not.toContain("REVIEW FLAGS");
     expect(html).not.toContain("READY FOR TCS REVIEW");
     expect(html).not.toContain("status-bar pass");
   });
@@ -489,7 +490,7 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     );
     // 1 validation warning + 1 compliance fail + 1 V1 limitation = 3.
     expect(html).toContain("VERIFIED · 3 plan flags");
-    expect(html).toContain("REVIEW FLAGS");
+    expect(html).not.toContain("REVIEW FLAGS");
     expect(html).not.toContain("compliance check failed");
     expect(html).not.toContain("V1 limitation");
     expect(html).not.toContain("WORK ZONE SHORT VS BUFFER");
@@ -573,5 +574,37 @@ describe("arc12 coda — the strip never attributes compliance fails to the Supp
     );
     expect(html).toContain("VERIFIED · 2 plan flags");
     expect(html).not.toMatch(/colorado supplement/i);
+  });
+});
+
+// #437 ruling 2 (Ryan, 2026-11-02): with questions waiting, a ready
+// verdict says the count in words; at zero it keeps today's wording.
+describe("StatusBar (#437 ruling 2: the question count in words)", () => {
+  const strip = (questions: number, opts?: Parameters<typeof makeAudit>[0]) =>
+    renderToStaticMarkup(
+      <StatusBar inputError={null} audit={ready(makeAudit(opts))} questions={questions} />,
+    );
+  it("N = 2 reads the plural sentence, ⚠ caution, and no pill", () => {
+    const html = strip(2, { coloradoFails: 1 });
+    expect(html).toContain("status-bar caution");
+    expect(html).toContain("Plan ready. Answer 2 quick questions before you send it.");
+    expect(html).toContain("⚠");
+    expect(html).not.toContain("pill");
+    expect(html).not.toContain("VERIFIED");
+  });
+  it("N = 1 reads the singular", () => {
+    expect(strip(1)).toContain("Plan ready. Answer 1 quick question before you send it.");
+  });
+  it("N = 0 keeps today's verdict wording", () => {
+    const html = strip(0, { coloradoFails: 1 });
+    expect(html).toContain("VERIFIED · 1 plan flag");
+    expect(html).not.toContain("quick question");
+  });
+  it("a non-ready verdict is never replaced by the sentence", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar inputError="Work length is required" audit={ready(makeAudit())} questions={2} />,
+    );
+    expect(html).toContain("INVALID INPUT");
+    expect(html).not.toContain("quick question");
   });
 });

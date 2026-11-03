@@ -175,186 +175,151 @@ async function generate() {
   const user = userEvent.setup();
   await user.click(screen.getByRole("button", { name: "Generate package" }));
   await settle();
-  // R96 C: open NEEDS YOU's fold, so its none-found / not-asserted rows
-  // are in the DOM for the staging this suite drives.
-  const fold = document.querySelector(".ny-fold-toggle");
-  if (fold) await user.click(fold);
   return user;
 }
 const block = () => document.getElementById("site-corrections") as HTMLElement;
 const band = () => document.querySelector(".working-band") as HTMLElement | null;
-// #288 clause 1: the corrections block moved into NEEDS YOU and its rows
-// are rule 74 item rows — `.sc-row` → `.ny-item`.  The id it is found by
-// moved with it, so `block()` is unchanged.
-const row = (label: string) => within(block()).getByText(label).closest(".ny-item") as HTMLElement;
-const apply = (name: string) => within(block()).getByRole("button", { name }) as HTMLButtonElement;
 const ribbon = () =>
   Array.from(document.querySelectorAll(".stale-ribbon")).find((r) => /staged/.test(r.textContent ?? "")) ?? null;
 const stale = () => document.querySelector(".results-stale");
-// Rule 78's standing sentence at zero, in full.  #288 clause 1 appended
-// its second clause, which the strip never printed — so this assertion
-// got LONGER, not looser: still an exact match, on the whole sentence.
-const ZERO_STANDING = "no corrections staged · staging costs nothing, Apply re-generates once";
 const download = () => screen.getByText("DOWNLOAD_STUB") as HTMLButtonElement;
-
-async function stageTwo(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(within(row("School zone")).getByRole("button", { name: "Assert" }));
-  await user.click(within(row("Pedestrian sidewalks")).getByRole("button", { name: "Dismiss" }));
-  const picker = block().querySelector(".site-correction-picker") as HTMLElement;
-  await user.click(within(picker).getByRole("radio", { name: "Fenced off" }));
-  await user.click(within(picker).getByRole("button", { name: "Confirm dismiss" }));
+const button = (name: string) => within(block()).getByRole("button", { name }) as HTMLButtonElement;
+// #437 ruling 8: the none-found rows (and their Assert) sit in the other-
+// conditions row, opened by "Show them".
+async function assertSchool(user: ReturnType<typeof userEvent.setup>) {
+  const other = document.querySelector(".ny-other") as HTMLElement;
+  await user.click(within(other).getByRole("button", { name: "Show them" }));
+  const school = within(other).getByText("School zone").closest(".ny-item") as HTMLElement;
+  await user.click(within(school).getByRole("button", { name: "Assert" }));
   await settle();
 }
 
-describe("#254 — corrections stage in the shell and apply as one write", () => {
-  it("staging two corrections opens no request, mounts no band, discloses (dim + ribbon) and keeps downloads live", async () => {
+// #437 (rulings 3, 5, 6; S1, S2): the two detected conditions are two
+// questions.  No site adjustment is on this wire, so ruling 4 keeps the
+// scan's order: the intersection first, then the sidewalks.
+async function answerBoth(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(within(block()).getByLabelText(/No, there isn't one/));
+  await user.click(button("Next question"));
+  await user.click(within(block()).getByLabelText(/Yes, they're there/));
+  await settle();
+}
+
+describe("#254 — answers stage in the shell and apply as one write (#437)", () => {
+  it("staging two answers opens no request, mounts no band, discloses (dim + ribbon) and keeps downloads live", async () => {
     const user = await generate();
     const audits = calls("audit").length;
     const breakdowns = calls("device-breakdown").length;
     expect(band()).toBeNull();
     expect(stale()).toBeNull();
     expect(ribbon()).toBeNull();
-    await stageTwo(user);
-    // Two staged rows, the Apply row says 2, the ribbon says 2.
-    expect(row("School zone").classList.contains("sc-staged")).toBe(true);
-    expect(row("Pedestrian sidewalks").classList.contains("sc-staged")).toBe(true);
-    expect(within(block()).getByText("2 corrections staged · not yet applied")).toBeTruthy();
-    expect(apply("Apply 2 corrections").disabled).toBe(false);
+    await answerBoth(user);
+    expect(button("Apply answers").disabled).toBe(false);
     expect(calls("audit").length).toBe(audits);
     expect(calls("device-breakdown").length).toBe(breakdowns);
     expect(band()).toBeNull();
     expect(document.querySelector(".workbench")!.classList.contains("ws-locked")).toBe(false);
-    // Disclose, don't lock (P7 / #252): the results dim behind the ribbon,
-    // the download control stays live.
+    // Disclose, don't lock (P7 / #252; ruling 11).
     expect(stale()).not.toBeNull();
     expect(ribbon()!.textContent).toBe("Previous answer: 2 corrections staged, not yet applied.");
     expect(download().disabled).toBe(false);
-    expect(download().closest(".results-stale")).not.toBeNull();
   });
 
-  it("Undo on a staged row un-stages it — no request; the count follows", async () => {
+  it("Undo on a staged answer un-stages it: no request; the count follows", async () => {
     const user = await generate();
     const audits = calls("audit").length;
-    await stageTwo(user);
-    await user.click(within(row("School zone")).getByRole("button", { name: "Undo" }));
+    await user.click(within(block()).getByLabelText(/No, there isn't one/));
+    await user.click(button("Next question"));
     await settle();
-    expect(row("School zone").classList.contains("sc-staged")).toBe(false);
-    expect(within(row("School zone")).getByRole("button", { name: "Assert" })).toBeTruthy();
-    expect(within(block()).getByText("1 correction staged · not yet applied")).toBeTruthy();
     expect(ribbon()!.textContent).toBe("Previous answer: 1 correction staged, not yet applied.");
-    await user.click(within(row("Pedestrian sidewalks")).getByRole("button", { name: "Undo" }));
+    await user.click(button("Undo"));
     await settle();
-    expect(within(block()).getByText(ZERO_STANDING)).toBeTruthy();
-    expect(apply("Apply 0 corrections").disabled).toBe(true);
     expect(ribbon()).toBeNull();
     expect(stale()).toBeNull();
+    expect(within(block()).getByText("Question 1 of 2")).toBeTruthy();
     expect(calls("audit").length).toBe(audits);
   });
 
-  it("Apply opens exactly one request per surface carrying the staged set exactly; the band mounts once and names the count; the set empties on settle", async () => {
+  it("Apply answers opens exactly one request carrying the staged set exactly; the band names the count; the set empties", async () => {
     const user = await generate();
-    await stageTwo(user);
+    await answerBoth(user);
     const audits = calls("audit").length;
     const breakdowns = calls("device-breakdown").length;
-    const asserted = {
-      flag: "school_zone",
-      action: "assert",
-      status: "applied",
-      scan_detected: false,
-      disclosure: "Operator asserted school zone; the scan found none along the corridor. " + ADVISORY,
-      record_clause: "Operator asserted school zone; the scan found none along the corridor.",
-    };
     const dismissed = {
-      flag: "pedestrian_facility",
+      flag: "adjacent_intersection",
       action: "dismiss",
-      reason: "fenced",
+      reason: "not_there",
       status: "applied",
       scan_detected: true,
-      disclosure: "Operator dismissed the scan's pedestrian sidewalks: fenced off. " + ADVISORY,
-      record_clause: "Operator dismissed the scan's pedestrian sidewalks: fenced off.",
+      disclosure: "Operator dismissed the scan's adjacent at-grade intersection: not there. " + ADVISORY,
+      record_clause: "Operator dismissed the scan's adjacent at-grade intersection: not there.",
     };
-    served = audit([asserted, dismissed]);
+    const confirmed = {
+      flag: "pedestrian_facility",
+      action: "confirm",
+      status: "confirmed",
+      scan_detected: true,
+      disclosure: "Operator confirmed the scan's pedestrian sidewalks. The plan is unchanged.",
+      record_clause: "Operator confirmed the scan's pedestrian sidewalks. The plan is unchanged.",
+    };
+    served = audit([dismissed, confirmed]);
     const held = gate(served);
     auditGate = held;
-    await user.click(apply("Apply 2 corrections"));
+    await user.click(button("Apply answers"));
     await settle();
-    // One request — not one per correction.  #306 (R64): and not one
-    // per surface either: the audit carries the breakdown.
+    // One request, not one per answer; the audit carries the breakdown (#306).
     expect(calls("audit").length).toBe(audits + 1);
     expect(calls("device-breakdown").length).toBe(breakdowns);
-    expect((lastBody("audit") as unknown as { include_breakdown?: boolean }).include_breakdown).toBe(true);
-    for (const kind of ["audit"] as const) {
-      const sent = lastBody(kind).meta.siteConditionOverrides!;
-      expect(sent.map((m) => (m as { flag: string }).flag)).toEqual(["school_zone", "pedestrian_facility"]);
-      expect(sent[0]).toMatchObject({ flag: "school_zone", action: "assert" });
-      expect(sent[1]).toMatchObject({ flag: "pedestrian_facility", action: "dismiss", reason: "fenced" });
-      expect(sent[0]).not.toHaveProperty("reason");
-      expect(sent[1]).not.toHaveProperty("note");
-    }
-    // The band is up once, naming the count (not one condition's name).
+    const sent = lastBody("audit").meta.siteConditionOverrides!;
+    expect(sent.map((m) => (m as { flag: string }).flag)).toEqual([
+      "adjacent_intersection",
+      "pedestrian_facility",
+    ]);
+    expect(sent[0]).toMatchObject({ action: "dismiss", reason: "not_there" });
+    expect(sent[0]).not.toHaveProperty("note");
+    expect(sent[1]).toMatchObject({ action: "confirm" });
+    expect(sent[1]).not.toHaveProperty("reason");
     expect(band()).not.toBeNull();
     expect(band()!.querySelector(".wb-verb")!.textContent).toBe("RE-GENERATING");
     expect(band()!.querySelector(".wb-object")!.textContent).toBe("after 2 corrections");
-    expect(band()!.querySelector(".wb-named")).toBeNull();
-    // In flight: the staged set is already empty (Apply consumed it); the
-    // staged ribbon is gone — the flight's own ribbon speaks.
     expect(ribbon()).toBeNull();
-    expect(apply("Apply 0 corrections").disabled).toBe(true);
     await act(async () => {
       held.release();
     });
     await settle();
     expect(band()).toBeNull();
     expect(calls("audit").length).toBe(audits + 1);
-    // Settled: two records, the advisory once, nothing staged, nothing dimmed.
-    expect(within(block()).getByText(asserted.record_clause)).toBeTruthy();
-    expect(within(block()).getByText(dismissed.record_clause)).toBeTruthy();
-    expect(block().querySelectorAll(".sc-foot-advisory")).toHaveLength(1);
-    expect(within(block()).getByText(ZERO_STANDING)).toBeTruthy();
+    // Settled: both answers are applied records; nothing staged or dimmed.
+    expect(within(block()).getByText("2 of 2 answered")).toBeTruthy();
+    expect(
+      within(block()).getByText("Is there an intersection next to the work: No, there isn't one"),
+    ).toBeTruthy();
+    expect(
+      within(block()).getByText("Are there sidewalks along the work zone: Yes, they're there"),
+    ).toBeTruthy();
+    expect(block().querySelectorAll(".ny-advisory")).toHaveLength(1);
     expect(stale()).toBeNull();
-    expect(block().querySelectorAll(".sc-staged")).toHaveLength(0);
   });
 
   it("CHANGE ONE THING KEEPS the staged set — one Apply carries both halves", async () => {
-    // #289 Phase 2 — the panel-era Reopen cleared staging, because it
-    // threw the whole answer away and started again.  CHANGE ONE THING
-    // does not: ruling 191 folds "this field plus any staged site
-    // corrections" into ONE write, which is only possible if the
-    // corrections are still there when the field is being edited.
-    //
-    // So the assertion inverts, deliberately.  Part 1 §5.5: "Apply folds
-    // the whole staged set — this field plus any staged site corrections
-    // — into one write, one request, one working-band cycle."
+    // Part 1 §5.5 / ruling 191: the field and the staged answers in one write.
     const user = await generate();
-    await stageTwo(user);
+    await answerBoth(user);
     await changeOneThing();
     await settle();
-    // Still staged, still counted, still under its ribbon.
-    expect(within(block()).queryByText(ZERO_STANDING)).toBeNull();
     expect(ribbon()).not.toBeNull();
-    // And they are still STAGED, not written: only APPLY writes (rule
-    // 78, ruling 191).  #289 S7 makes that literal — in revision there
-    // is no second Generate to press, because APPLY *is* the generate
-    // (ruling e), so the staged set can only leave through the one
-    // write that carries both halves.
     expect("siteConditionOverrides" in lastBody("audit").meta).toBe(false);
     await applyRevision();
     await settle();
-    // One write, both halves: the corrections land on the meta.
     expect("siteConditionOverrides" in lastBody("audit").meta).toBe(true);
     expect(ribbon()).toBeNull();
   });
 });
 
 describe("#289 finding 2 — the staged sentence says what is staged, from the one list", () => {
-  it("one FIELD reads '1 field' — in NEEDS YOU, on its Apply, and on the ribbon", async () => {
+  it("one FIELD reads '1 field' on the ribbon", async () => {
     await generate();
     await stageRevision("55");
     await settle();
-    // Was "1 correction staged" / "Apply 1 correction" — a speed is not
-    // a site correction.
-    expect(within(block()).getByText("1 field staged · not yet applied")).toBeTruthy();
-    expect(apply("Apply 1 field").disabled).toBe(false);
     expect(ribbon()!.textContent).toBe("Previous answer: 1 field staged, not yet applied.");
   });
 
@@ -362,37 +327,28 @@ describe("#289 finding 2 — the staged sentence says what is staged, from the o
     const user = await generate();
     await stageRevision("55");
     await settle();
-    await user.click(within(row("School zone")).getByRole("button", { name: "Assert" }));
-    await settle();
-    expect(
-      within(block()).getByText("1 field · 1 correction staged · not yet applied"),
-    ).toBeTruthy();
-    expect(apply("Apply 1 field · 1 correction").disabled).toBe(false);
+    await assertSchool(user);
     expect(ribbon()!.textContent).toBe(
       "Previous answer: 1 field · 1 correction staged, not yet applied.",
     );
-    // The S7 panel's own sentence is the same producer's.
     expect(screen.getByTestId("revise-sentence").textContent).toBe(
       "1 field · 1 correction staged · not yet applied",
     );
   });
 
-  it("PAYLOAD: NEEDS YOU's Apply writes BOTH halves — a staged field is no longer dropped", async () => {
+  it("PAYLOAD: Apply answers writes BOTH halves — a staged field is not dropped", async () => {
     const user = await generate();
     await stageRevision("55");
     await settle();
-    await user.click(within(row("School zone")).getByRole("button", { name: "Assert" }));
-    await settle();
-    await user.click(apply("Apply 1 field · 1 correction"));
+    await answerBoth(user);
+    await user.click(button("Apply answers"));
     await settle();
     const wrote = lastBody("audit") as unknown as {
       speed: number;
       meta: { siteConditionOverrides?: unknown[] };
     };
-    // Before finding 2 the button folded meta only and cleared the list,
-    // so the 55 vanished.  Now the one write carries it.
     expect(wrote.speed).toBe(55);
-    expect("siteConditionOverrides" in wrote.meta).toBe(true);
+    expect(wrote.meta.siteConditionOverrides).toHaveLength(2);
     expect(ribbon()).toBeNull();
   });
 });

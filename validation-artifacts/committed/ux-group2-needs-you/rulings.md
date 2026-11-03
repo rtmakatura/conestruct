@@ -50,3 +50,21 @@ Built 2026-11-02 on Ryan's rulings S1 and S2. None of these hits the park list.
 - **E6. The ledger (Python `tier_ledger.py`, TS `tiering.ts` mirror)** is unchanged. A confirmed record adds no fact; the condition keeps its own detected fact.
 
 **Rule 5 miss:** the checkpoint predicted "~+40" for the backend if S2-A/S1-C were ruled in. Actual: backend source +55/−9, backend tests +85, and frontend +35/−8 (types, two helpers, their test, one intent line). I hadn't predicted the frontend half.
+
+
+## Branch 2 (`ux-group2-needs-you-ui`): R145 self-ruled calls
+
+Built 2026-11-02 on rulings 1-8 and S1-S5 (the strip, NEEDS YOU one question at a time, the new order). None of these hits the park list.
+
+- **F1. The REVIEW FLAGS pill is removed in every state**, N = 0 included (ruling 2 names it removed; the words stay). The REVIEW WARNINGS and READY FOR TCS REVIEW pills are not named and stay.
+- **F2. The strip's N is the open questions:** unanswered plus answered-but-not-applied (`openQuestionCount`, the number D6 gives the warning row). Once every answer is applied, N = 0 and the strip keeps today's verdict.
+- **F3. Per-flag words.** Singular flags read "Yes, it's there" / "No, there isn't one". Explanations: bike lane "…so we added N devices for people on bikes."; school "…for the school zone."; interchange "…The plan adds no devices for it; the ramp layout stays with your TCS." (audit.py:2664-2678); the intersection's "traffic control supervisor" reads "TCS" (S3). A flag with no adjustment record on the wire states no device count: "The plan stays as it is." / "The plan is built again without it." (Rule 10).
+- **F4. A radio click stages the answer at once**; choosing the answer the plan already carries (after an Undo of an applied record) un-stages instead of writing it again.
+- **F5. With the card closed** (every answer applied) the header reads "N of N answered". If something is still staged then (a manual key, an Undo on a non-question record), an "Answers ready to apply." row carries the same Apply.
+- **F6. A collapsed answer reads** "<the question without its ?>: <the answer label>", plus " · not applied yet" while staged, with Undo. Clicking the row reopens it.
+- **F7. Ruling 8's row drops "Nothing else needs you."** while NEEDS YOU still lists a tier item (Rule 10: the sentence would be false).
+- **F8. N = 0:** NEEDS YOU mounts only for a question, a tier item, a non-question condition record or a staged Apply. A scanned plan with nothing detected shows ruling 8's row alone (P14).
+- **F9. Setup moves below the other-conditions row in this branch**, as the grid it is today. Its one-row form (ruling 9) is branch 3's.
+- **F10. A staged non-question intent** (an Assert from "Show them") while a question is open applies with the last question's "Apply answers". There is no second Apply button beside the card (ruling 6 gives the block one).
+
+**Rule 5 against the checkpoint's prediction (§ 3 a, b, c, g):** predicted ~300 assertions in ~20 test files for (c) plus ~66 for (a, b, g). Actual: 14 test files touched, vitest 2722 passed. Two suites were rewritten as predicted (NeedsYouConditions.test, the batch-corrections tail), NeedsYouQuestion.test is new, and `NeedsYouConditions.tokens.test`, `ResultsHead.grid`, `post-generate-scroll`, `BandStack.landing` and `results-slot-tokens` needed no change (fewer than predicted). Source: NeedsYouConditions.tsx −691/+330 (predicted −450/+350), NeedsYouQuestion.tsx +330 (predicted +250), needs-you-items.ts +231 (predicted +120), globals.css +245 (predicted +300/−200; nothing was deleted, because the dismiss-picker CSS is now unused and leaves in branch 3's cleanup, which the prediction did not say).

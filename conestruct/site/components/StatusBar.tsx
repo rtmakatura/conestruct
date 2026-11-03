@@ -212,6 +212,14 @@ interface Props {
    * ranking and every other branch are untouched.
    */
   preGenerate?: boolean;
+  /**
+   * #437 ruling 2: the NEEDS YOU questions still waiting on the plan
+   * (lib/needs-you-items.ts `openQuestionCount`, the one producer).  Above
+   * zero, a ready verdict reads "Plan ready. Answer N quick questions
+   * before you send it." with the ⚠ caution treatment and no pill.  At
+   * zero every verdict keeps today's wording.
+   */
+  questions?: number;
 }
 
 // fix-spec-02 P1·05 (spec'd under P1·02): the strip is the product's
@@ -256,6 +264,7 @@ function StatusBarState({
   verifySlow,
   bandVoice = false,
   preGenerate = false,
+  questions = 0,
 }: Props) {
   // #289 finding 1 — ranked above INVALID INPUT on purpose: the client
   // bounds it checks (lanes per kind, the approach mirrors) are the
@@ -439,6 +448,21 @@ function StatusBarState({
   }
   const isClean = flags.is_clean;
 
+  // #437 ruling 2 (D2): the count in words, ⚠ caution (Rule 13's second
+  // channel is the glyph and the words).  The REVIEW FLAGS chip looked
+  // like a button and was not one, so this state carries no pill.
+  if (questions > 0) {
+    return (
+      <div className="status-bar caution" data-testid="strip-questions">
+        <Sym g="⚠" />
+        <span className="status-questions">
+          Plan ready. Answer {questions === 1 ? "1 quick question" : `${questions} quick questions`}{" "}
+          before you send it.
+        </span>
+      </div>
+    );
+  }
+
   if (isClean) {
     return (
       <div className="status-bar pass">
@@ -489,7 +513,8 @@ function StatusBarState({
       <span>
         VERIFIED · {total} plan flag{total === 1 ? "" : "s"}
       </span>
-      <span className="pill caution">REVIEW FLAGS</span>
+      {/* #437 ruling 2: the REVIEW FLAGS chip is removed (it looked like
+          a button and was not one).  The words above are unchanged. */}
     </div>
   );
 }

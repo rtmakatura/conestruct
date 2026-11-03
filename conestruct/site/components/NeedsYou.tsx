@@ -7,26 +7,25 @@
 // ACKNOWLEDGE renders no button).  Spec: #281 comment 1, rules 72–79,
 // with rulings 185 and 186.
 //
-// THE BLOCK, COMPLETE.  The shell landed first; the Phase 1 finish
-// ruling's clause 1 gave it the corrections block's rows and its one
-// write (components/NeedsYouConditions.tsx — the MOVE, verbatim from the
-// setup strip, which #289 Phase 2 then deleted).  The block now carries, in this order:
-//   · the ▲/⚠ tier rows, with their citations and — per ruling d — no
-//     buttons, because the wire carries nothing for them to write;
-//   · the five scanned site-condition rows and the two manual keys,
-//     with Dismiss / Assert / Undo on one right edge (rules 76–77);
-//   · rule 78's Apply row, the last data line, with its standing
-//     sentence and its disabled-at-zero button;
-//   · the scan's own provenance line.
+// #437 (UX group 2, Option B; validation-artifacts/committed/
+// ux-group2-needs-you/rulings.md) — the block now carries, in this order:
+//   · the question flow (components/NeedsYouQuestion.tsx): one detected
+//     site condition at a time, with its own header row ("NEEDS YOU",
+//     "Question k of N", the segment bar);
+//   · "Also on this plan": the ▲/⚠ tier rows, with their citations and,
+//     per ruling d, a button only where the wire carries a write (S5);
+//   · the condition records that are not questions (applied or staged
+//     asserts, asserted manual keys), each with Undo;
+//   · the backend's verify advisory, once (D9).
+// The scan footer and the old Apply row are gone (D9, ruling 6).
 //
 // It is also the jump target the reference's read-only signposts point
-// at (rule 129: "Correct in setup ↑", which jumps to NEEDS YOU) — the
-// anchor moved with the block, so the pointer still lands (Rule 10).
+// at (rule 129: "Correct in setup ↑", which jumps to NEEDS YOU; D10).
 //
 // The component decides nothing (the #228 deriveRail idiom): tiers come
-// from lib/tiering.ts, ordering and counts from lib/needs-you.ts, and
-// every string below is either fixed copy from the spec or a value the
-// wire carried.
+// from lib/tiering.ts, ordering and counts from lib/needs-you.ts and
+// lib/needs-you-items.ts, and every string below is either fixed copy from
+// the spec or a value the wire carried.
 
 import type { ReactNode } from "react";
 
@@ -46,6 +45,8 @@ const TIER_GLYPH = { changed: "▲", attention: "⚠" } as const;
 export function NeedsYou({
   model,
   conditions = null,
+  flow = null,
+  advisory = null,
   inFlight = false,
   primary = "needs-you",
   onAction,
@@ -54,37 +55,34 @@ export function NeedsYou({
   /** #297: a row's control was pressed.  The shell stages the intent;
    *  nothing here writes. */
   onAction?: (id: string, kind: NeedsYouAction["kind"]) => void;
-  /** #297: the Apply row, when something is staged and the condition rows
-   *  (which carry their own) are not mounted.  Same sentence, same write. */
+  /** #297: an Apply row for staged intents when no question flow is
+   *  mounted to carry the write.  Same one write. */
   applyRow?: ReactNode;
   model: NeedsYouModel;
-  /** #288 clause 3 — read, never decided here.  The shell derives it
-   *  once (lib/results-primary.ts) and hands the same answer to the
-   *  download row, so the two cannot both claim the primary.  Ruling
-   *  182: when this block owns it, its item ACTIONS are the primary —
-   *  the block is not promoted to a banner and the downloads are not
-   *  demoted; only the action treatment changes. */
+  /** #288 clause 3 — read, never decided here (lib/results-primary.ts). */
   primary?: PrimaryOwner;
-  /** Clause 1's rows — the moved corrections block, rendered as item
-   *  rows of this block's list.  `null` when the plan carries no scan
-   *  for them to read (Rule 10). */
+  /** The listed condition rows that are not questions (records with
+   *  Undo).  `null` when there are none (Rule 10). */
   conditions?: ReactNode;
+  /** #437 ruling 3: the question flow, which carries its own header row.
+   *  `null` with no question. */
+  flow?: ReactNode;
+  /** D9: the backend's verify advisory, once, under the questions. */
+  advisory?: string | null;
   /** Spec 34: a re-generation is in flight for the scenario on screen. */
   inFlight?: boolean;
 }) {
-  // Rule 10: nothing to show, no block.  An empty NEEDS YOU would assert
-  // that the plan was examined and found to want something, which is
-  // exactly what nothing does not say.
-  //
-  // DECLARED BEHAVIOUR CHANGE (Rule 5), from clause 1: the gate is no
-  // longer the tier count alone.  A clean plan with a served scan still
-  // has seven conditions the operator can correct, and rule 78 says the
-  // Apply row is always present post-scan — so the block mounts on its
-  // conditions even when nothing changed the plan.  The count stays
-  // ruling 185's sum of ▲ + ⚠ and is honest at zero: it is a statement
-  // about the two consequence tiers, not about the block's row count.
-  if (model.count === 0 && conditions === null) return null;
+  // Rule 10: nothing to show, no block.
+  // #437 (Rule 5, declared): the block mounts on a question, a
+  // non-question condition record, a tier item or a staged Apply.  The
+  // header numeral (ruling 185's sum) is gone: with questions the count is
+  // "Question k of N" in words and the verdict strip says it once more
+  // (P2: not a third time).
+  if (model.items.length === 0 && conditions === null && flow === null && applyRow === null) {
+    return null;
+  }
   const decomposition = countProvenance(model);
+  const hasList = model.items.length > 0 || conditions !== null || applyRow !== null;
   return (
     <section
       id={SITE_CORRECTIONS_ANCHOR}
@@ -92,31 +90,33 @@ export function NeedsYou({
       aria-busy={inFlight || undefined}
       className={`needs-you jump-anchor outline-none${
         primary === "needs-you" ? " owns-primary" : ""
-      }`}
+      }${flow ? " has-questions" : ""}`}
       aria-labelledby="needs-you-h"
     >
-      {/* Rule 73: section header → provenance → count, count last and
-          pushed right.  Ruling 186: always expanded, so the header is
-          not a disclosure control and carries no caret. */}
-      <div className="ny-head">
-        <h3 id="needs-you-h" className="ny-title tr-section">
-          NEEDS YOU
-        </h3>
-        <p className="ny-sub tr-prov">
-          changed the plan, or waiting on your word
-          {decomposition ? ` · ${decomposition}` : ""}
-        </p>
-        {/* Ruling 185: the header number is the SUM.  The decomposition
-            above is provenance and is never a second numeral here. */}
-        <span className="ny-count">{model.count}</span>
-      </div>
-      <ul className="ny-items">
-        {model.items.map((item) => (
-          <Item key={item.id} item={item} onAction={onAction} locked={inFlight} />
-        ))}
-        {conditions}
-        {conditions === null ? applyRow : null}
-      </ul>
+      {flow ?? (
+        <div className="ny-head">
+          <h3 id="needs-you-h" className="ny-title tr-section">
+            NEEDS YOU
+          </h3>
+          <p className="ny-sub tr-prov">
+            changed the plan, or waiting on your word
+            {decomposition ? ` · ${decomposition}` : ""}
+          </p>
+        </div>
+      )}
+      {flow && (model.items.length > 0 || conditions !== null) ? (
+        <p className="ny-also tr-prov">Also on this plan</p>
+      ) : null}
+      {hasList ? (
+        <ul className="ny-items">
+          {model.items.map((item) => (
+            <Item key={item.id} item={item} onAction={onAction} locked={inFlight} />
+          ))}
+          {conditions}
+          {applyRow}
+        </ul>
+      ) : null}
+      {advisory ? <p className="ny-advisory tr-note">{advisory}</p> : null}
     </section>
   );
 }
@@ -139,20 +139,13 @@ function Item({
       <div className="ny-mid">
         <span className="ny-body">{item.title}</span>
         {/* Rule 75: the provenance names the tier in words, then the
-            evidence the wire carried — and nothing it did not.
-            #289 fidelity F4 (X9): the uppercase result tag that sat after
-            the title (APPLIED / FAIL) is gone — it said the tier a second
-            time, in a third vocabulary, beside the provenance line that
-            already says it in words ("changed this plan", "needs
-            attention").  Only the render is removed: `item.result` stays
-            on the model (lib/needs-you-items.ts), unchanged. */}
+            evidence the wire carried (#289 F4: no result tag). */}
         <p className="ny-prov tr-prov">{itemProvenance(item)}</p>
       </div>
       <div className="ny-right">
         <span className="ny-cite">{item.cite}</span>
         {/* Ruling d: an action that would write nothing does not render
-            as a button.  The row still shows — an honest item without a
-            control beats a control that writes nothing. */}
+            as a button. */}
         {item.action ? (
           <Actions
             action={item.action}
@@ -192,10 +185,7 @@ function ActionButton({
   locked: boolean;
   press: (kind: NeedsYouAction["kind"]) => void;
 }) {
-  // The .act control, rule 133.  data-write declares the write for the
-  // write-lock honesty test — every control in this block writes, or it
-  // would not have rendered (ruling d).  #297: it stages; Apply writes.
-  // Disabled under the write lock like every write.
+  // The .act control, rule 133.  #297: it stages; Apply writes.
   return (
     <button
       type="button"

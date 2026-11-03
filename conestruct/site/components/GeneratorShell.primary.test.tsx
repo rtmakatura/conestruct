@@ -180,21 +180,17 @@ describe("#288 clause 3 — acceptance line 2: ONE primary per state", () => {
     expect(filledActions()).toHaveLength(0);
   });
 
-  it("S5 with none but SCANNED: the block mounts for its rows, and does NOT keep a filled action", async () => {
-    // The state the first two tests cannot reach: count 0 (zip primary)
-    // with NEEDS YOU mounted.  If the filled Apply treatment were not
-    // scoped to the primary's owner, this is where the page would show
-    // two primaries — and it is the only state where it would.
+  it("S5 with none but SCANNED: NEEDS YOU does not mount (N = 0); the other-conditions row does, and the zip is the one primary", async () => {
+    // #437 (Rule 5, declared; P14): with nothing detected there is no
+    // question and nothing staged, so the block has nothing to show and
+    // does not mount.  The conditions that need nothing are ruling 8's one
+    // row under where the block would be.  The zip keeps the primary.
     served = AUDIT_CLEAN_SCANNED;
     await generate();
-    const block = document.querySelector(".needs-you");
-    expect(block, "the block mounts for its condition rows").not.toBeNull();
-    expect(block!.classList.contains("owns-primary")).toBe(false);
+    expect(document.querySelector(".needs-you")).toBeNull();
+    expect(document.querySelector(".ny-other")).not.toBeNull();
     expect(zip()!.className).toContain("pri");
     expect(primaries()).toHaveLength(1);
-    // The Apply row is still there (rule 78: always present post-scan) —
-    // it just is not the page's primary.
-    expect(block!.querySelector(".ny-apply")).not.toBeNull();
   });
 
   it("R103: an advisory-only detection is listed and counted, but the zip keeps the primary", async () => {
@@ -216,7 +212,10 @@ describe("#288 clause 3 — acceptance line 2: ONE primary per state", () => {
     };
     await generate();
     const block = document.querySelector(".needs-you")!;
-    expect(block.querySelector(".ny-count")!.textContent).toBe("1");
+    // #437: the detection is a question (ruling 3); its button is not
+    // filled, because the zip owns the primary.
+    expect(block.textContent).toContain("Question 1 of 1");
+    expect(block.querySelector(".nyq-next-btn")!.classList.contains("is-on")).toBe(false);
     expect(block.classList.contains("owns-primary")).toBe(false);
     expect(zip()!.className).toContain("pri");
     expect(primaries()).toHaveLength(1);

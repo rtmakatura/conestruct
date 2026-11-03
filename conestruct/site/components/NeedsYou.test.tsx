@@ -38,13 +38,14 @@ describe("NeedsYou (rules 72–79)", () => {
       item({ id: "b", tier: "changed" }),
       item({ id: "c", tier: "attention" }),
     ]);
-    expect(container.querySelector(".ny-count")?.textContent).toBe("3");
+    // #437 (P2): the header numeral is gone; the strip and "Question k
+    // of N" carry the count.  The decomposition stays, in words.
+    expect(container.querySelector(".ny-count")).toBeNull();
     // The decomposition rides the provenance line, in words.
     const sub = container.querySelector(".ny-sub");
     expect(sub?.textContent).toContain("2 changed this plan");
     expect(sub?.textContent).toContain("1 needs attention");
-    // …and there is exactly one numeral element in the header.
-    expect(container.querySelectorAll(".ny-count").length).toBe(1);
+
   });
 
   it("Rule 10: a zero side renders as absence, not as '0 needs attention'", () => {

@@ -35,8 +35,11 @@
 
 import type { AppliedDelta } from "./jurisdiction";
 import { deltaCite, deltaDetail, deltaTitle } from "./delta-words";
-import type { SiteAdjustmentRecord } from "./render-types";
+import type { SiteAdjustmentRecord, SiteScanCorrection } from "./render-types";
 import type { NeedsYouItem, NeedsYouTier } from "./needs-you";
+import type { ConditionRow } from "./needs-you-conditions";
+import type { ScannedSiteFlag, StagedCorrection } from "./scenarios/types";
+import type { ScanBucketWire } from "./tiering";
 import type { TierSources } from "./tier-sources";
 import { deltaFactId } from "./tiering";
 import type { ItemSpec } from "@/components/AuditTrail";
@@ -190,4 +193,230 @@ export function buildNeedsYouItems({ sources, siteLabel, acks }: NeedsYouItemsIn
   }
 
   return items;
+}
+
+// ─── #437 (UX group 2, Option B): NEEDS YOU as one question at a time ───
+//
+// Authority: validation-artifacts/committed/ux-group2-needs-you/rulings.md,
+// rulings 3-7 with Ryan's checkpoint rulings S1-S5.
+//
+// S5: only a DETECTED scanned condition is a yes/no question, because only
+// it has a write that answers one: "Yes" stages `confirmMarker` (S1), "No"
+// stages `notThereMarker` (S2).  Ruling 4's order is derived HERE and
+// nowhere else: questions whose wire says they changed the plan (their own
+// site-adjustment record added or modified devices) first, then the ones
+// that only flag; ties keep the scan's bucket order (SCAN_BUCKET_TO_FLAG).
+//
+// Every consequence line is traced at the checkpoint (§ 2, S3, S4):
+//   · a confirm changes nothing (site_scan.py `confirmed`, no pending item);
+//   · a dismiss pops the flag, so the adjustment does not run and its
+//     `devices_added` come off (site_adjustments.py:366-387);
+//   · the intersection and the interchange add 0 devices and leave their
+//     layout with the TCS (audit.py:2646-2678).
+// The device count is the record's own `devices_added` (Rule 3: no total
+// is computed here; S4 dropped the total clause).
+
+export type QuestionAnswer = "yes" | "no";
+
+export interface NeedsYouQuestion {
+  flag: ScannedSiteFlag;
+  /** The 19 px heading. */
+  question: string;
+  /** The "Next: …" row's plain title. */
+  title: string;
+  /** One 13.5 px sentence: what the map showed and what the plan did. */
+  explanation: string;
+  yes: { label: string; consequence: string };
+  no: { label: string; consequence: string };
+  /** The site-adjustment record's citation, or null (Rule 10). */
+  citation: string | null;
+  bucket: ScanBucketWire | null;
+  /** Ruling 4: the wire says it changed the plan. */
+  changesPlan: boolean;
+  /** The answer on screen: staged first, then the applied record. */
+  answer: QuestionAnswer | null;
+  /** Where the answer lives: staged (not applied yet), applied (the
+   *  backend record), or null when unanswered. */
+  answerSource: "staged" | "applied" | null;
+  /** The applied record, when there is one. */
+  record: SiteScanCorrection | null;
+}
+
+interface FlagWords {
+  question: string;
+  title: string;
+  /** "sidewalks" / "an intersection", for the explanation sentence. */
+  noun: string;
+  plural: boolean;
+  /** Why the devices are there; read only when the record added some. */
+  purpose: string;
+  /** What stays with the TCS when the plan adds no devices (audit.py's
+   *  pending-item labels for the two 0-device flags). */
+  tcs: string | null;
+}
+
+const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
+  pedestrian_facility: {
+    question: "Are there sidewalks along the work zone?",
+    title: "sidewalks along the work zone",
+    noun: "sidewalks",
+    plural: true,
+    purpose: "to protect people walking",
+    tcs: null,
+  },
+  adjacent_intersection: {
+    question: "Is there an intersection next to the work?",
+    title: "an intersection next to the work",
+    noun: "an intersection",
+    plural: false,
+    purpose: "for it",
+    tcs: "the cross-street layout stays with your TCS",
+  },
+  adjacent_interchange: {
+    question: "Is there a highway interchange next to the work?",
+    title: "a highway interchange next to the work",
+    noun: "a highway interchange",
+    plural: false,
+    purpose: "for it",
+    tcs: "the ramp layout stays with your TCS",
+  },
+  bicycle_facility: {
+    question: "Is there a bike lane along the work zone?",
+    title: "a bike lane along the work zone",
+    noun: "a bike lane",
+    plural: false,
+    purpose: "for people on bikes",
+    tcs: null,
+  },
+  school_zone: {
+    question: "Is there a school zone along the work?",
+    title: "a school zone along the work",
+    noun: "a school zone",
+    plural: false,
+    purpose: "for the school zone",
+    tcs: null,
+  },
+};
+
+const devicesWord = (n: number) => `${n} device${n === 1 ? "" : "s"}`;
+
+function questionWords(
+  flag: ScannedSiteFlag,
+  bucket: ScanBucketWire | null,
+  rec: SiteAdjustmentRecord | undefined,
+): Pick<NeedsYouQuestion, "question" | "title" | "explanation" | "yes" | "no"> {
+  const w = FLAG_WORDS[flag];
+  const ft =
+    bucket && typeof bucket.nearest_distance_ft === "number" ? bucket.nearest_distance_ft : null;
+  const shows = `The map shows ${w.noun}${ft === null ? " near the work" : ` ${ft} ft from the work`}`;
+  const yes = w.plural ? "Yes, they're there" : "Yes, it's there";
+  const no = w.plural ? "No, there aren't any" : "No, there isn't one";
+  const added = rec ? rec.devices_added : null;
+  let explanation: string;
+  let yesLine: string;
+  let noLine: string;
+  if (added !== null && added > 0) {
+    const d = devicesWord(added);
+    explanation = `${shows}, so we added ${d} ${w.purpose}. Your answer decides whether they stay.`;
+    yesLine = `The ${d} ${added === 1 ? "stays" : "stay"} in the plan.`;
+    noLine = `The ${d} ${added === 1 ? "comes" : "come"} off the plan.`;
+  } else if (added === 0) {
+    explanation = w.tcs
+      ? `${shows}. The plan adds no devices for it; ${w.tcs}.`
+      : `${shows}. The plan adds no devices for it.`;
+    yesLine =
+      flag === "adjacent_intersection"
+        ? "Nothing changes. The TCS still lays out the cross street."
+        : "Nothing changes on the plan.";
+    noLine = "No devices change. Your answer goes in the audit trail for the TCS to check.";
+  } else {
+    // No adjustment record on the wire: no device count is stated (Rule 10).
+    explanation = `${shows}.`;
+    yesLine = "The plan stays as it is.";
+    noLine = "The plan is built again without it.";
+  }
+  return {
+    question: w.question,
+    title: w.title,
+    explanation,
+    yes: { label: yes, consequence: yesLine },
+    no: { label: no, consequence: noLine },
+  };
+}
+
+/** A staged marker's answer: undefined when nothing is staged for the
+ *  flag (or it is not a confirm / dismiss), null for a staged Undo. */
+function stagedAnswer(s: StagedCorrection | undefined): QuestionAnswer | null | undefined {
+  if (!s || !("marker" in s)) return undefined;
+  if (s.marker === null) return null;
+  if (s.marker.action === "confirm") return "yes";
+  if (s.marker.action === "dismiss") return "no";
+  return undefined;
+}
+
+/** S5 + ruling 4: the questions, in order, from the ONE condition
+ *  classification (lib/needs-you-conditions.ts).  A scanned flag is a
+ *  question when the scan detected it, or, with no ok scan, when its
+ *  applied record is a confirm or a dismiss (only a detected flag takes
+ *  either). */
+export function buildQuestions(
+  rows: readonly ConditionRow[],
+  adjustments: readonly SiteAdjustmentRecord[],
+  corrections: readonly SiteScanCorrection[] = [],
+): NeedsYouQuestion[] {
+  const adj = new Map(adjustments.map((r) => [r.flag, r] as const));
+  const applied = new Map(corrections.map((c) => [c.flag, c] as const));
+  const out: NeedsYouQuestion[] = [];
+  for (const r of rows) {
+    if (!(r.flag in FLAG_WORDS)) continue;
+    const flag = r.flag as ScannedSiteFlag;
+    let bucket: ScanBucketWire | null = null;
+    let staged: StagedCorrection | undefined;
+    if (r.kind === "detected") bucket = r.bucket;
+    else if (r.kind === "staged") {
+      bucket = r.staged && "marker" in r.staged ? (r.bucket ?? null) : null;
+      staged = r.staged;
+    } else if (r.kind !== "record") continue;
+    // A staged row hides its applied record; the record is still on the scan.
+    const record = applied.get(flag) ?? (r.kind === "record" ? r.correction : null);
+    const isQuestion =
+      bucket?.detected === true ||
+      (bucket === null &&
+        record !== null &&
+        (record.action === "confirm" || record.action === "dismiss"));
+    if (!isQuestion) continue;
+    const st = stagedAnswer(staged);
+    const recAnswer: QuestionAnswer | null =
+      record && record.status !== "moot"
+        ? record.action === "confirm"
+          ? "yes"
+          : record.action === "dismiss"
+            ? "no"
+            : null
+        : null;
+    const answer = st !== undefined ? st : recAnswer;
+    const answerSource: NeedsYouQuestion["answerSource"] =
+      st !== undefined ? (st === null ? null : "staged") : recAnswer ? "applied" : null;
+    const rec = adj.get(flag);
+    out.push({
+      flag,
+      ...questionWords(flag, bucket, rec),
+      citation: rec?.citation || null,
+      bucket,
+      changesPlan: rec ? rec.devices_added > 0 || (rec.devices_modified ?? 0) > 0 : false,
+      answer,
+      answerSource,
+      record,
+    });
+  }
+  // Ruling 4: changed-the-plan first.  Array.prototype.sort is stable, so
+  // ties keep the scan's order.
+  return out.sort((a, b) => Number(b.changesPlan) - Number(a.changesPlan));
+}
+
+/** The questions still waiting on the plan: unanswered, or answered but
+ *  not applied yet.  The verdict strip's N (ruling 2) and, in branch 3,
+ *  the downloads' warning row (ruling 11, D6) read this one number. */
+export function openQuestionCount(questions: readonly NeedsYouQuestion[]): number {
+  return questions.filter((q) => q.answerSource !== "applied").length;
 }

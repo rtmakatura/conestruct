@@ -7,7 +7,7 @@
 // carry their own Apply) are absent.
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render } from "@testing-library/react";
+import { cleanup, screen, fireEvent, render } from "@testing-library/react";
 import { NeedsYou } from "./NeedsYou";
 import { deriveNeedsYou, type NeedsYouItem } from "@/lib/needs-you";
 
@@ -52,17 +52,12 @@ describe("#297: the row control", () => {
     expect((document.querySelector("button.act") as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it("the handed Apply row renders only without condition rows", () => {
+  it("#437: the handed Apply row renders whenever it is handed; the shell gates it on no question flow", () => {
     render(<NeedsYou model={deriveNeedsYou([item()])} applyRow={APPLY} />);
     expect(document.querySelector('[data-testid="ny-ack-apply"]')).not.toBeNull();
     cleanup();
-    render(
-      <NeedsYou
-        model={deriveNeedsYou([item()])}
-        conditions={<li data-testid="conditions">rows</li>}
-        applyRow={APPLY}
-      />,
-    );
+    render(<NeedsYou model={deriveNeedsYou([item()])} flow={<div>flow</div>} />);
     expect(document.querySelector('[data-testid="ny-ack-apply"]')).toBeNull();
+    expect(screen.getByText("Also on this plan")).toBeTruthy();
   });
 });

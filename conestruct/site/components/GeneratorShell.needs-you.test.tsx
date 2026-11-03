@@ -130,8 +130,9 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     served = AUDIT_WITH_ITEMS;
     await generate();
     expect(block(), "the block mounted").not.toBeNull();
-    // 2 ▲ site adjustments + 1 ⚠ Colorado FAIL = 3.
-    expect(count()).toBe("3");
+    // 2 ▲ site adjustments + 1 ⚠ Colorado FAIL = 3 rows.  #437 (P2): the
+    // header numeral is gone; the split stays in words below.
+    expect(count()).toBeUndefined();
     expect(rows()).toHaveLength(3);
     // Ruling 185: the split is words on the provenance line, not a second numeral.
     const sub = document.querySelector(".ny-sub")?.textContent ?? "";
@@ -212,121 +213,79 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     expect(head.hasAttribute("data-write")).toBe(false);
   });
 
-  // ── #288 clause 1 — the corrections block, mounted inside NEEDS YOU ──
-  it("clause 1: the condition rows and the Apply row mount INSIDE the block, and the block is the signposts' anchor", async () => {
-    served = {
-      ...AUDIT_WITH_ITEMS,
-      sections: {
-        ...AUDIT_WITH_ITEMS.sections,
-        site_scan: {
-          status: "ok",
-          mode: "corridor",
-          measured_at: "2026-09-04T12:00:00+00:00",
-          buckets: {
-            intersections: { detected: true, count: 26, nearest_distance_ft: 34.1 },
-            schools: { detected: false, count: 0 },
-          },
-          flags: {},
-          corrections: [],
+  // ── #437: the detected conditions as questions, mounted inside NEEDS YOU ──
+  const withScan = {
+    ...AUDIT_WITH_ITEMS,
+    sections: {
+      ...AUDIT_WITH_ITEMS.sections,
+      site_scan: {
+        status: "ok",
+        mode: "corridor",
+        measured_at: "2026-09-04T12:00:00+00:00",
+        buckets: {
+          intersections: { detected: true, count: 26, nearest_distance_ft: 34.1 },
+          schools: { detected: false, count: 0 },
         },
+        flags: {},
+        corrections: [],
       },
-    };
+    },
+  };
+
+  it("#437 ruling 3: the question mounts INSIDE the block, and the block is the signposts' anchor", async () => {
+    served = withScan;
     await generate();
-    const b = block()!;
-    expect(b, "the block mounted").not.toBeNull();
-    // Rule 129: the reference's "Correct in setup ↑" signposts jump to
-    // NEEDS YOU — the anchor moved WITH the block, so the pointer lands.
+    const b = block()! as HTMLElement;
+    // Rule 129 / D10: the reference's "Correct in setup ↑" signposts jump
+    // to NEEDS YOU, and the anchor is still on the block.
     expect(b.id).toBe("site-corrections");
-    // The rows are this block's item rows, in its own list.
-    const list = b.querySelector(".ny-items")!;
-    // R96 C: the detected row is listed; the none-found row waits in the
-    // fold until it is opened.
-    expect(list.querySelectorAll(".site-correction-row").length).toBe(1);
-    await userEvent.setup().click(within(b as HTMLElement).getByRole("button", { name: "Show 3" }));
-    expect(list.querySelectorAll(".site-correction-row").length).toBe(2);
-    expect(list.querySelector(".ny-apply")).not.toBeNull();
-    // Rule 78's one write, and the tier rows still carry no button
-    // (ruling d) — so every button in the block belongs to a condition.
-    expect(within(b as HTMLElement).getByRole("button", { name: "Apply 0 corrections" })).toBeTruthy();
-    // Spec 34's aria-busy rides the section now, not the retired block.
+    expect(within(b).getByText("Question 1 of 1")).toBeTruthy();
+    expect(within(b).getByRole("heading", { level: 4 }).textContent).toBe(
+      "Is there an intersection next to the work?",
+    );
+    // One question, so its button is the Apply (ruling 6), off until answered.
+    const apply = within(b).getByRole("button", { name: "Apply answers" }) as HTMLButtonElement;
+    expect(apply.disabled).toBe(true);
+    // The tier rows sit under "Also on this plan" (S5).
+    expect(within(b).getByText("Also on this plan")).toBeTruthy();
+    // Spec 34's aria-busy rides the section.
     expect(b.getAttribute("aria-busy")).toBeNull();
   });
 
-  it("R99: the header count equals the rows listed; what passed folds behind a labelled count", async () => {
-    // Ruling 185 amended (R99, 2026-10-06): detected conditions count, so
-    // the numeral is true of every row above the fold.  Replaces fix 4's
-    // sub-header test: the sub-header named the rows the count was NOT
-    // about, and the listed rows are now counted.
-    served = {
-      ...AUDIT_WITH_ITEMS,
-      sections: {
-        ...AUDIT_WITH_ITEMS.sections,
-        site_scan: {
-          status: "ok",
-          mode: "corridor",
-          measured_at: "2026-09-04T12:00:00+00:00",
-          buckets: {
-            intersections: { detected: true, count: 26, nearest_distance_ft: 34.1 },
-            schools: { detected: false, count: 0 },
-          },
-          flags: {},
-          corrections: [],
-        },
-      },
-    };
-    await generate();
-    const b = block()!;
-    expect(b.querySelector(".ny-subhead")).toBeNull();
-    const rows = Array.from(b.querySelectorAll(".ny-item"));
-    const foldIdx = rows.findIndex((r) => r.classList.contains("ny-fold"));
-    expect(foldIdx, "the fold exists and is not first").toBeGreaterThan(0);
-    // Everything ABOVE the fold is counted: tier rows and listed conditions.
-    const above = rows.slice(0, foldIdx);
-    expect(above.every((r) => /is-(changed|attention)|ny-cond/.test(r.className))).toBe(true);
-    expect(String(above.length)).toBe(count());
-    // The fold names what it holds, symbol + word, and is closed.
-    const fold = rows[foldIdx] as HTMLElement;
-    expect(fold.querySelector(".ny-fold-text")!.textContent).toBe("✓ 1 none found · ◌ 2 not asserted");
-    const toggle = within(fold).getByRole("button", { name: "Show 3" });
+  it("#437 ruling 8: what needs nothing folds into ONE row under the block, with Show them", async () => {
+    served = withScan;
+    const user = await generate();
+    const b = block()! as HTMLElement;
+    expect(within(b).queryByText("School zone")).toBeNull();
+    const other = document.querySelector(".ny-other") as HTMLElement;
+    // 1 none found + 2 manual keys not asserted; the plan has other items
+    // (▲ school, ⚠ Colorado), so "Nothing else needs you." is withheld.
+    expect(other.querySelector(".ny-other-text")!.textContent).toBe("3 other conditions checked.");
+    // Ruling 1's order: NEEDS YOU, then this row.
+    expect(b.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const toggle = within(other).getByRole("button", { name: "Show them" });
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
-    expect(within(b as HTMLElement).queryByText("School zone")).toBeNull();
+    await user.click(toggle);
+    expect(within(other).getByText("School zone")).toBeTruthy();
   });
 
-  it("R99: a detected condition and the adjustment it caused are ONE row (P2)", async () => {
+  it("R99 / ruling 5: a detected condition and the adjustment it caused are ONE question (P2)", async () => {
     // AUDIT_WITH_ITEMS carries the intersection adjustment (+2 devices)
-    // and a school-zone one (1 modified).  The scan detects intersections
-    // and finds no school: the intersection adjustment renders inside its
-    // detected row; the school one has no listed row and stays an item.
-    served = {
-      ...AUDIT_WITH_ITEMS,
-      sections: {
-        ...AUDIT_WITH_ITEMS.sections,
-        site_scan: {
-          status: "ok",
-          mode: "corridor",
-          measured_at: "2026-09-04T12:00:00+00:00",
-          buckets: {
-            intersections: { detected: true, count: 26, nearest_distance_ft: 34.1 },
-            schools: { detected: false, count: 0 },
-          },
-          flags: {},
-          corrections: [],
-        },
-      },
-    };
+    // and a school-zone one (1 modified).  The intersection's count is in
+    // its question's lines; the school one has no question and stays an item.
+    served = withScan;
     await generate();
     const b = block()! as HTMLElement;
-    const row = b.querySelector(".site-correction-row") as HTMLElement;
-    expect(row.querySelector(".sc-name")!.textContent).toBe("Adjacent at-grade intersection");
-    expect(row.querySelector(".sc-adjustment")!.textContent).toBe("changed this plan · 2 devices added");
-    expect(row.querySelector(".ny-cite")!.textContent).toBe("MUTCD § 6C.02 · OPENSTREETMAP");
-    // No second voice for the intersection: no tier item names it.
+    expect(within(b).getByText("The 2 devices come off the plan.")).toBeTruthy();
+    expect(within(b).getByText(/Source: MUTCD § 6C.02 · map data from OpenStreetMap/)).toBeTruthy();
     const tierTitles = Array.from(b.querySelectorAll(".ny-item.is-changed .ny-body")).map((x) => x.textContent);
     expect(tierTitles.some((t) => /intersection/i.test(t ?? ""))).toBe(false);
-    // The school adjustment has no listed row of its own, so it stays.
     expect(tierTitles.some((t) => /school/i.test(t ?? ""))).toBe(true);
-    // ▲ school + ⚠ Colorado FAIL + the listed intersection row.
-    expect(count()).toBe("3");
+    // No header numeral (P2): the strip says the count once, in words.
+    expect(count()).toBeUndefined();
+    expect(document.querySelector('[data-testid="strip-questions"]')?.textContent).toContain(
+      "Plan ready. Answer 1 quick question before you send it.",
+    );
   });
 
   it("ruling 186 on a real mount: always expanded — every item is on screen, no caret in the header", async () => {

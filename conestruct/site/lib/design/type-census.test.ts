@@ -295,6 +295,10 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // #436 ruling 1: the road-picked name, Inter 15 / 600, on the
         // existing --fs-refusal token (15px is already a census size).
         "var(--fs-refusal)",
+        // #437 rulings 2, 3, 5: the question heading on the existing 19 px
+        // step-question token (D1) and the body-value token once more.
+        "var(--fs-step-question-520)",
+        "var(--fs-body-value)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",

@@ -152,19 +152,21 @@ async function generateHeld() {
   expect(document.querySelector(".working-band")).toBeNull();
   // Open every disclosure so their controls are in the DOM to enumerate.
   await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
-  // R96 C: open NEEDS YOU's fold, so its none-found / not-asserted rows
-  // are in the DOM for the staging this suite drives.
-  const fold = document.querySelector(".ny-fold-toggle");
-  if (fold) await user.click(fold);
+  // #437: open the other-conditions row so its Assert controls are in the
+  // DOM to enumerate.
+  const other = document.querySelector(".ny-other-toggle");
+  if (other) await user.click(other);
   const held = gate(AUDIT_WITH_BREAKDOWN);
   auditGate = held;
   const block = document.getElementById("site-corrections")!;
-  const school = within(block).getByText("School zone").closest(".site-correction-row") as HTMLElement;
-  await user.click(within(school).getByRole("button", { name: "Assert" }));
+  // #437 (rulings 3, 6): answer the two questions, then the one write.
+  await user.click(within(block).getByLabelText(/No, there isn't one/));
+  await user.click(within(block).getByRole("button", { name: "Next question" }));
+  await user.click(within(block).getByLabelText(/Yes, they're there/));
   await settle();
-  // #254: a correction is staged — no request opens until Apply.
+  // #254: answers are staged — no request opens until Apply.
   expect(document.querySelector(".working-band"), "staged: nothing requested").toBeNull();
-  await user.click(within(block).getByRole("button", { name: "Apply 1 correction" }));
+  await user.click(within(block).getByRole("button", { name: "Apply answers" }));
   await settle();
   expect(document.querySelector(".working-band"), "the request is held open").not.toBeNull();
   expect(document.querySelector(".workbench")!.classList.contains("ws-locked")).toBe(true);
@@ -218,7 +220,11 @@ describe("#252 — the write lock's enumeration is honest", () => {
     // 133's .act (one control treatment for the block's ledger actions);
     // the claim — that it is the ONE control still off at settle, and
     // only because of its own reason — is unchanged.
-    expect(stillOff).toEqual(['button.act.tr-step "Apply 0 corrections"']);
+    // #437: this fixture's settled audit carries no corrections, so the
+    // card is back on question 1, unanswered: its Next is the one control
+    // off, with its own reason on its title ("choose an answer first",
+    // ruling 6).  It is the plain .act here: the zip owns the primary.
+    expect(stillOff).toEqual(['button.act.nyq-next-btn "Next question"']);
   });
 
   it("the one dim rule sits after the block's own disabled ink, which steps aside under the lock (spec 25: one tier)", () => {

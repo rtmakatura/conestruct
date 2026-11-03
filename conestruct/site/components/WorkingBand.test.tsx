@@ -247,43 +247,58 @@ describe("#252 — the working band is present iff a request for the generated s
     expect(document.body.textContent).not.toMatch(/unnamed|untitled/i);
   });
 
-  it("RE-GENERATING · after a correction to {condition} on Apply of a staged Assert; after undoing the correction on Apply of a staged Undo (#254)", async () => {
+  it("RE-GENERATING · after N corrections on Apply answers; after a correction to {condition} when one answer is re-applied (#254, #437)", async () => {
+    // #437: the detected conditions are questions (rulings 3, 6).  The
+    // band's sentences are unchanged; this walks them through the flow.
     const user = await generate();
     expect(band()).toBeNull();
     const block = () => document.getElementById("site-corrections")!;
-    const asserted = {
-      flag: "school_zone",
-      action: "assert",
+    const button = (name: string) => within(block()).getByRole("button", { name });
+    const dismissed = {
+      flag: "adjacent_intersection",
+      action: "dismiss",
+      reason: "not_there",
       status: "applied",
-      scan_detected: false,
-      disclosure: "Operator asserted school zone; the scan found none along the corridor.",
+      scan_detected: true,
+      disclosure: "Operator dismissed the scan's adjacent at-grade intersection: not there.",
     };
-    served = audit([asserted]);
+    const confirmedSide = {
+      flag: "pedestrian_facility",
+      action: "confirm",
+      status: "confirmed",
+      scan_detected: true,
+      disclosure: "Operator confirmed the scan's pedestrian sidewalks. The plan is unchanged.",
+    };
+    served = audit([dismissed, confirmedSide]);
     let held = holdAudit();
-    const school = within(block()).getByText("School zone").closest(".site-correction-row") as HTMLElement;
-    await user.click(within(school).getByRole("button", { name: "Assert" }));
+    await user.click(within(block()).getByLabelText(/No, there isn't one/));
+    await user.click(button("Next question"));
+    await user.click(within(block()).getByLabelText(/Yes, they're there/));
     await settle();
     // #254: staged — no request, no band, until Apply.
     expect(band()).toBeNull();
-    await user.click(within(block()).getByRole("button", { name: "Apply 1 correction" }));
+    await user.click(button("Apply answers"));
     await settle();
     expect(verb()).toBe("RE-GENERATING");
-    expect(object()).toBe("after a correction to School zone");
-    expect(named()).toBe("School zone");
+    expect(object()).toBe("after 2 corrections");
+    expect(named()).toBeNull();
     await act(async () => {
       held.release();
     });
     await settle();
     expect(band()).toBeNull();
-    // Undo: the marker leaves the wire; the band says so.
-    served = audit();
+    // Undo the applied intersection answer, answer it the other way: one
+    // correction, named.
+    served = audit([{ ...dismissed, action: "confirm", reason: undefined, status: "confirmed" }, confirmedSide]);
     held = holdAudit();
-    await user.click(within(block()).getByRole("button", { name: "Undo" }));
+    await user.click(within(block()).getAllByRole("button", { name: "Undo" })[0]);
+    await user.click(within(block()).getByLabelText(/Yes, it's there/));
     await settle();
     expect(band()).toBeNull();
-    await user.click(within(block()).getByRole("button", { name: "Apply 1 correction" }));
+    await user.click(button("Apply answers"));
     await settle();
-    expect(object()).toBe("after undoing the correction to School zone");
+    expect(object()).toBe("after a correction to Adjacent at-grade intersection");
+    expect(named()).toBe("Adjacent at-grade intersection");
     await act(async () => {
       held.release();
     });

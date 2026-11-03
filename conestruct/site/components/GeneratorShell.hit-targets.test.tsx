@@ -167,6 +167,13 @@ const FLOORED = [
   // Rule 168 (R137 Q1): the file-count line under the zip — 44 px in the
   // ≤480 block, and not displayed at the desk (components/rule-168.test.tsx).
   "dl-files",
+  // #437 (Option B): the question card's radios fill their 56 px answer
+  // row (the input is inset over it), and the Details / Show them text
+  // buttons and the remaining-question rows carry a 44 px min-height.
+  "nyq-radio",
+  "nyq-details-btn",
+  "ny-other-toggle",
+  "nyq-row-btn",
 ];
 /** Tailwind-floored controls (the footer's links). */
 const TW_FLOOR = /min-h-\[(32|44)px\]/;
@@ -272,11 +279,12 @@ describe("#288 clause 7 — rule 15 reaches every control in the results stack",
     expect(unfloored, "controls revealed by opening a disclosure").toEqual([]);
   });
 
-  it("and with the dismiss picker open — its chips and note are controls", async () => {
+  it("#437: and with an answer chosen and Details open — the card's controls are floored", async () => {
     const user = await generate();
-    const dismiss = screen.queryAllByRole("button", { name: "Dismiss" })[0];
-    expect(dismiss, "the fixture detects a condition, so a Dismiss renders").toBeTruthy();
-    await user.click(dismiss);
+    const yes = screen.queryAllByRole("radio")[0];
+    expect(yes, "the fixture detects a condition, so a question renders").toBeTruthy();
+    await user.click(yes);
+    await user.click(screen.getByRole("button", { name: "Details" }));
     const stack = document.querySelector("section.results-stack")!;
     const unfloored = interactives(stack)
       .filter((el) => !flooredSomehow(el))

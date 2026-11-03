@@ -1,0 +1,43 @@
+components/GeneratorShell.batch-corrections.test.tsx :: #254 — corrections stage in the shell and apply as one write staging two corrections opens no request, mounts no band, discloses (dim + ribbon) and keeps downloads live
+components/GeneratorShell.batch-corrections.test.tsx :: #254 — corrections stage in the shell and apply as one write Undo on a staged row un-stages it — no request; the count follows
+components/GeneratorShell.batch-corrections.test.tsx :: #254 — corrections stage in the shell and apply as one write Apply opens exactly one request per surface carrying the staged set exactly; the band mounts once and names the count; the set empties on settle
+components/GeneratorShell.batch-corrections.test.tsx :: #254 — corrections stage in the shell and apply as one write CHANGE ONE THING KEEPS the staged set — one Apply carries both halves
+components/GeneratorShell.batch-corrections.test.tsx :: #289 finding 2 — the staged sentence says what is staged, from the one list one FIELD reads '1 field' — in NEEDS YOU, on its Apply, and on the ribbon
+components/GeneratorShell.batch-corrections.test.tsx :: #289 finding 2 — the staged sentence says what is staged, from the one list a field and a correction read '1 field · 1 correction' everywhere the set is named
+components/GeneratorShell.batch-corrections.test.tsx :: #289 finding 2 — the staged sentence says what is staged, from the one list PAYLOAD: NEEDS YOU's Apply writes BOTH halves — a staged field is no longer dropped
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack every interactive element in the stack carries a declared floor
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack the same holds with the disclosures OPEN — a panel's controls are controls too
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack and with the dismiss picker open — its chips and note are controls
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack S5 with items: the block mounts, the header count is the SUM, and each row carries its citation
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack clause 1: the condition rows and the Apply row mount INSIDE the block, and the block is the signposts' anchor
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack R99: the header count equals the rows listed; what passed folds behind a labelled count
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack R99: a detected condition and the adjustment it caused are ONE row (P2)
+components/GeneratorShell.primary.test.tsx :: #288 clause 3 — acceptance line 2: ONE primary per state S5 with none but SCANNED: the block mounts for its rows, and does NOT keep a filled action
+components/GeneratorShell.primary.test.tsx :: #288 clause 3 — acceptance line 2: ONE primary per state R103: an advisory-only detection is listed and counted, but the zip keeps the primary
+components/GeneratorShell.revision.test.tsx :: a preview writes nothing — no band, no lock, no memo (#289 acceptance) in flight AND landed: no working band, no lock, the editor and every write control live
+components/NeedsYou.acknowledge.test.tsx :: #297: the row control the handed Apply row renders only without condition rows
+components/NeedsYou.test.tsx :: NeedsYou (rules 72–79) ruling 185: the header number is the SUM, and the split is provenance not a second numeral
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) an ok scan renders one row per bucket on the wire with the wire's words and one action each
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) #251: the footer prints the scan's duration (ms → s, one decimal) and 'memoised' from the wire
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) #249: a measured_at that is not a UTC ISO stamp prints verbatim — never converted (rule 10)
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) a bucket missing from the wire renders no row (absence of signal is not absence of a feature)
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) #245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ● glyph (#407)
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) Cancel closes the picker without writing
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo)
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) undo of the last correction drops the key: meta is byte-identical to before the correction
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) rules 74–77: every row is glyph / body+provenance / citation+action, one button in the action track
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) #248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none)
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) #249 + #270: the open picker is exactly one extra row — Confirm in the row's ACTION track; Cancel in the condition row's
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) a proceeded outage with an applied assert shows the record (undo-able) and no scan rows
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) #249 spec 34: in flight, every button is disabled and a click writes nothing
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) §8.25: the two manual keys render as rows with an ASSERT action, and they stage like every other row
+components/NeedsYouConditions.test.tsx :: NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1) §8.25: an asserted key reads ✓ and its Undo drops the key — meta byte-identical to before
+components/StatusBar.test.tsx :: StatusBar (#60 plan-flags rollup) a failing compliance check with zero validation warnings is now amber, not green
+components/StatusBar.test.tsx :: StatusBar (#60 plan-flags rollup) a mixed flag set states the rollup's total — the categories are the stack's rows, not the strip's
+components/WorkingBand.test.tsx :: #252 — the working band is present iff a request for the generated scenario is open RE-GENERATING · after a correction to {condition} on Apply of a staged Assert; after undoing the correction on Apply of a staged Undo (#254)
+components/WriteLock.test.tsx :: #252 — the write lock's enumeration is honest under the lock every control is a disabled write, a live read, or a route link — anything else fails by name
+components/WriteLock.test.tsx :: #252 — the write lock's enumeration is honest at settle every write control re-enables unless it has a reason of its own; the root drops the lock
+lib/design/type-census.test.ts :: #263 type census — globals.css font-sizes every other font-size site is a named exception or a declared-debt row (new size/site fails)
+lib/design/type-census.test.ts :: #263 type census — the exceptions are the ruled set and the pins are the sources' figures CENSUS_PINS equal the figures read from the sources (the README quotes these)

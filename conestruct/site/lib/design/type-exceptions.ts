@@ -302,6 +302,19 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
+  {
+    name: "NEEDS YOU, one question at a time (#437)",
+    sizes: ["var(--fs-step-question-520)", "var(--fs-body-value)"],
+    reason:
+      "#437 rulings 2, 3 and 5 (Ryan, 2026-11-02; Option B): the question heading in Inter 19 / 600 on the existing --fs-step-question-520 token (D1), the answer label and the Next / Apply button in Inter 13.5 / 600, and the verdict strip's question sentence in Inter 13.5 / 600 (D2).  Both are existing tokens: no size joins the census.  The explanation, the consequence line, the source line and the remaining-question rows ride .tr-help / .tr-note.",
+    css: [
+      { selector: ".workbench .nyq-q", size: "var(--fs-step-question-520)" },
+      { selector: ".workbench .nyq-label", size: "var(--fs-body-value)" },
+      { selector: ".workbench .needs-you .act.nyq-next-btn", size: "var(--fs-body-value)" },
+      { selector: ".workbench .status-bar .status-questions", size: "var(--fs-body-value)" },
+    ],
+    tsx: [],
+  },
 ];
 
 export const TYPE_DEBT: readonly TypeDebt[] = [
@@ -735,7 +748,9 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 179, // #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 183, // #436: +2 — the road-picked row's name and plain-words line
+  // #437: +4 (179 -> 183) — the question heading, the answer label, the
+  // Next / Apply button and the strip's question sentence; sizes unchanged.
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
