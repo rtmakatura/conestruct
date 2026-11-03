@@ -91,6 +91,8 @@ export interface BandStackProps {
   onKindPicked?: () => void;
   /** The WHERE primary was pressed — the only way to `confirmed`. */
   onKindConfirmed?: () => void;
+  /** #439 W6: Undo on the kind — back to `none`. */
+  onKindCleared?: () => void;
   /** Defect 2: the band a setup-line value link asked for.  `n` counts
    *  presses, so a second press on a value whose band is already asked
    *  for still re-opens it after the user has steered elsewhere.  Null =
@@ -132,6 +134,7 @@ export function BandStack(props: BandStackProps) {
     kindState = "confirmed",
     onKindPicked,
     onKindConfirmed,
+    onKindCleared,
     openRequest = null,
   } = props;
 
@@ -223,6 +226,7 @@ export function BandStack(props: BandStackProps) {
             onKindChange(k);
             onKindPicked?.();
           }}
+          onKindCleared={onKindCleared}
           kindPicked={kindState !== "none"}
           kindConfirmed={kindState === "confirmed"}
           onConfirm={() => {

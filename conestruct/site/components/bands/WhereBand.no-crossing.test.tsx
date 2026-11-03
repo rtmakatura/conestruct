@@ -132,14 +132,18 @@ describe("#317: no crossing marked", () => {
 });
 
 describe("R131: one voice — WHERE's side row reads the side control's line", () => {
-  it("the 'Which side is occupied?' row and the side control show the same line, and no side sentence", async () => {
+  // #439: the ledger's side row left the band (the CONFIRM card asks the
+  // side); the one voice is now the card's line, said once.
+  it("the side question shows the backend's line once, and no side sentence", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={NO_CROSSING} />);
     await openWhere();
     const control = await waitFor('[data-testid="side-control-not-marked"]');
-    const row = document.querySelector('[data-testid="move-side"]')!;
-    const sub = row.querySelector(".a-sub")!;
-    expect(sub.textContent).toBe(LINE);
+    expect(document.querySelector('[data-testid="move-side"]')).toBeNull();
     expect(control!.textContent).toBe(`⚠ ${LINE}`);
+    // Once on the card; the aerial's centre hint (unchanged, #301) is the
+    // picture's own note.
+    const card = document.querySelector('[data-testid="where-questions"]')!;
+    expect(card.textContent!.split(LINE).length - 1).toBe(1);
     expect(document.body.textContent).not.toContain(SIDE_BLOCKER);
   });
 

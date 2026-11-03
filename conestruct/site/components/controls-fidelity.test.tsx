@@ -41,9 +41,12 @@ describe("rule 130 — the primary", () => {
     const find = rule(".workbench .a-findrow .a-pri");
     expect(find).toMatch(/height:\s*44px/);
     expect(find).toMatch(/white-space:\s*nowrap/);
-    // The source strings: the ruled "Pick on map", and its located pair.
+    // The source strings: the ruled "Pick on map", and its located pair —
+    // #439 ruling 1 puts "Edit on map" on the aerial's corner.
     const where = readFileSync(join(__dirname, "bands", "WhereBand.tsx"), "utf-8");
-    expect(where).toContain('located ? "Edit on map" : "Pick on map"');
+    expect(where).toMatch(/^\s*Pick on map$/m);
+    const aerial = readFileSync(join(__dirname, "bands", "BandAerial.tsx"), "utf-8");
+    expect(aerial).toMatch(/^\s*Edit on map$/m);
     // (The comment above the expression quotes the retired label; the
     // expression is what renders.)
     expect(where).not.toMatch(/: *"Pick Location on Map"|\? *"Edit Location & Corridor/);

@@ -1925,6 +1925,8 @@ export function GeneratorShell({
                 kindState={kindState}
                 onKindPicked={() => setKindState("picked")}
                 onKindConfirmed={() => setKindState("confirmed")}
+                // #439 W6: Undo on the kind question un-chooses it.
+                onKindCleared={() => setKindState("none")}
                 // Defect 2: the band a setup-line value asked for.
                 openRequest={columnOpenOn}
               />

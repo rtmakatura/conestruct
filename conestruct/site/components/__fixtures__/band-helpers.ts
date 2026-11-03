@@ -45,12 +45,15 @@ export async function answerSide(): Promise<void> {
   const deadline = Date.now() + 3000;
   for (;;) {
     const option = Array.from(
-      document.querySelectorAll<HTMLButtonElement>('[data-testid="side-option"]'),
-    ).find((b) => b.getAttribute("aria-disabled") !== "true");
+      document.querySelectorAll<HTMLInputElement>('[data-testid="side-option"]'),
+    ).find((b) => !b.disabled);
     if (option) {
       await act(async () => {
         fireEvent.click(option);
       });
+      // #439: the CONFIRM card stays on the side until Next; move on to the
+      // kind, as a person does.
+      await nextQuestion("side");
       return;
     }
     if (Date.now() > deadline) {
@@ -212,10 +215,10 @@ export async function discardRevision(): Promise<void> {
  * confirmation that did not happen.
  */
 export async function confirmKind(): Promise<void> {
-  const btn = document.querySelector('[data-testid="where-confirm"]');
-  if (!btn) throw new Error("no WHERE confirm on screen");
-  if (btn.getAttribute("aria-disabled") === "true") {
-    throw new Error("WHERE confirm is disabled — no kind chip was clicked");
+  const btn = document.querySelector<HTMLButtonElement>('[data-testid="where-confirm"]');
+  if (!btn) throw new Error("no WHERE confirm on screen (is the side answered?)");
+  if (btn.disabled) {
+    throw new Error("WHERE confirm is disabled — no kind was chosen");
   }
   await act(async () => {
     fireEvent.click(btn);
@@ -227,5 +230,63 @@ export async function clickPicker(): Promise<void> {
   await openWhere();
   await act(async () => {
     fireEvent.click(screen.getByTestId("where-open-picker"));
+  });
+}
+
+/** #439: press "Next question" on the CONFIRM card while it shows `id`. */
+export async function nextQuestion(id: string): Promise<void> {
+  const btn = document.querySelector<HTMLButtonElement>(
+    `[data-testid="where-questions"] .nyq-card[data-flag="${id}"] .nyq-foot button`,
+  );
+  if (!btn || btn.disabled || btn.dataset.testid === "where-confirm") return;
+  await act(async () => {
+    fireEvent.click(btn);
+  });
+}
+
+/** #439: choose a kind on the CONFIRM card, as a person does: bring the
+ *  kind question on screen (its "Next:" row) if it isn't, then click its
+ *  radio row. */
+export async function pickKind(kind: string): Promise<void> {
+  await openWhere();
+  if (!document.querySelector(`[data-testid="kind-chip-${kind}"]`)) {
+    const row = document.querySelector('[data-testid="step-next-kind"]');
+    if (row) {
+      await act(async () => {
+        fireEvent.click(row);
+      });
+    } else {
+      await showKind();
+    }
+  }
+  const radio = document.querySelector(`[data-testid="kind-chip-${kind}"]`);
+  if (!radio) throw new Error(`no kind-chip-${kind} on screen`);
+  await act(async () => {
+    fireEvent.click(radio);
+  });
+}
+
+/** #439: bring the CONFIRM card's kind question on screen (its "Next:" row,
+ *  or its answered record) without answering it. */
+export async function showKind(): Promise<void> {
+  await openWhere();
+  const deadline = Date.now() + 3000;
+  while (
+    !document.querySelector('[data-testid="where-questions"]') &&
+    Date.now() < deadline
+  ) {
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 50));
+    });
+  }
+  if (document.querySelector('[data-testid="where-questions"] .nyq-card[data-flag="kind"]')) return;
+  const target =
+    document.querySelector('[data-testid="step-next-kind"]') ??
+    Array.from(
+      document.querySelectorAll('[data-testid="where-questions"] .nyq-answered .nyq-row-btn'),
+    ).find((b) => b.querySelector(".nyq-row-text")?.textContent?.startsWith("What kind of work"));
+  if (!target) return;
+  await act(async () => {
+    fireEvent.click(target);
   });
 }

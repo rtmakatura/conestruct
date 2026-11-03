@@ -128,7 +128,10 @@ export function OpenBand({
         <p className="tr-question a-question">{question}</p>
         {/* #435 ruling 2: the helper under the question is the band's main
             helper line, Inter 13.5 (.tr-help), in every band. */}
-        <p className="tr-help a-question-prov">{questionProvenance}</p>
+        {/* #439 ruling 1: an empty helper renders no element. */}
+        {questionProvenance ? (
+          <p className="tr-help a-question-prov">{questionProvenance}</p>
+        ) : null}
         {children}
       </div>
     </section>

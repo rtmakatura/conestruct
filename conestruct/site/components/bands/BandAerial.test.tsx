@@ -128,7 +128,9 @@ describe("the band's aerial, state by state", () => {
     expect(Array.from(legend.querySelectorAll(".a-aerial-row")).map((r) => r.textContent)).toEqual([
       "Work zone",
     ]);
-    expect(legend.textContent).toContain(AERIAL_KIND_OWED);
+    // #439 W10: the sentence is not a channel; it sits under the aerial.
+    expect(legend.textContent).not.toContain(AERIAL_KIND_OWED);
+    expect(q("band-aerial")!.textContent).toContain(AERIAL_KIND_OWED);
     expect(q("band-aerial-note")).toBeNull();
   });
 
@@ -138,11 +140,12 @@ describe("the band's aerial, state by state", () => {
     expect(requests.map((r) => r.stage)).toEqual(["laid_out"]);
     const rows = Array.from(q("band-aerial-legend")!.querySelectorAll(".a-aerial-row"));
     expect(rows.map((r) => r.textContent)).toEqual([
-      "Advance warning",
+      // #439 ruling 7: the key's plain labels.
+      "Warning signs",
       "Taper",
       "Buffer",
       "Work zone",
-      "Downstream",
+      "After the work",
     ]);
     // Rule 111 / #131: the width rank rides every swatch, not colour alone.
     const heights = rows.map((r) => (r.querySelector(".a-aerial-swatch") as HTMLElement).style.height);
@@ -159,9 +162,13 @@ describe("the band's aerial, state by state", () => {
       />,
     );
     await settle();
+    // #439 W10: the faded row is a channel (on the key); the approaches
+    // sentence is not (under the aerial).
     const legend = q("band-aerial-legend")!.textContent;
-    expect(legend).toContain("Two approaches: northbound (the work's side) and southbound");
     expect(legend).toContain("Faded: past the mapped road");
+    expect(q("band-aerial")!.textContent).toContain(
+      "Two approaches: northbound (the work's side) and southbound",
+    );
   });
 
   it("a refused corridor is the backend's reason in words, and no picture is asked for", async () => {

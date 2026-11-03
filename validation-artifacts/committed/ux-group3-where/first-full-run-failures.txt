@@ -1,0 +1,32 @@
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > #290, PAYLOAD: a confirmed kind with no side fires no check, and Generate names the side
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > FINDING 1: a kind re-picked after a confirmation pauses the checks and drops the held lengths
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > after a road is confirmed: three chips, NONE pressed; the primary disabled with the reason
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > changing the kind after confirming asks for the confirm again
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > confirming the kind before the side keeps WHERE open on the side control, then moves on when it is chosen
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > only a click selects — and re-picking the default's own chip IS the choice
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > the side row ticks with the side once it is chosen; the kind has its own row until Confirm
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > REGRESSION: detect-then-switch payload carries every relay the flagger gates consume
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > no confirmed detection → no relays: absence renders as absence (rule 10)
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > switching kinds twice returns the shared inputs, not the defaults
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > the recovery affordances render after the switch — refusal comes with its confirm row
+ FAIL  components/GeneratorShell.near-intersection.test.tsx > near_intersection picker → form → payload > a CHANGED cross-street detection applies over manual edits (new information wins)
+ FAIL  components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > the kind link lands on the chips, the kind still pressed (already confirmed)
+ FAIL  components/GeneratorSidebar.fact-strip.test.tsx > #227 fact strip — pin readout as labeled cells > pinned: the five facts survive the strip, each under the question it answers
+ FAIL  components/bands/BandAerial.test.tsx > the band's aerial, state by state > a flagger names its two approaches, as page 2 does; footage past the road is named
+ FAIL  components/bands/BandAerial.test.tsx > the band's aerial, state by state > both answered: the whole corridor and the five channels, upstream first
+ FAIL  components/bands/BandAerial.test.tsx > the band's aerial, state by state > the side chosen, the kind owed: the work only, and a legend line for the rest (ruling 4)
+ FAIL  components/bands/WhereBand.kind-proposal.test.tsx > #284: the proposed kind > a click on the proposed chip picks it like any other chip
+ FAIL  components/bands/WhereBand.kind-proposal.test.tsx > #284: the proposed kind > marks the proposed chip and prints the backend's reason, pressing nothing
+ FAIL  components/bands/WhereBand.kind-proposal.test.tsx > #284: the proposed kind > once the proposed chip is picked, its '⚠ proposed' and the note go
+ FAIL  components/bands/WhereBand.left-side.test.tsx > #300: the side control on a one-way street > a stored left side the backend refuses shows the built curb and the backend's line; nothing is reset
+ FAIL  components/bands/WhereBand.left-side.test.tsx > #300: the side control on a one-way street > renders both curbs the backend offers, and the left one is choosable
+ FAIL  components/bands/WhereBand.no-crossing.test.tsx > R131: one voice — WHERE's side row reads the side control's line > the 'Which side is occupied?' row and the side control show the same line, and no side sentence
+ FAIL  components/bands/WhereBand.side-control.test.tsx > the chosen side is visible, and the options are spaced > clicking a side checks it: aria-checked, a leading ●, the kind chip's class
+ FAIL  components/bands/WhereBand.side-control.test.tsx > the side control offers only the sides a plan can be built for > an unbuildable (median / left) side is not rendered — not greyed, not named
+ FAIL  components/controls-fidelity.test.tsx > rule 130 — the primary > rule 114's box: 1fr / 132 px, 44 px, and the label never wraps (post-fidelity hand-check, finding 1)
+ FAIL  components/live-check-hooks.test.ts > #237 — every hook a live rig selects is declared by a component > fidelity-after/measure-gutter.cjs: its hooks exist
+ FAIL  components/live-check-hooks.test.ts > #237 — every hook a live rig selects is declared by a component > fidelity-audit/probe.cjs: its hooks exist
+ FAIL  components/live-check-hooks.test.ts > #237 — every hook a live rig selects is declared by a component > strip-reserve/measure-strip.cjs: its hooks exist
+ FAIL  lib/design/type-census.test.ts > #263 type census — globals.css font-sizes > every other font-size site is a named exception or a declared-debt row (new size/site fails)
+ FAIL  lib/design/type-census.test.ts > #263 type census — the exceptions are the ruled set and the pins are the sources' figures > CENSUS_PINS equal the figures read from the sources (the README quotes these)

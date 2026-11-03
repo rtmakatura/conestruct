@@ -87,6 +87,28 @@ afterEach(() => {
   sideOptions = [RIGHT, LEFT];
 });
 
+/** #439 W2: a side's radio row, read as its two lines. */
+function sideText(o: HTMLElement): string {
+  const l = o.closest("label")!;
+  return [l.querySelector(".nyq-label")?.textContent, l.querySelector(".nyq-consequence")?.textContent]
+    .filter(Boolean)
+    .join(" / ");
+}
+
+/** #439: the CONFIRM card's side record, once answered. */
+const sideRecord = () => {
+  const record = Array.from(
+    document.querySelectorAll('[data-testid="where-questions"] .nyq-answered'),
+  )
+    .map((r) => r.textContent ?? "")
+    .find((t) => t.includes("Which side of the road"));
+  if (record) return record;
+  // Still on the card (no Next pressed): the checked row.
+  const checked = document.querySelector<HTMLInputElement>('[data-testid="side-option"]:checked');
+  const label = checked?.closest("label")?.querySelector(".nyq-label")?.textContent;
+  return label ? `Which side of the road is the work on: ${label}` : undefined;
+};
+
 async function waitForOptions(): Promise<HTMLElement[]> {
   const deadline = Date.now() + 3000;
   for (;;) {
@@ -110,9 +132,9 @@ describe("#300: the side control on a one-way street", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
     await openWhere();
     const options = await waitForOptions();
-    expect(options.map((o) => o.textContent)).toEqual([
-      "West side · southbound traffic",
-      "East side · southbound traffic",
+    expect(options.map(sideText)).toEqual([
+      "West side / Next to southbound traffic",
+      "East side / Next to southbound traffic",
     ]);
     await act(async () => {
       options[1].click();
@@ -120,11 +142,7 @@ describe("#300: the side control on a one-way street", () => {
     // The side was the last WHERE answer owed, so the column moves on to
     // WHAT; re-open WHERE to read the choice (as the #290 suite does).
     await openWhere();
-    await waitForOptions();
-    const checked = document.querySelector<HTMLElement>(
-      '[data-testid="side-option"][aria-checked="true"]',
-    );
-    expect(checked?.textContent).toBe("● East side · southbound traffic");
+    expect(sideRecord()).toContain("Which side of the road is the work on: East side");
     expect(document.querySelector('[data-testid="side-control-stale"]')).toBeNull();
   });
 
@@ -142,8 +160,8 @@ describe("#300: the side control on a one-way street", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={staleLeft} />);
     await openWhere();
     const options = await waitForOptions();
-    expect(options.map((o) => o.textContent)).toEqual(["West side · southbound traffic"]);
-    expect(options.map((o) => o.getAttribute("aria-checked"))).toEqual(["false"]);
+    expect(options.map(sideText)).toEqual(["West side / Next to southbound traffic"]);
+    expect(options.map((o) => (o as HTMLInputElement).checked)).toEqual([false]);
     const line = document.querySelector('[data-testid="side-control-stale"]');
     expect(line?.textContent).toBe(`⚠ ${NOT_SHOULDER}`);
     // #411 (Rule 18): the ⚠ in its own hue, not the line's faint ink.
@@ -154,14 +172,10 @@ describe("#300: the side control on a one-way street", () => {
       options[0].click();
     });
     await openWhere();
-    await waitForOptions();
     await act(async () => {
       await new Promise((r) => setTimeout(r, 600));
     });
-    const checked = document.querySelector<HTMLElement>(
-      '[data-testid="side-option"][aria-checked="true"]',
-    );
-    expect(checked?.textContent).toBe("● West side · southbound traffic");
+    expect(sideRecord()).toContain("Which side of the road is the work on: West side");
     expect(document.querySelector('[data-testid="side-control-stale"]')).toBeNull();
   });
 

@@ -320,6 +320,13 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".workbench .dl-card h4", size: "var(--fs-body-value)" },
       { selector: ".workbench .dl-all .act", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-setuprow-edit, .workbench .disc-word", size: "var(--fs-body-value)" },
+      // #439 (Ryan, 2026-11-03; Option B on the Where canvas): the aerial's
+      // Edit on map button, the WHERE summary row's Edit / Details links
+      // and the CONFIRM card's Next / Confirm button — the same card as
+      // NEEDS YOU, on the same existing token; no size joins the census.
+      { selector: ".workbench .a-pri.a-aerial-edit", size: "var(--fs-body-value)" },
+      { selector: ".workbench .wq-link", size: "var(--fs-body-value)" },
+      { selector: ".workbench .a-pri.wq-next", size: "var(--fs-body-value)" },
     ],
     tsx: [],
   },
@@ -758,7 +765,7 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 180, // #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 183, // #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
   // #437: +4 (179 -> 183) — the question heading, the answer label, the
   // Next / Apply button and the strip's question sentence; sizes unchanged.
   // #437 branch 3: 183 -> 180 — seven out (the dismiss picker's legend,

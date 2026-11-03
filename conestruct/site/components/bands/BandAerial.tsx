@@ -42,7 +42,7 @@ import {
   useCorridorAerial,
   type AerialStage,
 } from "@/lib/corridor-aerial";
-import { ZONE_CHANNEL, ZONE_COLOR, ZONE_LABEL, type CorridorZone } from "@/lib/corridor-zones";
+import { ZONE_CHANNEL, ZONE_COLOR, type CorridorZone } from "@/lib/corridor-zones";
 
 // Upstream first — the motorist's order, the picker's and page 2's legend.
 const LEGEND_ORDER: readonly CorridorZone[] = [
@@ -52,6 +52,16 @@ const LEGEND_ORDER: readonly CorridorZone[] = [
   "work_zone",
   "downstream",
 ];
+
+/** #439 ruling 7: the key's plain labels.  `ZONE_LABEL` (the extent
+ *  lines, the static preview) is unchanged. */
+export const KEY_LABEL: Record<CorridorZone, string> = {
+  advance_warning: "Warning signs",
+  transition: "Taper",
+  buffer: "Buffer",
+  work_zone: "Work zone",
+  downstream: "After the work",
+};
 
 export const AERIAL_WAIT = "Drawing the corridor…";
 export const AERIAL_FAILED = "The aerial didn't load. Edit on map shows the corridor.";
@@ -91,9 +101,18 @@ export interface BandAerialProps {
   scenario: Scenario;
   geometry: GeometryFetch;
   kindConfirmed: boolean;
+  /** #439 ruling 1: "Edit on map" on the aerial's top-right corner. */
+  onEditMap?: () => void;
+  locked?: boolean;
 }
 
-export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProps) {
+export function BandAerial({
+  scenario,
+  geometry,
+  kindConfirmed,
+  onEditMap,
+  locked = false,
+}: BandAerialProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
   // Only an answer for THIS scenario: while the geometry re-reads (a pin
@@ -162,6 +181,18 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
   return (
     <div className="a-aerial" data-testid="band-aerial" data-read data-stage={stage ?? "none"}>
       <div ref={frameRef} className="a-aerial-frame">
+        {onEditMap && (
+          <button
+            type="button"
+            className="a-pri a-aerial-edit"
+            data-write=""
+            aria-disabled={locked || undefined}
+            onClick={onEditMap}
+            data-testid="where-open-picker"
+          >
+            Edit on map
+          </button>
+        )}
         {shown && (
           // The source is an object URL of an image the backend drew at this
           // frame's exact size — there is nothing for next/image to
@@ -219,19 +250,22 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
         )}
       </div>
       {shown && (stage === "work" || stage === "laid_out") && (
+        // #439 ruling 7: the key on the aerial's top-left corner (under it
+        // below 520 px, a 2-column grid); one row per channel, the same
+        // swatches and hexes (ZONE_COLOR, the ruled overlay pair).
         <div className="a-aerial-legend" data-testid="band-aerial-legend">
           {(stage === "laid_out" ? LEGEND_ORDER : (["work_zone"] as const)).map((zone) => (
-            <div key={zone} className="a-aerial-row tr-prov">
+            <div key={zone} className="a-aerial-row tr-note">
               <span
                 className="a-aerial-swatch"
                 aria-hidden="true"
                 style={{ background: ZONE_COLOR[zone], height: 1 + ZONE_CHANNEL[zone].widthRank }}
               />
-              {ZONE_LABEL[zone]}
+              {KEY_LABEL[zone]}
             </div>
           ))}
           {extended && (
-            <div className="a-aerial-row tr-prov">
+            <div className="a-aerial-row tr-note">
               <span
                 className="a-aerial-swatch"
                 aria-hidden="true"
@@ -240,14 +274,16 @@ export function BandAerial({ scenario, geometry, kindConfirmed }: BandAerialProp
               Faded: past the mapped road
             </div>
           )}
-          {stage === "work" && <div className="a-aerial-line tr-prov">{AERIAL_KIND_OWED}</div>}
-          {stage === "laid_out" && approaches.length === 2 && (
-            <div className="a-aerial-line tr-prov">
-              Two approaches: {boundWord(approaches[0].travel_bearing_deg)} (the work&apos;s side) and{" "}
-              {boundWord(approaches[1].travel_bearing_deg)}
-            </div>
-          )}
         </div>
+      )}
+      {/* W10: the two sentences are not channels; one line under the
+          aerial. */}
+      {shown && stage === "work" && <p className="a-aerial-line tr-prov">{AERIAL_KIND_OWED}</p>}
+      {shown && stage === "laid_out" && approaches.length === 2 && (
+        <p className="a-aerial-line tr-prov">
+          Two approaches: {boundWord(approaches[0].travel_bearing_deg)} (the work&apos;s side) and{" "}
+          {boundWord(approaches[1].travel_bearing_deg)}
+        </p>
       )}
     </div>
   );

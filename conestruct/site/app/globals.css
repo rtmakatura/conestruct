@@ -6098,11 +6098,22 @@ input[type="number"] {
   background: rgb(var(--ws-surface-rgb) / 0.9);
   border: 1px solid var(--rule);
 }
+.workbench .a-aerial {
+  position: relative;
+}
+/* #439 ruling 7: the key on the aerial's top-left corner, --da-ground at
+   92 % with a --rule border, one row per channel; under the aerial as a
+   2-column grid below 520 px (the media block after the zoom's). */
 .workbench .a-aerial-legend {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 6px 14px;
-  margin-top: 8px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  background: rgb(var(--da-ground-rgb) / 0.92);
+  border: 1px solid var(--rule);
 }
 .workbench .a-aerial-row {
   display: flex;
@@ -6112,11 +6123,11 @@ input[type="number"] {
 /* Rule 109's 26 px swatch; its height is the zone's width rank — the one
    non-colour channel the static image carries (#131). */
 .workbench .a-aerial-swatch {
-  flex: 0 0 26px;
-  width: 26px;
+  flex: 0 0 16px;
+  width: 16px;
 }
 .workbench .a-aerial-line {
-  grid-column: 1 / -1;
+  margin: 8px 0 0;
 }
 @media (max-width: 480px) {
   .workbench .a-aerial-frame {
@@ -9093,4 +9104,114 @@ input[type="number"] {
     margin: 16px 16px 0;
     width: auto;
   }
+}
+
+/* ── #439 UX group 3 (Option B): the WHERE band, map first ──────────────
+   Authority: validation-artifacts/committed/ux-group3-where/rulings.md.
+   Gaps are #435's three (8 / 16 / 24); controls are 44.  No new size or
+   hex: 13.5 = --fs-body-value, 12.5 rides .tr-note, colours are tokens. */
+.workbench .wq-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block);
+  margin-top: var(--space-block);
+}
+.workbench .wq-stack .a-aerial {
+  margin-top: 0;
+}
+.workbench .a-pri.a-aerial-edit {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  width: auto;
+  height: 44px;
+  padding: 0 16px;
+  font-size: var(--fs-body-value);
+  white-space: nowrap;
+}
+.workbench .a-aerial-edit ~ .a-aerial-zoom {
+  top: 60px;
+}
+@media (max-width: 519px) {
+  .workbench .a-aerial-legend {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 16px;
+    margin-top: 8px;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+}
+.workbench .wq-sum {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  padding: 0 var(--space-block);
+  border: 1px solid var(--rule);
+}
+.workbench .wq-sum-glyph {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+.workbench .wq-sum-text {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
+}
+.workbench .wq-link {
+  flex: none;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--act);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.workbench .wq-link:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .wq-sum-details {
+  margin: var(--space-tight) 0 0;
+}
+.workbench .wq-edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block);
+}
+.workbench .wq-edit[hidden] {
+  display: none;
+}
+.workbench .a-findrow.wq-findrow {
+  grid-template-columns: 1fr;
+}
+.workbench .wq {
+  border: 1px solid var(--warn);
+  background: var(--da-ground);
+}
+.workbench .a-pri.wq-next {
+  width: auto;
+  height: 44px;
+  padding: 0 24px;
+  margin-top: 0;
+  font-size: var(--fs-body-value);
+  white-space: nowrap;
+}
+.workbench .a-pri.wq-map-btn {
+  align-self: flex-start;
+}
+.workbench .wq-line {
+  margin: 0;
+}
+.workbench .wq .act-btn.wq-undo {
+  min-height: 44px;
 }

@@ -106,6 +106,7 @@ interface Props {
   kindState?: KindState;
   onKindPicked?: () => void;
   onKindConfirmed?: () => void;
+  onKindCleared?: () => void;
   /** Defect 2 — which band a setup-line value link asked for. */
   openRequest?: OpenRequest | null;
 }
@@ -156,6 +157,7 @@ export function GeneratorSidebar({
   kindState = "confirmed",
   onKindPicked,
   onKindConfirmed,
+  onKindCleared,
   openRequest = null,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -476,6 +478,7 @@ export function GeneratorSidebar({
         kindState={kindState}
         onKindPicked={onKindPicked}
         onKindConfirmed={onKindConfirmed}
+        onKindCleared={onKindCleared}
         openRequest={openRequest}
         onGenerate={onGenerate}
         generating={generating}

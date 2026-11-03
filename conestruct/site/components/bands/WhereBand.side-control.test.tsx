@@ -71,6 +71,14 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+/** #439 W2: a side's radio row, read as its two lines. */
+function sideText(o: HTMLElement): string {
+  const l = o.closest("label")!;
+  return [l.querySelector(".nyq-label")?.textContent, l.querySelector(".nyq-consequence")?.textContent]
+    .filter(Boolean)
+    .join(" / ");
+}
+
 async function waitForOptions(): Promise<HTMLElement[]> {
   const deadline = Date.now() + 3000;
   for (;;) {
@@ -89,8 +97,8 @@ describe("the side control offers only the sides a plan can be built for", () =>
     render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
     await openWhere();
     const options = await waitForOptions();
-    expect(options.map((o) => o.textContent)).toEqual(["West side · southbound traffic"]);
-    const control = document.querySelector('[data-testid="side-control"]');
+    expect(options.map(sideText)).toEqual(["West side / Next to southbound traffic"]);
+    const control = document.querySelector('[data-testid="where-questions"]');
     expect(control?.textContent).not.toContain("not built");
     expect(control?.textContent).not.toContain("median");
     expect(control?.textContent).not.toContain("East side");
@@ -101,34 +109,29 @@ describe("the side control offers only the sides a plan can be built for", () =>
 // treatment — accent border, the wash, a ✓ — so the choice is visible.
 // Fix the spacing between options."
 describe("the chosen side is visible, and the options are spaced", () => {
-  it("clicking a side checks it: aria-checked, a leading ●, the kind chip's class", async () => {
+  // #439 ruling 5: the side is a radio row (#437's), its marker the 14 px
+  // square (Rule 13: shape, not hue); ● (#407) retires with the chip.
+  it("clicking a side checks its radio row; the row marks the choice by shape", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
     await openWhere();
     const [option] = await waitForOptions();
-    expect(option.className).toBe("a-chip a-chip-side");
-    expect(option.getAttribute("aria-checked")).toBe("false");
-    expect(option.textContent).not.toContain("✓");
-    expect(option.textContent).not.toContain("●");
+    expect((option as HTMLInputElement).type).toBe("radio");
+    expect((option as HTMLInputElement).checked).toBe(false);
+    expect(option.closest("label")?.className).toBe("nyq-answer");
     await act(async () => {
       option.click();
     });
     // RULE 5, stated (the kind-before-side fix): this plan's kind is
     // already confirmed, so the side was the last WHERE answer owed and
     // the column moves on to WHAT (deriveBands' `natural`).  Re-open WHERE
-    // the way a person does to see the choice.
+    // the way a person does to see the choice: an answered record.
     expect(
       document.querySelector('[data-testid="band-stack"]')?.getAttribute("data-open-band"),
     ).toBe("what");
     await openWhere();
-    await waitForOptions();
-    const checked = document.querySelector<HTMLElement>(
-      '[data-testid="side-option"][aria-checked="true"]',
-    );
-    expect(checked?.textContent).toBe("● West side · southbound traffic");
-    // The glyph is decoration; aria-checked is what is announced.
-    expect(checked?.querySelector(".sym-select")?.getAttribute("aria-hidden")).toBe("true");
-    // #407 (Ryan, 2026-10-25): the selection mark is ●, never ✓.
-    expect(checked?.textContent).not.toContain("✓");
+    const record = document.querySelector('[data-testid="where-questions"] .nyq-answered');
+    expect(record?.textContent).toContain("Which side of the road is the work on: West side");
+    expect(record?.textContent).not.toContain("●");
   });
 
   it("the checked radio shares the pressed kind chip's accent border and wash; the row keeps rule 135's gap", async () => {

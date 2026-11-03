@@ -46,7 +46,10 @@ describe("#237 — every hook a live rig selects is declared by a component", ()
         const prefix = h.slice(0, h.lastIndexOf("-") + 1);
         const declared =
           src.includes(`data-testid="${h}"`) ||
-          (prefix.length > 0 && src.includes(`data-testid={\`${prefix}\${`));
+          (prefix.length > 0 && src.includes(`data-testid={\`${prefix}\${`)) ||
+          // #439: a testid handed to the shared question card.
+          src.includes(`lastTestId="${h}"`) ||
+          (prefix.length > 0 && src.includes(`testid: \`${prefix}\${`));
         expect(declared, `${rig}: hook "${h}" is declared by no component`).toBe(true);
       }
     });

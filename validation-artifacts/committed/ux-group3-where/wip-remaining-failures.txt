@@ -1,0 +1,15 @@
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > #290, PAYLOAD: a confirmed kind with no side fires no check, and Generate names the side
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > FINDING 1: a kind re-picked after a confirmation pauses the checks and drops the held lengths
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > after a road is confirmed: three chips, NONE pressed; the primary disabled with the reason
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > changing the kind after confirming asks for the confirm again
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > confirming the kind before the side keeps WHERE open on the side control, then moves on when it is chosen
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > only a click selects — and re-picking the default's own chip IS the choice
+ FAIL  components/GeneratorShell.kind-confirm.test.tsx > defect 1 — the kind is confirmed, never inferred > the side row ticks with the side once it is chosen; the kind has its own row until Confirm
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > REGRESSION: detect-then-switch payload carries every relay the flagger gates consume
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > no confirmed detection → no relays: absence renders as absence (rule 10)
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > switching kinds twice returns the shared inputs, not the defaults
+ FAIL  components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > the recovery affordances render after the switch — refusal comes with its confirm row
+ FAIL  components/GeneratorShell.near-intersection.test.tsx > near_intersection picker → form → payload > a CHANGED cross-street detection applies over manual edits (new information wins)
+ FAIL  components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces
+ FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > the kind link lands on the chips, the kind still pressed (already confirmed)
+ FAIL  components/GeneratorSidebar.fact-strip.test.tsx > #227 fact strip — pin readout as labeled cells > pinned: the five facts survive the strip, each under the question it answers

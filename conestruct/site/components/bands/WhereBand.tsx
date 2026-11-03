@@ -29,11 +29,7 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
-import {
-  ENABLED_SCENARIO_KINDS,
-  SCENARIO_KINDS,
-  isScenarioKindEnabled,
-} from "@/lib/scenarios";
+import { ENABLED_SCENARIO_KINDS } from "@/lib/scenarios";
 import { validateWorkZone, workLenIsEmpty, workLenIsRefused } from "@/lib/scenarios/validation";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
@@ -42,22 +38,15 @@ import {
   type CorridorZone,
 } from "@/lib/corridor-zones";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
-import {
-  kindCitation,
-  kindLabel,
-  roadIsStale,
-  whereProvenance,
-} from "@/lib/scenarios/band-facts";
-import { deriveMoveLedger, type MoveRow } from "@/lib/scenarios/move-ledger";
+import { roadIsStale, whereProvenance } from "@/lib/scenarios/band-facts";
+import { deriveMoveLedger, type MoveId, type MoveRow } from "@/lib/scenarios/move-ledger";
 import {
   selectedSideOption,
   notMarkedLine,
   useCorridorGeometry,
   type GeometryFetch,
-  type SideOption,
 } from "@/lib/corridor-geometry";
 import type { CrossStreetTag } from "@/lib/cross-street-tag";
-import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 import { symClass } from "@/lib/design/symbols";
 import { hasConfirmedSide, hasLocation, workLenIsDefault } from "@/lib/scenarios";
 import { clearWorkLen, setWorkLen } from "@/lib/scenarios/what-writes";
@@ -65,9 +54,11 @@ import { isOperatorSet } from "@/lib/scenarios/guesses";
 import { OpenBand } from "./BandPrimitives";
 import { BandAerial } from "./BandAerial";
 import { ManualFallback } from "./ManualFallback";
+import { WhereQuestions } from "./WhereQuestions";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
 import { FieldCell } from "./FieldCell";
 import { useWriteLock } from "../WriteLock";
+import { candidateLabel } from "@/lib/road-detection/labels";
 
 /** The five zones, in the order the corridor lays them out — the same
  *  labels `ZONE_LABEL` gave the retired bar's rows, read from the one
@@ -164,6 +155,9 @@ export function CorridorExtentLines({
   );
 }
 
+/** #439 ruling 3: Edit re-opens today's three rows, with their actions. */
+const EDIT_ROWS: ReadonlySet<MoveId> = new Set<MoveId>(["spot", "start", "extent"]);
+
 /** C5 — the move ledger (rules 67-70).  It renders `deriveMoveLedger()`'s
  *  rows and decides nothing (rule 71). */
 function MoveLedgerRows({
@@ -242,228 +236,94 @@ function MoveLedgerRows({
   );
   return (
     <div className="a-moves" data-testid="move-ledger">
-      {ledger.rows.map(row)}
+      {ledger.rows.filter((r) => EDIT_ROWS.has(r.id)).map(row)}
     </div>
   );
 }
 
 /**
- * #290 — move 4's side control (ruling 8): "the road's two edges in
- * compass words ('East side · northbound traffic') ... the plain control
- * phones use".  The choices, their words and which are built are the
- * BACKEND's (`side_options` from /render/corridor-geometry): each carries
- * the exact `meta.work` it writes, and a click writes it verbatim — no
- * direction is composed here (Rule 3).  Only BUILT sides render: the #290
- * hand-check ruling superseding the open-points ruling 2 — "an option the
- * user can't choose, named in jargon, is noise (P13, P18)".  The backend
- * no longer sends one; the filter keeps an older backend's from showing.
+ * #439 ruling 3 — the done summary row: one line, ✓, the values that are
+ * done joined with " · " (an unset one is not printed, Rule 10).  Edit
+ * re-opens today's three rows in place (with the address and length
+ * fields, W9); Details shows the header's old provenance line (ruling 2,
+ * P19: nothing in it is deleted).
  */
-function SideControl({
-  fetchState,
-  scenario,
-  setMeta,
-  locked,
-  onMarkIntersection,
+export function summaryParts(
+  scenario: Scenario,
+  crossStreetTag: string | null,
+): string[] {
+  const parts: string[] = [];
+  const road = scenario.meta.confirmedRoad;
+  if (road && !roadIsStale(scenario)) {
+    const l = candidateLabel(road.candidate);
+    parts.push(`${l.primary} ${l.direction.toLowerCase()}`);
+  }
+  if (crossStreetTag) parts.push(`starts ${crossStreetTag}`);
+  if (!workLenIsEmpty(scenario) && !workLenIsRefused(scenario) && scenario.workLen > 0) {
+    parts.push(
+      `${scenario.workLen.toLocaleString("en-US")} ft${workLenIsDefault(scenario) ? " (default)" : ""}`,
+    );
+  }
+  return parts;
+}
+
+function WhereSummary({
+  parts,
+  provenance,
+  editOpen,
+  setEditOpen,
 }: {
-  fetchState: GeometryFetch;
-  scenario: Scenario;
-  setMeta: (m: ScenarioMeta) => void;
-  locked: boolean;
-  /** #317 (R129 Q1): opens the picker ready to mark the crossing (#301's
-   *  `openPicker(true)`). */
-  onMarkIntersection?: () => void;
+  parts: string[];
+  provenance: string;
+  editOpen: boolean;
+  setEditOpen: (v: boolean) => void;
 }) {
-  const options: SideOption[] = (fetchState.geometry?.side_options ?? []).filter(
-    (o) => o.built,
-  );
-  const selected = selectedSideOption(options, scenario.meta.work);
-  // #300 (R119 Q4), #315: a stored left side the backend no longer builds.
-  // The geometry read answers it as no side and says why (`side_refused`,
-  // one line per cause, R125 Q1); the line is the backend's, verbatim, and
-  // nothing is reset.
-  const refused = fetchState.geometry?.side_refused ?? null;
-  // #317 (R129 Q1): a near-intersection plan with no crossing marked — the
-  // backend's line and Mark on map, and no chips: the sides can't be laid
-  // out until the crossing is marked.
-  const notMarked =
-    fetchState.geometry?.status === "intersection_not_marked"
-      ? (fetchState.geometry.message ?? null)
-      : null;
+  const [detailsOpen, setDetailsOpen] = useState(false);
   return (
-    <div className="mt-4" data-testid="side-control">
-      <div className="tr-field">Occupied side</div>
-      {notMarked !== null ? (
-        <>
-          <div className="tr-prov mt-1" data-testid="side-control-not-marked">
-            {/* #411 (Rule 18): ⚠ in its own hue, not the line's ink. */}
-            <span className={symClass("⚠")} aria-hidden="true">
-              ⚠{" "}
-            </span>
-            {notMarked}
-          </div>
-          {onMarkIntersection && (
-            <div className="mt-2">
-              <button
-                type="button"
-                className="act-btn"
-                data-write=""
-                aria-disabled={locked || undefined}
-                onClick={() => {
-                  if (!locked) onMarkIntersection();
-                }}
-                data-testid="side-control-mark"
-              >
-                Mark on map
-              </button>
-            </div>
-          )}
-        </>
-      ) : options.length === 0 ? (
-        <div className="tr-prov mt-1" data-testid="side-control-note">
-          {/* P8: one honest line while the road's sides are read; a
-              failure says so rather than offering a guessed choice. */}
-          {fetchState.state === "error"
-            ? "the road's sides are unavailable. Reopen the map to retry"
-            : "reading the road's sides…"}
-        </div>
-      ) : (
-        // #290 hand-check item 3: rule 135's chip, not the segmented
-        // `.chip` — whose `is-on` no rule styled (the choice was invisible)
-        // and whose row set the options edge to edge.  `.a-chip` gives the
-        // 10 px gap and the 44 px target; checked takes the pressed kind
-        // chip's accent border and wash, and a leading ● (#407, Ryan
-        // 2026-10-25: the selection glyph, never ✓; as text, aria-hidden —
-        // `aria-checked` is what is announced).
-        <div className="a-chips a-chips-side" role="radiogroup" aria-label="Occupied side">
-          {options.map((o) => {
-            const on = selected === o;
-            return (
-              <button
-                key={o.label}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                aria-disabled={locked || undefined}
-                className="a-chip a-chip-side"
-                data-write=""
-                data-testid="side-option"
-                onClick={() => {
-                  if (locked || on) return;
-                  setMeta({ ...scenario.meta, work: { ...o.work } });
-                }}
-              >
-                <span className="tr-field">
-                  {on && (
-                    <span className={symClass("●")} aria-hidden="true">
-                      ●{" "}
-                    </span>
-                  )}
-                  {o.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-      {refused && (
-        <div className="tr-prov mt-1" data-testid="side-control-stale">
-          {/* R125 Q3 (P9): the needs-you glyph leads the line, in its own
-              hue (#411, Rule 18). */}
-          <span className={symClass("⚠")} aria-hidden="true">
-            ⚠{" "}
+    <div className="wq-sum-wrap">
+      <div className="wq-sum" data-testid="where-summary">
+        {parts.length > 0 && (
+          <span className={`wq-sum-glyph ${symClass("✓")}`} aria-hidden="true">
+            ✓
           </span>
-          {refused.message}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/**
- * Rule 135 — the kind chips, horizontal, same labels and TA/sheet
- * citations as the vertical list they replace (§8.18), same
- * carry-across-kinds behaviour on switch.
- *
- * R2, ruled 2026-09-22: the four gated kinds are NOT rendered, and the
- * provenance line below the row names what is missing and why.  Rule 135
- * says gated kinds are "not rendered at all today"; Rule 10 says an
- * absence renders as an absence rather than as nothing at all, and #277's
- * surviving bullet wants the gate named.  One line does both.
- *
- * Suggest-never-set: a chip CONFIRMS the kind.  #284 gives the "⚠
- * proposed" (amended #411) citation suffix its producer: the corridor-geometry answer's
- * `kind_proposal`, present only when the road facts leave exactly one live
- * kind (src/rules/kind_proposal.py).  Until that chip is picked, it marks
- * the chip and prints the backend's reason under the row (Ryan,
- * 2026-10-26, amending #284); it never presses the chip (Ryan,
- * 2026-10-14: "never pre-selected").  The click is still the person's.
- *
- * #289 hand-check, 2026-09-23, defect 1: `value` is null until a person
- * clicks a chip, and then NO chip is pressed.  `scenario.kind` is not
- * passed here raw, because it always holds a value — the default's
- * included — and pressing that chip for the operator was the defect.
- */
-function KindChips({
-  value,
-  onChange,
-  locked,
-  proposal = null,
-}: {
-  value: ScenarioKind | null;
-  onChange: (k: ScenarioKind) => void;
-  locked: boolean;
-  /** #284: the backend's proposal, or null.  Marks; never presses. */
-  proposal?: { kind: ScenarioKind; basis: string } | null;
-}) {
-  const live = SCENARIO_KINDS.filter((k) => isScenarioKindEnabled(k.v));
-  const gated = SCENARIO_KINDS.length - live.length;
-  // Ryan, 2026-10-26 (amends #284): once the proposed chip is the one
-  // pressed, its "⚠ proposed" and the note go, and ● alone says "chosen".
-  // Another kind pressed leaves the proposal unanswered, so it shows.
-  const open = proposal !== null && value !== proposal.kind ? proposal : null;
-  return (
-    <div>
-      <div className="a-chips" role="group" aria-label="Kind of work">
-        {live.map((k) => (
+        )}
+        <span className="wq-sum-text tr-help" data-testid="where-summary-text">
+          {parts.join(" · ")}
+        </span>
+        <button
+          type="button"
+          className="wq-link"
+          data-read=""
+          aria-expanded={editOpen}
+          aria-controls="where-edit"
+          onClick={() => setEditOpen(!editOpen)}
+          data-testid="where-edit"
+        >
+          Edit
+        </button>
+        {provenance && (
           <button
-            key={k.v}
             type="button"
-            className="a-chip"
-            data-write=""
-            aria-pressed={value === k.v}
-            aria-disabled={locked || undefined}
-            onClick={() => {
-              if (!locked) onChange(k.v);
-            }}
-            data-testid={`kind-chip-${k.v}`}
+            className="wq-link"
+            data-read=""
+            aria-expanded={detailsOpen}
+            aria-controls="where-details"
+            onClick={() => setDetailsOpen(!detailsOpen)}
+            data-testid="where-details"
           >
-            <span className="tr-field">{k.l}</span>
-            <span className="tr-prov">
-              {kindCitation(k.v)}
-              {open?.kind === k.v && (
-                // #411: "⚠ proposed" (Ryan, 2026-10-26, amending #284's
-                // "✓ proposed"): ⚠ is "a guess, check it"; ✓ is only
-                // "measured" or "yours".
-                <span data-testid="kind-proposed-mark">
-                  {" · "}
-                  <span className={symClass("⚠")}>⚠</span> proposed
-                </span>
-              )}
-            </span>
+            Details
           </button>
-        ))}
+        )}
       </div>
-      {open && live.some((k) => k.v === open.kind) && (
-        <div className="tr-prov mt-2" data-testid="kind-proposal-note">
-          <span className={symClass("⚠")}>⚠</span> proposed: {open.basis} Pick it to
-          use it.
-        </div>
-      )}
-      {gated > 0 && (
-        <div className="tr-prov mt-2" data-testid="kind-gate-note">
-          {gated} more kinds aren&apos;t enabled yet. Each waits until its typical
-          sheet is validated against the generator.
-        </div>
+      {provenance && (
+        <p
+          id="where-details"
+          className="tr-prov wq-sum-details"
+          data-testid="where-provenance"
+          hidden={!detailsOpen}
+        >
+          {provenance}
+        </p>
       )}
     </div>
   );
@@ -478,6 +338,7 @@ export function WhereBand({
   geometry: shellGeometry,
   crossStreet = null,
   onKindChange,
+  onKindCleared,
   kindPicked = true,
   // Rule 10: the safe default is "not chosen" — an omitted prop must not
   // read as a confirmed kind.  BandStack passes the real value.
@@ -503,6 +364,8 @@ export function WhereBand({
   crossStreet?: CrossStreetTag | null;
   /** A chip click — the ONLY writer of the kind choice (defect 1). */
   onKindChange: (k: ScenarioKind) => void;
+  /** #439 W6: Undo on the kind returns it to unchosen. */
+  onKindCleared?: () => void;
   /** Has a person clicked a chip?  False renders the chips with none
    *  pressed and the primary disabled with the rail's reason. */
   kindPicked?: boolean;
@@ -614,72 +477,75 @@ export function WhereBand({
     setWzDraft(null);
   };
 
-  return (
-    <OpenBand
-      stepIndex={stepIndex}
-      head="WHERE"
-      provenance={whereProvenance(scenario, crossStreet?.provenance ?? null)}
-      question="Where is the work?"
-      questionProvenance={
-        located
-          ? "The segment below is what the plan is built from. Change what is wrong; the map is in the picker."
-          : "Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map."
-      }
-    >
-      {/* Rule 114's producer row: the field and its 132 px button, both
-          44 px, stacking at 380 (rule 164).  The button opens the picker
-          rather than geocoding in place: the picker is where the search,
-          the candidates and the road pick live (ruling 189), and giving
-          the band its own geocoder would be a second door onto the pin. */}
-      <div className="a-findrow">
-        <input
-          className="a-fld"
-          data-write=""
-          aria-label="Address or cross streets"
-          placeholder="Address or cross streets"
-          value={scenario.meta.address}
-          disabled={locked}
-          onChange={(e) => setMeta({ ...scenario.meta, address: e.target.value })}
-          onKeyDown={(e) => {
-            // #402: Enter is the field's "go".  It opens the same picker
-            // the button opens (one door onto the pin), which is handed
-            // the typed text and searches it on open when the plan has
-            // no pin yet.  Not while an input method is composing.
-            if (e.key !== "Enter" || e.nativeEvent.isComposing || locked) return;
-            e.preventDefault();
-            onOpenPicker();
-          }}
-        />
+  // #439 W9: the Edit fold.  It opens by itself while the length is unset
+  // or refused: an open item keeps its control on screen (P5).
+  const [editChoice, setEditChoice] = useState<boolean | null>(null);
+  const lengthOwed = workLenIsEmpty(scenario) || workLenIsRefused(scenario) || !wz.ok;
+  const editOpen = editChoice ?? lengthOwed;
+  const openMap = () => {
+    if (!locked) onOpenPicker();
+  };
+
+  // Rule 114's producer row: the field and its button, both 44 px,
+  // stacking at 380 (rule 164).  The button opens the picker rather than
+  // geocoding in place (ruling 189: one door onto the pin).  #439 ruling 1:
+  // under the heading before a pin; inside Edit after one, with "Edit on
+  // map" on the aerial's corner.
+  const findRow = (withButton: boolean) => (
+    <div className={withButton ? "a-findrow" : "a-findrow wq-findrow"}>
+      <input
+        className="a-fld"
+        data-write=""
+        aria-label="Address or cross streets"
+        placeholder="Address or cross streets"
+        value={scenario.meta.address}
+        disabled={locked}
+        onChange={(e) => setMeta({ ...scenario.meta, address: e.target.value })}
+        onKeyDown={(e) => {
+          // #402: Enter is the field's "go": the same picker the button
+          // opens, handed the typed text.  Not while composing.
+          if (e.key !== "Enter" || e.nativeEvent.isComposing || locked) return;
+          e.preventDefault();
+          onOpenPicker();
+        }}
+      />
+      {withButton && (
         <button
           type="button"
           className="a-pri"
           data-write=""
           aria-disabled={locked || undefined}
-          onClick={() => {
-            if (!locked) onOpenPicker();
-          }}
+          onClick={openMap}
           data-testid="where-open-picker"
         >
-          {/* #289 post-fidelity hand-check, finding 1 (Ryan, 2026-09-24):
-              "Pick Location on Map" wrapped to two lines in rule 114's
-              132 px.  RULED: "Pick on map", one line, nowrap, in rule
-              130's type.  The located label had the same box and would
-              overflow it once the box refuses to wrap, so it takes the
-              ruling's form too — "Edit on map" is this build's choice,
-              flagged, not a ruled string. */}
-          {located ? "Edit on map" : "Pick on map"}
+          {/* #289 post-fidelity hand-check, finding 1: one line, nowrap. */}
+          Pick on map
         </button>
-      </div>
-      {/* #289 fidelity F4 (X5): the "map · road detect · work zone in one
-          step" caption is gone.  Rule 64's body order is question →
-          provenance → producers → primary, with no caption slot, and rule
-          114's S1 is the field and FIND alone; the caption described the
-          picker modal (ruling 189 keeps it), which the button already
-          names. */}
+      )}
+    </div>
+  );
+  const aerialShown = workStart && !stale;
 
-      {/* #288's finding class, applied here: a stale road is a fact the
-          band states rather than a silence.  `deriveRail()` owns the
-          predicate; this reads it (band-facts.roadIsStale). */}
+  return (
+    <OpenBand
+      stepIndex={stepIndex}
+      head="WHERE"
+      // #439 ruling 2: the provenance line moves behind the summary row's
+      // Details; the header is the step and WHERE only.
+      provenance=""
+      question="Where is the work?"
+      // Ruling 1: after a pin nothing sits between the question and the
+      // aerial.
+      questionProvenance={
+        located
+          ? ""
+          : "Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map."
+      }
+    >
+      {!located && findRow(true)}
+
+      {/* #288's finding class: a stale road is a fact the band states
+          rather than a silence (band-facts.roadIsStale). */}
       {stale && (
         <div className="tr-prov mt-2" style={{ color: "var(--warn)" }}>
           ⚠ detection stale: the confirmed road was picked at a different
@@ -687,8 +553,7 @@ export function WhereBand({
         </div>
       )}
       {/* #290 ruling 10: a plan saved before the pin marked the work start
-          opens with its pin kept and its side unset — never silently
-          re-read.  The band says why it is asking. */}
+          opens with its pin kept and its side unset. */}
       {located && scenario.meta.pinModelFrom === "corridor_end" && !sided && (
         <div
           className="tr-prov mt-2"
@@ -701,213 +566,142 @@ export function WhereBand({
       )}
 
       {located && (
-        <>
-          <MoveLedgerRows
-            scenario={scenario}
-            jurisdictionName={jurisdictionName}
-            kindConfirmed={kindConfirmed}
-            sideLabel={sideLabel}
-            notMarkedLine={notMarkedLine(geometry)}
-            crossStreetTag={crossStreet?.text ?? null}
-            onOpenPicker={onOpenPicker}
-            locked={locked}
-          />
-
-          {/* #301 piece 1: the aerial, under the ledger and above the side
-              control — the side question sits right under the picture it
-              changes.  A read (data-read): it stays live under the write
-              lock.  Only for a work-start pin whose road is current; the
-              stale-road warning above is the answer otherwise. */}
-          {workStart && !stale && (
+        <div className="wq-stack">
+          {/* #301 piece 1: the aerial, a read (data-read) that stays live
+              under the write lock.  #439 ruling 1: first after the
+              question, "Edit on map" on its corner, the key on it. */}
+          {aerialShown ? (
             <BandAerial
               scenario={scenario}
               geometry={geometry}
               kindConfirmed={kindConfirmed}
-            />
-          )}
-
-          {/* #290 move 4: the side control, above the kind chips — the two
-              answers §4.4 asks together.  Same arming as the chips: a road
-              confirmed at this pin, or a manual pin (no road → the four
-              headings). */}
-          {workStart && chipsShown && (
-            <SideControl
-              fetchState={geometry}
-              scenario={scenario}
-              setMeta={setMeta}
+              onEditMap={openMap}
               locked={locked}
-              onMarkIntersection={onMarkIntersection}
             />
+          ) : (
+            // W11: no aerial (a stale road, a corridor-end pin): the
+            // button stays reachable under the heading.
+            <button
+              type="button"
+              className="a-pri wq-next wq-map-btn"
+              data-write=""
+              aria-disabled={locked || undefined}
+              onClick={openMap}
+              data-testid="where-open-picker"
+            >
+              Edit on map
+            </button>
           )}
 
-          {/* Move 3's producer.  §4.3 puts the extent in the WHERE band,
-              and this is the ONE work-zone length field in setup now: the
-              three per-kind forms' copies are deleted in this commit, so
-              `workLen` has one door here and one in the picker. */}
-          {/* Rule 135's kind chips — BELOW the location, and only once a
-              road is confirmed.
-              #289 hand-check on prod, 2026-09-22: "The kind chips move
-              below the location and render only once a road is confirmed
-              (S2), per Part 1 §2.2 and §4.4 — the WHERE question is
-              answered by a pin, not a kind."
-
-              §4.4 is why the gate is a CONFIRMED ROAD and not a pin: move
-              4 is the system proposing a side from what the tap hit, and
-              a tap that has not resolved to a road has proposed nothing.
-              Until Phase 3 builds that producer the chips render with no
-              "✓ proposed" on any citation — #281's own audit ruling —
-              so what the operator sees is three kinds and no opinion.
-
-              RULE 5, and it is a real consequence: on a fresh session the
-              kind is no longer settable before the picker opens, and the
-              picker's capture flow reads it (`initial.scenarioKind`, and
-              `near_intersection` asks for a second pin).  Reaching that
-              kind is now: open the picker, save a road, pick the chip,
-              reopen the picker.  Recorded in the arc README as the one
-              flow this correction lengthens. */}
-          {/* #289 hand-check, 2026-09-23, defect 1 — AND A STATED
-              WIDENING OF THE GATE ABOVE.  The kind is now owed before
-              Generate, so a pin no picker save ever touched — the
-              manual-entry path, which has no detection at all — would
-              have no chips and no way to answer the question the column
-              is waiting on.  Until this fix that pin generated on the
-              silent default, which is the defect.  So the row renders
-              for a confirmed road (the ruled case, which already
-              included a save that resolved no road) AND for a pin with
-              no picker save on record.  A STALE road still hides it:
-              that pin has a road to re-confirm, and the warning above
-              says so.  Flagged for a ruling in rulings.md. */}
-          {chipsShown && (
-            <div className="mt-4">
-              <KindChips
-                value={kindPicked ? scenario.kind : null}
-                onChange={onKindChange}
-                locked={locked}
-                proposal={geometry.geometry?.kind_proposal ?? null}
-              />
-            </div>
-          )}
-
-          {/* R117 Q2 (Ryan, 2026-10-08): "B, the WHAT-style row with the
-              five lengths in its popover."  The extent is a FieldCell in
-              the band's own columns -- label, marker, input, as the WHAT
-              band's rows are (P2, P4) -- and the corridor's zone lengths
-              are its details, one click away.  They stay the one place
-              the lengths show before Generate (#301 ruling 7); the loose
-              stack of six lines under the input (#289 F4) is gone. */}
-          <div className="a-cols mt-4">
-            <div className="a-col">
-              <FieldCell
-                label="Work zone length (ft)"
-                htmlFor="band-worklen"
-                testid="worklen"
-                provenance={
-                  <span className="tr-prov" data-testid="prov-worklen">
-                    {workLenIsEmpty(scenario)
-                      ? "not set · the extent the plan is built for"
-                      : workLenIsDefault(scenario)
-                        ? // #397: the starting length, not an answer (Rule 10).
-                          "default · the plan's starting length; enter the real one"
-                        : "your answer · the extent the plan is built for"}
-                  </span>
-                }
-                marker={
-                  workLenIsEmpty(scenario)
-                    ? { glyph: "◌", word: "not set", tone: "pending" }
-                    : workLenIsRefused(scenario)
-                      ? // #403: the operator's, but refused; no ✓ on it.
-                        // #428: a typed 0 too.  #429 (Ryan, 2026-10-29):
-                        // over the cap too; DESIGN-SPACING.md records it.
-                        { glyph: null, word: "yours", tone: "plain" }
-                      : workLenIsDefault(scenario)
-                        ? // Plain "default", no mark (Ryan, 2026-10-26).
-                          { glyph: null, word: "default", tone: "plain" }
-                        : { glyph: "✓", word: "yours", tone: "ok" }
-                }
-                alert={wzTouched && !wz.ok ? <FieldErrorLine>{wz.message}</FieldErrorLine> : null}
-                info={
-                  <CorridorExtentLines
-                    lengths={corridorSpecLengths ?? null}
-                    workLen={scenario.workLen}
-                    kind={scenario.kind}
-                    note={
-                      scenario.workLen <= 0
-                        ? "set the work-zone length to compute"
-                        : !kindConfirmed
-                          ? // #289 finding 1: the lengths are the kind's, and
-                            // no check is fired for a kind nobody confirmed.
-                            "corridor lengths wait on the kind of work"
-                          : !sided
-                            ? // #290: nor for a side nobody gave.
-                              "corridor lengths wait on the occupied side"
-                            : // Rule 3 / rule 10: an audit response without
-                              // the lengths degrades to an honest note,
-                              // never a locally-computed extent.
-                              "corridor extent unavailable, awaiting verification"
-                    }
+          <WhereSummary
+            parts={summaryParts(scenario, crossStreet?.text ?? null)}
+            provenance={whereProvenance(scenario, crossStreet?.provenance ?? null)}
+            editOpen={editOpen}
+            setEditOpen={(v) => setEditChoice(v)}
+          />
+          <div id="where-edit" className="wq-edit" hidden={!editOpen} data-testid="where-edit-fold">
+            {findRow(false)}
+            <MoveLedgerRows
+              scenario={scenario}
+              jurisdictionName={jurisdictionName}
+              kindConfirmed={kindConfirmed}
+              sideLabel={sideLabel}
+              notMarkedLine={notMarkedLine(geometry)}
+              crossStreetTag={crossStreet?.text ?? null}
+              onOpenPicker={onOpenPicker}
+              locked={locked}
+            />
+            {/* R117 Q2: the extent is a FieldCell with the corridor's zone
+                lengths in its details.  #439 W9: it lives in the fold. */}
+            <div className="a-cols">
+              <div className="a-col">
+                <FieldCell
+                  label="Work zone length (ft)"
+                  htmlFor="band-worklen"
+                  testid="worklen"
+                  provenance={
+                    <span className="tr-prov" data-testid="prov-worklen">
+                      {workLenIsEmpty(scenario)
+                        ? "not set · the extent the plan is built for"
+                        : workLenIsDefault(scenario)
+                          ? // #397: the starting length, not an answer (Rule 10).
+                            "default · the plan's starting length; enter the real one"
+                          : "your answer · the extent the plan is built for"}
+                    </span>
+                  }
+                  marker={
+                    workLenIsEmpty(scenario)
+                      ? { glyph: "◌", word: "not set", tone: "pending" }
+                      : workLenIsRefused(scenario)
+                        ? // #403/#428/#429: the operator's, but refused; no ✓.
+                          { glyph: null, word: "yours", tone: "plain" }
+                        : workLenIsDefault(scenario)
+                          ? // Plain "default", no mark (Ryan, 2026-10-26).
+                            { glyph: null, word: "default", tone: "plain" }
+                          : { glyph: "✓", word: "yours", tone: "ok" }
+                  }
+                  alert={wzTouched && !wz.ok ? <FieldErrorLine>{wz.message}</FieldErrorLine> : null}
+                  info={
+                    <CorridorExtentLines
+                      lengths={corridorSpecLengths ?? null}
+                      workLen={scenario.workLen}
+                      kind={scenario.kind}
+                      note={
+                        scenario.workLen <= 0
+                          ? "set the work-zone length to compute"
+                          : !kindConfirmed
+                            ? // #289 finding 1: the lengths are the kind's.
+                              "corridor lengths wait on the kind of work"
+                            : !sided
+                              ? // #290: nor for a side nobody gave.
+                                "corridor lengths wait on the occupied side"
+                              : // Rule 3 / rule 10: never a locally-computed extent.
+                                "corridor extent unavailable, awaiting verification"
+                      }
+                    />
+                  }
+                >
+                  <input
+                    id="band-worklen"
+                    type="number"
+                    step={10}
+                    min={0}
+                    className="a-fld"
+                    data-write=""
+                    disabled={locked}
+                    // #428: only an empty box shows empty; a typed 0 shows 0.
+                    value={wzDraft ?? (workLenIsEmpty(scenario) ? "" : scenario.workLen)}
+                    onChange={(e) => setWzDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") commitWorkLen();
+                    }}
+                    onBlur={commitWorkLen}
                   />
-                }
-              >
-                <input
-                  id="band-worklen"
-                  type="number"
-                  step={10}
-                  min={0}
-                  className="a-fld"
-                  data-write=""
-                  disabled={locked}
-                  // #428: only an empty box shows empty; a typed 0 shows 0.
-                  value={wzDraft ?? (workLenIsEmpty(scenario) ? "" : scenario.workLen)}
-                  onChange={(e) => setWzDraft(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") commitWorkLen();
-                  }}
-                  onBlur={commitWorkLen}
-                />
-              </FieldCell>
+                </FieldCell>
+              </div>
             </div>
           </div>
 
-          {/* #289 hand-check, 2026-09-23, correction 3: the "Applied
-              from picker" box is gone.  Its sentences did not go with it
-              — every one of them is now a provenance line under the WHAT
-              cell whose value it is about (handoffNotesByCell), which is
-              where rule 137 already says a field explains itself, and is
-              the cell the operator would change to undo it. */}
-
-          {/* Rule 115's primary, naming the choice.  It confirms; it
-              never infers (suggest-never-set), and it writes nothing to
-              the scenario — the chip already did.
-
-              Defect 1: until a chip is clicked there is no choice to
-              name, so the primary is DISABLED and says why, in the
-              rail's own words (rule 139).  `aria-disabled`, not
-              `disabled`, so it stays focusable and the reason stays
-              reachable (#252's convention for a write control). */}
-          <button
-            type="button"
-            className="a-pri a-confirm"
-            aria-disabled={locked || !kindPicked || undefined}
-            aria-describedby={kindPicked ? undefined : "where-confirm-reason"}
-            onClick={() => {
-              if (!locked && kindPicked) onConfirm();
-            }}
-            data-testid="where-confirm"
-          >
-            {kindPicked
-              ? `Confirm ${kindLabel(scenario.kind).toLowerCase()}`
-              : "Confirm"}
-          </button>
-          {!kindPicked && (
-            <div
-              id="where-confirm-reason"
-              className="tr-prov mt-2"
-              data-testid="where-confirm-reason"
-            >
-              {KIND_BLOCKER.toLowerCase()}
-            </div>
+          {/* #439 rulings 4-6: the CONFIRM card, the side then the kind.
+              Same arming as the old chips (#289 defect 1's widening): a
+              road confirmed at this pin, or a manual pin with no picker
+              save on record; a stale road hides it. */}
+          {chipsShown && (
+            <WhereQuestions
+              scenario={scenario}
+              setMeta={setMeta}
+              geometry={geometry}
+              showSide={workStart}
+              kindPicked={kindPicked}
+              kindConfirmed={kindConfirmed}
+              onKindChange={onKindChange}
+              onKindCleared={onKindCleared}
+              onConfirm={onConfirm}
+              onMarkIntersection={onMarkIntersection}
+              locked={locked}
+            />
           )}
-        </>
+        </div>
       )}
 
       {!mapboxToken && (

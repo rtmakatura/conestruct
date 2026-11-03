@@ -18,7 +18,7 @@ vi.mock("../QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("../LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "../GeneratorShell";
-import { openWhere } from "../__fixtures__/band-helpers";
+import { openWhere, showKind } from "../__fixtures__/band-helpers";
 import { MIN_AUDIT, TEST_PIN } from "../test-fixtures";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
@@ -81,7 +81,10 @@ const PINNED = {
   meta: { ...DEFAULT_SHOULDER.meta, ...TEST_PIN, pinModel: "work_start" },
 } as unknown as Scenario;
 
-const chip = (k: string) => document.querySelector<HTMLButtonElement>(`[data-testid="kind-chip-${k}"]`)!;
+// #439: the kind is a radio row on the CONFIRM card; `chip` is its input,
+// `row` its label (the row a person sees).
+const chip = (k: string) => document.querySelector<HTMLInputElement>(`[data-testid="kind-chip-${k}"]`)!;
+const row = (k: string) => chip(k).closest("label")!;
 
 describe("#284: the proposed kind", () => {
   // A passed-in scenario loads as a saved plan, its kind already chosen
@@ -93,29 +96,31 @@ describe("#284: the proposed kind", () => {
   it("marks the proposed chip and prints the backend's reason, pressing nothing", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER} />);
     await openWhere();
+    await showKind();
     const mark = await waitFor('[data-testid="kind-proposed-mark"]');
     // #411 (Ryan, 2026-10-26, amending #284): "⚠ proposed", the ⚠ in its
     // rule-18 hue.
-    expect(mark?.textContent).toBe(" · ⚠ proposed");
+    expect(mark?.textContent).toBe("⚠ proposed");
     expect(mark?.querySelector(".sym-warn")?.textContent).toBe("⚠");
-    expect(chip("shoulder").contains(mark)).toBe(true);
+    expect(row("shoulder").contains(mark)).toBe(true);
     const note = document.querySelector('[data-testid="kind-proposal-note"]');
     expect(note?.textContent).toBe(`⚠ proposed: ${BASIS} Pick it to use it.`);
     expect(note?.querySelector(".sym-warn")?.textContent).toBe("⚠");
-    expect(chip("shoulder").getAttribute("aria-pressed")).toBe("false");
-    expect(chip("flagger_lane_closure").getAttribute("aria-pressed")).toBe("true");
-    expect(chip("near_intersection").getAttribute("aria-pressed")).toBe("false");
+    expect(chip("shoulder").checked).toBe(false);
+    expect(chip("flagger_lane_closure").checked).toBe(true);
+    expect(chip("near_intersection").checked).toBe(false);
   });
 
   it("a click on the proposed chip picks it like any other chip", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER} />);
     await openWhere();
+    await showKind();
     await waitFor('[data-testid="kind-proposed-mark"]');
     await act(async () => {
       chip("shoulder").click();
     });
-    expect(chip("shoulder").getAttribute("aria-pressed")).toBe("true");
-    expect(chip("flagger_lane_closure").getAttribute("aria-pressed")).toBe("false");
+    expect(chip("shoulder").checked).toBe(true);
+    expect(chip("flagger_lane_closure").checked).toBe(false);
   });
 
   // Ryan, 2026-10-26 (#411, amends #284): "Once the operator picks the
@@ -124,23 +129,24 @@ describe("#284: the proposed kind", () => {
   it("once the proposed chip is picked, its '⚠ proposed' and the note go", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER} />);
     await openWhere();
+    await showKind();
     await waitFor('[data-testid="kind-proposed-mark"]');
     await act(async () => {
       chip("shoulder").click();
     });
-    expect(chip("shoulder").getAttribute("aria-pressed")).toBe("true");
+    expect(chip("shoulder").checked).toBe(true);
     expect(document.querySelector('[data-testid="kind-proposed-mark"]')).toBeNull();
     expect(document.querySelector('[data-testid="kind-proposal-note"]')).toBeNull();
-    expect(chip("shoulder").textContent).not.toContain("⚠");
-    expect(chip("shoulder").textContent).not.toContain("proposed");
+    expect(row("shoulder").textContent).not.toContain("⚠");
+    expect(row("shoulder").textContent).not.toContain("proposed");
     // Another kind picked: the proposal is unanswered again, so it shows.
     await act(async () => {
       chip("flagger_lane_closure").click();
     });
-    expect(chip("shoulder").getAttribute("aria-pressed")).toBe("false");
+    expect(chip("shoulder").checked).toBe(false);
     expect(
       document.querySelector('[data-testid="kind-proposed-mark"]')?.textContent,
-    ).toBe(" · ⚠ proposed");
+    ).toBe("⚠ proposed");
     expect(document.querySelector('[data-testid="kind-proposal-note"]')).not.toBeNull();
   });
 
@@ -148,6 +154,7 @@ describe("#284: the proposed kind", () => {
     proposal = null;
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED} />);
     await openWhere();
+    await showKind();
     await waitFor('[data-testid="kind-chip-shoulder"]');
     await act(async () => {
       await new Promise((r) => setTimeout(r, 500));
@@ -159,6 +166,7 @@ describe("#284: the proposed kind", () => {
   it("the proposal never writes the kind: every request carries the scenario's own", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={FLAGGER} />);
     await openWhere();
+    await showKind();
     await waitFor('[data-testid="kind-proposed-mark"]');
     await act(async () => {
       await new Promise((r) => setTimeout(r, 500));
