@@ -1,0 +1,2456 @@
+{
+ "390": {
+  "steps": [
+   {
+    "name": "generated",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": false,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download↓",
+      "disabled": false
+     },
+     {
+      "text": "Download↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF↓",
+      "disabled": false
+     },
+     {
+      "text": ".md↓",
+      "disabled": false
+     },
+     {
+      "text": "Download↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-00-generated.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   },
+   {
+    "name": "q1-details-open",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question 28 found · nearest 57.4 ft · MUTCD § 6C.02 · OpenStreetMap · corridor scan · 3 nov · 17:22 utc · 7.9 s",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": false,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-01-q1-details-open.png"
+   },
+   {
+    "name": "q1-yes",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-02-q1-yes.png"
+   },
+   {
+    "name": "q1-no",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-03-q1-no.png"
+   },
+   {
+    "name": "q2-open",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-04-q2-open.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   },
+   {
+    "name": "q2-no",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-05-q2-no.png"
+   },
+   {
+    "name": "q2-yes",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-06-q2-yes.png"
+   },
+   {
+    "name": "q3-open",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 3 of 3",
+    "currentQ": "Is there an intersection next to the work?",
+    "card": "Is there an intersection next to the work? The map shows an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS. Is there an intersection next to the work? Yes, it's there Nothing changes. The TCS still lays out the cross street. No, there isn't one No devices change. Your answer goes in the audit trail for the TCS to check. Source: MUTCD § 6N.12 p. 848 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 3 of 3 Is there an intersection next to the work? T",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-07-q3-open.png"
+   },
+   {
+    "name": "q3-no",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 3 of 3",
+    "currentQ": "Is there an intersection next to the work?",
+    "card": "Is there an intersection next to the work? The map shows an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS. Is there an intersection next to the work? Yes, it's there Nothing changes. The TCS still lays out the cross street. No, there isn't one No devices change. Your answer goes in the audit trail for the TCS to check. Source: MUTCD § 6N.12 p. 848 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 3 of 3 Is there an intersection next to the work? T",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-08-q3-no.png"
+   },
+   {
+    "name": "q3-yes",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 3 of 3",
+    "currentQ": "Is there an intersection next to the work?",
+    "card": "Is there an intersection next to the work? The map shows an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS. Is there an intersection next to the work? Yes, it's there Nothing changes. The TCS still lays out the cross street. No, there isn't one No devices change. Your answer goes in the audit trail for the TCS to check. Source: MUTCD § 6N.12 p. 848 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 3 of 3 Is there an intersection next to the work? T",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-09-q3-yes.png"
+   },
+   {
+    "name": "q1-undone",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-10-q1-undone.png"
+   },
+   {
+    "name": "q1-yes-again",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-11-q1-yes-again.png"
+   },
+   {
+    "name": "q2-undone",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-12-q2-undone.png"
+   },
+   {
+    "name": "q2-no-again",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-13-q2-no-again.png"
+   },
+   {
+    "name": "ready-to-apply",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-14-ready-to-apply.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   },
+   {
+    "name": "applied",
+    "strip": "⚠ VERIFIED · 4 PLAN FLAGS",
+    "head": "NEEDS YOU 3 of 3 answered",
+    "currentQ": "",
+    "card": "",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there UNDO",
+     "× Is there a bike lane along the work zone: No, there isn't one UNDO"
+    ],
+    "warn": null,
+    "ribbons": [],
+    "stale": false,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included ›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU 3 of 3 answered ✓ Are there sidewalks along the work zone: Y",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 38 On the plan sheet DEVICE T",
+     "✓ Checked & passed 14 checks, each cited › ◌ Pending / not verified 4 "
+    ],
+    "renders": 4,
+    "setupBoxH": 107,
+    "slotH": 107,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "390-15-applied.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   }
+  ],
+  "questionsAtLoad": [
+   "Are there sidewalks along the work zone?",
+   "◌ Next: a bike lane along the work zone",
+   "◌ Next: an intersection next to the work"
+  ],
+  "downloadBeforeAnswers": "East-Colfax-Avenue_shoulder_2026-11-03_9ff47a.pdf",
+  "N": 3,
+  "titles": [
+   "Are there sidewalks along the work zone?",
+   "Is there a bike lane along the work zone?",
+   "Is there an intersection next to the work?"
+  ],
+  "reopenedQ1": true,
+  "reopenedQ2": true,
+  "totalBefore": null,
+  "rendersForApply": 1,
+  "totalAfter": null,
+  "downloadAfterApply": "East-Colfax-Avenue_shoulder_2026-11-03_1f5edb.pdf"
+ },
+ "1440": {
+  "steps": [
+   {
+    "name": "generated",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": false,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-00-generated.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   },
+   {
+    "name": "q1-details-open",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question 28 found · nearest 57.4 ft · MUTCD § 6C.02 · OpenStreetMap · corridor scan · 3 nov · 17:21 utc · 4.0 s",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": false,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-01-q1-details-open.png"
+   },
+   {
+    "name": "q1-yes",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-02-q1-yes.png"
+   },
+   {
+    "name": "q1-no",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-03-q1-no.png"
+   },
+   {
+    "name": "q2-open",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-04-q2-open.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   },
+   {
+    "name": "q2-no",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-05-q2-no.png"
+   },
+   {
+    "name": "q2-yes",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Next question",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "◌ Next: an intersection next to the work"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-06-q2-yes.png"
+   },
+   {
+    "name": "q3-open",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 3 of 3",
+    "currentQ": "Is there an intersection next to the work?",
+    "card": "Is there an intersection next to the work? The map shows an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS. Is there an intersection next to the work? Yes, it's there Nothing changes. The TCS still lays out the cross street. No, there isn't one No devices change. Your answer goes in the audit trail for the TCS to check. Source: MUTCD § 6N.12 p. 848 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 3 of 3 Is there an intersection next to the work? T",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-07-q3-open.png"
+   },
+   {
+    "name": "q3-no",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 3 of 3",
+    "currentQ": "Is there an intersection next to the work?",
+    "card": "Is there an intersection next to the work? The map shows an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS. Is there an intersection next to the work? Yes, it's there Nothing changes. The TCS still lays out the cross street. No, there isn't one No devices change. Your answer goes in the audit trail for the TCS to check. Source: MUTCD § 6N.12 p. 848 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 3 of 3 Is there an intersection next to the work? T",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-08-q3-no.png"
+   },
+   {
+    "name": "q3-yes",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 3 of 3",
+    "currentQ": "Is there an intersection next to the work?",
+    "card": "Is there an intersection next to the work? The map shows an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS. Is there an intersection next to the work? Yes, it's there Nothing changes. The TCS still lays out the cross street. No, there isn't one No devices change. Your answer goes in the audit trail for the TCS to check. Source: MUTCD § 6N.12 p. 848 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "× Are there sidewalks along the work zone: No, there aren't any · not applied yet UNDO",
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 3 of 3 Is there an intersection next to the work? T",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-09-q3-yes.png"
+   },
+   {
+    "name": "q1-undone",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-10-q1-undone.png"
+   },
+   {
+    "name": "q1-yes-again",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 1 of 3",
+    "currentQ": "Are there sidewalks along the work zone?",
+    "card": "Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay. Are there sidewalks along the work zone? Yes, they're there The 4 devices stay in the plan. No, there aren't any The 4 devices come off the plan. Source: MUTCD § 6C.02 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Is there a bike lane along the work zone: Yes, it's there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-11-q1-yes-again.png"
+   },
+   {
+    "name": "q2-undone",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-12-q2-undone.png"
+   },
+   {
+    "name": "q2-no-again",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-13-q2-no-again.png"
+   },
+   {
+    "name": "ready-to-apply",
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "head": "NEEDS YOU Question 2 of 3",
+    "currentQ": "Is there a bike lane along the work zone?",
+    "card": "Is there a bike lane along the work zone? The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay. Is there a bike lane along the work zone? Yes, it's there The 2 devices stay in the plan. No, there isn't one The 2 devices come off the plan. Source: MUTCD § 9C.101 · map data from OpenStreetMap · Details Apply answers",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there · not applied yet UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there · not applied yet UNDO"
+    ],
+    "warn": "⚠ These files match the plan before your 3 answers. Answer first and they'll update.",
+    "ribbons": [],
+    "stale": true,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU Question 2 of 3 Is there a bike lane along the work zone? Th",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan sheet DEVICE T",
+     "✓ Checked & passed 13 checks, each cited › ◌ Pending / not verified 3 "
+    ],
+    "renders": 3,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-14-ready-to-apply.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   },
+   {
+    "name": "applied",
+    "strip": "⚠ VERIFIED · 4 PLAN FLAGS",
+    "head": "NEEDS YOU 3 of 3 answered",
+    "currentQ": "",
+    "card": "",
+    "rows": [
+     "✓ Are there sidewalks along the work zone: Yes, they're there UNDO",
+     "✓ Is there an intersection next to the work: Yes, it's there UNDO",
+     "× Is there a bike lane along the work zone: No, there isn't one UNDO"
+    ],
+    "warn": null,
+    "ribbons": [],
+    "stale": false,
+    "setupLine": "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street · Denver",
+    "totalCell": null,
+    "dlButtons": [
+     {
+      "text": "Download all (.zip) ↓",
+      "disabled": false
+     },
+     {
+      "text": "6 files, quote included›",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "PDF ↓",
+      "disabled": false
+     },
+     {
+      "text": ".md ↓",
+      "disabled": false
+     },
+     {
+      "text": "Download ↓",
+      "disabled": false
+     },
+     {
+      "text": "i Price quote Contractor estim",
+      "disabled": false
+     },
+     {
+      "text": "Preview breakdown",
+      "disabled": false
+     },
+     {
+      "text": "Download Quote (XLSX)↓",
+      "disabled": false
+     }
+    ],
+    "order": [
+     "NEEDS YOU 3 of 3 answered ✓ Are there sidewalks along the work zone: Y",
+     "✓ 4 other conditions checked. Show them",
+     "✓ SETUP East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 m",
+     "YOUR PLAN As it stands now TOTAL DEVICES 38 On the plan sheet DEVICE T",
+     "✓ Checked & passed 14 checks, each cited › ◌ Pending / not verified 4 "
+    ],
+    "renders": 4,
+    "setupBoxH": 46.25,
+    "slotH": 47,
+    "gap": {
+     "px": 33,
+     "hits": []
+    },
+    "shot": "1440-15-applied.png",
+    "axe": [
+     {
+      "id": "heading-order",
+      "impact": "moderate",
+      "nodes": 1,
+      "first": "#needs-you-h"
+     }
+    ],
+    "small": []
+   }
+  ],
+  "questionsAtLoad": [
+   "Are there sidewalks along the work zone?",
+   "◌ Next: a bike lane along the work zone",
+   "◌ Next: an intersection next to the work"
+  ],
+  "downloadBeforeAnswers": "East-Colfax-Avenue_shoulder_2026-11-03_9ff47a.pdf",
+  "N": 3,
+  "titles": [
+   "Are there sidewalks along the work zone?",
+   "Is there a bike lane along the work zone?",
+   "Is there an intersection next to the work?"
+  ],
+  "reopenedQ1": true,
+  "reopenedQ2": true,
+  "totalBefore": null,
+  "rendersForApply": 1,
+  "totalAfter": null,
+  "downloadAfterApply": "East-Colfax-Avenue_shoulder_2026-11-03_11f90d.pdf"
+ }
+}
