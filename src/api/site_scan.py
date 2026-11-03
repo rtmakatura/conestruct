@@ -180,6 +180,8 @@ DISMISS_REASON_TEXT: dict[str, str] = {
     "fenced": "fenced off",
     "removed": "removed",
     "not_in_work_zone": "not in the work zone",
+    # #437 (Ryan's ruling S2): the "No, there aren't any" answer.
+    "not_there": "not there",
     "other": "other",
 }
 
@@ -210,7 +212,8 @@ def override_violation(overrides: list[Any]) -> str | None:
         if action == "dismiss":
             if reason is None:
                 return (
-                    f"Dismissing {label} needs a reason (fenced, removed, not in work zone, other)."
+                    f"Dismissing {label} needs a reason "
+                    "(fenced, removed, not in work zone, not there, other)."
                 )
             if reason == "other" and not note:
                 return f"Dismissing {label} for another reason needs a note saying which."
@@ -219,6 +222,9 @@ def override_violation(overrides: list[Any]) -> str | None:
         elif action == "assert":
             if reason is not None or note:
                 return f"Asserting {label} takes no reason; the assertion is the fact."
+        elif action == "confirm":
+            if reason is not None or note:
+                return f"Confirming {label} takes no reason; the confirmation is the fact."
     return None
 
 
@@ -252,7 +258,7 @@ def _apply_corrections(
     for o in overrides:
         flag = str(getattr(o, "flag", ""))
         action = str(getattr(o, "action", ""))
-        status: Literal["applied", "moot"]
+        status: Literal["applied", "moot", "confirmed"]
         label = SITE_CONDITION_LABELS.get(flag, flag)
         detected: bool | None = None
         if buckets is not None:
@@ -277,6 +283,27 @@ def _apply_corrections(
                     f"Operator dismissal of {label} couldn't apply: the site scan didn't "
                     "complete. Nothing was detected to dismiss.",
                 )
+        elif action == "confirm":
+            # #437 (Ryan's ruling S1): "Yes, they're there".  A record, not
+            # a correction: the flag stays as the scan set it, so the plan
+            # is unchanged, no pending item and no verify advisory follow.
+            if detected is True:
+                status, text = (
+                    "confirmed",
+                    f"Operator confirmed the scan's {label}. The plan is unchanged.",
+                )
+            elif detected is False:
+                status, text = (
+                    "moot",
+                    f"Operator confirmation of {label} is moot: the scan found none along "
+                    "the corridor. There's nothing to confirm.",
+                )
+            else:
+                status, text = (
+                    "moot",
+                    f"Operator confirmation of {label} couldn't apply: the site scan didn't "
+                    "complete. Nothing was detected to confirm.",
+                )
         else:  # assert
             if detected is True:
                 status, text = (
@@ -295,9 +322,9 @@ def _apply_corrections(
         records.append(
             SiteScanCorrection(
                 flag=flag,
-                # "dismiss" or "assert": the else branch above treats
-                # anything but "dismiss" as an assertion.
-                action=cast(Literal["dismiss", "assert"], action),
+                # "dismiss", "confirm" or "assert": the else branch above
+                # treats anything else as an assertion.
+                action=cast(Literal["dismiss", "assert", "confirm"], action),
                 reason=getattr(o, "reason", None),
                 note=getattr(o, "note", None),
                 recorded_at=str(getattr(o, "recorded_at", "") or ""),
@@ -418,11 +445,13 @@ class SiteScanCorrection(BaseModel):
     """One applied-or-moot operator correction, disclosed (#224 phase 4)."""
 
     flag: str
-    action: Literal["dismiss", "assert"]
+    action: Literal["dismiss", "assert", "confirm"]
     reason: str | None = None
     note: str | None = None
     recorded_at: str = ""
-    status: Literal["applied", "moot"]
+    # #437: ``confirmed`` = the operator confirmed a detected condition;
+    # the plan is unchanged, so it is neither applied nor moot.
+    status: Literal["applied", "moot", "confirmed"]
     # What the scan said for this flag at apply time; None = no scan result.
     scan_detected: bool | None = None
     # The one backend-composed sentence every surface prints.

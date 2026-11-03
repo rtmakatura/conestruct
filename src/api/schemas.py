@@ -77,8 +77,8 @@ ScannedSiteFlag = Literal[
     "bicycle_facility",
     "school_zone",
 ]
-SiteOverrideAction = Literal["dismiss", "assert"]
-SiteDismissReason = Literal["fenced", "removed", "not_in_work_zone", "other"]
+SiteOverrideAction = Literal["dismiss", "assert", "confirm"]
+SiteDismissReason = Literal["fenced", "removed", "not_in_work_zone", "not_there", "other"]
 
 
 class SiteConditionOverride(BaseModel):
@@ -87,7 +87,9 @@ class SiteConditionOverride(BaseModel):
     The in-generate scan owns the five detection keys (phase 1 ruling 1).
     This marker is the operator's explicit, disclosed disagreement with
     what the scan found — ``dismiss`` ("the sidewalk is fenced off") or
-    ``assert`` ("there is a school zone the map lacks").  It rides
+    ``assert`` ("there is a school zone the map lacks") — or the
+    operator's agreement with it, ``confirm`` (#437: a record that
+    changes nothing).  It rides
     ``meta.siteConditionOverrides`` on the scenario itself, like the #177
     ``DetectionOverride`` markers, because the backend re-generates from it
     and a saved plan must reload to the same plan (rule 10).

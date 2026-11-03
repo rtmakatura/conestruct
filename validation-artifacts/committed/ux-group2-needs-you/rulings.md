@@ -36,3 +36,17 @@ Ruled 2026-11-02 by Ryan at the checkpoint, quoted verbatim:
 > Size: three stacked branches under one issue, one ship go: (1) backend confirm + "not there", (2) strip, NEEDS YOU, new order, (3) Setup, Your plan, Downloads.
 >
 > Your ten D1–D10 calls are approved. Post the issue yourself (R146).
+
+
+## Branch 1 (`ux-group2-backend`): R145 self-ruled calls
+
+Built 2026-11-02 on Ryan's rulings S1 and S2. None of these hits the park list.
+
+- **E1. A third status, `confirmed`.** A confirm on a detected flag comes back `status: "confirmed"`, not `applied`. Every consumer that keys on `applied` (the `site_condition_overridden` pending item `audit.py:2827`, `corrections_advisory`, the sheet line `corrections_disclosure`, the PDF Result cell, TieredReference's assert branch) then skips it by default. That answers the handoff's open call: a confirm adds no pending item because nothing is overridden.
+- **E2. Confirm on a flag the scan didn't find is `moot`.** Without a scan result it is `moot` too, the same shape as a dismiss in both cases.
+- **E3. The record sentence:** "Operator confirmed the scan's {label}. The plan is unchanged." It carries no verify advisory, so `record_clause == disclosure`. The narrative and the audit print it through `correction_sentences` (every record), so the "Yes" is in the audit trail and survives a reload (S1).
+- **E4. Audit PDF scan table:** a confirmed row reads "DETECTED: confirmed by operator" with the scan's evidence kept.
+- **E5. `not_there`** joins the backend Literal and `DISMISS_REASON_TEXT` ("not there") and the TS `SiteDismissReason`. It is **not** added to the `DISMISS_REASONS` chip list: "No" sends it directly (S2, no chips), and the chips leave in branch 2. The helpers are `confirmMarker` and `notThereMarker`.
+- **E6. The ledger (Python `tier_ledger.py`, TS `tiering.ts` mirror)** is unchanged. A confirmed record adds no fact; the condition keeps its own detected fact.
+
+**Rule 5 miss:** the checkpoint predicted "~+40" for the backend if S2-A/S1-C were ruled in. Actual: backend source +55/−9, backend tests +85, and frontend +35/−8 (types, two helpers, their test, one intent line). I hadn't predicted the frontend half.

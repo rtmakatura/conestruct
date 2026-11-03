@@ -6,6 +6,8 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 import {
   assertMarker,
+  confirmMarker,
+  notThereMarker,
   dismissIsComplete,
   dismissMarker,
   withSiteCorrection,
@@ -46,6 +48,23 @@ describe("site-condition correction markers (#224 phase 4)", () => {
       action: "assert",
       recorded_at: "2026-09-04T12:00:00+00:00",
     });
+  });
+
+  it("#437: Yes = a confirm marker (no reason); No = a not_there dismiss (no note)", () => {
+    expect(confirmMarker("pedestrian_facility", NOW)).toEqual({
+      flag: "pedestrian_facility",
+      action: "confirm",
+      recorded_at: "2026-09-04T12:00:00+00:00",
+    });
+    expect(notThereMarker("adjacent_intersection", NOW)).toEqual({
+      flag: "adjacent_intersection",
+      action: "dismiss",
+      reason: "not_there",
+      recorded_at: "2026-09-04T12:00:00+00:00",
+    });
+    // Undo of either restores meta byte-identically (#179 shape).
+    const m = withSiteCorrection(DEFAULT_SCENARIO.meta, confirmMarker("pedestrian_facility", NOW));
+    expect(withoutSiteCorrection(m, "pedestrian_facility")).toEqual(DEFAULT_SCENARIO.meta);
   });
 
   it("one marker per condition — a new marker for a flag replaces the old one", () => {

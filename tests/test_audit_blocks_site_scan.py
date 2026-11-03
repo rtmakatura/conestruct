@@ -317,6 +317,19 @@ def test_moot_correction_leaves_the_row_and_is_still_disclosed() -> None:
     assert "Sentence for school_zone dismiss (moot)." in _texts(blocks)
 
 
+def test_confirmed_record_says_so_in_the_result_cell_and_keeps_the_evidence() -> None:
+    """#437 (ruling S1): "Yes, they're there" prints beside the scan's verdict."""
+    scan = _ok({"sidewalks": {"detected": True, "count": 18, "nearest_distance_m": 14.2}})
+    scan["corrections"] = [_correction("pedestrian_facility", "confirm", "confirmed")]
+    blocks = _site_scan_blocks(scan)
+    by_label = {r[0]: r for r in _rows(blocks)}
+    assert by_label["Pedestrian sidewalks"][1:] == [
+        "DETECTED: confirmed by operator",
+        "18 found · nearest 46.6 ft from anchor",
+    ]
+    assert "Sentence for pedestrian_facility confirm (confirmed)." in _texts(blocks)
+
+
 def test_proceeded_anyway_lists_the_corrections_after_the_disclosure() -> None:
     scan = _unavailable(True)
     scan["corrections"] = [_correction("school_zone", "assert", "applied")]

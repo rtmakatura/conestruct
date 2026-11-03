@@ -80,11 +80,11 @@ export interface ScanBucketWire {
  *  backend-composed sentence every surface prints verbatim. */
 export interface ScanCorrectionWire {
   flag: string;
-  action: "dismiss" | "assert";
+  action: "dismiss" | "assert" | "confirm";
   reason?: string | null;
   note?: string | null;
   recorded_at?: string;
-  status: "applied" | "moot";
+  status: "applied" | "moot" | "confirmed";
   scan_detected?: boolean | null;
   disclosure: string;
 }

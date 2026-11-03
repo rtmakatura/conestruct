@@ -262,6 +262,7 @@ export function SiteConditionRows({
     if (isManualStaged(s)) return s.on ? "assert" : "undo";
     if (s.marker === null) return "undo";
     if (s.marker.action === "assert") return "assert";
+    if (s.marker.action === "confirm") return "confirm";
     if (s.marker.reason === "other") return `dismiss: other (${s.marker.note ?? ""})`;
     const r = DISMISS_REASONS.find((x) => x.v === s.marker!.reason);
     return `dismiss: ${(r?.l ?? s.marker.reason ?? "").toLowerCase()}`;

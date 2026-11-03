@@ -220,6 +220,67 @@ def test_other_reason_carries_the_note_in_the_sentence(
 
 
 # --------------------------------------------------------------------------- #
+# #437 (Ryan's rulings S1, S2) — "Yes" confirms, "No" dismisses as not there
+# --------------------------------------------------------------------------- #
+
+CONFIRM_SIDEWALK = {"flag": "pedestrian_facility", "action": "confirm", "recorded_at": AT}
+
+
+def test_confirm_of_a_detected_key_is_recorded_and_changes_nothing(
+    client: TestClient, auth: dict[str, str], overpass: None
+) -> None:
+    base = _audit(client, auth, scenario(None))
+    audit = _audit(client, auth, scenario([CONFIRM_SIDEWALK]))
+    scan = audit["sections"]["site_scan"]
+    assert scan["flags"] == base["sections"]["site_scan"]["flags"]
+    assert _fired(audit) == _fired(base)
+    assert audit["sections"]["site_adjustments"] == base["sections"]["site_adjustments"]
+    [c] = scan["corrections"]
+    assert c["status"] == "confirmed"
+    assert c["scan_detected"] is True
+    assert c["reason"] is None
+    sentence = "Operator confirmed the scan's pedestrian sidewalks. The plan is unchanged."
+    assert c["disclosure"] == sentence
+    assert c["record_clause"] == sentence
+    # Nothing was overridden: no pending item, no verify advisory, the
+    # pending list exactly the uncorrected plan's.
+    assert "site_condition_overridden" not in _pending_kinds(audit)
+    assert _pending_kinds(audit) == _pending_kinds(base)
+    assert scan["corrections_advisory"] is None
+
+
+def test_confirm_of_an_absent_key_is_moot(
+    client: TestClient, auth: dict[str, str], overpass: None
+) -> None:
+    confirm_school = {"flag": "school_zone", "action": "confirm", "recorded_at": AT}
+    audit = _audit(client, auth, scenario([confirm_school]))
+    scan = audit["sections"]["site_scan"]
+    assert "school_zone" not in scan["flags"]
+    assert "school_zone" not in _fired(audit)
+    [c] = scan["corrections"]
+    assert c["status"] == "moot"
+    assert c["disclosure"] == (
+        "Operator confirmation of school zone is moot: the scan found none along "
+        "the corridor. There's nothing to confirm."
+    )
+    assert "site_condition_overridden" not in _pending_kinds(audit)
+
+
+def test_dismiss_not_there_applies_with_its_own_words(
+    client: TestClient, auth: dict[str, str], overpass: None
+) -> None:
+    not_there = {**DISMISS_SIDEWALK, "reason": "not_there"}
+    audit = _audit(client, auth, scenario([not_there]))
+    scan = audit["sections"]["site_scan"]
+    assert "pedestrian_facility" not in scan["flags"]
+    assert _fired(audit) == ["adjacent_intersection", "bicycle_facility"]
+    [c] = scan["corrections"]
+    assert c["status"] == "applied"
+    assert c["record_clause"] == "Operator dismissed the scan's pedestrian sidewalks: not there."
+    assert _pending_kinds(audit).count("site_condition_overridden") == 1
+
+
+# --------------------------------------------------------------------------- #
 # Moot corrections (rule 10: disclosed, never dropped)
 # --------------------------------------------------------------------------- #
 
@@ -361,6 +422,17 @@ def test_not_run_applies_asserts_too(
             "only with the reason 'other'",
         ),
         ([{**ASSERT_SCHOOL, "reason": "fenced"}], "takes no reason"),
+        (
+            [
+                {
+                    "flag": "pedestrian_facility",
+                    "action": "confirm",
+                    "reason": "fenced",
+                    "recorded_at": AT,
+                }
+            ],
+            "Confirming pedestrian sidewalks takes no reason",
+        ),
         ([ASSERT_SCHOOL, {**ASSERT_SCHOOL}], "Two corrections name school zone"),
     ],
 )

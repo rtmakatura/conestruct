@@ -390,11 +390,21 @@ def _site_scan_ok_blocks(scan: dict[str, Any]) -> list[Block]:
         for c in scan.get("corrections") or []
         if isinstance(c, dict) and c.get("status") == "applied"
     }
+    # #437: a confirmed record changes nothing but is the operator's answer;
+    # the Result cell says so beside the scan's verdict.
+    confirmed: set[str] = {
+        str(c.get("flag"))
+        for c in scan.get("corrections") or []
+        if isinstance(c, dict) and c.get("status") == "confirmed"
+    }
     rows: list[list[Any]] = []
     for bucket_name, label in _SCAN_CONDITION_ROWS:
         b = buckets.get(bucket_name)
         correction = applied.get(DETECTION_TO_FLAG.get(bucket_name, ""))
-        if correction is not None and correction.get("action") == "dismiss":
+        if correction is None and DETECTION_TO_FLAG.get(bucket_name, "") in confirmed:
+            evidence = _scan_evidence(b) if isinstance(b, dict) else ""
+            rows.append([_cell(label), _cell("DETECTED: confirmed by operator"), _cell(evidence)])
+        elif correction is not None and correction.get("action") == "dismiss":
             result = f"DETECTED: dismissed by operator ({correction_reason_text(correction)})"
             evidence = _scan_evidence(b) if isinstance(b, dict) else ""
             rows.append([_cell(label), _cell(result), _cell(evidence)])

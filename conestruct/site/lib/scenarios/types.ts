@@ -248,7 +248,8 @@ export type ScannedSiteFlag =
   | "pedestrian_facility"
   | "bicycle_facility"
   | "school_zone";
-export type SiteDismissReason = "fenced" | "removed" | "not_in_work_zone" | "other";
+/** #437: `not_there` is the "No, there aren't any" answer (Ryan's ruling S2). */
+export type SiteDismissReason = "fenced" | "removed" | "not_in_work_zone" | "not_there" | "other";
 
 /** The two keys no scan can see — operator-asserted (Part 1 8.25). */
 export type ManualSiteFlag = Extract<
@@ -269,8 +270,10 @@ export type ManualSiteFlag = Extract<
  */
 export interface SiteConditionOverride {
   flag: ScannedSiteFlag;
-  action: "dismiss" | "assert";
-  /** Required for a dismiss; never on an assert (backend 400 otherwise). */
+  /** #437: `confirm` records "Yes, they're there" on a detected flag; the
+   *  plan is unchanged (backend status `confirmed`). */
+  action: "dismiss" | "assert" | "confirm";
+  /** Required for a dismiss; never on an assert or a confirm (backend 400 otherwise). */
   reason?: SiteDismissReason;
   /** Required iff ``reason === "other"``. */
   note?: string;

@@ -239,6 +239,19 @@ export function assertMarker(flag: ScannedSiteFlag, now: Date = new Date()): Sit
   return { flag, action: "assert", recorded_at: stamp(now) };
 }
 
+/** #437 (Ryan's ruling S1): "Yes, they're there" on a detected flag.  The
+ *  backend records it (status `confirmed`) and changes nothing; it takes
+ *  no reason, like an assert. */
+export function confirmMarker(flag: ScannedSiteFlag, now: Date = new Date()): SiteConditionOverride {
+  return { flag, action: "confirm", recorded_at: stamp(now) };
+}
+
+/** #437 (Ryan's ruling S2): "No, there aren't any" — a dismiss with the
+ *  `not_there` reason; no note, no reason chips. */
+export function notThereMarker(flag: ScannedSiteFlag, now: Date = new Date()): SiteConditionOverride {
+  return dismissMarker(flag, "not_there", "", now);
+}
+
 /** ISO-8601 UTC to the second (the backend field caps at 32 chars). */
 function stamp(d: Date): string {
   return d.toISOString().replace(/\.\d{3}Z$/, "+00:00");

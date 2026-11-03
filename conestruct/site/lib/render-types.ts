@@ -254,11 +254,13 @@ export interface SiteScanProvenance {
  *  backend-composed sentence every surface prints verbatim. */
 export interface SiteScanCorrection {
   flag: string;
-  action: "dismiss" | "assert";
+  action: "dismiss" | "assert" | "confirm";
   reason?: string | null;
   note?: string | null;
   recorded_at?: string;
-  status: "applied" | "moot";
+  /** #437: `confirmed` = the operator confirmed a detected condition; the
+   *  plan is unchanged, so no pending item and no verify advisory. */
+  status: "applied" | "moot" | "confirmed";
   scan_detected?: boolean | null;
   disclosure: string;
   /** #255 — ``disclosure`` minus the advisory (equal to it on a moot
