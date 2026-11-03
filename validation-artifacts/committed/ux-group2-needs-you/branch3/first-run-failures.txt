@@ -1,0 +1,129 @@
+components/AuditTrail.declined-stale.test.tsx :: audit rows never present a prior input's numbers under a declined banner (#187) refetch (loading) keeps last-known rows with the refreshing cue — the sanctioned fallback
+components/AuditTrail.declined-stale.test.tsx :: audit rows never present a prior input's numbers under a declined banner (#187) a declined (400) audit blanks the cited values and disables the Audit PDF
+components/AuditTrail.declined-stale.test.tsx :: audit rows never present a prior input's numbers under a declined banner (#187) a failed (5xx) audit blanks the values too, keeping the retry line
+components/BandStack.landing.test.tsx :: #289 acceptance — every collapse / re-open lands, counted focus is re-homed: Generate lands on the results stack; a value link lands back in the column — both tabIndex −1
+components/BandStack.one-open.test.tsx :: #289 acceptance — exactly one band open, the rest fact or pending lines post-generate: no band open until a value link re-opens one — then exactly one
+components/controls-fidelity.test.tsx :: rule 133 — the ledger action every ledger action is mono 9.5 .14em uppercase at rest
+components/GeneratorShell.a11y-announce.test.tsx :: generation announcements (#193) clears at the click so a repeat Generate with identical counts re-announces
+components/GeneratorShell.a11y-announce.test.tsx :: generation announcements (#193) a background settle never writes the status region
+components/GeneratorShell.a11y-announce.test.tsx :: generation announcements (#193) a bundle failure announces via role=alert
+components/GeneratorShell.a11y-announce.test.tsx :: generation announcements (#193) #426: the package wording spells MHT out once, in the working band; the announcement says MHT alone
+components/GeneratorShell.a11y-announce.test.tsx :: generation announcements (#193) the stale ribbon stays visual-only (the band's region announces the flight, #252)
+components/GeneratorShell.a11y-focus.test.tsx :: focus policy after Generate (#193) a background settle never moves focus (debounced strip edit)
+components/GeneratorShell.a11y-focus.test.tsx :: focus policy after Generate (#193) CHANGE ONE THING lands focus on the zone the revision opens in
+components/GeneratorShell.batch-corrections.test.tsx :: #254 — answers stage in the shell and apply as one write (#437) CHANGE ONE THING KEEPS the staged set — one Apply carries both halves
+components/GeneratorShell.batch-corrections.test.tsx :: #289 finding 2 — the staged sentence says what is staged, from the one list one FIELD reads '1 field' on the ribbon
+components/GeneratorShell.batch-corrections.test.tsx :: #289 finding 2 — the staged sentence says what is staged, from the one list a field and a correction read '1 field · 1 correction' everywhere the set is named
+components/GeneratorShell.batch-corrections.test.tsx :: #289 finding 2 — the staged sentence says what is staged, from the one list PAYLOAD: Apply answers writes BOTH halves — a staged field is not dropped
+components/GeneratorShell.bundle-settings.test.tsx :: GeneratorShell bundle download — live quote settings (#74) sends the user's edited rates to /api/render/bundle
+components/GeneratorShell.bundle-settings.test.tsx :: GeneratorShell bundle download — live quote settings (#74) keeps the edited rate field across a reopen → regenerate cycle
+components/GeneratorShell.bundle-settings.test.tsx :: GeneratorShell bundle download — live quote settings (#74) preserves a manual flagger count and delivery distance through the cycle
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows the four rows are ONE group, in rule 27's order, with its 10px gap
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows rule 89: the COUNTED tiers show their number; the quote and the reference show none
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows #187: ONE '◌ previous answer, refreshing…' cue, in the stack, in a reserved slot
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows the quote's panel survives a collapse — its state is written nowhere else
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack every interactive element in the stack carries a declared floor
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack the same holds with the disclosures OPEN — a panel's controls are controls too
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack #437: and with an answer chosen and Details open — the card's controls are floored
+components/GeneratorShell.post-generate-scroll.test.tsx :: post-generate scroll (#152 E) ordinary edits never scroll — only a Generate click arms it
+components/GeneratorShell.primary.test.tsx :: #288 clause 3 — acceptance line 2: ONE primary per state S5 with items: NEEDS YOU's actions are primary and the zip is a ghost (ruling 182)
+components/GeneratorShell.primary.test.tsx :: #288 clause 3 — acceptance line 2: ONE primary per state S5 with none: the zip IS the primary and no filled action survives beside it
+components/GeneratorShell.primary.test.tsx :: #288 clause 3 — acceptance line 2: ONE primary per state S5 with none but SCANNED: NEEDS YOU does not mount (N = 0); the other-conditions row does, and the zip is the one primary
+components/GeneratorShell.primary.test.tsx :: #288 clause 3 — acceptance line 2: ONE primary per state R103: an advisory-only detection is listed and counted, but the zip keeps the primary
+components/GeneratorShell.primary.test.tsx :: #288 clause 3 — acceptance line 4: the file count, stated ONCE the count appears exactly once on the settled page, and it is the bundle's own
+components/GeneratorShell.regenerate-mounted.test.tsx :: results stay mounted through regeneration (#192) a post-generate edit dims in place: no empty-state swap, panel stays mounted, ribbon marks the refresh
+components/GeneratorShell.regenerate-mounted.test.tsx :: results stay mounted through regeneration (#192) #252: a refusal settling mid-regeneration is never masked — the strip says PLAN DECLINED and the band leaves with it
+components/GeneratorShell.revision.test.tsx :: a preview is a read (#282, ruling e) a staged edit fires ONE request — the breakdown, with preview: true
+components/GeneratorShell.revision.test.tsx :: a preview is a read (#282, ruling e) the scenario is NOT written — the plan on screen still says what it said
+components/GeneratorShell.revision.test.tsx :: a preview is a read (#282, ruling e) the panel names the staged value and the computation behind it
+components/GeneratorShell.revision.test.tsx :: 7d's RETRY PREVIEW re-asks the same read; APPLY names the write PAYLOAD: a failed preview offers RETRY PREVIEW, and it fires one breakdown with preview: true for the staged value
+components/GeneratorShell.revision.test.tsx :: 7d's RETRY PREVIEW re-asks the same read; APPLY names the write rule 94: the write is labelled APPLY AND RE-GENERATE
+components/GeneratorShell.revision.test.tsx :: Escape cancels S7 with zero requests (#289 acceptance) PAYLOAD: Escape un-stages, closes S7 and asks for nothing — the plan keeps its value
+components/GeneratorShell.revision.test.tsx :: Escape cancels S7 with zero requests (#289 acceptance) Escape on the S7 <select> only leaves it — the staged edit survives; the next Escape discards
+components/GeneratorShell.revision.test.tsx :: Escape cancels S7 with zero requests (#289 acceptance) Escape with nothing staged still closes S7, with zero requests
+components/GeneratorShell.revision.test.tsx :: a preview writes nothing — no band, no lock, no memo (#289 acceptance) in flight AND landed: no working band, no lock, the editor and every write control live
+components/GeneratorShell.revision.test.tsx :: a preview writes nothing — no band, no lock, no memo (#289 acceptance) PAYLOAD, no memo: the preview's answer never becomes the plan's — the results keep the settled count, and APPLY asks afresh
+components/GeneratorShell.revision.test.tsx :: DISCARD fires zero requests (#289 acceptance) un-stages, and asks for nothing
+components/GeneratorShell.revision.test.tsx :: DISCARD fires zero requests (#289 acceptance) re-opening after a discard starts clean — 7a, not the old answer
+components/GeneratorShell.revision.test.tsx :: APPLY is the one write and the one generate (ruling e) writes the staged field and re-generates — with the scan, and no preview flag
+components/GeneratorShell.revision.test.tsx :: APPLY is the one write and the one generate (ruling e) the revision closes behind it — one cycle, not a state you have to leave
+components/GeneratorShell.saved-dirty.test.tsx :: workbench downloads gate on dirty state (#183) an edit disables the row-backed downloads and names the resolution
+components/GeneratorShell.saved-dirty.test.tsx :: workbench downloads gate on dirty state (#183) saving re-enables downloads that match the screen
+components/GeneratorShell.saved-settings.test.tsx :: saved quote settings join the dirty baseline (#202) opens on the saved settings, clean
+components/GeneratorShell.saved-settings.test.tsx :: saved quote settings join the dirty baseline (#202) a rate edit makes the plan dirty; saving it makes it clean
+components/GeneratorShell.scan-disclosure.test.tsx :: the NOT-CHECKED disclosure through the shell (#224 phase 2) proceed-anyway → the Setup panel prints the disclosure; an edit blanks it
+components/GeneratorShell.scan-refusal.test.tsx :: the code-keyed scan refusal (#224 phase 2) an edit drops the acknowledgement: the next scan must succeed or be re-acknowledged
+components/GeneratorShell.scan-refusal.test.tsx :: the code-keyed scan refusal (#224 phase 2) a fresh Generate click resets the acknowledgement (never remembered)
+components/GeneratorShell.scan-wire.test.tsx :: Generate sets site_scan on the wire (#224 phase 2) an edit under CHANGE ONE THING re-scans, and carries no earlier acknowledgement
+components/GeneratorShell.value-links.test.tsx :: defect 2 — the setup line's values are the links every value is its own link, and the single CHANGE ONE THING is gone
+components/GeneratorShell.value-links.test.tsx :: defect 2 — the setup line's values are the links each link says which field it is, not just its value
+components/GeneratorShell.value-links.test.tsx :: defect 2 — the setup line's values are the links a kind with no lane count has no lanes link
+components/GeneratorShell.value-links.test.tsx :: defect 2 — a staged field opens S7 on THAT field PAYLOAD: pressing LANES stages lanes — the preview and the apply move lanes, never speed
+components/GeneratorShell.value-links.test.tsx :: defect 2 — a staged field opens S7 on THAT field PAYLOAD: road type, lane width and jurisdiction each stage themselves
+components/GeneratorShell.value-links.test.tsx :: defect 2 — a staged field opens S7 on THAT field pressing a second value while revising moves to that field and KEEPS the first staged
+components/GeneratorShell.value-links.test.tsx :: defect 2 — kind, location, extent and dates open the band that owns them kind → the column, WHERE open, no request
+components/GeneratorShell.value-links.test.tsx :: defect 2 — kind, location, extent and dates open the band that owns them location → the column, WHERE open, no request
+components/GeneratorShell.value-links.test.tsx :: defect 2 — kind, location, extent and dates open the band that owns them extent → the column, WHERE open, no request
+components/GeneratorShell.value-links.test.tsx :: defect 2 — kind, location, extent and dates open the band that owns them dates → the column, WHAT open, no request
+components/GeneratorShell.value-links.test.tsx :: defect 2 — kind, location, extent and dates open the band that owns them CHANGE SOMETHING ELSE is retired — S7 offers DISCARD only
+components/GeneratorShell.value-links.test.tsx :: defect 2 — kind, location, extent and dates open the band that owns them from S7, a value link is the way out — and the staged set survives it, as the retired link's did
+components/GeneratorShell.value-links.test.tsx :: defect 2 — kind, location, extent and dates open the band that owns them the kind link lands on the chips, the kind still pressed (already confirmed)
+components/GeneratorShell.zone-staging.test.tsx :: zone staging lifecycle generating: a regenerate with prior results dims in place (#192); the placeholder is first-generate only
+components/GeneratorShell.zone-staging.test.tsx :: zone staging lifecycle error: breakdown failure after generate shows the stale ribbon, not a silent blank
+components/GeneratorShell.zone-staging.test.tsx :: zone staging lifecycle CHANGE ONE THING re-opens ONE FIELD and KEEPS the answer on screen
+components/GeneratorShell.zone-staging.test.tsx :: zone staging lifecycle strip inline edit writes the scenario and refires the request (payload-level)
+components/GeneratorSidebar.manual-pin-move.test.tsx :: manual coordinate entry is a pin move (fix-224-manual-pin-move) typing a new latitude drops siteConditionOverrides; re-typing the same value keeps them
+components/NeedsYouConditions.tokens.test.tsx :: #245 — the reason picker's tokens (moved by #288 clause 1) unselected chips are the ghost pair; chosen chips the act pair; the legend the row ink
+components/NeedsYouConditions.tokens.test.tsx :: #245 — the reason picker's tokens (moved by #288 clause 1) the radio stays focusable (hidden by opacity, never display:none) and focus shows on the chip
+components/NeedsYouConditions.tokens.test.tsx :: #245 — the reason picker's tokens (moved by #288 clause 1) #255: the chip centres its label — a mirror glyph slot on the trailing edge (F-S4-2)
+components/NeedsYouConditions.tokens.test.tsx :: #245 — the reason picker's tokens (moved by #288 clause 1) #255: the note slot is a fixed 184px reservation; void = hidden, still laid out (P1)
+components/NeedsYouConditions.tokens.test.tsx :: #245 — the reason picker's tokens (moved by #288 clause 1) the other-note input is the field-input workbench pair, never the UA field
+components/NeedsYouConditions.tokens.test.tsx :: #288 clause 1 — the condition rows inside NEEDS YOU rule 133: .act is ONE treatment, rule 15's floor is its min-height, 'on' is border and text --act on the wash
+components/NeedsYouConditions.tokens.test.tsx :: #288 clause 1 — the condition rows inside NEEDS YOU rule 15 at 380: every control in the block clears 44px, and the note takes the full line
+components/NeedsYouConditions.tokens.test.tsx :: #288 clause 1 — the condition rows inside NEEDS YOU #270: the picker sub-row is one extra row — the legend its own line, Confirm on the shared action edge
+components/NeedsYouConditions.tokens.test.tsx :: #288 clause 1 — the condition rows inside NEEDS YOU rule 78: the Apply row and the scan's provenance line are the block's last two lines, ruled off
+components/OutputCards.phone-note.test.tsx :: #318: the Plan sheet card says how to read it on a phone the line is on the Plan sheet card only, verbatim, before its button
+components/OutputCards.test.tsx :: OutputCards download cards renders one card per deliverable with backend values
+components/OutputCards.test.tsx :: OutputCards download cards loading: the quantity lines are present and empty; the buttons stand
+components/OutputCards.test.tsx :: OutputCards download cards breakdown failed: every card says "not generated" and every button is disabled
+components/OutputCards.test.tsx :: OutputCards download cards public mode: the crew card offers PDF plus a secondary .md download, and clicking posts the scenario
+components/OutputCards.test.tsx :: OutputCards download cards public mode: renders the All (.zip) button wired to the bundle handler, disabled while bundling
+components/OutputCards.test.tsx :: the action row (#261a) the card title is an h3 (one h2 per zone; no h4 anywhere in a card)
+components/OutputCards.test.tsx :: the action row (#261a) globals.css: the row is bottom-anchored flex with an 8px gap, its buttons share the row (flex: 1 1 0, no own margin), 44 px targets at phone width; the title rule follows the h3
+components/OutputCards.test.tsx :: the audit card (#261b) no settled audit (auditChecked null): the quantity line is empty but present, and the button is disabled
+components/QuotePanel.invalidation.test.tsx :: quote breakdown invalidates on settings edits (#185) an overhead edit clears the figures and the collapsed headline, and says re-preview
+components/QuotePanel.invalidation.test.tsx :: quote breakdown invalidates on settings edits (#185) re-preview restores current figures
+components/QuotePanel.invalidation.test.tsx :: quote breakdown invalidates on settings edits (#185) screen and XLSX cannot disagree: after an edit the download posts the CURRENT settings while the screen says re-preview
+components/QuotePanel.invalidation.test.tsx :: quote breakdown invalidates on settings edits (#185) the quote saves as <plan>.quote.xlsx, apart from the device list's <plan>.xlsx
+components/QuotePanel.invalidation.test.tsx :: quote breakdown invalidates on settings edits (#185) an unchanged input keeps the previewed figures (no over-invalidation)
+components/QuotePanel.saved-mode.test.tsx :: saved-mode quote panel (#194, #202) renders the eight fields, now that they reach the saved quote
+components/QuotePanel.saved-mode.test.tsx :: saved-mode quote panel (#194, #202) asserts no auto count it didn't compute
+components/QuotePanel.saved-mode.test.tsx :: saved-mode quote panel (#194, #202) keeps the row-backed download
+components/QuotePanel.saved-mode.test.tsx :: saved-mode quote panel (#194, #202) public mode still renders the eight fields and the flagger caption
+components/QuotePanel.unpriced.test.tsx :: unpriced equipment lines (#373) shows — for the pilot car and an unmapped jurisdiction line, never $0.00
+components/ResultsHead.grid.test.tsx :: the Setup box (R106) eight labelled cells in SetupB's order, no run-on sentence
+components/ResultsHead.grid.test.tsx :: the Setup box (R106) Road spans two cells, and so do Dates (the row's last)
+components/ResultsHead.grid.test.tsx :: the Setup box (R106) every cell IS its button, with the target it has today
+components/ResultsHead.grid.test.tsx :: the Setup box (R106) the Lanes cell holds two full-height buttons, each with its own target (Q9)
+components/ResultsHead.grid.test.tsx :: the Setup box (R106) a kind with no lane count states the count it uses; only the width is a button
+components/ResultsHead.grid.test.tsx :: the Setup box (R106) a set jurisdiction and dates read as values; a guessed one carries no ⚠ (Q9)
+components/ResultsHead.grid.test.tsx :: the Setup box (R106) the head says how it works: ✓ SETUP, pick a cell to change it
+components/ResultsHero.test.tsx :: #288 clause 2 — the counts hero's ruled shell (rules 80–83) rule 80: three tracks 1fr / 1fr / 300px, 20px 22px cells, the ruled ground and hairline
+components/ResultsHero.test.tsx :: #288 clause 2 — the counts hero's ruled shell (rules 80–83) rule 82: the geometry rows are space-between, mono 11px, body ink, gap 7px
+components/ResultsHero.test.tsx :: #288 clause 2 — the counts hero's ruled shell (rules 80–83) the sub-line and the case-ID line carry the provenance role rather than their own size
+components/ResultsHero.test.tsx :: #288 clause 2 — rule 83's degradations are UNCHANGED (Part 1 §8.7 KEPT) the four geometry rows render verbatim from zone_geometry
+components/rule-169.test.tsx :: rule 169: Reference's Zone geometry group shows the hero's four rows, as the hero shows them
+components/saved-downloads.test.tsx :: saved-plan quote download (#203) a 502 prints on the panel's error line and the page stays
+components/saved-downloads.test.tsx :: saved-plan quote download (#203) a 200 saves under the route's filename
+components/severity-ramp.test.tsx :: severity-ramp role assignments pricing card: the collapsed total is orange output only when a backend total exists
+components/WorkingBand.render.test.tsx :: #252 — RENDERING: a file render raises the band and the lock a per-file render says RENDERING · {file}, locks the page, and the band leaves with the response; the button never says 'Rendering…'
+components/WorkingBand.render.test.tsx :: #252 — RENDERING: a file render raises the band and the lock the zip, the quote preview, the quote XLSX and the audit PDF each name their file
+components/WorkingBand.render.test.tsx :: #252 — RENDERING: a file render raises the band and the lock a render closing hands the page back; the next plan request speaks in its own voice (precedence over an open render is the unit test's)
+components/WorkingBand.test.tsx :: #252 — the working band is present iff a request for the generated scenario is open RE-GENERATING · after an edit to speed from the strip's inline editor — up from the deferred debounce window, not only the fetch
+components/WriteLock.test.tsx :: #252 — the write lock's enumeration is honest under the lock every control is a disabled write, a live read, or a route link — anything else fails by name
+components/WriteLock.test.tsx :: #252 — the write lock's enumeration is honest at settle every write control re-enables unless it has a reason of its own; the root drops the lock
+lib/design/type-census.test.ts :: #263 type census — globals.css font-sizes every other font-size site is a named exception or a declared-debt row (new size/site fails)
+lib/design/type-census.test.ts :: #263 type census — globals.css font-sizes every declared row still exists (a stale row fails)
+lib/design/type-census.test.ts :: #263 type census — the exceptions are the ruled set and the pins are the sources' figures CENSUS_PINS equal the figures read from the sources (the README quotes these)
+lib/design/walkthrough-l2-css.test.ts :: W12 — a pressed option carries a mark, not the blue alone (Rule 13; #407: the mark is ●) #412: every selection ● sits on its label's baseline, in the label's font (one vertical rule for all four)
+app/api/render/bundle/route.test.ts :: the download-all zip (#401) holds every card's file plus the quote, and the label counts them

@@ -145,7 +145,7 @@ const filledActions = () => Array.from(document.querySelectorAll(".needs-you .ac
 const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
 const zip = () =>
   Array.from(document.querySelectorAll("button")).find((b) =>
-    /All \(\.zip\)/.test(b.textContent ?? ""),
+    /Download all \(\.zip\)/.test(b.textContent ?? ""),
   ) as HTMLButtonElement | undefined;
 
 describe("#288 clause 3 — acceptance line 2: ONE primary per state", () => {
@@ -259,7 +259,7 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
     const label = bundleLabel();
     // #401: every card's file plus the quote.
     expect(BUNDLE_PART_KINDS.length).toBe(6);
-    expect(label).toBe("6 files, with the quote");
+    expect(label).toBe("6 files, quote included");
     // Rule 168 (R137 Q1): the count has two homes in the markup, one per
     // width: beside the zip at the desk, and as the file-count line under
     // it at the phone.  CSS shows exactly one of them at each width
@@ -269,7 +269,12 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
     expect(text.split(label).length - 1, `"${label}": one home per width`).toBe(2);
     // Rule 12: it traces to the zip's own parts, and it sits beside the
     // control it describes.
-    expect(document.querySelector(".dl-all .dl-all-count")!.textContent).toBe(label);
+    // #437 branch 3 (ruling 11): the desk's count is the DOWNLOADS
+    // header's line, a sibling of the zip in the same .dl-head row (it
+    // was inside .dl-all).
+    const deskCount = document.querySelector(".dl-head > .dl-all-count")!;
+    expect(deskCount.textContent).toBe(label);
+    expect(deskCount.parentElement!.querySelector(":scope > .dl-all button")).toBe(zip());
     expect(document.querySelector(".dl-files")!.textContent).toContain(label);
   });
 
@@ -290,7 +295,7 @@ describe("#288 clause 3 — acceptance line 4: the file count, stated ONCE", () 
     expect(text).not.toMatch(/FILES READY/i);
     // No \b after "files": textContent runs adjacent elements together
     // (it read "4 filesPlan sheet" before #401), so a word boundary can't
-    // be relied on.  Since #401 the label reads "6 files, with the quote",
+    // be relied on.  Since #401 the label reads "6 files, quote included",
     // and the pattern matches its "6 files" in each home.  The claim is
     // about how many times a file COUNT is printed, not what follows it.
     // Rule 168: two homes, one shown per width (above).

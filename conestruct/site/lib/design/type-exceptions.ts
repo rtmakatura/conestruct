@@ -303,15 +303,23 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     tsx: [],
   },
   {
-    name: "NEEDS YOU, one question at a time (#437)",
+    name: "NEEDS YOU, one question at a time; Setup row, Your plan, Downloads (#437)",
     sizes: ["var(--fs-step-question-520)", "var(--fs-body-value)"],
     reason:
-      "#437 rulings 2, 3 and 5 (Ryan, 2026-11-02; Option B): the question heading in Inter 19 / 600 on the existing --fs-step-question-520 token (D1), the answer label and the Next / Apply button in Inter 13.5 / 600, and the verdict strip's question sentence in Inter 13.5 / 600 (D2).  Both are existing tokens: no size joins the census.  The explanation, the consequence line, the source line and the remaining-question rows ride .tr-help / .tr-note.",
+      "#437 rulings 2, 3 and 5 (Ryan, 2026-11-02; Option B): the question heading in Inter 19 / 600 on the existing --fs-step-question-520 token (D1), the answer label and the Next / Apply button in Inter 13.5 / 600, and the verdict strip's question sentence in Inter 13.5 / 600 (D2).  Both are existing tokens: no size joins the census.  The explanation, the consequence line, the source line and the remaining-question rows ride .tr-help / .tr-note.  Branch 3 (rulings 9-13): the Setup row's Edit word, the price quote's Open / Close word, the Key distances rows, the download card's h4 title and the Download all button read the same --fs-body-value token; no size joins the census.",
     css: [
       { selector: ".workbench .nyq-q", size: "var(--fs-step-question-520)" },
       { selector: ".workbench .nyq-label", size: "var(--fs-body-value)" },
       { selector: ".workbench .needs-you .act.nyq-next-btn", size: "var(--fs-body-value)" },
       { selector: ".workbench .status-bar .status-questions", size: "var(--fs-body-value)" },
+      // #437 branch 3 (rulings 9-13): the Setup row's Edit word and the
+      // price quote's Open / Close word, the Key distances rows, the
+      // download card title (h4, Inter 13.5 / 600) and the Download all
+      // button (Inter 13.5 / 600), all on the same existing token.
+      { selector: ".workbench .hero-meta .row", size: "var(--fs-body-value)" },
+      { selector: ".workbench .dl-card h4", size: "var(--fs-body-value)" },
+      { selector: ".workbench .dl-all .act", size: "var(--fs-body-value)" },
+      { selector: ".workbench .a-setuprow-edit, .workbench .disc-word", size: "var(--fs-body-value)" },
     ],
     tsx: [],
   },
@@ -349,7 +357,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".check-list-item .ck", size: "11px" },
       { selector: ".check-list-item .check-list-src", size: "10px" },
       { selector: ".workbench .dl-card .fmt", size: "10.5px" },
-      { selector: ".workbench .dl-card .desc", size: "10.5px" },
       { selector: ".workbench .dl-btn", size: "13px" }, // #289 F6: rule 132 ghost (was 12.5)
       { selector: ".workbench .ref-group-label", size: "9.5px" },
       { selector: ".workbench .ref-group-label .ix", size: "11px" },
@@ -384,7 +391,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // the item body (rule 9, the body-value token), the citation (rule
       // 11, 9.5) and the disclosure count (rule 88, 11).  Every size is
       // already in the sheet.
-      { selector: ".workbench .dl-card h3", size: "12.5px" },
+      // #437 branch 3: the card title (now an h4) reads the body-value
+      // token; its row moved to the #437 exception.
       { selector: ".workbench .ny-count", size: "11px" },
       { selector: ".workbench .ny-body", size: "var(--fs-body-value)" },
       { selector: ".workbench .ny-cite", size: "9.5px" },
@@ -398,7 +406,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // #289 fidelity F6 — rule 133's ledger action states its own 9.5 px
       // (audit rows 51, 55, 57); .tr-step's 10 had stood in for it.
       { selector: ".workbench .needs-you .act", size: "9.5px" },
-      { selector: ".workbench .dl-all .act", size: "9.5px" },
+      // #437 branch 3: .dl-all .act left rule 133's 9.5 for the
+      // body-value token; its row moved to the #437 exception.
       // #289 fidelity F7 — S7's panel at Part 2's pixel figures: rule
       // 95.4's status row (10.5 — it read the undeclared --fs-provenance
       // and rendered the inherited size, audit row 161), rule 94's
@@ -475,7 +484,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // two rows are DELETED rather than re-declared; the geometry row
       // takes rule 82's 11px.
       { selector: ".workbench .hero-cell .k", size: "10px" },
-      { selector: ".workbench .hero-meta .row", size: "11px" },
+      // #437 branch 3: the geometry row reads the body-value token now;
+      // its row moved to the #437 exception.
     ],
     tsx: [],
   },
@@ -492,9 +502,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // result, evidence, record glyph and record sentence now ride the
       // .tr-* roles, and the picker's two 10px overrides went with the
       // ledger they were scoped to.
-      { selector: ".workbench .needs-you .site-correction-reasons legend", size: "11.5px" },
-      { selector: ".workbench .needs-you .reason-chip", size: "10px" },
-      { selector: ".workbench .needs-you .site-correction-note", size: "12px" },
+      // #437 branch 3: the dismiss picker's three rows (legend, chip,
+      // note) are DELETED with the picker's CSS (the picker left in
+      // branch 2).
       { selector: ".workbench .sys-event .sys-glyph", size: "13px" },
     ],
     tsx: [],
@@ -748,9 +758,14 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 183, // #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 180, // #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
   // #437: +4 (179 -> 183) — the question heading, the answer label, the
   // Next / Apply button and the strip's question sentence; sizes unchanged.
+  // #437 branch 3: 183 -> 180 — seven out (the dismiss picker's legend,
+  // chip and note; the card's .desc size; the card title's, the zip's and
+  // the geometry row's px rows), four in at the body-value token (the
+  // geometry row, the h4 title, the zip, Edit / Open-Close).  Sizes stay
+  // 33: 12.5, 11.5, 11, 10.5, 10 and 9.5 px all remain elsewhere.
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

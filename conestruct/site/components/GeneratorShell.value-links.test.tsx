@@ -108,6 +108,12 @@ async function generated(initial: Scenario = PINNED_SHOULDER) {
   return user;
 }
 
+// #437 branch 3 (ruling 9): the value cells sit behind the Setup row's
+// Edit button; the operator opens it first.
+async function openSetupGrid(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByTestId("setup-edit"));
+}
+
 async function pick(editorId: string, value: string) {
   const el = document.getElementById(editorId) as HTMLSelectElement | null;
   if (!el) throw new Error(`no ${editorId} on screen`);
@@ -132,7 +138,10 @@ afterEach(() => {
 
 describe("defect 2 — the setup line's values are the links", () => {
   it("every value is its own link, and the single CHANGE ONE THING is gone", async () => {
-    await generated();
+    const user = await generated();
+    // #437 branch 3: closed by default, the row offers Edit and no cell.
+    expect(document.querySelector('[data-testid="setup-values"]')).toBeNull();
+    await openSetupGrid(user);
     for (const k of [
       "kind",
       "location",
@@ -149,14 +158,13 @@ describe("defect 2 — the setup line's values are the links", () => {
     expect(document.querySelector('[data-testid="fact-link-setup"]')).toBeNull();
     expect(document.body.textContent).not.toContain("CHANGE ONE THING");
     // Rule 134: the row's right track is a word, not a second link.
-    // R106 (SetupB.dc.html): the cells are the links, and the word says so.
-    expect(screen.getByTestId("setup-links-hint").textContent).toBe(
-      "pick a cell to change it",
-    );
-    // R106: the hint sits in the box's own head, beside ✓ SETUP — no
-    // longer in a fact line's track (s4-prod's one-word-per-line defect
-    // at 380 cannot recur: the head is a flex row, not rule 166's grid).
-    expect(screen.getByTestId("setup-links-hint").closest(".a-setupbox-head")).not.toBeNull();
+    // #437 branch 3 (ruling 9): the "pick a cell to change it" hint is
+    // gone; the word in the head is now the Edit / Close toggle, in the
+    // box's own head beside ✓ SETUP (a flex row, not rule 166's grid).
+    expect(screen.queryByTestId("setup-links-hint")).toBeNull();
+    const edit = screen.getByTestId("setup-edit");
+    expect(edit.textContent).toBe("Close");
+    expect(edit.closest(".a-setupbox-head")).not.toBeNull();
     // The speed reads under its own label, in a cell that IS the link.
     const speed = screen.getByTestId("setup-link-speed");
     expect(speed.querySelector(".a-setup-k")!.textContent).toBe("Speed");
@@ -164,14 +172,14 @@ describe("defect 2 — the setup line's values are the links", () => {
   });
 
   it("each link says which field it is, not just its value", async () => {
-    await generated();
+    await openSetupGrid(await generated()); // #437 branch 3: behind Edit
     expect(screen.getByTestId("setup-link-speed").getAttribute("aria-label")).toBe(
       "Change Speed: 65 mph",
     );
   });
 
   it("a kind with no lane count has no lanes link", async () => {
-    await generated(PINNED_FLAGGER);
+    await openSetupGrid(await generated(PINNED_FLAGGER)); // #437 branch 3: behind Edit
     expect(document.querySelector('[data-testid="setup-link-lanes"]')).toBeNull();
     expect(screen.getByTestId("setup-link-speed")).toBeTruthy();
   });

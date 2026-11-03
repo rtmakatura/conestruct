@@ -111,7 +111,7 @@ function rowFor(name: string): HTMLElement {
 describe("unpriced equipment lines (#373)", () => {
   it("shows — for the pilot car and an unmapped jurisdiction line, never $0.00", async () => {
     render(<Harness />);
-    fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
     fireEvent.click(screen.getByRole("button", { name: "Preview breakdown" }));
     fireEvent.click(await screen.findByRole("button", { name: /Equipment Rental/ }));
 

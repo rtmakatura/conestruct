@@ -8,6 +8,11 @@
 // mounted half pins rule 83's degradations, which are the part Part 1
 // §8.7 says is KEPT — a restyle that quietly changed them would be a
 // behaviour change wearing a stylesheet's clothes.
+//
+// #437 branch 3 (ruling 10): the hero sits inside YOUR PLAN (`.yp`), which
+// draws the box; three equal tracks; plain-word labels ("Device types",
+// "Key distances", "Taper"); the sub-lines take .tr-note; the case-ID line
+// is removed.  The numbers and rule 83's degradations are unchanged.
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -53,11 +58,17 @@ const ready = (over: Record<string, unknown> = {}): DeviceBreakdownState =>
   }) as unknown as DeviceBreakdownState;
 
 describe("#288 clause 2 — the counts hero's ruled shell (rules 80–83)", () => {
-  it("rule 80: three tracks 1fr / 1fr / 300px, 20px 22px cells, the ruled ground and hairline", () => {
+  it("rule 80: three equal tracks, 20px 22px cells, the ruled ground; the .yp box draws the border", () => {
     const hero = rule(".workbench .hero");
-    expect(hero).toMatch(/grid-template-columns:\s*1fr 1fr 300px/);
-    expect(hero).toMatch(/border:\s*1px solid var\(--rule\)/);
+    // #437 branch 3: three equal tracks (was 1fr / 1fr / 300px), and the
+    // border moved to YOUR PLAN's box, so the hero carries none.
+    expect(hero).toMatch(/grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+    expect(hero).not.toMatch(/border:/);
+    expect(hero).not.toMatch(/margin-bottom/);
     expect(hero).toMatch(/background:\s*var\(--da-ground\)/);
+    const yp = rule(".workbench .yp");
+    expect(yp).toMatch(/border:\s*1px solid var\(--rule\)/);
+    expect(yp).toMatch(/background:\s*var\(--da-ground\)/);
     const cell = rule(".workbench .hero-cell");
     expect(cell).toMatch(/padding:\s*20px 22px/);
     expect(cell).toMatch(/border-right:\s*1px solid var\(--da-hair\)/);
@@ -97,18 +108,19 @@ describe("#288 clause 2 — the counts hero's ruled shell (rules 80–83)", () =
     expect(k).toMatch(/color:\s*var\(--ink-on-dark-faint\)/);
   });
 
-  it("rule 82: the geometry rows are space-between, mono 11px, body ink, gap 7px", () => {
+  it("rule 82: the geometry rows are space-between at the body-value token, gap 8px, value in --dim", () => {
     const row = rule(".workbench .hero-meta .row");
     expect(row).toMatch(/justify-content:\s*space-between/);
-    expect(row).toMatch(/font-size:\s*11px/);
-    expect(row).toMatch(/gap:\s*7px/);
+    // #437 branch 3 (ruling 10): 11px -> the body-value token, gap 7 -> 8,
+    // and the value (.mv) takes --dim, the generated-number ink.
+    expect(row).toMatch(/font-size:\s*var\(--fs-body-value\)/);
+    expect(row).toMatch(/gap:\s*8px/);
     // Rule 82's #c8d1dd is Part 2's --body; here it is --ink-on-dark.
     expect(row).toMatch(/color:\s*var\(--ink-on-dark\)/);
-    // The case-ID line is provenance AT --ink, the one override rule 82
-    // names; its SIZE comes from the .tr-prov role, not from here.
-    const caseid = rule(".workbench .hero-meta .caseid");
-    expect(caseid).toMatch(/color:\s*var\(--ink\)/);
-    expect(caseid).not.toMatch(/font-size/);
+    expect(rule(".workbench .hero-meta .row .mv")).toMatch(/color:\s*var\(--dim\)/);
+    // #437 branch 3: the case-ID line left the block, and its rule left
+    // the sheet with it.
+    expect(css).not.toContain(".hero-meta .caseid");
   });
 
   it("rule 80 specifies the whole shell, so the old corner ticks are gone", () => {
@@ -118,10 +130,39 @@ describe("#288 clause 2 — the counts hero's ruled shell (rules 80–83)", () =
     expect(css).not.toContain(".workbench .hero .tick");
   });
 
-  it("the sub-line and the case-ID line carry the provenance role rather than their own size", () => {
+  it("the sub-lines carry the note role rather than their own size; there is no case-ID line", () => {
     const { container } = render(<ResultsHero breakdown={ready()} jurisdiction={JUR} />);
-    expect(container.querySelector(".hero-cell .sub")!.className).toContain("tr-prov");
-    expect(container.querySelector(".hero-meta .caseid")!.className).toContain("tr-prov");
+    // #437 branch 3: .tr-note (was .tr-prov) on both sub-lines, and the
+    // case-ID line is removed (R145 G3).
+    const subs = Array.from(container.querySelectorAll(".hero-cell .sub"));
+    expect(subs).toHaveLength(2);
+    for (const sub of subs) {
+      expect(sub.className).toContain("tr-note");
+      expect(sub.className).not.toContain("tr-prov");
+    }
+    expect(container.querySelector(".caseid")).toBeNull();
+    expect(container.textContent).not.toContain("Denver · MHT");
+  });
+
+  it("#437 ruling 10: YOUR PLAN heads the block, with the three plain-word cell labels", () => {
+    const { container } = render(<ResultsHero breakdown={ready()} jurisdiction={JUR} />);
+    const yp = container.querySelector('[data-testid="your-plan"]')!;
+    expect(yp.tagName).toBe("SECTION");
+    expect(yp.classList.contains("yp")).toBe(true);
+    const h = yp.querySelector("h3")!;
+    expect(h.textContent).toBe("YOUR PLAN");
+    expect(yp.getAttribute("aria-labelledby")).toBe(h.id);
+    expect(yp.textContent).toContain("As it stands now");
+    // The hero stays the inner grid (the "results landed" marker).
+    expect(yp.querySelector(".hero")).not.toBeNull();
+    expect(Array.from(yp.querySelectorAll(".k")).map((k) => k.textContent)).toEqual([
+      "Total devices",
+      "Device types",
+      "Key distances",
+    ]);
+    const subs = Array.from(yp.querySelectorAll(".sub")).map((s) => s.textContent);
+    expect(subs[0]!.startsWith("On the plan sheet")).toBe(true);
+    expect(subs[1]!.startsWith("Different devices to pull from the yard")).toBe(true);
   });
 });
 
@@ -145,9 +186,15 @@ describe("#288 clause 2 — rule 83's degradations are UNCHANGED (Part 1 §8.7 K
       (r) => r.textContent,
     );
     expect(rows).toHaveLength(4);
-    expect(rows[0]).toBe("Taper L205 ft");
-    expect(rows[3]).toBe("Work zone1,200 ft");
-    expect(container.querySelector(".caseid")!.textContent).toBe("Denver · MHT");
+    // #437 branch 3: the hero shows the plain labels (ruling 10); the
+    // values are still the wire's, verbatim.  The case-ID line is gone.
+    expect(rows).toEqual([
+      "Taper205 ft",
+      "Buffer115 ft",
+      "Device spacing40 ft o.c.",
+      "Work zone1,200 ft",
+    ]);
+    expect(container.querySelector(".caseid")).toBeNull();
   });
 
   it("absent zone_geometry renders ONE honest row — nothing is recomputed locally", () => {

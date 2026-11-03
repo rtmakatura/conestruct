@@ -18,6 +18,11 @@ import type { DeviceBreakdownState } from "./DeviceBreakdown";
 // mounted-flow tests of the rendered cards: real backend values in the
 // right cards, the loading/error fallbacks, all three mode variants,
 // and the bundle-count header rule.
+//
+// #437 branch 3 (rulings 11-13): one DOWNLOADS section; each card's mono
+// spec line and separate .qty line became ONE plain `.desc` sentence (a
+// lead + " <b>N</b> noun."); titles are h4; single-file buttons read
+// "Download ↓" and keep the whole action as their accessible name.
 
 const SUMMARY: AuditSummary = {
   ta: "TA-3",
@@ -73,21 +78,51 @@ describe("OutputCards download cards", () => {
     expect(cards(container)).toHaveLength(4);
 
     // Backend-sourced quantities land in the right cards.
+    // #437 branch 3 (ruling 12): the mono spec line ("11×17 · TA-3 ·
+    // S-630-1", "CDOT BID-READY", ...) is gone; each card's .desc is one
+    // plain sentence, its count the wire's figure in <b>.
     expect(plan.textContent).toContain("Plan sheet");
-    expect(plan.textContent).toContain("42"); // total_devices
-    expect(plan.textContent).toContain("TA-3"); // summary.ta in the spec line
-    expect(plan.textContent).toContain("S-630-1"); // summary.cdot_sheet
+    expect(plan.querySelector(".desc")!.textContent).toBe(
+      "The drawing for the crew and the permit. 42 devices.",
+    );
+    expect(plan.querySelector(".desc b")!.textContent).toBe("42"); // total_devices
+    expect(plan.textContent).not.toContain("TA-3");
     expect(devices.textContent).toContain("Device list");
-    expect(devices.textContent).toContain("6"); // unique_types
+    expect(devices.querySelector(".desc")!.textContent).toBe(
+      "What to load on the truck. 6 types, CDOT bid items.",
+    );
+    expect(devices.querySelector(".desc b")!.textContent).toBe("6"); // unique_types
     expect(crew.textContent).toContain("Crew instructions");
-    expect(crew.textContent).toContain("8"); // step_count
+    expect(crew.querySelector(".desc")!.textContent).toBe("Setup and takedown, in order. 8 steps.");
+    expect(crew.querySelector(".desc b")!.textContent).toBe("8"); // step_count
     // #261: the audit PDF is the fourth card — the deliverable a TCS
     // needs, on the same .dl-btn path as every other download.
     expect(audit.textContent).toContain("Audit trail");
-    expect(audit.textContent).toContain("EVERY CHECK CITED");
     expect(audit.querySelector(".fmt")!.textContent).toBe("PDF");
+    expect(audit.querySelector(".desc")!.textContent).toBe(
+      "Every number and the rule behind it. 13 checks.",
+    );
     expect(audit.querySelector(".desc b")!.textContent).toBe("13"); // auditChecked
-    expect(audit.textContent).toContain("checks");
+    // No separate quantity line any more: the count lives in the sentence.
+    expect(audit.querySelector(".qty")).toBeNull();
+    // #437 branch 3: the plain line takes the note role.
+    for (const c of cards(container)) {
+      expect(c.querySelector(".desc")!.classList.contains("tr-note")).toBe(true);
+    }
+  });
+
+  it("#437 ruling 12: a count of one takes the singular noun", () => {
+    const { container } = renderPublic({
+      breakdown: { state: "ready", data: { devices: [], total_devices: 1, unique_types: 1 } },
+      summary: { ...SUMMARY, step_count: 1 },
+      auditChecked: 1,
+    });
+    expect(cards(container).map((c) => c.querySelector(".desc")!.textContent)).toEqual([
+      "The drawing for the crew and the permit. 1 device.",
+      "What to load on the truck. 1 type, CDOT bid items.",
+      "Setup and takedown, in order. 1 step.",
+      "Every number and the rule behind it. 1 check.",
+    ]);
   });
 
   it("#289 fidelity F4 (X8): no MHT PACKAGE heading — the file count is stated ONCE, beside the zip (ruling 193); the zip carries 6 parts", () => {
@@ -112,33 +147,37 @@ describe("OutputCards download cards", () => {
   });
 
   // #261 (P16 / Rule 10): no "…" and no "—" — a quantity the system has
-  // not computed is an EMPTY line of reserved height while it is on its
-  // way, and the honest word "not generated" with every download
-  // withheld when the breakdown failed (the package cannot be built
-  // without it; F-S5-1's "— devices" with live buttons).
-  it("loading: the quantity lines are present and empty; the buttons stand", () => {
+  // not computed is left unsaid while it is on its way, and the honest
+  // words "Not generated." with every download withheld when the
+  // breakdown failed (the package cannot be built without it; F-S5-1's
+  // "— devices" with live buttons).
+  // #437 branch 3 (ruling 12 / D5): the reserved-height .qty line is
+  // gone; a null count drops its sentence and the lead stands alone.
+  it("loading: the counts the wire has not given are dropped; the buttons stand", () => {
     const { container: loading } = renderPublic({
       breakdown: { state: "loading" },
       summary: null,
     });
-    for (const card of cards(loading)) {
-      expect(card.querySelector(".desc .qty")).not.toBeNull();
-    }
-    expect(cards(loading)[0].querySelector(".desc .qty")!.textContent).toBe(""); // devices
-    expect(cards(loading)[1].querySelector(".desc .qty")!.textContent).toBe(""); // types
-    expect(cards(loading)[2].querySelector(".desc .qty")!.textContent).toBe(""); // steps (null summary)
-    expect(cards(loading)[3].querySelector(".desc .qty")!.textContent).toBe("13 checks");
+    const descs = cards(loading).map((c) => c.querySelector(".desc")!);
+    expect(descs[0].textContent).toBe("The drawing for the crew and the permit."); // devices
+    expect(descs[1].textContent).toBe("What to load on the truck."); // types
+    expect(descs[2].textContent).toBe("Setup and takedown, in order."); // steps (null summary)
+    expect(descs[3].textContent).toBe("Every number and the rule behind it. 13 checks.");
+    for (const d of descs.slice(0, 3)) expect(d.querySelector("b")).toBeNull();
     expect(cards(loading)[0].textContent).not.toContain("…");
     expect((cards(loading)[0].querySelector(".dl-btn") as HTMLButtonElement).disabled).toBe(false);
   });
 
-  it("breakdown failed: every card says \"not generated\" and every button is disabled", () => {
+  it("breakdown failed: every card says \"Not generated.\" and every button is disabled", () => {
     const { container: errored } = renderPublic({
       breakdown: { state: "error", message: "boom" },
       summary: null,
     });
     for (const card of cards(errored)) {
-      expect(card.querySelector(".desc .qty")!.textContent).toBe("not generated");
+      // #437 branch 3: the words close the card's one sentence.
+      const desc = card.querySelector(".desc")!.textContent!;
+      expect(desc.endsWith(" Not generated.")).toBe(true);
+      expect(card.querySelector(".desc b")).toBeNull();
       for (const b of Array.from(card.querySelectorAll(".dl-btn"))) {
         expect((b as HTMLButtonElement).disabled).toBe(true);
       }
@@ -202,8 +241,12 @@ describe("OutputCards download cards", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     renderPublic();
-    expect(screen.getAllByText("Download PDF")).toHaveLength(2); // plan + audit
-    expect(screen.getByText("Download XLSX")).toBeTruthy();
+    // #437 branch 3 (ruling 12): the single-file buttons read "Download ↓";
+    // the accessible name keeps the whole action.
+    expect(screen.getByRole("button", { name: "Download plan sheet PDF" }).textContent).toBe("Download↓");
+    expect(screen.getByRole("button", { name: "Download device list XLSX" }).textContent).toBe("Download↓");
+    expect(screen.getByRole("button", { name: "Download audit trail PDF" }).textContent).toBe("Download↓");
+    expect(screen.queryByText("Download PDF")).toBeNull();
     // #329: the crew card's shared row says the format; the accessible
     // name keeps the whole action.
     const crewPdf = screen.getByRole("button", { name: "Download crew instructions PDF" });
@@ -224,7 +267,7 @@ describe("OutputCards download cards", () => {
     const onDownloadAll = vi.fn();
     renderPublic({ onDownloadAll });
 
-    const zip = screen.getByRole("button", { name: /All \(\.zip\)/ });
+    const zip = screen.getByRole("button", { name: /Download all \(\.zip\)/ });
     fireEvent.click(zip);
     expect(onDownloadAll).toHaveBeenCalledTimes(1);
 
@@ -232,9 +275,40 @@ describe("OutputCards download cards", () => {
     // #252: no "Bundling…" word on the button — the working band is the
     // one working voice; the button keeps its label and disables.
     renderPublic({ onDownloadAll, bundling: true });
-    const busy = screen.getByRole("button", { name: /All \(\.zip\)/ }) as HTMLButtonElement;
+    const busy = screen.getByRole("button", { name: /Download all \(\.zip\)/ }) as HTMLButtonElement;
     expect(busy.disabled).toBe(true);
     expect(document.body.textContent).not.toMatch(/Bundling/);
+  });
+
+  // #437 branch 3 (rulings 11, 13): the warning row discloses open answers
+  // without locking the files, and the price quote's row comes last.
+  it("#437: the warning row names the open answers (files stay live); the quote slot renders last", () => {
+    const { container } = renderPublic({ onDownloadAll: () => {}, pendingAnswers: 0 });
+    expect(screen.queryByTestId("dl-warn")).toBeNull();
+    expect(container.querySelector(".dl-quote")).toBeNull();
+    cleanup();
+
+    const one = renderPublic({ onDownloadAll: () => {}, pendingAnswers: 1 });
+    expect(screen.getByTestId("dl-warn").textContent).toContain(
+      "These files match the plan before your answer. Answer first and they'll update.",
+    );
+    for (const b of Array.from(one.container.querySelectorAll<HTMLButtonElement>(".dl-btn"))) {
+      expect(b.disabled).toBe(false);
+    }
+    cleanup();
+
+    const { container: c3 } = renderPublic({
+      onDownloadAll: () => {},
+      pendingAnswers: 3,
+      quote: <div data-testid="quote-stub">Price quote</div>,
+    });
+    expect(screen.getByTestId("dl-warn").textContent).toContain("before your 3 answers.");
+    const sec = c3.querySelector('[data-testid="downloads"]')!;
+    expect(sec.lastElementChild!.classList.contains("dl-quote")).toBe(true);
+    expect(sec.lastElementChild!.contains(screen.getByTestId("quote-stub"))).toBe(true);
+    expect(screen.getByRole("button", { name: /Download all \(\.zip\)/ }).textContent).toBe(
+      "Download all (.zip) ↓",
+    );
   });
 
   it("saved mode with a plan id: cards download from the plan's routes and no zip button renders", async () => {
@@ -274,7 +348,7 @@ describe("OutputCards download cards", () => {
       "/api/plans/plan-1/audit-pdf",
     ]);
     // Ruling: a zip button that has no bundle route must not render.
-    expect(screen.queryByText(/All \(\.zip\)/)).toBeNull();
+    expect(screen.queryByText(/Download all \(\.zip\)/)).toBeNull();
   });
 
   it("saved mode without a plan id: each card funnels to signup", () => {
@@ -485,15 +559,19 @@ describe("the action row (#261a)", () => {
     }
   });
 
-  it("the card title is an h3 (one h2 per zone; no h4 anywhere in a card)", () => {
+  // #437 branch 3 (ruling 12): the section now has its own h3
+  // (DOWNLOADS), so each card title is an h4 under it (heading order).
+  it("the card title is an h4 under the DOWNLOADS h3 (no h3 inside a card)", () => {
     const { container } = renderPublic();
-    expect(container.querySelectorAll(".dl-card h4")).toHaveLength(0);
-    const h3 = Array.from(container.querySelectorAll(".dl-card > .top > h3")).map((h) => h.textContent);
-    expect(h3).toEqual(cards(container).map((c) => c.querySelector(".top")!.firstElementChild!.textContent));
-    expect(h3).toContain("Plan sheet");
+    expect(container.querySelectorAll(".dl-card h3")).toHaveLength(0);
+    const h4 = Array.from(container.querySelectorAll(".dl-card > .top > h4")).map((h) => h.textContent);
+    expect(h4).toEqual(cards(container).map((c) => c.querySelector(".top")!.firstElementChild!.textContent));
+    expect(h4).toContain("Plan sheet");
+    const sec = container.querySelector('[data-testid="downloads"]')!;
+    expect(sec.querySelector(":scope > .dl-head > h3")!.textContent).toBe("DOWNLOADS");
   });
 
-  it("globals.css: the row is bottom-anchored flex with an 8px gap, its buttons share the row (flex: 1 1 0, no own margin), 44 px targets at phone width; the title rule follows the h3", () => {
+  it("globals.css: the row is bottom-anchored flex with an 8px gap, its buttons share the row (flex: 1 1 0, no own margin), 44 px targets at phone width; the title rule follows the h4", () => {
     expect(rule(".workbench .dl-actions")).toContain("margin-top: auto");
     expect(rule(".workbench .dl-actions")).toContain("display: flex");
     expect(rule(".workbench .dl-actions")).toContain("gap: 8px");
@@ -507,8 +585,11 @@ describe("the action row (#261a)", () => {
     expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("padding-right: 4px");
     expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("gap: 4px");
     // #289 fidelity F2: rule 85's title is role 3 — 12.5 px (was 14).
-    expect(rule(".workbench .dl-card h3")).toContain("font-size: 12.5px");
-    expect(css).not.toMatch(/\.dl-card h4/);
+    // #437 branch 3 (ruling 12): the title is an h4 at the body-value
+    // token, 600; no h3 rule is left on the card.
+    expect(rule(".workbench .dl-card h4")).toContain("font-size: var(--fs-body-value)");
+    expect(rule(".workbench .dl-card h4")).toContain("font-weight: 600");
+    expect(css).not.toMatch(/\.dl-card h3/);
     const phone = css.slice(css.indexOf(".workbench .dl-actions {"));
     const q = phone.slice(phone.indexOf("@media (max-width: 480px)"));
     expect(q.slice(0, q.indexOf("}\n}") + 3).replace(/\s+/g, " ")).toContain(
@@ -631,12 +712,13 @@ describe("the audit card (#261b)", () => {
     expect(downloads).toEqual(["Test_Job.audit.pdf"]);
   });
 
-  it("no settled audit (auditChecked null): the quantity line is empty but present, and the button is disabled", () => {
+  it("no settled audit (auditChecked null): the count sentence is dropped, and the button is disabled", () => {
     const { container } = renderPublic({ auditChecked: null });
     const audit = cards(container)[3];
-    const qty = audit.querySelector(".desc .qty")!;
-    expect(qty).not.toBeNull();
-    expect(qty.textContent).toBe("");
+    // #437 branch 3 (ruling 12 / D5): no reserved .qty line; the lead
+    // stands alone and no number is shown for a count the wire withheld.
+    expect(audit.querySelector(".desc")!.textContent).toBe("Every number and the rule behind it.");
+    expect(audit.querySelector(".desc b")).toBeNull();
     expect(audit.textContent).not.toContain("checks");
     expect((audit.querySelector(".dl-btn") as HTMLButtonElement).disabled).toBe(true);
     // The other cards are untouched by the audit's state.

@@ -66,6 +66,9 @@ export interface DisclosureRowProps {
    *  nothing by being absent.  Found by QuotePanel.invalidation.test.tsx
    *  failing the moment the quote became a row. */
   keepMounted?: boolean;
+  /** #437 ruling 13: the row ends in a word ("Open" / "Close") in place
+   *  of the caret.  Only the price quote's row asks for it. */
+  actionWord?: { closed: string; open: string };
   children: ReactNode;
 }
 
@@ -80,6 +83,7 @@ export function DisclosureRow({
   onToggle,
   nested = false,
   keepMounted = false,
+  actionWord,
   children,
 }: DisclosureRowProps) {
   const panelId = `disc-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
@@ -119,9 +123,13 @@ export function DisclosureRow({
             ) : null}
           </>
         )}
-        <span className="disc-caret" aria-hidden="true">
-          ›
-        </span>
+        {actionWord ? (
+          <span className="disc-word">{open ? actionWord.open : actionWord.closed}</span>
+        ) : (
+          <span className="disc-caret" aria-hidden="true">
+            ›
+          </span>
+        )}
       </button>
       {/* Expands downward in place.  Rendered only when open by default:
           a hidden panel that still occupies the DOM is the kind of thing

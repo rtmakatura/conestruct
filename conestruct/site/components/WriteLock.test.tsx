@@ -151,7 +151,7 @@ async function generateHeld() {
   await settle();
   expect(document.querySelector(".working-band")).toBeNull();
   // Open every disclosure so their controls are in the DOM to enumerate.
-  await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+  await user.click(screen.getByRole("button", { name: /Price quote/i }));
   // #437: open the other-conditions row so its Assert controls are in the
   // DOM to enumerate.
   const other = document.querySelector(".ny-other-toggle");

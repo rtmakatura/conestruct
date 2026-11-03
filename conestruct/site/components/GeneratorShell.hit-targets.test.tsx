@@ -139,8 +139,6 @@ const FLOORED = [
   "pri",
   "disc-head",
   "dl-btn",
-  "reason-chip",
-  "site-correction-note",
   "tr-signpost",
   "chip-sum",
   "audit-head",
@@ -174,6 +172,8 @@ const FLOORED = [
   "nyq-details-btn",
   "ny-other-toggle",
   "nyq-row-btn",
+  // #437 ruling 9: the Setup row's Edit, 44 x 44 at every width.
+  "a-setuprow-edit",
 ];
 /** Tailwind-floored controls (the footer's links). */
 const TW_FLOOR = /min-h-\[(32|44)px\]/;

@@ -2292,6 +2292,25 @@ export function GeneratorShell({
                     bundling={bundling}
                     auditChecked={auditChecked}
                     primary={primaryOwner}
+                    // #437 ruling 11 / D6: the strip's own N.
+                    pendingAnswers={openQuestions}
+                    quote={
+                      resultsVisible ? (
+                        <PricingCard
+                    mode={
+                      mode === "sandbox"
+                        ? { kind: "public", scenario: downloadScenario }
+                        : { kind: "saved", planId, dirty: planDirty }
+                    }
+                    settings={settings}
+                    setSettings={setSettings}
+                    flaggerSource={flaggerSource}
+                    setFlaggerSource={setFlaggerSource}
+                    delivery={delivery}
+                    setDelivery={setDelivery}
+                        />
+                      ) : null
+                    }
                   />
                 </div>
                 {/* #288 clause 4 — the quote, then the two counted tiers,
@@ -2337,21 +2356,8 @@ export function GeneratorShell({
                 why it is not simply gated on `resultsVisible`. */}
             {(resultsVisible || referenceMounts) && (
               <div className="results-disc">
-                {resultsVisible && (
-                  <PricingCard
-                    mode={
-                      mode === "sandbox"
-                        ? { kind: "public", scenario: downloadScenario }
-                        : { kind: "saved", planId, dirty: planDirty }
-                    }
-                    settings={settings}
-                    setSettings={setSettings}
-                    flaggerSource={flaggerSource}
-                    setFlaggerSource={setFlaggerSource}
-                    delivery={delivery}
-                    setDelivery={setDelivery}
-                  />
-                )}
+                {/* #437 ruling 13: the price quote's row joined the
+                    downloads (OutputCards' `quote` slot, above). */}
                 {/* Rule 89: a COUNTED tier shows its number.  Both count
                     from the one ledger above; neither renders at all
                     before an audit has settled, because a count with no

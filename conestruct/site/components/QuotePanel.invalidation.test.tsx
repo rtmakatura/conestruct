@@ -97,7 +97,7 @@ async function flush() {
 
 async function openAndPreview() {
   render(<Harness />);
-  fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
   fireEvent.click(screen.getByRole("button", { name: "Preview breakdown" }));
   await screen.findAllByText("$1,794");
 }
@@ -127,11 +127,9 @@ describe("quote breakdown invalidates on settings edits (#185)", () => {
     expect(screen.queryByText("Total estimate")).toBeNull();
     expect(screen.getByText(/inputs changed/i)).toBeTruthy();
     expect(screen.getByText(/Preview again for current totals/)).toBeTruthy();
-    expect(
-      screen.getByText(
-        "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
-      ),
-    ).toBeTruthy();
+    // #437 branch 3 (ruling 13): the headline falls back to the plain
+    // framing alone, with no total beside it.
+    expect(screen.getByText("Contractor estimate, not a permit fee")).toBeTruthy();
   });
 
   it("re-preview restores current figures", async () => {
@@ -195,8 +193,8 @@ describe("quote breakdown invalidates on settings edits (#185)", () => {
   it("an unchanged input keeps the previewed figures (no over-invalidation)", async () => {
     await openAndPreview();
     // Collapse/expand cycles must not clear the stamped answer.
-    fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
-    fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
     expect(screen.getAllByText("$1,794")).toHaveLength(2);
     expect(screen.getByText("Total estimate")).toBeTruthy();
   });

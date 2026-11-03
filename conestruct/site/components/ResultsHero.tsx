@@ -34,12 +34,21 @@ import type { JurisdictionBlock } from "@/lib/jurisdiction";
  *  The hero shows them at the desk and Reference's "Zone geometry" group
  *  at every width; both render this one list, so the two can't drift.
  *  Every value is the backend's ``zone_geometry`` as received. */
-export function zoneGeometryRows(g: ZoneGeometry): { label: string; value: string }[] {
+/*  #437 ruling 10 (R145 G2): Your plan names the rows in plain words
+ *  ("Taper", "Buffer"); Reference keeps the MUTCD letters (group 5 owns
+ *  its inside).  Both labels ride this one list, beside the one value. */
+export function zoneGeometryRows(
+  g: ZoneGeometry,
+): { label: string; plain: string; value: string }[] {
   return [
-    { label: "Taper L", value: `${g.taper_l_ft} ft` },
-    { label: "Buffer B", value: `${g.buffer_b_ft} ft` },
-    { label: "Device spacing", value: `${g.device_spacing_ft} ft o.c.` },
-    { label: "Work zone", value: `${g.work_len_ft.toLocaleString("en-US")} ft` },
+    { label: "Taper L", plain: "Taper", value: `${g.taper_l_ft} ft` },
+    { label: "Buffer B", plain: "Buffer", value: `${g.buffer_b_ft} ft` },
+    { label: "Device spacing", plain: "Device spacing", value: `${g.device_spacing_ft} ft o.c.` },
+    {
+      label: "Work zone",
+      plain: "Work zone",
+      value: `${g.work_len_ft.toLocaleString("en-US")} ft`,
+    },
   ];
 }
 
@@ -69,53 +78,64 @@ export function ResultsHero({ breakdown, jurisdiction }: Props) {
   const g = d.zone_geometry ?? null;
   if (d.total_devices == null || d.unique_types == null) return null;
 
+  // #437 ruling 10: "YOUR PLAN · As it stands now", then three cells.
+  // The numbers are the same wire fields as before (Rule 12); only the
+  // words around them change.  R145 G3: the case-ID line
+  // ("Denver · TCP") leaves the block — the jurisdiction reads in the
+  // Setup row above, and ruling 10 lists the three cells and nothing
+  // else.  `.hero` stays the class name: it is the "results landed"
+  // marker other surfaces and tests read.
   return (
-    <div className="hero">
-      <div className="hero-cell">
-        <span className="k">Total devices</span>
-        <div className="num">{d.total_devices}</div>
-        <div className="sub tr-prov">
-          on the plan sheet
-          {jrCount > 0 && (
-            <>
-              {" "}
-              · incl. <b>+{jrCount}</b> jurisdiction-required
-            </>
-          )}
-        </div>
+    <section className="yp" aria-labelledby="your-plan-h" data-testid="your-plan">
+      <div className="yp-head">
+        <h3 id="your-plan-h" className="tr-section yp-title">
+          YOUR PLAN
+        </h3>
+        <p className="tr-note yp-sub">As it stands now</p>
       </div>
-      <div className="hero-cell">
-        <span className="k">Unique types</span>
-        <div className="num">{d.unique_types}</div>
-        <div className="sub tr-prov">
-          distinct device types to source
-          {jrCount > 0 && jurisdiction && (
-            <>
-              {" "}
-              · <b>{jrRows.length}</b> from {jurisdiction.name}
-            </>
-          )}
-        </div>
-      </div>
-      <div className="hero-meta">
-        <div className="caseid tr-prov">
-          {jurisdiction
-            ? `${jurisdiction.name} · ${jurisdiction.tcp_term}`
-            : "Baseline · MHT"}
-        </div>
-        {g ? (
-          zoneGeometryRows(g).map((row) => (
-            <div className="row" key={row.label}>
-              <span>{row.label}</span>
-              <span className="mv">{row.value}</span>
-            </div>
-          ))
-        ) : (
-          <div className="row">
-            <span>Zone geometry unavailable</span>
+      <div className="hero">
+        <div className="hero-cell">
+          <span className="k">Total devices</span>
+          <div className="num">{d.total_devices}</div>
+          <div className="sub tr-note">
+            On the plan sheet
+            {jrCount > 0 && (
+              <>
+                {" "}
+                · incl. <b>+{jrCount}</b> jurisdiction-required
+              </>
+            )}
           </div>
-        )}
+        </div>
+        <div className="hero-cell">
+          <span className="k">Device types</span>
+          <div className="num">{d.unique_types}</div>
+          <div className="sub tr-note">
+            Different devices to pull from the yard
+            {jrCount > 0 && jurisdiction && (
+              <>
+                {" "}
+                · <b>{jrRows.length}</b> from {jurisdiction.name}
+              </>
+            )}
+          </div>
+        </div>
+        <div className="hero-meta">
+          <span className="k">Key distances</span>
+          {g ? (
+            zoneGeometryRows(g).map((row) => (
+              <div className="row" key={row.label}>
+                <span className="tr-help">{row.plain}</span>
+                <span className="mv">{row.value}</span>
+              </div>
+            ))
+          ) : (
+            <div className="row">
+              <span className="tr-help">Zone geometry unavailable</span>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

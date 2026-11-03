@@ -2146,117 +2146,6 @@ input[type="number"] {
   line-height: 1.5;
   color: var(--ink-on-dark-faint);
 }
-/* #245 — the dismiss reason picker.  A native <select> under the
-   workbench's inherited light ink measured 1.54:1 and its popup renders
-   outside the DOM where nothing can measure it, so the reason is an
-   in-DOM radio-chip group: border + wash + ink + a ● glyph (#407: the
-   selection mark, never ✓) + the native
-   :checked state (rule 13: never hue alone).  The radio itself stays in
-   the tab order (visually hidden, not display:none).
-   #288 clause 1: re-scoped from .jbar-suggest to .needs-you — the block
-   these rules dress MOVED (Part 1 §8.5).  Values unchanged. */
-.workbench .needs-you .site-correction-reasons {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-}
-.workbench .needs-you .site-correction-reasons legend {
-  float: left;
-  padding: 0;
-  margin-right: 4px;
-  font-size: 11.5px;
-  color: var(--ink-on-dark);
-}
-.workbench .needs-you .reason-chip {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  /* Rule 15: a chip is interactive, so it clears 32 px at 1440 — the
-     picker's chips were 22 px tall before this arc's rule-15 pass. */
-  min-height: 32px;
-  padding: 3px 10px;
-  border: 1px solid var(--rule);
-  color: var(--ink-on-dark-faint);
-  background: transparent;
-  cursor: pointer;
-}
-.workbench .needs-you .reason-chip input {
-  position: absolute;
-  opacity: 0;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  pointer-events: none;
-}
-.workbench .needs-you .reason-chip .reason-glyph {
-  width: 10px;
-  text-align: center;
-}
-/* #255 (F-S4-2): the glyph cell is mirrored on the trailing edge so the
-   label sits at the chip's centre in both states — the left-only cell
-   measured the label +7.5 px off centre. */
-.workbench .needs-you .reason-chip::after {
-  content: "";
-  width: 10px;
-  flex-shrink: 0;
-}
-.workbench .needs-you .reason-chip:hover {
-  color: var(--ink-on-dark);
-  border-color: var(--ink-on-dark-faint);
-}
-.workbench .needs-you .reason-chip:focus-within {
-  border-color: var(--act);
-  box-shadow: 0 0 0 2px var(--act-glow);
-}
-.workbench .needs-you .reason-chip.chosen {
-  color: var(--act);
-  border-color: var(--act);
-}
-/* The "other" note: the .field-input workbench pair (--canvas, white
-   ink, faint placeholder) at the row's scale. */
-.workbench .needs-you .site-correction-note {
-  background: var(--canvas);
-  border: 1px solid var(--rule);
-  color: var(--ink-bright);
-  font-family: var(--font-sans);
-  font-size: 12px;
-  padding: 3px 8px;
-  /* Rule 15: the note is a write control — 32 px at 1440. */
-  min-height: 32px;
-  /* #255 (P1): a fixed slot in the picker's flex line — 184 px is the
-     measured width of the arc-21 note (F-S4-3) — so choosing Other
-     never moves Confirm. */
-  flex: 0 0 184px;
-  width: 184px;
-  outline: none;
-  border-radius: 0;
-}
-/* Void until Other: hidden but laid out (never display:none — the slot
-   IS the reservation); disabled + aria-hidden + tabIndex -1 in the DOM. */
-.workbench .needs-you .site-correction-note.is-void {
-  visibility: hidden;
-}
-.workbench .needs-you .site-correction-note[aria-invalid="true"] {
-  border-color: var(--warn);
-}
-.workbench .needs-you .site-correction-note::placeholder {
-  color: var(--ink-on-dark-faint);
-}
-.workbench .needs-you .site-correction-note:focus {
-  border-color: var(--act);
-  box-shadow: 0 0 0 2px var(--act-glow);
-}
 
 /* ─── #288 Phase 1 clause 1 — the condition rows inside NEEDS YOU ───
    The #249 ledger (two tracks, an elastic dotted leader, a right-edge
@@ -2428,65 +2317,16 @@ input[type="number"] {
      row 6, #289 fidelity follow-up). */
   padding: 13px 16px;
 }
-.workbench .needs-you .ny-apply .ny-mid,
-.workbench .needs-you .ny-foot .ny-mid {
+.workbench .needs-you .ny-apply .ny-mid {
   align-self: center;
 }
 .workbench .needs-you .ny-apply .sc-apply-text {
   text-decoration: none;
 }
-/* The scan's own provenance — the block's last line, no action. */
-.workbench .needs-you .ny-foot {
-  border-top: 1px solid var(--da-hair);
-  display: grid;
-  grid-template-columns: 20px minmax(0, 1fr);
-  column-gap: 14px;
-}
-.workbench .needs-you .ny-foot .sc-foot-text,
-.workbench .needs-you .ny-foot .sc-foot-advisory {
-  text-decoration: none;
-  display: block;
-}
-/* #289 fidelity follow-up (after-audit row 1): the scan time is
-   provenance (rule 6), and Q1 ruled the dotted underline dropped.  The
-   <time>'s title still carries the full stamp on hover. */
-.workbench .needs-you .ny-foot .sc-time {
-  text-decoration: none;
-}
-/* #270: the open picker is exactly one extra row — legend, chips and
-   the always-mounted note wrap among themselves in the body track;
-   Confirm is the row's ACTION cell, the shared right edge, so its place
-   and the row's height never depend on the legend's length. */
-.workbench .needs-you .ny-sub .sc-picker {
-  display: flex;
-  flex-wrap: wrap;
-  /* The legend is its own full-width line, so the chips + note line is
-     the same width for every condition name and the row is one height
-     at 1440 (local run 1: 82.2 x3 vs 116.2 for the longest legend); the
-     note rides the chips line (flex-end). */
-  align-items: flex-end;
-  gap: 8px;
-}
 .workbench .needs-you .ny-sub {
   border-top: 1px dashed var(--rule);
   border-bottom-style: solid;
   align-items: center;
-}
-.workbench .needs-you .sc-picker .site-correction-reasons legend {
-  width: 100%;
-  float: none;
-}
-/* Chosen chip = --act border + the wash + --act-bright ink (6.15:1
-   measured; --act on the wash was 4.97).  The block's one filled pair,
-   shared with rule 133's `.act.is-on`.
-   #407: those two figures are the wash over --canvas (#14202e; 6.13 and
-   4.96 recomputed).  The block now paints --da-ground (#101c29), where
-   --act on the wash measures 5.21:1 and --act-bright 6.44:1, so the
-   chip's ● (.sym-select, --act) clears AA; the label keeps --act-bright. */
-.workbench .needs-you .sc-picker .reason-chip.chosen {
-  background: var(--sc-act-wash);
-  border-color: var(--act);
-  color: var(--act-bright);
 }
 
 /* ─── #252 — the write lock (spec 25, GO ruling b) ───
@@ -2506,20 +2346,11 @@ input[type="number"] {
 }
 
 /* ≤480 (rule 15 / the 380 arc): every control in the block clears 44 px
-   in its smaller dimension, and the picker's chips take a tighter inset
-   without dropping below that floor. */
+   in its smaller dimension.  #437: the dismiss picker's chips and note
+   left with the picker (branch 2). */
 @media (max-width: 480px) {
-  .workbench .needs-you .act,
-  .workbench .needs-you .reason-chip,
-  .workbench .needs-you .site-correction-note {
+  .workbench .needs-you .act {
     min-height: 44px;
-  }
-  .workbench .needs-you .reason-chip {
-    padding: 4px 7px;
-  }
-  .workbench .needs-you .site-correction-note {
-    flex: 1 1 100%;
-    width: 100%;
   }
 }
 
@@ -2531,8 +2362,7 @@ input[type="number"] {
    unchanged, rule 15 admits no exemption" — unchanged in CONTENT is not
    the same as exempt from a hit-target floor.
    The 1440 floors are declared on each control beside its own rules
-   (.act, .pri, .disc-head, .dl-btn, .reason-chip, .site-correction-note,
-   .tr-signpost).  This block is the ≤480 sweep: one place, so a control
+   (.act, .pri, .disc-head, .dl-btn, .tr-signpost).  This block is the ≤480 sweep: one place, so a control
    added later and missed here is visible as an omission rather than
    buried in a component's own block.
    The TARGETS probe reading 0 at both widths is the prod leg's figure
@@ -3255,14 +3085,13 @@ input[type="number"] {
    nowhere to read them (Rule 10).  Recorded as a finding in this arc's
    README ("Findings from the Phase 1 finish push") and beside rule 169's
    verbatim text in rulings.md. */
+/* #437 ruling 10: the cells sit inside YOUR PLAN's box (.yp), which
+   draws the border; three equal tracks (P6). */
 .workbench .hero {
   display: grid;
-  grid-template-columns: 1fr 1fr 300px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
-  border: 1px solid var(--rule);
   background: var(--da-ground);
-  /* #289 fidelity F3 — rule 27: "hero → downloads 12 px" (was 16). */
-  margin-bottom: 12px;
 }
 .workbench .hero-cell {
   /* Rule 80. */
@@ -3314,27 +3143,19 @@ input[type="number"] {
   gap: 7px;
   border-right: none;
 }
-.workbench .hero-meta .caseid {
-  /* Rule 82: a case-ID line in the provenance role AT --ink (the one
-     override the rule names).  The role class carries the size. */
-  color: var(--ink);
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--da-hair);
-  text-decoration: none;
-}
+/* #437 ruling 10: KEY DISTANCES — label Inter 13.5 (.tr-help on the
+   span), value mono --dim at the same size. */
 .workbench .hero-meta .row {
-  /* Rule 82: space-between, mono 11px, body ink, gap 7px. */
   display: flex;
   justify-content: space-between;
-  gap: 7px;
+  align-items: baseline;
+  gap: 8px;
   font-family: var(--font-mono);
-  font-size: 11px;
-  /* Rule 82's #c8d1dd is Part 2's --body; this sheet calls it
-     --ink-on-dark.  The geometry rows take it. */
+  font-size: var(--fs-body-value);
   color: var(--ink-on-dark);
 }
 .workbench .hero-meta .row .mv {
-  color: var(--ink-on-dark);
+  color: var(--dim);
 }
 @media (max-width: 980px) {
   .workbench .hero {
@@ -3428,11 +3249,13 @@ input[type="number"] {
    9.5 px uppercase and 11.5 px sans).  The format strings and the spec
    line are WRITTEN in capitals, so dropping the CSS uppercase shows the
    same words. */
-.workbench .dl-card h3 {
+/* #437 ruling 12: the title is an h4 under DOWNLOADS, Inter 13.5 / 600
+   (the artboard's), reading the body-value token. */
+.workbench .dl-card h4 {
   font-family: var(--font-sans);
-  font-size: 12.5px;
+  font-size: var(--fs-body-value);
   line-height: 1.4;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
   margin: 0;
 }
@@ -3443,11 +3266,13 @@ input[type="number"] {
   letter-spacing: 0.04em;
   color: var(--ink-on-dark-faint);
 }
+/* #437 ruling 12: the plain line takes .tr-note (Inter 12.5); this rule
+   only sets its ink and spacing. */
 .workbench .dl-card .desc {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--ink-on-dark-faint);
+  margin: 0;
+  color: var(--ink-mute);
   line-height: 1.5;
+  flex: 1 1 auto;
 }
 .workbench .dl-card .desc b {
   /* Rule 10: generated numerals are mono, weight 500, #ff8a2e. */
@@ -3456,10 +3281,6 @@ input[type="number"] {
 }
 /* #261 (P1/P16): the quantity line keeps its height when it has nothing
    honest to say (no settled count) — an empty line, not a placeholder. */
-.workbench .dl-card .desc .qty {
-  display: block;
-  min-height: 1.45em;
-}
 /* ─── Rule 130 — PRIMARY (.pri) ───
    Full width of its container, 56px tall, the action ground with its own
    ink, Inter 600 at the declared --fs-primary (#283 put that token on
@@ -3509,24 +3330,23 @@ input[type="number"] {
   gap: 12px;
   min-width: 150px;
 }
+/* #437 ruling 12: "Download all (.zip) ↓" as the artboard draws it — a
+   44 px act-blue outline, Inter 13.5 / 600 (was mono 9.5 caps, 32 px). */
 .workbench .dl-all .act {
-  /* Rule 133's ghost, matching the NEEDS YOU block's control. */
-  min-height: 32px;
-  padding: 7px 11px;
-  border: 1px solid var(--rule);
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--act);
   background: transparent;
-  /* #289 F2: rule 133's casing and tracking, stated here (see the NEEDS
-     YOU .act above).  F6: and its 9.5 px. */
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 9.5px;
-  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  color: var(--act);
   cursor: pointer;
   white-space: nowrap;
 }
 .workbench .dl-all .act:hover {
-  border-color: var(--ink-on-dark-faint);
-  color: var(--ink-bright);
+  border-color: var(--act-bright);
+  color: var(--act-bright);
 }
 .workbench .dl-all .act:focus-visible,
 .workbench .dl-all .pri:focus-visible {
@@ -9125,4 +8945,148 @@ input[type="number"] {
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
+}
+
+/* ─── #437 branch 3 — Setup row, Your plan, Downloads ───
+   Authority: validation-artifacts/committed/ux-group2-needs-you/rulings.md
+   rulings 9-13 (Option B, design reference OptionB.dc.html).  Gaps are
+   #435's three (8 / 16 / 24); controls are 44.  No new font size: every
+   text is a role (.tr-section / .tr-step / .tr-help / .tr-note) or reads
+   --fs-body-value. */
+
+/* Ruling 9: the Setup row.  One line; Edit opens the grid under it. */
+.workbench .a-setupbox-head.a-setuprow {
+  min-height: 44px;
+  padding: 0 0 0 16px;
+  gap: 8px;
+  border-bottom: 0;
+}
+.workbench .a-setupbox:has(.a-setupbox-grid) .a-setuprow {
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .a-setuprow-k {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .a-setuprow-v {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 12px 0;
+  color: var(--ink-on-dark);
+}
+.workbench .a-setuprow-edit,
+.workbench .disc-word {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  color: var(--act);
+}
+.workbench .a-setuprow-edit {
+  flex: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 16px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.workbench .a-setuprow-edit:hover {
+  color: var(--act-bright);
+}
+.workbench .a-setuprow-edit:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: -2px;
+}
+
+/* Ruling 10: YOUR PLAN — header row, then the three cells. */
+.workbench .yp {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .yp-head,
+.workbench .dl-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .yp-title,
+.workbench .dl-title {
+  margin: 0;
+}
+.workbench .yp-sub,
+.workbench .dl-head-count {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .yp .hero-cell,
+.workbench .yp .hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+.workbench .yp .hero-meta {
+  justify-content: flex-start;
+}
+.workbench .yp .hero-cell .num {
+  margin: 0;
+}
+.workbench .yp .hero-cell .sub {
+  color: var(--ink-on-dark-faint);
+}
+
+/* Rulings 11-13: DOWNLOADS — header, warning row, cards, quote row. */
+.workbench .dl-sec {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .dl-head {
+  padding: 8px 8px 8px 16px;
+}
+.workbench .dl-warn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--vd-flag-ground);
+  border-bottom: 1px solid var(--da-hair);
+  color: var(--ink);
+}
+.workbench .dl-warn-glyph {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+.workbench .dl-sec .dls {
+  gap: 8px;
+  padding: 16px;
+  margin-bottom: 0;
+}
+.workbench .dl-sec .dl-card {
+  gap: 8px;
+  padding: 16px;
+  background: var(--canvas-tint);
+}
+.workbench .dl-quote {
+  border-top: 1px solid var(--da-hair);
+}
+.workbench .dl-quote > .disc {
+  border: 0;
+  margin: 0;
+}
+.workbench .disc-word {
+  flex: none;
+  margin-left: 8px;
+}
+@media (max-width: 480px) {
+  .workbench .dl-head {
+    flex-wrap: wrap;
+  }
+  .workbench .dl-sec .dl-files {
+    margin: 16px 16px 0;
+    width: auto;
+  }
 }

@@ -32,13 +32,17 @@ const html = (el: ReactElement | null) => (el ? renderToStaticMarkup(el) : "");
 const text = (markup: string) => markup.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 
 describe("rule 169: Reference's Zone geometry group", () => {
-  it("shows the hero's four rows, as the hero shows them", () => {
+  it("shows the hero's four rows and values, from the one list", () => {
     const group = text(html(<ZoneGeometryGroup breakdown={ready} />));
     const hero = text(html(<ResultsHero breakdown={ready} jurisdiction={null} />));
     expect(group.startsWith("Zone geometry")).toBe(true);
+    // #437 branch 3 (ruling 10, R145 G2): the hero names each row in plain
+    // words (`plain`, "Taper"); Reference keeps the MUTCD letters
+    // (`label`, "Taper L").  Both read the same row and the same value
+    // from zoneGeometryRows(), so the two still cannot drift on a number.
     for (const row of zoneGeometryRows(DATA.zone_geometry!)) {
       expect(group).toContain(`${row.label} ${row.value}`);
-      expect(hero).toContain(`${row.label} ${row.value}`);
+      expect(hero).toContain(`${row.plain} ${row.value}`);
     }
     expect(group).toContain("Taper L 40 ft Buffer B 200 ft Device spacing 30 ft o.c. Work zone 1,000 ft");
   });

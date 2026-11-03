@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import type { Scenario } from "@/lib/scenarios";
 import { bundleLabel, type AuditSummary } from "@/lib/render-types";
@@ -62,6 +62,14 @@ interface Props {
    *  same answer so acceptance line 2 ("one primary per state") cannot be
    *  broken by the two disagreeing. */
   primary?: PrimaryOwner;
+  /** #437 ruling 11 / D6: the questions not yet applied (unanswered plus
+   *  answered-but-staged, `openQuestionCount`).  Above zero, the warning
+   *  row says the files are the plan before those answers.  The files
+   *  stay live either way (P8: disclose, don't lock). */
+  pendingAnswers?: number;
+  /** #437 ruling 13: the price quote's collapsed row, which joins the
+   *  downloads as their last row.  The shell hands it in. */
+  quote?: ReactNode;
 }
 
 const SIGNUP_HREF = "/app";
@@ -80,9 +88,12 @@ function statFromBreakdown(
 
 interface DlCardDef {
   title: string;
-  spec: string;
+  /** #437 ruling 12: one plain line of what the file is for. */
+  lead: string;
   format: string;
-  qtyLbl: string;
+  /** The count's noun, singular and plural, and the words after it. */
+  qtyLbl: readonly [string, string];
+  qtyTail?: string;
   // Null: no quantity to state — the line renders empty (reserved
   // height, P1) and the label is omitted.
   qty: number | null;
@@ -96,12 +107,15 @@ interface DlCardDef {
   unavailable?: boolean;
 }
 
+// #437 ruling 12: a single-file card's button reads "Download ↓"; the
+// card's title and format tag already name the file.  The accessible
+// name keeps the whole action (``soloAriaLabel``).
 const LABELS: Record<RenderKind, string> = {
-  pdf: "Download PDF",
-  xlsx: "Download XLSX",
-  markdown: "Download .md",
-  "crew-pdf": "Download PDF",
-  "audit-pdf": "Download PDF",
+  pdf: "Download",
+  xlsx: "Download",
+  markdown: "Download",
+  "crew-pdf": "Download",
+  "audit-pdf": "Download",
 };
 
 // #329: a card offering two formats shares one row between two buttons
@@ -159,6 +173,8 @@ export function OutputCards({
   bundling,
   auditChecked = null,
   primary = "download-all",
+  pendingAnswers = 0,
+  quote = null,
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
   // Rule 168 (R137 Q1, R145 self-ruled): at the phone width the four cards
@@ -193,25 +209,27 @@ export function OutputCards({
   const cards: DlCardDef[] = [
     {
       title: "Plan sheet",
-      spec: summary ? `11×17 · ${summary.ta} · ${summary.cdot_sheet}` : "11×17",
+      lead: "The drawing for the crew and the permit.",
       format: "PDF",
-      qtyLbl: "devices",
+      qtyLbl: ["device", "devices"],
       qty: statFromBreakdown(breakdown, (d) => d.total_devices),
       kind: "pdf",
     },
     {
       title: "Device list",
-      spec: "CDOT BID-READY",
+      lead: "What to load on the truck.",
       format: "XLSX",
-      qtyLbl: "types",
+      qtyLbl: ["type", "types"],
+      // Repeats the card's old "CDOT BID-READY" claim in words (D5).
+      qtyTail: ", CDOT bid items",
       qty: statFromBreakdown(breakdown, (d) => d.unique_types),
       kind: "xlsx",
     },
     {
       title: "Crew instructions",
-      spec: "SETUP + TAKEDOWN",
+      lead: "Setup and takedown, in order.",
       format: "PDF + MD",
-      qtyLbl: "steps",
+      qtyLbl: ["step", "steps"],
       qty: summary?.step_count ?? null,
       kind: "crew-pdf",
       secondaryKind: "markdown",
@@ -221,9 +239,9 @@ export function OutputCards({
     // #401: in the zip (BUNDLE_PART_KINDS), so the count includes it.
     {
       title: "Audit trail",
-      spec: "EVERY CHECK CITED",
+      lead: "Every number and the rule behind it.",
       format: "PDF",
-      qtyLbl: "checks",
+      qtyLbl: ["check", "checks"],
       qty: auditChecked,
       kind: "audit-pdf",
       unavailable: auditChecked === null,
@@ -252,46 +270,53 @@ export function OutputCards({
   // the count stays beside the zip; at the phone the count beside the zip
   // is hidden and the line carries it, so it's stated once either way.
   const hasZip = mode.kind === "public" && Boolean(onDownloadAll);
+  // #437 ruling 11 (D6): the warning row's sentence.  N is the
+  // questions not yet applied; "your answer" for one (R145 G5).
+  const warn =
+    pendingAnswers > 0
+      ? `These files match the plan before your ${
+          pendingAnswers === 1 ? "answer" : `${pendingAnswers} answers`
+        }. Answer first and they'll update.`
+      : null;
   return (
-    // #289 fidelity F3 — Part 2 rule 27: "downloads → quote 12 px" (mb-3;
-    // was mb-4, 16).
-    <div className="mb-3">
-      {/* #289 fidelity F4 (X8, ruled Q4): the "MHT PACKAGE" heading is
-          gone — rules 84–86 make the download row the four cards, and the
-          heading was the old results head's.  The file count is still
-          stated ONCE (ruling 193, #253's one voice), and on the download
-          row: inline beside the zip it counts, not stacked under it.  The
-          line renders only when there is a zip to hold — an empty padded
-          row would be a gap standing in for nothing. */}
-      {hasZip && (
-      <div className="flex items-center justify-end gap-4 px-1 pb-3">
-        {/* Ruling 183, settled by clause 3: the zip renders at BOTH
-            widths — rule 86 dropped it at 1440 and rule 168 made it the
-            phone's primary unconditionally; clause 3 supersedes both with
-            one width-blind derivation.  It is the PRIMARY when nothing
-            needs the operator, and a ghost beside NEEDS YOU's actions
-            when something does.  The file count rides it, once. */}
-        <div className={`dl-all${zipIsPrimary ? " is-primary" : ""}`}>
-          <span className="dl-all-count tr-prov">{zipLabel}</span>
-          <button
-            type="button"
-            data-write=""
-            onClick={onDownloadAll}
-            // #401: the zip holds the audit PDF, so it waits on the audit
-            // the way the audit card does: an audit that has not answered
-            // (or failed) has no PDF, and the zip would fail whole.
-            disabled={bundling || locked || auditChecked === null}
-            className={zipIsPrimary ? "pri" : "act tr-step"}
-          >
-            <span className="font-mono">↓</span> All (.zip)
-          </button>
-        </div>
+    // #437 rulings 11-13: one block — the header (DOWNLOADS, the file
+    // count, the zip), the warning row while answers are open, the four
+    // cards, and the price quote's row last.
+    <section className="dl-sec mb-3" aria-labelledby="downloads-h" data-testid="downloads">
+      <div className="dl-head">
+        <h3 id="downloads-h" className="tr-section dl-title">
+          DOWNLOADS
+        </h3>
+        {/* The file count is stated ONCE per width (ruling 193): here at
+            the desk, on the phone's file line below at ≤480.  It renders
+            only where there is a zip to count. */}
+        <p className="tr-note dl-head-count dl-all-count">{hasZip ? zipLabel : null}</p>
+        {hasZip && (
+          // Clause 3's derivation is unchanged: the zip is the PRIMARY
+          // when nothing needs the operator, a ghost when something does.
+          <div className={`dl-all${zipIsPrimary ? " is-primary" : ""}`}>
+            <button
+              type="button"
+              data-write=""
+              onClick={onDownloadAll}
+              disabled={bundling || locked || auditChecked === null}
+              className={zipIsPrimary ? "pri" : "act"}
+            >
+              Download all (.zip) <span className="font-mono">↓</span>
+            </button>
+          </div>
+        )}
       </div>
+      {warn !== null && (
+        // Ruling 11: disclose, don't lock.  The buttons below stay live.
+        <div className="dl-warn" data-testid="dl-warn">
+          <span className="dl-warn-glyph sym-warn" aria-hidden="true">
+            ⚠
+          </span>
+          <span className="tr-help">{warn}</span>
+        </div>
       )}
       {hasZip && (
-        // A disclosure: it shows what's already generated and writes
-        // nothing, so it is a read under the write lock (#252), as
-        // DisclosureRow's control is.
         <button
           type="button"
           className="dl-files tr-prov"
@@ -315,14 +340,12 @@ export function OutputCards({
             key={card.kind}
             card={card}
             mode={mode}
-            // #261 (P16): the breakdown failed — the package cannot be
-            // built from it.  Every card prints "not generated" and
-            // withholds its download; the zone's ⚠ ribbon says why.
             failed={breakdown.state === "error"}
           />
         ))}
       </div>
-    </div>
+      {quote !== null ? <div className="dl-quote">{quote}</div> : null}
+    </section>
   );
 }
 
@@ -382,10 +405,12 @@ function DlCard({
   // #329: the short label's full action ("Download crew instructions
   // PDF"), which contains the visible text (WCAG 2.5.3).  Not while the
   // button reads "Try again": the name follows the visible label.
+  // #437 ruling 12: every button's visible word is short ("Download",
+  // "PDF", ".md"), so each keeps the whole action as its accessible name.
   const sharedAriaLabel = (k: RenderKind) =>
-    shared && currentError?.kind !== k
-      ? `Download ${card.title.toLowerCase()} ${SHARED_LABELS[k]}`
-      : undefined;
+    currentError?.kind === k || (mode.kind === "saved" && !mode.planId)
+      ? undefined
+      : `Download ${card.title.toLowerCase()} ${SHARED_LABELS[k]}`;
 
   const beginRender = useRenderRequest();
   const onPublicDownload = async (dlKind: RenderKind) => {
@@ -525,26 +550,25 @@ function DlCard({
   return (
     <div className="dl-card">
       <div className="top">
-        <h3>{card.title}</h3>
+        {/* h4 under the block's h3 (axe heading-order, #261). */}
+        <h4>{card.title}</h4>
         <span className="fmt">{card.format}</span>
       </div>
-      <div className="desc">
-        <span>
-          {card.spec}
-        </span>
-        {/* The quantity line is always present at its own height (P1):
-            a null quantity leaves it empty — never a placeholder; a
-            failed breakdown prints the honest word (P16, Rule 10). */}
-        <span className="qty">
-          {failed ? (
-            "not generated"
-          ) : card.qty !== null ? (
-            <>
-              <b>{card.qty}</b> {card.qtyLbl}
-            </>
-          ) : null}
-        </span>
-      </div>
+      {/* #437 ruling 12 / D5: what the file is for, then its count from
+          the wire.  A count the wire has not given drops its sentence
+          (Rule 10); a failed breakdown says so in words (P16). */}
+      <p className="desc tr-note">
+        {card.lead}
+        {failed ? (
+          " Not generated."
+        ) : card.qty !== null ? (
+          <>
+            {" "}
+            <b>{card.qty}</b> {card.qty === 1 ? card.qtyLbl[0] : card.qtyLbl[1]}
+            {card.qtyTail ?? ""}.
+          </>
+        ) : null}
+      </p>
       {/* #318 (R149): at the phone width an 11×17 sheet fits to ~1.8 px
           text (validation-artifacts/committed/issue-318-phone-drawings),
           so the Plan sheet card says how to read it.  Rendered on every

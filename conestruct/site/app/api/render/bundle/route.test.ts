@@ -84,7 +84,7 @@ describe("the download-all zip (#401)", () => {
       ["audit-pdf", "crew-pdf", "markdown", "pdf", "quote", "xlsx"],
     );
     // The label beside the zip says what is in it (Rule 10).
-    expect(bundleLabel()).toBe(`${names.length} files, with the quote`);
+    expect(bundleLabel()).toBe(`${names.length} files, quote included`);
   });
 
   it("a sandbox plan's zip is named for its road, kind, day and fingerprint, with no 'mht'", async () => {

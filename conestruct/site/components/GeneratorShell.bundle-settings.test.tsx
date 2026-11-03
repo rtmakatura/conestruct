@@ -35,10 +35,21 @@ vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
 // The restage moved the bundle POST from the Generate click to Zone 2's
 // "All (.zip)"; the stub exposes that trigger.
 vi.mock("./OutputCards", () => ({
-  OutputCards: ({ onDownloadAll }: { onDownloadAll?: () => void }) => (
-    <button type="button" onClick={onDownloadAll}>
-      ALL_ZIP
-    </button>
+  // #437 ruling 13: the quote's row rides OutputCards' `quote` slot, so
+  // the stub renders it.
+  OutputCards: ({
+    onDownloadAll,
+    quote,
+  }: {
+    onDownloadAll?: () => void;
+    quote?: import("react").ReactNode;
+  }) => (
+    <>
+      <button type="button" onClick={onDownloadAll}>
+        ALL_ZIP
+      </button>
+      {quote}
+    </>
   ),
 }));
 vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
@@ -152,7 +163,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await act(async () => {
       await new Promise((r) => setTimeout(r, 400));
     });
-    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+    await user.click(screen.getByRole("button", { name: /Price quote/i }));
 
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
     fireEvent.change(overhead, { target: { value: "25" } });
@@ -174,7 +185,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await act(async () => {
       await new Promise((r) => setTimeout(r, 400));
     });
-    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+    await user.click(screen.getByRole("button", { name: /Price quote/i }));
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
     fireEvent.change(overhead, { target: { value: "25" } });
 
@@ -191,7 +202,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await act(async () => {
       await new Promise((r) => setTimeout(r, 400));
     });
-    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+    await user.click(screen.getByRole("button", { name: /Price quote/i }));
 
     const overheadAfter = screen.getByLabelText(
       /Overhead/i,
@@ -208,7 +219,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await act(async () => {
       await new Promise((r) => setTimeout(r, 400));
     });
-    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+    await user.click(screen.getByRole("button", { name: /Price quote/i }));
 
     const flaggers = screen.getByLabelText(/Flaggers/i) as HTMLInputElement;
     const delivery = screen.getByLabelText(/Delivery/i) as HTMLInputElement;
@@ -241,7 +252,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await act(async () => {
       await new Promise((r) => setTimeout(r, 400));
     });
-    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+    await user.click(screen.getByRole("button", { name: /Price quote/i }));
     expect((screen.getByLabelText(/Flaggers/i) as HTMLInputElement).value).toBe(
       "3",
     );

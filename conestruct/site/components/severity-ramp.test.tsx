@@ -128,15 +128,16 @@ describe("severity-ramp role assignments", () => {
     // §8.11), so the bespoke `.total` span gave way to the row's
     // provenance line; the CLAIM is unchanged — no currency before a
     // preview, and the "not a permit fee" framing always.
-    const head = screen.getByRole("button", { name: /Pricing quote/i });
+    const head = screen.getByRole("button", { name: /Price quote/i });
     const prov = head.querySelector(".disc-prov")!;
-    expect(prov.textContent).toBe(
-      "FYI: contractor estimate, not a permit fee. Expand to configure and preview.",
-    );
+    // #437 branch 3 (ruling 13): plain words, no "FYI:" and no "Expand
+    // to configure and preview." (the row's own "Open" word says it).
+    expect(prov.textContent).toBe("Contractor estimate, not a permit fee");
     expect(prov.textContent).not.toContain("·");
     expect(prov.querySelector(".quote-total")).toBeNull();
     expect(prov.textContent).not.toMatch(/\$/);
-    expect(head.textContent).toContain("FYI");
+    expect(head.textContent).toContain("not a permit fee");
+    expect(head.querySelector(".disc-word")!.textContent).toBe("Open");
     // Rule 89: the quote is not a counted tier, so it shows no numeral —
     // not a zero, which would read as a total of nothing.
     expect(head.querySelector(".disc-count")).toBeNull();

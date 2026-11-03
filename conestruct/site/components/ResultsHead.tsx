@@ -63,6 +63,7 @@
 // the same sentence it did — `setupValue()` is still that sentence, and
 // it is composed from the same segments rendered here.
 
+import { useState } from "react";
 import type { Scenario } from "@/lib/scenarios";
 import {
   setupSegments,
@@ -101,6 +102,28 @@ const SETUP_GRID: ReadonlyArray<{
 ];
 
 const UNSET = "◌ not set";
+
+/** #437 ruling 9 (R145 G1): the Setup row's one line — every SET value,
+ *  in the grid's reading order (Road first, as the Option B artboard
+ *  reads), joined with " · ".  An unset jurisdiction or date is dropped
+ *  from the line (Rule 10: "◌ not set" is a cell state, not a value) and
+ *  stays visible in the grid behind Edit.  The texts are
+ *  `setupSegments()`'s own, so the line and the grid cannot disagree. */
+export function setupLine(scenario: Scenario, jurisdictionName: string | null): string {
+  const byKey = new Map(
+    setupSegments(scenario, jurisdictionName).map((x) => [x.key, x] as const),
+  );
+  const out: string[] = [];
+  for (const cell of SETUP_GRID) {
+    for (const key of cell.keys) {
+      const seg = byKey.get(key);
+      if (!seg) continue;
+      if (cellText(seg, scenario) === UNSET) continue;
+      out.push(seg.text);
+    }
+  }
+  return out.join(" · ");
+}
 
 function cellText(s: SetupSegment, scenario: Scenario): string {
   if (s.key === "lanes") return `${(scenario as { lanes: number }).lanes} ×`;
@@ -143,6 +166,9 @@ export function ResultsHead({
   // `disabled`, so it stays focusable while the working band is up.
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const locked = useWriteLock();
+  // #437 ruling 9: the grid sits behind Edit, closed by default.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [gridOpen, setGridOpen] = useState(false);
   if (!reserve) return null;
   const occupied = (settled || declined) && scenario !== undefined;
   if (!occupied) {
@@ -204,21 +230,34 @@ export function ResultsHead({
       data-testid="results-head-slot"
     >
       <section className="a-setupbox" data-testid="fact-setup" data-fact-state="done">
-        <header className="a-setupbox-head">
+        {/* #437 ruling 9: one row — ✓, mono SETUP, the values joined
+            with " · ", and Edit, which opens the grid below (each cell
+            keeps its own revision path).  Edit is a read: it opens a
+            panel and writes nothing, so it stays live under the lock. */}
+        <header className="a-setupbox-head a-setuprow">
           <span className="a-sym" aria-hidden>
             {"✓"}
           </span>
-          <span className="tr-section">Setup</span>
-          <span className="a-setupbox-fill" aria-hidden />
+          <span className="tr-step a-setuprow-k">SETUP</span>
+          <span className="a-setuprow-v tr-help" data-testid="setup-line">
+            {setupLine(scenario, jurisdictionName)}
+          </span>
           {onChangeValue && (
-            // Rule 134: a link OR a provenance word.  The cells are the
-            // links; the word says so.
-            <span className="tr-prov" data-testid="setup-links-hint">
-              pick a cell to change it
-            </span>
+            <button
+              type="button"
+              className="a-setuprow-edit"
+              data-read=""
+              aria-expanded={gridOpen}
+              aria-controls="setup-values"
+              data-testid="setup-edit"
+              onClick={() => setGridOpen((o) => !o)}
+            >
+              {gridOpen ? "Close" : "Edit"}
+            </button>
           )}
         </header>
-        <div className="a-setupbox-grid" data-testid="setup-values">
+        {gridOpen && onChangeValue && (
+        <div className="a-setupbox-grid" id="setup-values" data-testid="setup-values">
           {SETUP_GRID.map((cell) => {
             const span = cell.span2 ? " is-span2" : "";
             if (cell.label === "Lanes") {
@@ -249,6 +288,7 @@ export function ResultsHead({
             return part(seg, cell.label, `a-setupcell${span}`);
           })}
         </div>
+        )}
       </section>
     </div>
   );

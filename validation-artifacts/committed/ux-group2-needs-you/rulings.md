@@ -68,3 +68,17 @@ Built 2026-11-02 on rulings 1-8 and S1-S5 (the strip, NEEDS YOU one question at 
 - **F10. A staged non-question intent** (an Assert from "Show them") while a question is open applies with the last question's "Apply answers". There is no second Apply button beside the card (ruling 6 gives the block one).
 
 **Rule 5 against the checkpoint's prediction (§ 3 a, b, c, g):** predicted ~300 assertions in ~20 test files for (c) plus ~66 for (a, b, g). Actual: 14 test files touched, vitest 2722 passed. Two suites were rewritten as predicted (NeedsYouConditions.test, the batch-corrections tail), NeedsYouQuestion.test is new, and `NeedsYouConditions.tokens.test`, `ResultsHead.grid`, `post-generate-scroll`, `BandStack.landing` and `results-slot-tokens` needed no change (fewer than predicted). Source: NeedsYouConditions.tsx −691/+330 (predicted −450/+350), NeedsYouQuestion.tsx +330 (predicted +250), needs-you-items.ts +231 (predicted +120), globals.css +245 (predicted +300/−200; nothing was deleted, because the dismiss-picker CSS is now unused and leaves in branch 3's cleanup, which the prediction did not say).
+
+
+## Branch 3 (`ux-group2-results`): R145 self-ruled calls
+
+Built 2026-11-03 on rulings 9-13 and the approved D3-D7. None of these hits the park list.
+
+- **G1. The Setup line** is every set value in the grid's reading order (Road · Work · Length · Speed · Lanes · Lane width · Road type · Jurisdiction · Dates), each in `setupSegments()`'s own words, joined with " · ". An unset jurisdiction or date is left out of the line (D3) and still shows "◌ not set" in the grid. Edit is a read (`data-read`, live under the lock); it opens the grid in place and reads "Close" while open.
+- **G2. Your plan's distance labels** are plain ("Taper", "Buffer", "Device spacing", "Work zone", ruling 10). Reference's Zone geometry group keeps "Taper L" / "Buffer B" (group 5 owns its inside). Both labels sit on the one `zoneGeometryRows()` list beside the one value, so the values can't drift.
+- **G3. The case-ID line** ("Denver · TCP" / "Baseline · MHT") leaves Your plan. Ruling 10 lists three cells; the jurisdiction reads in the Setup row. The "+N jurisdiction-required" clauses stay on the two sub-lines (wire fields, R117).
+- **G4. The cards' mono spec lines** ("11×17 · TA-3 · …", "CDOT BID-READY", "SETUP + TAKEDOWN", "EVERY CHECK CITED") and the separate count line are replaced by ruling 12's one plain line, with the count inside it. A failed breakdown appends " Not generated." (P16). A count the wire hasn't given drops its sentence (D5).
+- **G5. The warning row for one answer** reads "These files match the plan before your answer. Answer first and they'll update."
+- **G6. The price quote's row** moves inside Downloads as its last row. "FYI:" and "Expand to configure and preview." go; the row ends in "Open" / "Close" in place of the caret. Its panel, state and keep-mounted behaviour are unchanged.
+- **G7. Single-file buttons** read "Download ↓" (ruling 12). Each button's accessible name keeps the whole action ("Download plan sheet PDF").
+- **G8. The zip button** reads "Download all (.zip) ↓" in both treatments. With nothing open in NEEDS YOU it is still the one primary (`derivePrimaryOwner` unchanged, P18); otherwise it is the 44 px outline the artboard draws.

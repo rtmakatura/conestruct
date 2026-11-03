@@ -406,7 +406,7 @@ describe("generation announcements (#193)", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    await user.click(screen.getByRole("button", { name: /All \(\.zip\)/ }));
+    await user.click(screen.getByRole("button", { name: /Download all \(\.zip\)/ }));
     const alerts = screen.getAllByRole("alert");
     expect(
       alerts.some((a) => a.textContent?.includes("Bundle failed (500)")),
@@ -434,7 +434,7 @@ describe("generation announcements (#193)", () => {
     await flushDebounce();
     expect(statusRegion().textContent).toBe("Plan generated. MHT package ready.");
 
-    await user.click(screen.getByRole("button", { name: /All \(\.zip\)/ }));
+    await user.click(screen.getByRole("button", { name: /Download all \(\.zip\)/ }));
     const bandRow = document.querySelector(".working-band [role=status]");
     expect(bandRow).not.toBeNull();
     expect(bandRow!.querySelector(".wb-object")!.textContent).toBe(

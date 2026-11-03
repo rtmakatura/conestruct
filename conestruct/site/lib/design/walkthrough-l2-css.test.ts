@@ -59,23 +59,23 @@ describe("W12 — a pressed option carries a mark, not the blue alone (Rule 13; 
     expect(body, sel).toMatch(/color:\s*var\(--act\);/);
   });
 
-  it("#412: every selection ● sits on its label's baseline, in the label's font (one vertical rule for all four)", () => {
+  it("#412: every selection ● sits on its label's baseline, in the label's font (one vertical rule for all three)", () => {
     // Side chip: an in-flow span inside .tr-field (WhereBand.tsx).  Kind chip
-    // and segmented option: in-flow pseudo-elements.  Dismiss-reason chip:
-    // its glyph cell and its text are flex items centred in the same line
-    // box with the same font, so their baselines coincide.  None of them may
-    // be lifted out of the flow or shifted on its own.
+    // and segmented option: in-flow pseudo-elements.  None of them may be
+    // lifted out of the flow or shifted on its own.
+    // #437 branch 3: the dismiss-reason chip's glyph cell left the sheet
+    // with the picker (deleted in branch 2), so its selector is dropped.
     const shifts = /position:\s*absolute|(?:^|;)\s*(?:top|bottom):|vertical-align:|transform:|font-size:|line-height:/;
     for (const sel of [
       ".workbench .a-chip[aria-pressed] > .tr-field::after",
       '.workbench .a-seg > button[aria-pressed="true"] > .a-seg-label::before',
-      ".workbench .needs-you .reason-chip .reason-glyph",
       ".workbench .sym-select",
     ]) {
       const body = ruleFor(sel);
       expect(body, sel).not.toBe("");
       expect(body, sel).not.toMatch(shifts);
     }
+    expect(ruleFor(".workbench .needs-you .reason-chip .reason-glyph")).toBe("");
     expect(ruleFor(".workbench .a-seg-label"), "no positioning context left for an absolute mark").toBe("");
   });
 });

@@ -35,7 +35,8 @@ export const BUNDLE_PART_KINDS = [
 export function bundleLabel(): string {
   const kinds: readonly string[] = BUNDLE_PART_KINDS;
   const count = `${kinds.length} files`;
-  return kinds.includes("quote") ? `${count}, with the quote` : count;
+  // #437 ruling 12: "N files, quote included".
+  return kinds.includes("quote") ? `${count}, quote included` : count;
 }
 
 export interface AuditSummary {

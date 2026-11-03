@@ -30,8 +30,9 @@ const fmtTotal = (n: number) =>
     maximumFractionDigits: 0,
   });
 
-/** §8.11's framing, kept verbatim — the summary line's standing half. */
-const FYI = "FYI: contractor estimate, not a permit fee";
+/** §8.11's framing — the summary line's standing half.  #437 ruling 13
+ *  words it "Contractor estimate, not a permit fee" (the "FYI:" goes). */
+const FYI = "Contractor estimate, not a permit fee";
 
 type QuotePanelProps = Omit<
   ComponentProps<typeof QuotePanel>,
@@ -45,23 +46,27 @@ export function PricingCard(props: QuotePanelProps) {
   return (
     <DisclosureRow
       symbol="i"
-      name="Pricing quote"
+      // #437 ruling 13: "Price quote · Contractor estimate, not a permit
+      // fee · $total · Open", in plain words, ending in Open / Close.
+      name="Price quote"
       count={null}
+      plainWords
+      actionWord={{ closed: "Open", open: "Close" }}
       // The framing first, then the last previewed total — or, before any
       // preview, the words that say there is none.  The total is its own
       // element, not spliced into the sentence: it is a VALUE, and a
       // value findable only as a substring is not measurable (#185 asserts
       // the collapsed headline shows the number).
-      // R43: before a preview the line is two sentences, with no middle
-      // dot inside it; the dot stays only as the separator before a total.
+      // D7 (#437): before a preview there is no total and the row leaves
+      // it out (Rule 10); "Expand to configure and preview." goes, since
+      // the row's own "Open" says what pressing it does.
       provenance={
         total != null ? (
           <>
-            {FYI} ·{" "}
-            <b className="quote-total">{fmtTotal(total)}</b>
+            {FYI} · <b className="quote-total">{fmtTotal(total)}</b>
           </>
         ) : (
-          `${FYI}. Expand to configure and preview.`
+          FYI
         )
       }
       open={open}

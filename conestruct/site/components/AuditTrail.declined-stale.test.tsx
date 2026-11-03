@@ -254,7 +254,12 @@ describe("audit rows never present a prior input's numbers under a declined bann
     // answer separately.  Still no settled audit, so no live PDF and no
     // count.
     expect(pdfButton().disabled).toBe(true);
-    expect(auditCard().querySelector(".desc .qty")!.textContent).toBe("not generated");
+    // #437 branch 3 (ruling 12): the card's one .desc sentence closes
+    // with "Not generated." (the separate .qty line is gone), no count.
+    expect(auditCard().querySelector(".desc")!.textContent).toBe(
+      "Every number and the rule behind it. Not generated.",
+    );
+    expect(auditCard().querySelector(".desc b")).toBeNull();
     expect(auditCard().textContent).not.toContain("checks");
   });
 });

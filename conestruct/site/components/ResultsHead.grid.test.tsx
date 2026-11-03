@@ -27,7 +27,11 @@ const SCENARIO = {
   meta: { ...DEFAULT_SHOULDER.meta, address: "East Colfax Avenue Westbound", lat: 39.7402, lng: -104.956 },
 } as Scenario;
 
-function mount(s: Scenario = SCENARIO, jurisdictionName: string | null = null) {
+function mount(
+  s: Scenario = SCENARIO,
+  jurisdictionName: string | null = null,
+  openGrid = true,
+) {
   const onChangeValue = vi.fn();
   render(
     <ResultsHead
@@ -38,6 +42,8 @@ function mount(s: Scenario = SCENARIO, jurisdictionName: string | null = null) {
       onChangeValue={onChangeValue}
     />,
   );
+  // #437 branch 3: the grid sits behind Edit (ruling 9).
+  if (openGrid) fireEvent.click(screen.getByTestId("setup-edit"));
   return onChangeValue;
 }
 
@@ -124,12 +130,54 @@ describe("the Setup box (R106)", () => {
     expect(screen.getByTestId("fact-setup").textContent).not.toContain("⚠");
   });
 
-  it("the head says how it works: ✓ SETUP, pick a cell to change it", () => {
-    mount();
+  // #437 branch 3: the head no longer says "pick a cell to change it"
+  // (the hint left with ruling 9); it is one row with an Edit button.
+  it("the head is one row: ✓, SETUP, the values line, and Edit (ruling 9)", () => {
+    mount(SCENARIO, null, false);
     const box = screen.getByTestId("fact-setup");
     expect(box.querySelector(".a-setupbox-head .a-sym")!.textContent).toBe("✓");
-    expect(within(box).getByText("Setup")).toBeTruthy();
-    expect(within(box).getByText("pick a cell to change it")).toBeTruthy();
+    expect(within(box).getByText("SETUP")).toBeTruthy();
+    expect(screen.queryByTestId("setup-links-hint")).toBeNull();
+    expect(box.textContent).not.toContain("pick a cell to change it");
+    // The set values, in the grid's order, joined once; the unset
+    // jurisdiction and dates are dropped, never printed as "◌ not set".
+    const line = screen.getByTestId("setup-line").textContent!;
+    expect(line).toBe(
+      "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 lanes · 12 ft lanes · Urban street",
+    );
+    expect(line).not.toContain("not set");
+    // Closed by default: the grid is not mounted until Edit.
+    expect(screen.queryByTestId("setup-values")).toBeNull();
+  });
+
+  it("Edit opens the grid and reads Close; Close hides it again (ruling 9)", () => {
+    mount(SCENARIO, null, false);
+    const edit = screen.getByTestId("setup-edit");
+    expect(edit.tagName).toBe("BUTTON");
+    expect(edit.textContent).toBe("Edit");
+    expect(edit.getAttribute("aria-expanded")).toBe("false");
+    fireEvent.click(edit);
+    expect(edit.textContent).toBe("Close");
+    expect(edit.getAttribute("aria-expanded")).toBe("true");
+    expect(edit.getAttribute("aria-controls")).toBe("setup-values");
+    expect(screen.getByTestId("setup-values").id).toBe("setup-values");
+    fireEvent.click(edit);
+    expect(edit.textContent).toBe("Edit");
+    expect(screen.queryByTestId("setup-values")).toBeNull();
+  });
+
+  it("a set jurisdiction and date join the line (ruling 9)", () => {
+    mount(
+      {
+        ...SCENARIO,
+        jurisdiction_key: "denver",
+        schedule: { date_mode: "single", work_date: "2026-10-12" },
+      } as Scenario,
+      "Denver",
+      false,
+    );
+    const line = screen.getByTestId("setup-line").textContent!;
+    expect(line.endsWith(" · Denver · 2026-10-12")).toBe(true);
   });
 });
 

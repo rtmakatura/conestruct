@@ -40,7 +40,7 @@ function Harness({ mode }: { mode: Mode }) {
 
 function open(mode: Mode) {
   render(<Harness mode={mode} />);
-  fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
 }
 
 beforeEach(() => {

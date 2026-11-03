@@ -64,7 +64,7 @@ async function mountSavedPlan() {
   await act(async () => {
     await new Promise((r) => setTimeout(r, 400));
   });
-  fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
   return user;
 }
 

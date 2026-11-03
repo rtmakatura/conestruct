@@ -12,6 +12,10 @@
 // Clause 4 moved that slot into the stack — a cue inside a closed
 // disclosure cannot say the counts above it are stale — so the claim
 // moved here rather than being dropped.
+//
+// #437 branch 3 (ruling 13): the price quote's row left the disclosure
+// group for the bottom of the DOWNLOADS section (OutputCards' `quote`
+// slot), and is named "Price quote".  The group is the three tier rows.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
@@ -148,27 +152,31 @@ const countPhrase = (name: string) =>
   rowByName(name)?.querySelector(".disc-count")?.textContent ?? null;
 
 describe("#288 clause 4 — the stack's disclosure rows", () => {
-  it("the four rows are ONE group, in rule 27's order, with its 10px gap", async () => {
+  it("the three tier rows are ONE group, in rule 27's order; the quote row closes the downloads", async () => {
     await generate();
     // Ryan's hand-check at f44377e, fix 3: the Reference row was in its
     // own Zone 3 section below the draft notice.  Rule 27 names a
-    // "disclosure group" with an internal gap, so the four rows are one
+    // "disclosure group" with an internal gap, so the tier rows are one
     // run — and the group, not a zone, is what the operator reads down.
     const group = document.querySelector(".results-disc")!;
     expect(group, "the group exists").not.toBeNull();
     const inGroup = Array.from(group.querySelectorAll(".disc-name")).map((n) => n.textContent);
+    // #437 branch 3 (ruling 13): the quote is no longer in the group.
     expect(inGroup).toEqual([
-      "Pricing quote",
       "Checked & passed",
       "Pending / not verified",
       "Reference",
     ]);
-    // Every rule-87 row on the page is in it: none stranded elsewhere.
-    expect(document.querySelectorAll(".disc-name")).toHaveLength(inGroup.length);
-    // Part 1 §8.11 puts the quote "directly under the downloads"; §8.9
-    // keeps ✓, ◌ and the uncounted i tier as disclosures, and clause 4
-    // promotes the first two out of section 03's chips into rows here.
-    expect(rowNames()).toEqual(inGroup);
+    // §8.9 keeps ✓, ◌ and the uncounted i tier as disclosures, and
+    // clause 4 promotes the first two out of section 03's chips into rows
+    // here.  #437 branch 3: the quote row is the downloads section's last
+    // row instead (Part 1 §8.11's "directly under the downloads", now
+    // inside them) — the only rule-87 row outside the group.
+    const downloads = screen.getByTestId("downloads");
+    const quoteSlot = downloads.lastElementChild!;
+    expect(quoteSlot.classList.contains("dl-quote")).toBe(true);
+    expect(quoteSlot.querySelector(".disc-name")!.textContent).toBe("Price quote");
+    expect(rowNames()).toEqual(["Price quote", ...inGroup]);
   });
 
   it("the draft notice is the column's LAST line, below the group (§8.12, rule 29)", async () => {
@@ -203,9 +211,11 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     // row and the audit card's "N checks" must agree, always.
     const checked = countOf("Checked & passed");
     expect(checked).toMatch(/^\d+$/);
+    // #437 branch 3: the card title is an h4, and the count is the <b>
+    // inside the card's one .desc sentence (the .qty line is gone).
     const cardQty = Array.from(document.querySelectorAll(".dl-card"))
-      .find((c) => c.querySelector("h3")?.textContent === "Audit trail")!
-      .querySelector(".qty b")!.textContent;
+      .find((c) => c.querySelector("h4")?.textContent === "Audit trail")!
+      .querySelector(".desc b")!.textContent;
     expect(cardQty, "the card and the row read one ledger").toBe(checked);
     // ◌ is counted too — its own tier, never buried (#219).
     expect(countOf("Pending / not verified")).toMatch(/^\d+$/);
@@ -218,7 +228,7 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     expect(countOf("Reference")).toBeNull();
     // The quote is not a tier at all — no ledger, nothing to count.  A
     // zero would read as a total of nothing.
-    expect(countOf("Pricing quote")).toBeNull();
+    expect(countOf("Price quote")).toBeNull(); // #437 branch 3: renamed
   });
 
   it("the promoted tiers are GONE from section 03 — one container each, never two", async () => {
@@ -282,7 +292,7 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
 
   it("the quote's panel survives a collapse — its state is written nowhere else", async () => {
     const user = await generate();
-    const row = rowByName("Pricing quote")!;
+    const row = rowByName("Price quote")!; // #437 branch 3: renamed
     const head = row.querySelector(".disc-head") as HTMLButtonElement;
     await user.click(head);
     expect(row.querySelector(".disc-panel")!.hasAttribute("hidden")).toBe(false);

@@ -21,6 +21,12 @@
 // @container query keyed to the block's own width.  Rule 74's three
 // tracks and rule 133's `.act` are what the rows wear now, and they are
 // pinned below in their place.
+//
+// #437 branch 3: the dismiss reason picker was deleted in branch 2 and
+// its CSS (.reason-chip*, .site-correction-*, .sc-picker*, .ny-foot*) in
+// branch 3, so every #245 picker test, the #270 picker sub-row test and
+// the scan's .ny-foot claim are DELETED here: they pinned a UI that no
+// longer exists.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -40,44 +46,6 @@ function rule(selector: string, from = 0): string {
   const j = css.indexOf("}", i);
   return css.slice(i + selector.length + 2, j);
 }
-
-describe("#245 — the reason picker's tokens (moved by #288 clause 1)", () => {
-  it("unselected chips are the ghost pair; chosen chips the act pair; the legend the row ink", () => {
-    expect(rule(".workbench .needs-you .reason-chip")).toMatch(/color:\s*var\(--ink-on-dark-faint\)/);
-    expect(rule(".workbench .needs-you .reason-chip")).toMatch(/border:\s*1px solid var\(--rule\)/);
-    expect(rule(".workbench .needs-you .reason-chip.chosen")).toMatch(/color:\s*var\(--act\)/);
-    expect(rule(".workbench .needs-you .reason-chip.chosen")).toMatch(/border-color:\s*var\(--act\)/);
-    expect(rule(".workbench .needs-you .site-correction-reasons legend")).toMatch(
-      /color:\s*var\(--ink-on-dark\)/,
-    );
-  });
-  it("the radio stays focusable (hidden by opacity, never display:none) and focus shows on the chip", () => {
-    expect(rule(".workbench .needs-you .reason-chip input")).toMatch(/opacity:\s*0/);
-    expect(rule(".workbench .needs-you .reason-chip input")).not.toMatch(/display:\s*none/);
-    expect(rule(".workbench .needs-you .reason-chip:focus-within")).toMatch(/var\(--act-glow\)/);
-  });
-  it("#255: the chip centres its label — a mirror glyph slot on the trailing edge (F-S4-2)", () => {
-    expect(rule(".workbench .needs-you .reason-chip")).toMatch(/justify-content:\s*center/);
-    expect(rule(".workbench .needs-you .reason-chip .reason-glyph")).toMatch(/width:\s*10px/);
-    expect(rule(".workbench .needs-you .reason-chip::after")).toMatch(/width:\s*10px/);
-    expect(rule(".workbench .needs-you .reason-chip::after")).toMatch(/content:\s*""/);
-  });
-  it("#255: the note slot is a fixed 184px reservation; void = hidden, still laid out (P1)", () => {
-    expect(rule(".workbench .needs-you .site-correction-note")).toMatch(/flex:\s*0 0 184px/);
-    expect(rule(".workbench .needs-you .site-correction-note")).not.toMatch(/min-width/);
-    const voided = rule(".workbench .needs-you .site-correction-note.is-void");
-    expect(voided).toMatch(/visibility:\s*hidden/);
-    expect(voided).not.toMatch(/display:\s*none/);
-  });
-  it("the other-note input is the field-input workbench pair, never the UA field", () => {
-    const note = rule(".workbench .needs-you .site-correction-note");
-    expect(note).toMatch(/background:\s*var\(--canvas\)/);
-    expect(note).toMatch(/color:\s*var\(--ink-bright\)/); // #263: the token, not the literal
-    expect(rule(".workbench .needs-you .site-correction-note::placeholder")).toMatch(
-      /var\(--ink-on-dark-faint\)/,
-    );
-  });
-});
 
 describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
   it("the tier tokens ride symbol and word (▲ --warn, ✓ --pass, ◌ --none; the none word stays provenance ink)", () => {
@@ -135,10 +103,8 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     expect(on).toMatch(/background:\s*var\(--sc-act-wash\)/);
     expect(on).toMatch(/color:\s*var\(--act\)/);
     expect(on).toMatch(/border-color:\s*var\(--act\)/);
-    // The same filled pair on the picker's chosen chip.
-    const chosen = rule(".workbench .needs-you .sc-picker .reason-chip.chosen");
-    expect(chosen).toMatch(/background:\s*var\(--sc-act-wash\)/);
-    expect(chosen).toMatch(/color:\s*var\(--act-bright\)/);
+    // #437 branch 3: the picker's chosen chip (the same filled pair) left
+    // with the picker, so its assertion is dropped.
     // Rule 16: focus is visible on every control in the block.
     expect(rule(".workbench .needs-you .act:focus-visible")).toMatch(/outline:\s*2px solid var\(--act\)/);
   });
@@ -155,39 +121,23 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     expect(at).toBeGreaterThan(css.indexOf(".workbench .ny-item {"));
   });
 
-  it("rule 15 at 380: every control in the block clears 44px, and the note takes the full line", () => {
+  it("rule 15 at 380: every control in the block clears 44px", () => {
     const at480 = css.indexOf("@media (max-width: 480px)", css.indexOf("Rule 133 — LEDGER ACTION"));
     expect(at480).toBeGreaterThan(-1);
     const q = css.slice(at480, css.indexOf("\n}\n", at480));
-    expect(q).toMatch(
-      /\.workbench \.needs-you \.act,\s*\.workbench \.needs-you \.reason-chip,\s*\.workbench \.needs-you \.site-correction-note \{\s*min-height: 44px;/,
-    );
-    expect(q).toMatch(/flex:\s*1 1 100%/);
+    // #437 branch 3: the chip and the note left with the picker, so .act
+    // is the block's one control in the sweep, and the note's full-line
+    // rule is gone with the note.
+    expect(q).toMatch(/\.workbench \.needs-you \.act \{\s*min-height: 44px;/);
+    expect(q).not.toMatch(/reason-chip|site-correction-note/);
   });
 
-  it("#270: the picker sub-row is one extra row — the legend its own line, Confirm on the shared action edge", () => {
-    const sub = rule(".workbench .needs-you .ny-sub");
-    expect(sub).toMatch(/border-top:\s*1px dashed var\(--rule\)/);
-    expect(sub).toMatch(/align-items:\s*center/);
-    const line = rule(".workbench .needs-you .ny-sub .sc-picker");
-    expect(line).not.toMatch(/grid-column/);
-    expect(line).toMatch(/flex-wrap:\s*wrap/);
-    expect(line).toMatch(/align-items:\s*flex-end/);
-    const legend = rule(".workbench .needs-you .sc-picker .site-correction-reasons legend");
-    expect(legend).toMatch(/width:\s*100%/);
-    expect(legend).toMatch(/float:\s*none/);
-  });
-
-  it("rule 78: the Apply row and the scan's provenance line are the block's last two lines, ruled off", () => {
+  it("rule 78: the Apply row is ruled off at rule 78's padding", () => {
+    // #437 branch 3: the scan's .ny-foot provenance line and its .sc-time
+    // rule left the sheet as dead CSS, so only the Apply row is pinned.
     expect(rule(".workbench .needs-you .ny-apply")).toMatch(/border-top:\s*1px solid var\(--da-hair\)/);
-    const foot = rule(".workbench .needs-you .ny-foot");
-    expect(foot).toMatch(/border-top:\s*1px solid var\(--da-hair\)/);
-    // The provenance line has no action track: it is not a data line.
-    expect(foot).toMatch(/grid-template-columns:\s*20px minmax\(0, 1fr\)/);
-    // #289 fidelity follow-up (after-audit rows 1 and 6): the scan time
-    // is provenance — Q1 dropped the dotted underline — and the Apply
-    // row takes rule 78's own "padding 13 px 16 px".
-    expect(rule(".workbench .needs-you .ny-foot .sc-time")).toMatch(/text-decoration:\s*none/);
+    // #289 fidelity follow-up (after-audit row 6): the Apply row takes
+    // rule 78's own "padding 13 px 16 px".
     expect(rule(".workbench .needs-you .ny-apply")).toMatch(/padding:\s*13px 16px/);
   });
 

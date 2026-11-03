@@ -102,6 +102,14 @@ export async function changeOneThing(key: string = "speed"): Promise<void> {
   // name because the suites' claim is unchanged ("a post-generate edit is
   // one field"); it now says WHICH field, defaulting to the speed the old
   // link always opened.
+  // #437 ruling 9: the cells sit behind the Setup row's Edit; open it
+  // first when it is closed (the operator's own first click).
+  const edit = document.querySelector('[data-testid="setup-edit"]');
+  if (edit && edit.getAttribute("aria-expanded") === "false") {
+    await act(async () => {
+      fireEvent.click(edit);
+    });
+  }
   const link = document.querySelector(`[data-testid="setup-link-${key}"]`);
   if (!link) throw new Error(`no ${key} value link on the setup fact line`);
   await act(async () => {

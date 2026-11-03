@@ -174,7 +174,7 @@ async function releaseRender(kind: string) {
 describe("#252 — RENDERING: a file render raises the band and the lock", () => {
   it("a per-file render says RENDERING · {file}, locks the page, and the band leaves with the response; the button never says 'Rendering…'", async () => {
     const user = await generate();
-    const pdf = screen.getAllByRole("button", { name: /Download PDF/ })[0];
+    const pdf = screen.getAllByRole("button", { name: /Download plan sheet PDF/ })[0];
     await user.click(pdf);
     expect(band()).not.toBeNull();
     expect(verb()).toBe("RENDERING");
@@ -193,12 +193,13 @@ describe("#252 — RENDERING: a file render raises the band and the lock", () =>
 
   it("the zip, the quote preview, the quote XLSX and the audit PDF each name their file", async () => {
     const user = await generate();
-    await user.click(screen.getByRole("button", { name: /All \(\.zip\)/ }));
+    // #437 branch 3: the zip reads "Download all (.zip) ↓" (ruling 12).
+    await user.click(screen.getByRole("button", { name: /Download all \(\.zip\)/ }));
     expect(object()).toBe("Method of Handling Traffic (MHT) package ZIP");
     await releaseRender("bundle");
     expect(band()).toBeNull();
 
-    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
+    await user.click(screen.getByRole("button", { name: /Price quote/i }));
     await user.click(screen.getByRole("button", { name: "Preview breakdown" }));
     expect(object()).toBe("quote preview");
     await releaseRender("quote-breakdown");
@@ -224,7 +225,7 @@ describe("#252 — RENDERING: a file render raises the band and the lock", () =>
 
   it("a render closing hands the page back; the next plan request speaks in its own voice (precedence over an open render is the unit test's)", async () => {
     const user = await generate();
-    await user.click(screen.getAllByRole("button", { name: /Download PDF/ })[0]);
+    await user.click(screen.getAllByRole("button", { name: /Download plan sheet PDF/ })[0]);
     expect(object()).toBe("plan sheet PDF");
     // Under the lock no edit can open a plan request alongside the
     // render, so the two never co-exist from the UI; the ordering when

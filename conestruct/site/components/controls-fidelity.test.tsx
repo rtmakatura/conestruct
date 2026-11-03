@@ -105,9 +105,10 @@ describe("rule 132 — the ghost (download buttons)", () => {
 
 describe("rule 133 — the ledger action", () => {
   it("every ledger action is mono 9.5 .14em uppercase at rest", () => {
+    // #437 branch 3: `.dl-all .act` left rule 133 (ruling 12, below), so
+    // the ledger actions are the remaining two.
     for (const sel of [
       ".workbench .needs-you .act",
-      ".workbench .dl-all .act",
       ".workbench .jbar-suggest button.confirm,\n.workbench .jbar-suggest button.ghost",
     ]) {
       const r = rule(sel);
@@ -116,6 +117,18 @@ describe("rule 133 — the ledger action", () => {
       expect(r, sel).toMatch(/text-transform:\s*uppercase/);
       expect(r, sel).toMatch(/color:\s*var\(--ink-on-dark\)/);
     }
+  });
+
+  it("#437 ruling 12: the zip's ghost is 44 px, Inter 600 at the body-value token, act-blue, no caps", () => {
+    const r = rule(".workbench .dl-all .act");
+    expect(r).toMatch(/min-height:\s*44px/);
+    expect(r).toMatch(/font-family:\s*var\(--font-sans\)/);
+    expect(r).toMatch(/font-size:\s*var\(--fs-body-value\)/);
+    expect(r).toMatch(/font-weight:\s*600/);
+    expect(r).toMatch(/color:\s*var\(--act\)/);
+    expect(r).toMatch(/border:\s*1px solid var\(--act\)/);
+    expect(r).not.toMatch(/text-transform:\s*uppercase/);
+    expect(r).not.toMatch(/letter-spacing/);
   });
 
   it("disabled is opacity .45 on the control's own ink", () => {

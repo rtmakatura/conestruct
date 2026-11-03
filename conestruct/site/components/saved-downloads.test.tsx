@@ -139,7 +139,7 @@ describe("saved-plan quote download (#203)", () => {
   it("a 502 prints on the panel's error line and the page stays", async () => {
     respond(new Response("Render failed", { status: 502 }));
     render(<Quote mode={{ kind: "saved", planId: "plan-1" }} />);
-    fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
     fireEvent.click(screen.getByRole("button", { name: /Download Quote \(XLSX\)/ }));
     expect(await screen.findByText("Render failed (502)")).toBeTruthy();
     expect(clicks).toEqual([]);
@@ -153,7 +153,7 @@ describe("saved-plan quote download (#203)", () => {
       }),
     );
     render(<Quote mode={{ kind: "saved", planId: "plan-1" }} />);
-    fireEvent.click(screen.getByRole("button", { name: /Pricing quote/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Price quote/ }));
     fireEvent.click(screen.getByRole("button", { name: /Download Quote \(XLSX\)/ }));
     await waitFor(() => expect(clicks).toEqual(["Broadway_SB.xlsx"]));
   });
