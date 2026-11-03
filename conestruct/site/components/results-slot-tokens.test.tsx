@@ -76,11 +76,12 @@ describe("#288 rule 28 — the reserved first row's CSS contract", () => {
     expect(code).toMatch(/\.a-fact \{[^}]*min-height: var\(--fact-min-h\)/);
   });
 
-  it("R106: --setup-box-h is the Setup box's measured height at each width", () => {
-    // build-2/setup-<w>-facts.json: 166.75 px at 1440, 358.75 px at 390.
-    expect(CSS).toMatch(/--setup-box-h:\s*167px/);
+  it("#437 G10: --setup-box-h is the one-row Setup box's measured height at each width", () => {
+    // ux-group2-needs-you/branch3/walk/walk.json (Denver Colfax): 46.25 px at
+    // 1440, 107 px at 390.  R106's 167 / 359 measured the old 4x2 grid.
+    expect(CSS).toMatch(/--setup-box-h:\s*47px/);
     expect(CSS).toMatch(
-      /@media \(max-width: 600px\) \{\s*\.workbench \{\s*--setup-box-h:\s*359px;/,
+      /@media \(max-width: 600px\) \{\s*\.workbench \{\s*--setup-box-h:\s*107px;/,
     );
   });
 
