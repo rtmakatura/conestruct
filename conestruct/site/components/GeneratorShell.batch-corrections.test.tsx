@@ -21,8 +21,16 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./PricingCard", () => ({ PricingCard: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 vi.mock("./OutputCards", () => ({
-  OutputCards: ({ generated }: { generated?: boolean }) => (
-    <button type="button" className="dl-btn" data-read="" disabled={!generated}>
+  // pendingAnswers is the Downloads warning row's N (ruling 11): the one
+  // voice for staged answers once the #254 ribbon steps aside.
+  OutputCards: ({ generated, pendingAnswers }: { generated?: boolean; pendingAnswers?: number }) => (
+    <button
+      type="button"
+      className="dl-btn"
+      data-read=""
+      data-pending={pendingAnswers ?? 0}
+      disabled={!generated}
+    >
       DOWNLOAD_STUB
     </button>
   ),
@@ -183,6 +191,7 @@ const ribbon = () =>
   Array.from(document.querySelectorAll(".stale-ribbon")).find((r) => /staged/.test(r.textContent ?? "")) ?? null;
 const stale = () => document.querySelector(".results-stale");
 const download = () => screen.getByText("DOWNLOAD_STUB") as HTMLButtonElement;
+const pending = () => Number(download().dataset.pending);
 const button = (name: string) => within(block()).getByRole("button", { name }) as HTMLButtonElement;
 // #437 ruling 8: the none-found rows (and their Assert) sit in the other-
 // conditions row, opened by "Show them".
@@ -205,7 +214,7 @@ async function answerBoth(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe("#254 — answers stage in the shell and apply as one write (#437)", () => {
-  it("staging two answers opens no request, mounts no band, discloses (dim + ribbon) and keeps downloads live", async () => {
+  it("staging two answers opens no request, mounts no band, discloses (dim + the Downloads row, no ribbon) and keeps downloads live", async () => {
     const user = await generate();
     const audits = calls("audit").length;
     const breakdowns = calls("device-breakdown").length;
@@ -220,7 +229,10 @@ describe("#254 — answers stage in the shell and apply as one write (#437)", ()
     expect(document.querySelector(".workbench")!.classList.contains("ws-locked")).toBe(false);
     // Disclose, don't lock (P7 / #252; ruling 11).
     expect(stale()).not.toBeNull();
-    expect(ribbon()!.textContent).toBe("Previous answer: 2 corrections staged, not yet applied.");
+    // #437 hand check (P2): answers only staged, so the Downloads warning
+    // row is the one voice; the #254 ribbon does not repeat it.
+    expect(ribbon()).toBeNull();
+    expect(pending()).toBe(2);
     expect(download().disabled).toBe(false);
   });
 
@@ -230,7 +242,8 @@ describe("#254 — answers stage in the shell and apply as one write (#437)", ()
     await user.click(within(block()).getByLabelText(/No, there isn't one/));
     await user.click(button("Next question"));
     await settle();
-    expect(ribbon()!.textContent).toBe("Previous answer: 1 correction staged, not yet applied.");
+    expect(ribbon()).toBeNull();
+    expect(stale()).not.toBeNull();
     await user.click(button("Undo"));
     await settle();
     expect(ribbon()).toBeNull();
@@ -306,7 +319,10 @@ describe("#254 — answers stage in the shell and apply as one write (#437)", ()
     await answerBoth(user);
     await changeOneThing();
     await settle();
-    expect(ribbon()).not.toBeNull();
+    // The staged answers survive opening the editor: the Downloads row
+    // still counts them (the ribbon steps aside for answers, P2).
+    expect(pending()).toBe(2);
+    expect(stale()).not.toBeNull();
     expect("siteConditionOverrides" in lastBody("audit").meta).toBe(false);
     await applyRevision();
     await settle();

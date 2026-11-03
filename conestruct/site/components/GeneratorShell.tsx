@@ -55,6 +55,7 @@ import {
   applyStaged,
   fmtScanStamp,
   isAckStaged,
+  isFlagStaged,
   stage,
   stagedSentence,
   unstage,
@@ -1522,6 +1523,15 @@ export function GeneratorShell({
   // Ruling 2: the verdict strip's N, the questions still waiting on the
   // plan.  Zero before the results show (no question is on screen).
   const openQuestions = resultsVisible ? openQuestionCount(needsYouQuestions) : 0;
+  // #437 hand check (Ryan, 2026-11-03, P2): while everything staged is
+  // an answer to a NEEDS YOU question, the Downloads warning row is the
+  // one voice for "not yet applied"; the #254 ribbon steps aside.  A
+  // staged field edit, assert or acknowledgement keeps the ribbon (the
+  // warning row counts questions only, so it would not say those).
+  const stagedAnswersOnly =
+    openQuestions > 0 &&
+    staged.length > 0 &&
+    staged.every((s) => isFlagStaged(s) && questionFlags.has(s.flag));
   // #437 ruling 6: the question flow's Apply.  The same write the
   // condition block's Apply made (#254): the staged fields and corrections
   // in one setScenario, which re-generates once.
@@ -2245,7 +2255,7 @@ export function GeneratorShell({
             {/* #254: the text channel of the staged dim (rule 13) —
                 the count in words; the block's Apply row is the
                 action.  Never alongside the flight's ribbon. */}
-            {stagedDisclose && !planDeclined && !regenerating && (
+            {stagedDisclose && !planDeclined && !regenerating && !stagedAnswersOnly && (
               <div className="stale-ribbon">
                 {/* #289 finding 2: what is staged, in ruling 191's
                     words, from the one list — "1 field", "1 correction",
