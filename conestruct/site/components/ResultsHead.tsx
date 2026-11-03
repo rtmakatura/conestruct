@@ -113,13 +113,23 @@ export function setupLine(scenario: Scenario, jurisdictionName: string | null): 
   const byKey = new Map(
     setupSegments(scenario, jurisdictionName).map((x) => [x.key, x] as const),
   );
+  // Ryan, 2026-11-03: lanes are mentioned once on the line — "2 × 12 ft
+  // lanes", not "2 lanes · 12 ft lanes".  Either half alone keeps its
+  // own segment text.
+  const lanes = byKey.get("lanes");
+  const width = byKey.get("laneWidth");
+  const pair =
+    lanes && width
+      ? `${(scenario as { lanes: number }).lanes} × ${(scenario as { laneWidth: number }).laneWidth} ft lanes`
+      : null;
   const out: string[] = [];
   for (const cell of SETUP_GRID) {
     for (const key of cell.keys) {
       const seg = byKey.get(key);
       if (!seg) continue;
       if (cellText(seg, scenario) === UNSET) continue;
-      out.push(seg.text);
+      if (pair && key === "laneWidth") continue;
+      out.push(pair && key === "lanes" ? pair : seg.text);
     }
   }
   return out.join(" · ");

@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios/types";
-import { ResultsHead } from "./ResultsHead";
+import { ResultsHead, setupLine } from "./ResultsHead";
 
 afterEach(cleanup);
 
@@ -143,11 +143,25 @@ describe("the Setup box (R106)", () => {
     // jurisdiction and dates are dropped, never printed as "◌ not set".
     const line = screen.getByTestId("setup-line").textContent!;
     expect(line).toBe(
-      "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 lanes · 12 ft lanes · Urban street",
+      "East Colfax Avenue Westbound · Shoulder work · 1,000 ft · 30 mph · 2 × 12 ft lanes · Urban street",
     );
     expect(line).not.toContain("not set");
     // Closed by default: the grid is not mounted until Edit.
     expect(screen.queryByTestId("setup-values")).toBeNull();
+  });
+
+  // Ryan, 2026-11-03: lanes once on the line.  Either half alone keeps
+  // its own segment text; the grid behind Edit is unchanged.
+  it("the line mentions lanes once: '2 × 12 ft lanes'; one half alone keeps its text", () => {
+    const line = setupLine(SCENARIO, null);
+    expect(line).toContain("2 × 12 ft lanes");
+    expect(line.match(/lanes/g)!.length).toBe(1);
+    const noWidth = { ...SCENARIO } as Record<string, unknown>;
+    delete noWidth.laneWidth;
+    expect(setupLine(noWidth as unknown as Scenario, null)).toContain(" · 2 lanes · ");
+    const noLanes = { ...SCENARIO } as Record<string, unknown>;
+    delete noLanes.lanes;
+    expect(setupLine(noLanes as unknown as Scenario, null)).toContain(" · 12 ft lanes · ");
   });
 
   it("Edit opens the grid and reads Close; Close hides it again (ruling 9)", () => {

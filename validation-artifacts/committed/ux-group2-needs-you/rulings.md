@@ -82,3 +82,13 @@ Built 2026-11-03 on rulings 9-13 and the approved D3-D7. None of these hits the 
 - **G6. The price quote's row** moves inside Downloads as its last row. "FYI:" and "Expand to configure and preview." go; the row ends in "Open" / "Close" in place of the caret. Its panel, state and keep-mounted behaviour are unchanged.
 - **G7. Single-file buttons** read "Download ↓" (ruling 12). Each button's accessible name keeps the whole action ("Download plan sheet PDF").
 - **G8. The zip button** reads "Download all (.zip) ↓" in both treatments. With nothing open in NEEDS YOU it is still the one primary (`derivePrimaryOwner` unchanged, P18); otherwise it is the 44 px outline the artboard draws.
+
+### Branch 3: Ryan's ruling 2026-11-03 (verbatim)
+
+> Before the walkthrough: change the Setup line's lanes to one mention, "2 × 12 ft lanes".
+
+- **G9 (folded into branch 3, R154 fold test: same file, no new source, ~20 lines).** `setupLine()` (`conestruct/site/components/ResultsHead.tsx`) prints lanes once when both halves are set: "2 × 12 ft lanes". Either half alone keeps its `setupSegments()` text ("2 lanes" / "12 ft lanes"). `setupSegments()` and the grid behind Edit are unchanged. Churn predicted before the diff: one assertion (`ResultsHead.grid.test.tsx`, the ruling-9 line), plus one new test. Actual: the same one assertion; full vitest 2723 passed, 1 skipped.
+
+### Branch 3: Rule 5, predicted against actual
+
+The checkpoint predicted about 170 assertions across (d) Setup, (e) Your plan and (f) Downloads. The first full run had 129 failures in 39 files (`branch3/first-run-failures.txt`), under the prediction. Two moves the prediction didn't name: `NeedsYouConditions.tokens` lost 6 tests for the dismiss picker's CSS, which branch 3 deleted as dead; and the type census went from 183 to 180 for the same deleted rules.
