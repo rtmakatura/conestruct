@@ -1,0 +1,16 @@
+# R158 red-proof: the new tests in tests/test_ship_gate.py run against the unchanged hook (scripts/hooks/ship_gate.py at d65bf13), 2026-11-03
+# uv run --extra dev pytest -q -p no:cacheprovider tests/test_ship_gate.py
+FAILED tests/test_ship_gate.py::test_a_read_or_grep_naming_the_script_passes[grep -n "Write-Host" scripts/ship.ps1]
+FAILED tests/test_ship_gate.py::test_a_read_or_grep_naming_the_script_passes[grep -rn ship.ps1 handoff.md | head -5]
+FAILED tests/test_ship_gate.py::test_a_read_or_grep_naming_the_script_passes[cat .claude/worktrees/_ship/scripts/ship.ps1 | sed -n 1,40p]
+FAILED tests/test_ship_gate.py::test_a_read_or_grep_naming_the_script_passes[Get-Content scripts\\ship.ps1 -TotalCount 40]
+FAILED tests/test_ship_gate.py::test_a_read_or_grep_naming_the_script_passes[git log --oneline -3 -- scripts/ship.ps1]
+FAILED tests/test_ship_gate.py::test_a_read_or_grep_naming_the_script_passes[echo "next: run .\\scripts\\ship.ps1 -Branch ship-loop-3 after the go"]
+FAILED tests/test_ship_gate.py::test_a_heredoc_or_string_containing_the_script_passes[python
+FAILED tests/test_ship_gate.py::test_a_heredoc_or_string_containing_the_script_passes[cat > notes.md <<EOF\nShip with powershell -File scripts/ship.ps1 -Branch x.\nEOF\nwc -l notes.md]
+FAILED tests/test_ship_gate.py::test_a_heredoc_or_string_containing_the_script_passes[$m = @'\n& .\\scripts\\ship.ps1 -Branch ship-loop-3\n'@\nSet-Content msg.txt $m]
+FAILED tests/test_ship_gate.py::test_a_heredoc_or_string_containing_the_script_passes[python -c "import re; print(re.findall('ship.ps1', open('handoff.md').read()))"]
+FAILED tests/test_ship_gate.py::test_a_go_ending_with_a_full_stop_names_the_same_branch[ship ship-loop-3.]
+FAILED tests/test_ship_gate.py::test_a_positional_branch_is_the_branch
+FAILED tests/test_ship_gate.py::test_a_mention_does_not_skip_the_main_checks
+13 failed, 96 passed in 27.28s

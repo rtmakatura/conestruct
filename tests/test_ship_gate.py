@@ -283,6 +283,96 @@ def test_an_unreadable_transcript_fails_closed(tmp_path):
 
 
 # --------------------------------------------------------------------------- #
+# R158 (Ryan, 2026-11-03): the gate blocks runs, never mentions; a full stop
+# after the branch in the go matches the same branch.
+# --------------------------------------------------------------------------- #
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'grep -n "Write-Host" scripts/ship.ps1',
+        "grep -rn ship.ps1 handoff.md | head -5",
+        "cat .claude/worktrees/_ship/scripts/ship.ps1 | sed -n 1,40p",
+        r"Get-Content scripts\ship.ps1 -TotalCount 40",
+        "git log --oneline -3 -- scripts/ship.ps1",
+        'echo "next: run .\\scripts\\ship.ps1 -Branch ship-loop-3 after the go"',
+        "rg 'ship\\.ps1' docs",
+    ],
+)
+def test_a_read_or_grep_naming_the_script_passes(tmp_path, command):
+    """No transcript at all: a command judged a ship would fail closed."""
+    code, err = hook(tmp_path, command)
+    assert code == 0, err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "python - <<'EOF'\nprint(open('scripts/ship.ps1').read()[:80])\n"
+        ".\\scripts\\ship.ps1 -Branch ship-loop-3\nEOF",
+        "cat > notes.md <<EOF\nShip with powershell -File scripts/ship.ps1 -Branch x.\n"
+        "EOF\nwc -l notes.md",
+        "$m = @'\n& .\\scripts\\ship.ps1 -Branch ship-loop-3\n'@\nSet-Content msg.txt $m",
+        "python -c \"import re; print(re.findall('ship.ps1', open('handoff.md').read()))\"",
+    ],
+)
+def test_a_heredoc_or_string_containing_the_script_passes(tmp_path, command):
+    code, err = hook(tmp_path, command)
+    assert code == 0, err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "pwsh scripts/ship.ps1 ship-loop-3",
+        r".\scripts\ship.ps1 -Branch ship-loop-3",
+        r'& "C:\x\.claude\worktrees\_ship\scripts\ship.ps1" -Branch ship-loop-3',
+        "PYTHONIOENCODING=utf-8 powershell -NoProfile "
+        '-File "C:/x/scripts/ship.ps1" -Branch ship-loop-3',
+        r"Set-Location C:\x; .\scripts\ship.ps1 -Branch ship-loop-3 2>&1 | Tee-Object log.txt",
+        "powershell -Command \"& 'C:\\x\\scripts\\ship.ps1' -Branch ship-loop-3\"",
+        'bash -c "pwsh scripts/ship.ps1 ship-loop-3"',
+        r". .\scripts\ship.ps1",
+        "Start-Process powershell -ArgumentList '-File','scripts/ship.ps1','-Branch','ship-loop-3'",
+        'python -c "import subprocess; '
+        "subprocess.run(['pwsh','scripts/ship.ps1','ship-loop-3'])\"",
+    ],
+)
+def test_running_the_script_with_no_go_is_blocked(tmp_path, command):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("looks good", "h1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and 'not exactly "ship <branch>"' in err
+
+
+@pytest.mark.parametrize("go", ["ship ship-loop-3.", "ship ship-loop-3"])
+def test_a_go_ending_with_a_full_stop_names_the_same_branch(tmp_path, go):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human(go, "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3 -DryRun", t)
+    assert code == 0, err
+
+
+def test_a_positional_branch_is_the_branch(tmp_path):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
+    code, err = hook(tmp_path, "pwsh scripts/ship.ps1 ship-loop-3 -DryRun", t)
+    assert code == 0, err
+
+
+def test_a_positional_branch_must_still_match_the_go(tmp_path):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
+    code, err = hook(tmp_path, "pwsh scripts/ship.ps1 something-else", t)
+    assert code == 2 and "the go names" in err
+
+
+def test_a_mention_does_not_skip_the_main_checks(tmp_path, repo):
+    """A command that names the script without running it still gets the
+    R10 checks: a rebase on main stays blocked."""
+    subprocess.run(["git", "checkout", "-q", "main"], cwd=repo, check=True)
+    code, err = hook(tmp_path, "grep -c Branch scripts/ship.ps1; git rebase feature", cwd=repo)
+    assert code == 2 and "on main is blocked" in err
+
+
+# --------------------------------------------------------------------------- #
 # Anything that moves main, force pushes, remote deletes (R10)
 # --------------------------------------------------------------------------- #
 
