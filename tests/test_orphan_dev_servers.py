@@ -72,3 +72,35 @@ def test_git_bash_and_forward_slash_spellings_match_the_root():
         ),
     ]
     assert [x["pid"] for x in o.select_orphans(procs, ROOT, set())] == [50, 51]
+
+
+# R159 amendment (Ryan, 2026-11-03): kill only when the parent is gone.
+
+
+def test_a_dev_server_whose_parent_is_alive_is_listed_not_killed():
+    procs = [
+        p(60, r"C:\Program Files\Git\bin\bash.exe -c npx next dev"),  # another session's shell
+        p(61, rf"node {WT}\node_modules\next\dist\bin\next dev -p 3436", ppid=60),
+        p(62, rf"node {SITE}\node_modules\next\dist\bin\next dev", ppid=4040),  # parent gone
+    ]
+    assert [x["pid"] for x in o.select_orphans(procs, ROOT, set())] == [62]
+    assert [x["pid"] for x in o.select_parented(procs, ROOT, set())] == [61]
+
+
+def test_a_parent_with_an_unreadable_command_line_still_counts_as_alive():
+    procs = [
+        {"pid": 70, "ppid": 4, "cmd": None},
+        p(71, rf"node {SITE}\node_modules\next\dist\bin\next dev", ppid=70),
+    ]
+    assert o.select_orphans(procs, ROOT, set()) == []
+    assert [x["pid"] for x in o.select_parented(procs, ROOT, set())] == [71]
+
+
+def test_a_sibling_folder_sharing_the_repo_name_is_not_the_repo():
+    """The reviewer's point: the root matches as a whole path, not a prefix."""
+    procs = [
+        p(50, rf"node {ROOT}-old\conestruct\site\node_modules\next\dist\bin\next dev"),
+        p(51, rf"node {ROOT}2\node_modules\next\dist\bin\next dev"),
+        p(52, rf'node "{SITE}\node_modules\next\dist\bin\next" dev'),
+    ]
+    assert [x["pid"] for x in o.select_orphans(procs, ROOT, set())] == [52]

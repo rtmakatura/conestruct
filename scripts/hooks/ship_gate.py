@@ -40,29 +40,35 @@ Exit 0 = allow.  Exit 2 = block; the reason goes to stderr, which CC sees.
      - gh pr merge; gh api writes to git/refs.
    Ordinary pushes of arc branches stay allowed.
 
-R158 (Ryan, 2026-11-03): "The ship_gate blocks a command that executes
-ship.ps1 (directly, via pwsh/powershell, or via &). Reads, greps, heredocs
-and file views that merely contain the text "ship.ps1" pass. A branch name
-followed by a full stop in the result: line or in Ryan's go matches the same
-branch."  So rule 1 applies only to a segment that RUNS the script:
-  - the script path in command position (after VAR=val prefixes and the
-    & / . call operators), quoted or not;
-  - powershell / pwsh with the script anywhere in its arguments (-File, a
-    positional path, a -Command string);
-  - bash / sh / cmd -c, Start-Process, Invoke-Expression / iex with the
-    script in their arguments;
-  - python / node -c / -e strings that name the script AND spawn a process
-    (subprocess, os.system, spawn, exec...; R145 self-ruled, so a mention
-    can't become a bypass).
-Heredoc bodies (<<WORD ... WORD) and PowerShell here-strings (@' '@, @" "@)
-are text, not commands.  A command that only mentions the script still gets
-rule 2's checks.  The branch may be given as -Branch <b> or positionally
-(the script's first parameter); the go may end with a full stop.
+R158 (Ryan, 2026-11-03), as amended the same day: the mention-pass part is
+dropped.  Every Bash or PowerShell command that names ship.ps1 is gated as a
+ship, reads and heredocs included ("Read or search ship.ps1 only with the
+Read and Grep tools, never through Bash; edit files that name it with Write
+or Edit, never a heredoc").  The hook is registered on Bash|PowerShell only;
+Read, Grep and Glob can't execute anything and never reach it.  Kept from
+R158: a go ending in a full stop (`ship <branch>.`) names <branch>.  Kept
+from its R52 amendment: `ship.ps1 -Resume -Sha <sha>` passes without a fresh
+go only when <sha> is the tip of the branch named in the go used for this
+session's last ship, and that ship's output asked for the resume.  The two
+no-go forms (that resume and the read-only -FrontendCheckOnly) pass only as
+one bare invocation: `[powershell|pwsh <options> -File | &] <path> <params>
+[2>&1]`, nothing before or after, no shell metacharacters, and only that
+form's own parameters.  Anything else naming the script needs the go, and
+with the go it must itself be one bare run (`-Branch <b>` plus optional
+-DryRun, -Handoff, -SiteUrl, -FrontendTimeoutMin, full names, each once; an
+optional PYTHONIOENCODING=utf-8 prefix and `| Tee-Object <file>` suffix), so
+the gate and PowerShell read the same branch: a shortened name (`-Bra x`),
+a positional branch or a second command is refused before the go is spent.
 
 What it cannot see, stated: git run from inside another script file (other
 than ship.ps1, which is gated as a whole), a command assembled at run time
-from variables (`& $script`), or a run started from inside a heredoc fed to
-an interpreter (`python - <<EOF ... EOF`).
+from variables, or the script run under a name that doesn't spell
+"ship.ps1": without its extension (`& ./ship x`, which PowerShell resolves),
+through a glob (`./shi?.ps1`), or as a renamed copy.  The bare forms are one
+line ([ \t] only; a newline ends a statement) and a `| Tee-Object` target
+must end in .txt or .log.  The R52 resume is not limited to one use: it
+passes while the conditions hold (the same sha is still the branch tip and
+the last ship's output asked for it), as the amendment words it.
 
 It FAILS CLOSED: any internal error blocks a command that mentions git, gh
 or ship.ps1.  (verdict_hook.py fails open by design; a guard must not.)
@@ -79,8 +85,8 @@ import sys
 from pathlib import Path
 
 GO = re.compile(r"^ship\s+([A-Za-z0-9._/-]+)$")
-SHIP = re.compile(r"ship\.ps1", re.IGNORECASE)
-RELEVANT = re.compile(r"\bgit\b|\bgh\b|ship\.ps1", re.IGNORECASE)
+SHIP = re.compile(r"ship\\?\.ps1", re.IGNORECASE)  # also a regex-escaped `ship\.ps1`
+RELEVANT = re.compile(r"\bgit\b|\bgh\b|ship\\?\.ps1", re.IGNORECASE)
 NOT_HUMAN = ("<local-command", "<command-name>", "<command-message>", "<local-command-caveat>")
 SYSTEM_REMINDER = re.compile(r"<system-reminder>[\s\S]*?</system-reminder>")
 READY = "ready"  # R147: `ship ready`
@@ -406,169 +412,194 @@ def check_gh(toks: list[str]) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# R158: does a command RUN the script, or only mention it?
+# The two forms that need no go, each only as one bare invocation (R158 as
+# amended 2026-11-03: anything else naming the script is gated as a ship).
 # --------------------------------------------------------------------------- #
 
-Tok = tuple[str, bool]  # (text, was quoted)
-
-_HEREDOC = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1")
-_HERESTRING = re.compile(r"@(['\"])\r?\n[\s\S]*?\r?\n\1@")
-_PS = {"powershell", "powershell.exe", "pwsh", "pwsh.exe"}
-_SHELL_C = {"bash", "bash.exe", "sh", "sh.exe", "zsh", "cmd", "cmd.exe"}
-_LAUNCH = {"start-process", "saps", "start", "invoke-expression", "iex"}
-_INTERP = {"python", "python3", "python.exe", "py", "node", "node.exe"}
-_PREFIX = {"&", ".", "exec", "nohup", "time", "env", "call"}
-_SPAWN = re.compile(
-    r"subprocess|os\.system|popen|spawn|execsync|execfile|\bexec\(|start-process|powershell|pwsh",
+_BARE = re.compile(
+    # [ \t], never \s: a newline ends a statement in bash and PowerShell.
+    r"""^[ \t]*(?:\$env:PYTHONIOENCODING[ \t]*=[ \t]*(['"])utf-8\1[ \t]*;[ \t]*"""
+    r"""|PYTHONIOENCODING=utf-8[ \t]+)?"""
+    r"""(?:(?:powershell|pwsh)(?:\.exe)?"""
+    r"""(?:[ \t]+-(?:NoProfile|NonInteractive|NoLogo|ExecutionPolicy[ \t]+Bypass))*"""
+    r"""[ \t]+-File[ \t]+|&[ \t]+)?"""
+    r"""(?P<q>["']?)(?P<path>[A-Za-z0-9_:./\\-]*ship\.ps1)(?P=q)"""
+    r"""(?P<params>(?:[ \t]+[A-Za-z0-9_:./=-]+)*)(?:[ \t]+2>&1)?"""
+    r"""(?:[ \t]*\|[ \t]*Tee-Object[ \t]+(?:-FilePath[ \t]+)?[A-Za-z0-9_:./\\-]+\.(?:txt|log))?"""
+    r"""[ \t]*\Z""",
     re.IGNORECASE,
 )
-_VALUED = {"-sha", "-siteurl", "-frontendtimeoutmin"}  # the script's parameters that take a value
+_HEX = re.compile(r"[0-9a-fA-F]{7,40}")
+_URL = re.compile(r"https://[A-Za-z0-9.-]+(?:/[A-Za-z0-9._/-]*)?")
+_BRANCH = re.compile(r"[A-Za-z0-9._/-]+")
 
 
-def strip_heredocs(command: str) -> str:
-    """The command without heredoc bodies or PowerShell here-strings."""
-    command = _HERESTRING.sub("''", command)
-    lines = command.split("\n")
-    out: list[str] = []
+def ship_run_branch(command: str) -> str | None:
+    """The branch of a command that is exactly one ship run:
+    `ship.ps1 -Branch <b> [-DryRun] [-Handoff] [-SiteUrl <url>]
+    [-FrontendTimeoutMin <n>]`, full parameter names only, each once
+    (PowerShell accepts shortened names and positional values, which the
+    gate would read differently from the script); else None."""
+    params = bare_params(command)
+    if params is None:
+        return None
+    got = _pairs(
+        params,
+        {"-dryrun", "-handoff"},
+        {"-branch": _BRANCH, "-siteurl": _URL, "-frontendtimeoutmin": re.compile(r"\d{1,3}")},
+    )
+    return str(got["-branch"]) if got and "-branch" in got else None
+
+
+def bare_params(command: str) -> list[str] | None:
+    """The parameters of a command that is exactly one invocation of the
+    script and nothing else, or None."""
+    # One line only: bash and PowerShell end a statement at a newline, so
+    # `<script> -Sha x` NEWLINE `-FrontendCheckOnly` is a real ship.
+    if "\n" in command or "\r" in command:
+        return None
+    m = _BARE.match(command)
+    return m.group("params").split() if m else None
+
+
+def _pairs(params: list[str], switches: set[str], valued: dict[str, re.Pattern]) -> dict | None:
+    """{param: value or True} when ``params`` holds only these full names,
+    each once, every value matching its pattern; else None."""
+    seen: dict = {}
     i = 0
-    while i < len(lines):
-        out.append(lines[i])
-        words = [m.group(2) for m in _HEREDOC.finditer(lines[i])]
-        i += 1
-        for word in words:
-            while i < len(lines) and lines[i].strip() != word:
-                i += 1
-            i += 1  # the terminator
-    return "\n".join(out)
-
-
-def shell_segments(command: str) -> list[list[Tok]]:
-    """Split on ; && || | & and newlines OUTSIDE quotes; a quoted string may
-    span lines and stays one token.  `&` (the PowerShell call operator, or a
-    background job) is its own token; `>&` stays part of a redirect."""
-    segs: list[list[Tok]] = []
-    toks: list[Tok] = []
-    cur, quoted, i, n = "", False, 0, len(command)
-
-    def end_tok() -> None:
-        nonlocal cur, quoted
-        if cur or quoted:
-            toks.append((cur, quoted))
-        cur, quoted = "", False
-
-    def end_seg() -> None:
-        end_tok()
-        if toks:
-            segs.append(list(toks))
-            toks.clear()
-
-    while i < n:
-        c = command[i]
-        if c in "\"'":
-            j = i + 1
-            while j < n and command[j] != c:
-                j += 2 if (c == '"' and command[j] == "\\" and command[j + 1 : j + 2] == '"') else 1
-            cur, quoted, i = cur + command[i + 1 : j], True, j + 1
-        elif c in " \t\r":
-            end_tok()
+    while i < len(params):
+        p = params[i].lower()
+        if p in seen:
+            return None
+        if p in switches:
+            seen[p] = True
             i += 1
-        elif command.startswith(("&&", "||"), i):
-            end_seg()
+        elif p in valued and i + 1 < len(params) and valued[p].fullmatch(params[i + 1]):
+            seen[p] = params[i + 1]
             i += 2
-        elif c in ";|\n":
-            end_seg()
-            i += 1
-        elif c == "&" and not cur.endswith(">"):
-            end_tok()
-            toks.append(("&", False))
-            i += 1
         else:
-            cur += c
-            i += 1
-    end_seg()
-    return segs
+            return None
+    return seen
 
 
-def _base(text: str) -> str:
-    return text.replace("\\", "/").rstrip("/").rsplit("/", 1)[-1].lower()
+def frontend_check_only(command: str) -> bool:
+    """`ship.ps1 -FrontendCheckOnly [-SiteUrl <url>] [-Sha <sha>]
+    [-FrontendTimeoutMin <n>]`: read-only, no go needed."""
+    params = bare_params(command)
+    if params is None:
+        return False
+    got = _pairs(
+        params,
+        {"-frontendcheckonly"},
+        {
+            "-siteurl": _URL,
+            "-sha": _HEX,
+            "-frontendtimeoutmin": re.compile(r"\d{1,3}"),
+        },
+    )
+    return bool(got and got.get("-frontendcheckonly"))
 
 
-def _is_script(text: str) -> bool:
-    return _base(text) == "ship.ps1"
-
-
-def runs_ship(seg: list[Tok]) -> list[Tok] | None:
-    """The tokens after the script path when this segment runs it, else None."""
-    k = 0
-    while k < len(seg) and not seg[k][1] and re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", seg[k][0]):
-        k += 1  # VAR=val prefixes
-    while k < len(seg) and seg[k][0].lower() in _PREFIX and not seg[k][1]:
-        k += 1
-    if k >= len(seg):
+def resume_sha(command: str) -> str | None:
+    """The <sha> of exactly `ship.ps1 -Resume -Sha <sha>`, else None."""
+    params = bare_params(command)
+    if params is None:
         return None
-    word, rest = seg[k][0], seg[k + 1 :]
-    if _is_script(word):
-        return rest
-    base = _base(word)
-    if base in _PS:
-        for j, (t, _q) in enumerate(rest):
-            if _is_script(t):
-                return rest[j + 1 :]
-            if SHIP.search(t):  # a -Command string
-                for inner in shell_segments(strip_heredocs(t)):
-                    found = runs_ship(inner)
-                    if found is not None:
-                        return found
-                return []  # it names the script inside its own command: a run
-        return None
-    if base in _SHELL_C or base in _LAUNCH:
-        for j, (t, _q) in enumerate(rest):
-            if _is_script(t):
-                return rest[j + 1 :]
-            if SHIP.search(t):
-                for inner in shell_segments(strip_heredocs(t)):
-                    found = runs_ship(inner)
-                    if found is not None:
-                        return found
-                if base in _LAUNCH:
-                    return []  # Start-Process -ArgumentList '-File','...ship.ps1'
-        return None
-    if base in _INTERP:
-        for t, _q in rest:
-            if SHIP.search(t) and _SPAWN.search(t):
-                return []
+    got = _pairs(params, {"-resume"}, {"-sha": _HEX})
+    if got and got.get("-resume") and "-sha" in got and len(got) == 2:
+        return str(got["-sha"])
     return None
 
 
-def ship_runs(command: str) -> list[list[Tok]]:
-    """Each run of the script in the command: the tokens that follow it."""
-    out = []
-    for seg in shell_segments(strip_heredocs(command)):
-        args = runs_ship(seg)
-        if args is not None:
-            out.append(args)
-    return out
+# --------------------------------------------------------------------------- #
+# R158 amendment (Ryan, 2026-11-03): the R52 resume
+# --------------------------------------------------------------------------- #
+
+_RESUME_LINE = re.compile(r"-Resume\s+-Sha\s+([0-9a-fA-F]{7,40})")
 
 
-def ship_branch_arg(args: list[Tok]) -> str | None:
-    """-Branch <b>, -Branch:<b>, or the first positional argument."""
-    words = [t for t, _q in args]
-    j = 0
-    while j < len(words):
-        w = words[j]
-        lw = w.lower()
-        if lw == "-branch" and j + 1 < len(words):
-            return words[j + 1]
-        if lw.startswith("-branch:"):
-            return w.split(":", 1)[1]
-        if lw in _VALUED:
-            j += 2
+def _result_text(content) -> str:
+    if isinstance(content, str):
+        return content
+    parts = []
+    for b in content or []:
+        if isinstance(b, dict):
+            parts.append(b.get("text") or _result_text(b.get("content")))
+    return "\n".join(p for p in parts if p)
+
+
+def last_ship(transcript_path: str) -> tuple[str | None, str, str | None] | None:
+    """(branch, its output, the uuid of the go before it) for this session's
+    last ship run (one bare `-Branch` invocation, so never a resume or a
+    frontend check) that this hook did not refuse; or None."""
+    commands: dict[str, str] = {}
+    found: tuple[str | None, str, str | None] | None = None
+    go_uuid: str | None = None
+    for i, e in enumerate(_entries(transcript_path)):
+        if e.get("isSidechain"):
             continue
-        if w.startswith("-") or re.match(r"^\d?>", w) or w == "&":
-            j += 1
-            continue
-        return w if re.fullmatch(r"[A-Za-z0-9._/-]+", w) else None
-    return None
+        h = human_text(e)
+        if h is not None:
+            go_uuid = (e.get("uuid") or f"line-{i}") if GO.match(h) else None
+        content = e.get("message", {}).get("content")
+        if e.get("type") == "assistant":
+            for b in content or []:
+                if isinstance(b, dict) and b.get("type") == "tool_use":
+                    commands[b.get("id", "")] = (b.get("input") or {}).get("command") or ""
+        elif e.get("type") == "user" and isinstance(content, list):
+            for b in content:
+                if not (isinstance(b, dict) and b.get("type") == "tool_result"):
+                    continue
+                cmd = commands.get(b.get("tool_use_id", ""))
+                run_branch = ship_run_branch(cmd) if cmd else None
+                if run_branch is None:
+                    continue
+                out = _result_text(b.get("content"))
+                if "BLOCKED by ship_gate" in out:
+                    continue
+                found = (run_branch, out, go_uuid)
+    return found
+
+
+def _go_was_used_for(uuid: str | None, branch: str) -> bool:
+    """The ledger records this very go (its uuid) as spent on ``branch``."""
+    if uuid is None:
+        return False
+    p = ledger_path()
+    used = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    v = used.get(uuid)
+    if v == branch:
+        return True
+    return isinstance(v, dict) and any(s.get("branch") == branch for s in v.get("shipped", []))
+
+
+def check_resume(sha: str, transcript_path: str, cwd: str | None) -> None:
+    """R158 amendment: "allow `ship.ps1 -Resume -Sha <sha>` when <sha> is the
+    tip of the branch named in the go used for this session's last ship, and
+    that ship's output asked for the resume. Anything else stays blocked." """
+    last = last_ship(transcript_path)
+    if last is None:
+        raise Block(
+            "a resume is allowed only after this session's own ship asked for it; none found"
+        )
+    branch, output, go_uuid = last
+    if not branch or not _go_was_used_for(go_uuid, branch):
+        raise Block(f"the last ship ({branch!r}) has no used go on record; a resume needs one")
+    asked = _RESUME_LINE.findall(output) if "FRONTEND NOT VERIFIED" in output else []
+    if not any(
+        a.lower().startswith(sha.lower()) or sha.lower().startswith(a.lower()) for a in asked
+    ):
+        raise Block(f"the last ship's output did not ask for a resume of {sha}")
+    tip = pushed_sha(branch)
+    if tip is None or not (
+        tip.lower().startswith(sha.lower()) or sha.lower().startswith(tip.lower())
+    ):
+        raise Block(f"{sha} is not the tip of {branch!r} ({(tip or 'none')[:12]})")
+    if cwd and (arc_worktree_of(cwd) is not None or current_branch(cwd) == branch):
+        raise Block(
+            f"this session's working directory ({cwd}) is inside {branch!r}'s worktree or under "
+            ".claude/worktrees/; the resume runs the cleanup.  Leave it first (R77/R95)."
+        )
 
 
 def decide(payload: dict) -> None:
@@ -576,13 +607,23 @@ def decide(payload: dict) -> None:
     if not RELEVANT.search(command):
         return
     cwd = payload.get("cwd")
-    gated = False
-    for run_args in ship_runs(command):  # R158: runs only; a mention falls through
-        flags = {t.lower() for t, _q in run_args}
-        if "-frontendcheckonly" in flags and ship_branch_arg(run_args) is None:
-            continue  # read-only
+    if SHIP.search(command):
+        if frontend_check_only(command):
+            return  # read-only
+        sha = resume_sha(command)
+        if sha is not None:
+            check_resume(sha, payload.get("transcript_path") or "", cwd)
+            return
         branch, uuid, line = find_go(payload.get("transcript_path") or "")
-        arg = ship_branch_arg(run_args)
+        arg = ship_run_branch(command)
+        if arg is None:
+            raise Block(
+                "a command naming the ship script must be exactly one run of it: "
+                "`powershell -File <path>/ship.ps1 -Branch <branch>` (full parameter names, "
+                "optional -DryRun / -Handoff / 2>&1 / | Tee-Object <file>), nothing before or "
+                "after.  Read or search the script with the Read and Grep tools, never "
+                "through Bash.  The go is not spent."
+            )
         ready = branch == READY
         if ready:
             branch = arg or ""  # consume_ready checks it is the next listed one
@@ -603,9 +644,7 @@ def decide(payload: dict) -> None:
         if ready:
             consume_ready(uuid, line, arg)
         else:
-            consume(uuid, branch)  # a second run in the same command finds the go used
-        gated = True
-    if gated:
+            consume(uuid, branch)
         return
     # R68: each git call is judged in the directory it runs in -- the
     # session's cwd, moved by any earlier `cd` / `Set-Location` in the same

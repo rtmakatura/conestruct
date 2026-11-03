@@ -14,3 +14,120 @@ FAILED tests/test_ship_gate.py::test_a_go_ending_with_a_full_stop_names_the_same
 FAILED tests/test_ship_gate.py::test_a_positional_branch_is_the_branch
 FAILED tests/test_ship_gate.py::test_a_mention_does_not_skip_the_main_checks
 13 failed, 96 passed in 27.28s
+
+# R158 amendment (R52 resume), 2026-11-03: the five resume tests against the unchanged hook (d65bf134), run in a scratch copy outside the repo
+# uv run --extra dev pytest -q -p no:cacheprovider -k resume tests/test_ship_gate.py
+FAILED tests/test_ship_gate.py::test_a_resume_the_ship_asked_for_is_allowed
+FAILED tests/test_ship_gate.py::test_a_resume_the_ship_did_not_ask_for_is_blocked
+FAILED tests/test_ship_gate.py::test_a_resume_of_a_sha_that_is_not_the_branch_tip_is_blocked
+FAILED tests/test_ship_gate.py::test_a_resume_with_no_ship_in_this_session_is_blocked
+FAILED tests/test_ship_gate.py::test_a_resume_after_a_ship_whose_go_was_never_spent_is_blocked
+5 failed, 109 deselected in 1.77s
+# The allowed-resume case is a behaviour red (the old hook refused every resume: no -Branch). The four blocked cases were blocked by the old hook too; they are red on the reason text only.
+
+# Reviewer FAIL round, 2026-11-03: the 17 bypass and flag cases against the first R158 hook (a9f49f7), in a scratch copy outside the repo. The original hook (d65bf134) blocked every mention, so these pass there; they guard the fail-closed rewrite.
+# uv run --extra dev pytest -q -p no:cacheprovider -k "wrapped_or_hidden or comment_or_redirect" tests/test_ship_gate.py
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[true & pwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[grep -c x README.md & pwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[(pwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3)]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[x=$(pwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3)]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[if true; then pwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3; fi]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[{ pwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3; }]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[if ($true) { & 'C:\\x\\scripts\\ship.ps1' -Branch ship-loop-3 }]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[1 | % { & 'C:\\x\\scripts\\ship.ps1' -Branch ship-loop-3 }]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[timeout 900 pwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[echo ship-loop-3 | xargs pwsh -File C:/x/scripts/ship.ps1 -Branch]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[Get-Content C:/x/scripts/ship.ps1 -Raw | Invoke-Expression]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[cat C:/x/scripts/ship.ps1 | pwsh]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[Start-Job -FilePath C:/x/scripts/ship.ps1]
+FAILED tests/test_ship_gate.py::test_a_wrapped_or_hidden_run_with_no_go_is_blocked[echo '<<EOF'\npwsh -File C:/x/scripts/ship.ps1 -Branch ship-loop-3\nEOF]
+FAILED tests/test_ship_gate.py::test_a_frontend_check_flag_in_a_comment_or_redirect_does_not_count[& 'C:\\x\\scripts\\ship.ps1' # -FrontendCheckOnly]
+FAILED tests/test_ship_gate.py::test_a_frontend_check_flag_in_a_comment_or_redirect_does_not_count[& 'C:\\x\\scripts\\ship.ps1' > -FrontendCheckOnly]
+FAILED tests/test_ship_gate.py::test_a_frontend_check_flag_in_a_comment_or_redirect_does_not_count[& 'C:\\x\\scripts\\ship.ps1' '-FrontendCheckOnly']
+17 failed, 115 deselected in 2.02s
+
+# Re-checked by the diff-verifier after the repair round: on the d65bf134 hook `-k resume` gives 6 failed. The sixth, test_a_resume_needs_the_last_ships_own_go_not_an_older_one (added in the repair), is red there too, on the reason text.
+
+## Round 3 (2026-11-03): the amended R158 gate, the two-word copy rule, the non-blocking fixes
+
+Red on origin/main's hook (tests/test_ship_gate.py as of this round, run against `git show origin/main:scripts/hooks/ship_gate.py`): 30
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[rg 'ship\\.ps1' docs]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[grep -n "Write-Host" scripts/ship.ps1]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[grep -rn ship.ps1 handoff.md | head -5]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[cat .claude/worktrees/_ship/scripts/ship.ps1 | sed -n 1,40p]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[Get-Content scripts\\ship.ps1 -TotalCount 40]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[git log --oneline -3 -- scripts/ship.ps1]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[echo "next: run .\\scripts\\ship.ps1 -Branch ship-loop-3 after the go"]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[rg 'ship\\.ps1' docs]
+  test_a_go_ending_with_a_full_stop_names_the_same_branch[ship ship-loop-3.]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[pwsh scripts/ship.ps1 ship-loop-3 -DryRun]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Bra ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Site ship-loop-3 -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Sh abc1234 ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3 -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -branch:ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[echo -Branch ship-loop-3; powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 other-branch]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 other-branch; echo -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3; powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3 $(whoami)]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[Set-Location C:\\x; powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3]
+  test_a_resume_the_ship_asked_for_is_allowed
+  test_a_resume_the_ship_did_not_ask_for_is_blocked
+  test_a_resume_of_a_sha_that_is_not_the_branch_tip_is_blocked
+  test_a_resume_with_no_ship_in_this_session_is_blocked
+  test_a_resume_after_a_ship_whose_go_was_never_spent_is_blocked
+  test_a_frontend_check_flag_in_a_comment_or_redirect_does_not_count[& 'C:\\x\\scripts\\ship.ps1' # -FrontendCheckOnly]
+  test_a_frontend_check_flag_in_a_comment_or_redirect_does_not_count[& 'C:\\x\\scripts\\ship.ps1' > -FrontendCheckOnly]
+  test_a_frontend_check_flag_in_a_comment_or_redirect_does_not_count[& 'C:\\x\\scripts\\ship.ps1' '-FrontendCheckOnly']
+  test_a_resume_needs_the_last_ships_own_go_not_an_older_one
+  test_a_frontend_check_with_anything_added_needs_the_go[powershell -File C:/x/scripts/ship.ps1 -FrontendCheckOnly -Sha 55c9054 2>&1 | tail]
+
+Red on round 2's hook (a9f49f7 plus the uncommitted round-2 repair): 36
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[grep -n "Write-Host" scripts/ship.ps1]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[grep -rn ship.ps1 handoff.md | head -5]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[cat .claude/worktrees/_ship/scripts/ship.ps1 | sed -n 1,40p]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[Get-Content scripts\\ship.ps1 -TotalCount 40]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[git log --oneline -3 -- scripts/ship.ps1]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[echo "next: run .\\scripts\\ship.ps1 -Branch ship-loop-3 after the go"]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[rg 'ship\\.ps1' docs]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[python
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[cat > notes.md <<EOF\nShip with powershell -File scripts/ship.ps1 -Branch x.\nEOF\nwc -l notes.md]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[$m = @'\n& .\\scripts\\ship.ps1 -Branch ship-loop-3\n'@\nSet-Content msg.txt $m]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[python -c "import re; print(re.findall('ship.ps1', open('handoff.md').read()))"]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[S=C:/x/scripts/ship.ps1; wc -l $S]
+  test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship[$S = "C:/x/scripts/ship.ps1"; Get-Content $S -TotalCount 5]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[grep -n "Write-Host" scripts/ship.ps1]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[grep -rn ship.ps1 handoff.md | head -5]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[cat .claude/worktrees/_ship/scripts/ship.ps1 | sed -n 1,40p]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[Get-Content scripts\\ship.ps1 -TotalCount 40]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[git log --oneline -3 -- scripts/ship.ps1]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[echo "next: run .\\scripts\\ship.ps1 -Branch ship-loop-3 after the go"]
+  test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go[rg 'ship\\.ps1' docs]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[pwsh scripts/ship.ps1 ship-loop-3 -DryRun]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Bra ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Site ship-loop-3 -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Sh abc1234 ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3 -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -branch:ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[echo -Branch ship-loop-3; powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 other-branch]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 other-branch; echo -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3; powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3 $(whoami)]
+  test_anything_but_one_bare_run_is_refused_and_keeps_the_go[Set-Location C:\\x; powershell -NoProfile -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\ship.ps1 -Branch ship-loop-3]
+  test_a_resume_with_anything_added_is_not_a_resume[ -Branch other]
+  test_a_resume_with_anything_added_is_not_a_resume[ -DryRun]
+  test_a_resume_with_anything_added_is_not_a_resume[ | Invoke-Expression]
+  test_a_resume_with_anything_added_is_not_a_resume[ $(whoami)]
+  test_a_frontend_check_with_anything_added_needs_the_go[powershell -File C:/x/scripts/ship.ps1 -FrontendCheckOnly -Sha 55c9054 2>&1 | tail]
+
+Red on round 2's lane check and orphan sweep (rebuilt by reversing this round's edits): 8
+  test_cosmetic_lane_check.py::test_a_one_word_string_or_a_joined_word_leaves_the_lane["ArrowUp", "ArrowDown"-"Tab", "Enter"]
+  test_cosmetic_lane_check.py::test_a_one_word_string_or_a_joined_word_leaves_the_lane[" ", "Space"-"Escape", "Space"]
+  test_cosmetic_lane_check.py::test_a_one_word_string_or_a_joined_word_leaves_the_lane[label: "Download"-label: "Get"]
+  test_cosmetic_lane_check.py::test_a_one_word_string_or_a_joined_word_leaves_the_lane[let mode = "Download"-let mode = "Get"]
+  test_cosmetic_lane_check.py::test_a_one_word_string_or_a_joined_word_leaves_the_lane[new Date()-newDate()]
+  test_cosmetic_lane_check.py::test_a_one_word_string_or_a_joined_word_leaves_the_lane[typeof x in y-typeof x iny]
+  test_cosmetic_lane_check.py::test_a_path_with_spaces_is_one_path
+  test_orphan_dev_servers.py::test_a_sibling_folder_sharing_the_repo_name_is_not_the_repo
+
+All green on this round's code: ship_gate 169 passed, 1 skipped; lane check 75; orphan sweep 8.

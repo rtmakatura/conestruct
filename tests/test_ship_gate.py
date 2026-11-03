@@ -283,43 +283,77 @@ def test_an_unreadable_transcript_fails_closed(tmp_path):
 
 
 # --------------------------------------------------------------------------- #
-# R158 (Ryan, 2026-11-03): the gate blocks runs, never mentions; a full stop
-# after the branch in the go matches the same branch.
+# R158 (Ryan, 2026-11-03) as amended the same day: the mention-pass part is
+# dropped -- every Bash/PowerShell command naming the script is gated as a
+# ship.  Kept: a go ending in a full stop names the same branch.
 # --------------------------------------------------------------------------- #
 
+MENTIONS = [
+    'grep -n "Write-Host" scripts/ship.ps1',
+    "grep -rn ship.ps1 handoff.md | head -5",
+    "cat .claude/worktrees/_ship/scripts/ship.ps1 | sed -n 1,40p",
+    r"Get-Content scripts\ship.ps1 -TotalCount 40",
+    "git log --oneline -3 -- scripts/ship.ps1",
+    'echo "next: run .\\scripts\\ship.ps1 -Branch ship-loop-3 after the go"',
+    "rg 'ship\\.ps1' docs",
+    "python - <<'EOF'\nprint(open('scripts/ship.ps1').read()[:80])\nEOF",
+    "cat > notes.md <<EOF\nShip with powershell -File scripts/ship.ps1 -Branch x.\n"
+    "EOF\nwc -l notes.md",
+    "$m = @'\n& .\\scripts\\ship.ps1 -Branch ship-loop-3\n'@\nSet-Content msg.txt $m",
+    "python -c \"import re; print(re.findall('ship.ps1', open('handoff.md').read()))\"",
+    "S=C:/x/scripts/ship.ps1; wc -l $S",
+    '$S = "C:/x/scripts/ship.ps1"; Get-Content $S -TotalCount 5',
+]
 
-@pytest.mark.parametrize(
-    "command",
-    [
-        'grep -n "Write-Host" scripts/ship.ps1',
-        "grep -rn ship.ps1 handoff.md | head -5",
-        "cat .claude/worktrees/_ship/scripts/ship.ps1 | sed -n 1,40p",
-        r"Get-Content scripts\ship.ps1 -TotalCount 40",
-        "git log --oneline -3 -- scripts/ship.ps1",
-        'echo "next: run .\\scripts\\ship.ps1 -Branch ship-loop-3 after the go"',
-        "rg 'ship\\.ps1' docs",
-    ],
-)
-def test_a_read_or_grep_naming_the_script_passes(tmp_path, command):
-    """No transcript at all: a command judged a ship would fail closed."""
-    code, err = hook(tmp_path, command)
+
+@pytest.mark.parametrize("command", MENTIONS)
+def test_a_bash_read_grep_or_heredoc_naming_the_script_is_gated_like_a_ship(tmp_path, command):
+    """R158 amendment: reads go through the Read and Grep tools, never Bash."""
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("looks good", "h1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and 'not exactly "ship <branch>"' in err, err
+
+
+@pytest.mark.parametrize("command", MENTIONS[:7])
+def test_a_mention_with_a_valid_go_is_refused_and_keeps_the_go(tmp_path, command):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and "exactly one run" in err, err
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3 -DryRun", t)
     assert code == 0, err
 
 
 @pytest.mark.parametrize(
-    "command",
+    "tool_name, tool_input",
     [
-        "python - <<'EOF'\nprint(open('scripts/ship.ps1').read()[:80])\n"
-        ".\\scripts\\ship.ps1 -Branch ship-loop-3\nEOF",
-        "cat > notes.md <<EOF\nShip with powershell -File scripts/ship.ps1 -Branch x.\n"
-        "EOF\nwc -l notes.md",
-        "$m = @'\n& .\\scripts\\ship.ps1 -Branch ship-loop-3\n'@\nSet-Content msg.txt $m",
-        "python -c \"import re; print(re.findall('ship.ps1', open('handoff.md').read()))\"",
+        ("Read", {"file_path": r"C:\x\.claude\worktrees\_ship\scripts\ship.ps1"}),
+        ("Grep", {"pattern": "Write-Host", "path": "scripts/ship.ps1"}),
+        ("Glob", {"pattern": "**/ship.ps1"}),
     ],
 )
-def test_a_heredoc_or_string_containing_the_script_passes(tmp_path, command):
-    code, err = hook(tmp_path, command)
-    assert code == 0, err
+def test_the_read_grep_and_glob_tools_pass(tmp_path, tool_name, tool_input):
+    """They can't execute anything.  (The hook is registered on Bash|PowerShell
+    only, so these never reach it; if one did, it still passes.)"""
+    payload = {
+        "hook_event_name": "PreToolUse",
+        "tool_name": tool_name,
+        "tool_input": tool_input,
+        "transcript_path": str(tmp_path / "missing.jsonl"),
+        "cwd": str(tmp_path),
+    }
+    r = subprocess.run(
+        [sys.executable, str(HOOK)], input=json.dumps(payload), capture_output=True, text=True
+    )
+    assert r.returncode == 0, r.stderr
+
+
+def test_the_hook_is_registered_on_bash_and_powershell_only():
+    settings = Path(__file__).resolve().parents[1] / ".claude" / "settings.json"
+    if not settings.exists():  # gitignored: present only in the main checkout
+        pytest.skip("no .claude/settings.json in this checkout")
+    hooks = json.loads(settings.read_text(encoding="utf-8"))["hooks"]["PreToolUse"]
+    matchers = [h["matcher"] for h in hooks if any("ship_gate" in x["command"] for x in h["hooks"])]
+    assert matchers == ["Bash|PowerShell"]
 
 
 @pytest.mark.parametrize(
@@ -352,24 +386,47 @@ def test_a_go_ending_with_a_full_stop_names_the_same_branch(tmp_path, go):
     assert code == 0, err
 
 
-def test_a_positional_branch_is_the_branch(tmp_path):
+@pytest.mark.parametrize(
+    "command",
+    [
+        f"{SHIP} -Branch ship-loop-3",
+        f"{SHIP} -Branch ship-loop-3 2>&1",
+        f"{SHIP} -Branch ship-loop-3 2>&1 | Tee-Object C:/x/ship-log.txt",
+        f"$env:PYTHONIOENCODING='utf-8'; {SHIP} -Branch ship-loop-3",
+        r"& 'C:\x\.claude\worktrees\_ship\scripts\ship.ps1' -Branch ship-loop-3 -Handoff",
+        "powershell -File .claude/worktrees/_ship/scripts/ship.ps1 -Branch ship-loop-3",
+    ],
+)
+def test_a_bare_run_with_the_go_ships(tmp_path, command):
     t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
-    code, err = hook(tmp_path, "pwsh scripts/ship.ps1 ship-loop-3 -DryRun", t)
+    code, err = hook(tmp_path, command, t)
     assert code == 0, err
 
 
-def test_a_positional_branch_must_still_match_the_go(tmp_path):
+@pytest.mark.parametrize(
+    "command",
+    [
+        "pwsh scripts/ship.ps1 ship-loop-3 -DryRun",  # positional branch
+        f"{SHIP} -Bra ship-loop-3",  # shortened name: PowerShell binds it, the gate can't
+        f"{SHIP} -Site ship-loop-3 -Branch ship-loop-3",  # shortened -SiteUrl
+        f"{SHIP} -Sh abc1234 ship-loop-3",
+        f"{SHIP} -Branch ship-loop-3 -Branch ship-loop-3",
+        f"{SHIP} -branch:ship-loop-3",
+        f"echo -Branch ship-loop-3; {SHIP} other-branch",
+        f"{SHIP} other-branch; echo -Branch ship-loop-3",
+        f"{SHIP} -Branch ship-loop-3; {SHIP} -Branch ship-loop-3",
+        f"{SHIP} -Branch ship-loop-3 $(whoami)",
+        f"Set-Location C:\\x; {SHIP} -Branch ship-loop-3",
+    ],
+)
+def test_anything_but_one_bare_run_is_refused_and_keeps_the_go(tmp_path, command):
+    """The reviewer's point 4: the gate and PowerShell must read the same
+    branch, so only full parameter names in one bare invocation count."""
     t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
-    code, err = hook(tmp_path, "pwsh scripts/ship.ps1 something-else", t)
-    assert code == 2 and "the go names" in err
-
-
-def test_a_mention_does_not_skip_the_main_checks(tmp_path, repo):
-    """A command that names the script without running it still gets the
-    R10 checks: a rebase on main stays blocked."""
-    subprocess.run(["git", "checkout", "-q", "main"], cwd=repo, check=True)
-    code, err = hook(tmp_path, "grep -c Branch scripts/ship.ps1; git rebase feature", cwd=repo)
-    assert code == 2 and "on main is blocked" in err
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and "exactly one run" in err, err
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3 -DryRun", t)
+    assert code == 0, err
 
 
 # --------------------------------------------------------------------------- #
@@ -634,3 +691,245 @@ def test_the_308_shape_is_refused_and_says_how_to_leave(tmp_path, arc_worktrees)
     code, err = hook(tmp_path, f"{SHIP} -Branch issue-308-oneway-read-as-divided", t, cwd=folder)
     assert code == 2, err
     assert "ExitWorktree" in err
+
+
+# --------------------------------------------------------------------------- #
+# R158 amendment (Ryan, 2026-11-03): the R52 resume
+# --------------------------------------------------------------------------- #
+
+SHIP_CMD = f"{SHIP} -Branch ship-loop-3"
+
+
+def tool_call(uuid: str, tid: str, command: str) -> dict:
+    return {
+        "type": "assistant",
+        "uuid": uuid,
+        "message": {
+            "content": [
+                {"type": "tool_use", "id": tid, "name": "PowerShell", "input": {"command": command}}
+            ]
+        },
+    }
+
+
+def tool_output(uuid: str, tid: str, text: str) -> dict:
+    return {
+        "type": "user",
+        "uuid": uuid,
+        "message": {"content": [{"type": "tool_result", "tool_use_id": tid, "content": text}]},
+    }
+
+
+def timed_out(sha: str) -> str:
+    return (
+        "main is now abc1234.\nFRONTEND NOT VERIFIED\n  HEAD is " + sha + "\n"
+        "  Resume (R52; re-checks, then finishes the ship and its cleanup): powershell "
+        "-NoProfile -ExecutionPolicy Bypass -File C:\\x\\.claude\\worktrees\\_ship\\scripts\\"
+        "ship.ps1 -Resume -Sha " + sha
+    )
+
+
+@pytest.fixture
+def tip(tmp_path: Path) -> tuple[Path, str]:
+    """A scratch repo whose origin/ship-loop-3 is one commit; returns it and the sha."""
+    r = tmp_path / "tip-repo"
+    r.mkdir()
+    run = lambda *a: subprocess.run(  # noqa: E731
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", *a],
+        cwd=r,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    run("init", "-q", "-b", "main")
+    run("commit", "-q", "--allow-empty", "-m", "tip")
+    run("update-ref", "refs/remotes/origin/ship-loop-3", "HEAD")
+    return r, run("rev-parse", "HEAD")
+
+
+def _shipped(tmp_path: Path, refs: Path, output: str) -> str:
+    """A session that got the go, ran the ship (spending the go), and saw
+    ``output``; returns the transcript path."""
+    entries = [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")]
+    t = write_transcript(tmp_path, entries)
+    code, err = hook(tmp_path, SHIP_CMD, t, repo_refs=refs)
+    assert code == 0, err
+    entries += [tool_call("a2", "t1", SHIP_CMD), tool_output("u2", "t1", output)]
+    return write_transcript(tmp_path, entries)
+
+
+def test_a_resume_the_ship_asked_for_is_allowed(tmp_path, tip):
+    refs, sha = tip
+    t = _shipped(tmp_path, refs, timed_out(sha))
+    code, err = hook(tmp_path, f"{SHIP} -Resume -Sha {sha}", t, repo_refs=refs)
+    assert code == 0, err
+
+
+def test_a_resume_the_ship_did_not_ask_for_is_blocked(tmp_path, tip):
+    refs, sha = tip
+    t = _shipped(tmp_path, refs, "SHIP VERIFIED\n  Backend live at abc1234.")
+    code, err = hook(tmp_path, f"{SHIP} -Resume -Sha {sha}", t, repo_refs=refs)
+    assert code == 2 and "did not ask for a resume" in err
+
+
+def test_a_resume_of_a_sha_that_is_not_the_branch_tip_is_blocked(tmp_path, tip):
+    refs, _sha = tip
+    other = "0123456789abcdef0123456789abcdef01234567"
+    t = _shipped(tmp_path, refs, timed_out(other))
+    code, err = hook(tmp_path, f"{SHIP} -Resume -Sha {other}", t, repo_refs=refs)
+    assert code == 2 and "is not the tip of" in err
+
+
+def test_a_resume_with_no_ship_in_this_session_is_blocked(tmp_path, tip):
+    refs, sha = tip
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Resume -Sha {sha}", t, repo_refs=refs)
+    assert code == 2 and "none found" in err
+
+
+def test_a_resume_after_a_ship_whose_go_was_never_spent_is_blocked(tmp_path, tip):
+    refs, sha = tip
+    entries = [
+        assistant(REPORT, "a1"),
+        human("ship ship-loop-3", "g1"),
+        tool_call("a2", "t1", SHIP_CMD),
+        tool_output("u2", "t1", timed_out(sha)),
+    ]
+    t = write_transcript(tmp_path, entries)  # the ledger has no entry for it
+    code, err = hook(tmp_path, f"{SHIP} -Resume -Sha {sha}", t, repo_refs=refs)
+    assert code == 2 and "no used go" in err
+
+
+# The independent reviewer's bypasses (2026-11-03): wrapped, grouped, piped or
+# hidden runs must be gated like a plain run (fail closed).
+P = "C:/x/scripts/ship.ps1"
+W = "C:\\x\\scripts\\ship.ps1"
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        f"true & pwsh -File {P} -Branch ship-loop-3",
+        f"grep -c x README.md & pwsh -File {P} -Branch ship-loop-3",
+        f"(pwsh -File {P} -Branch ship-loop-3)",
+        f"x=$(pwsh -File {P} -Branch ship-loop-3)",
+        f"if true; then pwsh -File {P} -Branch ship-loop-3; fi",
+        f"{{ pwsh -File {P} -Branch ship-loop-3; }}",
+        f"if ($true) {{ & '{W}' -Branch ship-loop-3 }}",
+        f"1 | % {{ & '{W}' -Branch ship-loop-3 }}",
+        f"timeout 900 pwsh -File {P} -Branch ship-loop-3",
+        f"echo ship-loop-3 | xargs pwsh -File {P} -Branch",
+        f"Get-Content {P} -Raw | Invoke-Expression",
+        f"cat {P} | pwsh",
+        f"Start-Job -FilePath {P}",
+        f"echo '<<EOF'\npwsh -File {P} -Branch ship-loop-3\nEOF",
+    ],
+)
+def test_a_wrapped_or_hidden_run_with_no_go_is_blocked(tmp_path, command):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("looks good", "h1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and 'not exactly "ship <branch>"' in err, err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        f"& '{W}' # -FrontendCheckOnly",
+        f"& '{W}' > -FrontendCheckOnly",
+        f"& '{W}' '-FrontendCheckOnly'",
+    ],
+)
+def test_a_frontend_check_flag_in_a_comment_or_redirect_does_not_count(tmp_path, command):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("looks good", "h1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and 'not exactly "ship <branch>"' in err, err
+
+
+def test_the_real_frontend_check_still_needs_no_go(tmp_path):
+    code, err = hook(tmp_path, f"powershell -File {P} -FrontendCheckOnly -Sha 55c9054 2>&1")
+    assert code == 0, err
+
+
+def test_a_resume_needs_the_last_ships_own_go_not_an_older_one(tmp_path, tip):
+    refs, sha = tip
+    (tmp_path / "ledger.json").write_text(json.dumps({"g0-older": "ship-loop-3"}), encoding="utf-8")
+    entries = [
+        assistant(REPORT, "a1"),
+        human("ship ship-loop-3", "g1"),
+        tool_call("a2", "t1", SHIP_CMD),
+        tool_output("u2", "t1", timed_out(sha)),
+    ]
+    t = write_transcript(tmp_path, entries)  # g1 itself was never spent
+    code, err = hook(tmp_path, f"{SHIP} -Resume -Sha {sha}", t, repo_refs=refs)
+    assert code == 2 and "no used go" in err
+
+
+@pytest.mark.parametrize("command", [f"$r = & '{W}' -Branch ship-loop-3", f"$r = {W} -Branch x"])
+def test_assigning_a_runs_output_is_a_run(tmp_path, command):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("looks good", "h1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and 'not exactly "ship <branch>"' in err, err
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        "; pwsh -File C:/x/scripts/ship.ps1 -Branch other",
+        " -Branch other",
+        " -DryRun",
+        " | Invoke-Expression",
+        " $(whoami)",
+    ],
+)
+def test_a_resume_with_anything_added_is_not_a_resume(tmp_path, tip, extra):
+    """Only the bare `-Resume -Sha <sha>` skips the go; anything added is a
+    ship that needs a fresh one."""
+    refs, sha = tip
+    t = _shipped(tmp_path, refs, timed_out(sha))
+    code, err = hook(tmp_path, f"{SHIP} -Resume -Sha {sha}{extra}", t, repo_refs=refs)
+    assert code == 2, err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        f"powershell -File {P} -FrontendCheckOnly -Sha 55c9054 2>&1 | tail",
+        f"powershell -File {P} -FrontendCheckOnly; pwsh -File {P} -Branch ship-loop-3",
+        f"powershell -File {P} -FrontendCheckOnly -Branch ship-loop-3",
+    ],
+)
+def test_a_frontend_check_with_anything_added_needs_the_go(tmp_path, command):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("looks good", "h1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and 'not exactly "ship <branch>"' in err, err
+
+
+# Round 3 reviewer, blocking: a newline ends a statement, so a bare form
+# split over two lines is two commands (the first a real ship).
+@pytest.mark.parametrize(
+    "command",
+    [
+        f"powershell -File {P} -Sha abcdef1 -SiteUrl https://x.example\n-FrontendCheckOnly",
+        f"powershell -File {P} -Sha abcdef1\r\n-FrontendCheckOnly",
+        f"powershell -File {P} -FrontendCheckOnly | Tee-Object scripts/hooks/ship_gate.py",
+    ],
+)
+def test_a_frontend_check_over_two_lines_or_teeing_into_code_needs_the_go(tmp_path, command):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("looks good", "h1")])
+    code, err = hook(tmp_path, command, t)
+    assert code == 2 and 'not exactly "ship <branch>"' in err, err
+
+
+def test_a_ship_over_two_lines_is_refused_and_keeps_the_go(tmp_path):
+    t = write_transcript(tmp_path, [assistant(REPORT, "a1"), human("ship ship-loop-3", "g1")])
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3\n-DryRun", t)
+    assert code == 2 and "exactly one run" in err, err
+    code, err = hook(tmp_path, f"{SHIP} -Branch ship-loop-3 -DryRun", t)
+    assert code == 0, err
+
+
+def test_a_resume_over_two_lines_is_not_a_resume(tmp_path, tip):
+    refs, sha = tip
+    t = _shipped(tmp_path, refs, timed_out(sha))
+    code, err = hook(tmp_path, f"{SHIP} -Sha {sha}\n-Resume", t, repo_refs=refs)
+    assert code == 2, err

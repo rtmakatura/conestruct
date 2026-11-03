@@ -1,3 +1,21 @@
+# scripts/cosmetic_lane_check.py on the speed audit's nine rounds, 2026-11-03
+# Each round shows the first 3 lines of the check's output; an OUT round with more offending paths (i356: 6 of 10) lists only the first two here.
+
+## After the R156 Q1 amendment (three copy modules, string values only)
+# Re-run after the reviewer FAIL repair (value-position masking, --no-renames): identical results.
+# Re-run in round 3 (Ryan's two-word / whole-const copy rule, words kept apart, -z paths): identical results;
+# R33 Part A's copy-module edits were all multi-word strings, so it stays IN.
+R33-partA    IN LANE: all 81 paths are frontend look-only 
+R120         OUT OF LANE: 1 of 4 paths fall outside   src/api/render_api.py -- outside the frontend (backend, tests, scripts or repo config) 
+R128         IN LANE: all 15 paths are frontend look-only 
+R133         IN LANE: all 27 paths are frontend look-only 
+form-polish  IN LANE: all 29 paths are frontend look-only 
+i356         OUT OF LANE: 6 of 10 paths fall outside   conestruct/site/lib/render-proxy.validation.test.ts -- under lib/ (only lib/design/ is in the lane)   src/api/schemas.py -- outside the frontend (backend, tests, scripts or repo config) 
+i436         IN LANE: all 19 paths are frontend look-only 
+i437-G9G10   IN LANE: all 33 paths are frontend look-only 
+i437-G11     IN LANE: all 3 paths are frontend look-only 
+
+## As first ruled (a9f49f7; nothing under lib/ but lib/design/)
 R33-partA    OUT OF LANE: 2 of 81 paths fall outside   conestruct/site/lib/coming-soon-copy.ts -- under lib/ (only lib/design/ is in the lane)   conestruct/site/lib/public-copy.ts -- under lib/ (only lib/design/ is in the lane) 
 R120         OUT OF LANE: 1 of 4 paths fall outside   src/api/render_api.py -- outside the frontend (backend, tests, scripts or repo config) 
 R128         IN LANE: all 15 paths are frontend look-only 

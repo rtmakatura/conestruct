@@ -7,8 +7,11 @@ repo or its worktrees, kills any not started by this session by process tree,
 and reports what it killed. Session end still kills the session's own server
 by process tree."
 
-/start runs it before any work, so every match is an orphan except the PIDs
-passed with --keep (a server this session started earlier).  A process
+R159 amendment (Ryan, 2026-11-03), word for word: "kill a repo dev server
+only if its parent process no longer exists. List the rest without killing
+them."  So a match is killed only when its parent PID is not among the live
+processes; one whose parent is alive (another session's, or this one's) is
+listed and left running.  --keep PID spares a server outright.  A process
 matches only when its command line names `next dev` (or Next's dev server
 entry) AND a path inside the repo root, the worktrees included; a dev server
 from any other project is never touched.  Kills use `taskkill /PID <pid> /T
@@ -44,17 +47,19 @@ def _norm(path: str) -> str:
     return p.rstrip("/").lower()
 
 
-def select_orphans(procs: list[dict], root: str, keep: set[int]) -> list[dict]:
+def dev_servers(procs: list[dict], root: str, keep: set[int]) -> list[dict]:
     """The dev servers from this repo (or its worktrees) not in ``keep``.
-    ``procs`` items: {"pid": int, "ppid": int, "cmd": str}.  A child whose
-    parent is also selected is left out: killing the parent's tree ends it."""
-    r = _norm(root)
+    ``procs`` items: {"pid": int, "ppid": int, "cmd": str | None}.  A child
+    whose parent is also a match is left out: its parent's line covers it."""
+    # The root as a whole path: followed by a separator, a quote, a space or
+    # the end, so a sibling folder like traffic-control-tool-old is not it.
+    r = re.compile(re.escape(_norm(root)) + r"(?=[/\"'\s]|$)")
     hits = [
         p
         for p in procs
         if p.get("cmd")
         and DEV.search(p["cmd"])
-        and r in _norm(p["cmd"])
+        and r.search(_norm(p["cmd"]))
         and p["pid"] not in keep
         and p.get("ppid") not in keep
     ]
@@ -62,10 +67,24 @@ def select_orphans(procs: list[dict], root: str, keep: set[int]) -> list[dict]:
     return [p for p in hits if p.get("ppid") not in pids]
 
 
+def select_orphans(procs: list[dict], root: str, keep: set[int]) -> list[dict]:
+    """R159 amendment: only a dev server whose parent process no longer
+    exists is an orphan.  ``procs`` must hold
+    every live process, readable command line or not."""
+    alive = {p["pid"] for p in procs}
+    return [p for p in dev_servers(procs, root, keep) if p.get("ppid") not in alive]
+
+
+def select_parented(procs: list[dict], root: str, keep: set[int]) -> list[dict]:
+    """The repo's dev servers whose parent is still alive: listed, never killed."""
+    alive = {p["pid"] for p in procs}
+    return [p for p in dev_servers(procs, root, keep) if p.get("ppid") in alive]
+
+
 def list_processes() -> list[dict]:
     if os.name == "nt":
         ps = (
-            "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine } | "
+            "Get-CimInstance Win32_Process | "
             "Select-Object ProcessId,ParentProcessId,CommandLine | ConvertTo-Json -Compress"
         )
         out = subprocess.run(
@@ -130,14 +149,17 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: could not list processes: {e}")
         return 2
     found = select_orphans(procs, root, set(a.keep))
-    if not found:
-        print(f"no orphan next dev servers under {root}")
-        return 0
+    parented = select_parented(procs, root, set(a.keep))
+    for p in parented:
+        print(f"PID {p['pid']} left running (parent {p['ppid']} is alive): {p['cmd'][:160]}")
     for p in found:
-        status = kill_tree(p["pid"]) if a.kill else "found (not killed; pass --kill)"
+        status = kill_tree(p["pid"]) if a.kill else "orphan (not killed; pass --kill)"
         print(f"PID {p['pid']} {status}: {p['cmd'][:160]}")
     verb = "killed" if a.kill else "found"
-    print(f"{len(found)} orphan next dev server(s) {verb} under {root}")
+    print(
+        f"{len(found)} orphan next dev server(s) {verb}, "
+        f"{len(parented)} with a live parent left running, under {root}"
+    )
     return 0
 
 
