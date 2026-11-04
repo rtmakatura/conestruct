@@ -29,7 +29,7 @@ import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_FLAGGER, PINNED_SHOULDER } from "./test-fixtures";
 import type { Scenario } from "@/lib/scenarios";
 import auditFull from "./__fixtures__/audit-shoulder-full.json";
-import { applyRevision, changeOneThing } from "./__fixtures__/band-helpers";
+import { applyRevision, changeOneThing, showKind } from "./__fixtures__/band-helpers";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -312,11 +312,19 @@ describe("defect 2 — kind, location, extent and dates open the band that owns 
     expect(screen.getByTestId("revise-sentence").textContent).toContain("1 field");
   });
 
-  it("the kind link lands on the chips, the kind still pressed (already confirmed)", async () => {
+  // #439: the kind is a question on WHERE's CONFIRM card; confirmed, it
+  // shows as its record with Undo, and its radio row stays chosen.
+  it("the kind link lands on WHERE's kind record, the kind still chosen (already confirmed)", async () => {
     await generated();
     await changeOneThing("kind");
+    expect(openBand()).toBe("where");
+    const records = Array.from(
+      document.querySelectorAll('[data-testid="where-questions"] .nyq-answered .nyq-row-text'),
+    ).map((r) => r.textContent);
+    expect(records).toContain("What kind of work is it: Shoulder work");
+    await showKind();
     expect(
-      screen.getByTestId("kind-chip-shoulder").getAttribute("aria-pressed"),
-    ).toBe("true");
+      (screen.getByTestId("kind-chip-shoulder") as HTMLInputElement).checked,
+    ).toBe(true);
   });
 });

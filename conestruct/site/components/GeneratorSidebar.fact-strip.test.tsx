@@ -117,11 +117,17 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN"));
 
-    // Lat / lng, in the band's provenance rather than in cells.
+    // Lat / lng, in the band's provenance rather than in cells.  #439
+    // ruling 2: that line sits behind the summary row's Details now.
     await openWhere();
-    const whereProv = document.querySelector(".a-open .a-prov")!.textContent!;
-    expect(whereProv).toContain("39.71466");
-    expect(whereProv).toContain("-104.94071");
+    const details = screen.getByTestId("where-details");
+    expect(details.getAttribute("aria-expanded")).toBe("false");
+    await user.click(details);
+    const whereProv = screen.getByTestId("where-provenance");
+    expect(whereProv.hidden).toBe(false);
+    expect(details.getAttribute("aria-expanded")).toBe("true");
+    expect(whereProv.textContent).toContain("39.71466");
+    expect(whereProv.textContent).toContain("-104.94071");
 
     await openWhat();
     // Speed and jurisdiction: their own cells, each with a provenance

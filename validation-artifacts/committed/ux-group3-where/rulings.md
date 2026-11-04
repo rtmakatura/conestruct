@@ -26,3 +26,7 @@
 - **W9, what folds into Edit.** The address field and the work-zone length field sit in the Edit fold with today's three rows. The fold opens by itself while the length is unset or refused (an open item needs its control on screen, P5). The kind proposal note ("⚠ proposed: …") stays under the kind's radio rows (suggest-never-set: it marks, never selects).
 - **W10, the key's two lines.** "Faded: past the mapped road" is a channel and stays a key row. The two sentences (the kind-owed line and "Two approaches: …") are not channels; they move to one line under the aerial.
 - **W11, Edit on map without an aerial.** A stale road or a corridor-end pin draws no aerial; there "Edit on map" stays a 44 px button under the heading.
+
+## Ryan's approval (2026-11-04)
+
+Verbatim, from `/start 439`: "W3, W7 and W9 approved." W3, W7 and W9 stand as written above; they are now Ryan-approved, not only R145 self-ruled.

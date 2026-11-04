@@ -13,3 +13,5 @@
  FAIL  components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces
  FAIL  components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > the kind link lands on the chips, the kind still pressed (already confirmed)
  FAIL  components/GeneratorSidebar.fact-strip.test.tsx > #227 fact strip — pin readout as labeled cells > pinned: the five facts survive the strip, each under the question it answers
+
+Resolved 2026-11-04 (/start 439): all 15 moved onto the CONFIRM card (helpers pickKind/showKind/nextQuestion/answerSide); full vitest 2735 passed / 1 skipped.

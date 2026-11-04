@@ -24,7 +24,7 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // the progress rail's trailing "Generate" jump entry is a second
 // /generate/i button on every mount now.
 import { GeneratorShell } from "./GeneratorShell";
-import { answerSide, confirmKind, openWhat } from "./__fixtures__/band-helpers";
+import { answerSide, confirmKind, openWhat, pickKind } from "./__fixtures__/band-helpers";
 import { TEST_SIDE, corridorGeometryResponse } from "./test-fixtures";
 import { DEFAULT_SHOULDER, hasLocation } from "@/lib/scenarios";
 import type { ShoulderScenario } from "@/lib/scenarios";
@@ -258,22 +258,21 @@ describe("no location, no certification (#186)", () => {
     expect(
       document.querySelector('[data-testid="cta-reason"]')?.textContent,
     ).toContain("Choose the kind of work");
-    await act(async () => {
-      fireEvent.click(screen.getByTestId("kind-chip-shoulder"));
-    });
-    await confirmKind();
+    await pickKind("shoulder");
     await flushDebounce();
     await settle();
     // #290 (RULE 5, stated): the kind is not the last thing owed any more.
     // Ruling 10 — a located plan's side is needs-you, and nothing is
-    // checked until it is answered.  With no road confirmed (this path),
-    // the side control offers the four headings (open-points ruling 1).
+    // checked until it is answered.  #439 W7 (Ryan-approved 2026-11-04):
+    // the CONFIRM card asks the side before Confirm shows, so a picked
+    // kind with the side owed offers no Confirm.  With no road confirmed
+    // (this path), the side question offers the four headings
+    // (open-points ruling 1).
     expect(btn().disabled).toBe(true);
-    expect(screen.getByTestId("strip-side-unconfirmed").textContent).toBe(
-      "◌AWAITING OCCUPIED SIDE",
-    );
+    expect(document.querySelector('[data-testid="where-confirm"]')).toBeNull();
     expect(document.body.textContent).not.toContain("READY FOR TCS REVIEW");
     await answerSide();
+    await confirmKind();
     await flushDebounce();
     await settle();
     // R127 Q1 (b), RULE 5 (stated): typed coordinates put no road under the

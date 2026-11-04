@@ -169,8 +169,14 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { MIN_AUDIT } from "./test-fixtures";
-import { confirmKind, openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { MIN_AUDIT, corridorGeometryResponse } from "./test-fixtures";
+import {
+  answerSide,
+  confirmKind,
+  openWhere,
+  openWhat,
+  pickKind,
+} from "./__fixtures__/band-helpers";
 
 // #289 rule 135 — the kind is three CHIPS in the WHERE band now (§8.18),
 // not a vertical list of seven.  Selecting by test id rather than by the
@@ -181,7 +187,9 @@ const KIND_ID: Record<string, string> = {
   "Flagger lane closure": "kind-chip-flagger_lane_closure",
   "Lane closure near intersection": "kind-chip-near_intersection",
 };
-const kindChip = (label: string) => KIND_ID[label];
+// #439: the kinds are radio rows on the CONFIRM card; `pickKind` brings the
+// kind question on screen first, as a person does.
+const kindValue = (label: string) => KIND_ID[label].replace("kind-chip-", "");
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -212,6 +220,11 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       status: 200,
       json: async () => MIN_AUDIT,
     } as unknown as Response);
+  }
+  // #439 W7: the side's choices, so a suite can answer the side before
+  // Confirm (Confirm needs both answers).
+  if (url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve(corridorGeometryResponse());
   }
   return Promise.resolve({
     ok: true,
@@ -278,7 +291,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
+    await pickKind(kindValue("Flagger lane closure"));
 
     await generate(user);
     const s = bundleBody!.scenario;
@@ -308,9 +321,11 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
     await openWhere();
-    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
+    await pickKind(kindValue("Flagger lane closure"));
     // #289 defect 1: the chip selects; the WHERE primary confirms, and
-    // WHAT stays pending until it does.
+    // WHAT stays pending until it does.  #439 W7: Confirm needs the side
+    // answered too.
+    await answerSide();
     await confirmKind();
 
     // Re-armed relays arm their affordances: the #86 multilane confirm
@@ -341,9 +356,9 @@ describe("kind-switch preserves the safety relays (#181)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
+    await pickKind(kindValue("Flagger lane closure"));
     await openWhere();
-    await user.click(screen.getByTestId(kindChip("Shoulder work")));
+    await pickKind(kindValue("Shoulder work"));
 
     await generate(user);
     const s = bundleBody!.scenario;
@@ -374,7 +389,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_NO_ROAD"));
     await openWhere();
-    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
+    await pickKind(kindValue("Flagger lane closure"));
 
     await generate(user);
     const s = bundleBody!.scenario;

@@ -130,7 +130,12 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT, PINNED_SHOULDER, corridorGeometryResponse } from "./test-fixtures";
-import { answerSide, confirmKind } from "./__fixtures__/band-helpers";
+import {
+  answerSide,
+  confirmKind,
+  nextQuestion,
+  pickKind,
+} from "./__fixtures__/band-helpers";
 
 type Call = { url: string; body: Record<string, unknown> };
 let calls: Call[] = [];
@@ -217,10 +222,11 @@ async function freshWithRoad({ side = true }: { side?: boolean } = {}) {
 }
 
 const chip = (k: string) => screen.getByTestId(`kind-chip-${k}`);
+// #439: the kinds are radio rows on the CONFIRM card; "pressed" is checked.
 const pressed = () =>
-  Array.from(document.querySelectorAll('.a-chips [aria-pressed="true"]')).map(
-    (el) => el.getAttribute("data-testid"),
-  );
+  Array.from(document.querySelectorAll<HTMLInputElement>('[data-testid^="kind-chip-"]'))
+    .filter((el) => el.checked)
+    .map((el) => el.getAttribute("data-testid"));
 const generateBtn = () =>
   screen.getByRole("button", { name: /Generate plan/ }) as HTMLButtonElement;
 const openBand = () =>
@@ -248,14 +254,12 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(chip("near_intersection")).toBeTruthy();
     expect(pressed()).toEqual([]);
 
-    const confirm = screen.getByTestId("where-confirm");
-    expect(confirm.getAttribute("aria-disabled")).toBe("true");
-    // The confirm names no kind, because none was chosen.
-    expect(confirm.textContent).toBe("Confirm");
-    expect(screen.getByTestId("where-confirm-reason").textContent).toBe(
-      "choose the kind of work",
-    );
-    expect(confirm.getAttribute("aria-describedby")).toBe("where-confirm-reason");
+    // #439 ruling 4: the last button is "Confirm and lay out the plan",
+    // disabled with its reason while the kind is unanswered.
+    const confirm = screen.getByTestId("where-confirm") as HTMLButtonElement;
+    expect(confirm.disabled).toBe(true);
+    expect(confirm.textContent).toBe("Confirm and lay out the plan");
+    expect(confirm.title).toBe("choose an answer first");
 
     // WHAT is a pending line with the same reason; no link into it.
     const what = document.querySelector('[data-testid="fact-what"]')!;
@@ -318,7 +322,7 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
 
     await user.click(screen.getByTestId("fact-link-where"));
     calls = [];
-    await user.click(chip("flagger_lane_closure"));
+    await pickKind("flagger_lane_closure");
     await settle();
     // Picked again, not confirmed: nothing is asked about flagger yet.
     expect(liveChecks()).toHaveLength(0);
@@ -343,10 +347,9 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     // a person chose it.
     await user.click(chip("shoulder"));
     expect(pressed()).toEqual(["kind-chip-shoulder"]);
-    const confirm = screen.getByTestId("where-confirm");
-    expect(confirm.getAttribute("aria-disabled")).toBeNull();
-    expect(confirm.textContent).toBe("Confirm shoulder work");
-    expect(document.querySelector('[data-testid="where-confirm-reason"]')).toBeNull();
+    const confirm = screen.getByTestId("where-confirm") as HTMLButtonElement;
+    expect(confirm.disabled).toBe(false);
+    expect(confirm.textContent).toBe("Confirm and lay out the plan");
 
     // Selected is not confirmed: WHAT stays pending and Generate blocked
     // until the primary is pressed.
@@ -364,39 +367,48 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
   // the side is chosen, the ledger's 'Which side is occupied?' row ticks
   // with the side as its value; the kind question gets its own row ('Kind
   // of work — confirm below')."
-  it("the side row ticks with the side once it is chosen; the kind has its own row until Confirm", async () => {
+  //
+  // #439 (RULE 5, stated): the ledger's side and kind rows became the
+  // CONFIRM card's two questions (rulings 4-6).  The claim is kept: the
+  // side's answer is its own record, with the side as its value, and the
+  // kind is still asked on its own until Confirm.
+  it("the side's record ticks with the side once it is chosen; the kind is its own question until Confirm", async () => {
     const user = await freshWithRoad({ side: false });
-    const side = () => screen.getByTestId("move-side");
-    const kind = () => screen.getByTestId("move-kind");
-    expect(side().getAttribute("data-move-state")).toBe("attention");
-    expect(side().textContent).toContain("Which side is occupied?");
-    expect(side().textContent).toContain("needs you");
-    expect(side().textContent).toContain("Say which side is occupied to lay out the work");
-    expect(kind().getAttribute("data-move-state")).toBe("attention");
-    expect(kind().textContent).toContain("Kind of work: confirm below");
+    const card = () => document.querySelector('[data-testid="where-questions"] .nyq-card');
+    const count = () =>
+      document.querySelector('[data-testid="where-questions"] .nyq-count')?.textContent;
+    expect(card()?.getAttribute("data-flag")).toBe("side");
+    expect(count()).toBe("Question 1 of 2");
+    expect(card()?.textContent).toContain("Which side of the road is the work on?");
+    expect(screen.getByTestId("step-next-kind").textContent).toBe(
+      "◌Next: what kind of work it is",
+    );
 
     await answerSide();
     await settle();
-    // The side is answered: its row ticks, with the side as its value, and
-    // does not speak for the kind.
-    expect(side().getAttribute("data-move-state")).toBe("done");
-    expect(side().textContent).toContain("East side · traffic heads north");
-    expect(side().textContent).not.toContain("needs you");
-    expect(side().textContent).not.toContain("Choose the kind of work");
-    // The kind is still owed, on its own row.
-    expect(kind().getAttribute("data-move-state")).toBe("attention");
-    expect(kind().textContent).toContain("Kind of work: confirm below");
-    expect(kind().textContent).toContain("needs you");
+    // The side is answered: a ✓ record with the side's compass words and
+    // an Undo; the card has moved on to the kind.
+    const records = () =>
+      Array.from(document.querySelectorAll('[data-testid="where-questions"] .nyq-answered'));
+    expect(records().map((r) => r.querySelector(".nyq-row-text")?.textContent)).toEqual([
+      "Which side of the road is the work on: East side",
+    ]);
+    expect(screen.getByTestId("step-undo-side")).toBeTruthy();
+    expect(card()?.getAttribute("data-flag")).toBe("kind");
+    expect(count()).toBe("Question 2 of 2");
+    expect(pressed()).toEqual([]);
 
     await user.click(chip("shoulder"));
     await confirmKind();
     await user.click(screen.getByTestId("fact-link-where"));
     await settle();
-    expect(kind().getAttribute("data-move-state")).toBe("done");
-    expect(kind().textContent).toContain("Shoulder work");
-    expect(kind().textContent).not.toContain("confirm below");
-    expect(side().getAttribute("data-move-state")).toBe("done");
-    expect(screen.getByTestId("move-grow").getAttribute("data-move-state")).toBe("done");
+    // Confirmed: the card shows the two records only (W8), each with Undo.
+    expect(card()).toBeNull();
+    expect(count()).toBe("2 of 2 answered");
+    expect(records().map((r) => r.querySelector(".nyq-row-text")?.textContent)).toEqual([
+      "Which side of the road is the work on: East side",
+      "What kind of work is it: Shoulder work",
+    ]);
   });
 
   // #290 prod sweep finding (flagger-*-04-kind-confirmed-side-owed): the
@@ -404,25 +416,48 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
   // folded away.  Ryan, 2026-09-25: "WHERE's Confirm doesn't move on to
   // WHAT while the side is owed, and the side control stays open on WHERE
   // until chosen."
-  it("confirming the kind before the side keeps WHERE open on the side control, then moves on when it is chosen", async () => {
-    const user = await freshWithRoad({ side: false });
-    await user.click(chip("flagger_lane_closure"));
-    await confirmKind();
+  //
+  // #439 W7 (Ryan-approved 2026-11-04; RULE 5, stated): Confirm needs both
+  // answers.  The last button shows only on the last open question, so the
+  // kind picked before the side offers "Next question", never Confirm.
+  it("W7: Confirm needs both answers; a kind picked before the side leads to the side, then Confirm", async () => {
+    await freshWithRoad({ side: false });
+    await pickKind("flagger_lane_closure");
     await settle();
+    expect(pressed()).toEqual(["kind-chip-flagger_lane_closure"]);
+    // Not the last open question: no Confirm anywhere, and WHERE stays open.
+    expect(document.querySelector('[data-testid="where-confirm"]')).toBeNull();
+    const next = document.querySelector<HTMLButtonElement>(
+      '[data-testid="where-questions"] .nyq-card[data-flag="kind"] .nyq-foot > button',
+    )!;
+    expect(next.textContent).toBe("Next question");
+    await nextQuestion("kind");
+    expect(
+      document.querySelector('[data-testid="where-questions"] .nyq-card')?.getAttribute("data-flag"),
+    ).toBe("side");
     expect(openBand()).toBe("where");
-    expect(document.querySelectorAll('[data-testid="side-option"]').length).toBeGreaterThan(0);
-    expect(screen.getByTestId("move-kind").getAttribute("data-move-state")).toBe("done");
-    expect(screen.getByTestId("move-side").getAttribute("data-move-state")).toBe("attention");
+    expect(liveChecks()).toHaveLength(0);
 
+    // The side answered, its card carries the one Confirm.
     await answerSide();
+    await settle();
+    expect(screen.getByTestId("where-confirm").textContent).toBe("Confirm and lay out the plan");
+    await confirmKind();
     await settle();
     expect(openBand()).toBe("what");
   });
 
-  it("#290, PAYLOAD: a confirmed kind with no side fires no check, and Generate names the side", async () => {
-    const user = await freshWithRoad({ side: false });
+  // #439 W7: a confirmed kind with no side is now reached only by Undo on
+  // the side after Confirm (BandStack's side-owed branch stays for it).
+  it("#290, PAYLOAD: a confirmed kind whose side is undone fires no check, and Generate names the side", async () => {
+    const user = await freshWithRoad();
     await user.click(chip("shoulder"));
     await confirmKind();
+    await settle();
+    await user.click(screen.getByTestId("fact-link-where"));
+    await user.click(screen.getByTestId("step-undo-side"));
+    await settle();
+    calls = [];
     await settle();
     expect(liveChecks()).toHaveLength(0);
     expect(generateBtn().disabled).toBe(true);
@@ -481,7 +516,7 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
 
     // Back into WHERE through its fact line, and a different chip.
     await user.click(screen.getByTestId("fact-link-where"));
-    await user.click(chip("flagger_lane_closure"));
+    await pickKind("flagger_lane_closure");
     expect(pressed()).toEqual(["kind-chip-flagger_lane_closure"]);
     expect(generateBtn().disabled).toBe(true);
     expect(

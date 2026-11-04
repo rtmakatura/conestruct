@@ -44,9 +44,20 @@ export async function answerSide(): Promise<void> {
   await openWhere();
   const deadline = Date.now() + 3000;
   for (;;) {
+    // #439: the card may be on the kind; its "Next:" row brings the side
+    // on screen, as a person would click it.
+    const sideRow = document.querySelector('[data-testid="step-next-side"]');
+    if (sideRow) {
+      await act(async () => {
+        fireEvent.click(sideRow);
+      });
+    }
     const option = Array.from(
       document.querySelectorAll<HTMLInputElement>('[data-testid="side-option"]'),
     ).find((b) => !b.disabled);
+    // #439: the side already answered (a closed card shows its record with
+    // Undo): nothing to do, as re-clicking the chosen row did before.
+    if (!option && document.querySelector('[data-testid="step-undo-side"]')) return;
     if (option) {
       await act(async () => {
         fireEvent.click(option);
@@ -236,7 +247,7 @@ export async function clickPicker(): Promise<void> {
 /** #439: press "Next question" on the CONFIRM card while it shows `id`. */
 export async function nextQuestion(id: string): Promise<void> {
   const btn = document.querySelector<HTMLButtonElement>(
-    `[data-testid="where-questions"] .nyq-card[data-flag="${id}"] .nyq-foot button`,
+    `[data-testid="where-questions"] .nyq-card[data-flag="${id}"] .nyq-foot > button`,
   );
   if (!btn || btn.disabled || btn.dataset.testid === "where-confirm") return;
   await act(async () => {
