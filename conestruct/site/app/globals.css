@@ -9144,6 +9144,11 @@ input[type="number"] {
     background: none;
     border: 0;
   }
+  /* #439 evidence (ruling 7, "never wrapping mid-row"): the one long
+     label takes the grid's full width instead of wrapping in a cell. */
+  .workbench .a-aerial-row-wide {
+    grid-column: 1 / -1;
+  }
 }
 .workbench .wq-sum {
   display: flex;
@@ -9165,6 +9170,8 @@ input[type="number"] {
 .workbench .wq-link {
   flex: none;
   min-height: 44px;
+  /* #439 evidence: a 44 px target both ways (Edit measured 32.9 wide). */
+  min-width: 44px;
   padding: 0 4px;
   border: 0;
   background: transparent;

@@ -46,6 +46,10 @@ export interface StepQuestion {
 export interface QuestionStepsProps {
   heading: string;
   headingId?: string;
+  /** The heading's level: NEEDS YOU's h3 by default; CONFIRM is the
+   *  page's first section heading after the h1, so h2 (#439 evidence, axe
+   *  heading-order). */
+  headingLevel?: 2 | 3;
   questions: readonly StepQuestion[];
   onAnswer: (q: StepQuestion, value: string) => void;
   onUndo: (q: StepQuestion) => void;
@@ -75,6 +79,7 @@ function firstOpen(questions: readonly StepQuestion[]): string | null {
 export function QuestionSteps({
   heading,
   headingId,
+  headingLevel = 3,
   questions,
   onAnswer,
   onUndo,
@@ -100,6 +105,7 @@ export function QuestionSteps({
       : (firstOpen(questions) ?? (chosen === null ? null : fallbackId));
   const current = currentId ? (byId.get(currentId) ?? null) : null;
   const n = questions.length;
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const k = current ? questions.indexOf(current) + 1 : 0;
 
   const open = (id: string) => {
@@ -133,9 +139,9 @@ export function QuestionSteps({
   return (
     <>
       <div className="ny-head nyq-head">
-        <h3 id={headingId} className="ny-title tr-section">
+        <Heading id={headingId} className="ny-title tr-section">
           {heading}
-        </h3>
+        </Heading>
         <p className="nyq-count tr-note">
           {current ? `Question ${k} of ${n}` : `${n} of ${n} answered`}
         </p>

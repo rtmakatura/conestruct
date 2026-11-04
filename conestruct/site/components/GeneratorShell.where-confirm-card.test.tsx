@@ -135,6 +135,15 @@ describe("#439 ruling 6 / W5 — the gated-kinds line", () => {
   });
 });
 
+describe("#439 evidence — the CONFIRM heading is the page's h2", () => {
+  it("CONFIRM is an h2 (axe heading-order: the page's h1 comes before it)", async () => {
+    await mountWhere();
+    const h = document.getElementById("where-confirm-h")!;
+    expect(h.tagName).toBe("H2");
+    expect(h.textContent).toBe("CONFIRM");
+  });
+});
+
 describe("#439 ruling 3 — the done summary row", () => {
   it("summaryParts prints only what is done: an unset length is not printed", () => {
     const set = summaryParts(setWorkLen(PINNED_SHOULDER, 1200), "200 ft north of Clarkson St");

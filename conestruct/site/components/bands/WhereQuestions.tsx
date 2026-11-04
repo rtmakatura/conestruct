@@ -236,6 +236,7 @@ export function WhereQuestions({
       <QuestionSteps
         heading="CONFIRM"
         headingId="where-confirm-h"
+        headingLevel={2}
         questions={questions}
         onAnswer={(q, v) => {
           if (locked) return;

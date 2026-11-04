@@ -265,7 +265,7 @@ export function BandAerial({
             </div>
           ))}
           {extended && (
-            <div className="a-aerial-row tr-note">
+            <div className="a-aerial-row a-aerial-row-wide tr-note">
               <span
                 className="a-aerial-swatch"
                 aria-hidden="true"
