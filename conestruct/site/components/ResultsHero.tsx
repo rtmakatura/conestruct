@@ -88,9 +88,9 @@ export function ResultsHero({ breakdown, jurisdiction }: Props) {
   return (
     <section className="yp" aria-labelledby="your-plan-h" data-testid="your-plan">
       <div className="yp-head">
-        <h3 id="your-plan-h" className="tr-section yp-title">
+        <h2 id="your-plan-h" className="tr-section yp-title">
           YOUR PLAN
-        </h3>
+        </h2>
         <p className="tr-note yp-sub">As it stands now</p>
       </div>
       <div className="hero">

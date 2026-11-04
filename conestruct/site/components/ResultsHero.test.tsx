@@ -97,7 +97,11 @@ describe("#288 clause 2 — the counts hero's ruled shell (rules 80–83)", () =
   });
 
   it("rule 81: the cell label is rule 3's QUIET section header — .18em, provenance ink", () => {
-    const k = rule(".workbench .hero-cell .k");
+    // #438 item 3 (P11): KEY DISTANCES (.hero-meta) shares the rule.
+    expect(css).toMatch(/\.workbench \.hero-cell \.k,\s*\.workbench \.hero-meta \.k \{/);
+    const k = rule(".workbench .hero-meta .k");
+    expect(k).toMatch(/font-family:\s*var\(--font-mono\)/);
+    expect(k).toMatch(/font-size:\s*10px/);
     expect(k).toMatch(/letter-spacing:\s*0\.18em/);
     expect(k).toMatch(/text-transform:\s*uppercase/);
     expect(k).toMatch(/font-weight:\s*500/);
@@ -149,7 +153,8 @@ describe("#288 clause 2 — the counts hero's ruled shell (rules 80–83)", () =
     const yp = container.querySelector('[data-testid="your-plan"]')!;
     expect(yp.tagName).toBe("SECTION");
     expect(yp.classList.contains("yp")).toBe(true);
-    const h = yp.querySelector("h3")!;
+    // #438 item 5: a results section title, h2 under the page h1.
+    const h = yp.querySelector("h2")!;
     expect(h.textContent).toBe("YOUR PLAN");
     expect(yp.getAttribute("aria-labelledby")).toBe(h.id);
     expect(yp.textContent).toContain("As it stands now");

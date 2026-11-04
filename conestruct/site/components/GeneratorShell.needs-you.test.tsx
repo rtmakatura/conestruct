@@ -240,7 +240,8 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     // to NEEDS YOU, and the anchor is still on the block.
     expect(b.id).toBe("site-corrections");
     expect(within(b).getByText("Question 1 of 1")).toBeTruthy();
-    expect(within(b).getByRole("heading", { level: 4 }).textContent).toBe(
+    // #438 item 5: NEEDS YOU is h2, so the question title is h3.
+    expect(within(b).getByRole("heading", { level: 3 }).textContent).toBe(
       "Is there an intersection next to the work?",
     );
     // One question, so its button is the Apply (ruling 6), off until answered.

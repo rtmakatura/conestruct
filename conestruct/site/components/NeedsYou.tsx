@@ -95,9 +95,9 @@ export function NeedsYou({
     >
       {flow ?? (
         <div className="ny-head">
-          <h3 id="needs-you-h" className="ny-title tr-section">
+          <h2 id="needs-you-h" className="ny-title tr-section">
             NEEDS YOU
-          </h3>
+          </h2>
           <p className="ny-sub tr-prov">
             changed the plan, or waiting on your word
             {decomposition ? ` · ${decomposition}` : ""}
@@ -140,7 +140,7 @@ function Item({
         <span className="ny-body">{item.title}</span>
         {/* Rule 75: the provenance names the tier in words, then the
             evidence the wire carried (#289 F4: no result tag). */}
-        <p className="ny-prov tr-prov">{itemProvenance(item)}</p>
+        <p className="ny-prov tr-note">{itemProvenance(item)}</p>
       </div>
       <div className="ny-right">
         <span className="ny-cite">{item.cite}</span>

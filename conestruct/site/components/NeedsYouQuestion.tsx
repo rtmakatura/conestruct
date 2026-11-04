@@ -30,6 +30,10 @@ import {
 } from "@/lib/scenarios/site-corrections";
 import type { StagedCorrection } from "@/lib/scenarios/types";
 
+/** #438 item 2: the answer label mid-sentence ("Yes, they're there" →
+ *  "yes, they're there" after the topic). */
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+
 export interface QuestionFlowProps {
   questions: readonly NeedsYouQuestion[];
   staged: StagedCorrection[];
@@ -96,7 +100,7 @@ export function QuestionFlow({
         : {
             className: q.answer === "yes" ? "confirmed" : "dismissed",
             glyph: q.answer === "yes" ? "✓" : "×",
-            text: `${q.question.replace(/\?$/, "")}: ${q[q.answer].label}${
+            text: `${q.topic}: ${lowerFirst(q[q.answer].label)}${
               q.answerSource === "staged" ? " · not applied yet" : ""
             }`,
           },
@@ -111,6 +115,8 @@ export function QuestionFlow({
     <QuestionSteps
       heading="NEEDS YOU"
       headingId="needs-you-h"
+      // #438 item 5: a results section title, h2 under the page h1.
+      headingLevel={2}
       questions={steps}
       onAnswer={(s, v) => {
         const q = byFlag.get(s.id);

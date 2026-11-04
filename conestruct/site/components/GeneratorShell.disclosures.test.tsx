@@ -214,7 +214,7 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     // #437 branch 3: the card title is an h4, and the count is the <b>
     // inside the card's one .desc sentence (the .qty line is gone).
     const cardQty = Array.from(document.querySelectorAll(".dl-card"))
-      .find((c) => c.querySelector("h4")?.textContent === "Audit trail")!
+      .find((c) => c.querySelector("h3")?.textContent === "Audit trail")!
       .querySelector(".desc b")!.textContent;
     expect(cardQty, "the card and the row read one ledger").toBe(checked);
     // ◌ is counted too — its own tier, never buried (#219).
@@ -305,5 +305,60 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     expect(panel, "the quote's panel stays in the DOM").not.toBeNull();
     expect(panel!.hasAttribute("hidden")).toBe(true);
     expect(rowByName("Checked & passed")!.querySelector(".disc-panel")).toBeNull();
+  });
+});
+
+// #438 item 1 (Ryan, 2026-11-03), Rule 11: the strip's two counts are the
+// counts the two sections it names print, in the same mounted render.
+describe("#438 item 1 — the N = 0 strip names where the flags are", () => {
+  const notClean = (warnings: Array<{ flag: string; level: string; message: string }>) => {
+    const saved = { flags: AUDIT.plan_flags, cv: SECTIONS.corridor_validation };
+    SECTIONS.corridor_validation = { checked: true, warnings } as typeof SECTIONS.corridor_validation;
+    AUDIT.plan_flags = {
+      validation_warnings: warnings.length,
+      compliance_fails: 0,
+      v1_limitations: 2,
+      is_clean: false,
+    };
+    return () => {
+      AUDIT.plan_flags = saved.flags;
+      SECTIONS.corridor_validation = saved.cv;
+    };
+  };
+  const strip = () =>
+    document.querySelector('[data-testid="strip-field-checks"] .status-questions');
+  const needsYouRows = () =>
+    document.querySelectorAll("#site-corrections .ny-items > li").length;
+
+  it("P is the Pending row's count, and A is the rows NEEDS YOU lists", async () => {
+    const restore = notClean([
+      { flag: "bearing_conflict", level: "warning", message: "Declared bearing diverges." },
+    ]);
+    try {
+      await generate();
+      const p = countOf("Pending / not verified");
+      expect(p).toMatch(/^[1-9]\d*$/);
+      const a = needsYouRows();
+      expect(a).toBeGreaterThan(0);
+      const words = `${a} item${a === 1 ? "" : "s"} above and ${p} under Pending need a check before field use.`;
+      expect(strip()?.textContent).toBe(`Plan ready. ${words}`);
+      expect(document.body.textContent).not.toMatch(/plan flags?/);
+    } finally {
+      restore();
+    }
+  });
+
+  it("with nothing in NEEDS YOU, the strip names Pending alone", async () => {
+    const restore = notClean([]);
+    try {
+      await generate();
+      expect(document.getElementById("site-corrections")).toBeNull();
+      const p = countOf("Pending / not verified");
+      expect(strip()?.textContent).toBe(
+        `Plan ready. ${p} under Pending ${p === "1" ? "needs" : "need"} a check before field use.`,
+      );
+    } finally {
+      restore();
+    }
   });
 });

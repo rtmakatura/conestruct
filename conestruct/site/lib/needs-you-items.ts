@@ -222,6 +222,9 @@ export interface NeedsYouQuestion {
   flag: ScannedSiteFlag;
   /** The 19 px heading. */
   question: string;
+  /** #438 item 2: the short topic the answered row leads with
+   *  ("Sidewalks: yes, they're there"). */
+  topic: string;
   /** The "Next: …" row's plain title. */
   title: string;
   /** One 13.5 px sentence: what the map showed and what the plan did. */
@@ -244,6 +247,7 @@ export interface NeedsYouQuestion {
 
 interface FlagWords {
   question: string;
+  topic: string;
   title: string;
   /** "sidewalks" / "an intersection", for the explanation sentence. */
   noun: string;
@@ -257,6 +261,7 @@ interface FlagWords {
 
 const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
   pedestrian_facility: {
+    topic: "Sidewalks",
     question: "Are there sidewalks along the work zone?",
     title: "sidewalks along the work zone",
     noun: "sidewalks",
@@ -265,6 +270,7 @@ const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
     tcs: null,
   },
   adjacent_intersection: {
+    topic: "Intersection",
     question: "Is there an intersection next to the work?",
     title: "an intersection next to the work",
     noun: "an intersection",
@@ -273,6 +279,7 @@ const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
     tcs: "the cross-street layout stays with your TCS",
   },
   adjacent_interchange: {
+    topic: "Highway interchange",
     question: "Is there a highway interchange next to the work?",
     title: "a highway interchange next to the work",
     noun: "a highway interchange",
@@ -281,6 +288,7 @@ const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
     tcs: "the ramp layout stays with your TCS",
   },
   bicycle_facility: {
+    topic: "Bike lane",
     question: "Is there a bike lane along the work zone?",
     title: "a bike lane along the work zone",
     noun: "a bike lane",
@@ -289,6 +297,7 @@ const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
     tcs: null,
   },
   school_zone: {
+    topic: "School zone",
     question: "Is there a school zone along the work?",
     title: "a school zone along the work",
     noun: "a school zone",
@@ -304,7 +313,7 @@ function questionWords(
   flag: ScannedSiteFlag,
   bucket: ScanBucketWire | null,
   rec: SiteAdjustmentRecord | undefined,
-): Pick<NeedsYouQuestion, "question" | "title" | "explanation" | "yes" | "no"> {
+): Pick<NeedsYouQuestion, "question" | "topic" | "title" | "explanation" | "yes" | "no"> {
   const w = FLAG_WORDS[flag];
   const ft =
     bucket && typeof bucket.nearest_distance_ft === "number" ? bucket.nearest_distance_ft : null;
@@ -337,6 +346,7 @@ function questionWords(
   }
   return {
     question: w.question,
+    topic: w.topic,
     title: w.title,
     explanation,
     yes: { label: yes, consequence: yesLine },

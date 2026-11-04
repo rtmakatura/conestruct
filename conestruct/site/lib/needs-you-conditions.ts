@@ -137,6 +137,21 @@ export function mergeConditions(model: NeedsYouModel, rows: readonly ConditionRo
   };
 }
 
+/** #438 item 1 (Ryan, 2026-11-03): A, the rows NEEDS YOU lists that are
+ *  not questions: the tier items (after the merge) and the listed condition
+ *  rows the question flow does not own.  With questions these sit under
+ *  "Also on this plan"; without, they are the whole list.  One producer:
+ *  the verdict strip reads this, and NeedsYou renders exactly these rows
+ *  (`model.items` plus SiteConditionRows' own filter), so the two can't
+ *  disagree (P2). */
+export function alsoOnPlanCount(
+  model: NeedsYouModel,
+  rows: readonly ConditionRow[],
+  questionFlags: ReadonlySet<string>,
+): number {
+  return model.items.length + rows.filter((r) => isListed(r) && !questionFlags.has(r.flag)).length;
+}
+
 /** R103 (2026-10-06): "NEEDS YOU takes the primary button only when an
  *  item changed the plan or waits on a decision that would.  If every item
  *  is advisory, the downloads keep it."  The header still counts every

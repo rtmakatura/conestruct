@@ -141,7 +141,8 @@ describe("QuestionFlow (rulings 3, 5, 6, 7)", () => {
   it("opens on question 1 of 2 with one segment per question and the remaining row", () => {
     const { container } = render(<Host />);
     expect(screen.getByText("Question 1 of 2")).toBeTruthy();
-    expect(screen.getByRole("heading", { level: 4 }).textContent).toBe(
+    // #438 item 5: NEEDS YOU is h2, so the question title is h3.
+    expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(
       "Are there sidewalks along the work zone?",
     );
     const segs = container.querySelectorAll(".nyq-seg");
@@ -162,7 +163,8 @@ describe("QuestionFlow (rulings 3, 5, 6, 7)", () => {
     fireEvent.click(next);
     expect(screen.getByText("Question 2 of 2")).toBeTruthy();
     expect(
-      screen.getByText("Are there sidewalks along the work zone: Yes, they're there · not applied yet"),
+      // #438 item 2: the topic and the answer, not the whole question.
+      screen.getByText("Sidewalks: yes, they're there · not applied yet"),
     ).toBeTruthy();
     expect(container.querySelectorAll(".nyq-seg.is-done").length).toBe(1);
     expect(screen.getByRole("button", { name: "Apply answers" })).toBeTruthy();

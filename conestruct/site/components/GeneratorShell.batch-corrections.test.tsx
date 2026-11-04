@@ -304,10 +304,10 @@ describe("#254 — answers stage in the shell and apply as one write (#437)", ()
     // Settled: both answers are applied records; nothing staged or dimmed.
     expect(within(block()).getByText("2 of 2 answered")).toBeTruthy();
     expect(
-      within(block()).getByText("Is there an intersection next to the work: No, there isn't one"),
+      within(block()).getByText("Intersection: no, there isn't one"),
     ).toBeTruthy();
     expect(
-      within(block()).getByText("Are there sidewalks along the work zone: Yes, they're there"),
+      within(block()).getByText("Sidewalks: yes, they're there"),
     ).toBeTruthy();
     expect(block().querySelectorAll(".ny-advisory")).toHaveLength(1);
     expect(stale()).toBeNull();

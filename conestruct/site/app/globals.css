@@ -3102,7 +3102,11 @@ input[type="number"] {
   padding: 20px 22px;
   border-right: 1px solid var(--da-hair);
 }
-.workbench .hero-cell .k {
+/* #438 item 3 (P11): the third cell's KEY DISTANCES label is the same
+   cell label as TOTAL DEVICES and DEVICE TYPES; .hero-meta is not a
+   .hero-cell, so it had no rule and rendered in the body face. */
+.workbench .hero-cell .k,
+.workbench .hero-meta .k {
   /* Rule 81 → rule 3's QUIET section header: mono 10px .18em uppercase,
      provenance ink.  The quiet variant is what the counts hero's cell
      labels are named for in rule 3 itself. */
@@ -3253,9 +3257,10 @@ input[type="number"] {
    9.5 px uppercase and 11.5 px sans).  The format strings and the spec
    line are WRITTEN in capitals, so dropping the CSS uppercase shows the
    same words. */
-/* #437 ruling 12: the title is an h4 under DOWNLOADS, Inter 13.5 / 600
-   (the artboard's), reading the body-value token. */
-.workbench .dl-card h4 {
+/* #437 ruling 12: the title is under DOWNLOADS, Inter 13.5 / 600
+   (the artboard's), reading the body-value token.  #438 item 5: an h3
+   under the DOWNLOADS h2 (it was an h4 under an h3). */
+.workbench .dl-card h3 {
   font-family: var(--font-sans);
   font-size: var(--fs-body-value);
   line-height: 1.4;

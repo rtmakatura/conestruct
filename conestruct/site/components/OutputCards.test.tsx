@@ -559,19 +559,20 @@ describe("the action row (#261a)", () => {
     }
   });
 
-  // #437 branch 3 (ruling 12): the section now has its own h3
-  // (DOWNLOADS), so each card title is an h4 under it (heading order).
-  it("the card title is an h4 under the DOWNLOADS h3 (no h3 inside a card)", () => {
+  // #437 branch 3 (ruling 12): the section has its own heading
+  // (DOWNLOADS), so each card title sits one level under it.  #438 item
+  // 5: DOWNLOADS is a results section title, h2; the card titles are h3.
+  it("the card title is an h3 under the DOWNLOADS h2 (no h2 or h4 inside a card)", () => {
     const { container } = renderPublic();
-    expect(container.querySelectorAll(".dl-card h3")).toHaveLength(0);
-    const h4 = Array.from(container.querySelectorAll(".dl-card > .top > h4")).map((h) => h.textContent);
-    expect(h4).toEqual(cards(container).map((c) => c.querySelector(".top")!.firstElementChild!.textContent));
-    expect(h4).toContain("Plan sheet");
+    expect(container.querySelectorAll(".dl-card h2, .dl-card h4")).toHaveLength(0);
+    const h3 = Array.from(container.querySelectorAll(".dl-card > .top > h3")).map((h) => h.textContent);
+    expect(h3).toEqual(cards(container).map((c) => c.querySelector(".top")!.firstElementChild!.textContent));
+    expect(h3).toContain("Plan sheet");
     const sec = container.querySelector('[data-testid="downloads"]')!;
-    expect(sec.querySelector(":scope > .dl-head > h3")!.textContent).toBe("DOWNLOADS");
+    expect(sec.querySelector(":scope > .dl-head > h2")!.textContent).toBe("DOWNLOADS");
   });
 
-  it("globals.css: the row is bottom-anchored flex with an 8px gap, its buttons share the row (flex: 1 1 0, no own margin), 44 px targets at phone width; the title rule follows the h4", () => {
+  it("globals.css: the row is bottom-anchored flex with an 8px gap, its buttons share the row (flex: 1 1 0, no own margin), 44 px targets at phone width; the title rule follows the h3", () => {
     expect(rule(".workbench .dl-actions")).toContain("margin-top: auto");
     expect(rule(".workbench .dl-actions")).toContain("display: flex");
     expect(rule(".workbench .dl-actions")).toContain("gap: 8px");
@@ -585,11 +586,11 @@ describe("the action row (#261a)", () => {
     expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("padding-right: 4px");
     expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("gap: 4px");
     // #289 fidelity F2: rule 85's title is role 3 — 12.5 px (was 14).
-    // #437 branch 3 (ruling 12): the title is an h4 at the body-value
-    // token, 600; no h3 rule is left on the card.
-    expect(rule(".workbench .dl-card h4")).toContain("font-size: var(--fs-body-value)");
-    expect(rule(".workbench .dl-card h4")).toContain("font-weight: 600");
-    expect(css).not.toMatch(/\.dl-card h3/);
+    // #437 branch 3 (ruling 12): the title is at the body-value token, 600;
+    // #438 item 5: the title is an h3 now, so no h4 rule is left on the card.
+    expect(rule(".workbench .dl-card h3")).toContain("font-size: var(--fs-body-value)");
+    expect(rule(".workbench .dl-card h3")).toContain("font-weight: 600");
+    expect(css).not.toMatch(/\.dl-card h4/);
     const phone = css.slice(css.indexOf(".workbench .dl-actions {"));
     const q = phone.slice(phone.indexOf("@media (max-width: 480px)"));
     expect(q.slice(0, q.indexOf("}\n}") + 3).replace(/\s+/g, " ")).toContain(

@@ -31,8 +31,8 @@ describe("#318: the Plan sheet card says how to read it on a phone", () => {
     expect(notes).toHaveLength(1);
     expect(notes[0].textContent).toBe(LINE);
     const card = notes[0].closest(".dl-card")!;
-    // #437 branch 3: the card title is an h4 (ruling 12).
-    expect(card.querySelector("h4")?.textContent).toBe("Plan sheet");
+    // #437 branch 3: the card title is a heading (ruling 12); an h3 since #438 item 5.
+    expect(card.querySelector("h3")?.textContent).toBe("Plan sheet");
     const actions = card.querySelector(".dl-actions")!;
     expect(notes[0].compareDocumentPosition(actions) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });

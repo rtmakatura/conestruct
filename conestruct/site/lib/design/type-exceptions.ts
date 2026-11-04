@@ -317,7 +317,7 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // download card title (h4, Inter 13.5 / 600) and the Download all
       // button (Inter 13.5 / 600), all on the same existing token.
       { selector: ".workbench .hero-meta .row", size: "var(--fs-body-value)" },
-      { selector: ".workbench .dl-card h4", size: "var(--fs-body-value)" },
+      { selector: ".workbench .dl-card h3", size: "var(--fs-body-value)" }, // #438 item 5: h4 -> h3
       { selector: ".workbench .dl-all .act", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-setuprow-edit, .workbench .disc-word", size: "var(--fs-body-value)" },
       // #439 (Ryan, 2026-11-03; Option B on the Where canvas): the aerial's
@@ -490,7 +490,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // .tr-prov (the provenance role rules 81 and 82 name), so their
       // two rows are DELETED rather than re-declared; the geometry row
       // takes rule 82's 11px.
-      { selector: ".workbench .hero-cell .k", size: "10px" },
+      // #438 item 3: KEY DISTANCES (.hero-meta .k) joins the same site.
+      { selector: ".workbench .hero-cell .k, .workbench .hero-meta .k", size: "10px" },
       // #437 branch 3: the geometry row reads the body-value token now;
       // its row moved to the #437 exception.
     ],

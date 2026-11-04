@@ -129,12 +129,12 @@ function row(
       </span>
       <div className="ny-mid">
         <span className="ny-body sc-name">{label}</span>
-        <p className="ny-prov tr-prov">
+        <p className="ny-prov tr-note">
           <span className={`sc-result ${tone}`}>{word}</span>
           {evidence ? " · " : ""}
           <span className="sc-evidence">{evidence}</span>
         </p>
-        {extra ? <p className="ny-prov tr-prov sc-adjustment">{extra}</p> : null}
+        {extra ? <p className="ny-prov tr-note sc-adjustment">{extra}</p> : null}
       </div>
       <div className="ny-right">
         <span className="ny-cite">{cite}</span>
@@ -186,7 +186,7 @@ export function SiteConditionRows({
         <div className="ny-mid">
           {/* #198: the backend's sentence, one text node. */}
           <span className="ny-body sc-disclosure">{c.record_clause ?? c.disclosure}</span>
-          {adjLine(flag) ? <p className="ny-prov tr-prov sc-adjustment">{adjLine(flag)}</p> : null}
+          {adjLine(flag) ? <p className="ny-prov tr-note sc-adjustment">{adjLine(flag)}</p> : null}
         </div>
         <div className="ny-right">
           <span className="ny-cite">{adjCite(flag, "OPERATOR")}</span>

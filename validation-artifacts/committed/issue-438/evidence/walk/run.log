@@ -1,0 +1,8 @@
+﻿1440 generated | strip: ⚠ Plan ready. Answer 3 quick questions before you send it. | q: Are there sidewalks along the work zone?
+1440 staged | strip: ⚠ Plan ready. Answer 3 quick questions before you send it. | q: Is there an intersection next to the work?
+1440 applied | strip: ⚠ Plan ready. 1 item above and 3 under Pending need a check before field use. | q: null
+1440 ok | renders for apply 1
+390 generated | strip: ⚠ Plan ready. Answer 3 quick questions before you send it. | q: Are there sidewalks along the work zone?
+390 staged | strip: ⚠ Plan ready. Answer 3 quick questions before you send it. | q: Is there an intersection next to the work?
+390 applied | strip: ⚠ Plan ready. 1 item above and 3 under Pending need a check before field use. | q: null
+390 ok | renders for apply 1

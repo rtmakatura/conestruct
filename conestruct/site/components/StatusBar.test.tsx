@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import {
   collectValidationWarnings,
+  fieldCheckSentence,
   StatusBar,
 } from "./StatusBar";
 import type { AuditResponse, AuditState } from "@/lib/render-types";
@@ -606,5 +607,69 @@ describe("StatusBar (#437 ruling 2: the question count in words)", () => {
     );
     expect(html).toContain("INVALID INPUT");
     expect(html).not.toContain("quick question");
+  });
+});
+
+describe("StatusBar (#438 item 1: where the remaining flags are)", () => {
+  const strip = (
+    fieldChecks: { above: number; pending: number } | undefined,
+    opts?: Parameters<typeof makeAudit>[0],
+    questions = 0,
+  ) =>
+    renderToStaticMarkup(
+      <StatusBar
+        inputError={null}
+        audit={ready(makeAudit(opts))}
+        questions={questions}
+        fieldChecks={fieldChecks}
+      />,
+    );
+  it("Colfax after Apply (A = 1, P = 3): both places, each with its own count, caution, no pill", () => {
+    const html = strip({ above: 1, pending: 3 }, { corridorChecked: true, corridorWarnings: [CORRIDOR_WARNING], pendingItems: 3 });
+    expect(html).toContain('data-testid="strip-field-checks"');
+    expect(html).toContain("status-bar caution");
+    expect(html).toContain(
+      "Plan ready. 1 item above and 3 under Pending need a check before field use.",
+    );
+    expect(html).not.toContain("pill");
+    expect(html).not.toContain("VERIFIED");
+  });
+  it("drops a part whose count is 0, and the verb agrees", () => {
+    expect(fieldCheckSentence({ above: 0, pending: 3 })).toBe(
+      "Plan ready. 3 under Pending need a check before field use.",
+    );
+    expect(fieldCheckSentence({ above: 0, pending: 1 })).toBe(
+      "Plan ready. 1 under Pending needs a check before field use.",
+    );
+    expect(fieldCheckSentence({ above: 1, pending: 0 })).toBe(
+      "Plan ready. 1 item above needs a check before field use.",
+    );
+    expect(fieldCheckSentence({ above: 2, pending: 0 })).toBe(
+      "Plan ready. 2 items above need a check before field use.",
+    );
+    expect(fieldCheckSentence({ above: 2, pending: 1 })).toBe(
+      "Plan ready. 2 items above and 1 under Pending need a check before field use.",
+    );
+  });
+  it("warnings only: the sentence replaces VERIFIED · N validation warnings and its REVIEW WARNINGS pill (H1, H2)", () => {
+    const html = strip({ above: 1, pending: 0 }, { geoViolations: [GEO_WARNING] });
+    expect(html).toContain("Plan ready. 1 item above needs a check before field use.");
+    expect(html).not.toContain("REVIEW WARNINGS");
+    expect(html).not.toContain("validation warning");
+  });
+  it("both 0, or counts absent: today's verdict wording (H3, Rule 10)", () => {
+    expect(strip({ above: 0, pending: 0 }, { coloradoFails: 1 })).toContain("VERIFIED · 1 plan flag");
+    expect(strip(undefined, { coloradoFails: 1 })).toContain("VERIFIED · 1 plan flag");
+    expect(fieldCheckSentence(undefined)).toBeNull();
+  });
+  it("the clean branch never reads the counts (H1)", () => {
+    const html = strip({ above: 2, pending: 3 });
+    expect(html).toContain("READY FOR TCS REVIEW");
+    expect(html).not.toContain("need a check");
+  });
+  it("an open question outranks it", () => {
+    const html = strip({ above: 1, pending: 3 }, { coloradoFails: 1 }, 2);
+    expect(html).toContain("Plan ready. Answer 2 quick questions before you send it.");
+    expect(html).not.toContain("need a check");
   });
 });

@@ -38,7 +38,13 @@ import { SITE_ADJUSTMENT_DETAIL } from "./AuditTrail";
 import { deriveTierSources } from "@/lib/tier-sources";
 import { buildNeedsYouItems, buildQuestions, openQuestionCount } from "@/lib/needs-you-items";
 import { deriveNeedsYou, type NeedsYouAction } from "@/lib/needs-you";
-import { conditionRows, isListed, mergeConditions, primaryCount } from "@/lib/needs-you-conditions";
+import {
+  alsoOnPlanCount,
+  conditionRows,
+  isListed,
+  mergeConditions,
+  primaryCount,
+} from "@/lib/needs-you-conditions";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { StatusBar } from "./StatusBar";
 import { WorkingBand } from "./WorkingBand";
@@ -1523,6 +1529,18 @@ export function GeneratorShell({
   // Ruling 2: the verdict strip's N, the questions still waiting on the
   // plan.  Zero before the results show (no question is on screen).
   const openQuestions = resultsVisible ? openQuestionCount(needsYouQuestions) : 0;
+  // #438 item 1: where the remaining flags are, each count from the
+  // producer of the section the strip names: NEEDS YOU's non-question rows
+  // and the Pending row's own count.  Absent until both sections are on
+  // screen (the same gates they mount on), so the strip never names a
+  // count the page doesn't show (Rule 10).
+  const fieldChecks =
+    resultsVisible && settledLedger !== null
+      ? {
+          above: alsoOnPlanCount(needsYouModel, needsYouRows, questionFlags),
+          pending: settledLedger.pending,
+        }
+      : undefined;
   // #437 hand check (Ryan, 2026-11-03, P2): while everything staged is
   // an answer to a NEEDS YOU question, the Downloads warning row is the
   // one voice for "not yet applied"; the #254 ribbon steps aside.  A
@@ -1752,6 +1770,7 @@ export function GeneratorShell({
             // that does not exist.  Pre-generate the retry IS Generate.
             preGenerate={preGenerate}
             questions={openQuestions}
+            fieldChecks={fieldChecks}
           />
 
           {/* ——— Zone 1 · Setup ——— */}

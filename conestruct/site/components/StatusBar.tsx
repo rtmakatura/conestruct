@@ -220,6 +220,19 @@ interface Props {
    * zero every verdict keeps today's wording.
    */
   questions?: number;
+  /**
+   * #438 item 1 (Ryan, 2026-11-03): where the remaining flags live, each
+   * count from the producer of the section it names.  `above` is the rows
+   * NEEDS YOU lists that are not questions (lib/needs-you-conditions.ts
+   * `alsoOnPlanCount`); `pending` is the Pending row's own count (the
+   * settled tier ledger's `pending`).  With no question open and a
+   * not-clean verdict, the strip names both places: "Plan ready. <A>
+   * item(s) above and <P> under Pending need a check before field use.",
+   * dropping a part whose count is 0.  Absent (the ledger hasn't
+   * settled), or both 0: today's verdict wording (Rule 10, no guessed
+   * count).  The clean branch never reads it.
+   */
+  fieldChecks?: { above: number; pending: number };
 }
 
 // fix-spec-02 P1·05 (spec'd under P1·02): the strip is the product's
@@ -254,6 +267,21 @@ function Sym({ g }: { g: string }) {
   );
 }
 
+/** #438 item 1 (H4): "1 item above", "2 items above", "3 under Pending";
+ *  "and" joins both parts; the verb agrees with what is left.  Null when
+ *  the counts are absent or both 0 (today's wording stays). */
+export function fieldCheckSentence(
+  counts: { above: number; pending: number } | undefined,
+): string | null {
+  if (!counts) return null;
+  const parts: string[] = [];
+  if (counts.above > 0) parts.push(`${counts.above} item${counts.above === 1 ? "" : "s"} above`);
+  if (counts.pending > 0) parts.push(`${counts.pending} under Pending`);
+  if (parts.length === 0) return null;
+  const single = parts.length === 1 && (counts.above === 1 || counts.pending === 1);
+  return `Plan ready. ${parts.join(" and ")} ${single ? "needs" : "need"} a check before field use.`;
+}
+
 function StatusBarState({
   inputError,
   refusal = null,
@@ -265,6 +293,7 @@ function StatusBarState({
   bandVoice = false,
   preGenerate = false,
   questions = 0,
+  fieldChecks,
 }: Props) {
   // #289 finding 1 — ranked above INVALID INPUT on purpose: the client
   // bounds it checks (lanes per kind, the approach mirrors) are the
@@ -469,6 +498,21 @@ function StatusBarState({
         <Sym g="✓" />
         <span>VERIFIED · 0 validation warnings</span>
         <span className="pill pass">READY FOR TCS REVIEW</span>
+      </div>
+    );
+  }
+
+  // #438 item 1 (Ryan, 2026-11-03; H1, H2): not clean, no question open,
+  // and the counts are known: the strip names where the flags are.  It
+  // replaces both not-clean wordings below, and carries no pill (the
+  // REVIEW WARNINGS chip looked like a button and was not one, the reason
+  // #437 ruling 2 removed REVIEW FLAGS).
+  const fieldCheckWords = fieldCheckSentence(fieldChecks);
+  if (fieldCheckWords !== null) {
+    return (
+      <div className="status-bar caution" data-testid="strip-field-checks">
+        <Sym g="⚠" />
+        <span className="status-questions">{fieldCheckWords}</span>
       </div>
     );
   }

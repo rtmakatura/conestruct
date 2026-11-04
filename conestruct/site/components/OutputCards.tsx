@@ -284,9 +284,9 @@ export function OutputCards({
     // cards, and the price quote's row last.
     <section className="dl-sec mb-3" aria-labelledby="downloads-h" data-testid="downloads">
       <div className="dl-head">
-        <h3 id="downloads-h" className="tr-section dl-title">
+        <h2 id="downloads-h" className="tr-section dl-title">
           DOWNLOADS
-        </h3>
+        </h2>
         {/* The file count is stated ONCE per width (ruling 193): here at
             the desk, on the phone's file line below at ≤480.  It renders
             only where there is a zip to count. */}
@@ -550,8 +550,8 @@ function DlCard({
   return (
     <div className="dl-card">
       <div className="top">
-        {/* h4 under the block's h3 (axe heading-order, #261). */}
-        <h4>{card.title}</h4>
+        {/* h3 under the block's h2 (axe heading-order, #261; #438 item 5). */}
+        <h3>{card.title}</h3>
         <span className="fmt">{card.format}</span>
       </div>
       {/* #437 ruling 12 / D5: what the file is for, then its count from

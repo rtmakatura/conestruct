@@ -1,0 +1,898 @@
+{
+ "390": {
+  "steps": [
+   {
+    "name": "generated",
+    "renders": 3,
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "stripPill": false,
+    "currentQ": "Are there sidewalks along the work zone?",
+    "nyItems": [
+     {
+      "question": true,
+      "cls": "nyq-row nyq-next",
+      "text": "◌ Next: a bike lane along the work zone"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-next",
+      "text": "◌ Next: an intersection next to the work"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "3 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Are there sidewalks along the work zone?",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": false
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "390-generated-strip.png",
+    "shotStack": "390-generated-results.png"
+   },
+   {
+    "name": "staged",
+    "renders": 3,
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "stripPill": false,
+    "currentQ": "Is there an intersection next to the work?",
+    "nyItems": [
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Sidewalks: yes, they're there · not applied yet UNDO"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Bike lane: yes, it's there · not applied yet UNDO"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [
+     "✓ Sidewalks: yes, they're there · not applied yet UNDO",
+     "✓ Bike lane: yes, it's there · not applied yet UNDO"
+    ],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "3 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(126, 139, 154)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(126, 139, 154)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(126, 139, 154)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Is there an intersection next to the work?",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": false
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "390-staged-strip.png",
+    "shotStack": "390-staged-results.png"
+   },
+   {
+    "name": "applied",
+    "renders": 4,
+    "strip": "⚠ Plan ready. 1 item above and 3 under Pending need a check before field use.",
+    "stripPill": false,
+    "currentQ": null,
+    "nyItems": [
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Sidewalks: yes, they're there UNDO"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Bike lane: yes, it's there UNDO"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Intersection: yes, it's there UNDO"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [
+     "✓ Sidewalks: yes, they're there UNDO",
+     "✓ Bike lane: yes, it's there UNDO",
+     "✓ Intersection: yes, it's there UNDO"
+    ],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "3 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": false
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "390-applied-strip.png",
+    "shotStack": "390-applied-results.png"
+   }
+  ],
+  "answers": [
+   {
+    "q": "Are there sidewalks along the work zone?",
+    "a": "Yes, they're there The 4 devices stay in the plan."
+   },
+   {
+    "q": "Is there a bike lane along the work zone?",
+    "a": "Yes, it's there The 2 devices stay in the plan."
+   },
+   {
+    "q": "Is there an intersection next to the work?",
+    "a": "Yes, it's there Nothing changes. The TCS still lays out the "
+   }
+  ],
+  "rendersForApply": 1
+ },
+ "1440": {
+  "steps": [
+   {
+    "name": "generated",
+    "renders": 3,
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "stripPill": false,
+    "currentQ": "Are there sidewalks along the work zone?",
+    "nyItems": [
+     {
+      "question": true,
+      "cls": "nyq-row nyq-next",
+      "text": "◌ Next: a bike lane along the work zone"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-next",
+      "text": "◌ Next: an intersection next to the work"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [
+     "◌ Next: a bike lane along the work zone",
+     "◌ Next: an intersection next to the work"
+    ],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "3 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Are there sidewalks along the work zone?",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": true
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "1440-generated-strip.png",
+    "shotStack": "1440-generated-results.png"
+   },
+   {
+    "name": "staged",
+    "renders": 3,
+    "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "stripPill": false,
+    "currentQ": "Is there an intersection next to the work?",
+    "nyItems": [
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Sidewalks: yes, they're there · not applied yet UNDO"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Bike lane: yes, it's there · not applied yet UNDO"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [
+     "✓ Sidewalks: yes, they're there · not applied yet UNDO",
+     "✓ Bike lane: yes, it's there · not applied yet UNDO"
+    ],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "3 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(126, 139, 154)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(126, 139, 154)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(126, 139, 154)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Is there an intersection next to the work?",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": true
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "1440-staged-strip.png",
+    "shotStack": "1440-staged-results.png"
+   },
+   {
+    "name": "applied",
+    "renders": 4,
+    "strip": "⚠ Plan ready. 1 item above and 3 under Pending need a check before field use.",
+    "stripPill": false,
+    "currentQ": null,
+    "nyItems": [
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Sidewalks: yes, they're there UNDO"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Bike lane: yes, it's there UNDO"
+     },
+     {
+      "question": true,
+      "cls": "nyq-row nyq-answered confirmed",
+      "text": "✓ Intersection: yes, it's there UNDO"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [
+     "✓ Sidewalks: yes, they're there UNDO",
+     "✓ Bike lane: yes, it's there UNDO",
+     "✓ Intersection: yes, it's there UNDO"
+    ],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "3 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": true
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "1440-applied-strip.png",
+    "shotStack": "1440-applied-results.png"
+   }
+  ],
+  "answers": [
+   {
+    "q": "Are there sidewalks along the work zone?",
+    "a": "Yes, they're there The 4 devices stay in the plan."
+   },
+   {
+    "q": "Is there a bike lane along the work zone?",
+    "a": "Yes, it's there The 2 devices stay in the plan."
+   },
+   {
+    "q": "Is there an intersection next to the work?",
+    "a": "Yes, it's there Nothing changes. The TCS still lays out the "
+   }
+  ],
+  "rendersForApply": 1
+ }
+}

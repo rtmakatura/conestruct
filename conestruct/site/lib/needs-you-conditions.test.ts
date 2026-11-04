@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import { deriveNeedsYou, countProvenance, type NeedsYouItem } from "./needs-you";
 import {
+  alsoOnPlanCount,
   conditionRows,
   conditionSummary,
   mergeConditions,
@@ -147,5 +148,34 @@ describe("primaryCount — R103", () => {
     const fail: NeedsYouItem = { ...SIDEWALK_ITEM, id: "audit:colorado:fail:0", tier: "attention" };
     const model = mergeConditions(deriveNeedsYou([fail]), []);
     expect(primaryCount(model, [], [])).toBe(1);
+  });
+});
+
+describe("alsoOnPlanCount (#438 item 1: A, the rows NEEDS YOU lists that are not questions)", () => {
+  const CORRIDOR: NeedsYouItem = {
+    id: "audit:corridor",
+    tier: "attention",
+    title: "Site corridor validation",
+    result: "WARN",
+    cite: "OpenStreetMap",
+    evidence: "needs attention",
+    action: null,
+  };
+  it("Colfax after Apply: both detected conditions are questions, so A is the one tier item", () => {
+    const rows = conditionRows(SCAN, [], {});
+    const model = mergeConditions(deriveNeedsYou([CORRIDOR, SIDEWALK_ITEM]), rows);
+    // The sidewalk adjustment merges into its condition row (a question).
+    expect(model.items.map((i) => i.id)).toEqual(["audit:corridor"]);
+    const questions = new Set(["adjacent_intersection", "pedestrian_facility"]);
+    expect(alsoOnPlanCount(model, rows, questions)).toBe(1);
+  });
+  it("a listed row the question flow does not own counts; folded rows never do", () => {
+    const rows = conditionRows(SCAN, [], { limited_sight_distance: true });
+    const model = mergeConditions(deriveNeedsYou([CORRIDOR]), rows);
+    const questions = new Set(["adjacent_intersection", "pedestrian_facility"]);
+    // corridor + the asserted manual key; absent buckets and the unasserted key are folded.
+    expect(alsoOnPlanCount(model, rows, questions)).toBe(2);
+    // With no question flow, the detected rows are the list too.
+    expect(alsoOnPlanCount(model, rows, new Set())).toBe(4);
   });
 });
