@@ -43,6 +43,12 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+# Python's output is UTF-8 for this run and every child (modal deploy, the
+# hand-over copy, the helper scripts), whatever the shell or the machine sets.
+# On 2026-11-04 the ship of 6231697 died at the Modal deploy on "'charmap'
+# codec can't encode character" because the shell that ran it had no
+# PYTHONIOENCODING.  Process scope only; the machine's setting is untouched.
+$env:PYTHONIOENCODING = "utf-8"
 $RepoDir   = "C:\Users\rtmak\Documents\traffic-control-tool"
 $ShipDir   = Join-Path $RepoDir ".claude\worktrees\_ship"
 $HealthUrl = "https://rtmakatura--conestruct-render-fastapi-app.modal.run/healthz"
