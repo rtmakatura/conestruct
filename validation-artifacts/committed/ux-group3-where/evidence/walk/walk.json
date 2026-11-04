@@ -1,0 +1,1977 @@
+{
+ "390": {
+  "steps": [
+   {
+    "name": "pre-pin",
+    "card": null,
+    "order": [
+     {
+      "name": "header \"STEP 1 OF 4 WHERE\"",
+      "top": 173,
+      "h": 37
+     },
+     {
+      "name": "question \"Where is the work?\"",
+      "top": 226,
+      "h": 24
+     },
+     {
+      "name": "p.tr-help a-question-prov  \"Type an address or two cross streets, the way an 8\"",
+      "top": 258,
+      "h": 41
+     },
+     {
+      "name": "div.a-findrow  \"Pick on map\"",
+      "top": 314,
+      "h": 100
+     }
+    ],
+    "shot": "390-01-pre-pin.png"
+   },
+   {
+    "name": "pinned",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "order": [
+     {
+      "name": "header \"STEP 1 OF 4 WHERE\"",
+      "top": 173,
+      "h": 37
+     },
+     {
+      "name": "question \"Where is the work?\"",
+      "top": 226,
+      "h": 24
+     },
+     {
+      "name": "aerial",
+      "top": 266,
+      "h": 250
+     },
+     {
+      "name": "summary row",
+      "top": 532,
+      "h": 107
+     },
+     {
+      "name": "CONFIRM card",
+      "top": 655,
+      "h": 461
+     }
+    ],
+    "aerial": {
+     "stage": "pin",
+     "frame": {
+      "x": 31,
+      "y": 265.8,
+      "w": 328,
+      "h": 250
+     },
+     "edit": {
+      "x": 241.5,
+      "y": 274.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "editText": "Edit on map",
+     "legend": null,
+     "zoom": {
+      "x": 306,
+      "y": 326.8,
+      "w": 44,
+      "h": 92
+     },
+     "legendStyle": null,
+     "legendRows": [],
+     "legendInsideFrame": null
+    },
+    "axe": [],
+    "small": [],
+    "shot": "390-02-pinned.png"
+   },
+   {
+    "name": "q1-side-open",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "shot": "390-04-q1-side-open.png"
+   },
+   {
+    "name": "w7-kind-first",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": false
+     },
+     "whereConfirmCount": 0,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "◌ Next: which side of the road the work is on"
+     ]
+    },
+    "shot": "390-05-w7-kind-first.png"
+   },
+   {
+    "name": "kind-undone",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "◌ Next: which side of the road the work is on"
+     ]
+    },
+    "shot": "390-06-kind-undone.png"
+   },
+   {
+    "name": "side-chosen",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": true,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": false
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "shot": "390-07-side-chosen.png"
+   },
+   {
+    "name": "q2-kind-open",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "order": [
+     {
+      "name": "header \"STEP 1 OF 4 WHERE\"",
+      "top": 173,
+      "h": 37
+     },
+     {
+      "name": "question \"Where is the work?\"",
+      "top": 226,
+      "h": 24
+     },
+     {
+      "name": "aerial",
+      "top": 266,
+      "h": 323
+     },
+     {
+      "name": "summary row",
+      "top": 605,
+      "h": 107
+     },
+     {
+      "name": "CONFIRM card",
+      "top": 728,
+      "h": 476
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shot": "390-08-q2-kind-open.png"
+   },
+   {
+    "name": "q2-details-open",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": false,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "shot": "390-10-q2-details-open.png"
+   },
+   {
+    "name": "q2-kind-chosen",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "shot": "390-11-q2-kind-chosen.png"
+   },
+   {
+    "name": "side-undone",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "✓ What kind of work is it: Shoulder work UNDO"
+     ]
+    },
+    "shot": "390-12-side-undone.png"
+   },
+   {
+    "name": "summary-closed",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "summary": {
+     "text": "✓ Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default) Edit Details",
+     "sumText": "Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default)",
+     "editExpanded": "false",
+     "foldHidden": true,
+     "prov": {
+      "hidden": true,
+      "text": "Franklin Street northbound · Denver · 39.73978, -104.96825 · OSM detection · way 492215711 · sole match auto-adopted · cross street from OSM node 7402343536 · searched 1,700 m"
+     },
+     "fold": null
+    },
+    "shot": "390-13-summary-closed.png"
+   },
+   {
+    "name": "summary-details",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "summary": {
+     "text": "✓ Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default) Edit Details",
+     "sumText": "Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default)",
+     "editExpanded": "false",
+     "foldHidden": true,
+     "prov": {
+      "hidden": false,
+      "text": "Franklin Street northbound · Denver · 39.73978, -104.96825 · OSM detection · way 492215711 · sole match auto-adopted · cross street from OSM node 7402343536 · searched 1,700 m"
+     },
+     "fold": null
+    },
+    "shot": "390-14-summary-details.png"
+   },
+   {
+    "name": "summary-edit-open",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "summary": {
+     "text": "✓ Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default) Edit Details",
+     "sumText": "Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default)",
+     "editExpanded": "true",
+     "foldHidden": false,
+     "prov": {
+      "hidden": true,
+      "text": "Franklin Street northbound · Denver · 39.73978, -104.96825 · OSM detection · way 492215711 · sole match auto-adopted · cross street from OSM node 7402343536 · searched 1,700 m"
+     },
+     "fold": {
+      "address": true,
+      "rows": [
+       "move-spot: ✓ Found the spot Franklin Street Northbound CHANGE",
+       "move-start: ✓ Work starts at East Colfax Avenue MOVE",
+       "move-extent: ✓ Extent 1,000 ft · default CHANGE"
+      ],
+      "worklen": true
+     }
+    },
+    "axe": [],
+    "small": [],
+    "shot": "390-15-summary-edit-open.png"
+   },
+   {
+    "name": "oneway-pinned",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "North side",
+       "line2": "Next to westbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "shot": "390-17-oneway-pinned.png"
+   },
+   {
+    "name": "oneway-shoulder",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "North side",
+       "line2": "Next to westbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "✓ What kind of work is it: Shoulder work UNDO"
+     ]
+    },
+    "shot": "390-18-oneway-shoulder.png"
+   }
+  ],
+  "fails": [],
+  "prePin": {
+   "head": "STEP 1 OF 4 WHERE",
+   "question": "Where is the work?",
+   "helper": "Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map.",
+   "field": true,
+   "button": "Pick on map",
+   "tops": {
+    "head": 80,
+    "question": 133,
+    "findrow": 221
+   }
+  },
+  "auditAfterPinA": 0,
+  "pinA": {
+   "sideOptions": [
+    {
+     "line1": "East side",
+     "line2": "Next to northbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    },
+    {
+     "line1": "West side",
+     "line2": "Next to southbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ]
+  },
+  "w7": {
+   "flag": "kind",
+   "whereConfirmCount": 0,
+   "button": {
+    "text": "Next question",
+    "testid": null,
+    "disabled": false
+   }
+  },
+  "afterW7Next": {
+   "count": "Question 1 of 2",
+   "heading": "Which side of the road is the work on?",
+   "flag": "side",
+   "question": "Which side of the road is the work on?",
+   "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+   "options": [
+    {
+     "line1": "East side",
+     "line2": "Next to northbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    },
+    {
+     "line1": "West side",
+     "line2": "Next to southbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ],
+   "button": {
+    "text": "Confirm and lay out the plan",
+    "testid": "where-confirm",
+    "disabled": true
+   },
+   "whereConfirmCount": 1,
+   "gate": null,
+   "details": null,
+   "rows": [
+    "✓ What kind of work is it: Shoulder work UNDO"
+   ]
+  },
+  "kindUndo": {
+   "flag": "kind",
+   "anyChecked": false
+  },
+  "aerialWork": {
+   "stage": "work",
+   "frame": {
+    "x": 31,
+    "y": 265.8,
+    "w": 328,
+    "h": 250
+   },
+   "edit": {
+    "x": 241.5,
+    "y": 274.8,
+    "w": 108.5,
+    "h": 44
+   },
+   "editText": "Edit on map",
+   "legend": {
+    "x": 31,
+    "y": 523.8,
+    "w": 328,
+    "h": 41.5
+   },
+   "zoom": {
+    "x": 306,
+    "y": 326.8,
+    "w": 44,
+    "h": 92
+   },
+   "legendStyle": {
+    "position": "static",
+    "display": "grid",
+    "cols": "156px 156px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "border": "0px none rgb(200, 209, 221)"
+   },
+   "legendRows": [
+    {
+     "text": "Work zone",
+     "x": 31,
+     "y": 523.8,
+     "w": 156,
+     "h": 18.8
+    },
+    {
+     "text": "Faded: past the mapped road",
+     "x": 31,
+     "y": 546.5,
+     "w": 328,
+     "h": 18.8
+    }
+   ],
+   "legendInsideFrame": false
+  },
+  "sideUndo": {
+   "flag": "side",
+   "anyChecked": false
+  },
+  "sideRechosenCard": {
+   "count": "Question 1 of 2",
+   "heading": "Which side of the road is the work on?",
+   "flag": "side",
+   "question": "Which side of the road is the work on?",
+   "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+   "options": [
+    {
+     "line1": "East side",
+     "line2": "Next to northbound traffic",
+     "checked": true,
+     "testid": "side-option"
+    },
+    {
+     "line1": "West side",
+     "line2": "Next to southbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ],
+   "button": {
+    "text": "Confirm and lay out the plan",
+    "testid": "where-confirm",
+    "disabled": false
+   },
+   "whereConfirmCount": 1,
+   "gate": null,
+   "details": null,
+   "rows": [
+    "✓ What kind of work is it: Shoulder work UNDO"
+   ]
+  },
+  "readyCard": {
+   "count": "Question 2 of 2",
+   "heading": "What kind of work is it?",
+   "flag": "kind",
+   "question": "What kind of work is it?",
+   "why": null,
+   "options": [
+    {
+     "line1": "Shoulder work",
+     "line2": null,
+     "checked": true,
+     "testid": "kind-chip-shoulder"
+    },
+    {
+     "line1": "Lane closure with flaggers",
+     "line2": null,
+     "checked": false,
+     "testid": "kind-chip-flagger_lane_closure"
+    },
+    {
+     "line1": "Lane closure near an intersection",
+     "line2": null,
+     "checked": false,
+     "testid": "kind-chip-near_intersection"
+    }
+   ],
+   "button": {
+    "text": "Confirm and lay out the plan",
+    "testid": "where-confirm",
+    "disabled": false
+   },
+   "whereConfirmCount": 1,
+   "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+   "details": {
+    "hidden": true,
+    "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+   },
+   "rows": [
+    "✓ Which side of the road is the work on: East side UNDO"
+   ]
+  },
+  "foldOpenedByItself": false,
+  "auditBeforeConfirm": 0,
+  "afterConfirm": {
+   "openBand": "band-what",
+   "whereOpen": false
+  },
+  "auditAfterConfirm": 1,
+  "pinB": {
+   "sideOptions": [
+    {
+     "line1": "North side",
+     "line2": "Next to westbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ],
+   "sideOptionsWithShoulder": [
+    {
+     "line1": "North side",
+     "line2": "Next to westbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ]
+  }
+ },
+ "1440": {
+  "steps": [
+   {
+    "name": "pre-pin",
+    "card": null,
+    "order": [
+     {
+      "name": "header \"STEP 1 OF 4 WHERE\"",
+      "top": 160,
+      "h": 37
+     },
+     {
+      "name": "question \"Where is the work?\"",
+      "top": 213,
+      "h": 28
+     },
+     {
+      "name": "p.tr-help a-question-prov  \"Type an address or two cross streets, the way an 8\"",
+      "top": 249,
+      "h": 20
+     },
+     {
+      "name": "div.a-findrow  \"Pick on map\"",
+      "top": 285,
+      "h": 44
+     }
+    ],
+    "shot": "1440-01-pre-pin.png"
+   },
+   {
+    "name": "pinned",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "order": [
+     {
+      "name": "header \"STEP 1 OF 4 WHERE\"",
+      "top": 160,
+      "h": 37
+     },
+     {
+      "name": "question \"Where is the work?\"",
+      "top": 213,
+      "h": 28
+     },
+     {
+      "name": "aerial",
+      "top": 257,
+      "h": 300
+     },
+     {
+      "name": "summary row",
+      "top": 573,
+      "h": 46
+     },
+     {
+      "name": "CONFIRM card",
+      "top": 635,
+      "h": 397
+     }
+    ],
+    "aerial": {
+     "stage": "pin",
+     "frame": {
+      "x": 297,
+      "y": 256.5,
+      "w": 846,
+      "h": 300
+     },
+     "edit": {
+      "x": 1025.5,
+      "y": 265.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "editText": "Edit on map",
+     "legend": null,
+     "zoom": {
+      "x": 1102,
+      "y": 317.5,
+      "w": 32,
+      "h": 68
+     },
+     "legendStyle": null,
+     "legendRows": [],
+     "legendInsideFrame": null
+    },
+    "axe": [],
+    "small": [
+     {
+      "text": "+",
+      "testid": null,
+      "w": 32,
+      "h": 32,
+      "cls": "a-aerial-zbtn"
+     },
+     {
+      "text": "−",
+      "testid": null,
+      "w": 32,
+      "h": 32,
+      "cls": "a-aerial-zbtn"
+     }
+    ],
+    "shot": "1440-02-pinned.png"
+   },
+   {
+    "name": "q1-side-open",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "shot": "1440-04-q1-side-open.png"
+   },
+   {
+    "name": "w7-kind-first",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": false
+     },
+     "whereConfirmCount": 0,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "◌ Next: which side of the road the work is on"
+     ]
+    },
+    "shot": "1440-05-w7-kind-first.png"
+   },
+   {
+    "name": "kind-undone",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "◌ Next: which side of the road the work is on"
+     ]
+    },
+    "shot": "1440-06-kind-undone.png"
+   },
+   {
+    "name": "side-chosen",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": true,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": false
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "shot": "1440-07-side-chosen.png"
+   },
+   {
+    "name": "q2-kind-open",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "order": [
+     {
+      "name": "header \"STEP 1 OF 4 WHERE\"",
+      "top": 160,
+      "h": 37
+     },
+     {
+      "name": "question \"Where is the work?\"",
+      "top": 213,
+      "h": 28
+     },
+     {
+      "name": "aerial",
+      "top": 257,
+      "h": 324
+     },
+     {
+      "name": "summary row",
+      "top": 596,
+      "h": 46
+     },
+     {
+      "name": "CONFIRM card",
+      "top": 659,
+      "h": 457
+     }
+    ],
+    "axe": [],
+    "small": [
+     {
+      "text": "+",
+      "testid": null,
+      "w": 32,
+      "h": 32,
+      "cls": "a-aerial-zbtn"
+     },
+     {
+      "text": "−",
+      "testid": null,
+      "w": 32,
+      "h": 32,
+      "cls": "a-aerial-zbtn"
+     }
+    ],
+    "shot": "1440-08-q2-kind-open.png"
+   },
+   {
+    "name": "q2-details-open",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": false,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "shot": "1440-10-q2-details-open.png"
+   },
+   {
+    "name": "q2-kind-chosen",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "shot": "1440-11-q2-kind-chosen.png"
+   },
+   {
+    "name": "side-undone",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "East side",
+       "line2": "Next to northbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      },
+      {
+       "line1": "West side",
+       "line2": "Next to southbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "✓ What kind of work is it: Shoulder work UNDO"
+     ]
+    },
+    "shot": "1440-12-side-undone.png"
+   },
+   {
+    "name": "summary-closed",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "summary": {
+     "text": "✓ Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default) Edit Details",
+     "sumText": "Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default)",
+     "editExpanded": "false",
+     "foldHidden": true,
+     "prov": {
+      "hidden": true,
+      "text": "Franklin Street northbound · Denver · 39.73978, -104.96825 · OSM detection · way 492215711 · sole match auto-adopted · cross street from OSM node 7402343536 · searched 1,700 m"
+     },
+     "fold": null
+    },
+    "shot": "1440-13-summary-closed.png"
+   },
+   {
+    "name": "summary-details",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "summary": {
+     "text": "✓ Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default) Edit Details",
+     "sumText": "Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default)",
+     "editExpanded": "false",
+     "foldHidden": true,
+     "prov": {
+      "hidden": false,
+      "text": "Franklin Street northbound · Denver · 39.73978, -104.96825 · OSM detection · way 492215711 · sole match auto-adopted · cross street from OSM node 7402343536 · searched 1,700 m"
+     },
+     "fold": null
+    },
+    "shot": "1440-14-summary-details.png"
+   },
+   {
+    "name": "summary-edit-open",
+    "card": {
+     "count": "Question 2 of 2",
+     "heading": "What kind of work is it?",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "options": [
+      {
+       "line1": "Shoulder work",
+       "line2": null,
+       "checked": true,
+       "testid": "kind-chip-shoulder"
+      },
+      {
+       "line1": "Lane closure with flaggers",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-flagger_lane_closure"
+      },
+      {
+       "line1": "Lane closure near an intersection",
+       "line2": null,
+       "checked": false,
+       "testid": "kind-chip-near_intersection"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": false
+     },
+     "whereConfirmCount": 1,
+     "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+     "details": {
+      "hidden": true,
+      "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+     },
+     "rows": [
+      "✓ Which side of the road is the work on: East side UNDO"
+     ]
+    },
+    "summary": {
+     "text": "✓ Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default) Edit Details",
+     "sumText": "Franklin Street northbound · starts at East Colfax Avenue · 1,000 ft (default)",
+     "editExpanded": "true",
+     "foldHidden": false,
+     "prov": {
+      "hidden": true,
+      "text": "Franklin Street northbound · Denver · 39.73978, -104.96825 · OSM detection · way 492215711 · sole match auto-adopted · cross street from OSM node 7402343536 · searched 1,700 m"
+     },
+     "fold": {
+      "address": true,
+      "rows": [
+       "move-spot: ✓ Found the spot Franklin Street Northbound CHANGE",
+       "move-start: ✓ Work starts at East Colfax Avenue MOVE",
+       "move-extent: ✓ Extent 1,000 ft · default CHANGE"
+      ],
+      "worklen": true
+     }
+    },
+    "axe": [],
+    "small": [
+     {
+      "text": "+",
+      "testid": null,
+      "w": 32,
+      "h": 32,
+      "cls": "a-aerial-zbtn"
+     },
+     {
+      "text": "−",
+      "testid": null,
+      "w": 32,
+      "h": 32,
+      "cls": "a-aerial-zbtn"
+     },
+     {
+      "text": "CHANGE",
+      "testid": "move-action-spot",
+      "w": 66.2,
+      "h": 32,
+      "cls": "act-btn"
+     },
+     {
+      "text": "MOVE",
+      "testid": "move-action-start",
+      "w": 52.1,
+      "h": 32,
+      "cls": "act-btn"
+     },
+     {
+      "text": "CHANGE",
+      "testid": "move-action-extent",
+      "w": 66.2,
+      "h": 32,
+      "cls": "act-btn"
+     },
+     {
+      "text": "default",
+      "testid": "info-toggle-worklen",
+      "w": 47,
+      "h": 32,
+      "cls": "a-mark tr-prov is-plain"
+     }
+    ],
+    "shot": "1440-15-summary-edit-open.png"
+   },
+   {
+    "name": "oneway-pinned",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "North side",
+       "line2": "Next to westbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Next question",
+      "testid": null,
+      "disabled": true
+     },
+     "whereConfirmCount": 0,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "◌ Next: what kind of work it is"
+     ]
+    },
+    "shot": "1440-17-oneway-pinned.png"
+   },
+   {
+    "name": "oneway-shoulder",
+    "card": {
+     "count": "Question 1 of 2",
+     "heading": "Which side of the road is the work on?",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "options": [
+      {
+       "line1": "North side",
+       "line2": "Next to westbound traffic",
+       "checked": false,
+       "testid": "side-option"
+      }
+     ],
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "testid": "where-confirm",
+      "disabled": true
+     },
+     "whereConfirmCount": 1,
+     "gate": null,
+     "details": null,
+     "rows": [
+      "✓ What kind of work is it: Shoulder work UNDO"
+     ]
+    },
+    "shot": "1440-18-oneway-shoulder.png"
+   }
+  ],
+  "fails": [],
+  "prePin": {
+   "head": "STEP 1 OF 4 WHERE",
+   "question": "Where is the work?",
+   "helper": "Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map.",
+   "field": true,
+   "button": "Pick on map",
+   "tops": {
+    "head": 160,
+    "question": 213,
+    "findrow": 285
+   }
+  },
+  "auditAfterPinA": 0,
+  "pinA": {
+   "sideOptions": [
+    {
+     "line1": "East side",
+     "line2": "Next to northbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    },
+    {
+     "line1": "West side",
+     "line2": "Next to southbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ]
+  },
+  "w7": {
+   "flag": "kind",
+   "whereConfirmCount": 0,
+   "button": {
+    "text": "Next question",
+    "testid": null,
+    "disabled": false
+   }
+  },
+  "afterW7Next": {
+   "count": "Question 1 of 2",
+   "heading": "Which side of the road is the work on?",
+   "flag": "side",
+   "question": "Which side of the road is the work on?",
+   "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+   "options": [
+    {
+     "line1": "East side",
+     "line2": "Next to northbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    },
+    {
+     "line1": "West side",
+     "line2": "Next to southbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ],
+   "button": {
+    "text": "Confirm and lay out the plan",
+    "testid": "where-confirm",
+    "disabled": true
+   },
+   "whereConfirmCount": 1,
+   "gate": null,
+   "details": null,
+   "rows": [
+    "✓ What kind of work is it: Shoulder work UNDO"
+   ]
+  },
+  "kindUndo": {
+   "flag": "kind",
+   "anyChecked": false
+  },
+  "aerialWork": {
+   "stage": "work",
+   "frame": {
+    "x": 297,
+    "y": 256.5,
+    "w": 846,
+    "h": 300
+   },
+   "edit": {
+    "x": 1025.5,
+    "y": 265.5,
+    "w": 108.5,
+    "h": 44
+   },
+   "editText": "Edit on map",
+   "legend": {
+    "x": 305,
+    "y": 264.5,
+    "w": 223.6,
+    "h": 59.5
+   },
+   "zoom": {
+    "x": 1102,
+    "y": 317.5,
+    "w": 32,
+    "h": 68
+   },
+   "legendStyle": {
+    "position": "absolute",
+    "display": "flex",
+    "cols": "none",
+    "bg": "rgba(16, 28, 41, 0.92)",
+    "border": "1px solid rgb(44, 62, 83)"
+   },
+   "legendRows": [
+    {
+     "text": "Work zone",
+     "x": 318,
+     "y": 273.5,
+     "w": 197.6,
+     "h": 18.8
+    },
+    {
+     "text": "Faded: past the mapped road",
+     "x": 318,
+     "y": 296.3,
+     "w": 197.6,
+     "h": 18.8
+    }
+   ],
+   "legendInsideFrame": true
+  },
+  "sideUndo": {
+   "flag": "side",
+   "anyChecked": false
+  },
+  "sideRechosenCard": {
+   "count": "Question 1 of 2",
+   "heading": "Which side of the road is the work on?",
+   "flag": "side",
+   "question": "Which side of the road is the work on?",
+   "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+   "options": [
+    {
+     "line1": "East side",
+     "line2": "Next to northbound traffic",
+     "checked": true,
+     "testid": "side-option"
+    },
+    {
+     "line1": "West side",
+     "line2": "Next to southbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ],
+   "button": {
+    "text": "Confirm and lay out the plan",
+    "testid": "where-confirm",
+    "disabled": false
+   },
+   "whereConfirmCount": 1,
+   "gate": null,
+   "details": null,
+   "rows": [
+    "✓ What kind of work is it: Shoulder work UNDO"
+   ]
+  },
+  "readyCard": {
+   "count": "Question 2 of 2",
+   "heading": "What kind of work is it?",
+   "flag": "kind",
+   "question": "What kind of work is it?",
+   "why": null,
+   "options": [
+    {
+     "line1": "Shoulder work",
+     "line2": null,
+     "checked": true,
+     "testid": "kind-chip-shoulder"
+    },
+    {
+     "line1": "Lane closure with flaggers",
+     "line2": null,
+     "checked": false,
+     "testid": "kind-chip-flagger_lane_closure"
+    },
+    {
+     "line1": "Lane closure near an intersection",
+     "line2": null,
+     "checked": false,
+     "testid": "kind-chip-near_intersection"
+    }
+   ],
+   "button": {
+    "text": "Confirm and lay out the plan",
+    "testid": "where-confirm",
+    "disabled": false
+   },
+   "whereConfirmCount": 1,
+   "gate": "4 more kinds are coming once each is checked against its standard sheet.",
+   "details": {
+    "hidden": true,
+    "text": "Shoulder work: TA-3/TA-5 · S-630-1; Lane closure with flaggers: TA-10 · S-630-1; Lane closure near an intersection: Cases 18/19 · S-630-1"
+   },
+   "rows": [
+    "✓ Which side of the road is the work on: East side UNDO"
+   ]
+  },
+  "foldOpenedByItself": false,
+  "auditBeforeConfirm": 0,
+  "afterConfirm": {
+   "openBand": "band-what",
+   "whereOpen": false
+  },
+  "auditAfterConfirm": 1,
+  "pinB": {
+   "sideOptions": [
+    {
+     "line1": "North side",
+     "line2": "Next to westbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ],
+   "sideOptionsWithShoulder": [
+    {
+     "line1": "North side",
+     "line2": "Next to westbound traffic",
+     "checked": false,
+     "testid": "side-option"
+    }
+   ]
+  }
+ }
+}
