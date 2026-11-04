@@ -1,0 +1,98 @@
+{
+ "390": {
+  "steps": [],
+  "answers": [],
+  "error": "TimeoutError: page.waitForSelector: Timeout 240000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=downloads]') to be visible\u001b[22m\n"
+ },
+ "1440": {
+  "steps": [],
+  "answers": [],
+  "error": "TimeoutError: page.waitForSelector: Timeout 240000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=downloads]') to be visible\u001b[22m\n"
+ },
+ "base": "https://www.conestruct.com",
+ "stub": true,
+ "roadLists": [
+  [
+   "SEARCH",
+   "+ OR ENTER COORDINATES MANUALLY",
+   "STREETS",
+   "i DETAILS",
+   "East Colfax Avenue, westbound Primary road · 1 m from your pin",
+   "East Colfax Avenue, eastbound Primary road · 6 m from your pin",
+   "Pennsylvania Street, northbound Residential street · 24 m from your pin",
+   "↻ RE-DETECT ROADS",
+   "Cancel",
+   "Save & Close"
+  ],
+  [
+   "SEARCH",
+   "+ OR ENTER COORDINATES MANUALLY",
+   "STREETS",
+   "i DETAILS",
+   "East Colfax Avenue, westbound Primary road · 1 m from your pin",
+   "East Colfax Avenue, eastbound Primary road · 6 m from your pin",
+   "Pennsylvania Street, northbound Residential street · 24 m from your pin",
+   "↻ RE-DETECT ROADS",
+   "Cancel",
+   "Save & Close"
+  ]
+ ],
+ "picked": [
+  "East Colfax Avenue, westbound Primary road · 1 m from your pin",
+  "East Colfax Avenue, westbound Primary road · 1 m from your pin"
+ ],
+ "roadBearing": [
+  {
+   "width": 1440,
+   "stub": true,
+   "status": 200,
+   "scan_status": "ok",
+   "candidates": [
+    {
+     "way_id": "1547338992",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 271
+    },
+    {
+     "way_id": "628643782",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 91
+    },
+    {
+     "way_id": "596451653",
+     "name": "Pennsylvania Street",
+     "oneway": "yes",
+     "bearing": 359
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "stub": true,
+   "status": 200,
+   "scan_status": "ok",
+   "candidates": [
+    {
+     "way_id": "1547338992",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 271
+    },
+    {
+     "way_id": "628643782",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 91
+    },
+    {
+     "way_id": "596451653",
+     "name": "Pennsylvania Street",
+     "oneway": "yes",
+     "bearing": 359
+    }
+   ]
+  }
+ ]
+}

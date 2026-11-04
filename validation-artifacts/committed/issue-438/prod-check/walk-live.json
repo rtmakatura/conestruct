@@ -1,0 +1,60 @@
+{
+ "390": {
+  "steps": [],
+  "answers": [],
+  "error": "Error: NOROAD: no Colfax road in the live picker list"
+ },
+ "1440": {
+  "steps": [],
+  "answers": [],
+  "error": "Error: NOROAD: no Colfax road in the live picker list"
+ },
+ "base": "https://www.conestruct.com",
+ "stub": false,
+ "roadLists": [],
+ "picked": [],
+ "roadBearing": [
+  {
+   "width": 1440,
+   "stub": false,
+   "status": 200,
+   "scan_status": "unavailable",
+   "candidates": []
+  },
+  {
+   "width": 1440,
+   "stub": false,
+   "status": 200,
+   "scan_status": "unavailable",
+   "candidates": []
+  },
+  {
+   "width": 1440,
+   "stub": false,
+   "status": 200,
+   "scan_status": "unavailable",
+   "candidates": []
+  },
+  {
+   "width": 390,
+   "stub": false,
+   "status": 200,
+   "scan_status": "unavailable",
+   "candidates": []
+  },
+  {
+   "width": 390,
+   "stub": false,
+   "status": 200,
+   "scan_status": "unavailable",
+   "candidates": []
+  },
+  {
+   "width": 390,
+   "stub": false,
+   "status": 200,
+   "scan_status": "unavailable",
+   "candidates": []
+  }
+ ]
+}

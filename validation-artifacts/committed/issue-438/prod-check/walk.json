@@ -1,0 +1,844 @@
+{
+ "390": {
+  "steps": [
+   {
+    "name": "generated",
+    "renders": 4,
+    "strip": "⚠ Plan ready. 2 items above and 2 under Pending need a check before field use.",
+    "stripPill": false,
+    "currentQ": null,
+    "nyItems": [
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site conditions needs attention OpenStreetMap"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "2 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     },
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     },
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": false
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "390-generated-strip.png",
+    "shotStack": "390-generated-results.png"
+   },
+   {
+    "name": "staged",
+    "renders": 4,
+    "strip": "⚠ Plan ready. 2 items above and 2 under Pending need a check before field use.",
+    "stripPill": false,
+    "currentQ": null,
+    "nyItems": [
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site conditions needs attention OpenStreetMap"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "2 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     },
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     },
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": false
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": false
+     }
+    ],
+    "axe": [],
+    "small": [],
+    "shotStrip": "390-staged-strip.png",
+    "shotStack": "390-staged-results.png"
+   }
+  ],
+  "answers": [],
+  "questionsAsked": 0,
+  "applySkipped": "no NEEDS YOU questions",
+  "headingsDlOpen": [
+   {
+    "tag": "h1",
+    "id": null,
+    "text": "Method of Handling Traffic plan generator",
+    "visible": true
+   },
+   {
+    "tag": "h2",
+    "id": "needs-you-h",
+    "text": "NEEDS YOU",
+    "visible": true
+   },
+   {
+    "tag": "h2",
+    "id": "your-plan-h",
+    "text": "YOUR PLAN",
+    "visible": true
+   },
+   {
+    "tag": "h2",
+    "id": "downloads-h",
+    "text": "DOWNLOADS",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Plan sheet",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Device list",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Crew instructions",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Audit trail",
+    "visible": true
+   }
+  ],
+  "download": {
+   "button": "Download plan sheet PDF",
+   "filename": "East-Colfax-Avenue_shoulder_2026-11-04_70cd99.pdf",
+   "bytes": 1046439,
+   "failure": null
+  }
+ },
+ "1440": {
+  "steps": [
+   {
+    "name": "generated",
+    "renders": 4,
+    "strip": "⚠ Plan ready. 2 items above and 2 under Pending need a check before field use.",
+    "stripPill": false,
+    "currentQ": null,
+    "nyItems": [
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site conditions needs attention OpenStreetMap"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "2 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     },
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     },
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": true
+     }
+    ],
+    "axe": [],
+    "small": [
+     {
+      "text": "⚠\nNeeds attention\n4\n›",
+      "w": 842,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "i\nReference\npermit · hours windows · zon",
+      "w": 844,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "⚠\nDenver hazards\n2 hazards, worst: $500 ",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "◷\nWork hours: Denver\nwindows shown · not",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "i\nPermit: Denver\nno published tiers · 14",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "▤\nPlan details: device schedule\n9 device",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     }
+    ],
+    "shotStrip": "1440-generated-strip.png",
+    "shotStack": "1440-generated-results.png"
+   },
+   {
+    "name": "staged",
+    "renders": 4,
+    "strip": "⚠ Plan ready. 2 items above and 2 under Pending need a check before field use.",
+    "stripPill": false,
+    "currentQ": null,
+    "nyItems": [
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site conditions needs attention OpenStreetMap"
+     },
+     {
+      "question": false,
+      "cls": "ny-item is-attention",
+      "text": "⚠ Site corridor validation needs attention OpenStreetMap"
+     }
+    ],
+    "nyqRows": [],
+    "pendRows": [
+     {
+      "inResults": true,
+      "visible": true,
+      "name": "Pending / not verified",
+      "count": "2 not verified yet"
+     }
+    ],
+    "keyDistancesK": [
+     {
+      "text": "KEY DISTANCES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "totalDevicesK": [
+     {
+      "text": "TOTAL DEVICES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     },
+     {
+      "text": "DEVICE TYPES",
+      "display": "block",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc",
+      "fontSize": "10px",
+      "letterSpacing": "1.8px",
+      "textTransform": "uppercase",
+      "color": "rgb(147, 160, 176)",
+      "fontWeight": "500"
+     }
+    ],
+    "prov": [
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     },
+     {
+      "text": "needs attention",
+      "fontFamily": "__Inter_176161, __Inter_Fallback_176161",
+      "underNY": true
+     }
+    ],
+    "cite": [
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     },
+     {
+      "text": "OpenStreetMap",
+      "fontFamily": "__JetBrains_Mono_5f34dc, __JetBrains_Mono_Fallback_5f34dc"
+     }
+    ],
+    "headings": [
+     {
+      "tag": "h1",
+      "id": null,
+      "text": "Method of Handling Traffic plan generator",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "needs-you-h",
+      "text": "NEEDS YOU",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "your-plan-h",
+      "text": "YOUR PLAN",
+      "visible": true
+     },
+     {
+      "tag": "h2",
+      "id": "downloads-h",
+      "text": "DOWNLOADS",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Plan sheet",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Device list",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Crew instructions",
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "id": null,
+      "text": "Audit trail",
+      "visible": true
+     }
+    ],
+    "axe": [],
+    "small": [
+     {
+      "text": "⚠\nNeeds attention\n4\n›",
+      "w": 842,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "i\nReference\npermit · hours windows · zon",
+      "w": 844,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "⚠\nDenver hazards\n2 hazards, worst: $500 ",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "◷\nWork hours: Denver\nwindows shown · not",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "i\nPermit: Denver\nno published tiers · 14",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     },
+     {
+      "text": "▤\nPlan details: device schedule\n9 device",
+      "w": 810,
+      "h": 43.5,
+      "cls": "chip-sum"
+     }
+    ],
+    "shotStrip": "1440-staged-strip.png",
+    "shotStack": "1440-staged-results.png"
+   }
+  ],
+  "answers": [],
+  "questionsAsked": 0,
+  "applySkipped": "no NEEDS YOU questions",
+  "headingsDlOpen": [
+   {
+    "tag": "h1",
+    "id": null,
+    "text": "Method of Handling Traffic plan generator",
+    "visible": true
+   },
+   {
+    "tag": "h2",
+    "id": "needs-you-h",
+    "text": "NEEDS YOU",
+    "visible": true
+   },
+   {
+    "tag": "h2",
+    "id": "your-plan-h",
+    "text": "YOUR PLAN",
+    "visible": true
+   },
+   {
+    "tag": "h2",
+    "id": "downloads-h",
+    "text": "DOWNLOADS",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Plan sheet",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Device list",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Crew instructions",
+    "visible": true
+   },
+   {
+    "tag": "h3",
+    "id": null,
+    "text": "Audit trail",
+    "visible": true
+   }
+  ],
+  "download": {
+   "button": "Download plan sheet PDF",
+   "filename": "East-Colfax-Avenue_shoulder_2026-11-04_70cd99.pdf",
+   "bytes": 1046420,
+   "failure": null
+  }
+ },
+ "base": "https://www.conestruct.com",
+ "stub": true,
+ "roadLists": [
+  [
+   "SEARCH",
+   "+ OR ENTER COORDINATES MANUALLY",
+   "STREETS",
+   "i DETAILS",
+   "East Colfax Avenue, westbound Primary road · 1 m from your pin",
+   "East Colfax Avenue, eastbound Primary road · 6 m from your pin",
+   "Pennsylvania Street, northbound Residential street · 24 m from your pin",
+   "↻ RE-DETECT ROADS",
+   "Cancel",
+   "Save & Close"
+  ],
+  [
+   "SEARCH",
+   "+ OR ENTER COORDINATES MANUALLY",
+   "STREETS",
+   "i DETAILS",
+   "East Colfax Avenue, westbound Primary road · 1 m from your pin",
+   "East Colfax Avenue, eastbound Primary road · 6 m from your pin",
+   "Pennsylvania Street, northbound Residential street · 24 m from your pin",
+   "↻ RE-DETECT ROADS",
+   "Cancel",
+   "Save & Close"
+  ]
+ ],
+ "picked": [
+  "East Colfax Avenue, westbound Primary road · 1 m from your pin",
+  "East Colfax Avenue, westbound Primary road · 1 m from your pin"
+ ],
+ "roadBearing": [
+  {
+   "width": 1440,
+   "stub": true,
+   "status": 200,
+   "scan_status": "ok",
+   "candidates": [
+    {
+     "way_id": "1547338992",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 271
+    },
+    {
+     "way_id": "628643782",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 91
+    },
+    {
+     "way_id": "596451653",
+     "name": "Pennsylvania Street",
+     "oneway": "yes",
+     "bearing": 359
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "stub": true,
+   "status": 200,
+   "scan_status": "ok",
+   "candidates": [
+    {
+     "way_id": "1547338992",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 271
+    },
+    {
+     "way_id": "628643782",
+     "name": "East Colfax Avenue",
+     "oneway": "yes",
+     "bearing": 91
+    },
+    {
+     "way_id": "596451653",
+     "name": "Pennsylvania Street",
+     "oneway": "yes",
+     "bearing": 359
+    }
+   ]
+  }
+ ],
+ "generateAnyway": [
+  "corridor scan · https://overpass.openstreetmap.fr/api/interpreter: 403 Forbidden; https://overpass-api.de/api/interpreter: 502 Bad Gateway · attempted 4 nov · 18:20 utc · budget 20 s",
+  "corridor scan · https://overpass.openstreetmap.fr/api/interpreter: 403 Forbidden; https://overpass-api.de/api/interpreter: 502 Bad Gateway · attempted 4 nov · 18:21 utc · budget 20 s"
+ ]
+}

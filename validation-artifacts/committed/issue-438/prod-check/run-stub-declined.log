@@ -1,0 +1,8 @@
+﻿1440 TimeoutError: page.waitForSelector: Timeout 240000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid=downloads]') to be visible[22m
+ | renders for apply undefined
+390 TimeoutError: page.waitForSelector: Timeout 240000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid=downloads]') to be visible[22m
+ | renders for apply undefined
