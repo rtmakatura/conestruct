@@ -159,6 +159,7 @@ export function QuestionSteps({
       {current ? (
         <Card
           q={current}
+          headingLevel={headingLevel}
           inFlight={inFlight}
           nextClass={nextClass}
           buttonDisabled={buttonDisabled}
@@ -230,6 +231,7 @@ export function QuestionSteps({
 
 function Card({
   q,
+  headingLevel,
   inFlight,
   nextClass,
   buttonDisabled,
@@ -242,6 +244,8 @@ function Card({
   onNext,
 }: {
   q: StepQuestion;
+  /** The card's heading level; the question title sits one below it. */
+  headingLevel: 2 | 3;
   inFlight: boolean;
   nextClass: string;
   buttonDisabled: boolean;
@@ -253,6 +257,7 @@ function Card({
   onAnswer: (value: string) => void;
   onNext: () => void;
 }) {
+  const QHeading = headingLevel === 2 ? "h3" : "h4";
   const name = `nyq-${q.id}`;
   const detailsId = `${name}-details`;
   const toggle =
@@ -271,7 +276,7 @@ function Card({
   return (
     <div className="nyq-card" data-flag={q.id}>
       <div className="nyq-text">
-        <h4 className="nyq-q">{q.question}</h4>
+        <QHeading className="nyq-q">{q.question}</QHeading>
         {q.explanation !== null ? <p className="nyq-why tr-help">{q.explanation}</p> : null}
       </div>
       {/* Radio rows, each with its consequence when it has one.  A native

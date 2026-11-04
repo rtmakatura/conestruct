@@ -141,6 +141,17 @@ describe("#439 evidence — the CONFIRM heading is the page's h2", () => {
     const h = document.getElementById("where-confirm-h")!;
     expect(h.tagName).toBe("H2");
     expect(h.textContent).toBe("CONFIRM");
+    // The question title sits one level below it (open one through its
+    // record; the mounted plan is confirmed, so the card starts closed).
+    await act(async () => {
+      fireEvent.click(
+        document.querySelector<HTMLButtonElement>(
+          '[data-testid="where-questions"] .nyq-answered .nyq-row-btn',
+        )!,
+      );
+    });
+    const q = document.querySelector('[data-testid="where-questions"] .nyq-q')!;
+    expect(q.tagName).toBe("H3");
   });
 });
 
