@@ -20,6 +20,12 @@
 //   · refused             the backend's reason, in words (Rule 10)
 //   · waiting / failed    a sentence in the sized frame (P8), never a
 //                         skeleton and never the previous picture
+//   · the cross street    #440: while the CONFIRM card's cross-street
+//                         question is on screen, the pin picture; armed, it
+//                         takes one tap (the bar, the outline, the
+//                         crosshair, "Use the big map instead"), and the
+//                         tap's box and label sit at its own pixel while
+//                         that same picture is shown (rulings 3-5, X3, X5)
 //
 // Rule 3: nothing here computes a coordinate or a length.  The image is the
 // backend's; the legend's swatches read ZONE_COLOR / ZONE_CHANNEL (the
@@ -66,6 +72,13 @@ export const KEY_LABEL: Record<CorridorZone, string> = {
 export const AERIAL_WAIT = "Drawing the corridor…";
 export const AERIAL_FAILED = "The aerial didn't load. Edit on map shows the corridor.";
 export const AERIAL_KIND_OWED = "Approaches lay out after you confirm the kind";
+/** #440 ruling 3. */
+export const AERIAL_TAP_BAR = "Tap the intersection nearest the work";
+/** #440 X12: the armed picture says the keyboard's way in. */
+export const AERIAL_ARMED_ALT =
+  "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead";
+/** #440 ruling 4. */
+export const AERIAL_BIG_MAP = "Use the big map instead";
 
 const ALT: Record<AerialStage, string> = {
   pin: "Aerial at the pin. Nothing is laid out until the side is chosen",
@@ -97,6 +110,23 @@ function useFrameSize(ref: React.RefObject<HTMLDivElement | null>) {
   return size;
 }
 
+/** #440 X5: the tap's pixel in the picture it was made on. */
+export interface AerialMark {
+  x: number;
+  y: number;
+  name: string;
+  frameKey: string;
+}
+
+export interface AerialTap {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  zoom: number;
+  frameKey: string;
+}
+
 export interface BandAerialProps {
   scenario: Scenario;
   geometry: GeometryFetch;
@@ -104,6 +134,35 @@ export interface BandAerialProps {
   /** #439 ruling 1: "Edit on map" on the aerial's top-right corner. */
   onEditMap?: () => void;
   locked?: boolean;
+  /** #440 X3: the cross-street question is on screen — the pin picture,
+   *  the one frame whose centre and zoom the backend fixes. */
+  pinFrame?: boolean;
+  /** #440 ruling 3: the picture takes one tap. */
+  armed?: boolean;
+  onTap?: (tap: AerialTap) => void;
+  /** #440 ruling 4: the picker, armed for the cross street. */
+  onBigMap?: () => void;
+  /** #440 X5: the box and label, shown only on the picture tapped. */
+  mark?: AerialMark | null;
+}
+
+/** #440 ruling 3: the bar's crosshair (the design canvas's own path). */
+function Crosshair() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M8 1v4M8 11v4M1 8h4M11 8h4" />
+      <circle cx="8" cy="8" r="2" />
+    </svg>
+  );
 }
 
 export function BandAerial({
@@ -112,6 +171,11 @@ export function BandAerial({
   kindConfirmed,
   onEditMap,
   locked = false,
+  pinFrame = false,
+  armed = false,
+  onTap,
+  onBigMap,
+  mark = null,
 }: BandAerialProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
@@ -119,11 +183,25 @@ export function BandAerial({
   // moved, a side changed) the hook still holds the previous answer, and a
   // picture of the previous answer is a stale corridor (Rule 10).
   const g = geometry.state === "ready" ? geometry.geometry : null;
-  const stage = aerialStage(g, kindConfirmed);
+  const natural = aerialStage(g, kindConfirmed);
+  // #440 X3: the cross-street question asks for the pin picture.  It is
+  // the pin, the frame and the step only, so it does not wait on the
+  // geometry read (the mark's own write re-reads it; P1: the picture and
+  // the box stay put meanwhile).
+  const forced = pinFrame && natural !== "pin";
+  const stage: AerialStage | null = pinFrame ? "pin" : natural;
   // Zoom (Ryan's hand-check ruling, 2026-09-26).  The step belongs to ONE
   // picture — this scenario, stage and frame — so a new picture always
-  // opens on the whole corridor, with no effect to reset it.
-  const base = stage && size ? JSON.stringify({ scenario, stage, size }) : null;
+  // opens on the whole corridor, with no effect to reset it.  #440 X5
+  // (Rule 5, stated): the pin picture is the pin, the frame and the step
+  // and nothing else of the scenario, so on that stage the key is those;
+  // the mark's own write keeps the picture (and the box on it).
+  const base =
+    stage && size
+      ? stage === "pin"
+        ? JSON.stringify({ lat: scenario.meta.lat, lng: scenario.meta.lng, stage, size })
+        : JSON.stringify({ scenario, stage, size })
+      : null;
   const [zoomAt, setZoomAt] = useState<{ base: string | null; step: number }>({
     base: null,
     step: 0,
@@ -162,11 +240,25 @@ export function BandAerial({
         : AERIAL_FAILED;
   } else if (aerial.state === "error") note = AERIAL_FAILED;
   else if (aerial.state !== "ready" && !holding) note = AERIAL_WAIT;
-  // #317 (R129 Q2): the side control's own line, the backend's verbatim.
-  else if (stage === "pin" && g?.status === "intersection_not_marked" && g.message) note = g.message;
-  else if (stage === "pin") note = SIDE_BLOCKER;
+  // #440 ruling 7: the not-marked line left the aerial (#317's note); the
+  // CONFIRM card's cross-street question asks for the crossing.
+  else if (stage === "pin" && !forced && g?.status !== "intersection_not_marked") note = SIDE_BLOCKER;
 
   const shown = src !== null && stage !== null;
+  const frameKey = base !== null ? JSON.stringify({ base, step }) : null;
+  const tapping = armed && shown && onTap !== undefined && size !== null && frameKey !== null;
+  const markShown = mark !== null && shown && frameKey !== null && mark.frameKey === frameKey;
+  const tap = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (!tapping || !size || frameKey === null || !onTap) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    // The pointer relative to the picture, in the frame's CSS px (the
+    // size the backend drew it at).
+    const sx = r.width > 0 ? size.width / r.width : 1;
+    const sy = r.height > 0 ? size.height / r.height : 1;
+    const x = Math.min(size.width, Math.max(0, (e.clientX - r.left) * sx));
+    const y = Math.min(size.height, Math.max(0, (e.clientY - r.top) * sy));
+    onTap({ x, y, width: size.width, height: size.height, zoom: step, frameKey });
+  };
   const zoomTo = (next: number) => {
     if (next < -ZOOM_OUT_MAX || next > ZOOM_IN_MAX) return;
     setZoomAt({ base, step: next });
@@ -180,7 +272,17 @@ export function BandAerial({
 
   return (
     <div className="a-aerial" data-testid="band-aerial" data-read data-stage={stage ?? "none"}>
-      <div ref={frameRef} className="a-aerial-frame">
+      <div
+        ref={frameRef}
+        className={tapping ? "a-aerial-frame is-armed" : "a-aerial-frame"}
+        data-testid="band-aerial-frame"
+      >
+        {tapping && (
+          <div className="a-aerial-bar" data-testid="band-aerial-bar">
+            <Crosshair />
+            {AERIAL_TAP_BAR}
+          </div>
+        )}
         {onEditMap && (
           <button
             type="button"
@@ -199,7 +301,48 @@ export function BandAerial({
           // optimise or resize, and it cannot load a blob: URL through its
           // loader.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt={ALT[stage]} data-testid="band-aerial-img" />
+          <img
+            src={src}
+            alt={tapping ? AERIAL_ARMED_ALT : ALT[stage]}
+            data-testid="band-aerial-img"
+            onClick={tapping ? tap : undefined}
+          />
+        )}
+        {markShown && size && mark && (
+          // X5: at the tap's own pixel; the label on the side with room.
+          <>
+            <span
+              className="a-aerial-mark"
+              data-testid="band-aerial-mark"
+              aria-hidden="true"
+              style={{ left: mark.x - 14, top: mark.y - 14 }}
+            />
+            <span
+              className="a-aerial-mark-label tr-note"
+              data-testid="band-aerial-mark-label"
+              style={
+                mark.x > size.width / 2
+                  ? { right: size.width - mark.x + 20, top: mark.y - 14 }
+                  : { left: mark.x + 20, top: mark.y - 14 }
+              }
+            >
+              {mark.name}
+            </span>
+          </>
+        )}
+        {tapping && onBigMap && (
+          <button
+            type="button"
+            className="a-aerial-bigmap"
+            data-write=""
+            aria-disabled={locked || undefined}
+            onClick={() => {
+              if (!locked) onBigMap();
+            }}
+            data-testid="band-aerial-big-map"
+          >
+            {AERIAL_BIG_MAP}
+          </button>
         )}
         {shown && (
           // The zoom controls: reads (data-read), never locked by the

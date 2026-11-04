@@ -20,12 +20,13 @@ import {
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
 import { deriveRail } from "@/lib/scenarios/rail";
-import { withoutOperatorSet } from "@/lib/scenarios/guesses";
 import { geometryRequestFor, notMarkedLine, useCorridorGeometry } from "@/lib/corridor-geometry";
 import { crossStreetRequestFor, useCrossStreetTag } from "@/lib/cross-street-tag";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { RoadClassification } from "@/lib/road-detection/types";
-import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
+import type { CrossStreetCandidate } from "@/lib/road-detection/cross-street";
+import { applyCrossStreetCandidate } from "@/lib/scenarios/cross-street-apply";
+import { useCrossStreetMark } from "@/lib/cross-street-mark";
 import type { CorridorSpecLengths, Refusal } from "@/lib/render-types";
 import { Field, FieldGroup, LabelRow } from "./GeneratorFormPrimitives";
 import { FlaggerForm } from "./FlaggerForm";
@@ -280,6 +281,36 @@ export function GeneratorSidebar({
     setScenario(next);
   };
 
+  // #440 X4 — the picker Save's cross-street apply, and the band tap's:
+  // the approaches, the speed flag, the overrides and the lane-count hold,
+  // behind the fresh-content guard (lib/scenarios/cross-street-apply.ts).
+  const applyCandidate = (next: Scenario, cs: CrossStreetCandidate | null): Scenario => {
+    const applied = applyCrossStreetCandidate(next, cs, lastAppliedCrossStreetRef.current);
+    lastAppliedCrossStreetRef.current = applied.appliedJson;
+    if (applied.hold) setApproachConfirm(applied.hold);
+    return applied.scenario;
+  };
+  const approachConfirmRef = useRef(approachConfirm);
+  approachConfirmRef.current = approachConfirm;
+  // #440: the band's cross-street mark — its one state (X3-X8, X11).
+  const crossMark = useCrossStreetMark({
+    scenario,
+    getScenario: () => scenarioRef.current,
+    setScenario: (s) => {
+      scenarioRef.current = s;
+      setScenario(s);
+    },
+    applyCandidate: (next, cs) => applyCandidate(next, cs),
+    memory: () => ({
+      hold: approachConfirmRef.current,
+      appliedJson: lastAppliedCrossStreetRef.current,
+    }),
+    restoreMemory: (m) => {
+      lastAppliedCrossStreetRef.current = m.appliedJson;
+      setApproachConfirm(m.hold);
+    },
+  });
+
   const setMeta = (meta: ScenarioMeta) => {
     setScenario({ ...scenario, meta } as Scenario);
   };
@@ -348,37 +379,9 @@ export function GeneratorSidebar({
     // Fresh-content guard mirrors the classification guard above: an
     // unchanged candidate on re-Apply is NOT new information and must
     // not overwrite approach fields the user has edited since.
-    if (next.kind === "near_intersection" && r.crossStreet) {
-      const crossJson = JSON.stringify(r.crossStreet);
-      if (crossJson !== lastAppliedCrossStreetRef.current) {
-        // #316: the fresh detection's approaches replace the operator's
-        // speed as they always did, so the speed is no longer theirs.
-        next = withoutOperatorSet(next, "approachSpeed") as typeof next;
-        next = {
-          ...next,
-          approaches: approachesFromCrossStreet(r.crossStreet),
-          // Fresh cross-street detection supersedes any recorded
-          // override (#177) — the old dispute was about approach relays
-          // this patch just replaced.
-          detectionOverrides: undefined,
-        };
-        lastAppliedCrossStreetRef.current = crossJson;
-        setApproachConfirm({
-          // #174 ruling (option d, 2026-08-03): confirm-on-default.  A
-          // substituted count renders identically to a detected one, so
-          // the no-tag case holds for confirmation too — the hold's
-          // reason says the 1 was assumed, making the acknowledgment
-          // (and the minLanes floor, when it bites) explicable.
-          pending: true,
-          reason:
-            r.crossStreet.lanesPerDirection !== null
-              ? r.crossStreet.lanesSuspectReason
-              : "The map data carries no lane tag for the cross street. " +
-                "The lane count was assumed at 1 per direction, not detected. " +
-                "Confirm it or set the real count.",
-        });
-      }
-    }
+    // #440 X4: the cross-street apply is one function, shared with the
+    // WHERE band's tap (applyCandidate below).
+    next = applyCandidate(next, r.crossStreet);
     // Name what the handoff did to the values the operator reviewed, so
     // the clamp/skip isn't silent (UX-01/UX-02).  Derived from the raw
     // picker result + the applied scenario; pure frontend metadata.
@@ -474,6 +477,7 @@ export function GeneratorSidebar({
         onMarkIntersection={() => openPicker(true)}
         geometry={geometry}
         crossStreet={crossStreet}
+        crossMark={crossMark}
         onKindChange={onKindChange}
         kindState={kindState}
         onKindPicked={onKindPicked}

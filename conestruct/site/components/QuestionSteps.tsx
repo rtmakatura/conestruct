@@ -11,7 +11,7 @@
 // what an answer writes: the adapter hands in the questions and the three
 // callbacks.  It holds one piece of view state, the question on screen.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 import { symClass } from "@/lib/design/symbols";
@@ -70,6 +70,10 @@ export interface QuestionStepsProps {
   closedTail?: (open: boolean) => ReactNode;
   /** The record rows' class (NEEDS YOU's `ny-items nyq-rows`). */
   rowsClass?: string;
+  /** #440: told the question on screen (its id, or null when the card is
+   *  closed) — the WHERE band arms its aerial while the cross-street
+   *  question is the one on screen.  The card's own behaviour is unchanged. */
+  onCurrentChange?: (id: string | null) => void;
 }
 
 function firstOpen(questions: readonly StepQuestion[]): string | null {
@@ -93,6 +97,7 @@ export function QuestionSteps({
   fallbackId = null,
   closedTail,
   rowsClass = "ny-items nyq-rows",
+  onCurrentChange,
 }: QuestionStepsProps) {
   // `undefined` = follow the first open one; an id = the operator moved to
   // it (Next, or a click on its row); null = the operator closed the card.
@@ -107,6 +112,10 @@ export function QuestionSteps({
   const n = questions.length;
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const k = current ? questions.indexOf(current) + 1 : 0;
+  const currentKey = current?.id ?? null;
+  useEffect(() => {
+    onCurrentChange?.(currentKey);
+  }, [currentKey, onCurrentChange]);
 
   const open = (id: string) => {
     setChosen(id);

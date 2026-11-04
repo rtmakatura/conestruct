@@ -144,6 +144,7 @@ const GATED_PAGES: Row[] = [
 
 const PLAN = "0b6a1f2e-6d7c-4f1e-9a55-2b1d3c4e5f60";
 const GATED_API: Row[] = [
+  { path: "/api/aerial-point", method: "POST", file: "app/api/aerial-point/route.ts" },
   { path: "/api/corridor-map", method: "POST", file: "app/api/corridor-map/route.ts" },
   { path: "/api/debug/sentry-test", method: "GET", file: "app/api/debug/sentry-test/route.ts" },
   { path: "/api/distance", method: "POST", file: "app/api/distance/route.ts" },

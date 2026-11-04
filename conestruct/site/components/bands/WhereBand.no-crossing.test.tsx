@@ -1,10 +1,14 @@
 // @vitest-environment happy-dom
 //
 // #317 (R129) — a near-intersection plan with no crossing marked.  The
-// geometry read answers `intersection_not_marked` with the backend's line;
-// the side control shows "⚠ " + that line and Mark on map, and no chips
-// (Q1); Mark on map opens the picker ready to mark the crossing.  The
-// band's aerial shows the pin with the same line (Q2).
+// geometry read answers `intersection_not_marked` with the backend's line.
+//
+// #440 (Rule 5, stated; rulings 2 and 7, X2): the side options never read
+// the crossing, so the side question shows its choices while it is
+// unmarked, and the not-marked line and its Mark on map leave the band
+// (the question card and the aerial).  The crossing is the CONFIRM card's
+// third question; its "Use the big map instead" is the picker, armed.
+// The line stays on the wire for the ledger and the rail (unchanged).
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render } from "@testing-library/react";
@@ -92,28 +96,18 @@ const NO_CROSSING = {
 } as unknown as Scenario;
 
 describe("#317: no crossing marked", () => {
-  it("the side control shows the backend's line with ⚠ and Mark on map, and no chips (Q1)", async () => {
+  it("#440 X2: the side question shows its choices while the crossing is unmarked, and no not-marked line", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={NO_CROSSING} />);
     await openWhere();
-    const line = await waitFor('[data-testid="side-control-not-marked"]');
-    expect(line?.textContent).toBe(`⚠ ${LINE}`);
-    // #411 (Rule 18): the ⚠ in its own hue, not the line's faint ink.
-    expect(line?.querySelector(".sym-warn")?.textContent).toBe("⚠ ");
-    expect(document.querySelectorAll('[data-testid="side-option"]')).toHaveLength(0);
+    expect(await waitFor('[data-testid="side-option"]')).not.toBeNull();
+    expect(document.querySelectorAll('[data-testid="side-option"]')).toHaveLength(1);
+    expect(document.querySelector('[data-testid="side-control-not-marked"]')).toBeNull();
+    expect(document.querySelector('[data-testid="side-control-mark"]')).toBeNull();
     expect(document.querySelector('[data-testid="side-control-note"]')).toBeNull();
     expect(document.body.textContent).not.toContain("the road's sides are unavailable");
-    expect(document.querySelector('[data-testid="side-control-mark"]')?.textContent).toBe("Mark on map");
-  });
-
-  it("Mark on map opens the picker ready to mark the crossing", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={NO_CROSSING} />);
-    await openWhere();
-    const mark = await waitFor('[data-testid="side-control-mark"]');
-    expect(document.querySelector('[data-testid="picker-open"]')).toBeNull();
-    await act(async () => {
-      mark!.click();
-    });
-    expect(document.querySelector('[data-testid="picker-open"]')?.getAttribute("data-arm")).toBe("true");
+    // Not on the card, not on the aerial; the rail keeps it (unchanged).
+    expect(document.querySelector('[data-testid="where-questions"]')!.textContent).not.toContain(LINE);
+    expect(document.querySelector('[data-testid="band-aerial"]')!.textContent).not.toContain(LINE);
   });
 
   it("a plan with its crossing marked, or another kind, shows the chips as today", async () => {
@@ -133,17 +127,15 @@ describe("#317: no crossing marked", () => {
 
 describe("R131: one voice — WHERE's side row reads the side control's line", () => {
   // #439: the ledger's side row left the band (the CONFIRM card asks the
-  // side); the one voice is now the card's line, said once.
-  it("the side question shows the backend's line once, and no side sentence", async () => {
+  // side).  #440 ruling 7: the not-marked line left the card and the
+  // aerial too; the band says neither it nor the side sentence.
+  it("the band shows neither the not-marked line nor a side sentence", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={NO_CROSSING} />);
     await openWhere();
-    const control = await waitFor('[data-testid="side-control-not-marked"]');
+    expect(await waitFor('[data-testid="side-option"]')).not.toBeNull();
     expect(document.querySelector('[data-testid="move-side"]')).toBeNull();
-    expect(control!.textContent).toBe(`⚠ ${LINE}`);
-    // Once on the card; the aerial's centre hint (unchanged, #301) is the
-    // picture's own note.
     const card = document.querySelector('[data-testid="where-questions"]')!;
-    expect(card.textContent!.split(LINE).length - 1).toBe(1);
+    expect(card.textContent).not.toContain(LINE);
     expect(document.body.textContent).not.toContain(SIDE_BLOCKER);
   });
 

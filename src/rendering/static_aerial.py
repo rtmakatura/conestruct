@@ -106,6 +106,36 @@ def _unmercator(x: float, y: float) -> tuple[float, float]:
     return math.degrees(math.atan(math.sinh(n))), x * 360.0 - 180.0
 
 
+def pin_frame_point(
+    lat: float,
+    lng: float,
+    *,
+    width: int,
+    height: int,
+    zoom: int,
+    x: float,
+    y: float,
+) -> tuple[float, float]:
+    """The ``(lat, lng)`` under pixel ``(x, y)`` of the ``pin`` picture (#440 X3).
+
+    The ``pin`` stage is the one frame whose centre and zoom the backend
+    fixes (:func:`band_image_url`: centred on the pin at :data:`PIN_ZOOM`
+    plus the zoom step), so a tap on it has a coordinate.  ``x``/``y`` are
+    CSS px from the picture's top-left inside a ``width`` x ``height`` frame;
+    the ``@2x`` image doubles its pixels, not its geometry.  Web Mercator,
+    512 px tiles (Mapbox Static Images).
+    """
+    if not -ZOOM_OUT_MAX <= zoom <= ZOOM_IN_MAX:
+        raise ValueError(f"zoom step {zoom} outside -{ZOOM_OUT_MAX}..{ZOOM_IN_MAX}")
+    if width <= 0 or height <= 0:
+        raise ValueError(f"frame {width}x{height} is empty")
+    if not (0 <= x <= width and 0 <= y <= height):
+        raise ValueError(f"pixel ({x}, {y}) outside the {width}x{height} frame")
+    world_px = _TILE_PX * 2.0 ** (PIN_ZOOM + zoom)
+    cx, cy = _mercator(lat, lng)
+    return _unmercator(cx + (x - width / 2) / world_px, cy + (y - height / 2) / world_px)
+
+
 def drawn_points(
     approaches: list[tuple[str, WorkCorridor]], *, stage: str
 ) -> list[tuple[float, float]]:

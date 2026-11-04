@@ -1829,6 +1829,46 @@ class CorridorMapRequest(BaseModel):
 _CORRIDOR_MAP_ADAPTER: TypeAdapter[CorridorMapRequest] = TypeAdapter(CorridorMapRequest)
 
 
+class AerialPointRequest(BaseModel):
+    """``POST /render/aerial-point``'s body: a tap on the band's ``pin`` picture (#440 X3)."""
+
+    lat: float = Field(ge=-85, le=85)
+    lng: float = Field(ge=-180, le=180)
+    # The frame the picture was drawn at, CSS px — /render/corridor-map's own bounds.
+    width: int = Field(ge=120, le=1280)
+    height: int = Field(ge=80, le=1280)
+    zoom: int = Field(default=0, ge=-1, le=3)
+    # The tap, CSS px from the picture's top-left.
+    x: float = Field(ge=0)
+    y: float = Field(ge=0)
+
+
+@app.post("/render/aerial-point")
+def render_aerial_point(req: AerialPointRequest) -> JSONResponse:
+    """The coordinate under a tap on the WHERE band's ``pin`` picture (#440 X3).
+
+    A read: the frame's centre is the pin and its zoom is ``PIN_ZOOM`` plus
+    the step (:func:`src.rendering.static_aerial.pin_frame_point`), so the
+    pixel becomes a coordinate here and never on the frontend (Rule 3).
+    Answers ``{"lat", "lng"}``; a tap outside the frame answers 422.
+    """
+    if req.x > req.width or req.y > req.height:
+        raise RequestValidationError(
+            [
+                {
+                    "type": "value_error",
+                    "loc": ("body", "x" if req.x > req.width else "y"),
+                    "msg": "the tap lies outside the frame",
+                    "input": req.x if req.x > req.width else req.y,
+                }
+            ]
+        )
+    lat, lng = _static_aerial.pin_frame_point(
+        req.lat, req.lng, width=req.width, height=req.height, zoom=req.zoom, x=req.x, y=req.y
+    )
+    return JSONResponse({"lat": lat, "lng": lng})
+
+
 @app.post("/render/nearest-intersection")
 def render_nearest_intersection(body: Annotated[Any, Body()]) -> JSONResponse:
     """The nearest named cross street at the work start (#285).

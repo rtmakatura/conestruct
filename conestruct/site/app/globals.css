@@ -9227,3 +9227,168 @@ input[type="number"] {
 .workbench .wq .act-btn.wq-undo {
   min-height: 44px;
 }
+
+/* ── #440 UX group 4 (Option A): the cross street on the WHERE band ─────
+   Authority: validation-artifacts/committed/ux-group4-cross-street/
+   rulings.md, rulings 3-6 and 8.  No new size or hex (ruling 8): the bar,
+   the big-map button and the ✓ row's buttons are 13.5 (--fs-body-value),
+   the row's name 15 (--fs-refusal, #436's road-picked name), its line and
+   the label 12.5 (.tr-note).  Colours are tokens; the box's fill is --act
+   at 25 % through color-mix, no literal. */
+.workbench .a-aerial-frame.is-armed {
+  cursor: crosshair;
+}
+/* Ruling 3: the 2 px --act outline, inset on the frame (P4). */
+.workbench .a-aerial-frame.is-armed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--act);
+  pointer-events: none;
+}
+.workbench .a-aerial-frame.is-armed img {
+  cursor: crosshair;
+}
+.workbench .a-aerial-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 8px 12px;
+  background: var(--act);
+  color: var(--on-act);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.workbench .a-aerial-bar svg {
+  flex: none;
+}
+/* The bar spans the top: Edit on map and the zoom step down under it. */
+.workbench .a-aerial-frame.is-armed .a-aerial-edit {
+  top: 44px;
+}
+.workbench .a-aerial-frame.is-armed .a-aerial-edit ~ .a-aerial-zoom {
+  top: 96px;
+}
+/* Ruling 4: 44 px, the aerial's bottom-right, clear of the Mapbox
+   attribution the picture carries in that corner. */
+.workbench .a-aerial-bigmap {
+  position: absolute;
+  right: 8px;
+  bottom: 28px;
+  z-index: 2;
+  min-height: 44px;
+  padding: 0 16px;
+  color: var(--ink);
+  background: var(--da-ground);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.workbench .a-aerial-bigmap:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 1px;
+}
+@media (max-width: 480px) {
+  /* At 380-390 the right column holds Edit on map and the big-map
+     button; the zoom moves to the left under the bar (no legend on the
+     pin picture), each button still 44. */
+  .workbench .a-aerial-frame.is-armed .a-aerial-edit ~ .a-aerial-zoom {
+    top: 44px;
+    right: auto;
+    left: 8px;
+    align-items: flex-start;
+  }
+}
+/* Ruling 5: the box on the crossing and the street's name beside it. */
+.workbench .a-aerial-mark {
+  position: absolute;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--act);
+  background: color-mix(in srgb, var(--act) 25%, transparent);
+  pointer-events: none;
+}
+.workbench .a-aerial-mark-label.tr-note {
+  position: absolute;
+  z-index: 1;
+  max-width: calc(50% - 28px);
+  padding: 4px 8px;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.4;
+  background: var(--da-ground);
+  border: 1px solid var(--act);
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+/* Ruling 5: the ✓ row; ruling 6: the same box while the name is found
+   (P1, its height reserved). */
+.workbench .wq-cross-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  min-height: 68px;
+  padding: 8px 12px;
+  background: var(--vd-ready-ground);
+  border: 1px solid var(--rule);
+}
+.workbench .wq-cross-glyph {
+  flex: none;
+  width: 16px;
+  text-align: center;
+  color: var(--pass);
+}
+.workbench .wq-cross-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.workbench .wq-cross-name {
+  font-family: var(--font-sans);
+  font-size: var(--fs-refusal);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.workbench .wq-cross-sub.tr-note {
+  color: var(--ink-mute);
+}
+.workbench .wq-cross-acts {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-tight);
+}
+.workbench .wq-cross-fail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-tight);
+}
+@media (max-width: 480px) {
+  .workbench .wq-cross-row {
+    flex-wrap: wrap;
+  }
+  .workbench .wq-cross-acts {
+    margin-left: 24px;
+  }
+}

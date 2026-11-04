@@ -29,3 +29,10 @@ Out of scope (the prompt): the rest of the picker (#301 pieces beyond the cross-
 - **X10, the picker paragraph.** The whole `detected` paragraph goes (ruling 7). The picker's other lines (resolving, none, error, restored) and its button stay.
 - **X11, Move.** Move re-arms the tap; the current mark stays until a new tap names a street (P1). While re-armed, the row's button reads "Cancel" and disarms.
 - **X12, keyboard.** The tap target is a pointer action on a picture; the keyboard path is "Use the big map instead" (the picker's own control). The armed aerial carries a label saying so.
+- **X13, the collapsed record.** It reads "Which intersection is the work near: <name>", the question less its "?", the same rule as the side and kind records (`WhereQuestions.tsx`, P11).
+- **X14, Undo after a Move.** Undo restores the state before the first mark of the chain, so it clears the crossing ("Undo (clears it)", ruling 5), not one tap back.
+- **X15, when the aerial is armed.** Whenever the cross-street question is the card's current one, whether or not the kind is confirmed, so a saved plan reopened with no crossing lands on an armed aerial. After Confirm the card closes and the aerial is #439's.
+- **X16, the pin picture while the question is current.** It depends on the pin, the frame and the zoom step only, and does not wait on a geometry re-read, so the mark's own write does not blank the picture or drop the box (P1). Stated behaviour change: on the pin stage a zoom step survives edits that don't move the pin.
+- **X17, placement on the armed aerial.** "Use the big map instead" sits bottom-right, 28 px up, clear of the attribution Mapbox draws into the picture. While armed, Edit on map sits 44 px from the top (under the bar) and the zoom 96 px; at 480 px and below the zoom moves to the left under the bar, clear of the big-map button.
+- **X18, Try again.** It re-runs the street lookup at the same point; the tap's coordinate is not asked for again. A lookup that finds no street, or fails, leaves the tap armed.
+- **X19, the label's side.** The name chip sits on the side of the box with more room, inside the frame.

@@ -7,7 +7,16 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render } from "@testing-library/react";
-import { BandAerial, AERIAL_FAILED, AERIAL_KIND_OWED, AERIAL_WAIT } from "./BandAerial";
+import {
+  BandAerial,
+  AERIAL_ARMED_ALT,
+  AERIAL_BIG_MAP,
+  AERIAL_FAILED,
+  AERIAL_KIND_OWED,
+  AERIAL_TAP_BAR,
+  AERIAL_WAIT,
+  type AerialTap,
+} from "./BandAerial";
 import { forgetAerials } from "@/lib/corridor-aerial";
 import { SIDE_BLOCKER } from "@/lib/scenarios/rail";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
@@ -104,7 +113,9 @@ describe("the band's aerial, state by state", () => {
     expect(q("band-aerial")?.getAttribute("data-stage")).toBe("pin");
   });
 
-  it("#317 (R129 Q2): no crossing marked — the pin, and the side control's own line", async () => {
+  // #440 ruling 7 (Rule 5, stated): the not-marked line leaves the aerial;
+  // the CONFIRM card's cross-street question asks for the crossing.
+  it("#317 (R129 Q2) / #440 ruling 7: no crossing marked — the pin, and no line on it", async () => {
     const line = "Mark the cross street on the map to lay out the sides.";
     render(
       <BandAerial
@@ -116,8 +127,8 @@ describe("the band's aerial, state by state", () => {
     await settle();
     expect(requests).toEqual([{ scenario: SCENARIO, stage: "pin", width: 600, height: 300 }]);
     expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
-    expect(q("band-aerial-note")?.textContent).toBe(line);
-    expect(q("band-aerial-note")?.textContent).not.toBe(AERIAL_FAILED);
+    expect(q("band-aerial-note")).toBeNull();
+    expect(document.body.textContent).not.toContain(line);
   });
 
   it("the side chosen, the kind owed: the work only, and a legend line for the rest (ruling 4)", async () => {
@@ -316,3 +327,113 @@ describe("the band's aerial zooms", () => {
   });
 });
 
+
+// ── #440: the cross street on the aerial (rulings 3-5, X3, X5, X12) ──────
+
+describe("#440: the aerial takes the cross-street tap", () => {
+  const rect = (img: HTMLElement, w: number, h: number) => {
+    img.getBoundingClientRect = () =>
+      ({ left: 10, top: 20, width: w, height: h, right: 10 + w, bottom: 20 + h, x: 10, y: 20 }) as DOMRect;
+  };
+
+  it("X3: the cross-street question asks for the pin picture, even with the work laid out", async () => {
+    render(<BandAerial scenario={SCENARIO} geometry={answer("laid_out")} kindConfirmed={false} pinFrame />);
+    await settle();
+    expect(requests).toEqual([{ scenario: SCENARIO, stage: "pin", width: 600, height: 300 }]);
+    expect(q("band-aerial")?.getAttribute("data-stage")).toBe("pin");
+    // No side sentence and no legend on the forced pin picture.
+    expect(q("band-aerial-note")).toBeNull();
+    expect(q("band-aerial-legend")).toBeNull();
+  });
+
+  it("ruling 3: armed — the bar, the outline class, the big-map button, the armed label; a tap sends its pixel", async () => {
+    const taps: AerialTap[] = [];
+    const bigMap = vi.fn();
+    render(
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("intersection_not_marked")}
+        kindConfirmed={false}
+        pinFrame
+        armed
+        onTap={(t) => taps.push(t)}
+        onBigMap={bigMap}
+      />,
+    );
+    await settle();
+    expect(q("band-aerial-bar")?.textContent).toBe(AERIAL_TAP_BAR);
+    expect(q("band-aerial-bar")?.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
+    expect(q("band-aerial-frame")?.className).toContain("is-armed");
+    const img = q("band-aerial-img")!;
+    expect(img.getAttribute("alt")).toBe(AERIAL_ARMED_ALT);
+    expect(q("band-aerial-big-map")?.textContent).toBe(AERIAL_BIG_MAP);
+    // The picture drawn at 600 x 300 is shown at 300 x 150: the pixel is
+    // the frame's own (the size the backend drew), not the screen's.
+    rect(img, 300, 150);
+    await act(async () => {
+      img.dispatchEvent(new MouseEvent("click", { bubbles: true, clientX: 160, clientY: 95 }));
+    });
+    expect(taps).toHaveLength(1);
+    expect(taps[0]).toMatchObject({ x: 300, y: 150, width: 600, height: 300, zoom: 0 });
+    q("band-aerial-big-map")!.click();
+    expect(bigMap).toHaveBeenCalledTimes(1);
+  });
+
+  it("ruling 3: unarmed, the picture is as #439 left it and takes no tap", async () => {
+    const taps: AerialTap[] = [];
+    render(
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("intersection_not_marked")}
+        kindConfirmed={false}
+        pinFrame
+        onTap={(t) => taps.push(t)}
+        onBigMap={() => {}}
+      />,
+    );
+    await settle();
+    expect(q("band-aerial-bar")).toBeNull();
+    expect(q("band-aerial-big-map")).toBeNull();
+    expect(q("band-aerial-frame")?.className).not.toContain("is-armed");
+    const img = q("band-aerial-img")!;
+    rect(img, 600, 300);
+    await act(async () => {
+      img.dispatchEvent(new MouseEvent("click", { bubbles: true, clientX: 100, clientY: 100 }));
+    });
+    expect(taps).toEqual([]);
+  });
+
+  it("X5: the box and label sit at the tap's pixel on that picture, and nowhere on another", async () => {
+    let tapped: AerialTap | null = null;
+    const props = {
+      scenario: SCENARIO,
+      geometry: answer("intersection_not_marked"),
+      kindConfirmed: false,
+      pinFrame: true,
+    };
+    const { rerender } = render(<BandAerial {...props} armed onTap={(t) => (tapped = t)} />);
+    await settle();
+    const img = q("band-aerial-img")!;
+    rect(img, 600, 300);
+    await act(async () => {
+      img.dispatchEvent(new MouseEvent("click", { bubbles: true, clientX: 110, clientY: 120 }));
+    });
+    const t = tapped as AerialTap | null;
+    expect(t).not.toBeNull();
+    const mark = { x: t!.x, y: t!.y, name: "Race Street", frameKey: t!.frameKey };
+    // The mark's own write changes the scenario but not the pin picture.
+    const marked = { ...SCENARIO, meta: { ...SCENARIO.meta, project: "after the mark" } };
+    rerender(<BandAerial {...props} scenario={marked} mark={mark} />);
+    await settle();
+    expect(q("band-aerial-mark")?.style.left).toBe("86px");
+    expect(q("band-aerial-mark")?.style.top).toBe("86px");
+    expect(q("band-aerial-mark-label")?.textContent).toBe("Race Street");
+    // A zoom step is another picture: no box, no guessed position (Rule 10).
+    await act(async () => {
+      q("band-aerial-zoom")!.querySelector<HTMLButtonElement>('[aria-label="Zoom in"]')!.click();
+    });
+    await settle();
+    expect(q("band-aerial-mark")).toBeNull();
+    expect(q("band-aerial-mark-label")).toBeNull();
+  });
+});

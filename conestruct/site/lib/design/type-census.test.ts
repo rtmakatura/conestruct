@@ -299,6 +299,11 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // step-question token (D1) and the body-value token once more.
         "var(--fs-step-question-520)",
         "var(--fs-body-value)",
+        // #440 rulings 3, 5, 8: the tap bar and the big-map button on the
+        // body-value token, the ✓ row's name on --fs-refusal (#436's own
+        // 15 / 600); no new size.
+        "var(--fs-body-value)",
+        "var(--fs-refusal)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",

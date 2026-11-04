@@ -1,0 +1,7 @@
+# #440 first full vitest run (before the predicted test updates), 2026-11-04
+# 5 failed | 2746 passed | 1 skipped (259 files). Each is a deliberate move:
+middleware.test.ts > the table names every page and route handler in app/ > app/api/aerial-point/route.ts has a row   (new route, not yet in the gate table)
+components/bands/BandAerial.test.tsx > the band's aerial, state by state > #317 (R129 Q2): no crossing marked — the pin, and the side control's own line   (ruling 7 removes the note)
+components/bands/WhereBand.no-crossing.test.tsx > #317: no crossing marked > the side control shows the backend's line with ⚠ and Mark on map, and no chips (Q1)   (ruling 7 / X2)
+components/bands/WhereBand.no-crossing.test.tsx > #317: no crossing marked > Mark on map opens the picker ready to mark the crossing   (ruling 7 / X2)
+components/bands/WhereBand.no-crossing.test.tsx > R131: one voice — WHERE's side row reads the side control's line > the side question shows the backend's line once, and no side sentence   (ruling 7 / X2)

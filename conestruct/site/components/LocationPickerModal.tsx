@@ -20,10 +20,12 @@ import type {
 } from "@/lib/road-detection/types";
 import { geocodeFailureMessage, isPreciseGeocode } from "@/lib/geocode-precision";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
+import type { CrossStreetCandidate } from "@/lib/road-detection/cross-street";
 import {
-  deriveCrossStreet,
-  type CrossStreetCandidate,
-} from "@/lib/road-detection/cross-street";
+  intersectionRecord,
+  lookupCrossStreet,
+  normaliseBearing,
+} from "@/lib/road-detection/cross-street-lookup";
 import { candidateLabel, crossStreetLabel, plainRoadClass } from "@/lib/road-detection/labels";
 import { symClass } from "@/lib/design/symbols";
 import { InfoToggle, useDetailsToggle } from "./InfoToggle";
@@ -212,12 +214,6 @@ function isValidLat(n: number): boolean {
 }
 function isValidLng(n: number): boolean {
   return Number.isFinite(n) && n >= -180 && n <= 180;
-}
-// A candidate's raw OSM bearing, normalised to 0–359.  (#290: never a
-// typed direction any more — the cross-street parallel filter reads it.)
-function normaliseBearing(n: number): number {
-  const r = ((Math.round(n) % 360) + 360) % 360;
-  return r;
 }
 
 function fmt4(n: number): string {
@@ -812,46 +808,20 @@ export function LocationPickerModal({
 
     const myToken = ++crossTokenRef.current;
     setCrossStatus("resolving");
-    try {
-      const r = await fetch("/api/road-bearing", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ lat: qLat, lng: qLng }),
-      });
-      if (crossTokenRef.current !== myToken) return;
-      if (!r.ok) {
-        setCrossStreet(null);
-        setCrossStatus("error");
-        return;
-      }
-      const j = (await r.json()) as RoadDetectResponse;
-      if (crossTokenRef.current !== myToken) return;
-      if (j.scan_status === "unavailable") {
-        // #213: same guard as the mainline path — an unavailable scan
-        // is the error state, never a derived "no cross street" (and
-        // never deriveCrossStreet's isUrban-driven rural default).
-        setCrossStreet(null);
-        setCrossStatus("error");
-        return;
-      }
-      const ctx = crossDetectCtxRef.current;
-      // #290: raw facts only — the cross street's name, legs, signal,
-      // speed and lanes.  Where it sits relative to the work is the
-      // backend's to measure from the marked pin (ruling 7); the station
-      // this used to derive from the pin and the corridor lengths is gone.
-      const derived = deriveCrossStreet({
-        detection: j,
-        mainlineWayId: ctx.mainline?.way_id ?? null,
-        mainlineName: ctx.mainline?.name ?? null,
-        mainlineBearingDeg: ctx.mainline ? normaliseBearing(ctx.mainline.bearing) : null,
-      });
-      setCrossStreet(derived);
-      setCrossStatus(derived ? "detected" : "none");
-    } catch {
-      if (crossTokenRef.current === myToken) {
-        setCrossStreet(null);
-        setCrossStatus("error");
-      }
+    // #440 X4: the lookup is the one producer the band's tap also calls
+    // (lib/road-detection/cross-street-lookup.ts) — the same request, the
+    // same #213 guard, the same derivation.
+    const found = await lookupCrossStreet(
+      { lat: qLat, lng: qLng },
+      crossDetectCtxRef.current.mainline,
+    );
+    if (crossTokenRef.current !== myToken) return;
+    if (found.kind === "detected") {
+      setCrossStreet(found.candidate);
+      setCrossStatus("detected");
+    } else {
+      setCrossStreet(null);
+      setCrossStatus(found.kind);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -1491,13 +1461,7 @@ export function LocationPickerModal({
         isNearIntersectionKind && crossPin
           ? crossStatus === "restored" && restoredCross
             ? { ...restoredCross, lat: crossPin.lat, lng: crossPin.lng }
-            : {
-                lat: crossPin.lat,
-                lng: crossPin.lng,
-                name: crossStreet?.name ?? null,
-                highwayClass: crossStreet?.highwayClass ?? null,
-                postedSpeedMph: crossStreet?.speedMph ?? null,
-              }
+            : intersectionRecord(crossPin, crossStreet)
           : null,
       confirmedRoad,
     });
@@ -1995,15 +1959,6 @@ function CrossStreetPanel({
               fact line reads — no detection fires on open. */}
           {crossStreetLabel(restoredName)}: marked at your last save. Move
           the intersection pin to look it up again.
-        </p>
-      )}
-      {crossStatus === "detected" && crossStreet && (
-        <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0">
-          {crossStreetLabel(crossStreet.name)}:{" "}
-          {crossStreet.legCount === 1 ? "one-way" : "two-way"}
-          {crossStreet.signalized ? ", signal detected" : ""}. The plan
-          places it along the road from where the work starts. You&apos;ll
-          confirm the details in the form.
         </p>
       )}
     </div>

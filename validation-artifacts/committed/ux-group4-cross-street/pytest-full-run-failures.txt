@@ -1,0 +1,2 @@
+tests/test_vercel_env_check.py::test_every_cite_is_real_and_one_names_the_variable
+Passed alone after the cite fix (LocationPickerModal.tsx:325->321, WhereBand.tsx:436->441 in scripts/production-env.txt).

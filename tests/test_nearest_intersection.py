@@ -302,3 +302,58 @@ def test_the_endpoint_names_the_marked_cross_pin_on_a_near_intersection_plan(
     assert out["status"] == "found"
     assert out["source"] == "marked_cross_pin"
     assert out["text"] == "210 ft S of E 17th Ave"
+    # #440 X6: the crossing as seen from the work start, for the band's ✓ row.
+    assert out["cross_direction"] == "north"
+
+
+# ── #440 X6: cross_direction, on a marked cross pin only ──────────────────
+
+_KEYS = {
+    "status",
+    "text",
+    "cross_street",
+    "offset_ft",
+    "direction",
+    "source",
+    "provenance_text",
+    "osm_node_id",
+    "reason",
+    "radius_m",
+}
+
+
+@pytest.mark.parametrize(
+    ("bearing", "word", "letters"),
+    [(0.0, "north", "S"), (180.0, "south", "N")],
+)
+def test_a_marked_cross_pin_names_the_crossing_from_the_work_start(
+    monkeypatch: pytest.MonkeyPatch, bearing: float, word: str, letters: str
+) -> None:
+    monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda *a, **k: pytest.fail("asked"))
+    cross = _destination_point(*PIN, bearing, 64.0)
+    a = nearest_intersection(
+        pin=PIN,
+        centerline=LINE,
+        road_name="N Downing St",
+        road_ref=None,
+        marked_cross=cross,
+        marked_cross_name="E 17th Ave",
+    )
+    # ``direction`` is the work start from the crossing (the tag's words);
+    # ``cross_direction`` is the reverse, as a word.
+    assert a.direction == letters
+    assert a.cross_direction == word
+    assert a.as_json()["cross_direction"] == word
+    assert set(a.as_json()) == _KEYS | {"cross_direction"}
+
+
+def test_every_other_answer_carries_no_cross_direction() -> None:
+    found = replay("broadway")
+    assert found.source == "osm_shared_node"
+    assert set(found.as_json()) == _KEYS
+    for a in (
+        nearest_intersection(pin=PIN, centerline=None, road_name="X", road_ref=None),
+        nearest_intersection(pin=PIN, centerline=LINE, road_name=None, road_ref=None),
+    ):
+        assert "cross_direction" not in a.as_json()
+        assert set(a.as_json()) == _KEYS

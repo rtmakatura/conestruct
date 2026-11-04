@@ -74,6 +74,18 @@ _CLASS_RANK = {c: i for i, c in enumerate(VEHICULAR_CLASSES)}
 
 M_PER_FT = 0.3048
 _COMPASS = ("N", "NE", "E", "SE", "S", "SW", "W", "NW")
+# #440 X6: the WHERE band's ✓ row reads the crossing's direction as a word
+# ("80 ft east of where the work starts"), not the tag's letters.
+_COMPASS_WORD = {
+    "N": "north",
+    "NE": "northeast",
+    "E": "east",
+    "SE": "southeast",
+    "S": "south",
+    "SW": "southwest",
+    "W": "west",
+    "NW": "northwest",
+}
 
 
 @dataclass(frozen=True)
@@ -89,9 +101,13 @@ class Answer:
     provenance_text: str | None = None
     osm_node_id: int | None = None
     reason: str | None = None
+    # #440 X6: the crossing as seen from the work start (the reverse of
+    # ``direction``), a lowercase compass word.  Only a marked cross pin
+    # carries it; every other answer's JSON is unchanged (the key absent).
+    cross_direction: str | None = None
 
     def as_json(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "status": self.status,
             "text": self.text,
             "cross_street": self.cross_street,
@@ -103,6 +119,9 @@ class Answer:
             "reason": self.reason,
             "radius_m": FETCH_RADIUS_M,
         }
+        if self.cross_direction is not None:
+            out["cross_direction"] = self.cross_direction
+        return out
 
 
 def _escape(value: str) -> str:
@@ -276,6 +295,7 @@ def from_marked_cross_pin(
         direction=direction,
         source="marked_cross_pin",
         provenance_text="cross street from your marked intersection",
+        cross_direction=_COMPASS_WORD[_direction(pin_foot, cross_foot)],
     )
 
 

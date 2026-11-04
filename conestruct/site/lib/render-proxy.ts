@@ -533,6 +533,55 @@ export const RENDER_PART_FILENAMES: Record<RenderKind, string> = {
   "audit-pdf": "audit_trail.pdf",
 };
 
+// #440 X3 — a tap on the WHERE band's `pin` picture, as a coordinate.  The
+// backend owns the pixel → lat/lng (POST /render/aerial-point,
+// static_aerial.pin_frame_point; Rule 3); this relays its answer.
+export interface AerialPointBody {
+  lat: number;
+  lng: number;
+  width: number;
+  height: number;
+  zoom?: number;
+  x: number;
+  y: number;
+}
+
+export async function fetchAerialPoint(body: AerialPointBody): Promise<Response> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    return new Response("Render service not configured", { status: 503 });
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${url.replace(/\/$/, "")}/render/aerial-point`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${secret}`,
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    console.error("aerial point fetch failed", err);
+    return new Response("Render service unreachable", { status: 502 });
+  }
+
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    console.error(`aerial point upstream ${upstream.status}`, detail);
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
+    return new Response("Aerial point failed", { status: 502 });
+  }
+
+  const headers = new Headers();
+  relayContentType(upstream, headers);
+  headers.set("cache-control", "private, no-store");
+  return new Response(upstream.body, { status: 200, headers });
+}
+
 export async function fetchJurisdictionSuggest(body: {
   lat: number;
   lng: number;

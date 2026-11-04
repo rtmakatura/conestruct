@@ -47,6 +47,8 @@ import {
   type GeometryFetch,
 } from "@/lib/corridor-geometry";
 import type { CrossStreetTag } from "@/lib/cross-street-tag";
+import type { CrossStreetMark } from "@/lib/cross-street-mark";
+import { crossStreetLabel } from "@/lib/road-detection/labels";
 import { symClass } from "@/lib/design/symbols";
 import { hasConfirmedSide, hasLocation, workLenIsDefault } from "@/lib/scenarios";
 import { clearWorkLen, setWorkLen } from "@/lib/scenarios/what-writes";
@@ -337,6 +339,7 @@ export function WhereBand({
   onMarkIntersection,
   geometry: shellGeometry,
   crossStreet = null,
+  crossMark,
   onKindChange,
   onKindCleared,
   kindPicked = true,
@@ -362,6 +365,8 @@ export function WhereBand({
   /** #285: the shell's nearest-cross-street answer (asked once, handed
    *  down like `geometry`).  Null leaves the tag on the road name. */
   crossStreet?: CrossStreetTag | null;
+  /** #440: the cross-street mark (GeneratorSidebar owns its state). */
+  crossMark?: CrossStreetMark;
   /** A chip click — the ONLY writer of the kind choice (defect 1). */
   onKindChange: (k: ScenarioKind) => void;
   /** #439 W6: Undo on the kind returns it to unchosen. */
@@ -525,6 +530,30 @@ export function WhereBand({
     </div>
   );
   const aerialShown = workStart && !stale;
+  // #440 rulings 3-5: the question on screen in the CONFIRM card.  While
+  // it is the cross-street question the aerial is the pin picture (X3); it
+  // takes a tap while no crossing is marked, or after Move (X11), and never
+  // while a lookup runs.  After Confirm the card closes (no question on
+  // screen), so the aerial is #439's again.  A saved plan reopened with its
+  // kind confirmed and no crossing lands on this question, armed.
+  const [currentQ, setCurrentQ] = useState<string | null>(null);
+  const crossOpen =
+    chipsShown &&
+    workStart &&
+    kindPicked &&
+    scenario.kind === "near_intersection" &&
+    currentQ === "cross";
+  const marked = scenario.meta.intersection ?? null;
+  const armed =
+    crossOpen &&
+    !locked &&
+    crossMark !== undefined &&
+    crossMark.phase !== "resolving" &&
+    (marked === null || crossMark.rearmed);
+  const aerialMark =
+    crossOpen && crossMark?.pixel && marked
+      ? { ...crossMark.pixel, name: crossStreetLabel(marked.name) }
+      : null;
 
   return (
     <OpenBand
@@ -577,6 +606,11 @@ export function WhereBand({
               kindConfirmed={kindConfirmed}
               onEditMap={openMap}
               locked={locked}
+              pinFrame={crossOpen}
+              armed={armed}
+              onTap={crossMark ? (t) => crossMark.tap(t) : undefined}
+              onBigMap={onMarkIntersection}
+              mark={aerialMark}
             />
           ) : (
             // W11: no aerial (a stale road, a corridor-end pin): the
@@ -698,6 +732,9 @@ export function WhereBand({
               onKindCleared={onKindCleared}
               onConfirm={onConfirm}
               onMarkIntersection={onMarkIntersection}
+              crossMark={crossMark}
+              crossTag={crossStreet}
+              onCurrentChange={setCurrentQ}
               locked={locked}
             />
           )}

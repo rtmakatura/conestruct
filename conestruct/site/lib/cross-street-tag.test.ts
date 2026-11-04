@@ -144,6 +144,35 @@ describe("only a found answer carries words", () => {
   it("no answer yet gives nothing", () => {
     expect(crossStreetTag(null)).toBeNull();
   });
+
+  // #440 X6: a marked cross pin's answer also hands down the distance and
+  // the crossing's direction for the band's ✓ row; the tag's own words and
+  // provenance are unchanged, and no other answer carries them.
+  it("a marked cross pin also carries its distance and the crossing's direction", () => {
+    const marked = {
+      ...FOUND,
+      text: "80 ft W of Race Street",
+      cross_street: "Race Street",
+      offset_ft: 80,
+      direction: "W",
+      source: "marked_cross_pin" as const,
+      provenance_text: "cross street from your marked intersection",
+      osm_node_id: null,
+      cross_direction: "east",
+    };
+    expect(crossStreetTag(marked)).toEqual({
+      text: "80 ft W of Race Street",
+      provenance: "cross street from your marked intersection",
+      marked: { name: "Race Street", offsetFt: 80, crossDirection: "east", at: false },
+    });
+    expect(crossStreetTag({ ...marked, text: "at Race Street", offset_ft: 20 })?.marked).toEqual({
+      name: "Race Street",
+      offsetFt: 20,
+      crossDirection: "east",
+      at: true,
+    });
+    expect(crossStreetTag(FOUND)).not.toHaveProperty("marked");
+  });
 });
 
 describe("the WHERE band prints it", () => {

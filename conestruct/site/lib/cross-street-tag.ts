@@ -25,12 +25,18 @@ export interface NearestIntersection {
   osm_node_id: number | null;
   reason: string | null;
   radius_m: number;
+  /** #440 X6: the crossing as seen from the work start, a lowercase
+   *  compass word; only a `marked_cross_pin` answer carries it. */
+  cross_direction?: string;
 }
 
 /** What the WHERE band prints: the tag and its provenance clause. */
 export interface CrossStreetTag {
   text: string;
   provenance: string | null;
+  /** #440 X6: a marked cross pin's distance and direction for the WHERE
+   *  band's ✓ row, as the backend sent them; absent on every other answer. */
+  marked?: { name: string | null; offsetFt: number; crossDirection: string | null; at: boolean };
 }
 
 /** The scenario to ask about: a located work-start pin whose road was
@@ -63,7 +69,20 @@ export function crossStreetKey(scenario: Scenario): string {
 /** The tag a `found` answer carries; null for every other answer. */
 export function crossStreetTag(answer: NearestIntersection | null): CrossStreetTag | null {
   if (!answer || answer.status !== "found" || !answer.text) return null;
-  return { text: answer.text, provenance: answer.provenance_text };
+  const tag: CrossStreetTag = { text: answer.text, provenance: answer.provenance_text };
+  if (answer.source === "marked_cross_pin" && typeof answer.offset_ft === "number") {
+    tag.marked = {
+      // The crossing the answer measured, so the row never pairs a
+      // distance with another crossing's name.
+      name: answer.cross_street,
+      offsetFt: answer.offset_ft,
+      crossDirection: answer.cross_direction ?? null,
+      // The backend's own "at" rule (AT_THRESHOLD_FT): its words start
+      // "at <name>" when the work starts at the cross street.
+      at: answer.text.startsWith("at "),
+    };
+  }
+  return tag;
 }
 
 export function useCrossStreetTag(scenario: Scenario | null): CrossStreetTag | null {
