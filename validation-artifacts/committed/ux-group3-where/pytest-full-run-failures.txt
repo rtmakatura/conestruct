@@ -1,0 +1,3 @@
+Full pytest run 2026-11-04 (/start 439, HEAD 81f62f9): 1 failed, 3795 passed, 3 skipped.
+Failed: tests/test_vercel_env_check.py::test_every_cite_is_real_and_one_names_the_variable
+Run alone after the fix (production-env.txt:26 cites LocationPickerModal.tsx:325, WhereBand.tsx:436): passed. Before the fix it failed alone too (WhereBand.tsx:573 moved by this branch to 436; LocationPickerModal.tsx:322 was already stale on main, now 325).
