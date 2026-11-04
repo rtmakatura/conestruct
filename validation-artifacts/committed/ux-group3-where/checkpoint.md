@@ -14,9 +14,9 @@ No park-list item: no money/legal, no safety distance, no Ryan ruling reversed, 
 | Revision | post-Generate the sidebar unmounts; revision is `RevisionPanel` (out of scope, unchanged) |
 
 ## 2. Ruling 5 trace: side options per road kind (`src/api/render_api.py:1594-1657`)
-- **Two-way road** (confirmed centerline, not one-way): two options, the right edge of each travel direction (1610-1629).
-- **One-way road**: the legal direction's right edge (the against-direction is skipped, 1614-1617), plus its left edge when `left_side_built` (`src/api/schemas.py:1316-1337`: shoulder or near_intersection, a one-way STREET verdict, the one-way tag, a confirmed road): one or two.
-- **Divided carriageway**: one (the median edge is never offered, 1603-1606).
+- **Two-way road** (confirmed centerline, not one-way): two options, the right edge of each travel direction (the `for travel` loop, 1620-1648).
+- **One-way road**: the legal direction's right edge (the against-direction is skipped, 1626-1629), plus its left edge when `left_side_built` (`src/api/schemas.py:1316-1337`: shoulder or near_intersection, a one-way STREET verdict, the one-way tag, a confirmed road): one or two.
+- **Divided carriageway**: one (the median edge is never offered, 1607-1611).
 - **No confirmed road**: four headings, "traffic heads N/E/S/W" (1647-1656).
 - One option still renders as the question with one unselected row (ruling 5).
 
