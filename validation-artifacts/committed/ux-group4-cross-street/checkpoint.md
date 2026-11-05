@@ -22,6 +22,8 @@ Base: `origin/main` `9f1314e`. No pending evidence branch. No park-list item: no
 
 See `rulings.md` X2: side options don't read the crossing (`src/api/render_api.py:1594-1657`, computed at 1738 before the not-marked check at 1740). Order: side → kind → cross street.
 
+**Superseded (session 2, 2026-11-04):** Ryan revised ruling 2: the order is kind → cross street (near-intersection only) → side. The trace above still holds. The kinds that change the side options are in `rulings.md` X20.
+
 ## 3. What a tap on the band aerial takes
 
 - The aerial is an `<img>` of a backend Static Images picture (`static_aerial.py:211-248`), not Mapbox GL. A pixel becomes a coordinate only through the frame's centre and zoom. The backend fixes them only for the `pin` stage (`static_aerial.py:238-239`, `PIN_ZOOM` 17 + step, centred on the pin). Zoom-0 `work` / `laid_out` frames are `auto` (Mapbox's fit).
@@ -70,3 +72,11 @@ Changes (deliberate):
 | P20 | WHERE asks where; the cross street is a where fact. |
 | P21 | "Tap the intersection nearest the work" matches how a rep names the spot. |
 | P22 | Revision is untouched (the sidebar unmounts after Generate). |
+
+### Session 2 (2026-11-04): Ryan's revised ruling 2, the reorder. Stated after the build, in this session, before the commit. Prediction and diff are listed together.
+
+- **Behaviour change, deliberate (ruling 2):** the CONFIRM card asks the kind first, then (near-intersection only) the cross street, then the side. Confirm and the W8 hold move to the side when a work-start pin is down, else they stay on the kind. Counts: near-intersection "Question 2 of 3" on the cross street, "3 of 3" on the side; shoulder and flaggers "2 of 2" on the side. So the shoulder and flagger card (§ 4's "byte-identical: the shoulder and flagger CONFIRM card") **now changes**: same two questions, opposite order.
+- **Behaviour change, deliberate (ruling 2, X20-X21):** a kind change that changes the backend's built `side_options` clears `meta.work`, the way the side's Undo does, and shows "The sides changed with the new kind of work." on the side question until it is answered again. That happens only on a confirmed one-way street, when switching to or from flaggers. Nothing else in the scenario moves, and no deliverable changes for a plan whose side is answered.
+- **Source:** `components/bands/WhereQuestions.tsx` (the order, the line, the exported `useSideClearOnKindChange`); `components/GeneratorSidebar.tsx` (calls the hook beside its geometry read, because the card unmounts when the column moves on); `components/BandStack.tsx`, `components/bands/WhereBand.tsx` (pass `sidesChanged` down). Config: `scripts/production-env.txt`, the `NEXT_PUBLIC_MAPBOX_TOKEN` cite `WhereBand.tsx:441` → `444`.
+- **Tests that move:** `GeneratorShell.cross-street-tap.test.tsx` (the helper follows the new order; "Question 2 of 3"; a new test for the side asked last with Confirm); `GeneratorShell.where-confirm-card.test.tsx` (the records' order); `WhereBand.side-control.test.tsx` (the side's record is the last one); `WhereBand.no-crossing.test.tsx` (the side is reached through its Next row); `WhereBand.left-side.test.tsx` (+2: cleared and re-asked on a one-way street, kept when the options don't change). Artifact: `evidence/script/walk.mjs` follows the new order and adds the side steps.
+- **Byte-identical:** the backend; every deliverable; the scenario the picker Save and the tap write; NEEDS YOU; the WHAT form.

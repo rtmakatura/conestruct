@@ -20,7 +20,7 @@ vi.mock("../QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("../LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "../GeneratorShell";
-import { openWhere } from "../__fixtures__/band-helpers";
+import { nextQuestion, openWhere, pickKind } from "../__fixtures__/band-helpers";
 import { MIN_AUDIT, TEST_PIN } from "../test-fixtures";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { FlaggerLaneClosureScenario, ShoulderScenario } from "@/lib/scenarios";
@@ -37,6 +37,10 @@ const LEFT = {
 };
 
 let sideOptions: unknown[] = [RIGHT, LEFT];
+// #440 X20: the backend's `left_side_built` — on this one-way street only
+// shoulder (and near-intersection) work builds the left curb, so a flagger
+// read answers the right curb alone.  Off by default (the #315 cases).
+let leftByKind = false;
 
 // #315: the backend's words for a refused left (render_api.SIDE_REFUSAL_MESSAGES
 // "not_shoulder"), as the geometry read returns them.
@@ -60,7 +64,8 @@ function geometryFor(body: unknown) {
     approaches: [],
     coverage_ft: null,
     message: null,
-    side_options: refusedLeft ? [RIGHT] : sideOptions,
+    side_options:
+      refusedLeft || (leftByKind && scenario.kind === "flagger_lane_closure") ? [RIGHT] : sideOptions,
     ...(refusedLeft
       ? { side_refused: { side: "left", cause: "not_shoulder", message: NOT_SHOULDER } }
       : {}),
@@ -85,6 +90,7 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
   sideOptions = [RIGHT, LEFT];
+  leftByKind = false;
 });
 
 /** #439 W2: a side's radio row, read as its two lines. */
@@ -191,4 +197,72 @@ describe("#300: the side control on a one-way street", () => {
     await waitForOptions();
     expect(document.querySelector('[data-testid="side-control-stale"]')).toBeNull();
   });
+});
+
+
+describe("#440 ruling 2 / X20: a kind change after the side", () => {
+  const SIDES_CHANGED = "The sides changed with the new kind of work.";
+  const sent = () =>
+    fetchMock.mock.calls
+      .filter(([u]) => String(u).includes("/api/render/corridor-geometry"))
+      .map(([, init]) => JSON.parse(String(init?.body ?? "{}")).scenario);
+  async function until(cond: () => boolean, what: string, ms = 6000) {
+    const deadline = Date.now() + ms;
+    while (!cond()) {
+      if (Date.now() > deadline) throw new Error(`timed out waiting for ${what}`);
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 50));
+      });
+    }
+  }
+  const pause = (ms: number) =>
+    act(async () => {
+      await new Promise((r) => setTimeout(r, ms));
+    });
+
+  it("the side's options change with the kind: the side is cleared and re-asked with one line", async () => {
+    leftByKind = true;
+    render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
+    await openWhere();
+    const options = await waitForOptions();
+    await act(async () => {
+      options[0].click();
+    });
+    await openWhere();
+    expect(sideRecord()).toContain("West side");
+    await pickKind("flagger_lane_closure");
+    // Cleared the way the side's Undo clears it: the next read carries the
+    // new kind and no side.
+    await until(
+      () => sent().some((s) => s.kind === "flagger_lane_closure" && s.meta.work === undefined),
+      "the cleared read",
+    );
+    await nextQuestion("kind");
+    const after = await waitForOptions();
+    expect(after.map(sideText)).toEqual(["West side / Next to southbound traffic"]);
+    expect(after.map((o) => (o as HTMLInputElement).checked)).toEqual([false]);
+    expect(document.querySelector('[data-testid="side-changed-note"]')?.textContent).toBe(SIDES_CHANGED);
+    // Answered again, the line goes.
+    await act(async () => {
+      after[0].click();
+    });
+    await until(() => document.querySelector('[data-testid="side-changed-note"]') === null, "the line to go");
+  }, 15000);
+
+  it("the side's options stay the same: the side answer stays, and no line", async () => {
+    render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
+    await openWhere();
+    const options = await waitForOptions();
+    await act(async () => {
+      options[0].click();
+    });
+    await pickKind("flagger_lane_closure");
+    await until(() => sent().some((s) => s.kind === "flagger_lane_closure"), "the new kind's read");
+    // Long enough for the answer and for a clear's re-read, were there one.
+    await pause(1200);
+    expect(sent().every((s) => s.kind !== "flagger_lane_closure" || s.meta.work?.side === "right")).toBe(true);
+    await openWhere();
+    expect(sideRecord()).toContain("West side");
+    expect(document.querySelector('[data-testid="side-changed-note"]')).toBeNull();
+  }, 15000);
 });

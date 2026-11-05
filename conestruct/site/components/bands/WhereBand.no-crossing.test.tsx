@@ -11,7 +11,7 @@
 // The line stays on the wire for the ledger and the rail (unchanged).
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render } from "@testing-library/react";
 
 vi.mock("../AppNav", () => ({ AppNav: () => null }));
 vi.mock("../AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -96,9 +96,17 @@ const NO_CROSSING = {
 } as unknown as Scenario;
 
 describe("#317: no crossing marked", () => {
-  it("#440 X2: the side question shows its choices while the crossing is unmarked, and no not-marked line", async () => {
+  it("#440 X2/X20: the cross street is asked before the side; the side still shows its choices while the crossing is unmarked, and no not-marked line", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={NO_CROSSING} />);
     await openWhere();
+    // Ruling 2: the card is on the cross street, the side listed after it.
+    expect(await waitFor('[data-testid="step-next-side"]')).not.toBeNull();
+    expect(document.querySelector('[data-testid="where-questions"]')!.textContent).toContain(
+      "Which intersection is the work near?",
+    );
+    await act(async () => {
+      fireEvent.click(document.querySelector('[data-testid="step-next-side"]')!);
+    });
     expect(await waitFor('[data-testid="side-option"]')).not.toBeNull();
     expect(document.querySelectorAll('[data-testid="side-option"]')).toHaveLength(1);
     expect(document.querySelector('[data-testid="side-control-not-marked"]')).toBeNull();
@@ -132,6 +140,12 @@ describe("R131: one voice — WHERE's side row reads the side control's line", (
   it("the band shows neither the not-marked line nor a side sentence", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={NO_CROSSING} />);
     await openWhere();
+    // #440 ruling 2: the side is listed after the cross street; bring it
+    // on screen once the road's sides are read.
+    expect(await waitFor('[data-testid="step-next-side"]')).not.toBeNull();
+    await act(async () => {
+      fireEvent.click(document.querySelector('[data-testid="step-next-side"]')!);
+    });
     expect(await waitFor('[data-testid="side-option"]')).not.toBeNull();
     expect(document.querySelector('[data-testid="move-side"]')).toBeNull();
     const card = document.querySelector('[data-testid="where-questions"]')!;

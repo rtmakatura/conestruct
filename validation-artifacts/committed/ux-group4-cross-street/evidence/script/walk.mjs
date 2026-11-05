@@ -153,7 +153,8 @@ async function pin(p) {
   if (await want.count()) await want.first().click().catch(() => {});
   await p.waitForTimeout(2000);
   await p.getByRole('button', { name: 'Save & Close' }).click();
-  await p.waitForSelector('[data-testid=side-option]', { state: 'attached', timeout: 60000 });
+  // #440 ruling 2: the card opens on the kind.
+  await p.waitForSelector('[data-testid=kind-chip-near_intersection]', { state: 'attached', timeout: 60000 });
   await p.waitForTimeout(2500);
 }
 const nextBtn = (p) => p.locator('[data-testid=where-questions] .nyq-card .nyq-foot > button:last-child');
@@ -199,10 +200,9 @@ async function run(w, h) {
     await p.goto(BASE + '/sandbox', { waitUntil: 'networkidle', timeout: 180000 });
     await p.waitForSelector('.a-open .a-head', { timeout: 120000 });
     await pin(p);
-    // Side (the one built option), Next, the kind, Next: the third question.
-    await p.locator('[data-testid=where-questions] label.nyq-answer').first().click(); await p.waitForTimeout(1200);
-    await nextBtn(p).click(); await p.waitForTimeout(600);
+    // Ruling 2: the kind first, Next: the cross street (question 2 of 3).
     await p.locator('label.nyq-answer:has([data-testid=kind-chip-near_intersection])').click(); await p.waitForTimeout(800);
+    await step('00-kind', { sel: '[data-testid=where-questions]' });
     await nextBtn(p).click();
     await p.waitForSelector('[data-testid=band-aerial-bar]', { timeout: 30000 });
     await p.waitForTimeout(1500);
@@ -260,7 +260,9 @@ async function run(w, h) {
     const canvas = p.locator('[role=dialog] canvas.mapboxgl-canvas').first();
     if (await canvas.count()) {
       const cb = await canvas.boundingBox();
-      await canvas.click({ position: { x: cb.width / 2, y: cb.height / 2 } });
+      // Off the work-pin marker at the centre (it takes the click); the
+      // stubbed road-bearing answers Franklin for any point.
+      await canvas.click({ position: { x: cb.width / 2, y: cb.height / 2 - 60 } });
       await p.waitForTimeout(3500);
       out.pickerAfterClick = (await p.evaluate(() => (document.querySelector('[role=dialog]')?.innerText ?? '').replace(/\s+/g, ' ')));
       await p.screenshot({ path: `${OUT}/${tag}-${nn()}-picker-after-click.png` });
@@ -274,7 +276,16 @@ async function run(w, h) {
       await p.keyboard.press('Escape');
     }
 
-    // Confirm (X9).
+    // Ruling 2 / X20: Next asks the side last (question 3 of 3, Confirm).
+    await nextBtn(p).click();
+    await p.waitForSelector('[data-testid=side-option]', { state: 'attached', timeout: 30000 });
+    await p.waitForTimeout(1200);
+    await park(p);
+    await step('10-side', { measure: true });
+    await p.locator('[data-testid=where-questions] label.nyq-answer').first().click(); await p.waitForTimeout(1500);
+    await step('11-side-answered', { sel: '[data-testid=where-questions]' });
+
+    // Confirm (X9 as amended by X20).
     out.scenarioAtConfirm = seen.lastScenario;
     await p.locator('[data-testid=where-confirm]').click();
     await p.waitForTimeout(3000);

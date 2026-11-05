@@ -140,7 +140,7 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { answerSide } from "./__fixtures__/band-helpers";
+import { openWhere } from "./__fixtures__/band-helpers";
 import { MIN_AUDIT } from "./test-fixtures";
 
 type Mode = "ok" | "none" | "fail" | "hold";
@@ -267,12 +267,13 @@ async function tapCrossing() {
   });
 }
 
-/** A fresh session: the pin from the picker, the side, the kind, Next. */
+/** A fresh session, as a person goes (#440 ruling 2): the pin from the
+ *  picker, the kind first, Next — the cross street, with the side after it. */
 async function toTheCrossStreetQuestion() {
   render(<GeneratorShell mode="sandbox" />);
   await click(q("where-open-picker"), "Pick on map");
   await click(byText("SAVE_PIN"), "SAVE_PIN");
-  await answerSide();
+  await openWhere();
   await until(() => q("kind-chip-near_intersection") !== null, "the kind question");
   await click(q("kind-chip-near_intersection"), "the near-intersection kind");
   await click(byText("Next question"), "Next question");
@@ -280,17 +281,19 @@ async function toTheCrossStreetQuestion() {
 }
 
 describe("#440: the cross-street question on the WHERE band", () => {
-  it("rulings 1, 3: the third question, the armed pin picture, the bar and the big-map button", async () => {
+  it("rulings 1-3: the second question, the armed pin picture, the bar and the big-map button", async () => {
     await toTheCrossStreetQuestion();
     const card = q("where-questions")!;
-    expect(card.textContent).toContain("Question 3 of 3");
+    expect(card.textContent).toContain("Question 2 of 3");
     expect(card.textContent).toContain("Which intersection is the work near?");
     expect(card.textContent).toContain(
       "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
     );
-    // X9: the cross street is the last question; its button is Confirm.
-    expect(q("where-confirm")?.textContent).toBe("Confirm and lay out the plan");
-    expect((q("where-confirm") as HTMLButtonElement).disabled).toBe(true);
+    // Ruling 2 / X20: the side comes after the cross street, so this
+    // question's button is Next, and Confirm waits for the side.
+    expect(q("where-confirm")).toBeNull();
+    expect((byText("Next question") as HTMLButtonElement).disabled).toBe(true);
+    expect(q("step-next-side")).not.toBeNull();
     expect(q("band-aerial")?.getAttribute("data-stage")).toBe("pin");
     expect(q("band-aerial-frame")?.className).toContain("is-armed");
     expect(q("band-aerial-bar")?.textContent).toBe("Tap the intersection nearest the work");
@@ -342,7 +345,7 @@ describe("#440: the cross-street question on the WHERE band", () => {
     expect(q("band-aerial-mark-label")?.textContent).toBe("Race Street");
     expect(q("band-aerial-mark")?.style.left).toBe("338px");
     expect(q("band-aerial-bar")).toBeNull();
-    expect((q("where-confirm") as HTMLButtonElement).disabled).toBe(false);
+    expect((byText("Next question") as HTMLButtonElement).disabled).toBe(false);
 
     // The scenario: the picker Save's own record and approaches (X4).
     const after = await held();
@@ -363,6 +366,22 @@ describe("#440: the cross-street question on the WHERE band", () => {
     expect(q("cross-row")).toBeNull();
     expect(q("band-aerial-mark")).toBeNull();
     await until(() => q("band-aerial-bar") !== null, "the re-armed aerial");
+  });
+
+  it("ruling 2 / X20: after the tap, Next asks the side last, and its button is Confirm", async () => {
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await click(byText("Next question"), "Next question");
+    await until(() => q("side-option") !== null, "the side question");
+    const card = q("where-questions")!;
+    expect(card.textContent).toContain("Question 3 of 3");
+    expect(card.textContent).toContain("Which side of the road is the work on?");
+    expect(q("band-aerial-bar")).toBeNull(); // only the cross-street question arms the aerial
+    expect(q("where-confirm")?.textContent).toBe("Confirm and lay out the plan");
+    expect((q("where-confirm") as HTMLButtonElement).disabled).toBe(true);
+    await click(q("side-option"), "a side");
+    expect((q("where-confirm") as HTMLButtonElement).disabled).toBe(false);
   });
 
   it("X8: no street at the tap says so and keeps the tap armed, writing nothing", async () => {

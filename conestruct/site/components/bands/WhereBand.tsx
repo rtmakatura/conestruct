@@ -340,6 +340,7 @@ export function WhereBand({
   geometry: shellGeometry,
   crossStreet = null,
   crossMark,
+  sidesChanged = false,
   onKindChange,
   onKindCleared,
   kindPicked = true,
@@ -367,6 +368,8 @@ export function WhereBand({
   crossStreet?: CrossStreetTag | null;
   /** #440: the cross-street mark (GeneratorSidebar owns its state). */
   crossMark?: CrossStreetMark;
+  /** #440 X20: a kind change cleared the side. */
+  sidesChanged?: boolean;
   /** A chip click — the ONLY writer of the kind choice (defect 1). */
   onKindChange: (k: ScenarioKind) => void;
   /** #439 W6: Undo on the kind returns it to unchosen. */
@@ -733,6 +736,7 @@ export function WhereBand({
               onConfirm={onConfirm}
               onMarkIntersection={onMarkIntersection}
               crossMark={crossMark}
+              sidesChanged={sidesChanged}
               crossTag={crossStreet}
               onCurrentChange={setCurrentQ}
               locked={locked}

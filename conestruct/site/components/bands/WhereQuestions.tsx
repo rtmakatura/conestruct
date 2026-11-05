@@ -1,9 +1,10 @@
 "use client";
 
-// #439 (UX group 3, Option B) — the WHERE band's CONFIRM card: the side,
-// then the kind, one question at a time.  #440 (UX group 4, Option A) adds
-// the third, the cross street, for "Lane closure near an intersection"
-// only (ux-group4-cross-street/rulings.md, rulings 1-6, X2, X6-X11).
+// #439 (UX group 3, Option B) — the WHERE band's CONFIRM card, one
+// question at a time.  #440 (UX group 4, Option A) adds the cross street
+// for "Lane closure near an intersection" only, and its ruling 2 sets the
+// order: the kind, then the cross street, then the side (ux-group4-cross-
+// street/rulings.md, rulings 1-6, X6-X11, X20-X21).
 //
 // Authority: validation-artifacts/committed/ux-group3-where/rulings.md,
 // rulings 4-6 and the R145 calls W1-W8.  The card is #437's component
@@ -15,12 +16,17 @@
 // are built are the backend's `side_options` (#290); a click writes the
 // option's `meta.work` verbatim and no direction is composed here (Rule 3).
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
 import { SCENARIO_KINDS, isScenarioKindEnabled } from "@/lib/scenarios";
 import { kindCitation, kindLabel } from "@/lib/scenarios/band-facts";
-import { selectedSideOption, type GeometryFetch, type SideOption } from "@/lib/corridor-geometry";
+import {
+  selectedSideOption,
+  type CorridorGeometry,
+  type GeometryFetch,
+  type SideOption,
+} from "@/lib/corridor-geometry";
 import { symClass } from "@/lib/design/symbols";
 import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import type { CrossStreetMark } from "@/lib/cross-street-mark";
@@ -47,6 +53,63 @@ export const CROSS_NONE = "No cross street found there. Tap closer to where the 
 export const CROSS_FAILED = "The street lookup didn't answer.";
 /** #440 ruling 4. */
 export const BIG_MAP_LABEL = "Use the big map instead";
+/** #440 ruling 2 (X21), verbatim. */
+export const SIDES_CHANGED = "The sides changed with the new kind of work.";
+
+/** #440 ruling 2 / X20: clears an answered side when a kind change changes
+ *  the backend's built side options, and reports that it did, until the
+ *  side is answered again.  Nothing is derived here: the labels compared
+ *  are the backend's `side_options`, before and after (Rule 3).  The
+ *  "after" is the first ready geometry object that is not the one on
+ *  screen when the kind changed.  Called by GeneratorSidebar, which owns
+ *  the geometry read and stays mounted while the bands open and close. */
+export function useSideClearOnKindChange(
+  scenario: Scenario,
+  setMeta: (m: ScenarioMeta) => void,
+  geometry: GeometryFetch,
+): boolean {
+  const options = (geometry.geometry?.side_options ?? []).filter((o) => o.built);
+  const selected = selectedSideOption(options, scenario.meta.work);
+  const [changed, setChanged] = useState(false);
+  // The kind and the labels the answered side was chosen from.
+  const basis = useRef<{ kind: ScenarioKind; labels: string } | null>(null);
+  // The kind changed to, and the geometry object on screen at that moment.
+  const pending = useRef<{ kind: ScenarioKind; stale: CorridorGeometry | null } | null>(null);
+  const ready = geometry.state === "ready" ? geometry.geometry : null;
+  const labels = options
+    .map((o) => o.label)
+    .sort()
+    .join("\n");
+  const kind = scenario.kind;
+  const meta = scenario.meta;
+  useEffect(() => {
+    const b = basis.current;
+    if (b && b.kind !== kind) {
+      if (!pending.current || pending.current.kind !== kind) {
+        pending.current = { kind, stale: geometry.geometry };
+      }
+      if (ready && ready !== pending.current.stale) {
+        pending.current = null;
+        if (meta.work && labels !== b.labels) {
+          // W6's unsided state: nothing is written in the side's place.
+          const { work: _drop, ...rest } = meta;
+          void _drop;
+          basis.current = null;
+          setChanged(true);
+          setMeta(rest);
+        } else {
+          basis.current = meta.work ? { kind, labels } : null;
+        }
+      }
+      return;
+    }
+    pending.current = null;
+    if (selected && ready) basis.current = { kind, labels };
+    else if (!meta.work) basis.current = null;
+    if (selected && changed) setChanged(false);
+  }, [kind, meta, ready, geometry.geometry, labels, selected, changed, setMeta]);
+  return changed;
+}
 
 /** Ruling 6's plain labels for the three live kinds (W4).  Any other kind
  *  falls back to the table's label. */
@@ -124,6 +187,7 @@ export function WhereQuestions({
   crossMark,
   crossTag = null,
   onCurrentChange,
+  sidesChanged = false,
   locked,
 }: {
   scenario: Scenario;
@@ -145,6 +209,10 @@ export function WhereQuestions({
   crossTag?: CrossStreetTag | null;
   /** #440: the question on screen, so the band arms its aerial. */
   onCurrentChange?: (id: string | null) => void;
+  /** #440 ruling 2 / X20: a kind change cleared the side
+   *  (`useSideClearOnKindChange`, in GeneratorSidebar); the side question
+   *  says why until it is answered again. */
+  sidesChanged?: boolean;
   locked: boolean;
 }) {
   const g = geometry.geometry;
@@ -155,9 +223,16 @@ export function WhereQuestions({
   const refused = g?.side_refused ?? null;
 
   const questions: StepQuestion[] = [];
+  // #440 ruling 2: the kind is pushed first, below; the side last.
+  let sideQuestion: StepQuestion | null = null;
   if (showSide) {
     const sideExtra = (
       <>
+        {sidesChanged && !selected && (
+          <p className="tr-note wq-line" data-testid="side-changed-note" role="status">
+            {SIDES_CHANGED}
+          </p>
+        )}
         {/* #440 X2: the side options do not read the crossing, so they show
             while it is unmarked; the not-marked line and its Mark on map
             left this question (ruling 7). */}
@@ -175,7 +250,7 @@ export function WhereQuestions({
         {refused && warnLine(refused.message, "side-control-stale")}
       </>
     );
-    questions.push({
+    sideQuestion = {
       id: "side",
       title: "which side of the road the work is on",
       question: SIDE_QUESTION,
@@ -195,7 +270,7 @@ export function WhereQuestions({
       foot: () => <span className="nyq-source" />,
       details: null,
       extra: sideExtra,
-    });
+    };
   }
 
   const live = SCENARIO_KINDS.filter((k) => isScenarioKindEnabled(k.v));
@@ -254,8 +329,8 @@ export function WhereQuestions({
     ),
   });
 
-  // #440 ruling 1 / X2: the third question, for the near-intersection kind
-  // only, after the kind (the side options never read the crossing).
+  // #440 rulings 1-2 / X20: the second question, for the near-intersection
+  // kind only, between the kind and the side.
   const crossAsked = showSide && kindPicked && scenario.kind === "near_intersection";
   if (crossAsked) {
     const inter = scenario.meta.intersection ?? null;
@@ -348,6 +423,8 @@ export function WhereQuestions({
       ),
     });
   }
+  // #440 ruling 2: the side is asked last, once its options are final.
+  if (sideQuestion) questions.push(sideQuestion);
 
   return (
     <section className="wq" data-testid="where-questions" aria-labelledby="where-confirm-h">
@@ -390,8 +467,8 @@ export function WhereQuestions({
         inFlight={locked}
         // W8: with every question answered and the kind not yet confirmed,
         // the card stays on the last question so Confirm is on screen —
-        // the cross street when it is asked (#440 X9), else the kind.
-        fallbackId={kindConfirmed ? null : crossAsked ? "cross" : "kind"}
+        // the side when it is asked (#440 X9 as amended by X20), else the kind.
+        fallbackId={kindConfirmed ? null : showSide ? "side" : "kind"}
         onCurrentChange={onCurrentChange}
       />
     </section>

@@ -1,0 +1,3362 @@
+{
+ "390": {
+  "steps": [
+   {
+    "name": "00-kind",
+    "card": {
+     "count": "Question 1 of 3",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "◌ Next: which intersection the work is near",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": -523.3,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": -514.3,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": -462.3,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "shot": "390-01-00-kind.png"
+   },
+   {
+    "name": "01-armed",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 31,
+      "y": -389.3,
+      "w": 328,
+      "h": 250
+     },
+     "bar": {
+      "x": 32,
+      "y": -388.3,
+      "w": 326,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 241.5,
+      "y": -344.3,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 40,
+      "y": -344.3,
+      "w": 44,
+      "h": 92
+     },
+     "big": {
+      "x": 159.2,
+      "y": -212.3,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    },
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390-02-01-armed.png"
+   },
+   {
+    "name": "02-finding",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": {
+      "testid": "cross-finding",
+      "text": "Finding the street name…",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": 77.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": 86.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": 138.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "shot": "390-04-02-finding.png"
+   },
+   {
+    "name": "03-marked",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 120.3,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": 10.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": 19.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": 71.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 143,
+      "y": 56,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 177,
+      "y": 56,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390-05-03-marked.png"
+   },
+   {
+    "name": "04-move",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Cancel Undo",
+      "h": 120.3,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Cancel",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 31,
+      "y": 10.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": {
+      "x": 32,
+      "y": 11.8,
+      "w": 326,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 241.5,
+      "y": 55.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 40,
+      "y": 55.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": {
+      "x": 159.2,
+      "y": 187.8,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": {
+      "x": 143,
+      "y": 56,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 177,
+      "y": 56,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "05-cancel",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 120.3,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": 10.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": 19.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": 71.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 143,
+      "y": 56,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 177,
+      "y": 56,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "06-undone",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 31,
+      "y": 10.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": {
+      "x": 32,
+      "y": 11.8,
+      "w": 326,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 241.5,
+      "y": 55.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 40,
+      "y": 55.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": {
+      "x": 159.2,
+      "y": 187.8,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "07-failed",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": "The street lookup didn't answer. Try again Use the big map instead",
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 31,
+      "y": 10.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": {
+      "x": 32,
+      "y": 11.8,
+      "w": 326,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 241.5,
+      "y": 55.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 40,
+      "y": 55.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": {
+      "x": 159.2,
+      "y": 187.8,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    },
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-retry": {
+      "w": 68.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-big-map": {
+      "w": 164.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390-07-07-failed.png"
+   },
+   {
+    "name": "08-retried",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 120.3,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": 7.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": 16.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": 68.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 143,
+      "y": 53,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 177,
+      "y": 53,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "09-after-picker",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 120.3,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": -506.3,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": -497.3,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": -445.3,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "10-side",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": -485.3,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": -476.3,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": -424.3,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     },
+     "where-confirm": {
+      "w": 231.7,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390-09-10-side.png"
+   },
+   {
+    "name": "11-side-answered",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": false
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "work",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": 0.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": 9.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": 61.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial: the work segment at the pin"
+    },
+    "shot": "390-10-11-side-answered.png"
+   }
+  ],
+  "fails": [],
+  "tap_390": {
+   "at": {
+    "x": 125.06485048867762,
+    "y": 58.4726101718843
+   },
+   "box": {
+    "x": 32,
+    "y": 11.75,
+    "width": 326,
+    "height": 248
+   },
+   "pin": {
+    "lat": 39.739781,
+    "lng": -104.968249
+   }
+  },
+  "markedScenario": {
+   "intersection": {
+    "lat": 39.7400522182635,
+    "lng": -104.96845284788513,
+    "name": "Franklin Street",
+    "highwayClass": "residential",
+    "postedSpeedMph": 25
+   },
+   "approaches": [
+    {
+     "id": "cross_a",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 0.24
+    },
+    {
+     "id": "cross_b",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 180.24
+    }
+   ]
+  },
+  "afterUndo": {
+   "intersection": null
+  },
+  "retrySamePoint": true,
+  "picker": {
+   "text": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Click the intersection on the map… CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close"
+  },
+  "pickerArmed": true,
+  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
+  "pickerDetectedParagraph": false,
+  "scenarioAtConfirm": {
+   "kind": "near_intersection",
+   "meta": {
+    "project": "",
+    "address": "1600 E Colfax Ave, Denver",
+    "lat": 39.739781,
+    "lng": -104.968249,
+    "pinModel": "work_start",
+    "confirmedRoad": {
+     "candidate": {
+      "way_id": "1547338997",
+      "highway_class": "primary",
+      "name": "East Colfax Avenue",
+      "ref": "I 70 BUS;US 40;US 287",
+      "bearing": 267.58,
+      "snap_distance_m": 45.6,
+      "snapped_lat": 39.7400501,
+      "snapped_lng": -104.9678473,
+      "signal_distance_m": null,
+      "tags": {
+       "oneway": "yes",
+       "maxspeed": "30 mph",
+       "lanes": "2",
+       "lanes_forward": null,
+       "lanes_backward": null,
+       "lanes_both_ways": null,
+       "turn_lanes": null,
+       "turn_lanes_forward": null,
+       "turn_lanes_backward": null
+      },
+      "geometry": [
+       [
+        39.7401971,
+        -104.9419158
+       ],
+       [
+        39.7401985,
+        -104.9429103
+       ],
+       [
+        39.7401987,
+        -104.9430574
+       ],
+       [
+        39.7401936,
+        -104.9438938
+       ],
+       [
+        39.740194,
+        -104.9439988
+       ],
+       [
+        39.7401947,
+        -104.9442189
+       ],
+       [
+        39.7401935,
+        -104.9443086
+       ],
+       [
+        39.7401947,
+        -104.9453683
+       ],
+       [
+        39.7401952,
+        -104.9458364
+       ],
+       [
+        39.740196,
+        -104.9459515
+       ],
+       [
+        39.7401953,
+        -104.9460986
+       ],
+       [
+        39.7401995,
+        -104.9465258
+       ],
+       [
+        39.7401958,
+        -104.9471129
+       ],
+       [
+        39.7402049,
+        -104.9476981
+       ],
+       [
+        39.7402051,
+        -104.948267
+       ],
+       [
+        39.7402058,
+        -104.9483216
+       ],
+       [
+        39.7402061,
+        -104.9483783
+       ],
+       [
+        39.7402068,
+        -104.9484983
+       ],
+       [
+        39.7402051,
+        -104.9488465
+       ],
+       [
+        39.7402084,
+        -104.9494209
+       ],
+       [
+        39.7402119,
+        -104.9499664
+       ],
+       [
+        39.7402131,
+        -104.9500116
+       ],
+       [
+        39.7402137,
+        -104.9500748
+       ],
+       [
+        39.7402163,
+        -104.9502179
+       ],
+       [
+        39.7402159,
+        -104.9504706
+       ],
+       [
+        39.7402159,
+        -104.9507152
+       ],
+       [
+        39.7402203,
+        -104.9512827
+       ],
+       [
+        39.7402245,
+        -104.952441
+       ],
+       [
+        39.7402229,
+        -104.9527741
+       ],
+       [
+        39.7402229,
+        -104.9528073
+       ],
+       [
+        39.7402228,
+        -104.9528437
+       ],
+       [
+        39.7402244,
+        -104.9530089
+       ],
+       [
+        39.740225,
+        -104.9535311
+       ],
+       [
+        39.7402256,
+        -104.9536065
+       ],
+       [
+        39.7402285,
+        -104.9541837
+       ],
+       [
+        39.7402316,
+        -104.954781
+       ],
+       [
+        39.7402342,
+        -104.9561945
+       ],
+       [
+        39.7402366,
+        -104.9563057
+       ],
+       [
+        39.7402332,
+        -104.9564391
+       ],
+       [
+        39.7402384,
+        -104.9572787
+       ],
+       [
+        39.7402387,
+        -104.9574031
+       ],
+       [
+        39.7402394,
+        -104.9575269
+       ],
+       [
+        39.7402411,
+        -104.958062
+       ],
+       [
+        39.7402348,
+        -104.9582251
+       ],
+       [
+        39.7402159,
+        -104.9584151
+       ],
+       [
+        39.7401738,
+        -104.9586898
+       ],
+       [
+        39.740153,
+        -104.9587967
+       ],
+       [
+        39.740141,
+        -104.9589031
+       ],
+       [
+        39.7400773,
+        -104.9592793
+       ],
+       [
+        39.7400606,
+        -104.9594255
+       ],
+       [
+        39.740042,
+        -104.959648
+       ],
+       [
+        39.7400412,
+        -104.9596621
+       ],
+       [
+        39.7400395,
+        -104.9596926
+       ],
+       [
+        39.7400392,
+        -104.9597835
+       ],
+       [
+        39.7400383,
+        -104.9598916
+       ],
+       [
+        39.7400429,
+        -104.9601969
+       ],
+       [
+        39.7400466,
+        -104.9603993
+       ],
+       [
+        39.7400463,
+        -104.9605426
+       ],
+       [
+        39.7400483,
+        -104.9609187
+       ],
+       [
+        39.7400488,
+        -104.9610194
+       ],
+       [
+        39.7400491,
+        -104.961145
+       ],
+       [
+        39.7400541,
+        -104.9614786
+       ],
+       [
+        39.7400535,
+        -104.9616357
+       ],
+       [
+        39.7400553,
+        -104.9621487
+       ],
+       [
+        39.7400593,
+        -104.9622534
+       ],
+       [
+        39.7400584,
+        -104.9623716
+       ],
+       [
+        39.74006,
+        -104.9628771
+       ],
+       [
+        39.7400631,
+        -104.9633566
+       ],
+       [
+        39.740064,
+        -104.963483
+       ],
+       [
+        39.7400653,
+        -104.9635947
+       ],
+       [
+        39.740069,
+        -104.9638763
+       ],
+       [
+        39.7400686,
+        -104.9641276
+       ],
+       [
+        39.7400711,
+        -104.9643426
+       ],
+       [
+        39.7400708,
+        -104.9646491
+       ],
+       [
+        39.7400708,
+        -104.9647725
+       ],
+       [
+        39.7400733,
+        -104.9648967
+       ],
+       [
+        39.7400668,
+        -104.9653324
+       ],
+       [
+        39.7400668,
+        -104.9653896
+       ],
+       [
+        39.7400687,
+        -104.9659109
+       ],
+       [
+        39.7400683,
+        -104.9660054
+       ],
+       [
+        39.7400674,
+        -104.9660927
+       ],
+       [
+        39.7400689,
+        -104.966255
+       ],
+       [
+        39.7400695,
+        -104.9666186
+       ],
+       [
+        39.7400705,
+        -104.9669611
+       ],
+       [
+        39.7400723,
+        -104.967104
+       ],
+       [
+        39.7400674,
+        -104.9672262
+       ],
+       [
+        39.7400663,
+        -104.9673484
+       ],
+       [
+        39.7400501,
+        -104.9678473
+       ]
+      ]
+     },
+     "classification": {
+      "roadType": "urban_arterial",
+      "divided": false,
+      "laneWidthFt": 12,
+      "lanesPerDirection": 2,
+      "detectedLanesTotal": 2,
+      "detectedOneway": "yes",
+      "carriageway": {
+       "oneway": "yes",
+       "highwayClass": "primary",
+       "twinDistanceM": null,
+       "twinSearched": false
+      },
+      "speedLimitMph": 30,
+      "confidence": "medium",
+      "source": "osm-tags",
+      "raw": {
+       "class": "primary",
+       "oneway": true,
+       "roadName": "East Colfax Avenue",
+       "roadRef": "I 70 BUS;US 40;US 287",
+       "placeName": "Denver",
+       "osmLanesTag": "2",
+       "osmMaxspeedTag": "30 mph",
+       "osmLanesForwardTag": null,
+       "osmLanesBackwardTag": null,
+       "osmLanesBothWaysTag": null,
+       "osmOnewayTag": "yes"
+      },
+      "fields": {
+       "speed": {
+        "value": 30,
+        "confidence": "high",
+        "source": "OSM maxspeed tag",
+        "method": "measured",
+        "rawData": "maxspeed=30 mph"
+       },
+       "lanes": {
+        "value": 2,
+        "confidence": "high",
+        "source": "OSM lanes:forward tag",
+        "method": "measured",
+        "rawData": "lanes=2"
+       },
+       "roadType": {
+        "value": "urban_arterial",
+        "confidence": "medium",
+        "source": "OSM class=primary + urban (inferred)",
+        "method": "inferred",
+        "rawData": "class=primary, place=urban, oneway=true"
+       },
+       "divided": {
+        "value": false,
+        "confidence": "low",
+        "source": "OSM oneway=yes; the same-name search didn't run → confirm one-way street or divided",
+        "method": "inferred",
+        "rawData": "class=primary, oneway=true"
+       }
+      }
+     },
+     "method": "auto_single",
+     "isUrban": true,
+     "placeName": "Denver",
+     "pinLat": 39.739781,
+     "pinLng": -104.968249
+    },
+    "intersection": {
+     "lat": 39.74027748072044,
+     "lng": -104.96824900000048,
+     "name": "Franklin Street",
+     "highwayClass": "residential",
+     "postedSpeedMph": 25
+    },
+    "work": {
+     "side": "right",
+     "travel": "with_geometry"
+    }
+   },
+   "roadType": "urban_arterial",
+   "speed": 30,
+   "lanes": 2,
+   "laneWidth": 12,
+   "divided": false,
+   "workType": "utility_cut",
+   "duration": "short",
+   "workLen": 1000,
+   "night": false,
+   "approaches": [
+    {
+     "id": "cross_a",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 0.24
+    },
+    {
+     "id": "cross_b",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 180.24
+    }
+   ],
+   "jurisdiction_key": "denver",
+   "street_class": "arterial",
+   "guesses": {
+    "street_class": {
+     "highwayClass": "primary"
+    },
+    "road_type": {
+     "highwayClass": "primary",
+     "urban": true,
+     "divided": false
+    },
+    "jurisdiction_key": {
+     "lat": 39.739781,
+     "lng": -104.968249
+    }
+   },
+   "carriageway": {
+    "oneway": "yes",
+    "highwayClass": "primary",
+    "twinDistanceM": null,
+    "twinSearched": false
+   }
+  },
+  "afterConfirm": {
+   "whereOpen": false,
+   "openBand": "band-what"
+  },
+  "marked": {
+   "count": "Question 2 of 3",
+   "flag": "cross",
+   "question": "Which intersection is the work near?",
+   "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+   "button": {
+    "text": "Next question",
+    "disabled": false
+   },
+   "row": {
+    "testid": "cross-row",
+    "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+    "h": 120.3,
+    "bg": "rgb(17, 38, 32)"
+   },
+   "name": {
+    "text": "Near Franklin Street",
+    "font": "15px/600"
+   },
+   "line": {
+    "text": "Two-way street · at where the work starts",
+    "font": "12.5px",
+    "color": "rgb(174, 187, 204)"
+   },
+   "none": null,
+   "failed": null,
+   "move": "Move",
+   "rows": [
+    "✓ What kind of work is it: Lane closure near an intersection UNDO",
+    "◌ Next: which side of the road the work is on"
+   ],
+   "notMarkedLine": false,
+   "occupiedBlock": false
+  }
+ },
+ "1440": {
+  "steps": [
+   {
+    "name": "00-kind",
+    "card": {
+     "count": "Question 1 of 3",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "◌ Next: which intersection the work is near",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": -373.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": -364.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": -312.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "shot": "1440-01-00-kind.png"
+   },
+   {
+    "name": "01-armed",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 297,
+      "y": -211.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": {
+      "x": 298,
+      "y": -210.5,
+      "w": 844,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 1025.5,
+      "y": -166.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": -114.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": {
+      "x": 943.2,
+      "y": 15.5,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    },
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "1440-02-01-armed.png"
+   },
+   {
+    "name": "02-finding",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": {
+      "testid": "cross-finding",
+      "text": "Finding the street name…",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": 106.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 158.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "shot": "1440-04-02-finding.png"
+   },
+   {
+    "name": "03-marked",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": 106.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 158.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 668,
+      "y": 167,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 702,
+      "y": 167,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "1440-05-03-marked.png"
+   },
+   {
+    "name": "04-move",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Cancel Undo",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Cancel",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": {
+      "x": 298,
+      "y": 98.5,
+      "w": 844,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 1025.5,
+      "y": 142.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 194.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": {
+      "x": 943.2,
+      "y": 324.5,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": {
+      "x": 668,
+      "y": 167,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 702,
+      "y": 167,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "05-cancel",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": 106.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 158.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 668,
+      "y": 167,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 702,
+      "y": 167,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "06-undone",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": {
+      "x": 298,
+      "y": 98.5,
+      "w": 844,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 1025.5,
+      "y": 142.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 194.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": {
+      "x": 943.2,
+      "y": 324.5,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "07-failed",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": "The street lookup didn't answer. Try again Use the big map instead",
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "cursor": "crosshair",
+     "outline": {
+      "border": "2px solid rgb(52, 169, 232)",
+      "content": "\"\""
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": {
+      "x": 298,
+      "y": 98.5,
+      "w": 844,
+      "h": 36
+     },
+     "barText": "Tap the intersection nearest the work",
+     "barStyle": {
+      "bg": "rgb(52, 169, 232)",
+      "color": "rgb(12, 22, 34)",
+      "font": "__Inter_176161 13.5px/600"
+     },
+     "edit": {
+      "x": 1025.5,
+      "y": 142.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 194.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": {
+      "x": 943.2,
+      "y": 324.5,
+      "w": 190.8,
+      "h": 44
+     },
+     "bigText": "Use the big map instead",
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": false,
+      "barZoom": false,
+      "bigZoom": false,
+      "bigEdit": false,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    },
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-retry": {
+      "w": 68.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-big-map": {
+      "w": 164.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "1440-07-07-failed.png"
+   },
+   {
+    "name": "08-retried",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": 106.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 158.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 668,
+      "y": 167,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 702,
+      "y": 167,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "09-after-picker",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · at where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": -295.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": -286.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": -234.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "10-side",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": true
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": -288.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": -279.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": -227.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     },
+     "where-confirm": {
+      "w": 231.7,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "1440-09-10-side.png"
+   },
+   {
+    "name": "11-side-answered",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": false
+     },
+     "row": null,
+     "name": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "work",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": 97.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": 106.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 158.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": null,
+     "label": null,
+     "labelText": null,
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": null,
+     "alt": "Aerial: the work segment at the pin"
+    },
+    "shot": "1440-10-11-side-answered.png"
+   }
+  ],
+  "fails": [],
+  "tap_1440": {
+   "at": {
+    "x": 384.0648504886776,
+    "y": 83.4726101718843
+   },
+   "box": {
+    "x": 298,
+    "y": 98.5,
+    "width": 844,
+    "height": 298
+   },
+   "pin": {
+    "lat": 39.739781,
+    "lng": -104.968249
+   }
+  },
+  "markedScenario": {
+   "intersection": {
+    "lat": 39.7400553120018,
+    "lng": -104.96845284788513,
+    "name": "Franklin Street",
+    "highwayClass": "residential",
+    "postedSpeedMph": 25
+   },
+   "approaches": [
+    {
+     "id": "cross_a",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 0.24
+    },
+    {
+     "id": "cross_b",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 180.24
+    }
+   ]
+  },
+  "afterUndo": {
+   "intersection": null
+  },
+  "retrySamePoint": true,
+  "picker": {
+   "text": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Click the intersection on the map… CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close"
+  },
+  "pickerArmed": true,
+  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
+  "pickerDetectedParagraph": false,
+  "scenarioAtConfirm": {
+   "kind": "near_intersection",
+   "meta": {
+    "project": "",
+    "address": "1600 E Colfax Ave, Denver",
+    "lat": 39.739781,
+    "lng": -104.968249,
+    "pinModel": "work_start",
+    "confirmedRoad": {
+     "candidate": {
+      "way_id": "1547338997",
+      "highway_class": "primary",
+      "name": "East Colfax Avenue",
+      "ref": "I 70 BUS;US 40;US 287",
+      "bearing": 267.58,
+      "snap_distance_m": 45.6,
+      "snapped_lat": 39.7400501,
+      "snapped_lng": -104.9678473,
+      "signal_distance_m": null,
+      "tags": {
+       "oneway": "yes",
+       "maxspeed": "30 mph",
+       "lanes": "2",
+       "lanes_forward": null,
+       "lanes_backward": null,
+       "lanes_both_ways": null,
+       "turn_lanes": null,
+       "turn_lanes_forward": null,
+       "turn_lanes_backward": null
+      },
+      "geometry": [
+       [
+        39.7401971,
+        -104.9419158
+       ],
+       [
+        39.7401985,
+        -104.9429103
+       ],
+       [
+        39.7401987,
+        -104.9430574
+       ],
+       [
+        39.7401936,
+        -104.9438938
+       ],
+       [
+        39.740194,
+        -104.9439988
+       ],
+       [
+        39.7401947,
+        -104.9442189
+       ],
+       [
+        39.7401935,
+        -104.9443086
+       ],
+       [
+        39.7401947,
+        -104.9453683
+       ],
+       [
+        39.7401952,
+        -104.9458364
+       ],
+       [
+        39.740196,
+        -104.9459515
+       ],
+       [
+        39.7401953,
+        -104.9460986
+       ],
+       [
+        39.7401995,
+        -104.9465258
+       ],
+       [
+        39.7401958,
+        -104.9471129
+       ],
+       [
+        39.7402049,
+        -104.9476981
+       ],
+       [
+        39.7402051,
+        -104.948267
+       ],
+       [
+        39.7402058,
+        -104.9483216
+       ],
+       [
+        39.7402061,
+        -104.9483783
+       ],
+       [
+        39.7402068,
+        -104.9484983
+       ],
+       [
+        39.7402051,
+        -104.9488465
+       ],
+       [
+        39.7402084,
+        -104.9494209
+       ],
+       [
+        39.7402119,
+        -104.9499664
+       ],
+       [
+        39.7402131,
+        -104.9500116
+       ],
+       [
+        39.7402137,
+        -104.9500748
+       ],
+       [
+        39.7402163,
+        -104.9502179
+       ],
+       [
+        39.7402159,
+        -104.9504706
+       ],
+       [
+        39.7402159,
+        -104.9507152
+       ],
+       [
+        39.7402203,
+        -104.9512827
+       ],
+       [
+        39.7402245,
+        -104.952441
+       ],
+       [
+        39.7402229,
+        -104.9527741
+       ],
+       [
+        39.7402229,
+        -104.9528073
+       ],
+       [
+        39.7402228,
+        -104.9528437
+       ],
+       [
+        39.7402244,
+        -104.9530089
+       ],
+       [
+        39.740225,
+        -104.9535311
+       ],
+       [
+        39.7402256,
+        -104.9536065
+       ],
+       [
+        39.7402285,
+        -104.9541837
+       ],
+       [
+        39.7402316,
+        -104.954781
+       ],
+       [
+        39.7402342,
+        -104.9561945
+       ],
+       [
+        39.7402366,
+        -104.9563057
+       ],
+       [
+        39.7402332,
+        -104.9564391
+       ],
+       [
+        39.7402384,
+        -104.9572787
+       ],
+       [
+        39.7402387,
+        -104.9574031
+       ],
+       [
+        39.7402394,
+        -104.9575269
+       ],
+       [
+        39.7402411,
+        -104.958062
+       ],
+       [
+        39.7402348,
+        -104.9582251
+       ],
+       [
+        39.7402159,
+        -104.9584151
+       ],
+       [
+        39.7401738,
+        -104.9586898
+       ],
+       [
+        39.740153,
+        -104.9587967
+       ],
+       [
+        39.740141,
+        -104.9589031
+       ],
+       [
+        39.7400773,
+        -104.9592793
+       ],
+       [
+        39.7400606,
+        -104.9594255
+       ],
+       [
+        39.740042,
+        -104.959648
+       ],
+       [
+        39.7400412,
+        -104.9596621
+       ],
+       [
+        39.7400395,
+        -104.9596926
+       ],
+       [
+        39.7400392,
+        -104.9597835
+       ],
+       [
+        39.7400383,
+        -104.9598916
+       ],
+       [
+        39.7400429,
+        -104.9601969
+       ],
+       [
+        39.7400466,
+        -104.9603993
+       ],
+       [
+        39.7400463,
+        -104.9605426
+       ],
+       [
+        39.7400483,
+        -104.9609187
+       ],
+       [
+        39.7400488,
+        -104.9610194
+       ],
+       [
+        39.7400491,
+        -104.961145
+       ],
+       [
+        39.7400541,
+        -104.9614786
+       ],
+       [
+        39.7400535,
+        -104.9616357
+       ],
+       [
+        39.7400553,
+        -104.9621487
+       ],
+       [
+        39.7400593,
+        -104.9622534
+       ],
+       [
+        39.7400584,
+        -104.9623716
+       ],
+       [
+        39.74006,
+        -104.9628771
+       ],
+       [
+        39.7400631,
+        -104.9633566
+       ],
+       [
+        39.740064,
+        -104.963483
+       ],
+       [
+        39.7400653,
+        -104.9635947
+       ],
+       [
+        39.740069,
+        -104.9638763
+       ],
+       [
+        39.7400686,
+        -104.9641276
+       ],
+       [
+        39.7400711,
+        -104.9643426
+       ],
+       [
+        39.7400708,
+        -104.9646491
+       ],
+       [
+        39.7400708,
+        -104.9647725
+       ],
+       [
+        39.7400733,
+        -104.9648967
+       ],
+       [
+        39.7400668,
+        -104.9653324
+       ],
+       [
+        39.7400668,
+        -104.9653896
+       ],
+       [
+        39.7400687,
+        -104.9659109
+       ],
+       [
+        39.7400683,
+        -104.9660054
+       ],
+       [
+        39.7400674,
+        -104.9660927
+       ],
+       [
+        39.7400689,
+        -104.966255
+       ],
+       [
+        39.7400695,
+        -104.9666186
+       ],
+       [
+        39.7400705,
+        -104.9669611
+       ],
+       [
+        39.7400723,
+        -104.967104
+       ],
+       [
+        39.7400674,
+        -104.9672262
+       ],
+       [
+        39.7400663,
+        -104.9673484
+       ],
+       [
+        39.7400501,
+        -104.9678473
+       ]
+      ]
+     },
+     "classification": {
+      "roadType": "urban_arterial",
+      "divided": false,
+      "laneWidthFt": 12,
+      "lanesPerDirection": 2,
+      "detectedLanesTotal": 2,
+      "detectedOneway": "yes",
+      "carriageway": {
+       "oneway": "yes",
+       "highwayClass": "primary",
+       "twinDistanceM": null,
+       "twinSearched": false
+      },
+      "speedLimitMph": 30,
+      "confidence": "medium",
+      "source": "osm-tags",
+      "raw": {
+       "class": "primary",
+       "oneway": true,
+       "roadName": "East Colfax Avenue",
+       "roadRef": "I 70 BUS;US 40;US 287",
+       "placeName": "Denver",
+       "osmLanesTag": "2",
+       "osmMaxspeedTag": "30 mph",
+       "osmLanesForwardTag": null,
+       "osmLanesBackwardTag": null,
+       "osmLanesBothWaysTag": null,
+       "osmOnewayTag": "yes"
+      },
+      "fields": {
+       "speed": {
+        "value": 30,
+        "confidence": "high",
+        "source": "OSM maxspeed tag",
+        "method": "measured",
+        "rawData": "maxspeed=30 mph"
+       },
+       "lanes": {
+        "value": 2,
+        "confidence": "high",
+        "source": "OSM lanes:forward tag",
+        "method": "measured",
+        "rawData": "lanes=2"
+       },
+       "roadType": {
+        "value": "urban_arterial",
+        "confidence": "medium",
+        "source": "OSM class=primary + urban (inferred)",
+        "method": "inferred",
+        "rawData": "class=primary, place=urban, oneway=true"
+       },
+       "divided": {
+        "value": false,
+        "confidence": "low",
+        "source": "OSM oneway=yes; the same-name search didn't run → confirm one-way street or divided",
+        "method": "inferred",
+        "rawData": "class=primary, oneway=true"
+       }
+      }
+     },
+     "method": "auto_single",
+     "isUrban": true,
+     "placeName": "Denver",
+     "pinLat": 39.739781,
+     "pinLng": -104.968249
+    },
+    "intersection": {
+     "lat": 39.7402801232798,
+     "lng": -104.96824899999993,
+     "name": "Franklin Street",
+     "highwayClass": "residential",
+     "postedSpeedMph": 25
+    },
+    "work": {
+     "side": "right",
+     "travel": "with_geometry"
+    }
+   },
+   "roadType": "urban_arterial",
+   "speed": 30,
+   "lanes": 2,
+   "laneWidth": 12,
+   "divided": false,
+   "workType": "utility_cut",
+   "duration": "short",
+   "workLen": 1000,
+   "night": false,
+   "approaches": [
+    {
+     "id": "cross_a",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 0.24
+    },
+    {
+     "id": "cross_b",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": false,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 180.24
+    }
+   ],
+   "jurisdiction_key": "denver",
+   "street_class": "arterial",
+   "guesses": {
+    "street_class": {
+     "highwayClass": "primary"
+    },
+    "road_type": {
+     "highwayClass": "primary",
+     "urban": true,
+     "divided": false
+    },
+    "jurisdiction_key": {
+     "lat": 39.739781,
+     "lng": -104.968249
+    }
+   },
+   "carriageway": {
+    "oneway": "yes",
+    "highwayClass": "primary",
+    "twinDistanceM": null,
+    "twinSearched": false
+   }
+  },
+  "afterConfirm": {
+   "whereOpen": false,
+   "openBand": "band-what"
+  },
+  "marked": {
+   "count": "Question 2 of 3",
+   "flag": "cross",
+   "question": "Which intersection is the work near?",
+   "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+   "button": {
+    "text": "Next question",
+    "disabled": false
+   },
+   "row": {
+    "testid": "cross-row",
+    "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+    "h": 68,
+    "bg": "rgb(17, 38, 32)"
+   },
+   "name": {
+    "text": "Near Franklin Street",
+    "font": "15px/600"
+   },
+   "line": {
+    "text": "Two-way street · at where the work starts",
+    "font": "12.5px",
+    "color": "rgb(174, 187, 204)"
+   },
+   "none": null,
+   "failed": null,
+   "move": "Move",
+   "rows": [
+    "✓ What kind of work is it: Lane closure near an intersection UNDO",
+    "◌ Next: which side of the road the work is on"
+   ],
+   "notMarkedLine": false,
+   "occupiedBlock": false
+  }
+ }
+}

@@ -372,33 +372,37 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
   // CONFIRM card's two questions (rulings 4-6).  The claim is kept: the
   // side's answer is its own record, with the side as its value, and the
   // kind is still asked on its own until Confirm.
+  //
+  // #440 ruling 2 (RULE 5, stated): the kind is asked first and the side
+  // last.  The claim is kept in the new order.
   it("the side's record ticks with the side once it is chosen; the kind is its own question until Confirm", async () => {
     const user = await freshWithRoad({ side: false });
     const card = () => document.querySelector('[data-testid="where-questions"] .nyq-card');
     const count = () =>
       document.querySelector('[data-testid="where-questions"] .nyq-count')?.textContent;
-    expect(card()?.getAttribute("data-flag")).toBe("side");
-    expect(count()).toBe("Question 1 of 2");
-    expect(card()?.textContent).toContain("Which side of the road is the work on?");
-    expect(screen.getByTestId("step-next-kind").textContent).toBe(
-      "◌Next: what kind of work it is",
-    );
-
-    await answerSide();
-    await settle();
-    // The side is answered: a ✓ record with the side's compass words and
-    // an Undo; the card has moved on to the kind.
-    const records = () =>
-      Array.from(document.querySelectorAll('[data-testid="where-questions"] .nyq-answered'));
-    expect(records().map((r) => r.querySelector(".nyq-row-text")?.textContent)).toEqual([
-      "Which side of the road is the work on: East side",
-    ]);
-    expect(screen.getByTestId("step-undo-side")).toBeTruthy();
     expect(card()?.getAttribute("data-flag")).toBe("kind");
-    expect(count()).toBe("Question 2 of 2");
+    expect(count()).toBe("Question 1 of 2");
+    expect(card()?.textContent).toContain("What kind of work is it?");
+    expect(screen.getByTestId("step-next-side").textContent).toBe(
+      "◌Next: which side of the road the work is on",
+    );
     expect(pressed()).toEqual([]);
 
     await user.click(chip("shoulder"));
+    await settle();
+    const records = () =>
+      Array.from(document.querySelectorAll('[data-testid="where-questions"] .nyq-answered'));
+    await answerSide();
+    await settle();
+    // The side is answered: its own ✓ record with the side's compass words
+    // and an Undo, after the kind's; the kind still waits for Confirm.
+    expect(records().map((r) => r.querySelector(".nyq-row-text")?.textContent)).toEqual([
+      "What kind of work is it: Shoulder work",
+    ]);
+    expect(card()?.getAttribute("data-flag")).toBe("side");
+    expect(count()).toBe("Question 2 of 2");
+    expect(generateBtn().disabled).toBe(true);
+
     await confirmKind();
     await user.click(screen.getByTestId("fact-link-where"));
     await settle();
@@ -406,9 +410,10 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(card()).toBeNull();
     expect(count()).toBe("2 of 2 answered");
     expect(records().map((r) => r.querySelector(".nyq-row-text")?.textContent)).toEqual([
-      "Which side of the road is the work on: East side",
       "What kind of work is it: Shoulder work",
+      "Which side of the road is the work on: East side",
     ]);
+    expect(screen.getByTestId("step-undo-side")).toBeTruthy();
   });
 
   // #290 prod sweep finding (flagger-*-04-kind-confirmed-side-owed): the

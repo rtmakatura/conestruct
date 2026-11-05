@@ -41,6 +41,7 @@ import {
   type LocationPickerResult,
 } from "./LocationPickerModal";
 import { BandStack, type OpenRequest } from "./BandStack";
+import { useSideClearOnKindChange } from "./bands/WhereQuestions";
 import type { KindState } from "@/lib/scenarios/band-facts";
 
 interface Props {
@@ -314,6 +315,9 @@ export function GeneratorSidebar({
   const setMeta = (meta: ScenarioMeta) => {
     setScenario({ ...scenario, meta } as Scenario);
   };
+  // #440 ruling 2 / X20: asked here, beside the geometry read, because
+  // the WHERE band's card unmounts when the column moves on.
+  const sidesChanged = useSideClearOnKindChange(scenario, setMeta, geometry);
 
   const onPickerSave = (r: LocationPickerResult) => {
     // Dev-only snapshot wiring (Refs #102): keep the raw detection alive.
@@ -478,6 +482,7 @@ export function GeneratorSidebar({
         geometry={geometry}
         crossStreet={crossStreet}
         crossMark={crossMark}
+        sidesChanged={sidesChanged}
         onKindChange={onKindChange}
         kindState={kindState}
         onKindPicked={onKindPicked}

@@ -55,6 +55,8 @@ export interface BandStackProps {
   crossStreet?: CrossStreetTag | null;
   /** #440: the band's cross-street mark (GeneratorSidebar owns its state). */
   crossMark?: CrossStreetMark;
+  /** #440 X20: a kind change cleared the side (GeneratorSidebar owns it). */
+  sidesChanged?: boolean;
   onKindChange: (k: ScenarioKind) => void;
   onGenerate: () => void;
   generating: boolean;
@@ -118,6 +120,7 @@ export function BandStack(props: BandStackProps) {
     geometry,
     crossStreet = null,
     crossMark,
+  sidesChanged = false,
     onKindChange,
     onGenerate,
     generating,
@@ -222,6 +225,7 @@ export function BandStack(props: BandStackProps) {
           geometry={geometry}
           crossStreet={crossStreet}
           crossMark={crossMark}
+          sidesChanged={sidesChanged}
           // Defect 1: the chip writes the kind AND records that a person
           // chose it.  Re-picking the kind already on the scenario (the
           // default's own chip) is a choice too — `onKindChange` returns

@@ -1,0 +1,3 @@
+#440 session 2, full vitest run after the ruling-2 reorder (2026-11-04): 1 failed | 2781 passed | 1 skipped (2783)
+FAIL components/GeneratorShell.kind-confirm.test.tsx > defect 1 ? the kind is confirmed, never inferred > the side's record ticks with the side once it is chosen; the kind is its own question until Confirm
+Alone (before the fix): failed the same way (expected 'kind' to be 'side', kind-confirm.test.tsx:380). Not flaky: the test pinned #439's side-first order. Rewritten to ruling 2's order with its claim kept.

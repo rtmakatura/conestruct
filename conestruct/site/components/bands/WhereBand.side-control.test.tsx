@@ -129,7 +129,9 @@ describe("the chosen side is visible, and the options are spaced", () => {
       document.querySelector('[data-testid="band-stack"]')?.getAttribute("data-open-band"),
     ).toBe("what");
     await openWhere();
-    const record = document.querySelector('[data-testid="where-questions"] .nyq-answered');
+    // #440 ruling 2: the side's record is the card's last (the kind's first).
+    const rows = document.querySelectorAll('[data-testid="where-questions"] .nyq-answered');
+    const record = rows[rows.length - 1];
     expect(record?.textContent).toContain("Which side of the road is the work on: West side");
     expect(record?.textContent).not.toContain("●");
   });

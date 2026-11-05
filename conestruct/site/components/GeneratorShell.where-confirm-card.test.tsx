@@ -219,8 +219,9 @@ describe("#439 W6 — Undo returns a question to unanswered and writes nothing i
   it("kind Undo: the kind is unchosen, its question re-opens, Generate waits on it", async () => {
     await mountWhere();
     expect(records()).toEqual([
-      "Which side of the road is the work on: East side",
+      // #440 ruling 2: the kind first, the side last.
       "What kind of work is it: Shoulder work",
+      "Which side of the road is the work on: East side",
     ]);
     expect(generateBtn().disabled).toBe(false);
     await act(async () => {
