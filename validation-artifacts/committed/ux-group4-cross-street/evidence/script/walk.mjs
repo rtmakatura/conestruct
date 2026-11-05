@@ -366,7 +366,9 @@ async function run(w, h) {
         const sc = body.scenario ?? body;
         out.pdf.sentIntersection = sc?.meta?.intersection ?? null;
         out.pdf.sentApproaches = sc?.approaches ?? null;
-        fs.writeFileSync(`${OUT}/${tag}-pdf-request.json`, JSON.stringify(body, null, 1));
+        // A signed site-scan token never gets committed (#371,
+        // tests/test_no_committed_scan_tokens.py): redacted on write.
+        fs.writeFileSync(`${OUT}/${tag}-pdf-request.json`, JSON.stringify(body, (k, v) => (k === 'token' && typeof v === 'string' ? '<redacted: signed site-scan token (#371)>' : v), 1));
       }
       console.log(tag, 'pdf', JSON.stringify({ button: clicked, status: out.pdf.status, bytes: out.pdf.bytes }));
     }

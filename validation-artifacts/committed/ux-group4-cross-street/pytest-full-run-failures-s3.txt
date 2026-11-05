@@ -1,0 +1,4 @@
+Session 3 full pytest on 3c838a6 (diff-verifier run, 2026-11-04): 1 failed, 3838 passed, 3 skipped.
+FAILED tests/test_no_committed_scan_tokens.py::test_no_committed_file_holds_a_signed_scan_token  (found evidence/local-pdf/1440-pdf-request.json: site_scan.token)
+Alone: failed again (diff-verifier re-ran it). Cause: the walk saved the page's PDF request body verbatim; fixed by redacting the token in the file and in walk.mjs.
+After the redaction: the test passes alone.
