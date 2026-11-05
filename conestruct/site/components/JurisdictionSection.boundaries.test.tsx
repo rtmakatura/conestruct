@@ -16,7 +16,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { mountJurisdiction as mountTiered } from "./reference-test-utils";
+import { mountJurisdiction as mountTiered, openRow, openSection, rowOf } from "./reference-test-utils";
 import {
   deriveBandRows,
   hourTick,
@@ -76,8 +76,9 @@ describe("#215 — the rendered card labels every boundary", () => {
       start_time: 8,
       end_time: 15,
     });
-    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
-    await userEvent.click(screen.getByRole("button", { name: /work hours/i }));
+    const user = userEvent.setup();
+    await openSection(user, "reference");
+    await openRow(user, rowOf("reference", "Work hours")!);
     return { container, thornton };
   }
 

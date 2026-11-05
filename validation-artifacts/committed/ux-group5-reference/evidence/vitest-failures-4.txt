@@ -1,0 +1,4 @@
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack the fixture REACHES all three ↗ links — coverage is a claim, so it is asserted
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ every (file, class, count) is declared exactly — a new class, file, or extra use fails
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ every declared Tailwind row still exists
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ no Tailwind site is declared twice

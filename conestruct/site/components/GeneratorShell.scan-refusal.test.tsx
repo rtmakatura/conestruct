@@ -32,7 +32,6 @@ import userEvent from "@testing-library/user-event";
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
-vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./PricingCard", () => ({ PricingCard: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
@@ -267,8 +266,8 @@ function expectNoPlan() {
   // reference — no quote, no counted tiers, nothing plan-derived.
   const group = document.querySelector(".results-disc");
   if (group) {
-    const names = Array.from(group.querySelectorAll(".disc-name")).map((n) => n.textContent);
-    expect(names, "only the reference survives a decline").toEqual(["Reference"]);
+    const ids = Array.from(group.querySelectorAll("[data-section]")).map((n) => n.getAttribute("data-section"));
+    expect(ids, "only the reference survives a decline").toEqual(["reference"]);
     expect(group.querySelector(".price, .quote-total")).toBeNull();
   }
   expect(document.querySelector(".zone.dominant")).toBeNull();

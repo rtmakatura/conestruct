@@ -10,7 +10,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { mountJurisdiction as mountTiered } from "./reference-test-utils";
+import { mountJurisdiction as mountTiered, openRow, openSection, rowOf } from "./reference-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 
@@ -31,9 +31,9 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
   it("a null schedule gets the 'Not set' arm, not the mid-entry prompt", async () => {
     const thornton = { ...jur("thornton"), hours_eval: unknownEval };
     mountTiered(thornton, null);
-    await userEvent.click(
-      screen.getByRole("button", { name: /pending \/ not verified/i }),
-    );
+    const user = userEvent.setup();
+    await openSection(user, "reference");
+    await openRow(user, rowOf("reference", "Work hours")!);
     expect(
       screen.getByText(/Schedule marked .Not set.. The windows above are/i),
     ).toBeTruthy();
@@ -43,9 +43,9 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
   it("an explicit tbd with residual times shows the same arm — no verdict", async () => {
     const thornton = { ...jur("thornton"), hours_eval: unknownEval };
     mountTiered(thornton, { date_mode: "tbd", start_time: 4.0, end_time: 6.0 });
-    await userEvent.click(
-      screen.getByRole("button", { name: /pending \/ not verified/i }),
-    );
+    const user = userEvent.setup();
+    await openSection(user, "reference");
+    await openRow(user, rowOf("reference", "Work hours")!);
     expect(
       screen.getByText(/Schedule marked .Not set.. The windows above are/i),
     ).toBeTruthy();
@@ -56,13 +56,12 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
 describe("PermitFYI — residual work date under 'Not set' (#199)", () => {
   it("lead deadlines render '—', not dates computed from a disavowed work date", async () => {
     mountTiered(jur("el_paso"), { date_mode: "tbd", work_date: "2026-07-22" });
-    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
-    await userEvent.click(
-      screen.getByRole("button", { name: /permit: el paso/i }),
-    );
+    const user = userEvent.setup();
+    await openSection(user, "reference");
+    await openRow(user, rowOf("reference", "Permit")!);
     // The sibling test in JurisdictionSection.test.tsx pins the positive
     // arm ("≈ Wed, Jul 8" for date_mode single, same work date).
-    expect(screen.getByText(/full closures and detours/i)).toBeTruthy();
-    expect(screen.queryByText(/≈/)).toBeNull();
+    expect(rowOf("reference", "Permit")!.textContent).toMatch(/full closures and detours/i);
+    expect(document.body.textContent).not.toContain("≈");
   });
 });

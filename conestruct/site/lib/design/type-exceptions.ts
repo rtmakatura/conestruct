@@ -78,6 +78,27 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     tsx: [],
   },
   {
+    name: "the three reference sections (#443)",
+    sizes: ["10px", "var(--fs-body-value)"],
+    reason:
+      "Ruling 1: group labels are mono 10 caps.  Ruling 2 / ruling 11: row text reads the existing body token; no new size joins the sheet.  The sentences, notes and sources in a row's detail are roles (tr-help, tr-note).",
+    css: [
+      { selector: ".workbench .rs-label", size: "10px" },
+      { selector: ".workbench .rs-input", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rs-clear", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rs-name", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rs-banner", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rr-head", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rr-act", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rr-pair", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rr-lines li", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rr-link, .workbench .rr-more", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rs-none-title", size: "var(--fs-body-value)" },
+      { selector: ".workbench .rs-chip", size: "var(--fs-body-value)" },
+    ],
+    tsx: [],
+  },
+  {
     name: "the coming-soon page (coming-soon-gate Arc 2)",
     sizes: ["var(--fs-hero-numeral)", "var(--fs-hero-numeral-380)", "var(--fs-body-value)", "var(--fs-step-question)"],
     reason:
@@ -575,10 +596,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — sandbox components",
     css: [],
     tsx: [
-      { file: "components/AuditTrail.tsx", cls: "text-[12px]", count: 6 },
       { file: "components/DebugSnapshotButton.tsx", cls: "text-[10px]", count: 2 },
-      { file: "components/DeviceBreakdown.tsx", cls: "text-[11px]", count: 1 },
-      { file: "components/DeviceBreakdown.tsx", cls: "text-[12px]", count: 4 },
       // #289 Phase 2: FlaggerForm's 10px site was the >1500 ft pilot-car
       // note, which moved to the WHERE band with the work-zone length it
       // is about (FLOW.md §5a move 3).  Row DELETED.
@@ -616,9 +634,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/QuotePanel.tsx", cls: "text-[16px]", count: 1 },
       { file: "components/QuotePanel.tsx", cls: "text-[28px]", count: 1 },
       { file: "components/ScheduleField.tsx", cls: "text-[11px]", count: 2 },
-      { file: "components/TieredReference.tsx", cls: "text-[11px]", count: 3 },
-      { file: "components/TieredReference.tsx", cls: "text-[12px]", count: 4 },
-      { file: "components/TieredReference.tsx", cls: "text-[13px]", count: 1 },
       { file: "components/WorkBeyondShoulderForm.tsx", cls: "text-[10px]", count: 2 },
     ],
   },
@@ -626,13 +641,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — jurisdiction section (Tailwind literals beside the .jbar rules)",
     css: [],
     tsx: [
-      { file: "components/JurisdictionSection.tsx", cls: "text-[10px]", count: 9 },
-      { file: "components/JurisdictionSection.tsx", cls: "text-[11px]", count: 7 },
-      { file: "components/JurisdictionSection.tsx", cls: "text-[12px]", count: 25 },
-      { file: "components/JurisdictionSection.tsx", cls: "text-[13px]", count: 2 },
-      { file: "components/JurisdictionSection.tsx", cls: "text-[15px]", count: 1 },
-      { file: "components/JurisdictionSection.tsx", cls: "text-[8px]", count: 1 },
-      { file: "components/JurisdictionSection.tsx", cls: "text-[9px]", count: 6 }, // #215: +1, the boundary labels (the axis ticks' own size)
+      { file: "components/JurisdictionSection.tsx", cls: "text-[10px]", count: 2 },
+      { file: "components/JurisdictionSection.tsx", cls: "text-[11px]", count: 1 },
+      { file: "components/JurisdictionSection.tsx", cls: "text-[9px]", count: 3 }, // #443: was 6, the cards left
     ],
   },
   {
@@ -778,7 +789,7 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 186, // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 198, // #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
   // #437: +4 (179 -> 183) — the question heading, the answer label, the
   // Next / Apply button and the strip's question sentence; sizes unchanged.
   // #437 branch 3: 183 -> 180 — seven out (the dismiss picker's legend,
@@ -828,7 +839,7 @@ export const CENSUS_PINS = {
   // coming-soon-gate C-Q8: the six legal-page sites leave (terms and
   // privacy, 36/15/11 px each); the wordmark's site moves AppNav ->
   // Wordmark (one out, one in).  92 -> 86.
-  tsxSites: 57, // #239: -29, the archived landing's nine components deleted (86 -> 57)
+  tsxSites: 48, // #443: -9, TieredReference, DeviceBreakdown's shell and JurisdictionSection's cards (57 -> 48); // #239: -29, the archived landing's nine components deleted (86 -> 57)
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -846,6 +857,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 199, // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
-  tsxFiles: 25, // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
+  tsxUses: 136, // #443: -63, the same; // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxFiles: 22, // #443: -3 (25 -> 22); // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;

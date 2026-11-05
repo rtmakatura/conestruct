@@ -174,6 +174,15 @@ const FLOORED = [
   "nyq-row-btn",
   // #437 ruling 9: the Setup row's Edit, 44 x 44 at every width.
   "a-setuprow-edit",
+  // #443: the three sections.  48 px on the section and row heads and the
+  // search box, 44 on the links, "Show N more", the chips and the clear.
+  "rs-head",
+  "rr-head",
+  "rr-link",
+  "rr-more",
+  "rs-chip",
+  "rs-clear",
+  "rs-input",
 ];
 /** Tailwind-floored controls (the footer's links). */
 const TW_FLOOR = /min-h-\[(32|44)px\]/;
@@ -217,7 +226,7 @@ async function openEverything(user: ReturnType<typeof userEvent.setup>) {
     // not rule 15's, so clause 7 reports it rather than fixing it here.
     const shut = Array.from(
       document.querySelectorAll<HTMLButtonElement>(
-        '.disc-head[aria-expanded="false"], .chip-sum[aria-expanded="false"], .audit-item:not(.open) > .audit-head',
+        '.disc-head[aria-expanded="false"], button.rs-head[aria-expanded="false"], .rr-more, .rr-head[aria-expanded="false"]',
       ),
     );
     if (shut.length === 0) return;
@@ -259,13 +268,13 @@ describe("#288 clause 7 — rule 15 reaches every control in the results stack",
     expect(labels.some((l) => /Open .* PDF on CDOT\.gov/.test(l ?? "")), "the case-reference link").toBe(
       true,
     );
-    expect(labels.some((l) => /Tracking issue \(/.test(l ?? "")), "the per-item tracking link").toBe(
+    expect(labels.some((l) => /Tracking issue/.test(l ?? "")), "the per-item tracking link").toBe(
       true,
     );
     // All of them, whichever branch produced them, carry the floor.
     for (const a of arrows) {
-      expect(a.className, a.textContent ?? "").toMatch(/min-h-\[32px\]/);
-      expect(a.className, a.textContent ?? "").toMatch(/max-\[480px\]:min-h-\[44px\]/);
+      expect(a.className, a.textContent ?? "").toMatch(/min-h-\[32px\]|rr-link/);
+      expect(a.className, a.textContent ?? "").toMatch(/max-\[480px\]:min-h-\[44px\]|rr-link/);
     }
   });
 

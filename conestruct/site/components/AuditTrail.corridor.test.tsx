@@ -31,7 +31,7 @@ describe("corridorValidationItem reason split (#213 V5)", () => {
     expect(item?.result).toBe("▲ CHECK UNAVAILABLE");
     render(<DetailOf spec={item} />);
     screen.getByText(/road-network warnings weren't evaluated/i);
-    screen.getByText(/NOT CHECKED/);
+    screen.getByText(/was not checked/);
   });
 
   it("not_run_no_coords stays unrendered — there was nothing to check", () => {

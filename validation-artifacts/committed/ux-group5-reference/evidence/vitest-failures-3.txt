@@ -1,0 +1,7 @@
+components/AuditTrail.test.tsx :: pendingVerificationItem renderer (Option B items[] iteration) renders one sentence and one tracking link per item
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack the fixture REACHES all three ↗ links — coverage is a claim, so it is asserted
+components/JurisdictionSection.schedule-overnight.test.tsx :: hours violations — alternative windows (#206) names the whole scope group when the backend reports alternatives
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ every (file, class, count) is declared exactly — a new class, file, or extra use fails
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ every declared Tailwind row still exists
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ no Tailwind site is declared twice
+lib/design/type-census.test.ts :: #263 type census — the exceptions are the ruled set and the pins are the sources' figures exception sizes are exactly the ruling's: 76/60, 28, 20/17, 16, 14, 11, 9 (24 left with the #249 lockup — #253 conflict 1; s2-arc30, 2026-09-14: the #273 value register is DELETED — the applied value takes `tr-field` at the label's 12px, so 14 is carried once again, as sans body copy only — and 11 stays as the ledger's glyph cell)

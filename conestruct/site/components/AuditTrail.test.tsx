@@ -93,10 +93,11 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
     expect(hrefs[0]).not.toBe(hrefs[1]);
   });
 
-  it("renders one <li> per item (the count of list items matches count)", () => {
+  it("renders one sentence and one tracking link per item", () => {
     const html = renderBody(twoItemPayload);
-    const liMatches = html.match(/<li/g) ?? [];
-    expect(liMatches.length).toBe(2);
+    // One sentence per item, then the one Source line.
+    expect(html.match(/<p /g) ?? []).toHaveLength(twoItems.length + 1);
+    expect(html.match(/<a /g) ?? []).toHaveLength(2);
   });
 
   it("each link surfaces the item.kind in the visible label", () => {
@@ -109,7 +110,7 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
 
   // --- Single-item path: the Δ25 case as it actually ships in V1 ----------
 
-  it("single-item payload (Δ25 case) renders one <li> with one link", () => {
+  it("single-item payload (Δ25 case) renders one link", () => {
     const oneItemPayload: AuditResponse["pending_verification"] = {
       count: 1,
       note: twoItems[1].label,
@@ -120,8 +121,7 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
     expect(spec).not.toBeNull();
     expect(spec!.result).toBe("1 reference pending");
     const html = renderBody(oneItemPayload);
-    const liMatches = html.match(/<li/g) ?? [];
-    expect(liMatches.length).toBe(1);
+    expect(html.match(/<a /g) ?? []).toHaveLength(1);
     expect(html).toContain(twoItems[1].tracking_issue!);
   });
 
@@ -363,7 +363,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     );
     expect(spec.result).toBe("Case 11: Shoulder closure on divided highway");
     const html = renderDetail(spec);
-    expect(html).not.toContain("Trigger:");
+    expect(html).not.toContain("<dt>Trigger</dt>");
   });
 
   it("65 mph reduction → Case 26 label + verbatim Trigger caption in quotes", () => {
@@ -384,7 +384,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
       "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
     );
     const html = renderDetail(spec);
-    expect(html).toContain("Trigger:");
+    expect(html).toContain("<dt>Trigger</dt>");
     // Quoted source attribution — verbatim Sheet 14 text inside &ldquo;&rdquo;.
     expect(html).toContain(
       "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
@@ -426,7 +426,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     );
     expect(spec.result).toContain("Case 11 (reduced work-zone speed)");
     const html = renderDetail(spec);
-    expect(html).not.toContain("Trigger:");
+    expect(html).not.toContain("<dt>Trigger</dt>");
   });
 });
 
@@ -1089,7 +1089,7 @@ describe("taper derivation text renders as received (PR A sentinel)", () => {
     const items = buildShoulderItems(dummyShoulder, audit, true, String);
     const html = renderDetail(items[0]);
     expect(html).toContain("12 x 55");
-    expect(html).toContain("Required: L = 660 ft");
+    expect(html).toContain("<dt>Required: L</dt><dd class=\"rr-num\">660 ft</dd>");
   });
 
   it("#286: result_text absent (a backend older than this panel) → —", () => {
@@ -1274,7 +1274,7 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
     expect(item?.cite).toBe("MUTCD § 6D.06");
     const html = renderDetail(item!);
     expect(html).toContain("777");
-    expect(html).toContain("SSD @ 99 mph = 777 ft");
+    expect(html).toContain("<dt>SSD @ 99 mph</dt><dd class=\"rr-num\">777 ft</dd>");
     expect(html).not.toContain("SSD @ 45");
     expect(html).toContain("TABLE 6B-2 · STOPPING SIGHT DISTANCE");
     expect(html).not.toContain("6E.06");
@@ -1294,21 +1294,21 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
       },
     });
     const html = renderDetail(flaggerSightDistanceItem(data, FLAGGER, true, r)!);
-    expect(html).toContain("Stations: <strong>3 AFAD</strong>");
-    expect(html).toContain("Pilot car: <strong>1 vehicle</strong>");
+    expect(html).toContain("<dt>Stations</dt><dd>3 AFAD</dd>");
+    expect(html).toContain("<dt>Pilot car</dt><dd>1 vehicle</dd>");
     expect(html).not.toContain("flagger station(s)");
   });
 
   it("#319: no station field (an older backend) or not generated → —, never a count", () => {
     const data = auditWith({ flagger: { sight_distance_ft: 360 } });
     const absent = renderDetail(flaggerSightDistanceItem(data, FLAGGER, true, r)!);
-    expect(absent).toContain("Stations: <strong>—</strong>");
+    expect(absent).toContain("<dt>Stations</dt><dd>—</dd>");
     expect(absent).not.toContain("Pilot car");
     const withField = auditWith({
       flagger: { sight_distance_ft: 360, stations_text: "2 flagger station(s)" },
     });
     const pre = renderDetail(flaggerSightDistanceItem(withField, FLAGGER, false, r)!);
-    expect(pre).toContain("Stations: <strong>—</strong>");
+    expect(pre).toContain("<dt>Stations</dt><dd>—</dd>");
   });
 
   it("absent field → the row is OMITTED from the flagger items, never computed", () => {

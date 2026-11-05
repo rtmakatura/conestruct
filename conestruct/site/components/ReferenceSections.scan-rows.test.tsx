@@ -73,13 +73,13 @@ describe("scan rows (#224 phase 3) — scanned-lakewood", () => {
     mountFixture(fx);
     await openSection(user, "checked");
     await openSection(user, "reference");
-    const row = rowOf("reference", "No railroad crossings, hospitals or road curvature")!;
+    const row = rowOf("reference", "No hospitals, railroad crossings or road curvature")!;
     expect(row).not.toBeNull();
     await openRow(user, row);
     expect(row.textContent).toContain("Source: REFERENCE");
     expect(row.querySelector(".rr-glyph")?.textContent).toBe("✓");
     // Never in a counted section.
-    expect(rowOf("checked", "No railroad crossings, hospitals or road curvature")).toBeNull();
+    expect(rowOf("checked", "No hospitals, railroad crossings or road curvature")).toBeNull();
   });
 
   it("the headers equal the shared expectation", () => {

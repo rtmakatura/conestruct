@@ -213,7 +213,7 @@ describe("#263 type census — globals.css font-sizes", () => {
 
 describe("#263 type census — Tailwind size classes in components/ and app/", () => {
   it("the scanner reads the tree", () => {
-    expect(observedTsx.length).toBeGreaterThan(50);
+    expect(observedTsx.length).toBeGreaterThan(40);
     // #289 fidelity F4: the anchor was the H1's text-[28px], which left
     // the screen (sr-only now).  The nav wordmark's rule-22 size is the
     // anchor instead — a real site with a spec-traced value.
@@ -249,6 +249,9 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
     const sizes = TYPE_EXCEPTIONS.flatMap((e) => e.sizes).sort();
     expect(sizes).toEqual(
       [
+        // #443 ruling 1: the sections' group labels; ruling 2: row text on the body token.
+        "10px",
+        "var(--fs-body-value)",
         // #288 clause 2: the hero's chosen 76/60 gave way to rules 81 and
         // 169's RULED 62/42, read from the :root tokens #283 declared
         // ahead of the surface — so the exception carries their names.

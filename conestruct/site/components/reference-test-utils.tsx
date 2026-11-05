@@ -85,7 +85,7 @@ export function mountJurisdiction(
       checkedCount={null}
       pendingCount={null}
       cited={false}
-      referenceDefaultOpen={true}
+      referenceDefaultOpen={false}
       {...extra}
     />,
   );

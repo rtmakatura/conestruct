@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { mountJurisdiction as mountTiered } from "./reference-test-utils";
+import { mountJurisdiction as mountTiered, openRow, openSection, rowOf } from "./reference-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 
@@ -38,8 +38,9 @@ describe("WorkHoursCard — overnight schedules (#188)", () => {
     });
     // The band chart is Reference-tier content: expand the tier, then
     // the card ("inside" does not auto-expand the card either).
-    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
-    await userEvent.click(screen.getByRole("button", { name: /work hours/i }));
+    const user = userEvent.setup();
+    await openSection(user, "reference");
+    await openRow(user, rowOf("reference", "Work hours")!);
     const overlays = Array.from(
       container.querySelectorAll<HTMLElement>(".border-x-2"),
     );
@@ -52,7 +53,7 @@ describe("WorkHoursCard — overnight schedules (#188)", () => {
 });
 
 describe("hours violations — alternative windows (#206)", () => {
-  it("names the whole scope group when the backend reports alternatives", () => {
+  it("names the whole scope group when the backend reports alternatives", async () => {
     const denverish = {
       ...jur("thornton"),
       hours_eval: {
@@ -79,7 +80,8 @@ describe("hours violations — alternative windows (#206)", () => {
       start_time: 10.0,
       end_time: 16.0,
     });
-    // OUTSIDE → the ⚠ tier auto-opens; the violation reads with no click.
+    // OUTSIDE: the row starts open once its section is, no second click.
+    await openSection(userEvent.setup(), "reference");
     expect(
       screen.getByText(
         /0\.5 h falls outside the permitted 8:30 AM–3:30 PM \/ 8:00 PM–12:00 AM \/ 12:00 AM–5:00 AM windows/i,
@@ -87,7 +89,7 @@ describe("hours violations — alternative windows (#206)", () => {
     ).toBeTruthy();
   });
 
-  it("single-window violations keep the singular phrasing", () => {
+  it("single-window violations keep the singular phrasing", async () => {
     const thornton = {
       ...jur("thornton"),
       hours_eval: {
@@ -109,6 +111,7 @@ describe("hours violations — alternative windows (#206)", () => {
       start_time: 8.0,
       end_time: 15.5,
     });
+    await openSection(userEvent.setup(), "reference");
     expect(
       screen.getByText(
         /0\.5 h falls outside the permitted 8:30 AM–3:30 PM window \(/i,

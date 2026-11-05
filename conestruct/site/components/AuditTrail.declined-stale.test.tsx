@@ -169,7 +169,7 @@ async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
   // expand it so the rows under test are actually rendered.  (The
   // declined/failed banners auto-open in ⚠; the blank-value contract
   // under test here is the ✓ tier's.)
-  await user.click(screen.getByRole("button", { name: /checked & passed/i }));
+  await user.click(screen.getByRole("button", { name: /checked and passed/i }));
   expect((await screen.findAllByText(/183/)).length).toBeGreaterThan(0); // sanity
   await editAfterGenerate("what-speed", "35");
   // #182: the edit's refetch reaches the wire through the 350 ms fetch

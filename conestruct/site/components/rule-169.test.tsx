@@ -7,13 +7,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { renderToStaticMarkup } from "react-dom/server";
-import type { ReactElement } from "react";
 
-import { ResultsHero, zoneGeometryRows } from "./ResultsHero";
-import { ZoneGeometryGroup } from "./ZoneGeometryGroup";
 import { buildShoulderItems } from "./AuditTrail";
-import type { DeviceBreakdownData, DeviceBreakdownState } from "./DeviceBreakdown";
 import type { AuditState } from "../lib/render-types";
 import type { ShoulderScenario } from "../lib/scenarios";
 import { renderDetail } from "./detail-test-utils";
@@ -22,57 +17,6 @@ const read = (...p: string[]) => readFileSync(join(__dirname, ...p), "utf-8").re
 const css = read("..", "app", "globals.css");
 const spacing = read("..", "DESIGN-SPACING.md");
 
-const DATA: DeviceBreakdownData = {
-  devices: [],
-  total_devices: 22,
-  unique_types: 6,
-  zone_geometry: { taper_l_ft: 40, buffer_b_ft: 200, device_spacing_ft: 30, work_len_ft: 1000 },
-};
-const ready: DeviceBreakdownState = { state: "ready", data: DATA };
-const html = (el: ReactElement | null) => (el ? renderToStaticMarkup(el) : "");
-const text = (markup: string) => markup.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-
-describe("rule 169: Reference's Zone geometry group", () => {
-  it("shows the hero's four rows and values, from the one list", () => {
-    const group = text(html(<ZoneGeometryGroup breakdown={ready} />));
-    const hero = text(html(<ResultsHero breakdown={ready} jurisdiction={null} />));
-    expect(group.startsWith("Zone geometry")).toBe(true);
-    // #437 branch 3 (ruling 10, R145 G2): the hero names each row in plain
-    // words (`plain`, "Taper"); Reference keeps the MUTCD letters
-    // (`label`, "Taper L").  Both read the same row and the same value
-    // from zoneGeometryRows(), so the two still cannot drift on a number.
-    for (const row of zoneGeometryRows(DATA.zone_geometry!)) {
-      expect(group).toContain(`${row.label} ${row.value}`);
-      expect(hero).toContain(`${row.plain} ${row.value}`);
-    }
-    expect(group).toContain("Taper L 40 ft Buffer B 200 ft Device spacing 30 ft o.c. Work zone 1,000 ft");
-  });
-
-  it("rule 83: no zone_geometry renders one unavailable row, nothing computed", () => {
-    const { zone_geometry: _omit, ...bare } = DATA;
-    void _omit;
-    const group = text(html(<ZoneGeometryGroup breakdown={{ state: "ready", data: bare }} />));
-    expect(group).toBe("Zone geometry Zone geometry unavailable");
-  });
-
-  it("holds the previous answer through a refetch, and says nothing without one", () => {
-    expect(text(html(<ZoneGeometryGroup breakdown={{ state: "loading", lastReady: DATA }} />))).toContain(
-      "Taper L 40 ft",
-    );
-    expect(html(<ZoneGeometryGroup breakdown={{ state: "loading", lastReady: null }} />)).toBe("");
-    expect(html(<ZoneGeometryGroup breakdown={{ state: "error", message: "boom" }} />)).toBe("");
-  });
-
-  it("sits in the Reference tier's body, ahead of the device schedule", () => {
-    const tr = read("TieredReference.tsx");
-    const zone = tr.indexOf('<div key="zone-geo"');
-    const devices = tr.indexOf('<div key="devices"');
-    expect(zone).toBeGreaterThan(0);
-    expect(zone).toBeLessThan(devices);
-    expect(tr).toContain("<ZoneGeometryGroup breakdown={breakdown} />");
-    expect(tr).toContain("zone geometry · </>}device schedule");
-  });
-});
 
 describe("rule 169: the hero's geometry cell at the phone width", () => {
   it("is not rendered at ≤480; the ≤980 stacking stays", () => {
@@ -119,15 +63,12 @@ describe("the fold-in: the advance row's sign table", () => {
     },
   };
 
-  it("marks each cell, labels the stacked lines for sight only, keeps the header for screen readers", () => {
+  it("#443: one line per sign, with the code and the wire's own column names (a value keeps its unit)", () => {
     const items = buildShoulderItems({ kind: "shoulder" } as unknown as ShoulderScenario, audit, true, String);
     const body = renderDetail(items[3]);
-    expect(body).toContain('<table class="sign-table" role="table">');
-    expect(body).toContain('<th role="columnheader">Code</th>');
-    expect(body).toContain('<td role="cell" class="st-code">W20-1</td>');
-    expect(body).toContain('<td role="cell" class="st-pos">C (furthest)</td>');
-    expect(body).toContain('<span class="st-label" aria-hidden="true">Station (ft)</span>1,540');
-    expect(body).toContain('<span class="st-label" aria-hidden="true">From taper (ft)</span>300 upstream');
+    expect(body).toContain("C (furthest)");
+    expect(body).toContain("W20-1");
+    expect(body).toContain("Station (ft): 1,540 · From taper (ft): 300 upstream");
   });
 
   it("codes never break, at any width; the labels show only on the phone", () => {

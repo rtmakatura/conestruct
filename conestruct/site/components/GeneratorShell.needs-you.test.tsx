@@ -16,7 +16,6 @@ import userEvent from "@testing-library/user-event";
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
-vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./PricingCard", () => ({ PricingCard: () => null }));
 vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
@@ -119,9 +118,7 @@ async function generate() {
 const block = () => document.querySelector(".needs-you");
 /** The i REFERENCE row's control, by name — not by document order. */
 const referenceHead = () =>
-  Array.from(document.querySelectorAll(".disc-head")).find(
-    (h) => h.querySelector(".disc-name")?.textContent === "Reference",
-  ) as HTMLButtonElement;
+  document.querySelector("[data-section=reference] button.rs-head") as HTMLButtonElement;
 const rows = () => Array.from(document.querySelectorAll(".ny-item"));
 const count = () => document.querySelector(".ny-count")?.textContent;
 
@@ -182,26 +179,27 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     expect(head, "the reference disclosure row mounted").not.toBeNull();
     // S5: closed, and the panel is not in the DOM at all.
     expect(head.getAttribute("aria-expanded")).toBe("false");
-    expect(document.querySelector(".disc-panel")).toBeNull();
+    expect(document.querySelector("[data-section=reference] .rs-body")).toBeNull();
     // Rule 89: the reference tier is UNCOUNTED — it says what is inside.
     // Rule 89, scoped to the row it is about: the REFERENCE tier is
     // uncounted and renders no numeral.  The ✓ and ◌ rows clause 4 added
     // above it ARE counted and do show one — which is the same rule's
     // other half, not a violation of it.
-    expect(head.querySelector(".disc-count")).toBeNull();
+    expect(head.querySelector(".rs-summary")?.textContent).not.toMatch(/\d/);
     // §8.31 pulled forward: the row's summary line now carries the
     // jurisdiction context bar's three facts — which jurisdiction, which
     // street class, which spec chain — in place of the generic
     // "jurisdiction rules · permit · audit trail".  Unset reads "Not
     // set" (rule 14: a value that is not known renders as a word).
-    expect(head.textContent).toContain("Not set · Not set · MUTCD 11th + CO Suppl.");
+    // #443 ruling 3: the summary is the mock-up's words.
+    expect(head.textContent).toContain("For reference, never blocks the plan");
     // NEEDS YOU sits ABOVE it and is unaffected by the toggle (rule 89:
     // nothing above the header moves).
     const before = document.querySelectorAll(".ny-item").length;
     await user.click(head);
     // S8.
     expect(head.getAttribute("aria-expanded")).toBe("true");
-    expect(document.querySelector(".disc-panel")).not.toBeNull();
+    expect(document.querySelector("[data-section=reference] .rs-body")).not.toBeNull();
     expect(document.querySelectorAll(".ny-item").length).toBe(before);
   });
 

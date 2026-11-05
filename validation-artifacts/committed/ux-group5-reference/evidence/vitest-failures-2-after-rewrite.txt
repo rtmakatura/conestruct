@@ -1,0 +1,17 @@
+components/AuditTrail.test.tsx :: pendingVerificationItem renderer (Option B items[] iteration) renders one sentence and one tracking link per item
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack the fixture REACHES all three ↗ links — coverage is a claim, so it is asserted
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack S8: the reference disclosure is CLOSED in S5 and opens in place — nothing above it moves
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack rule 129: the reference discloses, it never writes — the row's control is a read
+components/GeneratorShell.scan-refusal.test.tsx :: #258 — a declined plan shows no plan (rule 10) both requests refused: no hero, zero download buttons, the status region empty, the empty state's headline alone
+components/GeneratorShell.scan-refusal.test.tsx :: #258 — a declined plan shows no plan (rule 10) the breakdown succeeded while the audit refused: the answer is held, never shown — no counts, no downloads, no announcement
+components/GeneratorShell.scan-refusal.test.tsx :: #258 — a declined plan shows no plan (rule 10) downloads return with the verdict: proceed-anyway renders the cards, the hero, and announces the plan once
+components/JurisdictionSection.schedule-overnight.test.tsx :: hours violations — alternative windows (#206) names the whole scope group when the backend reports alternatives
+components/JurisdictionSection.schedule-overnight.test.tsx :: hours violations — alternative windows (#206) single-window violations keep the singular phrasing
+components/ReferenceSections.scan-rows.test.tsx :: scan rows (#224 phase 3) — scanned-lakewood X14: the absent keyless buckets read as one row, in section 3, uncounted
+components/ReferenceSections.test.tsx :: ruling 8: nothing found says so, offers this plan's own words, and every chip finds something
+components/ReferenceSections.test.tsx :: ruling 8: nothing found 'Clear search and show everything' clears
+lib/design/type-census.test.ts :: #263 type census — globals.css font-sizes every other font-size site is a named exception or a declared-debt row (new size/site fails)
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ the scanner reads the tree
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ every (file, class, count) is declared exactly — a new class, file, or extra use fails
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ every declared Tailwind row still exists
+lib/design/type-census.test.ts :: #263 type census — the exceptions are the ruled set and the pins are the sources' figures CENSUS_PINS equal the figures read from the sources (the README quotes these)

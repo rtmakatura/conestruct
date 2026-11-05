@@ -137,46 +137,28 @@ async function generate() {
   return user;
 }
 
-/** Every rule-87 row's name, in document order. */
-const rowNames = () =>
-  Array.from(document.querySelectorAll(".disc-name")).map((n) => n.textContent);
-const rowByName = (name: string) =>
-  Array.from(document.querySelectorAll(".disc")).find(
-    (d) => d.querySelector(".disc-name")?.textContent === name,
-  ) as HTMLElement | undefined;
-// #435 ruling 6: a counted tier says its count in words ("15 checks,
-// each cited"); the numeral is the phrase's leading figure.
-const countOf = (name: string) =>
-  rowByName(name)?.querySelector(".disc-count")?.textContent?.match(/^\d+/)?.[0] ?? null;
-const countPhrase = (name: string) =>
-  rowByName(name)?.querySelector(".disc-count")?.textContent ?? null;
+/** The sections' names, in document order. */
+const sectionNames = () =>
+  Array.from(document.querySelectorAll(".results-disc .rs-name")).map((n) => n.textContent);
+type Id = "checked" | "pending" | "reference";
+const section = (id: Id) => document.querySelector(`[data-section=${id}]`) as HTMLElement;
+const summaryOf = (id: Id) => section(id).querySelector(".rs-summary")?.textContent ?? "";
+// Ruling 3: a counted section says its count in words; the numeral leads.
+const countOf = (id: Id) => summaryOf(id).match(/^\d+/)?.[0] ?? null;
 
-describe("#288 clause 4 — the stack's disclosure rows", () => {
-  it("the three tier rows are ONE group, in rule 27's order; the quote row closes the downloads", async () => {
+describe("#288 clause 4, #443 — the stack's sections", () => {
+  it("the three sections are ONE group, in rule 27's order; the quote row closes the downloads", async () => {
     await generate();
-    // Ryan's hand-check at f44377e, fix 3: the Reference row was in its
-    // own Zone 3 section below the draft notice.  Rule 27 names a
-    // "disclosure group" with an internal gap, so the tier rows are one
-    // run — and the group, not a zone, is what the operator reads down.
     const group = document.querySelector(".results-disc")!;
     expect(group, "the group exists").not.toBeNull();
-    const inGroup = Array.from(group.querySelectorAll(".disc-name")).map((n) => n.textContent);
-    // #437 branch 3 (ruling 13): the quote is no longer in the group.
-    expect(inGroup).toEqual([
-      "Checked & passed",
-      "Pending / not verified",
-      "Reference",
-    ]);
-    // §8.9 keeps ✓, ◌ and the uncounted i tier as disclosures, and
-    // clause 4 promotes the first two out of section 03's chips into rows
-    // here.  #437 branch 3: the quote row is the downloads section's last
-    // row instead (Part 1 §8.11's "directly under the downloads", now
-    // inside them) — the only rule-87 row outside the group.
+    // X6: section 3 is "<jurisdiction> rules and site facts", "Site facts" without one.
+    expect(sectionNames()).toEqual(["Checked and passed", "Not checked yet", "Site facts"]);
+    // #437 branch 3: the quote is the downloads section's last row.
     const downloads = screen.getByTestId("downloads");
     const quoteSlot = downloads.lastElementChild!;
     expect(quoteSlot.classList.contains("dl-quote")).toBe(true);
     expect(quoteSlot.querySelector(".disc-name")!.textContent).toBe("Price quote");
-    expect(rowNames()).toEqual(["Price quote", ...inGroup]);
+    expect(group.querySelector(".disc-name")).toBeNull();
   });
 
   it("the draft notice is the column's LAST line, below the group (§8.12, rule 29)", async () => {
@@ -193,74 +175,54 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     );
   });
 
-  it("the reference row keeps the jump target and the focus target Zone 3 carried", async () => {
+  it("section 3 keeps the jump target and the focus target Zone 3 carried", async () => {
     await generate();
     const anchor = document.querySelector("#reference")!;
     expect(anchor, "#253's chip-2 target survives the move").not.toBeNull();
     expect(anchor.getAttribute("tabindex"), "#193's focus target").toBe("-1");
     expect(anchor.className).toContain("jump-anchor");
-    expect(anchor.querySelector(".disc-name")?.textContent).toBe("Reference");
+    expect(anchor.querySelector("[data-section=reference]")).not.toBeNull();
   });
 
-  it("rule 89: the COUNTED tiers show their number; the quote and the reference show none", async () => {
+  it("Rule 12: the counted sections read the ledger; section 3 shows no number", async () => {
     await generate();
-    // The number is the LEDGER's, not one this test computes — asserting
-    // a figure I assumed rather than measured is how the first version of
-    // this test failed ("2" for a tier the ledger counts as 8).  The
-    // claim worth making is that one ledger feeds every reader: the ✓
-    // row and the audit card's "N checks" must agree, always.
-    const checked = countOf("Checked & passed");
+    // The number is the LEDGER's, not one this test computes: the ✓ section
+    // and the audit card's "N checks" must agree, always.
+    const checked = countOf("checked");
     expect(checked).toMatch(/^\d+$/);
-    // #437 branch 3: the card title is an h4, and the count is the <b>
-    // inside the card's one .desc sentence (the .qty line is gone).
     const cardQty = Array.from(document.querySelectorAll(".dl-card"))
       .find((c) => c.querySelector("h3")?.textContent === "Audit trail")!
       .querySelector(".desc b")!.textContent;
-    expect(cardQty, "the card and the row read one ledger").toBe(checked);
-    // ◌ is counted too — its own tier, never buried (#219).
-    expect(countOf("Pending / not verified")).toMatch(/^\d+$/);
-    // #435 ruling 6: the words, in .tr-note.
-    expect(countPhrase("Checked & passed")).toMatch(/^\d+ checks?(, each cited)?$/);
-    expect(countPhrase("Pending / not verified")).toMatch(/^\d+ not verified yet$/);
-    expect(rowByName("Checked & passed")!.querySelector(".disc-count")!.classList.contains("tr-note")).toBe(true);
-    // Uncounted: a numeral here would have to be a sum across kinds that
-    // do not add up to anything the operator acts on.
-    expect(countOf("Reference")).toBeNull();
-    // The quote is not a tier at all — no ledger, nothing to count.  A
-    // zero would read as a total of nothing.
-    expect(countOf("Price quote")).toBeNull(); // #437 branch 3: renamed
+    expect(cardQty, "the card and the section read one ledger").toBe(checked);
+    expect(countOf("pending")).toMatch(/^\d+$/);
+    expect(summaryOf("checked")).toMatch(/^\d+ checks?, each cited$/);
+    expect(summaryOf("pending")).toMatch(/^\d+ items? for the TCS$/);
+    expect(section("checked").querySelector(".rs-summary")!.classList.contains("tr-note")).toBe(true);
+    expect(summaryOf("reference")).toBe("For reference, never blocks the plan");
+    // The quote is not a tier at all: no ledger, nothing to count.
+    expect(Array.from(document.querySelectorAll(".disc-count"))).toHaveLength(0);
   });
 
-  it("the promoted tiers are GONE from section 03 — one container each, never two", async () => {
+  it("every section is closed in S5 (X2) and opens in place", async () => {
     const user = await generate();
-    // Open the reference and look inside: ▲/⚠ and the i tier are what
-    // §8.9 leaves there.  ✓ and ◌ must not also be chips in here, or the
-    // same fact would have two containers (P2).
-    await user.click(rowByName("Reference")!.querySelector(".disc-head") as HTMLButtonElement);
-    const panel = rowByName("Reference")!.querySelector(".disc-panel")!;
-    const chipLabels = Array.from(panel.querySelectorAll(".refchip .label")).map(
-      (l) => l.textContent,
-    );
-    expect(chipLabels).not.toContain("Checked & passed");
-    expect(chipLabels).not.toContain("Pending / not verified");
-  });
-
-  it("every row is closed in S5 and opens in place (rules 87–89)", async () => {
-    const user = await generate();
-    for (const name of ["Checked & passed", "Pending / not verified", "Reference"]) {
-      const row = rowByName(name)!;
-      const head = row.querySelector(".disc-head") as HTMLButtonElement;
-      expect(head.getAttribute("aria-expanded"), name).toBe("false");
-      expect(row.querySelector(".disc-panel"), name).toBeNull();
+    for (const id of ["checked", "pending", "reference"] as const) {
+      const head = section(id).querySelector("button.rs-head") as HTMLButtonElement;
+      expect(head.getAttribute("aria-expanded"), id).toBe("false");
+      expect(section(id).querySelector(".rs-body"), id).toBeNull();
       await user.click(head);
-      expect(head.getAttribute("aria-expanded"), name).toBe("true");
-      expect(row.querySelector(".disc-panel"), name).not.toBeNull();
+      expect(head.getAttribute("aria-expanded"), id).toBe("true");
+      expect(section(id).querySelector(".rs-body"), id).not.toBeNull();
     }
   });
 
-  it("rule 129: every row's control is a READ — disclosing is never a write", async () => {
-    await generate();
-    for (const head of Array.from(document.querySelectorAll(".disc-head"))) {
+  it("rule 129: every head is a READ — disclosing is never a write", async () => {
+    const user = await generate();
+    for (const id of ["checked", "pending", "reference"] as const) {
+      await user.click(section(id).querySelector("button.rs-head") as HTMLButtonElement);
+    }
+    const heads = Array.from(document.querySelectorAll(".results-disc .rs-head, .results-disc .rr-head"));
+    expect(heads.length).toBeGreaterThan(3);
+    for (const head of heads) {
       expect(head.hasAttribute("data-read")).toBe(true);
       expect(head.hasAttribute("data-write")).toBe(false);
     }
@@ -292,19 +254,18 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
 
   it("the quote's panel survives a collapse — its state is written nowhere else", async () => {
     const user = await generate();
-    const row = rowByName("Price quote")!; // #437 branch 3: renamed
+    const row = Array.from(document.querySelectorAll(".disc")).find(
+      (d) => d.querySelector(".disc-name")?.textContent === "Price quote",
+    ) as HTMLElement;
     const head = row.querySelector(".disc-head") as HTMLButtonElement;
     await user.click(head);
     expect(row.querySelector(".disc-panel")!.hasAttribute("hidden")).toBe(false);
     await user.click(head);
-    // Still MOUNTED, just hidden: unmounting would discard duration,
-    // flagger count, rate edits and the previewed breakdown — the #74
-    // clobber class.  A tier body is derived from the wire and takes the
-    // opposite default (absent when closed).
+    // Still MOUNTED, just hidden: unmounting would discard duration, flagger
+    // count, rate edits and the previewed breakdown (the #74 clobber class).
     const panel = row.querySelector(".disc-panel");
     expect(panel, "the quote's panel stays in the DOM").not.toBeNull();
     expect(panel!.hasAttribute("hidden")).toBe(true);
-    expect(rowByName("Checked & passed")!.querySelector(".disc-panel")).toBeNull();
   });
 });
 
@@ -330,13 +291,13 @@ describe("#438 item 1 — the N = 0 strip names where the flags are", () => {
   const needsYouRows = () =>
     document.querySelectorAll("#site-corrections .ny-items > li").length;
 
-  it("P is the Pending row's count, and A is the rows NEEDS YOU lists", async () => {
+  it("P is the Not checked yet section's count, and A is the rows NEEDS YOU lists", async () => {
     const restore = notClean([
       { flag: "bearing_conflict", level: "warning", message: "Declared bearing diverges." },
     ]);
     try {
       await generate();
-      const p = countOf("Pending / not verified");
+      const p = countOf("pending");
       expect(p).toMatch(/^[1-9]\d*$/);
       const a = needsYouRows();
       expect(a).toBeGreaterThan(0);
@@ -353,7 +314,7 @@ describe("#438 item 1 — the N = 0 strip names where the flags are", () => {
     try {
       await generate();
       expect(document.getElementById("site-corrections")).toBeNull();
-      const p = countOf("Pending / not verified");
+      const p = countOf("pending");
       expect(strip()?.textContent).toBe(
         `Plan ready. ${p} under Pending ${p === "1" ? "needs" : "need"} a check before field use.`,
       );

@@ -12,7 +12,6 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { ResultsHero } from "./ResultsHero";
 import { PlanDetailCells } from "./bands/PlanDetails";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
-import { referenceSummary } from "@/lib/reference-summary";
 import { PricingCard } from "./PricingCard";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
@@ -75,23 +74,6 @@ describe("severity-ramp role assignments", () => {
     // Geometry values are output-meta (mono .mv), never controls.
     expect(container.querySelector(".hero-meta .row .mv")).not.toBeNull();
     expect(container.querySelectorAll(".hero button")).toHaveLength(0);
-  });
-
-  it("the spec chain is a document name, so it takes no generated-number accent", () => {
-    // #288 · §8.31 (Ryan's hand-check at f44377e): the bar this test
-    // rendered is DELETED, and the chain now rides the Reference row's
-    // summary line.  The CLAIM survives the move and is what matters —
-    // orange belongs to generated numbers, and a document name is not
-    // one — so it is asserted against the line that carries the chain
-    // now.  The `.seg.local` treatment retired with the bar's markup.
-    const line = referenceSummary({ jurisdiction: JUR, streetClass: null });
-    expect(line).toContain("Greeley");
-    for (const link of JUR.chain) {
-      expect(line).toContain(typeof link === "string" ? link : link.display_name);
-    }
-    // The summary is plain text in the row's provenance slot: there is no
-    // element on it to carry an accent at all.
-    expect(line).not.toMatch(/--dim|--orange|<[a-z]/i);
   });
 
   it("the street class carries pressed state, not hue alone", () => {

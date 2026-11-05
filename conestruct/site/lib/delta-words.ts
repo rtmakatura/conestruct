@@ -9,7 +9,7 @@
 // in the UI" -- a recording from before the label existed still gets a
 // readable name, never the key.
 
-import type { AppliedDelta } from "./jurisdiction";
+import type { AppliedDelta, TriggerStatus } from "./jurisdiction";
 
 /** The device's sentence-case name: the backend's label, or (on a wire
  *  that predates it) the id read as words. */
@@ -52,4 +52,31 @@ export function deltaDetail(d: AppliedDelta, jurisdictionName: string | null): s
  *  sentence (that stays in Plan reference, quoted as sourced). */
 export function deltaCite(d: AppliedDelta): string {
   return d.source.section ? `${d.source.doc} § ${d.source.section}` : d.source.doc;
+}
+
+const STATUS_WORDS: Record<TriggerStatus, string | null> = {
+  fires: null,
+  conditional: "conditional: shown here, not applied automatically",
+  unknown: "needs input (set the street class)",
+};
+
+/** R116: a rule's status in words; a firing rule says nothing extra. */
+export function statusWords(status: TriggerStatus): string | null {
+  return STATUS_WORDS[status];
+}
+
+/** #388 R5: what a delta does to this plan, from the backend's count (Rule 3). */
+export function deltaImpact(d: AppliedDelta): { main: string; unit?: string } {
+  if (d.severity === "count") {
+    // R116: never a raw key: the backend's label, or the id read as words on
+    // an older wire.
+    if (d.effect.op === "swap_device")
+      return { main: "→ swap", unit: d.device_label ?? d.effect.device?.replace(/_/g, " ") };
+    // A rule counted per direction with no plan count shows no number (Rule 10).
+    if (d.qty === undefined && d.effect.qty_per_direction !== undefined)
+      return { main: "—", unit: "per direction" };
+    const qty = d.qty ?? d.effect.qty ?? 1;
+    return { main: `+${qty}`, unit: qty === 1 ? "device" : "devices" };
+  }
+  return { main: d.severity === "op" ? "method" : "admin" };
 }

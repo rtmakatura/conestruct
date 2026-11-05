@@ -9,7 +9,7 @@ import { SITE_ADJUSTMENT_DETAIL, type ItemSpec } from "@/components/AuditTrail";
 import type { DeviceBreakdownState } from "@/components/DeviceBreakdown";
 import { HoursBars } from "@/components/JurisdictionSection";
 import { zoneGeometryRows } from "@/components/ResultsHero";
-import { deltaCite, deltaDetail, deltaTitle } from "@/lib/delta-words";
+import { deltaCite, deltaDetail, deltaImpact, deltaTitle, statusWords } from "@/lib/delta-words";
 import {
   dayLabel,
   deriveBandRows,
@@ -125,6 +125,11 @@ function docLine(jurName: string, s: { doc: string; section?: string }): string 
   return `${jurName} · ${s.doc}${s.section ? ` §${s.section}` : ""}`;
 }
 
+function withStatus(status: Parameters<typeof statusWords>[0], line: string): string {
+  const words = statusWords(status);
+  return words ? `${words} · ${line}` : line;
+}
+
 // ── hours ──
 
 function hoursWords(jur: JurisdictionBlock, schedule: WorkScheduleInput | null, verifying: boolean) {
@@ -150,7 +155,7 @@ function hoursWords(jur: JurisdictionBlock, schedule: WorkScheduleInput | null, 
   }
   return tbd
     ? {
-        sentence: `Schedule marked "Not set". Choose a date mode in Setup to check a schedule against ${jur.name}'s windows.`,
+        sentence: `Schedule marked "Not set". The windows above are reference only. Choose a date mode in Setup to check a schedule against ${jur.name}'s windows.`,
         result: `${jur.name}'s windows, not checked against dates`,
       }
     : {
@@ -164,7 +169,13 @@ function hoursDetail(i: SectionInput, jur: JurisdictionBlock): RowDetail {
   const words = hoursWords(jur, i.schedule, i.verifying);
   const rows = deriveBandRows(hours);
   const none = hours.shape === "none" || rows.length === 0;
-  const meter = jur.meters.find((m) => m.kind === "hours_violation");
+  // The meter scoped to the active street class (the backend's exposure-meter
+  // selection), then an unscoped one, then the first.
+  const hoursMeters = jur.meters.filter((m) => m.kind === "hours_violation");
+  const meter =
+    hoursMeters.find((m) => i.streetClass && m.classes?.includes(i.streetClass)) ??
+    hoursMeters.find((m) => !m.classes || m.classes.length === 0) ??
+    hoursMeters[0];
   const violations =
     !i.verifying && ev.status === "outside"
       ? ev.violations.map((v) =>
@@ -189,6 +200,9 @@ function hoursDetail(i: SectionInput, jur: JurisdictionBlock): RowDetail {
             `${jur.name} publishes no work-hour windows. No restriction shown: none is on record. That doesn't mean none exists.`,
           ]
         : []),
+      ...(hours.conflict
+        ? ["† Two adopted sources disagree. Showing the conservative value.", hours.conflict.verdict]
+        : []),
     ],
     pairs: [
       // X15: each scope's permitted windows, as text search can read.
@@ -203,11 +217,21 @@ function hoursDetail(i: SectionInput, jur: JurisdictionBlock): RowDetail {
                 .join(", ") || "banned all day",
             mono: true,
           }))),
-      ...(meter ? [{ label: "Metered", value: meterRateLabel(meter), mono: true }] : []),
+      ...(meter
+        ? [
+            {
+              label: "Metered",
+              value: `${meterRateLabel(meter)}${meter.classes?.length ? ` ${meter.classes.join("/")}` : ""}`,
+              mono: true,
+            },
+          ]
+        : []),
       ...(hours.holiday_rule === "holidays_and_eves_banned"
         ? [{ label: "Holidays", value: "holiday-eve rule" }]
         : []),
-      ...(hours.conflict ? [{ label: "Source conflict", value: hours.conflict.label }] : []),
+      ...(hours.conflict
+        ? hours.conflict.sources.map((c) => ({ label: c.doc, value: c.value, mono: true }))
+        : []),
     ],
     extra: none ? undefined : (
       <HoursBars jurisdiction={jur} streetClass={i.streetClass} schedule={i.schedule} />
@@ -249,18 +273,31 @@ function permitRow(jur: JurisdictionBlock, workDate: string | null): RefRow {
         ...(p.tiers.length > 0
           ? [{ label: "Permit types", value: p.tiers.map((t) => t.label).join(", ") }]
           : []),
-        ...(p.tier_suggested ? [{ label: "Suggested", value: p.tier_suggested }] : []),
+        ...(p.tier_suggested
+          ? [{ label: "Suggested", value: p.tier_suggested }]
+          : p.tiers.length > 0
+            ? [{ label: "Suggested", value: "none" }]
+            : []),
         ...(!unpublished && p.fee_estimate_cents != null
           ? [{ label: "Suggested-type fee", value: dollars(p.fee_estimate_cents), mono: true }]
           : []),
         ...(!unpublished && f.formula
-          ? [{ label: "Fee", value: `f(${f.formula.inputs.join(", ")})`, mono: true }]
+          ? [
+              {
+                label: f.formula.source.status === "provisional" ? "Fee (provisional)" : "Fee",
+                value: `f(${f.formula.inputs.join(", ")})`,
+                mono: true,
+              },
+            ]
           : []),
         ...p.leads.map((l) => ({
           label: l.label,
           value: `${leadNoticeLabel(l)}${workDate ? `, start no later than ≈ ${fmtDate(startNoLaterThan(workDate, l))}` : ""}`,
           mono: true,
         })),
+        ...(p.leads.length === 0 ? [{ label: "Lead times", value: "none on record" }] : []),
+        ...(p.notices.length === 0 ? [{ label: "Notices", value: "none on record" }] : []),
+        ...(p.onsite.items.length === 0 ? [{ label: "On-site requirements", value: "none on record" }] : []),
       ],
       list: unpublished
         ? undefined
@@ -526,7 +563,11 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
         result: deltaDetail(d, s.jurisdictionName),
         detail: {
           sentences: [d.rule],
-          pairs: d.baseline ? [{ label: "Baseline", value: d.baseline }] : [],
+          pairs: [
+            // #388 R5: the backend's per-plan count (Rule 3).
+            { label: "This plan", value: [deltaImpact(d).main, deltaImpact(d).unit].filter(Boolean).join(" "), mono: true },
+            ...(d.baseline ? [{ label: "Baseline", value: d.baseline }] : []),
+          ],
           source: docLine(jur.name, d.source),
         },
       }),
@@ -534,11 +575,11 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
     const keep = [
       ...s.deltasAttention.map((d) => ({
         text: d.rule,
-        sub: `${d.status} · ${docLine(jur.name, d.source)}`,
+        sub: withStatus(d.status, docLine(jur.name, d.source)),
       })),
       ...[...jur.chips.personnel, ...jur.chips.device].map((c) => ({
         text: c.rule,
-        sub: docLine(jur.name, c.source),
+        sub: withStatus(c.status, docLine(jur.name, c.source)),
       })),
     ];
     if (keep.length > 0) {
@@ -559,7 +600,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
         detail: {
           list: {
             noun: { one: "rule", many: "rules" },
-            lines: s.deltasAdmin.map((d) => ({ text: d.rule, sub: docLine(jur.name, d.source) })),
+            lines: s.deltasAdmin.map((d) => ({ text: d.rule, sub: withStatus(d.status, docLine(jur.name, d.source)) })),
           },
         },
       });
@@ -585,7 +626,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
             lines: hazards.map((c) => ({
               text: c.rule,
               value: c.meter ? meterRateLabel(c.meter) : undefined,
-              sub: docLine(jur.name, c.source),
+              sub: withStatus(c.status, docLine(jur.name, c.source)),
             })),
           },
         },

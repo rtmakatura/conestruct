@@ -58,6 +58,13 @@ Row count and ledger: every checked row is one `assignTiers` fact (`lib/tiering.
 
 **Predicted miss to watch:** honesty suites from #180, #182, #184, #187, #196 and #152 D reach Retry through the third section. If any fails, the fix is in the section's open logic, not the test.
 
+### Amended before the second commit (Rule 5)
+
+- **Dead CSS doesn't retire on this branch.** `refchip`, `chip-sum`, `audit-item`, `audit-head`, `check-list`, `sign-table` and `device-table` have no component left, but they share selectors with live rules and the census and `check-list-grid` / `rule-169` read them. A follow-up issue removes them. The prediction's "with their now-dead CSS" is withdrawn.
+- **Also retired, not predicted by name:** `ReferenceChip`, `ZoneGeometryGroup`, `lib/reference-summary` (X26), `DeltaRowView`, `HoursVerdictBlock`, `ConflictFootnote`, `ProvisionalBadge`, `FactRows`, `DeviceBreakdown` the component (its types stay).
+- **Tests retired with them:** `DeviceBreakdown.test`, `DeviceBreakdown.phone.test`, `reference-summary.test`; their claims that still hold moved to `ReferenceSections.test`. `JurisdictionSection.test`, `.density`, `.notset`, `.boundaries`, `.schedule-overnight`, `.per-direction-388`, `GeneratorShell.needs-you`, `.scan-refusal`, `.hit-targets`, `check-list-grid`, `lib/design/type-census` change too; the checkpoint named only some. Census pins: CSS 186 -> 198, tsx sites 57 -> 48, uses 199 -> 136, files 25 -> 22; the scanner's floor 50 -> 40.
+- **Behaviour added by the parity pass:** X25 and X27.
+
 ## 5. P1–P22 on the changed surfaces
 
 - **P1/P15:** clearing restores state; search overlays, never writes (X20).

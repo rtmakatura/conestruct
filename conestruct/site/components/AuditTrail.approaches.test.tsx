@@ -123,11 +123,11 @@ describe("approachesItem: the left-turn bay (#323 R153)", () => {
     const html = renderBody(
       approachesItem({ ...SECTION, turn_bay: { text: TEXT, provenance: "entered by operator" } }),
     );
-    expect(html).toContain('data-testid="turn-bay-text"');
+    expect(html).toContain(TEXT);
     expect(html).toContain("entered by operator");
   });
 
   it("prints nothing for it on every other plan", () => {
-    expect(renderBody(approachesItem(SECTION))).not.toContain("turn-bay-text");
+    expect(renderBody(approachesItem(SECTION))).not.toContain(TEXT);
   });
 });
