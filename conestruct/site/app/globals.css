@@ -9418,6 +9418,7 @@ input[type="number"] {
   border-radius: 0;
 }
 .workbench .rs-input::placeholder { color: var(--ink-faint); opacity: 1; }
+.workbench .rs-input:placeholder-shown { text-overflow: ellipsis; }
 .workbench .rs-input:focus { outline: 2px solid var(--act-bright); outline-offset: -2px; }
 .workbench .rs-input::-webkit-search-cancel-button { display: none; }
 .workbench .rs-clear {
@@ -9435,7 +9436,10 @@ input[type="number"] {
 .workbench .rs-status:empty { display: none; }
 .workbench .rs-status b { font-weight: 600; color: var(--ink); }
 .workbench .rs { border: 1px solid var(--rule); background: var(--panel-ground); }
-.workbench .rs.is-dim { opacity: 0.6; }
+/* X28: dimmed with tokens, not opacity; opacity took "No matches" under AA (axe). */
+.workbench .rs.is-dim { border-color: var(--rule-soft); }
+.workbench .rs.is-dim .rs-name,
+.workbench .rs.is-dim .rr-glyph { color: var(--ink-faint); }
 .workbench .rs-head {
   display: flex;
   align-items: center;
@@ -9466,6 +9470,8 @@ input[type="number"] {
   font-size: var(--fs-body-value);
 }
 .workbench .rr { border-top: 1px solid var(--rule-soft); }
+.workbench .rs-group > .rr:first-child { border-top: 0; }
+.workbench .rr-code { white-space: nowrap; }
 .workbench .rr-head {
   display: flex;
   align-items: center;
@@ -9509,13 +9515,13 @@ input[type="number"] {
 .workbench .rr-pairs { margin: 0; display: flex; flex-direction: column; gap: 4px; }
 .workbench .rr-pair {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 2px 16px;
+  gap: 16px;
   font-size: var(--fs-body-value);
 }
-.workbench .rr-pair dt { color: var(--ink-on-dark); font-weight: 400; }
-.workbench .rr-pair dd { margin: 0; color: var(--ink); text-align: right; overflow-wrap: anywhere; }
+.workbench .rr-pair dt { flex: 1 0 40%; min-width: 0; color: var(--ink-on-dark); font-weight: 400; }
+.workbench .rr-pair dd { flex: 0 1 auto; min-width: 0; margin: 0; color: var(--ink); text-align: right; overflow-wrap: anywhere; }
+.workbench .rr-pair dd:only-child { flex: 1; text-align: left; }
 .workbench .rr-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .workbench .rr-lines li {
   display: flex;
@@ -9541,6 +9547,7 @@ input[type="number"] {
   cursor: pointer;
   text-decoration: none;
 }
+.workbench .rr-link { min-width: 44px; justify-content: center; }
 .workbench .rr-more { width: 100%; border-top: 1px solid var(--rule-soft); }
 .workbench .rr-link:hover,
 .workbench .rr-more:hover { text-decoration: underline; }

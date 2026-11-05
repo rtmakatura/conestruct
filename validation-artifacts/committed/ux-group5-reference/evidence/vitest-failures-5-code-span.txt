@@ -1,0 +1,22 @@
+﻿vitest full run after X29's first version (2026-11-05): 12 failed, 2806 passed, 1 skipped. Cause: a code span in Hl split pinned sentences across text nodes.
+components/AuditTrail.approaches.test.tsx > approachesItem > renders the header line, both legs, and the source citation
+components/AuditTrail.approaches.test.tsx > approachesItem: the left-turn bay (#323 R153) > prints the backend's turn-bay sentence when present
+components/AuditTrail.test.tsx > pendingVerificationItem renderer (Option B items[] iteration) > renders both item labels
+components/AuditTrail.test.tsx > finesDoubleItem renderer > renders envelope geometry table with R2-10/R2-11/R2-1 rows
+components/AuditTrail.test.tsx > finesDoubleItem renderer > renders all four operational notes with their Sheet 12 citations
+components/AuditTrail.test.tsx > referenceItem renderer (UX-19 case narrative) > renders both narrative paragraphs (flagger closest-analog + layout note)
+components/AuditTrail.test.tsx > referenceItem renderer (UX-19 case narrative) > renders the shoulder Case 11 narrative
+components/AuditTrail.test.tsx > referenceItem renderer (UX-19 case narrative) > degrades gracefully when the case section omits narrative fields
+components/AuditTrail.test.tsx > taper derivation text renders as received (PR A sentinel) > #286: the advance row's count and citation are the backend's
+components/AuditTrail.test.tsx > engine-removal PR C backend-fed flagger SSD + colorado fail_count > sentinel: renders the backend's 777 ft, proving read-not-computed
+components/AuditTrail.test.tsx > arc12 coda expanded-body chips cite the standard plan, not the Supplement > Colorado body footer chip reads 'CDOT S-630-1 STANDARD PLAN'
+components/ReferenceSections.fixtures.test.tsx > default open state and pending isolation (adv-ni-denver) > #223 parity, mounted: the NI trace rows read inside check, with the case from the wire (X11)
+
+Second full run, the span on row results and all list lines: 3 failed, 2815 passed, 1 skipped.
+components/AuditTrail.test.tsx > finesDoubleItem renderer > renders envelope geometry table with R2-10/R2-11/R2-1 rows
+components/AuditTrail.test.tsx > finesDoubleItem renderer > renders all four operational notes with their Sheet 12 citations
+components/AuditTrail.test.tsx > arc12 coda expanded-body chips cite the standard plan, not the Supplement > Colorado body footer chip reads 'CDOT S-630-1 STANDARD PLAN'
+
+Third full run, the span on row results and list sub-lines with spec citations in the pattern: 2 failed, 2816 passed, 1 skipped.
+components/AuditTrail.test.tsx > finesDoubleItem renderer > renders all four operational notes with their Sheet 12 citations
+components/AuditTrail.test.tsx > arc12 coda expanded-body chips cite the standard plan, not the Supplement > Colorado body footer chip reads 'CDOT S-630-1 STANDARD PLAN'

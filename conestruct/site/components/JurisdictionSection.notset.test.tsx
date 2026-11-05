@@ -35,7 +35,7 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
     await openSection(user, "reference");
     await openRow(user, rowOf("reference", "Work hours")!);
     expect(
-      screen.getByText(/Schedule marked .Not set.. The windows above are/i),
+      screen.getByText(/Schedule marked .Not set.. These windows are/i),
     ).toBeTruthy();
     expect(screen.queryByText(/enter the\s+work date and start\/end times/i)).toBeNull();
   });
@@ -47,7 +47,7 @@ describe("hours verdict — null schedule reads as 'Not set' (#199)", () => {
     await openSection(user, "reference");
     await openRow(user, rowOf("reference", "Work hours")!);
     expect(
-      screen.getByText(/Schedule marked .Not set.. The windows above are/i),
+      screen.getByText(/Schedule marked .Not set.. These windows are/i),
     ).toBeTruthy();
     expect(screen.queryByText(/outside window/i)).toBeNull();
   });

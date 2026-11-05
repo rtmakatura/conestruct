@@ -45,21 +45,43 @@ export interface ReferenceSectionsProps {
   referenceDefaultOpen: boolean;
 }
 
+// A sign or device code (R9-9, W21-5aR, M4-9a): it stays whole
+// on a narrow line (X29).  Row results and a list line's sub-line only: a span
+// would split pinned detail text across text nodes.
+const CODE = /\b[A-Z]{1,3}\d+[A-Z]?(?:-\d+[A-Za-z]*)+\b/g;
+
 /** Draw `text` with its matches in `<mark>` (ruling 7). */
-function Hl({ text, m }: { text: string; m: RegExp | null }) {
-  if (!m) return <>{text}</>;
-  const parts: ReactNode[] = [];
+function Hl({ text, m, codes = false }: { text: string; m: RegExp | null; codes?: boolean }) {
+  const hits = m ? [...text.matchAll(m)].filter((h) => h[0] !== "") : [];
+  // The text between from and to, with the matches that fall in it marked.
+  const marked = (from: number, to: number): ReactNode[] => {
+    const parts: ReactNode[] = [];
+    let at = from;
+    for (const hit of hits) {
+      const start = Math.max(hit.index, from);
+      const end = Math.min(hit.index + hit[0].length, to);
+      if (start >= end) continue;
+      if (start > at) parts.push(text.slice(at, start));
+      parts.push(<mark key={start}>{text.slice(start, end)}</mark>);
+      at = end;
+    }
+    if (at < to) parts.push(text.slice(at, to));
+    return parts;
+  };
+  const out: ReactNode[] = [];
   let last = 0;
-  for (const hit of text.matchAll(m)) {
-    if (hit[0] === "") continue;
-    const at = hit.index;
-    if (at > last) parts.push(text.slice(last, at));
-    parts.push(<mark key={at}>{hit[0]}</mark>);
-    last = at + hit[0].length;
+  for (const code of codes ? text.matchAll(CODE) : []) {
+    const end = code.index + code[0].length;
+    if (code.index > last) out.push(...marked(last, code.index));
+    out.push(
+      <span className="rr-code" key={`code-${code.index}`}>
+        {marked(code.index, end)}
+      </span>,
+    );
+    last = end;
   }
-  if (parts.length === 0) return <>{text}</>;
-  if (last < text.length) parts.push(text.slice(last));
-  return <>{parts}</>;
+  if (last < text.length) out.push(...marked(last, text.length));
+  return <>{out}</>;
 }
 
 export function DetailView({
@@ -118,7 +140,7 @@ export function DetailView({
                 <Hl text={l.text} m={m} />
                 {l.sub && (
                   <span className="tr-note rr-line-sub">
-                    <Hl text={l.sub} m={m} />
+                    <Hl text={l.sub} m={m} codes />
                   </span>
                 )}
               </span>
@@ -189,7 +211,7 @@ function Row({
             {row.result && !row.resultMono && (
               <span className={`rr-result ${row.failed ? "is-fail" : ""}`}>
                 {" "}
-                <Hl text={row.result} m={m} />
+                <Hl text={row.result} m={m} codes />
               </span>
             )}
           </span>
@@ -456,7 +478,7 @@ export function ReferenceSections(props: ReferenceSectionsProps) {
             </button>
           )}
         </div>
-        <p className="tr-help rs-status" role="status" aria-live="polite">
+        <p className={`tr-help rs-status ${none ? "sr-only" : ""}`} role="status" aria-live="polite">
           {status && (
             <>
               {status.lead}

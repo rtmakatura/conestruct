@@ -1,0 +1,2169 @@
+{
+ "390": {
+  "steps": {
+   "idle": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "false",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "false",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "false",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": []
+    },
+    "m": {
+     "targets": 4,
+     "small": [],
+     "rowMin": null,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "axe": []
+   },
+   "sectionsOpen": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "true",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "true",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "calc-0-Taper length:false",
+      "calc-1-Buffer space:false",
+      "calc-2-Device spacing:false",
+      "calc-3-Warning signs:false",
+      "calc-4-Standard plan:false",
+      "pass-0:false",
+      "pass-1:false",
+      "pass-2:false",
+      "pass-3:false",
+      "info-0:false",
+      "site-adjacent_intersection:false",
+      "scan-adjacent_interchange:false",
+      "scan-school_zone:false",
+      "pending-0:false",
+      "pending-1:false",
+      "hours-pending:false",
+      "keep-in-mind:false",
+      "hazards:false",
+      "hours:false",
+      "permit:false",
+      "site-pedestrian_facility:false",
+      "site-bicycle_facility:false",
+      "corridor-warn:false",
+      "measured-absent:false",
+      "devices:false",
+      "zone-geometry:false"
+     ]
+    },
+    "m": {
+     "targets": 30,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "axe": []
+   },
+   "allOpen": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "true",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "true",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "calc-0-Taper length:true",
+      "calc-1-Buffer space:true",
+      "calc-2-Device spacing:true",
+      "calc-3-Warning signs:true",
+      "calc-4-Standard plan:true",
+      "pass-0:true",
+      "pass-1:true",
+      "pass-2:true",
+      "pass-3:true",
+      "info-0:true",
+      "site-adjacent_intersection:true",
+      "scan-adjacent_interchange:true",
+      "scan-school_zone:true",
+      "pending-0:true",
+      "pending-1:true",
+      "hours-pending:true",
+      "keep-in-mind:true",
+      "hazards:true",
+      "hours:true",
+      "permit:true",
+      "site-pedestrian_facility:true",
+      "site-bicycle_facility:true",
+      "corridor-warn:true",
+      "measured-absent:true",
+      "devices:true",
+      "zone-geometry:true"
+     ]
+    },
+    "m": {
+     "targets": 38,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "axe": [],
+    "hyphen": {
+     "checked": 41,
+     "broken": [
+      {
+       "code": "S-630-1",
+       "cls": "tr-help"
+      }
+     ]
+    },
+    "nestedDetails": 0
+   },
+   "mixedBefore": {
+    "sections": [
+     {
+      "id": "checked",
+      "open": "true",
+      "summary": "13 checks, each cited"
+     },
+     {
+      "id": "pending",
+      "open": "false",
+      "summary": "3 items for the TCS"
+     },
+     {
+      "id": "reference",
+      "open": "true",
+      "summary": "For reference, never blocks the plan"
+     }
+    ],
+    "rows": [
+     "calc-0-Taper length:true",
+     "calc-1-Buffer space:false",
+     "calc-2-Device spacing:false",
+     "calc-3-Warning signs:false",
+     "calc-4-Standard plan:false",
+     "pass-0:false",
+     "pass-1:false",
+     "pass-2:false",
+     "pass-3:false",
+     "info-0:false",
+     "site-adjacent_intersection:false",
+     "scan-adjacent_interchange:false",
+     "scan-school_zone:false",
+     "keep-in-mind:false",
+     "hazards:false",
+     "hours:false",
+     "permit:false",
+     "site-pedestrian_facility:false",
+     "site-bicycle_facility:false",
+     "corridor-warn:false",
+     "measured-absent:false",
+     "devices:false",
+     "zone-geometry:false"
+    ]
+   },
+   "search-sidewalk": {
+    "term": "sidewalk",
+    "view": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "hours",
+         "open": "true",
+         "head": "◌ Work hours: Denver's windows, not checked against dates Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 4,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 9,
+     "small": [],
+     "rowMin": 56.5,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-6B": {
+    "term": "6B",
+    "view": {
+     "status": "4 matching lines, all in Checked and passed",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "4 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-0-Taper length",
+         "open": "false",
+         "head": "✓ Taper length Source: MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3 40 ft Show"
+        },
+        {
+         "id": "calc-1-Buffer space",
+         "open": "true",
+         "head": "✓ Buffer space 200 ft Hide"
+        },
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        },
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [],
+     "subCounts": [],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 6,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-cone": {
+    "term": "cone",
+    "view": {
+     "status": "3 matching lines, in 3 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "1 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": false,
+       "summary": "1 of 3 lines match",
+       "rows": [
+        {
+         "id": "pending-1",
+         "open": "true",
+         "head": "◌ Intersection layout not generated Hide"
+        }
+       ]
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "1 of 10 lines match",
+       "rows": [
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 10,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "2 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 7,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-sign": {
+    "term": "sign",
+    "view": {
+     "status": "11 matching lines, in 3 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "5 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        },
+        {
+         "id": "calc-4-Standard plan",
+         "open": "true",
+         "head": "✓ Standard plan: Case 11: Shoulder closure on one-way street Hide"
+        },
+        {
+         "id": "pass-0",
+         "open": "false",
+         "head": "✓ Signs on both sides of one-way street: Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0"
+        },
+        {
+         "id": "pass-1",
+         "open": "false",
+         "head": "✓ G20-5P Work Zone signs every 2,640 ft: Zone length: 1,540 ft. Required: 1. Placed: 1. Show"
+        },
+        {
+         "id": "pass-2",
+         "open": "false",
+         "head": "✓ Speed reduction <= 15 mph per sign installation: No work-zone speed reduction. Posted speed 30 mph applies throughout "
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": false,
+       "summary": "1 of 3 lines match",
+       "rows": [
+        {
+         "id": "pending-1",
+         "open": "true",
+         "head": "◌ Intersection layout not generated Hide"
+        }
+       ]
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "keep-in-mind",
+         "open": "true",
+         "head": "⚠ 3 rules to keep in mind Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "site-bicycle_facility",
+         "open": "false",
+         "head": "▲ Bike lane / cycleway present: 2 M4-9a BIKE DETOUR signs added at the upstream and downstream ends. Show"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 35,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 6,
+     "showAll": [
+      "Show all 3 signs",
+      "Show all 3 rules",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "3 of 3 signs shown",
+      "2 of 3 rules shown",
+      "8 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 18,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-500": {
+    "term": "$500",
+    "view": {
+     "status": "2 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "2 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 4,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 2,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 14 fee lines"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 14 fee lines shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 6,
+     "small": [],
+     "rowMin": 56.5,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-flagger": {
+    "term": "flagger",
+    "view": {
+     "status": "1 matching line, in Checked and passed",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "1 of 13 lines match",
+       "rows": [
+        {
+         "id": "pass-3",
+         "open": "false",
+         "head": "✓ Flagger station lighting 500W @ 8 ft: Not applicable (no flaggers). Show"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      }
+     ],
+     "marks": 2,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 0,
+     "showAll": [],
+     "subCounts": [],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 3,
+     "small": [],
+     "rowMin": 56.5,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-taper": {
+    "term": "taper",
+    "view": {
+     "status": "4 matching lines, in 2 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "3 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-0-Taper length",
+         "open": "false",
+         "head": "✓ Taper length 40 ft Show"
+        },
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        },
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "1 of 10 lines match",
+       "rows": [
+        {
+         "id": "zone-geometry",
+         "open": "true",
+         "head": "i Zone geometry Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 5,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [
+      "Show all 3 signs"
+     ],
+     "subCounts": [
+      "3 of 3 signs shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 7,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "restore-x": {
+    "ok": true
+   },
+   "focusAfterX": "ref-search",
+   "search-for-escape": {
+    "term": "sidewalk",
+    "view": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "hours",
+         "open": "true",
+         "head": "◌ Work hours: Denver's windows, not checked against dates Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 4,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 9,
+     "small": [],
+     "rowMin": 56.5,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "restore-escape": {
+    "ok": true
+   },
+   "search-for-emptied": {
+    "term": "sidewalk",
+    "view": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "hours",
+         "open": "true",
+         "head": "◌ Work hours: Denver's windows, not checked against dates Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 4,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 9,
+     "small": [],
+     "rowMin": 56.5,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "restore-emptied": {
+    "ok": true
+   },
+   "search-none": {
+    "term": "zzqx",
+    "view": {
+     "status": "No matches for \"zzqx\".",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      }
+     ],
+     "marks": 0,
+     "markStyle": null,
+     "openedLines": 0,
+     "showAll": [],
+     "subCounts": [],
+     "none": "Nothing in this plan's details mentions \"zzqx\" Search looks through this plan's checks, sources and Denver rules. It doesn't search the whole MUTCD. Words that are in this plan: taper buffer sidewalk work hours fines Clear search and show everything",
+     "chips": [
+      "taper",
+      "buffer",
+      "sidewalk",
+      "work hours",
+      "fines"
+     ]
+    },
+    "axe": [],
+    "m": {
+     "targets": 8,
+     "small": [],
+     "rowMin": null,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "chip": {
+    "chip": "taper",
+    "view": {
+     "status": "4 matching lines, in 2 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "3 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-0-Taper length",
+         "open": "false",
+         "head": "✓ Taper length 40 ft Show"
+        },
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        },
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "1 of 10 lines match",
+       "rows": [
+        {
+         "id": "zone-geometry",
+         "open": "true",
+         "head": "i Zone geometry Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 5,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [
+      "Show all 3 signs"
+     ],
+     "subCounts": [
+      "3 of 3 signs shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "requests": []
+   },
+   "restore-clear-button": {
+    "ok": true
+   },
+   "hyphenAtEnd": {
+    "checked": 8,
+    "broken": []
+   },
+   "auditFailed": {
+    "banner": {
+     "text": "Audit trail failed: HTTP 500 Retry",
+     "section": "reference",
+     "open": "true"
+    },
+    "state": {
+     "sections": [
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "devices:true"
+     ]
+    },
+    "axe": [],
+    "m": {
+     "targets": 4,
+     "small": [],
+     "rowMin": 56.5,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    }
+   },
+   "sectionsWhileRetrying": 1,
+   "afterRetry": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "false",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "false",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "keep-in-mind:false",
+      "hazards:false",
+      "hours:false",
+      "permit:false",
+      "site-pedestrian_facility:false",
+      "site-bicycle_facility:false",
+      "corridor-warn:false",
+      "measured-absent:false",
+      "devices:false",
+      "zone-geometry:false"
+     ]
+    }
+   }
+  },
+  "errors": [],
+  "kindChips": [
+   "kind-chip-shoulder",
+   "kind-chip-flagger_lane_closure",
+   "kind-chip-near_intersection"
+  ],
+  "kind": "kind-chip-shoulder",
+  "ctaReason": null
+ },
+ "1440": {
+  "steps": {
+   "idle": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "false",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "false",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "false",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": []
+    },
+    "m": {
+     "targets": 4,
+     "small": [],
+     "rowMin": null,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "axe": []
+   },
+   "sectionsOpen": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "true",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "true",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "calc-0-Taper length:false",
+      "calc-1-Buffer space:false",
+      "calc-2-Device spacing:false",
+      "calc-3-Warning signs:false",
+      "calc-4-Standard plan:false",
+      "pass-0:false",
+      "pass-1:false",
+      "pass-2:false",
+      "pass-3:false",
+      "info-0:false",
+      "site-adjacent_intersection:false",
+      "scan-adjacent_interchange:false",
+      "scan-school_zone:false",
+      "pending-0:false",
+      "pending-1:false",
+      "hours-pending:false",
+      "keep-in-mind:false",
+      "hazards:false",
+      "hours:false",
+      "permit:false",
+      "site-pedestrian_facility:false",
+      "site-bicycle_facility:false",
+      "corridor-warn:false",
+      "measured-absent:false",
+      "devices:false",
+      "zone-geometry:false"
+     ]
+    },
+    "m": {
+     "targets": 30,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "axe": []
+   },
+   "allOpen": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "true",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "true",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "calc-0-Taper length:true",
+      "calc-1-Buffer space:true",
+      "calc-2-Device spacing:true",
+      "calc-3-Warning signs:true",
+      "calc-4-Standard plan:true",
+      "pass-0:true",
+      "pass-1:true",
+      "pass-2:true",
+      "pass-3:true",
+      "info-0:true",
+      "site-adjacent_intersection:true",
+      "scan-adjacent_interchange:true",
+      "scan-school_zone:true",
+      "pending-0:true",
+      "pending-1:true",
+      "hours-pending:true",
+      "keep-in-mind:true",
+      "hazards:true",
+      "hours:true",
+      "permit:true",
+      "site-pedestrian_facility:true",
+      "site-bicycle_facility:true",
+      "corridor-warn:true",
+      "measured-absent:true",
+      "devices:true",
+      "zone-geometry:true"
+     ]
+    },
+    "m": {
+     "targets": 38,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "axe": [],
+    "hyphen": {
+     "checked": 41,
+     "broken": []
+    },
+    "nestedDetails": 0
+   },
+   "mixedBefore": {
+    "sections": [
+     {
+      "id": "checked",
+      "open": "true",
+      "summary": "13 checks, each cited"
+     },
+     {
+      "id": "pending",
+      "open": "false",
+      "summary": "3 items for the TCS"
+     },
+     {
+      "id": "reference",
+      "open": "true",
+      "summary": "For reference, never blocks the plan"
+     }
+    ],
+    "rows": [
+     "calc-0-Taper length:true",
+     "calc-1-Buffer space:false",
+     "calc-2-Device spacing:false",
+     "calc-3-Warning signs:false",
+     "calc-4-Standard plan:false",
+     "pass-0:false",
+     "pass-1:false",
+     "pass-2:false",
+     "pass-3:false",
+     "info-0:false",
+     "site-adjacent_intersection:false",
+     "scan-adjacent_interchange:false",
+     "scan-school_zone:false",
+     "keep-in-mind:false",
+     "hazards:false",
+     "hours:false",
+     "permit:false",
+     "site-pedestrian_facility:false",
+     "site-bicycle_facility:false",
+     "corridor-warn:false",
+     "measured-absent:false",
+     "devices:false",
+     "zone-geometry:false"
+    ]
+   },
+   "search-sidewalk": {
+    "term": "sidewalk",
+    "view": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "hours",
+         "open": "true",
+         "head": "◌ Work hours: Denver's windows, not checked against dates Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 4,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 9,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-6B": {
+    "term": "6B",
+    "view": {
+     "status": "4 matching lines, all in Checked and passed",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "4 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-0-Taper length",
+         "open": "false",
+         "head": "✓ Taper length Source: MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3 40 ft Show"
+        },
+        {
+         "id": "calc-1-Buffer space",
+         "open": "true",
+         "head": "✓ Buffer space 200 ft Hide"
+        },
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        },
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [],
+     "subCounts": [],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 6,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-cone": {
+    "term": "cone",
+    "view": {
+     "status": "3 matching lines, in 3 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "1 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": false,
+       "summary": "1 of 3 lines match",
+       "rows": [
+        {
+         "id": "pending-1",
+         "open": "true",
+         "head": "◌ Intersection layout not generated Hide"
+        }
+       ]
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "1 of 10 lines match",
+       "rows": [
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 10,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "2 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 7,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-sign": {
+    "term": "sign",
+    "view": {
+     "status": "11 matching lines, in 3 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "5 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        },
+        {
+         "id": "calc-4-Standard plan",
+         "open": "true",
+         "head": "✓ Standard plan: Case 11: Shoulder closure on one-way street Hide"
+        },
+        {
+         "id": "pass-0",
+         "open": "false",
+         "head": "✓ Signs on both sides of one-way street: Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0"
+        },
+        {
+         "id": "pass-1",
+         "open": "false",
+         "head": "✓ G20-5P Work Zone signs every 2,640 ft: Zone length: 1,540 ft. Required: 1. Placed: 1. Show"
+        },
+        {
+         "id": "pass-2",
+         "open": "false",
+         "head": "✓ Speed reduction <= 15 mph per sign installation: No work-zone speed reduction. Posted speed 30 mph applies throughout "
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": false,
+       "summary": "1 of 3 lines match",
+       "rows": [
+        {
+         "id": "pending-1",
+         "open": "true",
+         "head": "◌ Intersection layout not generated Hide"
+        }
+       ]
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "keep-in-mind",
+         "open": "true",
+         "head": "⚠ 3 rules to keep in mind Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "site-bicycle_facility",
+         "open": "false",
+         "head": "▲ Bike lane / cycleway present: 2 M4-9a BIKE DETOUR signs added at the upstream and downstream ends. Show"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 35,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 6,
+     "showAll": [
+      "Show all 3 signs",
+      "Show all 3 rules",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "3 of 3 signs shown",
+      "2 of 3 rules shown",
+      "8 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 18,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-500": {
+    "term": "$500",
+    "view": {
+     "status": "2 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "2 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 4,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 2,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 14 fee lines"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 14 fee lines shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 6,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-flagger": {
+    "term": "flagger",
+    "view": {
+     "status": "1 matching line, in Checked and passed",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "1 of 13 lines match",
+       "rows": [
+        {
+         "id": "pass-3",
+         "open": "false",
+         "head": "✓ Flagger station lighting 500W @ 8 ft: Not applicable (no flaggers). Show"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      }
+     ],
+     "marks": 2,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 0,
+     "showAll": [],
+     "subCounts": [],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 3,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "search-taper": {
+    "term": "taper",
+    "view": {
+     "status": "4 matching lines, in 2 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "3 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-0-Taper length",
+         "open": "false",
+         "head": "✓ Taper length 40 ft Show"
+        },
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        },
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "1 of 10 lines match",
+       "rows": [
+        {
+         "id": "zone-geometry",
+         "open": "true",
+         "head": "i Zone geometry Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 5,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [
+      "Show all 3 signs"
+     ],
+     "subCounts": [
+      "3 of 3 signs shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 7,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "restore-x": {
+    "ok": true
+   },
+   "focusAfterX": "ref-search",
+   "search-for-escape": {
+    "term": "sidewalk",
+    "view": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "hours",
+         "open": "true",
+         "head": "◌ Work hours: Denver's windows, not checked against dates Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 4,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 9,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "restore-escape": {
+    "ok": true
+   },
+   "search-for-emptied": {
+    "term": "sidewalk",
+    "view": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "5 of 10 lines match",
+       "rows": [
+        {
+         "id": "hazards",
+         "open": "true",
+         "head": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide"
+        },
+        {
+         "id": "hours",
+         "open": "true",
+         "head": "◌ Work hours: Denver's windows, not checked against dates Hide"
+        },
+        {
+         "id": "permit",
+         "open": "true",
+         "head": "i Permit: 14 fee lines, 5 to 60 days lead time Hide"
+        },
+        {
+         "id": "site-pedestrian_facility",
+         "open": "false",
+         "head": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs a"
+        },
+        {
+         "id": "devices",
+         "open": "true",
+         "head": "i Device schedule 12 types, 40 units Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 7,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 4,
+     "showAll": [
+      "Show all 2 hazards",
+      "Show all 12 types"
+     ],
+     "subCounts": [
+      "1 of 2 hazards shown",
+      "1 of 12 device types shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "axe": [],
+    "m": {
+     "targets": 9,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "restore-emptied": {
+    "ok": true
+   },
+   "search-none": {
+    "term": "zzqx",
+    "view": {
+     "status": "No matches for \"zzqx\".",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      }
+     ],
+     "marks": 0,
+     "markStyle": null,
+     "openedLines": 0,
+     "showAll": [],
+     "subCounts": [],
+     "none": "Nothing in this plan's details mentions \"zzqx\" Search looks through this plan's checks, sources and Denver rules. It doesn't search the whole MUTCD. Words that are in this plan: taper buffer sidewalk work hours fines Clear search and show everything",
+     "chips": [
+      "taper",
+      "buffer",
+      "sidewalk",
+      "work hours",
+      "fines"
+     ]
+    },
+    "axe": [],
+    "m": {
+     "targets": 8,
+     "small": [],
+     "rowMin": null,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    },
+    "requests": []
+   },
+   "chip": {
+    "chip": "taper",
+    "view": {
+     "status": "4 matching lines, in 2 sections",
+     "sections": [
+      {
+       "id": "checked",
+       "dim": false,
+       "summary": "3 of 13 lines match",
+       "rows": [
+        {
+         "id": "calc-0-Taper length",
+         "open": "false",
+         "head": "✓ Taper length 40 ft Show"
+        },
+        {
+         "id": "calc-2-Device spacing",
+         "open": "true",
+         "head": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide"
+        },
+        {
+         "id": "calc-3-Warning signs",
+         "open": "true",
+         "head": "✓ Warning signs 3 signs Hide"
+        }
+       ]
+      },
+      {
+       "id": "pending",
+       "dim": true,
+       "summary": "No matches",
+       "rows": []
+      },
+      {
+       "id": "reference",
+       "dim": false,
+       "summary": "1 of 10 lines match",
+       "rows": [
+        {
+         "id": "zone-geometry",
+         "open": "true",
+         "head": "i Zone geometry Hide"
+        }
+       ]
+      }
+     ],
+     "marks": 5,
+     "markStyle": {
+      "bg": "rgb(41, 64, 86)",
+      "shadow": "rgb(52, 169, 232) 0px -2px 0px 0px inset"
+     },
+     "openedLines": 3,
+     "showAll": [
+      "Show all 3 signs"
+     ],
+     "subCounts": [
+      "3 of 3 signs shown"
+     ],
+     "none": null,
+     "chips": []
+    },
+    "requests": []
+   },
+   "restore-clear-button": {
+    "ok": true
+   },
+   "hyphenAtEnd": {
+    "checked": 8,
+    "broken": []
+   },
+   "auditFailed": {
+    "banner": {
+     "text": "Audit trail failed: HTTP 500 Retry",
+     "section": "reference",
+     "open": "true"
+    },
+    "state": {
+     "sections": [
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "devices:true"
+     ]
+    },
+    "axe": [],
+    "m": {
+     "targets": 4,
+     "small": [],
+     "rowMin": 48,
+     "box": 48,
+     "label": "__JetBrains_Mono_5f34dc 10px",
+     "overflowX": 0,
+     "rootOverflow": []
+    }
+   },
+   "sectionsWhileRetrying": 1,
+   "afterRetry": {
+    "state": {
+     "sections": [
+      {
+       "id": "checked",
+       "open": "false",
+       "summary": "13 checks, each cited"
+      },
+      {
+       "id": "pending",
+       "open": "false",
+       "summary": "3 items for the TCS"
+      },
+      {
+       "id": "reference",
+       "open": "true",
+       "summary": "For reference, never blocks the plan"
+      }
+     ],
+     "rows": [
+      "keep-in-mind:false",
+      "hazards:false",
+      "hours:false",
+      "permit:false",
+      "site-pedestrian_facility:false",
+      "site-bicycle_facility:false",
+      "corridor-warn:false",
+      "measured-absent:false",
+      "devices:false",
+      "zone-geometry:false"
+     ]
+    }
+   }
+  },
+  "errors": [],
+  "kindChips": [
+   "kind-chip-shoulder",
+   "kind-chip-flagger_lane_closure",
+   "kind-chip-near_intersection"
+  ],
+  "kind": "kind-chip-shoulder",
+  "ctaReason": null
+ }
+}

@@ -155,7 +155,7 @@ describe("the work-hours row — only the plan-invalidating state starts open", 
     expect(row.querySelector(".rr-head")?.getAttribute("aria-expanded")).toBe("false");
     expect(row.querySelector(".rr-glyph")?.textContent).toBe("◌");
     await openRow(user, row);
-    expect(screen.getByText(/Schedule marked .Not set.. The windows above are/i)).toBeTruthy();
+    expect(screen.getByText(/Schedule marked .Not set.. These windows are/i)).toBeTruthy();
   });
 
   it("UNKNOWN + schedule merely unentered: prompts Setup entry instead of claiming 'not checked'", async () => {

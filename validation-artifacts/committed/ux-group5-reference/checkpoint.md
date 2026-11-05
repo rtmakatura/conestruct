@@ -65,6 +65,10 @@ Row count and ledger: every checked row is one `assignTiers` fact (`lib/tiering.
 - **Tests retired with them:** `DeviceBreakdown.test`, `DeviceBreakdown.phone.test`; their claims that still hold moved to `ReferenceSections.test`. `JurisdictionSection.test`, `.density`, `.notset`, `.boundaries`, `.schedule-overnight`, `.per-direction-388`, `GeneratorShell.needs-you`, `.scan-refusal`, `.hit-targets`, `check-list-grid`, `lib/design/type-census` change too; the checkpoint named only some. Census pins: CSS 186 -> 198, tsx sites 57 -> 47, uses 199 -> 134, files 25 -> 22; the scanner's floor 50 -> 40.
 - **Behaviour added by the parity pass:** X25 and X27.
 
+### Amended after the walk (Rule 5)
+
+The first walk (2026-11-05) found X28-X34. Changes: `globals.css` (`.rs.is-dim`, `.rr-pair`, `.rr-code`, the first row's rule, the placeholder's ellipsis), `ReferenceSections.tsx` (`Hl`'s code span, the `sr-only` status), one sentence in `lib/reference-sections.tsx` and the two `JurisdictionSection` tests that pin it, new tests in `ReferenceSections.test.tsx`, the walk and its evidence. Backend, wire, section counts and search matching stay byte-identical. No new font size or hex, so the census and ink-literals pins don't move.
+
 ## 5. P1–P22 on the changed surfaces
 
 - **P1/P15:** clearing restores state; search overlays, never writes (X20).

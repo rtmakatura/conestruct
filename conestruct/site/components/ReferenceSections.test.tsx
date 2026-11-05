@@ -5,6 +5,8 @@
 // rows with no backend call, clearing restores every open and closed state,
 // and a failed audit opens the section holding Retry.
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -106,6 +108,63 @@ describe("ruling 4 / X3: the split", () => {
     await user.click(more);
     expect(rowsIn("checked")).toHaveLength(shown + n);
     expect(screen.queryByRole("button", { name: /^Show \d+ more check/ })).toBeNull();
+  });
+});
+
+describe("the walk's fixes (X28-X32)", () => {
+  const css = readFileSync(resolve(__dirname, "../app/globals.css"), "utf8");
+
+  it("X28: a dimmed section keeps its text at full opacity, so 'No matches' holds AA", () => {
+    expect(css).not.toMatch(/\.rs\.is-dim\s*\{[^}]*opacity/);
+  });
+
+  it("X29: a code draws whole, and a match inside it is still marked", () => {
+    mountFixture(fx, { breakdown: BREAKDOWN });
+    type("R9");
+    const row = rowOf("reference", "Device schedule")!;
+    const code = Array.from(row.querySelectorAll(".rr-code")).find((c) => c.textContent === "R9-9");
+    expect(code?.querySelector("mark")?.textContent).toBe("R9");
+    expect(css).toMatch(/\.rr-code\s*\{\s*white-space:\s*nowrap/);
+  });
+
+  it("X29: with no search a code draws whole with no mark and the same text", async () => {
+    const user = userEvent.setup();
+    mountFixture(fx, { breakdown: BREAKDOWN });
+    await openSection(user, "reference");
+    const row = rowOf("reference", "Device schedule")!;
+    await openRow(user, row);
+    const sub = Array.from(row.querySelectorAll(".rr-line-sub")).find((s) => s.textContent!.includes("R9-9"))!;
+    expect(sub.querySelector(".rr-code")?.textContent).toBe("R9-9");
+    expect(sub.querySelector("mark")).toBeNull();
+  });
+
+  it("X29: a match across a code's edge marks both sides and keeps the text", () => {
+    mountFixture(fx, { breakdown: BREAKDOWN });
+    type("R9-9 ·");
+    const row = rowOf("reference", "Device schedule")!;
+    const sub = Array.from(row.querySelectorAll(".rr-line-sub")).find((s) => s.textContent!.includes("R9-9"))!;
+    expect(sub.querySelector(".rr-code mark")?.textContent).toBe("R9-9");
+    expect(Array.from(sub.querySelectorAll("mark")).map((k) => k.textContent).join("")).toBe("R9-9 ·");
+    expect(sub.textContent).toMatch(/^R9-9 · /);
+  });
+
+  it("the walk's Retry measure: a text link is at least 44 px wide", () => {
+    expect(css).toMatch(/\.rr-link\s*\{[^}]*min-width:\s*44px/);
+  });
+
+  it("X30: a label-less pair reads left; a labelled pair keeps its value on the label's line", () => {
+    expect(css).toMatch(/\.rr-pair dd:only-child\s*\{[^}]*text-align:\s*left/);
+    expect(css).not.toMatch(/\.rr-pair\s*\{[^}]*flex-wrap/);
+  });
+
+  it("X31: with no match the status is for screen readers only; the card says it on the page", () => {
+    mountFixture(fx);
+    type("zzqx");
+    const s = screen.getByRole("status");
+    expect(s.textContent).toBe('No matches for "zzqx".');
+    expect(s.className).toContain("sr-only");
+    type("taper");
+    expect(screen.getByRole("status").className).not.toContain("sr-only");
   });
 });
 

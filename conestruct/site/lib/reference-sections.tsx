@@ -160,7 +160,7 @@ function hoursWords(jur: JurisdictionBlock, schedule: WorkScheduleInput | null, 
   }
   return tbd
     ? {
-        sentence: `Schedule marked "Not set". The windows above are reference only. Choose a date mode in Setup to check a schedule against ${jur.name}'s windows.`,
+        sentence: `Schedule marked "Not set". These windows are reference only. Choose a date mode in Setup to check a schedule against ${jur.name}'s windows.`,
         result: `${jur.name}'s windows, not checked against dates`,
       }
     : {
