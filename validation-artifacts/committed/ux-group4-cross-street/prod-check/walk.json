@@ -1,0 +1,996 @@
+{
+ "390": {
+  "steps": [
+   {
+    "name": "00-opens-on-kind",
+    "card": {
+     "count": "Question 1 of 2",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 1 of 2 What kind of work is it? What kind of work is it? Shoulder work Lane closure with flaggers Lane closure near an intersection 4 more kinds are coming once each is checked against its standard sheet. Details Next question ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map Drawing the corridor…",
+     "alt": null
+    },
+    "shot": "390-01-00-opens-on-kind.png"
+   },
+   {
+    "name": "01-armed",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "barText": "Tap the intersection nearest the work",
+     "bigText": "Use the big map instead",
+     "labelText": null,
+     "hasMark": false,
+     "text": "Tap the intersection nearest the work Edit on map Use the big map instead + −",
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    },
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390-02-01-armed.png"
+   },
+   {
+    "name": "02-marked",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Edit on map Franklin Street + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390-04-02-marked.png"
+   },
+   {
+    "name": "03-move",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Cancel Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Cancel",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Cancel Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "barText": "Tap the intersection nearest the work",
+     "bigText": "Use the big map instead",
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Tap the intersection nearest the work Edit on map Franklin Street Use the big map instead + −",
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "04-move-cancelled",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Edit on map Franklin Street + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "05-undone",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "barText": "Tap the intersection nearest the work",
+     "bigText": "Use the big map instead",
+     "labelText": null,
+     "hasMark": false,
+     "text": "Tap the intersection nearest the work Edit on map Use the big map instead + −",
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "06-after-big-map",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Park Avenue Two-way street · at where the work starts Move Undo"
+     },
+     "line": "Two-way street · at where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Park Avenue Two-way street · at where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "07-retapped",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Edit on map Franklin Street + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "08-side",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "text": "CONFIRM Question 3 of 3 Which side of the road is the work on? The plan draws the work on this edge and lays the signs out ahead of the traffic beside it. Which side of the road is the work on? South side Next to eastbound traffic Confirm and lay out the plan ✓ What kind of work is it: Lane closure near an intersection UNDO ✓ Which intersection is the work near: Franklin Street UNDO"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     },
+     "where-confirm": {
+      "w": 231.7,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390-07-08-side.png"
+   },
+   {
+    "name": "09-side-answered",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": false
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "text": "CONFIRM Question 3 of 3 Which side of the road is the work on? The plan draws the work on this edge and lays the signs out ahead of the traffic beside it. Which side of the road is the work on? South side Next to eastbound traffic Confirm and lay out the plan ✓ What kind of work is it: Lane closure near an intersection UNDO ✓ Which intersection is the work near: Franklin Street UNDO"
+    },
+    "aerial": {
+     "stage": "work",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map Drawing the corridor…",
+     "alt": null
+    },
+    "shot": "390-08-09-side-answered.png"
+   }
+  ],
+  "roadBearing": [
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "East Colfax Avenue",
+     "East Colfax Avenue",
+     "Humboldt Street"
+    ]
+   },
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "East Colfax Avenue",
+     "Franklin Street",
+     "Park Avenue",
+     "East Colfax Avenue",
+     "Franklin Street"
+    ]
+   },
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "Park Avenue"
+    ]
+   },
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "East Colfax Avenue",
+     "Franklin Street",
+     "Park Avenue",
+     "East Colfax Avenue",
+     "Franklin Street"
+    ]
+   }
+  ],
+  "tap": {
+   "at": {
+    "x": 317.44359395466745,
+    "y": 104.29084684699774
+   },
+   "box": {
+    "x": 32,
+    "y": -427.25,
+    "width": 326,
+    "height": 248
+   },
+   "pin": {
+    "lat": 39.73997,
+    "lng": -104.969281
+   }
+  },
+  "markedScenario": {
+   "intersection": {
+    "lat": 39.7400514684926,
+    "lng": -104.96845487962341,
+    "name": "Franklin Street",
+    "highwayClass": "residential",
+    "postedSpeedMph": 25
+   },
+   "approaches": [
+    {
+     "id": "cross_a",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": true,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 0.24
+    },
+    {
+     "id": "cross_b",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": true,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 180.24
+    }
+   ]
+  },
+  "afterUndo": {
+   "intersection": null
+  },
+  "pickerArmed": true,
+  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ✓ ROAD East Colfax Avenue, eastbound Primary road · 0 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
+  "pickerDetectedParagraph": false,
+  "afterConfirm": {
+   "whereOpen": false,
+   "openBand": "band-what"
+  }
+ },
+ "1440": {
+  "steps": [
+   {
+    "name": "00-opens-on-kind",
+    "card": {
+     "count": "Question 1 of 2",
+     "flag": "kind",
+     "question": "What kind of work is it?",
+     "why": null,
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 1 of 2 What kind of work is it? What kind of work is it? Shoulder work Lane closure with flaggers Lane closure near an intersection 4 more kinds are coming once each is checked against its standard sheet. Details Next question ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map Drawing the corridor…",
+     "alt": null
+    },
+    "shot": "1440-01-00-opens-on-kind.png"
+   },
+   {
+    "name": "01-armed",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "barText": "Tap the intersection nearest the work",
+     "bigText": "Use the big map instead",
+     "labelText": null,
+     "hasMark": false,
+     "text": "Tap the intersection nearest the work Edit on map Use the big map instead + −",
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    },
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "1440-02-01-armed.png"
+   },
+   {
+    "name": "02-marked",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Edit on map Franklin Street + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "1440-04-02-marked.png"
+   },
+   {
+    "name": "03-move",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Cancel Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Cancel",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Cancel Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "barText": "Tap the intersection nearest the work",
+     "bigText": "Use the big map instead",
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Tap the intersection nearest the work Edit on map Franklin Street Use the big map instead + −",
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "04-move-cancelled",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Edit on map Franklin Street + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "05-undone",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": true,
+     "barText": "Tap the intersection nearest the work",
+     "bigText": "Use the big map instead",
+     "labelText": null,
+     "hasMark": false,
+     "text": "Tap the intersection nearest the work Edit on map Use the big map instead + −",
+     "alt": "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead"
+    }
+   },
+   {
+    "name": "06-after-big-map",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Park Avenue Two-way street · at where the work starts Move Undo"
+     },
+     "line": "Two-way street · at where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Park Avenue Two-way street · at where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "07-retapped",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo"
+     },
+     "line": "Two-way street · 230 ft east of where the work starts",
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "text": "CONFIRM Question 2 of 3 Which intersection is the work near? Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go. ✓ Near Franklin Street Two-way street · 230 ft east of where the work starts Move Undo Next question ✓ What kind of work is it: Lane closure near an intersection UNDO ◌ Next: which side of the road the work is on"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": "Franklin Street",
+     "hasMark": true,
+     "text": "Edit on map Franklin Street + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
+    "name": "08-side",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": true
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "text": "CONFIRM Question 3 of 3 Which side of the road is the work on? The plan draws the work on this edge and lays the signs out ahead of the traffic beside it. Which side of the road is the work on? South side Next to eastbound traffic Confirm and lay out the plan ✓ What kind of work is it: Lane closure near an intersection UNDO ✓ Which intersection is the work near: Franklin Street UNDO"
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map + −",
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    },
+    "axe": [],
+    "targets": {
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     },
+     "where-confirm": {
+      "w": 231.7,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "1440-07-08-side.png"
+   },
+   {
+    "name": "09-side-answered",
+    "card": {
+     "count": "Question 3 of 3",
+     "flag": "side",
+     "question": "Which side of the road is the work on?",
+     "why": "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.",
+     "button": {
+      "text": "Confirm and lay out the plan",
+      "disabled": false
+     },
+     "row": null,
+     "line": null,
+     "none": null,
+     "failed": null,
+     "move": null,
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "✓ Which intersection is the work near: Franklin Street UNDO"
+     ],
+     "text": "CONFIRM Question 3 of 3 Which side of the road is the work on? The plan draws the work on this edge and lays the signs out ahead of the traffic beside it. Which side of the road is the work on? South side Next to eastbound traffic Confirm and lay out the plan ✓ What kind of work is it: Lane closure near an intersection UNDO ✓ Which intersection is the work near: Franklin Street UNDO"
+    },
+    "aerial": {
+     "stage": "work",
+     "armed": false,
+     "barText": null,
+     "bigText": null,
+     "labelText": null,
+     "hasMark": false,
+     "text": "Edit on map Drawing the corridor…",
+     "alt": null
+    },
+    "shot": "1440-08-09-side-answered.png"
+   }
+  ],
+  "roadBearing": [
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "East Colfax Avenue",
+     "East Colfax Avenue",
+     "Humboldt Street"
+    ]
+   },
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "Franklin Street",
+     "East Colfax Avenue",
+     "Park Avenue",
+     "Franklin Street",
+     "East Colfax Avenue"
+    ]
+   },
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "Park Avenue"
+    ]
+   },
+   {
+    "status": 200,
+    "scan_status": "ok",
+    "names": [
+     "Franklin Street",
+     "East Colfax Avenue",
+     "Park Avenue",
+     "Franklin Street",
+     "East Colfax Avenue"
+    ]
+   }
+  ],
+  "tap": {
+   "at": {
+    "x": 576.4435939546674,
+    "y": 129.29084684699774
+   },
+   "box": {
+    "x": 298,
+    "y": -231.5,
+    "width": 844,
+    "height": 298
+   },
+   "pin": {
+    "lat": 39.73997,
+    "lng": -104.969281
+   }
+  },
+  "markedScenario": {
+   "intersection": {
+    "lat": 39.74005456223094,
+    "lng": -104.96845487962341,
+    "name": "Franklin Street",
+    "highwayClass": "residential",
+    "postedSpeedMph": 25
+   },
+   "approaches": [
+    {
+     "id": "cross_a",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": true,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 0.24
+    },
+    {
+     "id": "cross_b",
+     "speed": 25,
+     "roadType": "urban_arterial",
+     "lanesPerDirection": 1,
+     "laneWidth": 12,
+     "signalized": true,
+     "detectedLanesTotal": 2,
+     "bearingDeg": 180.24
+    }
+   ]
+  },
+  "afterUndo": {
+   "intersection": null
+  },
+  "pickerArmed": true,
+  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD East Colfax Avenue, eastbound Primary road · 0 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
+  "pickerDetectedParagraph": false,
+  "afterConfirm": {
+   "whereOpen": false,
+   "openBand": "band-what"
+  },
+  "pdf": {
+   "saidOneWay": true,
+   "saidLaneCount": true,
+   "ctaReason": "Generation declined. The PLAN DECLINED notice says why."
+  },
+  "error": "TimeoutError: page.waitForFunction: Timeout 120000ms exceeded."
+ }
+}
