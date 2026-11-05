@@ -43,7 +43,7 @@ vi.mock("./OutputCards", () => ({
     </button>
   ),
 }));
-vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
 // A two-lane-each-way urban arterial.  Consistent relays (2 + 2, no

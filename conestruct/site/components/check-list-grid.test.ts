@@ -35,7 +35,6 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { CheckRow } from "./AuditTrail";
 import { StatusBar } from "./StatusBar";
 import type { AuditResponse, AuditState } from "@/lib/render-types";
 
@@ -162,10 +161,4 @@ describe("#225 — the renderer emits the three-cell row the grid lays out (mark
     expect(html).toContain("VERIFIED · 2 validation warnings");
   });
 
-  it("section 03's CheckRow: the same three cells, the tag in the annotation cell", () => {
-    const html = renderToStaticMarkup(
-      createElement(CheckRow, { label: "Taper length", detail: "183 ft", tag: "MUTCD 6C-3" }),
-    );
-    expect(rows(html)).toEqual(["MUTCD 6C-3"]);
-  });
 });

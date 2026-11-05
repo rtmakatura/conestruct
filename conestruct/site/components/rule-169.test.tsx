@@ -16,6 +16,7 @@ import { buildShoulderItems } from "./AuditTrail";
 import type { DeviceBreakdownData, DeviceBreakdownState } from "./DeviceBreakdown";
 import type { AuditState } from "../lib/render-types";
 import type { ShoulderScenario } from "../lib/scenarios";
+import { renderDetail } from "./detail-test-utils";
 
 const read = (...p: string[]) => readFileSync(join(__dirname, ...p), "utf-8").replace(/\r\n/g, "\n");
 const css = read("..", "app", "globals.css");
@@ -120,7 +121,7 @@ describe("the fold-in: the advance row's sign table", () => {
 
   it("marks each cell, labels the stacked lines for sight only, keeps the header for screen readers", () => {
     const items = buildShoulderItems({ kind: "shoulder" } as unknown as ShoulderScenario, audit, true, String);
-    const body = html(items[3].body as ReactElement);
+    const body = renderDetail(items[3]);
     expect(body).toContain('<table class="sign-table" role="table">');
     expect(body).toContain('<th role="columnheader">Code</th>');
     expect(body).toContain('<td role="cell" class="st-code">W20-1</td>');

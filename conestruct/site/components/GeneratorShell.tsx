@@ -54,7 +54,6 @@ import { OutputCards } from "./OutputCards";
 import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
 import { PricingCard } from "./PricingCard";
 import { ResultsHero } from "./ResultsHero";
-import { TieredReference } from "./TieredReference";
 import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tiering";
 import { settledData } from "./AuditTrail";
 import {
@@ -83,12 +82,10 @@ import type {
   StagedFieldKey,
 } from "@/lib/scenarios/types";
 import { derivePrimaryOwner } from "@/lib/results-primary";
-import { referenceSummary } from "@/lib/reference-summary";
 import { NeedsYou } from "./NeedsYou";
-import { CheckedDisclosure, PendingDisclosure } from "./ResultsDisclosures";
+import { ReferenceSections } from "./ReferenceSections";
 import { OtherConditions, SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 import { QuestionFlow } from "./NeedsYouQuestion";
-import { ReferenceDisclosure } from "./ReferenceDisclosure";
 import { ResultsHead } from "./ResultsHead";
 import { SiteNotChecked } from "./SiteNotChecked";
 import { RevisionPanel } from "./bands/RevisionPanel";
@@ -2387,46 +2384,17 @@ export function GeneratorShell({
                 why it is not simply gated on `resultsVisible`. */}
             {(resultsVisible || referenceMounts) && (
               <div className="results-disc">
-                {/* #437 ruling 13: the price quote's row joined the
-                    downloads (OutputCards' `quote` slot, above). */}
-                {/* Rule 89: a COUNTED tier shows its number.  Both count
-                    from the one ledger above; neither renders at all
-                    before an audit has settled, because a count with no
-                    settled answer behind it would be a number the wire
-                    never carried (Rule 10). */}
-                {resultsVisible && settledLedger !== null && (
-                  <>
-                    <CheckedDisclosure
-                      count={settledLedger.checked}
-                      cited={auditState.state !== "error"}
-                      tierProps={tierProps}
-                    />
-                    <PendingDisclosure
-                      count={settledLedger.pending}
-                      tierProps={tierProps}
-                    />
-                  </>
-                )}
-                {/* #253: chip 2's jump target, and #193's focus target —
-                    both moved onto the row with the content they name,
-                    because Zone 3's section is gone. */}
-                {referenceMounts && (
-                  <div id="reference" tabIndex={-1} className="jump-anchor outline-none">
-                    <ReferenceDisclosure
-                      defaultOpen={auditState.state === "error"}
-                      summary={referenceSummary({
-                        jurisdiction: jurisdictionBlock,
-                        streetClass: scenario.street_class ?? null,
-                        loading: jurisdictionLoading,
-                      })}
-                    >
-                      <TieredReference
-                        {...tierProps}
-                        tiers={["changed", "attention", "reference"]}
-                      />
-                    </ReferenceDisclosure>
-                  </div>
-                )}
+                {/* #443: the three sections, one row style and a search box.
+                    The two counted sections need a settled audit (Rule 89,
+                    Rule 10); section 3 mounts on its own after an audit
+                    error, so the strip's "retry below" lands on a Retry. */}
+                <ReferenceSections
+                  {...tierProps}
+                  checkedCount={resultsVisible && settledLedger !== null ? settledLedger.checked : null}
+                  pendingCount={resultsVisible && settledLedger !== null ? settledLedger.pending : null}
+                  cited={auditState.state !== "error"}
+                  referenceDefaultOpen={auditState.state === "error"}
+                />
               </div>
             )}
           </section>

@@ -464,6 +464,116 @@ export function BoundaryLabels({ hours }: { hours: number[] }) {
   );
 }
 
+/** #443 X15: the 24 h bars, drawn the same in the card and the row's detail. */
+export function HoursBars({
+  jurisdiction,
+  streetClass,
+  schedule,
+}: {
+  jurisdiction: JurisdictionBlock;
+  streetClass: StreetClass | null;
+  schedule: WorkScheduleInput | null;
+}) {
+  const rows = deriveBandRows(jurisdiction.hours);
+  const active = activeBandRow(rows, streetClass);
+  const sched = schedule ?? null;
+  const hoursKnown =
+    sched != null &&
+    sched.date_mode !== "tbd" &&
+    sched.start_time != null &&
+    sched.end_time != null;
+  return (
+        <div>
+          {rows.map((r) => {
+            const isActive = active === r;
+            return (
+              <div
+                key={`${r.scope}-${r.days}`}
+                // #215: at phone width the scope stacks above its bar, so
+                // the bar — and its boundary labels — get the column.
+                className="grid grid-cols-[130px_1fr] max-md:grid-cols-1 gap-2 items-center mb-1"
+                data-testid="hours-row"
+              >
+                <div
+                  className={`text-[11px] leading-tight ${
+                    isActive
+                      ? "text-[color:var(--ink)] font-semibold"
+                      : "text-[color:var(--ink-faint)]"
+                  }`}
+                >
+                  {r.scope}
+                  <span className="block font-mono text-[9px] uppercase tracking-[0.06em] font-normal">
+                    {dayLabel(r.days)}
+                  </span>
+                </div>
+                <div>
+                <div
+                  className={`relative flex h-6 overflow-hidden ${
+                    isActive ? "outline outline-1 outline-[color:var(--act)]" : ""
+                  }`}
+                >
+                  {r.segments.map((s) => (
+                    <div
+                      key={`${s.startH}-${s.endH}`}
+                      style={{ width: `${((s.endH - s.startH) / 24) * 100}%` }}
+                      className={`flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] ${
+                        s.t === "ban"
+                          ? "bg-[repeating-linear-gradient(45deg,var(--paper-deep),var(--paper-deep)_4px,var(--paper-line-soft)_4px,var(--paper-line-soft)_8px)] text-[color:var(--ink-faint)]"
+                          : "bg-[color:var(--pass-soft)] text-[color:var(--pass)]"
+                      }`}
+                    >
+                      {s.endH - s.startH >= 3 ? (s.t === "ban" ? "banned" : "ok") : ""}
+                    </div>
+                  ))}
+                  {isActive &&
+                    hoursKnown &&
+                    sched &&
+                    // An overnight schedule (#188: end < start wraps past
+                    // midnight) overlays as two segments, mirroring how the
+                    // window bands themselves split at midnight.
+                    scheduleOverlaySegments(
+                      sched.start_time as number,
+                      sched.end_time as number,
+                    ).map(([a, b]) => (
+                      <div
+                        key={`sched-${a}`}
+                        aria-hidden
+                        className="absolute top-0 bottom-0 border-x-2 border-[color:var(--act)] bg-[color:var(--act-glow)]"
+                        style={{
+                          left: `${(a / 24) * 100}%`,
+                          width: `${((b - a) / 24) * 100}%`,
+                        }}
+                      />
+                    ))}
+                </div>
+                {/* #215: every window boundary labelled where it falls, so
+                    no end time is inferred from an unlabeled gap.  The
+                    hours are the data's (rowBoundaries), formatted as the
+                    axis formats them (hourTick).  Labels alternate between
+                    two lines, so neighbouring boundaries never sit on top
+                    of each other at the column's width or at 380; the
+                    first and last are pinned inside the bar's edges. */}
+                <BoundaryLabels hours={rowBoundaries(r)} />
+                </div>
+              </div>
+            );
+          })}
+          <div className="grid grid-cols-[130px_1fr] max-md:grid-cols-1 gap-2">
+            <div />
+            <div className="flex justify-between font-mono text-[9px] text-[color:var(--ink-faint)]">
+              <span>12a</span>
+              <span>4a</span>
+              <span>8a</span>
+              <span>12p</span>
+              <span>4p</span>
+              <span>8p</span>
+              <span>12a</span>
+            </div>
+          </div>
+        </div>
+  );
+}
+
 export function WorkHoursCard({
   jurisdiction,
   streetClass,
@@ -562,94 +672,7 @@ export function WorkHoursCard({
           exists.
         </div>
       ) : (
-        <div>
-          {rows.map((r) => {
-            const isActive = active === r;
-            return (
-              <div
-                key={`${r.scope}-${r.days}`}
-                // #215: at phone width the scope stacks above its bar, so
-                // the bar — and its boundary labels — get the column.
-                className="grid grid-cols-[130px_1fr] max-md:grid-cols-1 gap-2 items-center mb-1"
-                data-testid="hours-row"
-              >
-                <div
-                  className={`text-[11px] leading-tight ${
-                    isActive
-                      ? "text-[color:var(--ink)] font-semibold"
-                      : "text-[color:var(--ink-faint)]"
-                  }`}
-                >
-                  {r.scope}
-                  <span className="block font-mono text-[9px] uppercase tracking-[0.06em] font-normal">
-                    {dayLabel(r.days)}
-                  </span>
-                </div>
-                <div>
-                <div
-                  className={`relative flex h-6 overflow-hidden ${
-                    isActive ? "outline outline-1 outline-[color:var(--act)]" : ""
-                  }`}
-                >
-                  {r.segments.map((s) => (
-                    <div
-                      key={`${s.startH}-${s.endH}`}
-                      style={{ width: `${((s.endH - s.startH) / 24) * 100}%` }}
-                      className={`flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] ${
-                        s.t === "ban"
-                          ? "bg-[repeating-linear-gradient(45deg,var(--paper-deep),var(--paper-deep)_4px,var(--paper-line-soft)_4px,var(--paper-line-soft)_8px)] text-[color:var(--ink-faint)]"
-                          : "bg-[color:var(--pass-soft)] text-[color:var(--pass)]"
-                      }`}
-                    >
-                      {s.endH - s.startH >= 3 ? (s.t === "ban" ? "banned" : "ok") : ""}
-                    </div>
-                  ))}
-                  {isActive &&
-                    hoursKnown &&
-                    sched &&
-                    // An overnight schedule (#188: end < start wraps past
-                    // midnight) overlays as two segments, mirroring how the
-                    // window bands themselves split at midnight.
-                    scheduleOverlaySegments(
-                      sched.start_time as number,
-                      sched.end_time as number,
-                    ).map(([a, b]) => (
-                      <div
-                        key={`sched-${a}`}
-                        aria-hidden
-                        className="absolute top-0 bottom-0 border-x-2 border-[color:var(--act)] bg-[color:var(--act-glow)]"
-                        style={{
-                          left: `${(a / 24) * 100}%`,
-                          width: `${((b - a) / 24) * 100}%`,
-                        }}
-                      />
-                    ))}
-                </div>
-                {/* #215: every window boundary labelled where it falls, so
-                    no end time is inferred from an unlabeled gap.  The
-                    hours are the data's (rowBoundaries), formatted as the
-                    axis formats them (hourTick).  Labels alternate between
-                    two lines, so neighbouring boundaries never sit on top
-                    of each other at the column's width or at 380; the
-                    first and last are pinned inside the bar's edges. */}
-                <BoundaryLabels hours={rowBoundaries(r)} />
-                </div>
-              </div>
-            );
-          })}
-          <div className="grid grid-cols-[130px_1fr] max-md:grid-cols-1 gap-2">
-            <div />
-            <div className="flex justify-between font-mono text-[9px] text-[color:var(--ink-faint)]">
-              <span>12a</span>
-              <span>4a</span>
-              <span>8a</span>
-              <span>12p</span>
-              <span>4p</span>
-              <span>8p</span>
-              <span>12a</span>
-            </div>
-          </div>
-        </div>
+        <HoursBars jurisdiction={jurisdiction} streetClass={streetClass} schedule={schedule} />
       )}
 
       {/* Plan tie — the verdict comes from the backend hours_eval, never

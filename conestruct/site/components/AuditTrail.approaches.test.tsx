@@ -8,10 +8,11 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import { approachesItem } from "./AuditTrail";
+import { renderDetail } from "./detail-test-utils";
 
-function renderBody(item: { body: React.ReactNode } | null): string {
+function renderBody(item: Parameters<typeof renderDetail>[0]): string {
   if (!item) throw new Error("expected an ItemSpec, got null");
-  return renderToStaticMarkup(<>{item.body}</>);
+  return renderDetail(item);
 }
 
 const SECTION = {

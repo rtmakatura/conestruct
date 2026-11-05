@@ -37,7 +37,7 @@ vi.mock("./OutputCards", () => ({
     </button>
   ),
 }));
-vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
 // The stub scripts the picker's Save exactly as the real modal would

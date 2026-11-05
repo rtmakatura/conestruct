@@ -1,0 +1,52 @@
+components/AuditTrail.approaches.test.tsx :: approachesItem renders the per-leg sign table with the backend's column names
+components/AuditTrail.approaches.test.tsx :: approachesItem: the left-turn bay (#323 R153) prints the backend's turn-bay sentence when present
+components/AuditTrail.corridor.test.tsx :: corridorValidationItem reason split (#213 V5) check_unavailable renders a stated no-verdict item — never null
+components/AuditTrail.declined-stale.test.tsx :: audit rows never present a prior input's numbers under a declined banner (#187) refetch (loading) keeps last-known rows with the refreshing cue — the sanctioned fallback
+components/AuditTrail.declined-stale.test.tsx :: audit rows never present a prior input's numbers under a declined banner (#187) a declined (400) audit blanks the cited values and disables the Audit PDF
+components/AuditTrail.declined-stale.test.tsx :: audit rows never present a prior input's numbers under a declined banner (#187) a failed (5xx) audit blanks the values too, keeping the retry line
+components/AuditTrail.test.tsx :: pendingVerificationItem renderer (Option B items[] iteration) renders one <li> per item (the count of list items matches count)
+components/AuditTrail.test.tsx :: pendingVerificationItem renderer (Option B items[] iteration) single-item payload (Δ25 case) renders one <li> with one link
+components/AuditTrail.test.tsx :: referenceItem renderer (V1-Wide S1) 65 mph reduction → Case 26 label + verbatim Trigger caption in quotes
+components/AuditTrail.test.tsx :: taper derivation text renders as received (PR A sentinel) #286: formula lines render as received (no glyph rewrite, no line picked by kind)
+components/AuditTrail.test.tsx :: engine-removal PR C — backend-fed flagger SSD + colorado fail_count sentinel: renders the backend's 777 ft, proving read-not-computed
+components/AuditTrail.test.tsx :: engine-removal PR C — backend-fed flagger SSD + colorado fail_count #319: the station line is the payload's, not the form's switch
+components/AuditTrail.test.tsx :: engine-removal PR C — backend-fed flagger SSD + colorado fail_count #319: no station field (an older backend) or not generated → —, never a count
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows the three tier rows are ONE group, in rule 27's order; the quote row closes the downloads
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows the reference row keeps the jump target and the focus target Zone 3 carried
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows rule 89: the COUNTED tiers show their number; the quote and the reference show none
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows the promoted tiers are GONE from section 03 — one container each, never two
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows every row is closed in S5 and opens in place (rules 87–89)
+components/GeneratorShell.disclosures.test.tsx :: #288 clause 4 — the stack's disclosure rows the quote's panel survives a collapse — its state is written nowhere else
+components/GeneratorShell.disclosures.test.tsx :: #438 item 1 — the N = 0 strip names where the flags are P is the Pending row's count, and A is the rows NEEDS YOU lists
+components/GeneratorShell.disclosures.test.tsx :: #438 item 1 — the N = 0 strip names where the flags are with nothing in NEEDS YOU, the strip names Pending alone
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack every interactive element in the stack carries a declared floor
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack the fixture REACHES all three ↗ links — coverage is a claim, so it is asserted
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack the same holds with the disclosures OPEN — a panel's controls are controls too
+components/GeneratorShell.hit-targets.test.tsx :: #288 clause 7 — rule 15 reaches every control in the results stack #437: and with an answer chosen and Details open — the card's controls are floored
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack S8: the reference disclosure is CLOSED in S5 and opens in place — nothing above it moves
+components/GeneratorShell.needs-you.test.tsx :: #288 step 3 — NEEDS YOU mounted in the results stack rule 129: the reference discloses, it never writes — the row's control is a read
+components/GeneratorShell.pre-generate-zone.test.tsx :: no results zone before Generate (Part 1 §2.1) a picked jurisdiction does not mount the reference disclosure — and Generate brings it back
+components/GeneratorShell.scan-refusal.test.tsx :: #258 — a declined plan shows no plan (rule 10) both requests refused: no hero, zero download buttons, the status region empty, the empty state's headline alone
+components/GeneratorShell.scan-refusal.test.tsx :: #258 — a declined plan shows no plan (rule 10) the breakdown succeeded while the audit refused: the answer is held, never shown — no counts, no downloads, no announcement
+components/GeneratorShell.scan-refusal.test.tsx :: #258 — a declined plan shows no plan (rule 10) downloads return with the verdict: proceed-anyway renders the cards, the hero, and announces the plan once
+components/JurisdictionSection.boundaries.test.tsx :: #215 — the rendered card labels every boundary each row's labels are its boundaries, in the axis's form, at their own positions
+components/JurisdictionSection.boundaries.test.tsx :: #215 — the rendered card labels every boundary adjacent boundaries never share a line (every width)
+components/JurisdictionSection.boundaries.test.tsx :: #215 — the rendered card labels every boundary column width: the scope column sits beside the bar; 380 (≤md): it stacks above, the bar takes the column
+components/JurisdictionSection.density.test.tsx :: SUITE ERROR
+components/JurisdictionSection.notset.test.tsx :: hours verdict — null schedule reads as 'Not set' (#199) a null schedule gets the 'Not set' arm, not the mid-entry prompt
+components/JurisdictionSection.notset.test.tsx :: hours verdict — null schedule reads as 'Not set' (#199) an explicit tbd with residual times shows the same arm — no verdict
+components/JurisdictionSection.notset.test.tsx :: PermitFYI — residual work date under 'Not set' (#199) lead deadlines render '—', not dates computed from a disavowed work date
+components/JurisdictionSection.schedule-overnight.test.tsx :: WorkHoursCard — overnight schedules (#188) overlays an overnight schedule as two band segments, both positive-width
+components/JurisdictionSection.test.tsx :: Zone 3 tiers — real-data rendering (#219-migrated) renders no tier containers when no jurisdiction is selected (no ledger line, no heading)
+components/JurisdictionSection.test.tsx :: Zone 3 tiers — real-data rendering (#219-migrated) Greeley delta panel: the fired Type C arrow-board delta reads in ▲, auto-open
+components/JurisdictionSection.test.tsx :: Zone 3 tiers — real-data rendering (#219-migrated) Loveland hours: the backend violation + exposure read in ⚠; the metered badge rides the Reference card
+components/JurisdictionSection.test.tsx :: Zone 3 tiers — real-data rendering (#219-migrated) Parker trust treatment: conflict footnote renders 9:00–3:30 with both sources
+components/JurisdictionSection.test.tsx :: Zone 3 tiers — real-data rendering (#219-migrated) El Paso permit FYI: formula structure + digital-on-site, all provisional-flagged
+components/JurisdictionSection.test.tsx :: Zone 3 tiers — real-data rendering (#219-migrated) E-470: personnel gates read in ⚠ as obligations; the $50,000/day fiber hazard stays a Reference meter
+components/JurisdictionSection.test.tsx :: Zone 3 tiers — real-data rendering (#219-migrated) Westminster: TCS-authorship gate rendered with its source, in ⚠
+components/ReferenceSections.scan-rows.test.tsx :: scan rows (#224 phase 3) — scanned-lakewood X14: the absent keyless buckets read as one row, in section 3, uncounted
+components/rule-169.test.tsx :: rule 169: Reference's Zone geometry group sits in the Reference tier's body, ahead of the device schedule
+components/rule-169.test.tsx :: the fold-in: the advance row's sign table marks each cell, labels the stacked lines for sight only, keeps the header for screen readers
+lib/design/type-census.test.ts :: #263 type census — globals.css font-sizes every other font-size site is a named exception or a declared-debt row (new size/site fails)
+lib/design/type-census.test.ts :: #263 type census — Tailwind size classes in components/ and app/ every declared Tailwind row still exists
+lib/design/type-census.test.ts :: #263 type census — the exceptions are the ruled set and the pins are the sources' figures CENSUS_PINS equal the figures read from the sources (the README quotes these)

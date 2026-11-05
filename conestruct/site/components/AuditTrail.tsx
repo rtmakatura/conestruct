@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { formulaPairs, type RowDetail } from "@/lib/row-detail";
 import type {
   FlaggerLaneClosureScenario,
   LaneClosureDividedScenario,
@@ -106,7 +106,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // backend derives from site_adjustments.py's rule string.
     rule: "MUTCD § 6N.12 p. 848",
     action:
-      "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
+      `No devices added: the cross-street approach layout isn't generated. See "Not checked yet".`,
   },
   adjacent_interchange: {
     label: "Adjacent interchange (highway ramps)",
@@ -115,7 +115,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // generally, not interchange signing).
     rule: "MUTCD § 6N.16 p. 851",
     action:
-      "No devices added: the per-ramp interchange layout isn't generated. See the pending-verification disclosure.",
+      `No devices added: the per-ramp interchange layout isn't generated. See "Not checked yet".`,
   },
   driveways_present: {
     label: "Driveways present",
@@ -147,7 +147,8 @@ export interface ItemSpec {
   title: string;
   result: string;
   cite: string;
-  body: ReactNode;
+  /** #443 ruling 2: the row's flat detail, as data (lib/row-detail). */
+  detail: RowDetail;
   /** When true, the item renders with dimmed styling (used for the
    *  pending-verification rollup that closes out the audit list). */
   dim?: boolean;
@@ -178,14 +179,14 @@ export function settledData(audit: AuditState): AuditResponse | null {
 
 // The row-level placeholder must distinguish "no answer yet" from
 // "answer refused/failed" (#192's masking rule, applied at row scope).
-function placeholderBody(audit: AuditState) {
-  return (
-    <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-      {audit.state === "error"
+function placeholderDetail(audit: AuditState): RowDetail {
+  return {
+    sentences: [
+      audit.state === "error"
         ? "Values unavailable. The audit for this input didn't succeed. See the notice above."
-        : "Computing…"}
-    </p>
-  );
+        : "Computing…",
+    ],
+  };
 }
 
 // (#219 — the "Verification & audit trail" chip is retired: Zone 3's
@@ -328,34 +329,17 @@ export function flaggerSightDistanceItem(
     title: "Flagger station sight distance",
     result: wireResult(flagger?.sight_distance_result_text, generated),
     cite: citation.cite,
-    body: (
-      <>
-        <p>
-          Each flagger station must be located so approaching drivers have
-          at least the stopping sight distance for the posted speed (MUTCD
-          § 6D.06, which points to Table 6B-2), so they can stop on the
-          open lane.
-        </p>
-        {wireLines(flagger?.sight_distance_formula_text).map((line, i) => (
-          <div className="formula" key={i}>
-            {line}
-          </div>
-        ))}
-        <p>
-          Stations: <strong>{stationsText}</strong>
-          {pilotCarText !== null && (
-            <>
-              {" "}
-              · Pilot car: <strong>{pilotCarText}</strong>
-            </>
-          )}
-        </p>
-        <div className="citation">
-          <span className="check">✓</span>
-          {citation.footer}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: [
+        "Each flagger station must be located so approaching drivers have at least the stopping sight distance for the posted speed (MUTCD § 6D.06, which points to Table 6B-2), so they can stop on the open lane.",
+      ],
+      pairs: [
+        ...formulaPairs(wireLines(flagger?.sight_distance_formula_text)),
+        { label: "Stations", value: stationsText },
+        ...(pilotCarText !== null ? [{ label: "Pilot car", value: pilotCarText }] : []),
+      ],
+      source: citation.footer,
+    },
   };
 }
 
@@ -400,31 +384,23 @@ function buildLaneClosureItems(
       title: "Arrow board placement",
       result: generated ? `${arrowBoards} unit · LEFT arrow` : "—",
       cite: "MUTCD § 6F.61",
-      body: (
-        <>
-          <p>
-            A Type C arrow board is required for lane closures on multi-lane
-            roadways at speeds ≥ 40 mph (MUTCD § 6F.61). Mounted at the
-            upstream start of the merging taper, set to LEFT-arrow mode so
-            drivers in the closed lane merge into the open lane.
-          </p>
-          <p>
-            Truck-mounted attenuator (TMA):{" "}
-            <strong>
-              {scenario.truckMountedAttenuator
-                ? `${tmaCount} unit (recommended)`
-                : "Not deployed"}
-            </strong>
-            {!scenario.truckMountedAttenuator && scenario.speed >= 45 && (
-              <>. CDOT M-630 strongly recommends a TMA at this speed.</>
-            )}
-          </p>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6F.61 · ARROW BOARDS
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          "A Type C arrow board is required for lane closures on multi-lane roadways at speeds ≥ 40 mph (MUTCD § 6F.61). Mounted at the upstream start of the merging taper, set to LEFT-arrow mode so drivers in the closed lane merge into the open lane.",
+          ...(!scenario.truckMountedAttenuator && scenario.speed >= 45
+            ? ["CDOT M-630 strongly recommends a TMA at this speed."]
+            : []),
+        ],
+        pairs: [
+          {
+            label: "Truck-mounted attenuator (TMA)",
+            value: scenario.truckMountedAttenuator
+              ? `${tmaCount} unit (recommended)`
+              : "Not deployed",
+          },
+        ],
+        source: "MUTCD § 6F.61 · ARROW BOARDS",
+      },
     },
     advanceItem(audit, generated, r),
     coloradoItem(audit, "S-630-3"),
@@ -444,68 +420,35 @@ function buildWorkBeyondShoulderItems(
       title: "Signing scope (no devices on roadway)",
       result: generated ? `${signs} sign(s)` : "—",
       cite: "MUTCD § 6G.04",
-      body: (
-        <>
-          <p>
-            Work beyond the shoulder occurs entirely outside the travelway
-            and roadway shoulder. Per MUTCD § 6G.04, only minimal advance
-            signing is required: no taper, no buffer, and no channelizing
-            devices on the road itself.
-          </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Sign</th>
-                <th>Code</th>
-                <th>Used</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Shoulder work</td>
-                <td>W21-5</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>End road work</td>
-                <td>G20-2</td>
-                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6G.04 · WORK OUTSIDE SHOULDER
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          "Work beyond the shoulder occurs entirely outside the travelway and roadway shoulder. Per MUTCD § 6G.04, only minimal advance signing is required: no taper, no buffer, and no channelizing devices on the road itself.",
+        ],
+        list: {
+          noun: { one: "sign", many: "signs" },
+          lines: [
+            { text: "Shoulder work", value: "W21-5" },
+            ...(scenario.duration === "long" ? [{ text: "End road work", value: "G20-2" }] : []),
+          ],
+        },
+        source: "MUTCD § 6G.04 · WORK OUTSIDE SHOULDER",
+      },
     },
     {
       title: "Worker exposure check",
       result: "OFF-ROADWAY",
       cite: "MUTCD § 6D.01",
-      body: (
-        <>
-          <p>
-            Workers operate beyond the roadway shoulder, with the shoulder
-            itself acting as a buffer. No worker-on-pavement exposure;
-            roadway traffic is unaffected.
-          </p>
-          {scenario.speed >= 55 && (
-            <p>
-              <strong>
-                High-speed adjacent traffic ({scenario.speed} mph):
-              </strong>{" "}
-              consider PCMS upstream if work materially affects sight lines
-              or driver attention (chip seal trucks, large equipment, etc.).
-            </p>
-          )}
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6D.01 · WORKER PROTECTION
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          "Workers operate beyond the roadway shoulder, with the shoulder itself acting as a buffer. No worker-on-pavement exposure; roadway traffic is unaffected.",
+          ...(scenario.speed >= 55
+            ? [
+                `High-speed adjacent traffic (${scenario.speed} mph): consider PCMS upstream if work materially affects sight lines or driver attention (chip seal trucks, large equipment, etc.).`,
+              ]
+            : []),
+        ],
+        source: "MUTCD § 6D.01 · WORKER PROTECTION",
+      },
     },
     coloradoItem(audit, "S-630-1"),
     referenceItem(audit, "TA-1", "S-630-1", r("Case 1")),
@@ -528,58 +471,36 @@ function buildMobileOp2LaneItems(
       title: "Mobile operation profile",
       result: generated ? `${totalDevices} devices · moving` : "—",
       cite: "MUTCD § 6G.05",
-      body: (
-        <>
-          <p>
-            Slow-moving operation with no static taper. The shadow vehicle
-            trails the work truck at <strong>{scenario.workLen} ft</strong>;
-            protection moves with the work. Per MUTCD § 6G.05, mobile ops on
-            two-lane roads use a vehicle-mounted W21-1A sign and an optional
-            arrow board on the shadow.
-          </p>
-          <p>
-            Active warning:{" "}
-            <strong>
-              {scenario.arrowBoardOnShadow
-                ? "Arrow board on shadow (caution mode)"
-                : "Vehicle-mounted W21-1A only"}
-            </strong>
-          </p>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6G.05 · MOBILE OPERATIONS
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          `Slow-moving operation with no static taper. The shadow vehicle trails the work truck at ${scenario.workLen} ft; protection moves with the work. Per MUTCD § 6G.05, mobile ops on two-lane roads use a vehicle-mounted W21-1A sign and an optional arrow board on the shadow.`,
+        ],
+        pairs: [
+          {
+            label: "Active warning",
+            value: scenario.arrowBoardOnShadow
+              ? "Arrow board on shadow (caution mode)"
+              : "Vehicle-mounted W21-1A only",
+          },
+        ],
+        source: "MUTCD § 6G.05 · MOBILE OPERATIONS",
+      },
     },
     {
       title: "Shadow vehicle protection",
       result: generated ? `${shadowVehicles} shadow · ${tmaCount} TMA` : "—",
       cite: "MUTCD § 6F.55",
-      body: (
-        <>
-          <p>
-            One shadow vehicle with a truck-mounted attenuator (NCHRP 350
-            / MASH-rated) provides upstream protection. Trailing distance
-            of <strong>{scenario.workLen} ft</strong> gives following
-            traffic a sight cue without losing crash-cushion proximity.
-          </p>
-          {scenario.speed >= 45 && (
-            <p>
-              <strong>
-                High-speed two-lane ({scenario.speed} mph):
-              </strong>{" "}
-              shoulder use for evasive maneuvers may be limited. Keep
-              shadow-to-truck spacing tight (≤ 200 ft) and brief drivers
-              on emergency-stop coordination.
-            </p>
-          )}
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          `One shadow vehicle with a truck-mounted attenuator (NCHRP 350 / MASH-rated) provides upstream protection. Trailing distance of ${scenario.workLen} ft gives following traffic a sight cue without losing crash-cushion proximity.`,
+          ...(scenario.speed >= 45
+            ? [
+                `High-speed two-lane (${scenario.speed} mph): shoulder use for evasive maneuvers may be limited. Keep shadow-to-truck spacing tight (≤ 200 ft) and brief drivers on emergency-stop coordination.`,
+              ]
+            : []),
+        ],
+        source: "MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS",
+      },
     },
     coloradoItem(audit, "S-630-1"),
     referenceItem(audit, "TA-35", "S-630-1", r("Case 4A")),
@@ -600,55 +521,33 @@ function buildMobileOpMultilaneItems(
       title: "Mobile operation profile",
       result: generated ? `${totalDevices} devices · moving` : "—",
       cite: "MUTCD § 6G.06",
-      body: (
-        <>
-          <p>
-            Slow-moving operation on multi-lane carriageway. Shadow vehicle
-            trails the work truck at <strong>{scenario.workLen} ft</strong>{" "}
-            with mandatory TMA + arrow board (LEFT-arrow mode for right-lane
-            mobile op).
-          </p>
-          {scenario.secondTMA && (
-            <p>
-              Second TMA deployed approximately <strong>1000 ft</strong>{" "}
-              upstream of the shadow for additional protection, as CDOT M-630
-              recommends at speeds ≥ 55 mph.
-            </p>
-          )}
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6G.06 · MULTI-LANE MOBILE OPS
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          `Slow-moving operation on multi-lane carriageway. Shadow vehicle trails the work truck at ${scenario.workLen} ft with mandatory TMA + arrow board (LEFT-arrow mode for right-lane mobile op).`,
+          ...(scenario.secondTMA
+            ? [
+                "Second TMA deployed approximately 1000 ft upstream of the shadow for additional protection, as CDOT M-630 recommends at speeds ≥ 55 mph.",
+              ]
+            : []),
+        ],
+        source: "MUTCD § 6G.06 · MULTI-LANE MOBILE OPS",
+      },
     },
     {
       title: "Shadow vehicle + arrow board",
       result: generated ? `${tmaCount} TMA · ${arrowBoards} board` : "—",
       cite: "MUTCD § 6F.55 / § 6F.61",
-      body: (
-        <>
-          <p>
-            Shadow vehicle with NCHRP 350 / MASH-rated TMA provides
-            crash-cushion protection. Arrow board (Type C) on the shadow
-            indicates merge direction at posted distance:{" "}
-            <strong>LEFT</strong> arrow for the right-lane operation.
-          </p>
-          {scenario.speed >= 55 && !scenario.secondTMA && (
-            <p>
-              <strong>
-                ⚠ Speed ≥ 55 mph without upstream second TMA:
-              </strong>{" "}
-              CDOT M-630 strongly recommends a second TMA upstream for
-              high-speed mobile ops to absorb high-energy hits.
-            </p>
-          )}
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          "Shadow vehicle with NCHRP 350 / MASH-rated TMA provides crash-cushion protection. Arrow board (Type C) on the shadow indicates merge direction at posted distance: LEFT arrow for the right-lane operation.",
+          ...(scenario.speed >= 55 && !scenario.secondTMA
+            ? [
+                "⚠ Speed ≥ 55 mph without upstream second TMA: CDOT M-630 strongly recommends a second TMA upstream for high-speed mobile ops to absorb high-energy hits.",
+              ]
+            : []),
+        ],
+        source: "MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS",
+      },
     },
     coloradoItem(audit, "S-630-3"),
     referenceItem(audit, "TA-26", "S-630-3", r("Case 4B")),
@@ -677,11 +576,13 @@ function taperItem(
       title: "Taper length calculation",
       result: "—",
       cite: TAPER_CITATION_FALLBACK.cite,
-      body: placeholderBody(audit),
+      detail: placeholderDetail(audit),
     };
   }
 
-  const taper = data.sections.taper as Record<string, unknown>;
+  // `?? {}` (the tier-sources precedent): search builds every row while the
+  // section is closed, so an absent wire section must draw "—", not throw.
+  const taper = (data.sections.taper ?? {}) as Record<string, unknown>;
   const formulaChoice = taper.formula_choice as string | undefined;
 
   // #286 (R144 Q1): the "L/3"/"L" label, the "×" glyph and which formula
@@ -693,20 +594,11 @@ function taperItem(
     title: "Taper length calculation",
     result: wireResult(taper.result_text, generated),
     cite: citation.cite,
-    body: (
-      <>
-        {formulaChoice && <p>{formulaChoice}</p>}
-        {wireLines(taper.formula_text).map((line, i) => (
-          <div className="formula" key={i}>
-            {line}
-          </div>
-        ))}
-        <div className="citation">
-          <span className="check">✓</span>
-          {citation.footer}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: formulaChoice ? [formulaChoice] : [],
+      pairs: formulaPairs(wireLines(taper.formula_text)),
+      source: citation.footer,
+    },
   };
 }
 
@@ -721,30 +613,24 @@ function bufferItem(
       title: "Buffer space calculation",
       result: "—",
       cite: BUFFER_CITATION_FALLBACK.cite,
-      body: placeholderBody(audit),
+      detail: placeholderDetail(audit),
     };
   }
-  const buffer = data.sections.buffer as Record<string, unknown>;
-  const lookupText = buffer.lookup_text as string;
+  const buffer = (data.sections.buffer ?? {}) as Record<string, unknown>;
+  const lookupText = buffer.lookup_text;
   const citation = sectionCitation(buffer, BUFFER_CITATION_FALLBACK);
   return {
     title: "Buffer space calculation",
     // #286: the "B =" label is the backend's (``result_text``).
     result: wireResult(buffer.result_text, generated),
     cite: citation.cite,
-    body: (
-      <>
-        <p>
-          Buffer space is the longitudinal clear distance between traffic and
-          workers, sized for stopping sight distance at the posted speed.
-        </p>
-        <div className="formula">{lookupText}</div>
-        <div className="citation">
-          <span className="check">✓</span>
-          {citation.footer}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: [
+        "Buffer space is the longitudinal clear distance between traffic and workers, sized for stopping sight distance at the posted speed.",
+      ],
+      pairs: formulaPairs(wireLines([lookupText])),
+      source: citation.footer,
+    },
   };
 }
 
@@ -759,12 +645,12 @@ function spacingItem(
       title: "Channelizing device spacing",
       result: "—",
       cite: SPACING_CITATION_FALLBACK.cite,
-      body: placeholderBody(audit),
+      detail: placeholderDetail(audit),
     };
   }
-  const spacing = data.sections.spacing as Record<string, unknown>;
-  const inTaperText = spacing.in_taper_text as string;
-  const onTangentText = spacing.on_tangent_text as string;
+  const spacing = (data.sections.spacing ?? {}) as Record<string, unknown>;
+  const inTaperText = spacing.in_taper_text;
+  const onTangentText = spacing.on_tangent_text;
   const citation = sectionCitation(spacing, SPACING_CITATION_FALLBACK);
   return {
     title: "Channelizing device spacing",
@@ -774,21 +660,11 @@ function spacingItem(
     // places one) are ``formula_text``.
     result: wireResult(spacing.result_text, generated),
     cite: citation.cite,
-    body: (
-      <>
-        <p>{inTaperText}</p>
-        <p>{onTangentText}</p>
-        {wireLines(spacing.formula_text).map((line, i) => (
-          <div className="formula" key={i}>
-            {line}
-          </div>
-        ))}
-        <div className="citation">
-          <span className="check">✓</span>
-          {citation.footer}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: wireLines([inTaperText, onTangentText]),
+      pairs: formulaPairs(wireLines(spacing.formula_text)),
+      source: citation.footer,
+    },
   };
 }
 
@@ -810,12 +686,12 @@ function advanceItem(
       title: "Advance warning sign set",
       result: "—",
       cite: ADVANCE_CITATION_FALLBACK.cite,
-      body: placeholderBody(audit),
+      detail: placeholderDetail(audit),
     };
   }
-  const advance = data.sections.advance as Record<string, unknown>;
-  const roadTypeText = advance.road_type_text as string;
-  const spacingText = advance.spacing_text as string;
+  const advance = (data.sections.advance ?? {}) as Record<string, unknown>;
+  const roadTypeText = advance.road_type_text;
+  const spacingText = advance.spacing_text;
   const signTable = (advance.sign_table as AdvanceSignRow[]) ?? [];
   // #286 (R144 Q1): the sign count and both citation strings are the
   // backend's; the footer this row used to write was "MUTCD § 6B-1".
@@ -824,49 +700,18 @@ function advanceItem(
     title: "Advance warning sign set",
     result: wireResult(advance.result_text, generated),
     cite: citation.cite,
-    body: (
-      <>
-        <p>{roadTypeText}</p>
-        <p>{spacingText}</p>
-        {/* The fold-in to rule 169's branch (R141's pattern): at the phone
-            width each sign stacks into a block (position and code, then the
-            labelled station and distance), and a code never breaks at any
-            width.  The CSS changes the rows' display, which drops a table's
-            implicit roles in some browsers, so the roles are explicit; the
-            visible labels stand in for the header row, which stays for
-            screen readers, so they are aria-hidden. */}
-        <table className="sign-table" role="table">
-          <thead role="rowgroup">
-            <tr role="row">
-              <th role="columnheader">Position</th>
-              <th role="columnheader">Code</th>
-              <th role="columnheader">Station (ft)</th>
-              <th role="columnheader">Distance from Taper (ft)</th>
-            </tr>
-          </thead>
-          <tbody role="rowgroup">
-            {signTable.map((row, i) => (
-              <tr key={i} role="row">
-                <td role="cell" className="st-pos">{row.Position}</td>
-                <td role="cell" className="st-code">{row.Code}</td>
-                <td role="cell" className="st-sta">
-                  <span className="st-label" aria-hidden="true">Station (ft)</span>
-                  {row["Station (ft)"]}
-                </td>
-                <td role="cell" className="st-dist">
-                  <span className="st-label" aria-hidden="true">From taper (ft)</span>
-                  {row["Distance from Taper (ft)"]}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="citation">
-          <span className="check">✓</span>
-          {citation.footer}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: wireLines([roadTypeText, spacingText]),
+      list: {
+        noun: { one: "sign", many: "signs" },
+        lines: signTable.map((row) => ({
+          text: row.Position,
+          value: row.Code,
+          sub: `Station (ft): ${row["Station (ft)"]} · From taper (ft): ${row["Distance from Taper (ft)"]}`,
+        })),
+      },
+      source: citation.footer,
+    },
   };
 }
 
@@ -896,10 +741,10 @@ export function coloradoItem(
       title: "Colorado requirements (CDOT S-630-1)",
       result: "— checks",
       cite: `CDOT ${cdotSheet}`,
-      body: placeholderBody(audit),
+      detail: placeholderDetail(audit),
     };
   }
-  const colorado = data.sections.colorado as Record<string, unknown>;
+  const colorado = (data.sections.colorado ?? {}) as Record<string, unknown>;
   const checks = (colorado.checks as ColoradoCheck[]) ?? [];
   const infoItems = (colorado.info_items as ColoradoInfoItem[]) ?? [];
   const allPass = colorado.all_pass as boolean;
@@ -917,34 +762,16 @@ export function coloradoItem(
         ? `${failCount} of ${checks.length} FAIL`
         : "CHECKS FAILED",
     cite: `CDOT ${cdotSheet}`,
-    body: (
-      <>
-        <div className="check-list">
-          {checks.map((c, i) => (
-            <CheckRow
-              key={`check-${i}`}
-              label={c.label}
-              detail={c.detail}
-              tone={c.pass ? "pass" : "fail"}
-              tag={c.citation}
-            />
-          ))}
-          {infoItems.map((item, i) => (
-            <CheckRow
-              key={`info-${i}`}
-              label={item.label}
-              detail={item.detail}
-              tone="info"
-              tag={item.citation}
-            />
-          ))}
-        </div>
-        <div className="citation">
-          <span className="check">✓</span>
-          CDOT {cdotSheet} · STANDARD PLAN
-        </div>
-      </>
-    ),
+    detail: {
+      list: {
+        noun: { one: "check", many: "checks" },
+        lines: [
+          ...checks.map((c) => ({ text: `${c.label}: ${c.detail}`, sub: c.citation })),
+          ...infoItems.map((c) => ({ text: `${c.label}: ${c.detail}`, sub: c.citation })),
+        ],
+      },
+      source: `CDOT ${cdotSheet} · STANDARD PLAN`,
+    },
   };
 }
 
@@ -975,50 +802,17 @@ export function referenceItem(
     title: `${ta} · ${cdotSheet} reference`,
     result: caseId,
     cite: `CDOT ${cdotSheet}`,
-    body: (
-      <>
-        <p>
-          Plan matched against MUTCD Typical Application <strong>{ta}</strong>{" "}
-          and CDOT Standard Plan <strong>{cdotSheet}</strong>, CDOT&apos;s
-          standard plan set for temporary traffic control.
-        </p>
-        {narrative && <p>{narrative}</p>}
-        {narrative2 && <p>{narrative2}</p>}
-        {triggerCondition && (
-          <p className="font-mono text-[12px] uppercase tracking-[0.04em] text-[color:var(--ink-on-dark-faint)]">
-            Trigger: &ldquo;{triggerCondition}&rdquo;
-          </p>
-        )}
-        {/* #288 clause 7 / rule 15: these three ↗ links are 12px inline
-            text, so their tappable box was the line box — about 16px,
-            against a 32px floor at 1440 and 44px at 380.  inline-flex +
-            a min-height grows the HIT BOX without moving the text (rule
-            134's idiom).
-            All three render only behind a fold, and one of them behind
-            TWO: this case-reference link lives in an ItemAccordion body
-            inside the ✓ disclosure row, so it takes two clicks to reach.
-            GeneratorShell.hit-targets.test.tsx opens every fold until
-            none are left and then ASSERTS all three are present — an
-            earlier version of that fixture rendered one of the three and
-            the comment here claimed it checked all of them. */}
-        {url ? (
-          <p>
-            <a
-              href={url}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
-            >
-              ↗ Open {cdotSheet} PDF on CDOT.gov
-            </a>
-          </p>
-        ) : (
-          <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-            Loading reference…
-          </p>
-        )}
-      </>
-    ),
+    detail: {
+      sentences: [
+        `Plan matched against MUTCD Typical Application ${ta} and CDOT Standard Plan ${cdotSheet}, CDOT's standard plan set for temporary traffic control.`,
+        ...(narrative ? [narrative] : []),
+        ...(narrative2 ? [narrative2] : []),
+        ...(url ? [] : ["Loading reference…"]),
+      ],
+      pairs: triggerCondition ? [{ label: "Trigger", value: triggerCondition }] : [],
+      links: url ? [{ href: url, label: `↗ Open ${cdotSheet} PDF on CDOT.gov` }] : [],
+      source: `CDOT ${cdotSheet}`,
+    },
   };
 }
 
@@ -1027,7 +821,7 @@ export function referenceItem(
 // reports the condition.  Empty for SHOULDER default scenario in v1.
 // ---------------------------------------------------------------------------
 // Additive backend items — only render when the backend explicitly
-// reports the condition.  (#219: composed per tier by TieredReference;
+// reports the condition.  (#219: composed per tier by lib/reference-sections;
 // the old buildAdditiveItems aggregator is retired.)
 // ---------------------------------------------------------------------------
 
@@ -1073,63 +867,35 @@ export function approachesItem(
     title: "Cross-street approaches",
     result: `${rows.length} leg${rows.length === 1 ? "" : "s"} · ${side}-side work`,
     cite: "MUTCD § 6N.12",
-    body: (
-      <>
-        <p>
-          Intersection on the {side} side of the work zone
-          {alongFt !== null && (
-            <>
-              {" "}
-              (centerline crossing at mainline station{" "}
-              {alongFt.toLocaleString("en-US")} ft)
-            </>
-          )}
-          .
-        </p>
-        {narrative && <p>{narrative}</p>}
-        {rows.map((ap) => (
-          <div key={ap.id}>
-            <p>
-              Approach &lsquo;{ap.id}&rsquo;: {ap.speed_mph} mph,{" "}
-              {ap.road_type}
-              {ap.signalized && (
-                <span className="text-[color:var(--warn)]">
-                  , SIGNALIZED (signal operation review required)
-                </span>
-              )}
-              . {ap.key_text}.
-            </p>
-            {ap.sign_table.length > 0 && (
-              <table>
-                <thead>
-                  <tr>
-                    {APPROACH_SIGN_COLUMNS.map((c) => (
-                      <th key={c}>{c}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {ap.sign_table.map((row, i) => (
-                    <tr key={i}>
-                      {APPROACH_SIGN_COLUMNS.map((c) => (
-                        <td key={c}>{row[c] ?? "—"}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        ))}
-        {/* #323 R153: TA-23's left-turn bay, the backend's sentence (the
-            storage "entered by operator"); absent on every other plan. */}
-        {turnBayText && <p data-testid="turn-bay-text">{turnBayText}</p>}
-        <div className="citation">
-          <span className="check">{nSignalized > 0 ? "⚠" : "✓"}</span>
-          {source || "MUTCD § 6N.12; CDOT S-630-1 SHEET 10"}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: [
+        `Intersection on the ${side} side of the work zone${
+          alongFt !== null
+            ? ` (centerline crossing at mainline station ${alongFt.toLocaleString("en-US")} ft)`
+            : ""
+        }.`,
+        ...(narrative ? [narrative] : []),
+        ...rows.map(
+          (ap) =>
+            `Approach ‘${ap.id}’: ${ap.speed_mph} mph, ${ap.road_type}${
+              ap.signalized ? ", SIGNALIZED (signal operation review required)" : ""
+            }. ${ap.key_text}.`,
+        ),
+        // #323 R153: TA-23's left-turn bay, the backend's sentence (the
+        // storage "entered by operator"); absent on every other plan.
+        ...(turnBayText ? [turnBayText] : []),
+      ],
+      list: {
+        noun: { one: "sign", many: "signs" },
+        lines: rows.flatMap((ap) =>
+          ap.sign_table.map((row) => ({
+            text: `${ap.id}: ${row[APPROACH_SIGN_COLUMNS[0]] ?? "—"}`,
+            sub: `${APPROACH_SIGN_COLUMNS[1]}: ${row[APPROACH_SIGN_COLUMNS[1]] ?? "—"} · ${row[APPROACH_SIGN_COLUMNS[2]] ?? "—"}`,
+          })),
+        ),
+      },
+      source: source || "MUTCD § 6N.12; CDOT S-630-1 SHEET 10",
+    },
   };
 }
 
@@ -1171,15 +937,10 @@ export function finesDoubleItem(
       result: "NOT APPLICABLE",
       cite: "S-630-1 Sheet 12",
       dim: true,
-      body: (
-        <>
-          <p>{reason}</p>
-          <div className="citation">
-            <span className="check">ℹ</span>
-            CDOT S-630-1 SHEET 12 · FINES DOUBLE SIGNING NOTES
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [reason],
+        source: "CDOT S-630-1 SHEET 12 · FINES DOUBLE SIGNING NOTES",
+      },
     };
   }
 
@@ -1210,6 +971,8 @@ export function finesDoubleItem(
   // applicable=true section with no operational_notes array. Shouldn't
   // happen with current code (audit.py always populates the four
   // Sheet 12 rules) but the render path stays safe.
+  const station = (ft: number | undefined) =>
+    ft !== undefined ? Math.round(ft).toLocaleString() : "—";
   const noteCount = notes.length;
   const result =
     noteCount > 0
@@ -1220,85 +983,34 @@ export function finesDoubleItem(
     title: "Fines Double envelope",
     result,
     cite: "S-630-1 Sheet 12",
-    body: (
-      <>
-        <p>
-          Work-zone posted speed is reduced: Fines Double signing
-          applies per CDOT S-630-1 Sheet 12, Fines Double Signing Notes.
-          The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P
-          assemblies at 2,640 ft intervals; the entrance R2-1 posts the
-          reduced limit as drivers enter the zone, and the downstream
-          R2-1 restores posted speed past R2-11.
-        </p>
-        {envelope && (
-          <table>
-            <thead>
-              <tr>
-                <th>Sign</th>
-                <th>Station (ft)</th>
-                <th>Role</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>R2-1</td>
-                <td>{entR21 !== undefined ? Math.round(entR21).toLocaleString() : "—"}</td>
-                <td>{entR21Label ?? "SPEED LIMIT (work-zone posting)"}</td>
-              </tr>
-              <tr>
-                <td>R2-10</td>
-                <td>{r210 !== undefined ? Math.round(r210).toLocaleString() : "—"}</td>
-                <td>BEGIN DOUBLE FINES ZONE (upstream)</td>
-              </tr>
-              <tr>
-                <td>G20-5P / R2-6P</td>
-                <td>—</td>
-                <td>
-                  {nAsm !== undefined ? nAsm : "—"} assembl
-                  {nAsm === 1 ? "y" : "ies"} every 2,640 ft
-                </td>
-              </tr>
-              <tr>
-                <td>R2-11</td>
-                <td>{r211 !== undefined ? Math.round(r211).toLocaleString() : "—"}</td>
-                <td>END DOUBLE FINES ZONE (downstream)</td>
-              </tr>
-              <tr>
-                <td>R2-1</td>
-                <td>{dsR21 !== undefined ? Math.round(dsR21).toLocaleString() : "—"}</td>
-                <td>{dsR21Label ?? "SPEED LIMIT (restoration)"}</td>
-              </tr>
-            </tbody>
-          </table>
-        )}
-        {envLen !== undefined && (
-          <p>
-            Envelope length: <strong>{Math.round(envLen).toLocaleString()} ft</strong>
-          </p>
-        )}
-        {notes.length > 0 && (
-          <>
-            <p>
-              <strong>Sheet 12 operational rules</strong> (field crew):
-            </p>
-            <div className="check-list">
-              {notes.map((n, i) => (
-                <CheckRow
-                  key={`note-${i}`}
-                  label={n.action}
-                  tone="info"
-                  tag={n.citation}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        <div className="citation">
-          <span className="check">✓</span>
-          {citation.toUpperCase()}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: [
+        "Work-zone posted speed is reduced: Fines Double signing applies per CDOT S-630-1 Sheet 12, Fines Double Signing Notes. The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P assemblies at 2,640 ft intervals; the entrance R2-1 posts the reduced limit as drivers enter the zone, and the downstream R2-1 restores posted speed past R2-11.",
+      ],
+      pairs:
+        envLen !== undefined
+          ? [{ label: "Envelope length", value: `${Math.round(envLen).toLocaleString()} ft`, mono: true }]
+          : [],
+      list: {
+        noun: { one: "line", many: "lines" },
+        lines: [
+          ...(envelope
+            ? [
+                { text: `R2-1: ${entR21Label ?? "SPEED LIMIT (work-zone posting)"}`, value: station(entR21) },
+                { text: "R2-10: BEGIN DOUBLE FINES ZONE (upstream)", value: station(r210) },
+                {
+                  text: `G20-5P / R2-6P: ${nAsm !== undefined ? nAsm : "—"} assembl${nAsm === 1 ? "y" : "ies"} every 2,640 ft`,
+                  value: "—",
+                },
+                { text: "R2-11: END DOUBLE FINES ZONE (downstream)", value: station(r211) },
+                { text: `R2-1: ${dsR21Label ?? "SPEED LIMIT (restoration)"}`, value: station(dsR21) },
+              ]
+            : []),
+          ...notes.map((n) => ({ text: n.action, sub: n.citation })),
+        ],
+      },
+      source: citation.toUpperCase(),
+    },
   };
 }
 
@@ -1323,21 +1035,12 @@ export function corridorValidationItem(
       title: "Site corridor validation",
       result: "▲ CHECK UNAVAILABLE",
       cite: "OpenStreetMap",
-      body: (
-        <>
-          <p>
-            OpenStreetMap couldn&apos;t be reached at generation.
-            Road-network warnings weren&apos;t evaluated.
-          </p>
-          <div className="check-list">
-            <CheckRow
-              label="Anchor and bearing agreement with OSM ground truth was not checked. Re-generate to retry."
-              tone="warn"
-              tag="NOT CHECKED"
-            />
-          </div>
-        </>
-      ),
+      detail: {
+        sentences: [
+          "OpenStreetMap couldn't be reached at generation. Road-network warnings weren't evaluated.",
+          "Anchor and bearing agreement with OSM ground truth was not checked. Re-generate to retry.",
+        ],
+      },
     };
   }
   if (warnings.length === 0) return null;
@@ -1345,21 +1048,13 @@ export function corridorValidationItem(
     title: "Site corridor validation",
     result: `⚠ ${warnings.length} warning${warnings.length === 1 ? "" : "s"}`,
     cite: "OpenStreetMap",
-    body: (
-      <>
-        <p>Soft check against OSM. Warnings don&apos;t block plan generation.</p>
-        <div className="check-list">
-          {warnings.map((w, i) => (
-            <CheckRow
-              key={`${w.flag}-${i}`}
-              label={w.message}
-              tone={w.level === "error" ? "fail" : "warn"}
-              tag={w.flag.replace(/_/g, " ").toUpperCase()}
-            />
-          ))}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: ["Soft check against OSM. Warnings don't block plan generation."],
+      list: {
+        noun: { one: "warning", many: "warnings" },
+        lines: warnings.map((w) => ({ text: w.message, sub: w.flag.replace(/_/g, " ").toUpperCase() })),
+      },
+    },
   };
 }
 
@@ -1391,19 +1086,13 @@ export function siteScanNotCheckedItem(
     title: "Site conditions",
     result: "▲ NOT CHECKED",
     cite: "OpenStreetMap",
-    body: (
-      <>
-        <p>{disclosure}</p>
-        <div className="check-list">
-          <CheckRow
-            label="School zones, sidewalks, bicycle facilities, intersections and interchanges along the corridor weren't verified. Site adjustments reflect operator-set flags only. Re-generate to retry the scan."
-            tone="warn"
-            tag="NOT CHECKED"
-          />
-        </div>
-        {facts.length > 0 && <div className="tr-prov mt-1.5">{facts.join(" · ")}</div>}
-      </>
-    ),
+    detail: {
+      sentences: [
+        disclosure,
+        "School zones, sidewalks, bicycle facilities, intersections and interchanges along the corridor weren't verified. Site adjustments reflect operator-set flags only. Re-generate to retry the scan.",
+      ],
+      pairs: facts.length > 0 ? [{ label: "Scan", value: facts.join(" · ") }] : [],
+    },
   };
 }
 
@@ -1429,21 +1118,13 @@ export function geometryValidationItem(
     title: "Geometry validation",
     result: failed ? "✕ FAILED" : "⚠ WARNINGS",
     cite: "MUTCD § 6C",
-    body: (
-      <>
-        <p>{typeof geo.source === "string" ? geo.source : ""}</p>
-        <div className="check-list">
-          {violations.map((v, i) => (
-            <CheckRow
-              key={`${v.rule_id}-${i}`}
-              label={v.message}
-              tone={v.severity === "error" ? "fail" : "warn"}
-              tag={`MUTCD § ${v.mutcd_section}`}
-            />
-          ))}
-        </div>
-      </>
-    ),
+    detail: {
+      sentences: typeof geo.source === "string" && geo.source ? [geo.source] : [],
+      list: {
+        noun: { one: "violation", many: "violations" },
+        lines: violations.map((v) => ({ text: v.message, sub: `MUTCD § ${v.mutcd_section}` })),
+      },
+    },
   };
 }
 
@@ -1462,133 +1143,25 @@ export function pendingVerificationItem(
     result: `${pending.count} reference${pending.count === 1 ? "" : "s"} pending`,
     cite: "PENDING",
     dim: true,
-    body: useItems ? (
-      <ul className="list-none p-0 m-0 space-y-2">
-        {items!.map((item, i) => (
-          <li key={`pending-${i}`}>
-            <p>{item.label}</p>
-            {item.tracking_issue && (
-              <p>
-                <a
-                  href={item.tracking_issue}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
-                >
-                  ↗ Tracking issue ({item.kind.replace(/_/g, " ")})
-                </a>
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <>
-        <p>{pending.note}</p>
-        {pending.tracking_issue && (
-          <p>
-            <a
-              href={pending.tracking_issue}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
-            >
-              ↗ Tracking issue
-            </a>
-          </p>
-        )}
-      </>
-    ),
+    detail: useItems
+      ? {
+          sentences: items!.map((item) => item.label),
+          links: items!.flatMap((item) =>
+            item.tracking_issue
+              ? [
+                  {
+                    href: item.tracking_issue,
+                    label: `↗ Tracking issue (${item.kind.replace(/_/g, " ")})`,
+                  },
+                ]
+              : [],
+          ),
+        }
+      : {
+          sentences: [pending.note],
+          links: pending.tracking_issue
+            ? [{ href: pending.tracking_issue, label: "↗ Tracking issue" }]
+            : [],
+        },
   };
-}
-
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
-
-interface ItemProps {
-  num: string;
-  title: string;
-  result: string;
-  cite: string;
-  open: boolean;
-  onClick: () => void;
-  children: ReactNode;
-  dim?: boolean;
-}
-
-export function AuditItem({
-  num,
-  title,
-  result,
-  cite,
-  open,
-  onClick,
-  children,
-  dim = false,
-}: ItemProps) {
-  return (
-    <div
-      className={`audit-item ${open ? "open" : ""} ${dim ? "opacity-70" : ""}`}
-    >
-      <button type="button" className="audit-head" data-read="" onClick={onClick}>
-        <span className="num">{num}</span>
-        <span className="title">{title}</span>
-        <span className="result">{result}</span>
-        <span className="cite">{cite}</span>
-        <span className="chev">›</span>
-      </button>
-      {open && <div className="audit-body">{children}</div>}
-    </div>
-  );
-}
-
-export function CheckRow({
-  label,
-  detail,
-  tone = "pass",
-  tag = "PASS",
-  evidence,
-  signpost,
-}: {
-  label: string;
-  detail?: string;
-  tone?: "pass" | "warn" | "fail" | "info";
-  tag?: string;
-  /** #224 phase 3 — the s2-arc4 margin evidence ("26 found · nearest
-   *  34.1 ft from anchor · …"), one provenance line under the label,
-   *  its own text node.  Absent ⇒ the row is byte-identical to before. */
-  evidence?: string;
-  /** #246 — a read-only signpost under the row (a jump to the strip's
-   *  correction block; never a write — section 03 discloses only).
-   *  Rendered inside the label cell so the 3-column grid and the #200
-   *  junction rule are untouched.  Absent ⇒ byte-identical row. */
-  signpost?: ReactNode;
-}) {
-  const ckClass = tone === "pass" ? "ck" : `ck ${tone}`;
-  const symbol =
-    tone === "warn"
-      ? "!"
-      : tone === "fail"
-        ? "✕"
-        : tone === "info"
-          ? "ℹ"
-          : "✓";
-  return (
-    <div className="check-list-item">
-      <span className={ckClass}>{symbol}</span>
-      <span className="check-list-lbl">
-        {detail ? (
-          <>
-            <strong>{label}</strong>: {detail}
-          </>
-        ) : (
-          label
-        )}
-        {evidence && <span className="tr-prov block mt-1">{evidence}</span>}
-        {signpost && <span className="block mt-1">{signpost}</span>}
-      </span>
-      <span className="check-list-src">{tag}</span>
-    </div>
-  );
 }

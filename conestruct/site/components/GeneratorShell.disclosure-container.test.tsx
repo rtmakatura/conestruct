@@ -32,7 +32,7 @@ vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
 vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
-vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
 // A detection whose off-grid speed forces the UX-01 snap note — the

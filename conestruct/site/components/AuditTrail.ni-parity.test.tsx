@@ -15,6 +15,7 @@ import type { ReactElement } from "react";
 import { buildScenarioItems } from "./AuditTrail";
 import type { AuditResponse, AuditState } from "../lib/render-types";
 import type { Scenario } from "../lib/scenarios";
+import { renderDetail } from "./detail-test-utils";
 
 const FIXTURE_DIR = join(__dirname, "..", "..", "..", "tests", "fixtures", "tiering");
 
@@ -55,7 +56,7 @@ describe("near_intersection trace parity (#223)", () => {
     expect(items[1].result).toBe(`B = ${fx.audit.summary.buffer_space_ft} ft`);
     expect(items[2].result).toBe(sections.spacing.result_text);
     expect(items[3].result).toBe(sections.advance.result_text);
-    const advanceHtml = renderToStaticMarkup(items[3].body as ReactElement);
+    const advanceHtml = renderDetail(items[3]);
     for (const row of (fx.audit.sections.advance as { sign_table: Array<{ Code: string }> })
       .sign_table) {
       expect(advanceHtml).toContain(row.Code);

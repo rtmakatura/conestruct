@@ -13,6 +13,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { corridorValidationItem } from "./AuditTrail";
+import { DetailOf } from "./detail-test-utils";
 
 afterEach(cleanup);
 
@@ -28,7 +29,7 @@ describe("corridorValidationItem reason split (#213 V5)", () => {
     // Word + glyph (rule 13): ▲ marks degraded detection in the
     // reconciled set; the words carry the verdict.
     expect(item?.result).toBe("▲ CHECK UNAVAILABLE");
-    render(<>{item?.body}</>);
+    render(<DetailOf spec={item} />);
     screen.getByText(/road-network warnings weren't evaluated/i);
     screen.getByText(/NOT CHECKED/);
   });

@@ -26,7 +26,7 @@ vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
-vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
 const PIN = { lat: 39.9936, lng: -105.0897 };

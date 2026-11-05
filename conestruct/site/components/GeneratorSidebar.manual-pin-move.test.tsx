@@ -25,7 +25,7 @@ vi.mock("./OutputCards", () => ({
     </button>
   ),
 }));
-vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 

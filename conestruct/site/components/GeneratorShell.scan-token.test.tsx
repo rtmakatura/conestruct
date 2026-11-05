@@ -34,7 +34,7 @@ vi.mock("./OutputCards", () => ({
     );
   },
 }));
-vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
   GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (

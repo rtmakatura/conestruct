@@ -10,7 +10,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { mountTiered } from "./tiered-test-utils";
+import { mountJurisdiction as mountTiered } from "./reference-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 

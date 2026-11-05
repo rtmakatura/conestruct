@@ -20,7 +20,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { chipNumeral, expectChipLedger, mountTiered } from "./tiered-test-utils";
+import { mountJurisdiction as mountTiered } from "./reference-test-utils";
 import { assignTiers } from "@/lib/tiering";
 import type { HoursEval, JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
@@ -47,17 +47,6 @@ const REFRESH_CUE = "◌ previous answer, refreshing…";
 afterEach(cleanup);
 
 describe("Zone 3 density contract — tiers", () => {
-  // #235-C (P2): the ledger line that restated every chip's count is
-  // gone — the chips are the one voice; their numerals equal assignTiers'
-  // ledger (the same mapping, the lib/tiering pin).
-  it("no ledger line: the chips are the one voice, each numeral equal to assignTiers' ledger", () => {
-    mountTiered(jur("greeley"), SCHEDULE);
-    const model = assignTiers({ jurisdiction: jur("greeley"), audit: null });
-    expectChipLedger(model.ledger);
-    expect(model.ledger.changed).toBeGreaterThan(0); // the ▲ chip carries a real numeral here
-    expect(chipNumeral("Changed this plan")).toBe(model.ledger.changed);
-  });
-
   // #235-C (P5): one heading per zone — the zone's h2 is the shell's; the
   // inner "<name> jurisdiction rules" is the tr-section role, not a
   // heading (F-S3-2: it was a 20px h2, larger than the 17px zone title).

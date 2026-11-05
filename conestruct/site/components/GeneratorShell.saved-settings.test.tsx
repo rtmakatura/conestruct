@@ -13,7 +13,7 @@ import userEvent from "@testing-library/user-event";
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
-vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // The nav's Save, reduced to what PlanSaveButton does on success: hand
 // back the scenario and the settings the body was built from.

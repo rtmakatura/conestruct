@@ -23,6 +23,7 @@ import type {
   FlaggerLaneClosureScenario,
   ShoulderScenario,
 } from "../lib/scenarios";
+import { renderDetail } from "./detail-test-utils";
 
 // V1-Wide Item 1, Q-PLAN-1 (Option B): the AuditTrail renderer iterates
 // pending_verification.items[] so each pending entry surfaces with its
@@ -35,7 +36,7 @@ import type {
 function renderBody(pending: AuditResponse["pending_verification"]): string {
   const spec = pendingVerificationItem(pending);
   if (!spec) throw new Error("pendingVerificationItem returned null");
-  return renderToStaticMarkup(spec.body as ReactElement);
+  return renderDetail(spec);
 }
 
 describe("pendingVerificationItem renderer (Option B items[] iteration)", () => {
@@ -194,7 +195,7 @@ describe("finesDoubleItem renderer", () => {
 
   function renderBody(spec: ReturnType<typeof finesDoubleItem>): string {
     if (!spec) throw new Error("finesDoubleItem returned null");
-    return renderToStaticMarkup(spec.body as ReactElement);
+    return renderDetail(spec);
   }
 
   // --- applicable=true (envelope + notes) -------------------------------
@@ -361,7 +362,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
       data.summary.trigger_condition,
     );
     expect(spec.result).toBe("Case 11: Shoulder closure on divided highway");
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     expect(html).not.toContain("Trigger:");
   });
 
@@ -382,7 +383,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     expect(spec.result).toBe(
       "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
     );
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     expect(html).toContain("Trigger:");
     // Quoted source attribution — verbatim Sheet 14 text inside &ldquo;&rdquo;.
     expect(html).toContain(
@@ -404,7 +405,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
       data.summary.case_id,
       data.summary.trigger_condition,
     );
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     expect(html).toContain("WITHIN 10 FT OF TRAVEL WAY");
   });
 
@@ -424,7 +425,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
       data.summary.trigger_condition,
     );
     expect(spec.result).toContain("Case 11 (reduced work-zone speed)");
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     expect(html).not.toContain("Trigger:");
   });
 });
@@ -491,7 +492,7 @@ describe("referenceItem renderer (UX-19 case narrative)", () => {
       "S-630-1",
       data.summary.case_id,
     );
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     // The closest-analog framing — the exact answer to "which case is
     // this based on, and how closely?"
     expect(html).toContain(
@@ -520,7 +521,7 @@ describe("referenceItem renderer (UX-19 case narrative)", () => {
       "S-630-1",
       data.summary.case_id,
     );
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     // Generic lead-in + narrative + narrative_2 = three <p> ahead of the
     // PDF link paragraph (no trigger here). Assert the two narrative
     // strings land in separate paragraphs, not concatenated into one.
@@ -545,7 +546,7 @@ describe("referenceItem renderer (UX-19 case narrative)", () => {
       "S-630-1",
       "Case 11: Shoulder closure on divided highway",
     );
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     expect(html).toContain(
       "matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway",
     );
@@ -562,7 +563,7 @@ describe("referenceItem renderer (UX-19 case narrative)", () => {
       "S-630-1",
       "Case 11: Shoulder closure on divided highway",
     );
-    const html = renderToStaticMarkup(spec.body as ReactElement);
+    const html = renderDetail(spec);
     expect(html).toContain("Plan matched against MUTCD Typical Application");
     expect(html).not.toContain("undefined");
     expect(html).toContain("Open S-630-1 PDF on CDOT.gov");
@@ -738,7 +739,7 @@ describe("#97 audit-panel citation edition guard", () => {
 
   function itemsHtml(items: ItemSpec[]): string {
     return items
-      .map((it) => `${it.cite} ${renderToStaticMarkup(it.body as ReactElement)}`)
+      .map((it) => `${it.cite} ${renderDetail(it)}`)
       .join("\n");
   }
 
@@ -986,7 +987,7 @@ describe("#96 spacing card downstream-taper line", () => {
     const items = buildShoulderItems(dummyShoulder, state, true, identityR);
     const spec = items.find((it) => it.title === "Channelizing device spacing");
     expect(spec).toBeDefined();
-    return renderToStaticMarkup(spec!.body as ReactElement);
+    return renderDetail(spec!);
   }
 
   it("renders the downstream_count_text line when the backend sends it", () => {
@@ -1057,7 +1058,7 @@ describe("taper derivation text renders as received (PR A sentinel)", () => {
     const items = buildShoulderItems(dummyShoulder, audit, true, String);
     const taperSpec = items[0];
     expect(taperSpec.title).toBe("Taper length calculation");
-    const html = renderToStaticMarkup(taperSpec.body as ReactElement);
+    const html = renderDetail(taperSpec);
     expect(html).toContain("220 ft");
     expect(html).not.toContain("999 ft");
     expect(taperSpec.result).toBe("L/3 = 220 ft");
@@ -1086,7 +1087,7 @@ describe("taper derivation text renders as received (PR A sentinel)", () => {
       formula_text: ["L = 12 x 55 = 660 ft", "Required: L = 660 ft"],
     });
     const items = buildShoulderItems(dummyShoulder, audit, true, String);
-    const html = renderToStaticMarkup(items[0].body as ReactElement);
+    const html = renderDetail(items[0]);
     expect(html).toContain("12 x 55");
     expect(html).toContain("Required: L = 660 ft");
   });
@@ -1146,10 +1147,10 @@ describe("taper derivation text renders as received (PR A sentinel)", () => {
       String,
     )[3];
     expect(sent.result).toBe("9 signs");
-    expect(renderToStaticMarkup(sent.body as ReactElement)).toContain("SENTINEL-ADVANCE-FOOTER");
+    expect(renderDetail(sent)).toContain("SENTINEL-ADVANCE-FOOTER");
     // Field absent (deploy window): the corrected fallback, never "§ 6B-1".
     const fallback = buildShoulderItems(dummyShoulder, withAdvance({ sign_table: [] }), true, String)[3];
-    const html = renderToStaticMarkup(fallback.body as ReactElement);
+    const html = renderDetail(fallback);
     expect(fallback.cite).toBe("MUTCD TABLE 6B-1");
     expect(html).toContain("MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING");
     expect(html).not.toContain("§ 6B-1");
@@ -1271,7 +1272,7 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
     const item = flaggerSightDistanceItem(data, FLAGGER, true, r);
     expect(item?.result).toBe("777 ft");
     expect(item?.cite).toBe("MUTCD § 6D.06");
-    const html = renderToStaticMarkup(item!.body as ReactElement);
+    const html = renderDetail(item!);
     expect(html).toContain("777");
     expect(html).toContain("SSD @ 99 mph = 777 ft");
     expect(html).not.toContain("SSD @ 45");
@@ -1292,9 +1293,7 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
         pilot_car_text: "1 vehicle",
       },
     });
-    const html = renderToStaticMarkup(
-      flaggerSightDistanceItem(data, FLAGGER, true, r)!.body as ReactElement,
-    );
+    const html = renderDetail(flaggerSightDistanceItem(data, FLAGGER, true, r)!);
     expect(html).toContain("Stations: <strong>3 AFAD</strong>");
     expect(html).toContain("Pilot car: <strong>1 vehicle</strong>");
     expect(html).not.toContain("flagger station(s)");
@@ -1302,17 +1301,13 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
 
   it("#319: no station field (an older backend) or not generated → —, never a count", () => {
     const data = auditWith({ flagger: { sight_distance_ft: 360 } });
-    const absent = renderToStaticMarkup(
-      flaggerSightDistanceItem(data, FLAGGER, true, r)!.body as ReactElement,
-    );
+    const absent = renderDetail(flaggerSightDistanceItem(data, FLAGGER, true, r)!);
     expect(absent).toContain("Stations: <strong>—</strong>");
     expect(absent).not.toContain("Pilot car");
     const withField = auditWith({
       flagger: { sight_distance_ft: 360, stations_text: "2 flagger station(s)" },
     });
-    const pre = renderToStaticMarkup(
-      flaggerSightDistanceItem(withField, FLAGGER, false, r)!.body as ReactElement,
-    );
+    const pre = renderDetail(flaggerSightDistanceItem(withField, FLAGGER, false, r)!);
     expect(pre).toContain("Stations: <strong>—</strong>");
   });
 
@@ -1338,7 +1333,7 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
     const data = auditWith({ flagger: { sight_distance_ft: 360 } });
     const item = flaggerSightDistanceItem(data, FLAGGER, true, r);
     expect(item?.cite).toBe("MUTCD § 6D.06");
-    const html = renderToStaticMarkup(item!.body as ReactElement);
+    const html = renderDetail(item!);
     expect(html).not.toContain("6E.06");
   });
 
@@ -1434,7 +1429,7 @@ describe("arc12 coda — expanded-body chips cite the standard plan, not the Sup
       pending_verification: { count: 0, note: "", tracking_issue: null },
     } as unknown as AuditResponse;
     const item = coloradoItem({ state: "ready", data: audit }, "S-630-1");
-    return renderToStaticMarkup(item.body as ReactElement);
+    return renderDetail(item);
   }
 
   it("Colorado body footer chip reads 'CDOT S-630-1 · STANDARD PLAN'", () => {
@@ -1464,7 +1459,7 @@ describe("arc12 coda — expanded-body chips cite the standard plan, not the Sup
       "S-630-1",
       "Case 11",
     );
-    const html = renderToStaticMarkup(item.body as ReactElement);
+    const html = renderDetail(item);
     expect(html).toContain("standard plan set for temporary traffic control");
     expect(html).not.toMatch(/colorado supplement/i);
   });

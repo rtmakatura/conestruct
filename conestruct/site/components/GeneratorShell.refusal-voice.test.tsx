@@ -32,7 +32,7 @@ import { PINNED_SHOULDER } from "./test-fixtures";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
 import type { FlaggerLaneClosureScenario } from "@/lib/scenarios";
 import { openWhat } from "./__fixtures__/band-helpers";
-import { TieredReference } from "./TieredReference";
+import { ReferenceSections } from "./ReferenceSections";
 
 // The backend's #86 gate message, verbatim (render_api.py
 // _ensure_lane_eligible) — the text that must NOT render when the
@@ -50,7 +50,7 @@ const FLOOR_400 =
   "(CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' annotation). Increase lane " +
   "width to at least 11 ft, or verify the scenario is not actually on a freeway.";
 
-// The audit trail panel's own declined line (TieredReference).  Asserted
+// The audit trail panel's own declined line (ReferenceSections).  Asserted
 // ONCE where the panel renders it (the last test below), so the zero-count
 // pins in the two refusal tests test a string the product can render.
 const DECLINED_LINE =
@@ -242,9 +242,10 @@ describe("one refusal, one voice (#180)", () => {
     // IS on screen (post-generate, the refusal 400), its declined line is
     // the pointer, once, and it never quotes the refusal or offers Retry.
     render(
-      <TieredReference
+      <ReferenceSections
         jurisdiction={null}
         jurisdictionLoading={false}
+        revalidating={false}
         streetClass={null}
         schedule={null}
         scenario={PINNED_SHOULDER}
@@ -253,6 +254,10 @@ describe("one refusal, one voice (#180)", () => {
         generated={true}
         showAudit={true}
         breakdown={{ state: "loading" }}
+        checkedCount={null}
+        pendingCount={null}
+        cited={false}
+        referenceDefaultOpen={true}
       />,
     );
     expect(occurrences(DECLINED_LINE)).toBe(1);
