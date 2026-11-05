@@ -18,6 +18,8 @@ Local `next dev` on the issue-440 worktree (port 3440), with the local backend (
 | axe on the WHERE band at 01/03/07/10 | 0 violations | 0 violations |
 | New controls at least 44 x 44 px | all | all |
 
+**X23 (after the PDF trace):** the cross-street question's second line now reads "The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go." (`walk.json` `01-armed` `card.why` at both widths; crops `*-02-01-armed.png`). The trace behind it is in rulings.md X23: the signs are left off page 1's drawing, but the summary, device XLSX, quote and crew narrative all count them.
+
 Re-cropped this session: `*-05-03-marked.png`, `*-06-aerial-marked.png`, `*-09-10-side.png`, `*-10-11-side-answered.png` (and the rest of the set).
 
 **The stub's geometry (session 3).** The live route extends a candidate's own-way geometry along the road's next ways (`route.ts` `trimChain`). The session-2 stub sent way `1547338997` alone, and that way ends at the work-start snap. So the Franklin tap clamped onto the line's end: it read "at where the work starts" and the plan was declined. The stub now sends the westbound chain the live route would send (`1547338997, 1547338998, 223788857, 600545918, 791808880`). The clamp itself is real when the live extension fails, and it predates #440: filed as #441.

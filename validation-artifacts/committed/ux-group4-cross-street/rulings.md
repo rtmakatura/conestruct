@@ -48,3 +48,20 @@ Out of scope (the prompt): the rest of the picker (#301 pieces beyond the cross-
 > Remove the aerial caption "Say which side is occupied to lay out the work" (same kind as ruling 7's removed overlay; the card asks the question).
 
 - **X22, the side caption leaves the aerial (R145 self-ruled on Ryan's instruction above).** `BandAerial` no longer writes `SIDE_BLOCKER` as its note at the pin stage. The aerial shows the pin with no caption, and the CONFIRM card's side question does the asking. Only the aerial loses the sentence: `SIDE_BLOCKER` stays the rail blocker (`lib/scenarios/rail.ts:154`), Generate's `cta-reason`, the move ledger's subline and the picker's sentence. Rule 5, stated: on the side-owed pin picture, `band-aerial-note` goes from that sentence to absent. The wait, failed and refused notes stay as they are. `forced` (used only by the removed line) and the import go with it.
+
+## Ryan's second session-3 instruction (2026-11-04), verbatim, and the call on it
+
+> Before ship: the card line "The plan lays out signs on the cross street too." conflicts with page 1 ("NOT DRAWN") and the "Not checked yet" row (P2, Rule 10). Trace whether cross-street signs reach anything the user gets (device list, counts, quote). If yes: "The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go." If no: "The sheet points to CDOT's standard drawing for the cross street." Record as a call, re-crop that step, push, CI, then the result: line.
+
+- **X23, the cross-street question's second line (supersedes X1's "the second sentence holds").** The trace answers **yes**:
+  - The generator places a W20-1, R2-10 and R2-11 on every cross-street approach, tagged with that approach's `approach_id` (`src/generation/layout.py:2219-2257`).
+  - Only page 1's drawing drops them (`src/rendering/plan_sheet.py:4993` keeps `approach_id == "mainline"`).
+  - Every count reads the unfiltered placements through one function, `aggregate_device_rows_with_deltas` (`src/rules/jurisdiction.py:911`):
+    - page 1's TRAFFIC CONTROL DEVICE SUMMARY (`plan_sheet.py:3529`)
+    - the device XLSX (`src/export/device_list.py:247`)
+    - the quote (`src/export/quote_generator.py:775`, fed by `_run_quote` → `_placements_for`, `src/api/render_api.py:2036`)
+    - the crew narrative (`src/narrative/crew_narrative.py:705`)
+  - #372 pins it: page 1's summary equals the XLSX, and two approaches count more W20-1/R2-10/R2-11 than one (`tests/test_ni_summary_counts_cross_street.py:118-146`).
+  - The session-3 PDF agrees: W20-1, R2-10 and R2-11 at ×4 each on page 1.
+
+  So `CROSS_WHY` (`conestruct/site/components/bands/WhereQuestions.tsx`) reads: "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go." Rule 5: only that string and its test pin change.

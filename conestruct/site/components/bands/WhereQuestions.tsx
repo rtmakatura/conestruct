@@ -41,11 +41,13 @@ export const KIND_QUESTION = "What kind of work is it?";
 export const SIDE_WHY =
   "The plan draws the work on this edge and lays the signs out ahead of the traffic beside it.";
 export const CONFIRM_LABEL = "Confirm and lay out the plan";
-/** #440 ruling 1.  X1: the second sentence holds — the layout lays an
- *  advance warning set on every cross-street leg (layout.py:1953). */
+/** #440 ruling 1.  X23 (Ryan, 2026-11-04; supersedes X1's second
+ *  sentence): page 1 doesn't draw the cross street (#117 Option C,
+ *  plan_sheet.py:4993), but every count does carry its signs (page 1's
+ *  summary, the device XLSX, the quote: #372), so the line says both. */
 export const CROSS_QUESTION = "Which intersection is the work near?";
 export const CROSS_WHY =
-  "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.";
+  "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.";
 /** #440 ruling 6. */
 export const CROSS_FINDING = "Finding the street name…";
 /** #440 X8. */
