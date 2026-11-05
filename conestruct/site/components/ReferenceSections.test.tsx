@@ -251,6 +251,45 @@ describe("Rule 10: a failed audit", () => {
     expect(sectionEl("pending")).toBeNull();
   });
 
+  describe("the device schedule's failures (#182, #184, #306)", () => {
+    const failed = async (b: Record<string, unknown>) => {
+      const user = userEvent.setup();
+      mountFixture(fx, { breakdown: { state: "error", ...b } as unknown as DeviceBreakdownState });
+      await openSection(user, "reference");
+      return rowOf("reference", "Device schedule")!;
+    };
+    const retry = (row: HTMLElement) => within(row).queryByRole("button", { name: "Retry" });
+
+    it("#184: a 400 draws the declined line, no Retry, and doesn't quote the refusal", async () => {
+      const row = await failed({ message: "REFUSAL-TEXT", httpStatus: 400 });
+      expect(row.textContent).toContain("unavailable: generation declined");
+      expect(row.textContent).toContain("Device schedule unavailable while generation is declined.");
+      expect(row.textContent).not.toContain("REFUSAL-TEXT");
+      expect(retry(row)).toBeNull();
+    });
+
+    it("#182: a 429 reads paused and keeps Retry; it never says failed", async () => {
+      const row = await failed({ message: "slow down", httpStatus: 429 });
+      expect(row.textContent).toContain("paused: retry inside");
+      expect(row.textContent).toContain("too many updates");
+      expect(row.textContent).not.toMatch(/failed/i);
+      expect(retry(row)).not.toBeNull();
+    });
+
+    it("a network error with no status keeps Retry", async () => {
+      const row = await failed({ message: "network down" });
+      expect(row.textContent).toContain("Device breakdown failed: network down");
+      expect(retry(row)).not.toBeNull();
+    });
+
+    it("#306: a failure from the audit points at its Retry, adds no second one, and doesn't double a full stop", async () => {
+      const row = await failed({ message: "It broke.", fromAudit: true });
+      expect(row.textContent).toContain("Device breakdown failed: It broke. Retry from the audit trail.");
+      expect(row.textContent).not.toContain("..");
+      expect(retry(row)).toBeNull();
+    });
+  });
+
   it("a failed device schedule starts open with its reason (X2)", async () => {
     const user = userEvent.setup();
     mountFixture(fx, { breakdown: { state: "error", message: "boom", httpStatus: 500 } as DeviceBreakdownState });

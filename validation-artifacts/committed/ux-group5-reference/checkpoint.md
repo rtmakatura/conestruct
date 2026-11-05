@@ -46,7 +46,7 @@ Row count and ledger: every checked row is one `assignTiers` fact (`lib/tiering.
 - Search box and its states.
 - All fee lines draw (X16).
 - Sidewalks and other site adjustments group under ALONG THE ROAD (X13).
-- "See the pending-verification disclosure." reworded (X22).
+- ~~"See the pending-verification disclosure." reworded (X22).~~ Withdrawn: it's backend wire text.
 
 **Code that retires:** `ResultsDisclosures.tsx`, `ReferenceDisclosure.tsx`, `TieredReference.tsx`, `ReferenceChip` usage in these sections, `HazardChip`, `PermitFYI`, `WorkHoursCard`'s chip shell (its bars are extracted), `DeviceBreakdown`'s chip shell and `ItemAccordion`/`AuditItem`, with their now-dead CSS.
 
@@ -61,8 +61,8 @@ Row count and ledger: every checked row is one `assignTiers` fact (`lib/tiering.
 ### Amended before the second commit (Rule 5)
 
 - **Dead CSS doesn't retire on this branch.** `refchip`, `chip-sum`, `audit-item`, `audit-head`, `check-list`, `sign-table` and `device-table` have no component left, but they share selectors with live rules and the census and `check-list-grid` / `rule-169` read them. A follow-up issue removes them. The prediction's "with their now-dead CSS" is withdrawn.
-- **Also retired, not predicted by name:** `ReferenceChip`, `ZoneGeometryGroup`, `lib/reference-summary` (X26), `DeltaRowView`, `HoursVerdictBlock`, `ConflictFootnote`, `ProvisionalBadge`, `FactRows`, `DeviceBreakdown` the component (its types stay).
-- **Tests retired with them:** `DeviceBreakdown.test`, `DeviceBreakdown.phone.test`, `reference-summary.test`; their claims that still hold moved to `ReferenceSections.test`. `JurisdictionSection.test`, `.density`, `.notset`, `.boundaries`, `.schedule-overnight`, `.per-direction-388`, `GeneratorShell.needs-you`, `.scan-refusal`, `.hit-targets`, `check-list-grid`, `lib/design/type-census` change too; the checkpoint named only some. Census pins: CSS 186 -> 198, tsx sites 57 -> 47, uses 199 -> 134, files 25 -> 22; the scanner's floor 50 -> 40.
+- **Also retired, not predicted by name:** `ReferenceChip`, `ZoneGeometryGroup`, `DeltaRowView`, `HoursVerdictBlock`, `ConflictFootnote`, `ProvisionalBadge`, `FactRows`, `DeviceBreakdown` the component (its types stay).
+- **Tests retired with them:** `DeviceBreakdown.test`, `DeviceBreakdown.phone.test`; their claims that still hold moved to `ReferenceSections.test`. `JurisdictionSection.test`, `.density`, `.notset`, `.boundaries`, `.schedule-overnight`, `.per-direction-388`, `GeneratorShell.needs-you`, `.scan-refusal`, `.hit-targets`, `check-list-grid`, `lib/design/type-census` change too; the checkpoint named only some. Census pins: CSS 186 -> 198, tsx sites 57 -> 47, uses 199 -> 134, files 25 -> 22; the scanner's floor 50 -> 40.
 - **Behaviour added by the parity pass:** X25 and X27.
 
 ## 5. P1–P22 on the changed surfaces

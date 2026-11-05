@@ -23,6 +23,7 @@ import {
   type StreetClass,
   type WorkScheduleInput,
 } from "@/lib/jurisdiction";
+import { referenceSummary } from "@/lib/reference-summary";
 import type { SiteAdjustmentRecord } from "@/lib/render-types";
 import type { RowDetail } from "@/lib/row-detail";
 import { resultValue } from "@/lib/row-detail";
@@ -705,6 +706,9 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
     name: jur ? `${jur.name} rules and site facts` : "Site facts",
     summary: "For reference, never blocks the plan",
     intro: [
+      // §8.31 (hand-check, 2026-09-22): which jurisdiction, which street class,
+      // which spec chain.  Ruling 3 took the header's summary, so they lead the body.
+      referenceSummary({ jurisdiction: jur, streetClass: i.streetClass }),
       ...(i.jurisdictionLoading ? ["Loading jurisdiction rules…"] : []),
       ...(jur?.provisional ? ["Contains provisional facts."] : []),
     ],

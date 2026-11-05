@@ -200,6 +200,10 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     // S8.
     expect(head.getAttribute("aria-expanded")).toBe("true");
     expect(document.querySelector("[data-section=reference] .rs-body")).not.toBeNull();
+    // §8.31: the three facts lead the opened section (Rule 14: unset reads "Not set").
+    expect(document.querySelector("[data-section=reference] .rs-intro")?.textContent).toContain(
+      "Not set · Not set · MUTCD 11th + CO Suppl.",
+    );
     expect(document.querySelectorAll(".ny-item").length).toBe(before);
   });
 

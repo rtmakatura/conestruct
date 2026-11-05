@@ -106,7 +106,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // backend derives from site_adjustments.py's rule string.
     rule: "MUTCD § 6N.12 p. 848",
     action:
-      `No devices added: the cross-street approach layout isn't generated. See "Not checked yet".`,
+      "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
   },
   adjacent_interchange: {
     label: "Adjacent interchange (highway ramps)",
@@ -115,7 +115,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // generally, not interchange signing).
     rule: "MUTCD § 6N.16 p. 851",
     action:
-      `No devices added: the per-ramp interchange layout isn't generated. See "Not checked yet".`,
+      "No devices added: the per-ramp interchange layout isn't generated. See the pending-verification disclosure.",
   },
   driveways_present: {
     label: "Driveways present",

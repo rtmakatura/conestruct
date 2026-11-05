@@ -1,0 +1,6 @@
+﻿FAILED tests/test_site_adjustment_detail_mirror.py::test_action_is_byte_identical_in_the_tsx[adjacent_intersection]
+FAILED tests/test_site_adjustment_detail_mirror.py::test_action_is_byte_identical_in_the_tsx[adjacent_interchange]
+FAILED tests/test_site_adjustment_detail_mirror.py::test_rule_chip_matches_the_audit_citation[adjacent_intersection]
+FAILED tests/test_site_adjustment_detail_mirror.py::test_rule_chip_matches_the_audit_citation[adjacent_interchange]
+4 failed, 3835 passed, 3 skipped in 431.45s (0:07:11)
+All four are real (X22 broke the mirror), not flakes. X22 withdrawn; the mirror suite is re-run below.
