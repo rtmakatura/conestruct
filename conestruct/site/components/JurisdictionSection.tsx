@@ -44,28 +44,6 @@ import {
 // Shared bits
 // ---------------------------------------------------------------------------
 
-function SourceLine({ source }: { source: AppliedDelta["source"] }) {
-  return (
-    <div className="font-mono text-[10px] tracking-[0.02em] text-[color:var(--ink-faint)] mt-1">
-      <span aria-hidden>✓ </span>
-      {source.doc}
-      {source.section ? ` · §${source.section}` : ""}
-      {source.date ? ` · ${source.date}` : ""}
-      {source.status !== "verified" && (
-        <span className="uppercase"> · {source.status}</span>
-      )}
-    </div>
-  );
-}
-
-export function ProvisionalBadge({ label = "Provisional" }: { label?: string }) {
-  return (
-    <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-1 border border-[color:var(--warn)] text-[color:var(--warn)]">
-      <span aria-hidden>◐</span> {label}
-    </span>
-  );
-}
-
 // ---------------------------------------------------------------------------
 // 1 · The evidence behind the two guesses (R108)
 // ---------------------------------------------------------------------------

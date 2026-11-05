@@ -121,8 +121,12 @@ function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function docLine(jurName: string, s: { doc: string; section?: string }): string {
-  return `${jurName} · ${s.doc}${s.section ? ` §${s.section}` : ""}`;
+function docLine(
+  jurName: string,
+  s: { doc: string; section?: string | null; date?: string | null; status?: string },
+): string {
+  const status = s.status && s.status !== "verified" ? ` · ${s.status}` : "";
+  return `${jurName} · ${s.doc}${s.section ? ` §${s.section}` : ""}${s.date ? ` · ${s.date}` : ""}${status}`;
 }
 
 function withStatus(status: Parameters<typeof statusWords>[0], line: string): string {

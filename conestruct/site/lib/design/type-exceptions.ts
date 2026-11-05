@@ -641,8 +641,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — jurisdiction section (Tailwind literals beside the .jbar rules)",
     css: [],
     tsx: [
-      { file: "components/JurisdictionSection.tsx", cls: "text-[10px]", count: 2 },
       { file: "components/JurisdictionSection.tsx", cls: "text-[11px]", count: 1 },
+      { file: "components/JurisdictionSection.tsx", cls: "text-[8px]", count: 1 },
       { file: "components/JurisdictionSection.tsx", cls: "text-[9px]", count: 3 }, // #443: was 6, the cards left
     ],
   },
@@ -839,7 +839,7 @@ export const CENSUS_PINS = {
   // coming-soon-gate C-Q8: the six legal-page sites leave (terms and
   // privacy, 36/15/11 px each); the wordmark's site moves AppNav ->
   // Wordmark (one out, one in).  92 -> 86.
-  tsxSites: 48, // #443: -9, TieredReference, DeviceBreakdown's shell and JurisdictionSection's cards (57 -> 48); // #239: -29, the archived landing's nine components deleted (86 -> 57)
+  tsxSites: 47, // #443: -10, TieredReference, DeviceBreakdown's shell and JurisdictionSection's cards (57 -> 47); // #239: -29, the archived landing's nine components deleted (86 -> 57)
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -857,6 +857,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 136, // #443: -63, the same; // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxUses: 134, // #443: -65, the same; // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
   tsxFiles: 22, // #443: -3 (25 -> 22); // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;
