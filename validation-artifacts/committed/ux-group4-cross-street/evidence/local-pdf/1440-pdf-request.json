@@ -1,0 +1,553 @@
+{
+ "scenario": {
+  "kind": "near_intersection",
+  "meta": {
+   "project": "",
+   "address": "1550 E Colfax Ave, Denver",
+   "lat": 39.73997,
+   "lng": -104.969281,
+   "pinModel": "work_start",
+   "confirmedRoad": {
+    "candidate": {
+     "way_id": "1547338997",
+     "highway_class": "primary",
+     "name": "East Colfax Avenue",
+     "ref": "I 70 BUS;US 40;US 287",
+     "bearing": 269.86,
+     "snap_distance_m": 12.7,
+     "snapped_lat": 39.7400504,
+     "snapped_lng": -104.9691757,
+     "signal_distance_m": null,
+     "tags": {
+      "oneway": "yes",
+      "maxspeed": "30 mph",
+      "lanes": "2",
+      "lanes_forward": null,
+      "lanes_backward": null,
+      "lanes_both_ways": null,
+      "turn_lanes": null,
+      "turn_lanes_forward": null,
+      "turn_lanes_backward": null
+     },
+     "geometry": [
+      [
+       39.7401971,
+       -104.9419158
+      ],
+      [
+       39.7401985,
+       -104.9429103
+      ],
+      [
+       39.7401987,
+       -104.9430574
+      ],
+      [
+       39.7401936,
+       -104.9438938
+      ],
+      [
+       39.740194,
+       -104.9439988
+      ],
+      [
+       39.7401947,
+       -104.9442189
+      ],
+      [
+       39.7401935,
+       -104.9443086
+      ],
+      [
+       39.7401947,
+       -104.9453683
+      ],
+      [
+       39.7401952,
+       -104.9458364
+      ],
+      [
+       39.740196,
+       -104.9459515
+      ],
+      [
+       39.7401953,
+       -104.9460986
+      ],
+      [
+       39.7401995,
+       -104.9465258
+      ],
+      [
+       39.7401958,
+       -104.9471129
+      ],
+      [
+       39.7402049,
+       -104.9476981
+      ],
+      [
+       39.7402051,
+       -104.948267
+      ],
+      [
+       39.7402058,
+       -104.9483216
+      ],
+      [
+       39.7402061,
+       -104.9483783
+      ],
+      [
+       39.7402068,
+       -104.9484983
+      ],
+      [
+       39.7402051,
+       -104.9488465
+      ],
+      [
+       39.7402084,
+       -104.9494209
+      ],
+      [
+       39.7402119,
+       -104.9499664
+      ],
+      [
+       39.7402131,
+       -104.9500116
+      ],
+      [
+       39.7402137,
+       -104.9500748
+      ],
+      [
+       39.7402163,
+       -104.9502179
+      ],
+      [
+       39.7402159,
+       -104.9504706
+      ],
+      [
+       39.7402159,
+       -104.9507152
+      ],
+      [
+       39.7402203,
+       -104.9512827
+      ],
+      [
+       39.7402245,
+       -104.952441
+      ],
+      [
+       39.7402229,
+       -104.9527741
+      ],
+      [
+       39.7402229,
+       -104.9528073
+      ],
+      [
+       39.7402228,
+       -104.9528437
+      ],
+      [
+       39.7402244,
+       -104.9530089
+      ],
+      [
+       39.740225,
+       -104.9535311
+      ],
+      [
+       39.7402256,
+       -104.9536065
+      ],
+      [
+       39.7402285,
+       -104.9541837
+      ],
+      [
+       39.7402316,
+       -104.954781
+      ],
+      [
+       39.7402342,
+       -104.9561945
+      ],
+      [
+       39.7402366,
+       -104.9563057
+      ],
+      [
+       39.7402332,
+       -104.9564391
+      ],
+      [
+       39.7402384,
+       -104.9572787
+      ],
+      [
+       39.7402387,
+       -104.9574031
+      ],
+      [
+       39.7402394,
+       -104.9575269
+      ],
+      [
+       39.7402411,
+       -104.958062
+      ],
+      [
+       39.7402348,
+       -104.9582251
+      ],
+      [
+       39.7402159,
+       -104.9584151
+      ],
+      [
+       39.7401738,
+       -104.9586898
+      ],
+      [
+       39.740153,
+       -104.9587967
+      ],
+      [
+       39.740141,
+       -104.9589031
+      ],
+      [
+       39.7400773,
+       -104.9592793
+      ],
+      [
+       39.7400606,
+       -104.9594255
+      ],
+      [
+       39.740042,
+       -104.959648
+      ],
+      [
+       39.7400412,
+       -104.9596621
+      ],
+      [
+       39.7400395,
+       -104.9596926
+      ],
+      [
+       39.7400392,
+       -104.9597835
+      ],
+      [
+       39.7400383,
+       -104.9598916
+      ],
+      [
+       39.7400429,
+       -104.9601969
+      ],
+      [
+       39.7400466,
+       -104.9603993
+      ],
+      [
+       39.7400463,
+       -104.9605426
+      ],
+      [
+       39.7400483,
+       -104.9609187
+      ],
+      [
+       39.7400488,
+       -104.9610194
+      ],
+      [
+       39.7400491,
+       -104.961145
+      ],
+      [
+       39.7400541,
+       -104.9614786
+      ],
+      [
+       39.7400535,
+       -104.9616357
+      ],
+      [
+       39.7400553,
+       -104.9621487
+      ],
+      [
+       39.7400593,
+       -104.9622534
+      ],
+      [
+       39.7400584,
+       -104.9623716
+      ],
+      [
+       39.74006,
+       -104.9628771
+      ],
+      [
+       39.7400631,
+       -104.9633566
+      ],
+      [
+       39.740064,
+       -104.963483
+      ],
+      [
+       39.7400653,
+       -104.9635947
+      ],
+      [
+       39.740069,
+       -104.9638763
+      ],
+      [
+       39.7400686,
+       -104.9641276
+      ],
+      [
+       39.7400711,
+       -104.9643426
+      ],
+      [
+       39.7400708,
+       -104.9646491
+      ],
+      [
+       39.7400708,
+       -104.9647725
+      ],
+      [
+       39.7400733,
+       -104.9648967
+      ],
+      [
+       39.7400668,
+       -104.9653324
+      ],
+      [
+       39.7400668,
+       -104.9653896
+      ],
+      [
+       39.7400687,
+       -104.9659109
+      ],
+      [
+       39.7400683,
+       -104.9660054
+      ],
+      [
+       39.7400674,
+       -104.9660927
+      ],
+      [
+       39.7400689,
+       -104.966255
+      ],
+      [
+       39.7400695,
+       -104.9666186
+      ],
+      [
+       39.7400705,
+       -104.9669611
+      ],
+      [
+       39.7400723,
+       -104.967104
+      ],
+      [
+       39.7400674,
+       -104.9672262
+      ],
+      [
+       39.7400663,
+       -104.9673484
+      ],
+      [
+       39.7400501,
+       -104.9678473
+      ],
+      [
+       39.7400515,
+       -104.9680343
+      ],
+      [
+       39.7400513,
+       -104.968345
+      ],
+      [
+       39.7400513,
+       -104.9684525
+      ],
+      [
+       39.7400512,
+       -104.968567
+      ],
+      [
+       39.7400512,
+       -104.9687399
+      ],
+      [
+       39.7400504,
+       -104.9691757
+      ]
+     ]
+    },
+    "classification": {
+     "roadType": "urban_arterial",
+     "divided": false,
+     "laneWidthFt": 12,
+     "lanesPerDirection": 2,
+     "detectedLanesTotal": 2,
+     "detectedOneway": "yes",
+     "carriageway": {
+      "oneway": "yes",
+      "highwayClass": "primary",
+      "twinDistanceM": null,
+      "twinSearched": false
+     },
+     "speedLimitMph": 30,
+     "confidence": "medium",
+     "source": "osm-tags",
+     "raw": {
+      "class": "primary",
+      "oneway": true,
+      "roadName": "East Colfax Avenue",
+      "roadRef": "I 70 BUS;US 40;US 287",
+      "placeName": "Denver",
+      "osmLanesTag": "2",
+      "osmMaxspeedTag": "30 mph",
+      "osmLanesForwardTag": null,
+      "osmLanesBackwardTag": null,
+      "osmLanesBothWaysTag": null,
+      "osmOnewayTag": "yes"
+     },
+     "fields": {
+      "speed": {
+       "value": 30,
+       "confidence": "high",
+       "source": "OSM maxspeed tag",
+       "method": "measured",
+       "rawData": "maxspeed=30 mph"
+      },
+      "lanes": {
+       "value": 2,
+       "confidence": "high",
+       "source": "OSM lanes:forward tag",
+       "method": "measured",
+       "rawData": "lanes=2"
+      },
+      "roadType": {
+       "value": "urban_arterial",
+       "confidence": "medium",
+       "source": "OSM class=primary + urban (inferred)",
+       "method": "inferred",
+       "rawData": "class=primary, place=urban, oneway=true"
+      },
+      "divided": {
+       "value": false,
+       "confidence": "low",
+       "source": "OSM oneway=yes; the same-name search didn't run → confirm one-way street or divided",
+       "method": "inferred",
+       "rawData": "class=primary, oneway=true"
+      }
+     }
+    },
+    "method": "auto_single",
+    "isUrban": true,
+    "placeName": "Denver",
+    "pinLat": 39.73997,
+    "pinLng": -104.969281
+   },
+   "intersection": {
+    "lat": 39.74005456223094,
+    "lng": -104.96845487962341,
+    "name": "Franklin Street",
+    "highwayClass": "residential",
+    "postedSpeedMph": 25
+   },
+   "work": {
+    "side": "right",
+    "travel": "with_geometry"
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 30,
+  "lanes": 2,
+  "laneWidth": 12,
+  "divided": false,
+  "workType": "utility_cut",
+  "duration": "short",
+  "workLen": 1000,
+  "night": false,
+  "approaches": [
+   {
+    "id": "cross_a",
+    "speed": 25,
+    "roadType": "urban_arterial",
+    "lanesPerDirection": 1,
+    "laneWidth": 12,
+    "signalized": false,
+    "bearingDeg": 0.24
+   },
+   {
+    "id": "cross_b",
+    "speed": 25,
+    "roadType": "urban_arterial",
+    "lanesPerDirection": 1,
+    "laneWidth": 12,
+    "signalized": false,
+    "bearingDeg": 180.24
+   }
+  ],
+  "jurisdiction_key": "denver",
+  "street_class": "arterial",
+  "guesses": {
+   "street_class": {
+    "highwayClass": "primary"
+   },
+   "road_type": {
+    "highwayClass": "primary",
+    "urban": true,
+    "divided": false
+   },
+   "jurisdiction_key": {
+    "lat": 39.73997,
+    "lng": -104.969281
+   }
+  },
+  "carriageway": {
+   "oneway": "yes",
+   "highwayClass": "primary",
+   "twinDistanceM": null,
+   "twinSearched": false,
+   "confirmed": "one_way_street"
+  },
+  "detectionOverrides": [
+   {
+    "via": "approach_lane_confirm",
+    "detectedLanesTotal": 2,
+    "asserted": "approach lane count 1"
+   }
+  ],
+  "site_scan": {
+   "proceed_if_unavailable": false,
+   "token": "eNqllt1yszYQhm-F0Wkdoj8Qck961Atoe-bJMDIsNjUGRohk0kzuvSucOLa_iDjOURzBimdXu--rF7Ieix24gSxfyLreQV6Zom5qV8O0VHRj68iSL0gJztQNLq7In9a0u6Zuo7-dBXDRqjEOrGkizaLKRV1VRQW0uITvwANZ_BrgcGHAj3Rt9EfEhOAY90Aepq9A4aAkS2dHWJAKjButZ1m9ENN07SYfnPGBeYVcPjSWGFbjaltA7roc_247m-_xqc7ibEEas4aGLC8piH8ycedIPICbdkxUGicLYqGBR-NTr0wzIMh_XQu4x1sEeV0EcWgIR4mYf5NGU5_AB8yhKNezBEujmOf8FguTMywfBxrGoT79wEnx9NsnJbCe6RUnhV3VgsEecvnx428VeEUe2_W977cXMhSmzXG3PfYuNpx_uu2GvnamOZ0FejoLZy37BnDSsw-4R-0nodiadgM3b7Mg_45tMRXTQnW28wDT-unWUp-N69i2Zg9lZFwkdKwkpYvojlEZa0VVtHrq7C73RcNRTLWaJnExG6QvgoT-MihNabTqRjfUpQ_hlGWhGHaMyZKQUsyG6YukdJbeKC9cpEl4nkWW-AF7b9qZ5GX2eQtLFrNwB7-VKzBQmGYswvPEY3UNGnbA52j8QgbPpv1Y3RAbfiWsypJeVzZstABb5g_lRjbfemE4ntFTYZxt6JAsxToIN3-kd1JOhvU5mlTcd8sVdQu1G5-1tiNbQDA5jRWKTvcItjfDpDdvYpm_3xJSrOu-trazuN_WuX5Y3t-_B8RdD-0wCfre9HFl701f308a1lucS0s8297YHVm2Y9P4_4YelQ3y9bPzM4rerAUiWFQ225kyL2w3DHW7-Yk8TxutMV_cZ7oEHX7mJWwm_2WY00We-rgy5Ef_wO9u6832yTxj7r2tMZFnzAhrOy0d2qDvah807OpjED7Na_yZUprIRLP0nakY7eNEGkqO_IWvRcfXItOa5nmoh6jtXFTv-wMilL9HWP1xDxEW3yCii8kVdRmw77ofGZ_vpifT7E73EGLOmoTWM9b0tWMoKs6DMva1Xyi0orMgkV3hTZpHq_VYVWC9LzEmvrbATJ2GcHTE21zpTmkRlv6Uqjl5ZeqYd0jBkkzPXay-0LBszjGV9uBBtg8JE0lAXVEhk5vZONNhOEn5rC99NIwMFI6rH9RNscRb9udsSSJP78e_sIkjWxLQfn3hmd-rm5xhk4eiBtiE5h91Y4FDpZMj32pM_vuv_io_2gPzHidH8hTPYgdejdO1qhIhhVpzVawZcCmN1KWuKgq6KrlIjDFQFlBUEkBqSIRhlS4rAEbZ5KZ7MAOOZJkbxCOc8vSOsTua_EPlUiZ4FfyN0iX1ffGIQK__A5L999o.hVo15VfSxuxPsy8qcUWwgNK8VVSJEfjf_OqQtEl3R0I"
+  }
+ }
+}

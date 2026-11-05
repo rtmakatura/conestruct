@@ -256,7 +256,7 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
       "h": 120.3,
       "bg": "rgb(17, 38, 32)"
      },
@@ -265,7 +265,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -366,8 +366,8 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Cancel Undo",
-      "h": 120.3,
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Cancel Undo",
+      "h": 139,
       "bg": "rgb(17, 38, 32)"
      },
      "name": {
@@ -375,7 +375,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -471,7 +471,7 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
       "h": 120.3,
       "bg": "rgb(17, 38, 32)"
      },
@@ -480,7 +480,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -752,7 +752,7 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
       "h": 120.3,
       "bg": "rgb(17, 38, 32)"
      },
@@ -761,7 +761,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -912,6 +912,97 @@
     }
    },
    {
+    "name": "09b-retapped",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
+      "h": 120.3,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · 60 ft west of where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 31,
+      "y": 265.8,
+      "w": 328,
+      "h": 250
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 241.5,
+      "y": 274.8,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 306,
+      "y": 326.8,
+      "w": 44,
+      "h": 92
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 143,
+      "y": 311,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 177,
+      "y": 311,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
     "name": "10-side",
     "card": {
      "count": "Question 3 of 3",
@@ -945,7 +1036,7 @@
      },
      "frame": {
       "x": 31,
-      "y": -485.3,
+      "y": -326.3,
       "w": 328,
       "h": 250
      },
@@ -954,13 +1045,13 @@
      "barStyle": null,
      "edit": {
       "x": 241.5,
-      "y": -476.3,
+      "y": -317.3,
       "w": 108.5,
       "h": 44
      },
      "zoom": {
       "x": 306,
-      "y": -424.3,
+      "y": -265.3,
       "w": 44,
       "h": 92
      },
@@ -1073,7 +1164,7 @@
    },
    "box": {
     "x": 32,
-    "y": 11.75,
+    "y": -407.25,
     "width": 326,
     "height": 248
    },
@@ -1118,10 +1209,10 @@
   },
   "retrySamePoint": true,
   "picker": {
-   "text": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Click the intersection on the map… CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close"
+   "text": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ✓ ROAD East Colfax Avenue, westbound Primary road · 31 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Click the intersection on the map… CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close"
   },
   "pickerArmed": true,
-  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
+  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS ✓ ROAD East Colfax Avenue, westbound Primary road · 31 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
   "pickerDetectedParagraph": false,
   "scenarioAtConfirm": {
    "kind": "near_intersection",
@@ -1137,10 +1228,10 @@
       "highway_class": "primary",
       "name": "East Colfax Avenue",
       "ref": "I 70 BUS;US 40;US 287",
-      "bearing": 267.58,
-      "snap_distance_m": 45.6,
-      "snapped_lat": 39.7400501,
-      "snapped_lng": -104.9678473,
+      "bearing": 270,
+      "snap_distance_m": 31.19,
+      "snapped_lat": 39.7400513,
+      "snapped_lng": -104.968345,
       "signal_distance_m": null,
       "tags": {
        "oneway": "yes",
@@ -1505,6 +1596,30 @@
        [
         39.7400501,
         -104.9678473
+       ],
+       [
+        39.7400515,
+        -104.9680343
+       ],
+       [
+        39.7400513,
+        -104.968345
+       ],
+       [
+        39.7400513,
+        -104.9684525
+       ],
+       [
+        39.7400512,
+        -104.968567
+       ],
+       [
+        39.7400512,
+        -104.9687399
+       ],
+       [
+        39.7400504,
+        -104.9691757
        ]
       ]
      },
@@ -1575,8 +1690,8 @@
      "pinLng": -104.968249
     },
     "intersection": {
-     "lat": 39.74027748072044,
-     "lng": -104.96824900000048,
+     "lat": 39.7400522182635,
+     "lng": -104.96845284788513,
      "name": "Franklin Street",
      "highwayClass": "residential",
      "postedSpeedMph": 25
@@ -1655,7 +1770,7 @@
    },
    "row": {
     "testid": "cross-row",
-    "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+    "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
     "h": 120.3,
     "bg": "rgb(17, 38, 32)"
    },
@@ -1664,7 +1779,7 @@
     "font": "15px/600"
    },
    "line": {
-    "text": "Two-way street · at where the work starts",
+    "text": "Two-way street · 60 ft west of where the work starts",
     "font": "12.5px",
     "color": "rgb(174, 187, 204)"
    },
@@ -1936,7 +2051,7 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
       "h": 68,
       "bg": "rgb(17, 38, 32)"
      },
@@ -1945,7 +2060,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -2046,7 +2161,7 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Cancel Undo",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Cancel Undo",
       "h": 68,
       "bg": "rgb(17, 38, 32)"
      },
@@ -2055,7 +2170,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -2151,7 +2266,7 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
       "h": 68,
       "bg": "rgb(17, 38, 32)"
      },
@@ -2160,7 +2275,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -2432,7 +2547,7 @@
      },
      "row": {
       "testid": "cross-row",
-      "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
       "h": 68,
       "bg": "rgb(17, 38, 32)"
      },
@@ -2441,7 +2556,7 @@
       "font": "15px/600"
      },
      "line": {
-      "text": "Two-way street · at where the work starts",
+      "text": "Two-way street · 60 ft west of where the work starts",
       "font": "12.5px",
       "color": "rgb(174, 187, 204)"
      },
@@ -2592,6 +2707,97 @@
     }
    },
    {
+    "name": "09b-retapped",
+    "card": {
+     "count": "Question 2 of 3",
+     "flag": "cross",
+     "question": "Which intersection is the work near?",
+     "why": "Tap where the two streets cross on the map above. The plan lays out signs on the cross street too.",
+     "button": {
+      "text": "Next question",
+      "disabled": false
+     },
+     "row": {
+      "testid": "cross-row",
+      "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
+      "h": 68,
+      "bg": "rgb(17, 38, 32)"
+     },
+     "name": {
+      "text": "Near Franklin Street",
+      "font": "15px/600"
+     },
+     "line": {
+      "text": "Two-way street · 60 ft west of where the work starts",
+      "font": "12.5px",
+      "color": "rgb(174, 187, 204)"
+     },
+     "none": null,
+     "failed": null,
+     "move": "Move",
+     "rows": [
+      "✓ What kind of work is it: Lane closure near an intersection UNDO",
+      "◌ Next: which side of the road the work is on"
+     ],
+     "notMarkedLine": false,
+     "occupiedBlock": false
+    },
+    "aerial": {
+     "stage": "pin",
+     "armed": false,
+     "cursor": "auto",
+     "outline": {
+      "border": "0px solid rgb(229, 231, 235)",
+      "content": "none"
+     },
+     "frame": {
+      "x": 297,
+      "y": 256.5,
+      "w": 846,
+      "h": 300
+     },
+     "bar": null,
+     "barText": null,
+     "barStyle": null,
+     "edit": {
+      "x": 1025.5,
+      "y": 265.5,
+      "w": 108.5,
+      "h": 44
+     },
+     "zoom": {
+      "x": 1102,
+      "y": 317.5,
+      "w": 32,
+      "h": 68
+     },
+     "big": null,
+     "bigText": null,
+     "mark": {
+      "x": 668,
+      "y": 326,
+      "w": 28,
+      "h": 28
+     },
+     "label": {
+      "x": 702,
+      "y": 326,
+      "w": 105.6,
+      "h": 27.5
+     },
+     "labelText": "Franklin Street",
+     "overlaps": {
+      "barEdit": null,
+      "barZoom": null,
+      "bigZoom": null,
+      "bigEdit": null,
+      "editZoom": false
+     },
+     "labelInside": true,
+     "alt": "Aerial at the pin. Nothing is laid out until the side is chosen"
+    }
+   },
+   {
     "name": "10-side",
     "card": {
      "count": "Question 3 of 3",
@@ -2625,7 +2831,7 @@
      },
      "frame": {
       "x": 297,
-      "y": -288.5,
+      "y": 256.5,
       "w": 846,
       "h": 300
      },
@@ -2634,13 +2840,13 @@
      "barStyle": null,
      "edit": {
       "x": 1025.5,
-      "y": -279.5,
+      "y": 265.5,
       "w": 108.5,
       "h": 44
      },
      "zoom": {
       "x": 1102,
-      "y": -227.5,
+      "y": 317.5,
       "w": 32,
       "h": 68
      },
@@ -2708,7 +2914,7 @@
      },
      "frame": {
       "x": 297,
-      "y": 97.5,
+      "y": 131.5,
       "w": 846,
       "h": 300
      },
@@ -2717,13 +2923,13 @@
      "barStyle": null,
      "edit": {
       "x": 1025.5,
-      "y": 106.5,
+      "y": 140.5,
       "w": 108.5,
       "h": 44
      },
      "zoom": {
       "x": 1102,
-      "y": 158.5,
+      "y": 192.5,
       "w": 32,
       "h": 68
      },
@@ -2753,7 +2959,7 @@
    },
    "box": {
     "x": 298,
-    "y": 98.5,
+    "y": -210.5,
     "width": 844,
     "height": 298
    },
@@ -2798,10 +3004,10 @@
   },
   "retrySamePoint": true,
   "picker": {
-   "text": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Click the intersection on the map… CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close"
+   "text": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD East Colfax Avenue, westbound Primary road · 31 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Click the intersection on the map… CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close"
   },
   "pickerArmed": true,
-  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD East Colfax Avenue, westbound Primary road · 46 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
+  "pickerAfterClick": "WORK ZONE · DEFINE Define Work Zone Drop a pin where the work starts, and pick the road. SEARCH + OR ENTER COORDINATES MANUALLY STREETS © Mapbox © OpenStreetMap Improve this map © Maxar ✓ ROAD East Colfax Avenue, westbound Primary road · 31 m from your pin · Details ↻ RE-DETECT ROADS CROSS STREET Move the intersection pin Clear CORRIDOR EXTENT CORRIDOR LENGTHS WAIT ON THE KIND OF WORK. CHOOSE IT AFTER YOU SAVE. Cancel Save & Close",
   "pickerDetectedParagraph": false,
   "scenarioAtConfirm": {
    "kind": "near_intersection",
@@ -2817,10 +3023,10 @@
       "highway_class": "primary",
       "name": "East Colfax Avenue",
       "ref": "I 70 BUS;US 40;US 287",
-      "bearing": 267.58,
-      "snap_distance_m": 45.6,
-      "snapped_lat": 39.7400501,
-      "snapped_lng": -104.9678473,
+      "bearing": 270,
+      "snap_distance_m": 31.19,
+      "snapped_lat": 39.7400513,
+      "snapped_lng": -104.968345,
       "signal_distance_m": null,
       "tags": {
        "oneway": "yes",
@@ -3185,6 +3391,30 @@
        [
         39.7400501,
         -104.9678473
+       ],
+       [
+        39.7400515,
+        -104.9680343
+       ],
+       [
+        39.7400513,
+        -104.968345
+       ],
+       [
+        39.7400513,
+        -104.9684525
+       ],
+       [
+        39.7400512,
+        -104.968567
+       ],
+       [
+        39.7400512,
+        -104.9687399
+       ],
+       [
+        39.7400504,
+        -104.9691757
        ]
       ]
      },
@@ -3255,8 +3485,8 @@
      "pinLng": -104.968249
     },
     "intersection": {
-     "lat": 39.7402801232798,
-     "lng": -104.96824899999993,
+     "lat": 39.7400553120018,
+     "lng": -104.96845284788513,
      "name": "Franklin Street",
      "highwayClass": "residential",
      "postedSpeedMph": 25
@@ -3335,7 +3565,7 @@
    },
    "row": {
     "testid": "cross-row",
-    "text": "✓ Near Franklin Street Two-way street · at where the work starts Move Undo",
+    "text": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
     "h": 68,
     "bg": "rgb(17, 38, 32)"
    },
@@ -3344,7 +3574,7 @@
     "font": "15px/600"
    },
    "line": {
-    "text": "Two-way street · at where the work starts",
+    "text": "Two-way street · 60 ft west of where the work starts",
     "font": "12.5px",
     "color": "rgb(174, 187, 204)"
    },

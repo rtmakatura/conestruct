@@ -12,8 +12,8 @@
 //
 // WHAT IT SHOWS, read off the backend's own geometry answer (the one
 // WhereBand already asks for the side control — never a second read):
-//   · side owed           the pin alone and "Say which side is occupied to
-//                         lay out the work" (#290's pre-side ruling, P16)
+//   · side owed           the pin alone, no caption (#440 X22: the CONFIRM
+//                         card's side question asks; #290's P16 caption left)
 //   · side chosen, kind owed   the work segment; the legend says the
 //                         approaches lay out after the kind (rule 112)
 //   · both answered       the whole corridor; the five-row legend
@@ -35,7 +35,6 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import type { Scenario } from "@/lib/scenarios";
-import { SIDE_BLOCKER } from "@/lib/scenarios/rail";
 import {
   boundWord,
   refusalReason,
@@ -188,7 +187,6 @@ export function BandAerial({
   // the pin, the frame and the step only, so it does not wait on the
   // geometry read (the mark's own write re-reads it; P1: the picture and
   // the box stay put meanwhile).
-  const forced = pinFrame && natural !== "pin";
   const stage: AerialStage | null = pinFrame ? "pin" : natural;
   // Zoom (Ryan's hand-check ruling, 2026-09-26).  The step belongs to ONE
   // picture — this scenario, stage and frame — so a new picture always
@@ -241,8 +239,9 @@ export function BandAerial({
   } else if (aerial.state === "error") note = AERIAL_FAILED;
   else if (aerial.state !== "ready" && !holding) note = AERIAL_WAIT;
   // #440 ruling 7: the not-marked line left the aerial (#317's note); the
-  // CONFIRM card's cross-street question asks for the crossing.
-  else if (stage === "pin" && !forced && g?.status !== "intersection_not_marked") note = SIDE_BLOCKER;
+  // CONFIRM card's cross-street question asks for the crossing.  #440 R145
+  // X22 (Ryan, 2026-11-04): the side caption left it the same way; the
+  // CONFIRM card's side question asks for the side.
 
   const shown = src !== null && stage !== null;
   const frameKey = base !== null ? JSON.stringify({ base, step }) : null;

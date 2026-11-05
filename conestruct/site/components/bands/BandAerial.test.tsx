@@ -102,13 +102,16 @@ async function settle(ms = 450) {
 const q = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`);
 
 describe("the band's aerial, state by state", () => {
-  it("before the side: the pin alone, the ruled sentence, no legend", async () => {
+  // #440 X22 (Rule 5, stated): the side caption left the aerial; the
+  // CONFIRM card's side question asks for the side.
+  it("before the side: the pin alone, no caption, no legend", async () => {
     render(<BandAerial scenario={SCENARIO} geometry={answer("side_not_confirmed")} kindConfirmed />);
     expect(q("band-aerial-note")?.textContent).toBe(AERIAL_WAIT);
     await settle();
     expect(requests).toEqual([{ scenario: SCENARIO, stage: "pin", width: 600, height: 300 }]);
     expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
-    expect(q("band-aerial-note")?.textContent).toBe(SIDE_BLOCKER);
+    expect(q("band-aerial-note")).toBeNull();
+    expect(document.body.textContent).not.toContain(SIDE_BLOCKER);
     expect(q("band-aerial-legend")).toBeNull();
     expect(q("band-aerial")?.getAttribute("data-stage")).toBe("pin");
   });

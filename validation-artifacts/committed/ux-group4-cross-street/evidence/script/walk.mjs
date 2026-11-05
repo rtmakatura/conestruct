@@ -17,6 +17,7 @@ const AXE = fs.readFileSync('C:/Users/rtmak/Documents/traffic-control-tool/cones
 const [OUT, PORT] = process.argv.slice(2);
 const TOK = process.env.SHOT_TOKEN ?? '';
 const BASE = `http://localhost:${PORT}`;
+const ADDR = process.env.ADDR ?? '1600 E Colfax Ave, Denver';
 fs.mkdirSync(OUT, { recursive: true });
 
 const FIX = JSON.parse(fs.readFileSync(new URL('../../../ux-group3-where/evidence/overpass-fixture/c74c32bdc5114bff.json', import.meta.url), 'utf8'));
@@ -27,9 +28,24 @@ const CROSSING = { lat: 39.7400513, lng: -104.9684525 };
 const rad = (d) => (d * Math.PI) / 180;
 const brg = (a, b) => { const y = Math.sin(rad(b.lon - a.lon)) * Math.cos(rad(b.lat)); const x = Math.cos(rad(a.lat)) * Math.sin(rad(b.lat)) - Math.sin(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.cos(rad(b.lon - a.lon)); return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360; };
 const distM = (a, at) => Math.hypot((a.lat - at.lat) * 111320, (a.lon - at.lng) * 111320 * Math.cos(rad(at.lat)));
-function candFromWay(id, at) {
+// Session 3: the live route extends a candidate's own-way geometry along
+// the same road's next ways (route.ts trimChain, #140).  Way 1547338997
+// ends at the work start's snap, and Franklin is 52 m past it, so a stub
+// with own-way geometry only clamps the tap onto the line's end ("at where
+// the work starts", then the corridor's decline).  `chain` gives the stub
+// the westbound run the live route would send.
+const COLFAX_WEST = [1547338997, 1547338998, 223788857, 600545918, 791808880];
+function chainGeometry(ids) {
+  const out = [];
+  for (const id of ids) {
+    const g = FIX.elements.find((e) => e.type === 'way' && e.id === id).geometry;
+    for (const n of g) { const l = out[out.length - 1]; if (!l || l.lat !== n.lat || l.lon !== n.lon) out.push(n); }
+  }
+  return out;
+}
+function candFromWay(id, at, chain = null) {
   const w = FIX.elements.find((e) => e.type === 'way' && e.id === id);
-  const g = w.geometry;
+  const g = chain ? chainGeometry(chain) : w.geometry;
   let i = 0; g.forEach((n, k) => { if (distM(n, at) < distM(g[i], at)) i = k; });
   const a = g[Math.max(0, Math.min(i, g.length - 2))], b = g[Math.max(1, Math.min(i + 1, g.length - 1))];
   const s = (k) => w.tags[k] ?? null;
@@ -41,8 +57,8 @@ function candFromWay(id, at) {
 }
 const det = (cands) => JSON.stringify({ scan_status: 'ok', primary_index: 0, isUrban: true, placeName: 'Denver', candidates: cands });
 const STUB = {
-  pin: det([candFromWay(1547338997, PIN0)]),
-  cross: det([candFromWay(1547338997, CROSSING), candFromWay(492215711, CROSSING)]),
+  pin: det([candFromWay(1547338997, PIN0, COLFAX_WEST)]),
+  cross: det([candFromWay(1547338997, CROSSING, COLFAX_WEST), candFromWay(492215711, CROSSING)]),
 };
 
 // The pin picture's pixel for a coordinate (Web Mercator, 512 px tiles at
@@ -144,7 +160,7 @@ async function card(p) {
 async function pin(p) {
   await p.getByRole('button', { name: 'Pick on map' }).click();
   await p.waitForTimeout(1500);
-  await p.getByLabel('Address or intersection search').fill('1600 E Colfax Ave, Denver');
+  await p.getByLabel('Address or intersection search').fill(ADDR);
   await p.getByRole('button', { name: 'SEARCH' }).click();
   await p.waitForFunction(() => /PICK THE ROAD|Which road|Save & Close/i.test(document.querySelector('[role=dialog]')?.innerText ?? ''), null, { timeout: 90000 });
   await p.waitForTimeout(1500);
@@ -165,7 +181,7 @@ async function run(w, h) {
   const out = { steps: [], fails: [] };
   let n = 1;
   const nn = () => String(n++).padStart(2, '0');
-  const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2, extraHTTPHeaders: { 'x-conestruct-gate': TOK } });
+  const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2, acceptDownloads: true, extraHTTPHeaders: { 'x-conestruct-gate': TOK } });
   const p = await ctx.newPage();
   let mode = 'pin';
   const seen = { aerialPoint: [], roadBearing: [], lastScenario: null };
@@ -178,7 +194,11 @@ async function run(w, h) {
     seen.roadBearing.push({ mode, body: JSON.parse(r.request().postData() ?? 'null') });
     if (mode === 'fail') return r.fulfill({ status: 502, contentType: 'text/plain', body: 'down' });
     if (mode === 'cross-slow') await new Promise((res) => setTimeout(res, 2500));
-    return r.fulfill({ status: 200, contentType: 'application/json', body: mode === 'pin' ? STUB.pin : STUB.cross });
+    // The pin's answer snaps at the point asked for (session 3: the PDF
+    // pass drops its pin elsewhere on Colfax); the cross answer stays.
+    const asked = JSON.parse(r.request().postData() ?? 'null');
+    const pinBody = asked && typeof asked.lat === 'number' ? det([candFromWay(1547338997, { lat: asked.lat, lng: asked.lng }, COLFAX_WEST)]) : STUB.pin;
+    return r.fulfill({ status: 200, contentType: 'application/json', body: mode === 'pin' ? pinBody : STUB.cross });
   });
   const step = async (name, opts = {}) => {
     const s = { name, card: await card(p), aerial: await aerial(p) };
@@ -271,6 +291,16 @@ async function run(w, h) {
       await p.waitForSelector('[data-testid=cross-row]', { timeout: 30000 }).catch(() => {});
       await p.waitForTimeout(1500);
       await step('09-after-picker', { shot: false });
+      // Session 3: the picker click is 60 px off the pin, not the
+      // crossing; Undo it and tap the crossing on the aerial again, so the
+      // plan carries Franklin's own point.
+      await p.locator('[data-testid=cross-undo]').click(); await p.waitForTimeout(1500);
+      await p.waitForSelector('[data-testid=band-aerial-bar]', { timeout: 30000 });
+      await tapCrossing();
+      await p.waitForSelector('[data-testid=cross-row]', { timeout: 30000 });
+      await p.waitForFunction(() => /of where the work starts/.test(document.querySelector('[data-testid=cross-row-line]')?.innerText ?? ''), null, { timeout: 30000 }).catch(() => {});
+      await p.waitForTimeout(800);
+      await step('09b-retapped', { shot: false });
     } else {
       out.fails.push({ label: 'no map canvas in the picker' });
       await p.keyboard.press('Escape');
@@ -291,6 +321,55 @@ async function run(w, h) {
     await p.waitForTimeout(3000);
     out.afterConfirm = await p.evaluate(() => ({ whereOpen: !!document.querySelector('.a-open[data-testid=band-where]'), openBand: document.querySelector('.a-open')?.getAttribute('data-testid') ?? null }));
     out.marked = marked.card;
+
+    // Session 3 (Ryan, 2026-11-04): the PDF through the page, 1440 only.
+    // Generate plan (the page's own button), then the downloads' PDF
+    // button; the render request the page sends is kept as sent.
+    if (w === 1440 && process.env.PDF === '1') {
+      out.pdf = {};
+      await p.waitForSelector('[data-testid=cell-work-type]', { timeout: 90000 });
+      await p.waitForTimeout(3000);
+      // As #437/#438's walks: the map can't tell a one-way street from
+      // one side of a divided road; say One-way.
+      const oneWay = p.getByRole('button', { name: /^One-way$/ });
+      if (await oneWay.count()) { await oneWay.first().click(); await p.waitForTimeout(4000); out.pdf.saidOneWay = true; }
+      // The operator's own lane-count check (Generate names it until then).
+      const laneOk = p.getByRole('button', { name: 'Lane count is right' });
+      if (await laneOk.count()) { await laneOk.first().click(); await p.waitForTimeout(3000); out.pdf.saidLaneCount = true; }
+      out.pdf.ctaReason = await p.evaluate(() => document.querySelector('[data-testid=cta-reason]')?.innerText.trim() ?? null);
+      await p.waitForFunction(() => { const g = document.querySelector('[data-testid=generate-plan]'); return g && !g.disabled; }, null, { timeout: 120000 });
+      await p.getByTestId('generate-plan').click();
+      await p.waitForSelector('[data-testid=downloads]', { timeout: 240000 });
+      await p.waitForTimeout(4000);
+      out.pdf.banner = await p.evaluate(() => document.querySelector('.status-slot')?.innerText.replace(/\s+/g, ' ').trim() ?? null);
+      await p.screenshot({ path: `${OUT}/${tag}-${nn()}-generated.png`, fullPage: true });
+      const pdfReq = [];
+      p.on('request', (r) => { if (r.method() === 'POST' && /\/api\/render\/pdf(\?|$)/.test(r.url())) pdfReq.push(r.postData() ?? ''); });
+      const btns = await p.locator('[data-testid=downloads] button').all();
+      let clicked = null;
+      for (const bt of btns) {
+        const label = ((await bt.getAttribute('aria-label')) || (await bt.innerText())).replace(/\s+/g, ' ').trim();
+        if (/plan/i.test(label) && /pdf/i.test(label) && !/crew|audit|zip/i.test(label)) { clicked = label;
+          const respP = p.waitForResponse((r) => /\/api\/render\/pdf(\?|$)/.test(r.url()), { timeout: 180000 }).catch(() => null);
+          const dlP = p.waitForEvent('download', { timeout: 180000 }).catch(() => null);
+          await bt.click();
+          const [resp, dl] = await Promise.all([respP, dlP]);
+          out.pdf.status = resp?.status() ?? null;
+          if (dl) { await dl.saveAs(`${OUT}/${tag}-plan.pdf`); out.pdf.file = `${tag}-plan.pdf`; out.pdf.bytes = fs.statSync(`${OUT}/${tag}-plan.pdf`).size; }
+          break;
+        }
+      }
+      out.pdf.button = clicked;
+      out.pdf.labels = await p.evaluate(() => [...document.querySelectorAll('[data-testid=downloads] button')].map((b) => (b.getAttribute('aria-label') || b.innerText).replace(/\s+/g, ' ').trim()));
+      if (pdfReq.length) {
+        const body = JSON.parse(pdfReq[0]);
+        const sc = body.scenario ?? body;
+        out.pdf.sentIntersection = sc?.meta?.intersection ?? null;
+        out.pdf.sentApproaches = sc?.approaches ?? null;
+        fs.writeFileSync(`${OUT}/${tag}-pdf-request.json`, JSON.stringify(body, null, 1));
+      }
+      console.log(tag, 'pdf', JSON.stringify({ button: clicked, status: out.pdf.status, bytes: out.pdf.bytes }));
+    }
   } catch (e) {
     out.error = String(e).slice(0, 600);
     await p.screenshot({ path: `${OUT}/${tag}-error.png`, fullPage: true }).catch(() => {});
@@ -302,5 +381,10 @@ async function run(w, h) {
 }
 
 const M = {};
-for (const [w, h] of [[1440, 900], [390, 844]]) M[`${w}`] = await run(w, h);
+// WIDTHS=1440 ADDR="1550 E Colfax Ave, Denver": the session-3 PDF pass.
+// At 1600 E Colfax the pin sits 57 ft east of Franklin on a westbound
+// one-way, so the backend declines (the crossing is inside the 1,000 ft
+// work zone; it names "more than 69 ft with traffic" as one way out).
+const WIDTHS = (process.env.WIDTHS ?? '1440,390').split(',').map(Number);
+for (const [w, h] of [[1440, 900], [390, 844]].filter(([w]) => WIDTHS.includes(w))) M[`${w}`] = await run(w, h);
 fs.writeFileSync(`${OUT}/walk.json`, JSON.stringify(M, null, 1));

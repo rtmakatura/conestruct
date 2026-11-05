@@ -1,0 +1,23 @@
+[out:json][timeout:10];
+(
+  node(39.739140,-104.976154,39.740972,-104.963906)["highway"="traffic_signals"];
+  node(39.739140,-104.976154,39.740972,-104.963906)["highway"="crossing"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["highway"="footway"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["footway"="sidewalk"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["highway"="cycleway"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["cycleway"];
+  node(39.739140,-104.976154,39.740972,-104.963906)["amenity"="school"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["amenity"="school"];
+  node(39.739140,-104.976154,39.740972,-104.963906)["railway"="level_crossing"];
+  node(39.739140,-104.976154,39.740972,-104.963906)["amenity"="hospital"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["amenity"="hospital"];
+  node(39.739140,-104.976154,39.740972,-104.963906)["highway"="motorway_junction"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["highway"="motorway_link"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["highway"="trunk_link"];
+  way(39.739140,-104.976154,39.740972,-104.963906)["bridge"="yes"];
+)->.scan;
+.scan out center tags;
+(
+  way(around:50,39.73997,-104.969281)["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];
+)->.road;
+.road out geom tags;
