@@ -1,0 +1,535 @@
+{
+ "1440x900": {
+  "errors": [],
+  "roadBearing": [
+   {
+    "mode": "live",
+    "status": 200
+   }
+  ],
+  "steps": {},
+  "error": "TimeoutError: locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog').locator('button').filter({ hasText: /Colfax/ }).first() to be visible\u001b[22m\n"
+ },
+ "390x844": {
+  "errors": [],
+  "roadBearing": [
+   {
+    "mode": "live",
+    "status": 200
+   },
+   {
+    "mode": "live",
+    "status": 200
+   }
+  ],
+  "steps": {
+   "armed": {
+    "scrollY": 628,
+    "innerHeight": 844,
+    "nav": 52,
+    "bar": "armed",
+    "barText": "Tap the intersection nearest the work",
+    "barBox": {
+     "top": -361.3,
+     "bottom": -317.3
+    },
+    "frame": {
+     "top": -362.3,
+     "bottom": -112.3
+    },
+    "row": null,
+    "next": {
+     "top": 227.8,
+     "bottom": 271.8
+    },
+    "moveLabel": null,
+    "ring": null,
+    "markBox": false,
+    "asked": [],
+    "focus": "BODY",
+    "overflowX": 0,
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390x844-01-armed.png"
+   }
+  },
+  "error": "TimeoutError: page.waitForFunction: Timeout 45000ms exceeded."
+ },
+ "390x664": {
+  "errors": [],
+  "roadBearing": [
+   {
+    "mode": "live",
+    "status": 200
+   },
+   {
+    "mode": "live",
+    "status": 200
+   },
+   {
+    "mode": "fail",
+    "status": 502
+   },
+   {
+    "mode": "none",
+    "status": 200
+   },
+   {
+    "mode": "none",
+    "status": 200
+   },
+   {
+    "mode": "live",
+    "status": 200
+   }
+  ],
+  "steps": {
+   "armed": {
+    "scrollY": 578,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "armed",
+    "barText": "Tap the intersection nearest the work",
+    "barBox": {
+     "top": -311.3,
+     "bottom": -267.3
+    },
+    "frame": {
+     "top": -312.3,
+     "bottom": -62.3
+    },
+    "row": null,
+    "next": {
+     "top": 298,
+     "bottom": 342
+    },
+    "moveLabel": null,
+    "ring": null,
+    "markBox": false,
+    "asked": [],
+    "focus": "BODY",
+    "overflowX": 0,
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390x664-01-armed.png"
+   },
+   "found-after-scroll": {
+    "scrollY": 421,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "found",
+    "barText": "✓\nNear Franklin Street",
+    "barBox": {
+     "top": -154.3,
+     "bottom": -110.3
+    },
+    "frame": {
+     "top": -155.3,
+     "bottom": 94.8
+    },
+    "row": {
+     "top": 455,
+     "bottom": 588
+    },
+    "next": {
+     "top": 604,
+     "bottom": 648
+    },
+    "moveLabel": "Move",
+    "ring": null,
+    "markBox": true,
+    "asked": [
+     {
+      "top": 421,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-row-name",
+    "overflowX": 0,
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390x664-02-found-after-scroll.png"
+   },
+   "after-move": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "armed",
+    "barText": "Tap the intersection nearest the work",
+    "barBox": {
+     "top": 52.8,
+     "bottom": 96.8
+    },
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "row": {
+     "top": 662,
+     "bottom": 795
+    },
+    "next": {
+     "top": 811,
+     "bottom": 855
+    },
+    "moveLabel": "Cancel",
+    "ring": null,
+    "markBox": true,
+    "asked": [
+     {
+      "top": -207.25,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-move",
+    "overflowX": 0,
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 53.3,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390x664-03-after-move.png"
+   },
+   "failed-before": {
+    "scrollY": 245,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "armed",
+    "barText": "Tap the intersection nearest the work",
+    "barBox": {
+     "top": 21.8,
+     "bottom": 65.8
+    },
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "row": null,
+    "next": {
+     "top": 610.8,
+     "bottom": 654.8
+    },
+    "moveLabel": null,
+    "ring": null,
+    "markBox": false,
+    "asked": [],
+    "focus": "BODY",
+    "overflowX": 0
+   },
+   "failed-was-hidden": {
+    "scrollY": 215,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "failed",
+    "barText": "⚠\nThe street lookup didn't answer. Tap again, or try once more.\nTry again",
+    "barBox": {
+     "top": 51.8,
+     "bottom": 116.4
+    },
+    "frame": {
+     "top": 50.8,
+     "bottom": 300.8
+    },
+    "row": null,
+    "next": {
+     "top": 747.8,
+     "bottom": 791.8
+    },
+    "moveLabel": null,
+    "ring": "dashed",
+    "markBox": false,
+    "asked": [
+     {
+      "top": -30.25,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "DIV",
+    "overflowX": 0,
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "band-aerial-retry": {
+      "w": 92.8,
+      "h": 64.7,
+      "ok": true
+     },
+     "cross-retry": {
+      "w": 68.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-big-map": {
+      "w": 164.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390x664-04-failed-was-hidden.png"
+   },
+   "none-before": {
+    "scrollY": 245,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "failed",
+    "barText": "⚠\nThe street lookup didn't answer. Tap again, or try once more.\nTry again",
+    "barBox": {
+     "top": 21.8,
+     "bottom": 86.4
+    },
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "row": null,
+    "next": {
+     "top": 717.8,
+     "bottom": 761.8
+    },
+    "moveLabel": null,
+    "ring": "dashed",
+    "markBox": false,
+    "asked": [],
+    "focus": "DIV",
+    "overflowX": 0
+   },
+   "no-street-was-hidden": {
+    "scrollY": 215,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "none",
+    "barText": "⚠\nNo cross street found there. Tap closer to where the two streets cross.",
+    "barBox": {
+     "top": 51.8,
+     "bottom": 105.5
+    },
+    "frame": {
+     "top": 50.8,
+     "bottom": 300.8
+    },
+    "row": null,
+    "next": {
+     "top": 714.5,
+     "bottom": 758.5
+    },
+    "moveLabel": null,
+    "ring": "dashed",
+    "markBox": false,
+    "asked": [
+     {
+      "top": -30.25,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "DIV",
+    "overflowX": 0,
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390x664-05-no-street-was-hidden.png"
+   },
+   "no-street-bar-in-view": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "none",
+    "barText": "⚠\nNo cross street found there. Tap closer to where the two streets cross.",
+    "barBox": {
+     "top": 52.8,
+     "bottom": 106.5
+    },
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "row": null,
+    "next": {
+     "top": 715.5,
+     "bottom": 759.5
+    },
+    "moveLabel": null,
+    "ring": "dashed",
+    "markBox": false,
+    "asked": [],
+    "focus": "DIV",
+    "overflowX": 0,
+    "shot": "390x664-06-no-street-bar-in-view.png"
+   },
+   "after-big-map": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "found",
+    "barText": "✓\nNear Unnamed road",
+    "barBox": {
+     "top": 52.8,
+     "bottom": 96.8
+    },
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "row": {
+     "top": 641.8,
+     "bottom": 774.8
+    },
+    "next": {
+     "top": 790.8,
+     "bottom": 834.8
+    },
+    "moveLabel": "Move",
+    "ring": null,
+    "markBox": false,
+    "asked": [],
+    "focus": "band-aerial-big-map",
+    "overflowX": 0,
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    },
+    "shot": "390x664-07-after-big-map.png"
+   },
+   "move-after-big-map": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "bar": "armed",
+    "barText": "Tap the intersection nearest the work",
+    "barBox": {
+     "top": 52.8,
+     "bottom": 96.8
+    },
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "row": {
+     "top": 641.8,
+     "bottom": 774.8
+    },
+    "next": {
+     "top": 790.8,
+     "bottom": 834.8
+    },
+    "moveLabel": "Cancel",
+    "ring": null,
+    "markBox": false,
+    "asked": [],
+    "focus": "band-aerial-big-map",
+    "overflowX": 0,
+    "shot": "390x664-08-move-after-big-map.png"
+   }
+  },
+  "timing": {
+   "tapToFoundMs": 9068,
+   "foundToScrollMs": 246,
+   "nearestReads": [
+    {
+     "status": 200,
+     "ms": 244
+    }
+   ]
+  },
+  "cancelAsked": 0,
+  "undoAsked": 0
+ }
+}

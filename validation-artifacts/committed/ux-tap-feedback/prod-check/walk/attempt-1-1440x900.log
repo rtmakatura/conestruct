@@ -1,0 +1,8 @@
+1440x900 armed | bar armed | y 489 | asked [] | focus BODY | axe 0
+1440x900 found-after-scroll | bar found | y 36 | asked [{"top":35.75,"behavior":"smooth"}] | focus cross-row-name | axe 0
+1440x900 after-move | bar armed | y 36 | asked [] | focus cross-move | axe 0
+1440x900 failed-was-hidden | bar failed | y 206 | asked [{"top":-30.5,"behavior":"smooth"}] | focus DIV | axe 0
+1440x900 no-street-was-hidden | bar none | y 206 | asked [{"top":-30.5,"behavior":"smooth"}] | focus DIV | axe 0
+1440x900 no-street-bar-in-view | bar finding | y 205 | asked [] | focus DIV | axe -
+1440x900 after-big-map | bar found | y 205 | asked [] | focus band-aerial-big-map | axe 0
+1440x900 move-after-big-map | bar armed | y 205 | asked [] | focus band-aerial-big-map | axe -
