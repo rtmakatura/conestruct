@@ -149,6 +149,7 @@ let roadBearing: Mode = "ok";
 let release: (() => void) | null = null;
 let readHangs = false;
 let tappedPoint = POINT;
+let aerialPoint: "ok" | "refused" | "garbled" | "down" = "ok";
 const calls: { url: string; body: unknown }[] = [];
 
 function json(body: unknown, status = 200): Response {
@@ -177,7 +178,12 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
       side_options: [SIDE],
     });
   }
-  if (url.includes("/api/aerial-point")) return json(tappedPoint);
+  if (url.includes("/api/aerial-point")) {
+    if (aerialPoint === "refused") return json({ error: "down" }, 502);
+    if (aerialPoint === "garbled") return json({ lat: null });
+    if (aerialPoint === "down") throw new Error("network");
+    return json(tappedPoint);
+  }
   if (url.includes("/api/road-bearing")) {
     if (roadBearing === "fail") return json({ error: "down" }, 502);
     if (roadBearing === "none") return json({ ...DETECTION, candidates: [MAINLINE] });
@@ -221,6 +227,7 @@ beforeEach(() => {
   release = null;
   readHangs = false;
   tappedPoint = POINT;
+  aerialPoint = "ok";
   lastInitial = null;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
@@ -694,14 +701,36 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
     expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "instant" });
   });
 
-  it("T25: no street there doesn't scroll, bar hidden or not (ruling 4 stands for it)", async () => {
+  it("T25: no street there with its bar under the nav scrolls just enough, once", async () => {
     barTop = -40;
+    await toTheCrossStreetQuestion();
+    roadBearing = "none";
+    await tapCrossing();
+    await until(() => barKind() === "none", "the no-street bar");
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "smooth" });
+    await settle();
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  it("T25: no street there with its bar all in view doesn't scroll", async () => {
+    barTop = 1;
     await toTheCrossStreetQuestion();
     roadBearing = "none";
     await tapCrossing();
     await until(() => barKind() === "none", "the no-street bar");
     await settle();
     expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("T25: with reduced motion no street's scroll is a jump", async () => {
+    barTop = -40;
+    reduced = true;
+    await toTheCrossStreetQuestion();
+    roadBearing = "none";
+    await tapCrossing();
+    await until(() => barKind() === "none", "the no-street bar");
+    expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "instant" });
   });
 
   it("T25, T26: the card's Try again failing again doesn't scroll and keeps focus; no street puts focus on that answer's line", async () => {
@@ -737,6 +766,87 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
     await until(() => scrollBy.mock.calls.length > 0, "the scroll");
     expect(scrollBy).toHaveBeenCalledTimes(1);
     expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "smooth" });
+  });
+
+  it("T25, T22: the bar's Try again answering no street with its bar under the nav scrolls, once, and focus lands", async () => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    expect(scrollBy).not.toHaveBeenCalled();
+    barTop = -40;
+    const retry = q("band-aerial-retry") as HTMLButtonElement;
+    retry.focus();
+    roadBearing = "none";
+    await click(retry, "the bar's Try again");
+    await until(() => barKind() === "none", "the no-street bar");
+    expect(document.activeElement).toBe(q("band-aerial-big-map"));
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "smooth" });
+  });
+
+  it.each(["refused", "garbled", "down"] as const)(
+    "T25: the tap's own coordinate read %s: the failed bar, its scroll, and Try again asks from the tap",
+    async (how) => {
+      barTop = -40;
+      await toTheCrossStreetQuestion();
+      aerialPoint = how;
+      await tapCrossing();
+      await until(() => barKind() === "failed", "the failed bar");
+      expect(scrollBy).toHaveBeenCalledTimes(1);
+      expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "smooth" });
+
+      aerialPoint = "ok";
+      await click(q("band-aerial-retry"), "the bar's Try again");
+      await until(() => q("cross-row") !== null, "the ✓ row");
+      expect(calls.filter((c) => c.url.includes("/api/aerial-point"))).toHaveLength(2);
+    },
+  );
+
+  it("T27: a different crossing saved on the big map ends the Move", async () => {
+    await toTheCrossStreetQuestion();
+    tappedPoint = { lat: POINT.lat + 0.0001, lng: POINT.lng };
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await click(q("cross-move"), "Move");
+    expect(q("cross-move")!.textContent).toBe("Cancel");
+
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    await click(byText("SAVE_CROSS"), "SAVE_CROSS");
+    await until(() => q("cross-move")?.textContent === "Move", "the Move to end");
+    expect(barKind()).toBe("found");
+  });
+
+  it("T27: Move on a crossing the big map made re-arms, scrolls, cancels, and a tap there undoes back to it", async () => {
+    await toTheCrossStreetQuestion();
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    await click(byText("SAVE_CROSS"), "SAVE_CROSS");
+    await until(() => q("cross-row") !== null, "the ✓ row after the picker");
+    const saved = await held();
+    expect(barKind()).toBe("found");
+    expect(scrollBy).not.toHaveBeenCalled();
+
+    frameTop = -200;
+    await click(q("cross-move"), "Move");
+    expect(barKind()).toBe("armed");
+    expect(q("cross-move")!.textContent).toBe("Cancel");
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    expect(scrollBy).toHaveBeenCalledWith({ top: -200, behavior: "smooth" });
+
+    await click(q("cross-move"), "Cancel");
+    expect(barKind()).toBe("found");
+    expect(q("cross-move")!.textContent).toBe("Move");
+
+    frameTop = 1;
+    await click(q("cross-move"), "Move");
+    tappedPoint = { lat: POINT.lat + 0.0001, lng: POINT.lng };
+    await tapCrossing();
+    await until(() => q("cross-move")?.textContent === "Move", "the Move to end with the new mark");
+    const moved = await held();
+    expect(moved.meta.intersection).not.toEqual(saved.meta.intersection);
+    await click(q("cross-undo"), "Undo");
+    await until(() => barKind() === "found", "the found bar back");
+    expect((await held()).meta.intersection).toEqual(saved.meta.intersection);
   });
 
   it.each([

@@ -338,6 +338,14 @@ async function run(w, h, { reduced = false, short = false, fromY = null, failedR
       m.afterFailedHidden = await rects();
       await view('failed-was-hidden');
 
+      // T25: failing again from where that scroll landed: the half-pixel isn't hidden.
+      await clearAsks();
+      await tap();
+      await p.waitForTimeout(1200);
+      await settleScroll();
+      await park(p);
+      m.afterFailedAgainLanded = await rects();
+
       // T25: the bar one px clear of the nav, already all there.
       await barUnderNav(-1);
       await clearAsks();
@@ -376,16 +384,30 @@ async function run(w, h, { reduced = false, short = false, fromY = null, failedR
       mode = 'fail';
       await p.waitForTimeout(100);
 
-      // "No street there" with the bar hidden: ruling 4 stands, no scroll.
+      // T25 (Ryan's answer): "no street there" with the bar hidden comes back, just enough.
       mode = 'none';
       await barUnderNav(30);
       await clearAsks();
+      m.beforeNoStreetHidden = await rects();
       await tap();
       await barIs('none');
       await p.waitForTimeout(600);
+      await settleScroll();
+      await p.waitForTimeout(300);
       await park(p);
       m.afterNoStreetHidden = await rects();
-      await view('no-street-hidden');
+      await view('no-street-was-hidden');
+
+      // T25: the same, with the bar one px clear of the nav: nothing moves.
+      await barUnderNav(-1);
+      await clearAsks();
+      m.beforeNoStreetVisible = await rects();
+      await tap();
+      await p.waitForTimeout(1200);
+      await settleScroll();
+      await park(p);
+      m.afterNoStreetVisible = await rects();
+      await view('no-street-bar-in-view');
 
       await ctx.close(); await b.close();
       console.log(tag, 'ok');
@@ -528,6 +550,17 @@ async function run(w, h, { reduced = false, short = false, fromY = null, failedR
     await p.waitForTimeout(1500);
     await park(p);
     await step('14-after-big-map-save', { measure: true, viewport: true, clear: true });
+
+    // T27: Move on the crossing the big map just made.
+    await p.evaluate(() => { window.__scrolls = []; });
+    await p.locator('[data-testid=cross-move]').evaluate((e) => e.click());
+    await p.waitForTimeout(1200);
+    out.moveAfterBigMap = await p.evaluate(() => ({
+      bar: document.querySelector('[data-testid=band-aerial-frame]')?.getAttribute('data-bar'),
+      button: document.querySelector('[data-testid=cross-move]')?.innerText,
+      asked: window.__scrolls,
+    }));
+    await step('15-move-after-big-map', { measure: true, viewport: true, clear: true });
   } catch (e) {
     out.error = String(e).slice(0, 600);
     await p.screenshot({ path: `${OUT}/${tag}-error.png`, fullPage: true }).catch(() => {});

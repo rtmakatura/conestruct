@@ -39,16 +39,17 @@ export function revealDelta(
 }
 
 /** #446 T24, T25: the least scroll that shows an element in the visible band;
- *  0 when it is already all there.  An element taller than the band keeps its
- *  top. */
+ *  0 when it is already all there, which under a pixel off counts as: a scroll
+ *  lands on the half-pixel at DPR 2.  An element taller than the band keeps
+ *  its top. */
 export function intoViewDelta(
   top: number,
   bottom: number,
   viewTop: number,
   viewBottom: number,
 ): number {
-  if (top < viewTop) return top - viewTop;
-  if (bottom > viewBottom) return Math.min(bottom - viewBottom, top - viewTop);
+  if (viewTop - top >= 1) return top - viewTop;
+  if (bottom - viewBottom >= 1) return Math.min(bottom - viewBottom, top - viewTop);
   return 0;
 }
 

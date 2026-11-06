@@ -52,10 +52,10 @@ export interface CrossStreetMark {
   /** #446 T15, T21: the last found tap's scroll may still run.  Move, Undo,
    *  Cancel and the picker opening end it (ruling 5). */
   revealOwed: boolean;
-  /** #446 T25: counts the failed answers to a tap or the bar's Try again, so
-   *  the aerial can bring a bar hidden under the nav back.  The card's Try
-   *  again doesn't count: the person is at the card. */
-  failedCount: number;
+  /** #446 T25: counts the failed and "no street" answers to a tap or the
+   *  bar's Try again, so the aerial can bring a bar hidden under the nav back.
+   *  The card's Try again doesn't count: the person is at the card. */
+  missCount: number;
   /** #446 T20: forgets a tap's failed or "no street" answer, and any lookup
    *  still out.  The picker's Save calls it. */
   clear: () => void;
@@ -140,12 +140,13 @@ export function useCrossStreetMark({
   restoreMemory: (m: CrossApplyMemory) => void;
 }): CrossStreetMark {
   const [phase, setPhase] = useState<CrossMarkPhase>("idle");
-  const [rearmed, setRearmed] = useState(false);
+  // #446 T27: the crossing Move was pressed on; a different one ends the Move.
+  const [rearmedOn, setRearmedOn] = useState<string | null>(null);
   const [pixel, setPixel] = useState<CrossMarkPixel | null>(null);
   const [ring, setRing] = useState<CrossMarkPixel | null>(null);
   const [foundCount, setFoundCount] = useState(0);
   const [revealOwed, setRevealOwed] = useState(false);
-  const [failedCount, setFailedCount] = useState(0);
+  const [missCount, setMissCount] = useState(0);
   const [askedAbout, setAskedAbout] = useState<string | null>(null);
   const snapRef = useRef<Snapshot | null>(null);
   const tokenRef = useRef(0);
@@ -163,7 +164,7 @@ export function useCrossStreetMark({
   const cancel = () => {
     tokenRef.current++;
     setRing(null);
-    setRearmed(false);
+    setRearmedOn(null);
     setRevealOwed(false);
     setPhase("idle");
   };
@@ -185,9 +186,9 @@ export function useCrossStreetMark({
     fromCard = false,
   ) => {
     const my = ++tokenRef.current;
-    const failed = () => {
-      setPhase("error");
-      if (!fromCard) setFailedCount((n) => n + 1);
+    const missed = (kind: "none" | "error") => {
+      setPhase(kind);
+      if (!fromCard) setMissCount((n) => n + 1);
     };
     lastRef.current = { tap, point: known };
     setPhase("resolving");
@@ -212,31 +213,27 @@ export function useCrossStreetMark({
         });
         if (tokenRef.current !== my) return;
         if (!r.ok) {
-          failed();
+          missed("error");
           return;
         }
         const j = (await r.json()) as { lat?: unknown; lng?: unknown };
         if (tokenRef.current !== my) return;
         if (typeof j.lat !== "number" || typeof j.lng !== "number") {
-          failed();
+          missed("error");
           return;
         }
         point = { lat: j.lat, lng: j.lng };
         lastRef.current = { tap, point };
       } catch {
-        if (tokenRef.current === my) failed();
+        if (tokenRef.current === my) missed("error");
         return;
       }
     }
     const cur0 = getScenario();
     const found = await lookupCrossStreet(point, cur0.meta.confirmedRoad?.candidate ?? null);
     if (tokenRef.current !== my) return;
-    if (found.kind === "error") {
-      failed();
-      return;
-    }
     if (found.kind !== "detected") {
-      setPhase(found.kind);
+      missed(found.kind);
       return;
     }
     const cur = getScenario();
@@ -254,7 +251,7 @@ export function useCrossStreetMark({
     snapRef.current = { before, memory: mem, written: record, after: JSON.stringify(next) };
     setPixel({ x: tap.x, y: tap.y, frameKey: tap.frameKey });
     setRing(null);
-    setRearmed(false);
+    setRearmedOn(null);
     setPhase("idle");
     setFoundCount((n) => n + 1);
     setRevealOwed(true);
@@ -263,12 +260,12 @@ export function useCrossStreetMark({
 
   return {
     phase: stale ? "idle" : phase,
-    rearmed: rearmed && markStands,
+    rearmed: rearmedOn !== null && rearmedOn === JSON.stringify(scenario.meta.intersection ?? null),
     pixel: markStands ? pixel : null,
     ring: stale ? null : ring,
     foundCount,
     revealOwed,
-    failedCount,
+    missCount,
     clear,
     leaveForPicker: () => {
       if (phase === "resolving") {
@@ -288,7 +285,7 @@ export function useCrossStreetMark({
       if (last) void run(last.tap, last.point, true);
     },
     move: () => {
-      setRearmed(true);
+      setRearmedOn(JSON.stringify(getScenario().meta.intersection ?? null));
       setRing(null);
       setRevealOwed(false);
       setPhase("idle");
@@ -310,7 +307,7 @@ export function useCrossStreetMark({
       lastRef.current = null;
       setPixel(null);
       setRing(null);
-      setRearmed(false);
+      setRearmedOn(null);
       setRevealOwed(false);
       setPhase("idle");
     },

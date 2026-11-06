@@ -47,6 +47,10 @@ describe("intoViewDelta (#446 T24, T25)", () => {
     expect(intoViewDelta(NAV, VIEW, NAV, VIEW)).toBe(0);
     expect(intoViewDelta(300, 400, NAV, VIEW)).toBe(0);
   });
+  it("under a pixel off is already there: where a scroll lands at DPR 2", () => {
+    expect(intoViewDelta(NAV - 0.5, 200, NAV, VIEW)).toBe(0);
+    expect(intoViewDelta(300, VIEW + 0.5, NAV, VIEW)).toBe(0);
+  });
   it("under the nav: just enough to clear it", () => {
     expect(intoViewDelta(NAV - 1, 200, NAV, VIEW)).toBe(-1);
     expect(intoViewDelta(-200, 50, NAV, VIEW)).toBe(-200 - NAV);

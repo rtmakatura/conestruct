@@ -170,8 +170,8 @@ export interface BandAerialProps {
   /** #446: the bar's state; without one the armed picture's bar. */
   bar?: AerialBar | null;
   ring?: AerialRing | null;
-  /** #446 T25: counts the failed answers a hidden bar comes back for. */
-  failedCount?: number;
+  /** #446 T25: counts the answers a hidden bar comes back for. */
+  missCount?: number;
 }
 
 /** #440 ruling 3: the bar's crosshair (the design canvas's own path).
@@ -213,7 +213,7 @@ export function BandAerial({
   mark = null,
   bar = null,
   ring = null,
-  failedCount = 0,
+  missCount = 0,
 }: BandAerialProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
@@ -234,18 +234,18 @@ export function BandAerial({
     }
     if (barKind !== "finding") retryHadFocus.current = false;
   }, [barKind]);
-  // #446 T25 (Ryan, 2026-11-06, amending ruling 4): a failed answer whose bar
-  // is hidden under the nav scrolls just enough to show the bar and Try again,
-  // once per answer; a bar already all there moves nothing.
+  // #446 T25 (Ryan, 2026-11-06, amending ruling 4): a failed or "no street"
+  // answer whose bar is hidden under the nav scrolls just enough to show the
+  // bar, once per answer; a bar already all there moves nothing.
   const barRef = useRef<HTMLDivElement | null>(null);
   // Seen whatever the bar says, so an answer that landed with this question
   // off screen doesn't scroll when the person comes back to it.
-  const failedSeen = useRef(failedCount);
+  const missSeen = useRef(missCount);
   useEffect(() => {
-    if (failedCount === failedSeen.current) return;
-    failedSeen.current = failedCount;
-    if (barKind === "failed" && barRef.current) scrollAerialPartIn(barRef.current);
-  }, [failedCount, barKind]);
+    if (missCount === missSeen.current) return;
+    missSeen.current = missCount;
+    if ((barKind === "failed" || barKind === "none") && barRef.current) scrollAerialPartIn(barRef.current);
+  }, [missCount, barKind]);
   // Only an answer for THIS scenario: while the geometry re-reads (a pin
   // moved, a side changed) the hook still holds the previous answer, and a
   // picture of the previous answer is a stale corridor (Rule 10).

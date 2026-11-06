@@ -357,14 +357,14 @@ describe("#440: the aerial takes the cross-street tap", () => {
       const top = this.getAttribute("data-testid") === "band-aerial-bar" ? -40 : 0;
       return { top, bottom: top + 65, left: 0, right: 0, width: 0, height: 65, x: 0, y: top } as DOMRect;
     });
-    const aerial = (failedCount: number, bar: AerialBar) => (
+    const aerial = (missCount: number, bar: AerialBar) => (
       <BandAerial
         scenario={SCENARIO}
         geometry={answer("intersection_not_marked")}
         kindConfirmed={false}
         pinFrame
         bar={bar}
-        failedCount={failedCount}
+        missCount={missCount}
       />
     );
     const failed: AerialBar = { kind: "failed", onRetry: () => {} };

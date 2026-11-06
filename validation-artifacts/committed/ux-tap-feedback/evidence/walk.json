@@ -1761,6 +1761,133 @@
       "ok": true
      }
     }
+   },
+   {
+    "name": "15-move-after-big-map",
+    "scrollY": 198,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 68.8,
+      "bottom": 112.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 67.8,
+     "bottom": 317.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 140.8,
+     "bottom": 184.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 140.8,
+     "bottom": 232.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 244.8,
+     "bottom": 288.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 678,
+     "bottom": 811,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 827,
+     "bottom": 871,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": true,
+     "next": false,
+     "heading": true
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "band-aerial-big-map"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · at where the work starts",
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "390-20-15-move-after-big-map-viewport.png",
+    "shot": "390-21-15-move-after-big-map.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 53.3,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
    }
   ],
   "errors": [],
@@ -1784,7 +1911,7 @@
   "scrollTrail": [
    0,
    46,
-   172,
+   189,
    216,
    227,
    227,
@@ -1818,7 +1945,12 @@
    227,
    227
   ],
-  "retrySamePoint": true
+  "retrySamePoint": true,
+  "moveAfterBigMap": {
+   "bar": "armed",
+   "button": "Cancel",
+   "asked": []
+  }
  },
  "1440": {
   "steps": [
@@ -3582,6 +3714,133 @@
       "ok": true
      }
     }
+   },
+   {
+    "name": "15-move-after-big-map",
+    "scrollY": 189,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 68.5,
+      "bottom": 112.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 67.5,
+     "bottom": 367.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 120.5,
+     "bottom": 164.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 172.5,
+     "bottom": 240.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 294.5,
+     "bottom": 338.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 602.8,
+     "bottom": 670.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 686.8,
+     "bottom": 730.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "band-aerial-big-map"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · at where the work starts",
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "1440-20-15-move-after-big-map-viewport.png",
+    "shot": "1440-21-15-move-after-big-map.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 53.3,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
    }
   ],
   "errors": [],
@@ -3639,7 +3898,12 @@
    36,
    36
   ],
-  "retrySamePoint": true
+  "retrySamePoint": true,
+  "moveAfterBigMap": {
+   "bar": "armed",
+   "button": "Cancel",
+   "asked": []
+  }
  },
  "1440-reduced": {
   "steps": [
@@ -5360,11 +5624,11 @@
   ],
   "scrollTrail": [
    0,
-   12,
-   233,
-   339,
-   395,
-   416,
+   33,
+   281,
+   373,
+   402,
+   419,
    421,
    421
   ]
@@ -5956,7 +6220,7 @@
   ],
   "scrollTrail": [
    260,
-   276,
+   316,
    395,
    418,
    421,
@@ -6882,7 +7146,7 @@
    0,
    47,
    184,
-   214,
+   209,
    220,
    220,
    220,

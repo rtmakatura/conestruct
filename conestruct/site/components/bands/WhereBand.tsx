@@ -638,7 +638,7 @@ export function WhereBand({
               mark={aerialMark}
               bar={aerialBar}
               ring={aerialRing}
-              failedCount={crossMark?.failedCount ?? 0}
+              missCount={crossMark?.missCount ?? 0}
             />
           ) : (
             // W11: no aerial (a stale road, a corridor-end pin): the
