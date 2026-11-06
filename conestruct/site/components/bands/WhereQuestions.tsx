@@ -31,7 +31,12 @@ import { symClass } from "@/lib/design/symbols";
 import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import type { CrossStreetMark } from "@/lib/cross-street-mark";
 import { crossStreetLabel } from "@/lib/road-detection/labels";
-import { REVEAL_WAIT_MS, scrollCrossRowIn } from "@/lib/cross-street-reveal";
+import {
+  focusWasDropped,
+  REVEAL_WAIT_MS,
+  scrollAerialPartIn,
+  scrollCrossRowIn,
+} from "@/lib/cross-street-reveal";
 import { QuestionSteps, type StepQuestion } from "../QuestionSteps";
 
 export const SIDE_QUESTION = "Which side of the road is the work on?";
@@ -241,6 +246,26 @@ export function WhereQuestions({
   const revealOwed = crossMark?.revealOwed ?? false;
   const cardPart = <T extends HTMLElement>(selector: string) =>
     sectionRef.current?.querySelector<T>(selector) ?? null;
+  const aerialPart = (selector: string) =>
+    sectionRef.current?.closest(".wq-stack")?.querySelector<HTMLElement>(selector) ?? null;
+  // #446 T26: the card's Try again leaves with the retry.  If it fails again,
+  // focus comes back to the new one; if it answers "no street" there's no new
+  // one, so focus goes to that answer's line, where the person already is (the
+  // bar's big-map button can be off screen).  Found goes to the heading (T9).
+  const markPhase = crossMark?.phase ?? "idle";
+  const cardRetryHadFocus = useRef(false);
+  useEffect(() => {
+    if (cardRetryHadFocus.current && focusWasDropped()) {
+      const target =
+        markPhase === "error"
+          ? cardPart('[data-testid="cross-retry"]')
+          : markPhase === "none"
+            ? cardPart('[data-testid="cross-none"]')
+            : null;
+      target?.focus({ preventScroll: true });
+    }
+    if (markPhase !== "resolving") cardRetryHadFocus.current = false;
+  }, [markPhase]);
   useEffect(() => {
     if (foundCount === foundSeen.current) return;
     // Seen either way: a tap that landed with the row off the card is over,
@@ -257,9 +282,7 @@ export function WhereQuestions({
       scrollOwed.current = false;
       const row = cardPart('[data-testid="cross-row"]');
       const next = cardPart(".nyq-foot .wq-next");
-      const frame = sectionRef.current
-        ?.closest(".wq-stack")
-        ?.querySelector<HTMLElement>('[data-testid="band-aerial-frame"]');
+      const frame = aerialPart('[data-testid="band-aerial-frame"]');
       if (frame && row && next) scrollCrossRowIn(frame, row, next);
     };
     if (!hasCrossing || !revealOwed) {
@@ -454,14 +477,20 @@ export function WhereQuestions({
                   {/* X11: Move re-arms the tap; while re-armed it reads Cancel. */}
                   {crossMark.rearmed
                     ? act("Cancel", "cross-move", crossMark.cancel)
-                    : act("Move", "cross-move", crossMark.move)}
+                    : act("Move", "cross-move", () => {
+                        // #446 T24 (Ryan, 2026-11-06, amending ruling 5): the
+                        // picture to tap comes back into view.
+                        crossMark.move();
+                        const frame = aerialPart('[data-testid="band-aerial-frame"]');
+                        if (frame) scrollAerialPartIn(frame);
+                      })}
                   {act("Undo", "cross-undo", crossMark.undo)}
                 </span>
               )}
             </div>
           ) : null}
           {phase === "none" && (
-            <p className="tr-note wq-line" data-testid="cross-none">
+            <p className="tr-note wq-line" data-testid="cross-none" tabIndex={-1}>
               {CROSS_NONE}
             </p>
           )}
@@ -469,7 +498,11 @@ export function WhereQuestions({
             <div className="wq-cross-fail" data-testid="cross-failed">
               <p className="tr-note wq-line">{CROSS_FAILED}</p>
               <span className="wq-cross-acts">
-                {crossMark && act("Try again", "cross-retry", crossMark.retry)}
+                {crossMark &&
+                  act("Try again", "cross-retry", () => {
+                    cardRetryHadFocus.current = true;
+                    crossMark.retryFromCard();
+                  })}
                 {onMarkIntersection && act(BIG_MAP_LABEL, "cross-big-map", onMarkIntersection)}
               </span>
             </div>

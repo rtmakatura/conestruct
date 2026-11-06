@@ -492,7 +492,6 @@ export function WhereBand({
   const editOpen = editChoice ?? lengthOwed;
   const openMap = () => {
     if (locked) return;
-    crossMark?.leaveForPicker(); // #446 T21: nothing lands behind the picker.
     onOpenPicker();
   };
 
@@ -580,12 +579,6 @@ export function WhereBand({
     crossOpen && crossMark?.ring && phase !== "idle"
       ? { ...crossMark.ring, look: phase === "resolving" ? "solid" : "dashed" }
       : null;
-  // T5, T21: the button stays while a lookup runs; pressing it drops that
-  // lookup and any scroll still owed, so nothing lands under the open picker.
-  const openBigMap = () => {
-    crossMark?.leaveForPicker();
-    onMarkIntersection?.();
-  };
 
   return (
     <OpenBand
@@ -641,10 +634,11 @@ export function WhereBand({
               pinFrame={crossOpen}
               armed={armed}
               onTap={crossMark ? (t) => crossMark.tap(t) : undefined}
-              onBigMap={onMarkIntersection ? openBigMap : undefined}
+              onBigMap={onMarkIntersection}
               mark={aerialMark}
               bar={aerialBar}
               ring={aerialRing}
+              failedCount={crossMark?.failedCount ?? 0}
             />
           ) : (
             // W11: no aerial (a stale road, a corridor-end pin): the

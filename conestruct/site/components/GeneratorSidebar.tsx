@@ -167,6 +167,8 @@ export function GeneratorSidebar({
   // picker with intersection mode armed; every other opener does not.
   const [pickerArmsIntersection, setPickerArmsIntersection] = useState(false);
   const openPicker = (armIntersection = false) => {
+    // #446 T21: every door onto the picker; nothing lands behind it.
+    crossMark.leaveForPicker();
     setPickerArmsIntersection(armIntersection);
     setPickerOpen(true);
   };

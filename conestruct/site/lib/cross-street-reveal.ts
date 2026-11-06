@@ -38,7 +38,43 @@ export function revealDelta(
   return Math.min(scroll, rowTop - viewTop);
 }
 
+/** #446 T24, T25: the least scroll that shows an element in the visible band;
+ *  0 when it is already all there.  An element taller than the band keeps its
+ *  top. */
+export function intoViewDelta(
+  top: number,
+  bottom: number,
+  viewTop: number,
+  viewBottom: number,
+): number {
+  if (top < viewTop) return top - viewTop;
+  if (bottom > viewBottom) return Math.min(bottom - viewBottom, top - viewTop);
+  return 0;
+}
+
 /** The scroll, a jump under reduced motion. */
+function scrollPage(top: number): void {
+  if (top === 0) return;
+  const reduce =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollBy({ top, behavior: reduce ? "instant" : "smooth" });
+}
+
+/** #446 T24, T25: brings one element of the aerial into view, under the nav. */
+export function scrollAerialPartIn(el: HTMLElement): void {
+  const chrome = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+  const box = el.getBoundingClientRect();
+  scrollPage(intoViewDelta(box.top, box.bottom, chrome, window.innerHeight));
+}
+
+/** #446 T26: a retry's button left with the retry, and focus fell to the page.
+ *  If the person has since moved it somewhere, it stays there. */
+export function focusWasDropped(): boolean {
+  const now = document.activeElement;
+  return now === null || now === document.body;
+}
+
 export function scrollCrossRowIn(frame: HTMLElement, row: HTMLElement, next: HTMLElement): void {
   // The sticky nav's budget, from the row's own scroll-margin-top.
   const chrome = parseFloat(getComputedStyle(row).scrollMarginTop) || 0;
@@ -47,16 +83,13 @@ export function scrollCrossRowIn(frame: HTMLElement, row: HTMLElement, next: HTM
   const wordsTop = words
     ? words.getBoundingClientRect().top + (parseFloat(getComputedStyle(words).paddingTop) || 0)
     : frame.getBoundingClientRect().top;
-  const top = revealDelta(
-    wordsTop,
-    row.getBoundingClientRect().top,
-    next.getBoundingClientRect().bottom,
-    chrome,
-    window.innerHeight,
+  scrollPage(
+    revealDelta(
+      wordsTop,
+      row.getBoundingClientRect().top,
+      next.getBoundingClientRect().bottom,
+      chrome,
+      window.innerHeight,
+    ),
   );
-  if (top === 0) return;
-  const reduce =
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  window.scrollBy({ top, behavior: reduce ? "instant" : "smooth" });
 }

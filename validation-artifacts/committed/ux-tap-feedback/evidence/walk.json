@@ -593,7 +593,7 @@
    },
    {
     "name": "05-move-rearmed",
-    "scrollY": 556,
+    "scrollY": 214,
     "viewportH": 844,
     "bar": {
      "kind": "armed",
@@ -604,8 +604,8 @@
      "font": "13.5px/600",
      "rect": {
       "x": 32,
-      "top": -289.3,
-      "bottom": -245.3,
+      "top": 52.8,
+      "bottom": 96.8,
       "w": 326,
       "h": 44
      },
@@ -617,51 +617,51 @@
     "ring": null,
     "mark": {
      "x": 143,
-     "top": -245,
-     "bottom": -217,
+     "top": 97,
+     "bottom": 125,
      "w": 28,
      "h": 28
     },
     "label": "Franklin Street",
     "frame": {
      "x": 31,
-     "top": -290.3,
-     "bottom": -40.3,
+     "top": 51.8,
+     "bottom": 301.8,
      "w": 328,
      "h": 250
     },
     "edit": {
      "x": 241.5,
-     "top": -217.3,
-     "bottom": -173.3,
+     "top": 124.8,
+     "bottom": 168.8,
      "w": 108.5,
      "h": 44
     },
     "zoom": {
      "x": 40,
-     "top": -217.3,
-     "bottom": -125.3,
+     "top": 124.8,
+     "bottom": 216.8,
      "w": 44,
      "h": 92
     },
     "big": {
      "x": 159.2,
-     "top": -113.3,
-     "bottom": -69.3,
+     "top": 228.8,
+     "bottom": 272.8,
      "w": 190.8,
      "h": 44
     },
     "row": {
      "x": 48,
-     "top": 320,
-     "bottom": 453,
+     "top": 662,
+     "bottom": 795,
      "w": 294,
      "h": 133
     },
     "next": {
      "x": 203.1,
-     "top": 469,
-     "bottom": 513,
+     "top": 811,
+     "bottom": 855,
      "w": 138.9,
      "h": 44
     },
@@ -673,20 +673,20 @@
      "w": 390,
      "h": 52
     },
-    "both_in_view": true,
+    "both_in_view": false,
     "gapAerialToRow": 360.3,
-    "barClearOfNav": false,
+    "barClearOfNav": true,
     "wordsTop": null,
     "wordsClearOfNav": null,
     "retryInBar": false,
     "inView": {
-     "box": false,
-     "label": false,
+     "box": true,
+     "label": true,
      "row": true,
-     "next": true,
+     "next": false,
      "heading": true
     },
-    "aerialVisiblePx": 0,
+    "aerialVisiblePx": 250,
     "focus": {
      "tag": "BUTTON",
      "testid": "cross-move"
@@ -696,7 +696,12 @@
     "cardLine": null,
     "rowName": "Near Franklin Street",
     "rowLine": "Two-way street · 60 ft west of where the work starts",
-    "scrolls": [],
+    "scrolls": [
+     {
+      "top": -342.25,
+      "behavior": "smooth"
+     }
+    ],
     "docOverflowX": false,
     "viewShot": "390-10-05-move-rearmed-viewport.png",
     "shot": "390-11-05-move-rearmed.png",
@@ -1778,10 +1783,10 @@
   ],
   "scrollTrail": [
    0,
-   14,
+   46,
    172,
-   209,
-   226,
+   216,
+   227,
    227,
    227,
    227
@@ -1789,8 +1794,8 @@
   "noScroll": {
    "move": {
     "before": 556,
-    "after": 556,
-    "asked": 0
+    "after": 214,
+    "asked": 1
    },
    "cancel": {
     "before": 556,
@@ -2409,7 +2414,7 @@
    },
    {
     "name": "05-move-rearmed",
-    "scrollY": 376,
+    "scrollY": 205,
     "viewportH": 900,
     "bar": {
      "kind": "armed",
@@ -2420,8 +2425,8 @@
      "font": "13.5px/600",
      "rect": {
       "x": 298,
-      "top": -118.5,
-      "bottom": -74.5,
+      "top": 52.5,
+      "bottom": 96.5,
       "w": 844,
       "h": 44
      },
@@ -2433,51 +2438,51 @@
     "ring": null,
     "mark": {
      "x": 860,
-     "top": -4,
-     "bottom": 24,
+     "top": 167,
+     "bottom": 195,
      "w": 28,
      "h": 28
     },
     "label": "Franklin Street",
     "frame": {
      "x": 297,
-     "top": -119.5,
-     "bottom": 180.5,
+     "top": 51.5,
+     "bottom": 351.5,
      "w": 846,
      "h": 300
     },
     "edit": {
      "x": 1025.5,
-     "top": -66.5,
-     "bottom": -22.5,
+     "top": 104.5,
+     "bottom": 148.5,
      "w": 108.5,
      "h": 44
     },
     "zoom": {
      "x": 1102,
-     "top": -14.5,
-     "bottom": 53.5,
+     "top": 156.5,
+     "bottom": 224.5,
      "w": 32,
      "h": 68
     },
     "big": {
      "x": 943.2,
-     "top": 107.5,
-     "bottom": 151.5,
+     "top": 278.5,
+     "bottom": 322.5,
      "w": 190.8,
      "h": 44
     },
     "row": {
      "x": 314,
-     "top": 415.8,
-     "bottom": 483.8,
+     "top": 586.8,
+     "bottom": 654.8,
      "w": 812,
      "h": 68
     },
     "next": {
      "x": 987.1,
-     "top": 499.8,
-     "bottom": 543.8,
+     "top": 670.8,
+     "bottom": 714.8,
      "w": 138.9,
      "h": 44
     },
@@ -2491,18 +2496,18 @@
     },
     "both_in_view": true,
     "gapAerialToRow": 235.3,
-    "barClearOfNav": false,
+    "barClearOfNav": true,
     "wordsTop": null,
     "wordsClearOfNav": null,
     "retryInBar": false,
     "inView": {
-     "box": false,
-     "label": false,
+     "box": true,
+     "label": true,
      "row": true,
      "next": true,
      "heading": true
     },
-    "aerialVisiblePx": 129,
+    "aerialVisiblePx": 300,
     "focus": {
      "tag": "BUTTON",
      "testid": "cross-move"
@@ -2512,7 +2517,12 @@
     "cardLine": null,
     "rowName": "Near Franklin Street",
     "rowLine": "Two-way street · 200 ft east of where the work starts",
-    "scrolls": [],
+    "scrolls": [
+     {
+      "top": -171.5,
+      "behavior": "smooth"
+     }
+    ],
     "docOverflowX": false,
     "viewShot": "1440-10-05-move-rearmed-viewport.png",
     "shot": "1440-11-05-move-rearmed.png",
@@ -3595,7 +3605,7 @@
   "scrollTrail": [
    0,
    23,
-   35,
+   36,
    36,
    36,
    36,
@@ -3605,8 +3615,8 @@
   "noScroll": {
    "move": {
     "before": 376,
-    "after": 376,
-    "asked": 0
+    "after": 205,
+    "asked": 1
    },
    "cancel": {
     "before": 376,
@@ -5350,11 +5360,11 @@
   ],
   "scrollTrail": [
    0,
-   33,
-   281,
-   358,
-   402,
-   419,
+   12,
+   233,
+   339,
+   395,
+   416,
    421,
    421
   ]
@@ -5946,9 +5956,9 @@
   ],
   "scrollTrail": [
    260,
-   316,
-   404,
-   420,
+   276,
+   395,
+   418,
    421,
    421,
    421,
@@ -6162,7 +6172,7 @@
    },
    {
     "name": "09-failed",
-    "scrollY": 260,
+    "scrollY": 215,
     "viewportH": 664,
     "bar": {
      "kind": "failed",
@@ -6173,8 +6183,8 @@
      "font": "13.5px/600",
      "rect": {
       "x": 32,
-      "top": 6.8,
-      "bottom": 71.4,
+      "top": 51.8,
+      "bottom": 116.4,
       "w": 326,
       "h": 64.7
      },
@@ -6188,8 +6198,8 @@
      "border": "3px dashed rgb(244, 192, 32)",
      "rect": {
       "x": 141,
-      "top": 49,
-      "bottom": 81,
+      "top": 94,
+      "bottom": 126,
       "w": 32,
       "h": 32
      }
@@ -6198,37 +6208,37 @@
     "label": null,
     "frame": {
      "x": 31,
-     "top": 5.8,
-     "bottom": 255.8,
+     "top": 50.8,
+     "bottom": 300.8,
      "w": 328,
      "h": 250
     },
     "edit": {
      "x": 241.5,
-     "top": 78.8,
-     "bottom": 122.8,
+     "top": 123.8,
+     "bottom": 167.8,
      "w": 108.5,
      "h": 44
     },
     "zoom": {
      "x": 40,
-     "top": 78.8,
-     "bottom": 170.8,
+     "top": 123.8,
+     "bottom": 215.8,
      "w": 44,
      "h": 92
     },
     "big": {
      "x": 159.2,
-     "top": 182.8,
-     "bottom": 226.8,
+     "top": 227.8,
+     "bottom": 271.8,
      "w": 190.8,
      "h": 44
     },
     "row": null,
     "next": {
      "x": 203.1,
-     "top": 702.8,
-     "bottom": 746.8,
+     "top": 747.8,
+     "bottom": 791.8,
      "w": 138.9,
      "h": 44
     },
@@ -6243,8 +6253,8 @@
     "both_in_view": null,
     "gapAerialToRow": null,
     "barClearOfNav": false,
-    "wordsTop": 10.8,
-    "wordsClearOfNav": false,
+    "wordsTop": 55.8,
+    "wordsClearOfNav": true,
     "retryInBar": true,
     "inView": {
      "box": null,
@@ -6253,7 +6263,7 @@
      "next": false,
      "heading": null
     },
-    "aerialVisiblePx": 204,
+    "aerialVisiblePx": 249,
     "focus": {
      "tag": "DIV",
      "testid": null
@@ -6271,6 +6281,10 @@
      {
       "top": -338.25,
       "behavior": "instant"
+     },
+     {
+      "top": -45.25,
+      "behavior": "smooth"
      }
     ],
     "docOverflowX": false,
@@ -6868,7 +6882,7 @@
    0,
    47,
    184,
-   209,
+   214,
    220,
    220,
    220,

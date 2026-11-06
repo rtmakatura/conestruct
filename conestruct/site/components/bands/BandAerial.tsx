@@ -51,6 +51,7 @@ import {
   type AerialStage,
 } from "@/lib/corridor-aerial";
 import { ZONE_CHANNEL, ZONE_COLOR, type CorridorZone } from "@/lib/corridor-zones";
+import { focusWasDropped, scrollAerialPartIn } from "@/lib/cross-street-reveal";
 import { symClass } from "@/lib/design/symbols";
 import { CROSS_FINDING, CROSS_NONE } from "./WhereQuestions";
 
@@ -169,6 +170,8 @@ export interface BandAerialProps {
   /** #446: the bar's state; without one the armed picture's bar. */
   bar?: AerialBar | null;
   ring?: AerialRing | null;
+  /** #446 T25: counts the failed answers a hidden bar comes back for. */
+  failedCount?: number;
 }
 
 /** #440 ruling 3: the bar's crosshair (the design canvas's own path).
@@ -210,6 +213,7 @@ export function BandAerial({
   mark = null,
   bar = null,
   ring = null,
+  failedCount = 0,
 }: BandAerialProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
@@ -222,11 +226,26 @@ export function BandAerial({
   const barKind = (bar?.kind ?? (armed ? "armed" : null)) as AerialBar["kind"] | null;
   useEffect(() => {
     if (retryHadFocus.current) {
-      if (barKind === "failed") retryRef.current?.focus({ preventScroll: true });
-      if (barKind === "none") bigMapRef.current?.focus({ preventScroll: true });
+      // T26: only if focus is still lost; a place the person moved it stays.
+      if (focusWasDropped()) {
+        if (barKind === "failed") retryRef.current?.focus({ preventScroll: true });
+        if (barKind === "none") bigMapRef.current?.focus({ preventScroll: true });
+      }
     }
     if (barKind !== "finding") retryHadFocus.current = false;
   }, [barKind]);
+  // #446 T25 (Ryan, 2026-11-06, amending ruling 4): a failed answer whose bar
+  // is hidden under the nav scrolls just enough to show the bar and Try again,
+  // once per answer; a bar already all there moves nothing.
+  const barRef = useRef<HTMLDivElement | null>(null);
+  // Seen whatever the bar says, so an answer that landed with this question
+  // off screen doesn't scroll when the person comes back to it.
+  const failedSeen = useRef(failedCount);
+  useEffect(() => {
+    if (failedCount === failedSeen.current) return;
+    failedSeen.current = failedCount;
+    if (barKind === "failed" && barRef.current) scrollAerialPartIn(barRef.current);
+  }, [failedCount, barKind]);
   // Only an answer for THIS scenario: while the geometry re-reads (a pin
   // moved, a side changed) the hook still holds the previous answer, and a
   // picture of the previous answer is a stale corridor (Rule 10).
@@ -331,7 +350,7 @@ export function BandAerial({
         data-testid="band-aerial-frame"
       >
         {barNow && (
-          <div className="a-aerial-bar" data-testid="band-aerial-bar" role="status">
+          <div ref={barRef} className="a-aerial-bar" data-testid="band-aerial-bar" role="status">
             {barNow.kind === "armed" && (
               <>
                 <BarIcon />

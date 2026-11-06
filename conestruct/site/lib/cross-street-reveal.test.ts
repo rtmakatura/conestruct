@@ -1,6 +1,6 @@
 // #446 ruling 3: the least scroll that shows the ✓ row and "Next question".
 import { describe, expect, it } from "vitest";
-import { REVEAL_MARGIN_PX, revealDelta } from "./cross-street-reveal";
+import { intoViewDelta, REVEAL_MARGIN_PX, revealDelta } from "./cross-street-reveal";
 
 const NAV = 52;
 const VIEW = 800;
@@ -39,5 +39,23 @@ describe("revealDelta", () => {
   });
   it("the row above the view (scrolled past it): back up to it", () => {
     expect(revealDelta(-300, 40, 300, NAV, VIEW)).toBe(40 - NAV);
+  });
+});
+
+describe("intoViewDelta (#446 T24, T25)", () => {
+  it("all in view: no scroll, down to the pixel", () => {
+    expect(intoViewDelta(NAV, VIEW, NAV, VIEW)).toBe(0);
+    expect(intoViewDelta(300, 400, NAV, VIEW)).toBe(0);
+  });
+  it("under the nav: just enough to clear it", () => {
+    expect(intoViewDelta(NAV - 1, 200, NAV, VIEW)).toBe(-1);
+    expect(intoViewDelta(-200, 50, NAV, VIEW)).toBe(-200 - NAV);
+  });
+  it("below the fold: just enough to show it", () => {
+    expect(intoViewDelta(700, 900, NAV, VIEW)).toBe(100);
+  });
+  it("taller than the band: its top wins", () => {
+    expect(intoViewDelta(300, 1500, NAV, VIEW)).toBe(300 - NAV);
+    expect(intoViewDelta(-10, 1500, NAV, VIEW)).toBe(-10 - NAV);
   });
 });

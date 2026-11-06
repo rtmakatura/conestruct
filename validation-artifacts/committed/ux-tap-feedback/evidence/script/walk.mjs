@@ -132,8 +132,8 @@ async function read(p) {
   });
 }
 
-async function run(w, h, { reduced = false, short = false, fromY = null, failedRun = false } = {}) {
-  const tag = short ? `${w}x${h}${fromY !== null ? `-y${fromY}` : ''}${failedRun ? '-failed' : ''}` : `${w}${reduced ? '-reduced' : ''}`;
+async function run(w, h, { reduced = false, short = false, fromY = null, failedRun = false, r4 = false } = {}) {
+  const tag = r4 ? `r4-${w}x${h}${reduced ? '-reduced' : ''}` : short ? `${w}x${h}${fromY !== null ? `-y${fromY}` : ''}${failedRun ? '-failed' : ''}` : `${w}${reduced ? '-reduced' : ''}`;
   const b = await chromium.launch();
   const out = { steps: [], errors: [] };
   let n = 1;
@@ -251,7 +251,146 @@ async function run(w, h, { reduced = false, short = false, fromY = null, failedR
     await p.waitForSelector('[data-testid=band-aerial-bar]', { timeout: 30000 });
     await p.waitForTimeout(1500);
     await park(p);
-    await step('01-armed', { measure: !reduced && !short, clear: true });
+    await step('01-armed', { measure: !reduced && !short && !r4, clear: true });
+
+    // Round 4 (T24, T25): what Move, a failed tap and the card's Try again
+    // ask of the page, read around each press, with a viewport shot of what
+    // a person is left looking at.
+    if (r4) {
+      const rects = () => p.evaluate(() => {
+        const box = (sel) => { const e = document.querySelector(sel); if (!e) return null; const r = e.getBoundingClientRect(); return { top: +r.top.toFixed(1), bottom: +r.bottom.toFixed(1) }; };
+        return {
+          scrollY: Math.round(window.scrollY),
+          innerHeight: window.innerHeight,
+          nav: +(document.querySelector('.a-nav, nav')?.getBoundingClientRect().bottom ?? 0).toFixed(1),
+          frame: box('[data-testid=band-aerial-frame]'),
+          bar: box('[data-testid=band-aerial-bar]'),
+          retry: box('[data-testid=band-aerial-retry]'),
+          row: box('[data-testid=cross-row]'),
+          asked: window.__scrolls,
+          focus: document.activeElement?.getAttribute('data-testid') ?? document.activeElement?.tagName,
+        };
+      });
+      const clearAsks = () => p.evaluate(() => { window.__scrolls = []; });
+      // The page stopped with the bar's top `by` px under the nav.
+      const barUnderNav = async (by) => {
+        await p.evaluate((d) => {
+          const b = document.querySelector('[data-testid=band-aerial-bar]').getBoundingClientRect();
+          const n = document.querySelector('.a-nav, nav')?.getBoundingClientRect().bottom ?? 0;
+          window.scrollBy({ top: b.top - n + d, behavior: 'instant' });
+        }, by);
+        await p.waitForTimeout(200);
+      };
+      const barIs = (kind) => p.waitForFunction((k) => document.querySelector('[data-testid=band-aerial-frame]')?.getAttribute('data-bar') === k, kind, { timeout: 30000 });
+      const pressCentred = async (id) => {
+        await p.evaluate((sel) => document.querySelector(sel).scrollIntoView({ block: 'center', behavior: 'instant' }), `[data-testid=${id}]`);
+        await p.waitForTimeout(200);
+        await clearAsks();
+        await press(id);
+        await settleScroll();
+        await p.waitForTimeout(300);
+      };
+      const m = (out.round4 = {});
+
+      // A found tap, its scroll done.
+      mode = 'cross';
+      await cardOffScreen();
+      await tap();
+      await barIs('found');
+      await p.waitForFunction(() => /of where the work starts/.test(document.querySelector('[data-testid=cross-row-line]')?.innerText ?? ''), null, { timeout: 30000 }).catch(() => {});
+      await p.waitForTimeout(600);
+      await settleScroll();
+      await park(p);
+      m.foundScrolled = await rects();
+      await view('found-scrolled');
+
+      // T24: Move from where that left the page.  The row is on screen there.
+      const moveBox = await p.locator('[data-testid=cross-move]').boundingBox();
+      await clearAsks();
+      m.beforeMove = await rects();
+      await p.mouse.click(moveBox.x + moveBox.width / 2, moveBox.y + moveBox.height / 2);
+      await settleScroll();
+      await p.waitForTimeout(300);
+      await park(p);
+      m.afterMove = await rects();
+      m.barAfterMove = await p.locator('[data-testid=band-aerial-bar]').innerText();
+      await view('after-move');
+      await crop('[data-testid=band-aerial]', 'after-move-aerial');
+
+      // Move's Cancel, then Move again with the picture already there if it can be.
+      await pressCentred('cross-move');
+      m.cancelAsked = await p.evaluate(() => window.__scrolls);
+      await pressCentred('cross-undo');
+      m.undoAsked = await p.evaluate(() => window.__scrolls);
+      await barIs('armed');
+      await p.waitForTimeout(1000);
+
+      // T25: a failed tap with the bar's top 30 px under the nav.
+      mode = 'fail';
+      await barUnderNav(30);
+      await clearAsks();
+      m.beforeFailedHidden = await rects();
+      await tap();
+      await barIs('failed');
+      await settleScroll();
+      await p.waitForTimeout(300);
+      await park(p);
+      m.afterFailedHidden = await rects();
+      await view('failed-was-hidden');
+
+      // T25: the bar one px clear of the nav, already all there.
+      await barUnderNav(-1);
+      await clearAsks();
+      m.beforeFailedVisible = await rects();
+      await tap();
+      await p.waitForTimeout(1200);
+      await settleScroll();
+      await park(p);
+      m.afterFailedVisible = await rects();
+      await view('failed-bar-in-view');
+
+      // T25, T26: the card's Try again, with the bar off screen: no scroll, focus kept.
+      await p.locator('[data-testid=cross-retry]').evaluate((e) => e.scrollIntoView({ block: 'center', behavior: 'instant' }));
+      await p.waitForTimeout(200);
+      await clearAsks();
+      m.beforeCardRetry = await rects();
+      await p.locator('[data-testid=cross-retry]').focus();
+      await p.keyboard.press('Enter');
+      await p.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'cross-retry', null, { timeout: 20000 }).catch(() => {});
+      await p.waitForTimeout(800);
+      await settleScroll();
+      m.afterCardRetry = await rects();
+      await view('card-retry-failed-again');
+
+      // T26: the card's Try again answering "no street": focus stays at the card.
+      mode = 'none';
+      await clearAsks();
+      await p.keyboard.press('Enter');
+      await p.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'cross-none', null, { timeout: 20000 }).catch(() => {});
+      await p.waitForTimeout(500);
+      m.afterCardRetryNone = await rects();
+      m.afterCardRetryNone.noneLine = await p.locator('[data-testid=cross-none]').evaluate((e) => { const r = e.getBoundingClientRect(); return { top: +r.top.toFixed(1), bottom: +r.bottom.toFixed(1) }; });
+      await view('card-retry-no-street');
+
+      // Back to a failed answer, so the next tap is armed from the same state.
+      mode = 'fail';
+      await p.waitForTimeout(100);
+
+      // "No street there" with the bar hidden: ruling 4 stands, no scroll.
+      mode = 'none';
+      await barUnderNav(30);
+      await clearAsks();
+      await tap();
+      await barIs('none');
+      await p.waitForTimeout(600);
+      await park(p);
+      m.afterNoStreetHidden = await rects();
+      await view('no-street-hidden');
+
+      await ctx.close(); await b.close();
+      console.log(tag, 'ok');
+      return out;
+    }
 
     // The tap, the lookup held 2.5 s; the first read comes straight after the click.
     mode = 'slow';
@@ -310,7 +449,8 @@ async function run(w, h, { reduced = false, short = false, fromY = null, failedR
       (out.noScroll ??= {})[label] = { before: Math.round(y0), after: Math.round(r.y), asked: r.asked };
     };
 
-    // Move: re-arms, no scroll.  Cancel: back to found, no scroll.
+    // Move: re-arms, and T24 brings the picture back (read here from the row
+    // in view).  Cancel: back to found, no scroll.
     await noScroll('move', 'cross-move');
     await park(p);
     await step('05-move-rearmed', { measure: true, viewport: true, clear: true });
@@ -399,6 +539,13 @@ async function run(w, h, { reduced = false, short = false, fromY = null, failedR
 }
 
 const M = {};
+if (process.env.R4_ONLY) {
+  for (const [w, h, reduced] of [[1440, 900, false], [1440, 700, false], [390, 844, false], [390, 664, false], [390, 664, true]]) {
+    M[`r4-${w}x${h}${reduced ? '-reduced' : ''}`] = await run(w, h, { r4: true, reduced });
+  }
+  fs.writeFileSync(`${OUT}/walk-r4.json`, JSON.stringify(M, null, 1));
+  process.exit(0);
+}
 const WIDTHS = (process.env.WIDTHS ?? '1440,390').split(',').map(Number);
 if (process.env.Y260_ONLY) M['390x664-y260'] = await run(390, 664, { short: true, fromY: 260 });
 for (const [w, h] of process.env.SHORT_ONLY || process.env.Y260_ONLY ? [] : [[1440, 900], [390, 844]].filter(([x]) => WIDTHS.includes(x))) {

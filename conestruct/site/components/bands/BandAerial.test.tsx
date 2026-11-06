@@ -15,6 +15,7 @@ import {
   AERIAL_KIND_OWED,
   AERIAL_TAP_BAR,
   AERIAL_WAIT,
+  type AerialBar,
   type AerialTap,
 } from "./BandAerial";
 import { forgetAerials } from "@/lib/corridor-aerial";
@@ -347,6 +348,40 @@ describe("#440: the aerial takes the cross-street tap", () => {
     // No side sentence and no legend on the forced pin picture.
     expect(q("band-aerial-note")).toBeNull();
     expect(q("band-aerial-legend")).toBeNull();
+  });
+
+  it("#446 T25: an answer counted while the bar wasn't failed doesn't scroll later; a new one does", async () => {
+    const scrollBy = vi.fn();
+    window.scrollBy = scrollBy as unknown as typeof window.scrollBy;
+    const rect = vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
+      const top = this.getAttribute("data-testid") === "band-aerial-bar" ? -40 : 0;
+      return { top, bottom: top + 65, left: 0, right: 0, width: 0, height: 65, x: 0, y: top } as DOMRect;
+    });
+    const aerial = (failedCount: number, bar: AerialBar) => (
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("intersection_not_marked")}
+        kindConfirmed={false}
+        pinFrame
+        bar={bar}
+        failedCount={failedCount}
+      />
+    );
+    const failed: AerialBar = { kind: "failed", onRetry: () => {} };
+    const view = render(aerial(0, { kind: "armed" }));
+    await settle();
+    // Answered with the question elsewhere, then shown: no scroll.
+    view.rerender(aerial(1, { kind: "armed" }));
+    await settle(0);
+    view.rerender(aerial(1, failed));
+    await settle(0);
+    expect(scrollBy).not.toHaveBeenCalled();
+    // A new answer while it's showing does.
+    view.rerender(aerial(2, failed));
+    await settle(0);
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    expect(scrollBy.mock.calls[0][0].top).toBe(-40);
+    rect.mockRestore();
   });
 
   it("ruling 3: armed — the bar, the outline class, the big-map button, the armed label; a tap sends its pixel", async () => {

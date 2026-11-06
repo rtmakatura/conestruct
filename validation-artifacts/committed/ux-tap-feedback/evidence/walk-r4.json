@@ -1,0 +1,1617 @@
+{
+ "r4-1440x900": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 489,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -231.5,
+      "bottom": -187.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": -232.5,
+     "bottom": 67.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -179.5,
+     "bottom": -135.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -127.5,
+     "bottom": -59.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": -5.5,
+     "bottom": 38.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 302.8,
+     "bottom": 346.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 16,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "r4-1440x900-01-01-armed.png"
+   }
+  ],
+  "errors": [],
+  "round4": {
+   "foundScrolled": {
+    "scrollY": 36,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 220.5,
+     "bottom": 520.5
+    },
+    "bar": {
+     "top": 221.5,
+     "bottom": 265.5
+    },
+    "retry": null,
+    "row": {
+     "top": 755.8,
+     "bottom": 823.8
+    },
+    "asked": [
+     {
+      "top": -300.5,
+      "behavior": "instant"
+     },
+     {
+      "top": -524.5,
+      "behavior": "instant"
+     },
+     {
+      "top": 35.75,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-row-name"
+   },
+   "beforeMove": {
+    "scrollY": 36,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 220.5,
+     "bottom": 520.5
+    },
+    "bar": {
+     "top": 221.5,
+     "bottom": 265.5
+    },
+    "retry": null,
+    "row": {
+     "top": 755.8,
+     "bottom": 823.8
+    },
+    "asked": [],
+    "focus": "cross-row-name"
+   },
+   "afterMove": {
+    "scrollY": 36,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 220.5,
+     "bottom": 520.5
+    },
+    "bar": {
+     "top": 221.5,
+     "bottom": 265.5
+    },
+    "retry": null,
+    "row": {
+     "top": 755.8,
+     "bottom": 823.8
+    },
+    "asked": [],
+    "focus": "cross-move"
+   },
+   "barAfterMove": "Tap the intersection nearest the work",
+   "cancelAsked": [],
+   "undoAsked": [],
+   "beforeFailedHidden": {
+    "scrollY": 236,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 20.5,
+     "bottom": 320.5
+    },
+    "bar": {
+     "top": 21.5,
+     "bottom": 65.5
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "BODY"
+   },
+   "afterFailedHidden": {
+    "scrollY": 206,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 50.5,
+     "bottom": 350.5
+    },
+    "bar": {
+     "top": 51.5,
+     "bottom": 95.5
+    },
+    "retry": {
+     "top": 51.5,
+     "bottom": 95.5
+    },
+    "row": null,
+    "asked": [
+     {
+      "top": -30.5,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "DIV"
+   },
+   "beforeFailedVisible": {
+    "scrollY": 205,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 51.5,
+     "bottom": 351.5
+    },
+    "bar": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "retry": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterFailedVisible": {
+    "scrollY": 205,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 51.5,
+     "bottom": 351.5
+    },
+    "bar": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "retry": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "beforeCardRetry": {
+    "scrollY": 364,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": -107.5,
+     "bottom": 192.5
+    },
+    "bar": {
+     "top": -106.5,
+     "bottom": -62.5
+    },
+    "retry": {
+     "top": -106.5,
+     "bottom": -62.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterCardRetry": {
+    "scrollY": 364,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": -107.5,
+     "bottom": 192.5
+    },
+    "bar": {
+     "top": -106.5,
+     "bottom": -62.5
+    },
+    "retry": {
+     "top": -106.5,
+     "bottom": -62.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "cross-retry"
+   },
+   "afterNoStreetHidden": {
+    "scrollY": 236,
+    "innerHeight": 900,
+    "nav": 52,
+    "frame": {
+     "top": 20.5,
+     "bottom": 320.5
+    },
+    "bar": {
+     "top": 21.5,
+     "bottom": 65.5
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   }
+  }
+ },
+ "r4-1440x700": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 644,
+    "viewportH": 700,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -386.5,
+      "bottom": -342.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": -387.5,
+     "bottom": -87.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -334.5,
+     "bottom": -290.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -282.5,
+     "bottom": -214.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": -160.5,
+     "bottom": -116.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 147.8,
+     "bottom": 191.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "r4-1440x700-01-01-armed.png"
+   }
+  ],
+  "errors": [],
+  "round4": {
+   "foundScrolled": {
+    "scrollY": 220,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 36.5,
+     "bottom": 336.5
+    },
+    "bar": {
+     "top": 37.5,
+     "bottom": 81.5
+    },
+    "retry": null,
+    "row": {
+     "top": 571.8,
+     "bottom": 639.8
+    },
+    "asked": [
+     {
+      "top": -455.5,
+      "behavior": "instant"
+     },
+     {
+      "top": -324.5,
+      "behavior": "instant"
+     },
+     {
+      "top": 219.75,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-row-name"
+   },
+   "beforeMove": {
+    "scrollY": 220,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 36.5,
+     "bottom": 336.5
+    },
+    "bar": {
+     "top": 37.5,
+     "bottom": 81.5
+    },
+    "retry": null,
+    "row": {
+     "top": 571.8,
+     "bottom": 639.8
+    },
+    "asked": [],
+    "focus": "cross-row-name"
+   },
+   "afterMove": {
+    "scrollY": 205,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 51.5,
+     "bottom": 351.5
+    },
+    "bar": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "retry": null,
+    "row": {
+     "top": 586.8,
+     "bottom": 654.8
+    },
+    "asked": [
+     {
+      "top": -15.5,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-move"
+   },
+   "barAfterMove": "Tap the intersection nearest the work",
+   "cancelAsked": [],
+   "undoAsked": [],
+   "beforeFailedHidden": {
+    "scrollY": 236,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 20.5,
+     "bottom": 320.5
+    },
+    "bar": {
+     "top": 21.5,
+     "bottom": 65.5
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "BODY"
+   },
+   "afterFailedHidden": {
+    "scrollY": 206,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 50.5,
+     "bottom": 350.5
+    },
+    "bar": {
+     "top": 51.5,
+     "bottom": 95.5
+    },
+    "retry": {
+     "top": 51.5,
+     "bottom": 95.5
+    },
+    "row": null,
+    "asked": [
+     {
+      "top": -30.5,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "DIV"
+   },
+   "beforeFailedVisible": {
+    "scrollY": 205,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 51.5,
+     "bottom": 351.5
+    },
+    "bar": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "retry": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterFailedVisible": {
+    "scrollY": 205,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 51.5,
+     "bottom": 351.5
+    },
+    "bar": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "retry": {
+     "top": 52.5,
+     "bottom": 96.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "beforeCardRetry": {
+    "scrollY": 464,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": -207.5,
+     "bottom": 92.5
+    },
+    "bar": {
+     "top": -206.5,
+     "bottom": -162.5
+    },
+    "retry": {
+     "top": -206.5,
+     "bottom": -162.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterCardRetry": {
+    "scrollY": 464,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": -207.5,
+     "bottom": 92.5
+    },
+    "bar": {
+     "top": -206.5,
+     "bottom": -162.5
+    },
+    "retry": {
+     "top": -206.5,
+     "bottom": -162.5
+    },
+    "row": null,
+    "asked": [],
+    "focus": "cross-retry"
+   },
+   "afterNoStreetHidden": {
+    "scrollY": 236,
+    "innerHeight": 700,
+    "nav": 52,
+    "frame": {
+     "top": 20.5,
+     "bottom": 320.5
+    },
+    "bar": {
+     "top": 21.5,
+     "bottom": 65.5
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   }
+  }
+ },
+ "r4-390x844": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 648,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -381.3,
+      "bottom": -337.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -382.3,
+     "bottom": -132.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -309.3,
+     "bottom": -265.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -309.3,
+     "bottom": -217.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -205.3,
+     "bottom": -161.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 228,
+     "bottom": 272,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "r4-390x844-01-01-armed.png"
+   }
+  ],
+  "errors": [],
+  "round4": {
+   "foundScrolled": {
+    "scrollY": 227,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 38.8,
+     "bottom": 288.8
+    },
+    "bar": {
+     "top": 39.8,
+     "bottom": 83.8
+    },
+    "retry": null,
+    "row": {
+     "top": 649,
+     "bottom": 782
+    },
+    "asked": [
+     {
+      "top": -450.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -518.25,
+      "behavior": "instant"
+     },
+     {
+      "top": 227.296875,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-row-name"
+   },
+   "beforeMove": {
+    "scrollY": 227,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 38.8,
+     "bottom": 288.8
+    },
+    "bar": {
+     "top": 39.8,
+     "bottom": 83.8
+    },
+    "retry": null,
+    "row": {
+     "top": 649,
+     "bottom": 782
+    },
+    "asked": [],
+    "focus": "cross-row-name"
+   },
+   "afterMove": {
+    "scrollY": 214,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 96.8
+    },
+    "retry": null,
+    "row": {
+     "top": 662,
+     "bottom": 795
+    },
+    "asked": [
+     {
+      "top": -13.25,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-move"
+   },
+   "barAfterMove": "Tap the intersection nearest the work",
+   "cancelAsked": [],
+   "undoAsked": [],
+   "beforeFailedHidden": {
+    "scrollY": 245,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "bar": {
+     "top": 21.8,
+     "bottom": 65.8
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "BODY"
+   },
+   "afterFailedHidden": {
+    "scrollY": 215,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 50.8,
+     "bottom": 300.8
+    },
+    "bar": {
+     "top": 51.8,
+     "bottom": 116.4
+    },
+    "retry": {
+     "top": 51.8,
+     "bottom": 116.4
+    },
+    "row": null,
+    "asked": [
+     {
+      "top": -30.25,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "DIV"
+   },
+   "beforeFailedVisible": {
+    "scrollY": 214,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "retry": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterFailedVisible": {
+    "scrollY": 214,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "retry": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "beforeCardRetry": {
+    "scrollY": 503,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": -237.3,
+     "bottom": 12.8
+    },
+    "bar": {
+     "top": -236.3,
+     "bottom": -171.6
+    },
+    "retry": {
+     "top": -236.3,
+     "bottom": -171.6
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterCardRetry": {
+    "scrollY": 503,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": -237.3,
+     "bottom": 12.8
+    },
+    "bar": {
+     "top": -236.3,
+     "bottom": -171.6
+    },
+    "retry": {
+     "top": -236.3,
+     "bottom": -171.6
+    },
+    "row": null,
+    "asked": [],
+    "focus": "cross-retry"
+   },
+   "afterNoStreetHidden": {
+    "scrollY": 245,
+    "innerHeight": 844,
+    "nav": 52,
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "bar": {
+     "top": 21.8,
+     "bottom": 75.5
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   }
+  }
+ },
+ "r4-390x664": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 587,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -320.3,
+      "bottom": -276.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -321.3,
+     "bottom": -71.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -248.3,
+     "bottom": -204.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -248.3,
+     "bottom": -156.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -144.3,
+     "bottom": -100.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 289,
+     "bottom": 333,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "r4-390x664-01-01-armed.png"
+   }
+  ],
+  "errors": [],
+  "round4": {
+   "foundScrolled": {
+    "scrollY": 421,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -155.3,
+     "bottom": 94.8
+    },
+    "bar": {
+     "top": -154.3,
+     "bottom": -110.3
+    },
+    "retry": null,
+    "row": {
+     "top": 455,
+     "bottom": 588
+    },
+    "asked": [
+     {
+      "top": -389.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -338.25,
+      "behavior": "instant"
+     },
+     {
+      "top": 421,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-row-name"
+   },
+   "beforeMove": {
+    "scrollY": 421,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -155.3,
+     "bottom": 94.8
+    },
+    "bar": {
+     "top": -154.3,
+     "bottom": -110.3
+    },
+    "retry": null,
+    "row": {
+     "top": 455,
+     "bottom": 588
+    },
+    "asked": [],
+    "focus": "cross-row-name"
+   },
+   "afterMove": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 96.8
+    },
+    "retry": null,
+    "row": {
+     "top": 662,
+     "bottom": 795
+    },
+    "asked": [
+     {
+      "top": -207.25,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "cross-move"
+   },
+   "barAfterMove": "Tap the intersection nearest the work",
+   "cancelAsked": [],
+   "undoAsked": [],
+   "beforeFailedHidden": {
+    "scrollY": 245,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "bar": {
+     "top": 21.8,
+     "bottom": 65.8
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "BODY"
+   },
+   "afterFailedHidden": {
+    "scrollY": 215,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 50.8,
+     "bottom": 300.8
+    },
+    "bar": {
+     "top": 51.8,
+     "bottom": 116.4
+    },
+    "retry": {
+     "top": 51.8,
+     "bottom": 116.4
+    },
+    "row": null,
+    "asked": [
+     {
+      "top": -30.25,
+      "behavior": "smooth"
+     }
+    ],
+    "focus": "DIV"
+   },
+   "beforeFailedVisible": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "retry": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterFailedVisible": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "retry": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "beforeCardRetry": {
+    "scrollY": 593,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -327.3,
+     "bottom": -77.3
+    },
+    "bar": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "retry": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterCardRetry": {
+    "scrollY": 593,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -327.3,
+     "bottom": -77.3
+    },
+    "bar": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "retry": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "row": null,
+    "asked": [],
+    "focus": "cross-retry"
+   },
+   "afterNoStreetHidden": {
+    "scrollY": 245,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "bar": {
+     "top": 21.8,
+     "bottom": 75.5
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   }
+  }
+ },
+ "r4-390x664-reduced": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 587,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -320.3,
+      "bottom": -276.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -321.3,
+     "bottom": -71.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -248.3,
+     "bottom": -204.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -248.3,
+     "bottom": -156.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -144.3,
+     "bottom": -100.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 289,
+     "bottom": 333,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "r4-390x664-reduced-01-01-armed.png"
+   }
+  ],
+  "errors": [],
+  "round4": {
+   "foundScrolled": {
+    "scrollY": 421,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -155.3,
+     "bottom": 94.8
+    },
+    "bar": {
+     "top": -154.3,
+     "bottom": -110.3
+    },
+    "retry": null,
+    "row": {
+     "top": 455,
+     "bottom": 588
+    },
+    "asked": [
+     {
+      "top": -389.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -338.25,
+      "behavior": "instant"
+     },
+     {
+      "top": 421,
+      "behavior": "instant"
+     }
+    ],
+    "focus": "cross-row-name"
+   },
+   "beforeMove": {
+    "scrollY": 421,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -155.3,
+     "bottom": 94.8
+    },
+    "bar": {
+     "top": -154.3,
+     "bottom": -110.3
+    },
+    "retry": null,
+    "row": {
+     "top": 455,
+     "bottom": 588
+    },
+    "asked": [],
+    "focus": "cross-row-name"
+   },
+   "afterMove": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 96.8
+    },
+    "retry": null,
+    "row": {
+     "top": 662,
+     "bottom": 795
+    },
+    "asked": [
+     {
+      "top": -207.25,
+      "behavior": "instant"
+     }
+    ],
+    "focus": "cross-move"
+   },
+   "barAfterMove": "Tap the intersection nearest the work",
+   "cancelAsked": [],
+   "undoAsked": [],
+   "beforeFailedHidden": {
+    "scrollY": 245,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "bar": {
+     "top": 21.8,
+     "bottom": 65.8
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "BODY"
+   },
+   "afterFailedHidden": {
+    "scrollY": 215,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 50.8,
+     "bottom": 300.8
+    },
+    "bar": {
+     "top": 51.8,
+     "bottom": 116.4
+    },
+    "retry": {
+     "top": 51.8,
+     "bottom": 116.4
+    },
+    "row": null,
+    "asked": [
+     {
+      "top": -30.25,
+      "behavior": "instant"
+     }
+    ],
+    "focus": "DIV"
+   },
+   "beforeFailedVisible": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "retry": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterFailedVisible": {
+    "scrollY": 214,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 51.8,
+     "bottom": 301.8
+    },
+    "bar": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "retry": {
+     "top": 52.8,
+     "bottom": 117.4
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "beforeCardRetry": {
+    "scrollY": 593,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -327.3,
+     "bottom": -77.3
+    },
+    "bar": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "retry": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   },
+   "afterCardRetry": {
+    "scrollY": 593,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": -327.3,
+     "bottom": -77.3
+    },
+    "bar": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "retry": {
+     "top": -326.3,
+     "bottom": -261.6
+    },
+    "row": null,
+    "asked": [],
+    "focus": "cross-retry"
+   },
+   "afterNoStreetHidden": {
+    "scrollY": 245,
+    "innerHeight": 664,
+    "nav": 52,
+    "frame": {
+     "top": 20.8,
+     "bottom": 270.8
+    },
+    "bar": {
+     "top": 21.8,
+     "bottom": 75.5
+    },
+    "retry": null,
+    "row": null,
+    "asked": [],
+    "focus": "DIV"
+   }
+  }
+ }
+}

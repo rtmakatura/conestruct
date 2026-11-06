@@ -9439,6 +9439,11 @@ input[type="number"] {
      on this page. */
   scroll-margin-top: var(--nav-h);
 }
+/* #446 T24, T25: the same band, for the picture and its bar. */
+.workbench .a-aerial-frame,
+.workbench .a-aerial-bar {
+  scroll-margin-top: var(--nav-h);
+}
 .workbench .wq-cross-glyph {
   flex: none;
   width: 16px;

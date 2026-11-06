@@ -144,7 +144,7 @@ import { GeneratorShell } from "./GeneratorShell";
 import { openWhere } from "./__fixtures__/band-helpers";
 import { MIN_AUDIT } from "./test-fixtures";
 
-type Mode = "ok" | "none" | "fail" | "hold";
+type Mode = "ok" | "none" | "fail" | "hold" | "holdFail";
 let roadBearing: Mode = "ok";
 let release: (() => void) | null = null;
 let readHangs = false;
@@ -182,6 +182,10 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
     if (roadBearing === "fail") return json({ error: "down" }, 502);
     if (roadBearing === "none") return json({ ...DETECTION, candidates: [MAINLINE] });
     if (roadBearing === "hold") await new Promise<void>((r) => (release = r));
+    if (roadBearing === "holdFail") {
+      await new Promise<void>((r) => (release = r));
+      return json({ error: "down" }, 502);
+    }
     return json(DETECTION);
   }
   if (url.includes("/api/render/nearest-intersection")) {
@@ -441,6 +445,8 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
   let wordsTop = 500;
   let rowTop = 900;
   let nextBottom = 1100;
+  let frameTop = 0;
+  let barTop = 0;
   let reduced = false;
 
   beforeEach(() => {
@@ -448,6 +454,8 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
     wordsTop = 500;
     rowTop = 900;
     nextBottom = 1100;
+    frameTop = 0;
+    barTop = 0;
     reduced = false;
     window.scrollBy = scrollBy as unknown as typeof window.scrollBy;
     Object.defineProperty(window, "innerHeight", { value: 800, configurable: true });
@@ -457,6 +465,8 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
     vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
       const at = (top: number, bottom: number) => ({ top, bottom, left: 0, right: 0, width: 0, height: bottom - top, x: 0, y: top }) as DOMRect;
       if (this.getAttribute("data-testid") === "cross-row") return at(rowTop, rowTop + 68);
+      if (this.getAttribute("data-testid") === "band-aerial-frame") return at(frameTop, frameTop + 300);
+      if (this.getAttribute("data-testid") === "band-aerial-bar") return at(barTop, barTop + 65);
       if (this.classList.contains("a-aerial-bar-text")) return at(wordsTop, wordsTop + 19);
       if (this.classList.contains("wq-next")) return at(nextBottom - 44, nextBottom);
       return at(0, 0);
@@ -543,31 +553,47 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
     expect(scrollBy).toHaveBeenCalledWith({ top: 316, behavior: "smooth" });
   });
 
-  it("T21: Edit on map during a lookup drops it: no write, no focus and no scroll behind the picker", async () => {
+  // Every door onto the picker, the same guard (the sidebar's openPicker).
+  const DOORS: [string, () => Promise<void>][] = [
+    ["Edit on map", () => click(q("where-open-picker"), "Edit on map")],
+    ["the bar's big-map button", () => click(q("band-aerial-big-map"), "the big-map button")],
+    [
+      "Enter in the address field",
+      async () => {
+        const field = document.querySelector('[aria-label="Address or cross streets"]');
+        if (!field) throw new Error("no address field on screen");
+        await act(async () => {
+          fireEvent.keyDown(field, { key: "Enter" });
+        });
+      },
+    ],
+    [
+      "the ledger's action",
+      () => click(document.querySelector('[data-testid^="move-action-"]'), "the ledger's action"),
+    ],
+  ];
+
+  it.each(DOORS)("T21: %s during a lookup drops it: no write, no focus, no scroll", async (_what, door) => {
     await toTheCrossStreetQuestion();
     await heldLookup();
-    await click(q("where-open-picker"), "Edit on map");
+    await door();
+    expect(q("picker")).not.toBeNull();
     await act(async () => {
       release?.();
     });
     await settle();
     expect(q("cross-row")).toBeNull();
-    expect(document.activeElement).not.toBe(q("cross-row-name"));
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, REVEAL_WAIT_MS + 100));
-    });
+    expect(q("band-aerial-ring")).toBeNull();
     expect(scrollBy).not.toHaveBeenCalled();
-  }, 8000);
+  });
 
-  it.each([
-    ["where-open-picker", "Edit on map"],
-    ["band-aerial-big-map", "Use the big map instead"],
-  ])("T21: %s during the scroll's wait calls the scroll off, and cancelling the picker doesn't bring it back", async (id, what) => {
+  it.each(DOORS)("T21: %s during the scroll's wait calls the scroll off, and cancelling the picker doesn't bring it back", async (_what, door) => {
     readHangs = true;
     await toTheCrossStreetQuestion();
     await tapCrossing();
     await until(() => q("cross-row") !== null, "the ✓ row");
-    await click(q(id), what);
+    await door();
+    expect(q("picker")).not.toBeNull();
     await act(async () => {
       await new Promise((r) => setTimeout(r, REVEAL_WAIT_MS + 100));
     });
@@ -577,6 +603,165 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
     expect(scrollBy).not.toHaveBeenCalled();
     readHangs = false;
   }, 8000);
+
+  it("T21: a picker opened during a Move's lookup keeps the Move armed when it's cancelled", async () => {
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await click(q("cross-move"), "Move");
+    await heldLookup();
+    expect(barKind()).toBe("finding");
+    await click(q("where-open-picker"), "Edit on map");
+    await act(async () => {
+      release?.();
+    });
+    await settle();
+    await click(byText("CANCEL"), "CANCEL");
+    expect(barKind()).toBe("armed");
+    expect(q("cross-move")?.textContent).toBe("Cancel");
+    expect(q("band-aerial-frame")?.className).toContain("is-armed");
+  });
+
+  it("T24: Move brings the aerial back; nothing else does, and a picture already there stays put", async () => {
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await until(() => scrollBy.mock.calls.length > 0, "the found tap's scroll");
+    scrollBy.mockClear();
+
+    // Already all there: no scroll.
+    await click(q("cross-move"), "Move");
+    expect(scrollBy).not.toHaveBeenCalled();
+    await click(q("cross-move"), "Cancel");
+
+    // Above the view: back up, once.
+    frameTop = -200;
+    await click(q("cross-move"), "Move");
+    expect(barKind()).toBe("armed");
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    expect(scrollBy).toHaveBeenCalledWith({ top: -200, behavior: "smooth" });
+    scrollBy.mockClear();
+
+    // Move's Cancel and Undo stay still, with the picture off screen (ruling 5).
+    await click(q("cross-move"), "Cancel");
+    await click(q("cross-undo"), "Undo");
+    await until(() => barKind() === "armed", "the re-armed bar");
+    await settle();
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("T24: with reduced motion Move's scroll is a jump", async () => {
+    reduced = true;
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await until(() => scrollBy.mock.calls.length > 0, "the found tap's scroll");
+    scrollBy.mockClear();
+    frameTop = -200;
+    await click(q("cross-move"), "Move");
+    expect(scrollBy).toHaveBeenCalledWith({ top: -200, behavior: "instant" });
+  });
+
+  it("T25: a failed tap with its bar under the nav scrolls just enough, once; a bar in view stays put", async () => {
+    barTop = -40;
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "smooth" });
+    await settle();
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  it("T25: a failed tap with its bar all in view doesn't scroll", async () => {
+    barTop = 1;
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    await settle();
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("T25: with reduced motion the failed tap's scroll is a jump", async () => {
+    barTop = -40;
+    reduced = true;
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "instant" });
+  });
+
+  it("T25: no street there doesn't scroll, bar hidden or not (ruling 4 stands for it)", async () => {
+    barTop = -40;
+    await toTheCrossStreetQuestion();
+    roadBearing = "none";
+    await tapCrossing();
+    await until(() => barKind() === "none", "the no-street bar");
+    await settle();
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("T25, T26: the card's Try again failing again doesn't scroll and keeps focus; no street puts focus on that answer's line", async () => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    barTop = -40;
+    const retry = q("cross-retry") as HTMLButtonElement;
+    retry.focus();
+    await click(retry, "the card's Try again");
+    await until(() => q("cross-retry") !== null && q("cross-retry") !== retry, "the failed line again");
+    await settle();
+    expect(document.activeElement).toBe(q("cross-retry"));
+    expect(scrollBy).not.toHaveBeenCalled();
+
+    roadBearing = "none";
+    q("cross-retry")?.focus();
+    await click(q("cross-retry"), "the card's Try again");
+    await until(() => barKind() === "none", "the no-street bar");
+    expect(document.activeElement).toBe(q("cross-none"));
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("T25: the bar's Try again failing with its bar under the nav scrolls, once", async () => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    expect(scrollBy).not.toHaveBeenCalled();
+    barTop = -40;
+    await click(q("band-aerial-retry"), "the bar's Try again");
+    await until(() => scrollBy.mock.calls.length > 0, "the scroll");
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    expect(scrollBy).toHaveBeenCalledWith({ top: -40, behavior: "smooth" });
+  });
+
+  it.each([
+    ["band-aerial-retry", "the bar's"],
+    ["cross-retry", "the card's"],
+  ])("T26: a place the person moved focus to during %s Try again stays", async (id, what) => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    const retry = q(id) as HTMLButtonElement;
+    retry.focus();
+    roadBearing = "holdFail";
+    release = null;
+    await click(retry, `${what} Try again`);
+    await until(() => release !== null, "the lookup to be asked");
+    const elsewhere = q("where-open-picker") as HTMLButtonElement;
+    elsewhere.focus();
+    await act(async () => {
+      release?.();
+    });
+    await until(() => barKind() === "failed", "the failed bar again");
+    await settle();
+    expect(document.activeElement).toBe(elsewhere);
+  });
 
   it("T22: Try again answering no street puts focus on the bar's big-map button", async () => {
     await toTheCrossStreetQuestion();
@@ -767,7 +952,7 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
     expect(scrollBy).not.toHaveBeenCalled();
   });
 
-  it("ruling 5: Move re-arms the bar and Undo clears the box; neither scrolls", async () => {
+  it("ruling 5: Move re-arms the bar and Undo clears the box; with the picture in view, neither scrolls", async () => {
     await toTheCrossStreetQuestion();
     await tapCrossing();
     await until(() => q("cross-row") !== null, "the ✓ row");

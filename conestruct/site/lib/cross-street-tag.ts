@@ -91,6 +91,9 @@ export function useCrossStreetTag(scenario: Scenario | null): CrossStreetTag | n
   const latest = useRef(scenario);
   latest.current = scenario;
   useEffect(() => {
+    // Forgets the answer outright, so going back to a key re-reads it rather
+    // than showing what was held for it.
+    setHeld(null);
     if (key === null || latest.current === null) return;
     const controller = new AbortController();
     (async () => {
