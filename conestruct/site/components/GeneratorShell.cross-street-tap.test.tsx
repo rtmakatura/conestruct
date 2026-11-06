@@ -18,6 +18,7 @@ import { approachesFromCrossStreet, deriveCrossStreet } from "@/lib/road-detecti
 import { intersectionRecord } from "@/lib/road-detection/cross-street-lookup";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import { forgetAerials } from "@/lib/corridor-aerial";
+import { REVEAL_WAIT_MS } from "@/lib/cross-street-reveal";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -146,6 +147,8 @@ import { MIN_AUDIT } from "./test-fixtures";
 type Mode = "ok" | "none" | "fail" | "hold";
 let roadBearing: Mode = "ok";
 let release: (() => void) | null = null;
+let readHangs = false;
+let tappedPoint = POINT;
 const calls: { url: string; body: unknown }[] = [];
 
 function json(body: unknown, status = 200): Response {
@@ -174,7 +177,7 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
       side_options: [SIDE],
     });
   }
-  if (url.includes("/api/aerial-point")) return json(POINT);
+  if (url.includes("/api/aerial-point")) return json(tappedPoint);
   if (url.includes("/api/road-bearing")) {
     if (roadBearing === "fail") return json({ error: "down" }, 502);
     if (roadBearing === "none") return json({ ...DETECTION, candidates: [MAINLINE] });
@@ -182,6 +185,7 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
     return json(DETECTION);
   }
   if (url.includes("/api/render/nearest-intersection")) {
+    if (readHangs) await new Promise<void>(() => {});
     const s = (body as { scenario: Scenario }).scenario;
     const x = s.kind === "near_intersection" ? s.meta.intersection : null;
     return json(
@@ -211,6 +215,8 @@ beforeEach(() => {
   calls.length = 0;
   roadBearing = "ok";
   release = null;
+  readHangs = false;
+  tappedPoint = POINT;
   lastInitial = null;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
@@ -331,7 +337,9 @@ describe("#440: the cross-street question on the WHERE band", () => {
     await click(q("cross-retry"), "Try again");
     await until(() => q("cross-finding") !== null, "Finding the street name…");
     expect(q("cross-finding")!.textContent).toBe("Finding the street name…");
-    expect(q("band-aerial-bar")).toBeNull(); // no second tap while it runs
+    // #446 ruling 1: the bar says so too; no second tap while it runs.
+    expect(q("band-aerial-bar")?.textContent).toBe("Finding the street name…");
+    expect(q("band-aerial-frame")?.className).not.toContain("is-armed");
     expect(calls.filter((c) => c.url.includes("/api/aerial-point"))).toHaveLength(1);
     await act(async () => {
       release?.();
@@ -344,7 +352,7 @@ describe("#440: the cross-street question on the WHERE band", () => {
     expect(q("cross-row-line")!.textContent).toBe("Two-way street · 80 ft east of where the work starts");
     expect(q("band-aerial-mark-label")?.textContent).toBe("Race Street");
     expect(q("band-aerial-mark")?.style.left).toBe("338px");
-    expect(q("band-aerial-bar")).toBeNull();
+    expect(q("band-aerial-bar")?.textContent).toBe("✓ Near Race Street"); // #446 ruling 2
     expect((byText("Next question") as HTMLButtonElement).disabled).toBe(false);
 
     // The scenario: the picker Save's own record and approaches (X4).
@@ -355,10 +363,10 @@ describe("#440: the cross-street question on the WHERE band", () => {
     // X11: Move re-arms; it reads Cancel and disarms again.
     await click(q("cross-move"), "Move");
     expect(q("cross-move")!.textContent).toBe("Cancel");
-    expect(q("band-aerial-bar")).not.toBeNull();
+    expect(q("band-aerial-bar")?.textContent).toBe("Tap the intersection nearest the work");
     await click(q("cross-move"), "Cancel");
     expect(q("cross-move")!.textContent).toBe("Move");
-    expect(q("band-aerial-bar")).toBeNull();
+    expect(q("band-aerial-bar")?.textContent).toBe("✓ Near Race Street"); // #446 ruling 2
 
     // X7: Undo restores the pre-mark scenario, byte for byte, and re-arms.
     await click(q("cross-undo"), "Undo");
@@ -421,5 +429,424 @@ describe("#440: the cross-street question on the WHERE band", () => {
     // The picker's mark answers the same question (ruling 4).
     await until(() => q("cross-row") !== null, "the ✓ row after the picker");
     expect(q("cross-row-name")!.textContent).toBe("Near Race Street");
+  });
+});
+
+// #446 (validation-artifacts/committed/ux-tap-feedback/rulings.md, rulings
+// 1-6, T1-T12): the tap answers on the map, then the card comes into view.
+// A DOM without layout, so the row's and the button's rects are set here
+// and window.scrollBy is what the page asked for.
+describe("#446: the tap answers on the aerial, then the card comes into view", () => {
+  const scrollBy = vi.fn();
+  let wordsTop = 500;
+  let rowTop = 900;
+  let nextBottom = 1100;
+  let reduced = false;
+
+  beforeEach(() => {
+    scrollBy.mockClear();
+    wordsTop = 500;
+    rowTop = 900;
+    nextBottom = 1100;
+    reduced = false;
+    window.scrollBy = scrollBy as unknown as typeof window.scrollBy;
+    Object.defineProperty(window, "innerHeight", { value: 800, configurable: true });
+    vi.spyOn(window, "matchMedia").mockImplementation(
+      (m: string) => ({ matches: reduced && m.includes("reduce"), media: m }) as MediaQueryList,
+    );
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
+      const at = (top: number, bottom: number) => ({ top, bottom, left: 0, right: 0, width: 0, height: bottom - top, x: 0, y: top }) as DOMRect;
+      if (this.getAttribute("data-testid") === "cross-row") return at(rowTop, rowTop + 68);
+      if (this.classList.contains("a-aerial-bar-text")) return at(wordsTop, wordsTop + 19);
+      if (this.classList.contains("wq-next")) return at(nextBottom - 44, nextBottom);
+      return at(0, 0);
+    });
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const barKind = () => q("band-aerial-frame")?.getAttribute("data-bar");
+  const heldLookup = async () => {
+    roadBearing = "hold";
+    await tapCrossing();
+    await until(() => release !== null, "the lookup to be asked");
+  };
+
+  it("ruling 1: the ring and the finding bar show before the lookup answers; the bar is the band's one live region", async () => {
+    await toTheCrossStreetQuestion();
+    expect(q("band-aerial-bar")?.getAttribute("role")).toBe("status");
+    const liveBar = q("band-aerial-bar");
+    expect(q("band-aerial-ring")).toBeNull();
+
+    // No wait: read straight after the tap's own click, nothing settled.
+    roadBearing = "hold";
+    await tapCrossing();
+    expect(barKind()).toBe("finding");
+    expect(q("band-aerial-bar")?.textContent).toBe("Finding the street name…");
+    expect(q("band-aerial-bar")?.querySelector("svg")).not.toBeNull();
+    const ring = q("band-aerial-ring")!;
+    expect(ring.getAttribute("data-look")).toBe("solid");
+    expect(ring.style.left).toBe("336px"); // 352 - 16
+    expect(ring.style.top).toBe("124px"); // 140 - 16
+    // The same element all along, so a screen reader hears the change.
+    expect(q("band-aerial-bar")).toBe(liveBar);
+    expect(document.querySelectorAll('[data-testid="band-where"] [role="status"]')).toHaveLength(1);
+    expect(scrollBy).not.toHaveBeenCalled();
+    await until(() => release !== null, "the lookup to be asked");
+    await act(async () => {
+      release?.();
+    });
+    await until(() => q("cross-row") !== null, "the ✓ row");
+  });
+
+  it("rulings 2-3: found turns the bar ready, keeps #440's box and label, scrolls the row and the button in, and focuses the row's heading", async () => {
+    await toTheCrossStreetQuestion();
+    await heldLookup();
+    expect(scrollBy).not.toHaveBeenCalled();
+    await act(async () => {
+      release?.();
+    });
+    await until(() => q("cross-row") !== null, "the ✓ row");
+
+    expect(barKind()).toBe("found");
+    expect(q("band-aerial-bar")?.textContent).toBe("✓ Near Race Street");
+    expect(q("band-aerial-ring")).toBeNull();
+    expect(q("band-aerial-mark")).not.toBeNull();
+    expect(q("band-aerial-mark-label")?.textContent).toBe("Race Street");
+    const heading = q("cross-row-name")!;
+    expect(heading.tagName).toBe("H4");
+    expect(document.activeElement).toBe(heading);
+    // T15: once the read that lengthens the lines above it has answered.
+    await until(() => q("cross-row-line")?.textContent?.includes("east") ?? false, "the read's distance");
+    await until(() => scrollBy.mock.calls.length > 0, "the scroll");
+    // 1100 + 16 - 800: the least that shows the button.
+    expect(scrollBy).toHaveBeenCalledWith({ top: 316, behavior: "smooth" });
+    // Nothing later scrolls again.
+    await settle();
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  it("T19 B: when the aerial, the row and the button can't all fit, the row and the button win and the bar's words go", async () => {
+    wordsTop = 120;
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => scrollBy.mock.calls.length > 0, "the scroll");
+    expect(scrollBy).toHaveBeenCalledWith({ top: 316, behavior: "smooth" });
+  });
+
+  it("T19 B: with the bar's words already off the top, the scroll runs the same", async () => {
+    wordsTop = -30;
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => scrollBy.mock.calls.length > 0, "the scroll");
+    expect(scrollBy).toHaveBeenCalledWith({ top: 316, behavior: "smooth" });
+  });
+
+  it("T21: Edit on map during a lookup drops it: no write, no focus and no scroll behind the picker", async () => {
+    await toTheCrossStreetQuestion();
+    await heldLookup();
+    await click(q("where-open-picker"), "Edit on map");
+    await act(async () => {
+      release?.();
+    });
+    await settle();
+    expect(q("cross-row")).toBeNull();
+    expect(document.activeElement).not.toBe(q("cross-row-name"));
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, REVEAL_WAIT_MS + 100));
+    });
+    expect(scrollBy).not.toHaveBeenCalled();
+  }, 8000);
+
+  it.each([
+    ["where-open-picker", "Edit on map"],
+    ["band-aerial-big-map", "Use the big map instead"],
+  ])("T21: %s during the scroll's wait calls the scroll off, and cancelling the picker doesn't bring it back", async (id, what) => {
+    readHangs = true;
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await click(q(id), what);
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, REVEAL_WAIT_MS + 100));
+    });
+    expect(scrollBy).not.toHaveBeenCalled();
+    await click(byText("CANCEL"), "CANCEL");
+    await settle();
+    expect(scrollBy).not.toHaveBeenCalled();
+    readHangs = false;
+  }, 8000);
+
+  it("T22: Try again answering no street puts focus on the bar's big-map button", async () => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    const retry = q("band-aerial-retry") as HTMLButtonElement;
+    retry.focus();
+    roadBearing = "none";
+    await click(retry, "the bar's Try again");
+    await until(() => barKind() === "none", "the no-street bar");
+    expect(document.activeElement).toBe(q("band-aerial-big-map"));
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("T23: re-tapping the same street waits for the new read, not the old one", async () => {
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => scrollBy.mock.calls.length > 0, "the first scroll");
+    scrollBy.mockClear();
+    await click(q("cross-move"), "Move");
+    readHangs = true;
+    // The same street at another pixel, so another coordinate and a new read.
+    tappedPoint = { lat: POINT.lat + 0.0001, lng: POINT.lng };
+    await tapCrossing();
+    await until(() => q("cross-move")?.textContent === "Move", "the new mark");
+    await settle();
+    expect(scrollBy).not.toHaveBeenCalled();
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, REVEAL_WAIT_MS + 100));
+    });
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    readHangs = false;
+  }, 8000);
+
+  it("T6: a tap found with the row off the card isn't owed anything when a later big-map save marks the crossing", async () => {
+    await toTheCrossStreetQuestion();
+    await heldLookup();
+    // The kind's Undo takes the question off the card while the lookup is out.
+    await click(byText("Undo"), "the kind's Undo");
+    await act(async () => {
+      release?.();
+    });
+    await settle();
+    expect(q("cross-row-name")).toBeNull();
+    await until(() => q("kind-chip-near_intersection") !== null, "the kind question");
+    await click(q("kind-chip-near_intersection"), "the near-intersection kind");
+    await click(byText("Next question"), "Next question");
+    // The tap's crossing stands, answered, with the card on the side question.
+    await until(() => q("where-questions")?.textContent?.includes("Race Street") ?? false, "the tap's crossing");
+    const undos = Array.from(document.querySelectorAll("button")).filter((b) => b.textContent === "Undo");
+    await click(undos[undos.length - 1], "the crossing's Undo");
+    await until(() => barKind() === "armed", "the re-armed bar");
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    await click(byText("SAVE_CROSS"), "SAVE_CROSS");
+    await until(() => q("cross-row") !== null, "the ✓ row after the picker");
+    await settle();
+    expect(document.activeElement).not.toBe(q("cross-row-name"));
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["failed", "fail" as Mode],
+    ["none", "none" as Mode],
+  ])("T20: from a %s tap, a crossing saved on the big map shows the found bar, no ring, no Try again, and nothing re-runs the old point", async (kind, mode) => {
+    await toTheCrossStreetQuestion();
+    roadBearing = mode;
+    await tapCrossing();
+    await until(() => barKind() === kind, "the warn bar");
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    await click(byText("SAVE_CROSS"), "SAVE_CROSS");
+    await until(() => q("cross-row") !== null, "the ✓ row after the picker");
+    await settle();
+    expect(barKind()).toBe("found");
+    expect(q("band-aerial-bar")?.textContent).toBe("✓ Near Race Street");
+    expect(q("band-aerial-ring")).toBeNull();
+    expect(q("band-aerial-retry")).toBeNull();
+    expect(q("cross-failed")).toBeNull();
+    expect(q("cross-none")).toBeNull();
+    // Undo goes back to the plain question: the old answer doesn't return.
+    await click(q("cross-undo"), "Undo");
+    await until(() => barKind() === "armed", "the re-armed bar");
+    expect(q("band-aerial-ring")).toBeNull();
+    expect(q("cross-failed")).toBeNull();
+  });
+
+  it("T20: a picker save that changes nothing also clears a failed tap; cancelling the picker doesn't", async () => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    await click(byText("CANCEL"), "CANCEL");
+    expect(barKind()).toBe("failed");
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    await click(byText("SAVE_PIN"), "SAVE_PIN");
+    await until(() => barKind() === "armed", "the armed bar");
+    expect(q("band-aerial-ring")).toBeNull();
+    expect(q("band-aerial-retry")).toBeNull();
+  });
+
+  it("ruling 3: both already in view, no scroll; focus still lands", async () => {
+    rowTop = 400;
+    nextBottom = 700;
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row-line")?.textContent?.includes("east") ?? false, "the read's distance");
+    await settle();
+    expect(scrollBy).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(q("cross-row-name"));
+  });
+
+  it("ruling 3: with reduced motion the scroll is a jump", async () => {
+    reduced = true;
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => scrollBy.mock.calls.length > 0, "the scroll");
+    expect(scrollBy).toHaveBeenCalledWith({ top: 316, behavior: "instant" });
+  });
+
+  it("ruling 4: failed turns the bar warn with Try again in it and a dashed ring, no scroll; Try again asks the same point, and found then scrolls", async () => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    const retry = q("band-aerial-retry")!;
+    expect(q("band-aerial-bar")?.textContent).toBe(
+      "⚠ The street lookup didn't answer. Tap again, or try once more.Try again",
+    );
+    expect(retry.textContent).toBe("Try again");
+    expect(q("band-aerial-ring")?.getAttribute("data-look")).toBe("dashed");
+    expect(q("band-aerial-frame")?.className).toContain("is-armed"); // tap again
+    expect(scrollBy).not.toHaveBeenCalled();
+    expect(document.activeElement).not.toBe(q("cross-row-name"));
+
+    // A retry that fails again hands focus back to the button.
+    (retry as HTMLButtonElement).focus();
+    await click(retry, "the bar's Try again");
+    await until(() => q("band-aerial-retry") !== null, "the failed bar again");
+    expect(document.activeElement).toBe(q("band-aerial-retry"));
+    expect(calls.filter((c) => c.url.includes("/api/aerial-point"))).toHaveLength(1);
+
+    roadBearing = "ok";
+    await click(q("band-aerial-retry"), "the bar's Try again");
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    expect(calls.filter((c) => c.url.includes("/api/aerial-point"))).toHaveLength(1);
+    expect(barKind()).toBe("found");
+    await until(() => scrollBy.mock.calls.length > 0, "the scroll");
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  it("T15: with no read answering, the scroll goes at the wait's end; Move or Undo before then calls it off", async () => {
+    readHangs = true;
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    expect(scrollBy).not.toHaveBeenCalled();
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, REVEAL_WAIT_MS + 100));
+    });
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+
+    scrollBy.mockClear();
+    await click(q("cross-move"), "Move");
+    await click(q("cross-move"), "Cancel");
+    await click(q("cross-undo"), "Undo");
+    await until(() => barKind() === "armed", "the re-armed bar");
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await click(q("cross-move"), "Move");
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, REVEAL_WAIT_MS + 100));
+    });
+    expect(scrollBy).not.toHaveBeenCalled();
+    readHangs = false;
+  }, 12000);
+
+  it("ruling 4: no street there has the same look with X8's copy, and no Try again", async () => {
+    await toTheCrossStreetQuestion();
+    roadBearing = "none";
+    await tapCrossing();
+    await until(() => barKind() === "none", "the no-street bar");
+    expect(q("band-aerial-bar")?.textContent).toBe(
+      "⚠ No cross street found there. Tap closer to where the two streets cross.",
+    );
+    expect(q("band-aerial-retry")).toBeNull();
+    expect(q("band-aerial-ring")?.getAttribute("data-look")).toBe("dashed");
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("ruling 5: Move re-arms the bar and Undo clears the box; neither scrolls", async () => {
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    scrollBy.mockClear();
+    await click(q("cross-move"), "Move");
+    expect(barKind()).toBe("armed");
+    expect(q("band-aerial-bar")?.textContent).toBe("Tap the intersection nearest the work");
+    expect(q("band-aerial-mark")).not.toBeNull();
+    await click(q("cross-undo"), "Undo");
+    await until(() => barKind() === "armed", "the re-armed bar");
+    expect(q("band-aerial-mark")).toBeNull();
+    expect(q("band-aerial-ring")).toBeNull();
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("T7: Undo after a failed tap clears the dashed ring; Move's new tap scrolls again when it is found", async () => {
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    scrollBy.mockClear();
+    await click(q("cross-move"), "Move");
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    // The standing mark stays until a new one replaces it.
+    expect(q("band-aerial-mark")).not.toBeNull();
+    expect(q("band-aerial-ring")).not.toBeNull();
+    roadBearing = "ok";
+    await tapCrossing();
+    await until(() => barKind() === "found", "the found bar");
+    await until(() => scrollBy.mock.calls.length > 0, "the scroll");
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    await click(q("cross-move"), "Move");
+    roadBearing = "fail";
+    await tapCrossing();
+    await until(() => barKind() === "failed", "the failed bar");
+    await click(q("cross-undo"), "Undo");
+    await until(() => barKind() === "armed", "the re-armed bar");
+    expect(q("band-aerial-ring")).toBeNull();
+    expect(q("band-aerial-mark")).toBeNull();
+  });
+
+  it("T6: a crossing marked on the big map shows the found bar without a box, a scroll or a focus move", async () => {
+    await toTheCrossStreetQuestion();
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    await click(byText("SAVE_CROSS"), "SAVE_CROSS");
+    await until(() => q("cross-row") !== null, "the ✓ row after the picker");
+    expect(barKind()).toBe("found");
+    expect(q("band-aerial-bar")?.textContent).toBe("✓ Near Race Street");
+    expect(q("band-aerial-mark")).toBeNull();
+    expect(scrollBy).not.toHaveBeenCalled();
+    expect(document.activeElement).not.toBe(q("cross-row-name"));
+  });
+
+  it("T5: the big-map button stays on in every state, and while a lookup runs it drops that lookup", async () => {
+    await toTheCrossStreetQuestion();
+    await heldLookup();
+    expect(q("band-aerial-big-map")).not.toBeNull();
+    await click(q("band-aerial-big-map"), "Use the big map instead");
+    expect(q("picker")?.getAttribute("data-arm")).toBe("true");
+    await click(byText("CANCEL"), "CANCEL");
+    await act(async () => {
+      release?.();
+    });
+    await settle();
+    expect(barKind()).toBe("armed");
+    expect(q("band-aerial-ring")).toBeNull();
+    expect(q("cross-row")).toBeNull();
+    expect(scrollBy).not.toHaveBeenCalled();
+    await tapCrossing();
+  });
+
+  it("the bar leaves with the question: after Next, the side's picture has no bar", async () => {
+    await toTheCrossStreetQuestion();
+    await tapCrossing();
+    await until(() => q("cross-row") !== null, "the ✓ row");
+    await click(byText("Next question"), "Next question");
+    await until(() => q("side-option") !== null, "the side question");
+    expect(q("band-aerial-bar")).toBeNull();
+    expect(q("band-aerial-frame")?.getAttribute("data-bar")).toBeNull();
   });
 });

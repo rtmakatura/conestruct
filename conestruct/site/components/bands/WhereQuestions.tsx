@@ -31,6 +31,7 @@ import { symClass } from "@/lib/design/symbols";
 import type { CrossStreetTag } from "@/lib/cross-street-tag";
 import type { CrossStreetMark } from "@/lib/cross-street-mark";
 import { crossStreetLabel } from "@/lib/road-detection/labels";
+import { REVEAL_WAIT_MS, scrollCrossRowIn } from "@/lib/cross-street-reveal";
 import { QuestionSteps, type StepQuestion } from "../QuestionSteps";
 
 export const SIDE_QUESTION = "Which side of the road is the work on?";
@@ -224,6 +225,55 @@ export function WhereQuestions({
   const selected = selectedSideOption(options, scenario.meta.work);
   const refused = g?.side_refused ?? null;
 
+  // #446 ruling 3: a tap that found a street focuses the ✓ row's heading,
+  // then brings the row and "Next question" into view, once per tap.  A
+  // mark made any other way moves nothing (T6).  T15: the scroll waits for
+  // the read that lengthens the lines above the button, so it runs once, to
+  // the right place.  Move, Undo or the picker opening before then call it
+  // off (ruling 5, T21).
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const foundCount = crossMark?.foundCount ?? 0;
+  const foundSeen = useRef(foundCount);
+  const scrollOwed = useRef(false);
+  const crossingName = scenario.meta.intersection?.name;
+  const hasCrossing = Boolean(scenario.meta.intersection);
+  const readIn = hasCrossing && crossTag?.marked?.name === crossingName;
+  const revealOwed = crossMark?.revealOwed ?? false;
+  const cardPart = <T extends HTMLElement>(selector: string) =>
+    sectionRef.current?.querySelector<T>(selector) ?? null;
+  useEffect(() => {
+    if (foundCount === foundSeen.current) return;
+    // Seen either way: a tap that landed with the row off the card is over,
+    // and a later mark made another way must not act on it (T6).
+    foundSeen.current = foundCount;
+    const heading = cardPart('[data-testid="cross-row-name"]');
+    if (!hasCrossing || !heading) return;
+    scrollOwed.current = true;
+    heading.focus({ preventScroll: true });
+  }, [foundCount, hasCrossing]);
+  useEffect(() => {
+    if (!scrollOwed.current) return;
+    const go = () => {
+      scrollOwed.current = false;
+      const row = cardPart('[data-testid="cross-row"]');
+      const next = cardPart(".nyq-foot .wq-next");
+      const frame = sectionRef.current
+        ?.closest(".wq-stack")
+        ?.querySelector<HTMLElement>('[data-testid="band-aerial-frame"]');
+      if (frame && row && next) scrollCrossRowIn(frame, row, next);
+    };
+    if (!hasCrossing || !revealOwed) {
+      scrollOwed.current = false;
+      return;
+    }
+    if (readIn) {
+      go();
+      return;
+    }
+    const t = setTimeout(go, REVEAL_WAIT_MS);
+    return () => clearTimeout(t);
+  }, [foundCount, hasCrossing, readIn, revealOwed]);
+
   const questions: StepQuestion[] = [];
   // #440 ruling 2: the kind is pushed first, below; the side last.
   let sideQuestion: StepQuestion | null = null;
@@ -375,8 +425,9 @@ export function WhereQuestions({
       extra: (
         <>
           {resolving ? (
-            // Ruling 6 / P1: in place, at the row's own height.
-            <div className="wq-cross-row" data-testid="cross-finding" role="status">
+            // Ruling 6 / P1: in place, at the row's own height.  #446 T3: the
+            // aerial's bar is the one live region for the tap's answer.
+            <div className="wq-cross-row" data-testid="cross-finding">
               <span className="wq-cross-body">
                 <span className="wq-cross-wait tr-help">{CROSS_FINDING}</span>
               </span>
@@ -386,16 +437,18 @@ export function WhereQuestions({
               <span className={`wq-cross-glyph ${symClass("✓")}`} aria-hidden="true">
                 ✓
               </span>
-              <span className="wq-cross-body">
-                <span className="wq-cross-name" data-testid="cross-row-name">
+              <div className="wq-cross-body">
+                {/* #446 T9: a real heading, one under the question's h3;
+                    focus lands here after a tap finds a street. */}
+                <h4 className="wq-cross-name" data-testid="cross-row-name" tabIndex={-1}>
                   Near {name}
-                </span>
+                </h4>
                 {line && (
                   <span className="wq-cross-sub tr-note" data-testid="cross-row-line">
                     {line}
                   </span>
                 )}
-              </span>
+              </div>
               {crossMark && (
                 <span className="wq-cross-acts">
                   {/* X11: Move re-arms the tap; while re-armed it reads Cancel. */}
@@ -408,12 +461,12 @@ export function WhereQuestions({
             </div>
           ) : null}
           {phase === "none" && (
-            <p className="tr-note wq-line" data-testid="cross-none" role="status">
+            <p className="tr-note wq-line" data-testid="cross-none">
               {CROSS_NONE}
             </p>
           )}
           {phase === "error" && (
-            <div className="wq-cross-fail" data-testid="cross-failed" role="status">
+            <div className="wq-cross-fail" data-testid="cross-failed">
               <p className="tr-note wq-line">{CROSS_FAILED}</p>
               <span className="wq-cross-acts">
                 {crossMark && act("Try again", "cross-retry", crossMark.retry)}
@@ -429,7 +482,12 @@ export function WhereQuestions({
   if (sideQuestion) questions.push(sideQuestion);
 
   return (
-    <section className="wq" data-testid="where-questions" aria-labelledby="where-confirm-h">
+    <section
+      ref={sectionRef}
+      className="wq"
+      data-testid="where-questions"
+      aria-labelledby="where-confirm-h"
+    >
       <QuestionSteps
         heading="CONFIRM"
         headingId="where-confirm-h"

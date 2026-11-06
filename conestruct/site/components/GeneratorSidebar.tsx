@@ -320,6 +320,7 @@ export function GeneratorSidebar({
   const sidesChanged = useSideClearOnKindChange(scenario, setMeta, geometry);
 
   const onPickerSave = (r: LocationPickerResult) => {
+    crossMark.clear(); // #446 T20: a tap's failed answer is over.
     // Dev-only snapshot wiring (Refs #102): keep the raw detection alive.
     onClassification?.(r.classification ?? null, { lat: r.lat, lng: r.lng });
     const cur = scenarioRef.current;

@@ -12,7 +12,7 @@
 // through the picker Save's own apply (the sidebar's `applyCandidate`,
 // X4).  Nothing is written until the lookup names a street (X8).
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { intersectionRecord, lookupCrossStreet } from "./road-detection/cross-street-lookup";
 import type { CrossStreetCandidate } from "./road-detection/cross-street";
 import type { IntersectionRecord, Scenario } from "./scenarios/types";
@@ -42,6 +42,23 @@ export interface CrossStreetMark {
   rearmed: boolean;
   /** The tap's pixel, while the mark it made is the scenario's crossing. */
   pixel: CrossMarkPixel | null;
+  /** #446 T7: the tap's pixel while it has no result: looking, or the
+   *  lookup failed or found no street.  A found street turns it into
+   *  `pixel`. */
+  ring: CrossMarkPixel | null;
+  /** #446 ruling 3: counts the taps that found a street, so the card can
+   *  bring its row into view for those and nothing else (T6). */
+  foundCount: number;
+  /** #446 T15, T21: the last found tap's scroll may still run.  Move, Undo,
+   *  Cancel and the picker opening end it (ruling 5). */
+  revealOwed: boolean;
+  /** #446 T20: forgets a tap's failed or "no street" answer, and any lookup
+   *  still out.  The picker's Save calls it. */
+  clear: () => void;
+  /** #446 T5, T21: the picker is opening: drops a lookup still out and a
+   *  scroll still owed, so neither happens behind it.  A failed answer stays
+   *  until the picker saves (T20). */
+  leaveForPicker: () => void;
   tap: (t: CrossTap) => void;
   retry: () => void;
   move: () => void;
@@ -91,6 +108,11 @@ export function restoreBeforeMark(cur: Scenario, snap: { before: Scenario; after
   return out as unknown as Scenario;
 }
 
+/** #446 T20: what a tap's answer was an answer about. */
+function answerKey(s: Scenario): string {
+  return JSON.stringify([s.meta.lat, s.meta.lng, s.meta.intersection ?? null]);
+}
+
 function sameRecord(a: IntersectionRecord | null | undefined, b: IntersectionRecord | null): boolean {
   return JSON.stringify(a ?? null) === JSON.stringify(b);
 }
@@ -114,11 +136,38 @@ export function useCrossStreetMark({
   const [phase, setPhase] = useState<CrossMarkPhase>("idle");
   const [rearmed, setRearmed] = useState(false);
   const [pixel, setPixel] = useState<CrossMarkPixel | null>(null);
+  const [ring, setRing] = useState<CrossMarkPixel | null>(null);
+  const [foundCount, setFoundCount] = useState(0);
+  const [revealOwed, setRevealOwed] = useState(false);
+  const [askedAbout, setAskedAbout] = useState<string | null>(null);
   const snapRef = useRef<Snapshot | null>(null);
   const tokenRef = useRef(0);
   // Try again repeats the same point: the coordinate once the backend
   // answered, else the tap itself.
   const lastRef = useRef<{ tap: CrossTap; point: { lat: number; lng: number } | null } | null>(null);
+
+  const clear = () => {
+    tokenRef.current++;
+    lastRef.current = null;
+    setRing(null);
+    setRevealOwed(false);
+    setPhase("idle");
+  };
+  const cancel = () => {
+    tokenRef.current++;
+    setRing(null);
+    setRearmed(false);
+    setRevealOwed(false);
+    setPhase("idle");
+  };
+  // T20 (Rule 10): the pin or the crossing changed under a failed tap, so
+  // its answer is about something else.  Hidden in this render, forgotten
+  // for good right after, so an Undo can't bring it back.
+  const nowAbout = answerKey(scenario);
+  const stale = phase !== "idle" && askedAbout !== nowAbout;
+  useEffect(() => {
+    if (stale) clear();
+  });
 
   const written = snapRef.current?.written ?? null;
   const markStands = written !== null && sameRecord(scenario.meta.intersection, written);
@@ -127,6 +176,8 @@ export function useCrossStreetMark({
     const my = ++tokenRef.current;
     lastRef.current = { tap, point: known };
     setPhase("resolving");
+    setRing({ x: tap.x, y: tap.y, frameKey: tap.frameKey });
+    setAskedAbout(answerKey(getScenario()));
     const pin = getScenario().meta;
     let point = known;
     if (point === null) {
@@ -183,15 +234,26 @@ export function useCrossStreetMark({
     const next = applyCandidate(marked, found.candidate);
     snapRef.current = { before, memory: mem, written: record, after: JSON.stringify(next) };
     setPixel({ x: tap.x, y: tap.y, frameKey: tap.frameKey });
+    setRing(null);
     setRearmed(false);
     setPhase("idle");
+    setFoundCount((n) => n + 1);
+    setRevealOwed(true);
     setScenario(next);
   };
 
   return {
-    phase,
+    phase: stale ? "idle" : phase,
     rearmed: rearmed && markStands,
     pixel: markStands ? pixel : null,
+    ring: stale ? null : ring,
+    foundCount,
+    revealOwed,
+    clear,
+    leaveForPicker: () => {
+      if (phase === "resolving") cancel();
+      setRevealOwed(false);
+    },
     tap: (t) => void run(t, null),
     retry: () => {
       const last = lastRef.current;
@@ -199,13 +261,11 @@ export function useCrossStreetMark({
     },
     move: () => {
       setRearmed(true);
+      setRing(null);
+      setRevealOwed(false);
       setPhase("idle");
     },
-    cancel: () => {
-      tokenRef.current++;
-      setRearmed(false);
-      setPhase("idle");
-    },
+    cancel,
     undo: () => {
       tokenRef.current++;
       const cur = getScenario();
@@ -221,7 +281,9 @@ export function useCrossStreetMark({
       snapRef.current = null;
       lastRef.current = null;
       setPixel(null);
+      setRing(null);
       setRearmed(false);
+      setRevealOwed(false);
       setPhase("idle");
     },
   };

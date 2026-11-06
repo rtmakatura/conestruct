@@ -1,0 +1,6878 @@
+{
+ "390": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 648,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -381.3,
+      "bottom": -337.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -382.3,
+     "bottom": -132.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -309.3,
+     "bottom": -265.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -309.3,
+     "bottom": -217.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -205.3,
+     "bottom": -161.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 228,
+     "bottom": 272,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390-01-01-armed.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 876,
+     "bottom": 920,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -450.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -518.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "02-finding",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "finding",
+     "text": "Finding the street name…",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": false,
+    "ring": {
+     "look": "solid",
+     "border": "3px solid rgb(86, 188, 242)",
+     "rect": {
+      "x": 141,
+      "top": 309,
+      "bottom": 341,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 1025,
+     "bottom": 1069,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "Finding the street name…",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "390-03-02-finding-viewport.png",
+    "shot": "390-04-02-finding.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "03-found-before-scroll",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 311,
+     "bottom": 339,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 876,
+     "bottom": 1009,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 1025,
+     "bottom": 1069,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": true,
+    "wordsTop": 279.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": false,
+     "next": false,
+     "heading": false
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 227.296875,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390-05-03-found-before-scroll-viewport.png",
+    "shot": "390-06-03-found-before-scroll.png"
+   },
+   {
+    "name": "04-found-after-scroll",
+    "scrollY": 227,
+    "viewportH": 844,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 39.8,
+      "bottom": 83.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 84,
+     "bottom": 112,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 38.8,
+     "bottom": 288.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 111.8,
+     "bottom": 155.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 111.8,
+     "bottom": 203.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 215.8,
+     "bottom": 259.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 649,
+     "bottom": 782,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 798,
+     "bottom": 842,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": 52.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 237,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 227.296875,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390-07-04-found-after-scroll-viewport.png",
+    "shot": "390-08-04-found-after-scroll.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "05-move-rearmed",
+    "scrollY": 556,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -289.3,
+      "bottom": -245.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": -245,
+     "bottom": -217,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": -290.3,
+     "bottom": -40.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -217.3,
+     "bottom": -173.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -217.3,
+     "bottom": -125.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -113.3,
+     "bottom": -69.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 320,
+     "bottom": 453,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 469,
+     "bottom": 513,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": false,
+     "label": false,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "cross-move"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "390-10-05-move-rearmed-viewport.png",
+    "shot": "390-11-05-move-rearmed.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 53.3,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "06-cancel",
+    "scrollY": 556,
+    "viewportH": 844,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -289.3,
+      "bottom": -245.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": -245,
+     "bottom": -217,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": -290.3,
+     "bottom": -40.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -217.3,
+     "bottom": -173.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -217.3,
+     "bottom": -125.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -113.3,
+     "bottom": -69.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 320,
+     "bottom": 453,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 469,
+     "bottom": 513,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": -276.7,
+    "wordsClearOfNav": false,
+    "retryInBar": false,
+    "inView": {
+     "box": false,
+     "label": false,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "cross-move"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [],
+    "docOverflowX": false
+   },
+   {
+    "name": "07-undo",
+    "scrollY": 556,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -289.3,
+      "bottom": -245.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -290.3,
+     "bottom": -40.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -217.3,
+     "bottom": -173.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -217.3,
+     "bottom": -125.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -113.3,
+     "bottom": -69.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 320,
+     "bottom": 364,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390-12-07-undo.png"
+   },
+   {
+    "name": "08-no-street",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "none",
+     "text": "⚠ No cross street found there. Tap closer to where the two streets cross.",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 320.5,
+      "w": 326,
+      "h": 53.8
+     },
+     "scrollH": 54,
+     "clientH": 54
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 141,
+      "top": 309,
+      "bottom": 341,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 929.5,
+     "bottom": 973.5,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 274.8,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "No cross street found there. Tap closer to where the two streets cross.",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390-13-08-no-street.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "09-failed",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "failed",
+     "text": "⚠ The street lookup didn't answer. Tap again, or try once more. Try again",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 331.4,
+      "w": 326,
+      "h": 64.7
+     },
+     "scrollH": 65,
+     "clientH": 65
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 141,
+      "top": 309,
+      "bottom": 341,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 962.8,
+     "bottom": 1006.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 270.8,
+    "wordsClearOfNav": true,
+    "retryInBar": true,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "The street lookup didn't answer. Try again Use the big map instead",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "390-14-09-failed-viewport.png",
+    "shot": "390-15-09-failed.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "band-aerial-retry": {
+      "w": 92.8,
+      "h": 64.7,
+      "ok": true
+     },
+     "cross-retry": {
+      "w": 68.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-big-map": {
+      "w": 164.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "10-retry-failed-again",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "failed",
+     "text": "⚠ The street lookup didn't answer. Tap again, or try once more. Try again",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 331.4,
+      "w": 326,
+      "h": 64.7
+     },
+     "scrollH": 65,
+     "clientH": 65
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 141,
+      "top": 309,
+      "bottom": 341,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 962.8,
+     "bottom": 1006.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 270.8,
+    "wordsClearOfNav": true,
+    "retryInBar": true,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "band-aerial-retry"
+    },
+    "focusVisibleOutline": "solid",
+    "liveRegions": 1,
+    "cardLine": "The street lookup didn't answer. Try again Use the big map instead",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false
+   },
+   {
+    "name": "11-retried-found",
+    "scrollY": 227,
+    "viewportH": 844,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 39.8,
+      "bottom": 83.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 84,
+     "bottom": 112,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 38.8,
+     "bottom": 288.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 111.8,
+     "bottom": 155.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 111.8,
+     "bottom": 203.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 215.8,
+     "bottom": 259.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 649,
+     "bottom": 782,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 798,
+     "bottom": 842,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": 52.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 237,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "solid",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 227.296875,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390-16-11-retried-found-viewport.png",
+    "shot": "390-17-11-retried-found.png"
+   },
+   {
+    "name": "12-already-in-view",
+    "scrollY": 0,
+    "viewportH": 1800,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 311,
+     "bottom": 339,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 876,
+     "bottom": 1009,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 1025,
+     "bottom": 1069,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": true,
+    "wordsTop": 279.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [],
+    "docOverflowX": false
+   },
+   {
+    "name": "13-failed-before-big-map",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "failed",
+     "text": "⚠ The street lookup didn't answer. Tap again, or try once more. Try again",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 331.4,
+      "w": 326,
+      "h": 64.7
+     },
+     "scrollH": 65,
+     "clientH": 65
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 141,
+      "top": 309,
+      "bottom": 341,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 962.8,
+     "bottom": 1006.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 270.8,
+    "wordsClearOfNav": true,
+    "retryInBar": true,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "The street lookup didn't answer. Try again Use the big map instead",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -320.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false
+   },
+   {
+    "name": "14-after-big-map-save",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 876,
+     "bottom": 1009,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 1025,
+     "bottom": 1069,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": true,
+    "wordsTop": 279.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": false,
+     "next": false,
+     "heading": false
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "band-aerial-big-map"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · at where the work starts",
+    "scrolls": [
+     {
+      "top": -320.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390-18-14-after-big-map-save-viewport.png",
+    "shot": "390-19-14-after-big-map-save.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "instant": {
+   "barKind": "finding",
+   "barText": "Finding the street name…",
+   "ring": "solid",
+   "cardLine": "Finding the street name…",
+   "liveRegions": 1
+  },
+  "askedScroll": {
+   "top": 227.296875,
+   "behavior": "smooth"
+  },
+  "askedAll": [
+   {
+    "top": 227.296875,
+    "behavior": "smooth"
+   }
+  ],
+  "scrollTrail": [
+   0,
+   14,
+   172,
+   209,
+   226,
+   227,
+   227,
+   227
+  ],
+  "noScroll": {
+   "move": {
+    "before": 556,
+    "after": 556,
+    "asked": 0
+   },
+   "cancel": {
+    "before": 556,
+    "after": 556,
+    "asked": 0
+   },
+   "undo": {
+    "before": 556,
+    "after": 556,
+    "asked": 0
+   }
+  },
+  "retryTrail": [
+   227,
+   227,
+   227,
+   227,
+   227,
+   227,
+   227,
+   227
+  ],
+  "retrySamePoint": true
+ },
+ "1440": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 489,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -231.5,
+      "bottom": -187.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": -232.5,
+     "bottom": 67.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -179.5,
+     "bottom": -135.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -127.5,
+     "bottom": -59.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": -5.5,
+     "bottom": 38.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 302.8,
+     "bottom": 346.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 16,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "1440-01-01-armed.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 791.8,
+     "bottom": 835.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -300.5,
+      "behavior": "instant"
+     },
+     {
+      "top": -524.5,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "02-finding",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "finding",
+     "text": "Finding the street name…",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": false,
+    "ring": {
+     "look": "solid",
+     "border": "3px solid rgb(86, 188, 242)",
+     "rect": {
+      "x": 858,
+      "top": 370,
+      "bottom": 402,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 875.8,
+     "bottom": 919.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "Finding the street name…",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "1440-03-02-finding-viewport.png",
+    "shot": "1440-04-02-finding.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "03-found-before-scroll",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 372,
+     "bottom": 400,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 791.8,
+     "bottom": 859.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 875.8,
+     "bottom": 919.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": false,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [
+     {
+      "top": 35.75,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440-05-03-found-before-scroll-viewport.png",
+    "shot": "1440-06-03-found-before-scroll.png"
+   },
+   {
+    "name": "04-found-after-scroll",
+    "scrollY": 36,
+    "viewportH": 900,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 221.5,
+      "bottom": 265.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 336,
+     "bottom": 364,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 220.5,
+     "bottom": 520.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 273.5,
+     "bottom": 317.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 325.5,
+     "bottom": 393.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 447.5,
+     "bottom": 491.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 755.8,
+     "bottom": 823.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 839.8,
+     "bottom": 883.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 234,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [
+     {
+      "top": 35.75,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440-07-04-found-after-scroll-viewport.png",
+    "shot": "1440-08-04-found-after-scroll.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "05-move-rearmed",
+    "scrollY": 376,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -118.5,
+      "bottom": -74.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": -4,
+     "bottom": 24,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": -119.5,
+     "bottom": 180.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -66.5,
+     "bottom": -22.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -14.5,
+     "bottom": 53.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 107.5,
+     "bottom": 151.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 415.8,
+     "bottom": 483.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 499.8,
+     "bottom": 543.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": false,
+     "label": false,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 129,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "cross-move"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "1440-10-05-move-rearmed-viewport.png",
+    "shot": "1440-11-05-move-rearmed.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 53.3,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "06-cancel",
+    "scrollY": 376,
+    "viewportH": 900,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -118.5,
+      "bottom": -74.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": -4,
+     "bottom": 24,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": -119.5,
+     "bottom": 180.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -66.5,
+     "bottom": -22.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -14.5,
+     "bottom": 53.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 107.5,
+     "bottom": 151.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 415.8,
+     "bottom": 483.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 499.8,
+     "bottom": 543.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": false,
+    "wordsTop": -106,
+    "wordsClearOfNav": false,
+    "retryInBar": false,
+    "inView": {
+     "box": false,
+     "label": false,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 129,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "cross-move"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [],
+    "docOverflowX": false
+   },
+   {
+    "name": "07-undo",
+    "scrollY": 376,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -118.5,
+      "bottom": -74.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": -119.5,
+     "bottom": 180.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -66.5,
+     "bottom": -22.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -14.5,
+     "bottom": 53.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 107.5,
+     "bottom": 151.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 415.8,
+     "bottom": 459.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 129,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "1440-12-07-undo.png"
+   },
+   {
+    "name": "08-no-street",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "none",
+     "text": "⚠ No cross street found there. Tap closer to where the two streets cross.",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 858,
+      "top": 370,
+      "bottom": 402,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 826.5,
+     "bottom": 870.5,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "No cross street found there. Tap closer to where the two streets cross.",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "1440-13-08-no-street.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "09-failed",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "failed",
+     "text": "⚠ The street lookup didn't answer. Tap again, or try once more. Try again",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 858,
+      "top": 370,
+      "bottom": 402,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 851.8,
+     "bottom": 895.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": true,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "The street lookup didn't answer. Try again Use the big map instead",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "1440-14-09-failed-viewport.png",
+    "shot": "1440-15-09-failed.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "band-aerial-retry": {
+      "w": 92.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-retry": {
+      "w": 68.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-big-map": {
+      "w": 164.8,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   },
+   {
+    "name": "10-retry-failed-again",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "failed",
+     "text": "⚠ The street lookup didn't answer. Tap again, or try once more. Try again",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 858,
+      "top": 370,
+      "bottom": 402,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 851.8,
+     "bottom": 895.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": true,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "band-aerial-retry"
+    },
+    "focusVisibleOutline": "solid",
+    "liveRegions": 1,
+    "cardLine": "The street lookup didn't answer. Try again Use the big map instead",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false
+   },
+   {
+    "name": "11-retried-found",
+    "scrollY": 36,
+    "viewportH": 900,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 221.5,
+      "bottom": 265.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 336,
+     "bottom": 364,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 220.5,
+     "bottom": 520.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 273.5,
+     "bottom": 317.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 325.5,
+     "bottom": 393.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 447.5,
+     "bottom": 491.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 755.8,
+     "bottom": 823.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 839.8,
+     "bottom": 883.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 234,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "solid",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [
+     {
+      "top": 35.75,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440-16-11-retried-found-viewport.png",
+    "shot": "1440-17-11-retried-found.png"
+   },
+   {
+    "name": "12-already-in-view",
+    "scrollY": 0,
+    "viewportH": 1800,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 372,
+     "bottom": 400,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 791.8,
+     "bottom": 859.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 875.8,
+     "bottom": 919.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [],
+    "docOverflowX": false
+   },
+   {
+    "name": "13-failed-before-big-map",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "failed",
+     "text": "⚠ The street lookup didn't answer. Tap again, or try once more. Try again",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 858,
+      "top": 370,
+      "bottom": 402,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 851.8,
+     "bottom": 895.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": true,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "The street lookup didn't answer. Try again Use the big map instead",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -335.5,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false
+   },
+   {
+    "name": "14-after-big-map-save",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 791.8,
+     "bottom": 859.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 875.8,
+     "bottom": 919.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": true,
+     "next": false,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "BUTTON",
+     "testid": "band-aerial-big-map"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · at where the work starts",
+    "scrolls": [
+     {
+      "top": -335.5,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440-18-14-after-big-map-save-viewport.png",
+    "shot": "1440-19-14-after-big-map-save.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "instant": {
+   "barKind": "finding",
+   "barText": "Finding the street name…",
+   "ring": "solid",
+   "cardLine": "Finding the street name…",
+   "liveRegions": 1
+  },
+  "askedScroll": {
+   "top": 35.75,
+   "behavior": "smooth"
+  },
+  "askedAll": [
+   {
+    "top": 35.75,
+    "behavior": "smooth"
+   }
+  ],
+  "scrollTrail": [
+   0,
+   23,
+   35,
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "noScroll": {
+   "move": {
+    "before": 376,
+    "after": 376,
+    "asked": 0
+   },
+   "cancel": {
+    "before": 376,
+    "after": 376,
+    "asked": 0
+   },
+   "undo": {
+    "before": 376,
+    "after": 376,
+    "asked": 0
+   }
+  },
+  "retryTrail": [
+   36,
+   36,
+   36,
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "retrySamePoint": true
+ },
+ "1440-reduced": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 489,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -231.5,
+      "bottom": -187.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": -232.5,
+     "bottom": 67.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -179.5,
+     "bottom": -135.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -127.5,
+     "bottom": -59.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": -5.5,
+     "bottom": 38.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 302.8,
+     "bottom": 346.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 16,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "1440-reduced-01-01-armed.png"
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 791.8,
+     "bottom": 835.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -300.5,
+      "behavior": "instant"
+     },
+     {
+      "top": -524.5,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440-reduced-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "02-finding",
+    "scrollY": 0,
+    "viewportH": 900,
+    "bar": {
+     "kind": "finding",
+     "text": "Finding the street name…",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": false,
+    "ring": {
+     "look": "solid",
+     "border": "3px solid rgb(86, 188, 242)",
+     "rect": {
+      "x": 858,
+      "top": 370,
+      "bottom": 402,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 875.8,
+     "bottom": 919.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "Finding the street name…",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "1440-reduced-03-02-finding.png"
+   },
+   {
+    "name": "03-found-after-jump",
+    "scrollY": 36,
+    "viewportH": 900,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 221.5,
+      "bottom": 265.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 336,
+     "bottom": 364,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 220.5,
+     "bottom": 520.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 273.5,
+     "bottom": 317.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 325.5,
+     "bottom": 393.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 447.5,
+     "bottom": 491.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 755.8,
+     "bottom": 823.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 839.8,
+     "bottom": 883.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 234,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [
+     {
+      "top": 35.75,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440-reduced-04-03-found-after-jump-viewport.png"
+   },
+   {
+    "name": "04-found-after-scroll",
+    "scrollY": 36,
+    "viewportH": 900,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 221.5,
+      "bottom": 265.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 336,
+     "bottom": 364,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 220.5,
+     "bottom": 520.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 273.5,
+     "bottom": 317.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 325.5,
+     "bottom": 393.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 447.5,
+     "bottom": 491.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 755.8,
+     "bottom": 823.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 839.8,
+     "bottom": 883.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 234,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [
+     {
+      "top": 35.75,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false
+   }
+  ],
+  "errors": [],
+  "instant": {
+   "barKind": "finding",
+   "barText": "Finding the street name…",
+   "ring": "solid",
+   "cardLine": "Finding the street name…",
+   "liveRegions": 1
+  },
+  "askedScroll": null,
+  "askedAll": [
+   {
+    "top": 35.75,
+    "behavior": "instant"
+   }
+  ],
+  "scrollTrail": [
+   36,
+   36,
+   36,
+   36,
+   36,
+   36,
+   36,
+   36
+  ]
+ },
+ "390-reduced": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 648,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -381.3,
+      "bottom": -337.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -382.3,
+     "bottom": -132.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -309.3,
+     "bottom": -265.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -309.3,
+     "bottom": -217.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -205.3,
+     "bottom": -161.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 228,
+     "bottom": 272,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390-reduced-01-01-armed.png"
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 876,
+     "bottom": 920,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -450.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -518.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390-reduced-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "02-finding",
+    "scrollY": 0,
+    "viewportH": 844,
+    "bar": {
+     "kind": "finding",
+     "text": "Finding the street name…",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": false,
+    "ring": {
+     "look": "solid",
+     "border": "3px solid rgb(86, 188, 242)",
+     "rect": {
+      "x": 141,
+      "top": 309,
+      "bottom": 341,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 1025,
+     "bottom": 1069,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "Finding the street name…",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390-reduced-03-02-finding.png"
+   },
+   {
+    "name": "03-found-after-jump",
+    "scrollY": 227,
+    "viewportH": 844,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 39.8,
+      "bottom": 83.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 84,
+     "bottom": 112,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 38.8,
+     "bottom": 288.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 111.8,
+     "bottom": 155.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 111.8,
+     "bottom": 203.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 215.8,
+     "bottom": 259.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 649,
+     "bottom": 782,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 798,
+     "bottom": 842,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": 52.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 237,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 227.296875,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390-reduced-04-03-found-after-jump-viewport.png"
+   },
+   {
+    "name": "04-found-after-scroll",
+    "scrollY": 227,
+    "viewportH": 844,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 39.8,
+      "bottom": 83.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 84,
+     "bottom": 112,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 38.8,
+     "bottom": 288.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 111.8,
+     "bottom": 155.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 111.8,
+     "bottom": 203.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 215.8,
+     "bottom": 259.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 649,
+     "bottom": 782,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 798,
+     "bottom": 842,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": 52.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 237,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 227.296875,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false
+   }
+  ],
+  "errors": [],
+  "instant": {
+   "barKind": "finding",
+   "barText": "Finding the street name…",
+   "ring": "solid",
+   "cardLine": "Finding the street name…",
+   "liveRegions": 1
+  },
+  "askedScroll": null,
+  "askedAll": [
+   {
+    "top": 227.296875,
+    "behavior": "instant"
+   }
+  ],
+  "scrollTrail": [
+   227,
+   227,
+   227,
+   227,
+   227,
+   227,
+   227,
+   227
+  ]
+ },
+ "390x664": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 587,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -320.3,
+      "bottom": -276.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -321.3,
+     "bottom": -71.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -248.3,
+     "bottom": -204.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -248.3,
+     "bottom": -156.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -144.3,
+     "bottom": -100.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 289,
+     "bottom": 333,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390x664-01-01-armed.png"
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 0,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 876,
+     "bottom": 920,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -389.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -338.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "02-finding",
+    "scrollY": 0,
+    "viewportH": 664,
+    "bar": {
+     "kind": "finding",
+     "text": "Finding the street name…",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": false,
+    "ring": {
+     "look": "solid",
+     "border": "3px solid rgb(86, 188, 242)",
+     "rect": {
+      "x": 141,
+      "top": 309,
+      "bottom": 341,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 1025,
+     "bottom": 1069,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "Finding the street name…",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "390x664-03-02-finding-viewport.png",
+    "shot": "390x664-04-02-finding.png"
+   },
+   {
+    "name": "03-found-before-scroll",
+    "scrollY": 0,
+    "viewportH": 664,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 266.8,
+      "bottom": 310.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 311,
+     "bottom": 339,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 265.8,
+     "bottom": 515.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 338.8,
+     "bottom": 382.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 338.8,
+     "bottom": 430.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 442.8,
+     "bottom": 486.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 876,
+     "bottom": 1009,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 1025,
+     "bottom": 1069,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": true,
+    "wordsTop": 279.3,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": false,
+     "next": false,
+     "heading": false
+    },
+    "aerialVisiblePx": 250,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 421,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-05-03-found-before-scroll-viewport.png",
+    "shot": "390x664-06-03-found-before-scroll.png"
+   },
+   {
+    "name": "04-found-after-scroll",
+    "scrollY": 421,
+    "viewportH": 664,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -154.3,
+      "bottom": -110.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": -110,
+     "bottom": -82,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": -155.3,
+     "bottom": 94.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -82.3,
+     "bottom": -38.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -82.3,
+     "bottom": 9.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 21.8,
+     "bottom": 65.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 455,
+     "bottom": 588,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 604,
+     "bottom": 648,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": -141.7,
+    "wordsClearOfNav": false,
+    "retryInBar": false,
+    "inView": {
+     "box": false,
+     "label": false,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 43,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 421,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-07-04-found-after-scroll-viewport.png",
+    "shot": "390x664-08-04-found-after-scroll.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "instant": {
+   "barKind": "finding",
+   "barText": "Finding the street name…",
+   "ring": "solid",
+   "cardLine": "Finding the street name…",
+   "liveRegions": 1
+  },
+  "askedScroll": {
+   "top": 421,
+   "behavior": "smooth"
+  },
+  "askedAll": [
+   {
+    "top": 421,
+    "behavior": "smooth"
+   }
+  ],
+  "scrollTrail": [
+   0,
+   33,
+   281,
+   358,
+   402,
+   419,
+   421,
+   421
+  ]
+ },
+ "390x664-y260": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 587,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -320.3,
+      "bottom": -276.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -321.3,
+     "bottom": -71.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -248.3,
+     "bottom": -204.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -248.3,
+     "bottom": -156.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -144.3,
+     "bottom": -100.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 289,
+     "bottom": 333,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390x664-y260-01-01-armed.png"
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 260,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 6.8,
+      "bottom": 50.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 5.8,
+     "bottom": 255.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 78.8,
+     "bottom": 122.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 78.8,
+     "bottom": 170.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 182.8,
+     "bottom": 226.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 616,
+     "bottom": 660,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 204,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -389.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -338.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-y260-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "02-finding",
+    "scrollY": 260,
+    "viewportH": 664,
+    "bar": {
+     "kind": "finding",
+     "text": "Finding the street name…",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 6.8,
+      "bottom": 50.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": false,
+    "ring": {
+     "look": "solid",
+     "border": "3px solid rgb(86, 188, 242)",
+     "rect": {
+      "x": 141,
+      "top": 49,
+      "bottom": 81,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 5.8,
+     "bottom": 255.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 78.8,
+     "bottom": 122.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 78.8,
+     "bottom": 170.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 182.8,
+     "bottom": 226.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 765,
+     "bottom": 809,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 204,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "Finding the street name…",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "390x664-y260-03-02-finding-viewport.png",
+    "shot": "390x664-y260-04-02-finding.png"
+   },
+   {
+    "name": "03-found-before-scroll",
+    "scrollY": 260,
+    "viewportH": 664,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 6.8,
+      "bottom": 50.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": 51,
+     "bottom": 79,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": 5.8,
+     "bottom": 255.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 78.8,
+     "bottom": 122.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 78.8,
+     "bottom": 170.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 182.8,
+     "bottom": 226.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 616,
+     "bottom": 749,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 765,
+     "bottom": 809,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": 19.3,
+    "wordsClearOfNav": false,
+    "retryInBar": false,
+    "inView": {
+     "box": false,
+     "label": false,
+     "row": false,
+     "next": false,
+     "heading": true
+    },
+    "aerialVisiblePx": 204,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 161,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-y260-05-03-found-before-scroll-viewport.png",
+    "shot": "390x664-y260-06-03-found-before-scroll.png"
+   },
+   {
+    "name": "04-found-after-scroll",
+    "scrollY": 421,
+    "viewportH": 664,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -154.3,
+      "bottom": -110.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 143,
+     "top": -110,
+     "bottom": -82,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 31,
+     "top": -155.3,
+     "bottom": 94.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -82.3,
+     "bottom": -38.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -82.3,
+     "bottom": 9.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 21.8,
+     "bottom": 65.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 48,
+     "top": 455,
+     "bottom": 588,
+     "w": 294,
+     "h": 133
+    },
+    "next": {
+     "x": 203.1,
+     "top": 604,
+     "bottom": 648,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 360.3,
+    "barClearOfNav": false,
+    "wordsTop": -141.7,
+    "wordsClearOfNav": false,
+    "retryInBar": false,
+    "inView": {
+     "box": false,
+     "label": false,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 43,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 60 ft west of where the work starts",
+    "scrolls": [
+     {
+      "top": 161,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-y260-07-04-found-after-scroll-viewport.png",
+    "shot": "390x664-y260-08-04-found-after-scroll.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "instant": {
+   "barKind": "finding",
+   "barText": "Finding the street name…",
+   "ring": "solid",
+   "cardLine": "Finding the street name…",
+   "liveRegions": 1
+  },
+  "askedScroll": {
+   "top": 161,
+   "behavior": "smooth"
+  },
+  "askedAll": [
+   {
+    "top": 161,
+    "behavior": "smooth"
+   }
+  ],
+  "scrollTrail": [
+   260,
+   316,
+   404,
+   420,
+   421,
+   421,
+   421,
+   421
+  ]
+ },
+ "390x664-y260-failed": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 587,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": -320.3,
+      "bottom": -276.3,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": -321.3,
+     "bottom": -71.3,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": -248.3,
+     "bottom": -204.3,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": -248.3,
+     "bottom": -156.3,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": -144.3,
+     "bottom": -100.3,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 289,
+     "bottom": 333,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "390x664-y260-failed-01-01-armed.png"
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 260,
+    "viewportH": 664,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 6.8,
+      "bottom": 50.8,
+      "w": 326,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 5.8,
+     "bottom": 255.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 78.8,
+     "bottom": 122.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 78.8,
+     "bottom": 170.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 182.8,
+     "bottom": 226.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 616,
+     "bottom": 660,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 204,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -389.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -338.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-y260-failed-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "09-failed",
+    "scrollY": 260,
+    "viewportH": 664,
+    "bar": {
+     "kind": "failed",
+     "text": "⚠ The street lookup didn't answer. Tap again, or try once more. Try again",
+     "role": "status",
+     "bg": "rgb(34, 30, 16)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 32,
+      "top": 6.8,
+      "bottom": 71.4,
+      "w": 326,
+      "h": 64.7
+     },
+     "scrollH": 65,
+     "clientH": 65
+    },
+    "outline": "2px solid rgb(244, 192, 32)",
+    "armed": true,
+    "ring": {
+     "look": "dashed",
+     "border": "3px dashed rgb(244, 192, 32)",
+     "rect": {
+      "x": 141,
+      "top": 49,
+      "bottom": 81,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 31,
+     "top": 5.8,
+     "bottom": 255.8,
+     "w": 328,
+     "h": 250
+    },
+    "edit": {
+     "x": 241.5,
+     "top": 78.8,
+     "bottom": 122.8,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 40,
+     "top": 78.8,
+     "bottom": 170.8,
+     "w": 44,
+     "h": 92
+    },
+    "big": {
+     "x": 159.2,
+     "top": 182.8,
+     "bottom": 226.8,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 203.1,
+     "top": 702.8,
+     "bottom": 746.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 390,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": 10.8,
+    "wordsClearOfNav": false,
+    "retryInBar": true,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 204,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "The street lookup didn't answer. Try again Use the big map instead",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -389.25,
+      "behavior": "instant"
+     },
+     {
+      "top": -338.25,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "390x664-y260-failed-03-09-failed-viewport.png"
+   }
+  ],
+  "errors": []
+ },
+ "1440x700": {
+  "steps": [
+   {
+    "name": "01-armed",
+    "scrollY": 644,
+    "viewportH": 700,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": -386.5,
+      "bottom": -342.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": -387.5,
+     "bottom": -87.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": -334.5,
+     "bottom": -290.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": -282.5,
+     "bottom": -214.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": -160.5,
+     "bottom": -116.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 147.8,
+     "bottom": 191.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": false,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": true,
+     "heading": null
+    },
+    "aerialVisiblePx": 0,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "shot": "1440x700-01-01-armed.png"
+   },
+   {
+    "name": "01b-card-off-screen",
+    "scrollY": 0,
+    "viewportH": 700,
+    "bar": {
+     "kind": "armed",
+     "text": "Tap the intersection nearest the work",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": true,
+    "ring": null,
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 791.8,
+     "bottom": 835.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "BODY",
+     "testid": null
+    },
+    "focusVisibleOutline": null,
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [
+     {
+      "top": -455.5,
+      "behavior": "instant"
+     },
+     {
+      "top": -324.5,
+      "behavior": "instant"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440x700-02-01b-card-off-screen-viewport.png"
+   },
+   {
+    "name": "02-finding",
+    "scrollY": 0,
+    "viewportH": 700,
+    "bar": {
+     "kind": "finding",
+     "text": "Finding the street name…",
+     "role": "status",
+     "bg": "rgb(52, 169, 232)",
+     "color": "rgb(12, 22, 34)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(52, 169, 232)",
+    "armed": false,
+    "ring": {
+     "look": "solid",
+     "border": "3px solid rgb(86, 188, 242)",
+     "rect": {
+      "x": 858,
+      "top": 370,
+      "bottom": 402,
+      "w": 32,
+      "h": 32
+     }
+    },
+    "mark": null,
+    "label": null,
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": null,
+    "next": {
+     "x": 987.1,
+     "top": 875.8,
+     "bottom": 919.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": null,
+    "gapAerialToRow": null,
+    "barClearOfNav": true,
+    "wordsTop": null,
+    "wordsClearOfNav": null,
+    "retryInBar": false,
+    "inView": {
+     "box": null,
+     "label": null,
+     "row": null,
+     "next": false,
+     "heading": null
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "DIV",
+     "testid": null
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": "Finding the street name…",
+    "rowName": null,
+    "rowLine": null,
+    "scrolls": [],
+    "docOverflowX": false,
+    "viewShot": "1440x700-03-02-finding-viewport.png",
+    "shot": "1440x700-04-02-finding.png"
+   },
+   {
+    "name": "03-found-before-scroll",
+    "scrollY": 0,
+    "viewportH": 700,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 257.5,
+      "bottom": 301.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 372,
+     "bottom": 400,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 256.5,
+     "bottom": 556.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 309.5,
+     "bottom": 353.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 361.5,
+     "bottom": 429.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 483.5,
+     "bottom": 527.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 791.8,
+     "bottom": 859.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 875.8,
+     "bottom": 919.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": false,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": true,
+    "wordsTop": 270,
+    "wordsClearOfNav": true,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": false,
+     "next": false,
+     "heading": false
+    },
+    "aerialVisiblePx": 300,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [
+     {
+      "top": 219.75,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440x700-05-03-found-before-scroll-viewport.png",
+    "shot": "1440x700-06-03-found-before-scroll.png"
+   },
+   {
+    "name": "04-found-after-scroll",
+    "scrollY": 220,
+    "viewportH": 700,
+    "bar": {
+     "kind": "found",
+     "text": "✓ Near Franklin Street",
+     "role": "status",
+     "bg": "rgb(17, 38, 32)",
+     "color": "rgb(234, 240, 247)",
+     "font": "13.5px/600",
+     "rect": {
+      "x": 298,
+      "top": 37.5,
+      "bottom": 81.5,
+      "w": 844,
+      "h": 44
+     },
+     "scrollH": 44,
+     "clientH": 44
+    },
+    "outline": "2px solid rgb(79, 215, 135)",
+    "armed": false,
+    "ring": null,
+    "mark": {
+     "x": 860,
+     "top": 152,
+     "bottom": 180,
+     "w": 28,
+     "h": 28
+    },
+    "label": "Franklin Street",
+    "frame": {
+     "x": 297,
+     "top": 36.5,
+     "bottom": 336.5,
+     "w": 846,
+     "h": 300
+    },
+    "edit": {
+     "x": 1025.5,
+     "top": 89.5,
+     "bottom": 133.5,
+     "w": 108.5,
+     "h": 44
+    },
+    "zoom": {
+     "x": 1102,
+     "top": 141.5,
+     "bottom": 209.5,
+     "w": 32,
+     "h": 68
+    },
+    "big": {
+     "x": 943.2,
+     "top": 263.5,
+     "bottom": 307.5,
+     "w": 190.8,
+     "h": 44
+    },
+    "row": {
+     "x": 314,
+     "top": 571.8,
+     "bottom": 639.8,
+     "w": 812,
+     "h": 68
+    },
+    "next": {
+     "x": 987.1,
+     "top": 655.8,
+     "bottom": 699.8,
+     "w": 138.9,
+     "h": 44
+    },
+    "nextText": "Next question",
+    "nav": {
+     "x": 0,
+     "top": 0,
+     "bottom": 52,
+     "w": 1440,
+     "h": 52
+    },
+    "both_in_view": true,
+    "gapAerialToRow": 235.3,
+    "barClearOfNav": false,
+    "wordsTop": 50,
+    "wordsClearOfNav": false,
+    "retryInBar": false,
+    "inView": {
+     "box": true,
+     "label": true,
+     "row": true,
+     "next": true,
+     "heading": true
+    },
+    "aerialVisiblePx": 285,
+    "focus": {
+     "tag": "H4",
+     "testid": "cross-row-name"
+    },
+    "focusVisibleOutline": "none",
+    "liveRegions": 1,
+    "cardLine": null,
+    "rowName": "Near Franklin Street",
+    "rowLine": "Two-way street · 200 ft east of where the work starts",
+    "scrolls": [
+     {
+      "top": 219.75,
+      "behavior": "smooth"
+     }
+    ],
+    "docOverflowX": false,
+    "viewShot": "1440x700-07-04-found-after-scroll-viewport.png",
+    "shot": "1440x700-08-04-found-after-scroll.png",
+    "axe": [],
+    "targets": {
+     "band-aerial-big-map": {
+      "w": 190.8,
+      "h": 44,
+      "ok": true
+     },
+     "cross-move": {
+      "w": 44.1,
+      "h": 44,
+      "ok": true
+     },
+     "cross-undo": {
+      "w": 44,
+      "h": 44,
+      "ok": true
+     },
+     "where-open-picker": {
+      "w": 108.5,
+      "h": 44,
+      "ok": true
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "instant": {
+   "barKind": "finding",
+   "barText": "Finding the street name…",
+   "ring": "solid",
+   "cardLine": "Finding the street name…",
+   "liveRegions": 1
+  },
+  "askedScroll": {
+   "top": 219.75,
+   "behavior": "smooth"
+  },
+  "askedAll": [
+   {
+    "top": 219.75,
+    "behavior": "smooth"
+   }
+  ],
+  "scrollTrail": [
+   0,
+   47,
+   184,
+   209,
+   220,
+   220,
+   220,
+   220
+  ]
+ }
+}

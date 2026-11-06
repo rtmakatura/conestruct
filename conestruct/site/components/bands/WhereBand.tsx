@@ -54,7 +54,7 @@ import { hasConfirmedSide, hasLocation, workLenIsDefault } from "@/lib/scenarios
 import { clearWorkLen, setWorkLen } from "@/lib/scenarios/what-writes";
 import { isOperatorSet } from "@/lib/scenarios/guesses";
 import { OpenBand } from "./BandPrimitives";
-import { BandAerial } from "./BandAerial";
+import { BandAerial, type AerialBar, type AerialRing } from "./BandAerial";
 import { ManualFallback } from "./ManualFallback";
 import { WhereQuestions } from "./WhereQuestions";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
@@ -491,7 +491,9 @@ export function WhereBand({
   const lengthOwed = workLenIsEmpty(scenario) || workLenIsRefused(scenario) || !wz.ok;
   const editOpen = editChoice ?? lengthOwed;
   const openMap = () => {
-    if (!locked) onOpenPicker();
+    if (locked) return;
+    crossMark?.leaveForPicker(); // #446 T21: nothing lands behind the picker.
+    onOpenPicker();
   };
 
   // Rule 114's producer row: the field and its button, both 44 px,
@@ -557,6 +559,33 @@ export function WhereBand({
     crossOpen && crossMark?.pixel && marked
       ? { ...crossMark.pixel, name: crossStreetLabel(marked.name) }
       : null;
+  // #446 rulings 1-5: what the aerial's bar says, read off the same state as
+  // the card (T3, T6).  Nothing new is read.
+  const phase = crossMark?.phase ?? "idle";
+  const aerialBar: AerialBar | null =
+    !crossOpen || !crossMark
+      ? null
+      : phase === "resolving"
+        ? { kind: "finding" }
+        : phase === "error"
+          ? { kind: "failed", onRetry: crossMark.retry }
+          : phase === "none"
+            ? { kind: "none" }
+            : armed
+              ? { kind: "armed" }
+              : marked
+                ? { kind: "found", name: crossStreetLabel(marked.name) }
+                : null;
+  const aerialRing: AerialRing | null =
+    crossOpen && crossMark?.ring && phase !== "idle"
+      ? { ...crossMark.ring, look: phase === "resolving" ? "solid" : "dashed" }
+      : null;
+  // T5, T21: the button stays while a lookup runs; pressing it drops that
+  // lookup and any scroll still owed, so nothing lands under the open picker.
+  const openBigMap = () => {
+    crossMark?.leaveForPicker();
+    onMarkIntersection?.();
+  };
 
   return (
     <OpenBand
@@ -612,8 +641,10 @@ export function WhereBand({
               pinFrame={crossOpen}
               armed={armed}
               onTap={crossMark ? (t) => crossMark.tap(t) : undefined}
-              onBigMap={onMarkIntersection}
+              onBigMap={onMarkIntersection ? openBigMap : undefined}
               mark={aerialMark}
+              bar={aerialBar}
+              ring={aerialRing}
             />
           ) : (
             // W11: no aerial (a stale road, a corridor-end pin): the

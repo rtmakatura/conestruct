@@ -9238,13 +9238,23 @@ input[type="number"] {
 .workbench .a-aerial-frame.is-armed {
   cursor: crosshair;
 }
-/* Ruling 3: the 2 px --act outline, inset on the frame (P4). */
-.workbench .a-aerial-frame.is-armed::after {
+/* Ruling 3: the 2 px --act outline, inset on the frame (P4).  #446: while
+   the cross-street question has a bar; found and failed turn it (rulings 2,
+   4; validation-artifacts/committed/ux-tap-feedback/rulings.md). */
+.workbench .a-aerial-frame.has-bar::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 3;
   border: 2px solid var(--act);
   pointer-events: none;
+}
+.workbench .a-aerial-frame[data-bar="found"]::after {
+  border-color: var(--pass);
+}
+.workbench .a-aerial-frame[data-bar="failed"]::after,
+.workbench .a-aerial-frame[data-bar="none"]::after {
+  border-color: var(--warn);
 }
 .workbench .a-aerial-frame.is-armed img {
   cursor: crosshair;
@@ -9258,8 +9268,8 @@ input[type="number"] {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 36px;
-  padding: 8px 12px;
+  min-height: 44px;
+  padding: 4px 12px;
   background: var(--act);
   color: var(--on-act);
   font-family: var(--font-sans);
@@ -9271,12 +9281,87 @@ input[type="number"] {
 .workbench .a-aerial-bar svg {
   flex: none;
 }
-/* The bar spans the top: Edit on map and the zoom step down under it. */
-.workbench .a-aerial-frame.is-armed .a-aerial-edit {
-  top: 44px;
+/* #446 rulings 2, 4: the ready and warn bars, ink on their own grounds;
+   the glyph carries the hue (symClass), the words the meaning (Rule 13). */
+.workbench .a-aerial-frame[data-bar="found"] .a-aerial-bar {
+  background: var(--vd-ready-ground);
+  color: var(--ink);
 }
-.workbench .a-aerial-frame.is-armed .a-aerial-edit ~ .a-aerial-zoom {
-  top: 96px;
+.workbench .a-aerial-frame[data-bar="failed"] .a-aerial-bar,
+.workbench .a-aerial-frame[data-bar="none"] .a-aerial-bar {
+  background: var(--vd-flag-ground);
+  color: var(--ink);
+}
+.workbench .a-aerial-frame[data-bar="failed"] .a-aerial-bar {
+  padding: 0 0 0 12px;
+}
+.workbench .a-aerial-bar-glyph {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+.workbench .a-aerial-bar-text {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 0;
+}
+/* Ruling 4: the bar lets a tap through to the picture; its button takes its
+   own.  44 px (the bar's height), as TapA3 draws it. */
+.workbench .a-aerial-bar-btn {
+  flex: none;
+  align-self: stretch;
+  min-height: 44px;
+  padding: 0 16px;
+  color: var(--on-act);
+  background: var(--act);
+  border: 0;
+  border-radius: 0;
+  font: inherit; /* T17: the bar's own 13.5/600, no new census site */
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.workbench .a-aerial-bar-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
+}
+/* #446 rulings 1, 4: the ring at the tap, solid while finding, dashed once
+   the lookup has no street.  The halo is the label's own ground at 60 %.
+   Over the bar: a tap near the top still shows its answer at the tap. */
+.workbench .a-aerial-ring {
+  position: absolute;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--act-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgb(var(--da-ground-rgb) / 0.6);
+  pointer-events: none;
+}
+.workbench .a-aerial-ring::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--act-bright);
+}
+.workbench .a-aerial-ring[data-look="dashed"] {
+  border: 3px dashed var(--warn);
+  box-shadow: none;
+}
+.workbench .a-aerial-ring[data-look="dashed"]::after {
+  content: none;
+}
+/* The bar spans the top: Edit on map and the zoom step down under it, in the
+   same place through every state of the bar (#446 T10, P1). */
+.workbench .a-aerial-frame.has-bar .a-aerial-edit {
+  top: 52px;
+}
+.workbench .a-aerial-frame.has-bar .a-aerial-edit ~ .a-aerial-zoom {
+  top: 104px;
 }
 /* Ruling 4: 44 px, the aerial's bottom-right, clear of the Mapbox
    attribution the picture carries in that corner. */
@@ -9304,9 +9389,14 @@ input[type="number"] {
 @media (max-width: 480px) {
   /* At 380-390 the right column holds Edit on map and the big-map
      button; the zoom moves to the left under the bar (no legend on the
-     pin picture), each button still 44. */
-  .workbench .a-aerial-frame.is-armed .a-aerial-edit ~ .a-aerial-zoom {
-    top: 44px;
+     pin picture), each button still 44.  #446 T10: the failed sentence wraps
+     to 3 lines here (65 px; "no street" to 2, 54 px), so the buttons sit
+     under that in every state and don't move when the bar grows. */
+  .workbench .a-aerial-frame.has-bar .a-aerial-edit {
+    top: 72px;
+  }
+  .workbench .a-aerial-frame.has-bar .a-aerial-edit ~ .a-aerial-zoom {
+    top: 72px;
     right: auto;
     left: 8px;
     align-items: flex-start;
@@ -9345,6 +9435,9 @@ input[type="number"] {
   padding: 8px 12px;
   background: var(--vd-ready-ground);
   border: 1px solid var(--rule);
+  /* #446 T19: the top of the band the scroll works in; only the nav is pinned
+     on this page. */
+  scroll-margin-top: var(--nav-h);
 }
 .workbench .wq-cross-glyph {
   flex: none;
@@ -9366,6 +9459,7 @@ input[type="number"] {
   line-height: 1.4;
   color: var(--ink);
   overflow-wrap: anywhere;
+  margin: 0;
 }
 .workbench .wq-cross-sub.tr-note {
   color: var(--ink-mute);
@@ -9385,8 +9479,18 @@ input[type="number"] {
   gap: var(--space-tight);
 }
 @media (max-width: 480px) {
+  /* #446 T16: the words get the row's whole width and Move and Undo their
+     own line, as this block always meant (the body's flex-basis kept them
+     side by side), and the height is reserved, CHOSEN 133 px as measured:
+     finding, found, its later second line, Move and Cancel are all one
+     height (P1). */
   .workbench .wq-cross-row {
     flex-wrap: wrap;
+    align-content: flex-start;
+    min-height: 133px;
+  }
+  .workbench .wq-cross-body {
+    flex-basis: calc(100% - 24px);
   }
   .workbench .wq-cross-acts {
     margin-left: 24px;

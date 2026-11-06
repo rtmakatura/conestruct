@@ -86,14 +86,11 @@ export function crossStreetTag(answer: NearestIntersection | null): CrossStreetT
 }
 
 export function useCrossStreetTag(scenario: Scenario | null): CrossStreetTag | null {
-  const [answer, setAnswer] = useState<NearestIntersection | null>(null);
+  const [held, setHeld] = useState<{ key: string; answer: NearestIntersection } | null>(null);
   const key = scenario ? crossStreetKey(scenario) : null;
   const latest = useRef(scenario);
   latest.current = scenario;
   useEffect(() => {
-    // A new pin or road clears the old answer at once: a cross street
-    // measured from another pin is never shown as this one's.
-    setAnswer(null);
     if (key === null || latest.current === null) return;
     const controller = new AbortController();
     (async () => {
@@ -106,12 +103,15 @@ export function useCrossStreetTag(scenario: Scenario | null): CrossStreetTag | n
         });
         if (!r.ok) return;
         const a = (await r.json()) as NearestIntersection;
-        if (!controller.signal.aborted) setAnswer(a);
+        if (!controller.signal.aborted) setHeld({ key, answer: a });
       } catch {
         // Aborted or unreachable: the tag keeps the road name.
       }
     })();
     return () => controller.abort();
   }, [key]);
-  return crossStreetTag(answer);
+  // A new pin, road or crossing clears the old answer in the same render: a
+  // cross street measured from another pin is never shown as this one's, and
+  // #446 T23's wait can't take an old read of the same street for the new one.
+  return crossStreetTag(held?.key === key ? held.answer : null);
 }

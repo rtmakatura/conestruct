@@ -26,6 +26,9 @@
 //                         crosshair, "Use the big map instead"), and the
 //                         tap's box and label sit at its own pixel while
 //                         that same picture is shown (rulings 3-5, X3, X5)
+//   · the tap's answer    #446: the bar, its outline and a ring at the tap
+//                         say what the tap did: finding, found, failed, no
+//                         street (ux-tap-feedback/rulings.md, rulings 1-5)
 //
 // Rule 3: nothing here computes a coordinate or a length.  The image is the
 // backend's; the legend's swatches read ZONE_COLOR / ZONE_CHANNEL (the
@@ -33,7 +36,7 @@
 // size is measured and sent, so the backend frames the corridor for exactly
 // the box it is shown in — no crop, no horizontal scroll at 380.
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Scenario } from "@/lib/scenarios";
 import {
   boundWord,
@@ -48,6 +51,8 @@ import {
   type AerialStage,
 } from "@/lib/corridor-aerial";
 import { ZONE_CHANNEL, ZONE_COLOR, type CorridorZone } from "@/lib/corridor-zones";
+import { symClass } from "@/lib/design/symbols";
+import { CROSS_FINDING, CROSS_NONE } from "./WhereQuestions";
 
 // Upstream first — the motorist's order, the picker's and page 2's legend.
 const LEGEND_ORDER: readonly CorridorZone[] = [
@@ -73,6 +78,8 @@ export const AERIAL_FAILED = "The aerial didn't load. Edit on map shows the corr
 export const AERIAL_KIND_OWED = "Approaches lay out after you confirm the kind";
 /** #440 ruling 3. */
 export const AERIAL_TAP_BAR = "Tap the intersection nearest the work";
+/** #446 ruling 4, verbatim. */
+export const CROSS_FAILED_BAR = "The street lookup didn't answer. Tap again, or try once more.";
 /** #440 X12: the armed picture says the keyboard's way in. */
 export const AERIAL_ARMED_ALT =
   "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead";
@@ -126,6 +133,22 @@ export interface AerialTap {
   frameKey: string;
 }
 
+/** #446: what the bar says while the cross-street question is on screen. */
+export type AerialBar =
+  | { kind: "armed" }
+  | { kind: "finding" }
+  | { kind: "found"; name: string }
+  | { kind: "failed"; onRetry: () => void }
+  | { kind: "none" };
+
+/** #446 T7: the tap's ring, on the picture tapped (X5). */
+export interface AerialRing {
+  x: number;
+  y: number;
+  frameKey: string;
+  look: "solid" | "dashed";
+}
+
 export interface BandAerialProps {
   scenario: Scenario;
   geometry: GeometryFetch;
@@ -143,10 +166,14 @@ export interface BandAerialProps {
   onBigMap?: () => void;
   /** #440 X5: the box and label, shown only on the picture tapped. */
   mark?: AerialMark | null;
+  /** #446: the bar's state; without one the armed picture's bar. */
+  bar?: AerialBar | null;
+  ring?: AerialRing | null;
 }
 
-/** #440 ruling 3: the bar's crosshair (the design canvas's own path). */
-function Crosshair() {
+/** #440 ruling 3: the bar's crosshair (the design canvas's own path).
+ *  #446 ruling 1 / T1: the finding arc, `TapA1`'s path, still (R10). */
+function BarIcon({ finding = false }: { finding?: boolean }) {
   return (
     <svg
       width="16"
@@ -158,8 +185,14 @@ function Crosshair() {
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M8 1v4M8 11v4M1 8h4M11 8h4" />
-      <circle cx="8" cy="8" r="2" />
+      {finding ? (
+        <path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5" />
+      ) : (
+        <>
+          <path d="M8 1v4M8 11v4M1 8h4M11 8h4" />
+          <circle cx="8" cy="8" r="2" />
+        </>
+      )}
     </svg>
   );
 }
@@ -175,9 +208,25 @@ export function BandAerial({
   onTap,
   onBigMap,
   mark = null,
+  bar = null,
+  ring = null,
 }: BandAerialProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
+  // #446 T11: a retry unmounts its own button; if it fails again, focus
+  // comes back to the new one.  T22: if it answers "no street" there's no
+  // new one, so focus goes to the bar's big-map button, the keyboard's way in.
+  const retryRef = useRef<HTMLButtonElement | null>(null);
+  const bigMapRef = useRef<HTMLButtonElement | null>(null);
+  const retryHadFocus = useRef(false);
+  const barKind = (bar?.kind ?? (armed ? "armed" : null)) as AerialBar["kind"] | null;
+  useEffect(() => {
+    if (retryHadFocus.current) {
+      if (barKind === "failed") retryRef.current?.focus({ preventScroll: true });
+      if (barKind === "none") bigMapRef.current?.focus({ preventScroll: true });
+    }
+    if (barKind !== "finding") retryHadFocus.current = false;
+  }, [barKind]);
   // Only an answer for THIS scenario: while the geometry re-reads (a pin
   // moved, a side changed) the hook still holds the previous answer, and a
   // picture of the previous answer is a stale corridor (Rule 10).
@@ -247,6 +296,10 @@ export function BandAerial({
   const frameKey = base !== null ? JSON.stringify({ base, step }) : null;
   const tapping = armed && shown && onTap !== undefined && size !== null && frameKey !== null;
   const markShown = mark !== null && shown && frameKey !== null && mark.frameKey === frameKey;
+  const ringShown = ring !== null && shown && frameKey !== null && ring.frameKey === frameKey;
+  // #446: one bar element through every state, so its live region is there
+  // before its words change (ruling 1).
+  const barNow: AerialBar | null = shown ? (bar ?? (tapping ? { kind: "armed" } : null)) : null;
   const tap = (e: React.MouseEvent<HTMLImageElement>) => {
     if (!tapping || !size || frameKey === null || !onTap) return;
     const r = e.currentTarget.getBoundingClientRect();
@@ -273,13 +326,55 @@ export function BandAerial({
     <div className="a-aerial" data-testid="band-aerial" data-read data-stage={stage ?? "none"}>
       <div
         ref={frameRef}
-        className={tapping ? "a-aerial-frame is-armed" : "a-aerial-frame"}
+        className={`a-aerial-frame${tapping ? " is-armed" : ""}${barNow ? " has-bar" : ""}`}
+        data-bar={barNow?.kind}
         data-testid="band-aerial-frame"
       >
-        {tapping && (
-          <div className="a-aerial-bar" data-testid="band-aerial-bar">
-            <Crosshair />
-            {AERIAL_TAP_BAR}
+        {barNow && (
+          <div className="a-aerial-bar" data-testid="band-aerial-bar" role="status">
+            {barNow.kind === "armed" && (
+              <>
+                <BarIcon />
+                {AERIAL_TAP_BAR}
+              </>
+            )}
+            {barNow.kind === "finding" && (
+              <>
+                <BarIcon finding />
+                {CROSS_FINDING}
+              </>
+            )}
+            {barNow.kind === "found" && (
+              <>
+                <span className={`a-aerial-bar-glyph ${symClass("✓")}`}>✓</span>{" "}
+                <span className="a-aerial-bar-text">Near {barNow.name}</span>
+              </>
+            )}
+            {(barNow.kind === "failed" || barNow.kind === "none") && (
+              <>
+                <span className={`a-aerial-bar-glyph ${symClass("⚠")}`}>⚠</span>{" "}
+                <span className="a-aerial-bar-text">
+                  {barNow.kind === "failed" ? CROSS_FAILED_BAR : CROSS_NONE}
+                </span>
+              </>
+            )}
+            {barNow.kind === "failed" && (
+              <button
+                ref={retryRef}
+                type="button"
+                className="a-aerial-bar-btn"
+                data-write=""
+                aria-disabled={locked || undefined}
+                onClick={() => {
+                  if (locked) return;
+                  retryHadFocus.current = true;
+                  barNow.onRetry();
+                }}
+                data-testid="band-aerial-retry"
+              >
+                Try again
+              </button>
+            )}
           </div>
         )}
         {onEditMap && (
@@ -307,6 +402,16 @@ export function BandAerial({
             onClick={tapping ? tap : undefined}
           />
         )}
+        {ringShown && ring && (
+          // #446 ruling 1 / ruling 4: at the tap's own pixel.
+          <span
+            className="a-aerial-ring"
+            data-testid="band-aerial-ring"
+            data-look={ring.look}
+            aria-hidden="true"
+            style={{ left: ring.x - 16, top: ring.y - 16 }}
+          />
+        )}
         {markShown && size && mark && (
           // X5: at the tap's own pixel; the label on the side with room.
           <>
@@ -329,8 +434,9 @@ export function BandAerial({
             </span>
           </>
         )}
-        {tapping && onBigMap && (
+        {barNow && onBigMap && (
           <button
+            ref={bigMapRef}
             type="button"
             className="a-aerial-bigmap"
             data-write=""
