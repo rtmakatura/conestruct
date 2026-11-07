@@ -140,6 +140,27 @@ describe("the map in the card (rulings 1-7)", () => {
     expect(screen.queryByRole("link")).toBeNull();
   });
 
+  it("phone fix round: only the zoom is in the frame; the label and link sit outside it for the phone's CSS", async () => {
+    const { container } = render(<Host />);
+    await img();
+    const frame = container.querySelector(".nyq-map-frame")!;
+    expect(frame.contains(screen.getByTestId("needs-you-map-zoom"))).toBe(true);
+    const under = container.querySelector(".nyq-map-under")!;
+    expect(frame.contains(under)).toBe(false);
+    expect(under.contains(screen.getByTestId("needs-you-map-label"))).toBe(true);
+    expect(under.contains(screen.getByTestId("needs-you-map-street"))).toBe(true);
+  });
+
+  it("the space under the map stays in the layout while loading and when it fails (P1)", async () => {
+    answer = { ok: false, status: 502 };
+    const { container } = render(<Host />);
+    expect(container.querySelector(".nyq-map-under")).toBeTruthy();
+    await screen.findByTestId("needs-you-map-failed");
+    expect(container.querySelector(".nyq-map-under")).toBeTruthy();
+    expect(screen.queryByTestId("needs-you-map-label")).toBeNull();
+    expect(screen.queryByTestId("needs-you-map-street")).toBeNull();
+  });
+
   it("ruling 7: the frame and the key are there while loading", () => {
     const { container } = render(<Host />);
     expect(container.querySelector(".nyq-map-frame")!.getAttribute("aria-busy")).toBe("true");

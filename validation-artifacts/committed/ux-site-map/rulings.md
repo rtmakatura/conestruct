@@ -16,6 +16,14 @@
 
 Part 1's ruling 6, which ruling 8 points at: "Every value traces to what #440 already reads, and no new wire field is added. Follow group 1's rules: 44 px targets, only the ruled sizes, no new hex. List every new string with its source."
 
+## Phone fix round, verbatim (Ryan, 2026-11-06, holding the ship)
+
+"Hold the ship. One phone fix round for 447: below 480 px make the map taller (about 4:3), move the line label and "See it at street level" below the map, and keep only the zoom on it. For the intersection question draw one ring, on the nearest crossing only, at every width. Re-crop 390 and 1440, re-run the gates, then the result: line."
+
+This narrows ruling 1's 16:8 and ruling 5's "on the map's bottom-right" to 480 px and up, and replaces X4's corner chip below 480 px. X3's ring stays, one per intersection question.
+
+**X11 (R145 self-ruled). Below 480 px, the order under the map is the label, then the link, in a space held for both.** The label is known only once the backend answers, and the space keeps the key and the choices from moving (ruling 7, P1). With no line drawn the link moves up and the blank is at the bottom, not between the map and the link. "Nearest" is the scan's own: the distance from the pin, the same one the question's "74.8 ft from the work" states.
+
 ## R145 self-ruled
 
 **X1. Where the subject's geometry comes from.** No question has a location or a line on the wire today (`checkpoint.md` § 1), so read literally, ruling 3's no-geometry clause would leave every map with no dashed line and ruling 2's frame could never apply. The scan can't carry it without moving what ruling 8 and the issue keep fixed: `out geom` on the scan set removes the one thing that separates scan elements from road elements (`split_folded_elements`), slows every Generate, and a new bucket field changes the audit record. So the map's own read fetches it: `POST /render/needs-you-map` asks Overpass for that one bucket's selectors with `out geom tags` and keeps what the scan's own `_categorize` and `_classified` count. The frontend still receives only a picture and two headers. No field is added to the audit or the scan. If that read doesn't answer, no line is drawn (Rule 10).

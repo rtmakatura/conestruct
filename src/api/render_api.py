@@ -2077,6 +2077,10 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
             subject = subject_geometry(
                 FLAG_TO_DETECTION[req.flag], frame, opposing, (meta.lat, meta.lng)
             )
+            # Ryan's phone fix round, 2026-11-06: one ring, on the nearest
+            # crossing only, at every width.  Nearest first, so the first.
+            if req.flag == "adjacent_intersection" and subject:
+                subject = subject[:1]
     url, query, point, drawn = _static_aerial.question_image_url(
         meta.lat,
         meta.lng,

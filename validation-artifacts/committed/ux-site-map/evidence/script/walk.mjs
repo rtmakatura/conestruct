@@ -93,7 +93,9 @@ const read = (p) => p.evaluate(() => {
   const card = q('.nyq-card');
   const targets = {};
   for (const [k, e] of [['zoomIn', q('[aria-label="Zoom in"].nyq-map-zbtn')], ['zoomOut', q('[aria-label="Zoom out"].nyq-map-zbtn')], ['street', q('[data-testid=needs-you-map-street]')]]) targets[k] = r(e);
-  return { question: t('.nyq-q'), frame: r(q('.nyq-map-frame')), card: r(card), answers: r(q('.nyq-answers')), key: t('[data-testid=needs-you-map-key]'), keyBox: r(q('[data-testid=needs-you-map-key]')),
+  const f = q('.nyq-map-frame')?.getBoundingClientRect();
+  const place = (e) => { if (!e || !f) return null; const b = e.getBoundingClientRect(); return b.top >= f.bottom - 0.5 ? 'under' : b.bottom <= f.bottom + 0.5 && b.top >= f.top - 0.5 ? 'on' : 'across'; };
+  return { question: t('.nyq-q'), place: { zoom: place(q('[data-testid=needs-you-map-zoom]')), label: place(q('[data-testid=needs-you-map-label]')), street: place(q('[data-testid=needs-you-map-street]')) }, label_box: r(q('[data-testid=needs-you-map-label]')), under: r(q('.nyq-map-under')), frame: r(q('.nyq-map-frame')), card: r(card), answers: r(q('.nyq-answers')), key: t('[data-testid=needs-you-map-key]'), keyBox: r(q('[data-testid=needs-you-map-key]')),
     label: t('[data-testid=needs-you-map-label]'), failed: t('[data-testid=needs-you-map-failed]'), step: q('[data-testid=needs-you-map-zoom]')?.getAttribute('data-step') ?? null,
     street: q('[data-testid=needs-you-map-street]')?.getAttribute('href') ?? null, streetTarget: q('[data-testid=needs-you-map-street]')?.getAttribute('target') ?? null, alt: q('[data-testid=needs-you-map-img]')?.alt ?? null, targets,
     imgNatural: q('[data-testid=needs-you-map-img]')?.naturalWidth ?? null, overflowX: document.documentElement.scrollWidth > innerWidth };

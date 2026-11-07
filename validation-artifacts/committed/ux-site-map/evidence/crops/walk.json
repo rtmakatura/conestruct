@@ -5,6 +5,21 @@
    {
     "name": "q1-map",
     "question": "Are there sidewalks along the work zone?",
+    "place": {
+     "zoom": "on",
+     "label": "on",
+     "street": "on"
+    },
+    "label_box": {
+     "w": 180.7,
+     "h": 32,
+     "top": 314
+    },
+    "under": {
+     "w": 846,
+     "h": 0,
+     "top": 729
+    },
     "frame": {
      "w": 846,
      "h": 423,
@@ -57,6 +72,21 @@
    {
     "name": "q1-zoom-in",
     "question": "Are there sidewalks along the work zone?",
+    "place": {
+     "zoom": "on",
+     "label": "on",
+     "street": "on"
+    },
+    "label_box": {
+     "w": 180.7,
+     "h": 32,
+     "top": 314
+    },
+    "under": {
+     "w": 846,
+     "h": 0,
+     "top": 729
+    },
     "frame": {
      "w": 846,
      "h": 423,
@@ -108,6 +138,21 @@
    {
     "name": "q2-map",
     "question": "Is there a bike lane along the work zone?",
+    "place": {
+     "zoom": "on",
+     "label": "on",
+     "street": "on"
+    },
+    "label_box": {
+     "w": 181.1,
+     "h": 32,
+     "top": 314
+    },
+    "under": {
+     "w": 846,
+     "h": 0,
+     "top": 729
+    },
     "frame": {
      "w": 846,
      "h": 423,
@@ -160,6 +205,21 @@
    {
     "name": "q3-map",
     "question": "Is there an intersection next to the work?",
+    "place": {
+     "zoom": "on",
+     "label": "on",
+     "street": "on"
+    },
+    "label_box": {
+     "w": 180.2,
+     "h": 32,
+     "top": 293.8
+    },
+    "under": {
+     "w": 846,
+     "h": 0,
+     "top": 708.8
+    },
     "frame": {
      "w": 846,
      "h": 423,
@@ -212,6 +272,17 @@
    {
     "name": "no-geometry",
     "question": "Is there an intersection next to the work?",
+    "place": {
+     "zoom": "on",
+     "label": null,
+     "street": "on"
+    },
+    "label_box": null,
+    "under": {
+     "w": 846,
+     "h": 0,
+     "top": 708.8
+    },
     "frame": {
      "w": 846,
      "h": 423,
@@ -264,6 +335,17 @@
    {
     "name": "failed-image",
     "question": "Is there an intersection next to the work?",
+    "place": {
+     "zoom": null,
+     "label": null,
+     "street": null
+    },
+    "label_box": null,
+    "under": {
+     "w": 846,
+     "h": 0,
+     "top": 708.8
+    },
     "frame": {
      "w": 846,
      "h": 423,
@@ -399,26 +481,41 @@
    {
     "name": "q1-map",
     "question": "Are there sidewalks along the work zone?",
+    "place": {
+     "zoom": "on",
+     "label": "under",
+     "street": "under"
+    },
+    "label_box": {
+     "w": 180.7,
+     "h": 32,
+     "top": 641
+    },
+    "under": {
+     "w": 328,
+     "h": 84,
+     "top": 641
+    },
     "frame": {
      "w": 360,
-     "h": 180,
+     "h": 270,
      "top": 363
     },
     "card": {
      "w": 360,
-     "h": 684,
+     "h": 866,
      "top": 206.8
     },
     "answers": {
      "w": 328,
      "h": 130,
-     "top": 639.3
+     "top": 821.3
     },
     "key": "The work Sidewalk the map knows about Imagery may be a few years old",
     "keyBox": {
      "w": 328,
      "h": 72.3,
-     "top": 551
+     "top": 733
     },
     "label": "Sidewalk on the map",
     "failed": null,
@@ -438,9 +535,9 @@
       "top": 415
      },
      "street": {
-      "w": 174.9,
+      "w": 328,
       "h": 44,
-      "top": 471
+      "top": 681
      }
     },
     "imgNatural": 720,
@@ -451,26 +548,41 @@
    {
     "name": "q1-zoom-in",
     "question": "Are there sidewalks along the work zone?",
+    "place": {
+     "zoom": "on",
+     "label": "under",
+     "street": "under"
+    },
+    "label_box": {
+     "w": 180.7,
+     "h": 32,
+     "top": 641
+    },
+    "under": {
+     "w": 328,
+     "h": 84,
+     "top": 641
+    },
     "frame": {
      "w": 360,
-     "h": 180,
+     "h": 270,
      "top": 363
     },
     "card": {
      "w": 360,
-     "h": 684,
+     "h": 866,
      "top": 206.8
     },
     "answers": {
      "w": 328,
      "h": 130,
-     "top": 639.3
+     "top": 821.3
     },
     "key": "The work Sidewalk the map knows about Imagery may be a few years old",
     "keyBox": {
      "w": 328,
      "h": 72.3,
-     "top": 551
+     "top": 733
     },
     "label": "Sidewalk on the map",
     "failed": null,
@@ -490,9 +602,9 @@
       "top": 415
      },
      "street": {
-      "w": 174.9,
+      "w": 328,
       "h": 44,
-      "top": 471
+      "top": 681
      }
     },
     "imgNatural": 720,
@@ -502,26 +614,41 @@
    {
     "name": "q2-map",
     "question": "Is there a bike lane along the work zone?",
+    "place": {
+     "zoom": "on",
+     "label": "under",
+     "street": "under"
+    },
+    "label_box": {
+     "w": 181.1,
+     "h": 32,
+     "top": 641
+    },
+    "under": {
+     "w": 328,
+     "h": 84,
+     "top": 641
+    },
     "frame": {
      "w": 360,
-     "h": 180,
+     "h": 270,
      "top": 363
     },
     "card": {
      "w": 360,
-     "h": 684,
+     "h": 866,
      "top": 206.8
     },
     "answers": {
      "w": 328,
      "h": 130,
-     "top": 639.3
+     "top": 821.3
     },
     "key": "The work Bike lane the map knows about Imagery may be a few years old",
     "keyBox": {
      "w": 328,
      "h": 72.3,
-     "top": 551
+     "top": 733
     },
     "label": "Bike lane on the map",
     "failed": null,
@@ -541,9 +668,9 @@
       "top": 415
      },
      "street": {
-      "w": 174.9,
+      "w": 328,
       "h": 44,
-      "top": 471
+      "top": 681
      }
     },
     "imgNatural": 720,
@@ -554,26 +681,41 @@
    {
     "name": "q3-map",
     "question": "Is there an intersection next to the work?",
+    "place": {
+     "zoom": "on",
+     "label": "under",
+     "street": "under"
+    },
+    "label_box": {
+     "w": 180.2,
+     "h": 32,
+     "top": 641
+    },
+    "under": {
+     "w": 328,
+     "h": 84,
+     "top": 641
+    },
     "frame": {
      "w": 360,
-     "h": 180,
+     "h": 270,
      "top": 363
     },
     "card": {
      "w": 360,
-     "h": 721.5,
+     "h": 903.5,
      "top": 206.8
     },
     "answers": {
      "w": 328,
      "h": 167.5,
-     "top": 639.3
+     "top": 821.3
     },
     "key": "The work Crossing the map knows about Imagery may be a few years old",
     "keyBox": {
      "w": 328,
      "h": 72.3,
-     "top": 551
+     "top": 733
     },
     "label": "Crossing on the map",
     "failed": null,
@@ -593,9 +735,9 @@
       "top": 415
      },
      "street": {
-      "w": 174.9,
+      "w": 328,
       "h": 44,
-      "top": 471
+      "top": 681
      }
     },
     "imgNatural": 720,
@@ -606,26 +748,37 @@
    {
     "name": "no-geometry",
     "question": "Is there an intersection next to the work?",
+    "place": {
+     "zoom": "on",
+     "label": null,
+     "street": "under"
+    },
+    "label_box": null,
+    "under": {
+     "w": 328,
+     "h": 84,
+     "top": 641
+    },
     "frame": {
      "w": 360,
-     "h": 180,
+     "h": 270,
      "top": 363
     },
     "card": {
      "w": 360,
-     "h": 721.5,
+     "h": 903.5,
      "top": 206.8
     },
     "answers": {
      "w": 328,
      "h": 167.5,
-     "top": 639.3
+     "top": 821.3
     },
     "key": "The work Imagery may be a few years old",
     "keyBox": {
      "w": 328,
      "h": 72.3,
-     "top": 551
+     "top": 733
     },
     "label": null,
     "failed": null,
@@ -645,9 +798,9 @@
       "top": 415
      },
      "street": {
-      "w": 174.9,
+      "w": 328,
       "h": 44,
-      "top": 471
+      "top": 641
      }
     },
     "imgNatural": 720,
@@ -658,26 +811,37 @@
    {
     "name": "failed-image",
     "question": "Is there an intersection next to the work?",
+    "place": {
+     "zoom": null,
+     "label": null,
+     "street": null
+    },
+    "label_box": null,
+    "under": {
+     "w": 328,
+     "h": 84,
+     "top": 641
+    },
     "frame": {
      "w": 360,
-     "h": 180,
+     "h": 270,
      "top": 363
     },
     "card": {
      "w": 360,
-     "h": 721.5,
+     "h": 903.5,
      "top": 206.8
     },
     "answers": {
      "w": 328,
      "h": 167.5,
-     "top": 639.3
+     "top": 821.3
     },
     "key": null,
     "keyBox": {
      "w": 328,
      "h": 72.3,
-     "top": 551
+     "top": 733
     },
     "label": null,
     "failed": "The map didn't load. Your answer still works without it.",
@@ -701,7 +865,7 @@
    {
     "flag": "pedestrian_facility",
     "width": 360,
-    "height": 180,
+    "height": 270,
     "zoom": 0,
     "status": 200,
     "subject": "drawn"
@@ -709,7 +873,7 @@
    {
     "flag": "pedestrian_facility",
     "width": 360,
-    "height": 180,
+    "height": 270,
     "zoom": 1,
     "status": 200,
     "subject": "drawn"
@@ -717,7 +881,7 @@
    {
     "flag": "bicycle_facility",
     "width": 360,
-    "height": 180,
+    "height": 270,
     "zoom": 0,
     "status": 200,
     "subject": "drawn"
@@ -725,7 +889,7 @@
    {
     "flag": "adjacent_intersection",
     "width": 360,
-    "height": 180,
+    "height": 270,
     "zoom": 0,
     "status": 200,
     "subject": "drawn"
@@ -733,7 +897,7 @@
    {
     "flag": "school_zone",
     "width": 360,
-    "height": 180,
+    "height": 270,
     "zoom": -1,
     "status": 200,
     "subject": "none"
@@ -741,7 +905,7 @@
    {
     "flag": "adjacent_intersection",
     "width": 360,
-    "height": 180,
+    "height": 270,
     "zoom": 1,
     "status": 502,
     "subject": null
@@ -750,25 +914,25 @@
   "loading": {
    "frame": {
     "w": 360,
-    "h": 180,
+    "h": 270,
     "top": 363
    },
    "answers": {
     "w": 328,
     "h": 130,
-    "top": 639.3
+    "top": 821.3
    },
    "key": {
     "w": 328,
     "h": 72.3,
-    "top": 551
+    "top": 733
    }
   },
   "layoutShiftOnLoad": {
    "answersMoved": 0,
    "frameH": [
-    180,
-    180
+    270,
+    270
    ],
    "keyH": [
     72.3,
@@ -778,8 +942,8 @@
   "layoutShiftOnFail": {
    "answersMoved": 0,
    "frameH": [
-    180,
-    180
+    270,
+    270
    ],
    "keyH": [
     72.3,

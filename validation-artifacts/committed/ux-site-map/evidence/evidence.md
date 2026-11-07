@@ -1,4 +1,4 @@
-# #447 walk evidence (2026-11-06)
+# #447 walk evidence (2026-11-06, re-cropped after Ryan's phone fix round; every measure and crop is from the final code)
 
 Local `next dev` on the issue-447 worktree, local backend through ux-group3's `serve_replay.py`. Overpass was asked live once per query and replayed after that (`overpass-fixture/`: the seeded ux-group3 answers plus what this walk recorded). Mapbox was live, through the backend. `/api/road-bearing` was stubbed from the recorded fixture. The pin is 1600 E Colfax Ave, Denver. Playwright Chromium, DPR 2, 1440x900 and 390x844.
 
@@ -8,12 +8,14 @@ Script: `script/walk.mjs`. Every measure: `crops/walk.json`. Red proof: `red-pro
 
 | Ruling | Check | 1440 | 390 |
 |---|---|---|---|
-| 1 | Frame size, 2:1 | 846 x 423 | 360 x 180 |
+| 1, phone round | Frame size: 2:1 from 480 px up, 4:3 below | 846 x 423 | 360 x 270 |
+| Phone round | On the map | zoom, label, link | zoom only |
+| Phone round | Under the map, in a held 84 px space | nothing (0 px) | label, link |
 | 1, 8 | Zoom buttons | 44 x 44 | 44 x 44 |
-| 5, 8 | Street-level link | 174.9 x 44 | 174.9 x 44 |
+| 5, 8 | Street-level link | 174.9 x 44 | 328 x 44 |
 | 7 | Answers moved when the image loaded | 0 px | 0 px |
 | 7 | Answers moved when the image failed | 0 px | 0 px |
-| 7 | Frame and key height, before and after both | 423 / 18.8 | 180 / 72.3 |
+| 7 | Frame and key height, before and after both | 423 / 18.8 | 270 / 72.3 |
 | 8 | axe on the card, in the 5 states run (3 questions, no geometry, failed) | 0 violations | 0 violations |
 | 6 | Page scrolls sideways | no | no |
 | 5 | Link | `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=39.739905,-104.968361`, `target=_blank` | same |
@@ -34,8 +36,10 @@ Named `<width>-<step>-<state>.png` in `crops/`, 10 committed: `01-q1-map` sidewa
 
 ## For Ryan's hand check
 
-- **Crossings:** `390-04-q3-map.png`. Colfax has many `highway=crossing` nodes in the frame, so the rings overlap and read busy at phone width. Each is a real scan feature. The ring size is CHOSEN (X3) and one number to change.
-- **The chip isn't on the line** (X4), it's in the map's top-left corner.
+- **One ring, nearest crossing** (phone fix round), at both widths: `390-04-q3-map.png`, `1440-04-q3-map.png`. The frame is centred on it. Other crossings the scan counted aren't marked, and the question's text doesn't change.
+- **The label isn't on the line** from 480 px up (X4), it's in the map's top-left corner.
+- **The held space under the phone map:** with no line drawn (`390-05-no-geometry.png`) there is a 40 px blank under the link, and a key line short. That's what keeps the choices from moving (X11).
+- **The nav in the 390 crops:** the card is now taller than the 844 px window, so the sticky nav lands on the top of the element shot. That's the screenshot, not the layout. From the map's top to the end of the choices is about 625 CSS px, so they fit on one screen.
 - **A sidewalk line can look like more than sidewalks.** `highway=footway` includes crosswalks mapped as paths, and the scan counts them, so the line shows them too. The question text is unchanged.
 
 ## Known limits

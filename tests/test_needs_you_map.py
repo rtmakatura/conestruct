@@ -168,6 +168,45 @@ def test_a_node_subject_is_a_ring_at_the_capped_zoom(
     assert view(url)[2] == pytest.approx(sa.SUBJECT_MAX_ZOOM)
 
 
+def test_the_intersection_question_draws_one_ring_on_the_nearest_crossing(
+    client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
+) -> None:
+    """Phone fix round: one ring, at every width, however many the road has."""
+    scenario = fixture()
+    lat, lng = pin(scenario)
+
+    def crossing(north: float) -> dict[str, Any]:
+        tags = {"highway": "crossing"}
+        return {"type": "node", "lat": lat + north, "lon": lng, "tags": tags}
+
+    # The nearest is not the first in the answer.
+    elements = [crossing(0.0003), crossing(0.00005), crossing(0.0002)]
+    overpass["answer"] = ({"elements": elements}, None)
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    url = mapbox[0]["url"]
+    assert url.count("path-3+3FD3A8-1(") == sa.RING_DASHES
+    c_lat, _c_lng, _z = view(url)
+    assert c_lat == pytest.approx(lat + 0.00005, abs=1e-5)
+    p_lat = float(r.headers["x-map-point"].split(",")[0])
+    assert p_lat == pytest.approx(lat + 0.00005, abs=1e-5)
+
+
+def test_other_questions_still_draw_every_feature(
+    client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    overpass["answer"] = ({"elements": [footway(lat, lng), footway(lat, lng + 0.0001)]}, None)
+    ask(client, scenario)
+    one = mapbox[0]["url"].count("path-3+3FD3A8-1(")
+    sd.clear_subject_memo()
+    overpass["answer"] = ({"elements": [footway(lat, lng)]}, None)
+    ask(client, scenario)
+    assert one > mapbox[1]["url"].count("path-3+3FD3A8-1(")
+
+
 @pytest.mark.parametrize(
     "answer", [({"elements": []}, None), (None, "all mirrors failed")], ids=["none", "down"]
 )

@@ -43,6 +43,8 @@ The new Overpass read is free, and 1 call per question per 600 s at most in a co
 - Every NEEDS YOU card is taller by the map and its key.
 - `issue-446-prod-check`'s evidence commit `dfb3a9c` ships with this.
 
+**Phone fix round (amended before its diff):** below 480 px the frame is 4:3, so the image is requested at 4:3 (one Mapbox request as before, a taller picture at the same price); the label and link leave the frame there; the intersection question's picture draws one ring and frames on it, at every width. `NeedsYouMap` gains a wrapper element around the frame at every width. At 480 px and up the card looks the same except for the intersection picture. Nothing else moves.
+
 **Stays byte-identical:**
 - The scan's query, buckets, memo key and token; the audit JSON; the PDF; `/render/corridor-map`'s answers; the WHERE band and its CONFIRM card (no `media`).
 - The questions, their order, answers, consequences, and what each answer writes.
