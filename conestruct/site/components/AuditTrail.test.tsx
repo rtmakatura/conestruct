@@ -62,10 +62,10 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
     items: twoItems,
   };
 
-  it("header text reads '2 references pending'", () => {
+  it("header text reads '2 references not checked yet'", () => {
     const spec = pendingVerificationItem(twoItemPayload);
     expect(spec).not.toBeNull();
-    expect(spec!.result).toBe("2 references pending");
+    expect(spec!.result).toBe("2 references not checked yet");
   });
 
   it("renders both item labels", () => {
@@ -119,7 +119,7 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
     };
     const spec = pendingVerificationItem(oneItemPayload);
     expect(spec).not.toBeNull();
-    expect(spec!.result).toBe("1 reference pending");
+    expect(spec!.result).toBe("1 reference not checked yet");
     const html = renderBody(oneItemPayload);
     expect(html.match(/<a /g) ?? []).toHaveLength(1);
     expect(html).toContain(twoItems[1].tracking_issue!);

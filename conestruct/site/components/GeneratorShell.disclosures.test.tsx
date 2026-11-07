@@ -301,7 +301,7 @@ describe("#438 item 1 — the N = 0 strip names where the flags are", () => {
       expect(p).toMatch(/^[1-9]\d*$/);
       const a = needsYouRows();
       expect(a).toBeGreaterThan(0);
-      const words = `${a} item${a === 1 ? "" : "s"} above and ${p} under Pending need a check before field use.`;
+      const words = `${a} item${a === 1 ? "" : "s"} above and ${p} under Not checked yet need a check before field use.`;
       expect(strip()?.textContent).toBe(`Plan ready. ${words}`);
       expect(document.body.textContent).not.toMatch(/plan flags?/);
     } finally {
@@ -316,7 +316,7 @@ describe("#438 item 1 — the N = 0 strip names where the flags are", () => {
       expect(document.getElementById("site-corrections")).toBeNull();
       const p = countOf("pending");
       expect(strip()?.textContent).toBe(
-        `Plan ready. ${p} under Pending ${p === "1" ? "needs" : "need"} a check before field use.`,
+        `Plan ready. ${p} under Not checked yet ${p === "1" ? "needs" : "need"} a check before field use.`,
       );
     } finally {
       restore();

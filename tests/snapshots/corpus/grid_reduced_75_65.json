@@ -102,25 +102,29 @@
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
           "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 19 left, 19 right.",
           "label": "Signs on both sides of divided highway",
-          "pass": true
+          "pass": true,
+          "short_result": "Not required · 19 left, 19 right"
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
           "detail": "Zone length: 4,570 ft. Required: 2. Placed: 6.",
           "label": "G20-5P Work Zone signs every 2,640 ft",
-          "pass": true
+          "pass": true,
+          "short_result": "2 required · 6 placed"
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
           "detail": "Work-zone speed reduced 75 → 65 mph (Δ10 mph). Required: 1. Placed: 1.",
           "label": "Speed reduction <= 15 mph per sign installation",
-          "pass": true
+          "pass": true,
+          "short_result": "75 → 65 mph · 1 required · 1 placed"
         },
         {
           "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
           "detail": "Not applicable (no flaggers).",
           "label": "Flagger station lighting 500W @ 8 ft",
-          "pass": true
+          "pass": true,
+          "short_result": "Not applicable · no flaggers"
         }
       ],
       "fail_count": 0,
@@ -129,7 +133,8 @@
           "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
           "detail": "Not applicable (not a mobile operation).",
           "info": true,
-          "label": "AADT threshold for mobile operations (<= 2,000)"
+          "label": "AADT threshold for mobile operations (<= 2,000)",
+          "short_result": "Not applicable · not a mobile operation"
         }
       ]
     },

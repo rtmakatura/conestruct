@@ -61,10 +61,13 @@ interface ColoradoCheck {
   label: string;
   citation: string;
   detail: string;
+  /** #450 ruling 2: the backend's short result (src/api/audit.py).  Absent
+   *  on an older wire; the row then reads `detail` (Rule 10). */
+  short_result?: string;
 }
 interface ColoradoSection {
   checks?: ColoradoCheck[];
-  info_items?: { label: string; citation: string; detail: string }[];
+  info_items?: { label: string; citation: string; detail: string; short_result?: string }[];
 }
 interface CorridorSection {
   checked?: boolean;

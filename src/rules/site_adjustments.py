@@ -145,7 +145,7 @@ def _adjust_limited_sight_distance(
             f"range) instead of Table 6B-1's {a_ft:,.0f} ft, and the signs behind it "
             "keep Table 6B-1's spacing."
         )
-    record = {
+    record: dict[str, Any] = {
         "flag": "limited_sight_distance",
         "action": f"{moved_text} {LIMITED_SIGHT_ENGINEER_NOTE}",
         "devices_added": 0,
@@ -157,6 +157,13 @@ def _adjust_limited_sight_distance(
             "at the top of ¶04's urban or ¶06's rural range (p. 771)"
         ),
     }
+    if not moved:
+        # #450 ruling 2: with nothing moved the record is a passed row.  Its
+        # short result keeps the Engineer note's two directives (Notes 10 and
+        # 25), so the row never reads as a clean pass.
+        record["short_result"] = (
+            "No signs moved · Engineer sets locations · add signs where sight is blocked"
+        )
     return out, record
 
 
@@ -179,10 +186,13 @@ def _adjust_adjacent_intersection(
     _ = params  # geometry no longer drives any placement here
     record = {
         "flag": "adjacent_intersection",
+        # #450 ruling 1: the list's name on the page and in the PDF.
         "action": (
-            "No devices added: the cross-street approach layout isn't "
-            "generated. See the pending-verification disclosure."
+            "No devices added: the cross-street approach layout isn't generated. "
+            "See Not checked yet."
         ),
+        # #450 ruling 2: the passed row's short result keeps the gap.
+        "short_result": "No devices added · cross-street layout not generated",
         "devices_added": 0,
         # Cited by real title + printed page (#16; subject-verified,
         # 11th Ed.): the section governs work at/adjacent to
@@ -213,10 +223,13 @@ def _adjust_adjacent_interchange(
     _ = params  # geometry no longer drives any placement here
     record = {
         "flag": "adjacent_interchange",
+        # #450 ruling 1: the list's name on the page and in the PDF.
         "action": (
-            "No devices added: the per-ramp interchange layout isn't "
-            "generated. See the pending-verification disclosure."
+            "No devices added: the per-ramp interchange layout isn't generated. "
+            "See Not checked yet."
         ),
+        # #450 ruling 2: the passed row's short result keeps the gap.
+        "short_result": "No devices added · ramp layout not generated",
         "devices_added": 0,
         # Cited by real title + printed page (#16; subject-verified,
         # 11th Ed.).  The former "+ Ch. 6H" rider is dropped: Ch. 6H is
@@ -236,6 +249,9 @@ def _adjust_driveways_present() -> dict[str, Any]:
             "channelization. Do not place channelizing devices across "
             "driveway entrances."
         ),
+        # #450 ruling 2: the passed row's short result carries the crew
+        # directive itself (the record adds and moves nothing).
+        "short_result": "Keep access gaps · no devices across driveways",
         "devices_added": 0,
         "rule": "MUTCD §6K.01: access management in work zones",
     }

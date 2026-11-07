@@ -372,6 +372,7 @@ export function ledgerLine(l: Ledger): string {
     `${l.changed} change${l.changed === 1 ? "" : "s"} · ` +
     `${l.attention} needs attention · ` +
     `${l.checked} checked · ` +
-    `${l.pending} pending · reference`
+    // #450 ruling 1: the tier's word is the section's name.
+    `${l.pending} not checked yet · reference`
   );
 }

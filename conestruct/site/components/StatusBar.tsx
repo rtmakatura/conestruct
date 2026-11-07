@@ -224,10 +224,11 @@ interface Props {
    * #438 item 1 (Ryan, 2026-11-03): where the remaining flags live, each
    * count from the producer of the section it names.  `above` is the rows
    * NEEDS YOU lists that are not questions (lib/needs-you-conditions.ts
-   * `alsoOnPlanCount`); `pending` is the Pending row's own count (the
-   * settled tier ledger's `pending`).  With no question open and a
+   * `alsoOnPlanCount`); `pending` is the "Not checked yet" section's own
+   * count (the settled tier ledger's `pending`).  With no question open and a
    * not-clean verdict, the strip names both places: "Plan ready. <A>
-   * item(s) above and <P> under Pending need a check before field use.",
+   * item(s) above and <P> under Not checked yet need a check before field
+   * use." (#450 ruling 1: the section's name),
    * dropping a part whose count is 0.  Absent (the ledger hasn't
    * settled), or both 0: today's verdict wording (Rule 10, no guessed
    * count).  The clean branch never reads it.
@@ -267,7 +268,8 @@ function Sym({ g }: { g: string }) {
   );
 }
 
-/** #438 item 1 (H4): "1 item above", "2 items above", "3 under Pending";
+/** #438 item 1 (H4): "1 item above", "2 items above", "3 under Not checked
+ *  yet" (#450 ruling 1);
  *  "and" joins both parts; the verb agrees with what is left.  Null when
  *  the counts are absent or both 0 (today's wording stays). */
 export function fieldCheckSentence(
@@ -276,7 +278,7 @@ export function fieldCheckSentence(
   if (!counts) return null;
   const parts: string[] = [];
   if (counts.above > 0) parts.push(`${counts.above} item${counts.above === 1 ? "" : "s"} above`);
-  if (counts.pending > 0) parts.push(`${counts.pending} under Pending`);
+  if (counts.pending > 0) parts.push(`${counts.pending} under Not checked yet`);
   if (parts.length === 0) return null;
   const single = parts.length === 1 && (counts.above === 1 || counts.pending === 1);
   return `Plan ready. ${parts.join(" and ")} ${single ? "needs" : "need"} a check before field use.`;

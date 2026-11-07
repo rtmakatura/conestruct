@@ -1,0 +1,6 @@
+# #450, the first local walk with newGatedContext (applyGate still on route.continue), 2026-11-07.
+# The walk's last console line, copied verbatim from the run's saved output. It lists the hosts
+# whose finished request carried x-conestruct-gate (request.allHeaders() on 'requestfinished').
+# The Clerk dev host is the leak: the 307 from /sandbox to Clerk's handshake kept the header.
+# That run's walk.json was overwritten by the re-runs; only this line was kept.
+gate hosts {"390":["localhost:3450","causal-polliwog-91.clerk.accounts.dev"],"1440":["localhost:3450","causal-polliwog-91.clerk.accounts.dev"]}

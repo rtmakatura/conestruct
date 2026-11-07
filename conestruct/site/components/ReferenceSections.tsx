@@ -5,7 +5,7 @@
 // closed rows stay unmounted (X4).  The search state overlays the stored
 // open and closed state and never writes it, so clearing restores it (P15).
 
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 
 import { jumpToAnchor } from "./GeneratorFormPrimitives";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
@@ -49,6 +49,24 @@ export interface ReferenceSectionsProps {
 // on a narrow line (X29).  Row results and a list line's sub-line only: a span
 // would split pinned detail text across text nodes.
 const CODE = /\b[A-Z]{1,3}\d+[A-Z]?(?:-\d+[A-Za-z]*)+\b/g;
+
+// #450 ruling 3: below 480 px the placeholder is the short one; above, #443's
+// wording.  The repo's phone query (X9).  The server and the first client
+// render take the wide wording; the narrow one follows on mount.
+const NARROW = "(max-width: 480px)";
+export const PLACEHOLDER_WIDE = "A number, a rule or a word: taper, 6B, sidewalk, $500";
+export const PLACEHOLDER_NARROW = "Search: taper, 6B, sidewalk";
+
+function subscribeNarrow(onChange: () => void): () => void {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return () => {};
+  const mq = window.matchMedia(NARROW);
+  mq.addEventListener?.("change", onChange);
+  return () => mq.removeEventListener?.("change", onChange);
+}
+
+function isNarrow(): boolean {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia(NARROW).matches;
+}
 
 /** Draw `text` with its matches in `<mark>` (ruling 7). */
 function Hl({ text, m, codes = false }: { text: string; m: RegExp | null; codes?: boolean }) {
@@ -404,6 +422,7 @@ export function ReferenceSections(props: ReferenceSectionsProps) {
   const [searchRows, setSearchRows] = useState<Record<string, boolean>>({});
   const search = useMemo(() => searchSections(sections, query), [sections, query]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const narrow = useSyncExternalStore(subscribeNarrow, isNarrow, () => false);
   const change = (q: string) => {
     setQuery(q);
     setSearchRows({});
@@ -462,7 +481,7 @@ export function ReferenceSections(props: ReferenceSectionsProps) {
             type="search"
             data-read=""
             autoComplete="off"
-            placeholder="A number, a rule or a word: taper, 6B, sidewalk, $500"
+            placeholder={narrow ? PLACEHOLDER_NARROW : PLACEHOLDER_WIDE}
             value={query}
             onChange={(e) => change(e.target.value)}
             onKeyDown={(e) => {

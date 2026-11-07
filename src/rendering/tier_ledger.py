@@ -183,5 +183,6 @@ def ledger_line(counts: dict[str, int]) -> str:
         f"{changed} change{'' if changed == 1 else 's'} · "
         f"{counts['attention']} needs attention · "
         f"{counts['checked']} checked · "
-        f"{counts['pending']} pending · reference"
+        # #450 ruling 1: the tier's word is the section's name.
+        f"{counts['pending']} not checked yet · reference"
     )

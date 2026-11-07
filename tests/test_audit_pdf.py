@@ -84,6 +84,10 @@ _PANEL_ONLY_KEYS = frozenset(
         # likewise (the PDF's flagger block keeps its table and narrative).
         "stations_text",
         "pilot_car_text",
+        # #450 ruling 2: a rule check's short result, the page's row line.
+        # The PDF prints the full ``detail`` sentence, which this proof
+        # keeps covering; the key name is used nowhere else.
+        "short_result",
     }
 )
 _SKIP_KEYS = (

@@ -103,11 +103,11 @@ def test_recorded_fixtures_match_shared_expectation(name: str) -> None:
 def test_ledger_line_format() -> None:
     assert (
         ledger_line({"changed": 0, "attention": 0, "checked": 0, "pending": 0})
-        == "0 changes · 0 needs attention · 0 checked · 0 pending · reference"
+        == "0 changes · 0 needs attention · 0 checked · 0 not checked yet · reference"
     )
     assert (
         ledger_line({"changed": 1, "attention": 2, "checked": 14, "pending": 2})
-        == "1 change · 2 needs attention · 14 checked · 2 pending · reference"
+        == "1 change · 2 needs attention · 14 checked · 2 not checked yet · reference"
     )
 
 

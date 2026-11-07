@@ -109,6 +109,9 @@ export interface SiteAdjustmentRecord {
   citation: string;
   devices_added: number;
   devices_modified?: number;
+  /** #450 ruling 2: a passed row's short result (src/rules/site_adjustments.py),
+   *  on the records that add and move nothing.  Absent otherwise. */
+  short_result?: string;
 }
 
 // Engine-removal PR B/D — the corridor-preview zone lengths, backend-

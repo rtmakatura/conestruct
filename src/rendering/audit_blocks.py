@@ -751,14 +751,15 @@ def _acknowledged_blocks(entries: list[dict[str, Any]] | None) -> list[Block]:
 def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
     if not pending:
         return []
-    blocks: list[Block] = [Heading(2, _cell("Pending Verification"))]
+    # #450 ruling 1: the list's name is the page's, "Not checked yet".
+    blocks: list[Block] = [Heading(2, _cell("Not checked yet"))]
     count = pending.get("count", 0)
     note = _str(pending, "note")
     # #363 (R4): an item with no tracking link prints no empty link.
     tracking = _str(pending, "tracking_issue")
     blocks.append(
         _body(
-            f"{count} reference(s) pending verification. {note}".strip()
+            f"{count} reference(s) not checked yet. {note}".strip()
             + (f"  Tracking: {tracking}" if tracking else "")
         )
     )

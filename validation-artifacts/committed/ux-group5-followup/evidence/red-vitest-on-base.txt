@@ -1,0 +1,11 @@
+ × components/ReferenceSections.short-result.test.tsx > a rule check with a short result > reads title and short result; the opened detail leads with the sentence and keeps the source
+ × components/ReferenceSections.short-result.test.tsx > a rule check with a short result > every passed Colorado check and info row shows its short result
+ × components/ReferenceSections.short-result.test.tsx > a rule check with a short result > a passed site row reads the record's short result; its action leads the detail
+ × components/ReferenceSections.short-result.test.tsx > a rule check with a short result > search finds a word only the detail holds, and opens the row on it
+ ✓ components/ReferenceSections.short-result.test.tsx > a rule check with a short result > X6: a failing check in section 3 keeps its sentence as the result
+ ✓ components/ReferenceSections.short-result.test.tsx > Rule 10: no short result on the wire > the row's result is the sentence and the detail adds nothing
+ × components/ReferenceSections.short-result.test.tsx > ruling 3: the search placeholder > at 480 and below it reads the short wording
+ ✓ components/ReferenceSections.short-result.test.tsx > ruling 3: the search placeholder > above 480 it keeps #443's wording
+ ✓ components/ReferenceSections.short-result.test.tsx > the section is named Not checked yet
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  5 failed | 4 passed (9)

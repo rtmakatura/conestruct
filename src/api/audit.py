@@ -1341,6 +1341,12 @@ def build_audit_trail(
         if not_counted
         else f"Required: {both_sides_required}. Signs placed: {sign_left} left, {sign_right} right."
     )
+    # #450 ruling 2: the row's short result, from the same counts.  The
+    # page prints it after the title and moves the sentence into the detail.
+    both_sides_short = (
+        f"{'Required' if both_sides_required else 'Not required'} · "
+        f"{sign_left} left, {sign_right} right{' counted' if not_counted else ''}"
+    )
     if params.one_way_street:
         # R90's figure note says which side a SHOULDER closure signs; a
         # lane closure on a one-way street (#309) signs both, so it isn't
@@ -1358,6 +1364,7 @@ def build_audit_trail(
         ),
         "citation": CO_CITATIONS.signs_both_sides,
         "detail": both_sides_detail,
+        "short_result": both_sides_short,
     }
 
     plaques_right = sum(
@@ -1377,6 +1384,7 @@ def build_audit_trail(
             f"Zone length: {total_signed_length:,.0f} ft. "
             f"Required: {plaques_required}. Placed: {plaques_right}."
         ),
+        "short_result": f"{plaques_required} required · {plaques_right} placed",
     }
 
     # Work-zone speed reduction (S-630-1 Sheet 2, General Note 3).
@@ -1402,6 +1410,7 @@ def build_audit_trail(
                 f"No work-zone speed reduction. Posted speed {speed} mph "
                 f"applies throughout the zone."
             ),
+            "short_result": f"No reduction · {speed} mph throughout",
         }
     else:
         assert wz_speed is not None  # is_reduced implies it (line 330)
@@ -1432,6 +1441,9 @@ def build_audit_trail(
             "label": "Speed reduction <= 15 mph per sign installation",
             "citation": CO_CITATIONS.speed_reduction,
             "detail": detail,
+            "short_result": (
+                f"{speed} → {wz_speed} mph · {n_signs_required} required · {n_w3_5_placed} placed"
+            ),
         }
 
     # Flagger-station lighting (S-630-1 Sheet 2, General Note 22):
@@ -1454,6 +1466,7 @@ def build_audit_trail(
             ),
             "citation": CO_CITATIONS.flagger_station_lighting,
             "detail": "Not applicable (no flaggers).",
+            "short_result": "Not applicable · no flaggers",
         }
     elif not params.is_night:
         flagger_lighting_section = {
@@ -1469,6 +1482,7 @@ def build_audit_trail(
                 "(daytime operation; S-630-1 Sheet 2 Note 22 applies to "
                 "night flagging)."
             ),
+            "short_result": "Not required · daytime",
         }
     else:
         flagger_lighting_section = {
@@ -1488,6 +1502,7 @@ def build_audit_trail(
                 "Placed: 0 (V1 does not emit lighting equipment "
                 "placements)."
             ),
+            "short_result": "Required at night · 0 placed",
         }
 
     aadt_section = {
@@ -1498,6 +1513,7 @@ def build_audit_trail(
         ),
         "citation": CO_CITATIONS.mobile_operation_aadt,
         "detail": "Not applicable (not a mobile operation).",
+        "short_result": "Not applicable · not a mobile operation",
     }
 
     co_checks: list[dict[str, Any]] = [

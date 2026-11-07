@@ -107,6 +107,15 @@ function fromItem(id: string, item: ItemSpec, glyph: RowGlyph, mono = false): Re
   };
 }
 
+/** #450 ruling 2: a rule check's row result.  The backend's short result
+ *  when it sent one, with the full sentence leading the opened detail as
+ *  written; with none (an older wire), the sentence stays the result, as
+ *  before (Rule 10).  The frontend never shortens a sentence itself (Rule 3). */
+function shortResult(sentence: string, short: string | undefined): { result: string; lead: string[] } {
+  const s = short?.trim();
+  return s ? { result: s, lead: [sentence] } : { result: sentence, lead: [] };
+}
+
 const SCAN_REFERENCE_LABELS: Record<string, string> = {
   railroad_crossings: "railroad crossings",
   hospitals: "hospitals",
@@ -407,8 +416,12 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
   const jur = s.jur;
   const out: RefSection[] = [];
 
-  const siteRow = (rec: SiteAdjustmentRecord, glyph: RowGlyph): RefRow => {
+  // `short`: a passed row ("Checked and passed", #450 ruling 2) reads the
+  // record's short result; the ▲ rows keep their sentence.
+  const siteRow = (rec: SiteAdjustmentRecord, glyph: RowGlyph, short = false): RefRow => {
     const words = SITE_ADJUSTMENT_DETAIL[rec.flag as SiteConditionFlag];
+    const action = words?.action ?? rec.action;
+    const r = short ? shortResult(action, rec.short_result) : { result: action, lead: [] };
     const c = s.corrections.get(rec.flag);
     const asserted = c?.status === "applied" && c.action === "assert";
     const bucket = s.flagToBucket.get(rec.flag);
@@ -421,9 +434,9 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
       id: `site-${rec.flag}`,
       glyph,
       title: words?.label ?? rec.flag,
-      result: words?.action ?? rec.action,
+      result: r.result,
       detail: {
-        sentences: evidence ? [evidence] : [],
+        sentences: [...r.lead, ...(evidence ? [evidence] : [])],
         source: asserted ? "OPERATOR" : rec.citation,
         actions: s.scanBuckets ? i.signpost("Correct in setup ↑") : undefined,
       },
@@ -445,12 +458,22 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
         detail: { sentences: [d.rule], source: deltaCite(d) },
       }),
     );
-    s.coloradoPasses.forEach((c, n) =>
-      checks.push({ id: `pass-${n}`, glyph: "✓", title: c.label, result: c.detail, detail: { source: c.citation } }),
-    );
-    s.coloradoInfos.forEach((c, n) =>
-      checks.push({ id: `info-${n}`, glyph: "i", title: c.label, result: c.detail, detail: { source: c.citation } }),
-    );
+    const coloradoRow = (
+      id: string,
+      glyph: RowGlyph,
+      c: { label: string; detail: string; citation: string; short_result?: string },
+    ): RefRow => {
+      const r = shortResult(c.detail, c.short_result);
+      return {
+        id,
+        glyph,
+        title: c.label,
+        result: r.result,
+        detail: { ...(r.lead.length > 0 ? { sentences: r.lead } : {}), source: c.citation },
+      };
+    };
+    s.coloradoPasses.forEach((c, n) => checks.push(coloradoRow(`pass-${n}`, "✓", c)));
+    s.coloradoInfos.forEach((c, n) => checks.push(coloradoRow(`info-${n}`, "i", c)));
     if (s.corridorClean) {
       checks.push({
         id: "corridor",
@@ -460,7 +483,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
         detail: { source: "OPENSTREETMAP" },
       });
     }
-    s.siteAdvisory.forEach((rec) => checks.push(siteRow(rec, "✓")));
+    s.siteAdvisory.forEach((rec) => checks.push(siteRow(rec, "✓", true)));
     if (s.scanBuckets) {
       const scannedAt = s.scan?.measured_at ? `scanned ${s.scan.measured_at}` : "scanned";
       for (const [bucket, flag] of SCAN_BUCKET_TO_FLAG) {

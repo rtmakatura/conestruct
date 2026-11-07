@@ -106,7 +106,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // backend derives from site_adjustments.py's rule string.
     rule: "MUTCD § 6N.12 p. 848",
     action:
-      "No devices added: the cross-street approach layout isn't generated. See the pending-verification disclosure.",
+      "No devices added: the cross-street approach layout isn't generated. See Not checked yet.",
   },
   adjacent_interchange: {
     label: "Adjacent interchange (highway ramps)",
@@ -115,7 +115,7 @@ export const SITE_ADJUSTMENT_DETAIL: Record<
     // generally, not interchange signing).
     rule: "MUTCD § 6N.16 p. 851",
     action:
-      "No devices added: the per-ramp interchange layout isn't generated. See the pending-verification disclosure.",
+      "No devices added: the per-ramp interchange layout isn't generated. See Not checked yet.",
   },
   driveways_present: {
     label: "Driveways present",
@@ -1140,7 +1140,8 @@ export function pendingVerificationItem(
   const useItems = items && items.length > 0;
   return {
     title: "Verification status",
-    result: `${pending.count} reference${pending.count === 1 ? "" : "s"} pending`,
+    // #450 ruling 1: the section's name, on the row a pre-items wire draws.
+    result: `${pending.count} reference${pending.count === 1 ? "" : "s"} not checked yet`,
     cite: "PENDING",
     dim: true,
     detail: useItems

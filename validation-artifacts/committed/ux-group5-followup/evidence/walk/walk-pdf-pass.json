@@ -1,0 +1,151 @@
+{
+ "1440": {
+  "steps": {
+   "strip": {
+    "text": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+    "axe": [],
+    "m": {
+     "targets": 0,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "placeholder": {
+    "text": "A number, a rule or a word: taper, 6B, sidewalk, $500",
+    "fits": true,
+    "w": 878
+   },
+   "closed": {
+    "rows": [
+     {
+      "id": "pass-0",
+      "open": "false",
+      "head": "Signs on both sides of one-way street: Not required · 0 left, 10 right",
+      "lines": 1
+     },
+     {
+      "id": "pass-1",
+      "open": "false",
+      "head": "G20-5P Work Zone signs every 2,640 ft: 1 required · 1 placed",
+      "lines": 1
+     },
+     {
+      "id": "pass-2",
+      "open": "false",
+      "head": "Speed reduction <= 15 mph per sign installation: No reduction · 30 mph throughout",
+      "lines": 1
+     },
+     {
+      "id": "pass-3",
+      "open": "false",
+      "head": "Flagger station lighting 500W @ 8 ft: Not applicable · no flaggers",
+      "lines": 1
+     },
+     {
+      "id": "info-0",
+      "open": "false",
+      "head": "AADT threshold for mobile operations (<= 2,000): Not applicable · not a mobile operation",
+      "lines": 1
+     },
+     {
+      "id": "site-adjacent_intersection",
+      "open": "false",
+      "head": "Intersection within work zone: No devices added",
+      "lines": 1
+     },
+     {
+      "id": "scan-adjacent_interchange",
+      "open": "false",
+      "head": "Adjacent interchange (highway ramps): none along the corridor",
+      "lines": 1
+     },
+     {
+      "id": "scan-school_zone",
+      "open": "false",
+      "head": "School zone nearby: none along the corridor",
+      "lines": 1
+     }
+    ],
+    "axe": [],
+    "m": {
+     "targets": 17,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "opened": {
+    "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 10 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.” Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to the MUTCD and set no sign-side rule. DOTI standards and details not read. Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+    "axe": [],
+    "m": {
+     "targets": 17,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "search": {
+    "term": "Signs placed",
+    "status": "7 matching lines, in 2 sections",
+    "opened": 4,
+    "marks": [
+     "W20-1",
+     "W20-2",
+     "W21-5aR",
+     "Signs placed",
+     "M4-9c",
+     "G20-1",
+     "G20-2",
+     "G20-5P",
+     "M4-9a",
+     "R9-9",
+     "W20-1",
+     "W20-2",
+     "W21-5aR"
+    ],
+    "axe": [],
+    "m": {
+     "targets": 12,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "pdf": {
+    "status": 200,
+    "body": null
+   },
+   "answers": [
+    {
+     "q": "Are there sidewalks along the work zone?",
+     "a": "Yes, they're there The 4 devices stay in the plan."
+    },
+    {
+     "q": "Is there a bike lane along the work zone?",
+     "a": "Yes, it's there The 2 devices stay in the plan."
+    },
+    {
+     "q": "Is there an intersection next to the work?",
+     "a": "Yes, it's there Nothing changes. The TCS still lays out the cross street."
+    }
+   ],
+   "stripAfter": {
+    "text": "⚠ Plan ready. 1 item above and 3 under Not checked yet need a check before field use.",
+    "axe": [],
+    "m": {
+     "targets": 0,
+     "small": [],
+     "overflowX": 0
+    }
+   }
+  },
+  "errors": [],
+  "hostsSeen": [
+   "http://localhost:3450",
+   "https://api.mapbox.com",
+   "https://causal-polliwog-91.clerk.accounts.dev",
+   "https://events.mapbox.com"
+  ],
+  "kind": "kind-chip-shoulder",
+  "gatedHosts": [
+   "http://localhost:3450"
+  ]
+ }
+}

@@ -629,17 +629,17 @@ describe("StatusBar (#438 item 1: where the remaining flags are)", () => {
     expect(html).toContain('data-testid="strip-field-checks"');
     expect(html).toContain("status-bar caution");
     expect(html).toContain(
-      "Plan ready. 1 item above and 3 under Pending need a check before field use.",
+      "Plan ready. 1 item above and 3 under Not checked yet need a check before field use.",
     );
     expect(html).not.toContain("pill");
     expect(html).not.toContain("VERIFIED");
   });
   it("drops a part whose count is 0, and the verb agrees", () => {
     expect(fieldCheckSentence({ above: 0, pending: 3 })).toBe(
-      "Plan ready. 3 under Pending need a check before field use.",
+      "Plan ready. 3 under Not checked yet need a check before field use.",
     );
     expect(fieldCheckSentence({ above: 0, pending: 1 })).toBe(
-      "Plan ready. 1 under Pending needs a check before field use.",
+      "Plan ready. 1 under Not checked yet needs a check before field use.",
     );
     expect(fieldCheckSentence({ above: 1, pending: 0 })).toBe(
       "Plan ready. 1 item above needs a check before field use.",
@@ -648,7 +648,7 @@ describe("StatusBar (#438 item 1: where the remaining flags are)", () => {
       "Plan ready. 2 items above need a check before field use.",
     );
     expect(fieldCheckSentence({ above: 2, pending: 1 })).toBe(
-      "Plan ready. 2 items above and 1 under Pending need a check before field use.",
+      "Plan ready. 2 items above and 1 under Not checked yet need a check before field use.",
     );
   });
   it("warnings only: the sentence replaces VERIFIED · N validation warnings and its REVIEW WARNINGS pill (H1, H2)", () => {

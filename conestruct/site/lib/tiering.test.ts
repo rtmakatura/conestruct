@@ -293,10 +293,10 @@ describe("ledger invariants", () => {
 
   it("all four counted tokens render, zeros included (flag k)", () => {
     expect(ledgerLine({ changed: 0, attention: 0, checked: 0, pending: 0 })).toBe(
-      "0 changes · 0 needs attention · 0 checked · 0 pending · reference",
+      "0 changes · 0 needs attention · 0 checked · 0 not checked yet · reference",
     );
     expect(ledgerLine({ changed: 1, attention: 2, checked: 14, pending: 2 })).toBe(
-      "1 change · 2 needs attention · 14 checked · 2 pending · reference",
+      "1 change · 2 needs attention · 14 checked · 2 not checked yet · reference",
     );
   });
 

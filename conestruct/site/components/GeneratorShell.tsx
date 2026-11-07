@@ -1528,7 +1528,7 @@ export function GeneratorShell({
   const openQuestions = resultsVisible ? openQuestionCount(needsYouQuestions) : 0;
   // #438 item 1: where the remaining flags are, each count from the
   // producer of the section the strip names: NEEDS YOU's non-question rows
-  // and the Pending row's own count.  Absent until both sections are on
+  // and the "Not checked yet" section's own count.  Absent until both sections are on
   // screen (the same gates they mount on), so the strip never names a
   // count the page doesn't show (Rule 10).
   const fieldChecks =

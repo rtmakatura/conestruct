@@ -117,7 +117,5 @@ def test_pdf_item_line_keeps_a_link_and_drops_an_empty_one() -> None:
             ],
         }
     )
-    assert (
-        blocks[1].text == "2 reference(s) pending verification. n  Tracking: https://example.test/1"
-    )
+    assert blocks[1].text == "2 reference(s) not checked yet. n  Tracking: https://example.test/1"
     assert [i.text for i in blocks[2].items] == ["[k1] L1 (https://example.test/1)", "[k2] L2"]
