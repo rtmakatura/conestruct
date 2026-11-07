@@ -1,0 +1,636 @@
+{
+ "390": [
+  {
+   "width": 390,
+   "height": 844,
+   "attempt": 1,
+   "steps": {
+    "clsAfterGenerate": 0.9614,
+    "strip": {
+     "text": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+     "axe": [],
+     "m": {
+      "targets": 0,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "placeholder": {
+     "text": "Search: taper, 6B, sidewalk",
+     "fits": true,
+     "w": 360
+    },
+    "closed": {
+     "rows": [
+      {
+       "id": "pass-0",
+       "open": "false",
+       "head": "Signs on both sides of one-way street: Not required · 0 left, 10 right",
+       "lines": 2
+      },
+      {
+       "id": "pass-1",
+       "open": "false",
+       "head": "G20-5P Work Zone signs every 2,640 ft: 1 required · 1 placed",
+       "lines": 2
+      },
+      {
+       "id": "pass-2",
+       "open": "false",
+       "head": "Speed reduction <= 15 mph per sign installation: No reduction · 30 mph throughout",
+       "lines": 3
+      },
+      {
+       "id": "pass-3",
+       "open": "false",
+       "head": "Flagger station lighting 500W @ 8 ft: Not applicable · no flaggers",
+       "lines": 2
+      },
+      {
+       "id": "info-0",
+       "open": "false",
+       "head": "AADT threshold for mobile operations (<= 2,000): Not applicable · not a mobile operation",
+       "lines": 3
+      },
+      {
+       "id": "site-adjacent_intersection",
+       "open": "false",
+       "head": "Intersection within work zone: No devices added · cross-street layout not generated",
+       "lines": 3
+      },
+      {
+       "id": "scan-adjacent_interchange",
+       "open": "false",
+       "head": "Adjacent interchange (highway ramps): none along the corridor",
+       "lines": 2
+      },
+      {
+       "id": "scan-school_zone",
+       "open": "false",
+       "head": "School zone nearby: none along the corridor",
+       "lines": 2
+      }
+     ],
+     "axe": [],
+     "m": {
+      "targets": 17,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "opened": {
+     "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 10 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.” Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to the MUTCD and set no sign-side rule. DOTI standards and details not read. Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+     "axe": [],
+     "m": {
+      "targets": 17,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "termInHeads": [],
+    "search": {
+     "term": "Signs placed",
+     "status": "7 matching lines, in 2 sections",
+     "opened": 4,
+     "marks": [
+      "W20-1",
+      "W20-2",
+      "W21-5aR",
+      "Signs placed",
+      "M4-9c",
+      "G20-1",
+      "G20-2",
+      "G20-5P",
+      "M4-9a",
+      "R9-9",
+      "W20-1",
+      "W20-2",
+      "W21-5aR"
+     ],
+     "axe": [],
+     "m": {
+      "targets": 12,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "answers": [
+     {
+      "q": "Are there sidewalks along the work zone?",
+      "a": "Yes, they're there The 4 devices stay in the plan."
+     },
+     {
+      "q": "Is there a bike lane along the work zone?",
+      "a": "Yes, it's there The 2 devices stay in the plan."
+     },
+     {
+      "q": "Is there an intersection next to the work?",
+      "a": "Yes, it's there Nothing changes. The TCS still lays out the cross street."
+     }
+    ],
+    "stripAfter": {
+     "text": "⚠ Plan ready. 1 item above and 3 under Not checked yet need a check before field use.",
+     "axe": [],
+     "m": {
+      "targets": 0,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "clsEnd": 1.7346,
+    "layoutShifts": [
+     0.0952,
+     0.8655,
+     0.0007,
+     0.0007,
+     0.0007,
+     0.0007,
+     0.7711
+    ]
+   },
+   "errors": [],
+   "hostsSeen": [
+    "api.mapbox.com",
+    "clerk.conestruct.com",
+    "events.mapbox.com",
+    "o4511428711153664.ingest.us.sentry.io",
+    "www.conestruct.com"
+   ],
+   "roadBearing": [
+    {
+     "status": "ok",
+     "candidates": 4
+    }
+   ],
+   "clerkResponses": [
+    {
+     "host": "clerk.conestruct.com",
+     "status": 307
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    }
+   ],
+   "clerk": {
+    "present": true,
+    "loaded": true
+   },
+   "kind": "kind-chip-shoulder",
+   "routeHopsByHost": {
+    "www.conestruct.com": {
+     "hops": 48,
+     "withGate": 48
+    }
+   },
+   "hostsWithGate": [
+    "www.conestruct.com"
+   ]
+  }
+ ],
+ "1440": [
+  {
+   "width": 1440,
+   "height": 900,
+   "attempt": 1,
+   "steps": {
+    "clsAfterGenerate": 0.574,
+    "strip": {
+     "text": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+     "axe": [],
+     "m": {
+      "targets": 0,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "placeholder": {
+     "text": "A number, a rule or a word: taper, 6B, sidewalk, $500",
+     "fits": true,
+     "w": 878
+    },
+    "closed": {
+     "rows": [
+      {
+       "id": "pass-0",
+       "open": "false",
+       "head": "Signs on both sides of one-way street: Not required · 0 left, 10 right",
+       "lines": 1
+      },
+      {
+       "id": "pass-1",
+       "open": "false",
+       "head": "G20-5P Work Zone signs every 2,640 ft: 1 required · 1 placed",
+       "lines": 1
+      },
+      {
+       "id": "pass-2",
+       "open": "false",
+       "head": "Speed reduction <= 15 mph per sign installation: No reduction · 30 mph throughout",
+       "lines": 1
+      },
+      {
+       "id": "pass-3",
+       "open": "false",
+       "head": "Flagger station lighting 500W @ 8 ft: Not applicable · no flaggers",
+       "lines": 1
+      },
+      {
+       "id": "info-0",
+       "open": "false",
+       "head": "AADT threshold for mobile operations (<= 2,000): Not applicable · not a mobile operation",
+       "lines": 1
+      },
+      {
+       "id": "site-adjacent_intersection",
+       "open": "false",
+       "head": "Intersection within work zone: No devices added · cross-street layout not generated",
+       "lines": 1
+      },
+      {
+       "id": "scan-adjacent_interchange",
+       "open": "false",
+       "head": "Adjacent interchange (highway ramps): none along the corridor",
+       "lines": 1
+      },
+      {
+       "id": "scan-school_zone",
+       "open": "false",
+       "head": "School zone nearby: none along the corridor",
+       "lines": 1
+      }
+     ],
+     "axe": [],
+     "m": {
+      "targets": 17,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "opened": {
+     "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 10 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.” Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to the MUTCD and set no sign-side rule. DOTI standards and details not read. Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+     "axe": [],
+     "m": {
+      "targets": 17,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "termInHeads": [],
+    "search": {
+     "term": "Signs placed",
+     "status": "7 matching lines, in 2 sections",
+     "opened": 4,
+     "marks": [
+      "W20-1",
+      "W20-2",
+      "W21-5aR",
+      "Signs placed",
+      "M4-9c",
+      "G20-1",
+      "G20-2",
+      "G20-5P",
+      "M4-9a",
+      "R9-9",
+      "W20-1",
+      "W20-2",
+      "W21-5aR"
+     ],
+     "axe": [],
+     "m": {
+      "targets": 12,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "pdf": {
+     "suggested": "East-Colfax-Avenue_shoulder_2026-11-07_540ad2.audit.pdf",
+     "ms": 1039,
+     "bytes": 10448
+    },
+    "answers": [
+     {
+      "q": "Are there sidewalks along the work zone?",
+      "a": "Yes, they're there The 4 devices stay in the plan."
+     },
+     {
+      "q": "Is there a bike lane along the work zone?",
+      "a": "Yes, it's there The 2 devices stay in the plan."
+     },
+     {
+      "q": "Is there an intersection next to the work?",
+      "a": "Yes, it's there Nothing changes. The TCS still lays out the cross street."
+     },
+     {
+      "q": "Are there sidewalks along the work zone?",
+      "a": "Yes, they're there The 4 devices stay in the plan."
+     }
+    ]
+   },
+   "errors": [],
+   "hostsSeen": [
+    "api.mapbox.com",
+    "clerk.conestruct.com",
+    "events.mapbox.com",
+    "o4511428711153664.ingest.us.sentry.io",
+    "www.conestruct.com"
+   ],
+   "roadBearing": [
+    {
+     "status": "ok",
+     "candidates": 4
+    }
+   ],
+   "clerkResponses": [
+    {
+     "host": "clerk.conestruct.com",
+     "status": 307
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    }
+   ],
+   "clerk": {
+    "present": true,
+    "loaded": true
+   },
+   "kind": "kind-chip-shoulder",
+   "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.nyq-card:not([data-testid=where-questions] .nyq-card)').first().locator('label.nyq-answer').first()\u001b[22m\n\u001b[2m    - locator resolved to <label class=\"nyq-answer\">…</label>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is not enabled\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    -",
+   "routeHopsByHost": {
+    "www.conestruct.com": {
+     "hops": 48,
+     "withGate": 48
+    }
+   },
+   "hostsWithGate": [
+    "www.conestruct.com"
+   ]
+  },
+  {
+   "width": 1440,
+   "height": 900,
+   "attempt": 2,
+   "steps": {
+    "clsAfterGenerate": 0.5698,
+    "strip": {
+     "text": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+     "axe": [],
+     "m": {
+      "targets": 0,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "placeholder": {
+     "text": "A number, a rule or a word: taper, 6B, sidewalk, $500",
+     "fits": true,
+     "w": 878
+    },
+    "closed": {
+     "rows": [
+      {
+       "id": "pass-0",
+       "open": "false",
+       "head": "Signs on both sides of one-way street: Not required · 0 left, 10 right",
+       "lines": 1
+      },
+      {
+       "id": "pass-1",
+       "open": "false",
+       "head": "G20-5P Work Zone signs every 2,640 ft: 1 required · 1 placed",
+       "lines": 1
+      },
+      {
+       "id": "pass-2",
+       "open": "false",
+       "head": "Speed reduction <= 15 mph per sign installation: No reduction · 30 mph throughout",
+       "lines": 1
+      },
+      {
+       "id": "pass-3",
+       "open": "false",
+       "head": "Flagger station lighting 500W @ 8 ft: Not applicable · no flaggers",
+       "lines": 1
+      },
+      {
+       "id": "info-0",
+       "open": "false",
+       "head": "AADT threshold for mobile operations (<= 2,000): Not applicable · not a mobile operation",
+       "lines": 1
+      },
+      {
+       "id": "site-adjacent_intersection",
+       "open": "false",
+       "head": "Intersection within work zone: No devices added · cross-street layout not generated",
+       "lines": 1
+      },
+      {
+       "id": "scan-adjacent_interchange",
+       "open": "false",
+       "head": "Adjacent interchange (highway ramps): none along the corridor",
+       "lines": 1
+      },
+      {
+       "id": "scan-school_zone",
+       "open": "false",
+       "head": "School zone nearby: none along the corridor",
+       "lines": 1
+      }
+     ],
+     "axe": [],
+     "m": {
+      "targets": 17,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "opened": {
+     "detail": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 10 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.” Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to the MUTCD and set no sign-side rule. DOTI standards and details not read. Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+     "axe": [],
+     "m": {
+      "targets": 17,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "termInHeads": [],
+    "search": {
+     "term": "Signs placed",
+     "status": "7 matching lines, in 2 sections",
+     "opened": 4,
+     "marks": [
+      "W20-1",
+      "W20-2",
+      "W21-5aR",
+      "Signs placed",
+      "M4-9c",
+      "G20-1",
+      "G20-2",
+      "G20-5P",
+      "M4-9a",
+      "R9-9",
+      "W20-1",
+      "W20-2",
+      "W21-5aR"
+     ],
+     "axe": [],
+     "m": {
+      "targets": 12,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "pdf": {
+     "suggested": "East-Colfax-Avenue_shoulder_2026-11-07_540ad2.audit.pdf",
+     "ms": 682,
+     "bytes": 10448
+    },
+    "answers": [
+     {
+      "q": "Are there sidewalks along the work zone?",
+      "a": "Yes, they're there The 4 devices stay in the plan."
+     },
+     {
+      "q": "Is there a bike lane along the work zone?",
+      "a": "Yes, it's there The 2 devices stay in the plan."
+     },
+     {
+      "q": "Is there an intersection next to the work?",
+      "a": "Yes, it's there Nothing changes. The TCS still lays out the cross street."
+     }
+    ],
+    "stripAfter": {
+     "text": "⚠ Plan ready. 1 item above and 3 under Not checked yet need a check before field use.",
+     "axe": [],
+     "m": {
+      "targets": 0,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "clsEnd": 0.9598,
+    "layoutShifts": [
+     0.0158,
+     0.0004,
+     0.0001,
+     0.5518,
+     0.0017,
+     0.0018,
+     0.0017,
+     0.3865
+    ]
+   },
+   "errors": [],
+   "hostsSeen": [
+    "api.mapbox.com",
+    "clerk.conestruct.com",
+    "events.mapbox.com",
+    "o4511428711153664.ingest.us.sentry.io",
+    "www.conestruct.com"
+   ],
+   "roadBearing": [
+    {
+     "status": "ok",
+     "candidates": 4
+    }
+   ],
+   "clerkResponses": [
+    {
+     "host": "clerk.conestruct.com",
+     "status": 307
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    }
+   ],
+   "clerk": {
+    "present": true,
+    "loaded": true
+   },
+   "kind": "kind-chip-shoulder",
+   "routeHopsByHost": {
+    "www.conestruct.com": {
+     "hops": 49,
+     "withGate": 49
+    }
+   },
+   "hostsWithGate": [
+    "www.conestruct.com"
+   ]
+  }
+ ]
+}
