@@ -24,7 +24,7 @@ Requests, both widths, flag / zoom step / HTTP / subject: sidewalks 0 200 drawn;
 
 ## The crops
 
-Named `<width>-<step>-<state>.png` in `crops/`, 10 committed: `01-q1-map` sidewalks, `03-q2-map` bike lane, `04-q3-map` crossing, `05-no-geometry`, `06-failed-image`, at each width. `02-q1-zoom-in` is named in `walk.json` and left out to keep the size down; the zoom measure is in the JSON.
+Named `<width>-<step>-<state>.png` in `crops/`, 10 committed: `01-q1-map` sidewalks, `03-q2-map` bike lane, `04-q3-map` crossing, `05-no-geometry`, `06-failed-image`, at each width. `02-q1-zoom-in` is named in `walk.json` and was left out at first to keep the size down; it was committed on `issue-447-prod-check` on 2026-11-07 (about 1.5 MB together) so the ship's cleanup can remove the issue-447 worktree. The zoom measure is in the JSON.
 
 - **No geometry is real, not a rewritten header.** The walk asks the backend for a flag with nothing counted at this pin (no school), on the crossing's card, so the backend drew no line and framed the work zone. That crop is at zoom step −1, the unseen frame the walk used, which is why it's zoomed out. The question text on it is the crossing's; only the picture's request changed.
 - **The failed image** is forced with a 502 at the browser. The answers still work.
