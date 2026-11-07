@@ -41,6 +41,8 @@ export interface StepQuestion {
   details: ReactNode | null;
   /** Lines under the radio rows (a loading line, a refusal, a note). */
   extra?: ReactNode;
+  /** #447 ruling 1: between the explanation and the choices (a map). */
+  media?: ReactNode;
 }
 
 export interface QuestionStepsProps {
@@ -288,6 +290,7 @@ function Card({
         <QHeading className="nyq-q">{q.question}</QHeading>
         {q.explanation !== null ? <p className="nyq-why tr-help">{q.explanation}</p> : null}
       </div>
+      {q.media ?? null}
       {/* Radio rows, each with its consequence when it has one.  A native
           radio group (one Tab stop, arrow keys); the 14 px square marker
           is fill + inset + border when chosen, outline when not (Rule 13:

@@ -278,6 +278,165 @@ def band_image_url(
     return f"{base}{overlays}{centre[1]:.6f},{centre[0]:.6f},{z:.2f},0/{size}", {}
 
 
+# A NEEDS YOU question's map (#447, ruling 3).  The work is a solid ``--dim``
+# line; the subject is dashed ``#3fd3a8``.  Both MIRROR globals.css
+# (``--dim``, ``--lv-work``), which the key under the map draws with.
+WORK_COLOR: str = "FF8A2E"
+SUBJECT_COLOR: str = "3FD3A8"
+# #447 X10, CHOSEN: the pin picture's zoom plus one, since a single crossing
+# has no span to fit; and the sidewalk "segment" is the nearest three features.
+SUBJECT_MAX_ZOOM: float = 18.0
+SUBJECT_FRAME_FEATURES: int = 3
+# #447 X2, X3, CHOSEN: Static Images can't dash a path, so a dash is its own
+# path.  A floor in metres, since the polyline's 5 decimals are about 1 m.
+DASH_ON_PX: float = 12.0
+DASH_OFF_PX: float = 8.0
+DASH_ON_MIN_M: float = 3.0
+DASH_OFF_MIN_M: float = 2.0
+RING_RADIUS_PX: float = 14.0
+RING_RADIUS_MIN_M: float = 4.0
+RING_DASHES: int = 8
+_EARTH_CIRCUMFERENCE_M: float = 40_075_016.7
+
+
+def _px_per_m(lat: float, zoom: float) -> float:
+    return _TILE_PX * 2.0**zoom / (_EARTH_CIRCUMFERENCE_M * math.cos(math.radians(lat)))
+
+
+def _dash_path(a: tuple[float, float], b: tuple[float, float]) -> str:
+    poly = urllib_quote(encode_polyline([a, b]), safe="")
+    return f"path-3+{SUBJECT_COLOR}-1({poly})"
+
+
+def _dashes(
+    line: list[tuple[float, float]],
+    centre: tuple[float, float],
+    zoom: float,
+    width: int,
+    height: int,
+) -> list[tuple[tuple[float, float], tuple[float, float]]]:
+    """One subject as dash ends, keeping only the dashes the frame shows."""
+    world = _TILE_PX * 2.0**zoom
+    cx, cy = _mercator(*centre)
+    per_m = _px_per_m(centre[0], zoom)
+
+    def latlng(px: tuple[float, float]) -> tuple[float, float]:
+        return _unmercator(cx + px[0] / world, cy + px[1] / world)
+
+    def shown(px: tuple[float, float]) -> bool:
+        return abs(px[0]) <= width / 2 and abs(px[1]) <= height / 2
+
+    def pixel(p: tuple[float, float]) -> tuple[float, float]:
+        x, y = _mercator(*p)
+        return (x - cx) * world, (y - cy) * world
+
+    if len(line) == 1:
+        # X3: a point has no line to dash; a ring of dashes around it.
+        ox, oy = pixel(line[0])
+        radius = max(RING_RADIUS_PX, RING_RADIUS_MIN_M * per_m)
+        ring: list[tuple[tuple[float, float], tuple[float, float]]] = []
+        for i in range(RING_DASHES):
+            a1 = 2 * math.pi * i / RING_DASHES
+            a2 = a1 + math.pi / RING_DASHES
+            p1 = (ox + radius * math.cos(a1), oy + radius * math.sin(a1))
+            p2 = (ox + radius * math.cos(a2), oy + radius * math.sin(a2))
+            if shown(p1) or shown(p2):
+                ring.append((latlng(p1), latlng(p2)))
+        return ring
+
+    on = max(DASH_ON_PX, DASH_ON_MIN_M * per_m)
+    off = max(DASH_OFF_PX, DASH_OFF_MIN_M * per_m)
+    period = on + off
+    out: list[tuple[tuple[float, float], tuple[float, float]]] = []
+    walked = 0.0
+    px_line = [pixel(p) for p in line]
+    for (x1, y1), (x2, y2) in zip(px_line, px_line[1:], strict=False):
+        length = math.hypot(x2 - x1, y2 - y1)
+        if length <= 0:
+            continue
+        ux, uy = (x2 - x1) / length, (y2 - y1) / length
+        # The next dash's start along this segment.
+        s = (-walked) % period
+        while s < length:
+            e = min(s + on, length)
+            p1 = (x1 + ux * s, y1 + uy * s)
+            p2 = (x1 + ux * e, y1 + uy * e)
+            if shown(p1) or shown(p2):
+                out.append((latlng(p1), latlng(p2)))
+            s += period
+        walked += length
+    return out
+
+
+def _work_overlays(approaches: list[tuple[str, WorkCorridor]], max_points: int) -> list[str]:
+    primary = approaches[0][1]
+    work = next(span for span in zone_spans(primary) if span[0] == "work_zone")
+    return [
+        f"path-5+{WORK_COLOR}-{EXT_OPACITY if part.extended else OPACITY}"
+        f"({urllib_quote(encode_polyline(part.points), safe='')})"
+        for part in zone_parts(primary, work[1], work[2], max_points)
+        if len(part.points) >= 2
+    ]
+
+
+def question_image_url(
+    lat: float,
+    lng: float,
+    approaches: list[tuple[str, WorkCorridor]] | None,
+    subject: list[list[tuple[float, float]]] | None,
+    *,
+    width: int,
+    height: int,
+    zoom: int = 0,
+) -> tuple[str, dict[str, str], tuple[float, float], bool]:
+    """A NEEDS YOU map: its URL and query, the question's point, whether a line was drawn.
+
+    Framed on the nearest features of ``subject`` (nearest first; the
+    backend's own read, :func:`src.rules.site_detection.subject_geometry`).
+    With no subject the frame is the work zone, and with no laid-out corridor
+    the pin picture; neither draws a guessed line (Rule 10).
+    """
+    if not -ZOOM_OUT_MAX <= zoom <= ZOOM_IN_MAX:
+        raise ValueError(f"zoom step {zoom} outside -{ZOOM_OUT_MAX}..{ZOOM_IN_MAX}")
+    if not approaches:
+        url, query = band_image_url(
+            lat, lng, None, stage="pin", width=width, height=height, zoom=zoom
+        )
+        return url, query, (lat, lng), False
+    padding = NARROW_PADDING_PX if width < NARROW_BELOW_PX else PADDING_PX
+    subject = subject or []
+    if subject:
+        framed = [p for line in subject[:SUBJECT_FRAME_FEATURES] for p in line]
+        nearest = subject[0]
+        point = nearest[len(nearest) // 2]
+    else:
+        framed = drawn_points(approaches, stage="work")
+        point = work_midpoint(approaches)
+    centre, fit = fit_view(framed, width, height, padding)
+    z = max(0.0, min(_ZOOM_CEILING, min(fit, SUBJECT_MAX_ZOOM) + zoom))
+    size = f"{width}x{height}@2x"
+    head = f"https://api.mapbox.com/styles/v1/mapbox/{STYLE}/static/"
+    tail = f"/{centre[1]:.6f},{centre[0]:.6f},{z:.2f},0/{size}"
+    work: list[str] = []
+    for max_points in POINT_STEPS:
+        work = _work_overlays(approaches, max_points)
+        if sum(len(w) + 1 for w in work) < URL_MAX_CHARS // 4:
+            break
+    # The farthest features go first if the URL would pass the cap (X2): a
+    # feature is drawn whole or not at all.
+    used = len(head) + len(tail) + sum(len(w) + 1 for w in work)
+    dashes: list[str] = []
+    for line in subject:
+        drawn = [_dash_path(a, b) for a, b in _dashes(line, centre, z, width, height)]
+        cost = sum(len(d) + 1 for d in drawn)
+        if used + cost > URL_MAX_CHARS - 200:
+            break
+        dashes.extend(drawn)
+        used += cost
+    overlays = ",".join([*work, *dashes])
+    return f"{head}{overlays}{tail}", {}, point, bool(dashes)
+
+
 # The formats the Static Images API answers, by their leading bytes (#369).
 # satellite-streets-v12 comes back as JPEG, not PNG.
 _SIGNATURES: tuple[tuple[bytes, str], ...] = (

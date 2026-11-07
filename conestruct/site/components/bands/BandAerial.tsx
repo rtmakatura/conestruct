@@ -97,7 +97,7 @@ const ALT: Record<AerialStage, string> = {
 // without layout) the frame's rule-104 size stands in.
 const FALLBACK = { width: 600, height: 300 };
 
-function useFrameSize(ref: React.RefObject<HTMLDivElement | null>) {
+export function useFrameSize(ref: React.RefObject<HTMLDivElement | null>) {
   const [size, setSize] = useState<{ width: number; height: number } | null>(null);
   useLayoutEffect(() => {
     const el = ref.current;

@@ -18,6 +18,8 @@
 
 import type { NeedsYouQuestion, QuestionAnswer } from "@/lib/needs-you-items";
 import { scanEvidence } from "@/lib/tiering";
+import type { Scenario } from "@/lib/scenarios";
+import { NeedsYouMap } from "./NeedsYouMap";
 import { QuestionSteps, type StepQuestion } from "./QuestionSteps";
 import type { SiteScanProvenance } from "@/lib/render-types";
 import {
@@ -46,6 +48,8 @@ export interface QuestionFlowProps {
   inFlight: boolean;
   /** #288 clause 3: read from the one derivation, never decided here. */
   ownsPrimary: boolean;
+  /** #447: the plan each question's map is of.  Absent: no map. */
+  scenario?: Scenario | null;
 }
 
 export function QuestionFlow({
@@ -56,6 +60,7 @@ export function QuestionFlow({
   siteScan,
   inFlight,
   ownsPrimary,
+  scenario = null,
 }: QuestionFlowProps) {
   const byFlag = new Map(questions.map((q) => [q.flag as string, q] as const));
   const answer = (q: NeedsYouQuestion, a: QuestionAnswer) => {
@@ -88,6 +93,17 @@ export function QuestionFlow({
     title: q.title,
     question: q.question,
     explanation: q.explanation,
+    // Keyed by the flag: each question opens on its own frame and step.
+    media: scenario ? (
+      <NeedsYouMap
+        key={q.flag}
+        scenario={scenario}
+        flag={q.flag}
+        label={q.mapLabel}
+        keyLabel={q.mapKey}
+        topic={q.topic}
+      />
+    ) : null,
     options: (["yes", "no"] as const).map((a) => ({
       value: a,
       label: q[a].label,

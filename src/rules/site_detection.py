@@ -1047,6 +1047,111 @@ def detect_along_corridor(
 
 
 # ---------------------------------------------------------------------------
+# A NEEDS YOU map's subject (#447)
+# ---------------------------------------------------------------------------
+
+# Each question's bucket, as the scan's own selectors (a test pins them to
+# ``_SCAN_SELECTORS``).  Railroad crossings and hospitals ask no question.
+_SUBJECT_SELECTORS: dict[str, tuple[str, ...]] = {
+    "intersections": _SCAN_SELECTORS[0:2],
+    "sidewalks": _SCAN_SELECTORS[2:4],
+    "bike_facilities": _SCAN_SELECTORS[4:6],
+    "schools": _SCAN_SELECTORS[6:8],
+    "interchanges": _SCAN_SELECTORS[11:15],
+}
+# CHOSEN (#447 X10): about one mirror's 7 s cap plus the fall-through, so a
+# slow Overpass costs the line and not the picture.
+SUBJECT_BUDGET_S: float = 8.0
+# CHOSEN (#447 X10): more than a frame's worth; the URL cap drops the rest.
+SUBJECT_MAX_FEATURES: int = 12
+# CHOSEN (#447 X10): a zoom step doesn't ask Overpass again.
+SUBJECT_MEMO_TTL_S: float = 600.0
+_SUBJECT_MEMO_MAX: int = 64
+_SUBJECT_MEMO: dict[str, tuple[float, list[list[tuple[float, float]]]]] = {}
+
+
+def clear_subject_memo() -> None:
+    _SUBJECT_MEMO.clear()
+
+
+def _subject_query(bucket_name: str, boxes: list[tuple[float, float, float, float]]) -> str:
+    lines: list[str] = []
+    for south, west, north, east in boxes:
+        box = f"{south:.6f},{west:.6f},{north:.6f},{east:.6f}"
+        lines.extend(f"  {sel.format(box=box)}\n" for sel in _SUBJECT_SELECTORS[bucket_name])
+    # ``out geom``: the line the scan's ``out center`` leaves out.
+    return f"[out:json][timeout:10];\n(\n{''.join(lines)});\nout geom tags;\n"
+
+
+def _subject_points(el: dict[str, Any]) -> list[tuple[float, float]]:
+    """A way's line, or a node's one point (a ring on the map, #447 X3)."""
+    if _has_coords(el):
+        return [(float(el["lat"]), float(el["lon"]))]
+    return [(float(p["lat"]), float(p["lon"])) for p in el.get("geometry") or [] if _has_coords(p)]
+
+
+def _bounds_centre(points: list[tuple[float, float]]) -> tuple[float, float]:
+    """Overpass's ``center`` is its bounding box's centre, so a way is
+    classified at the point the scan classified it at."""
+    lats, lngs = zip(*points, strict=True)
+    return (max(lats) + min(lats)) / 2.0, (max(lngs) + min(lngs)) / 2.0
+
+
+def subject_geometry(
+    bucket_name: str,
+    corridor: WorkCorridor,
+    opposing: WorkCorridor | None,
+    origin: tuple[float, float],
+) -> list[list[tuple[float, float]]] | None:
+    """The lines (or one-point nodes) a question is asking about, nearest first.
+
+    ``None``: Overpass didn't answer, so the map draws no line and guesses
+    nothing (Rule 10).  ``[]``: it answered and nothing counts.  What counts
+    is what the scan counts: the same selectors, ``_categorize`` and
+    ``_classified`` against the same frames (``site_scan.scan_frames``).
+    Never raises.
+    """
+    if bucket_name not in _SUBJECT_SELECTORS:
+        return None
+    frames = [corridor, *([opposing] if opposing is not None else [])]
+    boxes = [
+        c.corridor_bbox(
+            lateral_buffer_m=_CORRIDOR_LATERAL_BUFFER_M,
+            longitudinal_buffer_m=_CORRIDOR_LONGITUDINAL_BUFFER_M,
+        )
+        for c in frames
+    ]
+    query = _subject_query(bucket_name, boxes)
+    hit = _SUBJECT_MEMO.get(query)
+    if hit is not None and time.monotonic() - hit[0] <= SUBJECT_MEMO_TTL_S:
+        return hit[1]
+    try:
+        payload, _error = _overpass_request_with_fallback(query, budget_s=SUBJECT_BUDGET_S)
+        if payload is None:
+            return None
+        found: list[tuple[float, list[tuple[float, float]]]] = []
+        for el in payload.get("elements", []) or []:
+            if _categorize(el) != bucket_name:
+                continue
+            points = _subject_points(el)
+            if not points:
+                continue
+            centre = _bounds_centre(points)
+            if any(_classified(bucket_name, c, centre)["relevant"] for c in frames):
+                found.append((_haversine(origin[0], origin[1], centre[0], centre[1]), points))
+    except Exception as exc:  # noqa: BLE001
+        # A third-party answer the parser didn't expect: no line, not a 500.
+        print(f"[overpass] map subject failed: {type(exc).__name__}")
+        return None
+    found.sort(key=lambda item: item[0])
+    lines = [points for _distance, points in found[:SUBJECT_MAX_FEATURES]]
+    if len(_SUBJECT_MEMO) >= _SUBJECT_MEMO_MAX:
+        _SUBJECT_MEMO.clear()
+    _SUBJECT_MEMO[query] = (time.monotonic(), lines)
+    return lines
+
+
+# ---------------------------------------------------------------------------
 # OSM way bearing auto-detect
 # ---------------------------------------------------------------------------
 

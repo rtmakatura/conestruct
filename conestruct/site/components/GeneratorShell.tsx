@@ -2158,6 +2158,7 @@ export function GeneratorShell({
                       siteScan={needsYouScan}
                       inFlight={scanInFlight}
                       ownsPrimary={primaryOwner === "needs-you"}
+                      scenario={scenario}
                     />
                   ) : null
                 }

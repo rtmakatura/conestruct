@@ -8768,6 +8768,141 @@ input[type="number"] {
   flex-direction: column;
   gap: var(--space-tight);
 }
+/* #447 (SeeA): the map inside a question.  Ruling 1: full width at 16:8.
+   Ruling 7 (P1): the frame and the key hold their height, loaded or not. */
+.workbench .nyq-map {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+.workbench .nyq-map-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  background: rgb(var(--ws-surface-rgb));
+}
+.workbench .nyq-map-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.workbench .nyq-map-failed {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-block);
+  text-align: center;
+}
+.workbench .nyq-map-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  height: 32px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: rgb(var(--ws-surface-rgb));
+  border: 1px solid var(--lv-work);
+}
+.workbench .nyq-map-zoom {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+}
+.workbench .nyq-map-zbtn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--ink);
+  background: rgb(var(--ws-surface-rgb));
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+.workbench .nyq-map-zbtn + .nyq-map-zbtn {
+  border-top: 0;
+}
+.workbench .nyq-map-zbtn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+.workbench .nyq-map-street {
+  position: absolute;
+  right: 8px;
+  /* Clear of the "© Mapbox © OpenStreetMap" the image carries (#301). */
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 var(--space-block);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  background: rgb(var(--ws-surface-rgb));
+  border: 1px solid var(--rule);
+}
+.workbench .nyq-map-zbtn:focus-visible,
+.workbench .nyq-map-street:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 1px;
+}
+.workbench .nyq-map-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-tight) var(--space-block);
+  min-height: 1.5em;
+}
+.workbench .nyq-map-key[data-hidden] {
+  visibility: hidden;
+}
+.workbench .nyq-map-key-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+}
+.workbench .nyq-map-key-note {
+  flex: 1;
+  text-align: right;
+}
+.workbench .nyq-map-swatch {
+  flex: none;
+  width: 24px;
+}
+.workbench .nyq-map-swatch.is-work {
+  height: 6px;
+  background: var(--dim);
+}
+/* Rule 13: the dash itself, drawn; a 4 px dashed border this short renders
+   solid, and the two lines would differ by hue alone. */
+.workbench .nyq-map-swatch.is-subject {
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--lv-work) 0 6px, transparent 6px 9px);
+}
+/* Ruling 6: edge to edge inside the card; the key wraps, one line each, and
+   holds its three lines before the backend says what it drew. */
+@media (max-width: 480px) {
+  .workbench .nyq-map-frame {
+    width: auto;
+    margin: 0 calc(-1 * var(--space-block));
+  }
+  .workbench .nyq-map-key {
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: calc(3 * 1.5em + 2 * var(--space-tight));
+  }
+  .workbench .nyq-map-key-note {
+    flex: none;
+    text-align: left;
+  }
+}
 .workbench .nyq-q {
   margin: 0;
   font-family: var(--font-sans);

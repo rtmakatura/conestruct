@@ -432,6 +432,65 @@ export async function fetchCorridorMap(
   return new Response(upstream.body, { status: 200, headers });
 }
 
+// #447 — a NEEDS YOU question's map (POST /render/needs-you-map on Modal):
+// the backend frames and draws it; this relays the bytes and the two headers
+// that say what it drew and where the question's point is.  Refusals as
+// fetchCorridorMap's.
+export async function fetchNeedsYouMap(
+  scenario: Scenario,
+  picture: { flag: string; width: number; height: number; zoom?: number },
+): Promise<Response> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    return new Response("Render service not configured", { status: 503 });
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${url.replace(/\/$/, "")}/render/needs-you-map`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${secret}`,
+      },
+      body: JSON.stringify({ scenario: toWire(scenario), ...picture }),
+    });
+  } catch (err) {
+    console.error("needs-you map fetch failed", err);
+    return new Response("Render service unreachable", { status: 502 });
+  }
+
+  const contentType = upstream.headers.get("content-type") ?? "";
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    if (contentType.startsWith("application/json") && [409, 502, 503].includes(upstream.status)) {
+      return new Response(detail, {
+        status: upstream.status,
+        headers: { "content-type": "application/json", "cache-control": "private, no-store" },
+      });
+    }
+    console.error(`needs-you map upstream ${upstream.status}`, detail);
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
+    return new Response("Needs-you map failed", { status: 502 });
+  }
+
+  if (!contentType) {
+    await upstream.body?.cancel().catch(() => {});
+    console.error("needs-you map upstream 200 with no content-type");
+    return new Response("Needs-you map failed", { status: 502 });
+  }
+  const headers = new Headers();
+  headers.set("content-type", contentType);
+  headers.set("cache-control", upstream.headers.get("cache-control") ?? "private, max-age=600");
+  for (const name of ["x-map-subject", "x-map-point"]) {
+    const value = upstream.headers.get(name);
+    if (value) headers.set(name, value);
+  }
+  return new Response(upstream.body, { status: 200, headers });
+}
+
 export async function fetchAuditTrail(
   scenario: Scenario,
 ): Promise<Response> {

@@ -57,12 +57,14 @@ from src.api.schemas import (
     scenario_to_call,
 )
 from src.api.site_scan import (
+    FLAG_TO_DETECTION,
     SiteScanResult,
     not_run_provenance,
     override_detail,
     override_violation,
     refusal_detail,
     run_site_scan,
+    scan_frames,
 )
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
@@ -100,6 +102,7 @@ from src.rules.kind_proposal import propose_kind
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
+from src.rules.site_detection import subject_geometry
 from src.rules.spacing import (
     buffer_space,
     device_spacing_in_taper,
@@ -2004,6 +2007,108 @@ def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
         content=image,
         media_type=media_type,
         headers={"cache-control": "private, max-age=600"},
+    )
+
+
+class NeedsYouMapRequest(BaseModel):
+    """``POST /render/needs-you-map``'s body: the scenario, the question and the picture."""
+
+    scenario: Scenario
+    flag: Literal[
+        "adjacent_intersection",
+        "adjacent_interchange",
+        "pedestrian_facility",
+        "bicycle_facility",
+        "school_zone",
+    ]
+    # CSS px; the image is drawn @2x, as /render/corridor-map's.
+    width: int = Field(ge=120, le=1280)
+    height: int = Field(ge=80, le=1280)
+    zoom: int = Field(default=0, ge=-1, le=3)
+
+
+_NEEDS_YOU_MAP_ADAPTER: TypeAdapter[NeedsYouMapRequest] = TypeAdapter(NeedsYouMapRequest)
+
+
+@app.post("/render/needs-you-map")
+def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
+    """A NEEDS YOU question's aerial, framed on what it asks about (#447).
+
+    A read: no scan, no generator, nothing written.  The subject is one
+    Overpass read through the scan's own selectors and classifier
+    (:func:`src.rules.site_detection.subject_geometry`), so the audit and the
+    scan are untouched.  No answer draws no line (Rule 10) and still answers
+    a picture.  The frontend computes nothing: it gets the image, plus
+    ``x-map-subject`` (``drawn`` | ``none``) and ``x-map-point`` (``lat,lng``,
+    the street-level link's point).  Anything that isn't a picture answers
+    the same JSON as ``/render/corridor-map``.
+    """
+    req = _validate_read_body(_NEEDS_YOU_MAP_ADAPTER, body)
+    scenario, _side_refused = _read_scenario(req.scenario)
+    _ensure_scenario_enabled(scenario)
+    try:
+        params, _generator, _kwargs = scenario_to_call(scenario, place_cross_street=False)
+    except UnknownJurisdictionError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    meta = scenario.meta
+    if not (meta.lat and meta.lng):
+        return JSONResponse({"status": "no_pin", "message": None}, status_code=409)
+    token = os.environ.get("MAPBOX_TOKEN", "")
+    if not token:
+        return JSONResponse(
+            {"status": "unavailable", "message": "no map token configured"}, status_code=503
+        )
+    approaches = None
+    subject = None
+    # X9: a plan the band can't lay out gets the pin picture, with no lines.
+    if (
+        params.pin_model == "work_start"
+        and params.bearing_deg is not None
+        and not intersection_not_marked(scenario)
+    ):
+        try:
+            _primary, approaches = _laid_out(
+                params, meta.lat, meta.lng, placements=_read_placements(scenario)
+            )
+            frame, opposing = scan_frames(params, meta.lat, meta.lng)
+        except ValueError:
+            approaches = None
+        else:
+            subject = subject_geometry(
+                FLAG_TO_DETECTION[req.flag], frame, opposing, (meta.lat, meta.lng)
+            )
+    url, query, point, drawn = _static_aerial.question_image_url(
+        meta.lat,
+        meta.lng,
+        approaches,
+        subject,
+        width=req.width,
+        height=req.height,
+        zoom=req.zoom,
+    )
+    try:
+        image = _static_aerial.fetch_image(url, query, token)
+    except httpx.HTTPError as exc:
+        print(f"[mapbox] needs-you map fetch failed: {type(exc).__name__}")
+        return JSONResponse(
+            {"status": "unavailable", "message": "the aerial image could not be fetched"},
+            status_code=502,
+        )
+    media_type = _static_aerial.image_media_type(image)
+    if media_type is None:
+        print("[mapbox] needs-you map answered neither PNG nor JPEG")
+        return JSONResponse(
+            {"status": "unavailable", "message": "the aerial image was not a PNG or JPEG"},
+            status_code=502,
+        )
+    return Response(
+        content=image,
+        media_type=media_type,
+        headers={
+            "cache-control": "private, max-age=600",
+            "x-map-subject": "drawn" if drawn else "none",
+            "x-map-point": f"{point[0]:.6f},{point[1]:.6f}",
+        },
     )
 
 

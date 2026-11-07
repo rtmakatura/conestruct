@@ -56,7 +56,7 @@ from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from src.rules.corridor import build_corridor, opposing_work_start
+from src.rules.corridor import WorkCorridor, build_corridor, opposing_work_start
 from src.rules.site_detection import (
     _VALIDATION_SEARCH_RADIUS_M,
     detect_along_corridor,
@@ -719,6 +719,73 @@ def _uncount_freeway_sidewalks(buckets: dict[str, Any], road_type: str) -> dict[
     return {**buckets, "sidewalks": uncounted}
 
 
+def scan_frames(params: Any, lat: float, lng: float) -> tuple[WorkCorridor, WorkCorridor | None]:
+    """The corridors the scan searches and classifies against, and the opposing one.
+
+    One producer (#447): the scan and a NEEDS YOU map read its subject
+    against the same frames, so a line on the map is a feature the scan
+    counted.  Raises ``ValueError`` when the corridor math refuses.
+    """
+    pin_model = str(getattr(params, "pin_model", "corridor_end"))
+    work_start = pin_model == "work_start"
+    # #290: under the work-start model the flagger frame takes the flagger's
+    # own one-lane two-way taper (plan_sheet.py already maps it the same
+    # way); the corridor_end path keeps its frame byte-identical.
+    closure_type = str(params.closure_type)
+    flagger = work_start and _is_flagger_scenario(params)
+    if flagger:
+        closure_type = "flagger_alternating_2lane"
+
+    centerline = getattr(params, "centerline", None)
+    corridor = build_corridor(
+        lat=lat,
+        lng=lng,
+        bearing_deg=float(params.bearing_deg),
+        speed_mph=int(params.speed_mph),
+        work_zone_ft=float(params.work_zone_length_ft),
+        closure_type=closure_type,
+        road_type=str(params.road_type),
+        lane_width_ft=float(params.lane_width_ft),
+        shoulder_width_ft=float(params.shoulder_width_ft),
+        jurisdiction=str(getattr(params, "jurisdiction", "CDOT")),
+        centerline=centerline,
+        pin_model=pin_model,
+        # CHOSEN (#257): this corridor is the scan's search FRAME, not
+        # a printed length — it takes the MUTCD §6B.08 ceiling (100 ft
+        # per lane closed) so the detection bbox reaches past the
+        # longest downstream taper a designer could choose.  Every
+        # printed "Downstream" reads ``placed_downstream_taper_ft``
+        # (the 50 ft floor the plan builds); this value is never
+        # displayed.
+        downstream_taper_use_max=True,
+    )
+
+    # #290 — the flagger's second approach (ruling 9 fixes "start" as the
+    # closed lane's upstream end, so the OTHER traffic reaches the work at
+    # its far end).  It is its own work-start corridor: starting at the
+    # work's far end, travelling back along the road toward the pin.  The
+    # open-points ruling 4: its box joins the scan beside the first.
+    opposing = None
+    if flagger:
+        far_end, opposing_travel = opposing_work_start(corridor)
+        opposing = build_corridor(
+            lat=far_end[0],
+            lng=far_end[1],
+            bearing_deg=opposing_travel,
+            speed_mph=int(params.speed_mph),
+            work_zone_ft=float(params.work_zone_length_ft),
+            closure_type=closure_type,
+            road_type=str(params.road_type),
+            lane_width_ft=float(params.lane_width_ft),
+            shoulder_width_ft=float(params.shoulder_width_ft),
+            jurisdiction=str(getattr(params, "jurisdiction", "CDOT")),
+            centerline=centerline,
+            downstream_taper_use_max=True,
+            pin_model="work_start",
+        )
+    return corridor, opposing
+
+
 def run_site_scan(
     scenario: Any, params: Any, token_entry: Mapping[str, Any] | None = None
 ) -> SiteScanResult:
@@ -757,38 +824,9 @@ def run_site_scan(
         # no direction yet, and scanning a guessed corridor is the defect
         # this arc removes (#298).  Named for what is missing.
         return _unscanned(not_run_provenance("side_not_confirmed" if work_start else "no_bearing"))
-    # #290: under the work-start model the flagger frame takes the flagger's
-    # own one-lane two-way taper (plan_sheet.py already maps it the same
-    # way); the corridor_end path keeps its frame byte-identical.
-    closure_type = str(params.closure_type)
-    flagger = work_start and _is_flagger_scenario(params)
-    if flagger:
-        closure_type = "flagger_alternating_2lane"
-
     centerline = getattr(params, "centerline", None)
     try:
-        corridor = build_corridor(
-            lat=lat,
-            lng=lng,
-            bearing_deg=float(bearing),
-            speed_mph=int(params.speed_mph),
-            work_zone_ft=float(params.work_zone_length_ft),
-            closure_type=closure_type,
-            road_type=str(params.road_type),
-            lane_width_ft=float(params.lane_width_ft),
-            shoulder_width_ft=float(params.shoulder_width_ft),
-            jurisdiction=str(getattr(params, "jurisdiction", "CDOT")),
-            centerline=centerline,
-            pin_model=pin_model,
-            # CHOSEN (#257): this corridor is the scan's search FRAME, not
-            # a printed length — it takes the MUTCD §6B.08 ceiling (100 ft
-            # per lane closed) so the detection bbox reaches past the
-            # longest downstream taper a designer could choose.  Every
-            # printed "Downstream" reads ``placed_downstream_taper_ft``
-            # (the 50 ft floor the plan builds); this value is never
-            # displayed.
-            downstream_taper_use_max=True,
-        )
+        corridor, opposing = scan_frames(params, lat, lng)
     except ValueError as exc:
         # A kind whose closure type the corridor math does not know — not a
         # service failure, so not ``unavailable``; an honest not_run with
@@ -796,35 +834,6 @@ def run_site_scan(
         return _unscanned(
             not_run_provenance("corridor_unbuildable", f"{type(exc).__name__}: {exc}")
         )
-
-    # #290 — the flagger's second approach (ruling 9 fixes "start" as the
-    # closed lane's upstream end, so the OTHER traffic reaches the work at
-    # its far end).  It is its own work-start corridor: starting at the
-    # work's far end, travelling back along the road toward the pin.  The
-    # open-points ruling 4: its box joins the scan beside the first.
-    opposing = None
-    if flagger:
-        far_end, opposing_travel = opposing_work_start(corridor)
-        try:
-            opposing = build_corridor(
-                lat=far_end[0],
-                lng=far_end[1],
-                bearing_deg=opposing_travel,
-                speed_mph=int(params.speed_mph),
-                work_zone_ft=float(params.work_zone_length_ft),
-                closure_type=closure_type,
-                road_type=str(params.road_type),
-                lane_width_ft=float(params.lane_width_ft),
-                shoulder_width_ft=float(params.shoulder_width_ft),
-                jurisdiction=str(getattr(params, "jurisdiction", "CDOT")),
-                centerline=centerline,
-                downstream_taper_use_max=True,
-                pin_model="work_start",
-            )
-        except ValueError as exc:
-            return _unscanned(
-                not_run_provenance("corridor_unbuildable", f"{type(exc).__name__}: {exc}")
-            )
 
     from src.rules.site_detection import (
         _CORRIDOR_LATERAL_BUFFER_M,

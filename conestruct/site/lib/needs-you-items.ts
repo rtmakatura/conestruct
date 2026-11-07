@@ -229,6 +229,10 @@ export interface NeedsYouQuestion {
   title: string;
   /** One 13.5 px sentence: what the map showed and what the plan did. */
   explanation: string;
+  /** #447 ruling 3: the chip on the map's dashed line. */
+  mapLabel: string;
+  /** #447 ruling 4: the key's line for it. */
+  mapKey: string;
   yes: { label: string; consequence: string };
   no: { label: string; consequence: string };
   /** The site-adjustment record's citation, or null (Rule 10). */
@@ -258,6 +262,16 @@ interface FlagWords {
    *  pending-item labels for the two 0-device flags). */
   tcs: string | null;
 }
+
+/** #447 ruling 3 and 4 (X5): "<noun> on the map", "<noun> the map knows
+ *  about"; "Sidewalk" is the ruling's own word, "Crossing" ruling 2's. */
+const MAP_NOUN: Record<ScannedSiteFlag, string> = {
+  pedestrian_facility: "Sidewalk",
+  adjacent_intersection: "Crossing",
+  adjacent_interchange: "Interchange",
+  bicycle_facility: "Bike lane",
+  school_zone: "School",
+};
 
 const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
   pedestrian_facility: {
@@ -411,6 +425,8 @@ export function buildQuestions(
     out.push({
       flag,
       ...questionWords(flag, bucket, rec),
+      mapLabel: `${MAP_NOUN[flag]} on the map`,
+      mapKey: `${MAP_NOUN[flag]} the map knows about`,
       citation: rec?.citation || null,
       bucket,
       changesPlan: rec ? rec.devices_added > 0 || (rec.devices_modified ?? 0) > 0 : false,

@@ -1,0 +1,6 @@
+[out:json][timeout:10];
+(
+  way(39.739142,-104.975122,39.740973,-104.963373)["highway"="footway"];
+  way(39.739142,-104.975122,39.740973,-104.963373)["footway"="sidewalk"];
+);
+out geom tags;

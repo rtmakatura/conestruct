@@ -1,0 +1,6 @@
+[out:json][timeout:10];
+(
+  node(39.739142,-104.975122,39.740973,-104.963373)["highway"="traffic_signals"];
+  node(39.739142,-104.975122,39.740973,-104.963373)["highway"="crossing"];
+);
+out geom tags;
