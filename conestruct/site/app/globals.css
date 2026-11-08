@@ -8943,6 +8943,15 @@ input[type="number"] {
 }
 .workbench .nyq-why {
   margin: 0;
+  /* #448 (P1): NEEDS YOU's sentences share one cell, so the paragraph is
+     as tall as the longest; a plain sentence lays out as before. */
+  display: grid;
+}
+.workbench .nyq-why > span {
+  grid-area: 1 / 1;
+}
+.workbench .nyq-why > span[aria-hidden="true"] {
+  visibility: hidden;
 }
 .workbench .nyq-answers {
   display: flex;

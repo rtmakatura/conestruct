@@ -220,6 +220,82 @@ describe("the map in the card (rulings 1-7)", () => {
   });
 });
 
+// #448 (Ryan's ruling, cc-queue-ux.md item 4): the explanation says what the
+// picture shows.  `why()` is the sentence a reader gets: the paragraph's text
+// without the sentences held hidden for its height (P1).
+describe("#448: the explanation follows what the map drew (Rule 10)", () => {
+  const why = (container: HTMLElement) => {
+    const p = container.querySelector(".nyq-why")!.cloneNode(true) as HTMLElement;
+    p.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+    return p.textContent;
+  };
+  const SIDE_DRAWN =
+    "The map shows sidewalks 25.6 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.";
+  const SIDE_SCAN =
+    "The scan found sidewalks 25.6 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.";
+  const SIDE_NONE =
+    "The scan found sidewalks 25.6 ft from the work, but the map couldn't draw them. Check them at street level. We added 4 devices to protect people walking. Your answer decides whether they stay.";
+
+  it("drawn: the sentence stays as it is", async () => {
+    const { container } = render(<Host />);
+    await img();
+    expect(why(container)).toBe(SIDE_DRAWN);
+  });
+
+  it("x-map-subject: none: never 'The map shows'; the scan's finding and street level", async () => {
+    answer = { ok: true, subject: "none", point: "39.740000,-104.970000" };
+    const { container } = render(<Host />);
+    await img();
+    expect(why(container)).not.toContain("The map shows");
+    expect(why(container)).toBe(SIDE_NONE);
+  });
+
+  it("a header the backend didn't send reads as no line", async () => {
+    answer = { ok: true, point: "39.740000,-104.970000" };
+    const { container } = render(<Host />);
+    await img();
+    expect(why(container)).toBe(SIDE_NONE);
+  });
+
+  it("a failed image: no claim about the picture", async () => {
+    answer = { ok: false, status: 502 };
+    const { container } = render(<Host />);
+    await screen.findByTestId("needs-you-map-failed");
+    expect(why(container)).toBe(SIDE_SCAN);
+  });
+
+  it("while loading, and with no map at all: no claim about the picture", () => {
+    const { container } = render(<Host />);
+    expect(why(container)).toBe(SIDE_SCAN);
+    cleanup();
+    const again = render(<Host scenario={null} />);
+    expect(why(again.container)).toBe(SIDE_SCAN);
+  });
+
+  it("the intersection question with no line (no adjustment record: no device words)", async () => {
+    answer = { ok: true, subject: "none", point: "39.740000,-104.970000" };
+    const { container } = render(<Host />);
+    await img();
+    fireEvent.click(screen.getByLabelText(/Yes, they're there/));
+    fireEvent.click(screen.getByRole("button", { name: "Next question" }));
+    await waitFor(() => expect(bodies().at(-1).flag).toBe("adjacent_intersection"));
+    await waitFor(() =>
+      expect(why(container)).toBe(
+        "The scan found an intersection 49.9 ft from the work, but the map couldn't draw it. Check it at street level.",
+      ),
+    );
+  });
+
+  it("P1: every sentence is held in the paragraph, one shown, so it never changes height", async () => {
+    const { container } = render(<Host />);
+    const spans = () => [...container.querySelectorAll(".nyq-why > span")];
+    expect(spans().map((s) => s.textContent)).toEqual([SIDE_DRAWN, SIDE_NONE, SIDE_SCAN]);
+    expect(spans().map((s) => s.getAttribute("aria-hidden"))).toEqual(["true", "true", null]);
+    await img();
+    expect(spans().map((s) => s.getAttribute("aria-hidden"))).toEqual([null, "true", "true"]);
+  });
+});
+
 describe("streetLevelUrl", () => {
   it("is the documented form, no key", () => {
     expect(streetLevelUrl("1.5,-2.5")).toBe(

@@ -6,7 +6,7 @@
 // Rule 3: the backend frames and draws the picture, both lines included.
 // This holds the zoom step and says in the key what the backend said it drew.
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useFrameSize } from "@/components/bands/BandAerial";
 import { ZOOM_IN_MAX, ZOOM_OUT_MAX } from "@/lib/corridor-aerial";
@@ -21,6 +21,11 @@ export const MAP_KEY_WORK = "The work";
 /** Ruling 5, verbatim. */
 export const MAP_STREET_LEVEL = "See it at street level ↗";
 
+/** #448: what the picture says about the subject, for the explanation above
+ *  it.  A relay of the backend's `x-map-subject` header (Rule 3): the card
+ *  decides nothing about geometry. */
+export type MapSubject = "loading" | "drawn" | "none" | "failed";
+
 export interface NeedsYouMapProps {
   scenario: Scenario;
   flag: string;
@@ -30,9 +35,18 @@ export interface NeedsYouMapProps {
   keyLabel: string;
   /** The question's topic, for the alt text. */
   topic: string;
+  /** #448: told each time the picture's subject state changes. */
+  onSubject?: (subject: MapSubject) => void;
 }
 
-export function NeedsYouMap({ scenario, flag, label, keyLabel, topic }: NeedsYouMapProps) {
+export function NeedsYouMap({
+  scenario,
+  flag,
+  label,
+  keyLabel,
+  topic,
+  onSubject,
+}: NeedsYouMapProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
   const [step, setStep] = useState(0);
@@ -54,6 +68,11 @@ export function NeedsYouMap({ scenario, flag, label, keyLabel, topic }: NeedsYou
   const shown = map.state === "ready" ? map : map.state === "loading" ? held.current : null;
   const failed = map.state === "error";
   const drawn = shown?.drawn === true;
+  // #448: the same state the key and label show, said to the explanation.
+  const subject: MapSubject = failed ? "failed" : shown === null ? "loading" : drawn ? "drawn" : "none";
+  useEffect(() => {
+    onSubject?.(subject);
+  }, [subject, onSubject]);
   const zoomTo = (next: number) => {
     if (next >= -ZOOM_OUT_MAX && next <= ZOOM_IN_MAX) setStep(next);
   };

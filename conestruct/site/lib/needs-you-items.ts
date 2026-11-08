@@ -227,8 +227,15 @@ export interface NeedsYouQuestion {
   topic: string;
   /** The "Next: …" row's plain title. */
   title: string;
-  /** One 13.5 px sentence: what the map showed and what the plan did. */
+  /** One 13.5 px sentence: what the map showed and what the plan did.
+   *  Shown when the question's map drew the subject's line. */
   explanation: string;
+  /** #448: the same, when the map answered and drew no line for it (Ryan's
+   *  ruling, cc-queue-ux.md item 4: "the map couldn't draw it"). */
+  explanationNoLine: string;
+  /** #448: the same with no claim about the picture: while the map loads,
+   *  when it fails, or with no map. */
+  explanationScan: string;
   /** #447 ruling 3: the chip on the map's dashed line. */
   mapLabel: string;
   /** #447 ruling 4: the key's line for it. */
@@ -327,26 +334,41 @@ function questionWords(
   flag: ScannedSiteFlag,
   bucket: ScanBucketWire | null,
   rec: SiteAdjustmentRecord | undefined,
-): Pick<NeedsYouQuestion, "question" | "topic" | "title" | "explanation" | "yes" | "no"> {
+): Pick<
+  NeedsYouQuestion,
+  "question" | "topic" | "title" | "explanation" | "explanationNoLine" | "explanationScan" | "yes" | "no"
+> {
   const w = FLAG_WORDS[flag];
   const ft =
     bucket && typeof bucket.nearest_distance_ft === "number" ? bucket.nearest_distance_ft : null;
-  const shows = `The map shows ${w.noun}${ft === null ? " near the work" : ` ${ft} ft from the work`}`;
+  const where = `${w.noun}${ft === null ? " near the work" : ` ${ft} ft from the work`}`;
+  const shows = `The map shows ${where}`;
+  // #448: the scan's finding with no claim about the picture, and Ryan's
+  // no-line form ("but the map couldn't draw it. Check it at street level.").
+  const found = `The scan found ${where}`;
+  const it = w.plural ? "them" : "it";
+  const noLineLead = `${found}, but the map couldn't draw ${it}. Check ${it} at street level.`;
   const yes = w.plural ? "Yes, they're there" : "Yes, it's there";
   const no = w.plural ? "No, there aren't any" : "No, there isn't one";
   const added = rec ? rec.devices_added : null;
-  let explanation: string;
+  // What the plan did, after the lead.  `(lead) => …` so the drawn sentence
+  // stays byte-identical and the other two say the same about the plan.
+  let tail: (lead: string) => string;
+  let noLineTail: string;
   let yesLine: string;
   let noLine: string;
   if (added !== null && added > 0) {
     const d = devicesWord(added);
-    explanation = `${shows}, so we added ${d} ${w.purpose}. Your answer decides whether they stay.`;
+    tail = (lead) => `${lead}, so we added ${d} ${w.purpose}. Your answer decides whether they stay.`;
+    noLineTail = ` We added ${d} ${w.purpose}. Your answer decides whether they stay.`;
     yesLine = `The ${d} ${added === 1 ? "stays" : "stay"} in the plan.`;
     noLine = `The ${d} ${added === 1 ? "comes" : "come"} off the plan.`;
   } else if (added === 0) {
-    explanation = w.tcs
-      ? `${shows}. The plan adds no devices for it; ${w.tcs}.`
-      : `${shows}. The plan adds no devices for it.`;
+    const none = w.tcs
+      ? `The plan adds no devices for it; ${w.tcs}.`
+      : "The plan adds no devices for it.";
+    tail = (lead) => `${lead}. ${none}`;
+    noLineTail = ` ${none}`;
     yesLine =
       flag === "adjacent_intersection"
         ? "Nothing changes. The TCS still lays out the cross street."
@@ -354,7 +376,8 @@ function questionWords(
     noLine = "No devices change. Your answer goes in the audit trail for the TCS to check.";
   } else {
     // No adjustment record on the wire: no device count is stated (Rule 10).
-    explanation = `${shows}.`;
+    tail = (lead) => `${lead}.`;
+    noLineTail = "";
     yesLine = "The plan stays as it is.";
     noLine = "The plan is built again without it.";
   }
@@ -362,7 +385,9 @@ function questionWords(
     question: w.question,
     topic: w.topic,
     title: w.title,
-    explanation,
+    explanation: tail(shows),
+    explanationNoLine: `${noLineLead}${noLineTail}`,
+    explanationScan: tail(found),
     yes: { label: yes, consequence: yesLine },
     no: { label: no, consequence: noLine },
   };

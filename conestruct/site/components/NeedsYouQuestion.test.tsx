@@ -74,6 +74,53 @@ describe("buildQuestions (ruling 4's order, ruling 5's lines)", () => {
     expect(ix.title).toBe("an intersection next to the work");
   });
 
+  it("#448: every kind's three sentences (drawn, no line, scan only); drawn is today's", () => {
+    const all = colfax({
+      buckets: {
+        intersections: { detected: true, count: 3, nearest_distance_ft: 73.2 },
+        interchanges: { detected: true, count: 1, nearest_distance_ft: 410 },
+        sidewalks: { detected: true, count: 57, nearest_distance_ft: 25.6 },
+        bike_facilities: { detected: true, count: 2, nearest_distance_ft: 12.1 },
+        schools: { detected: true, count: 1 },
+      },
+    } as Partial<SiteScanProvenance>);
+    const adj: SiteAdjustmentRecord[] = [
+      ...ADJ,
+      { flag: "adjacent_interchange", action: "flag", rule: "r", citation: "c", devices_added: 0 },
+      { flag: "bicycle_facility", action: "add", rule: "r", citation: "c", devices_added: 1 },
+    ];
+    const by = Object.fromEntries(
+      qs(all, [], adj).map((q) => [q.flag, [q.explanation, q.explanationNoLine, q.explanationScan]]),
+    );
+    expect(by).toEqual({
+      pedestrian_facility: [
+        "The map shows sidewalks 25.6 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+        "The scan found sidewalks 25.6 ft from the work, but the map couldn't draw them. Check them at street level. We added 4 devices to protect people walking. Your answer decides whether they stay.",
+        "The scan found sidewalks 25.6 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+      ],
+      bicycle_facility: [
+        "The map shows a bike lane 12.1 ft from the work, so we added 1 device for people on bikes. Your answer decides whether they stay.",
+        "The scan found a bike lane 12.1 ft from the work, but the map couldn't draw it. Check it at street level. We added 1 device for people on bikes. Your answer decides whether they stay.",
+        "The scan found a bike lane 12.1 ft from the work, so we added 1 device for people on bikes. Your answer decides whether they stay.",
+      ],
+      adjacent_intersection: [
+        "The map shows an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS.",
+        "The scan found an intersection 73.2 ft from the work, but the map couldn't draw it. Check it at street level. The plan adds no devices for it; the cross-street layout stays with your TCS.",
+        "The scan found an intersection 73.2 ft from the work. The plan adds no devices for it; the cross-street layout stays with your TCS.",
+      ],
+      adjacent_interchange: [
+        "The map shows a highway interchange 410 ft from the work. The plan adds no devices for it; the ramp layout stays with your TCS.",
+        "The scan found a highway interchange 410 ft from the work, but the map couldn't draw it. Check it at street level. The plan adds no devices for it; the ramp layout stays with your TCS.",
+        "The scan found a highway interchange 410 ft from the work. The plan adds no devices for it; the ramp layout stays with your TCS.",
+      ],
+      school_zone: [
+        "The map shows a school zone near the work.",
+        "The scan found a school zone near the work, but the map couldn't draw it. Check it at street level.",
+        "The scan found a school zone near the work.",
+      ],
+    });
+  });
+
   it("Rule 10: with no adjustment record, no device count is stated", () => {
     // No record: nothing changed the plan, so the scan order holds.
     const side = qs(colfax(), [], []).find((x) => x.flag === "pedestrian_facility")!;

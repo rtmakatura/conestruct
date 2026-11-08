@@ -1,0 +1,454 @@
+[
+ {
+  "width": 1440,
+  "steps": [
+   {
+    "name": "loading",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The scan found sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 846,
+     "h": 40.5,
+     "top": 249.5
+    },
+    "answers": {
+     "w": 846,
+     "h": 130,
+     "top": 771.8
+    },
+    "key": "The work Imagery may be a few years old",
+    "label": null,
+    "failed": null,
+    "targets": {
+     "zoomIn": null,
+     "zoomOut": null,
+     "street": null,
+     "yes": {
+      "w": 846,
+      "h": 61,
+      "top": 771.8
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 917.8
+     }
+    },
+    "overflowX": false
+   },
+   {
+    "name": "drawn",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 846,
+     "h": 40.5,
+     "top": 249.5
+    },
+    "answers": {
+     "w": 846,
+     "h": 130,
+     "top": 771.8
+    },
+    "key": "The work Sidewalk the map knows about Imagery may be a few years old",
+    "label": "Sidewalk on the map",
+    "failed": null,
+    "targets": {
+     "zoomIn": {
+      "w": 44,
+      "h": 44,
+      "top": 314
+     },
+     "zoomOut": {
+      "w": 44,
+      "h": 44,
+      "top": 358
+     },
+     "street": {
+      "w": 174.9,
+      "h": 44,
+      "top": 657
+     },
+     "yes": {
+      "w": 846,
+      "h": 61,
+      "top": 771.8
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 917.8
+     }
+    },
+    "overflowX": false,
+    "shot": "1440-01-drawn.png",
+    "axe": []
+   },
+   {
+    "name": "no-line",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The scan found sidewalks 57.4 ft from the work, but the map couldn't draw them. Check them at street level. We added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 846,
+     "h": 40.5,
+     "top": 249.5
+    },
+    "answers": {
+     "w": 846,
+     "h": 130,
+     "top": 771.8
+    },
+    "key": "The work Imagery may be a few years old",
+    "label": null,
+    "failed": null,
+    "targets": {
+     "zoomIn": {
+      "w": 44,
+      "h": 44,
+      "top": 314
+     },
+     "zoomOut": {
+      "w": 44,
+      "h": 44,
+      "top": 358
+     },
+     "street": {
+      "w": 174.9,
+      "h": 44,
+      "top": 657
+     },
+     "yes": {
+      "w": 846,
+      "h": 61,
+      "top": 771.8
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 917.8
+     }
+    },
+    "overflowX": false,
+    "shot": "1440-02-no-line.png",
+    "axe": []
+   },
+   {
+    "name": "failed",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The scan found sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 846,
+     "h": 40.5,
+     "top": 249.5
+    },
+    "answers": {
+     "w": 846,
+     "h": 130,
+     "top": 771.8
+    },
+    "key": "",
+    "label": null,
+    "failed": "The map didn't load. Your answer still works without it.",
+    "targets": {
+     "zoomIn": null,
+     "zoomOut": null,
+     "street": null,
+     "yes": {
+      "w": 846,
+      "h": 61,
+      "top": 771.8
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 917.8
+     }
+    },
+    "overflowX": false,
+    "shot": "1440-03-failed.png",
+    "axe": []
+   }
+  ],
+  "errors": [],
+  "mapRequests": [
+   {
+    "flag": "pedestrian_facility",
+    "zoom": 0,
+    "status": 200,
+    "subject": "drawn"
+   },
+   {
+    "flag": "school_zone",
+    "zoom": -1,
+    "status": 200,
+    "subject": "none"
+   },
+   {
+    "flag": "pedestrian_facility",
+    "zoom": 1,
+    "status": 502,
+    "subject": null
+   }
+  ],
+  "moved": {
+   "answersTop": {
+    "loading": 771.8,
+    "drawn": 771.8,
+    "no-line": 771.8,
+    "failed": 771.8
+   },
+   "whyHeight": {
+    "loading": 40.5,
+    "drawn": 40.5,
+    "no-line": 40.5,
+    "failed": 40.5
+   }
+  }
+ },
+ {
+  "width": 390,
+  "steps": [
+   {
+    "name": "loading",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The scan found sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 328,
+     "h": 81,
+     "top": 286.3
+    },
+    "answers": {
+     "w": 328,
+     "h": 130,
+     "top": 841.5
+    },
+    "key": "The work Imagery may be a few years old",
+    "label": null,
+    "failed": null,
+    "targets": {
+     "zoomIn": null,
+     "zoomOut": null,
+     "street": null,
+     "yes": {
+      "w": 328,
+      "h": 61,
+      "top": 841.5
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 1006.3
+     }
+    },
+    "overflowX": false
+   },
+   {
+    "name": "drawn",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 328,
+     "h": 81,
+     "top": 286.3
+    },
+    "answers": {
+     "w": 328,
+     "h": 130,
+     "top": 841.5
+    },
+    "key": "The work Sidewalk the map knows about Imagery may be a few years old",
+    "label": "Sidewalk on the map",
+    "failed": null,
+    "targets": {
+     "zoomIn": {
+      "w": 44,
+      "h": 44,
+      "top": 391.3
+     },
+     "zoomOut": {
+      "w": 44,
+      "h": 44,
+      "top": 435.3
+     },
+     "street": {
+      "w": 328,
+      "h": 44,
+      "top": 701.3
+     },
+     "yes": {
+      "w": 328,
+      "h": 61,
+      "top": 841.5
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 1006.3
+     }
+    },
+    "overflowX": false,
+    "shot": "390-01-drawn.png",
+    "axe": []
+   },
+   {
+    "name": "no-line",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The scan found sidewalks 57.4 ft from the work, but the map couldn't draw them. Check them at street level. We added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 328,
+     "h": 81,
+     "top": 286.3
+    },
+    "answers": {
+     "w": 328,
+     "h": 130,
+     "top": 841.5
+    },
+    "key": "The work Imagery may be a few years old",
+    "label": null,
+    "failed": null,
+    "targets": {
+     "zoomIn": {
+      "w": 44,
+      "h": 44,
+      "top": 391.3
+     },
+     "zoomOut": {
+      "w": 44,
+      "h": 44,
+      "top": 435.3
+     },
+     "street": {
+      "w": 328,
+      "h": 44,
+      "top": 661.3
+     },
+     "yes": {
+      "w": 328,
+      "h": 61,
+      "top": 841.5
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 1006.3
+     }
+    },
+    "overflowX": false,
+    "shot": "390-02-no-line.png",
+    "axe": []
+   },
+   {
+    "name": "failed",
+    "question": "Are there sidewalks along the work zone?",
+    "why": "The scan found sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+    "whyShownCount": 1,
+    "whyHiddenVisibility": [
+     "hidden",
+     "hidden"
+    ],
+    "whyBox": {
+     "w": 328,
+     "h": 81,
+     "top": 286.3
+    },
+    "answers": {
+     "w": 328,
+     "h": 130,
+     "top": 841.5
+    },
+    "key": "",
+    "label": null,
+    "failed": "The map didn't load. Your answer still works without it.",
+    "targets": {
+     "zoomIn": null,
+     "zoomOut": null,
+     "street": null,
+     "yes": {
+      "w": 328,
+      "h": 61,
+      "top": 841.5
+     },
+     "next": {
+      "w": 140.9,
+      "h": 44,
+      "top": 1006.3
+     }
+    },
+    "overflowX": false,
+    "shot": "390-03-failed.png",
+    "axe": []
+   }
+  ],
+  "errors": [],
+  "mapRequests": [
+   {
+    "flag": "pedestrian_facility",
+    "zoom": 0,
+    "status": 200,
+    "subject": "drawn"
+   },
+   {
+    "flag": "school_zone",
+    "zoom": -1,
+    "status": 200,
+    "subject": "none"
+   },
+   {
+    "flag": "pedestrian_facility",
+    "zoom": 1,
+    "status": 502,
+    "subject": null
+   }
+  ],
+  "moved": {
+   "answersTop": {
+    "loading": 841.5,
+    "drawn": 841.5,
+    "no-line": 841.5,
+    "failed": 841.5
+   },
+   "whyHeight": {
+    "loading": 81,
+    "drawn": 81,
+    "no-line": 81,
+    "failed": 81
+   }
+  }
+ }
+]

@@ -29,7 +29,8 @@ export interface StepQuestion {
   /** "Next: <title>" on the row of a question not yet on screen. */
   title: string;
   question: string;
-  explanation: string | null;
+  /** A sentence, or (#448) NEEDS YOU's held sentences, one shown. */
+  explanation: ReactNode | null;
   options: readonly StepOption[];
   /** The chosen option's value, or null while unanswered. */
   answer: string | null;

@@ -19,7 +19,9 @@
 import type { NeedsYouQuestion, QuestionAnswer } from "@/lib/needs-you-items";
 import { scanEvidence } from "@/lib/tiering";
 import type { Scenario } from "@/lib/scenarios";
-import { NeedsYouMap } from "./NeedsYouMap";
+import { useState } from "react";
+
+import { NeedsYouMap, type MapSubject } from "./NeedsYouMap";
 import { QuestionSteps, type StepQuestion } from "./QuestionSteps";
 import type { SiteScanProvenance } from "@/lib/render-types";
 import {
@@ -86,13 +88,20 @@ export function QuestionFlow({
     if (q.answerSource === "staged") setStaged(unstage(staged, q.flag));
     else if (q.answerSource === "applied") setStaged(stage(staged, { flag: q.flag, marker: null }));
   };
+  // #448: what each question's map said about its subject (the backend's
+  // header, relayed by NeedsYouMap).  No map: nothing is said about one.
+  const [subjects, setSubjects] = useState<Record<string, MapSubject>>({});
+  const onSubject = (flag: string) => (s: MapSubject) =>
+    setSubjects((prev) => (prev[flag] === s ? prev : { ...prev, [flag]: s }));
   const nextClass = `act nyq-next-btn${ownsPrimary ? " is-on" : ""}`;
   // #439 W1: the card itself is the shared one-question-at-a-time component.
   const steps: StepQuestion[] = questions.map((q) => ({
     id: q.flag,
     title: q.title,
     question: q.question,
-    explanation: q.explanation,
+    explanation: (
+      <Explanation q={q} subject={scenario ? (subjects[q.flag] ?? "loading") : "failed"} />
+    ),
     // Keyed by the flag: each question opens on its own frame and step.
     media: scenario ? (
       <NeedsYouMap
@@ -102,6 +111,7 @@ export function QuestionFlow({
         label={q.mapLabel}
         keyLabel={q.mapKey}
         topic={q.topic}
+        onSubject={onSubject(q.flag)}
       />
     ) : null,
     options: (["yes", "no"] as const).map((a) => ({
@@ -167,6 +177,24 @@ export function QuestionFlow({
         ) : null
       }
     />
+  );
+}
+
+/** #448 (Ryan's ruling, cc-queue-ux.md item 4): the sentence says what the
+ *  picture shows.  All three are in the paragraph, in one grid cell, so it is
+ *  always as tall as the longest and nothing under it moves when the map
+ *  answers or fails (P1); the two not in force are hidden from sight and
+ *  from screen readers. */
+function Explanation({ q, subject }: { q: NeedsYouQuestion; subject: MapSubject }) {
+  const on = subject === "drawn" ? 0 : subject === "none" ? 1 : 2;
+  return (
+    <>
+      {[q.explanation, q.explanationNoLine, q.explanationScan].map((text, i) => (
+        <span key={i} data-on={i === on || undefined} aria-hidden={i === on ? undefined : true}>
+          {text}
+        </span>
+      ))}
+    </>
   );
 }
 
