@@ -1,0 +1,137 @@
+{
+ "size": "390x844",
+ "part": "where",
+ "addr": "1600 E Colfax Ave, Denver",
+ "errors": [],
+ "steps": {
+  "01-confirm-kind-answered": {
+   "shot": "where-390x844-01-confirm-kind-answered.png",
+   "undos": [
+    {
+     "testid": "step-undo-kind",
+     "cls": "undo-link",
+     "text": "Undo",
+     "tag": "BUTTON",
+     "w": 50.8,
+     "h": 44,
+     "font": "__Inter_176161 13.5px/600",
+     "color": "rgb(52, 169, 232)",
+     "border": "0px none",
+     "transform": "none",
+     "decoration": "underline",
+     "padding": "0px 8px 0px 8px"
+    }
+   ],
+   "axe": []
+  },
+  "02-cross-row": {
+   "shot": "where-390x844-02-cross-row.png",
+   "undos": [
+    {
+     "testid": "cross-undo",
+     "cls": "undo-link",
+     "text": "Undo",
+     "tag": "BUTTON",
+     "w": 50.8,
+     "h": 44,
+     "font": "__Inter_176161 13.5px/600",
+     "color": "rgb(52, 169, 232)",
+     "border": "0px none",
+     "transform": "none",
+     "decoration": "underline",
+     "padding": "0px 8px 0px 8px"
+    },
+    {
+     "testid": "step-undo-kind",
+     "cls": "undo-link",
+     "text": "Undo",
+     "tag": "BUTTON",
+     "w": 50.8,
+     "h": 44,
+     "font": "__Inter_176161 13.5px/600",
+     "color": "rgb(52, 169, 232)",
+     "border": "0px none",
+     "transform": "none",
+     "decoration": "underline",
+     "padding": "0px 8px 0px 8px"
+    }
+   ],
+   "axe": []
+  },
+  "beforeMove": {
+   "testid": "cross-move",
+   "tag": "BUTTON",
+   "text": "Move",
+   "top": 729.5,
+   "bottom": 773.5,
+   "onScreen": true,
+   "scrollY": 226
+  },
+  "afterMove": {
+   "testid": "band-aerial-big-map",
+   "tag": "BUTTON",
+   "text": "Use the big map instead",
+   "top": 228.8,
+   "bottom": 272.8,
+   "onScreen": true,
+   "scrollY": 214,
+   "shot": "where-390x844-03-after-move-viewport.png",
+   "focusCrop": "where-390x844-03b-after-move-focus-crop.png"
+  },
+  "04-confirm-cross-answered": {
+   "shot": "where-390x844-04-confirm-cross-answered.png",
+   "undos": [
+    {
+     "testid": "step-undo-kind",
+     "cls": "undo-link",
+     "text": "Undo",
+     "tag": "BUTTON",
+     "w": 50.8,
+     "h": 44,
+     "font": "__Inter_176161 13.5px/600",
+     "color": "rgb(52, 169, 232)",
+     "border": "0px none",
+     "transform": "none",
+     "decoration": "underline",
+     "padding": "0px 8px 0px 8px"
+    },
+    {
+     "testid": "step-undo-cross",
+     "cls": "undo-link",
+     "text": "Undo",
+     "tag": "BUTTON",
+     "w": 50.8,
+     "h": 44,
+     "font": "__Inter_176161 13.5px/600",
+     "color": "rgb(52, 169, 232)",
+     "border": "0px none",
+     "transform": "none",
+     "decoration": "underline",
+     "padding": "0px 8px 0px 8px"
+    }
+   ],
+   "axe": []
+  }
+ },
+ "roadBearing": [
+  {
+   "http": 200,
+   "status": "ok",
+   "candidates": 4
+  },
+  {
+   "http": 200,
+   "status": "ok",
+   "candidates": 5
+  }
+ ],
+ "mapRequests": [],
+ "questions": [],
+ "tapCentre": {
+  "lat": 39.739781,
+  "lng": -104.968249
+ },
+ "crossRowText": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
+ "overflowX": 0,
+ "lateRejections": 0
+}

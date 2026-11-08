@@ -1,0 +1,161 @@
+=== page 1
+Audit Trail: Case 11: Shoulder closure on one-way street
+Field Value
+Plan status 2 changes · 4 needs attention · 13 checked · 3 not checked yet · reference
+MUTCD typical application TA-3
+CDOT standard sheet S-630-1
+Case Case 11: Shoulder closure on one-way street
+Taper length 40 ft (L/3 (shoulder taper))
+Buffer space 200 ft
+Device spacing: taper 30 ft
+Device spacing: tangent 60 ft
+Crew steps 14
+Routing shoulder_no_reduction
+Guessed and defaulted inputs
+• Street class: Arterial. Guessed from the road (OSM highway=primary). The operator did not confirm it. The
+jurisdiction's adopted classification map governs.
+• Jurisdiction: Denver. Guessed from the pin (Pin is inside Denver municipal limits (US Census TIGER/Line Place
+boundaries, 2025 vintage).). The operator did not confirm it. Confirm the jurisdiction with the permitting authority.
+• Road type: Urban street. Guessed from the road and nearby places (OSM highway=primary; urban, inferred from
+nearby places). The operator did not confirm it. Confirm on site whether the work is in an urban or rural setting.
+• Work zone length: 1,000 ft. Defaulted to the tool's starting length (nobody entered a length for this plan). The
+operator did not confirm it. Confirm the work zone length on site.
+Taper Length
+At 30 mph, below the 45 mph threshold, the taper length is the offset width times the speed squared, divided by 60.
+L = 8 x 30^2 / 60 = 120 ft
+L/3 = 120 / 3 = 40 ft
+Field Value
+Closure type shoulder
+Offset (shoulder width) 8 ft (assumed)
+Required taper (L/3 (shoulder taper)) 40 ft
+Source: MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table
+6B-3).
+CDOT reference: CDOT S-630-1 Case 11 (right-shoulder closure, applied to one-way street)
+Buffer Space
+MUTCD Table 6B-2 sets 200 ft; the CDOT supplement sets no value at this speed.
+Source: MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)
+=== page 2
+Channelizing Device Spacing
+In the taper, devices are spaced 30 ft apart, the speed in feet at 30 mph (MUTCD Sec 6K.01).
+Along the tangent, devices are spaced 60 ft apart, twice the speed in feet (MUTCD Sec 6K.01).
+L/3 = 40 ft / 30 ft max spacing -> 4 drums at 13.3 ft intervals
+1000 ft / 60 ft max spacing -> 18 cones at 58.8 ft intervals
+Buffer: 200 ft / 60 ft max spacing -> 3 cones at 50.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents
+along the buffer space)
+Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 18 tangent + 3
+buffer + 2 downstream = 23 cones total
+Source: MUTCD 11th Ed. Sec 6K.01
+Advance Warning Signs
+At 30 mph, the signs are spaced by MUTCD Table 6B-1's Urban (low speed) row.
+Table 6B-1 spacing: A 100 ft (the distance from the transition or point of restriction to the first sign), B 100 ft (the
+distance between the first and second signs), C 100 ft (the distance between the second and third signs).
+Position Code Station (ft) Distance from Taper (ft)
+C (furthest) W20-1 1,540 300 upstream
+B (middle) W20-2 1,440 200 upstream
+A (nearest) W21-5aR 1,340 100 upstream
+Source: MUTCD 11th Ed. Table 6B-1
+Colorado Requirements (CDOT S-630-1)
+Check Result Citation Detail
+Signs on both sides of one-way
+street
+PASS CDOT S-630-1
+(July 2026)
+Sheet 2,
+General Note 8
+Not required: one shoulder closed (Note 8's Case 11
+exception). Signs placed: 0 left, 10 right. MUTCD 11th
+Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK
+sign should be placed on the left-hand side of the
+roadway for a divided or one-way street only if the
+left-hand shoulder is affected.” Denver: DOTI PT-116.1
+(2022) and Rule 22.3 (2022) read; both defer sign
+placement to the MUTCD and set no sign-side rule.
+DOTI standards and details not read.
+G20-5P Work Zone signs every
+2,640 ft
+PASS CDOT S-630-1
+(July 2026)
+Sheet 2,
+General Note 4
+Zone length: 1,540 ft. Required: 1. Placed: 1.
+Speed reduction <= 15 mph per
+sign installation
+PASS CDOT S-630-1
+(July 2026)
+Sheet 2,
+General Note 3
+No work-zone speed reduction. Posted speed 30 mph
+applies throughout the zone.
+Flagger station lighting 500W @ 8 ft PASS CDOT S-630-1
+(July 2026)
+Sheet 2,
+General Note 22
+Not applicable (no flaggers).
+=== page 3
+AADT threshold for mobile operations (<= 2,000): Not applicable (not a mobile operation). (CDOT S-630-1 (July 2026)
+Sheet 23, Case 38 Note 1)
+All Colorado checks pass: True
+CDOT Case Reference
+Case 11: Shoulder closure on one-way street
+This scenario follows CDOT Standard Plan S-630-1, Case 11, the general shoulder-work typical (drawn for
+freeway/expressway), applied to a one-way street with signs on the closed shoulder's side only, under CDOT S-630-1
+Sheet 2 General Note 8's single-shoulder exception and MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864).
+The generated plan follows the same device layout as the reference case with spacing computed for 30 mph.
+Routing: shoulder_no_reduction
+Reference:
+https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf
+Geometry Validation
+Work zone 1000 ft vs required taper 40 ft (L/3 (shoulder taper)) + buffer 200 ft.
+All geometry checks pass: True
+Source: MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)
+Corridor Validation
+OpenStreetMap corridor check produced warnings:
+• No major road (motorway, trunk, primary or secondary) found within 50 m of the anchor (39.73978, -104.96825); the
+closest road within 50 m is a residential road. Check that the coordinates match the actual work zone.
+Site Conditions
+Scanned along the corridor against OpenStreetMap at 2026-11-08T20:28:27+00:00 (4927 ms, memoised, via
+https://overpass.openstreetmap.fr/api/interpreter). The five rule-bearing conditions below are plan facts; a detected
+condition fired the matching Site Adjustment that follows.
+Condition Result Evidence
+Adjacent at-grade intersection DETECTED 50 found · nearest 73.2 ft from anchor · unnamed at
+39.7400, -104.9648 (in the work zone, 125 ft along the
+corridor)
+Adjacent interchange (highway
+ramps)
+None along the corridor
+Pedestrian sidewalks DETECTED 38 found · nearest 57.4 ft from anchor · unnamed at
+39.7401, -104.9692 (60 ft off the centerline)
+Bike lane / cycleway DETECTED 2 found · nearest 58.1 ft from anchor · Franklin Street
+(61 ft off the centerline)
+School zone None along the corridor
+Railroad crossing Reference: none
+Hospital Reference: none
+Road curvature Reference: none
+=== page 4
+Site Adjustments
+Site-condition flags layered onto the baseline MUTCD/CDOT layout. Each adjustment is traced to its source rule; the
+rendered plan, device list, and crew narrative reflect every item below.
+Rule Adjustment
+MUTCD §6N.12 p. 848: Work within the Traveled
+Way at an Intersection (11th Ed.)
+No devices added: the cross-street approach layout isn't generated. See Not
+checked yet.
+MUTCD §6C.02: pedestrian considerations in work
+zones
+Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK
+CLOSED signs at the upstream and downstream ends of the work zone.
+MUTCD §9C.101: bicycle facility work zone signing Added 2 M4-9a BIKE DETOUR signs at the upstream and downstream ends.
+Flagger Control
+Not applicable for this scenario.
+Source: MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).
+Not checked yet
+3 items not checked yet.
+• [one_way_street_widths_chosen] On a one-way street the plan builds an 8 ft shoulder and fits lanes under a 52 ft
+half-road less that shoulder. Both values are CHOSEN: no MUTCD, S-630-1, Colorado Supplement or Denver text
+found sets them. Verify against the site (#308). (https://github.com/rtmakatura/conestruct/issues/308)
+• [intersection_layout_not_generated] An adjacent intersection is flagged, but Conestruct does not generate the
+cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control
+design and the signal-operation review (MUTCD §6N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain
+with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.
+(https://github.com/rtmakatura/conestruct/issues/117)
+• Work hours not checked (schedule marked Not set: hours not evaluated)

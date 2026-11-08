@@ -1,0 +1,134 @@
+{
+ "size": "1440x900",
+ "part": "plan",
+ "addr": "1600 E Colfax Ave, Denver",
+ "errors": [],
+ "steps": {
+  "05-needs-you-answered": {
+   "shot": "plan-1440x900-05-needs-you-answered.png",
+   "undos": [
+    {
+     "testid": "step-undo-pedestrian_facility",
+     "cls": "undo-link",
+     "text": "Undo",
+     "tag": "BUTTON",
+     "w": 50.8,
+     "h": 44,
+     "font": "__Inter_176161 13.5px/600",
+     "color": "rgb(52, 169, 232)",
+     "border": "0px none",
+     "transform": "none",
+     "decoration": "underline",
+     "padding": "0px 8px 0px 8px"
+    }
+   ],
+   "axe": []
+  }
+ },
+ "roadBearing": [
+  {
+   "http": 200,
+   "status": "ok",
+   "candidates": 4
+  }
+ ],
+ "mapRequests": [
+  {
+   "flag": "pedestrian_facility",
+   "zoom": 0,
+   "status": 200,
+   "subject": "drawn",
+   "induced": false
+  },
+  {
+   "flag": "school_zone",
+   "zoom": -1,
+   "status": 200,
+   "subject": "none",
+   "induced": true
+  },
+  {
+   "flag": "bicycle_facility",
+   "zoom": 0,
+   "status": 200,
+   "subject": "drawn",
+   "induced": false
+  }
+ ],
+ "questions": [
+  {
+   "q": "Are there sidewalks along the work zone?",
+   "why": "The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+   "label": "Sidewalk on the map",
+   "failed": null,
+   "hasMap": true,
+   "next": "Next: a bike lane at or near the work zone",
+   "subject": {
+    "flag": "pedestrian_facility",
+    "zoom": 0,
+    "status": 200,
+    "subject": "drawn",
+    "induced": false
+   },
+   "shot": "plan-1440x900-q1.png"
+  },
+  {
+   "q": "Is there a bike lane at or near the work zone?",
+   "why": "The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay.",
+   "label": "Bike lane on the map",
+   "failed": null,
+   "hasMap": true,
+   "next": "Next: an intersection next to the work",
+   "subject": {
+    "flag": "bicycle_facility",
+    "zoom": 0,
+    "status": 200,
+    "subject": "drawn",
+    "induced": false
+   },
+   "shot": "plan-1440x900-q2.png"
+  }
+ ],
+ "kind": "kind-chip-shoulder",
+ "pdf": {
+  "suggested": "East-Colfax-Avenue_shoulder_2026-11-08_3244fe.audit.pdf",
+  "file": "C:/Users/rtmak/AppData/Local/Temp/claude/556f937a78fa2516/e737671f-a27b-49f6-9e2c-f7a22e43845a/scratchpad/prod-check/audit-1440x900.pdf",
+  "bytes": 10681
+ },
+ "pageNotChecked": [
+  "Not checked yet"
+ ],
+ "inducedNoLine": {
+  "q": "Are there sidewalks along the work zone?",
+  "why": "The scan found sidewalks 57.4 ft from the work, but the map couldn't draw them. Check them at street level. We added 4 devices to protect people walking. Your answer decides whether they stay.",
+  "label": null,
+  "failed": null,
+  "hasMap": true,
+  "next": "Next: a bike lane at or near the work zone",
+  "subject": {
+   "flag": "school_zone",
+   "zoom": -1,
+   "status": 200,
+   "subject": "none",
+   "induced": true
+  },
+  "shot": "plan-1440x900-q1-induced-no-line.png"
+ },
+ "afterInduced": {
+  "q": "Are there sidewalks along the work zone?",
+  "why": "The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walking. Your answer decides whether they stay.",
+  "label": "Sidewalk on the map",
+  "failed": null,
+  "hasMap": true,
+  "next": "Next: a bike lane at or near the work zone"
+ },
+ "bike": {
+  "q": "Is there a bike lane at or near the work zone?",
+  "why": "The map shows a bike lane 58.1 ft from the work, so we added 2 devices for people on bikes. Your answer decides whether they stay.",
+  "shot": "plan-1440x900-q2.png",
+  "headCrop": "plan-1440x900-bike-heading.png"
+ },
+ "bikeAxe": [],
+ "overflowX": 0,
+ "lateRejections": 0
+}

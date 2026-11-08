@@ -1,0 +1,49 @@
+{
+ "size": "390x664",
+ "part": "where",
+ "addr": "1600 E Colfax Ave, Denver",
+ "errors": [],
+ "steps": {
+  "beforeMove": {
+   "testid": "cross-move",
+   "tag": "BUTTON",
+   "text": "Move",
+   "top": 534.5,
+   "bottom": 578.5,
+   "onScreen": true,
+   "scrollY": 421
+  },
+  "afterMove": {
+   "testid": "band-aerial-big-map",
+   "tag": "BUTTON",
+   "text": "Use the big map instead",
+   "top": 228.8,
+   "bottom": 272.8,
+   "onScreen": true,
+   "scrollY": 214,
+   "shot": "where-390x664-03-after-move-viewport.png",
+   "focusCrop": "where-390x664-03b-after-move-focus-crop.png"
+  }
+ },
+ "roadBearing": [
+  {
+   "http": 200,
+   "status": "ok",
+   "candidates": 4
+  },
+  {
+   "http": 200,
+   "status": "ok",
+   "candidates": 5
+  }
+ ],
+ "mapRequests": [],
+ "questions": [],
+ "tapCentre": {
+  "lat": 39.739781,
+  "lng": -104.968249
+ },
+ "crossRowText": "✓ Near Franklin Street Two-way street · 60 ft west of where the work starts Move Undo",
+ "overflowX": 0,
+ "lateRejections": 0
+}
