@@ -1,0 +1,5429 @@
+{
+ "390": [
+  {
+   "width": 390,
+   "height": 844,
+   "attempt": 1,
+   "rows": {
+    "checked-01-calc-0-Taper_length": {
+     "sec": "checked",
+     "id": "calc-0-Taper length",
+     "title": "✓ Taper length 40 ft",
+     "parts": [
+      {
+       "text": "At 30 mph, below the 45 mph threshold, the taper length is the offset width times the speed squared, divided by 60.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Shoulder width",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "8 ft (assumed)",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Full taper",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "8 × 30^2 / 60 = 120 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Shoulder taper, one third",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "120 / 3 = 40 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD 2023 edition · Chapter 6B · Table 6B-3",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 3,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD 2023 edition · Chapter 6B · Table 6B-3",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-02-calc-1-Buffer_space": {
+     "sec": "checked",
+     "id": "calc-1-Buffer space",
+     "title": "✓ Buffer space 200 ft",
+     "parts": [
+      {
+       "text": "Buffer space is the longitudinal clear distance between traffic and workers, sized for stopping sight distance at the posted speed.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "MUTCD Table 6B-2 sets 200 ft; the CDOT supplement sets no value at this speed.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD § 6B.06 · Stopping sight distance",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6B.06 · Stopping sight distance",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-03-calc-2-Device_spacing": {
+     "sec": "checked",
+     "id": "calc-2-Device spacing",
+     "title": "✓ Device spacing 25 devices · 30/60 ft o.c.",
+     "parts": [
+      {
+       "text": "In the taper, devices are spaced 30 ft apart, the speed in feet at 30 mph (MUTCD Sec 6K.01).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Along the tangent, devices are spaced 60 ft apart, twice the speed in feet (MUTCD Sec 6K.01).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Taper, 40 ft",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "4 drums at 13.3 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Tangent, 1,000 ft",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "18 cones at 58.8 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Buffer, 200 ft (S-630-1 Sheet 2 Note 18b)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "3 cones at 50.0 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "2 cones at ~25 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Cones in all (18 tangent, 3 buffer, 2 downstream)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "23",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD § 6K.01 · Channelizing device spacing",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 5,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6K.01 · Channelizing device spacing",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-04-calc-3-Warning_signs": {
+     "sec": "checked",
+     "id": "calc-3-Warning signs",
+     "title": "✓ Warning signs 3 signs",
+     "parts": [
+      {
+       "text": "At 30 mph, the signs are spaced by MUTCD Table 6B-1's Urban (low speed) row.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Table 6B-1 spacing: A 100 ft (the distance from the transition or point of restriction to the first sign), B 100 ft (the distance between the first and second signs), C 100 ft (the distance between the second and third signs).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "C (furthest)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Station (ft): 1,540 · From taper (ft): 300 upstream",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "B (middle)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Station (ft): 1,440 · From taper (ft): 200 upstream",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "A (nearest)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Station (ft): 1,340 · From taper (ft): 100 upstream",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "W21-5aR",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: W20-1",
+       "span: W20-2",
+       "span: W21-5aR"
+      ],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-05-calc-4-Standard_plan": {
+     "sec": "checked",
+     "id": "calc-4-Standard plan",
+     "title": "✓ Standard plan: Case 11: Shoulder closure on one-way street",
+     "parts": [
+      {
+       "text": "Plan matched against MUTCD Typical Application TA-3 and CDOT Standard Plan S-630-1, CDOT's standard plan set for temporary traffic control.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "This scenario follows CDOT Standard Plan S-630-1, Case 11, the general shoulder-work typical (drawn for freeway/expressway), applied to a one-way street with signs on the closed shoulder's side only, under CDOT S-630-1 Sheet 2 General Note 8's single-shoulder exception and MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "The generated plan follows the same device layout as the reference case with spacing computed for 30 mph.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "↗ Open S-630-1 PDF on CDOT.gov",
+       "tag": "a",
+       "cls": "rr-link",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 3,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-06-pass-0": {
+     "sec": "checked",
+     "id": "pass-0",
+     "title": "✓ Signs on both sides of one-way street: Not required · 0 left, 10 right",
+     "parts": [
+      {
+       "text": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 10 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.” Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to the MUTCD and set no sign-side rule. DOTI standards and details not read.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-07-pass-1": {
+     "sec": "checked",
+     "id": "pass-1",
+     "title": "✓ G20-5P Work Zone signs every 2,640 ft: 1 required · 1 placed",
+     "parts": [
+      {
+       "text": "Zone length: 1,540 ft. Required: 1. Placed: 1.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-08-pass-2": {
+     "sec": "checked",
+     "id": "pass-2",
+     "title": "✓ Speed reduction <= 15 mph per sign installation: No reduction · 30 mph throughout",
+     "parts": [
+      {
+       "text": "No work-zone speed reduction. Posted speed 30 mph applies throughout the zone.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-09-pass-3": {
+     "sec": "checked",
+     "id": "pass-3",
+     "title": "✓ Flagger station lighting 500W @ 8 ft: Not applicable · no flaggers",
+     "parts": [
+      {
+       "text": "Not applicable (no flaggers).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-10-info-0": {
+     "sec": "checked",
+     "id": "info-0",
+     "title": "i AADT threshold for mobile operations (<= 2,000): Not applicable · not a mobile operation",
+     "parts": [
+      {
+       "text": "Not applicable (not a mobile operation).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-11-site-adjacent_intersection": {
+     "sec": "checked",
+     "id": "site-adjacent_intersection",
+     "title": "✓ Intersection within work zone: No devices added · cross-street layout not generated",
+     "parts": [
+      {
+       "text": "No devices added: the cross-street approach layout isn't generated. See Not checked yet.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "50 found · nearest 73.2 ft from anchor · unnamed at 39.7400, -104.9648 (in the work zone, 125 ft along the corridor)",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Correct in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: MUTCD § 6N.12 p. 848",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6N.12 p. 848",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-12-scan-adjacent_interchange": {
+     "sec": "checked",
+     "id": "scan-adjacent_interchange",
+     "title": "✓ Adjacent interchange (highway ramps): none along the corridor",
+     "parts": [
+      {
+       "text": "Scanned 2026-11-08 at 04:05 UTC",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Assert in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-13-scan-school_zone": {
+     "sec": "checked",
+     "id": "scan-school_zone",
+     "title": "✓ School zone nearby: none along the corridor",
+     "parts": [
+      {
+       "text": "Scanned 2026-11-08 at 04:05 UTC",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Assert in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-01-keep-in-mind": {
+     "sec": "reference",
+     "id": "keep-in-mind",
+     "title": "⚠ 3 rules to keep in mind",
+     "parts": [
+      {
+       "text": "TCP 'must be prepared by a certified Traffic Control Supervisor' (PT-116.1, Permit 116.1); Rule 22.3 §IV.4.c says 'prepared by a certified traffic control company'. Denver's own procedures name the barricade company as the TCP author for arterials, collectors, and large-scale projects; DOTI Permit Operations can provide typical TCPs for most residential areas.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · DOTI PT-116.1 + Rule 22.3 §IV.4.c · 2022-04-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Conditional, so it's shown here and not applied automatically · Denver · DOTI PT-116.1 · 2022-04-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Steel plates: friction coefficient >=0.35, beveled leading/trailing edges or wedges. Bike detour: M4-9c signage at all decision points.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · DOTI PT-116.1 · 2022-04-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 0,
+      "raw": [],
+      "arrow": [
+       "Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost."
+      ],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-02-hazards": {
+     "sec": "reference",
+     "id": "hazards",
+     "title": "⚠ Fines and hazards: 2 on record, worst $500 / day",
+     "parts": [
+      {
+       "text": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · ROWS 2024 Consolidated Fee Schedule · 2024-01-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "$100 / occurrence",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · ROWS 2024 Consolidated Fee Schedule · 2024-01-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "$500 / day",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: $100 / occurrence",
+       "span: $500 / day"
+      ],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-03-hours": {
+     "sec": "reference",
+     "id": "hours",
+     "title": "◌ Work hours: Denver's windows, not checked against dates",
+     "parts": [
+      {
+       "text": "Schedule marked \"Not set\". These windows are reference only. Choose a date mode in Setup to check a schedule against Denver's windows.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Sidewalk/bike blockage = lane closure (§III.1). Fees apply daily per day of occupancy (§V.1).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Arterial / Collector",
+       "tag": "div",
+       "cls": "text-[11px] leading-tight text-[color:var(--ink)] font-semibold",
+       "mono": false,
+       "size": "11px",
+       "caps": false
+      },
+      {
+       "text": "Weekday",
+       "tag": "span",
+       "cls": "block font-mono text-[9px] uppercase tracking-[0.06em] font-normal",
+       "mono": true,
+       "size": "9px",
+       "caps": true
+      },
+      {
+       "text": "ok",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[color:var(--pass-soft)] text-[color:var(--pass)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "banned",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[repeating-linear-gradient(45deg,var(--paper-deep),var(--paper-deep)_4px,var(--paper-line-soft)_4px,var(--paper-line-soft)_8px)] text-[color:var(--ink-faint)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "ok",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[color:var(--pass-soft)] text-[color:var(--pass)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "banned",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[repeating-linear-gradient(45deg,var(--paper-deep),var(--paper-deep)_4px,var(--paper-line-soft)_4px,var(--paper-line-soft)_8px)] text-[color:var(--ink-faint)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "ok",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[color:var(--pass-soft)] text-[color:var(--pass)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "5a",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8:30a",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "3:30p",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8p",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "12a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "4a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "12p",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "4p",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8p",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "12a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "Arterial / Collector · Weekday",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "12:00 AM–5:00 AM, 8:30 AM–3:30 PM, 8:00 PM–12:00 AM",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 1,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: Weekday",
+       "div: ok",
+       "div: banned",
+       "div: ok",
+       "div: banned",
+       "div: ok",
+       "span: 5a",
+       "span: 8:30a",
+       "span: 3:30p",
+       "span: 8p",
+       "span: 12a",
+       "span: 4a",
+       "span: 8a",
+       "span: 12p",
+       "span: 4p",
+       "span: 8p",
+       "span: 12a"
+      ],
+      "capsText": [
+       "span: Weekday",
+       "div: ok",
+       "div: banned",
+       "div: ok",
+       "div: banned",
+       "div: ok"
+      ],
+      "sources": []
+     }
+    },
+    "reference-04-permit": {
+     "sec": "reference",
+     "id": "permit",
+     "title": "i Permit: 14 fee lines, 5 to 60 days lead time",
+     "parts": [
+      {
+       "text": "Courtesy reference. Fees are never quote line items.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver publishes no permit tiers.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "This is the 2024 fee schedule, and it may be out of date: Denver publishes a new schedule every year, so 2025 and 2026 schedules almost certainly exist. The rate depends on the road class, the zone (Residential, CBD/CCA or Collector/Arterial) and whether the work is in peak hours, with a per-lane step that is not a multiplier.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Standard RSOP",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "5 days",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Any construction/demolition (incl. street cuts)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "10 days",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Special Events",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "60 days",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "On-site requirements",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none on record",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Notice to adjacent owners, businesses, residents",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Full street closure: >=2 weeks notice.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Notice to public (full street closure)",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Press release, issued by the Permittee.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Notice to press (CBD detours & emergency closures)",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Issuance and inspection (one per application)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$50",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Residential — administrative review",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$125",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Residential — street lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.22",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Residential — complete closure",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.30",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "CBD/CCA — bike lane closure",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.85",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 1st lane and parking lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.45",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 2nd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.90",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 3rd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$2.70",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 4th/5th/6th lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$3.25",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial PEAK — 1st lane and parking lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.50",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial PEAK — 2nd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial PEAK — 3rd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Bike lane closure (residential / collector-arterial)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.33",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Expedite (permit requested in a non-standard timeframe)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$500",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 3,
+      "rows": 4,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: $50",
+       "span: $125",
+       "span: $0.22",
+       "span: $0.30",
+       "span: $0.85",
+       "span: $0.45",
+       "span: $0.90",
+       "span: $2.70",
+       "span: $3.25",
+       "span: $0.50",
+       "span: $1",
+       "span: $2",
+       "span: $0.33",
+       "span: $500"
+      ],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-05-site-pedestrian_facility": {
+     "sec": "reference",
+     "id": "site-pedestrian_facility",
+     "title": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
+     "parts": [
+      {
+       "text": "38 found · nearest 57.4 ft from anchor · unnamed at 39.7401, -104.9692 (60 ft off the centerline)",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Correct in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: MUTCD § 6C.02",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6C.02",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-06-site-bicycle_facility": {
+     "sec": "reference",
+     "id": "site-bicycle_facility",
+     "title": "▲ Bike lane / cycleway present: 2 M4-9a BIKE DETOUR signs added at the upstream and downstream ends.",
+     "parts": [
+      {
+       "text": "2 found · nearest 58.1 ft from anchor · Franklin Street (61 ft off the centerline)",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Correct in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: MUTCD § 9C.101",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 9C.101",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-07-corridor-warn": {
+     "sec": "reference",
+     "id": "corridor-warn",
+     "title": "⚠ Site corridor validation: 1 warning",
+     "parts": [
+      {
+       "text": "Soft check against OSM. Warnings don't block plan generation.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "No major road (motorway, trunk, primary or secondary) found within 50 m of the anchor (39.73978, -104.96825); the closest road within 50 m is a residential road. Check that the coordinates match the actual work zone.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-08-measured-absent": {
+     "sec": "reference",
+     "id": "measured-absent",
+     "title": "✓ No railroad crossings, hospitals or road curvature",
+     "parts": [
+      {
+       "text": "Railroad crossings",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none along the corridor",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Hospitals",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none along the corridor",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Road curvature",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none along the corridor",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 3,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-09-devices": {
+     "sec": "reference",
+     "id": "devices",
+     "title": "i Device schedule 12 types, 40 units",
+     "parts": [
+      {
+       "text": "ROAD CONSTRUCTION (NEXT 1000 FT)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "G20-1 · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "END ROAD WORK",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "G20-2 · Termination",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "WORK ZONE plaque",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "G20-5P · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "BIKE DETOUR",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "M4-9a · Guide",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "SIDEWALK CLOSED",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "R9-9 · Regulatory",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "ROAD WORK AHEAD",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-1 · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "ROAD WORK 200 FT",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-2 · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "RIGHT SHOULDER CLOSED AHEAD",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "W21-5aR · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Channelizing Drum",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Channelizing",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "4",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Traffic Cone (28-inch)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Channelizing",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "23",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Type III Barricade",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Closure",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Arrow Board",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Lane closure indication",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: 1",
+       "span: 1",
+       "span: 1",
+       "span: 2",
+       "span: 2",
+       "span: 1",
+       "span: 1",
+       "span: 1",
+       "span: 4",
+       "span: 23",
+       "span: 2",
+       "span: 1"
+      ],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-10-zone-geometry": {
+     "sec": "reference",
+     "id": "zone-geometry",
+     "title": "i Zone geometry",
+     "parts": [
+      {
+       "text": "Taper",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "40 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Buffer",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "200 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Device spacing",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "30 ft o.c.",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Work zone",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "1,000 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 4,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": []
+     }
+    }
+   },
+   "searches": {
+    "sidewalk": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "opened": {
+      "hazards": {
+       "title": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 2 hazards shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Denver · ROWS 2024 Consolidated Fee Schedule · 2024-01-01",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "$500 / day",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 2 hazards",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      },
+      "hours": {
+       "title": "◌ Work hours: Denver's windows, not checked against dates Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 3 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Sidewalk/bike blockage = lane closure (§III.1). Fees apply daily per day of occupancy (§V.1).",
+         "tag": "p",
+         "cls": "tr-help",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 3 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      },
+      "permit": {
+       "title": "i Permit: 14 fee lines, 5 to 60 days lead time Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 0 of 7 lines shown. 1 of 3 notices shown. 0 of 14 fee lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Notice to adjacent owners, businesses, residents",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 3 notices",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 14 fee lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 7 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      },
+      "devices": {
+       "title": "i Device schedule 12 types, 40 units Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 12 device types shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "SIDEWALK CLOSED",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "R9-9 · Regulatory",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "2",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 12 types",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      }
+     },
+     "axe": [],
+     "m": {
+      "targets": 13,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "taper": {
+     "status": "4 matching lines, in 2 sections",
+     "opened": {
+      "calc-0-Taper length": {
+       "title": "✓ Taper length 40 ft Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 3 of 4 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "At 30 mph, below the 45 mph threshold, the taper length is the offset width times the speed squared, divided by 60.",
+         "tag": "p",
+         "cls": "tr-help",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Full taper",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "8 × 30^2 / 60 = 120 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Shoulder taper, one third",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "120 / 3 = 40 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 4 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Source: MUTCD 2023 edition · Chapter 6B · Table 6B-3",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        }
+       ]
+      },
+      "calc-2-Device spacing": {
+       "title": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 3 of 7 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "In the taper, devices are spaced 30 ft apart, the speed in feet at 30 mph (MUTCD Sec 6K.01).",
+         "tag": "p",
+         "cls": "tr-help",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Taper, 40 ft",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "4 drums at 13.3 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft)",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "2 cones at ~25 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 7 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Source: MUTCD § 6K.01 · Channelizing device spacing",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        }
+       ]
+      },
+      "calc-3-Warning signs": {
+       "title": "✓ Warning signs 3 signs Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 0 of 2 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "C (furthest)",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Station (ft): 1,540 · From taper (ft): 300 upstream",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "W20-1",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "B (middle)",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Station (ft): 1,440 · From taper (ft): 200 upstream",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "W20-2",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "A (nearest)",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Station (ft): 1,340 · From taper (ft): 100 upstream",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "W21-5aR",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 2 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Source: MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        }
+       ]
+      },
+      "zone-geometry": {
+       "title": "i Zone geometry Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 4 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Taper",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "40 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 4 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      }
+     },
+     "axe": [],
+     "m": {
+      "targets": 10,
+      "small": [],
+      "overflowX": 0
+     }
+    }
+   },
+   "errors": [],
+   "hostsSeen": [
+    "api.mapbox.com",
+    "clerk.conestruct.com",
+    "events.mapbox.com",
+    "o4511428711153664.ingest.us.sentry.io",
+    "www.conestruct.com"
+   ],
+   "roadBearing": [
+    {
+     "status": "ok",
+     "candidates": 4
+    }
+   ],
+   "clerkResponses": [
+    {
+     "host": "clerk.conestruct.com",
+     "status": 307
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    }
+   ],
+   "clerk": {
+    "present": true,
+    "loaded": true
+   },
+   "kind": "kind-chip-shoulder",
+   "clsAfterGenerate": 0.9608,
+   "checkedOpen": {
+    "axe": [],
+    "m": {
+     "targets": 17,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "referenceOpen": {
+    "axe": [],
+    "m": {
+     "targets": 27,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "driveways": [],
+   "allOpen": {
+    "axe": [],
+    "m": {
+     "targets": 33,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "pdf": {
+    "suggested": "East-Colfax-Avenue_shoulder_2026-11-07_540ad2.audit.pdf",
+    "ms": 649,
+    "bytes": 10667
+   },
+   "overflowEnd": 0,
+   "clsEnd": 0.9608,
+   "layoutShifts": [
+    0.0952,
+    0.8655
+   ],
+   "routeHopsByHost": {
+    "www.conestruct.com": {
+     "hops": 42,
+     "withGate": 42
+    }
+   },
+   "hostsWithGate": [
+    "www.conestruct.com"
+   ]
+  }
+ ],
+ "1440": [
+  {
+   "width": 1440,
+   "height": 900,
+   "attempt": 1,
+   "rows": {
+    "checked-01-calc-0-Taper_length": {
+     "sec": "checked",
+     "id": "calc-0-Taper length",
+     "title": "✓ Taper length 40 ft",
+     "parts": [
+      {
+       "text": "At 30 mph, below the 45 mph threshold, the taper length is the offset width times the speed squared, divided by 60.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Shoulder width",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "8 ft (assumed)",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Full taper",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "8 × 30^2 / 60 = 120 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Shoulder taper, one third",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "120 / 3 = 40 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD 2023 edition · Chapter 6B · Table 6B-3",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 3,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD 2023 edition · Chapter 6B · Table 6B-3",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-02-calc-1-Buffer_space": {
+     "sec": "checked",
+     "id": "calc-1-Buffer space",
+     "title": "✓ Buffer space 200 ft",
+     "parts": [
+      {
+       "text": "Buffer space is the longitudinal clear distance between traffic and workers, sized for stopping sight distance at the posted speed.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "MUTCD Table 6B-2 sets 200 ft; the CDOT supplement sets no value at this speed.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD § 6B.06 · Stopping sight distance",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6B.06 · Stopping sight distance",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-03-calc-2-Device_spacing": {
+     "sec": "checked",
+     "id": "calc-2-Device spacing",
+     "title": "✓ Device spacing 25 devices · 30/60 ft o.c.",
+     "parts": [
+      {
+       "text": "In the taper, devices are spaced 30 ft apart, the speed in feet at 30 mph (MUTCD Sec 6K.01).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Along the tangent, devices are spaced 60 ft apart, twice the speed in feet (MUTCD Sec 6K.01).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Taper, 40 ft",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "4 drums at 13.3 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Tangent, 1,000 ft",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "18 cones at 58.8 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Buffer, 200 ft (S-630-1 Sheet 2 Note 18b)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "3 cones at 50.0 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "2 cones at ~25 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Cones in all (18 tangent, 3 buffer, 2 downstream)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "23",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD § 6K.01 · Channelizing device spacing",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 5,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6K.01 · Channelizing device spacing",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-04-calc-3-Warning_signs": {
+     "sec": "checked",
+     "id": "calc-3-Warning signs",
+     "title": "✓ Warning signs 3 signs",
+     "parts": [
+      {
+       "text": "At 30 mph, the signs are spaced by MUTCD Table 6B-1's Urban (low speed) row.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Table 6B-1 spacing: A 100 ft (the distance from the transition or point of restriction to the first sign), B 100 ft (the distance between the first and second signs), C 100 ft (the distance between the second and third signs).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "C (furthest)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Station (ft): 1,540 · From taper (ft): 300 upstream",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "B (middle)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Station (ft): 1,440 · From taper (ft): 200 upstream",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "A (nearest)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Station (ft): 1,340 · From taper (ft): 100 upstream",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "W21-5aR",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: W20-1",
+       "span: W20-2",
+       "span: W21-5aR"
+      ],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-05-calc-4-Standard_plan": {
+     "sec": "checked",
+     "id": "calc-4-Standard plan",
+     "title": "✓ Standard plan: Case 11: Shoulder closure on one-way street",
+     "parts": [
+      {
+       "text": "Plan matched against MUTCD Typical Application TA-3 and CDOT Standard Plan S-630-1, CDOT's standard plan set for temporary traffic control.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "This scenario follows CDOT Standard Plan S-630-1, Case 11, the general shoulder-work typical (drawn for freeway/expressway), applied to a one-way street with signs on the closed shoulder's side only, under CDOT S-630-1 Sheet 2 General Note 8's single-shoulder exception and MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "The generated plan follows the same device layout as the reference case with spacing computed for 30 mph.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "↗ Open S-630-1 PDF on CDOT.gov",
+       "tag": "a",
+       "cls": "rr-link",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 3,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-06-pass-0": {
+     "sec": "checked",
+     "id": "pass-0",
+     "title": "✓ Signs on both sides of one-way street: Not required · 0 left, 10 right",
+     "parts": [
+      {
+       "text": "Not required: one shoulder closed (Note 8's Case 11 exception). Signs placed: 0 left, 10 right. MUTCD 11th Ed. Fig. 6P-3 Note 1 (p. 864): “A SHOULDER WORK sign should be placed on the left-hand side of the roadway for a divided or one-way street only if the left-hand shoulder is affected.” Denver: DOTI PT-116.1 (2022) and Rule 22.3 (2022) read; both defer sign placement to the MUTCD and set no sign-side rule. DOTI standards and details not read.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-07-pass-1": {
+     "sec": "checked",
+     "id": "pass-1",
+     "title": "✓ G20-5P Work Zone signs every 2,640 ft: 1 required · 1 placed",
+     "parts": [
+      {
+       "text": "Zone length: 1,540 ft. Required: 1. Placed: 1.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-08-pass-2": {
+     "sec": "checked",
+     "id": "pass-2",
+     "title": "✓ Speed reduction <= 15 mph per sign installation: No reduction · 30 mph throughout",
+     "parts": [
+      {
+       "text": "No work-zone speed reduction. Posted speed 30 mph applies throughout the zone.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-09-pass-3": {
+     "sec": "checked",
+     "id": "pass-3",
+     "title": "✓ Flagger station lighting 500W @ 8 ft: Not applicable · no flaggers",
+     "parts": [
+      {
+       "text": "Not applicable (no flaggers).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-10-info-0": {
+     "sec": "checked",
+     "id": "info-0",
+     "title": "i AADT threshold for mobile operations (<= 2,000): Not applicable · not a mobile operation",
+     "parts": [
+      {
+       "text": "Not applicable (not a mobile operation).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-11-site-adjacent_intersection": {
+     "sec": "checked",
+     "id": "site-adjacent_intersection",
+     "title": "✓ Intersection within work zone: No devices added · cross-street layout not generated",
+     "parts": [
+      {
+       "text": "No devices added: the cross-street approach layout isn't generated. See Not checked yet.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "50 found · nearest 73.2 ft from anchor · unnamed at 39.7400, -104.9648 (in the work zone, 125 ft along the corridor)",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Correct in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: MUTCD § 6N.12 p. 848",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6N.12 p. 848",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-12-scan-adjacent_interchange": {
+     "sec": "checked",
+     "id": "scan-adjacent_interchange",
+     "title": "✓ Adjacent interchange (highway ramps): none along the corridor",
+     "parts": [
+      {
+       "text": "Scanned 2026-11-08 at 04:04 UTC",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Assert in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "checked-13-scan-school_zone": {
+     "sec": "checked",
+     "id": "scan-school_zone",
+     "title": "✓ School zone nearby: none along the corridor",
+     "parts": [
+      {
+       "text": "Scanned 2026-11-08 at 04:04 UTC",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Assert in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-01-keep-in-mind": {
+     "sec": "reference",
+     "id": "keep-in-mind",
+     "title": "⚠ 3 rules to keep in mind",
+     "parts": [
+      {
+       "text": "TCP 'must be prepared by a certified Traffic Control Supervisor' (PT-116.1, Permit 116.1); Rule 22.3 §IV.4.c says 'prepared by a certified traffic control company'. Denver's own procedures name the barricade company as the TCP author for arterials, collectors, and large-scale projects; DOTI Permit Operations can provide typical TCPs for most residential areas.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · DOTI PT-116.1 + Rule 22.3 §IV.4.c · 2022-04-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Conditional, so it's shown here and not applied automatically · Denver · DOTI PT-116.1 · 2022-04-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Steel plates: friction coefficient >=0.35, beveled leading/trailing edges or wedges. Bike detour: M4-9c signage at all decision points.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · DOTI PT-116.1 · 2022-04-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 0,
+      "raw": [],
+      "arrow": [
+       "Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost."
+      ],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-02-hazards": {
+     "sec": "reference",
+     "id": "hazards",
+     "title": "⚠ Fines and hazards: 2 on record, worst $500 / day",
+     "parts": [
+      {
+       "text": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · ROWS 2024 Consolidated Fee Schedule · 2024-01-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "$100 / occurrence",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver · ROWS 2024 Consolidated Fee Schedule · 2024-01-01",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "$500 / day",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: $100 / occurrence",
+       "span: $500 / day"
+      ],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-03-hours": {
+     "sec": "reference",
+     "id": "hours",
+     "title": "◌ Work hours: Denver's windows, not checked against dates",
+     "parts": [
+      {
+       "text": "Schedule marked \"Not set\". These windows are reference only. Choose a date mode in Setup to check a schedule against Denver's windows.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Sidewalk/bike blockage = lane closure (§III.1). Fees apply daily per day of occupancy (§V.1).",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Arterial / Collector",
+       "tag": "div",
+       "cls": "text-[11px] leading-tight text-[color:var(--ink)] font-semibold",
+       "mono": false,
+       "size": "11px",
+       "caps": false
+      },
+      {
+       "text": "Weekday",
+       "tag": "span",
+       "cls": "block font-mono text-[9px] uppercase tracking-[0.06em] font-normal",
+       "mono": true,
+       "size": "9px",
+       "caps": true
+      },
+      {
+       "text": "ok",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[color:var(--pass-soft)] text-[color:var(--pass)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "banned",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[repeating-linear-gradient(45deg,var(--paper-deep),var(--paper-deep)_4px,var(--paper-line-soft)_4px,var(--paper-line-soft)_8px)] text-[color:var(--ink-faint)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "ok",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[color:var(--pass-soft)] text-[color:var(--pass)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "banned",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[repeating-linear-gradient(45deg,var(--paper-deep),var(--paper-deep)_4px,var(--paper-line-soft)_4px,var(--paper-line-soft)_8px)] text-[color:var(--ink-faint)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "ok",
+       "tag": "div",
+       "cls": "flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] bg-[color:var(--pass-soft)] text-[color:var(--pass)]",
+       "mono": true,
+       "size": "8px",
+       "caps": true
+      },
+      {
+       "text": "5a",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8:30a",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "3:30p",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8p",
+       "tag": "span",
+       "cls": "absolute whitespace-nowrap",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "12a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "4a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "12p",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "4p",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "8p",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "12a",
+       "tag": "span",
+       "cls": "",
+       "mono": true,
+       "size": "9px",
+       "caps": false
+      },
+      {
+       "text": "Arterial / Collector · Weekday",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "12:00 AM–5:00 AM, 8:30 AM–3:30 PM, 8:00 PM–12:00 AM",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 2,
+      "rows": 1,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: Weekday",
+       "div: ok",
+       "div: banned",
+       "div: ok",
+       "div: banned",
+       "div: ok",
+       "span: 5a",
+       "span: 8:30a",
+       "span: 3:30p",
+       "span: 8p",
+       "span: 12a",
+       "span: 4a",
+       "span: 8a",
+       "span: 12p",
+       "span: 4p",
+       "span: 8p",
+       "span: 12a"
+      ],
+      "capsText": [
+       "span: Weekday",
+       "div: ok",
+       "div: banned",
+       "div: ok",
+       "div: banned",
+       "div: ok"
+      ],
+      "sources": []
+     }
+    },
+    "reference-04-permit": {
+     "sec": "reference",
+     "id": "permit",
+     "title": "i Permit: 14 fee lines, 5 to 60 days lead time",
+     "parts": [
+      {
+       "text": "Courtesy reference. Fees are never quote line items.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Denver publishes no permit tiers.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "This is the 2024 fee schedule, and it may be out of date: Denver publishes a new schedule every year, so 2025 and 2026 schedules almost certainly exist. The rate depends on the road class, the zone (Residential, CBD/CCA or Collector/Arterial) and whether the work is in peak hours, with a per-lane step that is not a multiplier.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Standard RSOP",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "5 days",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Any construction/demolition (incl. street cuts)",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "10 days",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Special Events",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "60 days",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "On-site requirements",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none on record",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Notice to adjacent owners, businesses, residents",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Full street closure: >=2 weeks notice.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Notice to public (full street closure)",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Press release, issued by the Permittee.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Notice to press (CBD detours & emergency closures)",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "Issuance and inspection (one per application)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$50",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Residential — administrative review",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$125",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Residential — street lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.22",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Residential — complete closure",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.30",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "CBD/CCA — bike lane closure",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.85",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 1st lane and parking lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.45",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 2nd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.90",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 3rd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$2.70",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial NON-PEAK — 4th/5th/6th lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$3.25",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial PEAK — 1st lane and parking lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.50",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial PEAK — 2nd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Collector & Arterial PEAK — 3rd lane",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Bike lane closure (residential / collector-arterial)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$0.33",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Expedite (permit requested in a non-standard timeframe)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "$500",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 3,
+      "rows": 4,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: $50",
+       "span: $125",
+       "span: $0.22",
+       "span: $0.30",
+       "span: $0.85",
+       "span: $0.45",
+       "span: $0.90",
+       "span: $2.70",
+       "span: $3.25",
+       "span: $0.50",
+       "span: $1",
+       "span: $2",
+       "span: $0.33",
+       "span: $500"
+      ],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-05-site-pedestrian_facility": {
+     "sec": "reference",
+     "id": "site-pedestrian_facility",
+     "title": "▲ Pedestrian sidewalks present: Added 2 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
+     "parts": [
+      {
+       "text": "38 found · nearest 57.4 ft from anchor · unnamed at 39.7401, -104.9692 (60 ft off the centerline)",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Correct in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: MUTCD § 6C.02",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 6C.02",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-06-site-bicycle_facility": {
+     "sec": "reference",
+     "id": "site-bicycle_facility",
+     "title": "▲ Bike lane / cycleway present: 2 M4-9a BIKE DETOUR signs added at the upstream and downstream ends.",
+     "parts": [
+      {
+       "text": "2 found · nearest 58.1 ft from anchor · Franklin Street (61 ft off the centerline)",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Correct in setup ↑",
+       "tag": "a",
+       "cls": "rr-link tr-signpost",
+       "mono": true,
+       "size": "13.5px",
+       "caps": true
+      },
+      {
+       "text": "Source: MUTCD § 9C.101",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: MUTCD § 9C.101",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-07-corridor-warn": {
+     "sec": "reference",
+     "id": "corridor-warn",
+     "title": "⚠ Site corridor validation: 1 warning",
+     "parts": [
+      {
+       "text": "Soft check against OSM. Warnings don't block plan generation.",
+       "tag": "p",
+       "cls": "tr-help",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "No major road (motorway, trunk, primary or secondary) found within 50 m of the anchor (39.73978, -104.96825); the closest road within 50 m is a residential road. Check that the coordinates match the actual work zone.",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 1,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-08-measured-absent": {
+     "sec": "reference",
+     "id": "measured-absent",
+     "title": "✓ No railroad crossings, hospitals or road curvature",
+     "parts": [
+      {
+       "text": "Railroad crossings",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none along the corridor",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Hospitals",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none along the corridor",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Road curvature",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "none along the corridor",
+       "tag": "dd",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Source: OpenStreetMap",
+       "tag": "p",
+       "cls": "tr-note",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 3,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": [
+       {
+        "text": "Source: OpenStreetMap",
+        "sentenceCase": true,
+        "mono": false
+       }
+      ]
+     }
+    },
+    "reference-09-devices": {
+     "sec": "reference",
+     "id": "devices",
+     "title": "i Device schedule 12 types, 40 units",
+     "parts": [
+      {
+       "text": "ROAD CONSTRUCTION (NEXT 1000 FT)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "G20-1 · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "END ROAD WORK",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "G20-2 · Termination",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "WORK ZONE plaque",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "G20-5P · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "BIKE DETOUR",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "M4-9a · Guide",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "SIDEWALK CLOSED",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "R9-9 · Regulatory",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "ROAD WORK AHEAD",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-1 · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "ROAD WORK 200 FT",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "W20-2 · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "RIGHT SHOULDER CLOSED AHEAD",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "W21-5aR · Advance warning",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Channelizing Drum",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Channelizing",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "4",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Traffic Cone (28-inch)",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Channelizing",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "23",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Type III Barricade",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Closure",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "2",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Arrow Board",
+       "tag": "li",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "— · Lane closure indication",
+       "tag": "span",
+       "cls": "tr-note rr-line-sub",
+       "mono": false,
+       "size": "12.5px",
+       "caps": false
+      },
+      {
+       "text": "1",
+       "tag": "span",
+       "cls": "rr-num rr-value",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 0,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [
+       "span: 1",
+       "span: 1",
+       "span: 1",
+       "span: 2",
+       "span: 2",
+       "span: 1",
+       "span: 1",
+       "span: 1",
+       "span: 4",
+       "span: 23",
+       "span: 2",
+       "span: 1"
+      ],
+      "capsText": [],
+      "sources": []
+     }
+    },
+    "reference-10-zone-geometry": {
+     "sec": "reference",
+     "id": "zone-geometry",
+     "title": "i Zone geometry",
+     "parts": [
+      {
+       "text": "Taper",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "40 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Buffer",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "200 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Device spacing",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "30 ft o.c.",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "Work zone",
+       "tag": "dt",
+       "cls": "",
+       "mono": false,
+       "size": "13.5px",
+       "caps": false
+      },
+      {
+       "text": "1,000 ft",
+       "tag": "dd",
+       "cls": "rr-num",
+       "mono": true,
+       "size": "13.5px",
+       "caps": false
+      }
+     ],
+     "judge": {
+      "sentences": 0,
+      "rows": 4,
+      "raw": [],
+      "arrow": [],
+      "monoOutsideValue": [],
+      "capsText": [],
+      "sources": []
+     }
+    }
+   },
+   "searches": {
+    "sidewalk": {
+     "status": "5 matching lines, all in Denver rules and site facts",
+     "opened": {
+      "hazards": {
+       "title": "⚠ Fines and hazards: 2 on record, worst $500 / day Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 2 hazards shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Denver · ROWS 2024 Consolidated Fee Schedule · 2024-01-01",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "$500 / day",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 2 hazards",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      },
+      "hours": {
+       "title": "◌ Work hours: Denver's windows, not checked against dates Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 3 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Sidewalk/bike blockage = lane closure (§III.1). Fees apply daily per day of occupancy (§V.1).",
+         "tag": "p",
+         "cls": "tr-help",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 3 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      },
+      "permit": {
+       "title": "i Permit: 14 fee lines, 5 to 60 days lead time Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 0 of 7 lines shown. 1 of 3 notices shown. 0 of 14 fee lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Notice to adjacent owners, businesses, residents",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 3 notices",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 14 fee lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 7 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      },
+      "devices": {
+       "title": "i Device schedule 12 types, 40 units Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 12 device types shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "SIDEWALK CLOSED",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "R9-9 · Regulatory",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "2",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 12 types",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      }
+     },
+     "axe": [],
+     "m": {
+      "targets": 13,
+      "small": [],
+      "overflowX": 0
+     }
+    },
+    "taper": {
+     "status": "4 matching lines, in 2 sections",
+     "opened": {
+      "calc-0-Taper length": {
+       "title": "✓ Taper length 40 ft Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 3 of 4 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "At 30 mph, below the 45 mph threshold, the taper length is the offset width times the speed squared, divided by 60.",
+         "tag": "p",
+         "cls": "tr-help",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Full taper",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "8 × 30^2 / 60 = 120 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Shoulder taper, one third",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "120 / 3 = 40 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 4 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Source: MUTCD 2023 edition · Chapter 6B · Table 6B-3",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        }
+       ]
+      },
+      "calc-2-Device spacing": {
+       "title": "✓ Device spacing 25 devices · 30/60 ft o.c. Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 3 of 7 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "In the taper, devices are spaced 30 ft apart, the speed in feet at 30 mph (MUTCD Sec 6K.01).",
+         "tag": "p",
+         "cls": "tr-help",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Taper, 40 ft",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "4 drums at 13.3 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft)",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "2 cones at ~25 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 7 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Source: MUTCD § 6K.01 · Channelizing device spacing",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        }
+       ]
+      },
+      "calc-3-Warning signs": {
+       "title": "✓ Warning signs 3 signs Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 0 of 2 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "C (furthest)",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Station (ft): 1,540 · From taper (ft): 300 upstream",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "W20-1",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "B (middle)",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Station (ft): 1,440 · From taper (ft): 200 upstream",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "W20-2",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "A (nearest)",
+         "tag": "li",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Station (ft): 1,340 · From taper (ft): 100 upstream",
+         "tag": "span",
+         "cls": "tr-note rr-line-sub",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "W21-5aR",
+         "tag": "span",
+         "cls": "rr-num rr-value",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 2 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Source: MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        }
+       ]
+      },
+      "zone-geometry": {
+       "title": "i Zone geometry Hide",
+       "parts": [
+        {
+         "text": "Opened because the match is inside. 1 of 4 lines shown.",
+         "tag": "p",
+         "cls": "tr-note",
+         "mono": false,
+         "size": "12.5px",
+         "caps": false
+        },
+        {
+         "text": "Taper",
+         "tag": "dt",
+         "cls": "",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "40 ft",
+         "tag": "dd",
+         "cls": "rr-num",
+         "mono": true,
+         "size": "13.5px",
+         "caps": false
+        },
+        {
+         "text": "Show all 4 lines",
+         "tag": "button",
+         "cls": "rr-link",
+         "mono": false,
+         "size": "13.5px",
+         "caps": false
+        }
+       ]
+      }
+     },
+     "axe": [],
+     "m": {
+      "targets": 10,
+      "small": [],
+      "overflowX": 0
+     }
+    }
+   },
+   "errors": [],
+   "hostsSeen": [
+    "api.mapbox.com",
+    "clerk.conestruct.com",
+    "events.mapbox.com",
+    "o4511428711153664.ingest.us.sentry.io",
+    "www.conestruct.com"
+   ],
+   "roadBearing": [
+    {
+     "status": "ok",
+     "candidates": 4
+    }
+   ],
+   "clerkResponses": [
+    {
+     "host": "clerk.conestruct.com",
+     "status": 307
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    },
+    {
+     "host": "clerk.conestruct.com",
+     "status": 200
+    }
+   ],
+   "clerk": {
+    "present": true,
+    "loaded": true
+   },
+   "kind": "kind-chip-shoulder",
+   "clsAfterGenerate": 0.5689,
+   "checkedOpen": {
+    "axe": [],
+    "m": {
+     "targets": 17,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "referenceOpen": {
+    "axe": [],
+    "m": {
+     "targets": 27,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "driveways": [],
+   "allOpen": {
+    "axe": [],
+    "m": {
+     "targets": 33,
+     "small": [],
+     "overflowX": 0
+    }
+   },
+   "pdf": {
+    "suggested": "East-Colfax-Avenue_shoulder_2026-11-07_540ad2.audit.pdf",
+    "ms": 1230,
+    "bytes": 10664
+   },
+   "overflowEnd": 0,
+   "clsEnd": 0.5689,
+   "layoutShifts": [
+    0.0158,
+    0.0004,
+    0.0001,
+    0.0008,
+    0.5518
+   ],
+   "routeHopsByHost": {
+    "www.conestruct.com": {
+     "hops": 42,
+     "withGate": 42
+    }
+   },
+   "hostsWithGate": [
+    "www.conestruct.com"
+   ]
+  }
+ ]
+}
