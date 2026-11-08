@@ -1,0 +1,38 @@
+== 1198x930 errors=0 
+   CLS (no recent input) total=0.0315 band-sourced=0.0029
+   requests: aerial=5 geometry=21 nearest=3
+   00-before-pin              | layout band=null | frame=- | vis=null | card=- | qInView=null | y=0
+   01-kind-question           | layout band=846 | frame=-67.8..492.3 h560 w411 | vis=440 | card=61..446.3 | qInView=true | y=343 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":0,"h":0,"ok":false}} | WHAT="◌ What's the job? pending: kind of work not chosen" GEN="Generate plan Choose the kind of work"
+   kind-flagger               | layout band=846 | frame=-67.8..492.3 h560 w411 | vis=440 | card=61..446.3 | qInView=true | y=343 | T ms=null blank=false wait=false a=0 g=1 n=0
+   kind-shoulder              | layout band=846 | frame=-67.8..492.3 h560 w411 | vis=440 | card=61..446.3 | qInView=true | y=343 | T ms=null blank=false wait=false a=0 g=0 n=0
+   03-side-question           | layout band=846 | frame=-67.5..492.5 h560 w411 | vis=441 | card=80..337.3 | qInView=true | y=324 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":0,"h":0,"ok":false}}
+   side                       | layout band=846 | frame=-67.5..492.5 h560 w411 | vis=441 | card=80..337.3 | qInView=true | y=324 | T ms=25 blank=false wait=false a=0 g=0 n=0
+   undo-side                  | layout band=846 | frame=-67.5..492.5 h560 w411 | vis=441 | card=80..337.3 | qInView=true | y=324 | T ms=27 blank=false wait=false a=1 g=0 n=0
+   side-again                 | layout band=846 | frame=-67.5..492.5 h560 w411 | vis=441 | card=80..337.3 | qInView=true | y=324 | T ms=41 blank=false wait=false a=0 g=0 n=0
+   11-strings-kind-picked     | layout band=846 | frame=-67.5..492.5 h560 w411 | vis=441 | card=80..337.3 | qInView=true | y=324 | WHAT="◌ What's the job? Opens after you confirm where" GEN="Generate plan Confirm where the work is first"
+   12-confirmed               | layout band=null | frame=- | vis=null | card=- | qInView=null | y=181 | WHAT="null" GEN="Generate plan"
+   kind-ni                    | layout band=846 | frame=-22.8..537.3 h560 w411 | vis=485 | card=61..446.3 | qInView=true | y=343 | T ms=null blank=false wait=false a=0 g=1 n=0
+   14-cross-question-armed    | layout band=846 | frame=51.5..611.5 h560 w411 | vis=560 | card=199..399.5 | qInView=true | y=205 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":0,"h":0,"ok":false}}
+   15-cross-found             | layout band=846 | frame=51.5..611.5 h560 w411 | vis=560 | card=199..483.5 | qInView=true | y=205 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":0,"h":0,"ok":false}} | scroll 205->205
+   16-held                    | layout band=846 | frame=-67.5..492.5 h560 w411 | vis=441 | card=80..337.3 | qInView=true | y=324 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":0,"h":0,"ok":false}}
+== 390x844 errors=0 
+   CLS (no recent input) total=0.1260 band-sourced=0.0308
+   requests: aerial=5 geometry=21 nearest=3
+   00-before-pin              | layout band=null | frame=- | vis=null | card=- | qInView=null | y=0
+   01-kind-question           | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=-89.5..295.8 | qInView=false | y=689 | axe=0 small=[] new={"band-aerial-hide":{"w":95.8,"h":44,"ok":true},"band-aerial-show":{"w":0,"h":0,"ok":false}} | WHAT="◌ What's the job? pending: kind of work not chosen" GEN="Generate plan Choose the kind of work"
+   kind-flagger               | layout band=328 | frame=265.8..415.8 h150 w328 | vis=150 | card=599.5..984.8 | qInView=true | y=0 | T ms=null blank=false wait=false a=0 g=1 n=0
+   kind-shoulder              | layout band=328 | frame=265.8..415.8 h150 w328 | vis=150 | card=599.5..984.8 | qInView=true | y=0 | T ms=null blank=false wait=false a=0 g=0 n=0
+   03-side-question           | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=82.5..383.8 | qInView=true | y=517 | axe=0 small=[] new={"band-aerial-hide":{"w":95.8,"h":44,"ok":true},"band-aerial-show":{"w":0,"h":0,"ok":false}}
+   side                       | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=83..384.3 | qInView=true | y=583 | T ms=29 blank=false wait=false a=0 g=0 n=0
+   undo-side                  | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=82.5..383.8 | qInView=true | y=517 | T ms=35 blank=false wait=false a=1 g=0 n=0
+   side-again                 | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=83..384.3 | qInView=true | y=583 | T ms=48 blank=false wait=false a=0 g=0 n=0
+   07-strip-pinned-scrolled   | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=266..567.3 | qInView=true | y=400
+   08-map-hidden              | layout band=328 | frame=0..0 h0 w0 | vis=0 | card=265.5..566.8 | qInView=true | y=228 | axe=0 small=[] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":102.1,"h":44,"ok":true}}
+   09-hidden-after-undo       | layout band=328 | frame=0..0 h0 w0 | vis=0 | card=265.5..566.8 | qInView=true | y=228
+   10-map-shown               | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=371.5..672.8 | qInView=true | y=228
+   11-strings-kind-picked     | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=438..739.3 | qInView=true | y=228 | WHAT="◌ What's the job? Opens after you confirm where" GEN="Generate plan Confirm where the work is first"
+   12-confirmed               | layout band=null | frame=- | vis=null | card=- | qInView=null | y=277 | WHAT="null" GEN="Generate plan"
+   kind-ni                    | layout band=328 | frame=262.8..412.8 h150 w328 | vis=150 | card=596.5..981.8 | qInView=true | y=3 | T ms=null blank=false wait=false a=0 g=1 n=0
+   14-cross-question-armed    | layout band=328 | frame=51.8..301.8 h250 w328 | vis=250 | card=485.5..730 | qInView=true | y=214 | axe=0 small=[] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":0,"h":0,"ok":false}}
+   15-cross-found             | layout band=328 | frame=51.8..301.8 h250 w328 | vis=250 | card=485.5..879 | qInView=true | y=214 | axe=0 small=[] new={"band-aerial-hide":{"w":0,"h":0,"ok":false},"band-aerial-show":{"w":0,"h":0,"ok":false}} | scroll 214->214
+   16-held                    | layout band=328 | frame=52..202 h150 w328 | vis=150 | card=74.5..375.8 | qInView=true | y=525 | axe=0 small=[] new={"band-aerial-hide":{"w":95.8,"h":44,"ok":true},"band-aerial-show":{"w":0,"h":0,"ok":false}}

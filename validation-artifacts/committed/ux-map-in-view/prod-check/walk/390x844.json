@@ -1,0 +1,1503 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "00-before-pin",
+   "scrollY": 0,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": null,
+   "layout": null,
+   "frame": null,
+   "img": null,
+   "card": null,
+   "cardQuestion": null,
+   "frameVisiblePx": null,
+   "imgVisiblePx": null,
+   "cardVisiblePx": null,
+   "mapWhollyInView": null,
+   "questionInView": null,
+   "stage": null,
+   "note": null,
+   "hideBtn": null,
+   "showBtn": null,
+   "whatRow": "◌ What's the job? Opens after you find the work",
+   "generateHint": "Generate plan Type an address or pick on map first, then Generate turns on.",
+   "docOverflowX": false
+  },
+  {
+   "name": "01-kind-question",
+   "scrollY": 689,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": -89.5,
+    "bottom": 295.8,
+    "w": 326,
+    "h": 385.3
+   },
+   "cardQuestion": "What kind of work is it?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 244,
+   "mapWhollyInView": true,
+   "questionInView": false,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? pending: kind of work not chosen",
+   "generateHint": "Generate plan Choose the kind of work",
+   "docOverflowX": false,
+   "shot": "390x844-01-01-kind-question.png",
+   "axe": [],
+   "small": [],
+   "newTargets": {
+    "band-aerial-hide": {
+     "w": 95.8,
+     "h": 44,
+     "ok": true
+    },
+    "band-aerial-show": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    }
+   }
+  },
+  {
+   "name": "kind-flagger",
+   "timing": {
+    "msToNewMap": null,
+    "srcChanged": false,
+    "blankSeen": false,
+    "waitNoteSeen": false,
+    "aerialRequests": 0,
+    "geometryRequests": 1,
+    "nearestRequests": 0,
+    "trail": []
+   },
+   "scrollY": 0,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 265.8,
+    "bottom": 415.8,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 216.8,
+    "bottom": 464.8,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 599.5,
+    "bottom": 984.8,
+    "w": 326,
+    "h": 385.3
+   },
+   "cardQuestion": "What kind of work is it?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 248,
+   "cardVisiblePx": 245,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 362.8,
+    "bottom": 406.8,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-02-02-kind-answered.png"
+  },
+  {
+   "name": "kind-shoulder",
+   "timing": {
+    "msToNewMap": null,
+    "srcChanged": false,
+    "blankSeen": false,
+    "waitNoteSeen": false,
+    "aerialRequests": 0,
+    "geometryRequests": 0,
+    "nearestRequests": 0,
+    "trail": []
+   },
+   "scrollY": 0,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 265.8,
+    "bottom": 415.8,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 216.8,
+    "bottom": 464.8,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 599.5,
+    "bottom": 984.8,
+    "w": 326,
+    "h": 385.3
+   },
+   "cardQuestion": "What kind of work is it?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 248,
+   "cardVisiblePx": 245,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 362.8,
+    "bottom": 406.8,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false
+  },
+  {
+   "name": "03-side-question",
+   "scrollY": 517,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 82.5,
+    "bottom": 383.8,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-03-03-side-question.png",
+   "axe": [],
+   "small": [],
+   "newTargets": {
+    "band-aerial-hide": {
+     "w": 95.8,
+     "h": 44,
+     "ok": true
+    },
+    "band-aerial-show": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    }
+   }
+  },
+  {
+   "name": "side",
+   "timing": {
+    "msToNewMap": 29,
+    "srcChanged": true,
+    "blankSeen": false,
+    "waitNoteSeen": false,
+    "aerialRequests": 0,
+    "geometryRequests": 0,
+    "nearestRequests": 0,
+    "trail": [
+     {
+      "at": 29,
+      "src": "img",
+      "note": null
+     }
+    ]
+   },
+   "scrollY": 583,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 83,
+    "bottom": 384.3,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "work",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-04-04-side-answered.png"
+  },
+  {
+   "name": "undo-side",
+   "timing": {
+    "msToNewMap": 35,
+    "srcChanged": true,
+    "blankSeen": false,
+    "waitNoteSeen": false,
+    "aerialRequests": 1,
+    "geometryRequests": 0,
+    "nearestRequests": 0,
+    "trail": [
+     {
+      "at": 35,
+      "src": "img",
+      "note": null
+     }
+    ]
+   },
+   "scrollY": 517,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 82.5,
+    "bottom": 383.8,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-05-05-side-undone.png"
+  },
+  {
+   "name": "side-again",
+   "timing": {
+    "msToNewMap": 48,
+    "srcChanged": true,
+    "blankSeen": false,
+    "waitNoteSeen": false,
+    "aerialRequests": 0,
+    "geometryRequests": 0,
+    "nearestRequests": 0,
+    "trail": [
+     {
+      "at": 48,
+      "src": "img",
+      "note": null
+     }
+    ]
+   },
+   "scrollY": 583,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 83,
+    "bottom": 384.3,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "work",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-06-06-side-again.png"
+  },
+  {
+   "name": "07-strip-pinned-scrolled",
+   "scrollY": 400,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 266,
+    "bottom": 567.3,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "work",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-07-07-strip-pinned-scrolled.png"
+  },
+  {
+   "name": "08-map-hidden",
+   "scrollY": 228,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "img": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "card": {
+    "x": 32,
+    "top": 265.5,
+    "bottom": 566.8,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 0,
+   "imgVisiblePx": 0,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": false,
+   "questionInView": true,
+   "stage": "work",
+   "note": null,
+   "hideBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "showBtn": {
+    "x": 256.9,
+    "top": 52,
+    "bottom": 96,
+    "w": 102.1,
+    "h": 44
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-08-08-map-hidden.png",
+   "axe": [],
+   "small": [],
+   "newTargets": {
+    "band-aerial-hide": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    },
+    "band-aerial-show": {
+     "w": 102.1,
+     "h": 44,
+     "ok": true
+    }
+   }
+  },
+  {
+   "name": "09-hidden-after-undo",
+   "scrollY": 228,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "img": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "card": {
+    "x": 32,
+    "top": 265.5,
+    "bottom": 566.8,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 0,
+   "imgVisiblePx": 0,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": false,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "showBtn": {
+    "x": 256.9,
+    "top": 52,
+    "bottom": 96,
+    "w": 102.1,
+    "h": 44
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-09-09-hidden-after-undo.png"
+  },
+  {
+   "name": "10-map-shown",
+   "scrollY": 228,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 371.5,
+    "bottom": 672.8,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-10-10-map-shown.png"
+  },
+  {
+   "name": "11-strings-kind-picked",
+   "scrollY": 228,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 438,
+    "bottom": 739.3,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "work",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false
+  },
+  {
+   "name": "12-confirmed",
+   "scrollY": 277,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": null,
+   "layout": null,
+   "frame": null,
+   "img": null,
+   "card": null,
+   "cardQuestion": null,
+   "frameVisiblePx": null,
+   "imgVisiblePx": null,
+   "cardVisiblePx": null,
+   "mapWhollyInView": null,
+   "questionInView": null,
+   "stage": null,
+   "note": null,
+   "hideBtn": null,
+   "showBtn": null,
+   "whatRow": null,
+   "generateHint": "Generate plan",
+   "docOverflowX": false,
+   "shot": "390x844-11-12-confirmed.png"
+  },
+  {
+   "name": "kind-ni",
+   "timing": {
+    "msToNewMap": null,
+    "srcChanged": false,
+    "blankSeen": false,
+    "waitNoteSeen": false,
+    "aerialRequests": 0,
+    "geometryRequests": 1,
+    "nearestRequests": 0,
+    "trail": []
+   },
+   "scrollY": 3,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 262.8,
+    "bottom": 412.8,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 213.8,
+    "bottom": 461.8,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 596.5,
+    "bottom": 981.8,
+    "w": 326,
+    "h": 385.3
+   },
+   "cardQuestion": "What kind of work is it?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 248,
+   "cardVisiblePx": 248,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 359.8,
+    "bottom": 403.8,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false
+  },
+  {
+   "name": "14-cross-question-armed",
+   "scrollY": 214,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 51.8,
+    "bottom": 301.8,
+    "w": 328,
+    "h": 250
+   },
+   "img": {
+    "x": 32,
+    "top": 52.8,
+    "bottom": 300.8,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 485.5,
+    "bottom": 730,
+    "w": 326,
+    "h": 244.5
+   },
+   "cardQuestion": "Which intersection is the work near?",
+   "frameVisiblePx": 250,
+   "imgVisiblePx": 248,
+   "cardVisiblePx": 245,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-12-14-cross-question-armed.png",
+   "axe": [],
+   "small": [],
+   "newTargets": {
+    "band-aerial-hide": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    },
+    "band-aerial-show": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    }
+   }
+  },
+  {
+   "name": "15-cross-found",
+   "scrollBefore": 214,
+   "scrollAfter": 214,
+   "scrollY": 214,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 51.8,
+    "bottom": 301.8,
+    "w": 328,
+    "h": 250
+   },
+   "img": {
+    "x": 32,
+    "top": 52.8,
+    "bottom": 300.8,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 485.5,
+    "bottom": 879,
+    "w": 326,
+    "h": 393.5
+   },
+   "cardQuestion": "Which intersection is the work near?",
+   "frameVisiblePx": 250,
+   "imgVisiblePx": 248,
+   "cardVisiblePx": 359,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "pin",
+   "note": null,
+   "hideBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-13-15-cross-found.png",
+   "axe": [],
+   "small": [],
+   "newTargets": {
+    "band-aerial-hide": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    },
+    "band-aerial-show": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    }
+   }
+  },
+  {
+   "name": "16-held",
+   "held": {
+    "text": "Drawing the corridor…",
+    "visible": true,
+    "top": 167.3,
+    "bottom": 193,
+    "h": 25.8
+   },
+   "scrollY": 525,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "bandWidth": 328,
+   "layout": null,
+   "frame": {
+    "x": 31,
+    "top": 52,
+    "bottom": 202,
+    "w": 328,
+    "h": 150
+   },
+   "img": {
+    "x": 32,
+    "top": 3,
+    "bottom": 251,
+    "w": 326,
+    "h": 248
+   },
+   "card": {
+    "x": 32,
+    "top": 74.5,
+    "bottom": 375.8,
+    "w": 326,
+    "h": 301.3
+   },
+   "cardQuestion": "Which side of the road is the work on?",
+   "frameVisiblePx": 150,
+   "imgVisiblePx": 199,
+   "cardVisiblePx": 301,
+   "mapWhollyInView": true,
+   "questionInView": true,
+   "stage": "work",
+   "note": null,
+   "hideBtn": {
+    "x": 254.3,
+    "top": 149,
+    "bottom": 193,
+    "w": 95.8,
+    "h": 44
+   },
+   "showBtn": {
+    "x": 0,
+    "top": 0,
+    "bottom": 0,
+    "w": 0,
+    "h": 0
+   },
+   "whatRow": "◌ What's the job? Opens after you confirm where",
+   "generateHint": "Generate plan Confirm where the work is first",
+   "docOverflowX": false,
+   "shot": "390x844-14-16-held.png",
+   "axe": [],
+   "small": [],
+   "newTargets": {
+    "band-aerial-hide": {
+     "w": 95.8,
+     "h": 44,
+     "ok": true
+    },
+    "band-aerial-show": {
+     "w": 0,
+     "h": 0,
+     "ok": false
+    }
+   }
+  }
+ ],
+ "net": [
+  {
+   "kind": "road-bearing",
+   "stage": null,
+   "start": 3321,
+   "end": 6816,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 8244,
+   "end": 8751,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 10022,
+   "end": 10367,
+   "status": 200
+  },
+  {
+   "kind": "nearest",
+   "stage": null,
+   "start": 10020,
+   "end": 11867,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 10022,
+   "end": 12071,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 10318,
+   "end": 12283,
+   "status": 200
+  },
+  {
+   "kind": "aerial",
+   "stage": "pin",
+   "start": 10368,
+   "end": 13344,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 12512,
+   "end": 13458,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 12510,
+   "end": 13811,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 12813,
+   "end": 14019,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 17198,
+   "end": 17782,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 25326,
+   "end": 25691,
+   "status": 200
+  },
+  {
+   "kind": "aerial",
+   "stage": "work",
+   "start": 25692,
+   "end": 26743,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 32043,
+   "end": 32400,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 32042,
+   "end": 32471,
+   "status": 200
+  },
+  {
+   "kind": "aerial",
+   "stage": "work",
+   "start": 32472,
+   "end": 33281,
+   "status": 200
+  },
+  {
+   "kind": "road-bearing",
+   "stage": null,
+   "start": 51461,
+   "end": 54086,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 55579,
+   "end": 55949,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 57321,
+   "end": 57805,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 57626,
+   "end": 58033,
+   "status": 200
+  },
+  {
+   "kind": "nearest",
+   "stage": null,
+   "start": 57319,
+   "end": 58383,
+   "status": 200
+  },
+  {
+   "kind": "aerial",
+   "stage": "pin",
+   "start": 57806,
+   "end": 58746,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 57321,
+   "end": 58760,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 58312,
+   "end": 58883,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 58619,
+   "end": 59081,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 58314,
+   "end": 59096,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 59895,
+   "end": 60229,
+   "status": 200
+  },
+  {
+   "kind": "road-bearing",
+   "stage": null,
+   "start": 66050,
+   "end": 69622,
+   "status": 200
+  },
+  {
+   "kind": "nearest",
+   "stage": null,
+   "start": 69634,
+   "end": 70038,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 69939,
+   "end": 70506,
+   "status": 200
+  },
+  {
+   "kind": "geometry",
+   "stage": null,
+   "start": 70624,
+   "end": 71022,
+   "status": 200
+  },
+  {
+   "kind": "aerial",
+   "stage": "work",
+   "start": 71023,
+   "end": 75746,
+   "status": 200
+  }
+ ],
+ "errors": [],
+ "cls": [
+  {
+   "at": 1352,
+   "value": 0.0001452498072070858,
+   "recent": true,
+   "sources": [
+    "absolute bottom-3 left-1/2 -translate-x-"
+   ]
+  },
+  {
+   "at": 2676,
+   "value": 0.0005414181434258337,
+   "recent": true,
+   "sources": [
+    "border border-[color:var(--act)] bg-tran"
+   ]
+  },
+  {
+   "at": 2907,
+   "value": 0.028933565779099345,
+   "recent": true,
+   "sources": [
+    "border-t border-[color:var(--rule)]",
+    "flex flex-wrap md:flex-nowrap items-cent",
+    "border border-[color:var(--act)] bg-tran"
+   ]
+  },
+  {
+   "at": 5559,
+   "value": 0.09522730990100321,
+   "recent": false,
+   "sources": [
+    "flex flex-wrap md:flex-nowrap items-cent",
+    "border-t border-[color:var(--rule)]"
+   ]
+  },
+  {
+   "at": 6699,
+   "value": 0.08208586850976117,
+   "recent": true,
+   "sources": [
+    "flex flex-wrap md:flex-nowrap items-cent",
+    "border-t border-[color:var(--rule)]",
+    "px-6 py-2 border-b border-[color:var(--r"
+   ]
+  },
+  {
+   "at": 8749,
+   "value": 0.46932754184282954,
+   "recent": true,
+   "sources": [
+    "flex flex-wrap items-center justify-betw",
+    "DIV",
+    "tr-note draft-notice mb-6",
+    "a-fact is-pending",
+    "zone results results-stack outline-none"
+   ]
+  },
+  {
+   "at": 11326,
+   "value": 0.00003225213799998733,
+   "recent": true,
+   "sources": [
+    "band"
+   ]
+  },
+  {
+   "at": 15356,
+   "value": 0.09484085657647011,
+   "recent": true,
+   "sources": [
+    "DIV",
+    "band",
+    "a-fact is-pending",
+    "band",
+    "tr-note draft-notice mb-6"
+   ]
+  },
+  {
+   "at": 17031,
+   "value": 0.026510004785986904,
+   "recent": true,
+   "sources": [
+    "band",
+    "band"
+   ]
+  },
+  {
+   "at": 21065,
+   "value": 0.010530018893417627,
+   "recent": false,
+   "sources": [
+    "band",
+    "band",
+    "band",
+    "band"
+   ]
+  },
+  {
+   "at": 21471,
+   "value": 0.020280036387322835,
+   "recent": false,
+   "sources": [
+    "band",
+    "band",
+    "band",
+    "band"
+   ]
+  },
+  {
+   "at": 22039,
+   "value": 0.054931897009924444,
+   "recent": true,
+   "sources": [
+    "DIV",
+    "band",
+    "a-fact is-pending",
+    "band",
+    "tr-note draft-notice mb-6"
+   ]
+  },
+  {
+   "at": 22069,
+   "value": 0.011071590243497883,
+   "recent": true,
+   "sources": [
+    "band"
+   ]
+  }
+ ],
+ "lastPin": {
+  "lat": 39.739781,
+  "lng": -104.968249
+ },
+ "imgLog": [
+  {
+   "at": 95,
+   "src": null,
+   "note": null
+  },
+  {
+   "at": 8748,
+   "src": null,
+   "note": "Drawing the corridor…"
+  },
+  {
+   "at": 10514,
+   "src": "blob:https://www.conestruct.com/3958b0e9-45f7-4d7b-a2ad-75ea0ab3bde4",
+   "note": null
+  },
+  {
+   "at": 27182,
+   "src": "blob:https://www.conestruct.com/b6809086-57cd-4761-9bce-6f9662ed4915",
+   "note": null
+  }
+ ]
+}
