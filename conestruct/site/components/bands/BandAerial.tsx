@@ -133,6 +133,8 @@ export function useFrameSize(ref: React.RefObject<HTMLDivElement | null>) {
 /** #456 M9: the picture on screen and what its key and line say. */
 interface Shown {
   base: string | null;
+  /** #460: the pin the picture was drawn at. */
+  pin: { lat: number; lng: number };
   src: string;
   stage: AerialStage;
   approachWords: string | null;
@@ -365,6 +367,7 @@ export function BandAerial({
   if (aerial.state === "ready" && stage !== null) {
     held.current = {
       base,
+      pin: { lat: scenario.meta.lat, lng: scenario.meta.lng },
       src: aerial.src,
       stage,
       approachWords:
@@ -392,13 +395,19 @@ export function BandAerial({
         : AERIAL_FAILED;
   } else if (aerial.state === "error") note = AERIAL_FAILED;
   const current = aerial.state === "ready" && stage !== null;
-  const display: Shown | null = current || note === null ? held.current : null;
+  const kept: Shown | null = current || note === null ? held.current : null;
+  // #460: the picker's picture stands in, with the wait line in the corner,
+  // before any picture and (Ryan, 2026-11-08, amendment) in place of a held
+  // picture drawn at another pin: that one is a different place.  A held
+  // picture at this same pin stays (#456 M9).
+  const keptElsewhere =
+    kept !== null && !current && (kept.pin.lat !== scenario.meta.lat || kept.pin.lng !== scenario.meta.lng);
+  const standIn = !current && note === null && (kept === null || keptElsewhere) ? pickerPicture : null;
+  const display: Shown | null = standIn !== null ? null : kept;
   const holding = !current && display !== null;
   // The wait sentence: centred in the box only before any picture; over a
-  // held picture of another corridor, a small line in its corner.
-  // #460: before any picture, the picker's own stands in, with the wait
-  // line in the corner rather than centred in an empty box.
-  const standIn = !current && note === null && display === null ? pickerPicture : null;
+  // held picture of another corridor, or the stand-in, a small line in its
+  // corner.
   const heldLine = (holding && display !== null && display.base !== base) || standIn !== null;
   if (!current && note === null && display === null && standIn === null) note = AERIAL_WAIT;
   // #440 ruling 7: the not-marked line left the aerial (#317's note); the

@@ -174,6 +174,50 @@ describe("#460 — the picker's picture stands in until the aerial is drawn", ()
     expect(screen.getByTestId("band-aerial-img").getAttribute("src")).toBe("blob:aerial");
   });
 
+  // Ryan, 2026-11-08 (amendment): "when the pin changed, show the picker's
+  // picture in place of the old map until the new map arrives (the old map
+  // is a different place). Keep the old map only when the pin didn't move."
+  it("a moved pin swaps the old map for the picker's picture; a save at the same pin keeps the map", async () => {
+    // The picture is asked for after the geometry read and a 300 ms
+    // debounce, so wait for the ask before answering it.
+    const releaseAll = async () => {
+      for (let round = 0; round < 3; round++) {
+        await settle();
+        await settle();
+        if (pendingMaps.length === 0) break;
+        await act(async () => {
+          for (const release of pendingMaps.splice(0)) release();
+        });
+      }
+      await settle();
+    };
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await settle();
+    // E Colfax, saved with no picture; its map drawn.
+    await saveFromPicker();
+    await releaseAll();
+    expect(screen.getByTestId("band-aerial-img")).not.toBeNull();
+
+    // The same pin, a picture from the picker: the map on screen stays.
+    saveWith = { ...saveWith, snapshot: SNAPSHOT };
+    await saveFromPicker();
+    expect(screen.queryByTestId("band-aerial-standin")).toBeNull();
+    expect(screen.getByTestId("band-aerial-img")).not.toBeNull();
+
+    // A moved pin (Lakewood), its map not drawn yet: the picker's picture,
+    // never the E Colfax map.
+    saveWith = { ...saveWith, snapshot: SNAPSHOT, lat: 39.7113, lng: -105.0815 };
+    await saveFromPicker();
+    expect(screen.getByTestId("band-aerial-standin").getAttribute("src")).toBe(SNAPSHOT);
+    expect(screen.queryByTestId("band-aerial-img")).toBeNull();
+    expect(screen.getByTestId("band-aerial-held").textContent).toBe(AERIAL_WAIT);
+
+    // Lakewood's map arrives and replaces it.
+    await releaseAll();
+    expect(screen.queryByTestId("band-aerial-standin")).toBeNull();
+    expect(screen.getByTestId("band-aerial-img")).not.toBeNull();
+  }, 30000);
+
   it("without a picture from the picker, the wait sentence is unchanged", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();

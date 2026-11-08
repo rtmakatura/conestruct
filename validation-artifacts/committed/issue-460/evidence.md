@@ -18,3 +18,5 @@
 - **Page errors:** 0 at every size.
 
 **The picture.** The stand-in is the picker's own map at Save, so it is framed as the picker framed it (its zoom, cropped to the frame by `object-fit: cover`). The DOM pin marker isn't on it, because it is not part of the map's canvas. Once the aerial answers it replaces the stand-in (`walk/*-02-*` vs `*-03-*`).
+
+**Amendment (Ryan, 2026-11-08: a moved pin shows the picker's picture, not the old map).** Covered by the mounted test `GeneratorShell.picker-close-landing.test.tsx`, "a moved pin swaps the old map for the picker's picture; a save at the same pin keeps the map". It is red-proved: it fails with the amendment's `BandAerial.tsx` change reversed. The local walk above was not re-run for it; the walk ran on `9884f95`, before the amendment.
