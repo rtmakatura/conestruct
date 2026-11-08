@@ -365,6 +365,14 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
+  {
+    name: "the WHERE map in view (#456)",
+    sizes: ["var(--fs-body-value)"],
+    reason:
+      "#456 ruling 2 (Ryan, 2026-11-07; MapSticky390 on the tap-feedback canvas): the narrow strip's Hide map button and its Show map row, 13.5 / 600 as the canvas draws them and as #440's Use the big map instead reads.  An existing token: no size joins the census (ruling 5).",
+    css: [{ selector: ".workbench .a-aerial-toggle", size: "var(--fs-body-value)" }],
+    tsx: [],
+  },
 ];
 
 export const TYPE_DEBT: readonly TypeDebt[] = [
@@ -791,7 +799,7 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 198, // #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 199, // #456: +1 (198 -> 199), the strip's Hide map / Show map; sizes unchanged (ruling 5). #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
   // #437: +4 (179 -> 183) — the question heading, the answer label, the
   // Next / Apply button and the strip's question sentence; sizes unchanged.
   // #437 branch 3: 183 -> 180 — seven out (the dismiss picker's legend,

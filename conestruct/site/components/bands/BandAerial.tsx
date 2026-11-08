@@ -47,9 +47,11 @@ import {
   ZOOM_IN_MAX,
   ZOOM_OUT_MAX,
   aerialStage,
+  prefetchAerial,
   useCorridorAerial,
   type AerialStage,
 } from "@/lib/corridor-aerial";
+import { prefetchGeometry } from "@/lib/corridor-geometry";
 import { ZONE_CHANNEL, ZONE_COLOR, type CorridorZone } from "@/lib/corridor-zones";
 import { focusWasDropped, scrollAerialPartIn } from "@/lib/cross-street-reveal";
 import { symClass } from "@/lib/design/symbols";
@@ -86,6 +88,9 @@ export const AERIAL_ARMED_ALT =
   "Aerial at the pin. Tap the intersection nearest the work, or use the big map instead";
 /** #440 ruling 4. */
 export const AERIAL_BIG_MAP = "Use the big map instead";
+/** #456 ruling 2, verbatim. */
+export const AERIAL_HIDE = "Hide map";
+export const AERIAL_SHOW = "Show map";
 
 const ALT: Record<AerialStage, string> = {
   pin: "Aerial at the pin. Nothing is laid out until the side is chosen",
@@ -105,6 +110,12 @@ export function useFrameSize(ref: React.RefObject<HTMLDivElement | null>) {
     const measure = () => {
       const w = Math.floor(el.clientWidth);
       const h = Math.floor(el.clientHeight);
+      // #456: a hidden map (Hide map) is not laid out; it keeps the size it
+      // was drawn at, so showing it again asks for nothing new.
+      if (w <= 0 && h <= 0 && el.getClientRects().length === 0) {
+        setSize((prev) => prev ?? FALLBACK);
+        return;
+      }
       const next = w > 0 && h > 0 ? { width: Math.min(w, 1280), height: Math.min(h, 1280) } : FALLBACK;
       setSize((prev) => (prev && prev.width === next.width && prev.height === next.height ? prev : next));
     };
@@ -115,6 +126,15 @@ export function useFrameSize(ref: React.RefObject<HTMLDivElement | null>) {
     return () => ro.disconnect();
   }, [ref]);
   return size;
+}
+
+/** #456 M9: the picture on screen and what its key and line say. */
+interface Shown {
+  base: string | null;
+  src: string;
+  stage: AerialStage;
+  approachWords: string | null;
+  extended: boolean;
 }
 
 /** #440 X5: the tap's pixel in the picture it was made on. */
@@ -172,6 +192,15 @@ export interface BandAerialProps {
   ring?: AerialRing | null;
   /** #446 T25: counts the answers a hidden bar comes back for. */
   missCount?: number;
+  /** #456 ruling 3, load ahead: the scenarios the open question's answers
+   *  would write.  Each one's geometry is read and its one picture asked
+   *  for, unless remembered.  Empty for a tap question. */
+  ahead?: readonly Scenario[];
+  /** #456 ruling 2: the strip's Hide map / Show map (the band owns the
+   *  choice; the layout shows them only in the narrow strip). */
+  hidden?: boolean;
+  onHide?: () => void;
+  onShow?: () => void;
 }
 
 /** #440 ruling 3: the bar's crosshair (the design canvas's own path).
@@ -214,9 +243,42 @@ export function BandAerial({
   bar = null,
   ring = null,
   missCount = 0,
+  ahead = [],
+  hidden = false,
+  onHide,
+  onShow,
 }: BandAerialProps) {
+  // #456 M4: measured on the picture's own box (the canvas), which keeps
+  // the full height while the narrow strip clips the frame to 150 px.
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
+  // #456: focus follows the toggle to its other button.
+  const hideRef = useRef<HTMLButtonElement | null>(null);
+  const showRef = useRef<HTMLButtonElement | null>(null);
+  const toggled = useRef(false);
+  useEffect(() => {
+    if (!toggled.current) return;
+    toggled.current = false;
+    (hidden ? showRef : hideRef).current?.focus({ preventScroll: true });
+  }, [hidden]);
+  // #456 ruling 3, load ahead (M13): each answer's geometry, then its one
+  // picture at this frame's size, unless remembered or on its way.  The
+  // request is built exactly as the hook below builds it.
+  const aheadKey = size && ahead.length > 0 ? JSON.stringify(ahead) : null;
+  useEffect(() => {
+    if (!size || aheadKey === null) return;
+    let live = true;
+    for (const s of JSON.parse(aheadKey) as Scenario[]) {
+      void prefetchGeometry(s).then((r) => {
+        if (!live || r.state !== "ready") return;
+        const st = aerialStage(r.geometry, kindConfirmed);
+        if (st) prefetchAerial({ scenario: s, stage: st, width: size.width, height: size.height });
+      });
+    }
+    return () => {
+      live = false;
+    };
+  }, [aheadKey, size, kindConfirmed]);
   // #446 T11: a retry unmounts its own button; if it fails again, focus
   // comes back to the new one.  T22: if it answers "no street" there's no
   // new one, so focus goes to the bar's big-map button, the keyboard's way in.
@@ -284,14 +346,30 @@ export function BandAerial({
         }
       : null,
   );
-  // P16: while a zoom step is drawn, the previous picture OF THE SAME
-  // corridor stays — no blank, no wait note on the image.  A different
-  // corridor (base) is never held over (Rule 10).
-  const held = useRef<{ base: string | null; src: string } | null>(null);
-  if (aerial.state === "ready") held.current = { base, src: aerial.src };
-  const holding =
-    aerial.state === "loading" && held.current !== null && held.current.base === base;
-  const src = aerial.state === "ready" ? aerial.src : holding ? held.current!.src : null;
+  const approaches = g?.approaches ?? [];
+  // #456 ruling 3 (M9): the picture on screen stays until the next one is
+  // ready, then swaps in one step: never a blank box.  P16's zoom hold (the
+  // same corridor) shows no line; any other held picture says it is being
+  // redrawn (Rule 10: it is not presented as the current one).  The key and
+  // the line under it are the held picture's own, so they always match it.
+  // A failure or a refusal is never held over: its sentence replaces it.
+  const held = useRef<Shown | null>(null);
+  if (aerial.state === "ready" && stage !== null) {
+    held.current = {
+      base,
+      src: aerial.src,
+      stage,
+      approachWords:
+        stage === "laid_out" && approaches.length === 2
+          ? `Two approaches: ${boundWord(approaches[0].travel_bearing_deg)} (the work's side) and ${boundWord(approaches[1].travel_bearing_deg)}`
+          : null,
+      extended:
+        stage === "laid_out"
+          ? approaches.some((a) => a.zones.some((z) => z.parts.some((p) => p.extended))) ||
+            (g?.work?.parts ?? []).some((p) => p.extended)
+          : (g?.work?.parts ?? []).some((p) => p.extended),
+    };
+  }
 
   if (geometry.state === "ready" && g?.status === "no_pin") return null;
 
@@ -305,17 +383,29 @@ export function BandAerial({
         ? `Can't lay the corridor out here: ${aerial.message.replace(/^\w+Error:\s*/, "")}`
         : AERIAL_FAILED;
   } else if (aerial.state === "error") note = AERIAL_FAILED;
-  else if (aerial.state !== "ready" && !holding) note = AERIAL_WAIT;
+  const current = aerial.state === "ready" && stage !== null;
+  const display: Shown | null = current || note === null ? held.current : null;
+  const holding = !current && display !== null;
+  // The wait sentence: centred in the box only before any picture; over a
+  // held picture of another corridor, a small line in its corner.
+  const heldLine = holding && display !== null && display.base !== base;
+  if (!current && note === null && display === null) note = AERIAL_WAIT;
   // #440 ruling 7: the not-marked line left the aerial (#317's note); the
   // CONFIRM card's cross-street question asks for the crossing.  #440 R145
   // X22 (Ryan, 2026-11-04): the side caption left it the same way; the
   // CONFIRM card's side question asks for the side.
 
-  const shown = src !== null && stage !== null;
+  // `shown`: a picture is on screen, this state's or a held one (#456 repair
+  // 2: the zoom buttons and #446's bar and live region stay through a held
+  // load, as #301's zoom hold kept them, so focus is never dropped).
+  // `current`: this state's own picture; taps, the ring and the box wait for
+  // it, so a tap is never read off a held picture.
+  const shown = display !== null;
+  const src = display?.src ?? null;
   const frameKey = base !== null ? JSON.stringify({ base, step }) : null;
-  const tapping = armed && shown && onTap !== undefined && size !== null && frameKey !== null;
-  const markShown = mark !== null && shown && frameKey !== null && mark.frameKey === frameKey;
-  const ringShown = ring !== null && shown && frameKey !== null && ring.frameKey === frameKey;
+  const tapping = armed && current && onTap !== undefined && size !== null && frameKey !== null;
+  const markShown = mark !== null && current && frameKey !== null && mark.frameKey === frameKey;
+  const ringShown = ring !== null && current && frameKey !== null && ring.frameKey === frameKey;
   // #446: one bar element through every state, so its live region is there
   // before its words change (ruling 1).
   const barNow: AerialBar | null = shown ? (bar ?? (tapping ? { kind: "armed" } : null)) : null;
@@ -334,19 +424,35 @@ export function BandAerial({
     if (next < -ZOOM_OUT_MAX || next > ZOOM_IN_MAX) return;
     setZoomAt({ base, step: next });
   };
-  const approaches = g?.approaches ?? [];
-  const extended =
-    stage === "laid_out"
-      ? approaches.some((a) => a.zones.some((z) => z.parts.some((p) => p.extended))) ||
-        (g?.work?.parts ?? []).some((p) => p.extended)
-      : (g?.work?.parts ?? []).some((p) => p.extended);
+  const keyStage = display?.stage ?? null;
+  const extended = display?.extended ?? false;
 
   return (
     <div className="a-aerial" data-testid="band-aerial" data-read data-stage={stage ?? "none"}>
+      {onShow && (
+        // #456 ruling 2: the strip, hidden, is this one row (the layout
+        // shows it only in the narrow strip).
+        <div className="a-aerial-showrow" hidden={!hidden}>
+          <button
+            ref={showRef}
+            type="button"
+            className="a-aerial-toggle"
+            data-read=""
+            onClick={() => {
+              toggled.current = true;
+              onShow();
+            }}
+            data-testid="band-aerial-show"
+          >
+            {AERIAL_SHOW}
+          </button>
+        </div>
+      )}
       <div
-        ref={frameRef}
         className={`a-aerial-frame${tapping ? " is-armed" : ""}${barNow ? " has-bar" : ""}`}
         data-bar={barNow?.kind}
+        data-held={holding || undefined}
+        aria-busy={holding || undefined}
         data-testid="band-aerial-frame"
       >
         {barNow && (
@@ -408,7 +514,8 @@ export function BandAerial({
             Edit on map
           </button>
         )}
-        {shown && (
+        <div ref={frameRef} className="a-aerial-canvas">
+        {src !== null && display !== null && (
           // The source is an object URL of an image the backend drew at this
           // frame's exact size — there is nothing for next/image to
           // optimise or resize, and it cannot load a blob: URL through its
@@ -416,7 +523,7 @@ export function BandAerial({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={src}
-            alt={tapping ? AERIAL_ARMED_ALT : ALT[stage]}
+            alt={tapping ? AERIAL_ARMED_ALT : ALT[display.stage]}
             data-testid="band-aerial-img"
             onClick={tapping ? tap : undefined}
           />
@@ -453,6 +560,7 @@ export function BandAerial({
             </span>
           </>
         )}
+        </div>
         {barNow && onBigMap && (
           <button
             ref={bigMapRef}
@@ -467,6 +575,26 @@ export function BandAerial({
           >
             {AERIAL_BIG_MAP}
           </button>
+        )}
+        {onHide && (
+          <button
+            ref={hideRef}
+            type="button"
+            className="a-aerial-toggle a-aerial-hide"
+            data-read=""
+            onClick={() => {
+              toggled.current = true;
+              onHide();
+            }}
+            data-testid="band-aerial-hide"
+          >
+            {AERIAL_HIDE}
+          </button>
+        )}
+        {heldLine && (
+          <div className="a-aerial-held tr-prov" data-testid="band-aerial-held" role="status">
+            {AERIAL_WAIT}
+          </div>
         )}
         {shown && (
           // The zoom controls: reads (data-read), never locked by the
@@ -516,12 +644,12 @@ export function BandAerial({
           </div>
         )}
       </div>
-      {shown && (stage === "work" || stage === "laid_out") && (
+      {src !== null && (keyStage === "work" || keyStage === "laid_out") && (
         // #439 ruling 7: the key on the aerial's top-left corner (under it
         // below 520 px, a 2-column grid); one row per channel, the same
         // swatches and hexes (ZONE_COLOR, the ruled overlay pair).
         <div className="a-aerial-legend" data-testid="band-aerial-legend">
-          {(stage === "laid_out" ? LEGEND_ORDER : (["work_zone"] as const)).map((zone) => (
+          {(keyStage === "laid_out" ? LEGEND_ORDER : (["work_zone"] as const)).map((zone) => (
             <div key={zone} className="a-aerial-row tr-note">
               <span
                 className="a-aerial-swatch"
@@ -545,12 +673,11 @@ export function BandAerial({
       )}
       {/* W10: the two sentences are not channels; one line under the
           aerial. */}
-      {shown && stage === "work" && <p className="a-aerial-line tr-prov">{AERIAL_KIND_OWED}</p>}
-      {shown && stage === "laid_out" && approaches.length === 2 && (
-        <p className="a-aerial-line tr-prov">
-          Two approaches: {boundWord(approaches[0].travel_bearing_deg)} (the work&apos;s side) and{" "}
-          {boundWord(approaches[1].travel_bearing_deg)}
-        </p>
+      {src !== null && keyStage === "work" && (
+        <p className="a-aerial-line tr-prov">{AERIAL_KIND_OWED}</p>
+      )}
+      {src !== null && display?.approachWords && (
+        <p className="a-aerial-line tr-prov">{display.approachWords}</p>
       )}
     </div>
   );

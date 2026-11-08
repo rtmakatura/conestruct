@@ -1,0 +1,48 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "armed",
+   "zoomIn": true,
+   "zoomVisible": true,
+   "focus": "BODY",
+   "bar": {
+    "role": "status",
+    "text": "Tap the intersection nearest the work"
+   },
+   "armed": true,
+   "held": null,
+   "busy": null,
+   "step": "0"
+  },
+  {
+   "name": "zoom-mid-load",
+   "zoomIn": true,
+   "zoomVisible": true,
+   "focus": "Zoom in",
+   "bar": {
+    "role": "status",
+    "text": "Tap the intersection nearest the work"
+   },
+   "armed": false,
+   "held": "true",
+   "busy": "true",
+   "step": "1"
+  },
+  {
+   "name": "zoom-landed",
+   "zoomIn": true,
+   "zoomVisible": true,
+   "focus": "Zoom in",
+   "bar": {
+    "role": "status",
+    "text": "Tap the intersection nearest the work"
+   },
+   "armed": true,
+   "held": null,
+   "busy": null,
+   "step": "1"
+  }
+ ],
+ "errors": []
+}

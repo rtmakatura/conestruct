@@ -171,7 +171,16 @@ describe("#284: the proposed kind", () => {
     await act(async () => {
       await new Promise((r) => setTimeout(r, 500));
     });
-    expect(sent.length).toBeGreaterThan(0);
-    expect(sent.every((s) => s.kind === "flagger_lane_closure")).toBe(true);
+    // #456 (Rule 5, stated): the kind question loads each other kind's
+    // answer ahead, so those reads carry the other kinds.  The proposal
+    // still writes nothing: the plan's own reads carry its kind, and no
+    // other kind is chosen.
+    expect(sent.some((s) => s.kind === "flagger_lane_closure")).toBe(true);
+    expect(
+      document.querySelector<HTMLInputElement>('[data-testid="kind-chip-shoulder"]')?.checked,
+    ).toBe(false);
+    expect(
+      document.querySelector<HTMLInputElement>('[data-testid="kind-chip-flagger_lane_closure"]')?.checked,
+    ).toBe(true);
   });
 });

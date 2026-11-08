@@ -60,6 +60,9 @@ export type AerialFetch =
 // the cap.  CHOSEN: 24 (a session asks for about 3–6 — #301 checkpoint (b)).
 const CACHE_MAX = 24;
 const cache = new Map<string, string>();
+// #456 ruling 3: a request already on its way (the hook's own, or one
+// loaded ahead) is shared, never sent twice.
+const inflight = new Map<string, Promise<AerialFetch>>();
 
 function remember(key: string, src: string) {
   cache.set(key, src);
@@ -73,17 +76,89 @@ function remember(key: string, src: string) {
 /** Test seam: forget every picture. */
 export function forgetAerials() {
   cache.clear();
+  inflight.clear();
+}
+
+/** #456 M11: what a picture is remembered by.  The pin picture is the pin,
+ *  the frame and the zoom step and nothing else of the scenario (#440 X5;
+ *  the backend draws `stage: "pin"` from lat, lng, size and zoom alone), so
+ *  a kind answered before the side reuses the picture on screen.  Every
+ *  other stage is the whole request.  The request SENT is always the whole
+ *  request (`JSON.stringify(req)`). */
+export function aerialCacheKey(req: AerialRequest): string {
+  if (req.stage !== "pin") return JSON.stringify(req);
+  return JSON.stringify({
+    lat: req.scenario.meta.lat,
+    lng: req.scenario.meta.lng,
+    stage: "pin",
+    width: req.width,
+    height: req.height,
+    zoom: req.zoom ?? 0,
+  });
+}
+
+/** One request for one picture; a picture is remembered, and decoded before
+ *  it is reported ready so it swaps in one step (#456 M10). */
+function ask(body: string, key: string): Promise<AerialFetch> {
+  const running = inflight.get(key);
+  if (running) return running;
+  const p = (async (): Promise<AerialFetch> => {
+    try {
+      const r = await fetch("/api/corridor-map", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body,
+      });
+      if (!r.ok) {
+        const answer = (await r.json().catch(() => null)) as {
+          status?: unknown;
+          message?: unknown;
+        } | null;
+        return answer && typeof answer.status === "string"
+          ? {
+              state: "refused",
+              status: answer.status,
+              message: typeof answer.message === "string" ? answer.message : null,
+            }
+          : { state: "error" };
+      }
+      const blob = await r.blob();
+      const src = URL.createObjectURL(blob);
+      if (typeof Image !== "undefined") {
+        const img = new Image();
+        img.src = src;
+        await img.decode().catch(() => undefined);
+      }
+      remember(key, src);
+      return { state: "ready", src };
+    } catch {
+      return { state: "error" };
+    } finally {
+      inflight.delete(key);
+    }
+  })();
+  inflight.set(key, p);
+  return p;
+}
+
+/** #456 ruling 3, load ahead: ask for a picture an answer would show, unless
+ *  it is remembered or already on its way (at most one per choice). */
+export function prefetchAerial(req: AerialRequest): void {
+  const key = aerialCacheKey(req);
+  if (cache.has(key) || inflight.has(key)) return;
+  void ask(JSON.stringify(req), key);
 }
 
 /**
  * Ask for the picture ``req`` describes (null: nothing to ask), debounced
- * 300 ms like the geometry read and superseded by any newer request.  An
- * answer is kept only while it is the current request's: a new request
- * clears the old picture at once — a stale corridor is never shown as this
- * one (Rule 10).
+ * 300 ms like the geometry read.  A remembered picture comes back at once,
+ * and a request already on its way (loaded ahead) is awaited, not re-sent.
+ * An answer is kept only while it is the current request's (Rule 10); the
+ * band holds the previous picture on screen meanwhile (#456 M9).
  */
 export function useCorridorAerial(req: AerialRequest | null): AerialFetch {
-  const key = req ? JSON.stringify(req) : null;
+  const body = req ? JSON.stringify(req) : null;
+  const key = req ? aerialCacheKey(req) : null;
   // Every answer is tagged with the request it answers.  On the render in
   // which the request changes, the effect below has not run yet, so the
   // held answer is the OLD request's — and an old picture returned as this
@@ -94,11 +169,13 @@ export function useCorridorAerial(req: AerialRequest | null): AerialFetch {
     key,
     fetch: key && cache.has(key) ? { state: "ready", src: cache.get(key)! } : { state: "idle" },
   }));
-  const setResult = (fetch: AerialFetch) => setAnswer({ key, fetch });
   const tokenRef = useRef(0);
   useEffect(() => {
     const token = ++tokenRef.current;
-    if (key === null) {
+    const setResult = (fetch: AerialFetch) => {
+      if (tokenRef.current === token) setAnswer({ key, fetch });
+    };
+    if (key === null || body === null) {
       setResult({ state: "idle" });
       return;
     }
@@ -108,49 +185,20 @@ export function useCorridorAerial(req: AerialRequest | null): AerialFetch {
       return;
     }
     setResult({ state: "loading" });
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
-      try {
-        const r = await fetch("/api/corridor-map", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: key,
-          signal: controller.signal,
-        });
-        if (tokenRef.current !== token) return;
-        if (!r.ok) {
-          const body = (await r.json().catch(() => null)) as {
-            status?: unknown;
-            message?: unknown;
-          } | null;
-          if (tokenRef.current !== token) return;
-          setResult(
-            body && typeof body.status === "string"
-              ? {
-                  state: "refused",
-                  status: body.status,
-                  message: typeof body.message === "string" ? body.message : null,
-                }
-              : { state: "error" },
-          );
-          return;
-        }
-        const blob = await r.blob();
-        if (tokenRef.current !== token) return;
-        const src = URL.createObjectURL(blob);
-        remember(key, src);
-        setResult({ state: "ready", src });
-      } catch {
-        if (tokenRef.current === token) setResult({ state: "error" });
-      }
+    const running = inflight.get(key);
+    if (running) {
+      void running.then(setResult);
+      return;
+    }
+    // A request that has started is not called off: its picture is
+    // remembered, so going back to that answer shows it at once.
+    const timer = setTimeout(() => {
+      void ask(body, key).then(setResult);
     }, 300);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-    // `setResult` closes over `key`, which is the dependency.
+    return () => clearTimeout(timer);
+    // `body` changes exactly when `key` or the scenario does.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
+  }, [body]);
   if (key === null) return { state: "idle" };
   if (answer.key === key) return answer.fetch;
   const cached = cache.get(key);

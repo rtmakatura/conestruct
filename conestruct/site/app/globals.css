@@ -9295,7 +9295,6 @@ input[type="number"] {
   display: flex;
   flex-direction: column;
   gap: var(--space-block);
-  margin-top: var(--space-block);
 }
 .workbench .wq-stack .a-aerial {
   margin-top: 0;
@@ -9898,4 +9897,168 @@ input[type="number"] {
 .workbench .undo-link:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+/* ── #456 the WHERE map in view (ux-map-in-view/rulings.md) ─────────────
+   Ruling 1 (MapSideB): at a band width of 720 px and up (M1, CHOSEN, a
+   container query on the band, not the window) the aerial is the left
+   column, 560 px tall (M2) and held under the nav (M3); the summary row, the
+   Edit fold and the CONFIRM card are the right column.  Ruling 2
+   (MapSticky390): below it, while a question is on screen, the picture is a
+   150 px strip pinned under the nav (M4), clipped from the full-height
+   picture (the canvas keeps its full-height size, M21, so no new image is
+   asked for); the key and
+   the line flow under it (M5); Hide map collapses it to a Show map row.  A
+   tap question shows the whole picture in its own place, unpinned (M7, M8).  Sizes are
+   the ruled ones: 44 px controls, 13.5 (--fs-body-value) 600; colours are
+   tokens. */
+.workbench .wq-wrap {
+  container-type: inline-size;
+  margin-top: var(--space-block);
+  --aerial-h: 300px;
+}
+@media (max-width: 480px) {
+  .workbench .wq-wrap {
+    --aerial-h: 250px;
+  }
+}
+.workbench .wq-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block);
+  min-width: 0;
+}
+.workbench .a-aerial-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.workbench .a-aerial-toggle {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 16px;
+  color: var(--ink);
+  background: var(--da-ground);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.workbench .a-aerial-toggle:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 1px;
+}
+.workbench .a-aerial-hide {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  display: none;
+}
+.workbench .a-aerial-showrow,
+.workbench .a-aerial-showrow[hidden] {
+  display: none;
+}
+/* M9: a held picture of another corridor says it is being redrawn, in its
+   bottom-left corner (clear of Hide map and the big-map button). */
+.workbench .a-aerial-held {
+  position: absolute;
+  left: 8px;
+  bottom: 28px;
+  z-index: 2;
+  padding: 4px 8px;
+  color: var(--ink);
+  background: rgb(var(--ws-surface-rgb) / 0.9);
+  border: 1px solid var(--rule);
+}
+@container (min-width: 720px) {
+  .workbench .wq-stack[data-aerial] {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-section);
+  }
+  .workbench .wq-stack[data-aerial] > .a-aerial {
+    flex: 1 1 0;
+    min-width: 0;
+    position: sticky;
+    top: calc(var(--nav-h) + var(--space-block));
+  }
+  .workbench .wq-stack[data-aerial] > .wq-side {
+    flex: 1 1 0;
+  }
+  .workbench .wq-stack[data-aerial] .a-aerial-frame {
+    height: min(560px, calc(100vh - var(--nav-h) - 2 * var(--space-block)));
+  }
+}
+@container (max-width: 719.98px) {
+  .workbench .wq-stack[data-card="open"] > .a-aerial {
+    display: contents;
+  }
+  /* M8 (amended, repair 1): only the strip pins.  The tap question's map
+     is the full-height picture in its own place, so the question and its
+     instructions stay readable under it and #446's scroll runs as shipped. */
+  .workbench .wq-stack[data-card="open"]:not([data-tap]) .a-aerial-frame {
+    position: sticky;
+    top: var(--nav-h);
+    z-index: var(--z-strip);
+    height: 150px;
+  }
+  .workbench .wq-stack[data-card="open"]:not([data-tap]) .a-aerial-canvas {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    /* The full picture's canvas is the frame's content box: --aerial-h less
+       the frame's 1 px border top and bottom.  The strip asks Mapbox for the
+       same size, so the tap question and the card's close reuse the picture
+       already loaded. */
+    height: calc(var(--aerial-h) - 2px);
+    transform: translateY(-50%);
+  }
+  .workbench .wq-stack[data-card="open"]:not([data-tap]) .a-aerial-zoom {
+    display: none;
+  }
+  /* M9 in the strip: the held picture's line stays, at the strip's
+     bottom-left, beside Hide map. */
+  .workbench .wq-stack[data-card="open"]:not([data-tap]) .a-aerial-held {
+    bottom: 8px;
+    max-width: calc(100% - 140px);
+  }
+  .workbench .wq-stack[data-card="open"]:not([data-tap]) .a-aerial-hide {
+    display: inline-flex;
+    align-items: center;
+  }
+  .workbench .wq-stack[data-card="open"] .a-aerial-legend {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 16px;
+    margin-top: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+  .workbench .wq-stack[data-card="open"] .a-aerial-row-wide {
+    grid-column: 1 / -1;
+  }
+  .workbench .wq-stack[data-card="open"] .a-aerial-line {
+    margin-top: 0;
+  }
+  .workbench .wq-stack[data-map="hidden"] .a-aerial-frame,
+  .workbench .wq-stack[data-map="hidden"] .a-aerial-legend,
+  .workbench .wq-stack[data-map="hidden"] .a-aerial-line {
+    display: none;
+  }
+  .workbench .wq-stack[data-card="open"][data-map="hidden"] .a-aerial-showrow {
+    position: sticky;
+    top: var(--nav-h);
+    z-index: var(--z-strip);
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+    background: var(--canvas);
+  }
 }

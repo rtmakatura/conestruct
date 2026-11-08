@@ -166,6 +166,7 @@ export function BandStack(props: BandStackProps) {
     openOverride,
     blockerReason,
     kindConfirmed: kindState === "confirmed",
+    kindPicked: kindState !== "none",
     crossStreetTag: crossStreet?.text ?? null,
   });
 

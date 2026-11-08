@@ -1,0 +1,32 @@
+== 1198x930 errors=0 
+   CLS (no recent input) total=0.0067 band-sourced=0.0067
+   requests: aerial=6 geometry=12 nearest=2
+   00-before-pin              | layout band=null | frame=- | vis=null | card=- | qInView=null | y=0
+   01-kind-question           | layout band=846 | frame=-343.5..-43.5 h300 w846 | vis=0 | card=79.5..446 | qInView=true | y=600 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={} | WHAT="◌ What's the job? pending: kind of work not chosen" GEN="Generate plan Choose the kind of work"
+   kind-flagger               | layout band=846 | frame=-343.5..-43.5 h300 w846 | vis=0 | card=79.5..446 | qInView=true | y=600 | T ms=884 blank=true wait=true a=1 g=1 n=0
+   kind-shoulder              | layout band=846 | frame=-343.5..-43.5 h300 w846 | vis=0 | card=79.5..446 | qInView=true | y=600 | T ms=1019 blank=true wait=true a=1 g=1 n=0
+   03-side-question           | layout band=846 | frame=-213.5..86.5 h300 w846 | vis=35 | card=209.5..446.5 | qInView=true | y=470 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={}
+   side                       | layout band=846 | frame=-213.5..86.5 h300 w846 | vis=35 | card=233.3..470.3 | qInView=true | y=470 | T ms=817 blank=true wait=true a=1 g=1 n=0
+   undo-side                  | layout band=846 | frame=-213.5..86.5 h300 w846 | vis=35 | card=209.5..446.5 | qInView=true | y=470 | T ms=346 blank=true wait=true a=0 g=1 n=0
+   side-again                 | layout band=846 | frame=-213.5..86.5 h300 w846 | vis=35 | card=233.3..470.3 | qInView=true | y=470 | T ms=357 blank=true wait=true a=0 g=1 n=0
+   11-strings-kind-picked     | layout band=846 | frame=-213.5..86.5 h300 w846 | vis=35 | card=233.3..470.3 | qInView=true | y=470 | WHAT="◌ What's the job? pending: kind of work not chosen" GEN="Generate plan Choose the kind of work"
+   12-confirmed               | layout band=null | frame=- | vis=null | card=- | qInView=null | y=193 | WHAT="null" GEN="Generate plan Generation declined. The PLAN DECLINED notice says why."
+   kind-ni                    | layout band=846 | frame=-343.5..-43.5 h300 w846 | vis=0 | card=79.5..446 | qInView=true | y=600 | T ms=828 blank=true wait=true a=1 g=1 n=0
+   14-cross-question-armed    | layout band=846 | frame=-202.5..97.5 h300 w846 | vis=46 | card=220.5..400.8 | qInView=true | y=459 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={}
+   15-cross-found             | layout band=846 | frame=-202.5..97.5 h300 w846 | vis=46 | card=220.5..400.8 | qInView=true | y=459 | axe=0 small=[{"text":"+","testid":null,"w":32,"h":32},{"text":"−","testid":null,"w":32,"h":32}] new={} | scroll 459->459
+== 390x844 errors=0 
+   CLS (no recent input) total=0.0001 band-sourced=0.0000
+   requests: aerial=6 geometry=12 nearest=2
+   00-before-pin              | layout band=null | frame=- | vis=null | card=- | qInView=null | y=93
+   01-kind-question           | layout band=328 | frame=-523.3..-273.3 h250 w328 | vis=0 | card=-89.5..295.8 | qInView=false | y=789 | axe=0 small=[] new={} | WHAT="◌ What's the job? pending: kind of work not chosen" GEN="Generate plan Choose the kind of work"
+   kind-flagger               | layout band=328 | frame=-523.3..-273.3 h250 w328 | vis=0 | card=-89.5..295.8 | qInView=false | y=789 | T ms=859 blank=true wait=true a=1 g=1 n=0
+   kind-shoulder              | layout band=328 | frame=265.8..515.8 h250 w328 | vis=250 | card=699.5..1084.8 | qInView=true | y=0 | T ms=833 blank=true wait=true a=1 g=1 n=0
+   03-side-question           | layout band=328 | frame=-351.3..-101.3 h250 w328 | vis=0 | card=82.5..383.8 | qInView=true | y=617 | axe=0 small=[] new={}
+   side                       | layout band=328 | frame=-424.3..-174.3 h250 w328 | vis=0 | card=82.8..384 | qInView=true | y=690 | T ms=828 blank=true wait=true a=1 g=1 n=0
+   undo-side                  | layout band=328 | frame=-351.3..-101.3 h250 w328 | vis=0 | card=82.5..383.8 | qInView=true | y=617 | T ms=351 blank=true wait=true a=0 g=1 n=0
+   side-again                 | layout band=328 | frame=-424.3..-174.3 h250 w328 | vis=0 | card=82.8..384 | qInView=true | y=690 | T ms=376 blank=true wait=true a=0 g=1 n=0
+   11-strings-kind-picked     | layout band=328 | frame=-424.3..-174.3 h250 w328 | vis=0 | card=82.8..384 | qInView=true | y=690 | WHAT="◌ What's the job? pending: kind of work not chosen" GEN="Generate plan Choose the kind of work"
+   12-confirmed               | layout band=null | frame=- | vis=null | card=- | qInView=null | y=340 | WHAT="null" GEN="Generate plan Generation declined. The PLAN DECLINED notice says why."
+   kind-ni                    | layout band=328 | frame=-523.3..-273.3 h250 w328 | vis=0 | card=-89.5..295.8 | qInView=false | y=789 | T ms=822 blank=true wait=true a=1 g=1 n=0
+   14-cross-question-armed    | layout band=328 | frame=-382.3..-132.3 h250 w328 | vis=0 | card=51.5..296 | qInView=true | y=648 | axe=0 small=[] new={}
+   15-cross-found             | layout band=328 | frame=-382.3..-132.3 h250 w328 | vis=0 | card=51.5..296 | qInView=true | y=648 | axe=0 small=[] new={} | scroll 648->648

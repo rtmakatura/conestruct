@@ -53,7 +53,9 @@ export const CONFIRM_LABEL = "Confirm and lay out the plan";
  *  summary, the device XLSX, the quote: #372), so the line says both. */
 export const CROSS_QUESTION = "Which intersection is the work near?";
 export const CROSS_WHY =
-  "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.";
+  // #456 M18 (R145 self-ruled): "on the map", not "on the map above": in
+  // two columns the map is to the left.
+  "Tap where the two streets cross on the map. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.";
 /** #440 ruling 6. */
 export const CROSS_FINDING = "Finding the street name…";
 /** #440 X8. */

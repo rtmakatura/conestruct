@@ -4,16 +4,14 @@ import { useRef, useState, type ReactNode } from "react";
 import type { JurisdictionLookup } from "./JurisdictionSection";
 import {
   applyClassification,
-  carryAcrossKinds,
   clearDetectionRelays,
-  defaultFor,
   hasLocation,
   type AutoApplyDelta,
   type Scenario,
   type ScenarioKind,
   type ScenarioMeta,
 } from "@/lib/scenarios";
-import { applyOverridesToScenario } from "@/lib/scenarios/overrides";
+import { kindSwitch } from "@/lib/scenarios/kind-switch";
 import { withPin, withoutSide } from "@/lib/scenarios/site-corrections";
 import {
   summarizeHandoff,
@@ -208,6 +206,7 @@ export function GeneratorSidebar({
     refusalPending,
     // Defect 1: Generate waits on a person's confirmation of the kind.
     kindConfirmed: kindState === "confirmed",
+    kindPicked: kindState !== "none",
     notMarkedLine: notMarkedLine(geometry),
   });
   // #222: pre-pin, every step after Location renders pending (dim +
@@ -244,24 +243,12 @@ export function GeneratorSidebar({
     lastAppliedDetectionRef.current = null;
     lastAppliedCrossStreetRef.current = null;
     setApproachConfirm({ pending: false, reason: null });
-    // #181: a kind switch is not an erase site.  Shared inputs carry
-    // (carryAcrossKinds), and the safety relays re-derive from the
-    // confirmed detection so the new kind gets its own relay shape —
-    // flagger gains `oneway` (#158) here even though the shoulder
-    // branch never captured it.  No detection on record → no relays:
-    // absence renders as absence (rule 10).
-    let next = carryAcrossKinds(scenario, defaultFor(kind));
+    // #181's carry and the re-derived relays: lib/scenarios/kind-switch.ts
+    // (#456: one function, so the WHERE band's load-ahead builds the same
+    // scenario this click writes).
+    const { next, applied } = kindSwitch(scenario, kind);
     const confirmed = scenario.meta.confirmedRoad;
-    if (confirmed) {
-      const prior = next;
-      const applied = applyClassification(next, confirmed.classification);
-      // The operator's in-effect speed outranks the re-applied detection
-      // speed — same override-over-detection order as onPickerSave.  The
-      // re-application exists to rebuild the relays for the new kind,
-      // not to revert a value the operator already reviewed.
-      next = applyOverridesToScenario(applied.scenario, {
-        speedMph: scenario.speed,
-      });
+    if (confirmed && applied) {
       lastAppliedDetectionRef.current = JSON.stringify(
         confirmed.classification,
       );
@@ -269,7 +256,7 @@ export function GeneratorSidebar({
       // narrower domain forces) — the old kind's notes no longer apply.
       setHandoff(
         summarizeHandoff({
-          prior,
+          prior: applied.prior,
           classification: confirmed.classification,
           overrides: { speedMph: scenario.speed },
           final: next,

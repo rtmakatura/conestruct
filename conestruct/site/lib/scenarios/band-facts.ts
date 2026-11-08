@@ -383,6 +383,9 @@ export interface BandInput {
    *  `scenario.kind` cannot say, because it always holds a value.
    *  Defaults to true for callers that do not ask. */
   kindConfirmed?: boolean;
+  /** #456 ruling 4: a kind is chosen (confirmed or not).  Defaults to
+   *  false: the not-chosen line, as before. */
+  kindPicked?: boolean;
   /** #285: the backend's nearest-cross-street tag, or null. */
   crossStreetTag?: string | null;
 }
@@ -398,6 +401,7 @@ export function deriveBands({
   openOverride,
   blockerReason = null,
   kindConfirmed = true,
+  kindPicked = false,
   crossStreetTag = null,
 }: BandInput): BandModel {
   const located = hasLocation(scenario.meta);
@@ -464,7 +468,11 @@ export function deriveBands({
             // kind of work not chosen'" — a STATE, not the instruction.
             // The instruction ("choose the kind of work") lives only on
             // the disabled primaries (the strip-wording ruling, a04bd73).
-            "pending: kind of work not chosen"
+            // #456 ruling 4: once a kind is chosen, WHERE's confirm is
+            // what WHAT waits on.
+            kindPicked
+            ? "Opens after you confirm where"
+            : "pending: kind of work not chosen"
           : // Part 1 §2.2's own string once a road exists; §2.1's before.
             scenario.meta.confirmedRoad
             ? `road facts prefill from ${confirmedRoadLabel(scenario)}`

@@ -1,0 +1,8 @@
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  21:39:58
+   Duration  2.34s (transform 133ms, setup 0ms, collect 495ms, tests 8ms, environment 778ms, prepare 149ms)
+

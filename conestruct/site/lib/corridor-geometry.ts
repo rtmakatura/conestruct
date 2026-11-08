@@ -267,45 +267,89 @@ export function refusalMessage(body: unknown): string | null {
  * scenario's (a newer request clears nothing, an error clears the answer —
  * a stale corridor is never drawn as this one, Rule 10).
  */
+// #456 M12: geometry answers already read this session, by scenario, and
+// reads on their way (the hook's own, or one loaded ahead) — so an Undo or
+// an answer loaded ahead is served without a read.  The answer is a pure
+// read of the scenario (no scan; the road is the relayed centerline).
+// CHOSEN: 24, the aerial cache's own cap.
+const GEOMETRY_MAX = 24;
+const geoCache = new Map<string, CorridorGeometry>();
+const geoInflight = new Map<string, Promise<GeometryFetch>>();
+
+/** Test seam: forget every geometry answer. */
+export function forgetGeometries() {
+  geoCache.clear();
+  geoInflight.clear();
+}
+
+function readGeometry(key: string): Promise<GeometryFetch> {
+  const running = geoInflight.get(key);
+  if (running) return running;
+  const p = (async (): Promise<GeometryFetch> => {
+    try {
+      const r = await fetch("/api/render/corridor-geometry", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ scenario: JSON.parse(key) }),
+      });
+      if (!r.ok) {
+        const message = r.status === 400 ? refusalMessage(await r.json().catch(() => null)) : null;
+        return { state: "error", geometry: null, httpStatus: r.status, message };
+      }
+      const g = (await r.json()) as CorridorGeometry;
+      geoCache.set(key, g);
+      while (geoCache.size > GEOMETRY_MAX) geoCache.delete(geoCache.keys().next().value as string);
+      return { state: "ready", geometry: g };
+    } catch {
+      return { state: "error", geometry: null };
+    } finally {
+      geoInflight.delete(key);
+    }
+  })();
+  geoInflight.set(key, p);
+  return p;
+}
+
+/** #456 ruling 3, load ahead: the geometry an answer would read, from the
+ *  cache, the read already on its way, or one new read. */
+export function prefetchGeometry(scenario: Scenario): Promise<GeometryFetch> {
+  const key = JSON.stringify(scenario);
+  const g = geoCache.get(key);
+  return g ? Promise.resolve({ state: "ready", geometry: g }) : readGeometry(key);
+}
+
 export function useCorridorGeometry(scenario: Scenario | null): GeometryFetch {
   const [result, setResult] = useState<GeometryFetch>({ state: "idle", geometry: null });
   const key = scenario ? JSON.stringify(scenario) : null;
   const tokenRef = useRef(0);
   useEffect(() => {
     const token = ++tokenRef.current;
+    const settle = (r: GeometryFetch) => {
+      if (tokenRef.current !== token) return;
+      // A fresh object each time it is served: consumers compare answers by
+      // identity (useSideClearOnKindChange), and a remembered answer is a
+      // new answer to them.
+      setResult(r.state === "ready" && r.geometry ? { ...r, geometry: { ...r.geometry } } : r);
+    };
     if (key === null) {
       setResult({ state: "idle", geometry: null });
       return;
     }
+    const cached = geoCache.get(key);
+    if (cached) {
+      settle({ state: "ready", geometry: cached });
+      return;
+    }
     setResult((prev) => ({ state: "loading", geometry: prev.geometry }));
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
-      try {
-        const r = await fetch("/api/render/corridor-geometry", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ scenario: JSON.parse(key) }),
-          signal: controller.signal,
-        });
-        if (tokenRef.current !== token) return;
-        if (!r.ok) {
-          const message =
-            r.status === 400 ? refusalMessage(await r.json().catch(() => null)) : null;
-          if (tokenRef.current !== token) return;
-          setResult({ state: "error", geometry: null, httpStatus: r.status, message });
-          return;
-        }
-        const g = (await r.json()) as CorridorGeometry;
-        if (tokenRef.current !== token) return;
-        setResult({ state: "ready", geometry: g });
-      } catch {
-        if (tokenRef.current === token) setResult({ state: "error", geometry: null });
-      }
+    const running = geoInflight.get(key);
+    if (running) {
+      void running.then(settle);
+      return;
+    }
+    const timer = setTimeout(() => {
+      void readGeometry(key).then(settle);
     }, 300);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
+    return () => clearTimeout(timer);
   }, [key]);
   return result;
 }

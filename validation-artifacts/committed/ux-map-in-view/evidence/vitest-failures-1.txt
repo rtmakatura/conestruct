@@ -1,0 +1,2 @@
+ FAIL  lib/design/type-census.test.ts > #263 type census — globals.css font-sizes > every other font-size site is a named exception or a declared-debt row (new size/site fails)
+ FAIL  lib/design/type-census.test.ts > #263 type census — the exceptions are the ruled set and the pins are the sources' figures > CENSUS_PINS equal the figures read from the sources (the README quotes these)

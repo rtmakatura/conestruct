@@ -304,7 +304,7 @@ describe("#440: the cross-street question on the WHERE band", () => {
     expect(card.textContent).toContain("Question 2 of 3");
     expect(card.textContent).toContain("Which intersection is the work near?");
     expect(card.textContent).toContain(
-      "Tap where the two streets cross on the map above. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
+      "Tap where the two streets cross on the map. The plan counts signs for the cross street. The sheet points to CDOT's standard drawing for where they go.",
     );
     // Ruling 2 / X20: the side comes after the cross street, so this
     // question's button is Next, and Confirm waits for the side.

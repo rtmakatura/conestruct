@@ -125,6 +125,10 @@ export interface RailInput {
    *  wire.  Defaults to true so a caller with no such question — the
    *  rail's own unit suite — reads the chain it always read. */
   kindConfirmed?: boolean;
+  /** #456 ruling 4: has a person chosen a kind (confirmed or not)?  With
+   *  a kind chosen and WHERE not confirmed, the blocker is WHERE, not the
+   *  kind.  Defaults to false: the kind's own sentence, as before. */
+  kindPicked?: boolean;
   /** #317 / R131: the backend's line while a near-intersection plan's
    *  crossing isn't marked (`notMarkedLine`), or null.  The side rank
    *  reads it in place of the side sentence, side stored or not. */
@@ -148,6 +152,9 @@ export const LOCATION_BLOCKER =
  *  One string on the WHERE primary, the WHAT pending line and the
  *  Generate frame (rule 139: one derivation, every surface). */
 export const KIND_BLOCKER = "Choose the kind of work";
+/** #456 ruling 4, verbatim: the kind is chosen and WHERE is not confirmed
+ *  yet (the CONFIRM card's last press, "Confirm and lay out the plan"). */
+export const WHERE_BLOCKER = "Confirm where the work is first";
 /** #290 — the pre-side ruling's sentence, verbatim ("before the side is
  *  confirmed, the picker draws the pin and the sentence ..."), and the
  *  one reason every surface gives while the side is unset (rule 139). */
@@ -249,6 +256,7 @@ export function deriveRail({
   refusal,
   refusalPending,
   kindConfirmed = true,
+  kindPicked = false,
   notMarkedLine = null,
 }: RailInput): Rail {
   const wz = validateWorkZone(scenario);
@@ -297,7 +305,7 @@ export function deriveRail({
   // before one there are no chips, and the location's sentence is the
   // true reason.
   else if (located && !kindConfirmed)
-    blocker = { message: KIND_BLOCKER, entryId: "location" };
+    blocker = { message: kindPicked ? WHERE_BLOCKER : KIND_BLOCKER, entryId: "location" };
   // #290, RULE 5 (stated): a new rank, right after the kind — both are
   // the WHERE band's answers, and the direction every corridor surface
   // needs comes from the side (ruling 8).  Only under the work-start model.

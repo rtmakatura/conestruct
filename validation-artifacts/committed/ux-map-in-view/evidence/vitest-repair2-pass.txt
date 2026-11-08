@@ -1,0 +1,4 @@
+ ✓ components/bands/BandAerial.test.tsx > #456: while the next picture loads, the controls and the bar stay > a zoom step keeps the old picture, the zoom buttons and focus until the new one lands 999ms
+ ✓ components/bands/BandAerial.test.tsx > #456: while the next picture loads, the controls and the bar stay > on the tap question, the bar and its live region stay through a zoom step's load 995ms
+ Test Files  1 passed (1)
+      Tests  2 passed | 20 skipped (22)

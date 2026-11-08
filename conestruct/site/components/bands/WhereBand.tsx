@@ -26,7 +26,8 @@
 // validation-artifacts/committed/issue-301-picker-pieces/rulings.md.
 // ─────────────────────────────────────────────────────────────────────
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { scrollAerialPartIn } from "@/lib/cross-street-reveal";
 import type { ReactNode } from "react";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
 import { ENABLED_SCENARIO_KINDS } from "@/lib/scenarios";
@@ -52,7 +53,9 @@ import { crossStreetLabel } from "@/lib/road-detection/labels";
 import { symClass } from "@/lib/design/symbols";
 import { hasConfirmedSide, hasLocation, workLenIsDefault } from "@/lib/scenarios";
 import { clearWorkLen, setWorkLen } from "@/lib/scenarios/what-writes";
-import { isOperatorSet } from "@/lib/scenarios/guesses";
+import { isOperatorSet, withCurrentGuesses } from "@/lib/scenarios/guesses";
+import { kindSwitch } from "@/lib/scenarios/kind-switch";
+import { isScenarioKindEnabled, SCENARIO_KINDS } from "@/lib/scenarios";
 import { OpenBand } from "./BandPrimitives";
 import { BandAerial, type AerialBar, type AerialRing } from "./BandAerial";
 import { ManualFallback } from "./ManualFallback";
@@ -155,6 +158,14 @@ export function CorridorExtentLines({
       )}
     </div>
   );
+}
+
+/** #456 ruling 2: is the map hidden right now?  Only while the CONFIRM card
+ *  is open (the strip, and its Show map row, exist only then: a hidden map
+ *  with the card closed would have no way back), and never for a tap
+ *  question (M7).  The choice itself is kept either way. */
+export function mapHiddenNow(cardOpen: boolean, chosenHidden: boolean, tapQuestion: boolean): boolean {
+  return cardOpen && chosenHidden && !tapQuestion;
 }
 
 /** #439 ruling 3: Edit re-opens today's three rows, with their actions. */
@@ -575,6 +586,48 @@ export function WhereBand({
               : marked
                 ? { kind: "found", name: crossStreetLabel(marked.name) }
                 : null;
+  // #456 ruling 2: the CONFIRM card is open while a question is on screen;
+  // the narrow layout pins the map while it is.  Hide map's choice is the
+  // band's, so it holds until WHERE is confirmed (the band closes and this
+  // state goes with it).  M7: a tap question shows the map whatever it is.
+  const cardOpen = chipsShown && currentQ !== null;
+  const [mapHidden, setMapHidden] = useState(false);
+  // Only while the card is open: the strip (and its Show map row) exist
+  // only then, so a hidden map with the card closed would have no way back.
+  const hiddenNow = mapHiddenNow(cardOpen, mapHidden, crossOpen);
+  // #456 M8 (repair 1): the tap question's map is unpinned at full height.
+  // Opening it (the operator's Next) brings the picture into view once, by
+  // #446 T24's own least scroll; a picture already wholly in view moves
+  // nothing.
+  const stackRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!crossOpen) return;
+    const frame = stackRef.current?.querySelector<HTMLElement>('[data-testid="band-aerial-frame"]');
+    if (frame) scrollAerialPartIn(frame);
+  }, [crossOpen]);
+  // #456 ruling 3, load ahead (M13): the scenarios the open question's
+  // answers would write, built by the same functions the click goes
+  // through (the side's `meta.work`; the sidebar's kind switch; the shell's
+  // guess pass), so the click finds its picture already there.  Never for
+  // a tap question.
+  const ahead: Scenario[] = [];
+  if (cardOpen && !locked && (currentQ === "side" || currentQ === "kind")) {
+    if (currentQ === "side") {
+      const options = (geometry.geometry?.side_options ?? []).filter((o) => o.built);
+      const selected = selectedSideOption(options, scenario.meta.work);
+      for (const o of options) {
+        if (o === selected) continue;
+        ahead.push(
+          withCurrentGuesses({ ...scenario, meta: { ...scenario.meta, work: { ...o.work } } } as Scenario, scenario),
+        );
+      }
+    } else {
+      for (const k of SCENARIO_KINDS) {
+        if (!isScenarioKindEnabled(k.v) || k.v === scenario.kind) continue;
+        ahead.push(withCurrentGuesses(kindSwitch(scenario, k.v).next, scenario));
+      }
+    }
+  }
   const aerialRing: AerialRing | null =
     crossOpen && crossMark?.ring && phase !== "idle"
       ? { ...crossMark.ring, look: phase === "resolving" ? "solid" : "dashed" }
@@ -620,7 +673,17 @@ export function WhereBand({
       )}
 
       {located && (
-        <div className="wq-stack">
+        // #456 ruling 1 / M1: the wrapper is the layout's container; two
+        // columns start at a band width of 720 px (app/globals.css).
+        <div className="wq-wrap">
+        <div
+          ref={stackRef}
+          className="wq-stack"
+          data-aerial={aerialShown || undefined}
+          data-card={cardOpen ? "open" : undefined}
+          data-tap={crossOpen || undefined}
+          data-map={hiddenNow ? "hidden" : undefined}
+        >
           {/* #301 piece 1: the aerial, a read (data-read) that stays live
               under the write lock.  #439 ruling 1: first after the
               question, "Edit on map" on its corner, the key on it. */}
@@ -639,6 +702,10 @@ export function WhereBand({
               bar={aerialBar}
               ring={aerialRing}
               missCount={crossMark?.missCount ?? 0}
+              ahead={ahead}
+              hidden={hiddenNow}
+              onHide={() => setMapHidden(true)}
+              onShow={() => setMapHidden(false)}
             />
           ) : (
             // W11: no aerial (a stale road, a corridor-end pin): the
@@ -655,6 +722,7 @@ export function WhereBand({
             </button>
           )}
 
+          <div className="wq-side">
           <WhereSummary
             parts={summaryParts(scenario, crossStreet?.text ?? null)}
             provenance={whereProvenance(scenario, crossStreet?.provenance ?? null)}
@@ -767,6 +835,8 @@ export function WhereBand({
               locked={locked}
             />
           )}
+          </div>
+        </div>
         </div>
       )}
 

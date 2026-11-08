@@ -200,19 +200,29 @@ describe("the band's aerial, state by state", () => {
     expect(q("band-aerial-img")).toBeNull();
   });
 
-  it("while the geometry re-reads, the frame waits — the previous answer is never pictured", async () => {
+  // #456 ruling 3 (Rule 5, stated; M9): the old picture stays until the
+  // new one is ready, never a blank box, and says it is being redrawn.
+  it("while the geometry re-reads, the old picture stays and says it is being redrawn", async () => {
     const { rerender } = render(
       <BandAerial scenario={SCENARIO} geometry={answer("laid_out")} kindConfirmed />,
     );
     await settle();
-    expect(q("band-aerial-img")).not.toBeNull();
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
     const moved = { ...SCENARIO, meta: { ...SCENARIO.meta, lat: SCENARIO.meta.lat + 0.001 } };
     const reading: GeometryFetch = { state: "loading", geometry: answer("laid_out").geometry };
     rerender(<BandAerial scenario={moved} geometry={reading} kindConfirmed />);
-    expect(q("band-aerial-img")).toBeNull();
-    expect(q("band-aerial-note")?.textContent).toBe(AERIAL_WAIT);
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-1");
+    expect(q("band-aerial-note")).toBeNull();
+    expect(q("band-aerial-held")?.textContent).toBe(AERIAL_WAIT);
+    expect(q("band-aerial-frame")?.getAttribute("aria-busy")).toBe("true");
     await settle();
     expect(requests).toHaveLength(1);
+    rerender(<BandAerial scenario={moved} geometry={answer("laid_out")} kindConfirmed />);
+    await settle();
+    expect(requests).toHaveLength(2);
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-2");
+    expect(q("band-aerial-held")).toBeNull();
+    expect(q("band-aerial-frame")?.hasAttribute("aria-busy")).toBe(false);
   });
 
   it("a failed image says so; the geometry failing says so", async () => {
@@ -305,7 +315,9 @@ describe("the band's aerial zooms", () => {
     expect(requests).toHaveLength(2);
   });
 
-  it("a different corridor opens on the whole corridor and never holds the old picture (Rule 10)", async () => {
+  // #456 M9 (Rule 5, stated): the old picture is held, marked as being
+  // redrawn (Rule 10), until the new corridor's whole-corridor picture lands.
+  it("a different corridor opens on the whole corridor; the old picture waits marked as redrawing", async () => {
     const { rerender } = render(
       <BandAerial scenario={SCENARIO} geometry={answer("laid_out")} kindConfirmed />,
     );
@@ -314,8 +326,9 @@ describe("the band's aerial zooms", () => {
     await settle();
     const moved = { ...SCENARIO, meta: { ...SCENARIO.meta, lat: SCENARIO.meta.lat + 0.001 } };
     rerender(<BandAerial scenario={moved} geometry={answer("laid_out")} kindConfirmed />);
-    expect(q("band-aerial-img")).toBeNull();
-    expect(q("band-aerial-note")?.textContent).toBe(AERIAL_WAIT);
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe("blob:aerial-2");
+    expect(q("band-aerial-held")?.textContent).toBe(AERIAL_WAIT);
+    expect(q("band-aerial-note")).toBeNull();
     await settle();
     expect((requests.at(-1) as { zoom?: number }).zoom).toBeUndefined();
     expect(q("band-aerial-zoom")?.getAttribute("data-step")).toBe("0");
@@ -473,5 +486,66 @@ describe("#440: the aerial takes the cross-street tap", () => {
     await settle();
     expect(q("band-aerial-mark")).toBeNull();
     expect(q("band-aerial-mark-label")).toBeNull();
+  });
+});
+
+// ── #456 repair 2: a held load keeps the controls, the bar and focus ─────
+
+describe("#456: while the next picture loads, the controls and the bar stay", () => {
+  const zoomIn = () =>
+    document.querySelector<HTMLButtonElement>('button[aria-label="Zoom in"]');
+  let release: () => void = () => {};
+  const slow = () => {
+    const png = () => new Response(new Blob(["png"], { type: "image/png" }), { status: 200 });
+    reply = (() =>
+      new Promise<Response>((res) => {
+        release = () => res(png());
+      })) as unknown as () => Response;
+  };
+
+  it("a zoom step keeps the old picture, the zoom buttons and focus until the new one lands", async () => {
+    render(<BandAerial scenario={SCENARIO} geometry={answer("laid_out")} kindConfirmed />);
+    await settle();
+    const before = q("band-aerial-img")?.getAttribute("src");
+    slow();
+    zoomIn()!.focus();
+    await act(async () => zoomIn()!.click());
+    await settle();
+    expect(q("band-aerial-img")?.getAttribute("src")).toBe(before);
+    expect(zoomIn()).not.toBeNull();
+    expect(document.activeElement).toBe(zoomIn());
+    expect(q("band-aerial-held")).toBeNull(); // P16: the same corridor, no line
+    await act(async () => release());
+    await settle(50);
+    expect(q("band-aerial-img")?.getAttribute("src")).not.toBe(before);
+    expect(document.activeElement).toBe(zoomIn());
+  });
+
+  it("on the tap question, the bar and its live region stay through a zoom step's load", async () => {
+    render(
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("side_not_confirmed")}
+        kindConfirmed
+        pinFrame
+        armed
+        onTap={() => {}}
+        bar={{ kind: "armed" }}
+      />,
+    );
+    await settle();
+    const bar = q("band-aerial-bar");
+    expect(bar?.getAttribute("role")).toBe("status");
+    slow();
+    await act(async () => zoomIn()!.click());
+    await settle();
+    // The same element: its live region was never unmounted.
+    expect(q("band-aerial-bar")).toBe(bar);
+    expect(q("band-aerial-bar")?.textContent).toContain(AERIAL_TAP_BAR);
+    // A tap waits for the new picture (no tap on a held picture).
+    expect(q("band-aerial-frame")?.classList.contains("is-armed")).toBe(false);
+    await act(async () => release());
+    await settle(50);
+    expect(q("band-aerial-frame")?.classList.contains("is-armed")).toBe(true);
   });
 });
