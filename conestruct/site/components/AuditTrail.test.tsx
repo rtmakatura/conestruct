@@ -782,7 +782,7 @@ describe("#97 audit-panel citation edition guard", () => {
       };
       advance.citation = {
         cite: "MUTCD TABLE 6B-1",
-        footer: "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
+        footer: "MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
       };
     }
     return {
@@ -1152,7 +1152,7 @@ describe("taper derivation text renders as received (PR A sentinel)", () => {
     const fallback = buildShoulderItems(dummyShoulder, withAdvance({ sign_table: [] }), true, String)[3];
     const html = renderDetail(fallback);
     expect(fallback.cite).toBe("MUTCD TABLE 6B-1");
-    expect(html).toContain("MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING");
+    expect(html).toContain("MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing");
     expect(html).not.toContain("§ 6B-1");
   });
 });
@@ -1432,9 +1432,9 @@ describe("arc12 coda — expanded-body chips cite the standard plan, not the Sup
     return renderDetail(item);
   }
 
-  it("Colorado body footer chip reads 'CDOT S-630-1 · STANDARD PLAN'", () => {
+  it("Colorado body footer chip reads 'CDOT S-630-1 · Standard plan' (#453 sentence case)", () => {
     const html = coloradoBodyHtml();
-    expect(html).toContain("CDOT S-630-1 · STANDARD PLAN");
+    expect(html).toContain("CDOT S-630-1 · Standard plan");
     // The per-check citation tags are the backend's recited strings.
     expect(html).toContain("CDOT S-630-1 (July 2026) Sheet 2, General Note 3");
   });

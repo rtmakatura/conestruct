@@ -36,7 +36,7 @@ _ALL_FLAGS = (
 _ADVISORY = {
     "adjacent_intersection": "No devices added · cross-street layout not generated",
     "adjacent_interchange": "No devices added · ramp layout not generated",
-    "driveways_present": "Keep access gaps · no devices across driveways",
+    "driveways_present": "Advisory · keep access gaps, no devices across driveways",
 }
 
 

@@ -1,0 +1,14 @@
+pages 4 | engine keys: {'road_type': False, 'urban_low': False, '->': True, 'threshold ->': False, '[work_zone': False}
+  p1: Device spacing: taper 30 ft
+  p1: Device spacing: tangent 60 ft
+  p1: At 30 mph, below the 45 mph threshold, the taper length is the offset width times the speed squared, divided by 60.
+  p1: MUTCD Table 6B-2 sets 200 ft; the CDOT supplement sets no value at this speed.
+  p1: Source: MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)
+  p2: In the taper, devices are spaced 30 ft apart, the speed in feet at 30 mph (MUTCD Sec 6K.01).
+  p2: Along the tangent, devices are spaced 60 ft apart, twice the speed in feet (MUTCD Sec 6K.01).
+  p2: L/3 = 40 ft / 30 ft max spacing -> 4 drums at 13.3 ft intervals
+  p2: 1000 ft / 60 ft max spacing -> 18 cones at 58.8 ft intervals
+  p2: Buffer: 200 ft / 60 ft max spacing -> 3 cones at 50.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents
+  p2: At 30 mph, the signs are spaced by MUTCD Table 6B-1's Urban (low speed) row.
+  p2: Table 6B-1 spacing: A 100 ft (the distance from the transition or point of restriction to the first sign), B 100 ft (the
+  p2: Source: MUTCD 11th Ed. Table 6B-1

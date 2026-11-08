@@ -59,7 +59,7 @@ def test_page1_states_the_assumed_width_the_taper_uses(
     taper = audit["sections"]["taper"]
     assert taper["shoulder_width_ft"] == float(width)
     assert taper["shoulder_width_basis"] == "assumed"
-    assert taper["formula_text"][0] == f"W = {width} ft (assumed)"
+    assert taper["formula_text"][0] == f"Shoulder width = {width} ft (assumed)"  # #453 label
     audit_pdf = " ".join(
         " ".join(_pdf_text(_post(api, "/render/audit-pdf", scenario).content)).split()
     )

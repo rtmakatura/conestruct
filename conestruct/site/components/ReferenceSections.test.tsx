@@ -82,7 +82,9 @@ describe("rule 169: zone geometry reads the hero's one list", () => {
     const row = rowOf("reference", "Zone geometry")!;
     await openRow(user, row);
     for (const r of zoneGeometryRows((BREAKDOWN as Extract<DeviceBreakdownState, { state: "ready" }>).data.zone_geometry!)) {
-      expect(within(row).getByText(r.label)).toBeTruthy();
+      // #453 ruling 1: the hero's plain label, never the letter one.
+      expect(within(row).getByText(r.plain)).toBeTruthy();
+      if (r.label !== r.plain) expect(within(row).queryByText(r.label)).toBeNull();
       expect(within(row).getByText(r.value)).toBeTruthy();
     }
   });

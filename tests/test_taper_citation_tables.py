@@ -82,7 +82,7 @@ def test_shoulder_source_cites_6b4_for_L_and_6b3_for_the_third() -> None:
     assert taper["L_required_ft"] == audit_module._ft(shoulder_taper_length(35, 8.0))
     assert taper["L_required_ft"] == 54
     # The panel chip still names the ratio table (the acceptance keeps 6B-3).
-    assert taper["citation"]["footer"].endswith("TABLE 6B-3")
+    assert taper["citation"]["footer"].endswith("Table 6B-3")  # #453 sentence case
 
 
 def test_near_intersection_source_cites_6b4_for_L_and_6b3_for_full_L(

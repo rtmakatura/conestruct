@@ -1,0 +1,1 @@
+repair 1 full vitest: components/ReferenceSections.details-453.test.tsx > X18: a short mono value never breaks > the taper rows' values carry the one-line class; a long hours window doesn't

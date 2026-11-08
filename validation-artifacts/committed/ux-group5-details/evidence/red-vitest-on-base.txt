@@ -1,0 +1,12 @@
+#453 red proof, repair round 2: components/ReferenceSections.details-453.test.tsx (final version) on the base frontend edaffb3e (git archive into the scratchpad, node_modules junctioned from the worktree).
+     → Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.: expected undefined to be truthy
+     → expected <li><span …(1)></span>
+     → expected <button type="button" …(2)></button> to be null
+     → expected '10.5 × 40^2 / 60 = 280 ft' to match /\d\u00a0ft$/
+     → expected [ { …(2) } ] to deeply equal [ { text: 'No road at the anchor.' } ]
+ FAIL  components/ReferenceSections.details-453.test.tsx > ruling 1: the Permit detail > each notice is a line with its audience under it, never a lowercase sentence
+ FAIL  components/ReferenceSections.details-453.test.tsx > ruling 2: a search shows only the matching lines of each list > 'sidewalk' opens Permit with its matching notice and fee lines, counted, each list with its Show all
+ FAIL  components/ReferenceSections.details-453.test.tsx > ruling 3: no Show all when every line shows > 'upstream' matches every advance sign: the list shows whole, with no count and no list button
+ FAIL  components/ReferenceSections.details-453.test.tsx > X18: a mono value never breaks badly > a short value carries the one-line class; a longer one keeps its number and unit together
+ FAIL  components/ReferenceSections.details-453.test.tsx > ruling 1: no internal key under a corridor warning > a warning line is its message only, never the wire flag
+      Tests  5 failed (5)

@@ -433,7 +433,14 @@ def _flagger_anchor(
             "summary.buffer_space_ft": buffer,
             "summary.device_spacing_taper_ft": 20.0,
             "summary.device_spacing_tangent_ft": tangent,
-            "sections.advance.spacing_text": f"A = {abc} ft, B = {abc} ft, C = {abc} ft",
+            # #453: the same A/B/C distances, in the sentence the panel and the
+            # PDF print (each letter defined as Table 6B-1's note defines it).
+            "sections.advance.spacing_text": (
+                f"Table 6B-1 spacing: A {abc:,} ft (the distance from the transition or "
+                f"point of restriction to the first sign), B {abc:,} ft (the distance "
+                f"between the first and second signs), C {abc:,} ft (the distance between "
+                "the second and third signs)."
+            ),
         },
         citation=_FLAGGER_ANCHOR_CITATION,
     )

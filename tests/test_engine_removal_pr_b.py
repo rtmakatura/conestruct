@@ -112,7 +112,7 @@ def test_flagger_section_carries_backend_sight_distance(speed: int) -> None:
     assert flagger["sight_distance_ft"] == stopping_sight_distance_ft(speed)
     assert flagger["sight_distance_citation"] == {
         "cite": "MUTCD § 6D.06",
-        "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+        "footer": "MUTCD § 6D.06 · Table 6B-2 · Stopping sight distance",  # #453
     }
 
 

@@ -2,7 +2,7 @@
 // on the page, no backend call.  It reads the same strings the rows draw.
 
 import { nicknameTerms } from "./reference-nicknames";
-import type { RowDetail } from "./row-detail";
+import { detailLists, type RowDetail } from "./row-detail";
 
 export interface SearchableRow {
   id: string;
@@ -21,8 +21,13 @@ export interface RowHit {
   inside: boolean;
   /** A match in the source shows the Source line under the title. */
   inSource: boolean;
-  /** Which list lines match; null when no line does. */
+  /** Which lines of `detail.list` match; null when no line does. */
   listLines: number[] | null;
+  /** #453 ruling 2: the matching lines of every list (`detailLists` order). */
+  lists: number[][];
+  /** #453 ruling 2 (repair 1): the matching sentences and label-value rows. */
+  sentences: number[];
+  pairs: number[];
 }
 
 export interface SectionHit {
@@ -57,17 +62,22 @@ function searchRow(row: SearchableRow, m: RegExp): RowHit | null {
   const d = row.detail;
   const lineText = (l: { text: string; value?: string; sub?: string }) =>
     hits(m, l.text) || hits(m, l.value) || hits(m, l.sub);
-  const matched = (d.list?.lines ?? []).flatMap((l, i) => (lineText(l) ? [i] : []));
-  const listLines = matched.length > 0 ? matched : null;
+  const lists = detailLists(d).map((list) => list.lines.flatMap((l, i) => (lineText(l) ? [i] : [])));
+  const first = d.list ? lists[0] : [];
+  const listLines = first.length > 0 ? first : null;
+  const sentences = (d.sentences ?? []).flatMap((s, i) => (hits(m, s) ? [i] : []));
+  // X10: the label and value are one wire line, and the whole line stays findable.
+  const pairs = (d.pairs ?? []).flatMap((p, i) =>
+    hits(m, p.label) || hits(m, p.value) || hits(m, `${p.label} = ${p.value}`) ? [i] : [],
+  );
   const inside =
-    listLines !== null ||
-    (d.sentences ?? []).some((s) => hits(m, s)) ||
-    // X10: the label and value are one wire line, and the whole line stays findable.
-    (d.pairs ?? []).some((p) => hits(m, p.label) || hits(m, p.value) || hits(m, `${p.label} = ${p.value}`)) ||
+    lists.some((l) => l.length > 0) ||
+    sentences.length > 0 ||
+    pairs.length > 0 ||
     (d.links ?? []).some((l) => hits(m, l.label));
   const inSource = hits(m, d.source);
   if (!inside && !inSource && !hits(m, row.title) && !hits(m, row.result)) return null;
-  return { inside, inSource, listLines };
+  return { inside, inSource, listLines, lists, sentences, pairs };
 }
 
 export function searchSections(

@@ -122,7 +122,7 @@ def test_rendered_federal_sources_derive_from_constants() -> None:
     assert trail["spacing"]["source"] == f"MUTCD 11th Ed. Sec {sec._SEC_SPACING}"
     assert trail["taper"]["citation"] == {
         "cite": f"MUTCD § {sec._SEC_TAPER}",
-        "footer": f"MUTCD 2023 EDITION · CHAPTER 6B · TABLE {sec._TBL_TAPER}",
+        "footer": f"MUTCD 2023 edition · Chapter 6B · Table {sec._TBL_TAPER}",  # #453
     }
     assert trail["buffer"]["citation"]["cite"] == f"MUTCD § {sec._SEC_BUFFER}"
     assert trail["spacing"]["citation"]["cite"] == f"MUTCD § {sec._SEC_SPACING}"

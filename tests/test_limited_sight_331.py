@@ -218,7 +218,7 @@ def test_broadway_reads_240_340_440_on_every_surface() -> None:
     assert rows["W20-2"]["Distance from Taper (ft)"] == "340 upstream"
     assert rows["W20-1"]["Distance from Taper (ft)"] == "440 upstream"
     assert audit["sections"]["advance"]["spacing_text"].endswith(
-        "limited sight distance moves every advance sign 140 ft farther upstream (MUTCD §6B.04)"
+        "limited sight distance moves every advance sign 140 ft farther upstream (MUTCD §6B.04)."
     )
     (rec,) = audit["sections"]["site_adjustments"]
     assert "now sits 240 ft from the taper (8 × 30 mph" in rec["action"]

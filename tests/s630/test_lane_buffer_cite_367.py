@@ -48,7 +48,7 @@ def test_lane_buffer_cites_table_6b_2_alone(speed: int, wz: int | None, built_ft
     assert buf["source"] == _TABLE_6B_2
     assert "Case 11" not in buf["lookup_text"]
     assert "General Note 24" not in buf["lookup_text"]
-    assert buf["lookup_text"].startswith(f"MUTCD Table 6B-2: {built_ft:g} ft.")
+    assert buf["lookup_text"].startswith(f"MUTCD Table 6B-2 sets {built_ft:g} ft.")  # #453 sentence
     assert "this plan closes a lane" in buf["lookup_text"]
 
 

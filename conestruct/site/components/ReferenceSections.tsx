@@ -5,7 +5,7 @@
 // closed rows stay unmounted (X4).  The search state overlays the stored
 // open and closed state and never writes it, so clearing restores it (P15).
 
-import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { Fragment, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 
 import { jumpToAnchor } from "./GeneratorFormPrimitives";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
@@ -20,7 +20,7 @@ import {
   type SectionId,
 } from "@/lib/reference-sections";
 import { planChips, searchSections, statusLine, type RowHit, type SearchResult } from "@/lib/reference-search";
-import type { DetailLine, RowDetail } from "@/lib/row-detail";
+import { detailLists, type DetailList, type RowDetail } from "@/lib/row-detail";
 import type { Scenario } from "@/lib/scenarios";
 import { SITE_CORRECTIONS_ANCHOR } from "@/lib/scenarios/site-corrections";
 import { deriveTierSources } from "@/lib/tier-sources";
@@ -102,6 +102,19 @@ function Hl({ text, m, codes = false }: { text: string; m: RegExp | null; codes?
   return <>{out}</>;
 }
 
+// #453 X18: a mono value this short (CHOSEN: the walk's longest spacing and
+// taper values, "8 × 30^2 / 60 = 120 ft", are 22) never breaks; a longer one
+// (a 10.5 ft lane's taper, the work-hours windows) may wrap, but never
+// between a number and its unit.
+const SHORT_VALUE = 24;
+/** A longer mono value may wrap, but never between a number and its unit. */
+const keepUnit = (v: string) => v.replace(/(\d) (ft|mph|days?|drums?|cones?|units?)\b/g, "$1\u00a0$2");
+
+/** "Show all 11 types" keeps #443's short noun for the device list. */
+function showAllLabel(list: DetailList): string {
+  return `Show all ${list.lines.length} ${list.noun.many === "device types" ? "types" : list.noun.many}`;
+}
+
 export function DetailView({
   detail,
   m,
@@ -111,69 +124,105 @@ export function DetailView({
   m: RegExp | null;
   hit?: RowHit;
 }) {
-  const [showAll, setShowAll] = useState(false);
-  const list = detail.list;
-  const filtered = !showAll && hit?.listLines != null && list != null;
-  const lines: DetailLine[] = list
-    ? filtered
-      ? hit!.listLines!.map((i) => list.lines[i])
-      : list.lines
-    : [];
-  const total = list?.lines.length ?? 0;
+  // #453 rulings 2 and 3 (X6): a search that opens the detail shows each
+  // list's matching lines only, with "N of M shown" and that list's
+  // "Show all"; a list where every line matches shows whole, with neither.
+  const [shown, setShown] = useState<Record<number, boolean>>({});
+  const lists = detailLists(detail);
+  const views = lists.map((list, k) => {
+    const matches = hit?.lists?.[k] ?? null;
+    const cut = hit?.inside === true && matches !== null && !shown[k] && matches.length < list.lines.length;
+    return { list, k, cut, lines: cut ? matches!.map((i) => list.lines[i]) : list.lines };
+  });
+  // Repair 1 (ruling 2): the sentences and label-value rows filter too.
+  // The row's title is the context, so no lead sentence is kept for sense
+  // (X6).  One "Show all N lines" brings back every sentence and row.
+  const allSentences = (detail.sentences ?? []).map((s, i) => ({ s, i }));
+  const allPairs = (detail.pairs ?? []).map((p, i) => ({ p, i }));
+  const otherTotal = allSentences.length + allPairs.length;
+  const otherShown = (hit?.sentences?.length ?? 0) + (hit?.pairs?.length ?? 0);
+  const cutOther = hit?.inside === true && !shown[-1] && otherShown < otherTotal;
+  const sentences = cutOther ? allSentences.filter(({ i }) => hit!.sentences.includes(i)) : allSentences;
+  const pairs = cutOther ? allPairs.filter(({ i }) => hit!.pairs.includes(i)) : allPairs;
+  const counts = [
+    ...(cutOther ? [`${otherShown} of ${otherTotal} lines shown.`] : []),
+    ...views
+      .filter((v) => v.cut)
+      .map((v) => `${v.lines.length} of ${v.list.lines.length} ${v.list.noun.many} shown.`),
+  ];
   return (
     <div className="rr-detail">
       {hit?.inside && (
         <p className="tr-note">
           Opened because the match is inside.
-          {filtered && list && ` ${lines.length} of ${total} ${list.noun.many} shown.`}
+          {counts.map((c) => ` ${c}`).join("")}
         </p>
       )}
-      {detail.sentences?.map((s, i) => (
+      {sentences.map(({ s, i }) => (
         <p className="tr-help" key={i}>
           <Hl text={s} m={m} />
         </p>
       ))}
-      {detail.extra}
-      {detail.pairs && detail.pairs.length > 0 && (
+      {!cutOther && detail.extra}
+      {pairs.length > 0 && (
         <dl className="rr-pairs">
-          {detail.pairs.map((p, i) => (
-            <div className="rr-pair" key={i}>
+          {pairs.map(({ p, i }) => (
+            <div className={`rr-pair${p.mono && p.value.length <= SHORT_VALUE ? " is-short" : ""}`} key={i}>
               {p.label && (
                 <dt>
                   <Hl text={p.label} m={m} />
                 </dt>
               )}
               <dd className={p.mono ? "rr-num" : undefined}>
-                <Hl text={p.value} m={m} />
+                <Hl text={p.mono && p.value.length > SHORT_VALUE ? keepUnit(p.value) : p.value} m={m} />
               </dd>
             </div>
           ))}
         </dl>
       )}
-      {lines.length > 0 && (
-        <ul className="rr-lines">
-          {lines.map((l, i) => (
-            <li key={i}>
-              <span className="rr-line-text">
-                <Hl text={l.text} m={m} />
-                {l.sub && (
-                  <span className="tr-note rr-line-sub">
-                    <Hl text={l.sub} m={m} codes />
+      {views.map((v) => (
+        <Fragment key={v.k}>
+          {v.lines.length > 0 && (
+            <ul className="rr-lines">
+              {v.lines.map((l, i) => (
+                <li key={i}>
+                  <span className="rr-line-text">
+                    <Hl text={l.text} m={m} />
+                    {l.sub && (
+                      <span className="tr-note rr-line-sub">
+                        <Hl text={l.sub} m={m} codes />
+                      </span>
+                    )}
                   </span>
-                )}
-              </span>
-              {l.value && (
-                <span className="rr-num rr-value">
-                  <Hl text={l.value} m={m} />
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-      {filtered && list && (
-        <button type="button" className="rr-link" data-read="" onClick={() => setShowAll(true)}>
-          Show all {total} {list.noun.many === "device types" ? "types" : list.noun.many}
+                  {l.value && (
+                    <span className="rr-num rr-value">
+                      <Hl text={l.value} m={m} />
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {v.cut && (
+            <button
+              type="button"
+              className="rr-link"
+              data-read=""
+              onClick={() => setShown((s) => ({ ...s, [v.k]: true }))}
+            >
+              {showAllLabel(v.list)}
+            </button>
+          )}
+        </Fragment>
+      ))}
+      {cutOther && (
+        <button
+          type="button"
+          className="rr-link"
+          data-read=""
+          onClick={() => setShown((s) => ({ ...s, [-1]: true }))}
+        >
+          Show all {otherTotal} lines
         </button>
       )}
       {detail.links?.map((l) => (

@@ -113,18 +113,33 @@ def _common(t: dict[str, Any]) -> None:
     )
     assert spacing["result_text"].startswith(f"{total} devices · ")
     assert spacing["result_text"].endswith(" ft o.c.")
-    assert spacing["formula_text"][:2] == [
-        spacing["taper_count_text"],
-        spacing["tangent_count_text"],
-    ]
-    # #333: a shoulder plan's buffer line sits between the tangent and the
-    # downstream lines (#358: or the near-side corner-extension line).
-    rest = [
-        spacing[k]
-        for k in ("buffer_count_text", "downstream_count_text", "corner_count_text")
-        if k in spacing
-    ]
-    assert spacing["formula_text"][2:] == rest
+    # #453 ruling 1: the panel's rows are labelled ("Taper", "Tangent", ...)
+    # and carry the count lines' own numbers; the PDF keeps the count lines.
+    rows = spacing["formula_text"]
+    assert rows[0].startswith("Taper, ")
+    assert f" = {spacing['n_taper_drums_required']} drum" in rows[0]
+    assert rows[1].startswith("Tangent, ")
+    assert f" = {spacing['n_tangent_cones_required']} cone" in rows[1]
+    # #333: a shoulder plan's buffer row sits between the tangent and the
+    # downstream rows (#358: or the near-side corner-extension row), and the
+    # cone total closes the list when a downstream or corner run is placed.
+    labels = [r.split(",", 1)[0].split(" (", 1)[0] for r in rows[2:]]
+    # Repair 1: the downstream row keeps its MUTCD band, the corner row its
+    # "no downstream taper".
+    if "downstream_count_text" in spacing:
+        assert "(MUTCD Sec 6B.08: 50-100 ft) = " in rows[-2]
+    if "corner_count_text" in spacing:
+        assert "(no downstream taper; the lane reopens beyond the intersection)" in rows[-2]
+    want = (["Buffer"] if "buffer_count_text" in spacing else []) + (
+        ["Downstream taper", "Cones in all"]
+        if "downstream_count_text" in spacing
+        else ["Corner extension to the curb line", "Cones in all"]
+        if "corner_count_text" in spacing
+        else []
+    )
+    assert labels == want
+    if "n_cones_placed_total" in spacing:
+        assert rows[-1].endswith(f") = {spacing['n_cones_placed_total']}")
     assert advance["result_text"] == f"{len(advance['sign_table'])} signs"
     assert advance["citation"] == _CITATION_ADVANCE
     assert "formula_text" not in advance  # a table lookup
@@ -138,9 +153,10 @@ def test_shoulder_closure_lines() -> None:
     taper = t["taper"]
     assert taper["result_text"] == "L/3 = 183 ft"
     assert taper["formula_text"] == [
-        "W = 10 ft (assumed)",  # #338 (Q1 = B)
-        "L = 10 × 55 = 550 ft",
-        "L/3 = 550 / 3 = 183 ft",
+        # #453: plain labels, the same arithmetic.
+        "Shoulder width = 10 ft (assumed)",  # #338 (Q1 = B)
+        "Full taper = 10 × 55 = 550 ft",
+        "Shoulder taper, one third = 550 / 3 = 183 ft",
     ]
     assert t["spacing"]["result_text"].endswith("· 55/110 ft o.c.")
 
@@ -152,9 +168,9 @@ def test_low_speed_shoulder_quadratic_line() -> None:
     )
     _common(t)
     assert t["taper"]["formula_text"] == [
-        "W = 8 ft (assumed)",  # #338 (Q1 = B)
-        "L = 8 × 25^2 / 60 = 83 ft",
-        "L/3 = 83 / 3 = 28 ft",
+        "Shoulder width = 8 ft (assumed)",  # #338 (Q1 = B)
+        "Full taper = 8 × 25^2 / 60 = 83 ft",
+        "Shoulder taper, one third = 83 / 3 = 28 ft",
     ]
     assert t["taper"]["result_text"] == "L/3 = 28 ft"
 
@@ -175,14 +191,14 @@ def test_lane_closure_lines() -> None:
     t = build_audit_trail(generate_lane_closure_divided(params), params)
     _common(t)
     assert t["taper"]["result_text"] == "L = 660 ft"
-    assert t["taper"]["formula_text"] == ["L = 12 × 55 = 660 ft"]
+    assert t["taper"]["formula_text"] == ["Taper length = 12 × 55 = 660 ft"]  # #453
 
 
 def test_near_intersection_lines() -> None:
     t = _trail(_near())
     _common(t)
     assert t["taper"]["result_text"] == "L = 540 ft"
-    assert t["taper"]["formula_text"] == ["L = 12 × 45 = 540 ft"]
+    assert t["taper"]["formula_text"] == ["Taper length = 12 × 45 = 540 ft"]  # #453
 
 
 def test_flagger_lines_and_sight_distance() -> None:
@@ -210,6 +226,6 @@ def test_advance_citation_is_the_verified_pair() -> None:
     assert (_SEC_ADVANCE, _TBL_ADVANCE) == ("6H.02", "6B-1")
     assert _CITATION_ADVANCE == {
         "cite": "MUTCD TABLE 6B-1",
-        "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
+        "footer": "MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",  # #453
     }
     assert "§ 6B-1" not in str(_CITATION_ADVANCE)

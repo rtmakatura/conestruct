@@ -9796,6 +9796,10 @@ input[type="number"] {
 .workbench .rr-pair dt { flex: 1 0 40%; min-width: 0; color: var(--ink-on-dark); font-weight: 400; }
 .workbench .rr-pair dd { flex: 0 1 auto; min-width: 0; margin: 0; color: var(--ink); text-align: right; overflow-wrap: anywhere; }
 .workbench .rr-pair dd:only-child { flex: 1; text-align: left; }
+/* #453 X18: a short mono value (a number with its unit, or short
+   arithmetic) stays on one line; its label wraps instead. */
+.workbench .rr-pair.is-short dt { flex-shrink: 1; }
+.workbench .rr-pair.is-short dd { flex-shrink: 0; white-space: nowrap; }
 .workbench .rr-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .workbench .rr-lines li {
   display: flex;

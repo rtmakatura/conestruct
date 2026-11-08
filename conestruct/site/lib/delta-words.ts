@@ -56,8 +56,9 @@ export function deltaCite(d: AppliedDelta): string {
 
 const STATUS_WORDS: Record<TriggerStatus, string | null> = {
   fires: null,
-  conditional: "conditional: shown here, not applied automatically",
-  unknown: "needs input (set the street class)",
+  // #453: sentence case, plain words (the same two facts each).
+  conditional: "Conditional, so it's shown here and not applied automatically",
+  unknown: "Not checked until the street class is set",
 };
 
 /** R116: a rule's status in words; a firing rule says nothing extra. */

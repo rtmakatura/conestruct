@@ -1,0 +1,67 @@
+FAILED tests/corpus/test_anchors.py::test_anchor_matches_spec[anchor_flagger_rural_20]
+FAILED tests/corpus/test_anchors.py::test_anchor_matches_spec[anchor_flagger_rural_45]
+FAILED tests/corpus/test_anchors.py::test_anchor_matches_spec[anchor_flagger_rural_55]
+FAILED tests/corpus/test_anchors.py::test_anchor_matches_spec[anchor_flagger_urban_20]
+FAILED tests/corpus/test_anchors.py::test_anchor_matches_spec[anchor_flagger_urban_40]
+FAILED tests/corpus/test_anchors.py::test_anchor_matches_spec[anchor_flagger_urban_45]
+FAILED tests/corpus/test_anchors.py::test_anchor_matches_spec[anchor_flagger_urban_55]
+FAILED tests/s630/test_case_11.py::test_case_11_general_buffer_silent_fallback_495
+FAILED tests/s630/test_lane_buffer_cite_367.py::test_lane_buffer_cites_table_6b_2_alone[65-None-645.0]
+FAILED tests/s630/test_lane_buffer_cite_367.py::test_lane_buffer_cites_table_6b_2_alone[75-None-820.0]
+FAILED tests/s630/test_lane_buffer_cite_367.py::test_lane_buffer_cites_table_6b_2_alone[65-55-645.0]
+FAILED tests/s630/test_lane_buffer_cite_367.py::test_lane_buffer_cites_table_6b_2_alone[75-70-820.0]
+FAILED tests/s630/test_shoulder_width_338.py::test_page1_states_the_assumed_width_the_taper_uses[undivided]
+FAILED tests/s630/test_shoulder_width_338.py::test_page1_states_the_assumed_width_the_taper_uses[divided]
+FAILED tests/s630/test_shoulder_width_338.py::test_page1_states_the_assumed_width_the_taper_uses[one-way]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_low-55]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_low-60]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_low-65]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_low-70]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_low-75]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_high-55]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_high-60]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_high-65]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_high-70]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[urban_high-75]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[rural-55]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[rural-60]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[rural-65]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[rural-70]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[rural-75]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[expressway-55]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[expressway-60]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[expressway-65]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[expressway-70]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[expressway-75]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[freeway-55]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[freeway-60]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[freeway-65]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[freeway-70]
+FAILED tests/test_audit_endpoint.py::test_audit_road_type_text_sourced_from_lookup_value[freeway-75]
+FAILED tests/test_audit_endpoint.py::test_audit_buffer_at_65_no_reduction_uses_federal
+FAILED tests/test_audit_endpoint.py::test_audit_buffer_at_65_with_case_26_stepdown_diverges
+FAILED tests/test_audit_endpoint.py::test_audit_buffer_at_75_no_reduction_uses_federal
+FAILED tests/test_audit_endpoint.py::test_audit_buffer_at_75_with_case_27_stepdown_diverges
+FAILED tests/test_audit_endpoint.py::test_audit_buffer_silent_at_55_names_silence
+FAILED tests/test_audit_endpoint.py::test_audit_buffer_federal_at_65_uses_mutcd_value
+FAILED tests/test_audit_endpoint.py::test_audit_quadratic_calc_text_is_arithmetically_coherent
+FAILED tests/test_audit_endpoint.py::test_taper_formula_choice_uses_quadratic_at_40
+FAILED tests/test_audit_pdf.py::test_blocks_carry_every_projection_string - A...
+FAILED tests/test_audit_pdf.py::test_no_reduction_omits_quote_and_fines_double
+FAILED tests/test_audit_pdf.py::test_corridor_warning_renders_as_clean_line
+FAILED tests/test_audit_pdf.py::test_blocks_carry_every_projection_string_flagger
+FAILED tests/test_audit_pdf.py::test_blocks_carry_every_projection_string_site_adjustments
+FAILED tests/test_citation_single_source.py::test_rendered_federal_sources_derive_from_constants
+FAILED tests/test_corner_extension_audit.py::test_corner_extension_is_not_a_downstream_taper
+FAILED tests/test_engine_removal_pr_b.py::test_flagger_section_carries_backend_sight_distance[25]
+FAILED tests/test_engine_removal_pr_b.py::test_flagger_section_carries_backend_sight_distance[35]
+FAILED tests/test_engine_removal_pr_b.py::test_flagger_section_carries_backend_sight_distance[45]
+FAILED tests/test_engine_removal_pr_b.py::test_flagger_section_carries_backend_sight_distance[55]
+FAILED tests/test_formula_fields.py::test_shoulder_closure_lines - AssertionE...
+FAILED tests/test_formula_fields.py::test_low_speed_shoulder_quadratic_line
+FAILED tests/test_formula_fields.py::test_lane_closure_lines - AssertionError...
+FAILED tests/test_formula_fields.py::test_near_intersection_lines - Assertion...
+FAILED tests/test_formula_fields.py::test_flagger_lines_and_sight_distance - ...
+FAILED tests/test_formula_fields.py::test_advance_citation_is_the_verified_pair
+FAILED tests/test_taper_citation_tables.py::test_shoulder_source_cites_6b4_for_L_and_6b3_for_the_third
+66 failed, 3831 passed, 3 skipped in 351.44s (0:05:51)

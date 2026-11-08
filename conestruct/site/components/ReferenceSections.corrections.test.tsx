@@ -2,7 +2,7 @@
 //
 // #224 phase 4 (s2-arc18, ruling c), redrawn by #443 — the sections over the
 // two recorded corrected fixtures: a dismissed condition keeps its ✓ row
-// (source OPERATOR, the backend sentence as its evidence); an asserted
+// (source Operator, the backend sentence as its evidence); an asserted
 // condition is a changed row whose evidence is the backend sentence; the
 // pending section carries the correction item; the headers equal the shared
 // expectation (the pin).  The rows have no write affordance.
@@ -33,7 +33,7 @@ describe("scanned-dismissed (#224 phase 4)", () => {
   const fx = loadFixture("scanned-dismissed");
   const [c] = correctionsOf(fx);
 
-  it("the dismissed sidewalk is a ✓ checked row with source OPERATOR and the backend sentence; no changed row", async () => {
+  it("the dismissed sidewalk is a ✓ checked row with source Operator and the backend sentence; no changed row", async () => {
     const user = userEvent.setup();
     mountFixture(fx);
     expect(c.status).toBe("applied");
@@ -43,7 +43,7 @@ describe("scanned-dismissed (#224 phase 4)", () => {
     const row = rowOf("checked", "Pedestrian sidewalks present")!;
     await openRow(user, row);
     expect(row.textContent).toContain("dismissed by operator");
-    expect(row.textContent).toContain("Source: OPERATOR");
+    expect(row.textContent).toContain("Source: Operator");
     expect(within(row).getByText(c.disclosure)).toBeTruthy();
     expect(row.querySelector(".rr-detail button")).toBeNull(); // discloses, never writes
   });
@@ -62,7 +62,7 @@ describe("scanned-asserted (#224 phase 4)", () => {
   const fx = loadFixture("scanned-asserted");
   const [c] = correctionsOf(fx);
 
-  it("the asserted school zone is a changed row whose evidence is the backend sentence, source OPERATOR", async () => {
+  it("the asserted school zone is a changed row whose evidence is the backend sentence, source Operator", async () => {
     const user = userEvent.setup();
     mountFixture(fx);
     expect(c.status).toBe("applied");
@@ -71,7 +71,7 @@ describe("scanned-asserted (#224 phase 4)", () => {
     await openRow(user, row);
     expect(row.querySelector(".rr-glyph")?.textContent).toBe("▲");
     expect(within(row).getByText(c.disclosure)).toBeTruthy();
-    expect(row.textContent).toContain("Source: OPERATOR");
+    expect(row.textContent).toContain("Source: Operator");
   });
 
   it("the scanned-absent pass for the asserted key is suppressed and the headers equal the pin", async () => {

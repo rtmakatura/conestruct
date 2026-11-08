@@ -14,10 +14,10 @@
     "advance": {
       "citation": {
         "cite": "MUTCD TABLE 6B-1",
-        "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+        "footer": "MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing"
       },
       "result_text": "4 signs",
-      "road_type_text": "Speed 50 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+      "road_type_text": "At 50 mph, the signs are spaced by MUTCD Table 6B-1's Rural row.",
       "sign_table": [
         {
           "Code": "W20-1",
@@ -45,15 +45,15 @@
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
-      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      "spacing_text": "Table 6B-1 spacing: A 500 ft (the distance from the transition or point of restriction to the first sign), B 500 ft (the distance between the first and second signs), C 500 ft (the distance between the second and third signs)."
     },
     "buffer": {
       "buffer_ft": 425.0,
       "citation": {
         "cite": "MUTCD § 6B.06",
-        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        "footer": "MUTCD § 6B.06 · Stopping sight distance"
       },
-      "lookup_text": "MUTCD Table 6B-2: 425 ft (CDOT supplement silent at this speed)",
+      "lookup_text": "MUTCD Table 6B-2 sets 425 ft; the CDOT supplement sets no value at this speed.",
       "result_text": "B = 425 ft",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
       "speed_mph": 50
@@ -126,7 +126,7 @@
       "required": 2,
       "sight_distance_citation": {
         "cite": "MUTCD § 6D.06",
-        "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+        "footer": "MUTCD § 6D.06 · Table 6B-2 · Stopping sight distance"
       },
       "sight_distance_formula_text": [
         "SSD @ 50 mph = 425 ft"
@@ -187,16 +187,17 @@
       "buffer_count_text": "Buffer: 425 ft / 100 ft max spacing -> 4 cones at 85.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
       "citation": {
         "cite": "MUTCD § 6K.01",
-        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        "footer": "MUTCD § 6K.01 · Channelizing device spacing"
       },
       "downstream_count_text": "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 11 tangent + 4 buffer + 4 downstream = 19 cones total",
       "formula_text": [
-        "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals",
-        "1000 ft / 100 ft max spacing -> 11 cones at 100.0 ft intervals",
-        "Buffer: 425 ft / 100 ft max spacing -> 4 cones at 85.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
-        "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 11 tangent + 4 buffer + 4 downstream = 19 cones total"
+        "Taper, 100 ft = 6 drums at 20.0 ft",
+        "Tangent, 1,000 ft = 11 cones at 100.0 ft",
+        "Buffer, 425 ft (S-630-1 Sheet 2 Note 18b) = 4 cones at 85.0 ft",
+        "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft) = 4 cones at ~12.5 ft",
+        "Cones in all (11 tangent, 4 buffer, 4 downstream) = 19"
       ],
-      "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
+      "in_taper_text": "In the one-lane, two-way taper, devices are spaced 20 ft apart: MUTCD Sec 6B.08 gives about 20 ft for this taper, which overrides the Sec 6K.01 speed rule.",
       "n_buffer_cones": 4,
       "n_cones_placed_total": 19,
       "n_downstream_taper_cones": 4,
@@ -204,7 +205,7 @@
       "n_tangent_cones_required": 11,
       "n_taper_drums_actual": 6,
       "n_taper_drums_required": 6,
-      "on_tangent_text": "50 mph -> 100 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "on_tangent_text": "Along the tangent, devices are spaced 100 ft apart, twice the speed in feet (MUTCD Sec 6K.01).",
       "result_text": "21 devices · 20/100 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
       "speed_mph": 50,
@@ -221,10 +222,10 @@
       "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
       "citation": {
         "cite": "MUTCD § 6B.08",
-        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        "footer": "MUTCD 2023 edition · Chapter 6B · Table 6B-3"
       },
       "closure_type": "lane",
-      "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
+      "formula_choice": "With flaggers alternating traffic on one lane, the taper is a one-lane, two-way taper of 50 to 100 ft (MUTCD Sec 6B.08); the plan uses the 100 ft maximum, and the merging-taper formula doesn't apply.",
       "formula_latex": "50 \\le L \\le 100",
       "formula_text": [
         "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)"

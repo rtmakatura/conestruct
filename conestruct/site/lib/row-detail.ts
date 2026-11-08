@@ -37,6 +37,8 @@ export interface RowDetail {
   sentences?: string[];
   pairs?: DetailPair[];
   list?: DetailList;
+  /** #453 X7: lists after `list` (the Permit's notices, then its fees). */
+  lists?: DetailList[];
   links?: DetailLink[];
   /** The text after "Source: ", read off the wire. */
   source?: string;
@@ -64,4 +66,9 @@ export function formulaPairs(lines: readonly string[]): DetailPair[] {
 export function resultValue(result: string): string {
   const at = result.indexOf(" = ");
   return at === -1 ? result : result.slice(at + 3);
+}
+
+/** #453: every list in a detail, `list` first. */
+export function detailLists(d: RowDetail): DetailList[] {
+  return [...(d.list ? [d.list] : []), ...(d.lists ?? [])];
 }

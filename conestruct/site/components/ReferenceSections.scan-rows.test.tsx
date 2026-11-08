@@ -61,8 +61,10 @@ describe("scan rows (#224 phase 3) — scanned-lakewood", () => {
       const row = rowOf("checked", label)!;
       await openRow(user, row);
       expect(row.textContent).toContain("none along the corridor");
-      expect(within(row).getByText(`scanned ${scan.measured_at}`)).toBeTruthy();
-      expect(row.textContent).toContain("Source: OPENSTREETMAP");
+      // #453 X14: the fixture's stamp (2026-09-03T23:14:50+00:00), readable.
+      expect(scan.measured_at).toBe("2026-09-03T23:14:50+00:00");
+      expect(within(row).getByText("Scanned 2026-09-03 at 23:14 UTC")).toBeTruthy();
+      expect(row.textContent).toContain("Source: OpenStreetMap");
       // Rule 13: glyph + words, never hue alone.
       expect(row.querySelector(".rr-glyph")?.textContent).toBe("✓");
     }
@@ -76,7 +78,7 @@ describe("scan rows (#224 phase 3) — scanned-lakewood", () => {
     const row = rowOf("reference", "No hospitals, railroad crossings or road curvature")!;
     expect(row).not.toBeNull();
     await openRow(user, row);
-    expect(row.textContent).toContain("Source: REFERENCE");
+    expect(row.textContent).toContain("Source: OpenStreetMap");
     expect(row.querySelector(".rr-glyph")?.textContent).toBe("✓");
     // Never in a counted section.
     expect(rowOf("checked", "No hospitals, railroad crossings or road curvature")).toBeNull();

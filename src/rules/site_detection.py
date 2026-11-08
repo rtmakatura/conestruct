@@ -805,6 +805,18 @@ def split_folded_elements(
     return scan, road
 
 
+# #453 (X10): ``WorkCorridor.classify_distance``'s zones (src/rules/corridor.py)
+# as the evidence line says them.
+_ZONE_WORDS: dict[str, str] = {
+    "advance_warning": "in the advance warning area",
+    "transition": "in the taper",
+    "buffer": "in the buffer",
+    "work_zone": "in the work zone",
+    "downstream": "in the downstream taper",
+    "outside": "past the end of the corridor",
+}
+
+
 def _empty_corridor_bucket(detail_msg: str = "") -> dict[str, Any]:
     out: dict[str, Any] = {"detected": False, "count": 0, "details": [], "features": []}
     if detail_msg:
@@ -1023,14 +1035,19 @@ def detect_along_corridor(
             # offset (the per-bucket override) — state that margin, not
             # the station that hides it (#16: a path 140 ft out and one
             # 10 ft out must not read alike).
+            # #453 (X10): the zone in words, never the classifier's key.
             if feature["zone"] == "lateral":
-                display = f"{label} [lateral {feature['lateral_offset_ft']:.0f} ft off centerline]"
+                display = f"{label} ({feature['lateral_offset_ft']:.0f} ft off the centerline)"
             else:
-                display = f"{label} [{feature['zone']} @ {feature['along_station_ft']:.0f} ft]"
+                zone_words = _ZONE_WORDS.get(feature["zone"], "on the corridor")
+                display = (
+                    f"{label} ({zone_words}, "
+                    f"{feature['along_station_ft']:.0f} ft along the corridor)"
+                )
             if feature.get("approach") not in (None, "primary"):
                 # #290: say which approach counted it — its station is in
                 # that approach's own frame, not the first one's.
-                display = display[:-1] + f", {feature['approach']} approach]"
+                display = display[:-1] + f", {feature['approach']} approach)"
             if len(bucket["details"]) < 5:
                 bucket["details"].append(display)
             anchor_dist_m = feature["distance_to_anchor_m"]
@@ -1552,8 +1569,12 @@ def validate_corridor_against_osm(
         # No major road within the radius — either nothing at all or a
         # residential / service / tertiary road.  Either way the
         # planner should re-verify coordinates.
+        # #453 repair 1: the OSM class in words ("a residential road"), not
+        # the quoted tag value.
+        nearby_words = str(detected_highway).replace("_", " ") if detected_highway else ""
         nearby_class = (
-            f" (closest road within {search_radius_m:.0f} m: '{detected_highway}')"
+            f"; the closest road within {search_radius_m:.0f} m is "
+            f"{'an' if nearby_words[:1] in 'aeiou' else 'a'} {nearby_words} road"
             if detected_highway
             else ""
         )
@@ -1562,10 +1583,10 @@ def validate_corridor_against_osm(
                 "flag": "no_road_at_anchor",
                 "level": "warning",
                 "message": (
-                    "No motorway/trunk/primary/secondary road detected at anchor "
-                    f"({anchor_lat:.5f}, {anchor_lng:.5f}) within {search_radius_m:.0f} m"
-                    f"{nearby_class}.  "
-                    "Verify coordinates correspond to the actual work zone."
+                    "No major road (motorway, trunk, primary or secondary) found within "
+                    f"{search_radius_m:.0f} m of the anchor ({anchor_lat:.5f}, "
+                    f"{anchor_lng:.5f}){nearby_class}.  "
+                    "Check that the coordinates match the actual work zone."
                 ),
                 "anchor_lat": anchor_lat,
                 "anchor_lng": anchor_lng,

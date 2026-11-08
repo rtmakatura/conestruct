@@ -141,8 +141,9 @@ def test_case_11_general_buffer_silent_fallback_495(
     assert buffer["buffer_ft"] == 495.0
     assert "divergence" not in buffer
     assert "cdot_value_ft" not in buffer
-    assert "MUTCD Table 6B-2: 495 ft" in buffer["lookup_text"]
-    assert "CDOT supplement silent" in buffer["lookup_text"]
+    # #453: the same lookup and the same silence, as a sentence.
+    assert "MUTCD Table 6B-2 sets 495 ft" in buffer["lookup_text"]
+    assert "the CDOT supplement sets no value at this speed" in buffer["lookup_text"]
 
 
 def test_case_11_general_omits_w3_5_no_reduction(

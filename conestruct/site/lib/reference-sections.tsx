@@ -25,7 +25,7 @@ import {
 } from "@/lib/jurisdiction";
 import { referenceSummary } from "@/lib/reference-summary";
 import type { SiteAdjustmentRecord } from "@/lib/render-types";
-import type { RowDetail } from "@/lib/row-detail";
+import type { DetailList, RowDetail } from "@/lib/row-detail";
 import { resultValue } from "@/lib/row-detail";
 import type { SiteConditionFlag } from "@/lib/scenarios";
 import type { TierSources } from "@/lib/tier-sources";
@@ -125,6 +125,16 @@ const SCAN_REFERENCE_LABELS: Record<string, string> = {
 function joinWords(words: string[]): string {
   if (words.length < 2) return words.join("");
   return `${words.slice(0, -1).join(", ")} or ${words[words.length - 1]}`;
+}
+
+/** #453 X14: "Scanned 2026-11-07 at 23:18 UTC", read off the scan's ISO stamp;
+ *  a stamp that doesn't parse prints as it came. */
+function scannedLine(at: string | null | undefined): string {
+  if (!at) return "Scanned";
+  const d = new Date(at);
+  if (Number.isNaN(d.getTime())) return `Scanned ${at}`;
+  const iso = d.toISOString();
+  return `Scanned ${iso.slice(0, 10)} at ${iso.slice(11, 16)} UTC`;
 }
 
 function capitalize(s: string): string {
@@ -280,7 +290,6 @@ function permitRow(jur: JurisdictionBlock, workDate: string | null): RefRow {
         ...(unpublished ? [f.note ?? "Fee amounts are not published for this jurisdiction."] : []),
         ...(!unpublished && f.formula ? [f.formula.note] : []),
         ...(!unpublished && f.note ? [f.note] : []),
-        ...p.notices.map((x) => `${x.audience}: ${x.rule}`),
         ...p.onsite.items.map((x) => `${x.rule}${p.onsite.digital_ok ? " Digital copies accepted." : ""}`),
       ],
       pairs: [
@@ -313,18 +322,33 @@ function permitRow(jur: JurisdictionBlock, workDate: string | null): RefRow {
         ...(p.notices.length === 0 ? [{ label: "Notices", value: "none on record" }] : []),
         ...(p.onsite.items.length === 0 ? [{ label: "On-site requirements", value: "none on record" }] : []),
       ],
-      list: unpublished
-        ? undefined
-        : {
-            // X16: every fee line, not the first six.
-            noun: { one: "fee line", many: "fee lines" },
-            lines: f.items.map((x) => ({
-              text: `${x.label}${x.provisional ? " (provisional)" : ""}`,
-              value: `${dollars(x.amount_cents)}${x.per && x.per !== "flat" ? ` / ${x.per.replace("_", " ")}` : ""}`,
-            })),
-          },
+      // #453 X7: the notices are a list (one line each, the audience under
+      // it), then the fee lines, so a search shows only the lines it matched.
+      ...permitLists(
+        p.notices.length > 0
+          ? {
+              noun: { one: "notice", many: "notices" },
+              lines: p.notices.map((x) => ({ text: x.rule, sub: `Notice to ${x.audience}` })),
+            }
+          : undefined,
+        unpublished
+          ? undefined
+          : {
+              // X16: every fee line, not the first six.
+              noun: { one: "fee line", many: "fee lines" },
+              lines: f.items.map((x) => ({
+                text: `${x.label}${x.provisional ? " (provisional)" : ""}`,
+                value: `${dollars(x.amount_cents)}${x.per && x.per !== "flat" ? ` / ${x.per.replace("_", " ")}` : ""}`,
+              })),
+            },
+      ),
     },
   };
+}
+
+function permitLists(...lists: (DetailList | undefined)[]): Pick<RowDetail, "list" | "lists"> {
+  const [first, ...rest] = lists.filter((l): l is DetailList => l !== undefined);
+  return first ? { list: first, ...(rest.length > 0 ? { lists: rest } : {}) } : {};
 }
 
 // ── devices ──
@@ -402,7 +426,8 @@ function deviceRows(i: SectionInput): RefRow[] {
     detail: g
       ? {
           // Rule 169: the hero's one list, so the two can't drift on a number.
-          pairs: zoneGeometryRows(g).map((row) => ({ label: row.label, value: row.value, mono: true })),
+          // #453 ruling 1: the hero's plain labels ("Taper", not "Taper L").
+          pairs: zoneGeometryRows(g).map((row) => ({ label: row.plain, value: row.value, mono: true })),
         }
       : { sentences: ["Zone geometry unavailable"] },
   });
@@ -437,7 +462,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
       result: r.result,
       detail: {
         sentences: [...r.lead, ...(evidence ? [evidence] : [])],
-        source: asserted ? "OPERATOR" : rec.citation,
+        source: asserted ? "Operator" : rec.citation,
         actions: s.scanBuckets ? i.signpost("Correct in setup ↑") : undefined,
       },
     };
@@ -480,12 +505,12 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
         glyph: "✓",
         title: "Site corridor validation",
         result: "checked against OSM, no warnings",
-        detail: { source: "OPENSTREETMAP" },
+        detail: { source: "OpenStreetMap" },
       });
     }
     s.siteAdvisory.forEach((rec) => checks.push(siteRow(rec, "✓", true)));
     if (s.scanBuckets) {
-      const scannedAt = s.scan?.measured_at ? `scanned ${s.scan.measured_at}` : "scanned";
+      const scannedAt = scannedLine(s.scan?.measured_at);
       for (const [bucket, flag] of SCAN_BUCKET_TO_FLAG) {
         const label = SITE_ADJUSTMENT_DETAIL[flag as SiteConditionFlag]?.label ?? flag;
         const b = s.scanBuckets[bucket];
@@ -496,7 +521,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
             glyph: "✓",
             title: label,
             result: "dismissed by operator",
-            detail: { sentences: [c.disclosure], source: "OPERATOR", actions: i.signpost("Correct in setup ↑") },
+            detail: { sentences: [c.disclosure], source: "Operator", actions: i.signpost("Correct in setup ↑") },
           });
         } else if (c?.status === "applied") {
           continue;
@@ -506,7 +531,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
             glyph: "✓",
             title: label,
             result: "none along the corridor",
-            detail: { sentences: [scannedAt], source: "OPENSTREETMAP", actions: i.signpost("Assert in setup ↑") },
+            detail: { sentences: [scannedAt], source: "OpenStreetMap", actions: i.signpost("Assert in setup ↑") },
           });
         }
       }
@@ -687,7 +712,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
       glyph: "i",
       title: SITE_ADJUSTMENT_DETAIL[c.flag as SiteConditionFlag]?.label ?? c.flag,
       result: "operator correction: moot",
-      detail: { sentences: [c.disclosure], source: "OPERATOR" },
+      detail: { sentences: [c.disclosure], source: "Operator" },
     });
   }
   if (s.scanBuckets) {
@@ -703,7 +728,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
           glyph: "i",
           title: capitalize(label),
           result: "detected, no rule applies",
-          detail: { sentences: [scanEvidence(b)].filter(Boolean), source: "REFERENCE" },
+          detail: { sentences: [scanEvidence(b)].filter(Boolean), source: "OpenStreetMap" },
         });
       } else {
         absent.push({ label, evidence: scanEvidence(b) || "none along the corridor" });
@@ -717,7 +742,7 @@ export function buildReferenceSections(i: SectionInput): RefSection[] {
         title: `No ${joinWords(absent.map((a) => a.label))}`,
         detail: {
           pairs: absent.map((a) => ({ label: capitalize(a.label), value: a.evidence })),
-          source: "REFERENCE",
+          source: "OpenStreetMap",
         },
       });
     }

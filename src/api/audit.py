@@ -72,6 +72,14 @@ from src.rules.validators import (
 _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
     {"urban_low", "urban_high", "rural", "expressway", "freeway"}
 )
+# #453: each category's row as MUTCD 11th Ed. Table 6B-1 (p. 773) names it.
+_TABLE_6B_1_ROW: dict[str, str] = {
+    "urban_low": "Urban (low speed)",
+    "urban_high": "Urban (high speed)",
+    "rural": "Rural",
+    "expressway": "Expressway / Freeway",
+    "freeway": "Expressway / Freeway",
+}
 
 # Discrete display citations for the on-screen audit panel (#97).
 #
@@ -124,19 +132,19 @@ _SEC_ADVANCE: str = "6H.02"
 _TBL_ADVANCE: str = "6B-1"
 _CITATION_TAPER: dict[str, str] = {
     "cite": f"MUTCD § {_SEC_TAPER}",
-    "footer": f"MUTCD 2023 EDITION · CHAPTER 6B · TABLE {_TBL_TAPER}",
+    "footer": f"MUTCD 2023 edition · Chapter 6B · Table {_TBL_TAPER}",
 }
 _CITATION_BUFFER: dict[str, str] = {
     "cite": f"MUTCD § {_SEC_BUFFER}",
-    "footer": f"MUTCD § {_SEC_BUFFER} · STOPPING SIGHT DISTANCE",
+    "footer": f"MUTCD § {_SEC_BUFFER} · Stopping sight distance",
 }
 _CITATION_SPACING: dict[str, str] = {
     "cite": f"MUTCD § {_SEC_SPACING}",
-    "footer": f"MUTCD § {_SEC_SPACING} · CHANNELIZING DEVICE SPACING",
+    "footer": f"MUTCD § {_SEC_SPACING} · Channelizing device spacing",
 }
 _CITATION_ADVANCE: dict[str, str] = {
     "cite": f"MUTCD TABLE {_TBL_ADVANCE}",
-    "footer": f"MUTCD § {_SEC_ADVANCE} · TABLE {_TBL_ADVANCE} · ADVANCE WARNING SIGN SPACING",
+    "footer": f"MUTCD § {_SEC_ADVANCE} · Table {_TBL_ADVANCE} · Advance warning sign spacing",
 }
 # #334 (ruling S4) — a freeway shoulder plan that cites Case 11 places its
 # signs at Case 11's distances (``CASE_11_FREEWAY_SIGN_FT``), so its
@@ -144,7 +152,7 @@ _CITATION_ADVANCE: dict[str, str] = {
 _CASE_11_SOURCE: str = "CDOT S-630-1 Sheet 7 Case 11"
 _CITATION_ADVANCE_CASE_11: dict[str, str] = {
     "cite": "CDOT S-630-1 CASE 11",
-    "footer": "CDOT S-630-1 · SHEET 7 · CASE 11 · SHOULDER WORK - FREEWAY/EXPRESSWAY",
+    "footer": "CDOT S-630-1 · Sheet 7 · Case 11 · Shoulder work, freeway/expressway",
 }
 
 
@@ -158,8 +166,8 @@ def _citation_advance_sheet_14(speed_mph: int) -> dict[str, str]:
     return {
         "cite": f"CDOT S-630-1 CASE {case}",
         "footer": (
-            f"CDOT S-630-1 · SHEET 14 · CASE {case} · SHOULDER WORK - FREEWAY/EXPRESSWAY "
-            f"W/ {speed_mph} MPH SPEED LIMIT"
+            f"CDOT S-630-1 · Sheet 14 · Case {case} · Shoulder work, freeway/expressway "
+            f"with {speed_mph} mph speed limit"
         ),
     }
 
@@ -172,6 +180,20 @@ def _times(text: str) -> str:
     to do happens here, once.
     """
     return text.replace(" x ", " × ")
+
+
+def _panel_row(label: str, line: str) -> str:
+    """#453 ruling 1: a formula line under a plain label (panel-only).
+
+    "L = 8 x 30^2 / 60 = 120 ft" under "Full taper" reads
+    "Full taper = 8 x 30^2 / 60 = 120 ft": the formula letter that led the
+    line is dropped, the arithmetic kept.  A line that leads with words
+    ("One-lane two-way taper = 100 ft ...") is already labelled.
+    """
+    for lead in ("L/3 = ", "L = "):
+        if line.startswith(lead):
+            return f"{label} = {line[len(lead) :]}"
+    return line
 
 
 # Sheet 12 FINES DOUBLE SIGNING NOTES — operational rules attached to
@@ -398,11 +420,17 @@ def build_audit_trail(
     # re-inlines the >= threshold formula).
     L_full = taper_length(speed, offset_ft)
     if speed >= threshold:
-        formula_choice = f"Speed {speed} mph >= {threshold} mph threshold -> using L = W x S"
+        formula_choice = (
+            f"At {speed} mph, at or above the {threshold} mph threshold, the taper length "
+            "is the offset width times the speed."
+        )
         formula_latex = r"L = W \times S"
         L_calc_text = f"L = {offset_ft:g} x {speed} = {_ft(L_full)} ft"
     else:
-        formula_choice = f"Speed {speed} mph < {threshold} mph threshold -> using L = W x S^2 / 60"
+        formula_choice = (
+            f"At {speed} mph, below the {threshold} mph threshold, the taper length is the "
+            "offset width times the speed squared, divided by 60."
+        )
         formula_latex = r"L = \frac{W \times S^2}{60}"
         # B-03 — the displayed arithmetic must match the formula that
         # produced the number (the linear-format text shown here used
@@ -427,9 +455,9 @@ def build_audit_trail(
             "maximum)"
         )
         formula_choice = (
-            "Flagger alternating-flow: one-lane two-way taper (50-100 ft "
-            f"fixed band per MUTCD Sec {_SEC_TAPER}) -> using 100 ft maximum; "
-            "the merging-taper L = W x S formula does not apply"
+            "With flaggers alternating traffic on one lane, the taper is a one-lane, "
+            f"two-way taper of 50 to 100 ft (MUTCD Sec {_SEC_TAPER}); the plan uses the "
+            "100 ft maximum, and the merging-taper formula doesn't apply."
         )
         formula_latex = r"50 \le L \le 100"
         L_calc_text = (
@@ -563,12 +591,27 @@ def build_audit_trail(
         "result_text": (
             f"{'L/3' if params.closure_type == 'shoulder' else 'L'} = {_ft(L_required)} ft"
         ),
+        # #453 ruling 1: each line is "<plain label> = <value>"; no formula
+        # letter labels a row.  The values keep their arithmetic.
         "formula_text": (
-            # #338 (Q1 = B): W leads the shoulder lines, marked assumed.
-            [f"W = {offset_ft:g} ft (assumed)"] if params.closure_type == "shoulder" else []
+            # #338 (Q1 = B): the width leads the shoulder lines, marked assumed.
+            [f"Shoulder width = {offset_ft:g} ft (assumed)"]
+            if params.closure_type == "shoulder"
+            else []
         )
-        + [_times(L_calc_text)]
-        + ([_times(L_required_calc_text)] if params.closure_type == "shoulder" else []),
+        + [
+            _times(
+                _panel_row(
+                    "Full taper" if params.closure_type == "shoulder" else "Taper length",
+                    L_calc_text,
+                )
+            )
+        ]
+        + (
+            [_times(_panel_row("Shoulder taper, one third", L_required_calc_text))]
+            if params.closure_type == "shoulder"
+            else []
+        ),
     }
     # #338 (Q1 = B, Ryan 2026-10-16): no input measures a shoulder width;
     # ``plan_shoulder_width_ft`` assumes it.  Recorded beside the value on
@@ -618,10 +661,10 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"CDOT supplement: {buf:g} ft. MUTCD Table {_TBL_BUFFER}: {mutcd_value:g} ft. "
-                f"Plan uses CDOT supplement value. Note: CDOT supplement permits "
-                f"shorter buffer than federal table. Verify against project-specific "
-                f"engineering judgment."
+                f"The CDOT supplement sets {buf:g} ft and MUTCD Table {_TBL_BUFFER} sets "
+                f"{mutcd_value:g} ft; the plan uses the CDOT supplement value. The CDOT "
+                "supplement permits a shorter buffer than the federal table, so verify it "
+                "against project-specific engineering judgment."
             ),
             "buffer_ft": buf,
             "source": (
@@ -643,7 +686,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"MUTCD Table {_TBL_BUFFER} sets {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
                 f"{_sheet_14_min:g} ft minimum for the {_supplement_case} step-down "
                 f"({speed} → {wz_speed} mph), but Sheet 14 is drawn for shoulder work on a "
                 f"freeway or expressway and this plan closes a lane, so the federal "
@@ -664,7 +707,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"MUTCD Table {_TBL_BUFFER} sets {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
                 f"{_sheet_14_min:g} ft minimum for the {_supplement_case} step-down "
                 f"({speed} → {wz_speed} mph), but Sheet 14 is drawn for shoulder work on a "
                 f"freeway or expressway and this road is neither, so the federal "
@@ -689,7 +732,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"MUTCD Table {_TBL_BUFFER} sets {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
                 f"{supplement_min:g} ft minimum at {speed} mph, but only as part of the "
                 f"{_supplement_case} mandatory speed step-down "
                 f"({speed} → {required_wz} mph), and Sheet 14 is drawn for shoulder "
@@ -713,7 +756,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"MUTCD Table {_TBL_BUFFER} sets {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
                 f"{supplement_min:g} ft minimum at {speed} mph, but only as part of the "
                 f"{_supplement_case} mandatory speed step-down "
                 f"({speed} → {required_wz} mph); this plan has no qualifying "
@@ -732,7 +775,8 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft (CDOT supplement silent at this speed)"
+                f"MUTCD Table {_TBL_BUFFER} sets {buf:g} ft; the CDOT supplement sets no "
+                "value at this speed."
             ),
             "buffer_ft": buf,
             "source": (
@@ -743,7 +787,7 @@ def build_audit_trail(
     else:  # jurisdiction == "federal"
         buffer_section = {
             "speed_mph": speed,
-            "lookup_text": f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft",
+            "lookup_text": f"MUTCD Table {_TBL_BUFFER} sets {buf:g} ft.",
             "buffer_ft": buf,
             "source": (
                 f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} (stopping sight distance)"
@@ -814,22 +858,22 @@ def build_audit_trail(
     if is_flagger:
         taper_label = "one-lane two-way taper"
         in_taper_text = (
-            f"{in_taper:g} ft spacing in the one-lane two-way taper "
-            f"(MUTCD Sec {_SEC_TAPER}: approximately 20 ft, taper-specific "
-            f"guidance overriding the Sec {_SEC_SPACING} speed-based rule)"
+            f"In the one-lane, two-way taper, devices are spaced {in_taper:g} ft apart: "
+            f"MUTCD Sec {_SEC_TAPER} gives about 20 ft for this taper, which overrides "
+            f"the Sec {_SEC_SPACING} speed rule."
         )
     else:
         taper_label = "L" if is_lane else "L/3"
         in_taper_text = (
-            f"{speed} mph -> {in_taper:g} ft spacing "
-            f"(MUTCD Sec {_SEC_SPACING}: spacing equals speed in feet)"
+            f"In the taper, devices are spaced {in_taper:g} ft apart, the speed in feet "
+            f"at {speed} mph (MUTCD Sec {_SEC_SPACING})."
         )
     spacing_section = {
         "speed_mph": speed,
         "in_taper_text": in_taper_text,
         "on_tangent_text": (
-            f"{speed} mph -> {on_tan:g} ft spacing "
-            f"(MUTCD Sec {_SEC_SPACING}: spacing equals 2x speed in feet)"
+            f"Along the tangent, devices are spaced {on_tan:g} ft apart, twice the speed "
+            f"in feet (MUTCD Sec {_SEC_SPACING})."
         ),
         "taper_count_text": (
             f"{taper_label} = {_ft(L_required)} ft / {in_taper:g} ft max spacing "
@@ -908,18 +952,41 @@ def build_audit_trail(
         f"{n_taper_drums + n_tangent_cones + n_buffer_cones} devices · "
         f"{in_taper:g}/{on_tan:g} ft o.c."
     )
-    spacing_section["formula_text"] = (
-        [
-            spacing_section["taper_count_text"],
-            spacing_section["tangent_count_text"],
-        ]
-        + ([spacing_section["buffer_count_text"]] if n_buffer_cones else [])
-        + (
-            [spacing_section["corner_count_text" if corner_extension else "downstream_count_text"]]
-            if n_ds_cones
-            else []
+
+    # #453 ruling 1: the panel's rows, "<plain label> = <value>", from the
+    # same counts and lengths the count lines above print (the PDF keeps
+    # printing those lines).  Words only: every number is the count line's.
+    def _n(count: int, word: str) -> str:
+        return f"{count} {word}{'' if count == 1 else 's'}"
+
+    # Short values (they read in mono, and fit one line at 390): the run's
+    # length rides the label.
+    spacing_rows = [
+        f"Taper, {_ft(L_required)} ft = {_n(n_taper_drums, 'drum')} at {taper_interval:.1f} ft",
+        f"Tangent, {wz_len:,g} ft = {_n(n_tangent_cones, 'cone')} at {tangent_interval:.1f} ft",
+    ]
+    if n_buffer_cones:
+        spacing_rows.append(
+            f"Buffer, {buf:,g} ft (S-630-1 Sheet 2 Note 18b) = "
+            f"{_n(n_buffer_cones, 'cone')} at {buffer_cone_spacing:.1f} ft"
         )
-    )
+    if n_ds_cones:
+        end_label = "corner" if corner_extension else "downstream"
+        # Repair 1: the count line's facts stay on the page (the taper's
+        # spacing and its MUTCD band; the corner run's "no downstream taper").
+        spacing_rows.append(
+            f"Corner extension to the curb line, {ds_len:g} ft (no downstream taper; "
+            f"the lane reopens beyond the intersection) = {_n(n_ds_cones, 'cone')}"
+            if corner_extension
+            else f"Downstream taper, {ds_len:g} ft (MUTCD Sec {_SEC_TAPER}: 50-100 ft) = "
+            f"{_n(n_ds_cones, 'cone')} at ~{ds_spacing:g} ft"
+        )
+        spacing_rows.append(
+            f"Cones in all ({n_tangent_actual} tangent, "
+            + (f"{n_buffer_cones} buffer, " if n_buffer_cones else "")
+            + f"{n_ds_cones} {end_label}) = {actual_cones}"
+        )
+    spacing_section["formula_text"] = spacing_rows
 
     # ------------------------------------------------------------------
     # 4. Advance warning sign placement
@@ -1259,7 +1326,14 @@ def build_audit_trail(
             f"W20-1 {sh14['C']:,.0f} ft"
         )
     else:
-        advance_spacing_text = f"A = {a_ft:g} ft, B = {b_ft:g} ft, C = {c_ft:g} ft"
+        # #453 ruling 1 (X4): Table 6B-1's own column names, each defined as
+        # the table's note defines it (MUTCD 11th Ed. p. 773).
+        advance_spacing_text = (
+            f"Table {_TBL_ADVANCE} spacing: A {a_ft:,g} ft (the distance from the "
+            f"transition or point of restriction to the first sign), B {b_ft:,g} ft "
+            f"(the distance between the first and second signs), C {c_ft:,g} ft (the "
+            "distance between the second and third signs)"
+        )
         if speed_group is not None:
             # #360 (Q2 (d)): Case 11's order upstream of the B sign.
             advance_spacing_text += (
@@ -1268,13 +1342,18 @@ def build_audit_trail(
                 "W20-1 one C beyond the farthest W3-5"
             )
     advance_section = {
+        # #453 ruling 1: no engine key on the page or the PDF.  The row the
+        # table names (MUTCD 11th Ed. Table 6B-1, p. 773), not the key.
         "road_type_text": (
-            f"Speed {speed} mph, road_type = '{params.road_type}' "
-            + (
-                f"-> {advance_source} (freeway shoulder work)"
-                if case_11 or sheet_14
-                else f"-> Table {_TBL_ADVANCE} category: {resolved_category}"
-            )
+            f"At {speed} mph on freeway shoulder work, the signs are placed at "
+            f"{advance_source}'s distances."
+            if case_11 or sheet_14
+            else f"At {speed} mph, the signs are spaced by MUTCD Table {_TBL_ADVANCE}'s "
+            f"{_TABLE_6B_1_ROW[resolved_category]} row."
+            if resolved_category in _TABLE_6B_1_ROW
+            # Rule 10: no category resolved, so no row is named (never a guess).
+            else f"At {speed} mph, the road type wasn't resolved, so no Table "
+            f"{_TBL_ADVANCE} row is named."
         ),
         "spacing_text": (advance_spacing_text)
         + (
@@ -1283,7 +1362,9 @@ def build_audit_trail(
             "farther upstream (MUTCD §6B.04)"
             if series_shift > 0.5
             else ""
-        ),
+        )
+        # #453 ruling 1: the line is a sentence on the page and in the PDF.
+        + ".",
         "sign_table": sign_table_rows,
         "source": advance_source,
         # #286 (R144 Q1) — the row's result (the panel used to count the
@@ -1923,7 +2004,7 @@ def build_audit_trail(
         flagger_section["sight_distance_ft"] = _ft(stopping_sight_distance_ft(speed))
         flagger_section["sight_distance_citation"] = {
             "cite": "MUTCD § 6D.06",
-            "footer": f"MUTCD § 6D.06 · TABLE {_TBL_BUFFER} · STOPPING SIGHT DISTANCE",
+            "footer": f"MUTCD § 6D.06 · Table {_TBL_BUFFER} · Stopping sight distance",
         }
         # #286 (R144 Q5) — the row's result and its formula line, at the
         # speed this audit used (the panel used to build the line from its

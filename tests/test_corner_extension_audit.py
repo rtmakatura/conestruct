@@ -62,7 +62,14 @@ def test_corner_extension_is_not_a_downstream_taper(client):
     assert not any("Downstream taper" in line for line in lines)
     assert "downstream_count_text" not in sp
     assert "n_downstream_taper_cones" not in sp
-    assert sp["corner_count_text"] == lines[-1]
+    # #453: the panel's rows are labelled; the PDF keeps the count line.
+    assert lines[-2:] == [
+        (
+            "Corner extension to the curb line, 48 ft (no downstream taper; the lane "
+            "reopens beyond the intersection) = 1 cone"
+        ),
+        "Cones in all (9 tangent, 3 buffer, 1 corner) = 13",
+    ]
     assert sp["corner_count_text"].startswith(
         "Corner extension: 48 ft past the work zone to the upstream curb line -> 1 cone "
     )

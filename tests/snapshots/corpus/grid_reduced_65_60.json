@@ -14,10 +14,10 @@
     "advance": {
       "citation": {
         "cite": "MUTCD TABLE 6B-1",
-        "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+        "footer": "MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing"
       },
       "result_text": "9 signs",
-      "road_type_text": "Speed 65 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+      "road_type_text": "At 65 mph, the signs are spaced by MUTCD Table 6B-1's Rural row.",
       "sign_table": [
         {
           "Code": "W20-1",
@@ -75,15 +75,15 @@
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
-      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft; reduced speed: the speed limit group at A + B + C, R2-10 500 ft upstream of it (S-630-1 Sheet 12 Case 24), each W3-5 530 ft beyond, W20-1 one C beyond the farthest W3-5"
+      "spacing_text": "Table 6B-1 spacing: A 500 ft (the distance from the transition or point of restriction to the first sign), B 500 ft (the distance between the first and second signs), C 500 ft (the distance between the second and third signs); reduced speed: the speed limit group at A + B + C, R2-10 500 ft upstream of it (S-630-1 Sheet 12 Case 24), each W3-5 530 ft beyond, W20-1 one C beyond the farthest W3-5."
     },
     "buffer": {
       "buffer_ft": 645.0,
       "citation": {
         "cite": "MUTCD § 6B.06",
-        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        "footer": "MUTCD § 6B.06 · Stopping sight distance"
       },
-      "lookup_text": "MUTCD Table 6B-2: 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum for the Case 26 step-down (65 → 60 mph), but Sheet 14 is drawn for shoulder work on a freeway or expressway and this road is neither, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
+      "lookup_text": "MUTCD Table 6B-2 sets 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum for the Case 26 step-down (65 → 60 mph), but Sheet 14 is drawn for shoulder work on a freeway or expressway and this road is neither, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
       "result_text": "B = 645 ft",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
       "speed_mph": 65
@@ -228,16 +228,17 @@
       "buffer_count_text": "Buffer: 645 ft / 130 ft max spacing -> 4 cones at 129.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
       "citation": {
         "cite": "MUTCD § 6K.01",
-        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        "footer": "MUTCD § 6K.01 · Channelizing device spacing"
       },
       "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 17 tangent + 4 buffer + 2 downstream = 23 cones total",
       "formula_text": [
-        "L/3 = 217 ft / 65 ft max spacing -> 5 drums at 54.2 ft intervals",
-        "2000 ft / 130 ft max spacing -> 17 cones at 125.0 ft intervals",
-        "Buffer: 645 ft / 130 ft max spacing -> 4 cones at 129.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
-        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 17 tangent + 4 buffer + 2 downstream = 23 cones total"
+        "Taper, 217 ft = 5 drums at 54.2 ft",
+        "Tangent, 2,000 ft = 17 cones at 125.0 ft",
+        "Buffer, 645 ft (S-630-1 Sheet 2 Note 18b) = 4 cones at 129.0 ft",
+        "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft) = 2 cones at ~25 ft",
+        "Cones in all (17 tangent, 4 buffer, 2 downstream) = 23"
       ],
-      "in_taper_text": "65 mph -> 65 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+      "in_taper_text": "In the taper, devices are spaced 65 ft apart, the speed in feet at 65 mph (MUTCD Sec 6K.01).",
       "n_buffer_cones": 4,
       "n_cones_placed_total": 23,
       "n_downstream_taper_cones": 2,
@@ -245,7 +246,7 @@
       "n_tangent_cones_required": 17,
       "n_taper_drums_actual": 5,
       "n_taper_drums_required": 5,
-      "on_tangent_text": "65 mph -> 130 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "on_tangent_text": "Along the tangent, devices are spaced 130 ft apart, twice the speed in feet (MUTCD Sec 6K.01).",
       "result_text": "26 devices · 65/130 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 65,
@@ -262,15 +263,15 @@
       "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway, reduced work-zone speed)",
       "citation": {
         "cite": "MUTCD § 6B.08",
-        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        "footer": "MUTCD 2023 edition · Chapter 6B · Table 6B-3"
       },
       "closure_type": "shoulder",
-      "formula_choice": "Speed 65 mph >= 45 mph threshold -> using L = W x S",
+      "formula_choice": "At 65 mph, at or above the 45 mph threshold, the taper length is the offset width times the speed.",
       "formula_latex": "L = W \\times S",
       "formula_text": [
-        "W = 10 ft (assumed)",
-        "L = 10 × 65 = 650 ft",
-        "L/3 = 650 / 3 = 217 ft"
+        "Shoulder width = 10 ft (assumed)",
+        "Full taper = 10 × 65 = 650 ft",
+        "Shoulder taper, one third = 650 / 3 = 217 ft"
       ],
       "offset_ft": 10.0,
       "offset_label": "shoulder width",

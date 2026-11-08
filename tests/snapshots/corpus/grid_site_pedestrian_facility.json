@@ -14,10 +14,10 @@
     "advance": {
       "citation": {
         "cite": "MUTCD TABLE 6B-1",
-        "footer": "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING"
+        "footer": "MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing"
       },
       "result_text": "3 signs",
-      "road_type_text": "Speed 55 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+      "road_type_text": "At 55 mph, the signs are spaced by MUTCD Table 6B-1's Rural row.",
       "sign_table": [
         {
           "Code": "W20-1",
@@ -39,15 +39,15 @@
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
-      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      "spacing_text": "Table 6B-1 spacing: A 500 ft (the distance from the transition or point of restriction to the first sign), B 500 ft (the distance between the first and second signs), C 500 ft (the distance between the second and third signs)."
     },
     "buffer": {
       "buffer_ft": 495.0,
       "citation": {
         "cite": "MUTCD § 6B.06",
-        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        "footer": "MUTCD § 6B.06 · Stopping sight distance"
       },
-      "lookup_text": "MUTCD Table 6B-2: 495 ft (CDOT supplement silent at this speed)",
+      "lookup_text": "MUTCD Table 6B-2 sets 495 ft; the CDOT supplement sets no value at this speed.",
       "result_text": "B = 495 ft",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
       "speed_mph": 55
@@ -168,16 +168,17 @@
       "buffer_count_text": "Buffer: 495 ft / 110 ft max spacing -> 4 cones at 99.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
       "citation": {
         "cite": "MUTCD § 6K.01",
-        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        "footer": "MUTCD § 6K.01 · Channelizing device spacing"
       },
       "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 20 tangent + 4 buffer + 2 downstream = 26 cones total",
       "formula_text": [
-        "L/3 = 183 ft / 55 ft max spacing -> 5 drums at 45.8 ft intervals",
-        "2000 ft / 110 ft max spacing -> 20 cones at 105.3 ft intervals",
-        "Buffer: 495 ft / 110 ft max spacing -> 4 cones at 99.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
-        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 20 tangent + 4 buffer + 2 downstream = 26 cones total"
+        "Taper, 183 ft = 5 drums at 45.8 ft",
+        "Tangent, 2,000 ft = 20 cones at 105.3 ft",
+        "Buffer, 495 ft (S-630-1 Sheet 2 Note 18b) = 4 cones at 99.0 ft",
+        "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft) = 2 cones at ~25 ft",
+        "Cones in all (20 tangent, 4 buffer, 2 downstream) = 26"
       ],
-      "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+      "in_taper_text": "In the taper, devices are spaced 55 ft apart, the speed in feet at 55 mph (MUTCD Sec 6K.01).",
       "n_buffer_cones": 4,
       "n_cones_placed_total": 26,
       "n_downstream_taper_cones": 2,
@@ -185,7 +186,7 @@
       "n_tangent_cones_required": 20,
       "n_taper_drums_actual": 5,
       "n_taper_drums_required": 5,
-      "on_tangent_text": "55 mph -> 110 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "on_tangent_text": "Along the tangent, devices are spaced 110 ft apart, twice the speed in feet (MUTCD Sec 6K.01).",
       "result_text": "29 devices · 55/110 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 55,
@@ -202,15 +203,15 @@
       "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
       "citation": {
         "cite": "MUTCD § 6B.08",
-        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        "footer": "MUTCD 2023 edition · Chapter 6B · Table 6B-3"
       },
       "closure_type": "shoulder",
-      "formula_choice": "Speed 55 mph >= 45 mph threshold -> using L = W x S",
+      "formula_choice": "At 55 mph, at or above the 45 mph threshold, the taper length is the offset width times the speed.",
       "formula_latex": "L = W \\times S",
       "formula_text": [
-        "W = 10 ft (assumed)",
-        "L = 10 × 55 = 550 ft",
-        "L/3 = 550 / 3 = 183 ft"
+        "Shoulder width = 10 ft (assumed)",
+        "Full taper = 10 × 55 = 550 ft",
+        "Shoulder taper, one third = 550 / 3 = 183 ft"
       ],
       "offset_ft": 10.0,
       "offset_label": "shoulder width",

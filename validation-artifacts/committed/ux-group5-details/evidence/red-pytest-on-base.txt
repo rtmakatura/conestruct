@@ -1,0 +1,25 @@
+#453 red proof, repair round 2: tests/test_details_clean_453.py (final version, 23 cases) on the base backend edaffb3e (git archive into the scratchpad). test_an_unresolved_road_type_names_no_row fails on the base with AttributeError: the base has no _TABLE_6B_1_ROW (its sentence printed the raw key); test_the_corridor_warning_says_the_road_class_in_words fails on the message text.
+FAILED tests/test_details_clean_453.py::test_detail_sentences_are_plain_sentences[shoulder-55]
+FAILED tests/test_details_clean_453.py::test_detail_sentences_are_plain_sentences[shoulder-30-urban]
+FAILED tests/test_details_clean_453.py::test_detail_sentences_are_plain_sentences[flagger]
+FAILED tests/test_details_clean_453.py::test_detail_sentences_are_plain_sentences[near-intersection]
+FAILED tests/test_details_clean_453.py::test_detail_sentences_are_plain_sentences[lane]
+FAILED tests/test_details_clean_453.py::test_formula_rows_carry_plain_labels[shoulder-55]
+FAILED tests/test_details_clean_453.py::test_formula_rows_carry_plain_labels[shoulder-30-urban]
+FAILED tests/test_details_clean_453.py::test_formula_rows_carry_plain_labels[flagger]
+FAILED tests/test_details_clean_453.py::test_formula_rows_carry_plain_labels[near-intersection]
+FAILED tests/test_details_clean_453.py::test_formula_rows_carry_plain_labels[lane]
+FAILED tests/test_details_clean_453.py::test_the_shoulder_rows_keep_their_numbers
+FAILED tests/test_details_clean_453.py::test_advance_names_the_table_row_and_defines_its_letters
+FAILED tests/test_details_clean_453.py::test_an_unresolved_road_type_names_no_row
+FAILED tests/test_details_clean_453.py::test_the_corridor_warning_says_the_road_class_in_words
+FAILED tests/test_details_clean_453.py::test_source_footers_are_sentence_case[shoulder-55]
+FAILED tests/test_details_clean_453.py::test_source_footers_are_sentence_case[shoulder-30-urban]
+FAILED tests/test_details_clean_453.py::test_source_footers_are_sentence_case[flagger]
+FAILED tests/test_details_clean_453.py::test_source_footers_are_sentence_case[near-intersection]
+FAILED tests/test_details_clean_453.py::test_source_footers_are_sentence_case[lane]
+FAILED tests/test_details_clean_453.py::test_driveways_short_result_is_ruling_4
+FAILED tests/test_details_clean_453.py::test_permit_tier_reason_is_a_sentence
+FAILED tests/test_details_clean_453.py::test_scan_evidence_names_the_zone_in_words
+FAILED tests/test_details_clean_453.py::test_the_audit_pdf_prints_the_same_sentences
+23 failed in 2.93s

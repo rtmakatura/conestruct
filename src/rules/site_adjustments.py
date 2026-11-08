@@ -250,8 +250,9 @@ def _adjust_driveways_present() -> dict[str, Any]:
             "driveway entrances."
         ),
         # #450 ruling 2: the passed row's short result carries the crew
-        # directive itself (the record adds and moves nothing).
-        "short_result": "Keep access gaps · no devices across driveways",
+        # directive itself (the record adds and moves nothing); #453 ruling 4
+        # leads it with "Advisory", the page copy's "(advisory only)".
+        "short_result": "Advisory · keep access gaps, no devices across driveways",
         "devices_added": 0,
         "rule": "MUTCD §6K.01: access management in work zones",
     }

@@ -14,10 +14,10 @@
     "advance": {
       "citation": {
         "cite": "CDOT S-630-1 CASE 11",
-        "footer": "CDOT S-630-1 · SHEET 7 · CASE 11 · SHOULDER WORK - FREEWAY/EXPRESSWAY"
+        "footer": "CDOT S-630-1 · Sheet 7 · Case 11 · Shoulder work, freeway/expressway"
       },
       "result_text": "6 signs",
-      "road_type_text": "Speed 75 mph, road_type = 'freeway' -> CDOT S-630-1 Sheet 7 Case 11 (freeway shoulder work)",
+      "road_type_text": "At 75 mph on freeway shoulder work, the signs are placed at CDOT S-630-1 Sheet 7 Case 11's distances.",
       "sign_table": [
         {
           "Code": "W20-1",
@@ -57,15 +57,15 @@
         }
       ],
       "source": "CDOT S-630-1 Sheet 7 Case 11",
-      "spacing_text": "CDOT S-630-1 Sheet 7 Case 11, from the taper: W5-1 500 ft, second W21-5aR 1,000 ft, first W21-5aR 2,000 ft, W20-1 5,200 ft"
+      "spacing_text": "CDOT S-630-1 Sheet 7 Case 11, from the taper: W5-1 500 ft, second W21-5aR 1,000 ft, first W21-5aR 2,000 ft, W20-1 5,200 ft."
     },
     "buffer": {
       "buffer_ft": 820.0,
       "citation": {
         "cite": "MUTCD § 6B.06",
-        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        "footer": "MUTCD § 6B.06 · Stopping sight distance"
       },
-      "lookup_text": "MUTCD Table 6B-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 → 65 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
+      "lookup_text": "MUTCD Table 6B-2 sets 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 → 65 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
       "result_text": "B = 820 ft",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
       "speed_mph": 75
@@ -177,16 +177,17 @@
       "buffer_count_text": "Buffer: 820 ft / 150 ft max spacing -> 5 cones at 136.7 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
       "citation": {
         "cite": "MUTCD § 6K.01",
-        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        "footer": "MUTCD § 6K.01 · Channelizing device spacing"
       },
       "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 11 tangent + 5 buffer + 2 downstream = 18 cones total",
       "formula_text": [
-        "L/3 = 250 ft / 75 ft max spacing -> 5 drums at 62.5 ft intervals",
-        "1500 ft / 150 ft max spacing -> 11 cones at 150.0 ft intervals",
-        "Buffer: 820 ft / 150 ft max spacing -> 5 cones at 136.7 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents along the buffer space)",
-        "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 11 tangent + 5 buffer + 2 downstream = 18 cones total"
+        "Taper, 250 ft = 5 drums at 62.5 ft",
+        "Tangent, 1,500 ft = 11 cones at 150.0 ft",
+        "Buffer, 820 ft (S-630-1 Sheet 2 Note 18b) = 5 cones at 136.7 ft",
+        "Downstream taper, 50 ft (MUTCD Sec 6B.08: 50-100 ft) = 2 cones at ~25 ft",
+        "Cones in all (11 tangent, 5 buffer, 2 downstream) = 18"
       ],
-      "in_taper_text": "75 mph -> 75 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+      "in_taper_text": "In the taper, devices are spaced 75 ft apart, the speed in feet at 75 mph (MUTCD Sec 6K.01).",
       "n_buffer_cones": 5,
       "n_cones_placed_total": 18,
       "n_downstream_taper_cones": 2,
@@ -194,7 +195,7 @@
       "n_tangent_cones_required": 11,
       "n_taper_drums_actual": 5,
       "n_taper_drums_required": 5,
-      "on_tangent_text": "75 mph -> 150 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "on_tangent_text": "Along the tangent, devices are spaced 150 ft apart, twice the speed in feet (MUTCD Sec 6K.01).",
       "result_text": "21 devices · 75/150 ft o.c.",
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 75,
@@ -211,15 +212,15 @@
       "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
       "citation": {
         "cite": "MUTCD § 6B.08",
-        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        "footer": "MUTCD 2023 edition · Chapter 6B · Table 6B-3"
       },
       "closure_type": "shoulder",
-      "formula_choice": "Speed 75 mph >= 45 mph threshold -> using L = W x S",
+      "formula_choice": "At 75 mph, at or above the 45 mph threshold, the taper length is the offset width times the speed.",
       "formula_latex": "L = W \\times S",
       "formula_text": [
-        "W = 10 ft (assumed)",
-        "L = 10 × 75 = 750 ft",
-        "L/3 = 750 / 3 = 250 ft"
+        "Shoulder width = 10 ft (assumed)",
+        "Full taper = 10 × 75 = 750 ft",
+        "Shoulder taper, one third = 750 / 3 = 250 ft"
       ],
       "offset_ft": 10.0,
       "offset_label": "shoulder width",

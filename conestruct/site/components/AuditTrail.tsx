@@ -29,22 +29,22 @@ import type {
 // field-absent branches render clean.
 const TAPER_CITATION_FALLBACK = {
   cite: "MUTCD § 6B.08",
-  footer: "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3",
+  footer: "MUTCD 2023 edition · Chapter 6B · Table 6B-3",
 } as const;
 const BUFFER_CITATION_FALLBACK = {
   cite: "MUTCD § 6B.06",
-  footer: "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
+  footer: "MUTCD § 6B.06 · Stopping sight distance",
 } as const;
 const SPACING_CITATION_FALLBACK = {
   cite: "MUTCD § 6K.01",
-  footer: "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+  footer: "MUTCD § 6K.01 · Channelizing device spacing",
 } as const;
 // #286 (R144): the advance row reads ``sections.advance.citation`` now.  Its
 // footer used to be written here as "MUTCD § 6B-1", a section that doesn't
 // exist (citation defect 20); §6H.02 places the signs by Table 6B-1.
 const ADVANCE_CITATION_FALLBACK = {
   cite: "MUTCD TABLE 6B-1",
-  footer: "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
+  footer: "MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
 } as const;
 
 // #286 (R144 Q1, Rule 3): a calculation row's result and formula lines are
@@ -298,7 +298,7 @@ export function buildShoulderItems(
 // (unlike the #104 string fallbacks, which are byte-identical text).
 const SSD_CITATION_FALLBACK = {
   cite: "MUTCD § 6D.06",
-  footer: "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+  footer: "MUTCD § 6D.06 · Table 6B-2 · Stopping sight distance",
 } as const;
 
 export function flaggerSightDistanceItem(
@@ -399,7 +399,7 @@ function buildLaneClosureItems(
               : "Not deployed",
           },
         ],
-        source: "MUTCD § 6F.61 · ARROW BOARDS",
+        source: "MUTCD § 6F.61 · Arrow boards",
       },
     },
     advanceItem(audit, generated, r),
@@ -431,7 +431,7 @@ function buildWorkBeyondShoulderItems(
             ...(scenario.duration === "long" ? [{ text: "End road work", value: "G20-2" }] : []),
           ],
         },
-        source: "MUTCD § 6G.04 · WORK OUTSIDE SHOULDER",
+        source: "MUTCD § 6G.04 · Work outside shoulder",
       },
     },
     {
@@ -447,7 +447,7 @@ function buildWorkBeyondShoulderItems(
               ]
             : []),
         ],
-        source: "MUTCD § 6D.01 · WORKER PROTECTION",
+        source: "MUTCD § 6D.01 · Worker protection",
       },
     },
     coloradoItem(audit, "S-630-1"),
@@ -483,7 +483,7 @@ function buildMobileOp2LaneItems(
               : "Vehicle-mounted W21-1A only",
           },
         ],
-        source: "MUTCD § 6G.05 · MOBILE OPERATIONS",
+        source: "MUTCD § 6G.05 · Mobile operations",
       },
     },
     {
@@ -499,7 +499,7 @@ function buildMobileOp2LaneItems(
               ]
             : []),
         ],
-        source: "MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS",
+        source: "MUTCD § 6F.55 · Truck-mounted attenuators",
       },
     },
     coloradoItem(audit, "S-630-1"),
@@ -530,7 +530,7 @@ function buildMobileOpMultilaneItems(
               ]
             : []),
         ],
-        source: "MUTCD § 6G.06 · MULTI-LANE MOBILE OPS",
+        source: "MUTCD § 6G.06 · Multi-lane mobile operations",
       },
     },
     {
@@ -546,7 +546,7 @@ function buildMobileOpMultilaneItems(
               ]
             : []),
         ],
-        source: "MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS",
+        source: "MUTCD § 6F.55 · Truck-mounted attenuators",
       },
     },
     coloradoItem(audit, "S-630-3"),
@@ -625,10 +625,12 @@ function bufferItem(
     result: wireResult(buffer.result_text, generated),
     cite: citation.cite,
     detail: {
+      // #453 ruling 1: the backend's lookup is a sentence, so it reads as
+      // one (it used to draw as a single mono value).
       sentences: [
         "Buffer space is the longitudinal clear distance between traffic and workers, sized for stopping sight distance at the posted speed.",
+        ...wireLines([lookupText]),
       ],
-      pairs: formulaPairs(wireLines([lookupText])),
       source: citation.footer,
     },
   };
@@ -770,7 +772,7 @@ export function coloradoItem(
           ...infoItems.map((c) => ({ text: `${c.label}: ${c.detail}`, sub: c.citation })),
         ],
       },
-      source: `CDOT ${cdotSheet} · STANDARD PLAN`,
+      source: `CDOT ${cdotSheet} · Standard plan`,
     },
   };
 }
@@ -894,7 +896,7 @@ export function approachesItem(
           })),
         ),
       },
-      source: source || "MUTCD § 6N.12; CDOT S-630-1 SHEET 10",
+      source: source || "MUTCD § 6N.12; CDOT S-630-1 Sheet 10",
     },
   };
 }
@@ -939,7 +941,7 @@ export function finesDoubleItem(
       dim: true,
       detail: {
         sentences: [reason],
-        source: "CDOT S-630-1 SHEET 12 · FINES DOUBLE SIGNING NOTES",
+        source: "CDOT S-630-1 Sheet 12 · Fines Double signing notes",
       },
     };
   }
@@ -1009,7 +1011,8 @@ export function finesDoubleItem(
           ...notes.map((n) => ({ text: n.action, sub: n.citation })),
         ],
       },
-      source: citation.toUpperCase(),
+      // #453 X5: the backend citation as written, sentence case.
+      source: citation,
     },
   };
 }
@@ -1052,7 +1055,8 @@ export function corridorValidationItem(
       sentences: ["Soft check against OSM. Warnings don't block plan generation."],
       list: {
         noun: { one: "warning", many: "warnings" },
-        lines: warnings.map((w) => ({ text: w.message, sub: w.flag.replace(/_/g, " ").toUpperCase() })),
+        // #453 X11: the message only; the wire flag is an internal key.
+        lines: warnings.map((w) => ({ text: w.message })),
       },
     },
   };

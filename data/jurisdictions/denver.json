@@ -250,7 +250,7 @@
   ],
   "hazards": [
     {
-      "rule": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each — precisely the failure the tool exists to prevent.",
+      "rule": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
       "meter_kind": "rejection",
       "source": {
         "doc": "ROWS 2024 Consolidated Fee Schedule",
@@ -485,7 +485,7 @@
       }
     ],
     "formula": null,
-    "note": "STALENESS RISK: this is the 2024 schedule; Denver publishes annually — 2025/2026 schedules almost certainly exist. Rate depends on road class x geographic zone (Residential / CBD-CCA / Collector-Arterial) x peak flag, with a per-lane escalator that is not a multiplier."
+    "note": "This is the 2024 fee schedule, and it may be out of date: Denver publishes a new schedule every year, so 2025 and 2026 schedules almost certainly exist. The rate depends on the road class, the zone (Residential, CBD/CCA or Collector/Arterial) and whether the work is in peak hours, with a per-lane step that is not a multiplier."
   },
   "meters": [
     {

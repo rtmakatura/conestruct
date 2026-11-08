@@ -88,6 +88,11 @@ _PANEL_ONLY_KEYS = frozenset(
         # The PDF prints the full ``detail`` sentence, which this proof
         # keeps covering; the key name is used nowhere else.
         "short_result",
+        # #453 ruling 1: the summary's Table 6B-1 category is an engine key
+        # ("urban_low"); no PDF block prints it as a field.  It reached the
+        # PDF only inside the advance road-type line, which now names the
+        # table's row ("Urban (low speed)") instead of the key.
+        "road_category",
     }
 )
 _SKIP_KEYS = (
@@ -102,15 +107,15 @@ _SKIP_KEYS = (
 # Fines Double) is a *rendered* string, so we can't skip the key globally
 # (that would stop verifying those real PDF citations).  Allowlist the exact
 # panel-only leaves instead.  Kept in sync with ``_CITATION_*`` in
-# ``src/api/audit.py``.
+# ``src/api/audit.py`` (#453: the footers in sentence case).
 _PANEL_ONLY_CITATIONS = frozenset(
     {
         "MUTCD § 6B.08",
-        "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3",
+        "MUTCD 2023 edition · Chapter 6B · Table 6B-3",
         "MUTCD § 6B.06",
-        "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
+        "MUTCD § 6B.06 · Stopping sight distance",
         "MUTCD § 6K.01",
-        "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+        "MUTCD § 6K.01 · Channelizing device spacing",
         # #104 — site-adjustment ``citation`` chips (derived from ``rule``
         # by _site_citation): panel-only; the PDF renders the full ``rule``
         # prose in the Site Adjustments table instead.
@@ -126,24 +131,24 @@ _PANEL_ONLY_CITATIONS = frozenset(
         # ``source``/``narrative``; whether the PDF gains an SSD row is
         # a separate visible-content decision, not bundled here.
         "MUTCD § 6D.06",
-        "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+        "MUTCD § 6D.06 · Table 6B-2 · Stopping sight distance",
         # #286 — the advance-sign citation chips (sections.advance.citation,
         # ``_CITATION_ADVANCE``): panel-only; the PDF's advance block keeps
         # its prose ``source`` ("MUTCD 11th Ed. Table 6B-1").
         "MUTCD TABLE 6B-1",
-        "MUTCD § 6H.02 · TABLE 6B-1 · ADVANCE WARNING SIGN SPACING",
+        "MUTCD § 6H.02 · Table 6B-1 · Advance warning sign spacing",
         # #334 — the same chip on a Case 11 plan (``_CITATION_ADVANCE_CASE_11``);
         # the PDF keeps its prose ``source`` ("CDOT S-630-1 Sheet 7 Case 11").
         "CDOT S-630-1 CASE 11",
-        "CDOT S-630-1 · SHEET 7 · CASE 11 · SHOULDER WORK - FREEWAY/EXPRESSWAY",
+        "CDOT S-630-1 · Sheet 7 · Case 11 · Shoulder work, freeway/expressway",
         # #344 — the same chip on a Case 26/27 plan (``_citation_advance_sheet_14``);
         # the PDF keeps its prose ``source`` ("CDOT S-630-1 Sheet 14 Case 26").
         "CDOT S-630-1 CASE 26",
-        "CDOT S-630-1 · SHEET 14 · CASE 26 · SHOULDER WORK - FREEWAY/EXPRESSWAY "
-        "W/ 65 MPH SPEED LIMIT",
+        "CDOT S-630-1 · Sheet 14 · Case 26 · Shoulder work, freeway/expressway "
+        "with 65 mph speed limit",
         "CDOT S-630-1 CASE 27",
-        "CDOT S-630-1 · SHEET 14 · CASE 27 · SHOULDER WORK - FREEWAY/EXPRESSWAY "
-        "W/ 75 MPH SPEED LIMIT",
+        "CDOT S-630-1 · Sheet 14 · Case 27 · Shoulder work, freeway/expressway "
+        "with 75 mph speed limit",
     }
 )
 

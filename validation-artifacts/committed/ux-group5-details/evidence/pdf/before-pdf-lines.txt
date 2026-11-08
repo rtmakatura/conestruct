@@ -1,0 +1,12 @@
+pages 4 | engine keys: {'road_type': True, 'urban_low': True, '->': True, 'threshold ->': True, '[work_zone': True}
+  p1: Device spacing: taper 30 ft
+  p1: Device spacing: tangent 60 ft
+  p1: Speed 30 mph < 45 mph threshold -> using L = W x S^2 / 60
+  p1: MUTCD Table 6B-2: 200 ft (CDOT supplement silent at this speed)
+  p1: Source: MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)
+  p2: L/3 = 40 ft / 30 ft max spacing -> 4 drums at 13.3 ft intervals
+  p2: 1000 ft / 60 ft max spacing -> 18 cones at 58.8 ft intervals
+  p2: Buffer: 200 ft / 60 ft max spacing -> 3 cones at 50.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents
+  p2: Speed 30 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low
+  p2: Source: MUTCD 11th Ed. Table 6B-1
+  p2: AADT threshold for mobile operations (<= 2,000): Not applicable (not a mobile operation). (CDOT S-630-1 (July 2026)
