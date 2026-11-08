@@ -1,0 +1,24 @@
+1198x930 errors 0
+  01-picker-before-save y 0/0 band-nav 107 heading true aerialWhole null null/null standIn false held null focus BODY 
+  02-saved-aerial-not-drawn y 99/324 band-nav 8 heading true aerialWhole true 560/560 standIn true held Drawing the corridor… focus DIV 
+  03-saved-landed y 99/343 band-nav 8 heading true aerialWhole true 560/560 standIn false held null focus DIV 
+  04-scrolled-to-end y 343/343 band-nav -236 heading false aerialWhole false 440/560 standIn false held null focus DIV 
+  05-resaved-from-end y 99/343 band-nav 8 heading true aerialWhole true 560/560 standIn false held null focus DIV 
+  06-cancelled y 200/343 band-nav -93 heading false aerialWhole true 560/560 standIn false held null focus where-open-picker yBefore 200
+  trail [{"at":8283,"state":"stand-in"},{"at":13472,"state":"aerial"}]
+1440x900 errors 0
+  01-picker-before-save y 0/0 band-nav 107 heading true aerialWhole null null/null standIn false held null focus BODY 
+  02-saved-aerial-not-drawn y 99/373 band-nav 8 heading true aerialWhole true 560/560 standIn true held Drawing the corridor… focus DIV 
+  03-saved-landed y 99/373 band-nav 8 heading true aerialWhole true 560/560 standIn false held null focus DIV 
+  04-scrolled-to-end y 373/373 band-nav -266 heading false aerialWhole false 410/560 standIn false held null focus DIV 
+  05-resaved-from-end y 99/373 band-nav 8 heading true aerialWhole true 560/560 standIn false held null focus DIV 
+  06-cancelled y 200/373 band-nav -93 heading false aerialWhole true 560/560 standIn false held null focus where-open-picker yBefore 200
+  trail [{"at":8120,"state":"stand-in"},{"at":11372,"state":"aerial"}]
+390x844 errors 0
+  01-picker-before-save y 93/93 band-nav 27 heading true aerialWhole null null/null standIn false held null focus BODY 
+  02-saved-aerial-not-drawn y 112/690 band-nav 8 heading true aerialWhole true 150/150 standIn true held Drawing the corridor… focus DIV 
+  03-saved-landed y 112/690 band-nav 8 heading true aerialWhole true 150/150 standIn false held null focus DIV 
+  04-scrolled-to-end y 690/690 band-nav -570 heading false aerialWhole true 150/150 standIn false held null focus DIV 
+  05-resaved-from-end y 112/690 band-nav 8 heading true aerialWhole true 150/150 standIn false held null focus DIV 
+  06-cancelled y 200/690 band-nav -80 heading false aerialWhole true 150/150 standIn false held null focus where-open-picker yBefore 200
+  trail [{"at":7826,"state":"stand-in"},{"at":11317,"state":"aerial"}]

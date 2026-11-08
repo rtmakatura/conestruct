@@ -6090,6 +6090,11 @@ input[type="number"] {
   width: 100%;
   height: 100%;
 }
+/* #460: the picker's picture is the picker's shape, not the frame's; it
+   fills the frame, centred, rather than stretching. */
+.workbench .a-aerial-frame img.a-aerial-standin {
+  object-fit: cover;
+}
 /* Rule 106's centre hint: the pre-side sentence, the wait, the refusal. */
 .workbench .a-aerial-note {
   position: absolute;

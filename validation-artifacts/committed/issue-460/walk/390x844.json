@@ -1,0 +1,227 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "01-picker-before-save",
+   "scrollY": 93,
+   "maxScroll": 93,
+   "atMax": true,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "openBand": "where",
+   "band": {
+    "top": 79,
+    "bottom": 338.3,
+    "h": 259.3
+   },
+   "heading": {
+    "top": 133,
+    "bottom": 156.8,
+    "h": 23.8
+   },
+   "frame": null,
+   "bandTopMinusNav": 27,
+   "headingInView": true,
+   "aerialWhollyInView": null,
+   "aerialVisiblePx": null,
+   "standIn": false,
+   "aerialImg": false,
+   "note": null,
+   "heldLine": null,
+   "activeTestid": "BODY",
+   "docOverflowX": false,
+   "shot": "390x844-01-01-picker-before-save.png"
+  },
+  {
+   "name": "02-saved-aerial-not-drawn",
+   "scrollY": 112,
+   "maxScroll": 690,
+   "atMax": false,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "openBand": "where",
+   "band": {
+    "top": 60,
+    "bottom": 935.8,
+    "h": 875.8
+   },
+   "heading": {
+    "top": 114,
+    "bottom": 137.8,
+    "h": 23.8
+   },
+   "frame": {
+    "top": 153.8,
+    "bottom": 303.8,
+    "h": 150
+   },
+   "bandTopMinusNav": 8,
+   "headingInView": true,
+   "aerialWhollyInView": true,
+   "aerialVisiblePx": 150,
+   "standIn": true,
+   "aerialImg": false,
+   "note": null,
+   "heldLine": "Drawing the corridor…",
+   "activeTestid": "DIV",
+   "docOverflowX": false,
+   "shot": "390x844-02-02-saved-aerial-not-drawn.png"
+  },
+  {
+   "name": "03-saved-landed",
+   "frameTrail": [
+    {
+     "at": 7826,
+     "state": "stand-in"
+    },
+    {
+     "at": 11317,
+     "state": "aerial"
+    }
+   ],
+   "scrollY": 112,
+   "maxScroll": 690,
+   "atMax": false,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "openBand": "where",
+   "band": {
+    "top": 60,
+    "bottom": 935.8,
+    "h": 875.8
+   },
+   "heading": {
+    "top": 114,
+    "bottom": 137.8,
+    "h": 23.8
+   },
+   "frame": {
+    "top": 153.8,
+    "bottom": 303.8,
+    "h": 150
+   },
+   "bandTopMinusNav": 8,
+   "headingInView": true,
+   "aerialWhollyInView": true,
+   "aerialVisiblePx": 150,
+   "standIn": false,
+   "aerialImg": true,
+   "note": null,
+   "heldLine": null,
+   "activeTestid": "DIV",
+   "docOverflowX": false,
+   "shot": "390x844-03-03-saved-landed.png"
+  },
+  {
+   "name": "04-scrolled-to-end",
+   "scrollY": 690,
+   "maxScroll": 690,
+   "atMax": true,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "openBand": "where",
+   "band": {
+    "top": -518,
+    "bottom": 357.8,
+    "h": 875.8
+   },
+   "heading": {
+    "top": -464,
+    "bottom": -440.3,
+    "h": 23.8
+   },
+   "frame": {
+    "top": 52,
+    "bottom": 202,
+    "h": 150
+   },
+   "bandTopMinusNav": -570,
+   "headingInView": false,
+   "aerialWhollyInView": true,
+   "aerialVisiblePx": 150,
+   "standIn": false,
+   "aerialImg": true,
+   "note": null,
+   "heldLine": null,
+   "activeTestid": "DIV",
+   "docOverflowX": false
+  },
+  {
+   "name": "05-resaved-from-end",
+   "scrollY": 112,
+   "maxScroll": 690,
+   "atMax": false,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "openBand": "where",
+   "band": {
+    "top": 60,
+    "bottom": 935.8,
+    "h": 875.8
+   },
+   "heading": {
+    "top": 114,
+    "bottom": 137.8,
+    "h": 23.8
+   },
+   "frame": {
+    "top": 153.8,
+    "bottom": 303.8,
+    "h": 150
+   },
+   "bandTopMinusNav": 8,
+   "headingInView": true,
+   "aerialWhollyInView": true,
+   "aerialVisiblePx": 150,
+   "standIn": false,
+   "aerialImg": true,
+   "note": null,
+   "heldLine": null,
+   "activeTestid": "DIV",
+   "docOverflowX": false,
+   "shot": "390x844-04-05-resaved-from-end.png"
+  },
+  {
+   "name": "06-cancelled",
+   "yBefore": 200,
+   "scrollY": 200,
+   "maxScroll": 690,
+   "atMax": false,
+   "vw": 390,
+   "vh": 844,
+   "navBottom": 52,
+   "openBand": "where",
+   "band": {
+    "top": -28,
+    "bottom": 847.8,
+    "h": 875.8
+   },
+   "heading": {
+    "top": 26,
+    "bottom": 49.8,
+    "h": 23.8
+   },
+   "frame": {
+    "top": 65.8,
+    "bottom": 215.8,
+    "h": 150
+   },
+   "bandTopMinusNav": -80,
+   "headingInView": false,
+   "aerialWhollyInView": true,
+   "aerialVisiblePx": 150,
+   "standIn": false,
+   "aerialImg": true,
+   "note": null,
+   "heldLine": null,
+   "activeTestid": "where-open-picker",
+   "docOverflowX": false
+  }
+ ],
+ "errors": []
+}

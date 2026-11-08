@@ -174,6 +174,16 @@ export function GeneratorSidebar({
   // is gone (the first save swaps "Pick Location on Map" for the pin
   // summary).  Attached to the location block, which survives the swap.
   const locationBlockRef = useRef<HTMLDivElement | null>(null);
+  // #460 (Ryan, 2026-11-08): each Save & Close lands the open band (the
+  // count is the request, so a second save at the same pin lands again),
+  // and the picker's last picture stands in until the aerial is drawn,
+  // for the pin it was taken at only.
+  const [landN, setLandN] = useState(0);
+  const [pickerPicture, setPickerPicture] = useState<{
+    lat: number;
+    lng: number;
+    src: string;
+  } | null>(null);
   // UX-01/UX-02: the transformations the picker → form handoff applied
   // (speed clamp/snap; later, low-confidence skip/accept).  Frontend-only
   // metadata held here and rendered in LocationSummary — never written to
@@ -392,6 +402,11 @@ export function GeneratorSidebar({
       }),
     );
     setScenario(next);
+    setPickerPicture(
+      r.snapshot ? { lat: next.meta.lat, lng: next.meta.lng, src: r.snapshot }
+        : null,
+    );
+    setLandN((n) => n + 1);
     setPickerOpen(false);
   };
 
@@ -479,6 +494,14 @@ export function GeneratorSidebar({
         onKindConfirmed={onKindConfirmed}
         onKindCleared={onKindCleared}
         openRequest={openRequest}
+        landRequest={landN}
+        pickerPicture={
+          pickerPicture &&
+          pickerPicture.lat === scenario.meta.lat &&
+          pickerPicture.lng === scenario.meta.lng
+            ? pickerPicture.src
+            : null
+        }
         onGenerate={onGenerate}
         generating={generating}
         // Rule 139: one derivation feeds the verdict strip, the disabled

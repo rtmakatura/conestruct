@@ -97,6 +97,32 @@ describe("LocationPickerModal focus containment", () => {
     fallback.remove();
   });
 
+  // #460: the restore never scrolls the page; the fallback sits after the
+  // band stack, so a scrolling focus jumped to the page's end.
+  it("restores focus without scrolling, to the opener and to the fallback", () => {
+    const fallback = document.createElement("div");
+    fallback.tabIndex = -1;
+    document.body.appendChild(fallback);
+    const openerFocus = vi.spyOn(opener, "focus");
+    const fallbackFocus = vi.spyOn(fallback, "focus");
+    const first = mountModal();
+    first.unmount();
+    expect(openerFocus).toHaveBeenLastCalledWith({ preventScroll: true });
+    const { unmount } = render(
+      <LocationPickerModal
+        open
+        initial={{ scenarioKind: "shoulder" }}
+        onCancel={() => {}}
+        onSave={() => {}}
+        restoreFallbackRef={{ current: fallback }}
+      />,
+    );
+    opener.remove();
+    unmount();
+    expect(fallbackFocus).toHaveBeenLastCalledWith({ preventScroll: true });
+    fallback.remove();
+  });
+
   it("Tab on the last focusable wraps to the first", () => {
     mountModal();
     const dialog = screen.getByRole("dialog");

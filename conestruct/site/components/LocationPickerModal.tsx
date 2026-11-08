@@ -149,6 +149,13 @@ export interface LocationPickerResult {
    * clears any previous confirmation.
    */
   confirmedRoad: ConfirmedRoad | null;
+  /**
+   * #460 (Ryan, 2026-11-08): the map as it stood at Save, a JPEG data URL,
+   * for the WHERE aerial to show until its own picture is drawn.  Absent
+   * when there is no map to read (no token, no WebGL, a test DOM).  A
+   * picture only: never written to the scenario or sent anywhere.
+   */
+  snapshot?: string;
 }
 
 interface Props {
@@ -655,8 +662,12 @@ export function LocationPickerModal({
       // first successful save it doesn't (UnsetLocation swaps to the
       // pin summary), and focusing a detached node silently no-ops,
       // stranding focus on <body>.
-      if (opener?.isConnected) opener.focus();
-      else restoreFallbackRef?.current?.focus();
+      // #460: without preventScroll the browser scrolls the focused node
+      // into view, and the fallback sits after the band stack, so the page
+      // jumped to its end.  The band landing (ruling 184) is the one place
+      // that moves the page after a Save.
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+      else restoreFallbackRef?.current?.focus({ preventScroll: true });
     };
   }, [open, restoreFallbackRef]);
 
@@ -977,6 +988,9 @@ export function LocationPickerModal({
         center: initialCenter,
         zoom: initialZoom,
         attributionControl: true,
+        // #460: keeps the last frame readable, so Save can hand the WHERE
+        // aerial the picture on screen.
+        preserveDrawingBuffer: true,
       });
       mapRef.current = map;
 
@@ -1445,7 +1459,16 @@ export function LocationPickerModal({
             pinLng: lng,
           }
         : null;
+    // #460: the picture on screen, if the canvas can be read.
+    let snapshot: string | undefined;
+    try {
+      const url = mapRef.current?.getCanvas().toDataURL("image/jpeg", 0.85);
+      if (url && url.startsWith("data:image/")) snapshot = url;
+    } catch {
+      snapshot = undefined;
+    }
     onSave({
+      ...(snapshot ? { snapshot } : {}),
       address,
       lat,
       lng,

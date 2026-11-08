@@ -363,11 +363,14 @@ export function WhereBand({
   stepIndex,
   corridorSpecLengths = null,
   jurisdictionName = null,
+  pickerPicture = null,
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
   setMeta: (m: ScenarioMeta) => void;
   onOpenPicker: () => void;
+  /** #460: the picker's last picture at this pin (BandAerial's stand-in). */
+  pickerPicture?: string | null;
   /** #317 (R129 Q1): the side control's Mark on map — the picker, ready to
    *  mark the crossing. */
   onMarkIntersection?: () => void;
@@ -692,6 +695,7 @@ export function WhereBand({
               scenario={scenario}
               geometry={geometry}
               kindConfirmed={kindConfirmed}
+              pickerPicture={pickerPicture}
               onEditMap={openMap}
               locked={locked}
               pinFrame={crossOpen}

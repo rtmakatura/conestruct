@@ -91,6 +91,8 @@ export const AERIAL_BIG_MAP = "Use the big map instead";
 /** #456 ruling 2, verbatim. */
 export const AERIAL_HIDE = "Hide map";
 export const AERIAL_SHOW = "Show map";
+/** #460: the stand-in's alt; it is the picker's map, not the aerial. */
+export const AERIAL_STAND_IN_ALT = "The map as you saved it. The aerial is being drawn";
 
 const ALT: Record<AerialStage, string> = {
   pin: "Aerial at the pin. Nothing is laid out until the side is chosen",
@@ -201,6 +203,11 @@ export interface BandAerialProps {
   hidden?: boolean;
   onHide?: () => void;
   onShow?: () => void;
+  /** #460 (Ryan, 2026-11-08): the picker's last picture at this pin.
+   *  Before any aerial is on screen it stands in for the empty box, with
+   *  the wait line in its corner (it is not the aerial, so it never takes
+   *  a tap, a zoom or the key).  Null = the wait sentence, as before. */
+  pickerPicture?: string | null;
 }
 
 /** #440 ruling 3: the bar's crosshair (the design canvas's own path).
@@ -247,6 +254,7 @@ export function BandAerial({
   hidden = false,
   onHide,
   onShow,
+  pickerPicture = null,
 }: BandAerialProps) {
   // #456 M4: measured on the picture's own box (the canvas), which keeps
   // the full height while the narrow strip clips the frame to 150 px.
@@ -388,8 +396,11 @@ export function BandAerial({
   const holding = !current && display !== null;
   // The wait sentence: centred in the box only before any picture; over a
   // held picture of another corridor, a small line in its corner.
-  const heldLine = holding && display !== null && display.base !== base;
-  if (!current && note === null && display === null) note = AERIAL_WAIT;
+  // #460: before any picture, the picker's own stands in, with the wait
+  // line in the corner rather than centred in an empty box.
+  const standIn = !current && note === null && display === null ? pickerPicture : null;
+  const heldLine = (holding && display !== null && display.base !== base) || standIn !== null;
+  if (!current && note === null && display === null && standIn === null) note = AERIAL_WAIT;
   // #440 ruling 7: the not-marked line left the aerial (#317's note); the
   // CONFIRM card's cross-street question asks for the crossing.  #440 R145
   // X22 (Ryan, 2026-11-04): the side caption left it the same way; the
@@ -451,8 +462,8 @@ export function BandAerial({
       <div
         className={`a-aerial-frame${tapping ? " is-armed" : ""}${barNow ? " has-bar" : ""}`}
         data-bar={barNow?.kind}
-        data-held={holding || undefined}
-        aria-busy={holding || undefined}
+        data-held={holding || standIn !== null || undefined}
+        aria-busy={holding || standIn !== null || undefined}
         data-testid="band-aerial-frame"
       >
         {barNow && (
@@ -515,6 +526,16 @@ export function BandAerial({
           </button>
         )}
         <div ref={frameRef} className="a-aerial-canvas">
+        {standIn !== null && (
+          // #460: a data URL the picker read off its own canvas.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={standIn}
+            alt={AERIAL_STAND_IN_ALT}
+            className="a-aerial-standin"
+            data-testid="band-aerial-standin"
+          />
+        )}
         {src !== null && display !== null && (
           // The source is an object URL of an image the backend drew at this
           // frame's exact size — there is nothing for next/image to

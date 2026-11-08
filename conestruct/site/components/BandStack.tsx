@@ -103,6 +103,13 @@ export interface BandStackProps {
    *  for still re-opens it after the user has steered elsewhere.  Null =
    *  the column decides. */
   openRequest?: OpenRequest | null;
+  /** #460 (Ryan, 2026-11-08): counts the picker's Save & Close.  Each one
+   *  lands the open band as a band change does (ruling 184), so WHERE's
+   *  heading and its whole aerial sit just under the top bar. */
+  landRequest?: number;
+  /** #460: the picker's last picture at this pin, for the aerial to show
+   *  until its own is drawn.  Null = none. */
+  pickerPicture?: string | null;
 }
 
 export interface OpenRequest {
@@ -143,6 +150,8 @@ export function BandStack(props: BandStackProps) {
     onKindConfirmed,
     onKindCleared,
     openRequest = null,
+    landRequest = 0,
+    pickerPicture = null,
   } = props;
 
   // Rule 65: ONE id.  `null` hands the choice back to the column, which
@@ -209,8 +218,12 @@ export function BandStack(props: BandStackProps) {
     // band TRANSITION (ruling 184), and re-running it when the lock
     // released would move the page for a request settling, which is the
     // movement P1 forbids.
+    //
+    // #460: `landRequest` (a picker Save & Close) lands the open band too,
+    // whether or not the save changed which band is open; a save that does
+    // both lands once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model.open]);
+  }, [model.open, landRequest]);
 
   const openBand = useCallback((id: BandId) => setOpenOverride(id), []);
 
@@ -224,6 +237,7 @@ export function BandStack(props: BandStackProps) {
           onOpenPicker={onOpenPicker}
           onMarkIntersection={onMarkIntersection}
           geometry={geometry}
+          pickerPicture={pickerPicture}
           crossStreet={crossStreet}
           crossMark={crossMark}
           sidesChanged={sidesChanged}
