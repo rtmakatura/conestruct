@@ -37,7 +37,8 @@ from src.rendering.document import (
     render_document_pdf,
     rich_text,
 )
-from src.rendering.tier_ledger import ledger_line, tier_ledger
+from src.rendering.tier_ledger import ledger_line, pending_fact_ids, tier_ledger
+from src.rules.jurisdiction import HOURS_NOT_SET_NOTE, NO_SCHEDULE_NOTE
 from src.rules.validators import SPEED_GUESSED_CLAUSE
 
 # Characters the projection emits that Helvetica/WinAnsi cannot render.
@@ -748,40 +749,66 @@ def _acknowledged_blocks(entries: list[dict[str, Any]] | None) -> list[Block]:
     ]
 
 
-def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
-    if not pending:
+def _pending_line(label: str, tracking: str) -> str:
+    # #363 (R4): an item with no tracking link prints no empty link.
+    return label + (f" ({tracking})" if tracking else "")
+
+
+def _hours_reason(jurisdiction: dict[str, Any] | None, schedule_not_set: bool) -> str:
+    """Why the work hours weren't checked: the backend's own note, except
+    that a schedule nobody set reads "Not set", as the page reads it (the
+    page treats an absent schedule as "Not set", ScheduleField.tsx)."""
+    note = _str((jurisdiction or {}).get("hours_eval") or {}, "note")
+    if schedule_not_set and note == NO_SCHEDULE_NOTE:
+        return HOURS_NOT_SET_NOTE
+    return note
+
+
+def _pending_blocks(
+    projection: dict[str, Any],
+    jurisdiction: dict[str, Any] | None = None,
+    schedule_not_set: bool = False,
+) -> list[Block]:
+    pending = projection.get("pending_verification") or {}
+    fact_ids = pending_fact_ids(projection, jurisdiction)
+    # #451: the section stands whenever the cover counts anything here.
+    if not pending and not fact_ids:
         return []
     # #450 ruling 1: the list's name is the page's, "Not checked yet".
     blocks: list[Block] = [Heading(2, _cell("Not checked yet"))]
-    count = pending.get("count", 0)
     note = _str(pending, "note")
-    # #363 (R4): an item with no tracking link prints no empty link.
     tracking = _str(pending, "tracking_issue")
-    blocks.append(
-        _body(
-            f"{count} reference(s) not checked yet. {note}".strip()
-            + (f"  Tracking: {tracking}" if tracking else "")
-        )
-    )
-    items = pending.get("items", [])
-    if items:
-        blocks.append(
-            Bullets(
-                [
-                    ListItem(
-                        _cell(
-                            f"[{_str(it, 'kind')}] {_str(it, 'label')}"
-                            + (
-                                f" ({_str(it, 'tracking_issue')})"
-                                if _str(it, "tracking_issue")
-                                else ""
-                            )
-                        )
-                    )
-                    for it in items
-                ]
+    items = pending.get("items") or []
+    # #451: one bullet per fact the cover counts as not checked yet, from
+    # the ledger itself, so the section's number is the cover's.
+    lines: list[str] = []
+    for fid in fact_ids:
+        if fid == "jur:hours":
+            # The page row's title, then why (``_hours_reason``).
+            hours_note = _hours_reason(jurisdiction, schedule_not_set)
+            lines.append(
+                f"Work hours not checked ({hours_note})" if hours_note else "Work hours not checked"
             )
-        )
+        elif items:
+            it = items[int(fid.rsplit(":", 1)[1])]
+            lines.append(
+                _pending_line(
+                    f"[{_str(it, 'kind')}] {_str(it, 'label')}", _str(it, "tracking_issue")
+                )
+            )
+        else:
+            # A count with no items (the pre-items shape): one fact.
+            lines.append(_pending_line(note, tracking))
+    n = len(lines)
+    first = f"{n} item{'' if n == 1 else 's'} not checked yet."
+    # The flat note and link are items[0]'s (or the general tracker when
+    # there are none); print them only when the section has no bullet, so
+    # the link never reads as tracking another item (#451 X5).
+    if n == 0:
+        first = f"{first} {note}".strip() + (f"  Tracking: {tracking}" if tracking else "")
+    blocks.append(_body(first))
+    if lines:
+        blocks.append(Bullets([ListItem(_cell(line)) for line in lines]))
     return blocks
 
 
@@ -793,18 +820,20 @@ def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
 def audit_to_blocks(
     projection: dict[str, Any],
     jurisdiction: dict[str, Any] | None = None,
+    schedule_not_set: bool = False,
 ) -> list[Block]:
     """Map a full audit projection (summary + sections + pending) to blocks.
 
     Renders every section the projection carries, independent of the UI's
     accordion state — the PDF is the complete, attach-to-a-bid-packet view.
     ``jurisdiction`` is the evaluated block (when the scenario names one)
-    — it feeds ONLY the cover's #220 status line; the jurisdiction corpus
-    itself is a screen surface, not an audit-PDF section.
+    — it feeds the cover's #220 status line and, #451, the "Not checked
+    yet" section's work-hours bullet; the jurisdiction corpus itself is a
+    screen surface, not an audit-PDF section.  ``schedule_not_set`` is
+    True when the plan's schedule is absent or "Not set" (``_hours_reason``).
     """
     summary = projection.get("summary", {})
     sections = projection.get("sections", {})
-    pending = projection.get("pending_verification", {})
 
     blocks: list[Block] = []
     blocks += _summary_blocks(
@@ -829,7 +858,7 @@ def audit_to_blocks(
     blocks += _flagger_blocks(sections.get("flagger", {}))
     if "fines_double" in sections:
         blocks += _fines_double_blocks(sections["fines_double"])
-    blocks += _pending_blocks(pending)
+    blocks += _pending_blocks(projection, jurisdiction, schedule_not_set)
     return blocks
 
 
@@ -837,11 +866,14 @@ def render_audit_pdf(
     projection: dict[str, Any],
     output_path: str,
     jurisdiction: dict[str, Any] | None = None,
+    schedule_not_set: bool = False,
 ) -> str:
     """Render the audit projection to a PDF at ``output_path``; return the path.
 
     Mirrors the write-to-path-return-path convention of the other
     renderers so the FastAPI ``_render_with`` plumbing works unchanged.
     """
-    blocks = audit_to_blocks(projection, jurisdiction=jurisdiction)
+    blocks = audit_to_blocks(
+        projection, jurisdiction=jurisdiction, schedule_not_set=schedule_not_set
+    )
     return render_document_pdf(blocks, output_path, title="Audit Trail")

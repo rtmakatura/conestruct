@@ -1,0 +1,10 @@
+E       AssertionError: (2, 1)
+tests\test_pdf_not_checked_count_451.py:100: AssertionError
+E       AssertionError: (2, 1)
+tests\test_pdf_not_checked_count_451.py:126: AssertionError
+E       ImportError: cannot import name 'pending_fact_ids' from 'src.rendering.tier_ledger' (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\issue-451\src\rendering\tier_ledger.py)
+tests\test_pdf_not_checked_count_451.py:136: ImportError
+FAILED tests/test_pdf_not_checked_count_451.py::test_cover_and_section_count_the_same_items_with_work_hours
+FAILED tests/test_pdf_not_checked_count_451.py::test_section_matches_the_cover_in_every_hours_state[no-schedule]
+FAILED tests/test_pdf_not_checked_count_451.py::test_one_bullet_per_counted_fact
+3 failed, 2 passed in 2.44s

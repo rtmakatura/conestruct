@@ -226,6 +226,6 @@ def test_the_audit_pdf_says_not_checked_yet_and_never_pending(
     assert re.search(r"\d+ not checked yet · reference", pages[0]), pages[0][:600]
     text = " ".join(pages)
     assert "Not checked yet" in text
-    assert re.search(r"\d+ reference\(s\) not checked yet\.", text)
+    assert re.search(r"\d+ items? not checked yet\.", text)
     assert text.count("See Not checked yet.") == 2
     assert "pending" not in text.lower()

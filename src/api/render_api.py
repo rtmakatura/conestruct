@@ -2690,7 +2690,14 @@ def render_audit_pdf_endpoint(scenario: Scenario) -> Response:
         os.close(fd)
         path = Path(raw_path)
         try:
-            render_audit_pdf(projection, str(path), jurisdiction=jurisdiction)
+            # #451: a schedule nobody set reads "Not set", as on the page.
+            sched = getattr(scenario, "schedule", None)
+            render_audit_pdf(
+                projection,
+                str(path),
+                jurisdiction=jurisdiction,
+                schedule_not_set=sched is None or sched.date_mode == "tbd",
+            )
             body = path.read_bytes()
         finally:
             path.unlink(missing_ok=True)

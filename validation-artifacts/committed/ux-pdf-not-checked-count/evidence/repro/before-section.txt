@@ -1,0 +1,7 @@
+Not checked yet
+1 reference(s) not checked yet. On a one-way street the plan builds an 8 ft shoulder and fits lanes under a 52 ft
+half-road less that shoulder. Both values are CHOSEN: no MUTCD, S-630-1, Colorado Supplement or Denver text
+found sets them. Verify against the site (#308). Tracking: https://github.com/rtmakatura/conestruct/issues/308
+• [one_way_street_widths_chosen] On a one-way street the plan builds an 8 ft shoulder and fits lanes under a 52 ft
+half-road less that shoulder. Both values are CHOSEN: no MUTCD, S-630-1, Colorado Supplement or Denver text
+found sets them. Verify against the site (#308). (https://github.com/rtmakatura/conestruct/issues/308)

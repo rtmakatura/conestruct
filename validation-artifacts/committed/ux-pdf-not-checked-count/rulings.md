@@ -1,0 +1,27 @@
+# #451 rulings: the audit PDF's "Not checked yet" count
+
+Mission `ux-queue-2-6` (tracking #458), item 5 of `cc-queue-ux.md`.
+
+## Ryan's rulings, verbatim
+
+- From `cc-queue-ux.md` item 5: "the "Not checked yet" section on the audit PDF lists all 3 items, including work hours, so it matches the cover."
+- From `cc-queue-ux.md` item 1: "#451: the PDF section lists all 3 items, including work hours."
+
+## Base check
+
+Item 1 (#453) did not do this. Its note in `cc-queue-ux.md`: "#451 not done here (item 5)". On the base `issue-448-no-line-text` (b88700b), `src/rendering/audit_blocks.py` `_pending_blocks` still prints `pending_verification.count` and its items only, and no hours line.
+
+## Self-rulings
+
+- **X1 (R145 self-ruled): one source.** The section's list is the tier ledger's own `pending` facts (`tier_ledger.pending_fact_ids`, a filter over `tier_facts`), the same facts `tier_ledger` counts for the cover. The section's number is the length of that list. No second count.
+- **X2 (R145 self-ruled): the first line says "item(s)", not "reference(s)".** Unchecked work hours are not a reference. The page's section summary already says "N items for the TCS" (`conestruct/site/lib/reference-sections.tsx`). Plural is exact: "1 item", "3 items". The rest of the line is X5.
+- **X3 (R145 self-ruled): the work-hours bullet.** "Work hours not checked (<hours_eval.note>)", or "Work hours not checked" when the backend gave no note. The title is the page row's title word for word. The reason is the backend's own `hours_eval.note` (`src/rules/jurisdiction.py` `evaluate_hours`), the same note the page's non-"Not set" sentence prints, so the PDF says why in the backend's words, true to the state (Rule 10, P2). It goes last, where the page puts it.
+- **X4 (R145 self-ruled): legacy shape.** A `pending_verification` with a count but no `items` (not produced by today's `audit.py`, which always sends `items` when the count is above 0) is one ledger fact; the section lists it as one bullet carrying the flat note and link, so the list still matches the count.
+- **X5 (R145 self-ruled, R154 fold): the first line stops repeating bullet 1.** The flat `note` / `tracking_issue` are `items[0]`'s label and link (`src/api/audit.py`, the back-compat fields), so with items the first line printed bullet 1's sentence twice, and next to the new hours bullet it read as if the whole list were that one item (P2). *(Repair 1:)* the first line prints the flat note and link only when the section has no bullet at all; otherwise it is the count only. With no items the flat link is the general tracker (#19), so printing it above a lone work-hours bullet read as if #19 tracked the hours (P2, Rule 10). #363's R4 (no empty link) still holds, and the single-source proof (`tests/test_audit_pdf.py`) still finds every projection string, because each one is in a bullet. Fold test: same file, no ruling or source needed, about 5 lines, prediction amended before the diff.
+- **X6 (R145 self-ruled, repair 1): the section stands whenever the cover counts something there.** With no `pending_verification` block but unchecked hours, the cover counted 1 and the section was missing. The section now renders when the block exists or the ledger has a pending fact.
+- **X7 (R145 self-ruled, repair 1): an absent schedule reads "Not set", as on the page.** The frontend doesn't always send a schedule: `scenario.schedule` stays undefined until the operator touches Schedule (`conestruct/site/components/ScheduleField.tsx`, `scenario.schedule?.date_mode ?? "tbd"`), and the page reads absent the same as "Not set" (`reference-sections.tsx` `hoursWords`: `schedule == null || date_mode === "tbd"`). The backend's note for an absent schedule is "no work schedule provided", so the PDF would have said that while the page says "Not set". `/render/audit-pdf` now passes `schedule_not_set` (schedule absent or `tbd`), and `_hours_reason` prints the backend's own Not-set note ("schedule marked Not set: hours not evaluated") in that case. The two notes became named constants in `src/rules/jurisdiction.py` (`NO_SCHEDULE_NOTE`, `HOURS_NOT_SET_NOTE`), values unchanged, so `hours_eval` on the wire is byte-identical. A date mode with no times keeps "no work schedule provided", matching the page's non-"Not set" sentence, which prints the same note. "jurisdiction publishes no work-hour windows" outranks Not set (the backend checks it first), so for a jurisdiction with no windows (`cdot.json`, `el_paso.json`: `shape: "none"`, `windows: []`) the PDF says that. The page does not agree there: its Not-set branch (`reference-sections.tsx` `hoursWords`, lines 180-183) ignores `hours_eval.note` and says 'Schedule marked "Not set". These windows are reference only…' for windows that don't exist. The PDF states the true fact; the page's wording is a pre-existing page flaw, left unchanged here and filed as #463. Until it ships, page and PDF state that one case two ways (P2).
+
+## For Ryan
+
+- The bracketed reason can say the hours were evaluated when they come back `unknown` from an unresolved window (e.g. "overnight shift: evaluated across midnight…"); the page has the same flaw. Filed: https://github.com/rtmakatura/conestruct/issues/462
+- For a jurisdiction with no work-hour windows and the default Not set schedule, the page's work-hours row says "These windows are reference only" while the PDF says the jurisdiction publishes none (X7). Filed: https://github.com/rtmakatura/conestruct/issues/463

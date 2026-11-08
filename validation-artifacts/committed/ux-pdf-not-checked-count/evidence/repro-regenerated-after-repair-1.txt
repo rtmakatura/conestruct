@@ -1,0 +1,6 @@
+d478272cf77e7c2ac0c9557c30dcffd0798c750c238a8589550e10fee3b7c83f  regenerated/after-page-1.txt
+d478272cf77e7c2ac0c9557c30dcffd0798c750c238a8589550e10fee3b7c83f  repro/after-page-1.txt
+cmp after-page-1.txt: identical
+c29aec2d6c5aed7e946235a848505d36bebe1d6821c275455006d50480bbd249  regenerated/after-section.txt
+c29aec2d6c5aed7e946235a848505d36bebe1d6821c275455006d50480bbd249  repro/after-section.txt
+cmp after-section.txt: identical

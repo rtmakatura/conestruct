@@ -263,6 +263,12 @@ def _merged_union(windows: list[dict[str, Any]]) -> list[tuple[float, float]]:
     return merged
 
 
+# The two ``unknown`` notes for a schedule nobody set.  #451: the audit
+# PDF reads them to say "Not set" for an absent schedule, as the page does.
+NO_SCHEDULE_NOTE = "no work schedule provided"
+HOURS_NOT_SET_NOTE = "schedule marked Not set: hours not evaluated"
+
+
 def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
     """Evaluate the plan's schedule against the jurisdiction's hours block.
 
@@ -284,7 +290,7 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         return {
             "status": "unknown",
             "violations": [],
-            "note": "no work schedule provided",
+            "note": NO_SCHEDULE_NOTE,
         }
     # #199: "Not set" is a deliberate choice — nothing is evaluated, even
     # when residual times survive in the payload (the user un-set the
@@ -294,13 +300,13 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         return {
             "status": "unknown",
             "violations": [],
-            "note": "schedule marked Not set: hours not evaluated",
+            "note": HOURS_NOT_SET_NOTE,
         }
     if sched.start_time is None or sched.end_time is None:
         return {
             "status": "unknown",
             "violations": [],
-            "note": "no work schedule provided",
+            "note": NO_SCHEDULE_NOTE,
         }
 
     notes: list[str] = []

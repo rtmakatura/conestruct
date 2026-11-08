@@ -175,6 +175,18 @@ def tier_ledger(
     return counts
 
 
+def pending_fact_ids(
+    projection: dict[str, Any] | None,
+    jurisdiction: dict[str, Any] | None,
+) -> list[str]:
+    """#451: the facts ``tier_ledger`` counts as ``pending``, in the page's
+    order (the pending-verification items, then the work hours).  The PDF's
+    "Not checked yet" section lists exactly these, so its number is the
+    cover's by construction (one source, no second count)."""
+    ids = [fid for fid, tier in tier_facts(projection, jurisdiction).items() if tier == "pending"]
+    return sorted(ids, key=lambda fid: fid == "jur:hours")
+
+
 def ledger_line(counts: dict[str, int]) -> str:
     """Byte-identical to tiering.ts ``ledgerLine`` — the cross-surface
     test asserts the PDF cover carries exactly the screen's words."""

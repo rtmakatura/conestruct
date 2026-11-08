@@ -108,14 +108,17 @@ def test_pdf_item_line_keeps_a_link_and_drops_an_empty_one() -> None:
 
     blocks = _pending_blocks(
         {
-            "count": 2,
-            "note": "n",
-            "tracking_issue": "https://example.test/1",
-            "items": [
-                {"kind": "k1", "label": "L1", "tracking_issue": "https://example.test/1"},
-                {"kind": "k2", "label": "L2", "tracking_issue": None},
-            ],
+            "pending_verification": {
+                "count": 2,
+                "note": "n",
+                "tracking_issue": "https://example.test/1",
+                "items": [
+                    {"kind": "k1", "label": "L1", "tracking_issue": "https://example.test/1"},
+                    {"kind": "k2", "label": "L2", "tracking_issue": None},
+                ],
+            }
         }
     )
-    assert blocks[1].text == "2 reference(s) not checked yet. n  Tracking: https://example.test/1"
+    # #451 X5: the flat note and link are items[0]'s, already in bullet 1.
+    assert blocks[1].text == "2 items not checked yet."
     assert [i.text for i in blocks[2].items] == ["[k1] L1 (https://example.test/1)", "[k2] L2"]

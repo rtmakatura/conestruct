@@ -1,0 +1,35 @@
+Audit Trail: Case 11: Shoulder closure on one-way street
+Field Value
+Plan status 0 changes · 3 needs attention · 10 checked · 2 not checked yet · reference
+MUTCD typical application TA-3
+CDOT standard sheet S-630-1
+Case Case 11: Shoulder closure on one-way street
+Taper length 40 ft (L/3 (shoulder taper))
+Buffer space 200 ft
+Device spacing: taper 30 ft
+Device spacing: tangent 60 ft
+Crew steps 11
+Routing shoulder_no_reduction
+Taper Length
+At 30 mph, below the 45 mph threshold, the taper length is the offset width times the speed squared, divided by 60.
+L = 8 x 30^2 / 60 = 120 ft
+L/3 = 120 / 3 = 40 ft
+Field Value
+Closure type shoulder
+Offset (shoulder width) 8 ft (assumed)
+Required taper (L/3 (shoulder taper)) 40 ft
+Source: MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table
+6B-3).
+CDOT reference: CDOT S-630-1 Case 11 (right-shoulder closure, applied to one-way street)
+Buffer Space
+MUTCD Table 6B-2 sets 200 ft; the CDOT supplement sets no value at this speed.
+Source: MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)
+Channelizing Device Spacing
+In the taper, devices are spaced 30 ft apart, the speed in feet at 30 mph (MUTCD Sec 6K.01).
+Along the tangent, devices are spaced 60 ft apart, twice the speed in feet (MUTCD Sec 6K.01).
+L/3 = 40 ft / 30 ft max spacing -> 4 drums at 13.3 ft intervals
+300 ft / 60 ft max spacing -> 6 cones at 60.0 ft intervals
+Buffer: 200 ft / 60 ft max spacing -> 3 cones at 50.0 ft intervals (CDOT S-630-1 Sheet 2 General Note 18b: tangents
+along the buffer space)
+Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 6 tangent + 3
+buffer + 2 downstream = 11 cones total
