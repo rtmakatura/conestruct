@@ -144,11 +144,11 @@ function row(
   );
 }
 
-function actBtn(label: string, onClick: () => void, inFlight: boolean) {
+function actBtn(label: string, onClick: () => void, inFlight: boolean, className = "act tr-step") {
   return (
     <button
       type="button"
-      className="act tr-step"
+      className={className}
       data-write=""
       disabled={inFlight}
       onClick={onClick}
@@ -156,6 +156,11 @@ function actBtn(label: string, onClick: () => void, inFlight: boolean) {
       {label}
     </button>
   );
+}
+
+/** #457 rulings 1-3: every Undo here is the one shared link (U1). */
+function undoBtn(onClick: () => void, inFlight: boolean) {
+  return actBtn("Undo", onClick, inFlight, "undo-link");
 }
 
 /** The listed rows the question flow does not own, as records with Undo. */
@@ -191,7 +196,7 @@ export function SiteConditionRows({
         <div className="ny-right">
           <span className="ny-cite">{adjCite(flag, "OPERATOR")}</span>
           <span className="ny-acts">
-            {actBtn("Undo", () => stageIntent({ flag, marker: null }), inFlight)}
+            {undoBtn(() => stageIntent({ flag, marker: null }), inFlight)}
           </span>
         </div>
       </li>
@@ -207,7 +212,7 @@ export function SiteConditionRows({
       "staged, not yet applied",
       intentText(s),
       adjCite(s.flag, "OPERATOR"),
-      actBtn("Undo", () => setStaged(unstage(staged, s.flag)), inFlight),
+      undoBtn(() => setStaged(unstage(staged, s.flag)), inFlight),
       adjLine(s.flag),
     );
   const render = (r: ConditionRow): ReactNode => {
@@ -226,11 +231,7 @@ export function SiteConditionRows({
           "asserted by you",
           MANUAL_FLAG_LABELS[r.flag as ManualSiteFlag].desc,
           adjCite(r.flag, "OPERATOR"),
-          actBtn(
-            "Undo",
-            () => stageIntent({ flag: r.flag, on: false } as StagedCorrection),
-            inFlight,
-          ),
+          undoBtn(() => stageIntent({ flag: r.flag, on: false } as StagedCorrection), inFlight),
           adjLine(r.flag),
         );
       default:

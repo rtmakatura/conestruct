@@ -1,0 +1,536 @@
+{
+ "lateRejections": 1,
+ "runs": [
+  {
+   "size": "1440x900",
+   "phase": "before",
+   "errors": [],
+   "steps": {
+    "01-confirm-kind-answered": {
+     "shot": "before-1440x900-01-confirm-kind-answered.png",
+     "undos": [
+      {
+       "testid": "step-undo-kind",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 10,
+      "small": [
+       {
+        "tag": "BUTTON",
+        "cls": "a-aerial-zbtn",
+        "text": "+",
+        "w": 32,
+        "h": 32
+       },
+       {
+        "tag": "BUTTON",
+        "cls": "a-aerial-zbtn",
+        "text": "−",
+        "w": 32,
+        "h": 32
+       }
+      ]
+     }
+    },
+    "02-cross-row": {
+     "shot": "before-1440x900-02-cross-row.png",
+     "undos": [
+      {
+       "testid": "cross-undo",
+       "cls": "wq-link",
+       "text": "Undo",
+       "tag": "BUTTON",
+       "w": 44,
+       "h": 44,
+       "font": "__Inter_176161 13.5px/600",
+       "color": "rgb(52, 169, 232)",
+       "border": "0px none",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "none",
+       "decoration": "underline",
+       "padding": "0px 4px 0px 4px",
+       "row": {
+        "cls": "wq-cross-row",
+        "h": 68,
+        "paddingRight": "12px"
+       },
+       "gaps": {
+        "top": 12,
+        "bottom": 12,
+        "right": 13
+       }
+      },
+      {
+       "testid": "step-undo-kind",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 12,
+      "small": [
+       {
+        "tag": "BUTTON",
+        "cls": "a-aerial-zbtn",
+        "text": "+",
+        "w": 32,
+        "h": 32
+       },
+       {
+        "tag": "BUTTON",
+        "cls": "a-aerial-zbtn",
+        "text": "−",
+        "w": 32,
+        "h": 32
+       }
+      ]
+     }
+    },
+    "beforeMove": {
+     "testid": "cross-move",
+     "tag": "BUTTON",
+     "text": "Move",
+     "top": 668.8,
+     "bottom": 712.8,
+     "onScreen": true,
+     "outline": "2px solid",
+     "scrollY": 135
+    },
+    "afterMove": {
+     "testid": "cross-move",
+     "tag": "BUTTON",
+     "text": "Cancel",
+     "top": 668.8,
+     "bottom": 712.8,
+     "onScreen": true,
+     "outline": "2px solid",
+     "scrollY": 135,
+     "shot": "before-1440x900-03-after-move-viewport.png"
+    },
+    "04-confirm-cross-answered": {
+     "shot": "before-1440x900-04-confirm-cross-answered.png",
+     "undos": [
+      {
+       "testid": "step-undo-kind",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      },
+      {
+       "testid": "step-undo-cross",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 44,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 0,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 11,
+      "small": [
+       {
+        "tag": "BUTTON",
+        "cls": "a-aerial-zbtn",
+        "text": "+",
+        "w": 32,
+        "h": 32
+       },
+       {
+        "tag": "BUTTON",
+        "cls": "a-aerial-zbtn",
+        "text": "−",
+        "w": 32,
+        "h": 32
+       }
+      ]
+     }
+    },
+    "05-needs-you-answered": {
+     "shot": "before-1440x900-05-needs-you-answered.png",
+     "undos": [
+      {
+       "testid": "step-undo-pedestrian_facility",
+       "cls": "act tr-step nyq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 10,
+      "small": []
+     }
+    },
+    "needsYouFocus": {
+     "testid": "step-undo-pedestrian_facility",
+     "tag": "BUTTON",
+     "text": "UNDO",
+     "top": 809.8,
+     "bottom": 853.8,
+     "onScreen": true,
+     "outline": "2px solid",
+     "scrollY": 177,
+     "shot": "before-1440x900-06-needs-you-undo-focus.png"
+    }
+   }
+  },
+  {
+   "size": "390x844",
+   "phase": "before",
+   "errors": [],
+   "steps": {
+    "01-confirm-kind-answered": {
+     "shot": "before-390x844-01-confirm-kind-answered.png",
+     "undos": [
+      {
+       "testid": "step-undo-kind",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 10,
+      "small": []
+     }
+    },
+    "02-cross-row": {
+     "shot": "before-390x844-02-cross-row.png",
+     "undos": [
+      {
+       "testid": "cross-undo",
+       "cls": "wq-link",
+       "text": "Undo",
+       "tag": "BUTTON",
+       "w": 44,
+       "h": 44,
+       "font": "__Inter_176161 13.5px/600",
+       "color": "rgb(52, 169, 232)",
+       "border": "0px none",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "none",
+       "decoration": "underline",
+       "padding": "0px 4px 0px 4px",
+       "row": {
+        "cls": "wq-cross-row",
+        "h": 133,
+        "paddingRight": "12px"
+       },
+       "gaps": {
+        "top": 79.5,
+        "bottom": 9.5,
+        "right": 160.9
+       }
+      },
+      {
+       "testid": "step-undo-kind",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 12,
+      "small": []
+     }
+    },
+    "beforeMove": {
+     "testid": "cross-move",
+     "tag": "BUTTON",
+     "text": "Move",
+     "top": 615.5,
+     "bottom": 659.5,
+     "onScreen": true,
+     "outline": "2px solid",
+     "scrollY": 340
+    },
+    "afterMove": {
+     "testid": "cross-move",
+     "tag": "BUTTON",
+     "text": "Cancel",
+     "top": 741.5,
+     "bottom": 785.5,
+     "onScreen": true,
+     "outline": "2px solid",
+     "scrollY": 214,
+     "shot": "before-390x844-03-after-move-viewport.png"
+    },
+    "04-confirm-cross-answered": {
+     "shot": "before-390x844-04-confirm-cross-answered.png",
+     "undos": [
+      {
+       "testid": "step-undo-kind",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      },
+      {
+       "testid": "step-undo-cross",
+       "cls": "act-btn wq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 44,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 0,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 11,
+      "small": []
+     }
+    },
+    "05-needs-you-answered": {
+     "shot": "before-390x844-05-needs-you-answered.png",
+     "undos": [
+      {
+       "testid": "step-undo-pedestrian_facility",
+       "cls": "act tr-step nyq-undo",
+       "text": "UNDO",
+       "tag": "BUTTON",
+       "w": 52.1,
+       "h": 44,
+       "font": "mono 9.5px/400",
+       "color": "rgb(200, 209, 221)",
+       "border": "1px solid",
+       "background": "rgba(0, 0, 0, 0)",
+       "transform": "uppercase",
+       "decoration": "none",
+       "padding": "7px 11px 7px 11px",
+       "row": {
+        "cls": "nyq-row nyq-answered confirmed",
+        "h": 45,
+        "paddingRight": "16px"
+       },
+       "gaps": {
+        "top": 0,
+        "bottom": 1,
+        "right": 16
+       }
+      }
+     ],
+     "axe": [],
+     "targets": {
+      "targets": 7,
+      "small": []
+     }
+    },
+    "needsYouFocus": {
+     "testid": "step-undo-pedestrian_facility",
+     "tag": "BUTTON",
+     "text": "UNDO",
+     "top": 640.8,
+     "bottom": 684.8,
+     "onScreen": true,
+     "outline": "2px solid",
+     "scrollY": 433,
+     "shot": "before-390x844-06-needs-you-undo-focus.png"
+    }
+   }
+  },
+  {
+   "size": "390x664",
+   "phase": "before",
+   "errors": [],
+   "steps": {
+    "beforeMove": {
+     "testid": "cross-move",
+     "tag": "BUTTON",
+     "text": "Move",
+     "top": 534.5,
+     "bottom": 578.5,
+     "onScreen": true,
+     "outline": "2px solid",
+     "scrollY": 421
+    },
+    "afterMove": {
+     "testid": "cross-move",
+     "tag": "BUTTON",
+     "text": "Cancel",
+     "top": 741.5,
+     "bottom": 785.5,
+     "onScreen": false,
+     "outline": "2px solid",
+     "scrollY": 214,
+     "shot": "before-390x664-03-after-move-viewport.png"
+    }
+   }
+  }
+ ]
+}

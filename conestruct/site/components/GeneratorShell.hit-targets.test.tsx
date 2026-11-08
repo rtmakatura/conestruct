@@ -172,6 +172,8 @@ const FLOORED = [
   "nyq-details-btn",
   "ny-other-toggle",
   "nyq-row-btn",
+  // #457 ruling 2: every Undo, 44 px tall at every width.
+  "undo-link",
   // #437 ruling 9: the Setup row's Edit, 44 x 44 at every width.
   "a-setuprow-edit",
   // #443: the three sections.  48 px on the section and row heads and the

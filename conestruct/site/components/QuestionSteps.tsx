@@ -62,7 +62,6 @@ export interface QuestionStepsProps {
   lastBlocked: string | null;
   lastTestId?: string;
   nextClass: string;
-  undoClass: string;
   inFlight: boolean;
   /** The question the card stays on when none is open, or null to close
    *  the card (NEEDS YOU closes it; CONFIRM keeps the last one until the
@@ -94,7 +93,6 @@ export function QuestionSteps({
   lastBlocked,
   lastTestId,
   nextClass,
-  undoClass,
   inFlight,
   fallbackId = null,
   closedTail,
@@ -221,9 +219,11 @@ export function QuestionSteps({
                   </span>
                   <span className="nyq-row-text tr-help">{q.record.text}</span>
                 </button>
+                {/* #457 rulings 1-3: every answered row's Undo is the one
+                    shared link (U1); no caller hands it another look. */}
                 <button
                   type="button"
-                  className={undoClass}
+                  className="undo-link"
                   data-write=""
                   data-testid={`step-undo-${q.id}`}
                   disabled={inFlight}

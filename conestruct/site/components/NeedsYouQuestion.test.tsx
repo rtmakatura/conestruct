@@ -190,6 +190,8 @@ describe("QuestionFlow (rulings 3, 5, 6, 7)", () => {
     render(<Host />);
     fireEvent.click(screen.getByLabelText(/Yes, they're there/));
     fireEvent.click(screen.getByRole("button", { name: "Next question" }));
+    // #457 rulings 1, 3: the NEEDS YOU answered row's Undo is the shared link.
+    expect(screen.getByRole("button", { name: "Undo" }).className).toBe("undo-link");
     fireEvent.click(screen.getByRole("button", { name: "Undo" }));
     expect(staged).toEqual([]);
     expect(screen.getByText("Question 1 of 2")).toBeTruthy();

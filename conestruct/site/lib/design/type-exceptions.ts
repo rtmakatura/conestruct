@@ -346,7 +346,9 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // and the CONFIRM card's Next / Confirm button — the same card as
       // NEEDS YOU, on the same existing token; no size joins the census.
       { selector: ".workbench .a-pri.a-aerial-edit", size: "var(--fs-body-value)" },
-      { selector: ".workbench .wq-link", size: "var(--fs-body-value)" },
+      // #457 (Ryan, 2026-11-05; Option A): every Undo shares the row
+      // actions' rule; no size joins the census.
+      { selector: ".workbench .wq-link, .workbench .undo-link", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-pri.wq-next", size: "var(--fs-body-value)" },
     ],
     tsx: [],
@@ -617,7 +619,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/MobileOp2LaneForm.tsx", cls: "text-[10px]", count: 2 },
       { file: "components/MobileOpMultilaneForm.tsx", cls: "text-[10px]", count: 3 },
       { file: "components/NearIntersectionForm.tsx", cls: "text-[11px]", count: 2 },
-      { file: "components/NearIntersectionForm.tsx", cls: "text-[12px]", count: 2 },
+      { file: "components/NearIntersectionForm.tsx", cls: "text-[12px]", count: 1 }, // #457: its Undo is the shared link
       // #289 fidelity F4 (X8): the "MHT PACKAGE" heading — OutputCards' last
       // text-[10px] — is removed.
       // #288 clause 3: 3 -> 2.  The "↓ All (.zip)" control stopped
@@ -857,6 +859,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 134, // #443: -65, the same; // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxUses: 133, // #457: -1, the near-intersection note's Undo is the shared link (text-[12px] 2 -> 1); // #443: -65, the same; // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
   tsxFiles: 22, // #443: -3 (25 -> 22); // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;

@@ -414,10 +414,10 @@ export function WhereQuestions({
     const name = inter ? crossStreetLabel(inter.name) : null;
     const legs = scenario.kind === "near_intersection" ? (scenario.approaches?.length ?? 0) : 0;
     const line = inter ? crossLine(legs, crossTag, inter.name) : "";
-    const act = (label: string, testid: string, run: () => void) => (
+    const act = (label: string, testid: string, run: () => void, className = "wq-link") => (
       <button
         type="button"
-        className="wq-link"
+        className={className}
         data-write=""
         aria-disabled={locked || undefined}
         onClick={() => {
@@ -483,8 +483,14 @@ export function WhereQuestions({
                         crossMark.move();
                         const frame = aerialPart('[data-testid="band-aerial-frame"]');
                         if (frame) scrollAerialPartIn(frame);
+                        // #457 U8 (#446's known limit): focus follows to the
+                        // bar's big-map button, the keyboard's way to answer
+                        // the re-armed question, so it isn't left on Cancel
+                        // off screen.
+                        aerialPart('[data-testid="band-aerial-big-map"]')?.focus({ preventScroll: true });
                       })}
-                  {act("Undo", "cross-undo", crossMark.undo)}
+                  {/* #457 rulings 1-3: the one shared Undo link (U1). */}
+                  {act("Undo", "cross-undo", crossMark.undo, "undo-link")}
                 </span>
               )}
             </div>
@@ -556,7 +562,6 @@ export function WhereQuestions({
         lastBlocked={null}
         lastTestId="where-confirm"
         nextClass="a-pri wq-next"
-        undoClass="act-btn wq-undo"
         inFlight={locked}
         // W8: with every question answered and the kind not yet confirmed,
         // the card stays on the last question so Confirm is on screen —

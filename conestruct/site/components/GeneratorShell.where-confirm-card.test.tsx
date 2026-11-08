@@ -224,6 +224,10 @@ describe("#439 W6 — Undo returns a question to unanswered and writes nothing i
       "Which side of the road is the work on: East side",
     ]);
     expect(generateBtn().disabled).toBe(false);
+    // #457 rulings 1, 3: the CONFIRM answered rows' Undo is the shared link.
+    expect(screen.getByTestId("step-undo-kind").className).toBe("undo-link");
+    expect(screen.getByTestId("step-undo-side").className).toBe("undo-link");
+    expect(screen.getByTestId("step-undo-kind").textContent).toBe("Undo");
     await act(async () => {
       fireEvent.click(screen.getByTestId("step-undo-kind"));
     });

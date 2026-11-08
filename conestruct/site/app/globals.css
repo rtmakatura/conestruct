@@ -9070,6 +9070,11 @@ input[type="number"] {
 .workbench .nyq-row:last-child {
   border-bottom: 0;
 }
+/* #457 ruling 2: a row with an Undo is at least 48 px, so the 44 px link
+   never touches the row's lines (U4). */
+.workbench .nyq-row.nyq-answered {
+  min-height: 48px;
+}
 .workbench .nyq-row-btn {
   flex: 1;
   min-height: 44px;
@@ -9090,9 +9095,6 @@ input[type="number"] {
 .workbench .nyq-row.nyq-apply {
   justify-content: space-between;
   min-height: 56px;
-}
-.workbench .needs-you .act.nyq-undo {
-  min-height: 44px;
 }
 .workbench .ny-also {
   margin: 0;
@@ -9337,7 +9339,8 @@ input[type="number"] {
   min-width: 0;
   padding: 12px 0;
 }
-.workbench .wq-link {
+.workbench .wq-link,
+.workbench .undo-link {
   flex: none;
   min-height: 44px;
   /* #439 evidence: a 44 px target both ways (Edit measured 32.9 wide). */
@@ -9388,9 +9391,6 @@ input[type="number"] {
 }
 .workbench .wq-line {
   margin: 0;
-}
-.workbench .wq .act-btn.wq-undo {
-  min-height: 44px;
 }
 
 /* ── #440 UX group 4 (Option A): the cross street on the WHERE band ─────
@@ -9597,7 +9597,8 @@ input[type="number"] {
   align-items: center;
   gap: var(--space-tight);
   min-height: 68px;
-  padding: 8px 12px;
+  /* #457 ruling 2: 16 px on the right, where the Undo link sits (U4). */
+  padding: 8px 16px 8px 12px;
   background: var(--vd-ready-ground);
   border: 1px solid var(--rule);
   /* #446 T19: the top of the band the scroll works in; only the nav is pinned
@@ -9854,4 +9855,38 @@ input[type="number"] {
   font-weight: 600;
   font-size: var(--fs-body-value);
   cursor: pointer;
+}
+
+/* ── #457 (Ryan, 2026-11-05; Option A): every Undo on the tool page ──────
+   One style for every Undo (rulings 1-3; validation-artifacts/committed/
+   ux-undo-links/rulings.md, U1-U7).  It shares the row actions' rule
+   (.wq-link: Move, Edit, Details: Inter 13.5 / 600 in --act, no border,
+   no box); here only what the ruling adds: 8 px side padding, the
+   --act-bright hover, the ring inside the hit area, and its own width
+   where rule 167 stretches a row's actions.  No new size, no new hex. */
+.workbench .undo-link {
+  min-height: 44px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  flex: none;
+}
+.workbench .undo-link:not(:disabled):hover {
+  color: var(--act-bright);
+}
+.workbench .undo-link:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: -2px;
+}
+/* Rule 133's disabled look (U7).  Under the write lock the one dim rule
+   (.workbench.ws-locked [data-write]:disabled) outranks this one. */
+.workbench .undo-link:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }

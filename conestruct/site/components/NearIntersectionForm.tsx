@@ -8,7 +8,7 @@
 // needs-confirmation hold on detection-filled lane counts) lives in
 // GeneratorSidebar and arrives via props.
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   NEAR_INTERSECTION_WORK_TYPES,
   type NearIntersectionApproach,
@@ -189,6 +189,8 @@ export function NearIntersectionForm({
     scenario.detectionOverrides,
     "approach_lane_confirm",
   );
+  // #457 U3: the confirmed note describes its Undo.
+  const confirmNoteId = useId();
   const undoConfirmLaneCounts = () => {
     const undo = undoDetectionOverride(
       scenario.detectionOverrides,
@@ -523,17 +525,24 @@ export function NearIntersectionForm({
             + button, no hue-only signal (rule 13); description built
             only from the marker's recorded fields. */}
         {!approachConfirm.pending && approachConfirmMarker !== null && (
-          <div className="mt-1 border border-[color:var(--line-soft)] px-3 py-2">
-            <p className="text-[11px] text-[color:var(--ink-on-dark-faint)] m-0">
+          // #457 ruling 2: 16 px on the right, where the Undo link sits (U4).
+          <div className="mt-1 border border-[color:var(--line-soft)] pl-3 pr-4 py-2">
+            <p
+              id={confirmNoteId}
+              className="text-[11px] text-[color:var(--ink-on-dark-faint)] m-0"
+            >
               ✓ Cross-street lane count confirmed; map data reported{" "}
               {overrideDetectedClause(approachConfirmMarker)}.
             </p>
+            {/* #457 rulings 1-3, U3: the one shared Undo link, reading
+                "Undo"; the note above says what it restores. */}
             <button
               type="button"
               onClick={undoConfirmLaneCounts}
-              className="tap-44 mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
+              className="undo-link"
+              aria-describedby={confirmNoteId}
             >
-              Undo: restore detected lane data
+              Undo
             </button>
           </div>
         )}

@@ -62,7 +62,10 @@ describe("R138 tap targets", () => {
     expect(css).not.toMatch(/\.band-stack \.chip,\n/);
   });
 
-  it("the cross-street lane confirm and its undo carry tap-44", () => {
-    expect(ni.match(/className="tap-44 mt-1\.5/g)?.length).toBe(2);
+  it("the cross-street lane confirm carries tap-44; its undo is the shared link, 44 px on its own", () => {
+    // #457 rulings 1-3: the undo left tap-44 for .undo-link, whose rule
+    // floors it at 44 px (undo-link.test.tsx, GeneratorShell.hit-targets).
+    expect(ni.match(/className="tap-44 mt-1\.5/g)?.length).toBe(1);
+    expect(ni.match(/className="undo-link"/g)?.length).toBe(1);
   });
 });

@@ -146,7 +146,6 @@ export function QuestionFlow({
       lastLabel="Apply answers"
       lastBlocked={staged.length === 0 ? "nothing to apply" : null}
       nextClass={nextClass}
-      undoClass="act tr-step nyq-undo"
       inFlight={inFlight}
       // Every question answered and the card closed, with something still
       // staged (an Undo elsewhere, a manual key): the same one write, as a

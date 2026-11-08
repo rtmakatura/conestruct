@@ -185,11 +185,12 @@ function ActionButton({
   locked: boolean;
   press: (kind: NeedsYouAction["kind"]) => void;
 }) {
-  // The .act control, rule 133.  #297: it stages; Apply writes.
+  // The .act control, rule 133.  #297: it stages; Apply writes.  #457
+  // rulings 1-3: an Undo is the one shared link instead (U1).
   return (
     <button
       type="button"
-      className="act"
+      className={action.kind === "undo" ? "undo-link" : "act"}
       data-write={action.kind}
       disabled={locked}
       onClick={() => press(action.kind)}

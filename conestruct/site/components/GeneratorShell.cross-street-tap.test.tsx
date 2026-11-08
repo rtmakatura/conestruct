@@ -379,6 +379,9 @@ describe("#440: the cross-street question on the WHERE band", () => {
     expect(q("cross-move")!.textContent).toBe("Move");
     expect(q("band-aerial-bar")?.textContent).toBe("✓ Near Race Street"); // #446 ruling 2
 
+    // #457 rulings 1, 3: the row's Undo is the shared link.
+    expect(q("cross-undo")?.className).toBe("undo-link");
+    expect(q("cross-undo")?.tagName).toBe("BUTTON");
     // X7: Undo restores the pre-mark scenario, byte for byte, and re-arms.
     await click(q("cross-undo"), "Undo");
     expect(JSON.stringify(await held())).toBe(beforeJson);
@@ -643,8 +646,12 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
 
     // Above the view: back up, once.
     frameTop = -200;
+    (q("cross-move") as HTMLElement).focus();
     await click(q("cross-move"), "Move");
     expect(barKind()).toBe("armed");
+    // #457 U8 (#446's known limit): focus goes to the bar's big-map button,
+    // which the scroll brings into view, not to Cancel.
+    expect(document.activeElement).toBe(q("band-aerial-big-map"));
     expect(scrollBy).toHaveBeenCalledTimes(1);
     expect(scrollBy).toHaveBeenCalledWith({ top: -200, behavior: "smooth" });
     scrollBy.mockClear();

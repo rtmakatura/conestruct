@@ -47,6 +47,20 @@ describe("#297: the row control", () => {
     expect(document.querySelector("button.act")?.textContent).toBe("Withdraw");
   });
 
+  it("#457 rulings 1, 3: a staged acknowledgement's Undo is the shared link; the others keep .act", () => {
+    const onAction = vi.fn();
+    render(
+      <NeedsYou
+        model={deriveNeedsYou([item({ ack: "staged", action: { kind: "undo", label: "Undo" } })])}
+        onAction={onAction}
+      />,
+    );
+    const undo = screen.getByRole("button", { name: "Undo" });
+    expect(undo.className).toBe("undo-link");
+    fireEvent.click(undo);
+    expect(onAction).toHaveBeenCalledWith(ID, "undo");
+  });
+
   it("locks under a regeneration in flight", () => {
     render(<NeedsYou model={deriveNeedsYou([item()])} inFlight onAction={vi.fn()} />);
     expect((document.querySelector("button.act") as HTMLButtonElement).disabled).toBe(true);

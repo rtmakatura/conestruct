@@ -135,6 +135,8 @@ describe("#437: the listed rows that are not questions stay records with Undo", 
     render(<Host siteScan={ok()} scenario={scenario} />);
     expect(screen.getByText("asserted by you")).toBeTruthy();
     expect(screen.getByText("4 other conditions checked. Nothing else needs you.")).toBeTruthy();
+    // #457 rulings 1, 3: the shared link, nothing else.
+    expect(screen.getByRole("button", { name: "Undo" }).className).toBe("undo-link");
     fireEvent.click(screen.getByRole("button", { name: "Undo" }));
     expect(lastStaged).toEqual([{ flag: "limited_sight_distance", on: false }]);
   });
@@ -154,6 +156,7 @@ describe("#437: the listed rows that are not questions stay records with Undo", 
     lastStaged = [];
     render(<Host siteScan={scan} />);
     expect(screen.getByText("Operator asserted School zone.")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Undo" }).className).toBe("undo-link"); // #457
     fireEvent.click(screen.getByRole("button", { name: "Undo" }));
     expect(lastStaged).toEqual([{ flag: "school_zone", marker: null }]);
   });
