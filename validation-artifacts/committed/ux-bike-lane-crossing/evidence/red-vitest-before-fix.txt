@@ -1,0 +1,6 @@
+Red proof, 2026-11-08: the new #449 tests on the unchanged needs-you-items.ts (base 0cd02e8 + the test only).
+Full run: Test Files 1 failed | 270 passed | 1 skipped (272); Tests 2 failed | 2944 passed | 1 skipped (2947)
+Failing (both by design, the only failures):
+- components/NeedsYouQuestion.test.tsx > #449 the bike lane question doesn't say along > the producer's question and title
+- components/NeedsYouQuestion.test.tsx > #449 the bike lane question doesn't say along > the mounted heading and the Next line
+Both: Expected "Is there a bike lane at or near the work zone?" Received "Is there a bike lane along the work zone?"

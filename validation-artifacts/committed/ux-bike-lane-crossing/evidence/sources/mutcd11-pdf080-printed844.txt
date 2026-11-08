@@ -1,0 +1,67 @@
+December 2023
+07  
+Pedestrian detours should be avoided since pedestrians rarely observe them and the cost of providing 
+accessibility and detectability might outweigh the cost of maintaining a continuous route. Whenever possible, work 
+should be done in a manner that does not create a need to detour pedestrians from existing routes or crossings.
+Standard:
+08  
+Where pedestrian routes are closed, alternate pedestrian routes shall be provided.
+09  
+When existing pedestrian facilities are disrupted, closed, or relocated in a TTC zone, the temporary 
+facilities shall be detectable and shall include accessibility features consistent with the features present in 
+the existing pedestrian facility.
+Guidance:
+10  
+The continuity of a bikeway should be maintained through the TTC zone if practical.
+Support:
+11  
+The continuity of a bikeway through the TTC zone is particularly important where bicyclists have been 
+traveling on a shoulder, bicycle lane, or shared-use path adjacent to a general-purpose lane (having a speed limit 
+greater than or equal to 35 miles per hour) and there would be a significant safety concern if bicyclists were to 
+share that general-purpose lane through the TTC zone.
+12  
+On roadways which are not bikeways but where bicyclists (when present) typically share lanes with 
+motor vehicle traffic, the TTC plan and Typical Applications for general traffic will usually be adequate for 
+bicyclists as well.
+13  
+In order to maintain room for bicycle lanes through the TTC zone on a multi-lane roadway, one or more travel 
+lanes could be closed.
+Guidance:
+14  
+If a bikeway detour is unavoidable, it should be as short and direct as practical.
+15  
+On-road bicyclists should not be directed onto a path or sidewalk intended for pedestrian use except where 
+such a path or sidewalk is a shared-use path, or where no practical alternative is available (such as might be the 
+case on a bridge in the course of a rehabilitation project).
+16  
+If a portion of a bikeway is to be closed due to construction activities and the detoured bikeway follows a 
+complex path not in the original bikeway corridor, then a full detour plan should be developed and implemented. 
+The TTC for the detour of the bikeway should include all necessary advance warning (W21 series) signs, detour 
+(W4-9 series) signs, and any other TTC devices necessary to guide bicyclists along the detour route.
+Support:
+17  
+Figures 6P-47 through 6P-51 provide examples and contain additional information for accommodating 
+bicycles through or around typical TTC zones.
+Option:
+18  
+If an on-street bikeway had a wide travel lane or lanes in which bicyclists traveled side by side with motor 
+vehicles prior to construction, and construction activities reduce the lane width(s) to less than 14 feet through the 
+TTC zone, then the BICYCLISTS ALLOWED USE OF FULL LANE (R9-20) sign may be used.
+Standard:
+19  
+The minimum TTC sign and plaque sizes for shared-use paths shall conform to those shown in Table 
+9A-1. The minimum TTC sign and plaque sizes for on-street bikeways shall conform to Chapters 6G, 
+6H, and 6I.
+Section 6N.05  Work Outside of the Shoulder
+Support:
+01  
+When work is being performed beyond the shoulders, but within the right-of-way, little or no TTC might 
+be needed. TTC generally is not needed where work is confined to an area 15 feet or more from the edge of the 
+traveled way. However, TTC is appropriate where distracting situations exist, such as vehicles parked on the 
+shoulder, vehicles accessing the worksite via the highway, and equipment traveling on or crossing the roadway to 
+perform the work operations (for example, mowing). A typical application for work beyond the shoulder is shown 
+in Figure 6P-1.
+Sect. 6N.04 to 6N.05 
+ 
+Page 844 
+MUTCD 11th Edition

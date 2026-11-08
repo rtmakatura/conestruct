@@ -285,3 +285,38 @@ describe("QuestionFlow (rulings 3, 5, 6, 7)", () => {
     expect((screen.getByRole("button", { name: "Details" }) as HTMLButtonElement).disabled).toBe(false);
   });
 });
+
+// #449: the scan keeps one point per way, so it can't tell a bike lane that
+// crosses the end of the work from one that runs beside it.  The question
+// claims neither (Rule 10); 1550 E Colfax's lane crosses on Franklin St.
+describe("#449 the bike lane question doesn't say along", () => {
+  const bikeOnly = (sidewalks = false) =>
+    colfax({
+      buckets: {
+        intersections: { detected: false, count: 0 },
+        interchanges: { detected: false, count: 0 },
+        sidewalks: sidewalks
+          ? { detected: true, count: 57, nearest_distance_ft: 25.6 }
+          : { detected: false, count: 0 },
+        bike_facilities: { detected: true, count: 2, nearest_distance_ft: 12.1 },
+        schools: { detected: false, count: 0 },
+      },
+    } as Partial<SiteScanProvenance>);
+
+  it("the producer's question and title", () => {
+    const [bike] = qs(bikeOnly());
+    expect(bike.flag).toBe("bicycle_facility");
+    expect(bike.question).toBe("Is there a bike lane at or near the work zone?");
+    expect(bike.title).toBe("a bike lane at or near the work zone");
+  });
+
+  it("the mounted heading and the Next line", () => {
+    render(<Host scan={bikeOnly()} />);
+    const h = screen.getByRole("heading", { level: 3 }).textContent ?? "";
+    expect(h).toBe("Is there a bike lane at or near the work zone?");
+    cleanup();
+    const { container } = render(<Host scan={bikeOnly(true)} />);
+    expect(screen.getByText("Next: a bike lane at or near the work zone")).toBeTruthy();
+    expect(container.textContent ?? "").not.toMatch(/bike lane along/);
+  });
+});

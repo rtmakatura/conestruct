@@ -1,0 +1,16 @@
+{
+ "width": 390,
+ "questions": [
+  {
+   "q": "Are there sidewalks along the work zone?",
+   "next": "Next: a bike lane at or near the work zone"
+  },
+  {
+   "q": "Is there a bike lane at or near the work zone?",
+   "next": "Next: an intersection next to the work Also on this plan ⚠ Site corridor validation needs attention OpenStreetMap"
+  }
+ ],
+ "axe": [],
+ "small": [],
+ "overflowX": 0
+}

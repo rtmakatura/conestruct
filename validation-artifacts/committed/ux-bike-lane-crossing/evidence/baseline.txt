@@ -1,0 +1,1 @@
+pytest baseline on 0cd02e8 (worktree, 2026-11-08): 3908 passed, 3 skipped in 392.79s

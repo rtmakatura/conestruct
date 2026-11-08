@@ -310,8 +310,11 @@ const FLAG_WORDS: Record<ScannedSiteFlag, FlagWords> = {
   },
   bicycle_facility: {
     topic: "Bike lane",
-    question: "Is there a bike lane along the work zone?",
-    title: "a bike lane along the work zone",
+    // #449: the scan keeps one point per way (`out center tags`), so it
+    // can't tell a lane that crosses the end of the work from one beside
+    // it.  The words claim neither (Rule 10).
+    question: "Is there a bike lane at or near the work zone?",
+    title: "a bike lane at or near the work zone",
     noun: "a bike lane",
     plural: false,
     purpose: "for people on bikes",
