@@ -11,6 +11,8 @@
 //     node scripts/verify-generate-cls.mjs
 //   Production (live road data, no hold):
 //     SITE=https://www.conestruct.com HOLD_MS=0 GATE_BYPASS_TOKEN=... node scripts/verify-generate-cls.mjs
+//     checks layout shift and outlines left; it prints the outline box
+//     check as SKIPPED, since that needs HOLD_MS >= 2000.
 // Env:
 //   SITE      the site (default http://localhost:3000)
 //   SIZES     "1440x900,1198x930,390x844" (default)
@@ -162,11 +164,24 @@ async function one(w, h) {
     await p.waitForTimeout(1500);
     await p.getByLabel("Address or intersection search").fill("1600 E Colfax Ave, Denver");
     await p.getByRole("button", { name: "SEARCH" }).click();
-    await p.waitForFunction(() => /PICK THE ROAD|Which road|Save & Close/i.test(document.querySelector("[role=dialog]")?.innerText ?? ""), null, { timeout: 90000 });
+    // #476: wait for the road list itself, not the "Save & Close" text, which
+    // is in the dialog while it still reads DETECTING ROADS AT PIN (live
+    // road data answers seconds later; the local stub answers in time).
+    await p.waitForFunction(() => {
+      const d = document.querySelector("[role=dialog]");
+      const save = [...(d?.querySelectorAll("button") ?? [])].find((x) => /Save & Close/.test(x.innerText));
+      return /PICK THE ROAD · \d+ FOUND|Which road/i.test(d?.innerText ?? "") || (save && !save.disabled);
+    }, null, { timeout: 90000 });
     await p.waitForTimeout(1500);
     const want = p.getByRole("dialog").locator("button", { hasText: /Colfax/ });
-    if (await want.count()) await want.first().click().catch(() => {});
+    const found = (await want.count()) > 0;
+    const clicked = found && (await want.first().click().then(() => true, () => false));
     await p.waitForTimeout(2000);
+    // #476 (Rule 10): a run that walks on without Colfax says so.  Decided
+    // from the dialog's road-picked row, which a list pick and the auto-
+    // adopted sole road (the local stub) both show.
+    const pickedName = await p.locator("[role=dialog] [data-testid=road-picked] .road-picked-name").first().innerText({ timeout: 1000 }).catch(() => "");
+    if (!/Colfax/.test(pickedName)) console.log(`${w}x${h} WARN road pick: ${found && !clicked ? "Colfax option found but its click failed" : "no Colfax option found"}; walking with ${pickedName ? `"${pickedName}"` : "no road"} picked`);
     await p.getByRole("button", { name: "Save & Close" }).click();
     await p.waitForSelector("[data-testid^=kind-chip-]", { state: "attached", timeout: 60000 });
     await p.waitForTimeout(2500);
@@ -257,6 +272,8 @@ for (const [w, h] of SIZES) {
     console.log(`   NEEDS YOU delta ${nd && !nd.absent ? nd.h : "n/a"} px (${r.visibleCards} visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)`);
     console.log(`   outline check ${bad.length ? "FAIL: " + bad.join(", ") : "PASS"} (tolerance ${TOL_PX} px)`);
     if (bad.length) failed = true;
+  } else {
+    console.log(`   outline box check SKIPPED (HOLD_MS=${HOLD_MS} < 2000: no in-flight outline boxes taken)`);
   }
   console.log(`   outlines left after the settle: ${r.outlinesLeft} ${r.outlinesLeft ? "FAIL" : "PASS"}`);
   if (r.outlinesLeft) failed = true;
