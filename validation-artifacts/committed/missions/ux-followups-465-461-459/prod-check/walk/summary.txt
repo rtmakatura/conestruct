@@ -1,0 +1,67 @@
+== 1198x930 pageerrors=0 console-errors=0 
+   01-kind-question       | strip="◌ AWAITING KIND OF WORK" | cover=52 | qTop=329 | clear=true/null | frame=157.5..717.5 | whole=true | y=99
+   02-kind-answered       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/null | frame=157.5..717.5 | whole=true | y=99
+   03-side-question       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99
+   04-side-answered       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99
+   05-kind-reopened       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/null | frame=157.5..717.5 | whole=true | y=99
+   06-side-undone         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99
+   07-side-again          | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99
+   12-confirmed           | strip="✓ VERIFIED · 0 VALIDATION WARNINGS READY FOR TCS REVIEW" | cover=52 | qTop=- | clear=null/null | frame=- | whole=null | y=181
+   13-ni-kind-answered    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/null | frame=157.5..717.5 | whole=true | y=99
+   14-cross-question      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99 | bar=armed:"Tap the intersection nearest the work"
+   15-zoomed-in-landed    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99 | bar=armed:"Tap the intersection nearest the work"
+   16-zoomed-back         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99 | bar=armed:"Tap the intersection nearest the work"
+   17-cross-found         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99 | bar=found:"✓ Near Franklin Street"
+   18-side-after-tap      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=329 | clear=true/true | frame=157.5..717.5 | whole=true | y=99
+   held Zoom in: mid bar=waiting:"Drawing the corridor…" armed=false focus=Zoom in tapMidLoad=true tapRequests=0 aerialRequests=1 after=armed:"Tap the intersection nearest the work"
+     log: 0ms armed+armed "Tap the intersection nearest the work" -> 40ms waiting+busy "Drawing the corridor…" -> 4940ms armed+armed "Tap the intersection nearest the work"
+   held Zoom out: mid bar=armed:"Tap the intersection nearest the work" armed=true focus=Zoom out tapMidLoad=false tapRequests=0 aerialRequests=0 after=armed:"Tap the intersection nearest the work"
+     log: 0ms armed+armed "Tap the intersection nearest the work"
+== 390x664 pageerrors=0 console-errors=0 
+   01-kind-question       | strip="◌ AWAITING KIND OF WORK" | cover=52 | qTop=511.5 | clear=true/null | frame=153.8..303.8 | whole=true | y=112
+   02-kind-answered       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=504.5 | clear=true/null | frame=146.8..296.8 | whole=true | y=119
+   03-side-question       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=209.5 | clear=true/true | frame=52.0..202.0 | whole=true | y=414
+   04-side-answered       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=210 | clear=true/true | frame=52.0..202.0 | whole=true | y=480
+   05-kind-reopened       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=210 | clear=true/null | frame=52.0..202.0 | whole=true | y=480
+   06-side-undone         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=209.5 | clear=true/true | frame=52.0..202.0 | whole=true | y=414
+   07-side-again          | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=210 | clear=true/true | frame=52.0..202.0 | whole=true | y=480
+   08-scrolled-by-hand    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=290 | clear=true/true | frame=52.0..202.0 | whole=true | y=400
+   09-map-hidden          | strip="◌ AWAITING WHERE CONFIRMATION" | cover=96 | qTop=289.5 | clear=true/true | frame=0.0..0.0 | whole=false | y=228
+   10-hidden-after-undo   | strip="◌ AWAITING WHERE CONFIRMATION" | cover=96 | qTop=255.5 | clear=true/true | frame=0.0..0.0 | whole=false | y=262
+   11-map-shown           | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=361.5 | clear=true/true | frame=52.0..202.0 | whole=true | y=262
+   11b-side-answered      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=362 | clear=true/true | frame=52.0..202.0 | whole=true | y=328
+   12-confirmed           | strip="⚠ VERIFIED · 1 VALIDATION WARNING REVIEW WARNINGS" | cover=52 | qTop=- | clear=null/null | frame=- | whole=null | y=277
+   13-ni-kind-answered    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=136.5 | clear=false/null | frame=52.0..202.0 | whole=true | y=487
+   14-cross-question      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=509.5 | clear=true/true | frame=51.8..301.8 | whole=true | y=214 | bar=armed:"Tap the intersection nearest the work"
+   15-zoomed-in-landed    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=509.5 | clear=true/true | frame=51.8..301.8 | whole=true | y=214 | bar=armed:"Tap the intersection nearest the work"
+   16-zoomed-back         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=509.5 | clear=true/true | frame=51.8..301.8 | whole=true | y=214 | bar=armed:"Tap the intersection nearest the work"
+   17-cross-found         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=302.5 | clear=true/true | frame=-155.3..94.8 | whole=false | y=421 | bar=found:"✓ Near Franklin Street"
+   18-side-after-tap      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=209.5 | clear=true/true | frame=52.0..202.0 | whole=true | y=414
+   held Zoom in: mid bar=waiting:"Drawing the corridor…" armed=false focus=Zoom in tapMidLoad=true tapRequests=0 aerialRequests=1 after=armed:"Tap the intersection nearest the work"
+     log: 0ms armed+armed "Tap the intersection nearest the work" -> 33ms waiting+busy "Drawing the corridor…" -> 4824ms armed+armed "Tap the intersection nearest the work"
+   held Zoom out: mid bar=armed:"Tap the intersection nearest the work" armed=true focus=Zoom out tapMidLoad=false tapRequests=0 aerialRequests=0 after=armed:"Tap the intersection nearest the work"
+     log: 0ms armed+armed "Tap the intersection nearest the work"
+== 390x844 pageerrors=0 console-errors=0 
+   01-kind-question       | strip="◌ AWAITING KIND OF WORK" | cover=52 | qTop=511.5 | clear=true/null | frame=153.8..303.8 | whole=true | y=112
+   02-kind-answered       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=511.5 | clear=true/null | frame=153.8..303.8 | whole=true | y=112
+   03-side-question       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=506.5 | clear=true/true | frame=148.8..298.8 | whole=true | y=117
+   04-side-answered       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=573 | clear=true/true | frame=148.8..298.8 | whole=true | y=117
+   05-kind-reopened       | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=210 | clear=true/null | frame=52.0..202.0 | whole=true | y=480
+   06-side-undone         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=209.5 | clear=true/true | frame=52.0..202.0 | whole=true | y=414
+   07-side-again          | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=210 | clear=true/true | frame=52.0..202.0 | whole=true | y=480
+   08-scrolled-by-hand    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=290 | clear=true/true | frame=52.0..202.0 | whole=true | y=400
+   09-map-hidden          | strip="◌ AWAITING WHERE CONFIRMATION" | cover=96 | qTop=289.5 | clear=true/true | frame=0.0..0.0 | whole=false | y=228
+   10-hidden-after-undo   | strip="◌ AWAITING WHERE CONFIRMATION" | cover=96 | qTop=289.5 | clear=true/true | frame=0.0..0.0 | whole=false | y=228
+   11-map-shown           | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=395.5 | clear=true/true | frame=52.0..202.0 | whole=true | y=228
+   11b-side-answered      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=462 | clear=true/true | frame=52.0..202.0 | whole=true | y=228
+   12-confirmed           | strip="⚠ VERIFIED · 1 VALIDATION WARNING REVIEW WARNINGS" | cover=52 | qTop=- | clear=null/null | frame=- | whole=null | y=277
+   13-ni-kind-answered    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=511.5 | clear=true/null | frame=153.8..303.8 | whole=true | y=112
+   14-cross-question      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=606.5 | clear=true/true | frame=148.8..398.8 | whole=true | y=117 | bar=armed:"Tap the intersection nearest the work"
+   15-zoomed-in-landed    | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=606.5 | clear=true/true | frame=148.8..398.8 | whole=true | y=117 | bar=armed:"Tap the intersection nearest the work"
+   16-zoomed-back         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=606.5 | clear=true/true | frame=148.8..398.8 | whole=true | y=117 | bar=armed:"Tap the intersection nearest the work"
+   17-cross-found         | strip="◌ AWAITING WHERE CONFIRMATION" | cover=52 | qTop=586.3 | clear=true/true | frame=148.8..398.8 | whole=true | y=117 | bar=found:"✓ Near Franklin Street"
+   18-side-after-tap      | strip="◌ AWAITING WHERE CONFIRMATION" | cover=202 | qTop=209.5 | clear=true/true | frame=52.0..202.0 | whole=true | y=414
+   held Zoom in: mid bar=waiting:"Drawing the corridor…" armed=false focus=Zoom in tapMidLoad=true tapRequests=0 aerialRequests=1 after=armed:"Tap the intersection nearest the work"
+     log: 0ms armed+armed "Tap the intersection nearest the work" -> 33ms waiting+busy "Drawing the corridor…" -> 4718ms armed+armed "Tap the intersection nearest the work"
+   held Zoom out: mid bar=armed:"Tap the intersection nearest the work" armed=true focus=Zoom out tapMidLoad=false tapRequests=0 aerialRequests=0 after=armed:"Tap the intersection nearest the work"
+     log: 0ms armed+armed "Tap the intersection nearest the work"

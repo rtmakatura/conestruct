@@ -1,0 +1,651 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "01-kind-question",
+   "y": 112,
+   "navB": 52,
+   "cover": 52,
+   "q": "What kind of work is it?",
+   "qTop": 511.5,
+   "whyTop": null,
+   "headingClear": true,
+   "firstLineClear": null,
+   "frame": "153.8..303.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-kind-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING KIND OF WORK",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true,
+   "shot": "390x844-01-01-kind-question.png",
+   "stripShot": "390x844-02-strip-01-kind-question.png",
+   "stripRect": {
+    "x": 14,
+    "y": 68,
+    "w": 362,
+    "h": 80,
+    "position": "static"
+   }
+  },
+  {
+   "name": "02-kind-answered",
+   "y": 112,
+   "navB": 52,
+   "cover": 52,
+   "q": "What kind of work is it?",
+   "qTop": 511.5,
+   "whyTop": null,
+   "headingClear": true,
+   "firstLineClear": null,
+   "frame": "153.8..303.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true,
+   "stripShot": "390x844-03-strip-02-kind-answered.png",
+   "stripRect": {
+    "x": 14,
+    "y": 68,
+    "w": 362,
+    "h": 80,
+    "position": "static"
+   }
+  },
+  {
+   "name": "03-side-question",
+   "y": 117,
+   "navB": 52,
+   "cover": 52,
+   "q": "Which side of the road is the work on?",
+   "qTop": 506.5,
+   "whyTop": 562,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "148.8..298.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true,
+   "shot": "390x844-04-03-side-question.png"
+  },
+  {
+   "name": "04-side-answered",
+   "y": 117,
+   "navB": 52,
+   "cover": 52,
+   "q": "Which side of the road is the work on?",
+   "qTop": 573,
+   "whyTop": 628.5,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "148.8..298.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true,
+   "stripShot": "390x844-05-strip-04-side-answered.png",
+   "stripRect": {
+    "x": 14,
+    "y": 68,
+    "w": 362,
+    "h": 80,
+    "position": "static"
+   }
+  },
+  {
+   "name": "05-kind-reopened",
+   "y": 480,
+   "navB": 52,
+   "cover": 202,
+   "q": "What kind of work is it?",
+   "qTop": 210,
+   "whyTop": null,
+   "headingClear": true,
+   "firstLineClear": null,
+   "frame": "52.0..202.0",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "06-side-undone",
+   "y": 414,
+   "navB": 52,
+   "cover": 202,
+   "q": "Which side of the road is the work on?",
+   "qTop": 209.5,
+   "whyTop": 265,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "52.0..202.0",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "07-side-again",
+   "y": 480,
+   "navB": 52,
+   "cover": 202,
+   "q": "Which side of the road is the work on?",
+   "qTop": 210,
+   "whyTop": 265.5,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "52.0..202.0",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "08-scrolled-by-hand",
+   "y": 400,
+   "navB": 52,
+   "cover": 202,
+   "q": "Which side of the road is the work on?",
+   "qTop": 290,
+   "whyTop": 345.5,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "52.0..202.0",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "09-map-hidden",
+   "y": 228,
+   "navB": 52,
+   "cover": 96,
+   "q": "Which side of the road is the work on?",
+   "qTop": 289.5,
+   "whyTop": 345,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "0.0..0.0",
+   "aerialWhole": false,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "10-hidden-after-undo",
+   "y": 228,
+   "navB": 52,
+   "cover": 96,
+   "q": "Which side of the road is the work on?",
+   "qTop": 289.5,
+   "whyTop": 345,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "0.0..0.0",
+   "aerialWhole": false,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "11-map-shown",
+   "y": 228,
+   "navB": 52,
+   "cover": 202,
+   "q": "Which side of the road is the work on?",
+   "qTop": 395.5,
+   "whyTop": 451,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "52.0..202.0",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true,
+   "shot": "390x844-06-11-map-shown.png"
+  },
+  {
+   "name": "11b-side-answered",
+   "y": 228,
+   "navB": 52,
+   "cover": 202,
+   "q": "Which side of the road is the work on?",
+   "qTop": 462,
+   "whyTop": 517.5,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "52.0..202.0",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "12-confirmed",
+   "y": 277,
+   "navB": 52,
+   "cover": 52,
+   "q": null,
+   "qTop": null,
+   "whyTop": null,
+   "headingClear": null,
+   "firstLineClear": null,
+   "frame": null,
+   "aerialWhole": null,
+   "strips": [],
+   "stripText": "⚠ VERIFIED · 1 VALIDATION WARNING REVIEW WARNINGS",
+   "bar": null,
+   "armed": null,
+   "whereOpen": false,
+   "shot": "390x844-07-12-confirmed.png",
+   "stripShot": "390x844-08-strip-12-confirmed.png",
+   "stripRect": {
+    "x": 14,
+    "y": 68,
+    "w": 362,
+    "h": 80,
+    "position": "static"
+   }
+  },
+  {
+   "name": "13-ni-kind-answered",
+   "y": 112,
+   "navB": 52,
+   "cover": 52,
+   "q": "What kind of work is it?",
+   "qTop": 511.5,
+   "whyTop": null,
+   "headingClear": true,
+   "firstLineClear": null,
+   "frame": "153.8..303.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "14-cross-question",
+   "y": 117,
+   "navB": 52,
+   "cover": 52,
+   "q": "Which intersection is the work near?",
+   "qTop": 606.5,
+   "whyTop": 662,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "148.8..398.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": {
+    "text": "Tap the intersection nearest the work",
+    "kind": "armed"
+   },
+   "armed": true,
+   "whereOpen": true,
+   "shot": "390x844-09-14-cross-question.png"
+  },
+  {
+   "name": "15-zoomed-in-landed",
+   "y": 117,
+   "navB": 52,
+   "cover": 52,
+   "q": "Which intersection is the work near?",
+   "qTop": 606.5,
+   "whyTop": 662,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "148.8..398.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": {
+    "text": "Tap the intersection nearest the work",
+    "kind": "armed"
+   },
+   "armed": true,
+   "whereOpen": true
+  },
+  {
+   "name": "16-zoomed-back",
+   "y": 117,
+   "navB": 52,
+   "cover": 52,
+   "q": "Which intersection is the work near?",
+   "qTop": 606.5,
+   "whyTop": 662,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "148.8..398.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": {
+    "text": "Tap the intersection nearest the work",
+    "kind": "armed"
+   },
+   "armed": true,
+   "whereOpen": true
+  },
+  {
+   "name": "17-cross-found",
+   "y": 117,
+   "navB": 52,
+   "cover": 52,
+   "q": "Which intersection is the work near?",
+   "qTop": 586.3,
+   "whyTop": 641.8,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "148.8..398.8",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": {
+    "text": "✓ Near Franklin Street",
+    "kind": "found"
+   },
+   "armed": false,
+   "whereOpen": true
+  },
+  {
+   "name": "18-side-after-tap",
+   "y": 414,
+   "navB": 52,
+   "cover": 202,
+   "q": "Which side of the road is the work on?",
+   "qTop": 209.5,
+   "whyTop": 265,
+   "headingClear": true,
+   "firstLineClear": true,
+   "frame": "52.0..202.0",
+   "aerialWhole": true,
+   "strips": [
+    "strip-where-unconfirmed"
+   ],
+   "stripText": "◌ AWAITING WHERE CONFIRMATION",
+   "bar": null,
+   "armed": false,
+   "whereOpen": true,
+   "shot": "390x844-11-18-side-after-tap.png"
+  }
+ ],
+ "net": [
+  {
+   "kind": "road-bearing",
+   "at": 3026
+  },
+  {
+   "kind": "geometry",
+   "at": 8118
+  },
+  {
+   "kind": "nearest",
+   "at": 9910
+  },
+  {
+   "kind": "geometry",
+   "at": 9911
+  },
+  {
+   "kind": "geometry",
+   "at": 9913
+  },
+  {
+   "kind": "aerial",
+   "at": 10136
+  },
+  {
+   "kind": "geometry",
+   "at": 10218
+  },
+  {
+   "kind": "geometry",
+   "at": 10540
+  },
+  {
+   "kind": "geometry",
+   "at": 10542
+  },
+  {
+   "kind": "geometry",
+   "at": 10846
+  },
+  {
+   "kind": "geometry",
+   "at": 14463
+  },
+  {
+   "kind": "geometry",
+   "at": 20176
+  },
+  {
+   "kind": "aerial",
+   "at": 20460
+  },
+  {
+   "kind": "geometry",
+   "at": 25910
+  },
+  {
+   "kind": "geometry",
+   "at": 25911
+  },
+  {
+   "kind": "aerial",
+   "at": 26206
+  },
+  {
+   "kind": "road-bearing",
+   "at": 46309
+  },
+  {
+   "kind": "geometry",
+   "at": 50880
+  },
+  {
+   "kind": "nearest",
+   "at": 52639
+  },
+  {
+   "kind": "geometry",
+   "at": 52641
+  },
+  {
+   "kind": "geometry",
+   "at": 52641
+  },
+  {
+   "kind": "aerial",
+   "at": 52853
+  },
+  {
+   "kind": "geometry",
+   "at": 52935
+  },
+  {
+   "kind": "geometry",
+   "at": 53529
+  },
+  {
+   "kind": "geometry",
+   "at": 53531
+  },
+  {
+   "kind": "geometry",
+   "at": 53838
+  },
+  {
+   "kind": "geometry",
+   "at": 55996
+  },
+  {
+   "kind": "aerial",
+   "at": 60932
+  },
+  {
+   "kind": "road-bearing",
+   "at": 74377
+  },
+  {
+   "kind": "nearest",
+   "at": 77871
+  },
+  {
+   "kind": "geometry",
+   "at": 78172
+  },
+  {
+   "kind": "geometry",
+   "at": 78391
+  },
+  {
+   "kind": "aerial",
+   "at": 78682
+  }
+ ],
+ "errors": [],
+ "console": [],
+ "held": [
+  {
+   "label": "Zoom in",
+   "tapMidLoad": true,
+   "mid": {
+    "bar": {
+     "text": "Drawing the corridor…",
+     "kind": "waiting"
+    },
+    "armed": false
+   },
+   "focusMid": "Zoom in",
+   "midShot": "390x844-10-held-in.png",
+   "log": [
+    {
+     "at": 0,
+     "text": "Tap the intersection nearest the work",
+     "kind": "armed",
+     "armed": true,
+     "busy": null
+    },
+    {
+     "at": 33,
+     "text": "Drawing the corridor…",
+     "kind": "waiting",
+     "armed": false,
+     "busy": "true"
+    },
+    {
+     "at": 4718,
+     "text": "Tap the intersection nearest the work",
+     "kind": "armed",
+     "armed": true,
+     "busy": null
+    }
+   ],
+   "tapRequests": 0,
+   "aerialRequests": 1,
+   "after": {
+    "bar": {
+     "text": "Tap the intersection nearest the work",
+     "kind": "armed"
+    },
+    "armed": true
+   }
+  },
+  {
+   "label": "Zoom out",
+   "tapMidLoad": false,
+   "mid": {
+    "bar": {
+     "text": "Tap the intersection nearest the work",
+     "kind": "armed"
+    },
+    "armed": true
+   },
+   "focusMid": "Zoom out",
+   "midShot": null,
+   "log": [
+    {
+     "at": 0,
+     "text": "Tap the intersection nearest the work",
+     "kind": "armed",
+     "armed": true,
+     "busy": null
+    }
+   ],
+   "tapRequests": 0,
+   "aerialRequests": 0,
+   "after": {
+    "bar": {
+     "text": "Tap the intersection nearest the work",
+     "kind": "armed"
+    },
+    "armed": true
+   }
+  }
+ ],
+ "lastPin": {
+  "lat": 39.739781,
+  "lng": -104.968249
+ }
+}
