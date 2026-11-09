@@ -157,11 +157,14 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(pre).toContain("VERIFYING");
     const band = renderToStaticMarkup(<StatusBar inputError={null} audit={loading} bandVoice />);
     // #250 f2: the live wrapper is the reserved slot, room kept; #470
-    // ruling 3: it holds the status line (spinner, the one step, the count,
-    // the bar), never VERIFYING and never the old verdict.
+    // ruling 3: it holds the status line, never VERIFYING and never the old
+    // verdict.  #477 answer 2: the spinner and the step name only -- no
+    // "Step N of M" and no bar.
     expect(band).toMatch(/^<div class="status-slot" aria-live="polite"><div class="status-bar wait-line idle" data-testid="wait-line">/);
     expect(band).toContain("Checking the road and laying out the taper, buffer and devices…");
-    expect(band).toContain("Step 1 of 1");
+    expect(band).not.toMatch(/Step \d+ of \d+/i);
+    expect(band).not.toContain("wait-bar");
+    expect(band).not.toContain("wait-count");
     expect(band).not.toContain("VERIFYING");
     const verdict = renderToStaticMarkup(
       <StatusBar inputError={null} audit={ready(makeAudit())} bandVoice />,

@@ -126,16 +126,11 @@ import type {
 
 type Mode = "sandbox" | "workbench";
 
-// #289 Phase 2: the landing check moved to `lib/landing.ts` so the band
-// stack can arm it too (ruling 184) without a circular import.  Re-exported
-// here because arc-28's suites import it from this module by name, and a
-// test that has to be edited to follow a file move is a test that stopped
-// asserting the thing it was written for.
-import { armLandingCheck, type LandingCheck } from "@/lib/landing";
+// #477 answer 6: the Generate settle no longer scrolls, so this module no
+// longer arms the landing check (`lib/landing.ts`; the band stack still
+// does, ruling 184).
 import { shownAerialFor } from "@/lib/corridor-aerial";
 import { packageFilename } from "@/lib/download-name";
-export { armLandingCheck };
-export type { LandingCheck };
 
 // Cold-start honesty (Refs #122, rule 10): a warm audit round-trip
 // measures 0.5–0.7 s; past 2 s the wait is almost certainly the Modal
@@ -983,17 +978,12 @@ export function GeneratorShell({
   // post); it no longer auto-downloads the zip.  The bundle download
   // moved to Zone 2's "All (.zip)" — same endpoint, same
   // { scenario, settings } body (the #74 contract), different trigger.
-  // #152 E: scroll target + arming flag for the post-generate scroll —
-  // the results populate ABOVE the Generate button's viewport position,
-  // so without it the user scrolls up hunting for what they just made.
-  // Armed per Generate click; the effect below (after ``genState``)
-  // fires it once on ``post``.
+  // The settle's focus target + its arming flag.  #152 E's settle scroll
+  // lived here; #477 answer 6 removed it (the press scrolls the strip's
+  // slot into view, R145-11 of #470).  Armed per Generate click; the
+  // effect below (after ``genState``) moves focus once on the settle.
   const resultsRef = useRef<HTMLElement | null>(null);
   const scrollPendingRef = useRef(false);
-  // #250 (a): the landing check armed by each landing scroll; its
-  // settle() runs at the pair's settle, cancel() on unmount.
-  const landingRef = useRef<LandingCheck | null>(null);
-  useEffect(() => () => landingRef.current?.cancel(), []);
 
   // #193 (WCAG 4.1.3): the results render without any announcement —
   // the strip's live region covers VERIFICATION states, not generation.
@@ -1019,9 +1009,9 @@ export function GeneratorShell({
     setGenerated(true);
     // #470 ruling 3 (R145-11): the status line "sits where the strip will
     // be", so the press brings the strip's slot into view -- a scroll only.
-    // Focus is untouched (it still lands at the settle, #193), and the
-    // settle's landing (#152 E) is unchanged: it lands on the results, which
-    // start right under this slot, so it has nowhere left to move.
+    // Focus is untouched (it still lands at the settle, #193).  This is the
+    // Generate's one scroll: #477 answer 6 removed #152 E's settle scroll,
+    // since the results start right under this slot.
     setTimeout(() => {
       const slot = document.querySelector<HTMLElement>(".workbench .status-slot");
       const nav = document.querySelector<HTMLElement>(".workbench .app-nav, .workbench nav");
@@ -1209,21 +1199,17 @@ export function GeneratorShell({
     !awaitingFirstPlan &&
     (genState === "post" || genState === "error" || regenerating);
 
-  // #152 E: on successful generation, land the viewport on the Zone-2
-  // hero.  Armed per Generate click (never on ordinary edits), fired
-  // once when the staged lifecycle reaches ``post``; a failed
-  // generation disarms instead — the error ribbon renders in place and
-  // yanking the viewport toward it helps nobody.  Reduced-motion users
-  // get an instant jump, not an animation.
-  // #193: the armed Generate click also owns the next FOCUS move — the
+  // #152 E landed the viewport on the results here at the settle; #477
+  // answer 6 removed that scroll (the press scrolls the strip's slot into
+  // view, and the results start right under it).
+  // #193: the armed Generate click owns the next FOCUS move — the
   // sidebar (and the Generate button under the keyboard) unmounts the
   // moment the lifecycle leaves "pre", so without this, focus falls to
   // <body> and the next Tab restarts at the nav.  Focus lands on the
-  // results zone on BOTH settles: post (alongside the scroll) and error
-  // (no scroll — the #152 E no-yank ruling stands — but the region now
-  // holds the failure alert, so focus belongs there too).  preventScroll
-  // keeps the focus move from double-scrolling; background settles are
-  // excluded by the arming, same as the scroll.
+  // results zone on BOTH settles: post and error (the region holds the
+  // failure alert, so focus belongs there too).  preventScroll
+  // keeps the focus move from scrolling; background settles are
+  // excluded by the arming.
   useEffect(() => {
     // The click nonce, same discipline as the announcement's (see it for
     // why the nonce exists).  A run caused by the ARMING may serve only
@@ -1243,47 +1229,26 @@ export function GeneratorShell({
     if (armedNow && genState !== "post") return;
     if (genState === "post") {
       scrollPendingRef.current = false;
-      const reduceMotion =
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const behavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
-      resultsRef.current?.scrollIntoView({ behavior, block: "start" });
-      // #250 (a): check the landing once it settles; re-issue once if off.
-      landingRef.current?.cancel();
-      landingRef.current = resultsRef.current
-        ? armLandingCheck(resultsRef.current, behavior)
-        : null;
+      // #477 answer 6 (Ryan, 2026-11-09): "The press already scrolls the
+      // strip's slot into view, so #152 E's settle scroll does nothing.
+      // Remove it."  The settle moves focus only (#193).
       resultsRef.current?.focus({ preventScroll: true });
       // #258: the announcement left this branch — it waits for the
       // pair's verdict (the effect after ``planDeclined`` below).
     } else if (genState === "error") {
-      // #258 (ruling c2, #152 E re-read): the no-yank rule stands for
-      // an error that carries no action — a broken breakdown; a DECLINED
-      // pair is a settled answer with two actions and lands exactly as
-      // ``post`` does (audit F-S5-3: the refusal whose breakdown also
-      // 400s scrolled nowhere and settled under the nav).  The verdict
+      // #258 (ruling c2): a DECLINED pair is a settled answer with two
+      // actions and takes focus exactly as ``post`` does; a broken
+      // breakdown takes it too (the region holds the alert).  The verdict
       // is the stamped audit's, so the arming waits for it: a breakdown
-      // error that lands before the audit answers neither scrolls nor
-      // disarms until the pair has settled.
+      // error that lands before the audit answers does not disarm until
+      // the pair has settled.  No scroll either way (#477 answer 6).
       if (!auditSettled) return;
       scrollPendingRef.current = false;
-      if (auditDeclined) {
-        const reduceMotion =
-          typeof window.matchMedia === "function" &&
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const behavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
-        resultsRef.current?.scrollIntoView({ behavior, block: "start" });
-        // #250 (a): the declined pair's landing is checked the same way.
-        landingRef.current?.cancel();
-        landingRef.current = resultsRef.current
-          ? armLandingCheck(resultsRef.current, behavior)
-          : null;
-      }
       resultsRef.current?.focus({ preventScroll: true });
       // No status text on failure: the error ribbon is role="alert"
       // and announces itself (assertively, as an error should).
     }
-  }, [genState, deviceBreakdown, auditSettled, auditDeclined, clickArm, awaitingFirstPlan]);
+  }, [genState, deviceBreakdown, auditSettled, clickArm, awaitingFirstPlan]);
 
   // #193: the Reopen half — focus the Setup zone once the column is
   // back.  Armed by `onReopen` and, since #289 Phase 2, by CHANGE ONE
@@ -1437,10 +1402,6 @@ export function GeneratorShell({
     announcePendingRef.current = false;
     // #253: the pair has settled since the click — the strip may render.
     setLanded(true);
-    // #250 (a): the pair's settle — the verdict re-mounts into its slot;
-    // one more landing check, still under the one-re-issue cap.
-    landingRef.current?.settle();
-    landingRef.current = null;
     if (genState !== "post" || auditDeclined) return;
     setPlanPresented(true);
     const d = deviceBreakdown.state === "ready" ? deviceBreakdown.data : null;

@@ -15,6 +15,15 @@ import type { StagedCorrection } from "@/lib/scenarios/types";
 import { MAP_FAILED, MAP_IMAGERY_NOTE, MAP_KEY_WORK, MAP_STREET_LEVEL } from "./NeedsYouMap";
 import { QuestionFlow } from "./NeedsYouQuestion";
 
+// #477 answer 4: the WHERE aerial the band last showed for a pin.  Seeded
+// per test; null is "the band never showed one for this pin".
+let whereAerial: string | null = null;
+vi.mock("@/lib/corridor-aerial", async (orig) => ({
+  ...(await orig<typeof import("@/lib/corridor-aerial")>()),
+  shownAerialFor: (lat: number | null | undefined, lng: number | null | undefined) =>
+    lat === 39.74 && lng === -104.97 ? whereAerial : null,
+}));
+
 const SCAN = {
   status: "ok",
   mode: "corridor",
@@ -36,6 +45,7 @@ const bodies = () => fetchMock.mock.calls.map((c) => JSON.parse(c[1].body as str
 
 beforeEach(() => {
   forgetNeedsYouMaps();
+  whereAerial = null;
   answer = { ok: true, subject: "drawn", point: "39.740100,-104.970200" };
   fetchMock = vi.fn(async () => {
     const headers = new Headers();
@@ -166,6 +176,37 @@ describe("the map in the card (rulings 1-7)", () => {
     expect(container.querySelector(".nyq-map-frame")!.getAttribute("aria-busy")).toBe("true");
     expect(screen.queryByTestId("needs-you-map-img")).toBeNull();
     expect(screen.getByTestId("needs-you-map-key")).toBeTruthy();
+  });
+
+  it("#477 answer 4: until the map loads the frame shows the WHERE aerial for this pin, dimmed like the outline's, never a blank frame", async () => {
+    whereAerial = "blob:where-aerial";
+    const { container } = render(<Host />);
+    const frame = container.querySelector(".nyq-map-frame")!;
+    const stand = frame.querySelector<HTMLImageElement>("[data-testid=needs-you-map-standin] img.ro-aerial");
+    expect(stand?.getAttribute("src")).toBe("blob:where-aerial");
+    // Decorative: the frame says it is busy; the picture claims nothing.
+    expect(stand?.getAttribute("alt")).toBe("");
+    expect(frame.querySelector("[data-testid=needs-you-map-standin]")!.getAttribute("aria-hidden")).toBe("true");
+    expect(frame.getAttribute("aria-busy")).toBe("true");
+    // The map replaces it in the same frame.
+    await img();
+    expect(frame.querySelector("[data-testid=needs-you-map-standin]")).toBeNull();
+  });
+
+  it("#477 answer 4 (Rule 10): with no WHERE aerial for this pin the frame holds the outline's grey block, not another pin's picture", () => {
+    const { container } = render(<Host />);
+    const stand = container.querySelector(".nyq-map-frame [data-testid=needs-you-map-standin]")!;
+    expect(stand).not.toBeNull();
+    expect(stand.querySelector("img")).toBeNull();
+    expect(stand.querySelector(".ro-aerial.ro-block")).not.toBeNull();
+  });
+
+  it("#477 answer 4: a failed map shows the ruled line, not the stand-in", async () => {
+    whereAerial = "blob:where-aerial";
+    answer = { ok: false, status: 502 };
+    const { container } = render(<Host />);
+    await screen.findByTestId("needs-you-map-failed");
+    expect(container.querySelector("[data-testid=needs-you-map-standin]")).toBeNull();
   });
 
   it("ruling 7: a failed image says the ruled line, holds the key's place, and the answer works", async () => {

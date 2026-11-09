@@ -1,12 +1,11 @@
 // @vitest-environment happy-dom
 //
-// #152 Surface E — Generate lands the viewport on the results zone.
-// The results populate ABOVE the Generate button, so without the
-// scroll the user hunts upward for what they just made.  Mounted-flow
-// tests with releasable breakdown fetches: scroll fires exactly once
-// per Generate click when the lifecycle reaches ``post``, honors
-// prefers-reduced-motion, never fires on ordinary edits, and disarms
-// on a failed generation.
+// #152 Surface E landed the viewport on the results zone at the settle.
+// #477 answer 6 (Ryan, 2026-11-09) removed that scroll: the press already
+// brings the strip's slot into view (#470 R145-11), and the results start
+// right under it.  Mounted-flow tests with releasable breakdown fetches
+// now pin that no settle scrolls (post, reduced motion, an edit, APPLY, a
+// failure, a declined pair) and that the settle still moves focus (#193).
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
@@ -20,7 +19,10 @@ vi.mock("./ReferenceSections", () => ({ ReferenceSections: () => null }));
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
-import { GeneratorShell, armLandingCheck } from "./GeneratorShell";
+import { GeneratorShell } from "./GeneratorShell";
+// #477: GeneratorShell no longer arms the landing check (answer 6); its
+// own cases below test it where it lives (BandStack still arms it).
+import { armLandingCheck } from "@/lib/landing";
 // #186: mounts assert a verdict / enabled Generate — start located.
 import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
 import {
@@ -169,6 +171,8 @@ async function release(index: number, response: Response) {
 }
 
 let scrollSpy: ReturnType<typeof vi.fn>;
+// Any `window.scrollTo` (the press's own needs the slot, absent here).
+let pressSpy: ReturnType<typeof vi.fn>;
 let reducedMotion = false;
 
 beforeEach(() => {
@@ -178,6 +182,8 @@ beforeEach(() => {
   vi.stubGlobal("fetch", fetchMock);
   scrollSpy = vi.fn();
   Element.prototype.scrollIntoView = scrollSpy as never;
+  pressSpy = vi.fn();
+  vi.stubGlobal("scrollTo", pressSpy);
   reducedMotion = false;
   vi.stubGlobal(
     "matchMedia",
@@ -195,31 +201,34 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("post-generate scroll (#152 E)", () => {
-  it("Generate scrolls the results zone into view once, smoothly", async () => {
+// #477 answer 6 (Ryan, 2026-11-09): "The press already scrolls the strip's
+// slot into view, so #152 E's settle scroll does nothing. Remove it."  The
+// cases below keep #152 E's shapes (a first Generate, a pending answer,
+// reduced motion, an edit, a failure, a declined pair) and now pin that
+// the settle scrolls nothing -- neither `scrollIntoView` nor
+// `window.scrollTo` -- and still moves focus to the results zone (#193).
+// StatusBar is mocked here, so the strip's slot is absent and the press's
+// own scroll (#470 R145-11) does not fire: every window scroll this suite
+// could see would be the settle's.  The press scroll is pinned with the
+// real StatusBar in GeneratorShell.generate-wait.test.tsx.  The landing
+// check's own cases (#250 (a), below) stay: BandStack still arms it.
+describe("post-generate scroll (#152 E, removed by #477 answer 6)", () => {
+  it("Generate's settle scrolls nothing and moves focus to the results zone", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
+    expect(pressSpy).not.toHaveBeenCalled();
 
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    // S4 (s4-prod/): the answer READY at the click is the pre-Generate
-    // one — never on screen as this plan's, so nothing lands on it.  The
-    // landing waits for the generated wire's own answer.
-    expect(scrollSpy).not.toHaveBeenCalled();
     await flushDebounce();
     await release(breakdownCalls.length - 1, okBreakdown());
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
-    expect(scrollSpy.mock.calls[0][0]).toMatchObject({
-      behavior: "smooth",
-      block: "start",
-    });
-    // The scrolled element is the results zone (it holds the hero).
-    const target = scrollSpy.mock.instances[0] as unknown as HTMLElement;
+    await flushDebounce();
+    expect(scrollSpy).not.toHaveBeenCalled();
+    expect(pressSpy).not.toHaveBeenCalled();
+    // Focus lands on the results zone (it holds the hero), once settled.
+    const target = document.activeElement as HTMLElement;
     expect(target.querySelector(".hero")).not.toBeNull();
-    // #250 (c): the zone carries the class the post-generate landing rule
-    // keys on, and the root's data-stage has left "pre" (the rail is gone,
-    // so --pin-h is 0 and the results rule budgets the strip instead).
     expect(target.classList.contains("results")).toBe(true);
     expect(document.querySelector(".workbench")?.getAttribute("data-stage")).toBe("post");
   });
@@ -230,26 +239,22 @@ describe("post-generate scroll (#152 E)", () => {
     expect(document.querySelector(".workbench")?.getAttribute("data-stage")).toBe("pre");
   });
 
-  it("waits for a pending breakdown: scroll fires when generating resolves to post", async () => {
+  it("a pending answer: focus waits for it, and its arrival scrolls nothing", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    // #289 Phase 2: the pending-flight window is the FIRST Generate's.
-    // The panel era reached one by reopening (which refired the pair)
-    // and clicking Generate over it; the column cannot — #252's write
-    // lock disables the CTA for the whole flight, so "Generate with a
-    // request pending" is no longer a state a user can reach by
-    // clicking.  The mount fetch is left unreleased here instead, which
-    // is the same shape: the click arms, the answer has not landed, the
-    // landing waits for it.
+    // The mount fetch is left unreleased: the click arms, the answer has
+    // not landed, the focus move waits for it (#193).
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    expect(scrollSpy).not.toHaveBeenCalled();
-
     await flushDebounce();
+    expect(document.activeElement?.classList.contains("results")).toBe(false);
+
     await release(breakdownCalls.length - 1, okBreakdown());
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect(document.activeElement?.classList.contains("results")).toBe(true);
+    expect(scrollSpy).not.toHaveBeenCalled();
+    expect(pressSpy).not.toHaveBeenCalled();
   });
 
-  it("respects prefers-reduced-motion: instant jump, no animation", async () => {
+  it("under prefers-reduced-motion the settle scrolls nothing either", async () => {
     reducedMotion = true;
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
@@ -258,81 +263,60 @@ describe("post-generate scroll (#152 E)", () => {
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await flushDebounce();
     await release(breakdownCalls.length - 1, okBreakdown());
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
-    expect(scrollSpy.mock.calls[0][0]).toMatchObject({ behavior: "auto" });
+    expect(pressSpy).not.toHaveBeenCalled();
+    expect(scrollSpy).not.toHaveBeenCalled();
   });
 
-  it("ordinary edits never scroll — only a Generate click arms it", async () => {
+  it("ordinary edits never scroll, and neither does APPLY's settle", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await flushDebounce();
     await release(1, okBreakdown());
-    scrollSpy.mockClear();
 
     // #289 S7: an edit STAGES and fires a preview, which is a read.  It
-    // writes nothing and it lands nothing — the claim this case has
-    // always made, now with a name for the half that does the editing.
+    // writes nothing and it lands nothing.
     await stageRevision("35");
     await release(breakdownCalls.length - 1, okBreakdown());
-    expect(scrollSpy).not.toHaveBeenCalled();
+    expect(pressSpy).not.toHaveBeenCalled();
 
-    // APPLY is a GENERATE (ruling e), and a generate lands the viewport
-    // (#152 E).  So the arming is unchanged: a click arms it, an edit
-    // never does.
+    // APPLY is a GENERATE (ruling e): its settle moves focus, no scroll.
     await applyRevision();
     await flushDebounce();
     await release(breakdownCalls.length - 1, okBreakdown());
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    await flushDebounce();
+    expect(pressSpy).not.toHaveBeenCalled();
+    expect(scrollSpy).not.toHaveBeenCalled();
   });
 
-  it("a failed generation disarms the scroll instead of yanking the viewport", async () => {
+  it("a failed generation scrolls nothing at the settle", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    scrollSpy.mockClear();
-
-    // #289 Phase 2: the failing generation is the first one (see the
-    // pending-breakdown case above — a second Generate over an unedited
-    // scenario opens no flight, so it has none to fail).  The mount
-    // fetch is left unreleased so the click finds no answer at all (a
-    // READY pre-generate answer is no longer landed on either — S4,
-    // s4-prod/ — but this case keeps its original shape).
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await flushDebounce();
     await release(breakdownCalls.length - 1, errBreakdown());
+    await flushDebounce();
     expect(scrollSpy).not.toHaveBeenCalled();
+    expect(pressSpy).not.toHaveBeenCalled();
   });
 
-  it("#258 (ruling c2): a declined pair — the audit refused and the breakdown 400s too — lands the results zone once, on the refusal container", async () => {
+  it("#258 (ruling c2): a declined pair -- focus lands once on the results zone holding the refusal container; no settle scroll", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    scrollSpy.mockClear();
 
-    // The same shape as the "failed generation" case above — a first
-    // Generate whose answer has not landed, so the landing waits for it
-    // — except the pair is DECLINED: the audit refuses and the
-    // breakdown 400s too.  Before c2 this path scrolled nowhere (audit
-    // F-S5-3).
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     auditRefuses = true; // the generated wire's audit (dispatched on the debounce) refuses
     await flushDebounce();
-    expect(scrollSpy).not.toHaveBeenCalled();
     await release(breakdownCalls.length - 1, refusedBreakdown());
     await flushDebounce();
 
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
-    expect(scrollSpy.mock.calls[0][0]).toMatchObject({
-      behavior: "smooth",
-      block: "start",
-    });
-    const target = scrollSpy.mock.instances[0] as unknown as HTMLElement;
+    const target = document.activeElement as HTMLElement;
+    expect(target.classList.contains("results")).toBe(true);
     expect(target.querySelector(".scan-refusal")).not.toBeNull();
     expect(target.querySelector(".hero")).toBeNull();
-    // Focus lands there too (#193), and only once: the arming is spent.
-    expect(document.activeElement).toBe(target);
-    await flushDebounce();
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect(scrollSpy).not.toHaveBeenCalled();
+    expect(pressSpy).not.toHaveBeenCalled();
   });
 });
 

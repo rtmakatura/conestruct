@@ -26,6 +26,24 @@ export const COLD_START_NOTE =
 export const ROAD_SLOW_NOTE =
   "The road check stops after 20 seconds. If it does, the page will say so and offer a retry.";
 
+/** The map placeholder's picture: the WHERE aerial dimmed under the sheen,
+ *  or a grey block with none remembered.  #477 answer 4: the NEEDS YOU map
+ *  frame shows the same picture until its own map loads (NeedsYouMap), so
+ *  the frame goes outline, stand-in, map with no blank step. */
+export function OutlineAerial({ src }: { src: string | null }) {
+  return (
+    <>
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="ro-aerial" src={src} alt="" />
+      ) : (
+        <div className="ro-aerial ro-block" />
+      )}
+      <span className="ro-sheen" />
+    </>
+  );
+}
+
 export function OutlineNeedsYou({
   aerialSrc,
   slow,
@@ -38,13 +56,7 @@ export function OutlineNeedsYou({
       <div data-outline="needs" className="ro-needs">
         <div className="ro-block ro-head" />
         <div className="ro-map">
-          {aerialSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img className="ro-aerial" src={aerialSrc} alt="" />
-          ) : (
-            <div className="ro-aerial ro-block" />
-          )}
-          <span className="ro-sheen" />
+          <OutlineAerial src={aerialSrc} />
           <span className="ro-label tr-note">Checking this stretch of road</span>
         </div>
         <p className={`ro-note tr-help${slow === "road" ? " is-slow" : ""}`}>

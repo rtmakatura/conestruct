@@ -10128,8 +10128,14 @@ input[type="number"] {
    (walk470.mjs, rulings.md R145-3) and grow only downward.  Tokens only:
    the blocks are --pri-off (ruling 4), the sheen's highlight is --rule
    (the nearest token to the board's), and the bar and spinner are --act. */
+/* #477 answer 1 (Ryan, 2026-11-09): the NEEDS YOU outline holds the room
+   of one question.  CHOSEN, measured: the one-question NEEDS YOU (936 /
+   1084 px, #470's signals walk) less the 2 px R145-4's 16 px margin adds
+   over the section's own 14 (rule 27), so every section under it lands
+   where its outline stood.  With no question the outline simply closes
+   at the swap, like every outline. */
 .workbench {
-  --ro-needs-h: 1025px;
+  --ro-needs-h: 934px;
   --ro-other-h: 46px;
   --ro-plan-h: 203px;
   --ro-dl-h: 340px;
@@ -10137,7 +10143,7 @@ input[type="number"] {
 }
 @media (max-width: 600px) {
   .workbench {
-    --ro-needs-h: 1135px;
+    --ro-needs-h: 1082px;
     --ro-plan-h: 344px;
     --ro-dl-h: 283px;
     --ro-refs-h: 284px;
@@ -10145,7 +10151,9 @@ input[type="number"] {
 }
 .workbench .ro-needs {
   min-height: var(--ro-needs-h);
-  margin-bottom: 14px;
+  /* #477 answer 5: a token (was 14, the section's own rule 27 margin);
+     the 2 px is taken out of --ro-needs-h. */
+  margin-bottom: var(--space-block);
   display: flex;
   flex-direction: column;
   gap: var(--space-block);
@@ -10249,6 +10257,12 @@ input[type="number"] {
     aspect-ratio: 4 / 3;
   }
 }
+/* #477 answer 4: the same picture stands in the NEEDS YOU map frame until
+   its map loads (NeedsYouMap, OutlineAerial). */
+.workbench .nyq-map-standin {
+  position: absolute;
+  inset: 0;
+}
 .workbench .ro-aerial {
   display: block;
   width: 100%;
@@ -10269,18 +10283,20 @@ input[type="number"] {
 }
 .workbench .ro-setup {
   height: var(--setup-box-h);
-  margin-bottom: 16px;
+  margin-bottom: var(--space-block);
 }
 .workbench .ro-refs {
   min-height: var(--ro-refs-h);
-  /* CHOSEN, measured by scripts/verify-generate-cls.mjs's outline check:
-     the reference group stands 38 px under Downloads (the cards' own
-     bottom room plus the group's 12). */
-  margin-top: 38px;
+  /* The reference group stands 38 px under Downloads (the cards' own
+     bottom room plus the group's 12), measured by
+     scripts/verify-generate-cls.mjs's outline check.  #477 answer 5: the
+     nearest token sum, 40, CHOSEN; the outline stands 2 px low, inside
+     the check's 8 px. */
+  margin-top: calc(var(--space-section) + var(--space-block));
   margin-bottom: var(--space-section);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-tight);
 }
 /* The slow-step sentence's reserved line (ruling 6): the room is there
    before the words are, so a slow step grows nothing. */
@@ -10291,11 +10307,8 @@ input[type="number"] {
 .workbench .ro-note.is-slow {
   color: var(--warn);
 }
-/* The status line, in the strip's own box (ruling 3). */
-.workbench .status-bar.wait-line {
-  position: relative;
-  overflow: hidden;
-}
+/* The status line, in the strip's own box (ruling 3): the spinner and
+   the step name (#477 answer 2 dropped the count and the bar). */
 /* The step is a sentence: .tr-help's Inter 13.5 (group 1 ruling 2), set
    by its class, so no size joins the census. */
 .workbench .wait-line .wait-step {
@@ -10304,17 +10317,11 @@ input[type="number"] {
 .workbench .wait-line.is-slow .wait-step {
   color: var(--warn);
 }
-.workbench .wait-line .wait-count {
-  color: var(--none);
-  white-space: nowrap;
-}
-/* At phone width the step takes two lines, and the count drops under
-   it, inside the strip's own 80 px (--status-h at 600 px and below), so
-   the status line is never taller than the strip that replaces it. */
+/* At phone width the step takes up to three lines inside the strip's own
+   80 px (--status-h at 600 px and below), so the status line is never
+   taller than the strip that replaces it. */
 @media (max-width: 600px) {
   .workbench .status-bar.wait-line {
-    flex-wrap: wrap;
-    row-gap: 0;
     padding-top: var(--space-tight);
     padding-bottom: var(--space-tight);
   }
@@ -10322,24 +10329,19 @@ input[type="number"] {
     flex: 1 1 0;
     min-width: 0;
   }
-  .workbench .status-slot > .status-bar.wait-line > span.wait-count {
-    flex: 1 0 100%;
-  }
-  .workbench .wait-line .wait-count {
-    margin-left: 24px;
-  }
   /* The 480 px strip rule gives every plain span a full row (specificity
-     0,4,1); the spinner and the step share the first row, the count takes
-     the second. */
+     0,4,1); the spinner and the step share the row. */
   .workbench .status-slot > .status-bar.wait-line > span.wait-spin {
     flex: none;
     min-width: 0;
   }
 }
+/* #477 answer 5: 16 px, CHOSEN from the allowed 8/16/24 (was 12; 8 would
+   leave a 4 px hole inside the 2 px ring).  A size, so written in px. */
 .workbench .wait-spin {
   flex: none;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border: 2px solid var(--pri-off);
   border-top-color: var(--act);
   border-radius: 50%;
@@ -10349,22 +10351,6 @@ input[type="number"] {
   to {
     transform: rotate(360deg);
   }
-}
-.workbench .wait-bar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  overflow: hidden;
-  background: var(--pri-off);
-}
-.workbench .wait-bar-run {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, var(--act), transparent);
-  transform: translateX(-100%);
-  animation: ro-sheen 1.4s linear infinite;
 }
 /* Arrival (ruling 5): each section fades in over 420 ms with a 6 px rise.
    Opacity and transform only, so no layout box moves and nothing counts
@@ -10392,7 +10378,6 @@ input[type="number"] {
   .workbench .ro-block::after,
   .workbench .ro-sheen,
   .workbench .wait-spin,
-  .workbench .wait-bar-run,
   .workbench .results-stack > section.needs-you,
   .workbench .results-stack > .ny-other,
   .workbench .results-stack > .results-head-slot > *,
@@ -10403,8 +10388,7 @@ input[type="number"] {
     animation: none;
   }
   .workbench .ro-block::after,
-  .workbench .ro-sheen,
-  .workbench .wait-bar-run {
+  .workbench .ro-sheen {
     display: none;
   }
 }

@@ -1,0 +1,16 @@
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 116 px | strip: ⚠ Plan ready. 1 item above and 2 under Not checked yet need a check before field
+   outline vs settled (top/h deltas, px): needs 0/-818 | map absent after | other -820/0 | setup -820/0 | plan -820/0 | downloads -820/-46 | refs -867/0
+   NEEDS YOU delta -818 px (0 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+1198x930 generate CLS 0 PASS (< 0.1) | NEEDS YOU 116 px | strip: ⚠ Plan ready. 1 item above and 2 under Not checked yet need a check before field
+   outline vs settled (top/h deltas, px): needs 0/-818 | map absent after | other -820/0 | setup -820/0 | plan -820/0 | downloads -820/-46 | refs -867/0
+   NEEDS YOU delta -818 px (0 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+390x844 generate CLS 0 PASS (< 0.1) | NEEDS YOU 148 px | strip: ⚠ Plan ready. 1 item above and 2 under Not checked yet need a check before field
+   outline vs settled (top/h deltas, px): needs 0/-934 | map absent after | other -936/0 | setup -936/0 | plan -936/0 | downloads -936/-65 | refs -1003/0
+   NEEDS YOU delta -934 px (0 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+exit 0

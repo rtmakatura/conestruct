@@ -1,0 +1,37 @@
+SWAP {"standin":true,"standinImg":"blob:","grey":false,"map":false,"opacity":"0.35"}
+SETTLED map img false
+AXE settle+2.5s (stand-in true): violations 0 [] | under 44 px 0 []
+AXE map loaded (stand-in false): violations 0 [] | under 44 px 0 []
+DL SECTION.dl-sec mb-3 h340 :: DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ These files match the plan befor | DIV.dl-head h61 :: DOWNLOADS 6 files, quote included Download all (.zip) ↓ | DIV.dl-warn h45 :: ⚠ These files match the plan before your answer. Answer first and they'll update. | BUTTON.dl-files tr-prov h0 :: 6 files, quote included› | DIV.dls dl-phone-closed h182 :: Plan sheet PDF The drawing for the crew and the permit. 34 devices. Download ↓ Device list | DIV.dl-quote h49 :: i Price quote Contractor estimate, not a permit fee Open
+CARDS dl-card 206x150 :: Plan sheet PDF The drawing for the crew and the permit. 34 devices. Download ↓ || dl-card 206x150 :: Device list XLSX What to load on the truck. 9 types, CDOT bid items. Download ↓ || dl-card 206x150 :: Crew instructions PDF + MD Setup and takedown, in order. 14 steps. PDF ↓ .md ↓ || dl-card 206x150 :: Audit trail PDF Every number and the rule behind it. 15 checks. Download ↓
+FONTS __Inter_176161,__Inter_176161,__Inter_176161,__Inter_176161,__Inter_Fallback_176161,__JetBrains_Mono_5f34dc,__JetBrains_Mono_5f34dc,__JetBrains_Mono_5f34dc,__JetBrains_Mono_Fallback_5f34dc
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 936 px | strip: ⚠ Plan ready. Answer 1 quick question before you send it.
+   outline vs settled (top/h deltas, px): needs 0/2 | map 0/0 | other 0/0 | setup 0/0 | plan 0/0 | downloads 0/0 | refs -2/0
+   NEEDS YOU delta 2 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+SWAP {"standin":true,"standinImg":"blob:","grey":false,"map":false,"opacity":"0.35"}
+SETTLED map img false
+AXE settle+2.5s (stand-in true): violations 0 [] | under 44 px 0 []
+AXE map loaded (stand-in false): violations 0 [] | under 44 px 0 []
+DL SECTION.dl-sec mb-3 h340 :: DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ These files match the plan befor | DIV.dl-head h61 :: DOWNLOADS 6 files, quote included Download all (.zip) ↓ | DIV.dl-warn h45 :: ⚠ These files match the plan before your answer. Answer first and they'll update. | BUTTON.dl-files tr-prov h0 :: 6 files, quote included› | DIV.dls dl-phone-closed h182 :: Plan sheet PDF The drawing for the crew and the permit. 34 devices. Download ↓ Device list | DIV.dl-quote h49 :: i Price quote Contractor estimate, not a permit fee Open
+CARDS dl-card 206x150 :: Plan sheet PDF The drawing for the crew and the permit. 34 devices. Download ↓ || dl-card 206x150 :: Device list XLSX What to load on the truck. 9 types, CDOT bid items. Download ↓ || dl-card 206x150 :: Crew instructions PDF + MD Setup and takedown, in order. 14 steps. PDF ↓ .md ↓ || dl-card 206x150 :: Audit trail PDF Every number and the rule behind it. 15 checks. Download ↓
+FONTS __Inter_176161,__Inter_176161,__Inter_176161,__Inter_176161,__Inter_Fallback_176161,__JetBrains_Mono_5f34dc,__JetBrains_Mono_5f34dc,__JetBrains_Mono_5f34dc,__JetBrains_Mono_Fallback_5f34dc
+1198x930 generate CLS 0 PASS (< 0.1) | NEEDS YOU 936 px | strip: ⚠ Plan ready. Answer 1 quick question before you send it.
+   outline vs settled (top/h deltas, px): needs 0/2 | map 0/0 | other 0/0 | setup 0/0 | plan 0/0 | downloads 0/0 | refs -2/0
+   NEEDS YOU delta 2 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+SWAP {"standin":true,"standinImg":"blob:","grey":false,"map":false,"opacity":"0.35"}
+SETTLED map img false
+AXE settle+2.5s (stand-in true): violations 0 [] | under 44 px 0 []
+AXE map loaded (stand-in false): violations 0 [] | under 44 px 0 []
+DL SECTION.dl-sec mb-3 h283 :: DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ These files match the plan befor | DIV.dl-head h92 :: DOWNLOADS 6 files, quote included Download all (.zip) ↓ | DIV.dl-warn h66 :: ⚠ These files match the plan before your answer. Answer first and they'll update. | BUTTON.dl-files tr-prov h44 :: 6 files, quote included › | DIV.dls dl-phone-closed h0 :: Plan sheetPDFThe drawing for the crew and the permit. 34 devices.This is an 11×17 drawing. | DIV.dl-quote h64 :: i Price quote Contractor estimate, not a permit fee Open
+CARDS dl-card 0x0 :: Plan sheetPDFThe drawing for the crew and the permit. 34 devices.This is an 11×17 drawing. Open it on a bigger screen or print it.Download↓ || dl-card 0x0 :: Device listXLSXWhat to load on the truck. 9 types, CDOT bid items.Download↓ || dl-card 0x0 :: Crew instructionsPDF + MDSetup and takedown, in order. 14 steps.PDF↓.md↓ || dl-card 0x0 :: Audit trailPDFEvery number and the rule behind it. 15 checks.Download↓
+FONTS __Inter_176161,__Inter_176161,__Inter_176161,__Inter_176161,__Inter_Fallback_176161,__JetBrains_Mono_5f34dc,__JetBrains_Mono_5f34dc,__JetBrains_Mono_5f34dc,__JetBrains_Mono_Fallback_5f34dc
+390x844 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1084 px | strip: ⚠ Plan ready. Answer 1 quick question before you send it.
+   outline vs settled (top/h deltas, px): needs 0/2 | map 0/0 | other 0/0 | setup 0/0 | plan 0/0 | downloads -1/0 | refs -1/0
+   NEEDS YOU delta 2 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+exit 0

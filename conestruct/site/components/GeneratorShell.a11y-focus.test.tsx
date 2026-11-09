@@ -189,7 +189,7 @@ afterEach(() => {
 });
 
 describe("focus policy after Generate (#193)", () => {
-  it("keyboard Generate (Enter) lands focus on the results zone; scroll still fires", async () => {
+  it("keyboard Generate (Enter) lands focus on the results zone; the settle adds no scroll (#477 answer 6)", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
@@ -203,7 +203,9 @@ describe("focus policy after Generate (#193)", () => {
     await release(breakdownCalls.length - 1, okBreakdown());
 
     expect(activeIsResultsZone()).toBe(true);
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    // #477 answer 6: #152 E's settle scroll is gone (the press scrolls the
+    // strip's slot, #470 R145-11); focus still lands (#193).
+    expect(scrollSpy).not.toHaveBeenCalled();
   });
 
   it("with the fetch still in flight, focus moves only when it settles to post", async () => {

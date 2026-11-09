@@ -1,0 +1,3 @@
+full vitest run 1 (2992 passed, 2 failed, 1 skipped):
+components/GeneratorShell.a11y-focus.test.tsx > focus policy after Generate (#193) > keyboard Generate (Enter) lands focus on the results zone; scroll still fires
+lib/design/motion.test.ts > R10 > every animation declaration is the band's or sits inside the no-preference block

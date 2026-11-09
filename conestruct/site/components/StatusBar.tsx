@@ -287,15 +287,18 @@ function Sym({ g }: { g: string }) {
  *  audit request (#306), which runs the road scan, the layout, the check
  *  and the device list in one call (rulings.md R145-1). */
 export const WAIT_STEP = "Checking the road and laying out the taper, buffer and devices…";
-/** #470 ruling 6 — the warn look's words past ROAD_SLOW_MS (R145-4). */
-export const WAIT_ROAD_SLOW = "The road data service is slow right now.";
+/** #470 ruling 6 — the warn look's words past ROAD_SLOW_MS (R145-4).
+ *  #477 answer 3 (Ryan, 2026-11-09), verbatim. */
+export const WAIT_ROAD_SLOW =
+  "This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.";
 
-/** #470 ruling 3: spinner, the step, "Step N of M", a thin bar.  Ruling 3
- *  asks for the spinner by name, so rule 14's no-spinner rule gives way on
- *  this one line (and it stops under reduced motion).  The step words are
- *  aria-hidden: the WorkingBand already speaks the flight (#193, R145-5);
- *  the slow sentence is a new fact and is spoken.  The bar shows steps
- *  done (0 of 1 until the answer), with the sheen over the running step. */
+/** #470 ruling 3: the spinner and the step name.  #477 answer 2 dropped the
+ *  bar and "Step N of M" (the page observes one step, so neither said
+ *  anything).  Ruling 3 asks for the spinner by name, so rule 14's
+ *  no-spinner rule gives way on this one line (and it stops under reduced
+ *  motion).  The step words are aria-hidden: the WorkingBand already speaks
+ *  the flight (#193, R145-5); the slow sentence is a new fact and is
+ *  spoken. */
 function WaitLine({ slow }: { slow: "none" | "cold" | "road" }) {
   const road = slow === "road";
   return (
@@ -306,12 +309,6 @@ function WaitLine({ slow }: { slow: "none" | "cold" | "road" }) {
       {road ? <Sym g="⚠" /> : <span className="wait-spin" aria-hidden />}
       <span className="wait-step tr-help" aria-hidden={road ? undefined : true}>
         {road ? WAIT_ROAD_SLOW : WAIT_STEP}
-      </span>
-      <span className="wait-count" aria-hidden>
-        Step 1 of 1
-      </span>
-      <span className="wait-bar" aria-hidden>
-        <span className="wait-bar-run" />
       </span>
     </div>
   );

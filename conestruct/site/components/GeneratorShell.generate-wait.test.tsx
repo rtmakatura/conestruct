@@ -5,8 +5,9 @@
 // (2026-11-08), as tested here:
 //   1. the press draws an outline of the results in their real places;
 //   2. each section swaps in, in place, when its call answers;
-//   3. a status line in the strip's slot (spinner, the step, "Step N of M",
-//      a bar) until the real strip replaces it;
+//   3. a status line in the strip's slot (the spinner and the step name;
+//      #477 answer 2 dropped "Step N of M" and the bar) until the real
+//      strip replaces it;
 //   6. a step past its threshold says what is slow (the cold start reuses
 //      today's copy).
 // The page waits on ONE call after Generate (#306: the audit carries the
@@ -155,7 +156,7 @@ describe("#470 the Generate wait", () => {
     expect(top!.getAttribute("aria-hidden")).toBe("true");
   });
 
-  it("ruling 3 (R145-11): the press scrolls the strip's slot into view, a scroll only; focus and the settle's landing are unchanged", async () => {
+  it("ruling 3 (R145-11) / #477 answer 6: the press scrolls the strip's slot into view, a scroll only; the settle moves focus and adds no scroll", async () => {
     const scrollTo = vi.fn();
     vi.stubGlobal("scrollTo", scrollTo);
     const into = vi.fn();
@@ -165,19 +166,22 @@ describe("#470 the Generate wait", () => {
     expect(into).not.toHaveBeenCalled();
     expect(document.activeElement === document.body || document.activeElement === null).toBe(true);
     await answer();
-    // #152 E: the settle lands the results, once.
-    expect(into).toHaveBeenCalledTimes(1);
+    // #477 answer 6: #152 E's settle scroll is gone (the press already
+    // brought the slot into view); #193's focus move at the settle stays.
+    expect(into).not.toHaveBeenCalled();
     expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(document.activeElement?.classList.contains("results-stack")).toBe(true);
   });
 
-  it("ruling 3: the strip's slot carries the status line (spinner, the one step, Step 1 of 1, a bar) until the real strip replaces it", async () => {
+  it("ruling 3 / #477 answer 2: the strip's slot carries the status line (the spinner and the step name only) until the real strip replaces it", async () => {
     await pressGenerate();
     const line = q(".status-slot .wait-line");
     expect(line).not.toBeNull();
     expect(line!.querySelector(".wait-spin")).not.toBeNull();
-    expect(line!.querySelector(".wait-bar")).not.toBeNull();
-    expect(line!.textContent).toContain("Checking the road and laying out the taper, buffer and devices…");
-    expect(line!.textContent).toContain("Step 1 of 1");
+    expect(line!.querySelector(".wait-bar")).toBeNull();
+    expect(line!.querySelector(".wait-count")).toBeNull();
+    expect(line!.textContent).toBe("Checking the road and laying out the taper, buffer and devices…");
+    expect(document.body.textContent).not.toMatch(/Step \d+ of \d+/i);
     await answer();
     // ruling 2 + 3: the answer swaps every section in and the strip in.
     expect(q(".wait-line")).toBeNull();
@@ -188,7 +192,7 @@ describe("#470 the Generate wait", () => {
     expect(q('[data-testid="downloads-stub"]')).not.toBeNull();
   });
 
-  it("ruling 6: past 2 s the line adds today's cold-start sentence; past 14 s it turns to the warn look and names the road data service", async () => {
+  it("ruling 6: past 2 s the line adds today's cold-start sentence; past 14 s it turns to the warn look with #477 answer 3's sentence", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     await pressGenerate();
     const line = () => q(".status-slot .wait-line")!;
@@ -208,7 +212,11 @@ describe("#470 the Generate wait", () => {
     });
     expect(line().classList.contains("is-slow")).toBe(true);
     expect(line().classList.contains("caution")).toBe(true);
-    expect(line().textContent).toContain("The road data service is slow right now.");
+    // #477 answer 3, byte for byte.
+    expect(line().querySelector(".wait-step")!.textContent).toBe(
+      "This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.",
+    );
+    expect(line().textContent).not.toContain("The road data service is slow right now.");
     expect(note().textContent).toBe(
       "The road check stops after 20 seconds. If it does, the page will say so and offer a retry.",
     );
@@ -250,6 +258,29 @@ describe("#470 the wait's CSS (rulings 4, 5, 9)", () => {
     expect(animated.length).toBeGreaterThan(8);
     const unreset = animated.filter((s) => !resets.includes(s));
     expect(unreset).toEqual([]);
+  });
+
+  it("#477 answer 5: no raw px spacing -- every margin, padding and gap is a token or 8/16/24, and so is the spinner's size", () => {
+    const code = block.replace(/\/\*[\s\S]*?\*\//g, "");
+    const decls = [...code.matchAll(/([a-z-]+)\s*:\s*([^;{}]+);/g)].map((m) => ({ prop: m[1], value: m[2] }));
+    const spacing = decls.filter((d) => /^(margin|padding|gap|row-gap|column-gap)(-(top|right|bottom|left))?$/.test(d.prop));
+    expect(spacing.length).toBeGreaterThan(8);
+    // The 1 px allowed is the NEEDS YOU card's border, which the map
+    // placeholder's margin steps over (the frame sits inside it), not a gap.
+    const raw = spacing.filter((d) =>
+      [...d.value.matchAll(/(\d+(?:\.\d+)?)px/g)].some((m) => !["1", "8", "16", "24"].includes(m[1])),
+    );
+    expect(raw).toEqual([]);
+    const spin = code.match(/\.workbench \.wait-spin\s*\{([^}]*)\}/)![1];
+    expect(spin).toMatch(/width:\s*(8|16|24)px/);
+    expect(spin).toMatch(/height:\s*(8|16|24)px/);
+    // R145-4: the cuts are named, not hidden.
+    expect(block).not.toMatch(/margin-bottom:\s*14px|margin-top:\s*38px|gap:\s*10px|margin-left:\s*24px/);
+  });
+
+  it("#477 answer 1: the NEEDS YOU outline holds the room of one question (936 / 1084 measured, less R145-4's 2 px)", () => {
+    expect(block).toMatch(/\.workbench \{\s*--ro-needs-h: 934px;/);
+    expect(block).toMatch(/@media \(max-width: 600px\) \{\s*\.workbench \{\s*--ro-needs-h: 1082px;/);
   });
 
   it("no new hex: every colour in the block is a token", () => {

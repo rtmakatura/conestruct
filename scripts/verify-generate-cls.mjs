@@ -40,8 +40,12 @@
 // the reference group) differs in height by more than TOL_PX,
 // or, when NEEDS YOU came in at its reserved height, when any section's
 // top differs by more than TOL_PX.  NEEDS YOU's own delta is REPORTED and
-// never fails: its height is unknowable before the scan answers (a known
-// open question for Ryan, #470 rulings.md R145-3).
+// never fails: its height is unknowable before the scan answers.  #477
+// answer 1 (Ryan, 2026-11-09): the reserve is the room of one question, so
+// the one-question scan (WALK_SCAN_MODE=signals) is the case that comes in
+// at it and has every top checked; more questions grow downward.  With no
+// question the outline closes: any [data-outline] left after the settle
+// FAILS.
 // The gate header rides only the site's own origin (scripts/gate.cjs).
 import { createRequire } from "node:module";
 import fs from "node:fs";
@@ -198,6 +202,8 @@ async function one(w, h) {
     hold = 0;
     await p.waitForTimeout(2500);
     const after = await boxes(p, SETTLED);
+    // #477 answer 1: no outline is left behind once the answer is in.
+    const outlinesLeft = await p.evaluate(() => document.querySelectorAll("[data-outline]").length);
     // ruling 5 under reduced motion: nothing in the results animates.
     const anim = await p.evaluate(() => {
       const sel = [".status-slot > .status-bar", "section.needs-you", "section.ny-other", "[data-testid=your-plan]", "#downloads > *", ".results-disc"];
@@ -213,11 +219,13 @@ async function one(w, h) {
       return {
         cls: +es.reduce((s, e) => s + e.v, 0).toFixed(4),
         strip: (document.querySelector(".status-slot")?.innerText ?? "").replace(/\s+/g, " ").trim().slice(0, 80),
-        questions: document.querySelectorAll("section.needs-you .nyq-card").length,
+        // The card shows one question at a time, so this counts the cards on
+        // screen, not the answer's questions (the strip names those).
+        visibleCards: document.querySelectorAll("section.needs-you .nyq-card").length,
         needsYou: Math.round(document.querySelector("section.needs-you")?.getBoundingClientRect().height ?? 0),
       };
     }, t0);
-    return { ...r, deltas, anim };
+    return { ...r, deltas, anim, outlinesLeft };
   } finally {
     await b.close();
   }
@@ -246,10 +254,12 @@ for (const [w, h] of SIZES) {
     }
     const nd = r.deltas.needs;
     console.log(`   outline vs settled (top/h deltas, px): ${Object.entries(r.deltas).map(([k, d]) => (d.absent ? `${k} absent ${d.absent}` : `${k} ${d.top}/${d.h}`)).join(" | ")}`);
-    console.log(`   NEEDS YOU delta ${nd && !nd.absent ? nd.h : "n/a"} px: reported, not failed (its height is unknowable before the scan; open question for Ryan)`);
+    console.log(`   NEEDS YOU delta ${nd && !nd.absent ? nd.h : "n/a"} px (${r.visibleCards} visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)`);
     console.log(`   outline check ${bad.length ? "FAIL: " + bad.join(", ") : "PASS"} (tolerance ${TOL_PX} px)`);
     if (bad.length) failed = true;
   }
+  console.log(`   outlines left after the settle: ${r.outlinesLeft} ${r.outlinesLeft ? "FAIL" : "PASS"}`);
+  if (r.outlinesLeft) failed = true;
   if (REDUCED) {
     const moving = r.anim.filter((a) => !/=none$/.test(a));
     console.log(`   reduced motion: ${moving.length ? "FAIL animating: " + moving.join(", ") : "PASS, no animation on " + r.anim.length + " elements"}`);

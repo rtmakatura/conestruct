@@ -1,0 +1,16 @@
+   × StatusBar (UX-21/22 derived states) > #252 / #470: under the band's voice the in-flight strip is the status line, no verdict — pre-generate it still says VERIFYING; a verdict is unchanged either way
+   × #470 the Generate wait > ruling 3 (R145-11) / #477 answer 6: the press scrolls the strip's slot into view, a scroll only; the settle moves focus and adds no scroll
+   × #470 the Generate wait > ruling 3 / #477 answer 2: the strip's slot carries the status line (the spinner and the step name only) until the real strip replaces it
+   × #470 the Generate wait > ruling 6: past 2 s the line adds today's cold-start sentence; past 14 s it turns to the warn look with #477 answer 3's sentence
+   × #470 the wait's CSS (rulings 4, 5, 9) > #477 answer 5: no raw px spacing -- every margin, padding and gap is a token or 8/16/24, and so is the spinner's size
+   × #470 the wait's CSS (rulings 4, 5, 9) > #477 answer 1: the NEEDS YOU outline holds the room of one question (936 / 1084 measured, less R145-4's 2 px)
+   × post-generate scroll (#152 E, removed by #477 answer 6) > Generate's settle scrolls nothing and moves focus to the results zone
+   × post-generate scroll (#152 E, removed by #477 answer 6) > a pending answer: focus waits for it, and its arrival scrolls nothing
+   × post-generate scroll (#152 E, removed by #477 answer 6) > under prefers-reduced-motion the settle scrolls nothing either
+   × post-generate scroll (#152 E, removed by #477 answer 6) > ordinary edits never scroll, and neither does APPLY's settle
+   × post-generate scroll (#152 E, removed by #477 answer 6) > #258 (ruling c2): a declined pair -- focus lands once on the results zone holding the refusal container; no settle scroll
+   × the map in the card (rulings 1-7) > #477 answer 4: until the map loads the frame shows the WHERE aerial for this pin, dimmed like the outline's, never a blank frame
+   × the map in the card (rulings 1-7) > #477 answer 4 (Rule 10): with no WHERE aerial for this pin the frame holds the outline's grey block, not another pin's picture
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  4 failed (4)
+      Tests  13 failed | 79 passed (92)

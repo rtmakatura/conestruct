@@ -87,7 +87,7 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
         "none",
         "none",
         "ro-arrive 420ms ease-out both",
-        "ro-sheen 1.4s linear infinite",
+        // #477 answer 2: the status line's bar (the second ro-sheen) is gone.
         "ro-sheen 1.4s linear infinite",
         "wait-spin 0.9s linear infinite",
         "wb-sweep 1.5s linear infinite",

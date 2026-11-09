@@ -9,7 +9,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useFrameSize } from "@/components/bands/BandAerial";
-import { ZOOM_IN_MAX, ZOOM_OUT_MAX } from "@/lib/corridor-aerial";
+import { OutlineAerial } from "@/components/ResultsOutline";
+import { ZOOM_IN_MAX, ZOOM_OUT_MAX, shownAerialFor } from "@/lib/corridor-aerial";
 import { streetLevelUrl, useNeedsYouMap } from "@/lib/needs-you-map";
 import type { Scenario } from "@/lib/scenarios";
 
@@ -86,6 +87,16 @@ export function NeedsYouMap({
             <p className="nyq-map-failed tr-help" role="status" data-testid="needs-you-map-failed">
               {MAP_FAILED}
             </p>
+          ) : null}
+          {/* #477 answer 4: until the map loads, the WHERE aerial the band
+              last showed for this pin, dimmed as the outline drew it (the
+              outline's grey block with none remembered, Rule 10).  It
+              claims nothing about the map, so it is hidden from assistive
+              tech; the frame is aria-busy meanwhile. */}
+          {!failed && !shown ? (
+            <div className="nyq-map-standin" data-testid="needs-you-map-standin" aria-hidden="true">
+              <OutlineAerial src={shownAerialFor(scenario.meta.lat, scenario.meta.lng)} />
+            </div>
           ) : null}
           {!failed && shown ? (
             <>
