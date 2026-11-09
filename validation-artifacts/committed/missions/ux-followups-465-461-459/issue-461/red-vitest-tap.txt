@@ -1,0 +1,11 @@
+#461 repair 1: red proof of the tap-question case.
+Source: WhereBand.tsx with N2's crossOpen bail removed (line 623,
+"if ((!opened && !shownAgain) || crossOpen) return;" -> "if (!opened && !shownAgain) return;"),
+then restored byte-identical from a scratchpad copy (cmp: identical).
+Run: npx vitest run components/bands/WhereBand.strip-question.test.tsx
+
+   × #461 N2: a question change brings the question below the pinned strip > opening the tap question asks for no question scroll (M8's map scroll only) 979ms
+     → expected true to be false // Object.is equality
+      Tests  1 failed | 4 passed (5)
+
+With the bail in place: Tests  5 passed (5).

@@ -10066,4 +10066,13 @@ input[type="number"] {
     padding: 0;
     background: var(--canvas);
   }
+  /* #461 N1: the question and its sentence clear what is pinned over them:
+     the 150 px strip (M4), or the 44 px Show map row, plus the 8 px ruling
+     184's landing keeps under the nav.  WhereBand's N2 scroll reads it. */
+  .workbench .wq-stack[data-card="open"]:not([data-tap]) .nyq-text {
+    scroll-margin-top: calc(var(--nav-h) + 150px + 8px);
+  }
+  .workbench .wq-stack[data-card="open"][data-map="hidden"] .nyq-text {
+    scroll-margin-top: calc(var(--nav-h) + 44px + 8px);
+  }
 }

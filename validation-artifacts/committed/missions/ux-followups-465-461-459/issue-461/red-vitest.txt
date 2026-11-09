@@ -1,0 +1,15 @@
+   × #461 N2: a question change brings the question below the pinned strip > the first question asks for no scroll; opening another asks for its text block 1007ms
+     → expected +0 to be 1 // Object.is equality
+   × #461 N2: a question change brings the question below the pinned strip > Show map asks for the question's scroll; Hide map does not 934ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ #461 N2: a question change brings the question below the pinned strip > in two columns (nothing pinned over the card) a question change scrolls nothing  924ms
+   × #461 N1: the question's scroll margin clears the strip > globals.css gives the text block nav + strip + 8, and nav + Show map row + 8, in the narrow layout only 2ms
+     → expected '@container (max-width: 719.98px) {\r\…' to match /\.wq-stack\[data-card="open"\]:not\(\…/
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/WhereBand.strip-question.test.tsx > #461 N2: a question change brings the question below the pinned strip > the first question asks for no scroll; opening another asks for its text block
+AssertionError: expected +0 to be 1 // Object.is equality
+ FAIL  components/bands/WhereBand.strip-question.test.tsx > #461 N2: a question change brings the question below the pinned strip > Show map asks for the question's scroll; Hide map does not
+AssertionError: expected +0 to be 1 // Object.is equality
+ FAIL  components/bands/WhereBand.strip-question.test.tsx > #461 N1: the question's scroll margin clears the strip > globals.css gives the text block nav + strip + 8, and nav + Show map row + 8, in the narrow layout only
+AssertionError: expected '@container (max-width: 719.98px) {\r\…' to match /\.wq-stack\[data-card="open"\]:not\(\…/
+      Tests  3 failed | 1 passed (4)

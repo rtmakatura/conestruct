@@ -608,6 +608,26 @@ export function WhereBand({
     const frame = stackRef.current?.querySelector<HTMLElement>('[data-testid="band-aerial-frame"]');
     if (frame) scrollAerialPartIn(frame);
   }, [crossOpen]);
+  // #461 N2: while the narrow strip (or the Show map row) is pinned under the
+  // nav, a question change or Show map brings the question and its sentence
+  // below it with the same least scroll; the text block's scroll-margin-top
+  // (globals.css, N1) is the pinned cover.  Not on the card's first question
+  // (ruling 184's landing owns that scroll), not on the tap question (M8
+  // above), and not in two columns (nothing pins over the card there).
+  const seen = useRef({ q: currentQ, hidden: hiddenNow });
+  useEffect(() => {
+    const was = seen.current;
+    seen.current = { q: currentQ, hidden: hiddenNow };
+    const opened = was.q !== null && currentQ !== null && currentQ !== was.q;
+    const shownAgain = was.hidden && !hiddenNow && currentQ !== null;
+    if ((!opened && !shownAgain) || crossOpen) return;
+    const stack = stackRef.current;
+    const cover = stack?.querySelector<HTMLElement>(
+      hiddenNow ? ".a-aerial-showrow" : '[data-testid="band-aerial-frame"]',
+    );
+    const text = stack?.querySelector<HTMLElement>('[data-testid="where-questions"] .nyq-card .nyq-text');
+    if (cover && text && getComputedStyle(cover).position === "sticky") scrollAerialPartIn(text);
+  }, [currentQ, hiddenNow, crossOpen]);
   // #456 ruling 3, load ahead (M13): the scenarios the open question's
   // answers would write, built by the same functions the click goes
   // through (the side's `meta.work`; the sidebar's kind switch; the shell's

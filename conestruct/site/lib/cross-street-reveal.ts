@@ -62,7 +62,9 @@ function scrollPage(top: number): void {
   window.scrollBy({ top, behavior: reduce ? "instant" : "smooth" });
 }
 
-/** #446 T24, T25: brings one element of the aerial into view, under the nav. */
+/** #446 T24, T25: brings one element of the aerial into view, under the nav.
+ *  #461 N2: also the CONFIRM question, under the 390 strip; the budget is
+ *  always the element's own scroll-margin-top. */
 export function scrollAerialPartIn(el: HTMLElement): void {
   const chrome = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
   const box = el.getBoundingClientRect();
