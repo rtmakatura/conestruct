@@ -1,0 +1,228 @@
+{
+ "size": "1198x930",
+ "mode": "real",
+ "frames": [
+  {
+   "at": 43,
+   "y": 0,
+   "words": "",
+   "strip": [
+    78,
+    57
+   ],
+   "setup": [
+    241,
+    47
+   ],
+   "downloads": [
+    304,
+    0
+   ],
+   "refs": [
+    304,
+    133
+   ],
+   "notice": [
+    461,
+    38
+   ],
+   "shot": "1198x930-real-f00-43ms.png"
+  },
+  {
+   "at": 221,
+   "y": 0,
+   "words": "",
+   "strip": [
+    78,
+    57
+   ],
+   "setup": [
+    467,
+    47
+   ],
+   "downloads": [
+    530,
+    0
+   ],
+   "refs": [
+    530,
+    133
+   ],
+   "notice": [
+    687,
+    38
+   ],
+   "shot": "1198x930-real-f01-221ms.png"
+  }
+ ],
+ "errors": [],
+ "settled": {
+  "at": 6661,
+  "y": 8,
+  "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+  "strip": [
+   78,
+   57
+  ],
+  "needs": [
+   149,
+   1025
+  ],
+  "other": [
+   1188,
+   46
+  ],
+  "setup": [
+   1258,
+   47
+  ],
+  "plan": [
+   1321,
+   203
+  ],
+  "downloads": [
+   1524,
+   340
+  ],
+  "refs": [
+   1902,
+   257
+  ],
+  "notice": [
+   2183,
+   38
+  ],
+  "shot": "1198x930-real-settled.png"
+ },
+ "generate": {
+  "cls": 0.3444,
+  "n": 3,
+  "top": [
+   {
+    "v": 0.2342,
+    "at": 4133,
+    "src": [
+     "div.results-disc 304->0 h137->0",
+     "footer.flex 552->0 h81->0",
+     "p[draft-notice].tr-note 461->0 h38->0"
+    ]
+   },
+   {
+    "v": 0.1077,
+    "at": 4102,
+    "src": [
+     "section.zone 371->145 h320->320",
+     "footer.flex 778->552 h81->81",
+     "section.zone 155->145 h200->8"
+    ]
+   },
+   {
+    "v": 0.0024,
+    "at": 4664,
+    "src": [
+     "span.nyq-map-key-note 729->729 h19->19"
+    ]
+   }
+  ]
+ },
+ "planBefore": "YOUR PLAN\n\nAs it stands now\n\nTOTAL DEVICES\n40\nOn the plan sheet\nDEVICE TYPES\n12\nDifferent devices to pull from the yard\nKEY DISTANCES\nTaper\n40 ft\nBuffer\n200 ft\nDevice spacing\n30 ft o.c.\nWork zone\n1,000 ft",
+ "answerFrames": [
+  {
+   "y": 563,
+   "words": "",
+   "strip": [
+    78,
+    57
+   ],
+   "needs": [
+    375,
+    1025
+   ],
+   "other": [
+    1414,
+    46
+   ],
+   "setup": [
+    1484,
+    47
+   ],
+   "plan": [
+    1604,
+    203
+   ],
+   "downloads": [
+    1807,
+    340
+   ],
+   "refs": [
+    2188,
+    257
+   ],
+   "notice": [
+    2469,
+    38
+   ],
+   "shot": "1198x930-real-answer-inflight.png"
+  },
+  {
+   "y": 0,
+   "words": "⚠ Plan ready. 1 item above and 3 under Not checked yet need a check before field use.",
+   "strip": [
+    78,
+    57
+   ],
+   "needs": [
+    149,
+    288
+   ],
+   "other": [
+    451,
+    46
+   ],
+   "setup": [
+    521,
+    47
+   ],
+   "plan": [
+    584,
+    203
+   ],
+   "downloads": [
+    787,
+    294
+   ],
+   "refs": [
+    1120,
+    257
+   ],
+   "notice": [
+    1401,
+    38
+   ],
+   "shot": "1198x930-real-answer-settled.png"
+  }
+ ],
+ "answer": {
+  "cls": 0.5591,
+  "n": 2,
+  "top": [
+   {
+    "v": 0.5566,
+    "at": 4094,
+    "src": [
+     "section.zone 371->145 h559->785",
+     "div. 0->584 h0->346",
+     "section.zone 155->145 h200->8"
+    ]
+   },
+   {
+    "v": 0.0024,
+    "at": 528,
+    "src": [
+     "span.nyq-map-key-note 400->400 h19->19"
+    ]
+   }
+  ]
+ },
+ "planAfter": "YOUR PLAN\n\nAs it stands now\n\nTOTAL DEVICES\n40\nOn the plan sheet\nDEVICE TYPES\n12\nDifferent devices to pull from the yard\nKEY DISTANCES\nTaper\n40 ft\nBuffer\n200 ft\nDevice spacing\n30 ft o.c.\nWork zone\n1,000 ft"
+}

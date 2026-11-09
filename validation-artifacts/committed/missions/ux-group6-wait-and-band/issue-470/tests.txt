@@ -1,0 +1,31 @@
+#470 tests, repair cycle 2 (2026-11-09), worktree .claude/worktrees/issue-470
+
+Full vitest (final, cycle 2): Tests 2982 passed | 1 skipped (2983); Test Files 276 passed | 1 skipped (277)
+GeneratorShell.a11y-announce.test.tsx: 6/6 runs "Tests 9 passed (9)" (announce-6-runs-cycle2.txt); cycle 1: 10/10 (announce-10-runs.txt)
+New cascade test (reduced motion): red before the CSS fix (red-vitest-cycle2.txt: the strip's `:not(.wait-line)` selector and `.wait-bar-run` unreset), green after
+tsc --noEmit: clean
+eslint (ResultsOutline, StatusBar, GeneratorShell): no problems
+Permanent check scripts/verify-generate-cls.mjs (CLS + outline box check), all exit 0:
+  recorded scan, recorded scan under REDUCED=1, signals-only scan, empty scan (walk/no-question/)
+Pytest, mypy, ruff: the coordinator runs them on the top branch before the push.
+
+Full run 1 (first build): 20 failures (full-run-1-failures.txt).
+- None was run on its own before its fix, so whether each would have passed alone is not recorded.
+- Each failure's assertion named its cause, the cause was fixed, and each passes in every later full run.
+
+| Failure | Cause | Resolution |
+|---|---|---|
+| a11y-focus (3): "a failed generation focuses...", "keyboard Generate...", "with the fetch still in flight..." | scroll and focus at the press (first build) | both reverted. Cycle 1's press scroll (window.scrollTo, no focus) passes them unchanged. |
+| post-generate-scroll (6) | the same press scroll (scrollIntoView on the results) | reverted. Pins unchanged. |
+| regenerate-mounted (3) | the placeholder pin; the band-voice-empty pin; one assertion reading the band-voice slot | updated, predicted (Rule 5) |
+| scan-wire (1) | placeholder pin | updated, predicted |
+| StatusBar.a11y (1), StatusBar (1), WorkingBand (1) | band-voice-empty pins | updated, predicted |
+| motion.test (2) | R10's animation list | admitted the three ruled animations; a new keyframes pin |
+| type-census (2) | new font-size sites in the wait line | removed; the step uses `.tr-help`, so no new size |
+
+Full run 2 (cycle 1): 8 failures (full-run-2-failures.txt). Each failed again on its own, so none was flaky.
+
+| Failure | Resolution |
+|---|---|
+| results-head (2) | rule 28's reservation is also held by the outline's Setup block (R145-12) |
+| near-intersection (5), manual-pin-move (1) | wait for the Downloads stub to appear with the plan |

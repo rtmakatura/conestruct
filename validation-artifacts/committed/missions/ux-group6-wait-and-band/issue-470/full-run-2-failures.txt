@@ -1,0 +1,4 @@
+# Full vitest run 2 (repair cycle 1, 2026-11-09): 8 failed | 2974 passed | 1 skipped; saved before any re-run
+GeneratorShell.near-intersection.test.tsx: 5 cases (ACCEPTANCE prefill/edit/re-apply; CHANGED detection; gates on unconfirmed lane count; gates on no lane tag; manual entry)
+GeneratorShell.results-head.test.tsx: 2 cases (row RESERVED from the Generate click; occupant follows the stack)
+GeneratorSidebar.manual-pin-move.test.tsx: 1 case (typing a new latitude drops siteConditionOverrides)

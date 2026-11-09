@@ -1,0 +1,105 @@
+// #470 (UX group 6, Part 1, rulings 1 and 4): the outline of the results
+// while the Generate's one call is in flight.  Each block stands where its
+// section will stand, at the height reserved for it in globals.css (the
+// `--ro-*` reserves, CHOSEN from the measured settled sections, rulings.md
+// R145-3), so the answer swaps in without moving anything (ruling 2).
+//
+// Presentation only: no value, no count, no verdict is drawn here.  The
+// whole outline is aria-hidden; the WorkingBand is the page's spoken
+// working voice (#193/#252) and the strip slot's status line carries the
+// step.  The slow-step sentences live in the NEEDS YOU block's note, a
+// reserved space, so a slow step grows nothing (ruling 6).
+//
+// The map placeholder is the WHERE aerial the band last showed for this
+// pin (ruling 4), dimmed and partly greyscale under the sheen.  With no
+// picture remembered it is a plain grey block (Rule 10: no picture is
+// drawn for this pin that the band never showed).
+
+export type WaitSlow = "none" | "cold" | "road";
+
+/** ruling 6 / R145-4 — the cold start, today's honest claim (SLOW_VERIFY_MS)
+ *  in a full sentence (group 1 ruling 2). */
+export const COLD_START_NOTE =
+  "The first plan after a quiet spell can take a few extra seconds while the server wakes up.";
+/** ruling 6 / R145-4 — past ROAD_SLOW_MS: what happens next.  The page's
+ *  refusal container (Retry scan) is the retry; SCAN_BUDGET_S is the 20. */
+export const ROAD_SLOW_NOTE =
+  "The road check stops after 20 seconds. If it does, the page will say so and offer a retry.";
+
+export function OutlineNeedsYou({
+  aerialSrc,
+  slow,
+}: {
+  aerialSrc: string | null;
+  slow: WaitSlow;
+}) {
+  return (
+    <div data-testid="results-outline" className="results-outline" aria-hidden="true">
+      <div data-outline="needs" className="ro-needs">
+        <div className="ro-block ro-head" />
+        <div className="ro-map">
+          {aerialSrc ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="ro-aerial" src={aerialSrc} alt="" />
+          ) : (
+            <div className="ro-aerial ro-block" />
+          )}
+          <span className="ro-sheen" />
+          <span className="ro-label tr-note">Checking this stretch of road</span>
+        </div>
+        <p className={`ro-note tr-help${slow === "road" ? " is-slow" : ""}`}>
+          {slow === "road" ? ROAD_SLOW_NOTE : slow === "cold" ? COLD_START_NOTE : ""}
+        </p>
+        <div className="ro-block ro-line" />
+        <div className="ro-block ro-line is-short" />
+      </div>
+      <div data-outline="other" className="ro-other">
+        <div className="ro-block ro-line" />
+      </div>
+      {/* Setup's outline, in ResultsHead's place (R145-3 as repaired: the
+          reserved row is not mounted under the outline, so nothing that
+          stands through the wait can move at the swap). */}
+      <div data-outline="setup" className="ro-setup ro-block" />
+    </div>
+  );
+}
+
+/** The search and reference group's outline, in its place (R145-3). */
+export function OutlineRefs() {
+  return (
+    <div data-outline="refs" className="ro-refs" aria-hidden="true">
+      <div className="ro-block ro-head" />
+      <div className="ro-block ro-head" />
+      <div className="ro-block ro-head" />
+    </div>
+  );
+}
+
+/** Your plan's outline, in ResultsHero's place. */
+export function OutlinePlan() {
+  return (
+    <div data-testid="results-outline-plan" data-outline="plan" className="ro-plan" aria-hidden="true">
+      <div className="ro-block ro-head" />
+      <div className="ro-row">
+        <div className="ro-block ro-tile" />
+        <div className="ro-block ro-tile" />
+        <div className="ro-block ro-tile" />
+      </div>
+    </div>
+  );
+}
+
+/** Downloads' outline, in OutputCards' place inside #downloads. */
+export function OutlineDownloads() {
+  return (
+    <div data-outline="downloads" className="ro-downloads" aria-hidden="true">
+      <div className="ro-block ro-head" />
+      <div className="ro-row">
+        <div className="ro-block ro-card" />
+        <div className="ro-block ro-card" />
+        <div className="ro-block ro-card" />
+        <div className="ro-block ro-card" />
+      </div>
+    </div>
+  );
+}

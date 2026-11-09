@@ -1,0 +1,9 @@
+1440x900 real | generate CLS 0 n 0 | answer CLS 0.2465 | settled 6912 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 15 | axe 0 small 0 | errors 
+   ans shift 0.2448 @ 4082 ms div. 0->584 h0->316 ; ul.ny-items 0->194 h0->145 ; ul.ny-items 0->364 h0->72
+   ans shift 0.0017 @ 535 ms span.nyq-map-key-note 385->385 h19->19
+1198x930 real | generate CLS 0 n 0 | answer CLS 0.3606 | settled 6707 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 15 | axe 0 small 0 | errors 
+   ans shift 0.3581 @ 4081 ms div. 0->584 h0->346 ; ul.ny-items 0->194 h0->145 ; div#dl-cards.dls 894->849 h36->81
+   ans shift 0.0024 @ 534 ms span.nyq-map-key-note 400->400 h19->19
+390x844 real | generate CLS 0 n 0 | answer CLS 0.6427 | settled 6610 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 22 | axe 0 small 0 | errors 
+   ans shift 0.6427 @ 4087 ms div. 0->673 h0->171 ; ul.ny-items 0->207 h0->145 ; section[fact-setup].a-setupbox 0->550 h0->107
+exit 0

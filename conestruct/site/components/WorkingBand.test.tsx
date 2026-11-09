@@ -380,8 +380,11 @@ describe("#252 — the working band is present iff a request for the generated s
     expect(row.getAttribute("aria-live")).toBe("polite");
     expect(row.textContent).toBe(`◌GENERATINGnew plan · pin 39.7400, -104.9663${CONTROLS_LOCKED}`);
     expect(row.querySelector(".wb-glyph")!.getAttribute("aria-hidden")).toBe("true");
-    // The strip's live wrapper stays mounted and says nothing.
-    expect(document.querySelector(".status-bar")).toBeNull();
+    // The strip's live wrapper stays mounted and says nothing aloud: #470's
+    // status line is there, its words aria-hidden (the band speaks them).
+    expect(document.querySelector(".status-bar:not(.wait-line)")).toBeNull();
+    const line = document.querySelector(".wait-line")!;
+    for (const e of Array.from(line.children)) expect(e.getAttribute("aria-hidden")).toBe("true");
     // Exactly one live region carries the flight's words.
     const speakers = Array.from(document.querySelectorAll("[aria-live], [role=status], [role=alert]")).filter((e) =>
       /GENERATING|CONTROLS LOCKED/.test(e.textContent ?? ""),

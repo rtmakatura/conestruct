@@ -244,7 +244,9 @@ async function generate(user: ReturnType<typeof userEvent.setup>) {
   // Generate stages the page (restage lifecycle); the bundle POST that
   // carries the payload under test fires from Zone 2's "All (.zip)".
   await user.click(screen.getByText("Generate plan"));
-  await user.click(screen.getByText("ALL_ZIP"));
+  // #470: Downloads mount with the plan (the outline holds their place
+  // during the wait), so the stub's button appears once the plan lands.
+  await user.click(await screen.findByText("ALL_ZIP"));
   await waitFor(() => expect(bundleBody).not.toBeNull());
 }
 

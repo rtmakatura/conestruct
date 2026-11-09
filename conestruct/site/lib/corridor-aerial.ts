@@ -73,10 +73,25 @@ function remember(key: string, src: string) {
   }
 }
 
+// #470 ruling 4: the picture the WHERE band last SHOWED for a pin (not one
+// loaded ahead), by its cache key, so the NEEDS YOU outline can show "the
+// WHERE aerial already loaded for this pin".  A key, not a URL: a picture
+// released past the cap is simply gone (Rule 10, no broken image).
+const shownForPin = new Map<string, string>();
+const pinOf = (lat: number, lng: number) => `${lat},${lng}`;
+
+/** #470: the WHERE aerial on screen last for this pin, or null. */
+export function shownAerialFor(lat: number | null | undefined, lng: number | null | undefined): string | null {
+  if (lat == null || lng == null) return null;
+  const key = shownForPin.get(pinOf(lat, lng));
+  return key ? (cache.get(key) ?? null) : null;
+}
+
 /** Test seam: forget every picture. */
 export function forgetAerials() {
   cache.clear();
   inflight.clear();
+  shownForPin.clear();
 }
 
 /** #456 M11: what a picture is remembered by.  The pin picture is the pin,
@@ -199,8 +214,23 @@ export function useCorridorAerial(req: AerialRequest | null): AerialFetch {
     // `body` changes exactly when `key` or the scenario does.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [body]);
-  if (key === null) return { state: "idle" };
-  if (answer.key === key) return answer.fetch;
-  const cached = cache.get(key);
-  return cached ? { state: "ready", src: cached } : { state: "loading" };
+  const out: AerialFetch =
+    key === null
+      ? { state: "idle" }
+      : answer.key === key
+        ? answer.fetch
+        : cache.has(key)
+          ? { state: "ready", src: cache.get(key)! }
+          : { state: "loading" };
+  // #470 (repair 2, fix 6): remember what this pin's band is SHOWING,
+  // once it is committed: an effect, not a write during render (a render
+  // React discards would otherwise record a picture never on screen).
+  // Called on every render, before any return (hook order).
+  const lat = req?.scenario.meta.lat;
+  const lng = req?.scenario.meta.lng;
+  const shownKey = out.state === "ready" ? key : null;
+  useEffect(() => {
+    if (shownKey !== null && lat != null && lng != null) shownForPin.set(pinOf(lat, lng), shownKey);
+  }, [shownKey, lat, lng]);
+  return out;
 }

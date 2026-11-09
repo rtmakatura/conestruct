@@ -10076,3 +10076,290 @@ input[type="number"] {
     scroll-margin-top: calc(var(--nav-h) + 44px + 8px);
   }
 }
+
+/* #470 (UX group 6, Part 1): the Generate wait.  Rulings 1-5 and 9.  The
+   reserves are CHOSEN from the settled sections measured by #470's walk
+   (walk470.mjs, rulings.md R145-3) and grow only downward.  Tokens only:
+   the blocks are --pri-off (ruling 4), the sheen's highlight is --rule
+   (the nearest token to the board's), and the bar and spinner are --act. */
+.workbench {
+  --ro-needs-h: 1025px;
+  --ro-other-h: 46px;
+  --ro-plan-h: 203px;
+  --ro-dl-h: 340px;
+  --ro-refs-h: 257px;
+}
+@media (max-width: 600px) {
+  .workbench {
+    --ro-needs-h: 1135px;
+    --ro-plan-h: 344px;
+    --ro-dl-h: 283px;
+    --ro-refs-h: 284px;
+  }
+}
+.workbench .ro-needs {
+  min-height: var(--ro-needs-h);
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block);
+}
+.workbench .ro-other {
+  min-height: var(--ro-other-h);
+  margin-bottom: var(--space-section);
+  display: flex;
+  align-items: center;
+}
+/* Your plan and Downloads have fixed layouts: their outlines are exactly
+   their measured heights, whatever the blocks inside would want. */
+.workbench .ro-plan {
+  height: var(--ro-plan-h);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block);
+}
+.workbench .ro-downloads {
+  height: var(--ro-dl-h);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block);
+}
+.workbench .ro-row {
+  display: flex;
+  gap: var(--space-tight);
+  flex: 1;
+}
+@media (max-width: 600px) {
+  .workbench .ro-row {
+    flex-direction: column;
+  }
+}
+/* Grey blocks with a soft sheen across them (ruling 4, about 1.4 s). */
+.workbench .ro-block {
+  position: relative;
+  overflow: hidden;
+  background: var(--pri-off);
+}
+.workbench .ro-block::after,
+.workbench .ro-sheen {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--rule), transparent);
+  transform: translateX(-100%);
+  animation: ro-sheen 1.4s linear infinite;
+}
+@keyframes ro-sheen {
+  to {
+    transform: translateX(100%);
+  }
+}
+.workbench .ro-head {
+  height: 44px;
+}
+.workbench .ro-line {
+  height: 20px;
+  flex: 1;
+}
+.workbench .ro-line.is-short {
+  max-width: 60%;
+}
+.workbench .ro-tile,
+.workbench .ro-card {
+  flex: 1;
+}
+/* The map placeholder: the WHERE aerial at about 35% and partly grey,
+   under the same sheen, labelled (ruling 4). */
+/* repair 2, fix 3: the map placeholder stands where the NEEDS YOU map
+   frame lands.  Its size is the frame's own CSS (.nyq-map-frame:
+   aspect-ratio 2 / 1, inside the card's 16 px padding and 1 px border;
+   4 / 3 edge to edge at 480 px and below).  Its top is CHOSEN, measured:
+   the frame's offset from NEEDS YOU's top on the walk's one-question card
+   (--ro-map-top), since the question's words above it are not known
+   until the scan answers. */
+.workbench {
+  --ro-map-top: 157px;
+}
+@media (max-width: 480px) {
+  .workbench {
+    --ro-map-top: 221px;
+  }
+}
+.workbench .ro-needs > .ro-head {
+  height: calc(var(--ro-map-top) - var(--space-block));
+}
+.workbench .ro-map {
+  position: relative;
+  overflow: hidden;
+  margin: 0 calc(var(--space-block) + 1px);
+  aspect-ratio: 2 / 1;
+  background: var(--pri-off);
+}
+@media (max-width: 480px) {
+  .workbench .ro-map {
+    margin: 0 1px;
+    aspect-ratio: 4 / 3;
+  }
+}
+.workbench .ro-aerial {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+  filter: grayscale(0.6);
+}
+.workbench .ro-label {
+  position: absolute;
+  left: var(--space-block);
+  bottom: var(--space-tight);
+  padding: 0 var(--space-tight);
+  /* Rule 13: a solid ground under the words, never the photo (the
+     board's chip); rule 90's panel ground. */
+  background: var(--panel-ground);
+  color: var(--ink-on-dark);
+}
+.workbench .ro-setup {
+  height: var(--setup-box-h);
+  margin-bottom: 16px;
+}
+.workbench .ro-refs {
+  min-height: var(--ro-refs-h);
+  /* CHOSEN, measured by scripts/verify-generate-cls.mjs's outline check:
+     the reference group stands 38 px under Downloads (the cards' own
+     bottom room plus the group's 12). */
+  margin-top: 38px;
+  margin-bottom: var(--space-section);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* The slow-step sentence's reserved line (ruling 6): the room is there
+   before the words are, so a slow step grows nothing. */
+.workbench .ro-note {
+  min-height: 3em;
+  margin: 0;
+}
+.workbench .ro-note.is-slow {
+  color: var(--warn);
+}
+/* The status line, in the strip's own box (ruling 3). */
+.workbench .status-bar.wait-line {
+  position: relative;
+  overflow: hidden;
+}
+/* The step is a sentence: .tr-help's Inter 13.5 (group 1 ruling 2), set
+   by its class, so no size joins the census. */
+.workbench .wait-line .wait-step {
+  flex: 1;
+}
+.workbench .wait-line.is-slow .wait-step {
+  color: var(--warn);
+}
+.workbench .wait-line .wait-count {
+  color: var(--none);
+  white-space: nowrap;
+}
+/* At phone width the step takes two lines, and the count drops under
+   it, inside the strip's own 80 px (--status-h at 600 px and below), so
+   the status line is never taller than the strip that replaces it. */
+@media (max-width: 600px) {
+  .workbench .status-bar.wait-line {
+    flex-wrap: wrap;
+    row-gap: 0;
+    padding-top: var(--space-tight);
+    padding-bottom: var(--space-tight);
+  }
+  .workbench .status-slot > .status-bar.wait-line > span.wait-step {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .workbench .status-slot > .status-bar.wait-line > span.wait-count {
+    flex: 1 0 100%;
+  }
+  .workbench .wait-line .wait-count {
+    margin-left: 24px;
+  }
+  /* The 480 px strip rule gives every plain span a full row (specificity
+     0,4,1); the spinner and the step share the first row, the count takes
+     the second. */
+  .workbench .status-slot > .status-bar.wait-line > span.wait-spin {
+    flex: none;
+    min-width: 0;
+  }
+}
+.workbench .wait-spin {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--pri-off);
+  border-top-color: var(--act);
+  border-radius: 50%;
+  animation: wait-spin 0.9s linear infinite;
+}
+@keyframes wait-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.workbench .wait-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+  background: var(--pri-off);
+}
+.workbench .wait-bar-run {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--act), transparent);
+  transform: translateX(-100%);
+  animation: ro-sheen 1.4s linear infinite;
+}
+/* Arrival (ruling 5): each section fades in over 420 ms with a 6 px rise.
+   Opacity and transform only, so no layout box moves and nothing counts
+   as layout shift. */
+.workbench .results-stack > section.needs-you,
+.workbench .results-stack > .ny-other,
+.workbench .results-stack > .results-head-slot > *,
+.workbench .results-stack [data-testid="your-plan"],
+.workbench .results-stack #downloads > *,
+.workbench .results-stack > .results-disc,
+.workbench .status-slot > .status-bar:not(.wait-line) {
+  animation: ro-arrive 420ms ease-out both;
+}
+@keyframes ro-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workbench .ro-block::after,
+  .workbench .ro-sheen,
+  .workbench .wait-spin,
+  .workbench .wait-bar-run,
+  .workbench .results-stack > section.needs-you,
+  .workbench .results-stack > .ny-other,
+  .workbench .results-stack > .results-head-slot > *,
+  .workbench .results-stack [data-testid="your-plan"],
+  .workbench .results-stack #downloads > *,
+  .workbench .results-stack > .results-disc,
+  .workbench .status-slot > .status-bar:not(.wait-line) {
+    animation: none;
+  }
+  .workbench .ro-block::after,
+  .workbench .ro-sheen,
+  .workbench .wait-bar-run {
+    display: none;
+  }
+}
+/* #470 end */

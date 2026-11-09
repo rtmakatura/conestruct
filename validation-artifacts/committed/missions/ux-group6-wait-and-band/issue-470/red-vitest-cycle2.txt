@@ -1,0 +1,8 @@
+   ↓ #470 the Generate wait > ruling 3: the strip's slot carries the status line (spinner, the one step, Step 1 of 1, a bar) until the real strip replaces it
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+- Expected
++ Received
++ [
++   ".workbench .wait-bar-run",
++   ".workbench .status-slot > .status-bar:not(.wait-line)",
++ ]

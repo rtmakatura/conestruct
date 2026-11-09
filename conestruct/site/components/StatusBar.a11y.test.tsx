@@ -65,8 +65,10 @@ describe("StatusBar aria-live region", () => {
     for (const html of states) {
       expect(html).toMatch(/^<div class="status-slot" aria-live="polite">/);
     }
-    // The empty state is the slot alone — nothing inside, the room stays.
-    expect(states[0]).toBe('<div class="status-slot" aria-live="polite"></div>');
+    // #470 ruling 3: the band-voice state is the slot holding the status
+    // line, whose step words are aria-hidden (the band speaks the flight).
+    expect(states[0]).toMatch(/^<div class="status-slot" aria-live="polite"><div class="status-bar wait-line idle"/);
+    expect(states[0]).not.toMatch(/<span class="wait-step tr-help">/);
   });
 });
 

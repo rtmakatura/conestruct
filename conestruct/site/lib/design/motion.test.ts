@@ -55,7 +55,12 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
   it("the only @keyframes are the band's sweep, the drawing's plotter (R10, R42: draw, fade, stroke, drop, stamp) and 02's mark replay (R21)", () => {
     const names = [...css.matchAll(/@keyframes\s+([\w-]+)/g)].map((m) => m[1]).sort();
     expect(names).toEqual(
-      ["cs-draw", "cs-drop", "cs-fade", "cs-k", "cs-stamp", "cs-stroke", "wb-sweep", ...LANDING_KEYFRAMES].sort(),
+      [
+        "cs-draw", "cs-drop", "cs-fade", "cs-k", "cs-stamp", "cs-stroke", "wb-sweep", ...LANDING_KEYFRAMES,
+        // #470 (Ryan, 2026-11-08, UX group 6 rulings 3–5): the Generate
+        // wait's sheen, the sections' arrival and the status line's spinner.
+        "ro-arrive", "ro-sheen", "wait-spin",
+      ].sort(),
     );
   });
 
@@ -75,7 +80,19 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
     // Outside it: only the band's sweep and the band's reduced-motion off.
     const outside = css.replace(noPref, "").replace(LANDING, "");
     const decls = [...outside.matchAll(/animation:\s*([^;]+);/g)].map((m) => m[1].trim()).sort();
-    expect(decls).toEqual(["none", "wb-sweep 1.5s linear infinite"]);
+    // #470 follows the band's pattern (app chrome, not the drawing's): the
+    // animation is declared outright and the reduce block sets it to none.
+    expect(decls).toEqual(
+      [
+        "none",
+        "none",
+        "ro-arrive 420ms ease-out both",
+        "ro-sheen 1.4s linear infinite",
+        "ro-sheen 1.4s linear infinite",
+        "wait-spin 0.9s linear infinite",
+        "wb-sweep 1.5s linear infinite",
+      ].sort(),
+    );
   });
 
   it("the drawing animates opacity, a mask's scale and a stroke's offset; R42's two recorded moves (a device's drop, the stamp's press) are transforms on absolutely placed or SVG marks, so no box moves in layout (P1); 02's replay animates --k only", () => {
@@ -86,6 +103,19 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
       "cs-drop": ["opacity", "transform"],
       "cs-stamp": ["opacity", "transform"],
       "cs-k": ["--k"],
+    };
+    for (const name of Object.keys(own)) {
+      const k = block(css.indexOf(`@keyframes ${name}`));
+      const props = [...k.matchAll(/(--[\w-]+|[\w-]+)\s*:/g)].map((m) => m[1]);
+      expect(new Set(props), name).toEqual(new Set(own[name]));
+    }
+  });
+
+  it("#470: the wait's keyframes move opacity and transform only, so no layout box moves (P1, ruling 5)", () => {
+    const own: Record<string, string[]> = {
+      "ro-arrive": ["opacity", "transform"],
+      "ro-sheen": ["transform"],
+      "wait-spin": ["transform"],
     };
     for (const name of Object.keys(own)) {
       const k = block(css.indexOf(`@keyframes ${name}`));

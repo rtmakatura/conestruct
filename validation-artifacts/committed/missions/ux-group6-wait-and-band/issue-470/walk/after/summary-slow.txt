@@ -1,0 +1,6 @@
+1440x900 slow | generate CLS 0 n 0 | answer CLS 0.2448 | settled 17895 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 64 | axe undefined small undefined | errors 
+   ans shift 0.2448 @ 15081 ms div. 0->584 h0->316 ; ul.ny-items 0->194 h0->145 ; ul.ny-items 0->364 h0->72
+390x844 slow | generate CLS 0.0003 n 1 | answer CLS 0.6427 | settled 17727 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 82 | axe undefined small undefined | errors 
+   gen shift 0.0003 @ 14042 ms span.wait-step 70->75 h41->20 ; span.wait-count 113->108 h17->17
+   ans shift 0.6427 @ 15087 ms div. 0->673 h0->171 ; ul.ny-items 0->207 h0->145 ; section[fact-setup].a-setupbox 0->550 h0->107
+exit 0

@@ -127,10 +127,11 @@ async function generateThenEdit() {
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
   await release(auditCalls, 0, okAudit());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-  // S4 (s4-prod/): a first Generate shows rule 117's placeholder until
-  // its own answer lands — the pre-Generate answer is not presented.
+  // S4 (s4-prod/): a first Generate shows no plan until its own answer
+  // lands — the pre-Generate answer is not presented.  #470 ruling 1: the
+  // outline of the results stands in rule 117's placeholder's place.
   expect(screen.queryByText("QUOTE_PANEL_MOUNTED")).toBeNull();
-  expect(document.querySelector('[data-testid="results-placeholder"]')).not.toBeNull();
+  expect(document.querySelector('[data-testid="results-outline"]')).not.toBeNull();
   // #252: settle the generated pair — the strip is locked while it is open.
   await flushDebounce();
   await release(auditCalls, 1, okAudit());
@@ -238,12 +239,15 @@ describe("StatusBar precedence: input honesty outranks 'no answer yet' (#192, #2
     expect(stripText()).not.toContain("VERIFYING");
   });
 
-  it("with honest inputs a pending answer is VERIFYING pre-generate and nothing under the band's voice — never COMPUTING", () => {
+  it("with honest inputs a pending answer is VERIFYING pre-generate and only the status line under the band's voice — never COMPUTING", () => {
     const { unmount } = render(<StatusBar inputError={null} audit={loadingAudit} />);
     expect(stripText()).toContain("VERIFYING");
     expect(stripText()).not.toContain("COMPUTING");
     unmount();
     render(<StatusBar inputError={null} audit={loadingAudit} bandVoice />);
-    expect(document.querySelector(".status-bar")).toBeNull();
+    // #470 ruling 3: the strip's slot carries the status line, no verdict.
+    expect(document.querySelector(".status-bar:not(.wait-line)")).toBeNull();
+    expect(document.querySelector(".wait-line")).not.toBeNull();
+    expect(stripText()).not.toMatch(/VERIFYING|COMPUTING/);
   });
 });

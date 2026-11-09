@@ -1,0 +1,1338 @@
+{
+ "size": "1198x930",
+ "mode": "slow",
+ "frames": [
+  {
+   "at": 48,
+   "y": 181,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@23+12 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f00-48ms.png"
+  },
+  {
+   "at": 451,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+15 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f01-451ms.png"
+  },
+  {
+   "at": 699,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f02-699ms.png"
+  },
+  {
+   "at": 963,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+13 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f03-963ms.png"
+  },
+  {
+   "at": 1228,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f04-1228ms.png"
+  },
+  {
+   "at": 1477,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f05-1477ms.png"
+  },
+  {
+   "at": 1850,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+12 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f06-1850ms.png"
+  },
+  {
+   "at": 2097,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f07-2097ms.png"
+  },
+  {
+   "at": 2394,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f08-2394ms.png"
+  },
+  {
+   "at": 2783,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f09-2783ms.png"
+  },
+  {
+   "at": 3032,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f10-3032ms.png"
+  },
+  {
+   "at": 3280,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f11-3280ms.png"
+  },
+  {
+   "at": 3671,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+13 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f12-3671ms.png"
+  },
+  {
+   "at": 3948,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f13-3948ms.png"
+  },
+  {
+   "at": 4197,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f14-4197ms.png"
+  },
+  {
+   "at": 4570,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+13 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f15-4570ms.png"
+  },
+  {
+   "at": 4834,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f16-4834ms.png"
+  },
+  {
+   "at": 5100,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f17-5100ms.png"
+  },
+  {
+   "at": 5488,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f18-5488ms.png"
+  },
+  {
+   "at": 5749,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f19-5749ms.png"
+  },
+  {
+   "at": 5999,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f20-5999ms.png"
+  },
+  {
+   "at": 6373,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f21-6373ms.png"
+  },
+  {
+   "at": 6655,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f22-6655ms.png"
+  },
+  {
+   "at": 6921,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f23-6921ms.png"
+  },
+  {
+   "at": 7185,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f24-7185ms.png"
+  },
+  {
+   "at": 7435,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+15 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f25-7435ms.png"
+  },
+  {
+   "at": 7698,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+12 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f26-7698ms.png"
+  },
+  {
+   "at": 7967,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+15 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f27-7967ms.png"
+  },
+  {
+   "at": 8230,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f28-8230ms.png"
+  },
+  {
+   "at": 8602,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+12 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f29-8602ms.png"
+  },
+  {
+   "at": 8850,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f30-8850ms.png"
+  },
+  {
+   "at": 9113,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f31-9113ms.png"
+  },
+  {
+   "at": 9409,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f32-9409ms.png"
+  },
+  {
+   "at": 9675,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+15 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f33-9675ms.png"
+  },
+  {
+   "at": 9924,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+13 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f34-9924ms.png"
+  },
+  {
+   "at": 10297,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f35-10297ms.png"
+  },
+  {
+   "at": 10562,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f36-10562ms.png"
+  },
+  {
+   "at": 10842,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+12 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f37-10842ms.png"
+  },
+  {
+   "at": 11107,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+15 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f38-11107ms.png"
+  },
+  {
+   "at": 11356,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f39-11356ms.png"
+  },
+  {
+   "at": 11605,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 11730,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+13 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 11854,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 11979,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+13 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12102,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12229,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12353,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12477,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12601,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+15 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12726,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12850,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 12976,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13100,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+12 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13225,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13346,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@22+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13469,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+17 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13593,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+15 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13718,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13842,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@20+16 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 13966,
+   "y": 18,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ]
+  },
+  {
+   "at": 14091,
+   "y": 18,
+   "words": "⚠ The road data service is slow right now. STEP 1 OF 1",
+   "waitParts": "status-glyph@22+13 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "outline": [
+    149,
+    1156
+   ],
+   "notice": [
+    2183,
+    38
+   ],
+   "shot": "1198x930-slow-f60-14091ms.png"
+  }
+ ],
+ "errors": [],
+ "contrast": [
+  {
+   "at": 48,
+   "label": {
+    "fg": "rgb(200, 209, 221)",
+    "bg": "rgb(15, 28, 41)",
+    "ratio": 11.18
+   },
+   "note": {
+    "fg": "rgb(200, 209, 221)",
+    "bg": "rgb(20, 32, 46)",
+    "ratio": 10.68
+   },
+   "count": {
+    "fg": "rgb(147, 160, 176)",
+    "bg": "rgb(16, 28, 41)",
+    "ratio": 6.47
+   },
+   "step": {
+    "fg": "rgb(200, 209, 221)",
+    "bg": "rgb(16, 28, 41)",
+    "ratio": 11.16
+   }
+  },
+  {
+   "at": 14091,
+   "label": {
+    "fg": "rgb(200, 209, 221)",
+    "bg": "rgb(15, 28, 41)",
+    "ratio": 11.18
+   },
+   "note": {
+    "fg": "rgb(244, 192, 32)",
+    "bg": "rgb(20, 32, 46)",
+    "ratio": 9.73
+   },
+   "count": {
+    "fg": "rgb(147, 160, 176)",
+    "bg": "rgb(34, 30, 16)",
+    "ratio": 6.26
+   },
+   "step": {
+    "fg": "rgb(244, 192, 32)",
+    "bg": "rgb(34, 30, 16)",
+    "ratio": 9.84
+   }
+  }
+ ],
+ "settled": {
+  "at": 17661,
+  "y": 8,
+  "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+  "strip": [
+   78,
+   57
+  ],
+  "needs": [
+   149,
+   1025
+  ],
+  "other": [
+   1188,
+   46
+  ],
+  "setup": [
+   1258,
+   47
+  ],
+  "plan": [
+   1321,
+   203
+  ],
+  "downloads": [
+   1524,
+   340
+  ],
+  "refs": [
+   1902,
+   257
+  ],
+  "notice": [
+   2183,
+   38
+  ],
+  "shot": "1198x930-slow-settled.png"
+ },
+ "generate": {
+  "cls": 0,
+  "n": 0,
+  "top": []
+ },
+ "planBefore": "YOUR PLAN\n\nAs it stands now\n\nTOTAL DEVICES\n40\nOn the plan sheet\nDEVICE TYPES\n12\nDifferent devices to pull from the yard\nKEY DISTANCES\nTaper\n40 ft\nBuffer\n200 ft\nDevice spacing\n30 ft o.c.\nWork zone\n1,000 ft",
+ "answerFrames": [
+  {
+   "y": 337,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@21+14 wait-step@18+20 wait-count@20+17 wait-bar@54+2",
+   "strip": [
+    78,
+    57
+   ],
+   "needs": [
+    149,
+    1025
+   ],
+   "other": [
+    1188,
+    46
+   ],
+   "setup": [
+    1258,
+    47
+   ],
+   "plan": [
+    1378,
+    203
+   ],
+   "downloads": [
+    1581,
+    340
+   ],
+   "refs": [
+    1962,
+    257
+   ],
+   "notice": [
+    2243,
+    38
+   ],
+   "shot": "1198x930-slow-answer-inflight.png"
+  },
+  {
+   "y": 0,
+   "words": "⚠ Plan ready. 1 item above and 3 under Not checked yet need a check before field use.",
+   "strip": [
+    78,
+    57
+   ],
+   "needs": [
+    149,
+    288
+   ],
+   "other": [
+    451,
+    46
+   ],
+   "setup": [
+    521,
+    47
+   ],
+   "plan": [
+    584,
+    203
+   ],
+   "downloads": [
+    787,
+    294
+   ],
+   "refs": [
+    1120,
+    257
+   ],
+   "notice": [
+    1401,
+    38
+   ],
+   "shot": "1198x930-slow-answer-settled.png"
+  }
+ ],
+ "answer": {
+  "cls": 0.3606,
+  "n": 2,
+  "top": [
+   {
+    "v": 0.3581,
+    "at": 15090,
+    "src": [
+     "div. 0->584 h0->346",
+     "ul.ny-items 0->194 h0->145",
+     "div#dl-cards.dls 894->849 h36->81"
+    ]
+   },
+   {
+    "v": 0.0024,
+    "at": 532,
+    "src": [
+     "span.nyq-map-key-note 400->400 h19->19"
+    ]
+   }
+  ]
+ },
+ "planAfter": "YOUR PLAN\n\nAs it stands now\n\nTOTAL DEVICES\n40\nOn the plan sheet\nDEVICE TYPES\n12\nDifferent devices to pull from the yard\nKEY DISTANCES\nTaper\n40 ft\nBuffer\n200 ft\nDevice spacing\n30 ft o.c.\nWork zone\n1,000 ft"
+}

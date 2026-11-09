@@ -211,6 +211,13 @@ interface Props {
    */
   bandVoice?: boolean;
   /**
+   * #470 ruling 6: how long the generated plan's call has run — "cold"
+   * past SLOW_VERIFY_MS, "road" past ROAD_SLOW_MS (GeneratorShell; the
+   * thresholds and their reasons are in #470's rulings.md R145-4).  Read
+   * only by the status line below.
+   */
+  waitSlow?: "none" | "cold" | "road";
+  /**
    * #289 hand-check, 2026-09-23, correction 2: true while no plan has
    * been generated, when Part 1 §2.1 gives the page no results zone at
    * all.  Read by the two VERIFICATION UNAVAILABLE branches ONLY, and
@@ -276,6 +283,40 @@ function Sym({ g }: { g: string }) {
   );
 }
 
+/** #470 ruling 3 — the one step the page waits on after Generate: the
+ *  audit request (#306), which runs the road scan, the layout, the check
+ *  and the device list in one call (rulings.md R145-1). */
+export const WAIT_STEP = "Checking the road and laying out the taper, buffer and devices…";
+/** #470 ruling 6 — the warn look's words past ROAD_SLOW_MS (R145-4). */
+export const WAIT_ROAD_SLOW = "The road data service is slow right now.";
+
+/** #470 ruling 3: spinner, the step, "Step N of M", a thin bar.  Ruling 3
+ *  asks for the spinner by name, so rule 14's no-spinner rule gives way on
+ *  this one line (and it stops under reduced motion).  The step words are
+ *  aria-hidden: the WorkingBand already speaks the flight (#193, R145-5);
+ *  the slow sentence is a new fact and is spoken.  The bar shows steps
+ *  done (0 of 1 until the answer), with the sheen over the running step. */
+function WaitLine({ slow }: { slow: "none" | "cold" | "road" }) {
+  const road = slow === "road";
+  return (
+    <div
+      className={`status-bar wait-line${road ? " caution is-slow" : " idle"}`}
+      data-testid="wait-line"
+    >
+      {road ? <Sym g="⚠" /> : <span className="wait-spin" aria-hidden />}
+      <span className="wait-step tr-help" aria-hidden={road ? undefined : true}>
+        {road ? WAIT_ROAD_SLOW : WAIT_STEP}
+      </span>
+      <span className="wait-count" aria-hidden>
+        Step 1 of 1
+      </span>
+      <span className="wait-bar" aria-hidden>
+        <span className="wait-bar-run" />
+      </span>
+    </div>
+  );
+}
+
 /** #438 item 1 (H4): "1 item above", "2 items above", "3 under Not checked
  *  yet" (#450 ruling 1);
  *  "and" joins both parts; the verb agrees with what is left.  Null when
@@ -302,6 +343,7 @@ function StatusBarState({
   audit,
   verifySlow,
   bandVoice = false,
+  waitSlow = "none",
   preGenerate = false,
   questions = 0,
   fieldChecks,
@@ -461,8 +503,10 @@ function StatusBarState({
   // that errors flips to "error" → VERIFICATION UNAVAILABLE above.
   if (audit.state !== "ready") {
     // #252: post-generate the working band is the voice; the strip says
-    // nothing rather than a second VERIFYING (and never the old verdict).
-    if (bandVoice) return null;
+    // no second VERIFYING (and never the old verdict).  #470 ruling 3: the
+    // strip's slot carries the status line instead, in the strip's own
+    // box, until the real strip replaces it.
+    if (bandVoice) return <WaitLine slow={waitSlow} />;
     return (
       <div className="status-bar idle verifying">
         <Sym g="◌" />

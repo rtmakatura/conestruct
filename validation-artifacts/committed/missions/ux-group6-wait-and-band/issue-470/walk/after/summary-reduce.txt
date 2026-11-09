@@ -1,0 +1,8 @@
+1440x900 reduce | generate CLS 0.0017 n 1 | answer CLS 0.2605 | settled 7339 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 5 | axe undefined small undefined | errors 
+   gen shift 0.0017 @ 4597 ms span.nyq-map-key-note 729->729 h19->19
+   ans shift 0.2587 @ 4085 ms div. 0->584 h0->316 ; ul.ny-items 0->194 h0->145 ; ul.ny-items 0->364 h0->72
+   ans shift 0.0017 @ 527 ms span.nyq-map-key-note 385->385 h19->19
+390x844 reduce | generate CLS 0.0007 n 1 | answer CLS 0.6427 | settled 7489 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 6 | axe undefined small undefined | errors 
+   gen shift 0.0007 @ 4643 ms span.nyq-map-key-note 780->807 h19->19
+   ans shift 0.6427 @ 4091 ms div. 0->673 h0->171 ; ul.ny-items 0->207 h0->145 ; div[results-head-slot].results-head-slot 0->550 h0->107
+exit 0

@@ -1,0 +1,4 @@
+1198x930 slow | generate CLS 0 n 0 | answer CLS 0.3606 | settled 17661 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 61 | axe undefined small undefined | errors 
+   ans shift 0.3581 @ 15090 ms div. 0->584 h0->346 ; ul.ny-items 0->194 h0->145 ; div#dl-cards.dls 894->849 h36->81
+   ans shift 0.0024 @ 532 ms span.nyq-map-key-note 400->400 h19->19
+exit 0

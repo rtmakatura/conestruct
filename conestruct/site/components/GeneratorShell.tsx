@@ -87,6 +87,7 @@ import { ReferenceSections } from "./ReferenceSections";
 import { OtherConditions, SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 import { QuestionFlow } from "./NeedsYouQuestion";
 import { ResultsHead } from "./ResultsHead";
+import { OutlineDownloads, OutlineNeedsYou, OutlinePlan, OutlineRefs, type WaitSlow } from "./ResultsOutline";
 import { SiteNotChecked } from "./SiteNotChecked";
 import { RevisionPanel } from "./bands/RevisionPanel";
 import {
@@ -131,6 +132,7 @@ type Mode = "sandbox" | "workbench";
 // test that has to be edited to follow a file move is a test that stopped
 // asserting the thing it was written for.
 import { armLandingCheck, type LandingCheck } from "@/lib/landing";
+import { shownAerialFor } from "@/lib/corridor-aerial";
 import { packageFilename } from "@/lib/download-name";
 export { armLandingCheck };
 export type { LandingCheck };
@@ -143,6 +145,12 @@ export type { LandingCheck };
 // escalates to copy that says the server is waking up.  Presentation
 // only: a timer and a flag, no frontend computation.
 const SLOW_VERIFY_MS = 2000;
+// #470 ruling 6: past this, a GENERATED plan's call (the one that runs the
+// road scan) turns the status line to the warn look and names the road data
+// service.  CHOSEN, traced (rulings.md R145-4): the slowest warm production
+// Generate measured 8.4 s, plus a cold start (~5.5 s, above) — past both,
+// what is left running is the scan, whose budget is 20 s (SCAN_BUDGET_S).
+const ROAD_SLOW_MS = 14000;
 
 // #182 — the verification fetches used to re-fire on EVERY scenario
 // write: a slider drag plus a few typed digits dispatched one audit +
@@ -365,6 +373,10 @@ export function GeneratorShell({
   // True once the in-flight audit fetch has run past SLOW_VERIFY_MS;
   // reset whenever a new fetch starts or a response lands.
   const [verifySlow, setVerifySlow] = useState(false);
+  // #470 ruling 6: the same flight past ROAD_SLOW_MS, only when it scans.
+  const [roadSlow, setRoadSlow] = useState(false);
+  // #470 (R145-10): true from an S7 APPLY until its flight settles.
+  const [revisionFlight, setRevisionFlight] = useState(false);
   // #182: the debounced scenario BOTH fetch effects key on and POST.
   // The answer stamps (``forScenario``) carry this value — it is the
   // input the backend actually saw; the strip's stamp comparison against
@@ -527,7 +539,17 @@ export function GeneratorShell({
     if (!fetchArmed) return;
     const controller = new AbortController();
     setVerifySlow(false);
+    setRoadSlow(false);
     const slowTimer = setTimeout(() => setVerifySlow(true), SLOW_VERIFY_MS);
+    // #470: no road is checked without `site_scan` on the wire, so only a
+    // scanning flight can say the road data service is slow.
+    const roadTimer = (fetchScenario as { site_scan?: unknown }).site_scan
+      ? setTimeout(() => setRoadSlow(true), ROAD_SLOW_MS)
+      : null;
+    const clearRoad = () => {
+      if (roadTimer !== null) clearTimeout(roadTimer);
+      setRoadSlow(false);
+    };
     // #192: carry the previous breakdown through the refetch so the
     // results zone dims in place instead of unmounting (presented only
     // under the recomputing ribbon).  An error drops the carry — after a
@@ -563,6 +585,7 @@ export function GeneratorShell({
         });
         clearTimeout(slowTimer);
         setVerifySlow(false);
+        clearRoad();
         if (!res.ok) {
           let detail = "";
           let code: string | undefined;
@@ -634,6 +657,7 @@ export function GeneratorShell({
         if ((e as Error).name === "AbortError") return;
         clearTimeout(slowTimer);
         setVerifySlow(false);
+        clearRoad();
         setAuditState((prev) => ({
           state: "error",
           message: "Network error",
@@ -647,6 +671,7 @@ export function GeneratorShell({
     return () => {
       controller.abort();
       clearTimeout(slowTimer);
+      if (roadTimer !== null) clearTimeout(roadTimer);
     };
   }, [fetchScenario, retryNonce, fetchArmed]);
 
@@ -798,6 +823,9 @@ export function GeneratorShell({
    *  the sentence enumerated both. */
   const applyStagedAll = () => {
     if (staged.length === 0) return;
+    // #470 (R145-10): an APPLY from the S7 column keeps today's swap for
+    // its flight (the column gives way to the locked stack, then nothing).
+    if (revising || revisingField !== null) setRevisionFlight(true);
     const withFields = applyStagedFields(scenario, staged);
     setScenario({
       ...withFields,
@@ -989,6 +1017,21 @@ export function GeneratorShell({
     // across a fresh Generate (suggest-never-set).
     setProceedFor(null);
     setGenerated(true);
+    // #470 ruling 3 (R145-11): the status line "sits where the strip will
+    // be", so the press brings the strip's slot into view -- a scroll only.
+    // Focus is untouched (it still lands at the settle, #193), and the
+    // settle's landing (#152 E) is unchanged: it lands on the results, which
+    // start right under this slot, so it has nowhere left to move.
+    setTimeout(() => {
+      const slot = document.querySelector<HTMLElement>(".workbench .status-slot");
+      const nav = document.querySelector<HTMLElement>(".workbench .app-nav, .workbench nav");
+      if (!slot || typeof window.scrollTo !== "function") return;
+      const top = slot.getBoundingClientRect().top + window.scrollY - (nav?.getBoundingClientRect().height ?? 0) - 8;
+      const reduce =
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+    }, 0);
   };
   // #224 phase 2 — the explicit proceed-anyway: acknowledge THIS input.
   // The wire scenario's identity changes, so both fetches refire with
@@ -1305,6 +1348,15 @@ export function GeneratorShell({
   // answer is held, not discarded; downloads return with the verdict.
   const planDeclined = auditDeclined || (!auditSettled && prevSettled400);
   const resultsVisible = showResults && !planDeclined;
+  // #470 ruling 1: the outline's predicate is rule 117's placeholder's,
+  // unchanged (a first Generate, no plan presented, none landed).
+  const outlineOn = (genState === "generating" || awaitingFirstPlan) && !resultsVisible;
+  // #470 ruling 6 (R145-4): how long the plan's one call has run.
+  const waitSlow: WaitSlow = roadSlow ? "road" : verifySlow ? "cold" : "none";
+  // R145-10: the S7 flight is over once the pair leaves "generating".
+  useEffect(() => {
+    if (revisionFlight && genState !== "generating" && auditSettled) setRevisionFlight(false);
+  }, [revisionFlight, genState, auditSettled]);
   // #288 step 3 — NEEDS YOU, mounted.  Reads the SAME producer section 03
   // reads (lib/tier-sources.ts, step 1) with the SAME inputs the
   // TieredReference mount below passes, so the two surfaces cannot drift:
@@ -1764,6 +1816,7 @@ export function GeneratorShell({
             // working band is mounted for both, so the strip is quiet for
             // both.
             bandVoice={generated || genState === "generating"}
+            waitSlow={waitSlow}
             // Correction 2: with no results zone before Generate, the
             // "retry from the panel below" pointer would name a panel
             // that does not exist.  Pre-generate the retry IS Generate.
@@ -1796,7 +1849,9 @@ export function GeneratorShell({
                 and including the settle, and nothing after it.
 
                 PRE: the column, one band open.
-                GENERATING (S4): the same column, LOCKED — rule 60's fact
+                GENERATING (S4): nothing, since #470 (R145-2: the outline
+                  stands in the results' places instead).  Before #470:
+                  the same column, LOCKED — rule 60's fact
                   lines at .5 with "locked" in place of their links, no
                   open band, no generate frame.  §2.4: "the two fact lines
                   held their positions from S3", which is why the stack
@@ -1906,7 +1961,12 @@ export function GeneratorShell({
                   />
                 }
               />
-            ) : genState === "pre" || genState === "generating" || revising ? (
+            ) : genState === "pre" || revising || (revisionFlight && genState === "generating") ? (
+              // #470 (rulings.md R145-2): the locked band stack no longer
+              // stands above the results through the wait.  It collapsed at
+              // the settle and moved the whole plan up (#452's 0.55 / 0.87);
+              // the zone now empties at the press, and the outline below
+              // stands in the results' real places.
               <GeneratorSidebar
                 scenario={scenario}
                 setScenario={setScenario}
@@ -2117,26 +2177,19 @@ export function GeneratorShell({
                 </div>
               </div>
             )}
-            {/* Rule 117 — S4's results placeholder.  "A results
-                placeholder block: 1 px #2c3e53, ground #101c29, padding
-                22 px 16 px, quiet section header '02 · RESULTS' plus 'No
-                package yet — the plan is being built.' in body value."
-
-                §8.28 kept exactly one use of the zone label: "'02 ·
-                RESULTS' survives only as the placeholder block's label in
-                S4."  This is that use, and the only one.
-
-                It renders on a FIRST generate only — `resultsVisible` is
-                false just then.  A regenerate keeps the previous answer
-                on screen under the stale dim (#192/#252), which is P16's
-                rule and not something a placeholder should interrupt. */}
-            {(genState === "generating" || awaitingFirstPlan) && !resultsVisible && (
-              <div className="results-placeholder" data-testid="results-placeholder">
-                <span className="tr-section">02 · RESULTS</span>
-                <div className="rp-line">
-                  No package yet. The plan is being built.
-                </div>
-              </div>
+            {/* #470 ruling 1: rule 117's placeholder ("02 · RESULTS / No
+                package yet. The plan is being built.") gives way to the outline
+                of the results, in their real places (same predicate: a
+                first Generate, nothing presented yet).  NEEDS YOU, the
+                other-conditions row and Setup (the outline's own block;
+                ResultsHead's reserved row mounts at the swap, R145-12)
+                here; Your plan, Downloads and the reference group stand
+                in their own components' places further down. */}
+            {outlineOn && (
+              <OutlineNeedsYou
+                aerialSrc={shownAerialFor(scenario.meta.lat, scenario.meta.lng)}
+                slow={waitSlow}
+              />
             )}
             {/* #288 rule 27 — NEEDS YOU, between the reserved first row and
                 the rest of the plan.  Gated on resultsVisible: a declined
@@ -2230,7 +2283,8 @@ export function GeneratorShell({
               />
             ) : null}
             <ResultsHead
-              reserve={genState !== "pre"}
+              // #470: under the outline, Setup is the outline's own block.
+              reserve={genState !== "pre" && !outlineOn}
               declined={planDeclined}
               settled={resultsVisible}
               scenario={scenario}
@@ -2284,18 +2338,27 @@ export function GeneratorShell({
                 Previous answer: {stagedEnumeration(staged)} staged, not yet applied.
               </div>
             )}
-            {
+            {/* #470 (R145-3, cycle 1): under the outline, Your plan and
+                Downloads are outline blocks OUTSIDE this wrapper, and the
+                wrapper is not mounted, so nothing that stands through the
+                wait can move at the swap whatever NEEDS YOU's height. */}
+            {outlineOn ? (
+              <>
+                <OutlinePlan />
+                <OutlineDownloads />
+              </>
+            ) : (
               <div
                 className={
                   genState === "error" || regenerating || stagedDisclose ? "results-stale" : ""
                 }
               >
-                {resultsVisible && (
+                {resultsVisible ? (
                   <ResultsHero
                     breakdown={deviceBreakdown}
                     jurisdiction={jurisdictionBlock}
                   />
-                )}
+                ) : null}
                 {/* A shell-level anchor around the cards.  ``ns-below``
                     retired with the strip (#288 §8.29): it budgeted the
                     PINNED strip in this target's scroll margin, and there
@@ -2366,7 +2429,7 @@ export function GeneratorShell({
                   </div>
                 )}
               </div>
-            }
+            )}
             {/* ─── #288 · rule 27's DISCLOSURE GROUP ───
                 Ryan's hand-check at f44377e, fix 3: the Reference row
                 joins the group under Pricing / Passed / Pending.  Rule 27
@@ -2385,7 +2448,8 @@ export function GeneratorShell({
                 The group renders when there are results OR when the
                 reference must mount on its own (an audit error), which is
                 why it is not simply gated on `resultsVisible`. */}
-            {(resultsVisible || referenceMounts) && (
+            {outlineOn && <OutlineRefs />}
+            {(resultsVisible || referenceMounts) && !outlineOn && (
               <div className="results-disc">
                 {/* #443: the three sections, one row style and a search box.
                     The two counted sections need a settled audit (Rule 89,

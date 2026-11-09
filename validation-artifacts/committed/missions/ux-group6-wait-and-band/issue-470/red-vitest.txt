@@ -1,0 +1,12 @@
+ [31m×[39m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the Generate wait[2m > [22mruling 1: the press draws an outline of every section, in the results' own order, and empties the setup zone[33m 894[2mms[22m[39m
+ [31m×[39m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the Generate wait[2m > [22mruling 3: the strip's slot carries the status line (spinner, the one step, Step 1 of 1, a bar) until the real strip replaces it[33m 881[2mms[22m[39m
+ [31m×[39m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the Generate wait[2m > [22mruling 6: past 2 s the line adds today's cold-start sentence; past 14 s it turns to the warn look and names the road data service[33m 1377[2mms[22m[39m
+ [31m×[39m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the wait's CSS (rulings 4, 5, 9)[2m > [22mthe sheen sweeps in 1.4 s, the arrival is 420 ms with a 6 px rise[32m 1[2mms[22m[39m
+ [31m×[39m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the wait's CSS (rulings 4, 5, 9)[2m > [22mreduced motion: no sheen, no fade, no rise, no spin[32m 1[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the wait's CSS (rulings 4, 5, 9)[2m > [22mno new hex: every colour in the block is a token[32m 0[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 5 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[41m[1m FAIL [22m[49m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the Generate wait[2m > [22mruling 1: the press draws an outline of every section, in the results' own order, and empties the setup zone
+[41m[1m FAIL [22m[49m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the Generate wait[2m > [22mruling 3: the strip's slot carries the status line (spinner, the one step, Step 1 of 1, a bar) until the real strip replaces it
+[41m[1m FAIL [22m[49m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the Generate wait[2m > [22mruling 6: past 2 s the line adds today's cold-start sentence; past 14 s it turns to the warn look and names the road data service
+[41m[1m FAIL [22m[49m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the wait's CSS (rulings 4, 5, 9)[2m > [22mthe sheen sweeps in 1.4 s, the arrival is 420 ms with a 6 px rise
+[41m[1m FAIL [22m[49m components/GeneratorShell.generate-wait.test.tsx[2m > [22m#470 the wait's CSS (rulings 4, 5, 9)[2m > [22mreduced motion: no sheen, no fade, no rise, no spin

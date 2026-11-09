@@ -1,0 +1,365 @@
+{
+ "size": "390x844",
+ "mode": "reduce",
+ "frames": [
+  {
+   "at": 27,
+   "y": 1360,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@25+12 wait-step@10+41 wait-count@53+17 wait-bar@77+2",
+   "strip": [
+    68,
+    80
+   ],
+   "outline": [
+    162,
+    1326
+   ],
+   "notice": [
+    2477,
+    56
+   ],
+   "shot": "390x844-reduce-f00-27ms.png"
+  },
+  {
+   "at": 4193,
+   "y": 0,
+   "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+   "strip": [
+    68,
+    80
+   ],
+   "needs": [
+    162,
+    1135
+   ],
+   "other": [
+    1311,
+    46
+   ],
+   "setup": [
+    1381,
+    107
+   ],
+   "plan": [
+    1504,
+    344
+   ],
+   "downloads": [
+    1848,
+    283
+   ],
+   "refs": [
+    2170,
+    284
+   ],
+   "notice": [
+    2478,
+    56
+   ],
+   "shot": "390x844-reduce-f01-4193ms.png"
+  },
+  {
+   "at": 4357,
+   "after": true,
+   "y": 0,
+   "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+   "strip": [
+    68,
+    80
+   ],
+   "needs": [
+    162,
+    1135
+   ],
+   "other": [
+    1311,
+    46
+   ],
+   "setup": [
+    1381,
+    107
+   ],
+   "plan": [
+    1504,
+    344
+   ],
+   "downloads": [
+    1848,
+    283
+   ],
+   "refs": [
+    2170,
+    284
+   ],
+   "notice": [
+    2478,
+    56
+   ],
+   "shot": "390x844-reduce-swap-02-4359ms.png"
+  },
+  {
+   "at": 4543,
+   "after": true,
+   "y": 0,
+   "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+   "strip": [
+    68,
+    80
+   ],
+   "needs": [
+    162,
+    1135
+   ],
+   "other": [
+    1311,
+    46
+   ],
+   "setup": [
+    1381,
+    107
+   ],
+   "plan": [
+    1504,
+    344
+   ],
+   "downloads": [
+    1848,
+    283
+   ],
+   "refs": [
+    2170,
+    284
+   ],
+   "notice": [
+    2478,
+    56
+   ],
+   "shot": "390x844-reduce-swap-03-4544ms.png"
+  },
+  {
+   "at": 4727,
+   "after": true,
+   "y": 0,
+   "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+   "strip": [
+    68,
+    80
+   ],
+   "needs": [
+    162,
+    1135
+   ],
+   "other": [
+    1311,
+    46
+   ],
+   "setup": [
+    1381,
+    107
+   ],
+   "plan": [
+    1504,
+    344
+   ],
+   "downloads": [
+    1848,
+    283
+   ],
+   "refs": [
+    2170,
+    284
+   ],
+   "notice": [
+    2478,
+    56
+   ],
+   "shot": "390x844-reduce-swap-04-4729ms.png"
+  },
+  {
+   "at": 4928,
+   "after": true,
+   "y": 0,
+   "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+   "strip": [
+    68,
+    80
+   ],
+   "needs": [
+    162,
+    1135
+   ],
+   "other": [
+    1311,
+    46
+   ],
+   "setup": [
+    1381,
+    107
+   ],
+   "plan": [
+    1504,
+    344
+   ],
+   "downloads": [
+    1848,
+    283
+   ],
+   "refs": [
+    2170,
+    284
+   ],
+   "notice": [
+    2478,
+    56
+   ],
+   "shot": "390x844-reduce-swap-05-4930ms.png"
+  }
+ ],
+ "errors": [],
+ "settled": {
+  "at": 7489,
+  "y": 0,
+  "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+  "strip": [
+   68,
+   80
+  ],
+  "needs": [
+   162,
+   1135
+  ],
+  "other": [
+   1311,
+   46
+  ],
+  "setup": [
+   1381,
+   107
+  ],
+  "plan": [
+   1504,
+   344
+  ],
+  "downloads": [
+   1848,
+   283
+  ],
+  "refs": [
+   2170,
+   284
+  ],
+  "notice": [
+   2478,
+   56
+  ],
+  "shot": "390x844-reduce-settled.png"
+ },
+ "generate": {
+  "cls": 0.0007,
+  "n": 1,
+  "top": [
+   {
+    "v": 0.0007,
+    "at": 4643,
+    "src": [
+     "span.nyq-map-key-note 780->807 h19->19"
+    ]
+   }
+  ]
+ },
+ "planBefore": "YOUR PLAN\n\nAs it stands now\n\nTOTAL DEVICES\n40\nOn the plan sheet\nDEVICE TYPES\n12\nDifferent devices to pull from the yard\nKEY DISTANCES\nTaper\n40 ft\nBuffer\n200 ft\nDevice spacing\n30 ft o.c.\nWork zone\n1,000 ft",
+ "answerFrames": [
+  {
+   "y": 450,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "waitParts": "wait-spin@25+12 wait-step@10+41 wait-count@53+17 wait-bar@77+2",
+   "strip": [
+    68,
+    80
+   ],
+   "needs": [
+    162,
+    1135
+   ],
+   "other": [
+    1311,
+    46
+   ],
+   "setup": [
+    1381,
+    107
+   ],
+   "plan": [
+    1581,
+    344
+   ],
+   "downloads": [
+    1925,
+    283
+   ],
+   "refs": [
+    2249,
+    284
+   ],
+   "notice": [
+    2557,
+    56
+   ],
+   "shot": "390x844-reduce-answer-inflight.png"
+  },
+  {
+   "y": 173,
+   "words": "⚠ Plan ready. 1 item above and 3 under Not checked yet need a check before field use.",
+   "strip": [
+    68,
+    80
+   ],
+   "needs": [
+    162,
+    304
+   ],
+   "other": [
+    480,
+    46
+   ],
+   "setup": [
+    550,
+    107
+   ],
+   "plan": [
+    673,
+    344
+   ],
+   "downloads": [
+    1017,
+    218
+   ],
+   "refs": [
+    1273,
+    284
+   ],
+   "notice": [
+    1581,
+    56
+   ],
+   "shot": "390x844-reduce-answer-settled.png"
+  }
+ ],
+ "answer": {
+  "cls": 0.6427,
+  "n": 1,
+  "top": [
+   {
+    "v": 0.6427,
+    "at": 4091,
+    "src": [
+     "div. 0->673 h0->171",
+     "ul.ny-items 0->207 h0->145",
+     "div[results-head-slot].results-head-slot 0->550 h0->107"
+    ]
+   }
+  ]
+ },
+ "planAfter": "YOUR PLAN\n\nAs it stands now\n\nTOTAL DEVICES\n40\nOn the plan sheet\nDEVICE TYPES\n12\nDifferent devices to pull from the yard\nKEY DISTANCES\nTaper\n40 ft\nBuffer\n200 ft\nDevice spacing\n30 ft o.c.\nWork zone\n1,000 ft"
+}

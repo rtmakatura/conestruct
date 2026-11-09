@@ -1,0 +1,6 @@
+1440x900 frames | generate CLS 0 n 0 | answer CLS 0.2465 | settled 7845 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 17 | axe undefined small undefined | errors 
+   ans shift 0.2448 @ 4086 ms div. 0->584 h0->316 ; ul.ny-items 0->194 h0->145 ; ul.ny-items 0->364 h0->72
+   ans shift 0.0017 @ 527 ms span.nyq-map-key-note 385->385 h19->19
+390x844 frames | generate CLS 0 n 0 | answer CLS 0.6427 | settled 7229 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 20 | axe undefined small undefined | errors 
+   ans shift 0.6427 @ 4087 ms div. 0->673 h0->171 ; ul.ny-items 0->207 h0->145 ; section[fact-setup].a-setupbox 0->550 h0->107
+exit 0

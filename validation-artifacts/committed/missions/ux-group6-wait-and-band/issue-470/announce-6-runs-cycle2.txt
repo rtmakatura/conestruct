@@ -1,0 +1,7 @@
+# GeneratorShell.a11y-announce.test.tsx, 6 repeat runs, repair cycle 2 (2026-11-09)
+run 1: Tests 9 passed (9)
+run 2: Tests 9 passed (9)
+run 3: Tests 9 passed (9)
+run 4: Tests 9 passed (9)
+run 5: Tests 9 passed (9)
+run 6: Tests 9 passed (9)

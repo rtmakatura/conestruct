@@ -1,0 +1,24 @@
+# Full vitest run 1 after the first build (2026-11-09): failing tests, saved before any re-run
+      Tests  20 failed | 2960 passed | 1 skipped (2981)
+ FAIL  components/GeneratorShell.a11y-focus.test.tsx > focus policy after Generate (#193) > a failed generation focuses the results zone (it holds the alert) without scrolling
+ FAIL  components/GeneratorShell.a11y-focus.test.tsx > focus policy after Generate (#193) > keyboard Generate (Enter) lands focus on the results zone; scroll still fires
+ FAIL  components/GeneratorShell.a11y-focus.test.tsx > focus policy after Generate (#193) > with the fetch still in flight, focus moves only when it settles to post
+ FAIL  components/GeneratorShell.post-generate-scroll.test.tsx > post-generate scroll (#152 E) > #258 (ruling c2): a declined pair — the audit refused and the breakdown 400s too — lands the results zone once, on the refusal container
+ FAIL  components/GeneratorShell.post-generate-scroll.test.tsx > post-generate scroll (#152 E) > Generate scrolls the results zone into view once, smoothly
+ FAIL  components/GeneratorShell.post-generate-scroll.test.tsx > post-generate scroll (#152 E) > a failed generation disarms the scroll instead of yanking the viewport
+ FAIL  components/GeneratorShell.post-generate-scroll.test.tsx > post-generate scroll (#152 E) > ordinary edits never scroll — only a Generate click arms it
+ FAIL  components/GeneratorShell.post-generate-scroll.test.tsx > post-generate scroll (#152 E) > respects prefers-reduced-motion: instant jump, no animation
+ FAIL  components/GeneratorShell.post-generate-scroll.test.tsx > post-generate scroll (#152 E) > waits for a pending breakdown: scroll fires when generating resolves to post
+ FAIL  components/GeneratorShell.regenerate-mounted.test.tsx > StatusBar precedence: input honesty outranks 'no answer yet' (#192, #252) > with honest inputs a pending answer is VERIFYING pre-generate and nothing under the band's voice — never COMPUTING
+ FAIL  components/GeneratorShell.regenerate-mounted.test.tsx > results stay mounted through regeneration (#192) > #252: a refusal settling mid-regeneration is never masked — the strip says PLAN DECLINED and the band leaves with it
+ FAIL  components/GeneratorShell.regenerate-mounted.test.tsx > results stay mounted through regeneration (#192) > a post-generate edit dims in place: no empty-state swap, panel stays mounted, ribbon marks the refresh
+ FAIL  components/GeneratorShell.scan-wire.test.tsx > Generate sets site_scan on the wire (#224 phase 2) > #252 + S4: a first Generate after kind-confirm raises the band naming the new plan and shows rule 117's placeholder — never the 'Previous answer' ribbon
+ FAIL  components/StatusBar.a11y.test.tsx > StatusBar aria-live region > #250 f2: the wrapper carries .status-slot in every state, including the band-voice empty one
+ FAIL  components/StatusBar.test.tsx > StatusBar (UX-21/22 derived states) > #252: under the band's voice the in-flight strip renders nothing — pre-generate it still says VERIFYING; a verdict is unchanged either way
+ FAIL  components/WorkingBand.test.tsx > #252 — the working band is present iff a request for the generated scenario is open > aria: the band's row is the one polite region that speaks the flight; the strip's region is empty while it is up; the sentence is the visible text
+ FAIL  lib/design/motion.test.ts > R10 — animation is the band's track and the coming-soon drawing, nothing else (hover colour transitions are not animation) > every animation declaration is the band's or sits inside the no-preference block
+ FAIL  lib/design/motion.test.ts > R10 — animation is the band's track and the coming-soon drawing, nothing else (hover colour transitions are not animation) > the only @keyframes are the band's sweep, the drawing's plotter (R10, R42: draw, fade, stroke, drop, stamp) and 02's mark replay (R21)
+ FAIL  lib/design/type-census.test.ts > #263 type census — globals.css font-sizes > every other font-size site is a named exception or a declared-debt row (new size/site fails)
+ FAIL  lib/design/type-census.test.ts > #263 type census — the exceptions are the ruled set and the pins are the sources' figures > CENSUS_PINS equal the figures read from the sources (the README quotes these)
+ Test Files  9 failed | 267 passed | 1 skipped (277)
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯

@@ -151,13 +151,18 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).toContain("READY FOR TCS REVIEW");
   });
 
-  it("#252: under the band's voice the in-flight strip renders nothing — pre-generate it still says VERIFYING; a verdict is unchanged either way", () => {
+  it("#252 / #470: under the band's voice the in-flight strip is the status line, no verdict — pre-generate it still says VERIFYING; a verdict is unchanged either way", () => {
     const loading: AuditState = { state: "loading", lastReady: null };
     const pre = renderToStaticMarkup(<StatusBar inputError={null} audit={loading} />);
     expect(pre).toContain("VERIFYING");
     const band = renderToStaticMarkup(<StatusBar inputError={null} audit={loading} bandVoice />);
-    // #250 f2: the live wrapper is the reserved slot — empty, room kept.
-    expect(band).toBe('<div class="status-slot" aria-live="polite"></div>');
+    // #250 f2: the live wrapper is the reserved slot, room kept; #470
+    // ruling 3: it holds the status line (spinner, the one step, the count,
+    // the bar), never VERIFYING and never the old verdict.
+    expect(band).toMatch(/^<div class="status-slot" aria-live="polite"><div class="status-bar wait-line idle" data-testid="wait-line">/);
+    expect(band).toContain("Checking the road and laying out the taper, buffer and devices…");
+    expect(band).toContain("Step 1 of 1");
+    expect(band).not.toContain("VERIFYING");
     const verdict = renderToStaticMarkup(
       <StatusBar inputError={null} audit={ready(makeAudit())} bandVoice />,
     );

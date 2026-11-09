@@ -1,0 +1,14 @@
+1440x900 real | generate CLS 0.5536 n 2 | answer CLS 0.3829 | settled 6834 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 2 | axe undefined small undefined | errors 
+   gen shift 0.5518 @ 4137 ms section.zone 371->145 h320->755 ; section.zone 155->145 h200->8 ; div.results-disc 530->0 h137->0
+   gen shift 0.0017 @ 4646 ms span.nyq-map-key-note 729->729 h19->19
+   ans shift 0.3829 @ 4079 ms section.zone 371->145 h529->755 ; div. 0->584 h0->316 ; section.zone 155->145 h200->8
+1198x930 real | generate CLS 0.3444 n 3 | answer CLS 0.5591 | settled 6661 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 2 | axe undefined small undefined | errors 
+   gen shift 0.2342 @ 4133 ms div.results-disc 304->0 h137->0 ; footer.flex 552->0 h81->0 ; p[draft-notice].tr-note 461->0 h38->0
+   gen shift 0.1077 @ 4102 ms section.zone 371->145 h320->320 ; footer.flex 778->552 h81->81 ; section.zone 155->145 h200->8
+   gen shift 0.0024 @ 4664 ms span.nyq-map-key-note 729->729 h19->19
+   ans shift 0.5566 @ 4094 ms section.zone 371->145 h559->785 ; div. 0->584 h0->346 ; section.zone 155->145 h200->8
+   ans shift 0.0024 @ 528 ms span.nyq-map-key-note 400->400 h19->19
+390x844 real | generate CLS 0.8662 n 2 | answer CLS 0.7711 | settled 6732 ms | words ⚠ Plan ready. Answer 3 quick questions before you send it. | frames 2 | axe undefined small undefined | errors 
+   gen shift 0.8655 @ 4211 ms section.zone 446->74 h398->770 ; section.zone 84->74 h346->8 ; div.results-disc 665->0 h164->0
+   gen shift 0.0007 @ 4794 ms span.nyq-map-key-note 780->807 h19->19
+   ans shift 0.7711 @ 4089 ms section.zone 530->158 h314->686 ; section.zone 168->158 h346->8 ; div. 0->673 h0->171

@@ -243,7 +243,9 @@ describe("#288 Phase 1 deviation from rule 28 — the slot renders NOTHING", () 
     // row in the stack follows, rather than a second opinion about when
     // there is something to show.  The genuinely empty case — nothing
     // landed yet — is the next one.
-    expect(slot(), "reserved mid-flight").not.toBeNull();
+    // #470 (R145-12): on a first Generate the outline's Setup block holds
+    // rule 28's reservation, at the row's own height, until the swap.
+    expect(slot() ?? document.querySelector('[data-outline="setup"]'), "reserved mid-flight").not.toBeNull();
     expect(document.getElementById("site-corrections")).toBeNull();
     await act(async () => {
       held.release();
@@ -283,7 +285,7 @@ describe("#288 Phase 1 deviation from rule 28 — the slot renders NOTHING", () 
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
     expect(band(), "the band is the voice").not.toBeNull();
-    expect(slot(), "the row is reserved from the click").not.toBeNull();
+    expect(slot() ?? document.querySelector('[data-outline="setup"]'), "the row is reserved from the click").not.toBeNull();
     // The hero is the rest of the stack; the fact line is with it.
     const heroUp = document.querySelector(".hero") !== null;
     const factUp =

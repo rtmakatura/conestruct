@@ -142,7 +142,9 @@ const latInput = () => {
 };
 async function generate(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByText("Generate plan"));
-  await user.click(screen.getByText("ALL_ZIP"));
+  // #470: Downloads mount with the plan (the outline holds their place
+  // during the wait), so the stub's button appears once the plan lands.
+  await user.click(await screen.findByText("ALL_ZIP"));
   await waitFor(() => expect(bundleBody).not.toBeNull());
   // #269: the bundle answering is not the write lock releasing — the plan
   // pair is still inside its 350 ms debounce and the ZIP render still open,

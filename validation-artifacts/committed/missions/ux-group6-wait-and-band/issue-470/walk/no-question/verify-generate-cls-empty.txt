@@ -1,0 +1,13 @@
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 116 px | strip: ⚠ Plan ready. 1 item above and 2 under Not checked yet need a check before field
+   outline vs settled (top/h deltas, px): needs 0/-909 | map absent after | other -909/0 | setup -909/0 | plan -909/0 | downloads -909/-46 | refs -954/0
+   NEEDS YOU delta -909 px: reported, not failed (its height is unknowable before the scan; open question for Ryan)
+   outline check PASS (tolerance 8 px)
+1198x930 generate CLS 0 PASS (< 0.1) | NEEDS YOU 116 px | strip: ⚠ Plan ready. 1 item above and 2 under Not checked yet need a check before field
+   outline vs settled (top/h deltas, px): needs 0/-909 | map absent after | other -909/0 | setup -909/0 | plan -909/0 | downloads -909/-46 | refs -954/0
+   NEEDS YOU delta -909 px: reported, not failed (its height is unknowable before the scan; open question for Ryan)
+   outline check PASS (tolerance 8 px)
+390x844 generate CLS 0 PASS (< 0.1) | NEEDS YOU 148 px | strip: ⚠ Plan ready. 1 item above and 2 under Not checked yet need a check before field
+   outline vs settled (top/h deltas, px): needs 0/-987 | map absent after | other -987/0 | setup -987/0 | plan -987/0 | downloads -987/-65 | refs -1052/0
+   NEEDS YOU delta -987 px: reported, not failed (its height is unknowable before the scan; open question for Ryan)
+   outline check PASS (tolerance 8 px)
+exit 0
