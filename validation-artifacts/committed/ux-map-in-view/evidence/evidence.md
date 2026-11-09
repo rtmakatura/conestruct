@@ -64,7 +64,7 @@ Overpass reads per state: the nearest-intersection read is 1 per state before an
 | A pin, kind chosen, WHERE not confirmed | **Opens after you confirm where** (was "pending: kind of work not chosen") | **Confirm where the work is first** (was "Choose the kind of work") |
 | WHERE confirmed | the job's value, CHANGE | the next rank of the blocker chain (side, speed, … unchanged) |
 
-Walked: `11-strings-kind-picked` at every size reads the new pair; `01-kind-question` reads the not-chosen pair. Unit-pinned in `lib/where-map-in-view.test.ts`. The strip's "AWAITING KIND OF WORK" in the same state: https://github.com/rtmakatura/conestruct/issues/459.
+Walked: `11-strings-kind-picked` at every size reads the new pair; `01-kind-question` reads the not-chosen pair. Unit-pinned in `lib/where-map-in-view.test.ts`. The verdict strip in the same states (#459, https://github.com/rtmakatura/conestruct/issues/459): a pin, no kind chosen, "◌ AWAITING KIND OF WORK" (unchanged); a pin, kind chosen, WHERE not confirmed, "◌ AWAITING WHERE CONFIRMATION" (was "◌ AWAITING KIND OF WORK"); every other strip state unchanged. Mounted in `components/GeneratorShell.no-location.test.tsx`; evidence in `validation-artifacts/committed/missions/ux-followups-465-461-459/issue-459/`.
 
 ## New strings and sources
 

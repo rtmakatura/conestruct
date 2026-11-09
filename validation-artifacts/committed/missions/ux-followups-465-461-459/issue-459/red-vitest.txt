@@ -1,0 +1,23 @@
+Red proof, #459: the new tests run against the old source (5e6f44c StatusBar.tsx / GeneratorShell.tsx, tests edited only).
+Command: npx vitest run components/StatusBar.test.tsx components/GeneratorShell.no-location.test.tsx --reporter=dot
+
+ FAIL components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces
+   -> Unable to find an element by: [data-testid="strip-where-unconfirmed"]  (the strip still read "AWAITING KIND OF WORK" with the kind picked)
+ FAIL components/StatusBar.test.tsx > StatusBar (UX-21/22 derived states) > whereUnconfirmed reads AWAITING WHERE CONFIRMATION, chromeless, over an input error and a held audit
+ Test Files  2 failed (2)
+      Tests  2 failed | 44 passed (46)
+
+Repair 1 (2026-11-08): the post-confirm assert (strip-where-unconfirmed gone after confirmKind()).
+Temporary edit: GeneratorShell.tsx `whereUnconfirmed={hasLocation(scenario.meta) && kindState !== "none"}`
+(true from `picked` on, so still true after the confirm; a plain `true` fails the test earlier, at the
+no-pin assert, and so does not isolate this one). Copied out to the scratchpad first, restored from that copy
+after the run; sha256 before and after the restore: 852559a910bfa88e... (identical).
+Command: npx vitest run components/GeneratorShell.no-location.test.tsx
+
+ FAIL ... > typing coordinates in the manual fallback enables both surfaces
+   -> expected <div …(2)>…(2)</div> to be null   (the new post-confirm assert)
+ FAIL ... > a pinned scenario shows the verdict and an enabled Generate (a confirmed saved plan; expected under the forced condition)
+      Tests  2 failed | 3 passed (5)
+
+The cta-reason asserts ("Confirm where the work is first") pin the live hint beside the new strip; they
+pass on the old source too (#456 shipped that hint), so they guard, they do not red-prove.

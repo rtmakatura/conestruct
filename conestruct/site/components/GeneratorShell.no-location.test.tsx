@@ -271,10 +271,26 @@ describe("no location, no certification (#186)", () => {
     expect(btn().disabled).toBe(true);
     expect(document.querySelector('[data-testid="where-confirm"]')).toBeNull();
     expect(document.body.textContent).not.toContain("READY FOR TCS REVIEW");
+    // #459: the kind is chosen, so the strip no longer says it is awaited;
+    // it names the WHERE confirm, as the Generate hint does (#456 ruling 4).
+    const whereStrip = () => screen.getByTestId("strip-where-unconfirmed");
+    expect(whereStrip().textContent).toBe("◌AWAITING WHERE CONFIRMATION");
+    expect(screen.queryByTestId("strip-kind-unconfirmed")).toBeNull();
+    const ctaReason = () =>
+      document.querySelector('[data-testid="cta-reason"]')?.textContent;
+    expect(ctaReason()).toContain("Confirm where the work is first");
     await answerSide();
+    await flushDebounce();
+    await settle();
+    // Side answered, Confirm not pressed yet: the same state, the same words.
+    expect(whereStrip().textContent).toBe("◌AWAITING WHERE CONFIRMATION");
+    expect(screen.queryByTestId("strip-kind-unconfirmed")).toBeNull();
+    expect(ctaReason()).toContain("Confirm where the work is first");
     await confirmKind();
     await flushDebounce();
     await settle();
+    // Confirmed: the WHERE state is over, so its strip is gone.
+    expect(screen.queryByTestId("strip-where-unconfirmed")).toBeNull();
     // R127 Q1 (b), RULE 5 (stated): typed coordinates put no road under the
     // pin, so nothing measures or guesses a speed (R126: "◌ not set").  The
     // plan waits for the operator's speed, and nothing is checked before it.

@@ -289,6 +289,28 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("status-bar fail");
   });
 
+  // #459: the kind is chosen and WHERE is not confirmed yet.  The strip
+  // names that state, the one #456 ruling 4's WHAT row and Generate hint
+  // name, at the kind branch's rank (no check is armed before the confirm).
+  it("whereUnconfirmed reads AWAITING WHERE CONFIRMATION, chromeless, over an input error and a held audit", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        inputError="Work zone length is required"
+        whereUnconfirmed
+        sideUnconfirmed
+        audit={ready(makeAudit())}
+      />,
+    );
+    expect(html).toContain('data-testid="strip-where-unconfirmed"');
+    expect(html).toContain(">AWAITING WHERE CONFIRMATION<");
+    expect(html).toContain("status-bar idle unavail");
+    expect(html).not.toContain("AWAITING KIND OF WORK");
+    expect(html).not.toContain("AWAITING OCCUPIED SIDE");
+    expect(html).not.toContain("INVALID INPUT");
+    expect(html).not.toContain("READY FOR TCS REVIEW");
+    expect(html).not.toContain("Confirm where the work is first");
+  });
+
   it("locationUnset outranks a pending verification — no verdict, no VERIFYING, for a site nobody chose", () => {
     const html = renderToStaticMarkup(
       <StatusBar

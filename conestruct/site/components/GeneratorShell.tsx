@@ -1748,7 +1748,9 @@ export function GeneratorShell({
             // #289 finding 1: a pin with no confirmed kind — the strip
             // says only "choose the kind of work" (no verdict for a kind
             // nobody picked; the checks behind it are not fired).
-            kindUnconfirmed={hasLocation(scenario.meta) && kindState !== "confirmed"}
+            kindUnconfirmed={hasLocation(scenario.meta) && kindState === "none"}
+            // #459: the kind is chosen and WHERE is not confirmed yet.
+            whereUnconfirmed={hasLocation(scenario.meta) && kindState === "picked"}
             sideUnconfirmed={
               hasLocation(scenario.meta) && kindState === "confirmed" && !sideConfirmed
             }

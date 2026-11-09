@@ -181,6 +181,14 @@ interface Props {
    */
   kindUnconfirmed?: boolean;
   /**
+   * #459: a pin and a chosen kind, WHERE not confirmed yet (the CONFIRM
+   * card's side question or its "Confirm and lay out the plan").  The strip
+   * reads "◌ AWAITING WHERE CONFIRMATION", the state #456 ruling 4's WHAT
+   * row and Generate hint name.  Ranked with the kind branch, for the same
+   * reason: no check is armed until the kind is confirmed.
+   */
+  whereUnconfirmed?: boolean;
+  /**
    * #290: a pin with a confirmed kind but no confirmed side (the
    * work-start model's needs-you, ruling 10).  Same treatment as the kind
    * branch, ranked right after it: no verdict for a direction nobody
@@ -289,6 +297,7 @@ function StatusBarState({
   refusal = null,
   locationUnset = false,
   kindUnconfirmed = false,
+  whereUnconfirmed = false,
   sideUnconfirmed = false,
   audit,
   verifySlow,
@@ -314,6 +323,18 @@ function StatusBarState({
       <div className="status-bar idle unavail" data-testid="strip-kind-unconfirmed">
         <Sym g="◌" />
         <span>AWAITING KIND OF WORK</span>
+      </div>
+    );
+  }
+
+  // #459: the kind is chosen; the page waits on the WHERE confirm.  The
+  // strip names that state; "Confirm where the work is first" stays the
+  // disabled primary's (#260 P2).
+  if (whereUnconfirmed) {
+    return (
+      <div className="status-bar idle unavail" data-testid="strip-where-unconfirmed">
+        <Sym g="◌" />
+        <span>AWAITING WHERE CONFIRMATION</span>
       </div>
     );
   }
