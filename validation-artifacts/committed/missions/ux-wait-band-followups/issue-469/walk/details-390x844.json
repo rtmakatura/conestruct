@@ -1,0 +1,685 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "kind-question",
+   "y": 112,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 875.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 765,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 112,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 599,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 476,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 70,
+   "footOffset": 45,
+   "cardNatural": 476,
+   "details": null,
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": null,
+   "rows": {
+    "top": 984.8,
+    "h": 45,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-01-kind-question.png"
+  },
+  {
+   "name": "kind-details-open",
+   "y": 172,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 875.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 765,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 172,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 599,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 476,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 70,
+   "footOffset": 45,
+   "cardNatural": 476,
+   "details": {
+    "top": 964.8,
+    "h": 97,
+    "left": 48,
+    "w": 280
+   },
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": {
+    "position": "absolute",
+    "onTop": true,
+    "inViewport": true,
+    "w": 280
+   },
+   "rows": {
+    "top": 984.8,
+    "h": 45,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-02-kind-details-open.png"
+  },
+  {
+   "name": "kind-details-closed",
+   "y": 204,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 875.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 765,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 204,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 599,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 476,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 70,
+   "footOffset": 45,
+   "cardNatural": 476,
+   "details": null,
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": null,
+   "rows": {
+    "top": 984.8,
+    "h": 45,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-03-kind-details-closed.png"
+  },
+  {
+   "name": "ni-kind-answered",
+   "y": 204,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 920.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 810,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 204,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 644,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 521,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 115,
+   "footOffset": 90,
+   "cardNatural": 521,
+   "details": null,
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": null,
+   "rows": {
+    "top": 984.8,
+    "h": 90,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-04-ni-kind-answered.png"
+  },
+  {
+   "name": "ni-kind-details-open",
+   "y": 204,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 920.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 810,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 204,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 644,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 521,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 115,
+   "footOffset": 90,
+   "cardNatural": 521,
+   "details": {
+    "top": 964.8,
+    "h": 97,
+    "left": 48,
+    "w": 280
+   },
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": {
+    "position": "absolute",
+    "onTop": true,
+    "inViewport": true,
+    "w": 280
+   },
+   "rows": {
+    "top": 984.8,
+    "h": 90,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-05-ni-kind-details-open.png"
+  },
+  {
+   "name": "ni-kind-details-closed",
+   "y": 218,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 920.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 810,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 218,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 270,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 644,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 521,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 115,
+   "footOffset": 90,
+   "cardNatural": 521,
+   "details": null,
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": null,
+   "rows": {
+    "top": 984.8,
+    "h": 90,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-06-ni-kind-details-closed.png"
+  },
+  {
+   "name": "ni-kind-details-open-2",
+   "y": 218,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 920.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 810,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 218,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 270,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 644,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 521,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 115,
+   "footOffset": 90,
+   "cardNatural": 521,
+   "details": {
+    "top": 964.8,
+    "h": 97,
+    "left": 48,
+    "w": 280
+   },
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": {
+    "position": "absolute",
+    "onTop": true,
+    "inViewport": true,
+    "w": 280
+   },
+   "rows": {
+    "top": 984.8,
+    "h": 90,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-07-ni-kind-details-open-2.png"
+  },
+  {
+   "name": "ni-kind-details-esc",
+   "y": 218,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 172,
+    "h": 920.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 810,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 218,
+    "h": 0,
+    "left": 0,
+    "w": 0
+   },
+   "frame": {
+    "top": 270,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "road": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 644,
+    "left": 31,
+    "w": 328
+   },
+   "wq": {
+    "top": 554.8,
+    "h": 521,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 599.5,
+    "h": 385.3,
+    "left": 32,
+    "w": 326
+   },
+   "foot": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 294
+   },
+   "footToWqBottom": 115,
+   "footOffset": 90,
+   "cardNatural": 521,
+   "details": null,
+   "detailsBtn": {
+    "top": 916.8,
+    "h": 44,
+    "left": 48,
+    "w": 49.5
+   },
+   "panel": null,
+   "rows": {
+    "top": 984.8,
+    "h": 90,
+    "left": 32,
+    "w": 326
+   },
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [],
+   "shot": "390x844-08-ni-kind-details-esc.png"
+  }
+ ],
+ "errors": [],
+ "escFocus": true
+}

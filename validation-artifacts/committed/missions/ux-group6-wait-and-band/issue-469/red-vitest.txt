@@ -1,0 +1,26 @@
+# #469 red proofs (repair 2): the current WhereBand.one-height.test.tsx, each time with the fixed globals.css restored byte for byte afterwards (cmp)
+
+## 1. Against the base globals.css (385b6c0, via git show)
+
+   ✓ #469 ruling 4 (mounted): every CONFIRM state keeps the band's reserved height > kind, side, the row, Undo, and the near-intersection kind  564ms
+   ✓ #469 ruling 4 (mounted): every CONFIRM state keeps the band's reserved height > the tap question: asked, failed, none, found, Undo, found again, then the side 140ms
+   × #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > B1, B2: the band's height and the line slot are the wrapper's own properties 8ms
+   × #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > ruling 1: the aerial column, the frame and the open card's right column take the one height 1ms
+   ✓ #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > ruling 2: no rule keyed on a CONFIRM state sizes the band, the aerial, the frame or the right column 3ms
+   ✓ #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > ruling 3: the narrow block still carries #456's strip, and none of #469's properties 1ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected null to be '648px' // Object.is equality
+AssertionError: expected null to be 'var(--wq-band-h)' // Object.is equality
+      Tests  2 failed | 4 passed (6)
+
+## 2. Against the repair-1 globals.css (before option d): the new B4b assertion
+
+   ✓ #469 ruling 4 (mounted): every CONFIRM state keeps the band's reserved height > kind, side, the row, Undo, and the near-intersection kind  590ms
+   ✓ #469 ruling 4 (mounted): every CONFIRM state keeps the band's reserved height > the tap question: asked, failed, none, found, Undo, found again, then the side 142ms
+   ✓ #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > B1, B2: the band's height and the line slot are the wrapper's own properties 6ms
+   × #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > ruling 1: the aerial column, the frame and the open card's right column take the one height 7ms
+   ✓ #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > ruling 2: no rule keyed on a CONFIRM state sizes the band, the aerial, the frame or the right column 4ms
+   ✓ #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > ruling 3: the narrow block still carries #456's strip, and none of #469's properties 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: .workbench .wq-stack[data-aerial][data-card="open"] .wq:has(.nyq-details:not([hidden])): expected undefined to be truthy
+      Tests  1 failed | 5 passed (6)

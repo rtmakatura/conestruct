@@ -9071,6 +9071,13 @@ input[type="number"] {
 .workbench .nyq-details {
   margin: 0;
 }
+/* #469 (Part 2 ruling 5): the WHERE kind question's Details is step 2's
+   popover (QuestionSteps DetailsTip); this box anchors its .a-info.a-pop
+   panel under the toggle, floating over the page. */
+.workbench .nyq-tip-box {
+  position: relative;
+  display: inline-block;
+}
 .workbench .nyq-rows {
   border-top: 1px solid var(--da-hair);
 }
@@ -9921,6 +9928,14 @@ input[type="number"] {
   container-type: inline-size;
   margin-top: var(--space-block);
   --aerial-h: 300px;
+  /* #469 B1 (CHOSEN, a layout number): the band's height in two columns,
+     the tallest traced CONFIRM question (the kind question with near
+     intersection chosen: the road row, the gap and the card with its
+     action row at the bottom (B4), 647.8 px at 1440 and 1198) to the
+     whole pixel.  B2: the slot under the aerial for its one line
+     (.a-aerial-line's 8 px margin and one .tr-prov line). */
+  --wq-band-h: 648px;
+  --wq-line-slot: calc(8px + 10.5px * 1.5);
 }
 @media (max-width: 480px) {
   .workbench .wq-wrap {
@@ -9985,9 +10000,14 @@ input[type="number"] {
     align-items: flex-start;
     gap: var(--space-section);
   }
+  /* #469 ruling 1 (B2, B3): the aerial fills the left column at the band's
+     one height, in every two-column state, so no question, Undo or tap state
+     moves it or asks for a new picture (M2's reason); its line sits in the
+     slot under the frame.  M2's window cap stays. */
   .workbench .wq-stack[data-aerial] > .a-aerial {
     flex: 1 1 0;
     min-width: 0;
+    height: var(--wq-band-h);
     position: sticky;
     top: calc(var(--nav-h) + var(--space-block));
   }
@@ -9995,7 +10015,33 @@ input[type="number"] {
     flex: 1 1 0;
   }
   .workbench .wq-stack[data-aerial] .a-aerial-frame {
-    height: min(560px, calc(100vh - var(--nav-h) - 2 * var(--space-block)));
+    height: min(
+      calc(var(--wq-band-h) - var(--wq-line-slot)),
+      calc(100vh - var(--nav-h) - 2 * var(--space-block))
+    );
+  }
+  /* #469 ruling 1 (B4): while the card is open the right column is at least
+     the band's height and the CONFIRM card stretches to it.  Its content
+     (the question, the answers, the answered and Next: rows) stays at the
+     top; its action row is pinned to the card's bottom, the card's own
+     24 px inset under it and the card's 16 px gap over it reserved, so it
+     is in one place on every question.  The DOM (and so the focus and
+     reading order) is unchanged: answers, then the action row, then the
+     rows (B4a).  A minimum, so the operator's own Edit fold still opens
+     the band.  The kind question's Details floats (.nyq-tip-box). */
+  .workbench .wq-stack[data-aerial][data-card="open"] > .wq-side {
+    min-height: var(--wq-band-h);
+  }
+  .workbench .wq-stack[data-aerial][data-card="open"] .wq {
+    flex: 1 0 auto;
+    position: relative;
+    padding-bottom: calc(var(--space-block) + 44px + var(--space-section));
+  }
+  .workbench .wq-stack[data-aerial][data-card="open"] .nyq-foot {
+    position: absolute;
+    left: var(--space-block);
+    right: var(--space-block);
+    bottom: var(--space-section);
   }
 }
 @container (max-width: 719.98px) {

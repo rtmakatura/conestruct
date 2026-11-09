@@ -533,6 +533,9 @@ export function WhereQuestions({
         heading="CONFIRM"
         headingId="where-confirm-h"
         headingLevel={2}
+        // #469 (Ryan 2026-11-09, Part 2 ruling 5): the kind question's
+        // Details floats over the page, so the band's height never changes.
+        detailsTip
         questions={questions}
         onAnswer={(q, v) => {
           if (locked) return;

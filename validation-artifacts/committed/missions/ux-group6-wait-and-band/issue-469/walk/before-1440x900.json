@@ -1,0 +1,1293 @@
+{
+ "size": "1440x900",
+ "steps": [
+  {
+   "name": "kind-question",
+   "y": 99,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 159,
+    "h": 693.3,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 578.8,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 578.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 476,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 385.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 721.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 70,
+   "cardNatural": 476,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-01-kind-question.png"
+  },
+  {
+   "name": "kind-answered",
+   "y": 99,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 159,
+    "h": 693.3,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 578.8,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 578.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 476,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 385.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 721.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 70,
+   "cardNatural": 476,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-02-kind-answered.png"
+  },
+  {
+   "name": "side-question",
+   "y": 99,
+   "q": "Which side of the road is the work on?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 454.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 352,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 257.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 593.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 74,
+   "cardNatural": 352,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-03-side-question.png"
+  },
+  {
+   "name": "side-answered",
+   "y": 99,
+   "q": "Which side of the road is the work on?",
+   "band": {
+    "top": 159,
+    "h": 698.3,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 454.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 352,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 257.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 593.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 74,
+   "cardNatural": 352,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-04-side-answered.png"
+  },
+  {
+   "name": "kind-reopened",
+   "y": 99,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 159,
+    "h": 698.3,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 582.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 480,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 385.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 721.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 74,
+   "cardNatural": 480,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-05-kind-reopened.png"
+  },
+  {
+   "name": "side-undone",
+   "y": 99,
+   "q": "Which side of the road is the work on?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 454.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 352,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 257.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 593.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 74,
+   "cardNatural": 352,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-06-side-undone.png"
+  },
+  {
+   "name": "side-again",
+   "y": 99,
+   "q": "Which side of the road is the work on?",
+   "band": {
+    "top": 159,
+    "h": 698.3,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 454.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 352,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 257.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 593.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 74,
+   "cardNatural": 352,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-07-side-again.png"
+  },
+  {
+   "name": "ni-kind-answered",
+   "y": 99,
+   "q": "What kind of work is it?",
+   "band": {
+    "top": 159,
+    "h": 738.3,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 623.8,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 623.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 521,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 385.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 721.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 115,
+   "cardNatural": 521,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-08-ni-kind-answered.png"
+  },
+  {
+   "name": "cross-question",
+   "y": 99,
+   "q": "Which intersection is the work near?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 442,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 339.3,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 200.5,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 536.5,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 118.1,
+   "cardNatural": 339.3,
+   "tap": true,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-09-cross-question.png"
+  },
+  {
+   "name": "cross-failed",
+   "y": 99,
+   "q": "Which intersection is the work near?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 528.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 426,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 287.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 623.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 118,
+   "cardNatural": 426,
+   "tap": true,
+   "cross": "cross-failed",
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-10-cross-failed.png"
+  },
+  {
+   "name": "cross-none",
+   "y": 99,
+   "q": "Which intersection is the work near?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 495.5,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 392.8,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 254,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 590,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 118.1,
+   "cardNatural": 392.8,
+   "tap": true,
+   "cross": "cross-none",
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-11-cross-none.png"
+  },
+  {
+   "name": "cross-found",
+   "y": 99,
+   "q": "Which intersection is the work near?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 538.5,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 435.8,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 297,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 633,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 118.1,
+   "cardNatural": 435.8,
+   "tap": true,
+   "cross": "cross-row",
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-12-cross-found.png"
+  },
+  {
+   "name": "cross-undone",
+   "y": 99,
+   "q": "Which intersection is the work near?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 442,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 339.3,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 200.5,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 536.5,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 118.1,
+   "cardNatural": 339.3,
+   "tap": true,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-13-cross-undone.png"
+  },
+  {
+   "name": "cross-found-again",
+   "y": 99,
+   "q": "Which intersection is the work near?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 538.5,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 435.8,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 297,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 633,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 118.1,
+   "cardNatural": 435.8,
+   "tap": true,
+   "cross": "cross-row",
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-14-cross-found-again.png"
+  },
+  {
+   "name": "side-after-tap",
+   "y": 99,
+   "q": "Which side of the road is the work on?",
+   "band": {
+    "top": 159,
+    "h": 674.5,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 502.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 400,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 257.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 593.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 122,
+   "cardNatural": 400,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-15-side-after-tap.png"
+  },
+  {
+   "name": "ni-side-answered",
+   "y": 99,
+   "q": "Which side of the road is the work on?",
+   "band": {
+    "top": 159,
+    "h": 698.3,
+    "left": 280,
+    "w": 880
+   },
+   "stack": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 846
+   },
+   "aerial": {
+    "top": 256.5,
+    "h": 583.8,
+    "left": 297,
+    "w": 411
+   },
+   "frame": {
+    "top": 256.5,
+    "h": 560,
+    "left": 297,
+    "w": 411
+   },
+   "road": {
+    "top": 256.5,
+    "h": 86.8,
+    "left": 732,
+    "w": 411
+   },
+   "side": {
+    "top": 256.5,
+    "h": 502.8,
+    "left": 732,
+    "w": 411
+   },
+   "wq": {
+    "top": 359.3,
+    "h": 400,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 404,
+    "h": 257.3,
+    "left": 733,
+    "w": 409
+   },
+   "foot": {
+    "top": 593.3,
+    "h": 44,
+    "left": 749,
+    "w": 377
+   },
+   "footToWqBottom": 122,
+   "cardNatural": 400,
+   "tap": false,
+   "cross": null,
+   "axe": [],
+   "small": [
+    {
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-16-ni-side-answered.png"
+  }
+ ],
+ "errors": [],
+ "trace": [
+  {
+   "kind": "kind-chip-shoulder",
+   "wq": 476,
+   "side": 578.8,
+   "stack": 578.8,
+   "band": 693.3
+  },
+  {
+   "kind": "kind-chip-flagger_lane_closure",
+   "wq": 476,
+   "side": 578.8,
+   "stack": 578.8,
+   "band": 693.3
+  },
+  {
+   "kind": "kind-chip-near_intersection",
+   "wq": 521,
+   "side": 623.8,
+   "stack": 623.8,
+   "band": 738.3
+  }
+ ]
+}

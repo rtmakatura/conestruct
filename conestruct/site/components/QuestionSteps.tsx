@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 import { symClass } from "@/lib/design/symbols";
+import { useDetailsToggle } from "./InfoToggle";
 
 export interface StepOption {
   value: string;
@@ -76,6 +77,11 @@ export interface QuestionStepsProps {
    *  closed) — the WHERE band arms its aerial while the cross-street
    *  question is the one on screen.  The card's own behaviour is unchanged. */
   onCurrentChange?: (id: string | null) => void;
+  /** #469 (Ryan 2026-11-09, Part 2 ruling 5): Details is step 2's popover
+   *  (`useDetailsToggle` + the `a-info a-pop` panel, as InfoToggle and the
+   *  WHAT band's markers), floating over the page, instead of a line in the
+   *  card's flow.  The WHERE band sets it; NEEDS YOU keeps the line. */
+  detailsTip?: boolean;
 }
 
 function firstOpen(questions: readonly StepQuestion[]): string | null {
@@ -99,6 +105,7 @@ export function QuestionSteps({
   closedTail,
   rowsClass = "ny-items nyq-rows",
   onCurrentChange,
+  detailsTip = false,
 }: QuestionStepsProps) {
   // `undefined` = follow the first open one; an id = the operator moved to
   // it (Next, or a click on its row); null = the operator closed the card.
@@ -184,6 +191,7 @@ export function QuestionSteps({
           testid={isLast ? lastTestId : undefined}
           detailsOpen={detailsOpen}
           setDetailsOpen={setDetailsOpen}
+          detailsTip={detailsTip}
           onAnswer={(v) => answer(current, v)}
           onNext={next}
         />
@@ -252,6 +260,7 @@ function Card({
   testid,
   detailsOpen,
   setDetailsOpen,
+  detailsTip,
   onAnswer,
   onNext,
 }: {
@@ -266,14 +275,21 @@ function Card({
   testid: string | undefined;
   detailsOpen: boolean;
   setDetailsOpen: (v: boolean) => void;
+  detailsTip: boolean;
   onAnswer: (value: string) => void;
   onNext: () => void;
 }) {
   const QHeading = headingLevel === 2 ? "h3" : "h4";
   const name = `nyq-${q.id}`;
   const detailsId = `${name}-details`;
+  // Keyed by question: moving to another question closes the popover, as
+  // `open()` closes the in-flow line.
   const toggle =
-    q.details !== null ? (
+    q.details !== null && detailsTip ? (
+      <DetailsTip key={q.id} id={detailsId}>
+        {q.details}
+      </DetailsTip>
+    ) : q.details !== null ? (
       <button
         type="button"
         className="nyq-details-btn"
@@ -341,11 +357,40 @@ function Card({
           {label}
         </button>
       </div>
-      {q.details !== null ? (
+      {q.details !== null && !detailsTip ? (
         <p id={detailsId} className="nyq-details tr-note" hidden={!detailsOpen}>
           {q.details}
         </p>
       ) : null}
     </div>
+  );
+}
+
+/** #469 (Part 2 ruling 5): the Details toggle and its text as one box, step
+ *  2's popover pattern (InfoToggle.tsx `useDetailsToggle`; FieldCell.tsx):
+ *  opens on click, tap, Enter or Space, never on hover (rules 141, 142);
+ *  closes on a click outside or Esc, focus back on the toggle (R101).  The
+ *  panel overlays the page (`.a-info.a-pop`), so nothing in the card or the
+ *  band moves when it opens (P1).  Spans throughout: the caller's foot is a
+ *  `<p>`.  The toggle keeps the card's own 44 px text button. */
+function DetailsTip({ id, children }: { id: string; children: ReactNode }) {
+  const { open, setOpen, boxRef, triggerRef } = useDetailsToggle<HTMLSpanElement>();
+  return (
+    <span ref={boxRef} className="nyq-tip-box">
+      <button
+        ref={triggerRef}
+        type="button"
+        className="nyq-details-btn"
+        data-read=""
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((o) => !o)}
+      >
+        Details
+      </button>
+      <span id={id} className="a-info a-pop tr-note nyq-details" role="group" aria-label="Details" hidden={!open}>
+        {children}
+      </span>
+    </span>
   );
 }

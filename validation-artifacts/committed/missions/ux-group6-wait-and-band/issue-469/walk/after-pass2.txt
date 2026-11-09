@@ -1,0 +1,60 @@
+1440x900 kind-question        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 480 | foot->bottom 74.1 | cross null | axe 0 small 2
+1440x900 trace kind-chip-shoulder                       | wq h 528.3 | side h 631 | stack h 631 | band h 745.5
+1440x900 trace kind-chip-flagger_lane_closure           | wq h 528.3 | side h 631 | stack h 631 | band h 745.5
+1440x900 trace kind-chip-near_intersection              | wq h 528.3 | side h 631 | stack h 631 | band h 745.5
+1440x900 kind-answered        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 480 | foot->bottom 74.1 | cross null | axe 0 small 2
+1440x900 side-question        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1440x900 side-answered        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1440x900 kind-reopened        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 480 | foot->bottom 74.1 | cross null | axe 0 small 2
+1440x900 side-undone          | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1440x900 side-again           | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1440x900 ni-kind-answered     | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 528 | foot->bottom 122.1 | cross null | axe 0 small 2
+1440x900 cross-question       | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 343.3 | foot->bottom 122.1 | cross null | axe 0 small 2
+1440x900 cross-failed         | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 430 | foot->bottom 122.1 | cross cross-failed | axe 0 small 2
+1440x900 cross-none           | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 396.8 | foot->bottom 122.1 | cross cross-none | axe 0 small 2
+1440x900 cross-found          | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 439.8 | foot->bottom 122.1 | cross cross-row | axe 0 small 2
+1440x900 cross-undone         | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 343.3 | foot->bottom 122.1 | cross null | axe 0 small 2
+1440x900 cross-found-again    | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 439.8 | foot->bottom 122.1 | cross cross-row | axe 0 small 2
+1440x900 side-after-tap       | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 400 | foot->bottom 122.1 | cross null | axe 0 small 2
+1440x900 ni-side-answered     | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 400 | foot->bottom 122.1 | cross null | axe 0 small 2
+1440x900 errors 0  | band h min 745.5 max 745.5 spread 0
+1198x930 kind-question        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 480 | foot->bottom 74.1 | cross null | axe 0 small 2
+1198x930 trace kind-chip-shoulder                       | wq h 528.3 | side h 631 | stack h 631 | band h 745.5
+1198x930 trace kind-chip-flagger_lane_closure           | wq h 528.3 | side h 631 | stack h 631 | band h 745.5
+1198x930 trace kind-chip-near_intersection              | wq h 528.3 | side h 631 | stack h 631 | band h 745.5
+1198x930 kind-answered        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 480 | foot->bottom 74.1 | cross null | axe 0 small 2
+1198x930 side-question        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1198x930 side-answered        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1198x930 kind-reopened        | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 480 | foot->bottom 74.1 | cross null | axe 0 small 2
+1198x930 side-undone          | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1198x930 side-again           | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 352 | foot->bottom 74.1 | cross null | axe 0 small 2
+1198x930 ni-kind-answered     | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 528 | foot->bottom 122.1 | cross null | axe 0 small 2
+1198x930 cross-question       | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 343.3 | foot->bottom 122.1 | cross null | axe 0 small 2
+1198x930 cross-failed         | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 430 | foot->bottom 122.1 | cross cross-failed | axe 0 small 2
+1198x930 cross-none           | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 396.8 | foot->bottom 122.1 | cross cross-none | axe 0 small 2
+1198x930 cross-found          | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 439.8 | foot->bottom 122.1 | cross cross-row | axe 0 small 2
+1198x930 cross-undone         | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 343.3 | foot->bottom 122.1 | cross null | axe 0 small 2
+1198x930 cross-found-again    | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 439.8 | foot->bottom 122.1 | cross cross-row | axe 0 small 2
+1198x930 side-after-tap       | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 400 | foot->bottom 122.1 | cross null | axe 0 small 2
+1198x930 ni-side-answered     | band h 745.5 | stack h 631 | frame 256.5 607.3 | road 256.5 86.8 | wq h 528.3 natural 400 | foot->bottom 122.1 | cross null | axe 0 small 2
+1198x930 errors 0  | band h min 745.5 max 745.5 spread 0
+390x844 kind-question        | band h 875.8 | stack h 765 | frame 265.8 150 | road 431.8 107 | wq h 476 natural 476 | foot->bottom 70 | cross null | axe 0 small 0
+390x844 trace kind-chip-shoulder                       | wq h 476 | side h 599 | stack h 765 | band h 875.8
+390x844 trace kind-chip-flagger_lane_closure           | wq h 476 | side h 599 | stack h 765 | band h 875.8
+390x844 trace kind-chip-near_intersection              | wq h 521 | side h 644 | stack h 810 | band h 920.8
+390x844 kind-answered        | band h 875.8 | stack h 765 | frame 265.8 150 | road 431.8 107 | wq h 476 natural 476 | foot->bottom 70 | cross null | axe 0 small 0
+390x844 side-question        | band h 795.8 | stack h 685 | frame 265.8 150 | road 431.8 107 | wq h 396 natural 396 | foot->bottom 74 | cross null | axe 0 small 0
+390x844 side-answered        | band h 885 | stack h 774.3 | frame 265.8 150 | road 521 107 | wq h 396 natural 396 | foot->bottom 74 | cross null | axe 0 small 0
+390x844 kind-reopened        | band h 969 | stack h 858.3 | frame 265.8 150 | road 521 107 | wq h 480 natural 480 | foot->bottom 74 | cross null | axe 0 small 0
+390x844 side-undone          | band h 795.8 | stack h 685 | frame 466 150 | road 431.8 107 | wq h 396 natural 396 | foot->bottom 74 | cross null | axe 0 small 0
+390x844 side-again           | band h 885 | stack h 774.3 | frame 265.8 150 | road 521 107 | wq h 396 natural 396 | foot->bottom 74 | cross null | axe 0 small 0
+390x844 ni-kind-answered     | band h 920.8 | stack h 810 | frame 265.8 150 | road 431.8 107 | wq h 521 natural 521 | foot->bottom 115 | cross null | axe 0 small 0
+390x844 cross-question       | band h 883 | stack h 772.3 | frame 265.8 250 | road 531.8 107 | wq h 383.3 natural 383.3 | foot->bottom 118.1 | cross null | axe 0 small 0
+390x844 cross-failed         | band h 969.8 | stack h 859 | frame 265.8 250 | road 531.8 107 | wq h 470 natural 470 | foot->bottom 118 | cross cross-failed | axe 0 small 0
+390x844 cross-none           | band h 936.5 | stack h 825.8 | frame 265.8 250 | road 531.8 107 | wq h 436.8 natural 436.8 | foot->bottom 118.1 | cross cross-none | axe 0 small 0
+390x844 cross-found          | band h 1032 | stack h 921.3 | frame 265.8 250 | road 531.8 107 | wq h 532.3 natural 532.3 | foot->bottom 118.1 | cross cross-row | axe 0 small 0
+390x844 cross-undone         | band h 883 | stack h 772.3 | frame 265.8 250 | road 531.8 107 | wq h 383.3 natural 383.3 | foot->bottom 118.1 | cross null | axe 0 small 0
+390x844 cross-found-again    | band h 1032 | stack h 921.3 | frame 265.8 250 | road 531.8 107 | wq h 532.3 natural 532.3 | foot->bottom 118.1 | cross cross-row | axe 0 small 0
+390x844 side-after-tap       | band h 843.8 | stack h 733 | frame 279 150 | road 431.8 107 | wq h 444 natural 444 | foot->bottom 122 | cross null | axe 0 small 0
+390x844 ni-side-answered     | band h 933 | stack h 822.3 | frame 265.8 150 | road 521 107 | wq h 444 natural 444 | foot->bottom 122 | cross null | axe 0 small 0
+390x844 errors 0  | band h min 795.8 max 1032 spread 236.2
