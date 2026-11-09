@@ -427,8 +427,14 @@ export function BandAerial({
   const markShown = mark !== null && current && frameKey !== null && mark.frameKey === frameKey;
   const ringShown = ring !== null && current && frameKey !== null && ring.frameKey === frameKey;
   // #446: one bar element through every state, so its live region is there
-  // before its words change (ruling 1).
-  const barNow: AerialBar | null = shown ? (bar ?? (tapping ? { kind: "armed" } : null)) : null;
+  // before its words change (ruling 1).  #465: while a held picture loads
+  // the frame takes no tap, so the armed line gives way to the wait (P8,
+  // P3); it comes back when this state's own picture lands.
+  const barSet: AerialBar | null = shown
+    ? (bar ?? (armed && onTap !== undefined ? { kind: "armed" } : null))
+    : null;
+  const barNow: AerialBar | { kind: "waiting" } | null =
+    barSet?.kind === "armed" && !tapping ? { kind: "waiting" } : barSet;
   const tap = (e: React.MouseEvent<HTMLImageElement>) => {
     if (!tapping || !size || frameKey === null || !onTap) return;
     const r = e.currentTarget.getBoundingClientRect();
@@ -481,6 +487,12 @@ export function BandAerial({
               <>
                 <BarIcon />
                 {AERIAL_TAP_BAR}
+              </>
+            )}
+            {barNow.kind === "waiting" && (
+              <>
+                <BarIcon finding />
+                {AERIAL_WAIT}
               </>
             )}
             {barNow.kind === "finding" && (
@@ -621,7 +633,7 @@ export function BandAerial({
             {AERIAL_HIDE}
           </button>
         )}
-        {heldLine && (
+        {heldLine && barNow?.kind !== "waiting" && (
           <div className="a-aerial-held tr-prov" data-testid="band-aerial-held" role="status">
             {AERIAL_WAIT}
           </div>

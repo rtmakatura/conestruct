@@ -541,11 +541,77 @@ describe("#456: while the next picture loads, the controls and the bar stay", ()
     await settle();
     // The same element: its live region was never unmounted.
     expect(q("band-aerial-bar")).toBe(bar);
-    expect(q("band-aerial-bar")?.textContent).toContain(AERIAL_TAP_BAR);
+    // #465: the bar says the wait, never the tap it can't take yet.
+    expect(q("band-aerial-bar")?.textContent).toBe(AERIAL_WAIT);
+    expect(q("band-aerial-bar")?.textContent).not.toContain(AERIAL_TAP_BAR);
+    expect(q("band-aerial-frame")?.getAttribute("data-bar")).toBe("waiting");
     // A tap waits for the new picture (no tap on a held picture).
     expect(q("band-aerial-frame")?.classList.contains("is-armed")).toBe(false);
     await act(async () => release());
     await settle(50);
+    expect(q("band-aerial-bar")).toBe(bar);
+    expect(q("band-aerial-bar")?.textContent).toContain(AERIAL_TAP_BAR);
+    expect(q("band-aerial-frame")?.getAttribute("data-bar")).toBe("armed");
     expect(q("band-aerial-frame")?.classList.contains("is-armed")).toBe(true);
+  });
+
+  it("#465: a tap during the held load is not read; the next tap on the new picture is", async () => {
+    const taps: AerialTap[] = [];
+    render(
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("side_not_confirmed")}
+        kindConfirmed
+        pinFrame
+        armed
+        onTap={(t) => taps.push(t)}
+        bar={{ kind: "armed" }}
+      />,
+    );
+    await settle();
+    slow();
+    zoomIn()!.focus();
+    await act(async () => zoomIn()!.click());
+    await settle();
+    await act(async () => {
+      q("band-aerial-img")!.dispatchEvent(new MouseEvent("click", { bubbles: true, clientX: 10, clientY: 10 }));
+    });
+    expect(taps).toHaveLength(0);
+    expect(q("band-aerial-bar")?.textContent).toBe(AERIAL_WAIT);
+    // One live region says it: no corner line on a zoom step (P16).
+    expect(q("band-aerial-held")).toBeNull();
+    expect(document.activeElement).toBe(zoomIn());
+    await act(async () => release());
+    await settle(50);
+    expect(document.activeElement).toBe(zoomIn());
+    await act(async () => {
+      q("band-aerial-img")!.dispatchEvent(new MouseEvent("click", { bubbles: true, clientX: 10, clientY: 10 }));
+    });
+    expect(taps).toHaveLength(1);
+    expect(taps[0].zoom).toBe(1);
+  });
+
+  it("#465: the armed fallback (no bar prop) stays mounted as the wait through a held load", async () => {
+    render(
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("side_not_confirmed")}
+        kindConfirmed
+        pinFrame
+        armed
+        onTap={() => {}}
+      />,
+    );
+    await settle();
+    const bar = q("band-aerial-bar");
+    expect(bar?.textContent).toContain(AERIAL_TAP_BAR);
+    slow();
+    await act(async () => zoomIn()!.click());
+    await settle();
+    expect(q("band-aerial-bar")).toBe(bar);
+    expect(bar?.textContent).toBe(AERIAL_WAIT);
+    await act(async () => release());
+    await settle(50);
+    expect(q("band-aerial-bar")?.textContent).toContain(AERIAL_TAP_BAR);
   });
 });
