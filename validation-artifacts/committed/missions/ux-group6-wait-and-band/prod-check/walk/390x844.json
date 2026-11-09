@@ -1,0 +1,75 @@
+{
+ "size": "390x844",
+ "addr": "1550 E Colfax Ave, Denver",
+ "frames": [
+  {
+   "at": 35,
+   "y": 1360,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "outline": true,
+   "waitLine": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1"
+  },
+  {
+   "at": 906,
+   "y": 8,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "outline": true,
+   "waitLine": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "shot": "390x844-wait-0-906ms.png"
+  },
+  {
+   "at": 2062,
+   "y": 8,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "outline": true,
+   "waitLine": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "shot": "390x844-wait-1-2062ms.png"
+  },
+  {
+   "at": 3541,
+   "y": 8,
+   "words": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "outline": true,
+   "waitLine": "Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1",
+   "shot": "390x844-wait-2-3541ms.png"
+  }
+ ],
+ "crops": [
+  "390x844-wait-0-906ms.png",
+  "390x844-wait-1-2062ms.png",
+  "390x844-wait-2-3541ms.png",
+  "390x844-plan-ready.png"
+ ],
+ "errors": [],
+ "console": [],
+ "road": "East Colfax Avenue, eastbound Primary road · 0 m from your pin",
+ "settled": {
+  "at": 7100,
+  "y": 0,
+  "words": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+  "outline": false,
+  "waitLine": null
+ },
+ "generate": {
+  "cls": 0,
+  "n": 0,
+  "top": []
+ },
+ "axe": [],
+ "small": {
+  "measured": 17,
+  "under": []
+ },
+ "answerApplied": true,
+ "answer": {
+  "cls": 0,
+  "n": 0,
+  "top": []
+ },
+ "answerSettled": {
+  "y": 0,
+  "words": "⚠ Plan ready. 3 under Not checked yet need a check before field use.",
+  "outline": false,
+  "waitLine": null
+ }
+}

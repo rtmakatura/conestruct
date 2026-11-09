@@ -1,0 +1,5 @@
+$ SITE=https://www.conestruct.com HOLD_MS=0 GATE_BYPASS_TOKEN=<from .env.local> node script/verify-generate-cls-prodwait.mjs   (750660c; the permanent check with the pick-dialog wait fixed, see cls-permanent-asis.txt)
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+1198x930 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+390x844 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1135 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+exit 0

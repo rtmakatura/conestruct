@@ -1,0 +1,16 @@
+1440x900 | road East Colfax Avenue, eastbound Primary road · 0 m from your pin | generate CLS 0 n 0 | settled 6440 ms ⚠ Plan ready. Answer 3 quick questions before you send it. | axe 0 | 44px under 0 of 21 | answer applied true CLS 0 | pageerrors 0 console errors 0
+   frame 21 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 884 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 2016 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 3584 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 3835 ms outline false | ⚠ Plan ready. Answer 3 quick questions before you send it. | wait-line: null
+1198x930 | road East Colfax Avenue, eastbound Primary road · 0 m from your pin | generate CLS 0 n 0 | settled 5890 ms ⚠ Plan ready. Answer 3 quick questions before you send it. | axe 0 | 44px under 0 of 21 | answer applied true CLS 0.3756 | pageerrors 0 console errors 0
+   frame 27 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 900 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 2032 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   ans shift 0.3756 @ 591 ms div. 0->455 h0->475 ; div#dl-cards.dls 765->720 h165->182 ; ul.ny-items 0->162 h0->145
+390x844 | road East Colfax Avenue, eastbound Primary road · 0 m from your pin | generate CLS 0 n 0 | settled 7100 ms ⚠ Plan ready. Answer 3 quick questions before you send it. | axe 0 | 44px under 0 of 17 | answer applied true CLS 0 | pageerrors 0 console errors 0
+   frame 35 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 906 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 2062 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 3541 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1

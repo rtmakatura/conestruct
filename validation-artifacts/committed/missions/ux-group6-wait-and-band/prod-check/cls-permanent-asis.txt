@@ -1,0 +1,19 @@
+$ SITE=https://www.conestruct.com HOLD_MS=0 GATE_BYPASS_TOKEN=<from .env.local> node scripts/verify-generate-cls.mjs   (worktree root, 750660c)
+1440x900 ERROR TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Save & Close' })
+    - locator resolved to <button disabled type="button" cla
+1198x930 ERROR TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Save & Close' })
+    - locator resolved to <button disabled type="button" cla
+390x844 ERROR TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Save & Close' })
+    - locator resolved to <button disabled type="button" cla
+exit 1
+
+Cause (probe, 1440x900, 1600 E Colfax): at +3 s the dialog reads "DETECTING ROADS AT PIN… ... Save & Close" with Save disabled;
+at +8 s it reads "PICK THE ROAD · 4 FOUND" (Franklin St SB 18 m, East Colfax Ave EB 21 m, Park Ave NW 27 m, Franklin St NB 27 m).
+The script's wait regex /PICK THE ROAD|Which road|Save & Close/ matches the button text at once, so the Colfax click runs before
+the list exists and is skipped (count 0); Save & Close stays disabled.  The stubbed road answer locally arrives in time, which hid it.

@@ -1,0 +1,11 @@
+# run 1 of walk-prod.mjs (before the timed wait crops and the 10 s answer wait were added; its PNG/JSON were replaced by run 2)
+1440x900 | road East Colfax Avenue, eastbound Primary road · 0 m from your pin | generate CLS 0 n 0 | settled 6613 ms ⚠ Plan ready. Answer 3 quick questions before you send it. | axe 0 | 44px under 0 of 21 | answer applied true CLS 0.2469 | pageerrors 0 console errors 0
+   frame 25 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 3991 ms outline false | ⚠ Plan ready. Answer 3 quick questions before you send it. | wait-line: null
+   ans shift 0.2452 @ 3390 ms div. 0->487 h0->413 ; div#dl-cards.dls 797->752 h103->148 ; ul.ny-items 0->194 h0->145
+   ans shift 0.0017 @ 2811 ms span.nyq-map-key-note 247->247 h19->19
+1198x930 | road East Colfax Avenue, eastbound Primary road · 0 m from your pin | generate CLS 0 n 0 | settled 5741 ms ⚠ Plan ready. Answer 3 quick questions before you send it. | axe 0 | 44px under 0 of 21 | answer applied true CLS 0 | pageerrors 0 console errors 0
+   frame 31 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
+   frame 3117 ms outline false | ⚠ Plan ready. Answer 3 quick questions before you send it. | wait-line: null
+390x844 | road East Colfax Avenue, eastbound Primary road · 0 m from your pin | generate CLS 0 n 0 | settled 6620 ms ⚠ Plan ready. Answer 3 quick questions before you send it. | axe 0 | 44px under 0 of 17 | answer applied true CLS 0 | pageerrors 0 console errors 0
+   frame 32 ms outline true | Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1 | wait-line: Checking the road and laying out the taper, buffer and devices… STEP 1 OF 1
