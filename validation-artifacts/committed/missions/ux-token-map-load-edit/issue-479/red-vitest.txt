@@ -1,0 +1,5 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/NeedsYouQuestion.test.tsx > QuestionFlow (rulings 3, 5, 6, 7) > #479 Details floats as #469's does: the panel is in the foot, Esc and a click outside close it
+AssertionError: nyq-details tr-note: expected false to be true // Object.is equality
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)

@@ -143,6 +143,9 @@ export function QuestionFlow({
       headingId="needs-you-h"
       // #438 item 5: a results section title, h2 under the page h1.
       headingLevel={2}
+      // #479 (Ryan 2026-11-10): Details is the WHERE kind question's floating
+      // panel (#469), so the card never grows when it opens (P1).
+      detailsTip
       questions={steps}
       onAnswer={(s, v) => {
         const q = byFlag.get(s.id);
@@ -204,8 +207,10 @@ function Details({ q, siteScan }: { q: NeedsYouQuestion; siteScan: SiteScanProve
   const evidence = scanEvidence(q.bucket ?? undefined, { details: false, anchorSuffix: false });
   const stamp = siteScan?.measured_at ?? null;
   const duration = fmtScanDuration(siteScan?.duration_ms);
+  // #479: one span, so the floating panel's grid (.a-info) holds one line of
+  // text, not a row per text run and <time>.
   return (
-    <>
+    <span>
       {[
         evidence || null,
         q.citation,
@@ -220,7 +225,8 @@ function Details({ q, siteScan }: { q: NeedsYouQuestion; siteScan: SiteScanProve
           {fmtScanStamp(stamp)}
         </time>
       ) : null}
-      {duration ? ` · ${duration}` : ""}
-    </>
+      {/* #479 R6: the duration never breaks across lines ("0.1 s"). */}
+      {duration ? <span className="nyq-dur">{` · ${duration}`}</span> : null}
+    </span>
   );
 }

@@ -98,7 +98,6 @@ describe("the map in the card (rulings 1-7)", () => {
       "nyq-map",
       "nyq-answers",
       "nyq-foot",
-      "nyq-details",
     ]);
     expect(bodies()[0]).toMatchObject({ flag: "pedestrian_facility", width: 600, height: 300 });
     expect(bodies()[0].zoom).toBeUndefined();

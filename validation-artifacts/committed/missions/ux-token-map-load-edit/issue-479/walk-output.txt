@@ -1,0 +1,9 @@
+1440x900 | q "Are there sidewalks along the work zone?" | NEEDS YOU h 1024.8 -> 1024.8 | card h 792 -> 792 | moved: none | in-flow details 0
+   panel SPAN absolute x 297-657 w 360 h 78.3 inView=true onTop=true items=1 | page scrollW 1440 / clientW 1440 (closed 1440)
+   shifts on open: [] | axe closed 0 open 0 | <44px closed [] open [] | toggle 49.5x44 | Esc closed=true focus on toggle=true
+1198x930 | q "Are there sidewalks along the work zone?" | NEEDS YOU h 1024.8 -> 1024.8 | card h 792 -> 792 | moved: none | in-flow details 0
+   panel SPAN absolute x 176-536 w 360 h 78.3 inView=true onTop=true items=1 | page scrollW 1198 / clientW 1198 (closed 1198)
+   shifts on open: [] | axe closed 0 open 0 | <44px closed [] open [] | toggle 49.5x44 | Esc closed=true focus on toggle=true
+390x844 | q "Are there sidewalks along the work zone?" | NEEDS YOU h 1135.3 -> 1135.3 | card h 886.3 -> 886.3 | moved: none | in-flow details 0
+   panel SPAN absolute x 31-359 w 328 h 78.3 inView=true onTop=true items=1 | page scrollW 390 / clientW 390 (closed 390)
+   shifts on open: [] | axe closed 0 open 0 | <44px closed [] open [] | toggle 49.5x44 | Esc closed=true focus on toggle=true

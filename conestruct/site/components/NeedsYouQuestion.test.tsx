@@ -278,6 +278,38 @@ describe("QuestionFlow (rulings 3, 5, 6, 7)", () => {
     );
   });
 
+  // #479 (Ryan 2026-11-10): NEEDS YOU's Details is the same floating panel
+  // as the WHERE kind question's (#469: QuestionSteps `detailsTip`, step 2's
+  // popover), so opening it changes nothing in the card's flow (P1).
+  it("#479 Details floats as #469's does: the panel is in the foot, Esc and a click outside close it", () => {
+    const { container } = render(<Host />);
+    const card = container.querySelector(".nyq-card")!;
+    const toggle = screen.getByRole("button", { name: "Details" });
+    const panel = document.getElementById(toggle.getAttribute("aria-controls")!)!;
+    expect(panel.classList.contains("a-info") && panel.classList.contains("a-pop"), panel.className).toBe(true);
+    expect(panel.tagName).toBe("SPAN");
+    expect(panel.parentElement!.classList.contains("nyq-tip-box")).toBe(true);
+    expect(panel.parentElement!.contains(toggle)).toBe(true);
+    expect(panel.closest(".nyq-foot")).not.toBeNull();
+    // No block element in the panel: it sits in the foot's <p>.
+    expect(panel.querySelector("div, p, ul, ol, section")).toBeNull();
+    // One item in the panel's grid (.a-info), so the text reads as one line.
+    expect(panel.children.length).toBe(1);
+    expect(card.querySelector(".nyq-card > .nyq-details")).toBeNull();
+    expect(panel.hidden).toBe(true);
+    fireEvent.click(toggle);
+    expect(panel.hidden).toBe(false);
+    // Esc closes it, focus back on the toggle (R101).
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(panel.hidden).toBe(true);
+    expect(document.activeElement).toBe(toggle);
+    // A click outside closes it too.
+    fireEvent.click(toggle);
+    expect(panel.hidden).toBe(false);
+    fireEvent.pointerDown(card.querySelector(".nyq-q")!);
+    expect(panel.hidden).toBe(true);
+  });
+
   it("in flight, every write is disabled and the reads stay live", () => {
     render(<Host inFlight />);
     for (const r of screen.getAllByRole("radio")) expect((r as HTMLInputElement).disabled).toBe(true);

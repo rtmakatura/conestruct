@@ -80,7 +80,8 @@ export interface QuestionStepsProps {
   /** #469 (Ryan 2026-11-09, Part 2 ruling 5): Details is step 2's popover
    *  (`useDetailsToggle` + the `a-info a-pop` panel, as InfoToggle and the
    *  WHAT band's markers), floating over the page, instead of a line in the
-   *  card's flow.  The WHERE band sets it; NEEDS YOU keeps the line. */
+   *  card's flow.  The WHERE band sets it, and NEEDS YOU too (#479, Ryan
+   *  2026-11-10); unset, Details is the line after the foot. */
   detailsTip?: boolean;
 }
 

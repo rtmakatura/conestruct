@@ -9080,12 +9080,26 @@ input[type="number"] {
 .workbench .nyq-details {
   margin: 0;
 }
-/* #469 (Part 2 ruling 5): the WHERE kind question's Details is step 2's
-   popover (QuestionSteps DetailsTip); this box anchors its .a-info.a-pop
-   panel under the toggle, floating over the page. */
+/* #469 (Part 2 ruling 5), #479: the WHERE kind question's and NEEDS YOU's
+   Details is step 2's popover (QuestionSteps DetailsTip); this box anchors
+   its .a-info.a-pop panel under the toggle, floating over the page. */
 .workbench .nyq-tip-box {
   position: relative;
   display: inline-block;
+}
+/* #479 R4: in NEEDS YOU the toggle ends the Source line, so a panel
+   anchored at the toggle ran past a 390 screen.  So NEEDS YOU's panel
+   anchors to the foot at every width: under it, from its left edge, with
+   .a-pop's own sizes. */
+.workbench .needs-you .nyq-foot {
+  position: relative;
+}
+.workbench .needs-you .nyq-tip-box {
+  position: static;
+}
+/* #479 R6: the scan duration in the panel stays on one line. */
+.workbench .needs-you .nyq-dur {
+  white-space: nowrap;
 }
 .workbench .nyq-rows {
   border-top: 1px solid var(--da-hair);

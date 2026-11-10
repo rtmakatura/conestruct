@@ -1,0 +1,220 @@
+{
+  "size": "390x844",
+  "question": "Are there sidewalks along the work zone?",
+  "closed": {
+    "needs": {
+      "top": 162,
+      "h": 1135.3,
+      "w": 362
+    },
+    "card": {
+      "top": 206.8,
+      "h": 886.3,
+      "w": 360
+    },
+    "foot": {
+      "top": 987.5,
+      "h": 81.5,
+      "w": 328
+    },
+    "toggle": {
+      "top": 1025,
+      "h": 44,
+      "w": 49.5
+    },
+    "rows": {
+      "top": 1093,
+      "h": 90,
+      "w": 360
+    },
+    "other": {
+      "top": 1311.3,
+      "h": 46,
+      "w": 362
+    },
+    "plan": {
+      "top": 1504.3,
+      "h": 343.5,
+      "w": 362
+    },
+    "downloads": {
+      "top": 1847.8,
+      "h": 283.3,
+      "w": 362
+    },
+    "refs": {
+      "top": 2155,
+      "h": 284,
+      "w": 362
+    },
+    "page": {
+      "scrollW": 390,
+      "clientW": 390
+    },
+    "inFlowDetails": 0
+  },
+  "axeClosed": [],
+  "smallClosed": [],
+  "open": {
+    "needs": {
+      "top": 162,
+      "h": 1135.3,
+      "w": 362
+    },
+    "card": {
+      "top": 206.8,
+      "h": 886.3,
+      "w": 360
+    },
+    "foot": {
+      "top": 987.5,
+      "h": 81.5,
+      "w": 328
+    },
+    "toggle": {
+      "top": 1025,
+      "h": 44,
+      "w": 49.5
+    },
+    "rows": {
+      "top": 1093,
+      "h": 90,
+      "w": 360
+    },
+    "other": {
+      "top": 1311.3,
+      "h": 46,
+      "w": 362
+    },
+    "plan": {
+      "top": 1504.3,
+      "h": 343.5,
+      "w": 362
+    },
+    "downloads": {
+      "top": 1847.8,
+      "h": 283.3,
+      "w": 362
+    },
+    "refs": {
+      "top": 2155,
+      "h": 284,
+      "w": 362
+    },
+    "page": {
+      "scrollW": 390,
+      "clientW": 390
+    },
+    "inFlowDetails": 0,
+    "panel": {
+      "tag": "SPAN",
+      "cls": "a-info a-pop tr-note nyq-details",
+      "position": "absolute",
+      "left": 31,
+      "right": 359,
+      "top": 1073,
+      "h": 78.3,
+      "w": 328,
+      "inViewport": true,
+      "onTop": true,
+      "text": "30 found · nearest 57.4 ft · MUTCD § 6C.02 · OpenStreetMap · corridor scan · 10 nov · 09:48 utc · 0.1 s",
+      "items": 1,
+      "lineRows": 4
+    }
+  },
+  "shiftsOnOpen": [],
+  "axeOpen": [],
+  "smallOpen": [],
+  "afterEsc": {
+    "needs": {
+      "top": 162,
+      "h": 1135.3,
+      "w": 362
+    },
+    "card": {
+      "top": 206.8,
+      "h": 886.3,
+      "w": 360
+    },
+    "foot": {
+      "top": 987.5,
+      "h": 81.5,
+      "w": 328
+    },
+    "toggle": {
+      "top": 1025,
+      "h": 44,
+      "w": 49.5
+    },
+    "rows": {
+      "top": 1093,
+      "h": 90,
+      "w": 360
+    },
+    "other": {
+      "top": 1311.3,
+      "h": 46,
+      "w": 362
+    },
+    "plan": {
+      "top": 1504.3,
+      "h": 343.5,
+      "w": 362
+    },
+    "downloads": {
+      "top": 1847.8,
+      "h": 283.3,
+      "w": 362
+    },
+    "refs": {
+      "top": 2155,
+      "h": 284,
+      "w": 362
+    },
+    "page": {
+      "scrollW": 390,
+      "clientW": 390
+    },
+    "inFlowDetails": 0
+  },
+  "escFocusOnToggle": true,
+  "escClosed": true,
+  "openMinusClosed": {
+    "needs": {
+      "top": 0,
+      "h": 0
+    },
+    "card": {
+      "top": 0,
+      "h": 0
+    },
+    "foot": {
+      "top": 0,
+      "h": 0
+    },
+    "toggle": {
+      "top": 0,
+      "h": 0
+    },
+    "rows": {
+      "top": 0,
+      "h": 0
+    },
+    "other": {
+      "top": 0,
+      "h": 0
+    },
+    "plan": {
+      "top": 0,
+      "h": 0
+    },
+    "downloads": {
+      "top": 0,
+      "h": 0
+    },
+    "refs": {
+      "top": 0,
+      "h": 0
+    }
+  }
+}
