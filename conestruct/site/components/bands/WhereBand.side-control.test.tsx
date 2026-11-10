@@ -22,6 +22,8 @@ import { openWhere } from "../__fixtures__/band-helpers";
 import { MIN_AUDIT, TEST_PIN } from "../test-fixtures";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { ShoulderScenario } from "@/lib/scenarios";
+import { AERIAL_FAILED } from "./BandAerial";
+import { SIDES_FAILED } from "./WhereQuestions";
 
 // A located plan, side not yet answered.
 const UNSIDED: ShoulderScenario = {
@@ -42,8 +44,14 @@ const ONE_WAY_OPTIONS = [
   },
 ];
 
+// #491: set to make the geometry read fail (a 502), as a down backend does.
+let geometryFails = false;
+
 const fetchMock = vi.fn((input: RequestInfo | URL) => {
   const url = String(input);
+  if (geometryFails && url.includes("/api/render/corridor-geometry")) {
+    return Promise.resolve({ ok: false, status: 502, json: async () => ({}) } as unknown as Response);
+  }
   const json = url.includes("/api/render/corridor-geometry")
     ? {
         status: "side_not_confirmed",
@@ -63,6 +71,7 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
 });
 
 beforeEach(() => {
+  geometryFails = false;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
 });
@@ -102,6 +111,33 @@ describe("the side control offers only the sides a plan can be built for", () =>
     expect(control?.textContent).not.toContain("not built");
     expect(control?.textContent).not.toContain("median");
     expect(control?.textContent).not.toContain("East side");
+  });
+});
+
+// #491: the two failure lines are plain sentences in Inter (group 1
+// ruling 2), and neither promises a retry a reopen of the map doesn't run
+// (rulings.md, the trace).
+describe("#491: a failed geometry read says so in plain sentences", () => {
+  it("the side line and the aerial's note read as sentences, both in Inter", async () => {
+    geometryFails = true;
+    render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
+    await openWhere();
+    const deadline = Date.now() + 3000;
+    while (!document.querySelector('[data-testid="side-control-note"]')?.textContent?.startsWith("We") && Date.now() < deadline) {
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 50));
+      });
+    }
+    const side = document.querySelector('[data-testid="side-control-note"]')!;
+    expect(side.textContent).toBe(SIDES_FAILED);
+    expect(side.textContent).toBe("We couldn't load this road's sides.");
+    expect(side.classList.contains("tr-note")).toBe(true);
+    const note = document.querySelector('[data-testid="band-aerial-note"]')!;
+    expect(note.textContent).toBe(AERIAL_FAILED);
+    expect(note.textContent).toBe("The map didn't load. Edit on map opens the big map at your pin.");
+    // Inter (.tr-note), not mono (.tr-prov).
+    expect(note.classList.contains("tr-note")).toBe(true);
+    expect(note.classList.contains("tr-prov")).toBe(false);
   });
 });
 

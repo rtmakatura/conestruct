@@ -33,6 +33,7 @@ import { aerialStage } from "@/lib/corridor-aerial";
 import { deriveMoveLedger } from "@/lib/scenarios/move-ledger";
 import { deriveRail, SIDE_BLOCKER } from "@/lib/scenarios/rail";
 import type { CorridorGeometry } from "@/lib/corridor-geometry";
+import { SIDES_FAILED } from "./WhereQuestions";
 
 // render_api.INTERSECTION_NOT_MARKED_MESSAGE, as the read returns it.
 const LINE = "Mark the cross street on the map to lay out the sides.";
@@ -112,7 +113,7 @@ describe("#317: no crossing marked", () => {
     expect(document.querySelector('[data-testid="side-control-not-marked"]')).toBeNull();
     expect(document.querySelector('[data-testid="side-control-mark"]')).toBeNull();
     expect(document.querySelector('[data-testid="side-control-note"]')).toBeNull();
-    expect(document.body.textContent).not.toContain("the road's sides are unavailable");
+    expect(document.body.textContent).not.toContain(SIDES_FAILED);
     // Not on the card, not on the aerial; the rail keeps it (unchanged).
     expect(document.querySelector('[data-testid="where-questions"]')!.textContent).not.toContain(LINE);
     expect(document.querySelector('[data-testid="band-aerial"]')!.textContent).not.toContain(LINE);

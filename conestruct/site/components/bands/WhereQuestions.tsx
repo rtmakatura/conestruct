@@ -65,6 +65,9 @@ export const CROSS_FAILED = "The street lookup didn't answer.";
 export const BIG_MAP_LABEL = "Use the big map instead";
 /** #440 ruling 2 (X21), verbatim. */
 export const SIDES_CHANGED = "The sides changed with the new kind of work.";
+/** #491 (R145 self-ruled): Ryan's first sentence, verbatim.  No retry is
+ *  promised: a reopened map doesn't read the band's geometry again. */
+export const SIDES_FAILED = "We couldn't load this road's sides.";
 /** #485 E2 (R145 self-ruled after #440 ruling 2 / X21): an answer the WHERE
  *  band's Edit panel cleared, asked again after Done. */
 export const EDIT_REASKED = "Your edit changed the road or the work start, so this is asked again.";
@@ -341,7 +344,7 @@ export function WhereQuestions({
           // says so rather than offering a guessed choice.
           <p className="tr-note wq-line" data-testid="side-control-note">
             {geometry.state === "error"
-              ? "the road's sides are unavailable. Reopen the map to retry"
+              ? SIDES_FAILED
               : "reading the road's sides…"}
           </p>
         ) : null}

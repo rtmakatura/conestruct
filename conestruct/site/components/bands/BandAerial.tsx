@@ -80,7 +80,10 @@ export const KEY_LABEL: Record<CorridorZone, string> = {
 };
 
 export const AERIAL_WAIT = "Drawing the corridor…";
-export const AERIAL_FAILED = "The aerial didn't load. Edit on map shows the corridor.";
+/** #491 (R145 self-ruled): Edit on map opens the picker at the pin; it
+ *  draws the corridor only from its own read, and nothing but the pin
+ *  before the side is confirmed, so the line promises only the pin. */
+export const AERIAL_FAILED = "The map didn't load. Edit on map opens the big map at your pin.";
 export const AERIAL_KIND_OWED = "Approaches lay out after you confirm the kind";
 /** #440 ruling 3. */
 export const AERIAL_TAP_BAR = "Tap the intersection nearest the work";
@@ -733,7 +736,7 @@ export function BandAerial({
         )}
         {note && (
           <div
-            className="a-aerial-note tr-prov"
+            className="a-aerial-note tr-note"
             data-testid="band-aerial-note"
             role={note === AERIAL_WAIT ? undefined : "note"}
           >

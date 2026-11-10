@@ -1,0 +1,8 @@
+#491 red proof: the new test run against the unchanged components (base f3ceb4b plus the test only)
+
+$ npx vitest run components/bands/WhereBand.side-control.test.tsx -t "491"
+  x #491: a failed geometry read says so in plain sentences > the side line and the aerial's note read as sentences, both in Inter
+AssertionError: expected 'the road\'s sides are unavailable. Re…' to be undefined // Object.is equality
+      Tests  1 failed | 3 skipped (4)
+
+(SIDES_FAILED is not exported yet, so the import is undefined; the line on screen is the old fragment.)
