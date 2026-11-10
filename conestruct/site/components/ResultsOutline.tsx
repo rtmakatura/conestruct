@@ -7,8 +7,11 @@
 // Presentation only: no value, no count, no verdict is drawn here.  The
 // whole outline is aria-hidden; the WorkingBand is the page's spoken
 // working voice (#193/#252) and the strip slot's status line carries the
-// step.  The slow-step sentences live in the NEEDS YOU block's note, a
-// reserved space, so a slow step grows nothing (ruling 6).
+// step.  The cold-start sentence lives in the NEEDS YOU block's note, a
+// reserved space, so a slow step grows nothing (ruling 6).  Past 14 s the
+// note is empty: only the strip's sentence speaks (#482 (a), Ryan
+// 2026-11-10).  If the road check does stop, the page's scan refusal says
+// so and carries Retry scan (rulings.md R145-2).
 //
 // The map placeholder is the WHERE aerial the band last showed for this
 // pin (ruling 4), dimmed and partly greyscale under the sheen.  With no
@@ -21,10 +24,6 @@ export type WaitSlow = "none" | "cold" | "road";
  *  in a full sentence (group 1 ruling 2). */
 export const COLD_START_NOTE =
   "The first plan after a quiet spell can take a few extra seconds while the server wakes up.";
-/** ruling 6 / R145-4 — past ROAD_SLOW_MS: what happens next.  The page's
- *  refusal container (Retry scan) is the retry; SCAN_BUDGET_S is the 20. */
-export const ROAD_SLOW_NOTE =
-  "The road check stops after 20 seconds. If it does, the page will say so and offer a retry.";
 
 /** The map placeholder's picture: the WHERE aerial dimmed under the sheen,
  *  or a grey block with none remembered.  #477 answer 4: the NEEDS YOU map
@@ -59,9 +58,7 @@ export function OutlineNeedsYou({
           <OutlineAerial src={aerialSrc} />
           <span className="ro-label tr-note">Checking this stretch of road</span>
         </div>
-        <p className={`ro-note tr-help${slow === "road" ? " is-slow" : ""}`}>
-          {slow === "road" ? ROAD_SLOW_NOTE : slow === "cold" ? COLD_START_NOTE : ""}
-        </p>
+        <p className="ro-note tr-help">{slow === "cold" ? COLD_START_NOTE : ""}</p>
         <div className="ro-block ro-line" />
         <div className="ro-block ro-line is-short" />
       </div>

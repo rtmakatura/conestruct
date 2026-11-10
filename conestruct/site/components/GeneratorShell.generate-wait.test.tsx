@@ -217,9 +217,10 @@ describe("#470 the Generate wait", () => {
       "This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.",
     );
     expect(line().textContent).not.toContain("The road data service is slow right now.");
-    expect(note().textContent).toBe(
-      "The road check stops after 20 seconds. If it does, the page will say so and offer a retry.",
-    );
+    // #482 (a), Ryan 2026-11-10: only the strip's 14 s sentence speaks;
+    // the note's line stays reserved and empty.
+    expect(note().textContent).toBe("");
+    expect(document.body.textContent).not.toContain("20 seconds");
     // No "Finish without it": the backend can't finish without the scan
     // and still ask its questions (rulings.md R145-6).
     expect(document.body.textContent).not.toContain("Finish without it");
@@ -281,6 +282,26 @@ describe("#470 the wait's CSS (rulings 4, 5, 9)", () => {
   it("#477 answer 1: the NEEDS YOU outline holds the room of one question (936 / 1084 measured, less R145-4's 2 px)", () => {
     expect(block).toMatch(/\.workbench \{\s*--ro-needs-h: 934px;/);
     expect(block).toMatch(/@media \(max-width: 600px\) \{\s*\.workbench \{\s*--ro-needs-h: 1082px;/);
+  });
+
+  it("#482 (b): the reference group stands one token, 24, under Downloads -- in the outline and settled (rulings.md R145-3)", () => {
+    const rule = (sel: string) => {
+      const esc = sel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const m = css.match(new RegExp(`(?:^|\\n)${esc}\\s*\\{([^}]*)\\}`));
+      expect(m, sel).not.toBeNull();
+      return m![1];
+    };
+    expect(rule(".workbench .ro-refs")).toMatch(/margin-top:\s*var\(--space-section\);/);
+    expect(block).not.toMatch(/calc\(var\(--space-section\) \+ var\(--space-block\)\)/);
+    // Settled: Downloads gives up its bottom margin, the cue row is the
+    // gap (its reserved line inside it), and the group's own 12 drops
+    // only where it follows that row.
+    expect(rule(".workbench #downloads > .dl-sec")).toMatch(/margin-bottom:\s*0;/);
+    const cue = rule(".workbench .tier-cue");
+    expect(cue).toMatch(/min-height:\s*var\(--space-section\);/);
+    expect(cue).toMatch(/line-height:\s*var\(--space-section\);/);
+    expect(cue).toMatch(/margin:\s*0;/);
+    expect(rule(".workbench .results-stack > :has(> .tier-cue) + .results-disc")).toMatch(/margin-top:\s*0;/);
   });
 
   it("no new hex: every colour in the block is a token", () => {

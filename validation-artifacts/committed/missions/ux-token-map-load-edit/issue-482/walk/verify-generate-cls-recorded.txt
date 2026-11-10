@@ -1,0 +1,16 @@
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline vs settled (top/h deltas, px): needs 0/91 | map 0/0 | other 89/0 | setup 89/0 | plan 89/0 | downloads 89/0 | refs 88/0
+   NEEDS YOU delta 91 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+1198x930 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline vs settled (top/h deltas, px): needs 0/91 | map 0/0 | other 89/0 | setup 89/0 | plan 89/0 | downloads 89/0 | refs 88/0
+   NEEDS YOU delta 91 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+390x844 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1135 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline vs settled (top/h deltas, px): needs 0/53 | map 0/0 | other 51/0 | setup 51/0 | plan 51/0 | downloads 51/0 | refs 51/0
+   NEEDS YOU delta 53 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+exit 0

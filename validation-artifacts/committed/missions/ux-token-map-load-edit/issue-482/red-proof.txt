@@ -1,0 +1,5 @@
+Red proof, before the fix (tests written first, sources at e2c8a3f):
+npx vitest run components/GeneratorShell.generate-wait.test.tsx
+  FAIL ruling 6 ... past 14 s: expected 'The road check stops after 20 seconds…' to be ''
+  FAIL #482 (b) reference group one token: .ro-refs has no margin-top: var(--space-section)
+  Tests  2 failed | 8 passed (10)

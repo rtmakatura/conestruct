@@ -3715,12 +3715,21 @@ input[type="number"] {
 }
 /* #235-C — the #187 cue slot above the tier stack, where the #219
    ledger line stood.  Reserved height whether or not the cue is in it
-   (P1): the tr-prov line (10px) on a 15px line box. */
+   (P1): the tr-prov line (10px) on a 24px line box.
+   #482 (b), rulings.md R145-3: the slot's row IS the 24 between Downloads
+   and the reference group (was Downloads' 12, a 15 px row, and the
+   group's 12: 39), with the cue's reserved line inside it. */
 .workbench .tier-cue {
   display: block;
-  min-height: 15px;
-  line-height: 15px;
-  margin: 0 0 10px;
+  min-height: var(--space-section);
+  line-height: var(--space-section);
+  margin: 0;
+}
+.workbench #downloads > .dl-sec {
+  margin-bottom: 0;
+}
+.workbench .results-stack > :has(> .tier-cue) + .results-disc {
+  margin-top: 0;
 }
 .workbench .refchip .chip-sum .verdict-ok {
   color: var(--pass);
@@ -10287,25 +10296,23 @@ input[type="number"] {
 }
 .workbench .ro-refs {
   min-height: var(--ro-refs-h);
-  /* The reference group stands 38 px under Downloads (the cards' own
-     bottom room plus the group's 12), measured by
-     scripts/verify-generate-cls.mjs's outline check.  #477 answer 5: the
-     nearest token sum, 40, CHOSEN; the outline stands 2 px low, inside
-     the check's 8 px. */
-  margin-top: calc(var(--space-section) + var(--space-block));
+  /* #482 (b), Ryan 2026-11-10: the reference group stands 24 under
+     Downloads, one token (was 40, a token sum).  The settled group moves
+     with it (the .tier-cue row, rulings.md R145-3), so the answer still
+     swaps in without moving anything; scripts/verify-generate-cls.mjs's
+     outline check measures it. */
+  margin-top: var(--space-section);
   margin-bottom: var(--space-section);
   display: flex;
   flex-direction: column;
   gap: var(--space-tight);
 }
-/* The slow-step sentence's reserved line (ruling 6): the room is there
-   before the words are, so a slow step grows nothing. */
+/* The cold-start sentence's reserved line (ruling 6): the room is there
+   before the words are, so a slow step grows nothing.  Past 14 s it is
+   empty (#482 (a)). */
 .workbench .ro-note {
   min-height: 3em;
   margin: 0;
-}
-.workbench .ro-note.is-slow {
-  color: var(--warn);
 }
 /* The status line, in the strip's own box (ruling 3): the spinner and
    the step name (#477 answer 2 dropped the count and the bar). */

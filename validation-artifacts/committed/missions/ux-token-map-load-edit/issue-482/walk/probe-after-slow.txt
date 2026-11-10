@@ -1,0 +1,25 @@
+OUTLINE GAP 1440x900 24
+AT14 1440x900 {"line":"⚠ This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.","note":"","noteH":41}
+SETTLED GAP 1440x900 {"boxGap":24,"inkGap":24,"dlBottom":1774,"refsTop":1798,"discMarginTop":"0px","dlMarginBottom":"0px","dlPadBottom":"0px"}
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 936 px | strip: ⚠ Plan ready. Answer 1 quick question before you send it.
+   outline vs settled (top/h deltas, px): needs 0/2 | map 0/0 | other 0/0 | setup 0/0 | plan 0/0 | downloads 0/0 | refs -1/0
+   NEEDS YOU delta 2 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+OUTLINE GAP 1198x930 24
+AT14 1198x930 {"line":"⚠ This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.","note":"","noteH":41}
+SETTLED GAP 1198x930 {"boxGap":24,"inkGap":24,"dlBottom":1774,"refsTop":1798,"discMarginTop":"0px","dlMarginBottom":"0px","dlPadBottom":"0px"}
+1198x930 generate CLS 0.0001 PASS (< 0.1) | NEEDS YOU 936 px | strip: ⚠ Plan ready. Answer 1 quick question before you send it.
+   outline vs settled (top/h deltas, px): needs 0/2 | map 0/0 | other 0/0 | setup 0/0 | plan 0/0 | downloads 0/0 | refs -1/0
+   NEEDS YOU delta 2 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+OUTLINE GAP 390x844 24
+AT14 390x844 {"line":"⚠ This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.","note":"","noteH":41}
+SETTLED GAP 390x844 {"boxGap":24,"inkGap":24,"dlBottom":2080,"refsTop":2104,"discMarginTop":"0px","dlMarginBottom":"0px","dlPadBottom":"0px"}
+390x844 generate CLS 0.0002 PASS (< 0.1) | NEEDS YOU 1084 px | strip: ⚠ Plan ready. Answer 1 quick question before you send it.
+   outline vs settled (top/h deltas, px): needs 0/2 | map 0/0 | other 0/0 | setup 0/0 | plan 0/0 | downloads -1/0 | refs 0/0
+   NEEDS YOU delta 2 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+exit 0
