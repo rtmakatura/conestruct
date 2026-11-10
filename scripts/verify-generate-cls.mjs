@@ -48,6 +48,16 @@
 // at it and has every top checked; more questions grow downward.  With no
 // question the outline closes: any [data-outline] left after the settle
 // FAILS.
+// The soft→sharp check (#483 ruling 4, Ryan 2026-11-09: "A NEEDS YOU map's
+// box doesn't change size from soft to sharp"): every animation frame from
+// the page's load, each NEEDS YOU map frame's box is recorded the first time
+// it shows its soft image and the first time its full image is decoded
+// (`data-map` soft / sharp, `data-loaded`), with each image's `data-frame`
+// (the backend's x-map-frame).  After the settle the run waits up to
+// SHARP_WAIT_MS for the first question's full image.  It FAILS when a map's
+// soft and sharp boxes differ (0 px, rounded) or their frames differ; a map
+// that never showed both (failed, or already drawn this session) prints
+// SKIPPED with the reason, never PASS.
 // The gate header rides only the site's own origin (scripts/gate.cjs), and
 // no output carries the token or a header line, even on a crash (#481:
 // guardOutput, and errors print as their first line, redacted).
@@ -72,6 +82,9 @@ const REDUCED = process.env.REDUCED === "1";
 // CHOSEN: 8 px, the tight gap (--space-tight); a box off by more than
 // that is visibly not where its section lands.
 const TOL_PX = 8;
+// #483: CHOSEN, not measured: room for a cold container, the map's own
+// Overpass read and two Mapbox images; a slower map prints SKIPPED, not PASS.
+const SHARP_WAIT_MS = 30000;
 const OUTLINE = {
   needs: "[data-outline=needs]", map: "[data-outline=needs] .ro-map", other: "[data-outline=other]",
   setup: "[data-outline=setup]", plan: "[data-outline=plan]", downloads: "[data-outline=downloads]", refs: "[data-outline=refs]",
@@ -138,6 +151,24 @@ async function one(w, h) {
   try {
     const ctx = await newGatedContext(b, SITE, { viewport: { width: w, height: h }, deviceScaleFactor: 1, reducedMotion: REDUCED ? "reduce" : "no-preference" });
     await ctx.addInitScript(() => {
+      // #483: each NEEDS YOU map frame's box at its first soft and sharp paint.
+      window.__nyq = [];
+      const seen = new Map();
+      const tick = () => {
+        for (const f of document.querySelectorAll(".nyq-map-frame")) {
+          let rec = seen.get(f);
+          if (!rec) { rec = { phases: {} }; seen.set(f, rec); window.__nyq.push(rec); }
+          const ph = f.getAttribute("data-map");
+          const sharp = f.querySelector("img.nyq-map-sharp");
+          const key = ph === "sharp" ? (sharp?.hasAttribute("data-loaded") ? "sharp" : null) : ph;
+          if (!key || rec.phases[key]) continue;
+          const r = f.getBoundingClientRect();
+          const img = key === "sharp" ? sharp : f.querySelector("[data-testid=needs-you-map-soft]");
+          rec.phases[key] = { w: Math.round(r.width), h: Math.round(r.height), frame: img?.getAttribute("data-frame") ?? null };
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
       window.__ls = [];
       try {
         new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__ls.push({ v: e.value, r: e.hadRecentInput, t: e.startTime }); })
@@ -230,6 +261,16 @@ async function one(w, h) {
     const after = await boxes(p, SETTLED);
     // #477 answer 1: no outline is left behind once the answer is in.
     const outlinesLeft = await p.evaluate(() => document.querySelectorAll("[data-outline]").length);
+    // #483: the first question's map, soft then sharp (or failed).
+    const hasMap = await p.evaluate(() => !!document.querySelector(".nyq-map-frame"));
+    if (hasMap) {
+      await p.waitForFunction(() => {
+        const f = document.querySelector(".nyq-map-frame");
+        return !f || f.getAttribute("data-map") === "failed" || !!f.querySelector("img.nyq-map-sharp[data-loaded]");
+      }, null, { timeout: SHARP_WAIT_MS }).catch(() => {});
+      await p.waitForTimeout(300);
+    }
+    const maps = await p.evaluate(() => (window.__nyq ?? []).map((m) => m.phases));
     // ruling 5 under reduced motion: nothing in the results animates.
     const anim = await p.evaluate(() => {
       const sel = [".status-slot > .status-bar", "section.needs-you", "section.ny-other", "[data-testid=your-plan]", "#downloads > *", ".results-disc"];
@@ -251,7 +292,7 @@ async function one(w, h) {
         needsYou: Math.round(document.querySelector("section.needs-you")?.getBoundingClientRect().height ?? 0),
       };
     }, t0);
-    return { ...r, deltas, anim, outlinesLeft };
+    return { ...r, deltas, anim, outlinesLeft, maps };
   } finally {
     await b.close();
   }
@@ -288,6 +329,21 @@ for (const [w, h] of SIZES) {
   }
   console.log(`   outlines left after the settle: ${r.outlinesLeft} ${r.outlinesLeft ? "FAIL" : "PASS"}`);
   if (r.outlinesLeft) failed = true;
+  // #483 ruling 4: a NEEDS YOU map's box doesn't change size from soft to sharp.
+  if (!r.maps.length) console.log("   soft→sharp box check SKIPPED (no NEEDS YOU map on this answer)");
+  r.maps.forEach((m, i) => {
+    const box = (b) => (b ? `${b.w}x${b.h}` : "-");
+    if (m.failed) return console.log(`   soft→sharp box check map ${i + 1} SKIPPED (the map failed)`);
+    if (!m.soft || !m.sharp) {
+      return console.log(`   soft→sharp box check map ${i + 1} SKIPPED (${!m.sharp ? `no sharp image within ${SHARP_WAIT_MS / 1000} s` : "no soft image shown"}; waiting ${box(m.waiting)}, soft ${box(m.soft)}, sharp ${box(m.sharp)})`);
+    }
+    const bad = [];
+    if (m.soft.w !== m.sharp.w || m.soft.h !== m.sharp.h) bad.push(`box ${box(m.soft)} → ${box(m.sharp)}`);
+    if (m.soft.frame !== m.sharp.frame) bad.push(`frame ${m.soft.frame} → ${m.sharp.frame}`);
+    if (m.waiting && (m.waiting.w !== m.sharp.w || m.waiting.h !== m.sharp.h)) bad.push(`waiting box ${box(m.waiting)} → ${box(m.sharp)}`);
+    console.log(`   soft→sharp box check map ${i + 1} ${bad.length ? "FAIL: " + bad.join(", ") : `PASS (${box(m.sharp)}, frame ${m.sharp.frame})`}`);
+    if (bad.length) failed = true;
+  });
   if (REDUCED) {
     const moving = r.anim.filter((a) => !/=none$/.test(a));
     console.log(`   reduced motion: ${moving.length ? "FAIL animating: " + moving.join(", ") : "PASS, no animation on " + r.anim.length + " elements"}`);

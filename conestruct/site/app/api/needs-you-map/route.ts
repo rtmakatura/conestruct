@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
     width?: unknown;
     height?: unknown;
     zoom?: unknown;
+    soft?: unknown;
   };
   if (!isScenario(b.scenario)) {
     return new Response("Invalid scenario", { status: 400 });
@@ -46,7 +47,9 @@ export async function POST(req: NextRequest) {
   const height = px(b.height, 80);
   const zoom = b.zoom === undefined ? 0 : b.zoom;
   const zoomOk = typeof zoom === "number" && Number.isInteger(zoom) && zoom >= -1 && zoom <= 3;
-  if (typeof b.flag !== "string" || !isScannedFlag(b.flag) || width === null || height === null || !zoomOk) {
+  // #483 ruling 1: the same frame's quick image.  Only a boolean is asked.
+  const softOk = b.soft === undefined || typeof b.soft === "boolean";
+  if (typeof b.flag !== "string" || !isScannedFlag(b.flag) || width === null || height === null || !zoomOk || !softOk) {
     return new Response("Invalid picture request", { status: 400 });
   }
 
@@ -55,5 +58,6 @@ export async function POST(req: NextRequest) {
     width,
     height,
     ...(zoom !== 0 ? { zoom } : {}),
+    ...(b.soft === true ? { soft: true as const } : {}),
   });
 }

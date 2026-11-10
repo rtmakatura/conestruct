@@ -1,0 +1,15 @@
+# #483: the first full vitest run after the change (3008 tests): 9 failed, 2998 passed, 1 skipped
+components/GeneratorShell.revision.test.tsx > 7d's RETRY PREVIEW re-asks the same read; APPLY names the write > PAYLOAD: a failed preview offers RETRY PREVIEW, and it fires one breakdown with preview: true for the staged value
+components/GeneratorShell.revision.test.tsx > Escape cancels S7 with zero requests (#289 acceptance) > outside S7 Escape does nothing to the plan and asks for nothing
+components/GeneratorShell.revision.test.tsx > a preview writes nothing — no band, no lock, no memo (#289 acceptance) > in flight AND landed: no working band, no lock, the editor and every write control live
+components/GeneratorShell.revision.test.tsx > a preview writes nothing — no band, no lock, no memo (#289 acceptance) > PAYLOAD, no memo: the preview's answer never becomes the plan's — the results keep the settled count, and APPLY asks afresh
+components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > kind → the column, WHERE open, no request
+components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > location → the column, WHERE open, no request
+components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > extent → the column, WHERE open, no request
+components/GeneratorShell.value-links.test.tsx > defect 2 — kind, location, extent and dates open the band that owns them > dates → the column, WHAT open, no request
+components/WriteLock.test.tsx > #252 — the write lock's enumeration is honest > under the lock every control is a disabled write, a live read, or a route link — anything else fails by name
+
+Each of the three files alone, before any fix: the same 9 failed (31 tests: 9 failed, 22 passed), so none was a flake.
+Cause: the card's two hook calls started the full request only after a re-render, which act() held past the tests' 400 ms settle, so the second /api/needs-you-map request leaked into the next phase (and once took a mockImplementationOnce meant for the breakdown).
+Fix: the hook asks the soft and full images in one async chain (lib/needs-you-map.ts useNeedsYouMap(req, softFirst)).
+After the fix: the three files alone 59/59 with NeedsYouMap.test.tsx; full run 3007 passed, 1 skipped (3008).

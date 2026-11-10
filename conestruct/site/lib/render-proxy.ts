@@ -438,7 +438,7 @@ export async function fetchCorridorMap(
 // fetchCorridorMap's.
 export async function fetchNeedsYouMap(
   scenario: Scenario,
-  picture: { flag: string; width: number; height: number; zoom?: number },
+  picture: { flag: string; width: number; height: number; zoom?: number; soft?: true },
 ): Promise<Response> {
   const url = process.env.MODAL_RENDER_URL;
   const secret = process.env.MODAL_RENDER_SECRET;
@@ -484,7 +484,8 @@ export async function fetchNeedsYouMap(
   const headers = new Headers();
   headers.set("content-type", contentType);
   headers.set("cache-control", upstream.headers.get("cache-control") ?? "private, max-age=600");
-  for (const name of ["x-map-subject", "x-map-point"]) {
+  // #483: x-map-frame, the frame both images were framed on (Rule 3).
+  for (const name of ["x-map-subject", "x-map-point", "x-map-frame"]) {
     const value = upstream.headers.get(name);
     if (value) headers.set(name, value);
   }

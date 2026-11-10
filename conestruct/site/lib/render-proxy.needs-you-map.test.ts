@@ -30,11 +30,14 @@ describe("fetchNeedsYouMap", () => {
             "content-type": "image/jpeg",
             "x-map-subject": "drawn",
             "x-map-point": "39.74,-104.97",
+            "x-map-frame": "39.740000,-104.970000,18.00",
           },
         }),
     );
     vi.stubGlobal("fetch", f);
     const r = await fetchNeedsYouMap(DEFAULT_SHOULDER, PICTURE);
+    // #483: the frame both images were framed on, relayed as it came.
+    expect(r.headers.get("x-map-frame")).toBe("39.740000,-104.970000,18.00");
     const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("https://modal.example/render/needs-you-map");
     expect(JSON.parse(init.body as string)).toMatchObject(PICTURE);

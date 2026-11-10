@@ -1,0 +1,323 @@
+{
+  "1440x900": [
+    {
+      "q": 1,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": "39.739914,-104.968447,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 2,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": "39.739842,-104.968454,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 3,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": "39.739969,-104.968354,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    }
+  ],
+  "1198x930": [
+    {
+      "q": 1,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": "39.739914,-104.968447,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 2,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": "39.739842,-104.968454,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 3,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": "39.739969,-104.968354,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    }
+  ],
+  "390x844": [
+    {
+      "q": 1,
+      "soft": {
+        "phase": "soft",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": "39.739914,-104.968447,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 2,
+      "soft": {
+        "phase": "soft",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": "39.739842,-104.968454,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 3,
+      "soft": {
+        "phase": "soft",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?"
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": "39.739969,-104.968354,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?"
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    }
+  ]
+}

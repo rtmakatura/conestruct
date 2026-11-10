@@ -345,3 +345,76 @@ def test_the_token_stays_on_the_backend(
     r = ask(client, fixture())
     assert "test-token" not in json.dumps(dict(r.headers))
     assert mapbox[0]["params"] == {"access_token": "test-token"}
+
+
+# #483 ruling 1: the soft image is the full image's frame, from the same
+# backend frame (Rule 3).  rulings.md R145-1, R145-2.
+
+
+def soft_view(url: str) -> tuple[float, float, float]:
+    """The soft image's centre and zoom: @1x, the same CSS size, nothing drawn."""
+    m = re.search(r"/static/(-?[\d.]+),(-?[\d.]+),([\d.]+),0/800x400$", url)
+    assert m, url
+    return float(m.group(2)), float(m.group(1)), float(m.group(3))
+
+
+def frame_of(r: Any) -> tuple[float, float, float]:
+    lat, lng, z = (float(v) for v in r.headers["x-map-frame"].split(","))
+    return lat, lng, z
+
+
+@pytest.mark.parametrize("flag", ["pedestrian_facility", "adjacent_intersection"])
+def test_483_the_soft_image_is_the_full_images_frame_with_nothing_drawn(
+    client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any], flag: str
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    node = {"type": "node", "lat": lat, "lon": lng, "tags": {"highway": "traffic_signals"}}
+    subject = footway(lat, lng) if flag == "pedestrian_facility" else node
+    overpass["answer"] = ({"elements": [subject]}, None)
+
+    soft = ask(client, scenario, flag=flag, soft=True)
+    full = ask(client, scenario, flag=flag)
+
+    assert (soft.status_code, full.status_code) == (200, 200)
+    assert soft.headers["x-map-frame"] == full.headers["x-map-frame"]
+    soft_url, full_url = mapbox[0]["url"], mapbox[1]["url"]
+    assert soft_view(soft_url) == pytest.approx(view(full_url), abs=1e-6)
+    assert frame_of(full) == pytest.approx(view(full_url), abs=1e-6)
+    assert "path-" not in soft_url and "pin-" not in soft_url and "@2x" not in soft_url
+    # R145-3: one Overpass read for both, the full one reuses the memo.
+    assert len(overpass["queries"]) == 1
+    # The soft image says nothing about what was drawn on it.
+    assert soft.headers["x-map-subject"] == "none"
+
+
+def test_483_the_pin_picture_soft_is_the_pins_frame(
+    client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    scenario["meta"].pop("work")
+    lat, lng = pin(scenario)
+    soft = ask(client, scenario, soft=True)
+    full = ask(client, scenario)
+    assert soft.headers["x-map-frame"] == full.headers["x-map-frame"]
+    assert frame_of(full) == pytest.approx((lat, lng, sa.PIN_ZOOM), abs=1e-6)
+    assert soft_view(mapbox[0]["url"]) == pytest.approx((lat, lng, sa.PIN_ZOOM), abs=1e-6)
+    assert "pin-" in mapbox[1]["url"] and "pin-" not in mapbox[0]["url"]
+
+
+def test_483_the_full_image_is_unchanged_by_the_soft_one(
+    client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    overpass["answer"] = ({"elements": [footway(*pin(scenario))]}, None)
+    ask(client, scenario)
+    sd.clear_subject_memo()
+    ask(client, scenario, soft=True)
+    ask(client, scenario, soft=False)
+    assert mapbox[2] == mapbox[0]
+
+
+def test_483_soft_must_be_a_boolean(
+    client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
+) -> None:
+    assert ask(client, fixture(), soft="yes please").status_code == 422

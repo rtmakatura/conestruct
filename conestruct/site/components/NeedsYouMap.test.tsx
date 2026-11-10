@@ -12,7 +12,7 @@ import { forgetNeedsYouMaps, streetLevelUrl } from "@/lib/needs-you-map";
 import type { SiteAdjustmentRecord, SiteScanProvenance } from "@/lib/render-types";
 import type { Scenario } from "@/lib/scenarios";
 import type { StagedCorrection } from "@/lib/scenarios/types";
-import { MAP_FAILED, MAP_IMAGERY_NOTE, MAP_KEY_WORK, MAP_STREET_LEVEL } from "./NeedsYouMap";
+import { MAP_FAILED, MAP_IMAGERY_NOTE, MAP_KEY_WORK, MAP_LOADING, MAP_STREET_LEVEL } from "./NeedsYouMap";
 import { QuestionFlow } from "./NeedsYouQuestion";
 
 // #477 answer 4: the WHERE aerial the band last showed for a pin.  Seeded
@@ -40,19 +40,39 @@ const SCENARIO = { kind: "lane_closure", meta: { lat: 39.74, lng: -104.97 } } as
 
 type Answer = { ok: boolean; status?: number; subject?: string; point?: string };
 let answer: Answer;
+// #483: the soft image's own answer (the backend says "none" for it), and
+// optional holds so a test can see each step.
+let softAnswer: Answer;
+let holdSoft: Promise<void> | null;
+let holdFull: Promise<void> | null;
+const FRAME = "39.740100,-104.970200,18.00";
 let fetchMock: ReturnType<typeof vi.fn>;
 const bodies = () => fetchMock.mock.calls.map((c) => JSON.parse(c[1].body as string));
+const fullBodies = () => bodies().filter((b) => !b.soft);
+function deferred() {
+  let open!: () => void;
+  const p = new Promise<void>((r) => (open = r));
+  return { p, open };
+}
 
 beforeEach(() => {
   forgetNeedsYouMaps();
   whereAerial = null;
   answer = { ok: true, subject: "drawn", point: "39.740100,-104.970200" };
-  fetchMock = vi.fn(async () => {
+  softAnswer = { ok: true, subject: "none", point: "39.740100,-104.970200" };
+  holdSoft = null;
+  holdFull = null;
+  fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
+    const soft = JSON.parse(init.body as string).soft === true;
+    const hold = soft ? holdSoft : holdFull;
+    if (hold) await hold;
+    const a = soft ? softAnswer : answer;
     const headers = new Headers();
-    if (answer.subject) headers.set("x-map-subject", answer.subject);
-    if (answer.point) headers.set("x-map-point", answer.point);
-    return new Response(answer.ok ? new Blob(["img"]) : "{}", {
-      status: answer.ok ? 200 : (answer.status ?? 502),
+    if (a.subject) headers.set("x-map-subject", a.subject);
+    if (a.point) headers.set("x-map-point", a.point);
+    if (a.ok) headers.set("x-map-frame", FRAME);
+    return new Response(a.ok ? new Blob(["img"]) : "{}", {
+      status: a.ok ? 200 : (a.status ?? 502),
       headers,
     });
   });
@@ -99,8 +119,11 @@ describe("the map in the card (rulings 1-7)", () => {
       "nyq-answers",
       "nyq-foot",
     ]);
-    expect(bodies()[0]).toMatchObject({ flag: "pedestrian_facility", width: 600, height: 300 });
-    expect(bodies()[0].zoom).toBeUndefined();
+    // #483: the soft image of this frame first, then the full one.
+    expect(bodies()[0]).toEqual({ ...bodies()[1], soft: true });
+    expect(bodies()[1]).toMatchObject({ flag: "pedestrian_facility", width: 600, height: 300 });
+    expect(bodies()[1].zoom).toBeUndefined();
+    expect(bodies()[1].soft).toBeUndefined();
   });
 
   it("names both lines when the backend drew the subject, in the ruled words", async () => {
@@ -162,6 +185,7 @@ describe("the map in the card (rulings 1-7)", () => {
 
   it("the space under the map stays in the layout while loading and when it fails (P1)", async () => {
     answer = { ok: false, status: 502 };
+    softAnswer = { ok: false, status: 502 };
     const { container } = render(<Host />);
     expect(container.querySelector(".nyq-map-under")).toBeTruthy();
     await screen.findByTestId("needs-you-map-failed");
@@ -170,44 +194,110 @@ describe("the map in the card (rulings 1-7)", () => {
     expect(screen.queryByTestId("needs-you-map-street")).toBeNull();
   });
 
-  it("ruling 7: the frame and the key are there while loading", () => {
+  it("ruling 7, #483: the frame and the key's place are there while loading; the key waits for the full image", () => {
     const { container } = render(<Host />);
     expect(container.querySelector(".nyq-map-frame")!.getAttribute("aria-busy")).toBe("true");
     expect(screen.queryByTestId("needs-you-map-img")).toBeNull();
-    expect(screen.getByTestId("needs-you-map-key")).toBeTruthy();
+    expect(screen.getByTestId("needs-you-map-key").hasAttribute("data-hidden")).toBe(true);
   });
+});
 
-  it("#477 answer 4: until the map loads the frame shows the WHERE aerial for this pin, dimmed like the outline's, never a blank frame", async () => {
+// #483 ruling 1 (Ryan, 2026-11-09): each question's map loads soft, then
+// sharpens, in the same frame.  rulings.md R145-1 to R145-10.
+describe("#483: the map loads soft, then sharpens in place", () => {
+  const frame = (c: HTMLElement) => c.querySelector<HTMLElement>(".nyq-map-frame")!;
+  const loading = () => screen.queryByText(MAP_LOADING);
+
+  it("before any image: the frame's own ground and the label, never the WHERE aerial at another frame", () => {
     whereAerial = "blob:where-aerial";
+    holdSoft = new Promise(() => {});
     const { container } = render(<Host />);
-    const frame = container.querySelector(".nyq-map-frame")!;
-    const stand = frame.querySelector<HTMLImageElement>("[data-testid=needs-you-map-standin] img.ro-aerial");
-    expect(stand?.getAttribute("src")).toBe("blob:where-aerial");
-    // Decorative: the frame says it is busy; the picture claims nothing.
-    expect(stand?.getAttribute("alt")).toBe("");
-    expect(frame.querySelector("[data-testid=needs-you-map-standin]")!.getAttribute("aria-hidden")).toBe("true");
-    expect(frame.getAttribute("aria-busy")).toBe("true");
-    // The map replaces it in the same frame.
-    await img();
-    expect(frame.querySelector("[data-testid=needs-you-map-standin]")).toBeNull();
-  });
-
-  it("#477 answer 4 (Rule 10): with no WHERE aerial for this pin the frame holds the outline's grey block, not another pin's picture", () => {
-    const { container } = render(<Host />);
-    const stand = container.querySelector(".nyq-map-frame [data-testid=needs-you-map-standin]")!;
-    expect(stand).not.toBeNull();
-    expect(stand.querySelector("img")).toBeNull();
-    expect(stand.querySelector(".ro-aerial.ro-block")).not.toBeNull();
-  });
-
-  it("#477 answer 4: a failed map shows the ruled line, not the stand-in", async () => {
-    whereAerial = "blob:where-aerial";
-    answer = { ok: false, status: 502 };
-    const { container } = render(<Host />);
-    await screen.findByTestId("needs-you-map-failed");
+    expect(frame(container).getAttribute("data-map")).toBe("waiting");
+    expect(container.querySelector("img")).toBeNull();
     expect(container.querySelector("[data-testid=needs-you-map-standin]")).toBeNull();
+    expect(loading()).not.toBeNull();
   });
 
+  it("the soft image shows first, with the label; the full one is asked for only after it", async () => {
+    const soft = deferred();
+    holdSoft = soft.p;
+    const { container } = render(<Host />);
+    await waitFor(() => expect(bodies()).toHaveLength(1));
+    expect(bodies()[0].soft).toBe(true);
+    // Nothing asked for the full image while the soft one is out (R145-3).
+    await new Promise((r) => setTimeout(r, 400));
+    expect(bodies()).toHaveLength(1);
+    holdFull = new Promise(() => {});
+    soft.open();
+    const s = await screen.findByTestId("needs-you-map-soft");
+    expect(frame(container).getAttribute("data-map")).toBe("soft");
+    expect(frame(container).contains(s)).toBe(true);
+    // Decorative: the frame is busy and the label says so.
+    expect(s.getAttribute("alt")).toBe("");
+    expect(s.getAttribute("data-frame")).toBe(FRAME);
+    expect(loading()).not.toBeNull();
+    expect(screen.queryByTestId("needs-you-map-img")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Zoom in" })).toBeNull();
+    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.getByTestId("needs-you-map-key").hasAttribute("data-hidden")).toBe(true);
+    await waitFor(() => expect(fullBodies()).toHaveLength(1));
+  });
+
+  it("the full image replaces it in the same frame; the label goes and the key appears", async () => {
+    const { container } = render(<Host />);
+    const sharp = await img();
+    expect(frame(container).getAttribute("data-map")).toBe("sharp");
+    expect(frame(container).contains(sharp)).toBe(true);
+    expect(sharp.getAttribute("data-frame")).toBe(FRAME);
+    expect(sharp.className).toContain("nyq-map-sharp");
+    expect(loading()).toBeNull();
+    expect(frame(container).getAttribute("aria-busy")).toBe("false");
+    expect(screen.getByTestId("needs-you-map-key").hasAttribute("data-hidden")).toBe(false);
+  });
+
+  it("a soft image that fails still gets the full one", async () => {
+    softAnswer = { ok: false, status: 429 };
+    render(<Host />);
+    await img();
+    expect(fullBodies()).toHaveLength(1);
+    expect(screen.queryByTestId("needs-you-map-failed")).toBeNull();
+  });
+
+  it("a full image that fails says the ruled line, with no soft picture left behind", async () => {
+    answer = { ok: false, status: 502 };
+    render(<Host />);
+    await screen.findByTestId("needs-you-map-failed");
+    expect(screen.queryByTestId("needs-you-map-soft")).toBeNull();
+    expect(loading()).toBeNull();
+  });
+
+  it("Rule 10: a full image that fails to decode reads as a failed map, never an invisible one under a live key", async () => {
+    render(<Host />);
+    fireEvent.error(await img());
+    expect((await screen.findByTestId("needs-you-map-failed")).textContent).toBe(MAP_FAILED);
+    expect(screen.queryByTestId("needs-you-map-img")).toBeNull();
+    expect(screen.queryByTestId("needs-you-map-soft")).toBeNull();
+    expect(screen.getByTestId("needs-you-map-key").hasAttribute("data-hidden")).toBe(true);
+    expect(screen.queryByRole("button", { name: "Zoom in" })).toBeNull();
+    expect(screen.queryByRole("link")).toBeNull();
+    // The answer still works without the map (ruling 7).
+    fireEvent.click(screen.getByLabelText(/Yes, they're there/));
+    expect((screen.getByRole("button", { name: "Next question" }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it("a zoom step asks no soft image and keeps the full picture meanwhile (P16)", async () => {
+    render(<Host />);
+    await img();
+    expect(bodies().filter((b) => b.soft)).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Zoom in" }));
+    await waitFor(() => expect(bodies().at(-1).zoom).toBe(1));
+    expect(bodies().filter((b) => b.soft)).toHaveLength(1);
+    expect(loading()).toBeNull();
+  });
+
+});
+
+describe("the map in the card, failed and zoomed (rulings 1-7)", () => {
   it("ruling 7: a failed image says the ruled line, holds the key's place, and the answer works", async () => {
     answer = { ok: false, status: 502 };
     render(<Host />);
@@ -238,19 +328,20 @@ describe("the map in the card (rulings 1-7)", () => {
   it("answering doesn't ask again; the next question asks once for its own frame and words", async () => {
     render(<Host />);
     await img();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    fireEvent.click(screen.getByLabelText(/Yes, they're there/));
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    fireEvent.click(screen.getByRole("button", { name: "Next question" }));
-    await waitFor(() => expect(bodies().at(-1).flag).toBe("adjacent_intersection"));
+    // #483: the soft image and the full one.
     expect(fetchMock).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByLabelText(/Yes, they're there/));
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByRole("button", { name: "Next question" }));
+    await waitFor(() => expect(fullBodies().at(-1).flag).toBe("adjacent_intersection"));
+    expect(fetchMock).toHaveBeenCalledTimes(4);
     expect((await screen.findByTestId("needs-you-map-label")).textContent).toBe("Crossing on the map");
   });
 
   it("only the question on screen asks (the cost, checkpoint § 3)", async () => {
     render(<Host />);
     await img();
-    expect(bodies().map((b) => b.flag)).toEqual(["pedestrian_facility"]);
+    expect(bodies().map((b) => b.flag)).toEqual(["pedestrian_facility", "pedestrian_facility"]);
   });
 
   it("without a scenario there is no map and no request", () => {
@@ -299,6 +390,7 @@ describe("#448: the explanation follows what the map drew (Rule 10)", () => {
 
   it("a failed image: no claim about the picture", async () => {
     answer = { ok: false, status: 502 };
+    softAnswer = { ok: false, status: 502 };
     const { container } = render(<Host />);
     await screen.findByTestId("needs-you-map-failed");
     expect(why(container)).toBe(SIDE_SCAN);
@@ -318,7 +410,7 @@ describe("#448: the explanation follows what the map drew (Rule 10)", () => {
     await img();
     fireEvent.click(screen.getByLabelText(/Yes, they're there/));
     fireEvent.click(screen.getByRole("button", { name: "Next question" }));
-    await waitFor(() => expect(bodies().at(-1).flag).toBe("adjacent_intersection"));
+    await waitFor(() => expect(fullBodies().at(-1).flag).toBe("adjacent_intersection"));
     await waitFor(() =>
       expect(why(container)).toBe(
         "The scan found an intersection 49.9 ft from the work, but the map couldn't draw it. Check it at street level.",

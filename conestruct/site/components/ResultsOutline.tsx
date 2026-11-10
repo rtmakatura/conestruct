@@ -26,9 +26,10 @@ export const COLD_START_NOTE =
   "The first plan after a quiet spell can take a few extra seconds while the server wakes up.";
 
 /** The map placeholder's picture: the WHERE aerial dimmed under the sheen,
- *  or a grey block with none remembered.  #477 answer 4: the NEEDS YOU map
- *  frame shows the same picture until its own map loads (NeedsYouMap), so
- *  the frame goes outline, stand-in, map with no blank step. */
+ *  or a grey block with none remembered.  #483 ruling 1 (R145-11): it stands
+ *  in only during the Generate wait, since the first question's frame isn't
+ *  known before the scan answers; the NEEDS YOU map itself loads soft, then
+ *  sharp, in its own frame (NeedsYouMap). */
 export function OutlineAerial({ src }: { src: string | null }) {
   return (
     <>

@@ -1,0 +1,31 @@
+# #483 red proofs (new tests run against the base 0c9e38d code, before the fix)
+
+## pytest tests/test_needs_you_map.py
+FAILED tests/test_needs_you_map.py::test_483_the_soft_image_is_the_full_images_frame_with_nothing_drawn[pedestrian_facility]
+FAILED tests/test_needs_you_map.py::test_483_the_soft_image_is_the_full_images_frame_with_nothing_drawn[adjacent_intersection]
+FAILED tests/test_needs_you_map.py::test_483_the_pin_picture_soft_is_the_pins_frame
+FAILED tests/test_needs_you_map.py::test_483_soft_must_be_a_boolean - Asserti...
+4 failed, 26 passed in 2.35s
+(test_483_the_full_image_is_unchanged_by_the_soft_one passes before and after: it is the byte-identical guard for the full URL, not a red test.)
+
+## vitest components/NeedsYouMap.test.tsx app/api/needs-you-map lib/render-proxy.needs-you-map.test.ts (before the fix)
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  lib/render-proxy.needs-you-map.test.ts > fetchNeedsYouMap > posts the scenario and the picture, and relays the bytes and both headers
+ FAIL  components/NeedsYouMap.test.tsx > the map in the card (rulings 1-7) > sits between the explanation and the choices, and asks for this question's frame
+ FAIL  components/NeedsYouMap.test.tsx > the map in the card (rulings 1-7) > ruling 7, #483: the frame and the key's place are there while loading; the key waits for the full image
+ FAIL  components/NeedsYouMap.test.tsx > #483: the map loads soft, then sharpens in place > before any image: the frame's own ground and the label, never the WHERE aerial at another frame
+ FAIL  components/NeedsYouMap.test.tsx > #483: the map loads soft, then sharpens in place > the soft image shows first, with the label; the full one is asked for only after it
+ FAIL  components/NeedsYouMap.test.tsx > #483: the map loads soft, then sharpens in place > the full image replaces it in the same frame; the label goes and the key appears
+ FAIL  components/NeedsYouMap.test.tsx > #483: the map loads soft, then sharpens in place > a full image that fails says the ruled line, with no soft picture left behind
+ FAIL  components/NeedsYouMap.test.tsx > #483: the map loads soft, then sharpens in place > a zoom step asks no soft image and keeps the full picture meanwhile (P16)
+ FAIL  components/NeedsYouMap.test.tsx > the map in the card, failed and zoomed (rulings 1-7) > answering doesn't ask again; the next question asks once for its own frame and words
+ FAIL  components/NeedsYouMap.test.tsx > the map in the card, failed and zoomed (rulings 1-7) > only the question on screen asks (the cost, checkpoint § 3)
+ FAIL  app/api/needs-you-map/route.test.ts > the needs-you-map route > #483: forwards soft: true when asked
+ FAIL  app/api/needs-you-map/route.test.ts > the needs-you-map route > #483: soft: false is the full picture; anything else is refused
+      Tests  12 failed | 22 passed (34)
+("a soft image that fails still gets the full one" passes before the fix: the old card asked only the full image; it guards R145-3 after.)
+
+## Repair cycle 1: vitest components/NeedsYouMap.test.tsx -t "fails to decode" (before the onError fix)
+ FAIL  ... > Rule 10: a full image that fails to decode reads as a failed map, never an invisible one under a live key
+TestingLibraryElementError: Unable to find an element by: [data-testid="needs-you-map-failed"]
+      Tests  1 failed | 28 skipped (29)

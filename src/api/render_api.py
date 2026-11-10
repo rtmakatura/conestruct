@@ -30,7 +30,7 @@ from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
-from pydantic import BaseModel, Field, TypeAdapter, ValidationError
+from pydantic import BaseModel, Field, StrictBool, TypeAdapter, ValidationError
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 from sentry_sdk.types import Event, Hint
@@ -2025,6 +2025,8 @@ class NeedsYouMapRequest(BaseModel):
     width: int = Field(ge=120, le=1280)
     height: int = Field(ge=80, le=1280)
     zoom: int = Field(default=0, ge=-1, le=3)
+    # #483 ruling 1: the same frame's quick image, @1x with nothing drawn.
+    soft: StrictBool = False
 
 
 _NEEDS_YOU_MAP_ADAPTER: TypeAdapter[NeedsYouMapRequest] = TypeAdapter(NeedsYouMapRequest)
@@ -2039,8 +2041,10 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
     (:func:`src.rules.site_detection.subject_geometry`), so the audit and the
     scan are untouched.  No answer draws no line (Rule 10) and still answers
     a picture.  The frontend computes nothing: it gets the image, plus
-    ``x-map-subject`` (``drawn`` | ``none``) and ``x-map-point`` (``lat,lng``,
-    the street-level link's point).  Anything that isn't a picture answers
+    ``x-map-subject`` (``drawn`` | ``none``), ``x-map-point`` (``lat,lng``,
+    the street-level link's point) and ``x-map-frame`` (``lat,lng,zoom``, the
+    frame; #483).  ``soft`` asks the same frame's quick image with nothing
+    drawn on it, so its ``x-map-subject`` is ``none``.  Anything that isn't a picture answers
     the same JSON as ``/render/corridor-map``.
     """
     req = _validate_read_body(_NEEDS_YOU_MAP_ADAPTER, body)
@@ -2081,7 +2085,7 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
             # crossing only, at every width.  Nearest first, so the first.
             if req.flag == "adjacent_intersection" and subject:
                 subject = subject[:1]
-    url, query, point, drawn = _static_aerial.question_image_url(
+    url, query, point, drawn, view = _static_aerial.question_image_url(
         meta.lat,
         meta.lng,
         approaches,
@@ -2089,6 +2093,7 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
         width=req.width,
         height=req.height,
         zoom=req.zoom,
+        soft=req.soft,
     )
     try:
         image = _static_aerial.fetch_image(url, query, token)
@@ -2112,6 +2117,8 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
             "cache-control": "private, max-age=600",
             "x-map-subject": "drawn" if drawn else "none",
             "x-map-point": f"{point[0]:.6f},{point[1]:.6f}",
+            # #483: the frame both images were framed on (Rule 3).
+            "x-map-frame": f"{view[0]:.6f},{view[1]:.6f},{view[2]:.2f}",
         },
     )
 

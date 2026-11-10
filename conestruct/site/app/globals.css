@@ -8829,6 +8829,55 @@ input[type="number"] {
   background: rgb(var(--ws-surface-rgb));
   border: 1px solid var(--lv-work);
 }
+/* #483 ruling 1 (Ryan, 2026-11-09): the map loads soft, then sharpens.
+   The soft image is this frame's own (the backend's), filling the box
+   exactly (rulings.md R145-5: no scale), blurred and slightly desaturated
+   under the panel ground's scrim (R145-6; CHOSEN from the canvas, LoadB1:
+   blur 14, saturate 0.7, scrim 0.25).  The full image sits over it and
+   fades in once decoded (R145-10). */
+.workbench .nyq-map-soft {
+  position: absolute;
+  inset: 0;
+}
+.workbench .nyq-map-soft img {
+  filter: blur(14px) saturate(0.7);
+}
+.workbench .nyq-map-soft::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(var(--ws-surface-rgb) / 0.25);
+}
+.workbench .nyq-map-sharp {
+  position: relative;
+}
+.workbench .nyq-map-sharp:not([data-loaded]) {
+  opacity: 0;
+}
+.workbench .nyq-map-sharp[data-loaded] {
+  animation: nyq-map-sharpen 200ms ease-out both;
+}
+@keyframes nyq-map-sharpen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* The label, in the map's corner (LoadB1: 16 from the left and bottom,
+   32 tall, 0 12 padding); Inter 12.5 is its .tr-note. */
+.workbench .nyq-map-loading {
+  position: absolute;
+  left: var(--space-block);
+  bottom: var(--space-block);
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: rgb(var(--ws-surface-rgb));
+}
 .workbench .nyq-map-zoom {
   position: absolute;
   top: 8px;
@@ -8928,10 +8977,13 @@ input[type="number"] {
     min-height: calc(32px + 44px + var(--space-tight));
   }
   .workbench .nyq-map-label,
+  .workbench .nyq-map-loading,
   .workbench .nyq-map-street {
     position: static;
   }
-  .workbench .nyq-map-label {
+  /* #483 R145-7: the loading label takes the map label's held slot. */
+  .workbench .nyq-map-label,
+  .workbench .nyq-map-loading {
     align-self: flex-start;
   }
   .workbench .nyq-map-street {
@@ -10280,12 +10332,6 @@ input[type="number"] {
     aspect-ratio: 4 / 3;
   }
 }
-/* #477 answer 4: the same picture stands in the NEEDS YOU map frame until
-   its map loads (NeedsYouMap, OutlineAerial). */
-.workbench .nyq-map-standin {
-  position: absolute;
-  inset: 0;
-}
 .workbench .ro-aerial {
   display: block;
   width: 100%;
@@ -10399,6 +10445,7 @@ input[type="number"] {
   .workbench .ro-block::after,
   .workbench .ro-sheen,
   .workbench .wait-spin,
+  .workbench .nyq-map-sharp[data-loaded],
   .workbench .results-stack > section.needs-you,
   .workbench .results-stack > .ny-other,
   .workbench .results-stack > .results-head-slot > *,

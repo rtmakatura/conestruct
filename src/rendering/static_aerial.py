@@ -388,21 +388,30 @@ def question_image_url(
     width: int,
     height: int,
     zoom: int = 0,
-) -> tuple[str, dict[str, str], tuple[float, float], bool]:
-    """A NEEDS YOU map: its URL and query, the question's point, whether a line was drawn.
+    soft: bool = False,
+) -> tuple[str, dict[str, str], tuple[float, float], bool, tuple[float, float, float]]:
+    """A NEEDS YOU map: its URL and query, the question's point, whether a
+    line was drawn, and the frame (centre lat, lng and zoom).
 
     Framed on the nearest features of ``subject`` (nearest first; the
     backend's own read, :func:`src.rules.site_detection.subject_geometry`).
     With no subject the frame is the work zone, and with no laid-out corridor
     the pin picture; neither draws a guessed line (Rule 10).
+
+    ``soft`` (#483 ruling 1): the same frame's quick image, @1x and with
+    nothing drawn on it, so it matches the full image by construction
+    (rulings.md R145-1).
     """
     if not -ZOOM_OUT_MAX <= zoom <= ZOOM_IN_MAX:
         raise ValueError(f"zoom step {zoom} outside -{ZOOM_OUT_MAX}..{ZOOM_IN_MAX}")
     if not approaches:
+        pin_frame = (lat, lng, float(PIN_ZOOM + zoom))
+        if soft:
+            return _soft_url(pin_frame, width, height), {}, (lat, lng), False, pin_frame
         url, query = band_image_url(
             lat, lng, None, stage="pin", width=width, height=height, zoom=zoom
         )
-        return url, query, (lat, lng), False
+        return url, query, (lat, lng), False, pin_frame
     padding = NARROW_PADDING_PX if width < NARROW_BELOW_PX else PADDING_PX
     subject = subject or []
     if subject:
@@ -414,6 +423,9 @@ def question_image_url(
         point = work_midpoint(approaches)
     centre, fit = fit_view(framed, width, height, padding)
     z = max(0.0, min(_ZOOM_CEILING, min(fit, SUBJECT_MAX_ZOOM) + zoom))
+    frame = (centre[0], centre[1], z)
+    if soft:
+        return _soft_url(frame, width, height), {}, point, False, frame
     size = f"{width}x{height}@2x"
     head = f"https://api.mapbox.com/styles/v1/mapbox/{STYLE}/static/"
     tail = f"/{centre[1]:.6f},{centre[0]:.6f},{z:.2f},0/{size}"
@@ -434,7 +446,19 @@ def question_image_url(
         dashes.extend(drawn)
         used += cost
     overlays = ",".join([*work, *dashes])
-    return f"{head}{overlays}{tail}", {}, point, bool(dashes)
+    return f"{head}{overlays}{tail}", {}, point, bool(dashes), frame
+
+
+def _soft_url(frame: tuple[float, float, float], width: int, height: int) -> str:
+    """#483: ``frame``'s image at the same CSS size, @1x, with no overlays.
+
+    The same centre and zoom at the same size is the same extent, so the soft
+    and full images match with no zoom arithmetic, and Mapbox's logo and
+    attribution sit where the full image's do (rulings.md R145-1).
+    """
+    lat, lng, z = frame
+    head = f"https://api.mapbox.com/styles/v1/mapbox/{STYLE}/static/"
+    return f"{head}{lng:.6f},{lat:.6f},{z:.2f},0/{width}x{height}"
 
 
 # The formats the Static Images API answers, by their leading bytes (#369).

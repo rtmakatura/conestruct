@@ -60,6 +60,9 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
         // #470 (Ryan, 2026-11-08, UX group 6 rulings 3–5): the Generate
         // wait's sheen, the sections' arrival and the status line's spinner.
         "ro-arrive", "ro-sheen", "wait-spin",
+        // #483 ruling 1 (Ryan, 2026-11-09): a NEEDS YOU map's full image
+        // fades in over its soft one.
+        "nyq-map-sharpen",
       ].sort(),
     );
   });
@@ -90,6 +93,7 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
         // #477 answer 2: the status line's bar (the second ro-sheen) is gone.
         "ro-sheen 1.4s linear infinite",
         "wait-spin 0.9s linear infinite",
+        "nyq-map-sharpen 200ms ease-out both",
         "wb-sweep 1.5s linear infinite",
       ].sort(),
     );
@@ -116,6 +120,8 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
       "ro-arrive": ["opacity", "transform"],
       "ro-sheen": ["transform"],
       "wait-spin": ["transform"],
+      // #483: the full image's fade, opacity only.
+      "nyq-map-sharpen": ["opacity"],
     };
     for (const name of Object.keys(own)) {
       const k = block(css.indexOf(`@keyframes ${name}`));
