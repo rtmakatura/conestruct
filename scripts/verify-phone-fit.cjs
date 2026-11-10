@@ -29,7 +29,8 @@ const path = require("path");
 const fs = require("fs");
 const { chromium } = require("playwright");
 const { hook } = require("./live-check.cjs");
-const { applyGate, gateHeaders } = require("./gate.cjs");
+const { applyGate, gateHeaders, guardOutput } = require("./gate.cjs");
+guardOutput(); // #481: no output carries the gate token, even on a crash
 
 const SITE = process.env.FIT_SITE || "https://www.conestruct.com/sandbox";
 const WIDTHS = (process.env.FIT_WIDTHS || "320,360").split(",").map(Number);

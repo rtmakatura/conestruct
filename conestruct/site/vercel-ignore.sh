@@ -23,6 +23,8 @@ SITE_INPUTS=(
   "../../tests/fixtures/centerline"
   "../../tests/fixtures/site_scan"
   "../../scripts/gate.cjs"
+  "../../scripts/verify-generate-cls.mjs"
+  "../../validation-artifacts/committed/ux-group3-where/evidence/overpass-fixture/c74c32bdc5114bff.json"
   "../../scripts/modal-healthz-probe.mjs"
   "../../src/rules/site_detection.py"
 )

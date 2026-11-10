@@ -28,7 +28,8 @@ const path = require("path");
 const fs = require("fs");
 const { chromium } = require("C:/Users/rtmak/Documents/traffic-control-tool/node_modules/playwright");
 
-const { applyGate, gateHeaders } = require("./gate.cjs");
+const { applyGate, gateHeaders, guardOutput } = require("./gate.cjs");
+guardOutput(); // #481: no output carries the gate token, even on a crash
 
 const SITE = process.env.AUDIT_SITE || "https://www.conestruct.com/sandbox";
 const OUT = process.env.AUDIT_OUT;

@@ -30,7 +30,8 @@ const { chromium } = require(
 );
 // #237: every band selection goes through the helper — zero matches throw.
 const { hook, nonEmpty } = require("./live-check.cjs");
-const { applyGate, gateHeaders } = require("./gate.cjs");
+const { applyGate, gateHeaders, guardOutput } = require("./gate.cjs");
+guardOutput(); // #481: no output carries the gate token, even on a crash
 
 const SITE = process.env.AUDIT_SITE || "https://www.conestruct.com/sandbox";
 const OUT = process.env.AUDIT_OUT;

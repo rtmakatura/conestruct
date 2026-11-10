@@ -1,0 +1,14 @@
+# #481 red proof: the new tests against the unchanged scripts/gate.cjs and scripts/verify-generate-cls.mjs (d5b6899)
+# command: npx vitest run tests/gate-helper.test.ts -t "#481"  (the token below is the tests' FAKE value)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/gate-helper.test.ts > #481: the gate token never reaches output, even on a crash > a request in flight at browser close: the gate route swallows it and the run goes on
+AssertionError: expected '\n[eval]:9\r\n        throw new Error…' not to contain 'fake-gate-481-NOT-REAL-7d3e'
+ FAIL  tests/gate-helper.test.ts > #481: the gate token never reaches output, even on a crash > any other route failure prints one line without headers and aborts the request
+AssertionError: expected '\n[eval]:9\r\n        throw new Error…' not to contain 'fake-gate-481-NOT-REAL-7d3e'
+ FAIL  tests/gate-helper.test.ts > #481: the gate token never reaches output, even on a crash > verify-generate-cls.mjs, its page closing mid-request, prints its ERROR line and no token
+AssertionError: expected '390x844 ERROR Error: page.goto: net::…' not to contain 'fake-gate-481-NOT-REAL-7d3e'
+ FAIL  tests/gate-helper.test.ts > #481: the gate token never reaches output, even on a crash > guardOutput scrubs every write and prints a crash as one redacted line
+AssertionError: expected '\n[eval]:3\r\n      gate.guardOutput(…' to contain 'raw [gate token]'
+ FAIL  tests/gate-helper.test.ts > #481: the gate token never reaches output, even on a crash > redact drops gate header lines and replaces the token value
+TypeError: g.redact is not a function
+      Tests  5 failed | 13 skipped (18)

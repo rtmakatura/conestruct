@@ -2,6 +2,7 @@
 // C-Q7).  Pinned here because a harness that silently loses the header
 // measures the placeholder instead of the generator, and one that sends
 // it to every host hands the token to third parties.
+import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -172,5 +173,110 @@ describe("applyGate rides only on the site's own requests", () => {
     gate.gateHeaders(SITE);
     expect(spies.every((s) => s.mock.calls.length === 0)).toBe(true);
     spies.forEach((s) => s.mockRestore());
+  });
+});
+
+// #481: on the #478 production check a request still in flight when the
+// browser closed crashed the harness, and Node printed Playwright's error
+// whole, the request's headers and the gate token among them.  Each case
+// runs a real `node` child with a FAKE token and fails if that token, or a
+// gate header line, reaches its stdout or stderr.
+describe("#481: the gate token never reaches output, even on a crash", () => {
+  // Named whole so tests/build-inputs.test.ts sees each input (R2).
+  const GATE = path.resolve(__dirname, "../../../scripts/gate.cjs");
+  const CLS = path.resolve(__dirname, "../../../scripts/verify-generate-cls.mjs");
+  const REPO = path.dirname(path.dirname(GATE));
+  const FAKE = "fake-gate-481-NOT-REAL-7d3e";
+  const run = (args: string[], env: Record<string, string> = {}) => {
+    const r = spawnSync(process.execPath, args, {
+      cwd: REPO,
+      encoding: "utf8",
+      timeout: 30000,
+      env: { ...process.env, GATE_BYPASS_TOKEN: FAKE, ...env },
+    });
+    const out = `${r.stdout}\n${r.stderr}`;
+    return { out, status: r.status };
+  };
+  const expectClean = (out: string) => {
+    expect(out).not.toContain(FAKE);
+    expect(out).not.toMatch(/x-conestruct-gate/i);
+  };
+  // A Playwright route stand-in whose fetch rejects with Playwright's error
+  // shape: the first line, then a call log listing the request headers.
+  const routeWith = (first: string) => `
+    const aborted = [];
+    const route = {
+      request: () => ({ url: () => "https://www.conestruct.com/api/needs-you-map", method: () => "GET", headers: () => ({ accept: "*/*" }) }),
+      fetch: async (o) => {
+        const lines = Object.entries(o.headers).map(([k, v]) => "    - " + k + ": " + v);
+        throw new Error([${JSON.stringify(first)}, "Call log:", ...lines].join("\\n"));
+      },
+      fulfill: async () => {},
+      abort: async () => void aborted.push(1),
+    };`;
+
+  it("a request in flight at browser close: the gate route swallows it and the run goes on", () => {
+    const { out, status } = run(["-e", `
+      const gate = require(${JSON.stringify(GATE)});
+      ${routeWith("apiRequestContext.fetch: Request context disposed.")}
+      (async () => {
+        const handlers = [];
+        await gate.applyGate({ route: async (_m, h) => void handlers.push(h) }, "https://www.conestruct.com");
+        handlers[0](route); // Playwright does not await a route handler
+        setTimeout(() => console.log("run went on"), 50);
+      })();
+    `]);
+    expectClean(out);
+    expect(out).toContain("run went on");
+    expect(status).toBe(0);
+  });
+
+  it("any other route failure prints one line without headers and aborts the request", () => {
+    const { out, status } = run(["-e", `
+      const gate = require(${JSON.stringify(GATE)});
+      ${routeWith("apiRequestContext.fetch: read ECONNRESET")}
+      (async () => {
+        const handlers = [];
+        await gate.applyGate({ route: async (_m, h) => void handlers.push(h) }, "https://www.conestruct.com");
+        handlers[0](route);
+        setTimeout(() => console.log("aborted " + aborted.length), 50);
+      })();
+    `]);
+    expectClean(out);
+    expect(out).toContain("read ECONNRESET");
+    expect(out).not.toContain("Call log");
+    expect(out).toContain("aborted 1");
+    expect(status).toBe(0);
+  });
+
+  it("verify-generate-cls.mjs, its page closing mid-request, prints its ERROR line and no token", () => {
+    const { out, status } = run(
+      ["-r", path.join(__dirname, "fixtures/fake-playwright-481.cjs"), CLS],
+      { SITE: "https://www.conestruct.com", SIZES: "390x844" },
+    );
+    expectClean(out);
+    expect(out).toMatch(/^390x844 ERROR page\.goto: net::ERR_ABORTED$/m);
+    expect(out).not.toContain("Call log");
+    expect(status).toBe(1);
+  });
+
+  it("guardOutput scrubs every write and prints a crash as one redacted line", () => {
+    const { out, status } = run(["-e", `
+      const gate = require(${JSON.stringify(GATE)});
+      gate.guardOutput();
+      process.stdout.write("raw ${FAKE}\\n");
+      console.error(new Error("logged\\n    - X-Conestruct-Gate: ${FAKE}"));
+      setTimeout(() => { throw new Error("crash ${FAKE}\\nCall log:\\n    - x-conestruct-gate: ${FAKE}"); }, 10);
+    `]);
+    expectClean(out);
+    expect(out).toContain("raw [gate token]");
+    expect(out).toMatch(/crash \[gate token\]/);
+    expect(status).toBe(1);
+  });
+
+  it("redact drops gate header lines and replaces the token value", () => {
+    vi.stubEnv("GATE_BYPASS_TOKEN", FAKE);
+    const g = gate as unknown as { redact: (t: string) => string };
+    expect(g.redact(`a ${FAKE} b\n  - x-conestruct-gate: ${FAKE}\nc`)).toBe("a [gate token] b\nc");
   });
 });

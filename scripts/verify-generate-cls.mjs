@@ -48,15 +48,18 @@
 // at it and has every top checked; more questions grow downward.  With no
 // question the outline closes: any [data-outline] left after the settle
 // FAILS.
-// The gate header rides only the site's own origin (scripts/gate.cjs).
+// The gate header rides only the site's own origin (scripts/gate.cjs), and
+// no output carries the token or a header line, even on a crash (#481:
+// guardOutput, and errors print as their first line, redacted).
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
+const { newGatedContext, gateHeaders, isSiteRequest, isProduction, guardOutput, oneLine, isClosedError } = require("./gate.cjs");
+guardOutput();
 const { chromium } = require("playwright");
-const { newGatedContext, gateHeaders, isSiteRequest, isProduction } = require("./gate.cjs");
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = process.env.SITE ?? "http://localhost:3000";
@@ -151,12 +154,20 @@ async function one(w, h) {
     let hold = 0;
     await p.route("**/api/render/audit", async (r) => {
       if (hold === 0) return r.fallback();
-      const url = r.request().url();
-      const own = isSiteRequest(url, SITE) ? gateHeaders(SITE) : {};
-      const resp = await r.fetch({ headers: { ...r.request().headers(), ...own } });
-      const body = await resp.body();
-      await new Promise((res) => setTimeout(res, hold));
-      return r.fulfill({ status: resp.status(), headers: resp.headers(), body });
+      // #481: this route carries the gate header itself; like gate.cjs's it
+      // never rejects (Playwright doesn't await it).
+      try {
+        const url = r.request().url();
+        const own = isSiteRequest(url, SITE) ? gateHeaders(SITE) : {};
+        const resp = await r.fetch({ headers: { ...r.request().headers(), ...own } });
+        const body = await resp.body();
+        await new Promise((res) => setTimeout(res, hold));
+        return await r.fulfill({ status: resp.status(), headers: resp.headers(), body });
+      } catch (e) {
+        if (isClosedError(e)) return;
+        console.log(`${w}x${h} audit hold: ${oneLine(e)}`);
+        await r.abort().catch(() => {});
+      }
     });
     await p.goto(`${SITE}/sandbox`, { waitUntil: "networkidle", timeout: 240000 });
     await p.waitForSelector(".a-open .a-head", { timeout: 120000 });
@@ -252,7 +263,7 @@ for (const [w, h] of SIZES) {
   try {
     r = await one(w, h);
   } catch (e) {
-    console.log(`${w}x${h} ERROR ${String(e).slice(0, 200)}`);
+    console.log(`${w}x${h} ERROR ${oneLine(e).slice(0, 200)}`);
     failed = true;
     continue;
   }

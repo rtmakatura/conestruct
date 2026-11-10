@@ -8,7 +8,8 @@ import { chromium } from "playwright";
 // without GATE_BYPASS_TOKEN.  The default moves from the apex to www:
 // the apex answers with a 307 to www, and the header does not survive a
 // redirect hop (scripts/gate.cjs).
-import { applyGate } from "./gate.cjs";
+import { applyGate, guardOutput } from "./gate.cjs";
+guardOutput(); // #481: no output carries the gate token, even on a crash
 
 const base = process.env.GEN2_BASE ?? "https://www.conestruct.com";
 const browser = await chromium.launch({ channel: "msedge", headless: true });

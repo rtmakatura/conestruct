@@ -1,0 +1,6 @@
+# #481 full vitest run (after the fix): failing tests
+tests/build-inputs.test.ts > the Vercel skip rule's inputs (R2) > every path outside the site that the site or its tests reach is on the list
+Alone: failed (not flaky). Cause: the new #481 test reached the repo root and
+scripts/verify-generate-cls.mjs from the site's tests, which R2 requires on
+SITE_INPUTS.  Fixed (rulings.md R145 self-ruled 7); the test then passed alone
+and the full run went green: 277 files passed, 1 skipped; 2999 tests passed, 1 skipped.

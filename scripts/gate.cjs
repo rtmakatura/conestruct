@@ -80,7 +80,23 @@ async function applyGate(target, site) {
 
 const MAX_HOPS = 10;
 
+// #481: Playwright calls a route handler without awaiting it, so a rejection
+// here is unhandled and Node prints it whole; Playwright's message carries a
+// call log listing the request's headers, the gate header among them (the
+// #478 production check, a request still in flight when the browser closed).
+// So the handler never rejects: a request cut off by the close is dropped,
+// anything else prints one redacted line and the request is aborted.
 async function fetchGated(route, site, gate) {
+  try {
+    await fetchHops(route, site, gate);
+  } catch (err) {
+    if (isClosedError(err)) return;
+    console.log(`gate.cjs: ${new URL(route.request().url()).pathname}: ${oneLine(err)}`);
+    await route.abort().catch(() => {});
+  }
+}
+
+async function fetchHops(route, site, gate) {
   const req = route.request();
   const own = req.headers();
   let url = req.url();
@@ -129,7 +145,79 @@ async function newGatedContext(browser, site, options = {}) {
   return ctx;
 }
 
+// #481: no output carries the token or a header line, even on a crash.
+// CHOSEN: 8 characters, the shortest value scrubbed by value; a shorter one
+// would match ordinary text (real tokens are far longer, and a header line
+// is dropped whatever the token's length).
+const MIN_SCRUB = 8;
+const TOKEN_MARK = "[gate token]";
+
+/** `text` with every line naming the gate header dropped and the token's
+ *  value replaced. */
+function redact(text) {
+  const token = process.env.GATE_BYPASS_TOKEN;
+  let out = String(text)
+    .split("\n")
+    .filter((line) => !line.toLowerCase().includes(GATE_HEADER))
+    .join("\n");
+  if (token && token.length >= MIN_SCRUB) out = out.split(token).join(TOKEN_MARK);
+  return out;
+}
+
+/** The error's first message line, redacted: never its call log or stack. */
+function oneLine(err) {
+  return redact(String(err?.message ?? err).split("\n")[0]);
+}
+
+/** Playwright's rejection for a request cut off by closing the page,
+ *  context or browser. */
+function isClosedError(err) {
+  const first = String(err?.message ?? err).split("\n")[0];
+  return /Request context disposed|Target page, context or browser has been closed|Browser has been closed/.test(first);
+}
+
+let guarded = false;
+
+/** Call first thing in a harness (not on require: vitest loads this module,
+ *  and these handlers exit the process).  Every stdout/stderr write is
+ *  redacted; a crash prints one redacted line and exits 1, except a request
+ *  still in flight when the browser closed, which is noted and ignored
+ *  (folds in #478's prod-check disposed-guard.cjs).  Node's own fatal-error
+ *  printer bypasses process.stderr.write, so the handlers are needed too. */
+function guardOutput() {
+  if (guarded) return;
+  guarded = true;
+  for (const stream of [process.stdout, process.stderr]) {
+    const write = stream.write.bind(stream);
+    stream.write = (chunk, ...rest) => {
+      if (typeof chunk === "string") return write(redact(chunk), ...rest);
+      if (chunk instanceof Uint8Array) {
+        const text = Buffer.from(chunk).toString("utf8");
+        const clean = redact(text);
+        return write(clean === text ? chunk : Buffer.from(clean), ...rest);
+      }
+      return write(chunk, ...rest);
+    };
+  }
+  process.on("unhandledRejection", (err) => {
+    if (isClosedError(err)) {
+      console.log(`   (gate) ignored a request still in flight at browser close: ${oneLine(err)}`);
+      return;
+    }
+    process.stderr.write(`unhandled rejection: ${oneLine(err)}\n`);
+    process.exit(1);
+  });
+  process.on("uncaughtException", (err) => {
+    process.stderr.write(`uncaught exception: ${oneLine(err)}\n`);
+    process.exit(1);
+  });
+}
+
 exports.GATE_HEADER = GATE_HEADER;
+exports.redact = redact;
+exports.oneLine = oneLine;
+exports.isClosedError = isClosedError;
+exports.guardOutput = guardOutput;
 exports.newGatedContext = newGatedContext;
 exports.gateHeaders = gateHeaders;
 exports.applyGate = applyGate;

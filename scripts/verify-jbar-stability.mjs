@@ -27,7 +27,8 @@ import { chromium } from "playwright";
 // site request when GATE_BYPASS_TOKEN is set (a local dev server loads
 // .env.local, which can turn the gate on), and is required on production.
 const require = createRequire(import.meta.url);
-const { applyGate, gateHeaders } = require("./gate.cjs");
+const { applyGate, gateHeaders, guardOutput } = require("./gate.cjs");
+guardOutput(); // #481: no output carries the gate token, even on a crash
 
 const base = process.env.GEN2_BASE ?? "http://localhost:3000";
 const PIN = { lat: "39.73370", lng: "-104.98753" };
