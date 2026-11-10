@@ -94,6 +94,8 @@ describe("R10 — animation is the band's track and the coming-soon drawing, not
         "ro-sheen 1.4s linear infinite",
         "wait-spin 0.9s linear infinite",
         "nyq-map-sharpen 200ms ease-out both",
+        // #484: the cross street's tag fades in with the full image.
+        "nyq-map-sharpen 200ms ease-out both",
         "wb-sweep 1.5s linear infinite",
       ].sort(),
     );

@@ -31,6 +31,8 @@ describe("fetchNeedsYouMap", () => {
             "x-map-subject": "drawn",
             "x-map-point": "39.74,-104.97",
             "x-map-frame": "39.740000,-104.970000,18.00",
+            "x-map-cross-street": "Franklin%20Street",
+            "x-map-cross-tag": "312,16",
           },
         }),
     );
@@ -38,6 +40,9 @@ describe("fetchNeedsYouMap", () => {
     const r = await fetchNeedsYouMap(DEFAULT_SHOULDER, PICTURE);
     // #483: the frame both images were framed on, relayed as it came.
     expect(r.headers.get("x-map-frame")).toBe("39.740000,-104.970000,18.00");
+    // #484: the cross street's name and its tag's place, relayed as they came.
+    expect(r.headers.get("x-map-cross-street")).toBe("Franklin%20Street");
+    expect(r.headers.get("x-map-cross-tag")).toBe("312,16");
     const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("https://modal.example/render/needs-you-map");
     expect(JSON.parse(init.body as string)).toMatchObject(PICTURE);

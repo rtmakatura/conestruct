@@ -8878,6 +8878,24 @@ input[type="number"] {
   color: var(--ink);
   background: rgb(var(--ws-surface-rgb));
 }
+/* #484 ruling 2 (XB): the cross street's name, beside its line.  The
+   backend says where (left, top); 30 tall, 0 10 padding, Inter 12.5/600
+   (.tr-note's size) on --da-ground, a 1 px --lv-work (#3fd3a8) border.
+   It never takes a click: the map under it stays the map. */
+.workbench .nyq-map-tag {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--da-ground);
+  border: 1px solid var(--lv-work);
+  pointer-events: none;
+  animation: nyq-map-sharpen 200ms ease-out both;
+}
 .workbench .nyq-map-zoom {
   position: absolute;
   top: 8px;
@@ -10446,6 +10464,7 @@ input[type="number"] {
   .workbench .ro-sheen,
   .workbench .wait-spin,
   .workbench .nyq-map-sharp[data-loaded],
+  .workbench .nyq-map-tag,
   .workbench .results-stack > section.needs-you,
   .workbench .results-stack > .ny-other,
   .workbench .results-stack > .results-head-slot > *,

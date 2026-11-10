@@ -485,7 +485,14 @@ export async function fetchNeedsYouMap(
   headers.set("content-type", contentType);
   headers.set("cache-control", upstream.headers.get("cache-control") ?? "private, max-age=600");
   // #483: x-map-frame, the frame both images were framed on (Rule 3).
-  for (const name of ["x-map-subject", "x-map-point", "x-map-frame"]) {
+  // #484: the cross street's name and where its tag goes.
+  for (const name of [
+    "x-map-subject",
+    "x-map-point",
+    "x-map-frame",
+    "x-map-cross-street",
+    "x-map-cross-tag",
+  ]) {
     const value = upstream.headers.get(name);
     if (value) headers.set(name, value);
   }

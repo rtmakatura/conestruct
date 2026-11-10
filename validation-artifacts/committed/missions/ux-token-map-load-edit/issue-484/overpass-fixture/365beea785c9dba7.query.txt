@@ -1,0 +1,5 @@
+[out:json][timeout:10];
+(
+  way(around:30,39.7399691,-104.968354)["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];
+);
+out geom tags;

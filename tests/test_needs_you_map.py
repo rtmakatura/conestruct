@@ -155,12 +155,13 @@ def test_a_zoom_step_steps_the_frame_and_does_not_ask_overpass_again(
 def test_a_node_subject_is_a_ring_at_the_capped_zoom(
     client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
 ) -> None:
+    """A school node still rings; #484 took the ring off the crossing only."""
     scenario = fixture()
     lat, lng = pin(scenario)
-    node = {"type": "node", "lat": lat, "lon": lng, "tags": {"highway": "traffic_signals"}}
+    node = {"type": "node", "lat": lat, "lon": lng, "tags": {"amenity": "school"}}
     overpass["answer"] = ({"elements": [node]}, None)
 
-    r = ask(client, scenario, flag="adjacent_intersection")
+    r = ask(client, scenario, flag="school_zone")
 
     assert r.headers["x-map-subject"] == "drawn"
     url = mapbox[0]["url"]
@@ -168,29 +169,253 @@ def test_a_node_subject_is_a_ring_at_the_capped_zoom(
     assert view(url)[2] == pytest.approx(sa.SUBJECT_MAX_ZOOM)
 
 
-def test_the_intersection_question_draws_one_ring_on_the_nearest_crossing(
-    client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
+# #484 ruling 2: the intersection question draws the cross street as a
+# dashed line, named by a tag; never a ring.  rulings.md R145-1 to R145-8.
+
+
+def signal(lat: float, lng: float) -> dict[str, Any]:
+    return {"type": "node", "lat": lat, "lon": lng, "tags": {"highway": "traffic_signals"}}
+
+
+def road(points: list[tuple[float, float]], **tags: str) -> dict[str, Any]:
+    """A vehicular way, as the road lookup's ``out geom tags`` answers it."""
+    return {
+        "type": "way",
+        "tags": {"highway": "residential", **tags},
+        "geometry": [{"lat": a, "lon": b} for a, b in points],
+    }
+
+
+def east_west(lat: float, lng: float, *, half: float = 0.0006) -> list[tuple[float, float]]:
+    return [(lat, lng - half), (lat, lng), (lat, lng + half)]
+
+
+@pytest.fixture()
+def routed(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
+    """Overpass answering by query: the subject read the crossing, the
+    cross-street read (``around:``) the ways; ``ways = None`` refuses it."""
+    state: dict[str, Any] = {"node": None, "ways": None, "queries": []}
+
+    def request(query: str, budget_s: float | None = None, **_kw: Any) -> Any:
+        state["queries"].append(query)
+        if "around:" in query:
+            ways = state["ways"]
+            return (None, "all mirrors failed") if ways is None else ({"elements": ways}, None)
+        return {"elements": [state["node"]]}, None
+
+    monkeypatch.setattr(sd, "_overpass_request_with_fallback", request)
+    return state
+
+
+def test_484_the_crossing_is_the_cross_streets_dashed_line_not_a_ring(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
 ) -> None:
-    """Phone fix round: one ring, at every width, however many the road has."""
     scenario = fixture()
     lat, lng = pin(scenario)
-
-    def crossing(north: float) -> dict[str, Any]:
-        tags = {"highway": "crossing"}
-        return {"type": "node", "lat": lat + north, "lon": lng, "tags": tags}
-
-    # The nearest is not the first in the answer.
-    elements = [crossing(0.0003), crossing(0.00005), crossing(0.0002)]
-    overpass["answer"] = ({"elements": elements}, None)
+    routed["node"] = signal(lat + 0.0003, lng)
+    # The mainline (Broadway runs north-south here) and the cross street,
+    # split at the intersection as OSM splits it.
+    mainline = road([(lat - 0.002, lng), (lat + 0.002, lng)], name="Broadway")
+    west = road([(lat + 0.0003, lng - 0.0008), (lat + 0.0003, lng)], name="West 1st Avenue")
+    east = road([(lat + 0.0003, lng), (lat + 0.0003, lng + 0.0008)], name="West 1st Avenue")
+    routed["ways"] = [mainline, west, east]
 
     r = ask(client, scenario, flag="adjacent_intersection")
 
+    assert r.status_code == 200
+    assert r.headers["x-map-subject"] == "drawn"
     url = mapbox[0]["url"]
-    assert url.count("path-3+3FD3A8-1(") == sa.RING_DASHES
-    c_lat, _c_lng, _z = view(url)
-    assert c_lat == pytest.approx(lat + 0.00005, abs=1e-5)
-    p_lat = float(r.headers["x-map-point"].split(",")[0])
-    assert p_lat == pytest.approx(lat + 0.00005, abs=1e-5)
+    assert url.count("path-3+3FD3A8-1(") > sa.RING_DASHES, "a line across the frame, not a ring"
+    # Framed on the crossing, as before: the ring's frame and point.
+    c_lat, c_lng, z = view(url)
+    assert (c_lat, c_lng) == pytest.approx((lat + 0.0003, lng), abs=1e-6)
+    assert z == pytest.approx(sa.SUBJECT_MAX_ZOOM)
+    assert r.headers["x-map-point"] == f"{lat + 0.0003:.6f},{lng:.6f}"
+    # The cross-street read: the crossing's own ways, within the radius.
+    road_query = next(q for q in routed["queries"] if "around:" in q)
+    assert f"around:{sd.CROSS_STREET_RADIUS_M:.0f},{lat + 0.0003}," in road_query
+    assert r.headers["x-map-cross-street"] == "West%201st%20Avenue"
+    left, top = (int(v) for v in r.headers["x-map-cross-tag"].split(","))
+    width = sa.TAG_CHAR_PX * len("West 1st Avenue") + sa.TAG_CHROME_PX
+    assert left >= sa.TAG_EDGE_PX and left + width <= 800 - sa.TAG_EDGE_PX
+    assert sa.TAG_EDGE_PX <= top <= 400 - sa.TAG_EDGE_PX - sa.TAG_HEIGHT_PX
+
+
+def test_484_only_the_mainline_near_the_crossing_draws_no_line(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    """A mid-block crosswalk: the road and a frontage road (R145-3, R145-6)."""
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"] = signal(lat, lng)
+    routed["ways"] = [
+        road([(lat - 0.002, lng), (lat + 0.002, lng)], name="Broadway"),
+        road([(lat - 0.002, lng + 0.0001), (lat + 0.002, lng + 0.00012)]),
+    ]
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert r.headers["x-map-subject"] == "none"
+    assert "3FD3A8" not in mapbox[0]["url"]
+    assert "x-map-cross-street" not in r.headers and "x-map-cross-tag" not in r.headers
+
+
+@pytest.mark.parametrize("ways", [None, []], ids=["refused", "nothing"])
+def test_484_no_cross_street_geometry_draws_no_line_and_no_ring(
+    client: TestClient,
+    mapbox: list[dict[str, Any]],
+    routed: dict[str, Any],
+    ways: list[dict[str, Any]] | None,
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"], routed["ways"] = signal(lat, lng), ways
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert r.status_code == 200
+    assert r.headers["x-map-subject"] == "none"
+    assert "3FD3A8" not in mapbox[0]["url"]
+    assert "x-map-cross-tag" not in r.headers
+    # Still framed on the crossing.
+    assert view(mapbox[0]["url"])[:2] == pytest.approx((lat, lng), abs=1e-6)
+
+
+def test_484_a_far_way_is_not_the_cross_street(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    """Overpass's ``around`` meets a way's bounds; the pick measures the line."""
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"] = signal(lat, lng)
+    routed["ways"] = [road(east_west(lat + 0.001, lng), name="Next Block Avenue")]
+    assert ask(client, scenario, flag="adjacent_intersection").headers["x-map-subject"] == "none"
+
+
+def test_484_a_refused_cross_street_read_is_not_remembered(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"], routed["ways"] = signal(lat, lng), None
+    ask(client, scenario, flag="adjacent_intersection")
+    routed["ways"] = [road(east_west(lat, lng), name="Ellsworth Avenue")]
+    assert ask(client, scenario, flag="adjacent_intersection").headers["x-map-subject"] == "drawn"
+
+
+def test_484_a_cross_street_with_no_name_is_drawn_with_no_tag(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    """R145-7: OSM has the line and no name; the tag says nothing it can't."""
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"], routed["ways"] = signal(lat, lng), [road(east_west(lat, lng))]
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert r.headers["x-map-subject"] == "drawn"
+    assert "x-map-cross-street" not in r.headers and "x-map-cross-tag" not in r.headers
+
+
+def test_484_a_ref_names_it_and_a_name_is_percent_encoded(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"] = signal(lat, lng)
+    routed["ways"] = [road(east_west(lat, lng), ref="CO 26")]
+    r = ask(client, scenario, flag="adjacent_intersection")
+    assert r.headers["x-map-cross-street"] == "CO%2026"
+    sd.clear_subject_memo()
+    routed["ways"] = [road(east_west(lat, lng), name="Calle Ñandú")]
+    r = ask(client, scenario, flag="adjacent_intersection")
+    assert r.headers["x-map-cross-street"] == "Calle%20%C3%91and%C3%BA"
+
+
+def test_484_a_zoom_step_reads_the_cross_street_once(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"] = signal(lat, lng)
+    routed["ways"] = [road(east_west(lat, lng), name="Ellsworth Avenue")]
+    ask(client, scenario, flag="adjacent_intersection")
+    ask(client, scenario, flag="adjacent_intersection", zoom=1)
+    assert sum("around:" in q for q in routed["queries"]) == 1
+
+
+def test_484_the_other_questions_read_no_cross_street(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    routed["node"] = footway(lat, lng)
+    routed["ways"] = [road(east_west(lat, lng), name="Ellsworth Avenue")]
+    r = ask(client, scenario)
+    assert r.headers["x-map-subject"] == "drawn"
+    assert not any("around:" in q for q in routed["queries"])
+    assert "x-map-cross-tag" not in r.headers
+
+
+@pytest.mark.parametrize(("width", "height"), [(800, 400), (757, 360), (390, 292)])
+def test_484_the_tag_is_inside_the_frame_and_clear_of_the_work_and_the_controls(
+    width: int, height: int
+) -> None:
+    """XB: beside the line, away from the work, clear of the zoom buttons
+    (top right), the street-level link (bottom right) and the attribution."""
+    from src.api.render_api import (
+        _NEEDS_YOU_MAP_ADAPTER,
+        _laid_out,
+        _read_placements,
+        _read_scenario,
+    )
+    from src.api.schemas import scenario_to_call
+
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    body = {"scenario": scenario, "flag": "adjacent_intersection", "width": 800, "height": 400}
+    model, _refused = _read_scenario(_NEEDS_YOU_MAP_ADAPTER.validate_python(body).scenario)
+    params, _g, _k = scenario_to_call(model, place_cross_street=False)
+    _p, approaches = _laid_out(params, lat, lng, placements=_read_placements(model))
+    _url, _q, _pt, _drawn, frame = sa.question_image_url(
+        lat, lng, approaches, [[(lat, lng)]], width=width, height=height
+    )
+    name = "Ellsworth Avenue"
+    line = [(lat, lng - 0.003), (lat, lng + 0.003)]
+    box = sa.cross_tag_box([line], approaches, frame, name, width=width, height=height)
+    assert box is not None
+    left, top = box
+    w, h = sa.TAG_CHAR_PX * len(name) + sa.TAG_CHROME_PX, sa.TAG_HEIGHT_PX
+    assert left >= sa.TAG_EDGE_PX - 1 and left + w <= width - sa.TAG_EDGE_PX + 1
+    assert top >= sa.TAG_EDGE_PX - 1 and top + h <= height - sa.TAG_EDGE_PX + 1
+    assert not (left + w > width - 60 and top < 104), "under the zoom buttons"
+    assert not (left + w > width - 256 and top + h > height - 80), "under the street link"
+    # Beside the line (12 px off it), not on it.
+    line_y = sa._frame_px(line[0], frame, width, height)[1]
+    assert top <= line_y <= top + h
+
+
+def test_484_no_clear_place_sends_no_tag() -> None:
+    """A frame too small to hold the tag clear of everything: no tag (R145-8)."""
+    from src.api.render_api import (
+        _NEEDS_YOU_MAP_ADAPTER,
+        _laid_out,
+        _read_placements,
+        _read_scenario,
+    )
+    from src.api.schemas import scenario_to_call
+
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    body = {"scenario": scenario, "flag": "adjacent_intersection", "width": 800, "height": 400}
+    model, _refused = _read_scenario(_NEEDS_YOU_MAP_ADAPTER.validate_python(body).scenario)
+    params, _g, _k = scenario_to_call(model, place_cross_street=False)
+    _p, approaches = _laid_out(params, lat, lng, placements=_read_placements(model))
+    _url, _q, _pt, _drawn, frame = sa.question_image_url(
+        lat, lng, approaches, [[(lat, lng)]], width=120, height=80
+    )
+    line = [(lat, lng - 0.003), (lat, lng + 0.003)]
+    assert sa.cross_tag_box([line], approaches, frame, "A" * 40, width=120, height=80) is None
 
 
 def test_other_questions_still_draw_every_feature(
@@ -382,8 +607,12 @@ def test_483_the_soft_image_is_the_full_images_frame_with_nothing_drawn(
     assert soft_view(soft_url) == pytest.approx(view(full_url), abs=1e-6)
     assert frame_of(full) == pytest.approx(view(full_url), abs=1e-6)
     assert "path-" not in soft_url and "pin-" not in soft_url and "@2x" not in soft_url
-    # R145-3: one Overpass read for both, the full one reuses the memo.
-    assert len(overpass["queries"]) == 1
+    # R145-3: one subject read for both, the full one reuses the memo.  #484:
+    # the intersection's full image also asks its cross street; the soft
+    # one asks nothing more.
+    roads = [q for q in overpass["queries"] if "around:" in q]
+    assert len(overpass["queries"]) - len(roads) == 1
+    assert len(roads) == (flag == "adjacent_intersection")
     # The soft image says nothing about what was drawn on it.
     assert soft.headers["x-map-subject"] == "none"
 

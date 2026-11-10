@@ -389,6 +389,7 @@ def question_image_url(
     height: int,
     zoom: int = 0,
     soft: bool = False,
+    lines: list[list[tuple[float, float]]] | None = None,
 ) -> tuple[str, dict[str, str], tuple[float, float], bool, tuple[float, float, float]]:
     """A NEEDS YOU map: its URL and query, the question's point, whether a
     line was drawn, and the frame (centre lat, lng and zoom).
@@ -401,6 +402,10 @@ def question_image_url(
     ``soft`` (#483 ruling 1): the same frame's quick image, @1x and with
     nothing drawn on it, so it matches the full image by construction
     (rulings.md R145-1).
+
+    ``lines`` (#484 ruling 2): drawn in place of ``subject``, which still
+    frames the map and gives the point; the intersection question frames on
+    its crossing and draws the cross street.
     """
     if not -ZOOM_OUT_MAX <= zoom <= ZOOM_IN_MAX:
         raise ValueError(f"zoom step {zoom} outside -{ZOOM_OUT_MAX}..{ZOOM_IN_MAX}")
@@ -438,7 +443,7 @@ def question_image_url(
     # feature is drawn whole or not at all.
     used = len(head) + len(tail) + sum(len(w) + 1 for w in work)
     dashes: list[str] = []
-    for line in subject:
+    for line in subject if lines is None else lines:
         drawn = [_dash_path(a, b) for a, b in _dashes(line, centre, z, width, height)]
         cost = sum(len(d) + 1 for d in drawn)
         if used + cost > URL_MAX_CHARS - 200:
@@ -447,6 +452,118 @@ def question_image_url(
         used += cost
     overlays = ",".join([*work, *dashes])
     return f"{head}{overlays}{tail}", {}, point, bool(dashes), frame
+
+
+# #484 ruling 2: the cross street's name tag (XB: 12 px beside the line, 30
+# tall, 0 10 padding and a 1 px border, Inter 12.5/600).  CHOSEN: 8 px a
+# character, wider than Inter 12.5/600 sets any letter but W and M, so the
+# box checked is never narrower than the tag drawn.  rulings.md R145-8.
+TAG_GAP_PX: float = 12.0
+TAG_HEIGHT_PX: float = 30.0
+TAG_CHAR_PX: float = 8.0
+TAG_CHROME_PX: float = 22.0
+# XB: 16 px in from the frame's edge.  CHOSEN: 12 px clear of the work line.
+TAG_EDGE_PX: float = 16.0
+TAG_WORK_CLEAR_PX: float = 12.0
+# MIRRORS of globals.css, so the tag is clear of the map's own controls:
+# .nyq-map-zoom (top 8, right 8, two 44 px buttons) and .nyq-map-street
+# (bottom 28, right 8, 44 tall; CHOSEN 240 wide, wider than "See it at
+# street level ↗" sets), and Mapbox's attribution along the bottom.
+_ZOOM_BOX_PX: tuple[float, float] = (8.0 + 44.0 + 8.0, 8.0 + 88.0 + 8.0)
+_STREET_BOX_PX: tuple[float, float] = (8.0 + 240.0 + 8.0, 28.0 + 44.0 + 8.0)
+_ATTRIBUTION_PX: float = 24.0
+_TAG_STEP_PX: float = 4.0
+
+
+def _frame_px(
+    p: tuple[float, float], frame: tuple[float, float, float], width: int, height: int
+) -> tuple[float, float]:
+    """``p`` in CSS px from the frame's top-left."""
+    world = _TILE_PX * 2.0 ** frame[2]
+    cx, cy = _mercator(frame[0], frame[1])
+    x, y = _mercator(*p)
+    return (x - cx) * world + width / 2, (y - cy) * world + height / 2
+
+
+def _box_gap(box: tuple[float, float, float, float], p: tuple[float, float]) -> float:
+    left, top, right, bottom = box
+    dx = max(left - p[0], 0.0, p[0] - right)
+    dy = max(top - p[1], 0.0, p[1] - bottom)
+    return math.hypot(dx, dy)
+
+
+def _walk(px_line: list[tuple[float, float]], step: float) -> list[tuple[float, float]]:
+    """Points every ``step`` px along a pixel polyline, ends included."""
+    out: list[tuple[float, float]] = []
+    for (x1, y1), (x2, y2) in zip(px_line, px_line[1:], strict=False):
+        length = math.hypot(x2 - x1, y2 - y1)
+        n = max(1, int(length // step))
+        out.extend((x1 + (x2 - x1) * i / n, y1 + (y2 - y1) * i / n) for i in range(n))
+    if px_line:
+        out.append(px_line[-1])
+    return out
+
+
+def cross_tag_box(
+    lines: list[list[tuple[float, float]]],
+    approaches: list[tuple[str, WorkCorridor]],
+    frame: tuple[float, float, float],
+    name: str,
+    *,
+    width: int,
+    height: int,
+) -> tuple[int, int] | None:
+    """Where the cross street's name tag goes: its ``(left, top)`` in CSS px
+    of the ``width`` x ``height`` frame, or None when no place is clear.
+
+    Beside a point of the drawn line (right of it, else left), the whole box
+    inside the frame, clear of the work line and the map's controls, and as
+    far from the work line as the line goes (XB: the line's far end).
+    rulings.md R145-8.
+    """
+    tag_w = TAG_CHAR_PX * len(name) + TAG_CHROME_PX
+    zoom_box = (width - _ZOOM_BOX_PX[0], 0.0, float(width), _ZOOM_BOX_PX[1])
+    w, h = float(width), float(height)
+    street_box = (w - _STREET_BOX_PX[0], h - _STREET_BOX_PX[1], w, h)
+    keep_out = [zoom_box, street_box, (0.0, height - _ATTRIBUTION_PX, float(width), float(height))]
+    primary = approaches[0][1]
+    work = next(span for span in zone_spans(primary) if span[0] == "work_zone")
+    work_px = [
+        q
+        for part in zone_parts(primary, work[1], work[2])
+        for q in _walk([_frame_px(p, frame, width, height) for p in part.points], 2.0)
+    ]
+
+    Box = tuple[float, float, float, float]
+
+    def overlaps(a: Box, b: Box) -> bool:
+        return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
+
+    best: tuple[float, float, tuple[int, int]] | None = None
+    for line in lines:
+        for x, y in _walk([_frame_px(p, frame, width, height) for p in line], _TAG_STEP_PX):
+            if not (0 <= x <= width and 0 <= y <= height):
+                continue
+            top = y - TAG_HEIGHT_PX / 2
+            for left in (x + TAG_GAP_PX, x - TAG_GAP_PX - tag_w):
+                box = (left, top, left + tag_w, top + TAG_HEIGHT_PX)
+                if (
+                    box[0] < TAG_EDGE_PX
+                    or box[1] < TAG_EDGE_PX
+                    or box[2] > width - TAG_EDGE_PX
+                    or box[3] > height - TAG_EDGE_PX
+                    or any(overlaps(box, k) for k in keep_out)
+                ):
+                    continue
+                clear = min((_box_gap(box, q) for q in work_px), default=math.inf)
+                if clear < TAG_WORK_CLEAR_PX:
+                    continue
+                # Farthest from the work; then the higher, then the right side.
+                rank = (clear, -top)
+                if best is None or rank > best[:2]:
+                    best = (clear, -top, (round(left), round(top)))
+                break
+    return None if best is None else best[2]
 
 
 def _soft_url(frame: tuple[float, float, float], width: int, height: int) -> str:

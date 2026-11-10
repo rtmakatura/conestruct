@@ -38,7 +38,14 @@ const ADJ: SiteAdjustmentRecord[] = [
 ];
 const SCENARIO = { kind: "lane_closure", meta: { lat: 39.74, lng: -104.97 } } as unknown as Scenario;
 
-type Answer = { ok: boolean; status?: number; subject?: string; point?: string };
+type Answer = {
+  ok: boolean;
+  status?: number;
+  subject?: string;
+  point?: string;
+  /** #484: the cross street's headers, as the backend sends them. */
+  cross?: { name: string; tag: string };
+};
 let answer: Answer;
 // #483: the soft image's own answer (the backend says "none" for it), and
 // optional holds so a test can see each step.
@@ -71,6 +78,10 @@ beforeEach(() => {
     if (a.subject) headers.set("x-map-subject", a.subject);
     if (a.point) headers.set("x-map-point", a.point);
     if (a.ok) headers.set("x-map-frame", FRAME);
+    if (a.cross) {
+      headers.set("x-map-cross-street", a.cross.name);
+      headers.set("x-map-cross-tag", a.cross.tag);
+    }
     return new Response(a.ok ? new Blob(["img"]) : "{}", {
       status: a.ok ? 200 : (a.status ?? 502),
       headers,
@@ -335,7 +346,13 @@ describe("the map in the card, failed and zoomed (rulings 1-7)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Next question" }));
     await waitFor(() => expect(fullBodies().at(-1).flag).toBe("adjacent_intersection"));
     expect(fetchMock).toHaveBeenCalledTimes(4);
-    expect((await screen.findByTestId("needs-you-map-label")).textContent).toBe("Crossing on the map");
+    // #484 ruling 2: the intersection has no chip; its key is the ruling's line.
+    await waitFor(() =>
+      expect(screen.getByTestId("needs-you-map-key").textContent).toContain(
+        "The cross street the map knows about",
+      ),
+    );
+    expect(screen.queryByTestId("needs-you-map-label")).toBeNull();
   });
 
   it("only the question on screen asks (the cost, checkpoint § 3)", async () => {
@@ -433,5 +450,69 @@ describe("streetLevelUrl", () => {
     expect(streetLevelUrl("1.5,-2.5")).toBe(
       "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=1.5,-2.5",
     );
+  });
+});
+
+// #484 ruling 2 (Ryan, 2026-11-09, Crossing option B): the cross street is a
+// dashed line the backend draws, named by a tag the backend places.
+// Authority: validation-artifacts/committed/missions/ux-token-map-load-edit/
+// issue-484/rulings.md.
+describe("the intersection question's cross street (#484)", () => {
+  async function toIntersection() {
+    render(<Host />);
+    await img();
+    fireEvent.click(screen.getByLabelText(/Yes, they're there/));
+    fireEvent.click(screen.getByRole("button", { name: "Next question" }));
+    await waitFor(() => expect(fullBodies().at(-1).flag).toBe("adjacent_intersection"));
+    await waitFor(() =>
+      expect(screen.getByTestId("needs-you-map-img").getAttribute("data-frame")).toBe(FRAME),
+    );
+    return screen.getByTestId("needs-you-map-img");
+  }
+
+  it("names the line with the backend's tag, where it placed it, once the full image decodes", async () => {
+    answer = { ...answer, cross: { name: "Franklin%20Street", tag: "312,16" } };
+    const full = await toIntersection();
+    // R145-11: not before the full image has decoded.
+    expect(screen.queryByTestId("needs-you-map-tag")).toBeNull();
+    fireEvent.load(full);
+    const tag = await screen.findByTestId("needs-you-map-tag");
+    expect(tag.textContent).toBe("Franklin Street");
+    expect(tag.style.left).toBe("312px");
+    expect(tag.style.top).toBe("16px");
+    expect(tag.className).toContain("nyq-map-tag");
+    expect(screen.queryByTestId("needs-you-map-label")).toBeNull();
+    expect(screen.getByTestId("needs-you-map-key").textContent).toContain(
+      "The cross street the map knows about",
+    );
+  });
+
+  it("no cross street geometry: no line in the key, no tag, #448's sentence (Rule 10)", async () => {
+    answer = { ...answer, subject: "none" };
+    const full = await toIntersection();
+    fireEvent.load(full);
+    expect(screen.queryByTestId("needs-you-map-tag")).toBeNull();
+    expect(screen.getByTestId("needs-you-map-key").textContent).not.toContain("cross street");
+    const on = document.querySelector(".nyq-text [data-on]");
+    expect(on?.textContent).toMatch(/^The scan found an intersection 49.9 ft from the work, but the map couldn't draw it\. Check it at street level\./);
+  });
+
+  it("a line with no name, or a malformed tag, shows no tag", async () => {
+    answer = { ...answer, cross: { name: "Franklin%20Street", tag: "left,top" } };
+    fireEvent.load(await toIntersection());
+    expect(screen.queryByTestId("needs-you-map-tag")).toBeNull();
+    // The line is still in the key: the backend drew it.
+    expect(screen.getByTestId("needs-you-map-key").textContent).toContain(
+      "The cross street the map knows about",
+    );
+  });
+
+  it("the soft image carries no tag", async () => {
+    softAnswer = { ...softAnswer, cross: { name: "Franklin%20Street", tag: "312,16" } };
+    answer = { ...answer, cross: { name: "Franklin%20Street", tag: "312,16" } };
+    holdFull = deferred().p;
+    render(<Host />);
+    await screen.findByTestId("needs-you-map-soft");
+    expect(screen.queryByTestId("needs-you-map-tag")).toBeNull();
   });
 });

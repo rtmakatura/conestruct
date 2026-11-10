@@ -44,8 +44,9 @@ export type MapSubject = "loading" | "drawn" | "none" | "failed";
 export interface NeedsYouMapProps {
   scenario: Scenario;
   flag: string;
-  /** "Sidewalk on the map": the chip on the picture. */
-  label: string;
+  /** "Sidewalk on the map": the chip on the picture.  #484: null for the
+   *  intersection, whose line the backend's name tag names instead. */
+  label: string | null;
   /** "Sidewalk the map knows about": the key's line. */
   keyLabel: string;
   /** The question's topic, for the alt text. */
@@ -150,6 +151,18 @@ export function NeedsYouMap({
                 onLoad={() => setSharpLoaded(true)}
                 onError={() => setUndecodable(true)}
               />
+              {/* #484 ruling 2: the cross street's name, where the backend
+                  placed it beside the line it drew (Rule 3), once the full
+                  image has decoded (R145-11). */}
+              {drawn && shown.crossStreet && sharpLoaded ? (
+                <span
+                  className="nyq-map-tag tr-note"
+                  data-testid="needs-you-map-tag"
+                  style={{ left: shown.crossStreet.left, top: shown.crossStreet.top }}
+                >
+                  {shown.crossStreet.name}
+                </span>
+              ) : null}
               <div className="nyq-map-zoom" data-testid="needs-you-map-zoom" data-step={step}>
                 <button
                   type="button"
@@ -185,7 +198,7 @@ export function NeedsYouMap({
               {MAP_LOADING}
             </span>
           ) : null}
-          {!failed && drawn ? (
+          {!failed && drawn && label ? (
             <span className="nyq-map-label tr-note" data-testid="needs-you-map-label">
               <span className="nyq-map-swatch is-subject" aria-hidden="true" />
               {label}

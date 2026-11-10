@@ -236,8 +236,9 @@ export interface NeedsYouQuestion {
   /** #448: the same with no claim about the picture: while the map loads,
    *  when it fails, or with no map. */
   explanationScan: string;
-  /** #447 ruling 3: the chip on the map's dashed line. */
-  mapLabel: string;
+  /** #447 ruling 3: the chip on the map's dashed line.  #484 ruling 2: null
+   *  for the intersection, whose line is named by its own tag. */
+  mapLabel: string | null;
   /** #447 ruling 4: the key's line for it. */
   mapKey: string;
   yes: { label: string; consequence: string };
@@ -271,10 +272,11 @@ interface FlagWords {
 }
 
 /** #447 ruling 3 and 4 (X5): "<noun> on the map", "<noun> the map knows
- *  about"; "Sidewalk" is the ruling's own word, "Crossing" ruling 2's. */
+ *  about"; "Sidewalk" is the ruling's own word.  #484 ruling 2: the
+ *  intersection's key is the ruling's own line, and it has no chip. */
 const MAP_NOUN: Record<ScannedSiteFlag, string> = {
   pedestrian_facility: "Sidewalk",
-  adjacent_intersection: "Crossing",
+  adjacent_intersection: "The cross street",
   adjacent_interchange: "Interchange",
   bicycle_facility: "Bike lane",
   school_zone: "School",
@@ -453,7 +455,7 @@ export function buildQuestions(
     out.push({
       flag,
       ...questionWords(flag, bucket, rec),
-      mapLabel: `${MAP_NOUN[flag]} on the map`,
+      mapLabel: flag === "adjacent_intersection" ? null : `${MAP_NOUN[flag]} on the map`,
       mapKey: `${MAP_NOUN[flag]} the map knows about`,
       citation: rec?.citation || null,
       bucket,

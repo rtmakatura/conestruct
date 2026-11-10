@@ -23,6 +23,7 @@ import tempfile
 from collections.abc import Awaitable, Callable
 from pathlib import Path
 from typing import Annotated, Any, Literal
+from urllib.parse import quote as urllib_quote
 
 import httpx
 import sentry_sdk
@@ -102,7 +103,7 @@ from src.rules.kind_proposal import propose_kind
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
-from src.rules.site_detection import subject_geometry
+from src.rules.site_detection import cross_street_geometry, subject_geometry
 from src.rules.spacing import (
     buffer_space,
     device_spacing_in_taper,
@@ -2081,10 +2082,21 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
             subject = subject_geometry(
                 FLAG_TO_DETECTION[req.flag], frame, opposing, (meta.lat, meta.lng)
             )
-            # Ryan's phone fix round, 2026-11-06: one ring, on the nearest
-            # crossing only, at every width.  Nearest first, so the first.
+            # Ryan's phone fix round, 2026-11-06: the nearest crossing only,
+            # at every width.  Nearest first, so the first.
             if req.flag == "adjacent_intersection" and subject:
                 subject = subject[:1]
+    # #484 ruling 2: the intersection question frames on its crossing and
+    # draws the cross street's line, never a ring; no cross street, no line
+    # (Rule 10).  The soft image draws nothing, so it reads nothing more.
+    lines = None
+    cross = None
+    if req.flag == "adjacent_intersection":
+        lines = []
+        if subject and approaches and not req.soft and params.bearing_deg is not None:
+            cross = cross_street_geometry(subject[0][0], params.bearing_deg, meta.roadName)
+            if cross is not None:
+                lines = cross.lines
     url, query, point, drawn, view = _static_aerial.question_image_url(
         meta.lat,
         meta.lng,
@@ -2094,7 +2106,13 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
         height=req.height,
         zoom=req.zoom,
         soft=req.soft,
+        lines=lines,
     )
+    tag = None
+    if drawn and cross is not None and cross.name and approaches:
+        tag = _static_aerial.cross_tag_box(
+            cross.lines, approaches, view, cross.name, width=req.width, height=req.height
+        )
     try:
         image = _static_aerial.fetch_image(url, query, token)
     except httpx.HTTPError as exc:
@@ -2119,6 +2137,17 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
             "x-map-point": f"{point[0]:.6f},{point[1]:.6f}",
             # #483: the frame both images were framed on (Rule 3).
             "x-map-frame": f"{view[0]:.6f},{view[1]:.6f},{view[2]:.2f}",
+            # #484: the cross street's name (percent-encoded: a header can't
+            # carry every name's characters) and where its tag goes, only
+            # when the line was drawn and a clear place exists (R145-7/8).
+            **(
+                {
+                    "x-map-cross-street": urllib_quote(cross.name, safe=""),
+                    "x-map-cross-tag": f"{tag[0]},{tag[1]}",
+                }
+                if tag is not None and cross is not None and cross.name
+                else {}
+            ),
         },
     )
 

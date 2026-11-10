@@ -84,3 +84,7 @@ validation-artifacts/*
 design-bundle*
 .vercel
 .env*
+
+# Ryan, 2026-11-10: a run's crops are moved, never deleted; the ones not
+# committed go to crops/extra/.
+**/crops/extra/

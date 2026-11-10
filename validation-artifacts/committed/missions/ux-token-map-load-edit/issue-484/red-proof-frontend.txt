@@ -1,0 +1,5 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/NeedsYouMap.test.tsx > the map in the card, failed and zoomed (rulings 1-7) > answering doesn't ask again; the next question asks once for its own frame and words
+ FAIL  components/NeedsYouMap.test.tsx > the intersection question's cross street (#484) > names the line with the backend's tag, where it placed it, once the full image decodes
+ FAIL  components/NeedsYouMap.test.tsx > the intersection question's cross street (#484) > a line with no name, or a malformed tag, shows no tag
+      Tests  3 failed | 30 passed (33)

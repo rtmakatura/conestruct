@@ -27,10 +27,36 @@ export type NeedsYouMapFetch =
       point: string | null;
       /** #483: the backend's `x-map-frame`, relayed for the checks (Rule 3). */
       frame: string | null;
+      /** #484: the cross street's name tag, as the backend placed it. */
+      crossStreet: CrossStreetTag | null;
     }
   | { state: "error" };
 
 type Ready = Extract<NeedsYouMapFetch, { state: "ready" }>;
+
+/** #484 ruling 2: the name and the tag's top-left, CSS px of the frame. */
+export interface CrossStreetTag {
+  name: string;
+  left: number;
+  top: number;
+}
+
+/** The backend's `x-map-cross-street` (percent-encoded) and `x-map-cross-tag`
+ *  ("left,top"), read as they are.  Either missing or malformed: no tag
+ *  (Rule 10), never one guessed into place. */
+export function readCrossStreet(name: string | null, tag: string | null): CrossStreetTag | null {
+  if (!name || !tag) return null;
+  const m = /^(-?\d+),(-?\d+)$/.exec(tag);
+  if (!m) return null;
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(name).trim();
+  } catch {
+    return null;
+  }
+  if (!decoded) return null;
+  return { name: decoded, left: Number(m[1]), top: Number(m[2]) };
+}
 
 // The pictures already drawn this session, by request.  CHOSEN: 24, as the
 // band's (a plan asks for 2 to 50, checkpoint § 3); the oldest is released.
@@ -77,6 +103,10 @@ async function draw(key: string, signal: AbortSignal): Promise<Ready> {
     drawn: r.headers.get("x-map-subject") === "drawn",
     point: r.headers.get("x-map-point"),
     frame: r.headers.get("x-map-frame"),
+    crossStreet: readCrossStreet(
+      r.headers.get("x-map-cross-street"),
+      r.headers.get("x-map-cross-tag"),
+    ),
   };
 }
 

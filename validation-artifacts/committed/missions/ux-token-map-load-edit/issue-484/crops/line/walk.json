@@ -1,0 +1,404 @@
+{
+  "1440x900": [
+    {
+      "q": 1,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": "39.739914,-104.968447,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?",
+        "keyText": "The work Sidewalk the map knows about Imagery may be a few years old",
+        "chip": "Sidewalk on the map",
+        "tag": null
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 2,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": "39.739842,-104.968454,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?",
+        "keyText": "The work Bike lane the map knows about Imagery may be a few years old",
+        "chip": "Bike lane on the map",
+        "tag": null
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 3,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": "39.739969,-104.968354,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?",
+        "keyText": "The work The cross street the map knows about Imagery may be a few years old",
+        "chip": null,
+        "tag": {
+          "text": "Franklin Street",
+          "at": "397,360 110x30",
+          "inside": true,
+          "font": "__Inter_176161 12.5px/600",
+          "ground": "rgb(16, 28, 41)",
+          "border": "1px rgb(63, 211, 168)",
+          "meetsZoom": false,
+          "meetsStreet": false
+        }
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    }
+  ],
+  "1198x930": [
+    {
+      "q": 1,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": "39.739914,-104.968447,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?",
+        "keyText": "The work Sidewalk the map knows about Imagery may be a few years old",
+        "chip": "Sidewalk on the map",
+        "tag": null
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 2,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": "39.739842,-104.968454,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?",
+        "keyText": "The work Bike lane the map knows about Imagery may be a few years old",
+        "chip": "Bike lane on the map",
+        "tag": null
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 3,
+      "soft": {
+        "phase": "soft",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "846x423",
+        "figure": "846x450",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": "39.739969,-104.968354,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?",
+        "keyText": "The work The cross street the map knows about Imagery may be a few years old",
+        "chip": null,
+        "tag": {
+          "text": "Franklin Street",
+          "at": "397,360 110x30",
+          "inside": true,
+          "font": "__Inter_176161 12.5px/600",
+          "ground": "rgb(16, 28, 41)",
+          "border": "1px rgb(63, 211, 168)",
+          "meetsZoom": false,
+          "meetsStreet": false
+        }
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    }
+  ],
+  "390x844": [
+    {
+      "q": 1,
+      "soft": {
+        "phase": "soft",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739914,-104.968447,18.00",
+        "sharpFrame": "39.739914,-104.968447,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Are there sidewalks along the work zone?",
+        "keyText": "The work Sidewalk the map knows about Imagery may be a few years old",
+        "chip": "Sidewalk on the map",
+        "tag": null
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 2,
+      "soft": {
+        "phase": "soft",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739842,-104.968454,18.00",
+        "sharpFrame": "39.739842,-104.968454,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there a bike lane at or near the work zone?",
+        "keyText": "The work Bike lane the map knows about Imagery may be a few years old",
+        "chip": "Bike lane on the map",
+        "tag": null
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    },
+    {
+      "q": 3,
+      "soft": {
+        "phase": "soft",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": "Loading the map of this spot",
+        "labelPx": "12.5px",
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": null,
+        "keyHidden": true,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?",
+        "keyText": "",
+        "chip": null,
+        "tag": null
+      },
+      "sharp": {
+        "phase": "sharp",
+        "box": "360x270",
+        "figure": "328x442",
+        "label": null,
+        "labelPx": null,
+        "softFrame": "39.739969,-104.968354,18.00",
+        "sharpFrame": "39.739969,-104.968354,18.00",
+        "keyHidden": false,
+        "softFilter": "blur(14px) saturate(0.7)",
+        "title": "Is there an intersection next to the work?",
+        "keyText": "The work The cross street the map knows about Imagery may be a few years old",
+        "chip": null,
+        "tag": {
+          "text": "Franklin Street",
+          "at": "155,159 110x30",
+          "inside": true,
+          "font": "__Inter_176161 12.5px/600",
+          "ground": "rgb(16, 28, 41)",
+          "border": "1px rgb(63, 211, 168)",
+          "meetsZoom": false,
+          "meetsStreet": false
+        }
+      },
+      "softMeasure": {
+        "axe": [],
+        "small": []
+      },
+      "sharpMeasure": {
+        "axe": [],
+        "small": []
+      }
+    }
+  ]
+}

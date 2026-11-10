@@ -26,6 +26,7 @@ import ssl
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, TypeGuard
 
 import certifi
@@ -1089,6 +1090,7 @@ _SUBJECT_MEMO: dict[str, tuple[float, list[list[tuple[float, float]]]]] = {}
 
 def clear_subject_memo() -> None:
     _SUBJECT_MEMO.clear()
+    _CROSS_MEMO.clear()
 
 
 def _subject_query(bucket_name: str, boxes: list[tuple[float, float, float, float]]) -> str:
@@ -1166,6 +1168,111 @@ def subject_geometry(
         _SUBJECT_MEMO.clear()
     _SUBJECT_MEMO[query] = (time.monotonic(), lines)
     return lines
+
+
+# #484 ruling 2: the intersection question draws the cross street as a line.
+# CHOSEN (Rule 12; not a safety distance, it only picks what the map draws):
+# 30 m, the road lookup's own default radius (``detect_road_bearing``) and
+# nearest_intersection's LATERAL_TOLERANCE_M; a stop-bar signal sits inside
+# it, the next block's street doesn't.  rulings.md R145-2.
+CROSS_STREET_RADIUS_M: float = 30.0
+# CHOSEN: the picker's PARALLEL_TOLERANCE_DEG (lib/road-detection/
+# cross-street.ts): a way this close to the road's bearing is the road or a
+# frontage road, never the cross street.  rulings.md R145-3.
+CROSS_STREET_PARALLEL_DEG: float = 25.0
+
+
+@dataclass(frozen=True)
+class CrossStreet:
+    """The cross street at a crossing: its OSM name (or ref), and its lines."""
+
+    name: str | None
+    lines: list[list[tuple[float, float]]]
+
+
+_CROSS_MEMO: dict[str, tuple[float, CrossStreet | None]] = {}
+
+
+def _nearest_segment(
+    point: tuple[float, float], line: list[tuple[float, float]]
+) -> tuple[float, float] | None:
+    """(metres, bearing) of ``line``'s segment nearest ``point``; None for no segment."""
+    from src.rules.corridor import _project_onto_segment_m
+
+    best: tuple[float, float] | None = None
+    for a, b in zip(line, line[1:], strict=False):
+        if a == b:
+            continue
+        lateral, _t = _project_onto_segment_m(point[0], point[1], a[0], a[1], b[0], b[1])
+        if best is None or lateral < best[0]:
+            best = (lateral, _bearing_between(a[0], a[1], b[0], b[1]))
+    return best
+
+
+def _parallel(a_deg: float, b_deg: float) -> bool:
+    gap = abs(a_deg - b_deg) % 180.0
+    return min(gap, 180.0 - gap) <= CROSS_STREET_PARALLEL_DEG
+
+
+def cross_street_from_elements(
+    elements: list[dict[str, Any]],
+    node: tuple[float, float],
+    road_bearing_deg: float,
+    road_name: str | None,
+) -> CrossStreet | None:
+    """The pick (pure; rulings.md R145-1).  None: no way here is a cross street."""
+    own = (road_name or "").strip().lower()
+    ways: list[tuple[float, str | None, list[tuple[float, float]]]] = []
+    for el in elements:
+        if el.get("type") != "way":
+            continue
+        geometry = el.get("geometry") or []
+        line = [(float(p["lat"]), float(p["lon"])) for p in geometry if _has_coords(p)]
+        seg = _nearest_segment(node, line)
+        if seg is None or seg[0] > CROSS_STREET_RADIUS_M:
+            continue
+        tags = el.get("tags") or {}
+        name = (tags.get("name") or tags.get("ref") or "").strip() or None
+        if _parallel(seg[1], road_bearing_deg) or (own and name and name.lower() == own):
+            continue
+        ways.append((seg[0], name, line))
+    if not ways:
+        return None
+    ways.sort(key=lambda w: w[0])
+    _d, name, line = ways[0]
+    if name is None:
+        return CrossStreet(name=None, lines=[line])
+    return CrossStreet(name=name, lines=[w[2] for w in ways if w[1] == name])
+
+
+def cross_street_geometry(
+    node: tuple[float, float], road_bearing_deg: float, road_name: str | None
+) -> CrossStreet | None:
+    """The cross street at the question's crossing, or None (draw no line, Rule 10).
+
+    One Overpass read of the vehicular ways within ``CROSS_STREET_RADIUS_M``
+    of ``node`` (the road lookup's own query, ``out geom tags``).  A refused
+    or failed read is not remembered.  Never raises.
+    """
+    query = _build_road_at_query(node[0], node[1], CROSS_STREET_RADIUS_M)
+    memo_key = f"{query}|{road_bearing_deg:.1f}|{road_name or ''}"
+    hit = _CROSS_MEMO.get(memo_key)
+    if hit is not None and time.monotonic() - hit[0] <= SUBJECT_MEMO_TTL_S:
+        return hit[1]
+    try:
+        payload, _error = _overpass_request_with_fallback(query, budget_s=SUBJECT_BUDGET_S)
+        if payload is None:
+            return None
+        found = cross_street_from_elements(
+            payload.get("elements", []) or [], node, road_bearing_deg, road_name
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"[overpass] map cross street failed: {type(exc).__name__}")
+        return None
+    if len(_CROSS_MEMO) >= _SUBJECT_MEMO_MAX:
+        _CROSS_MEMO.clear()
+    _CROSS_MEMO[memo_key] = (time.monotonic(), found)
+    return found
 
 
 # ---------------------------------------------------------------------------

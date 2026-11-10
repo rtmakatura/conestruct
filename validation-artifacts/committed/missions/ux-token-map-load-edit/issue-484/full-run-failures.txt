@@ -1,0 +1,3 @@
+Full vitest run 1 (after the change): 1 failed | 3011 passed | 1 skipped
+FAIL lib/design/motion.test.ts > R10 — animation is the band's track and the coming-soon drawing, nothing else > every animation declaration is the band's or sits inside the no-preference block
+Cause: real - the motion allow-list names every animation declaration; the tag's fade (.nyq-map-tag) joined it. Fixed in lib/design/motion.test.ts (one entry). Alone after the fix: 10 passed.
