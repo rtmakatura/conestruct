@@ -1,0 +1,7 @@
+pair | first cut [^0-9a-z]+ | cycle 1 [\W_]+ | current (NFKC) : equal?
+'\u0423\u043b\u0438\u0446\u0430 \u041b\u0435\u043d\u0438\u043d\u0430' vs '\u041f\u0440\u043e\u0441\u043f\u0435\u043a\u0442 \u041c\u0438\u0440\u0430' | True | False | False
+'Calle Jos\xe9' vs 'Calle Jos\xe8' | True | False | False
+'Calle Jose\u0301' vs 'Calle Jose\u0300' | True | True | False
+'Calle Jose\u0301' vs 'Calle Jos\xe9' | False | False | True
+'\uff11st Ave' vs '1st Ave' | False | False | True
+'E Colfax Ave' vs 'East Colfax Avenue' | True | True | True

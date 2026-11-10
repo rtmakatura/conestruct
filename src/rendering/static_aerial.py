@@ -399,9 +399,16 @@ def question_image_url(
     zoom: int = 0,
     soft: bool = False,
     lines: list[list[tuple[float, float]]] | None = None,
-) -> tuple[str, dict[str, str], tuple[float, float], bool, tuple[float, float, float]]:
-    """A NEEDS YOU map: its URL and query, the question's point, whether a
-    line was drawn, and the frame (centre lat, lng and zoom).
+) -> tuple[
+    str,
+    dict[str, str],
+    tuple[float, float],
+    list[list[tuple[float, float]]],
+    tuple[float, float, float],
+]:
+    """A NEEDS YOU map: its URL and query, the question's point, the lines
+    drawn (each whole, nearest first; empty when none), and the frame
+    (centre lat, lng and zoom).
 
     Framed on the nearest features of ``subject`` (nearest first; the
     backend's own read, :func:`src.rules.site_detection.subject_geometry`).
@@ -414,18 +421,19 @@ def question_image_url(
 
     ``lines`` (#484 ruling 2): drawn in place of ``subject``, which still
     frames the map and gives the point; the intersection question frames on
-    its crossing and draws the cross street.
+    its crossing and draws the cross street.  #487: a line the URL budget
+    left out is not in the lines drawn, so nothing is placed beside it.
     """
     if not -ZOOM_OUT_MAX <= zoom <= ZOOM_IN_MAX:
         raise ValueError(f"zoom step {zoom} outside -{ZOOM_OUT_MAX}..{ZOOM_IN_MAX}")
     if not approaches:
         pin_frame = (lat, lng, float(PIN_ZOOM + zoom))
         if soft:
-            return _soft_url(pin_frame, width, height), {}, (lat, lng), False, pin_frame
+            return _soft_url(pin_frame, width, height), {}, (lat, lng), [], pin_frame
         url, query = band_image_url(
             lat, lng, None, stage="pin", width=width, height=height, zoom=zoom
         )
-        return url, query, (lat, lng), False, pin_frame
+        return url, query, (lat, lng), [], pin_frame
     padding = NARROW_PADDING_PX if width < NARROW_BELOW_PX else PADDING_PX
     subject = subject or []
     if subject:
@@ -439,7 +447,7 @@ def question_image_url(
     z = max(0.0, min(_ZOOM_CEILING, min(fit, SUBJECT_MAX_ZOOM) + zoom))
     frame = (centre[0], centre[1], z)
     if soft:
-        return _soft_url(frame, width, height), {}, point, False, frame
+        return _soft_url(frame, width, height), {}, point, [], frame
     size = f"{width}x{height}@2x"
     head = f"https://api.mapbox.com/styles/v1/mapbox/{STYLE}/static/"
     tail = f"/{centre[1]:.6f},{centre[0]:.6f},{z:.2f},0/{size}"
@@ -452,6 +460,7 @@ def question_image_url(
     # feature is drawn whole or not at all.
     used = len(head) + len(tail) + sum(len(w) + 1 for w in work)
     dashes: list[str] = []
+    kept: list[list[tuple[float, float]]] = []
     for line in subject if lines is None else lines:
         drawn = [_dash_path(a, b) for a, b in _dashes(line, centre, z, width, height)]
         cost = sum(len(d) + 1 for d in drawn)
@@ -459,14 +468,18 @@ def question_image_url(
             break
         dashes.extend(drawn)
         used += cost
+        if drawn:
+            kept.append(line)
     overlays = ",".join([*work, *dashes])
-    return f"{head}{overlays}{tail}", {}, point, bool(dashes), frame
+    return f"{head}{overlays}{tail}", {}, point, kept, frame
 
 
 # #484 ruling 2: the cross street's name tag (XB: 12 px beside the line, 30
 # tall, 0 10 padding and a 1 px border, Inter 12.5/600).  CHOSEN: 8 px a
-# character, wider than Inter 12.5/600 sets any letter but W and M, so the
-# box checked is never narrower than the tag drawn.  rulings.md R145-8.
+# character, wider than Inter 12.5/600 sets every lowercase letter but m and
+# w; most capitals, m, w and some digits set wider.  So a mixed-case name
+# usually fits, but a capital-heavy one ("MOUNT MORRISON RD") can draw wider
+# than the box checked.  #484 rulings.md R145-8; #487 R145-8, tag-widths.txt.
 TAG_GAP_PX: float = 12.0
 TAG_HEIGHT_PX: float = 30.0
 TAG_CHAR_PX: float = 8.0

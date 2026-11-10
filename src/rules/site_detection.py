@@ -22,8 +22,10 @@ import asyncio
 import functools
 import math
 import os
+import re
 import ssl
 import time
+import unicodedata
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -1209,6 +1211,37 @@ def _nearest_segment(
     return best
 
 
+# #487: the worked road's name as OSM writes it and as the plan carries it
+# can differ only in abbreviation ("E Colfax Ave", "East Colfax Avenue").
+# CHOSEN (Rule 12; it only decides which way the map draws): the common
+# directional and street-type words, each mapped to one form.  A word not
+# here is compared as written, so a miss only falls back to the bearing test.
+# rulings.md (#487) R145-2.
+_STREET_WORDS: dict[str, str] = {
+    "n": "north", "s": "south", "e": "east", "w": "west",
+    "ne": "northeast", "nw": "northwest", "se": "southeast", "sw": "southwest",
+    "ave": "avenue", "av": "avenue", "st": "street", "rd": "road",
+    "blvd": "boulevard", "dr": "drive", "ln": "lane", "ct": "court",
+    "pl": "place", "pkwy": "parkway", "hwy": "highway", "ter": "terrace",
+    "cir": "circle", "trl": "trail", "expy": "expressway", "fwy": "freeway",
+}  # fmt: skip
+
+
+def _street_key(name: str | None) -> str:
+    """``name`` case-folded, punctuation out, abbreviations spelled out.
+
+    Every Unicode letter and digit is kept, so "Calle José" is not "Calle
+    Josè" and two Cyrillic names never share a key.  A name that is all
+    punctuation keys as itself; only an empty name keys as "", which the
+    caller never matches (Rule 10).  NFKC first, so a decomposed accent is
+    its precomposed letter (not a mark stripped as punctuation) and a
+    full-width digit is its ASCII digit.
+    """
+    folded = unicodedata.normalize("NFKC", (name or "").strip()).casefold()
+    words = re.sub(r"[\W_]+", " ", folded).split()
+    return " ".join(_STREET_WORDS.get(w, w) for w in words) or folded
+
+
 def _parallel(a_deg: float, b_deg: float) -> bool:
     gap = abs(a_deg - b_deg) % 180.0
     return min(gap, 180.0 - gap) <= CROSS_STREET_PARALLEL_DEG
@@ -1221,7 +1254,7 @@ def cross_street_from_elements(
     road_name: str | None,
 ) -> CrossStreet | None:
     """The pick (pure; rulings.md R145-1).  None: no way here is a cross street."""
-    own = (road_name or "").strip().lower()
+    own = _street_key(road_name)
     ways: list[tuple[float, str | None, list[tuple[float, float]]]] = []
     for el in elements:
         if el.get("type") != "way":
@@ -1233,7 +1266,8 @@ def cross_street_from_elements(
             continue
         tags = el.get("tags") or {}
         name = (tags.get("name") or tags.get("ref") or "").strip() or None
-        if _parallel(seg[1], road_bearing_deg) or (own and name and name.lower() == own):
+        # #487: the name through _street_key, so an abbreviation is still the road.
+        if _parallel(seg[1], road_bearing_deg) or (own and name and _street_key(name) == own):
             continue
         ways.append((seg[0], name, line))
     if not ways:
@@ -1242,7 +1276,8 @@ def cross_street_from_elements(
     _d, name, line = ways[0]
     if name is None:
         return CrossStreet(name=None, lines=[line])
-    return CrossStreet(name=name, lines=[w[2] for w in ways if w[1] == name])
+    key = _street_key(name)
+    return CrossStreet(name=name, lines=[w[2] for w in ways if w[1] and _street_key(w[1]) == key])
 
 
 def cross_street_geometry(

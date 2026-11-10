@@ -1,0 +1,17 @@
+Downloading fonttools (2.4MiB)
+ Downloaded fonttools
+Installed 1 package in 280ms
+font: @fontsource/inter@5.0.16 files/inter-latin-600-normal.woff (jsdelivr)
+sha256: 93b3d09b87eb7d5639e10866c37183fd35b7601427491c883292000d346d42b0
+unitsPerEm: 2816; size 12.5 px; TAG_CHAR_PX 8.0; TAG_CHROME_PX 22.0
+lowercase wider than 8.0 px: m 11.2, w 10.5
+  max m 11.2 px
+capitals wider than 8.0 px: A 9.0, B 8.2, C 9.3, D 9.1, G 9.4, H 9.3, K 8.5, M 11.3, N 9.3, O 9.7, P 8.0, Q 9.7, R 8.1, S 8.1, T 8.2, U 9.2, V 9.0, W 12.6, X 8.6, Y 8.8, Z 8.2
+  max W 12.6 px
+digits wider than 8.0 px: 0 8.3, 3 8.1, 4 8.3, 6 8.1, 8 8.1, 9 8.1
+  max 0 8.3 px
+space 3.1 px
+'Franklin Street': text 88.8 px vs checked 120.0 px (+22 chrome both) -> FITS
+'West 1st Avenue': text 101.7 px vs checked 120.0 px (+22 chrome both) -> FITS
+'MOUNT MORRISON RD': text 138.9 px vs checked 136.0 px (+22 chrome both) -> WIDER
+'Ellsworth Avenue': text 105.8 px vs checked 128.0 px (+22 chrome both) -> FITS

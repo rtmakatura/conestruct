@@ -8,6 +8,7 @@ route's own.
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 from collections.abc import Iterator
@@ -416,6 +417,132 @@ def test_484_no_clear_place_sends_no_tag() -> None:
     )
     line = [(lat, lng - 0.003), (lat, lng + 0.003)]
     assert sa.cross_tag_box([line], approaches, frame, "A" * 40, width=120, height=80) is None
+
+
+# #487: the tag sits only beside dashes the image has, and the worked road
+# is the worked road under any abbreviation.  rulings.md (#487) R145-1/2.
+
+
+def _tag_beside(
+    tag: tuple[int, int],
+    line: list[tuple[float, float]],
+    frame: tuple[float, float, float],
+    name: str,
+) -> bool:
+    """The tag box is cross_tag_box's place beside some point of ``line``."""
+    tag_w = sa.TAG_CHAR_PX * len(name) + sa.TAG_CHROME_PX
+    px = sa._walk([sa._frame_px(p, frame, 800, 400) for p in line], sa._TAG_STEP_PX)
+    return any(
+        abs(tag[1] - (y - sa.TAG_HEIGHT_PX / 2)) <= 1
+        and min(abs(tag[0] - (x + sa.TAG_GAP_PX)), abs(tag[0] - (x - sa.TAG_GAP_PX - tag_w))) <= 1
+        for x, y in px
+    )
+
+
+def test_487_the_tag_is_never_beside_a_part_the_url_left_out(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    scenario = fixture()
+    lat, lng = pin(scenario)
+    node = (lat + 0.0003, lng)
+    routed["node"] = signal(*node)
+    # The nearest part runs west; the other parts run east, so many and so
+    # long that the URL budget leaves the farthest out.
+    near = road([(node[0], lng - 0.0008), node], name="Park Avenue")
+    far = [
+        road(
+            [(node[0] + i * 0.00001, lng + 0.00002), (node[0] + i * 0.00001, lng + 0.003)],
+            name="Park Avenue",
+        )
+        for i in range(1, 25)
+    ]
+    mainline = road([(lat - 0.002, lng), (lat + 0.002, lng)], name="Broadway")
+    routed["ways"] = [mainline, near, *far]
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    url = mapbox[0]["url"]
+    c_lat, c_lng, z = (float(v) for v in r.headers["x-map-frame"].split(","))
+    frame = (c_lat, c_lng, z)
+
+    def in_url(way: dict[str, Any]) -> bool:
+        line = [(p["lat"], p["lon"]) for p in way["geometry"]]
+        dashes = sa._dashes(line, (c_lat, c_lng), z, 800, 400)
+        return bool(dashes) and all(sa._dash_path(a, b) in url for a, b in dashes)
+
+    left_out = [w for w in far if not in_url(w)]
+    assert left_out, "the budget left at least one part out"
+    assert in_url(near)
+    assert r.headers["x-map-cross-street"] == "Park%20Avenue"
+    left, top = (int(v) for v in r.headers["x-map-cross-tag"].split(","))
+    drawn = [w for w in [near, *far] if in_url(w)]
+    lines = [[(p["lat"], p["lon"]) for p in w["geometry"]] for w in drawn]
+    assert any(_tag_beside((left, top), ln, frame, "Park Avenue") for ln in lines)
+
+
+def test_487_an_abbreviated_mainline_on_a_curve_is_not_the_cross_street(
+    client: TestClient, mapbox: list[dict[str, Any]], routed: dict[str, Any]
+) -> None:
+    """The plan says "S Broadway", OSM "South Broadway", and the road bends
+    40° at the crossing: the bend is the road, not the cross street."""
+    scenario = fixture()
+    scenario["meta"]["roadName"] = "S Broadway"
+    lat, lng = pin(scenario)
+    bend = (lat + 0.0003, lng)
+    # 40° east of north from the bend, past 25° (CROSS_STREET_PARALLEL_DEG).
+    d_lat, d_lng = 0.0006 * math.cos(math.radians(40)), 0.0006 * math.sin(math.radians(40))
+    d_lng /= math.cos(math.radians(lat))
+    curve = road(
+        [(lat - 0.002, lng), bend, (bend[0] + d_lat, bend[1] + d_lng)], name="South Broadway"
+    )
+    node = (bend[0] + d_lat / 20, bend[1] + d_lng / 20)
+    routed["node"] = signal(*node)
+    cross = road(
+        [(node[0] + 0.00012, lng - 0.0008), (node[0] + 0.00012, lng + 0.0008)],
+        name="West 1st Avenue",
+    )
+    routed["ways"] = [curve, cross]
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert r.headers["x-map-subject"] == "drawn"
+    assert r.headers.get("x-map-cross-street") != "South%20Broadway"
+    found = sd.cross_street_from_elements([curve, cross], node, 180.49, "S Broadway")
+    assert found is not None and found.name == "West 1st Avenue"
+
+
+@pytest.mark.parametrize(
+    ("a", "b", "same"),
+    [
+        ("E Colfax Ave", "East Colfax Avenue", True),
+        ("W. 1st St.", "West 1st Street", True),
+        ("Martin Luther King Jr Blvd", "martin luther king jr boulevard", True),
+        ("E 1st Ave", "W 1st Ave", False),
+        ("Park Ave", "Park Place", False),
+        ("Улица Ленина", "Проспект Мира", False),
+        ("Calle José", "Calle Josè", False),
+        ("Calle José", "calle josé", True),
+        ("!!!", "???", False),
+        # Decomposed accents (NFD) are letters, not punctuation; full-width
+        # digits are digits.
+        ("Calle José", "Calle Josè", False),
+        ("Calle José", "Calle José", True),
+        ("１st Ave", "1st Ave", True),
+    ],
+)
+def test_487_the_street_key(a: str, b: str, same: bool) -> None:
+    assert (sd._street_key(a) == sd._street_key(b)) is same
+
+
+@pytest.mark.parametrize("blank", ["", "   ", None])
+def test_487_a_blank_road_name_drops_no_way_and_groups_no_part(blank: str | None) -> None:
+    """An empty key never matches: the bearing test alone drops the road."""
+    assert sd._street_key(blank) == ""
+    node = (39.7340, -104.9875)
+    a = road([(node[0], node[1] - 0.0008), node], name="Улица Ленина")
+    b = road([node, (node[0], node[1] + 0.0008)], name="Проспект Мира")
+    found = sd.cross_street_from_elements([a, b], node, 0.0, blank)
+    assert found is not None and len(found.lines) == 1, "one street, not two grouped"
 
 
 def test_other_questions_still_draw_every_feature(

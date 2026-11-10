@@ -2112,8 +2112,9 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
     )
     tag = None
     if drawn and cross is not None and cross.name and approaches:
+        # #487: only the lines the URL drew; the tag never sits beside a gap.
         tag = _static_aerial.cross_tag_box(
-            cross.lines, approaches, view, cross.name, width=req.width, height=req.height
+            drawn, approaches, view, cross.name, width=req.width, height=req.height
         )
     try:
         image = _static_aerial.fetch_image(url, query, token)

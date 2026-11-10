@@ -1,0 +1,29 @@
+# #487 red proof (refreshed, repair cycle 2)
+# Base cf5ddffd from `git archive cf5ddffd src tests` (no worktree), the branch's
+# tests/test_needs_you_map.py copied in; `pytest -k 487 -rA` on base, then on the fix.
+
+## On base cf5ddffd: 17 failed, 43 deselected
+FAILED test_487_the_tag_is_never_beside_a_part_the_url_left_out
+    E assert False  (the tag is beside no part the URL drew)
+FAILED test_487_an_abbreviated_mainline_on_a_curve_is_not_the_cross_street
+    E AssertionError: assert 'South%20Broadway' != 'South%20Broadway'
+FAILED test_487_the_street_key[E Colfax Ave-East Colfax Avenue-True]
+FAILED test_487_the_street_key[W. 1st St.-West 1st Street-True]
+FAILED test_487_the_street_key[Martin Luther King Jr Blvd-martin luther king jr boulevard-True]
+FAILED test_487_the_street_key[E 1st Ave-W 1st Ave-False]
+FAILED test_487_the_street_key[Park Ave-Park Place-False]
+FAILED test_487_the_street_key[Улица Ленина-Проспект Мира-False]
+FAILED test_487_the_street_key[Calle José-Calle Josè-False]
+FAILED test_487_the_street_key[Calle José-calle josé-True]
+FAILED test_487_the_street_key[!!!-???-False]
+FAILED test_487_the_street_key[Calle José-Calle Josè-False]
+FAILED test_487_the_street_key[Calle José-Calle Jos\xe9-True]
+FAILED test_487_the_street_key[１st Ave-1st Ave-True]
+FAILED test_487_a_blank_road_name_drops_no_way_and_groups_no_part[]
+FAILED test_487_a_blank_road_name_drops_no_way_and_groups_no_part[   ]
+FAILED test_487_a_blank_road_name_drops_no_way_and_groups_no_part[None]
+    (the last 15) E AttributeError: module 'src.rules.site_detection' has no attribute '_street_key'
+    The key did not exist on base; the behaviour each key case pins is shown
+    against the first cut and the cycle-1 key in probe.txt.
+
+## On the fix: 17 passed, 43 deselected
