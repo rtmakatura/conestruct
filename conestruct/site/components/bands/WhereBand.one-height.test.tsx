@@ -31,6 +31,7 @@ import type { Scenario } from "@/lib/scenarios";
 import type { ConfirmedRoad, RoadCandidate, RoadDetectOk } from "@/lib/road-detection/types";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import { forgetAerials } from "@/lib/corridor-aerial";
+import { coverScale } from "./BandAerial";
 
 vi.mock("../AppNav", () => ({ AppNav: () => null }));
 vi.mock("../AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -440,7 +441,8 @@ const BOX = /(?:^|[;\s])(height|min-height|max-height|margin(?:-top|-bottom)?|pa
 describe("#469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched", () => {
   it("B1, B2: the band's height and the line slot are the wrapper's own properties", () => {
     const wrap = rule(rules(CSS.slice(0, block("min-width: 720px").start)), ".workbench .wq-wrap");
-    expect(decl(wrap, "--wq-band-h")).toBe("648px");
+    // #490 C7: re-traced (missions/ux-columns-copy-maps/issue-490/rulings.md).
+    expect(decl(wrap, "--wq-band-h")).toBe("655px");
     expect(decl(wrap, "--wq-line-slot")).toBe("calc(8px + 10.5px * 1.5)");
     // The slot is the line's own margin and one .tr-prov line.
     expect(decl(rule(rules(CSS), ".workbench .a-aerial-line"), "margin")).toBe("8px 0 0");
@@ -450,12 +452,13 @@ describe("#469 rulings 1-3 (CSS): one height in two columns, the 390 strip untou
 
   it("ruling 1: the aerial column, the frame and the open card's right column take the one height", () => {
     const wide = rules(block("min-width: 720px").body);
-    expect(decl(rule(wide, ".workbench .wq-stack[data-aerial] > .a-aerial"), "height")).toBe("var(--wq-band-h)");
-    expect(decl(rule(wide, ".workbench .wq-stack[data-aerial] .a-aerial-frame"), "height")).toBe(
-      "min( calc(var(--wq-band-h) - var(--wq-line-slot)), calc(100vh - var(--nav-h) - 2 * var(--space-block)) )",
-    );
+    // #490: the one height is the row's: the right column starts at the
+    // band's height, and the aerial column and its frame stretch to it.
+    // Repair 2: a grid whose first row stretches its cells (grid's default).
+    expect(decl(rule(wide, ".workbench .wq-stack[data-aerial]"), "display")).toBe("grid");
+    expect(decl(rule(wide, ".workbench .wq-stack[data-aerial] > .wq-side"), "min-height")).toBe("var(--wq-band-h)");
+    expect(decl(rule(wide, ".workbench .wq-stack[data-aerial] .a-aerial-frame"), "height")).toBe("auto");
     const open = '.workbench .wq-stack[data-aerial][data-card="open"]';
-    expect(decl(rule(wide, `${open} > .wq-side`), "min-height")).toBe("var(--wq-band-h)");
     // The card stretches; its content at the top, and the room for its
     // action row (the 16 px gap, the 44 px button, the 24 px inset) reserved
     // at its bottom.
@@ -490,10 +493,12 @@ describe("#469 rulings 1-3 (CSS): one height in two columns, the 390 strip untou
     expect(block("min-width: 720px").body).not.toMatch(/\border\s*:|\.nyq-row\b|\.nyq-card\s*\{/);
   });
 
-  it("#485 E8: with the Edit panel open the right column is exactly the band's height", () => {
+  it("#485 E8: with the Edit panel open the right column is the band's height, the panel filling it", () => {
     const wide = rules(block("min-width: 720px").body);
     const edit = ".workbench .wq-stack[data-aerial][data-edit]";
-    expect(decl(rule(wide, `${edit} > .wq-side`), "height")).toBe("var(--wq-band-h)");
+    // #490: a minimum (the row's, as in every two-column state), so a panel
+    // that needs more grows both columns together.
+    expect(wide.some((r) => r.sel.includes(`${edit} > .wq-side`))).toBe(false);
     expect([decl(rule(wide, `${edit} .wq-panel`), "flex"), decl(rule(wide, `${edit} .wq-panel`), "min-height")]).toEqual([
       "1 1 auto",
       "0",
@@ -528,5 +533,59 @@ describe("#469 rulings 1-3 (CSS): one height in two columns, the 390 strip untou
     const narrow = block("max-width: 719.98px").body;
     expect(narrow).toMatch(/\.wq-stack\[data-card="open"\]:not\(\[data-tap\]\) \.a-aerial-frame \{[^}]*height: 150px;/);
     expect(narrow).not.toMatch(/--wq-band-h|--wq-line-slot/);
+  });
+});
+
+// #490 (Ryan 2026-11-10): "Columns that sit side by side always end
+// together."  The measured 0 px is scripts/verify-columns-end-together.mjs
+// (every WHERE state and variant at 1024, 1198 and 1440, at 100 and 200%
+// text; missions/ux-columns-copy-maps/issue-490/); here the CSS that makes
+// it structural, and the cover scale.
+describe("#490: the two WHERE columns end together", () => {
+  const wide = () => rules(block("min-width: 720px").body);
+  const stack = ".workbench .wq-stack[data-aerial]";
+
+  it("one grid whose first row stretches both columns; no box in it has a fixed height that could drift", () => {
+    const w = wide();
+    const g = rule(w, stack);
+    expect([decl(g, "display"), decl(g, "grid-template-columns"), decl(g, "grid-template-rows")]).toEqual([
+      "grid",
+      "minmax(0, 1fr) minmax(0, 1fr)",
+      "auto minmax(var(--wq-line-slot), auto)",
+    ]);
+    // Grid items stretch by default: nothing in the block overrides it.
+    expect(w.some((r) => /align-(items|self)\s*:/.test(r.body))).toBe(false);
+    expect([decl(rule(w, `${stack} > .a-aerial > .a-aerial-frame`), "grid-row"), decl(rule(w, `${stack} > .wq-side`), "grid-row")]).toEqual(["1", "1"]);
+    for (const sel of [`${stack} .a-aerial-frame`, `${stack} > .wq-side`]) {
+      expect(decl(rule(w, sel), "max-height"), sel).toBeNull();
+    }
+    // No rule in the block sets a fixed height on a column or its boxes; the
+    // one height is the picture's drawn size (below).  The frame's is reset.
+    const fixed = w.filter((r) => ![null, "auto"].includes(decl(r.body, "height"))).map((r) => r.sel);
+    expect(fixed).toEqual([`${stack} .a-aerial-canvas`]);
+    expect(decl(rule(w, `${stack} > .a-aerial`), "display")).toBe("contents");
+    // The right column's last box fills it (the card, or the waiting row
+    // under the Edit panel, which the panel pushes down).
+    expect(decl(rule(w, `${stack} > .wq-side > :last-child`), "flex")).toBe("1 0 auto");
+  });
+
+  it("the aerial's line is in flow in row 2, a slot at least one line tall that grows with its text", () => {
+    const w = wide();
+    expect(decl(rule(w, stack), "padding-bottom")).toBeNull();
+    const line = rule(w, `${stack} > .a-aerial > .a-aerial-line`);
+    expect([decl(line, "grid-row"), decl(line, "grid-column"), decl(line, "position")]).toEqual(["2", "1", null]);
+    // The key's containing block is the stack (the aerial column has no box).
+    expect(decl(rule(w, stack), "position")).toBe("relative");
+  });
+
+  it("the picture keeps its drawn size and is scaled to cover a taller frame", () => {
+    const canvas = rule(wide(), `${stack} .a-aerial-canvas`);
+    expect(decl(canvas, "height")).toBe("calc(var(--wq-band-h) - 2px)");
+    expect(decl(canvas, "transform")).toBe("translateY(-50%) scale(var(--aerial-cover, 1))");
+    expect(coverScale({ width: 409, height: 646 }, { width: 409, height: 646 })).toBe(1);
+    expect(coverScale({ width: 409, height: 800 }, { width: 409, height: 646 })).toBeCloseTo(800 / 646, 6);
+    // Never below 1 (the phone strip's frame is shorter than its canvas).
+    expect(coverScale({ width: 328, height: 148 }, { width: 328, height: 248 })).toBe(1);
+    expect(coverScale({ width: 0, height: 0 }, { width: 0, height: 0 })).toBe(1);
   });
 });

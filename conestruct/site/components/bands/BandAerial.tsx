@@ -56,6 +56,9 @@ import { ZONE_CHANNEL, ZONE_COLOR, type CorridorZone } from "@/lib/corridor-zone
 import { focusWasDropped, scrollAerialPartIn } from "@/lib/cross-street-reveal";
 import { symClass } from "@/lib/design/symbols";
 import { CROSS_FINDING, CROSS_NONE } from "./WhereQuestions";
+import { MapboxAttribution, MapboxMarks } from "./MapboxMarks";
+
+export { MAPBOX_ATTRIBUTION } from "./MapboxMarks";
 
 // Upstream first — the motorist's order, the picker's and page 2's legend.
 const LEGEND_ORDER: readonly CorridorZone[] = [
@@ -128,6 +131,39 @@ export function useFrameSize(ref: React.RefObject<HTMLDivElement | null>) {
     return () => ro.disconnect();
   }, [ref]);
   return size;
+}
+
+/** #490: the scale that makes the picture (the canvas, drawn at its own
+ *  layout size) cover the frame when the frame is taller or wider than it:
+ *  set on the frame as `--aerial-cover`, which only the two-column CSS reads.
+ *  A transform, so the canvas's layout size, and with it the picture asked
+ *  for, never changes; taps, the ring and the mark scale with it (the tap
+ *  reads the picture's on-screen box). */
+export function coverScale(frame: { width: number; height: number }, canvas: { width: number; height: number }): number {
+  if (canvas.width <= 0 || canvas.height <= 0) return 1;
+  return Math.max(1, frame.width / canvas.width, frame.height / canvas.height);
+}
+
+function useCoverScale(
+  frameBox: React.RefObject<HTMLDivElement | null>,
+  canvas: React.RefObject<HTMLDivElement | null>,
+) {
+  useLayoutEffect(() => {
+    const f = frameBox.current;
+    const c = canvas.current;
+    if (!f || !c) return;
+    const set = () => {
+      const s = coverScale({ width: f.clientWidth, height: f.clientHeight }, { width: c.clientWidth, height: c.clientHeight });
+      const v = String(+s.toFixed(4));
+      if (f.style.getPropertyValue("--aerial-cover") !== v) f.style.setProperty("--aerial-cover", v);
+    };
+    set();
+    if (typeof ResizeObserver !== "function") return;
+    const ro = new ResizeObserver(set);
+    ro.observe(f);
+    ro.observe(c);
+    return () => ro.disconnect();
+  }, [frameBox, canvas]);
 }
 
 /** #456 M9: the picture on screen and what its key and line say. */
@@ -262,6 +298,8 @@ export function BandAerial({
   // the full height while the narrow strip clips the frame to 150 px.
   const frameRef = useRef<HTMLDivElement | null>(null);
   const size = useFrameSize(frameRef);
+  const frameBoxRef = useRef<HTMLDivElement | null>(null);
+  useCoverScale(frameBoxRef, frameRef);
   // #456: focus follows the toggle to its other button.
   const hideRef = useRef<HTMLButtonElement | null>(null);
   const showRef = useRef<HTMLButtonElement | null>(null);
@@ -475,6 +513,7 @@ export function BandAerial({
         </div>
       )}
       <div
+        ref={frameBoxRef}
         className={`a-aerial-frame${tapping ? " is-armed" : ""}${barNow ? " has-bar" : ""}`}
         data-bar={barNow?.kind}
         data-held={holding || standIn !== null || undefined}
@@ -603,41 +642,57 @@ export function BandAerial({
           </>
         )}
         </div>
-        {barNow && onBigMap && (
-          <button
-            ref={bigMapRef}
-            type="button"
-            className="a-aerial-bigmap"
-            data-write=""
-            aria-disabled={locked || undefined}
-            onClick={() => {
-              if (!locked) onBigMap();
-            }}
-            data-testid="band-aerial-big-map"
-          >
-            {AERIAL_BIG_MAP}
-          </button>
-        )}
-        {onHide && (
-          <button
-            ref={hideRef}
-            type="button"
-            className="a-aerial-toggle a-aerial-hide"
-            data-read=""
-            onClick={() => {
-              toggled.current = true;
-              onHide();
-            }}
-            data-testid="band-aerial-hide"
-          >
-            {AERIAL_HIDE}
-          </button>
-        )}
-        {heldLine && barNow?.kind !== "waiting" && (
-          <div className="a-aerial-held tr-prov" data-testid="band-aerial-held" role="status">
-            {AERIAL_WAIT}
-          </div>
-        )}
+        {/* #490 repair 1: the frame's foot, one bottom-anchored column: the
+            foot's controls and lines over Mapbox's marks (C11), stacked by
+            the layout at any text size, so none of them covers another. */}
+        <div className="a-aerial-foot">
+          {((barNow && onBigMap) || onHide || (heldLine && barNow?.kind !== "waiting")) && (
+            <div className="a-aerial-foot-row">
+              {heldLine && barNow?.kind !== "waiting" && (
+                <div className="a-aerial-held tr-prov" data-testid="band-aerial-held" role="status">
+                  {AERIAL_WAIT}
+                </div>
+              )}
+              {barNow && onBigMap && (
+                <button
+                  ref={bigMapRef}
+                  type="button"
+                  className="a-aerial-bigmap"
+                  data-write=""
+                  aria-disabled={locked || undefined}
+                  onClick={() => {
+                    if (!locked) onBigMap();
+                  }}
+                  data-testid="band-aerial-big-map"
+                >
+                  {AERIAL_BIG_MAP}
+                </button>
+              )}
+              {onHide && (
+                <button
+                  ref={hideRef}
+                  type="button"
+                  className="a-aerial-toggle a-aerial-hide"
+                  data-read=""
+                  onClick={() => {
+                    toggled.current = true;
+                    onHide();
+                  }}
+                  data-testid="band-aerial-hide"
+                >
+                  {AERIAL_HIDE}
+                </button>
+              )}
+            </div>
+          )}
+          {(src !== null || standIn !== null) && (
+            // #490 C11: the picture is asked for without Mapbox's logo and
+            // attribution and may be scaled to cover the frame, so both are
+            // drawn here, on the frame, outside the scaled canvas: always
+            // whole.
+            <MapboxMarks testid="band-aerial" linked />
+          )}
+        </div>
         {shown && (
           // The zoom controls: reads (data-read), never locked by the
           // write lock.  At a bound a button is aria-disabled — still
@@ -686,6 +741,14 @@ export function BandAerial({
           </div>
         )}
       </div>
+      {(src !== null || standIn !== null) && (
+        // #490 repair 1 (Amendment 4): at 519 px and under the frame is too
+        // small for the attribution line beside its controls at large text
+        // sizes, so the line is drawn directly under it instead (Mapbox's
+        // static-map rule: "a textual description near the image"); the
+        // logo stays on the frame.  Shown there only (globals.css).
+        <MapboxAttribution testid="band-aerial-attribution-under" linked className="mbx-under" />
+      )}
       {src !== null && (keyStage === "work" || keyStage === "laid_out") && (
         // #439 ruling 7: the key on the aerial's top-left corner (under it
         // below 520 px, a 2-column grid); one row per channel, the same

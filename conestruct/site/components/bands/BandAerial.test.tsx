@@ -5,6 +5,8 @@
 // request it sends: the backend's picture of THIS scenario, never a
 // coordinate of its own (Rule 3) and never the previous picture (Rule 10).
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render } from "@testing-library/react";
 import {
@@ -15,6 +17,7 @@ import {
   AERIAL_KIND_OWED,
   AERIAL_TAP_BAR,
   AERIAL_WAIT,
+  MAPBOX_ATTRIBUTION,
   type AerialBar,
   type AerialTap,
 } from "./BandAerial";
@@ -613,5 +616,112 @@ describe("#456: while the next picture loads, the controls and the bar stay", ()
     await act(async () => release());
     await settle(50);
     expect(q("band-aerial-bar")?.textContent).toContain(AERIAL_TAP_BAR);
+  });
+});
+
+// #490 C11: the picture is asked for without Mapbox's marks (the backend's
+// query, tests/test_band_aerial_marks.py) and may be scaled to cover the
+// frame, so the page draws them on the frame, outside the scaled canvas.
+describe("#490 C11: Mapbox's logo and attribution on the frame", () => {
+  it("render with the picture, on the frame and outside the canvas, each a link", async () => {
+    render(<BandAerial scenario={SCENARIO} geometry={answer("side_not_confirmed")} kindConfirmed />);
+    // No picture yet: nothing of Mapbox's to credit.
+    expect(q("band-aerial-logo")).toBeNull();
+    expect(q("band-aerial-attribution")).toBeNull();
+    await settle();
+    expect(q("band-aerial-img")).not.toBeNull();
+    const frame = q("band-aerial-frame")!;
+    const canvas = frame.querySelector(".a-aerial-canvas")!;
+    const logo = q("band-aerial-logo")!;
+    const attrib = q("band-aerial-attribution")!;
+    for (const el of [logo, attrib]) {
+      expect(frame.contains(el)).toBe(true);
+      expect(canvas.contains(el)).toBe(false);
+    }
+    // Mapbox's own logo element, as GL JS draws it (mapbox-gl.css styles it).
+    const mark = logo.querySelector("a.mapboxgl-ctrl-logo")!;
+    expect(mark.getAttribute("href")).toBe("https://www.mapbox.com/");
+    expect(mark.getAttribute("aria-label")).toBe("Mapbox logo");
+    const links = Array.from(attrib.querySelectorAll("a")).map((a) => [a.textContent, a.getAttribute("href")]);
+    expect(links).toEqual(MAPBOX_ATTRIBUTION.map((l) => [l.text, l.href]));
+    expect(attrib.textContent).toBe("© Maxar © Mapbox © OpenStreetMap Improve this map");
+    // Reads: the write lock leaves them live.
+    for (const a of [mark, ...Array.from(attrib.querySelectorAll("a"))]) expect(a.hasAttribute("data-read")).toBe(true);
+  });
+
+  it("go with the picture when it fails", async () => {
+    reply = () => new Response("no", { status: 502 });
+    render(<BandAerial scenario={SCENARIO} geometry={answer("side_not_confirmed")} kindConfirmed />);
+    await settle();
+    expect(q("band-aerial-img")).toBeNull();
+    expect(q("band-aerial-logo")).toBeNull();
+    expect(q("band-aerial-attribution")).toBeNull();
+  });
+});
+
+// #490 repair 1: the frame's foot stacks its controls and lines over the
+// marks by layout, so none covers another at any text size (the measured
+// check: scripts/verify-columns-end-together.mjs's overlap assertion).
+describe("#490 repair 1: the foot is one stacked column", () => {
+  const CSS = readFileSync(join(__dirname, "..", "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+  const body = (sel: string) => {
+    const clean = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
+    const out: string[] = [];
+    const re = /([^{}@]+)\{([^{}]*)\}/g;
+    for (let m = re.exec(clean); m; m = re.exec(clean)) {
+      if (m[1].split(",").some((x) => x.trim().endsWith(sel))) out.push(m[2]);
+    }
+    return out.join(";");
+  };
+  it("the foot is anchored to the frame's bottom and stacks its rows", () => {
+    const foot = body(".workbench .a-aerial-foot");
+    expect(foot).toMatch(/position:\s*absolute/);
+    expect(foot).toMatch(/bottom:\s*0/);
+    expect(foot).toMatch(/flex-direction:\s*column/);
+    expect(body(".workbench .mbx-marks")).toMatch(/flex-wrap:\s*wrap-reverse/);
+  });
+  it("no foot control or line keeps a px offset of its own, at any width", () => {
+    for (const sel of [".a-aerial-bigmap", ".a-aerial-held", ".a-aerial-hide", ".mbx-attrib", ".mbx-logo"]) {
+      expect(body(sel), sel).not.toMatch(/(?:^|[;\s])(bottom|top|position)\s*:/);
+    }
+  });
+  it("the big-map button, Hide map and the held line are in the foot, above the marks", async () => {
+    render(
+      <BandAerial
+        scenario={SCENARIO}
+        geometry={answer("side_not_confirmed")}
+        kindConfirmed
+        bar={{ kind: "armed" }}
+        armed
+        onTap={() => {}}
+        onBigMap={() => {}}
+        onHide={() => {}}
+        onShow={() => {}}
+      />,
+    );
+    await settle();
+    const foot = document.querySelector(".a-aerial-foot")!;
+    const row = foot.querySelector(".a-aerial-foot-row")!;
+    expect(row.contains(q("band-aerial-big-map"))).toBe(true);
+    expect(row.contains(q("band-aerial-hide"))).toBe(true);
+    expect(foot.lastElementChild).toBe(q("band-aerial-marks"));
+  });
+});
+
+// #490 repair 1 (Amendment 4): at 519 px and under the attribution line is
+// drawn under the frame, in flow; on the frame it is hidden there.
+describe("#490 repair 1: the attribution under a narrow frame", () => {
+  it("is drawn after the frame, outside it, and the CSS shows it only at 519 px and under", async () => {
+    render(<BandAerial scenario={SCENARIO} geometry={answer("side_not_confirmed")} kindConfirmed />);
+    await settle();
+    const frame = q("band-aerial-frame")!;
+    const under = q("band-aerial-attribution-under")!;
+    expect(frame.contains(under)).toBe(false);
+    expect(frame.nextElementSibling).toBe(under);
+    expect(under.textContent).toBe(MAPBOX_ATTRIBUTION.map((l) => l.text).join(" "));
+    const css = readFileSync(join(__dirname, "..", "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    expect(css).toMatch(/\.workbench \.mbx-attrib\.mbx-under \{\s*display: none;/);
+    const narrow = css.slice(css.indexOf("@media (max-width: 519px) {\n  .workbench .a-aerial-frame .mbx-attrib"));
+    expect(narrow).toMatch(/^@media \(max-width: 519px\) \{\s*\.workbench \.a-aerial-frame \.mbx-attrib \{\s*display: none;\s*\}\s*\.workbench \.mbx-attrib\.mbx-under \{\s*display: block;/);
   });
 });

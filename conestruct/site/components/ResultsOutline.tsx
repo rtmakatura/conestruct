@@ -18,6 +18,8 @@
 // picture remembered it is a plain grey block (Rule 10: no picture is
 // drawn for this pin that the band never showed).
 
+import { MapboxMarks } from "./bands/MapboxMarks";
+
 export type WaitSlow = "none" | "cold" | "road";
 
 /** ruling 6 / R145-4 — the cold start, today's honest claim (SLOW_VERIFY_MS)
@@ -57,7 +59,14 @@ export function OutlineNeedsYou({
         <div className="ro-block ro-head" />
         <div className="ro-map">
           <OutlineAerial src={aerialSrc} />
-          <span className="ro-label tr-note">Checking this stretch of road</span>
+          {/* #490 C13: the band picture has no Mapbox marks of its own
+              (C11) and is cropped to cover here, so the marks are drawn on
+              the placeholder's foot, under its label, unlinked (the outline
+              is aria-hidden: nothing in it may be focusable). */}
+          <div className="ro-map-foot">
+            <span className="ro-label tr-note">Checking this stretch of road</span>
+            {aerialSrc ? <MapboxMarks testid="ro-map" linked={false} /> : null}
+          </div>
         </div>
         <p className="ro-note tr-help">{slow === "cold" ? COLD_START_NOTE : ""}</p>
         <div className="ro-block ro-line" />

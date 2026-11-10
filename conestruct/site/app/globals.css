@@ -9641,13 +9641,9 @@ input[type="number"] {
 .workbench .a-aerial-frame.has-bar .a-aerial-edit ~ .a-aerial-zoom {
   top: 104px;
 }
-/* Ruling 4: 44 px, the aerial's bottom-right, clear of the Mapbox
-   attribution the picture carries in that corner. */
+/* Ruling 4: 44 px, the aerial's bottom-right.  #490 repair 1: in the
+   frame's foot (.a-aerial-foot), over Mapbox's marks. */
 .workbench .a-aerial-bigmap {
-  position: absolute;
-  right: 8px;
-  bottom: 28px;
-  z-index: 2;
   min-height: 44px;
   padding: 0 16px;
   color: var(--ink);
@@ -10022,12 +10018,13 @@ input[type="number"] {
   margin-top: var(--space-block);
   --aerial-h: 300px;
   /* #469 B1 (CHOSEN, a layout number): the band's height in two columns,
-     the tallest traced CONFIRM question (the kind question with near
-     intersection chosen: the road row, the gap and the card with its
-     action row at the bottom (B4), 647.8 px at 1440 and 1198) to the
-     whole pixel.  B2: the slot under the aerial for its one line
+     the tallest traced CONFIRM state to the whole pixel.  #490 C7
+     re-trace: the kind question reopened after the near-intersection kind,
+     its cross street and the side are answered (two two-line answered
+     rows), 654.75 px at 1024, 1198 and 1440 (was 647.8, the kind question
+     with near intersection chosen).  B2: the slot under the aerial for its one line
      (.a-aerial-line's 8 px margin and one .tr-prov line). */
-  --wq-band-h: 648px;
+  --wq-band-h: 655px;
   --wq-line-slot: calc(8px + 10.5px * 1.5);
 }
 @media (max-width: 480px) {
@@ -10065,53 +10062,166 @@ input[type="number"] {
   outline-offset: 1px;
 }
 .workbench .a-aerial-hide {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  z-index: 2;
   display: none;
 }
 .workbench .a-aerial-showrow,
 .workbench .a-aerial-showrow[hidden] {
   display: none;
 }
-/* M9: a held picture of another corridor says it is being redrawn, in its
-   bottom-left corner (clear of Hide map and the big-map button). */
-.workbench .a-aerial-held {
+/* #490 C11 and repair 1: the frame's foot, one column anchored to the
+   frame's bottom: a row of the foot's controls and lines (the held line on
+   the left; "Use the big map instead" and, in the strip, Hide map on the
+   right) over Mapbox's marks.  The layout stacks them, so at any text size
+   none covers another; no px offset to drift.  Taps pass through the foot's
+   empty room to the picture. */
+.workbench .a-aerial-foot {
   position: absolute;
-  left: 8px;
-  bottom: 28px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  pointer-events: none;
+}
+.workbench .a-aerial-foot-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-tight);
+  padding: 0 var(--space-tight);
+}
+.workbench .a-aerial-foot-row > * {
+  pointer-events: auto;
+}
+/* Mapbox's marks (components/bands/MapboxMarks.tsx): the logo (its own GL
+   JS element, not restyled) and the attribution line in one row; the line
+   wraps above the logo (wrap-reverse) when the row is too narrow.  Colours
+   are tokens; the line is .tr-prov (no new size). */
+.workbench .mbx-marks {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0 var(--space-tight);
+  padding-left: var(--space-tight);
+  pointer-events: none;
+}
+.workbench .mbx-logo {
+  flex: none;
+  margin-bottom: var(--space-tight);
+  line-height: 0;
+  pointer-events: auto;
+}
+.workbench .mbx-attrib {
+  flex: 0 1 auto;
+  max-width: 100%;
+  margin: 0 0 0 auto;
+  padding: 0 var(--space-tight);
+  text-align: right;
+  color: var(--ink);
+  background: rgb(var(--ws-surface-rgb) / 0.9);
+  pointer-events: auto;
+}
+.workbench .mbx-attrib a,
+.workbench .mbx-attrib .mbx-text {
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.workbench .mbx-attrib a:hover {
+  text-decoration: underline;
+}
+.workbench .mbx-attrib a:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 1px;
+}
+/* #490 repair 1 (Amendment 4): the attribution line under a narrow frame.
+   At the key's own breakpoint (519 px, .a-aerial-legend's) the line leaves
+   the frame for the page's flow directly under it, so it meets none of the
+   frame's controls at any text size; the logo stays on the frame. */
+.workbench .mbx-attrib.mbx-under {
+  display: none;
+}
+@media (max-width: 519px) {
+  .workbench .a-aerial-frame .mbx-attrib {
+    display: none;
+  }
+  .workbench .mbx-attrib.mbx-under {
+    display: block;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    color: var(--ink-mute);
+    background: none;
+  }
+}
+/* M9: a held picture of another corridor says it is being redrawn, at the
+   left of the frame's foot row (clear of Hide map and the big-map button). */
+.workbench .a-aerial-held {
+  margin-right: auto;
   padding: 4px 8px;
   color: var(--ink);
   background: rgb(var(--ws-surface-rgb) / 0.9);
   border: 1px solid var(--rule);
 }
 @container (min-width: 720px) {
+  /* #490 (Ryan 2026-11-10): side-by-side columns end together.  A grid
+     whose first row stretches both columns to the taller. */
   .workbench .wq-stack[data-aerial] {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: var(--space-section);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(var(--wq-line-slot), auto);
+    column-gap: var(--space-section);
+    row-gap: 0;
+    position: relative;
   }
-  /* #469 ruling 1 (B2, B3): the aerial fills the left column at the band's
-     one height, in every two-column state, so no question, Undo or tap state
-     moves it or asks for a new picture (M2's reason); its line sits in the
-     slot under the frame.  M2's window cap stays. */
+  /* The right column starts at the band's height (#469 B1) in every
+     two-column state; content that needs more grows the row, and with it
+     the aerial.  The aerial's column box steps aside (display: contents):
+     its frame is row 1's left cell, and its one line sits in normal flow in
+     row 2 under it, a row at least one line's slot tall (#469 B2's slot, so
+     at 100% text the line's coming and going moves nothing) that grows
+     with the line's text (repair 2: it wraps at 200%).  The key, on the
+     frame's top-left, is placed from the stack (position: relative). */
   .workbench .wq-stack[data-aerial] > .a-aerial {
-    flex: 1 1 0;
-    min-width: 0;
-    height: var(--wq-band-h);
-    position: sticky;
-    top: calc(var(--nav-h) + var(--space-block));
+    display: contents;
+  }
+  .workbench .wq-stack[data-aerial] > .a-aerial > .a-aerial-frame {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .workbench .wq-stack[data-aerial] > .a-aerial > .a-aerial-line {
+    grid-column: 1;
+    grid-row: 2;
   }
   .workbench .wq-stack[data-aerial] > .wq-side {
-    flex: 1 1 0;
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    min-height: var(--wq-band-h);
   }
+  /* The frame fills its column.  The picture keeps the size it is drawn at
+     (the band's height less the frame's border, M2's reason: no state asks
+     for a new picture), centred, and is scaled to cover a taller frame
+     (--aerial-cover, set by BandAerial from the two boxes). */
   .workbench .wq-stack[data-aerial] .a-aerial-frame {
-    height: min(
-      calc(var(--wq-band-h) - var(--wq-line-slot)),
-      calc(100vh - var(--nav-h) - 2 * var(--space-block))
-    );
+    height: auto;
+    min-height: 0;
+  }
+  .workbench .wq-stack[data-aerial] .a-aerial-canvas {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: calc(var(--wq-band-h) - 2px);
+    transform: translateY(-50%) scale(var(--aerial-cover, 1));
+  }
+  /* The right column's last box fills it, so its bottom is the column's. */
+  .workbench .wq-stack[data-aerial] > .wq-side > :last-child {
+    flex: 1 0 auto;
   }
   /* #469 ruling 1 (B4): while the card is open the right column is at least
      the band's height and the CONFIRM card stretches to it.  Its content
@@ -10120,12 +10230,9 @@ input[type="number"] {
      24 px inset under it and the card's 16 px gap over it reserved, so it
      is in one place on every question.  The DOM (and so the focus and
      reading order) is unchanged: answers, then the action row, then the
-     rows (B4a).  A minimum; since #485, Edit with the card there is the
-     Edit panel's turn, at exactly this height (E8, below).  The kind
-     question's Details floats (.nyq-tip-box). */
-  .workbench .wq-stack[data-aerial][data-card="open"] > .wq-side {
-    min-height: var(--wq-band-h);
-  }
+     rows (B4a).  The column's minimum is the band's height in every
+     two-column state (#490, above).  The kind question's Details floats
+     (.nyq-tip-box). */
   .workbench .wq-stack[data-aerial][data-card="open"] .wq {
     flex: 1 0 auto;
     position: relative;
@@ -10137,12 +10244,10 @@ input[type="number"] {
     right: var(--space-block);
     bottom: var(--space-section);
   }
-  /* #485 E8: while the Edit panel has the right column, the column is
-     exactly the band's height (not a minimum), the panel takes the room the
-     waiting row leaves, so no edit grows the band or moves the aerial. */
-  .workbench .wq-stack[data-aerial][data-edit] > .wq-side {
-    height: var(--wq-band-h);
-  }
+  /* #485 E8: while the Edit panel has the right column, the panel takes the
+     room the waiting row leaves, so the row ends with the column.  #490: the
+     column is the band's height as a minimum (no longer exactly), so a
+     panel whose content needs more grows both columns together. */
   .workbench .wq-stack[data-aerial][data-edit] .wq-panel {
     flex: 1 1 auto;
     min-height: 0;
@@ -10181,8 +10286,9 @@ input[type="number"] {
   }
   /* M9 in the strip: the held picture's line stays, at the strip's
      bottom-left, beside Hide map. */
+  /* M9 in the strip: the held line beside Hide map, in the frame's foot
+     row (#490 repair 1: over Mapbox's marks, whatever their height). */
   .workbench .wq-stack[data-card="open"]:not([data-tap]) .a-aerial-held {
-    bottom: 8px;
     max-width: calc(100% - 140px);
   }
   .workbench .wq-stack[data-card="open"]:not([data-tap]) .a-aerial-hide {
@@ -10484,10 +10590,25 @@ input[type="number"] {
   opacity: 0.35;
   filter: grayscale(0.6);
 }
-.workbench .ro-label {
+/* #490 C13: the placeholder's foot, as the band frame's: its label over
+   Mapbox's marks, stacked by the layout (no offset to drift). */
+.workbench .ro-map-foot {
   position: absolute;
-  left: var(--space-block);
-  bottom: var(--space-tight);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-tight);
+  padding-bottom: var(--space-tight);
+}
+.workbench .ro-map-foot:has(.mbx-marks) {
+  padding-bottom: 0;
+}
+.workbench .ro-label {
+  align-self: flex-start;
+  margin: 0 0 0 var(--space-block);
   padding: 0 var(--space-tight);
   /* Rule 13: a solid ground under the words, never the photo (the
      board's chip); rule 90's panel ground. */

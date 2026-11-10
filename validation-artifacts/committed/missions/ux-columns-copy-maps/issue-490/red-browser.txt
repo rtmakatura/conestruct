@@ -1,0 +1,20 @@
+# #490 red proof (browser layer): scripts/verify-columns-end-together.mjs (first draft of the walk) on the base's CSS (d432b72e), 1440x900, 100% text, local next dev against the stubbed backend.
+# frame<->last = the aerial frame's bottom against the right column's last box; column<->column = the two column boxes.
+# The walk stopped at side-after-kind-change (a draft step that pressed Confirm; removed from the final walk).
+1440x900 kind-question              FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines kind-gate-note | road lines 4
+1440x900 kind-details-open          FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines kind-gate-note | road lines 4
+1440x900 kind-near-intersection     FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines kind-gate-note | road lines 4
+1440x900 tap-question               FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines - | road lines 4
+1440x900 tap-failed                 FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines cross-failed,wq-line | road lines 4
+1440x900 tap-none                   FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines cross-none | road lines 4
+1440x900 tap-found                  FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines cross-row | road lines 4
+1440x900 tap-undone                 FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines - | road lines 4
+1440x900 side-question              FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines - | road lines 4
+1440x900 side-answered              FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines - | road lines 4
+1440x900 kind-reopened              FAIL | frame↔last 31 px | column↔column 7 px | band 769.25 | last where-questions | lines kind-gate-note | road lines 4
+1440x900 kind-changed               FAIL | frame↔last 24 px | column↔column 0 px | band 762.5 | last where-questions | lines kind-gate-note | road lines 4
+1440x900 ERRORS walk: locator.click: Timeout 30000ms exceeded.
+Layouts checked (largest bottom difference, px):
+  WHERE band: aerial ↔ right column, 12 states x 1 size/zoom runs: max 31
+RESULT FAIL
+[exited with code 0]

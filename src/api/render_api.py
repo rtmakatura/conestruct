@@ -1987,6 +1987,8 @@ def render_corridor_map(body: Annotated[Any, Body()]) -> Response:
         height=req.height,
         zoom=req.zoom,
     )
+    # #490 C11: the page draws Mapbox's logo and attribution on the frame.
+    query = {**query, **_static_aerial.BAND_UNMARKED_QUERY}
     try:
         image = _static_aerial.fetch_image(url, query, token)
     except httpx.HTTPError as exc:

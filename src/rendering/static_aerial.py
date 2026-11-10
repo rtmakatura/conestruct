@@ -32,6 +32,15 @@ from src.rules.corridor_layout import zone_parts, zone_spans
 
 STYLE: str = "satellite-streets-v12"
 
+# #490 C11: the WHERE band's aerial is asked for without Mapbox's logo and
+# attribution, because the page scales it to cover a taller frame, which
+# would crop them; the page draws both on the frame's corners instead
+# (BandAerial.tsx).  Static Images API, "Optional parameters": "If you
+# specify `attribution=false`, you are legally required to include proper
+# attribution elsewhere on the webpage or document."
+# https://docs.mapbox.com/api/maps/static-images/
+BAND_UNMARKED_QUERY: dict[str, str] = {"logo": "false", "attribution": "false"}
+
 ZONE_COLOR: dict[str, str] = {
     "advance_warning": "FFD166",
     "transition": "F3722C",

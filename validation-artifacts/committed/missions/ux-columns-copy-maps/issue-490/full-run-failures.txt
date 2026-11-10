@@ -1,0 +1,5 @@
+# #490 full vitest run (after C11), failing tests saved before any re-run
+components/mapbox-wordmark.test.ts > R142: the Mapbox wordmark is always shown > nothing in our CSS styles, hides or resizes the logo itself
+# cause: a globals.css comment read "a.mapboxgl-ctrl-logo," (the test reads the CSS text); fixed, and the focus rule no longer names the logo. Re-run alone and in the full run: see below.
+alone after the fix: 3 passed (3)
+full run after the fix: Test Files 279 passed | 1 skipped (280); Tests 3025 passed | 1 skipped (3026)

@@ -1,0 +1,24 @@
+# #490 red proof (vitest layer): the new and amended tests in components/bands/WhereBand.one-height.test.tsx
+# run against the base's globals.css and BandAerial.tsx (d432b72e), the branch's test file; then the branch's files restored.
+# npx vitest run components/bands/WhereBand.one-height.test.tsx --reporter=dot
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/WhereBand.one-height.test.tsx > #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > ruling 1: the aerial column, the frame and the open card's right column take the one height
+AssertionError: expected 'flex-start' to be 'stretch' // Object.is equality
+ FAIL  components/bands/WhereBand.one-height.test.tsx > #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > #485 E8: with the Edit panel open the right column is the band's height, the panel filling it
+AssertionError: expected true to be false // Object.is equality
+ FAIL  components/bands/WhereBand.one-height.test.tsx > #490: the two WHERE columns end together > one stretched row; no box in it has a fixed height that could drift
+AssertionError: expected [ 'row', 'flex-start' ] to deeply equal [ 'row', 'stretch' ]
+ FAIL  components/bands/WhereBand.one-height.test.tsx > #490: the two WHERE columns end together > the aerial's line hangs under the row, in the slot the row keeps in every state
+AssertionError: expected null to be 'var(--wq-line-slot)' // Object.is equality
+ FAIL  components/bands/WhereBand.one-height.test.tsx > #490: the two WHERE columns end together > the picture keeps its drawn size and is scaled to cover a taller frame
+AssertionError: .workbench .wq-stack[data-aerial] .a-aerial-canvas: expected undefined to be truthy
+      Tests  5 failed | 7 passed (12)
+
+# C11 (amendment 2) red proofs, each run against the base's file (d432b72e) with the branch's tests, then the branch's file restored.
+# uv run --extra dev pytest -q tests/test_band_aerial_marks.py   (base src/api/render_api.py)
+FAILED tests/test_band_aerial_marks.py::test_the_band_aerial_is_asked_for_without_mapboxs_marks
+1 failed, 2 passed in 2.12s
+# npx vitest run components/bands/BandAerial.test.tsx -t C11   (base BandAerial.tsx; the 'go with the picture when it fails' test passes on the base, as nothing is drawn there)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/BandAerial.test.tsx > #490 C11: Mapbox's logo and attribution on the frame > render with the picture, on the frame and outside the canvas, each a link
+      Tests  1 failed | 1 passed | 24 skipped (26)

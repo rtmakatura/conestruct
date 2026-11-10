@@ -1,0 +1,107 @@
+# #490 (repair cycle 2): the existing checks re-run on this branch (local, same servers as check-output.txt), 2026-11-10. Lines untruncated.
+
+## #485 walk (missions/ux-token-map-load-edit/issue-485/script/walk.mjs, run from this worktree)
+1440x900 A-questions-confirm    | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 1000 | axe 0 small 7
+1440x900 A-edit-panel           | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 1000 | axe 0 small 7
+1440x900 A-cancelled            | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 1000 | axe 0 small 7
+1440x900 B-length-typed         | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1440x900 B-done-nothing-reasked | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 7
+1440x900 C-edit-panel           | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1440x900 C-moved-panel-holds    | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 1 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1440x900 C-done-side-reasked    | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked "Your edit changed the road or the work start, so this is asked again." | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 7
+1440x900 D-side-answered        | band h 793.3 | side h 655 | frame 297,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 7
+1440x900 D-reopened-after-confirm | band h 793.3 | side h 655 | frame 297,268 411x655 relative | attrs {"card":null,"edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 2 | q null | len 600 | axe 0 small 7
+1440x900 D-edit-after-confirm   | band h 793.3 | side h 655 | frame 297,268 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1440x900 D-cancelled-after-confirm | band h 793.3 | side h 655 | frame 297,268 411x655 relative | attrs {"card":null,"edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 2 | q null | len 600 | axe 0 small 7
+1440x900 errors 0  | band h min 793.3 max 793.3 | frames 297,97.5 411x655 | axe total 0 | small total 84
+1198x930 A-questions-confirm    | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 1000 | axe 0 small 7
+1198x930 A-edit-panel           | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 1000 | axe 0 small 7
+1198x930 A-cancelled            | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 1000 | axe 0 small 7
+1198x930 B-length-typed         | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1198x930 B-done-nothing-reasked | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 7
+1198x930 C-edit-panel           | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1198x930 C-moved-panel-holds    | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 1 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1198x930 C-done-side-reasked    | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked "Your edit changed the road or the work start, so this is asked again." | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 7
+1198x930 D-side-answered        | band h 793.3 | side h 655 | frame 176,256.5 411x655 relative | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 7
+1198x930 D-reopened-after-confirm | band h 793.3 | side h 655 | frame 176,268 411x655 relative | attrs {"card":null,"edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 2 | q null | len 600 | axe 0 small 7
+1198x930 D-edit-after-confirm   | band h 793.3 | side h 655 | frame 176,268 411x655 relative | attrs {"card":"open","edit":true,"tap":false} | panel 591 | wait 48 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 7
+1198x930 D-cancelled-after-confirm | band h 793.3 | side h 655 | frame 176,268 411x655 relative | attrs {"card":null,"edit":false,"tap":false} | panel - | wait -  | card 552.3 | reasked - | records 2 | q null | len 600 | axe 0 small 7
+1198x930 errors 0  | band h min 793.3 max 793.3 | frames 176,97.5 411x655 | axe total 0 | small total 84
+390x844 A-questions-confirm    | band h 932.5 | side h 519 | frame 31,513 328x150 sticky | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 396 | reasked - | records 1 | q Which side of the road is the work on? | len 1000 | axe 0 small 5
+390x844 A-edit-panel           | band h 937 | side h 523.5 | frame 31,313 328x150 sticky | attrs {"card":"open","edit":true,"tap":false} | panel 441 | wait 66.5 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 1000 | axe 0 small 5
+390x844 A-cancelled            | band h 932.5 | side h 519 | frame 31,313 328x150 sticky | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 396 | reasked - | records 1 | q Which side of the road is the work on? | len 1000 | axe 0 small 5
+390x844 B-length-typed         | band h 937 | side h 523.5 | frame 31,313 328x150 sticky | attrs {"card":"open","edit":true,"tap":false} | panel 441 | wait 66.5 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 5
+390x844 B-done-nothing-reasked | band h 932.5 | side h 519 | frame 31,313 328x150 sticky | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 396 | reasked - | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 5
+390x844 C-edit-panel           | band h 937 | side h 523.5 | frame 31,313 328x150 sticky | attrs {"card":"open","edit":true,"tap":false} | panel 441 | wait 66.5 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 5
+390x844 C-moved-panel-holds    | band h 847.8 | side h 523.5 | frame 31,265.8 328x150 sticky | attrs {"card":"open","edit":true,"tap":false} | panel 441 | wait 66.5 "◌ Questions wait while you edit · 1 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 5
+390x844 C-done-side-reasked    | band h 896.8 | side h 572.5 | frame 31,265.8 328x150 sticky | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 449.5 | reasked "Your edit changed the road or the work start, so this is asked again." | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 5
+390x844 D-side-answered        | band h 932.5 | side h 519 | frame 31,265.8 328x150 sticky | attrs {"card":"open","edit":false,"tap":false} | panel - | wait -  | card 396 | reasked - | records 1 | q Which side of the road is the work on? | len 600 | axe 0 small 5
+390x844 D-reopened-after-confirm | band h 769 | side h 265.8 | frame 31,329 328x250 relative | attrs {"card":null,"edit":false,"tap":false} | panel - | wait -  | card 142.8 | reasked - | records 2 | q null | len 600 | axe 0 small 5
+390x844 D-edit-after-confirm   | band h 950.8 | side h 523.5 | frame 31,329 328x150 sticky | attrs {"card":"open","edit":true,"tap":false} | panel 441 | wait 66.5 "◌ Questions wait while you edit · 2 of 2 answered" control=false | card - | reasked - | records 0 | q null | len 600 | axe 0 small 5
+390x844 D-cancelled-after-confirm | band h 769 | side h 265.8 | frame 31,329 328x250 relative | attrs {"card":null,"edit":false,"tap":false} | panel - | wait -  | card 142.8 | reasked - | records 2 | q null | len 600 | axe 0 small 5
+390x844 errors 0  | band h min 769 max 950.8 | frames 31,341 328x150 / 31,141 328x150 / 31,93.8 328x150 / 31,93.8 328x250 | axe total 0 | small total 60
+
+## #469 walk (missions/ux-wait-band-followups/issue-469/script/walk469.mjs, its worktree path pointed at this one)
+1440x900 kind-question        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 500 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 trace kind-chip-shoulder                       | wq h 552.3 | side h 655 | stack h 678.8 | band h 793.3
+1440x900 trace kind-chip-flagger_lane_closure           | wq h 552.3 | side h 655 | stack h 678.8 | band h 793.3
+1440x900 trace kind-chip-near_intersection              | wq h 552.3 | side h 655 | stack h 678.8 | band h 793.3
+1440x900 kind-answered        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 500 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 side-question        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 side-answered        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 kind-reopened        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 504 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 side-undone          | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 side-again           | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 ni-kind-answered     | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 545 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 cross-question       | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 363.3 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 cross-failed         | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 450 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-failed 
+1440x900 cross-none           | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 416.8 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-none 
+1440x900 cross-found          | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 459.8 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-row 
+1440x900 cross-undone         | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 363.3 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 cross-found-again    | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 459.8 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-row 
+1440x900 side-after-tap       | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 424 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 ni-side-answered     | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 424 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1440x900 errors 0  | band h min 793.3 max 793.3 spread 0
+1198x930 kind-question        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 500 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 trace kind-chip-shoulder                       | wq h 552.3 | side h 655 | stack h 678.8 | band h 793.3
+1198x930 trace kind-chip-flagger_lane_closure           | wq h 552.3 | side h 655 | stack h 678.8 | band h 793.3
+1198x930 trace kind-chip-near_intersection              | wq h 552.3 | side h 655 | stack h 678.8 | band h 793.3
+1198x930 kind-answered        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 500 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 side-question        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 side-answered        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 kind-reopened        | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 504 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 side-undone          | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 side-again           | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 376 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 ni-kind-answered     | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 545 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 cross-question       | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 363.3 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 cross-failed         | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 450 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-failed 
+1198x930 cross-none           | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 416.8 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-none 
+1198x930 cross-found          | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 459.8 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-row 
+1198x930 cross-undone         | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 363.3 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 cross-found-again    | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 459.8 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross cross-row 
+1198x930 side-after-tap       | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 424 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 ni-side-answered     | band h 793.3 | stack h 678.8 | frame 256.5 655 | road 256.5 86.8 | wq h 552.3 natural 424 | foot->bottom 25.1 | foot top 842.5 offset 0.1 | cross null 
+1198x930 errors 0  | band h min 793.3 max 793.3 spread 0
+
+## #470 scripts/verify-generate-cls.mjs (SITE=http://localhost:3490)
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline vs settled (top/h deltas, px): needs 0/91 | map 0/0 | other 89/0 | setup 89/0 | plan 89/0 | downloads 89/0 | refs 88/0
+   NEEDS YOU delta 91 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+   soft→sharp box check map 1 PASS (846x423, frame 39.739914,-104.968447,18.00)
+1198x930 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline vs settled (top/h deltas, px): needs 0/91 | map 0/0 | other 89/0 | setup 89/0 | plan 89/0 | downloads 89/0 | refs 88/0
+   NEEDS YOU delta 91 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+   soft→sharp box check map 1 PASS (846x423, frame 39.739914,-104.968447,18.00)
+390x844 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1135 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline vs settled (top/h deltas, px): needs 0/53 | map 0/0 | other 51/0 | setup 51/0 | plan 51/0 | downloads 51/0 | refs 51/0
+   NEEDS YOU delta 53 px (1 visible question card(s)): reported, not failed (its height is unknowable before the scan; the reserve is one question, #477 answer 1)
+   outline check PASS (tolerance 8 px)
+   outlines left after the settle: 0 PASS
+   soft→sharp box check map 1 PASS (360x270, frame 39.739914,-104.968447,18.00)
+
+## vitest (full, repair cycle 2)
+Test Files 280 passed | 1 skipped (281); Tests 3031 passed | 1 skipped (3032). tsc clean. No Python touched since the C11 cycle (pytest 3929 passed, 3 skipped; ruff and mypy clean there).
