@@ -1,0 +1,19 @@
+1440x900 road "East Colfax Avenue, eastbound" | WHERE q "What kind of work is it?" band h closed/open/closed/open/esc 762.5/762.5/762.5/762.5/762.5 spread 0.0 | panel absolute onTop=true inView=true | Esc focus on toggle true | axe kind 0 open 0 | <44 band 2 open 2
+1440x900 wait 1.2s: "Checking the road and laying out the taper, buffer and devices…" bars 0 StepNofM false needs outline {"top":149,"h":934}
+1440x900 wait 14.5s: class "status-bar wait-line caution is-slow" byte-equal true bars 0 StepNofM false | audit answered in 3587 ms
+1440x900 swap: {"frame":true,"standin":true,"standinImg":true,"standinImgLoaded":true,"standinOpacity":"0.35","greyBlock":false,"mapImg":false,"frameH":423}
+1440x900 settled: strip "⚠ Plan ready. Answer 3 quick questions before you send it." | NEEDS YOU {"top":149,"h":1025} cards 1 | outlines left 0 | map img true standin left false | axe 0 [] | <44 0 []
+1440x900 console errors 0 | page errors 0
+1198x930 road "East Colfax Avenue, eastbound" | WHERE q "What kind of work is it?" band h closed/open/closed/open/esc 762.5/762.5/762.5/762.5/762.5 spread 0.0 | panel absolute onTop=true inView=true | Esc focus on toggle true | axe kind 0 open 0 | <44 band 2 open 2
+1198x930 wait 1.2s: "Checking the road and laying out the taper, buffer and devices…" bars 0 StepNofM false needs outline {"top":149,"h":934}
+1198x930 wait 14.5s: class "status-bar wait-line caution is-slow" byte-equal true bars 0 StepNofM false | audit answered in 3698 ms
+1198x930 swap: {"frame":true,"standin":true,"standinImg":true,"standinImgLoaded":true,"standinOpacity":"0.35","greyBlock":false,"mapImg":false,"frameH":423}
+1198x930 settled: strip "⚠ Plan ready. Answer 3 quick questions before you send it." | NEEDS YOU {"top":149,"h":1025} cards 1 | outlines left 0 | map img true standin left false | axe 0 [] | <44 0 []
+1198x930 console errors 0 | page errors 0
+390x844 road "East Colfax Avenue, eastbound" | WHERE q "What kind of work is it?" band h closed/open/closed/open/esc 875.8/875.8/875.8/875.8/875.8 spread 0.0 | panel absolute onTop=true inView=true | Esc focus on toggle true | axe kind 0 open 0 | <44 band 0 open 0
+390x844 wait 1.2s: "Checking the road and laying out the taper, buffer and devices…" bars 0 StepNofM false needs outline {"top":162,"h":1082}
+390x844 wait 14.5s: class "status-bar wait-line caution is-slow" byte-equal true bars 0 StepNofM false | audit answered in 446 ms
+390x844 swap: {"frame":true,"standin":true,"standinImg":true,"standinImgLoaded":true,"standinOpacity":"0.35","greyBlock":false,"mapImg":false,"frameH":270}
+390x844 settled: strip "⚠ Plan ready. Answer 3 quick questions before you send it." | NEEDS YOU {"top":162,"h":1135} cards 1 | outlines left 0 | map img true standin left false | axe 0 [] | <44 0 []
+390x844 console errors 0 | page errors 0
+exit 0

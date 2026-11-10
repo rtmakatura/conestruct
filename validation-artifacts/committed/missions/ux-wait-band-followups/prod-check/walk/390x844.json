@@ -1,0 +1,121 @@
+{
+ "size": "390x844",
+ "console": [],
+ "pageerrors": [],
+ "where": {
+  "closed1": {
+   "band": {
+    "top": 172,
+    "h": 875.8
+   },
+   "q": "What kind of work is it?",
+   "panel": null
+  },
+  "axeKind": [],
+  "smallBand": [],
+  "open": {
+   "band": {
+    "top": 172,
+    "h": 875.8
+   },
+   "q": "What kind of work is it?",
+   "panel": {
+    "position": "absolute",
+    "onTop": true,
+    "inViewport": true,
+    "top": 964.8,
+    "h": 97,
+    "w": 280
+   }
+  },
+  "axeOpen": [],
+  "smallOpen": [],
+  "closed2": {
+   "band": {
+    "top": 172,
+    "h": 875.8
+   },
+   "q": "What kind of work is it?",
+   "panel": null
+  },
+  "open2": {
+   "band": {
+    "top": 172,
+    "h": 875.8
+   },
+   "q": "What kind of work is it?",
+   "panel": {
+    "position": "absolute",
+    "onTop": true,
+    "inViewport": true,
+    "top": 964.8,
+    "h": 97,
+    "w": 280
+   }
+  },
+  "escFocusOnToggle": true,
+  "afterEsc": {
+   "band": {
+    "top": 172,
+    "h": 875.8
+   },
+   "q": "What kind of work is it?",
+   "panel": null
+  }
+ },
+ "wait": {
+  "auditMs": 446,
+  "at1200": {
+   "slotText": "Checking the road and laying out the taper, buffer and devices…",
+   "lineText": "Checking the road and laying out the taper, buffer and devices…",
+   "lineClass": "status-bar wait-line idle",
+   "bars": 0,
+   "stepNofM": false,
+   "stepWordInSlot": false,
+   "outline": true,
+   "needsOutline": {
+    "top": 162,
+    "h": 1082
+   }
+  },
+  "at14500": {
+   "slotText": "⚠ This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.",
+   "lineText": "This is taking longer than usual. The first plan after a quiet spell can take up to 30 seconds.",
+   "lineClass": "status-bar wait-line caution is-slow",
+   "bars": 0,
+   "stepNofM": false,
+   "stepWordInSlot": false,
+   "outline": true,
+   "needsOutline": {
+    "top": 162,
+    "h": 1082
+   }
+  },
+  "slowByteEqual": true,
+  "swap": {
+   "frame": true,
+   "standin": true,
+   "standinImg": true,
+   "standinImgLoaded": true,
+   "standinOpacity": "0.35",
+   "greyBlock": false,
+   "mapImg": false,
+   "frameH": 270
+  }
+ },
+ "settled": {
+  "strip": "⚠ Plan ready. Answer 3 quick questions before you send it.",
+  "needsYou": {
+   "top": 162,
+   "h": 1135
+  },
+  "cards": 1,
+  "nyText": "NEEDS YOU Question 1 of 3 Are there sidewalks along the work zone? The map shows sidewalks 57.4 ft from the work, so we added 4 devices to protect people walkin",
+  "outlinesLeft": 0,
+  "mapImg": true,
+  "standinLeft": false,
+  "axe": [],
+  "small": []
+ },
+ "roadPicked": "East Colfax Avenue, eastbound"
+}
