@@ -1,0 +1,37 @@
+# #485 red proof: the new WhereBand.edit-turns.test.tsx on the base code (17009e3), before any product change
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: the Edit panel and the collapsed row take the right column > Edit turns the column into one panel; the card collapses to one row that is not a control
+Error: timed out waiting for the Edit panel
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: the Edit panel and the collapsed row take the right column > the count reads what is answered: 1 of 2 with the side open
+Error: timed out waiting for the Edit panel
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: Cancel undoes the edit (P15, byte-identical wire) > a typed length: Cancel puts the scenario back exactly as it was
+Error: timed out waiting for the Edit panel
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: Cancel undoes the edit (P15, byte-identical wire) > a moved work start: Cancel brings the cleared side back
+Error: timed out waiting for the Edit panel
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: Done, back to the questions (#440 ruling 2's rule) > a length only: every answer stays and no line shows
+Error: timed out waiting for the Edit panel
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: Done, back to the questions (#440 ruling 2's rule) > a moved work start: the side is cleared and re-asked with one line; the kind stays
+Error: timed out waiting for the Edit panel
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: Done, back to the questions (#440 ruling 2's rule) > an emptied length: Done keeps the panel open and shows the field's error
+Error: timed out waiting for the Edit panel
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+
+# The extended permanent check, WhereBand.one-height.test.tsx, with the five product files at 17009e3 (the new two fail, the seven #469 tests pass)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/WhereBand.one-height.test.tsx > #469 ruling 4 (mounted): every CONFIRM state keeps the band's reserved height > #485: edit, Cancel, edit again with a length, Done, and the questions back
+AssertionError: edit open: data-edit: expected false to be true // Object.is equality
+ FAIL  components/bands/WhereBand.one-height.test.tsx > #469 rulings 1-3 (CSS): one height in two columns, the 390 strip untouched > #485 E8: with the Edit panel open the right column is exactly the band's height
+AssertionError: .workbench .wq-stack[data-aerial][data-edit] > .wq-side: expected undefined to be truthy
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+
+# Repair cycle 1: the new cross-street test on the cycle-0 code (the false line shows)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/bands/WhereBand.edit-turns.test.tsx > #485 ruling 3: Done, back to the questions (#440 ruling 2's rule) > a crossing cleared in the picker: the cross question is open again, with no line
+AssertionError: expected <p class="tr-note wq-line" …(2)></p> to be null
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)

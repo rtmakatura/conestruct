@@ -65,6 +65,14 @@ export const CROSS_FAILED = "The street lookup didn't answer.";
 export const BIG_MAP_LABEL = "Use the big map instead";
 /** #440 ruling 2 (X21), verbatim. */
 export const SIDES_CHANGED = "The sides changed with the new kind of work.";
+/** #485 E2 (R145 self-ruled after #440 ruling 2 / X21): an answer the WHERE
+ *  band's Edit panel cleared, asked again after Done. */
+export const EDIT_REASKED = "Your edit changed the road or the work start, so this is asked again.";
+/** #485 ruling 3, verbatim: the CONFIRM card's one row while the Edit panel
+ *  has the column. */
+export function waitingLine(answered: number, asked: number): string {
+  return `Questions wait while you edit · ${answered} of ${asked} answered`;
+}
 
 /** #440 ruling 2 / X20: clears an answered side when a kind change changes
  *  the backend's built side options, and reports that it did, until the
@@ -198,6 +206,8 @@ export function WhereQuestions({
   crossTag = null,
   onCurrentChange,
   sidesChanged = false,
+  waiting = false,
+  reasked,
   locked,
 }: {
   scenario: Scenario;
@@ -223,6 +233,12 @@ export function WhereQuestions({
    *  (`useSideClearOnKindChange`, in GeneratorSidebar); the side question
    *  says why until it is answered again. */
   sidesChanged?: boolean;
+  /** #485 ruling 3: the Edit panel has the column; the card is one row that
+   *  is not a control (E7). */
+  waiting?: boolean;
+  /** #485 E1/E2: the questions the last Done found cleared by the edit (the
+   *  side only, repair 1); each says why while it is unanswered. */
+  reasked?: ReadonlySet<string>;
   locked: boolean;
 }) {
   const g = geometry.geometry;
@@ -300,6 +316,12 @@ export function WhereQuestions({
   }, [foundCount, hasCrossing, readIn, revealOwed]);
 
   const questions: StepQuestion[] = [];
+  // #485 E2: X21's shape, a plain note (no ⚠) under the question.
+  const reaskedLine = (
+    <p className="tr-note wq-line" data-testid="edit-reasked-note" role="status">
+      {EDIT_REASKED}
+    </p>
+  );
   // #440 ruling 2: the kind is pushed first, below; the side last.
   let sideQuestion: StepQuestion | null = null;
   if (showSide) {
@@ -310,6 +332,7 @@ export function WhereQuestions({
             {SIDES_CHANGED}
           </p>
         )}
+        {!sidesChanged && !selected && reasked?.has("side") && reaskedLine}
         {/* #440 X2: the side options do not read the crossing, so they show
             while it is unmarked; the not-marked line and its Mark on map
             left this question (ruling 7). */}
@@ -521,6 +544,20 @@ export function WhereQuestions({
   }
   // #440 ruling 2: the side is asked last, once its options are final.
   if (sideQuestion) questions.push(sideQuestion);
+
+  if (waiting) {
+    // #485 ruling 3 / E7: one row, not a control (no button, no tab stop, no
+    // handler); N of M from the list the card would show.
+    const answered = questions.filter((x) => x.answer !== null).length;
+    return (
+      <div className="wq-wait" data-testid="where-questions-wait">
+        <span className={`wq-sum-glyph ${symClass("◌")}`} aria-hidden="true">
+          ◌
+        </span>
+        <span className="wq-wait-text tr-help">{waitingLine(answered, questions.length)}</span>
+      </div>
+    );
+  }
 
   return (
     <section

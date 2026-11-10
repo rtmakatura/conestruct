@@ -28,7 +28,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { scrollAerialPartIn } from "@/lib/cross-street-reveal";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
 import { ENABLED_SCENARIO_KINDS } from "@/lib/scenarios";
 import { validateWorkZone, workLenIsEmpty, workLenIsRefused } from "@/lib/scenarios/validation";
@@ -171,6 +171,24 @@ export function mapHiddenNow(cardOpen: boolean, chosenHidden: boolean, tapQuesti
 /** #439 ruling 3: Edit re-opens today's three rows, with their actions. */
 const EDIT_ROWS: ReadonlySet<MoveId> = new Set<MoveId>(["spot", "start", "extent"]);
 
+/** #485 ruling 3 / E6: the Edit panel's two picker rows, in the canvas's
+ *  words (EA.dc.html: "Road · Change", "Work starts · Move").  The length is
+ *  the panel's third row, its own field. */
+const PANEL_ROWS: ReadonlyMap<MoveId, { label: string; verb: string }> = new Map<
+  MoveId,
+  { label: string; verb: string }
+>([
+  ["spot", { label: "Road", verb: "Change" }],
+  ["start", { label: "Work starts", verb: "Move" }],
+]);
+
+/** #485: the extra state an Edit panel's Cancel puts back besides the
+ *  scenario (the sidebar's picker guards, hold and notes; E3). */
+export interface EditMemory {
+  take: () => unknown;
+  restore: (memory: unknown) => void;
+}
+
 /** C5 — the move ledger (rules 67-70).  It renders `deriveMoveLedger()`'s
  *  rows and decides nothing (rule 71). */
 function MoveLedgerRows({
@@ -182,6 +200,7 @@ function MoveLedgerRows({
   crossStreetTag,
   onOpenPicker,
   locked,
+  panel = false,
 }: {
   scenario: Scenario;
   jurisdictionName: string | null;
@@ -193,6 +212,8 @@ function MoveLedgerRows({
   crossStreetTag: string | null;
   onOpenPicker: () => void;
   locked: boolean;
+  /** #485 E6: the Edit panel's rows (Road, Work starts) instead of the fold's. */
+  panel?: boolean;
 }) {
   const ledger = deriveMoveLedger(
     scenario,
@@ -247,6 +268,34 @@ function MoveLedgerRows({
       {r.subline && <div className="a-sub tr-prov">{r.subline}</div>}
     </div>
   );
+  // #485 E6: the panel's row, the ledger's value and the canvas's label and
+  // verb; the action is the same door onto the picker.
+  const panelRow = (r: MoveRow) => {
+    const words = PANEL_ROWS.get(r.id)!;
+    return (
+      <div key={r.id} className="wq-panel-row" data-testid={`move-${r.id}`} data-move-state={r.state}>
+        <span className="wq-panel-label tr-help">{words.label}</span>
+        <span className="wq-panel-val tr-help">{r.value}</span>
+        {r.verb && (
+          <button
+            type="button"
+            className="wq-link"
+            data-write=""
+            aria-disabled={locked || undefined}
+            onClick={() => {
+              if (!locked) onOpenPicker();
+            }}
+            data-testid={`move-action-${r.id}`}
+          >
+            {words.verb}
+          </button>
+        )}
+      </div>
+    );
+  };
+  if (panel) {
+    return <>{ledger.rows.filter((r) => PANEL_ROWS.has(r.id)).map(panelRow)}</>;
+  }
   return (
     <div className="a-moves" data-testid="move-ledger">
       {ledger.rows.filter((r) => EDIT_ROWS.has(r.id)).map(row)}
@@ -285,15 +334,20 @@ function WhereSummary({
   provenance,
   editOpen,
   setEditOpen,
+  hidden = false,
+  editRef,
 }: {
   parts: string[];
   provenance: string;
   editOpen: boolean;
   setEditOpen: (v: boolean) => void;
+  /** #485 E8: the Edit panel has the column (the node stays mounted). */
+  hidden?: boolean;
+  editRef?: RefObject<HTMLButtonElement>;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
-    <div className="wq-sum-wrap">
+    <div className="wq-sum-wrap" hidden={hidden || undefined}>
       <div className="wq-sum" data-testid="where-summary">
         {parts.length > 0 && (
           <span className={`wq-sum-glyph ${symClass("✓")}`} aria-hidden="true">
@@ -304,6 +358,7 @@ function WhereSummary({
           {parts.join(" · ")}
         </span>
         <button
+          ref={editRef}
           type="button"
           className="wq-link"
           data-read=""
@@ -364,6 +419,7 @@ export function WhereBand({
   corridorSpecLengths = null,
   jurisdictionName = null,
   pickerPicture = null,
+  editMemory,
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
@@ -371,6 +427,9 @@ export function WhereBand({
   onOpenPicker: () => void;
   /** #460: the picker's last picture at this pin (BandAerial's stand-in). */
   pickerPicture?: string | null;
+  /** #485 E3: what Cancel puts back besides the scenario (GeneratorSidebar's
+   *  picker memory).  Absent, only the scenario is put back. */
+  editMemory?: EditMemory;
   /** #317 (R129 Q1): the side control's Mark on map — the picker, ready to
    *  mark the crossing. */
   onMarkIntersection?: () => void;
@@ -504,6 +563,72 @@ export function WhereBand({
   const [editChoice, setEditChoice] = useState<boolean | null>(null);
   const lengthOwed = workLenIsEmpty(scenario) || workLenIsRefused(scenario) || !wz.ok;
   const editOpen = editChoice ?? lengthOwed;
+  // #485 ruling 3: with the CONFIRM card there, Edit is the Edit panel's
+  // turn: the right column is the panel, the card one row (E7, E8).
+  const panelOpen = chipsShown && editOpen;
+  // E3: what the panel opened on, so Cancel can put it back (P15).  Taken
+  // after the render that opened it, before any edit can land.
+  const editBase = useRef<{ scenario: Scenario; memory: unknown } | null>(null);
+  // E1/E2: the answers the last Done found cleared (the side only), each
+  // re-asked with a line.
+  const [reasked, setReasked] = useState<ReadonlySet<string>>(() => new Set());
+  const editRef = useRef<HTMLButtonElement>(null);
+  const panelHeadRef = useRef<HTMLHeadingElement | null>(null);
+  const focusAfter = useRef<"panel" | "edit" | null>(null);
+  useEffect(() => {
+    if (panelOpen && editBase.current === null) {
+      editBase.current = { scenario, memory: editMemory?.take() };
+      setReasked((r) => (r.size === 0 ? r : new Set()));
+    } else if (!panelOpen) {
+      editBase.current = null;
+    }
+    const f = focusAfter.current;
+    focusAfter.current = null;
+    if (f === "panel" && panelOpen) panelHeadRef.current?.focus({ preventScroll: true });
+    if (f === "edit" && !panelOpen) editRef.current?.focus({ preventScroll: true });
+    // Only the open/close transition takes the copy.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [panelOpen]);
+  // A re-asked answer given again drops its line (X21's rule).
+  const sideAnswered = scenario.meta.work !== undefined;
+  useEffect(() => {
+    if (reasked.has("side") && sideAnswered) setReasked(new Set());
+  }, [reasked, sideAnswered]);
+  const openEdit = (v: boolean) => {
+    focusAfter.current = v && chipsShown ? "panel" : null;
+    setEditChoice(v);
+  };
+  const cancelEdit = () => {
+    if (locked) return;
+    const base = editBase.current;
+    setWzDraft(null);
+    setWzTouched(false);
+    if (base) {
+      // P15: the same object back, so the wire is byte-identical.
+      if (base.scenario !== scenario) setScenario(base.scenario);
+      editMemory?.restore(base.memory);
+    }
+    focusAfter.current = "edit";
+    setEditChoice(false);
+  };
+  const doneEdit = () => {
+    // E4 (P5): an owed length keeps the panel and says why.
+    if (lengthOwed) {
+      setWzTouched(true);
+      document.getElementById("band-worklen")?.focus();
+      return;
+    }
+    const base = editBase.current?.scenario;
+    // E1/E2 (repair 1, Rule 10): only the side.  A pin move or a road change
+    // clears it (#290 ruling 10), so the line's reason is true.  Inside the
+    // panel the crossing goes only by the person's Clear in the picker (a move
+    // keeps it, LocationPickerModal.tsx:1483-1487), so it is just unanswered.
+    const cleared = new Set<string>();
+    if (base?.meta.work !== undefined && scenario.meta.work === undefined) cleared.add("side");
+    setReasked(cleared);
+    focusAfter.current = "edit";
+    setEditChoice(false);
+  };
   const openMap = () => {
     if (locked) return;
     onOpenPicker();
@@ -560,7 +685,9 @@ export function WhereBand({
     workStart &&
     kindPicked &&
     scenario.kind === "near_intersection" &&
-    currentQ === "cross";
+    currentQ === "cross" &&
+    // #485 E7: no question is on screen while the panel has the column.
+    !panelOpen;
   const marked = scenario.meta.intersection ?? null;
   const armed =
     crossOpen &&
@@ -593,7 +720,8 @@ export function WhereBand({
   // the narrow layout pins the map while it is.  Hide map's choice is the
   // band's, so it holds until WHERE is confirmed (the band closes and this
   // state goes with it).  M7: a tap question shows the map whatever it is.
-  const cardOpen = chipsShown && currentQ !== null;
+  // #485 E8: the panel's turn keeps the narrow strip pinned (#456 M4).
+  const cardOpen = chipsShown && (currentQ !== null || panelOpen);
   const [mapHidden, setMapHidden] = useState(false);
   // Only while the card is open: the strip (and its Show map row) exist
   // only then, so a hidden map with the card closed would have no way back.
@@ -634,7 +762,7 @@ export function WhereBand({
   // guess pass), so the click finds its picture already there.  Never for
   // a tap question.
   const ahead: Scenario[] = [];
-  if (cardOpen && !locked && (currentQ === "side" || currentQ === "kind")) {
+  if (cardOpen && !panelOpen && !locked && (currentQ === "side" || currentQ === "kind")) {
     if (currentQ === "side") {
       const options = (geometry.geometry?.side_options ?? []).filter((o) => o.built);
       const selected = selectedSideOption(options, scenario.meta.work);
@@ -655,6 +783,75 @@ export function WhereBand({
     crossOpen && crossMark?.ring && phase !== "idle"
       ? { ...crossMark.ring, look: phase === "resolving" ? "solid" : "dashed" }
       : null;
+
+  // R117 Q2: the extent is a FieldCell with the corridor's zone lengths in
+  // its details.  #439 W9: it lives in the fold; #485 E6: in the Edit panel
+  // while the CONFIRM card is there (one element, rendered in one place).
+  const lengthCell = (
+    <FieldCell
+      label="Work zone length (ft)"
+      htmlFor="band-worklen"
+      testid="worklen"
+      provenance={
+        <span className="tr-prov" data-testid="prov-worklen">
+          {workLenIsEmpty(scenario)
+            ? "not set · the extent the plan is built for"
+            : workLenIsDefault(scenario)
+              ? // #397: the starting length, not an answer (Rule 10).
+                "default · the plan's starting length; enter the real one"
+              : "your answer · the extent the plan is built for"}
+        </span>
+      }
+      marker={
+        workLenIsEmpty(scenario)
+          ? { glyph: "◌", word: "not set", tone: "pending" }
+          : workLenIsRefused(scenario)
+            ? // #403/#428/#429: the operator's, but refused; no ✓.
+              { glyph: null, word: "yours", tone: "plain" }
+            : workLenIsDefault(scenario)
+              ? // Plain "default", no mark (Ryan, 2026-10-26).
+                { glyph: null, word: "default", tone: "plain" }
+              : { glyph: "✓", word: "yours", tone: "ok" }
+      }
+      alert={wzTouched && !wz.ok ? <FieldErrorLine>{wz.message}</FieldErrorLine> : null}
+      info={
+        <CorridorExtentLines
+          lengths={corridorSpecLengths ?? null}
+          workLen={scenario.workLen}
+          kind={scenario.kind}
+          note={
+            scenario.workLen <= 0
+              ? "set the work-zone length to compute"
+              : !kindConfirmed
+                ? // #289 finding 1: the lengths are the kind's.
+                  "corridor lengths wait on the kind of work"
+                : !sided
+                  ? // #290: nor for a side nobody gave.
+                    "corridor lengths wait on the occupied side"
+                  : // Rule 3 / rule 10: never a locally-computed extent.
+                    "corridor extent unavailable, awaiting verification"
+          }
+        />
+      }
+    >
+      <input
+        id="band-worklen"
+        type="number"
+        step={10}
+        min={0}
+        className="a-fld"
+        data-write=""
+        disabled={locked}
+        // #428: only an empty box shows empty; a typed 0 shows 0.
+        value={wzDraft ?? (workLenIsEmpty(scenario) ? "" : scenario.workLen)}
+        onChange={(e) => setWzDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") commitWorkLen();
+        }}
+        onBlur={commitWorkLen}
+      />
+    </FieldCell>
+  );
 
   return (
     <OpenBand
@@ -706,6 +903,7 @@ export function WhereBand({
           data-card={cardOpen ? "open" : undefined}
           data-tap={crossOpen || undefined}
           data-map={hiddenNow ? "hidden" : undefined}
+          data-edit={panelOpen || undefined}
         >
           {/* #301 piece 1: the aerial, a read (data-read) that stays live
               under the write lock.  #439 ruling 1: first after the
@@ -751,8 +949,68 @@ export function WhereBand({
             parts={summaryParts(scenario, crossStreet?.text ?? null)}
             provenance={whereProvenance(scenario, crossStreet?.provenance ?? null)}
             editOpen={editOpen}
-            setEditOpen={(v) => setEditChoice(v)}
+            setEditOpen={openEdit}
+            hidden={panelOpen}
+            editRef={editRef}
           />
+          {chipsShown ? (
+            // #485 ruling 3 (E6, E8): the Edit panel, the right column's one
+            // block while it is open.  Mounted hidden otherwise, as the fold
+            // was, so its field keeps its draft and its id.
+            <section
+              id="where-edit"
+              className="wq-panel"
+              hidden={!panelOpen}
+              aria-labelledby="where-edit-h"
+              data-testid="where-edit-panel"
+            >
+              <div className="ny-head wq-panel-head">
+                <h2 id="where-edit-h" ref={panelHeadRef} tabIndex={-1} className="ny-title tr-section">
+                  EDIT
+                </h2>
+                <span className="tr-note wq-panel-sub">Where the work is</span>
+              </div>
+              <div className="wq-panel-body">
+                <MoveLedgerRows
+                  scenario={scenario}
+                  jurisdictionName={jurisdictionName}
+                  kindConfirmed={kindConfirmed}
+                  sideLabel={sideLabel}
+                  notMarkedLine={notMarkedLine(geometry)}
+                  crossStreetTag={crossStreet?.text ?? null}
+                  onOpenPicker={onOpenPicker}
+                  locked={locked}
+                  panel
+                />
+                {/* The fold's own row shape (a-cols / a-col: label, marker,
+                    then the field), so the field reads as the WHAT rows do. */}
+                <div className="wq-panel-len a-cols">
+                  <div className="a-col">{lengthCell}</div>
+                </div>
+              </div>
+              <div className="wq-panel-foot">
+                <button
+                  type="button"
+                  className="wq-cancel tr-help"
+                  data-write=""
+                  aria-disabled={locked || undefined}
+                  onClick={cancelEdit}
+                  data-testid="where-edit-cancel"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="a-pri wq-next"
+                  data-read=""
+                  onClick={doneEdit}
+                  data-testid="where-edit-done"
+                >
+                  Done, back to the questions
+                </button>
+              </div>
+            </section>
+          ) : (
           <div id="where-edit" className="wq-edit" hidden={!editOpen} data-testid="where-edit-fold">
             {findRow(false)}
             <MoveLedgerRows
@@ -769,72 +1027,11 @@ export function WhereBand({
                 lengths in its details.  #439 W9: it lives in the fold. */}
             <div className="a-cols">
               <div className="a-col">
-                <FieldCell
-                  label="Work zone length (ft)"
-                  htmlFor="band-worklen"
-                  testid="worklen"
-                  provenance={
-                    <span className="tr-prov" data-testid="prov-worklen">
-                      {workLenIsEmpty(scenario)
-                        ? "not set · the extent the plan is built for"
-                        : workLenIsDefault(scenario)
-                          ? // #397: the starting length, not an answer (Rule 10).
-                            "default · the plan's starting length; enter the real one"
-                          : "your answer · the extent the plan is built for"}
-                    </span>
-                  }
-                  marker={
-                    workLenIsEmpty(scenario)
-                      ? { glyph: "◌", word: "not set", tone: "pending" }
-                      : workLenIsRefused(scenario)
-                        ? // #403/#428/#429: the operator's, but refused; no ✓.
-                          { glyph: null, word: "yours", tone: "plain" }
-                        : workLenIsDefault(scenario)
-                          ? // Plain "default", no mark (Ryan, 2026-10-26).
-                            { glyph: null, word: "default", tone: "plain" }
-                          : { glyph: "✓", word: "yours", tone: "ok" }
-                  }
-                  alert={wzTouched && !wz.ok ? <FieldErrorLine>{wz.message}</FieldErrorLine> : null}
-                  info={
-                    <CorridorExtentLines
-                      lengths={corridorSpecLengths ?? null}
-                      workLen={scenario.workLen}
-                      kind={scenario.kind}
-                      note={
-                        scenario.workLen <= 0
-                          ? "set the work-zone length to compute"
-                          : !kindConfirmed
-                            ? // #289 finding 1: the lengths are the kind's.
-                              "corridor lengths wait on the kind of work"
-                            : !sided
-                              ? // #290: nor for a side nobody gave.
-                                "corridor lengths wait on the occupied side"
-                              : // Rule 3 / rule 10: never a locally-computed extent.
-                                "corridor extent unavailable, awaiting verification"
-                      }
-                    />
-                  }
-                >
-                  <input
-                    id="band-worklen"
-                    type="number"
-                    step={10}
-                    min={0}
-                    className="a-fld"
-                    data-write=""
-                    disabled={locked}
-                    // #428: only an empty box shows empty; a typed 0 shows 0.
-                    value={wzDraft ?? (workLenIsEmpty(scenario) ? "" : scenario.workLen)}
-                    onChange={(e) => setWzDraft(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") commitWorkLen();
-                    }}
-                    onBlur={commitWorkLen}
-                  />
-                </FieldCell>
+                {lengthCell}
               </div>
             </div>
           </div>
+          )}
 
           {/* #439 rulings 4-6: the CONFIRM card, the side then the kind.
               Same arming as the old chips (#289 defect 1's widening): a
@@ -854,6 +1051,8 @@ export function WhereBand({
               onMarkIntersection={onMarkIntersection}
               crossMark={crossMark}
               sidesChanged={sidesChanged}
+              waiting={panelOpen}
+              reasked={reasked}
               crossTag={crossStreet}
               onCurrentChange={setCurrentQ}
               locked={locked}

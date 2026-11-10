@@ -84,7 +84,7 @@ afterEach(() => {
 const FALSE_CLAIMS = /\byours\b|\btyped\b|operator-set|your answer|your change/;
 
 describe("W1: the starting 1,000 ft reads 'default' until the operator commits a length", () => {
-  it("mounted flow: ledger and field say 'default' after the pin and side; typing a length flips both", async () => {
+  it("mounted flow: the field says 'default' after the pin and side; typing a length flips it", async () => {
     const user = userEvent.setup();
     // The sandbox opens on DEFAULT_SCENARIO (GeneratorShell.tsx:210); the
     // speed record stands in for the operator's speed so checks can arm.
@@ -98,12 +98,13 @@ describe("W1: the starting 1,000 ft reads 'default' until the operator commits a
     await answerSide();
     await openWhere();
 
-    // Nothing was typed: the ledger names the producer "default".
-    const extentRow = screen.getByTestId("move-extent");
-    expect(extentRow.textContent).toContain("1,000 ft · default");
-    expect(extentRow.textContent).not.toMatch(FALSE_CLAIMS);
-    // The field's marker and its line say the same.
+    // Nothing was typed.  #485 E6: with the CONFIRM card there, Edit is the
+    // Edit panel, which has no ledger extent row; the field's marker and its
+    // line name the producer "default" (the ledger's own words stay pinned
+    // in MoveLedger.form.test.tsx).
+    expect(screen.queryByTestId("move-extent")).toBeNull();
     expect(screen.getByTestId("info-toggle-worklen").textContent).toBe("default");
+    expect(screen.getByTestId("info-toggle-worklen").textContent).not.toMatch(FALSE_CLAIMS);
     const prov = screen.getByTestId("prov-worklen").textContent!;
     expect(prov).toBe("default · the plan's starting length; enter the real one");
 
@@ -114,7 +115,6 @@ describe("W1: the starting 1,000 ft reads 'default' until the operator commits a
     await waitFor(() =>
       expect(screen.getByTestId("info-toggle-worklen").textContent).toBe("✓ yours"),
     );
-    expect(screen.getByTestId("move-extent").textContent).toContain("400 ft · typed");
     expect(screen.getByTestId("prov-worklen").textContent).toBe(
       "your answer · the extent the plan is built for",
     );
@@ -138,7 +138,9 @@ describe("W1: the starting 1,000 ft reads 'default' until the operator commits a
     await waitFor(() =>
       expect(screen.getByTestId("info-toggle-worklen").textContent).toBe("✓ yours"),
     );
-    expect(screen.getByTestId("move-extent").textContent).toContain("1,000 ft · typed");
+    expect(screen.getByTestId("prov-worklen").textContent).toBe(
+      "your answer · the extent the plan is built for",
+    );
   });
 });
 

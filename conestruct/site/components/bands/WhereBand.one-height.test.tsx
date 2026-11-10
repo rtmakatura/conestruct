@@ -15,6 +15,12 @@
 //     and the right column, the card stretches with its action row pinned to
 //     the card's bottom, and no rule keyed on a CONFIRM state sizes a box
 //     outside the card.
+// #485 ruling 4, second bullet (Ryan 2026-11-09): the same two layers across
+// edit and back to the questions (missions/ux-token-map-load-edit/issue-485/
+// rulings.md, E10): the Edit panel's states keep the stack's attributes and
+// the same aerial frame and road row, and the panel-mode CSS holds the right
+// column at exactly the band's height.  The measured 0 px is that folder's
+// walk (script/walk.mjs).
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -215,6 +221,24 @@ function holdsTheBand(name: string, first: { frame: HTMLElement; road: HTMLEleme
   return name;
 }
 
+/** #485: one Edit-panel state: the two columns' attributes, the panel's
+ *  turn (data-edit, the waiting row, no card), the same frame and road row. */
+function holdsTheBandInEdit(name: string, first: { frame: HTMLElement; road: HTMLElement }) {
+  const stack = document.querySelector<HTMLElement>(".wq-stack");
+  expect(stack, `${name}: the stack`).not.toBeNull();
+  expect(stack!.hasAttribute("data-aerial"), `${name}: data-aerial`).toBe(true);
+  expect(stack!.getAttribute("data-card"), `${name}: data-card`).toBe("open");
+  expect(stack!.hasAttribute("data-edit"), `${name}: data-edit`).toBe(true);
+  expect(q("where-questions"), `${name}: no CONFIRM card`).toBeNull();
+  expect(q("where-questions-wait"), `${name}: the waiting row`).not.toBeNull();
+  expect(q("where-edit-panel")?.hidden, `${name}: the panel`).toBe(false);
+  expect(stack!.firstElementChild?.getAttribute("data-testid"), `${name}: the aerial column`).toBe("band-aerial");
+  expect(stack!.children[1]?.classList.contains("wq-side"), `${name}: the right column`).toBe(true);
+  expect(q("band-aerial-frame"), `${name}: the same frame`).toBe(first.frame);
+  expect(q("where-summary"), `${name}: the same road row`).toBe(first.road);
+  return name;
+}
+
 describe("#469 ruling 4 (mounted): every CONFIRM state keeps the band's reserved height", () => {
   it("kind, side, the row, Undo, and the near-intersection kind", async () => {
     render(<GeneratorShell mode="sandbox" />);
@@ -281,6 +305,41 @@ describe("#469 ruling 4 (mounted): every CONFIRM state keeps the band's reserved
     await settle();
     seen.push(holdsTheBand("side answered after the tap", first));
     expect(seen).toHaveLength(8);
+  });
+
+  it("#485: edit, Cancel, edit again with a length, Done, and the questions back", async () => {
+    render(<GeneratorShell mode="sandbox" />);
+    await click(q("where-open-picker"), "Pick on map");
+    await click(byText("SAVE_PIN"), "SAVE_PIN");
+    await openWhere();
+    await until(() => q("kind-chip-shoulder") !== null && q("band-aerial-frame") !== null, "the kind question");
+    const first = { frame: q("band-aerial-frame")!, road: q("where-summary")! };
+    await click(q("kind-chip-shoulder"), "the shoulder kind");
+    await click(byText("Next question"), "Next question");
+    await until(() => q("side-option") !== null, "the side question");
+    await click(q("side-option"), "a side");
+    await settle();
+    const seen = [holdsTheBand("side answered", first)];
+    await click(q("where-edit"), "Edit");
+    seen.push(holdsTheBandInEdit("edit open", first));
+    await click(q("where-edit-cancel"), "Cancel");
+    await settle();
+    seen.push(holdsTheBand("cancelled", first));
+    await click(q("where-edit"), "Edit");
+    seen.push(holdsTheBandInEdit("edit open again", first));
+    const len = document.getElementById("band-worklen") as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(len, { target: { value: "600" } });
+      fireEvent.keyDown(len, { key: "Enter" });
+    });
+    await settle();
+    seen.push(holdsTheBandInEdit("length changed", first));
+    await click(q("where-edit-done"), "Done");
+    await settle();
+    seen.push(holdsTheBand("back to the questions", first));
+    expect(q("where-edit-panel")?.hidden).toBe(true);
+    expect(document.querySelector(".wq-stack")!.hasAttribute("data-edit")).toBe(false);
+    expect(seen).toHaveLength(6);
   });
 
   // Ryan's B4b answer (2026-11-09, Part 2 ruling 5; ux-wait-band-followups/
@@ -429,6 +488,21 @@ describe("#469 rulings 1-3 (CSS): one height in two columns, the 390 strip untou
     expect(decl(rule(rules(CSS), ".workbench .a-pri.wq-next"), "height")).toBe("44px");
     // Nothing else in the card is resized or reordered (B4a: DOM order kept).
     expect(block("min-width: 720px").body).not.toMatch(/\border\s*:|\.nyq-row\b|\.nyq-card\s*\{/);
+  });
+
+  it("#485 E8: with the Edit panel open the right column is exactly the band's height", () => {
+    const wide = rules(block("min-width: 720px").body);
+    const edit = ".workbench .wq-stack[data-aerial][data-edit]";
+    expect(decl(rule(wide, `${edit} > .wq-side`), "height")).toBe("var(--wq-band-h)");
+    expect([decl(rule(wide, `${edit} .wq-panel`), "flex"), decl(rule(wide, `${edit} .wq-panel`), "min-height")]).toEqual([
+      "1 1 auto",
+      "0",
+    ]);
+    expect(decl(rule(wide, `${edit} .wq-wait`), "flex")).toBe("none");
+    // The waiting row's own height, and nothing in the narrow block keys on
+    // the panel (the strip stays #456's).
+    expect(decl(rule(rules(CSS), ".workbench .wq-wait"), "min-height")).toBe("48px");
+    expect(block("max-width: 719.98px").body).not.toMatch(/data-edit/);
   });
 
   it("ruling 2: no rule keyed on a CONFIRM state sizes the band, the aerial, the frame or the right column", () => {

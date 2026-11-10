@@ -180,38 +180,45 @@ describe("#439 ruling 3 — the done summary row", () => {
     const edit = screen.getByTestId("where-edit");
     expect(edit.textContent).toBe("Edit");
     expect(edit.getAttribute("aria-expanded")).toBe("false");
-    expect(screen.getByTestId("where-edit-fold").hidden).toBe(true);
+    // #485: with the CONFIRM card there, Edit's block is the Edit panel.
+    expect(screen.getByTestId("where-edit-panel").hidden).toBe(true);
     expect(screen.getByTestId("where-details").getAttribute("aria-expanded")).toBe("false");
     expect(screen.getByTestId("where-provenance").hidden).toBe(true);
   });
 });
 
-describe("#439 W9 — the Edit fold", () => {
-  it("Edit opens today's rows in place, with the address and work-zone length fields", async () => {
+// #485 ruling 3 (Ryan 2026-11-09) replaced the fold, while the CONFIRM card
+// is there, with the Edit panel (missions/ux-token-map-load-edit/issue-485/
+// rulings.md, E6): Road and Work starts with their picker actions and the
+// length field; the address field and the ledger's extent row are not in it.
+// The panel's turn-taking is WhereBand.edit-turns.test.tsx.
+describe("#439 W9 — the Edit fold, now the Edit panel (#485)", () => {
+  it("Edit opens the panel: Road, Work starts and the work-zone length field", async () => {
     await mountWhere();
     const edit = screen.getByTestId("where-edit");
     await act(async () => {
       fireEvent.click(edit);
     });
-    expect(edit.getAttribute("aria-expanded")).toBe("true");
-    const fold = screen.getByTestId("where-edit-fold");
-    expect(fold.hidden).toBe(false);
-    expect(fold.querySelector('input[aria-label="Address or cross streets"]')).toBeTruthy();
-    expect(fold.querySelector("#band-worklen")).toBeTruthy();
-    for (const id of ["spot", "start", "extent"]) {
-      expect(fold.querySelector(`[data-testid="move-${id}"]`), id).toBeTruthy();
+    const panel = screen.getByTestId("where-edit-panel");
+    expect(panel.hidden).toBe(false);
+    expect(panel.querySelector("#band-worklen")).toBeTruthy();
+    for (const id of ["spot", "start"]) {
+      expect(panel.querySelector(`[data-testid="move-${id}"]`), id).toBeTruthy();
     }
-    // Pressed again, it closes.
+    expect(panel.querySelector('[data-testid="move-extent"]')).toBeNull();
+    expect(panel.querySelector('input[aria-label="Address or cross streets"]')).toBeNull();
+    // Done closes it.
     await act(async () => {
-      fireEvent.click(edit);
+      fireEvent.click(screen.getByTestId("where-edit-done"));
     });
-    expect(fold.hidden).toBe(true);
+    expect(panel.hidden).toBe(true);
+    expect(edit.getAttribute("aria-expanded")).toBe("false");
   });
 
-  it("the fold opens by itself while the length is unset (an open item keeps its control on screen)", async () => {
+  it("the panel opens by itself while the length is unset (an open item keeps its control on screen)", async () => {
     await mountWhere(clearWorkLen(PINNED_SHOULDER));
     expect(screen.getByTestId("where-edit").getAttribute("aria-expanded")).toBe("true");
-    expect(screen.getByTestId("where-edit-fold").hidden).toBe(false);
+    expect(screen.getByTestId("where-edit-panel").hidden).toBe(false);
   });
 });
 

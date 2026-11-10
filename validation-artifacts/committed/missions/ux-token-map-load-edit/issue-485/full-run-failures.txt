@@ -1,0 +1,27 @@
+# #485 first full vitest run after the change: 18 failed | 3003 passed | 1 skipped (3022)
+ FAIL  components/GeneratorShell.cross-street-tap.test.tsx > #446: the tap answers on the aerial, then the card comes into view > T21: Enter in the address field during a lookup drops it: no write, no focus, no scroll
+ FAIL  components/GeneratorShell.cross-street-tap.test.tsx > #446: the tap answers on the aerial, then the card comes into view > T21: Enter in the address field during the scroll's wait calls the scroll off, and cancelling the picker doesn't bring it back
+ FAIL  components/GeneratorShell.where-confirm-card.test.tsx > #439 W9 — the Edit fold > Edit opens today's rows in place, with the address and work-zone length fields
+ FAIL  components/GeneratorShell.where-confirm-card.test.tsx > #439 W9 — the Edit fold > the fold opens by itself while the length is unset (an open item keeps its control on screen)
+ FAIL  components/GeneratorShell.where-confirm-card.test.tsx > #439 ruling 3 — the done summary row > mounted: one ✓ row with the values; Edit and Details closed
+ FAIL  components/GeneratorSidebar.corridor-bar.test.tsx > #227 corridor bar — proportion of backend lengths only > R117 Q2: the extent is a WHAT-style row; the five lengths sit in its popover
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > #428: a typed 0 stays in the box and both lines say 'more than 0 ft', with the refused-length marker
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > #428: a typed 0, then an emptied box, reads required and '◌ not set' again; a real length clears both
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > #429: a length over the cap reads the refused-length marker, plain 'yours'; 20,000 itself keeps '✓ yours'
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > -5: the box keeps -5, the marker is the operator's word with no mark, and both lines say 'more than 0 ft'
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > a cleared field still says required and '◌ not set'
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #403: the work-zone length field says what is wrong > the 20,000 ft cap keeps its own message
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #432: a typed decimal stays in the box and the field says 'Use whole feet' > 0.5 stays 0.5 and reads 'Use whole feet', not 'more than 0 ft'
+ FAIL  components/bands/WhereBand.work-length.test.tsx > #432: a typed decimal stays in the box and the field says 'Use whole feet' > 512.5 stays 512.5, reads 'Use whole feet' in the field and the blocker, plain 'yours'; 512 clears both
+ FAIL  components/bands/untouched-provenance.test.tsx > W1: the starting 1,000 ft reads 'default' until the operator commits a length > mounted flow: ledger and field say 'default' after the pin and side; typing a length flips both
+ FAIL  components/bands/untouched-provenance.test.tsx > W1: the starting 1,000 ft reads 'default' until the operator commits a length > mounted flow: typing 1000 over the starting 1,000 is the operator's answer too
+ FAIL  lib/design/type-census.test.ts > #263 type census — globals.css font-sizes > every other font-size site is a named exception or a declared-debt row (new size/site fails)
+ FAIL  lib/design/type-census.test.ts > #263 type census — the exceptions are the ruled set and the pins are the sources' figures > CENSUS_PINS equal the figures read from the sources (the README quotes these)
+
+## What each was, and the run alone after the fix
+All 18 were real, from this change (none flaky). The six files re-run alone after the fix: 6 passed, 115 tests passed.
+- cross-street-tap (2): the T21 "Enter in the address field" door; the panel has no address field (E6). Door removed, predicted in checkpoint.md.
+- where-confirm-card (3): read `where-edit-fold` with the card mounted; rewritten to `where-edit-panel` (predicted).
+- untouched-provenance (2): read the ledger `move-extent` row; rewritten to the field's marker and line (predicted).
+- work-length (8) and corridor-bar (1): `closest(".a-col")` found nothing; the first build put the length cell in a bare `.wq-panel-len`. Fixed in the product: the panel keeps the fold's `a-cols > a-col` row shape. Not predicted (a miss in the build, not churn).
+- type-census (2): `.wq-cancel` set its own font-size; it now rides `.tr-help` (13.5) and sets weight only. No new size.

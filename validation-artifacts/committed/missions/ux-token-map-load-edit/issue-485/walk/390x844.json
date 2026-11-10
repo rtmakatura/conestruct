@@ -1,0 +1,824 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "A-questions-confirm",
+   "y": 117,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 885,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 774.3,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 521,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 644,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 521,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "1000",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-01-A-questions-confirm.png"
+  },
+  {
+   "name": "A-edit-panel",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 889.5,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 778.8,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 521,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 521,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 978,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "1000",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-02-A-edit-panel.png"
+  },
+  {
+   "name": "A-cancelled",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 885,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 774.3,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 521,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 644,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 521,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "1000",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-03-A-cancelled.png"
+  },
+  {
+   "name": "B-length-typed",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 889.5,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 778.8,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 521,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 521,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 978,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-04-B-length-typed.png"
+  },
+  {
+   "name": "B-done-nothing-reasked",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 885,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 774.3,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 521,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 644,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 521,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-05-B-done-nothing-reasked.png"
+  },
+  {
+   "name": "C-edit-panel",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 889.5,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 778.8,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 521,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 521,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 978,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-06-C-edit-panel.png"
+  },
+  {
+   "name": "C-moved-panel-holds",
+   "y": 112,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 800.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 689.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 431.8,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 888.8,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 1 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-07-C-moved-panel-holds.png"
+  },
+  {
+   "name": "C-done-side-reasked",
+   "y": 128,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 849.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 738.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 431.8,
+    "h": 572.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 554.8,
+    "h": 449.5,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 431.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": "Your edit changed the road or the work start, so this is asked again.",
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": false,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-08-C-done-side-reasked.png"
+  },
+  {
+   "name": "D-side-answered",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 885,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 774.3,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 521,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 644,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 521,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-09-D-side-answered.png"
+  },
+  {
+   "name": "D-reopened-after-confirm",
+   "y": 175,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 250
+   },
+   "band": {
+    "top": 235.3,
+    "h": 737.5,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 329,
+    "h": 626.8,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 329,
+    "h": 345,
+    "left": 31,
+    "w": 328
+   },
+   "frame": {
+    "top": 329,
+    "h": 250,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 690,
+    "h": 265.8,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 813,
+    "h": 142.8,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 690,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": null,
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "relative",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work",
+    "Which side of the road is the work on: North side"
+   ],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-10-D-reopened-after-confirm.png"
+  },
+  {
+   "name": "D-edit-after-confirm",
+   "y": 175,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 235.3,
+    "h": 903.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 329,
+    "h": 792.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 329,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 598,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 598,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 1055,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-11-D-edit-after-confirm.png"
+  },
+  {
+   "name": "D-cancelled-after-confirm",
+   "y": 235,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 250
+   },
+   "band": {
+    "top": 235.3,
+    "h": 737.5,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 329,
+    "h": 626.8,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 329,
+    "h": 345,
+    "left": 31,
+    "w": 328
+   },
+   "frame": {
+    "top": 329,
+    "h": 250,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 690,
+    "h": 265.8,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 813,
+    "h": 142.8,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 690,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": null,
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "relative",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work",
+    "Which side of the road is the work on: North side"
+   ],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [],
+   "shot": "390x844-12-D-cancelled-after-confirm.png"
+  }
+ ],
+ "errors": []
+}

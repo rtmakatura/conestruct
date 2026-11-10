@@ -10120,8 +10120,9 @@ input[type="number"] {
      24 px inset under it and the card's 16 px gap over it reserved, so it
      is in one place on every question.  The DOM (and so the focus and
      reading order) is unchanged: answers, then the action row, then the
-     rows (B4a).  A minimum, so the operator's own Edit fold still opens
-     the band.  The kind question's Details floats (.nyq-tip-box). */
+     rows (B4a).  A minimum; since #485, Edit with the card there is the
+     Edit panel's turn, at exactly this height (E8, below).  The kind
+     question's Details floats (.nyq-tip-box). */
   .workbench .wq-stack[data-aerial][data-card="open"] > .wq-side {
     min-height: var(--wq-band-h);
   }
@@ -10135,6 +10136,19 @@ input[type="number"] {
     left: var(--space-block);
     right: var(--space-block);
     bottom: var(--space-section);
+  }
+  /* #485 E8: while the Edit panel has the right column, the column is
+     exactly the band's height (not a minimum), the panel takes the room the
+     waiting row leaves, so no edit grows the band or moves the aerial. */
+  .workbench .wq-stack[data-aerial][data-edit] > .wq-side {
+    height: var(--wq-band-h);
+  }
+  .workbench .wq-stack[data-aerial][data-edit] .wq-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .workbench .wq-stack[data-aerial][data-edit] .wq-wait {
+    flex: none;
   }
 }
 @container (max-width: 719.98px) {
@@ -10214,6 +10228,118 @@ input[type="number"] {
   .workbench .wq-stack[data-card="open"][data-map="hidden"] .nyq-text {
     scroll-margin-top: calc(var(--nav-h) + 44px + 8px);
   }
+}
+
+/* ── #485 (Ryan, 2026-11-09, ruling 3; Editing option A, EA.dc.html) ────
+   Editing and the CONFIRM questions take turns in the WHERE band
+   (validation-artifacts/committed/missions/ux-token-map-load-edit/
+   issue-485/rulings.md, E6-E8).  While the Edit panel is open it is the
+   right column's one block and the card is one 48 px row under it; the
+   summary row is hidden.  In two columns the right column is exactly the
+   band's height, so the band never grows and the aerial stays put.  At one
+   column the strip stays pinned (data-card stays "open") and both flow
+   under it.  Sizes are the ruled ones (tr-section 10, tr-note 12.5,
+   tr-help 13.5, 44 px controls); colours are tokens: --act for the panel's
+   edge, --rule on --da-ground for the row, --da-hair between rows. */
+.workbench .wq-sum-wrap[hidden] {
+  display: none;
+}
+.workbench .wq-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--act);
+  background: var(--da-ground);
+}
+.workbench .wq-panel[hidden] {
+  display: none;
+}
+.workbench .wq-panel-head {
+  align-items: center;
+}
+.workbench .wq-panel-head .ny-title {
+  margin: 0;
+}
+.workbench .wq-panel-sub {
+  flex: 1;
+  min-width: 0;
+  color: var(--ink-faint);
+}
+.workbench .wq-panel-body {
+  display: flex;
+  flex-direction: column;
+}
+.workbench .wq-panel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 var(--space-block);
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .wq-panel-label {
+  flex: none;
+  width: 120px;
+  color: var(--ink-mute);
+}
+.workbench .wq-panel-val {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 0;
+}
+.workbench .wq-panel-len {
+  padding: 0 var(--space-block);
+  border-bottom: 1px solid var(--da-hair);
+}
+/* The row above already draws the rule (WHAT's rows draw it on the cell). */
+.workbench .wq-panel-len > .a-col > .a-cell {
+  border-top: 0;
+}
+/* Group 1's 44 px targets (ruling 5) for the length's marker inside the
+   panel: rule 15's overhang, 12 px deeper, so the row keeps its height. */
+.workbench .wq-panel .a-mark {
+  min-height: 44px;
+  margin-bottom: -26px;
+}
+.workbench .wq-panel-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-tight);
+  margin-top: auto;
+  padding: var(--space-block);
+  border-top: 1px solid var(--da-hair);
+}
+.workbench .wq-cancel {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 16px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  /* Type: .tr-help (Inter 13.5), at the buttons' 600. */
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.workbench .wq-cancel:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .wq-wait {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  min-height: 48px;
+  padding: 0 var(--space-block);
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+  color: var(--ink-mute);
+}
+.workbench .wq-wait-text {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
 }
 
 /* #470 (UX group 6, Part 1): the Generate wait.  Rulings 1-5 and 9.  The

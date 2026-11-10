@@ -36,7 +36,7 @@ import {
   type KindState,
 } from "@/lib/scenarios/band-facts";
 import { FactLine } from "./bands/BandPrimitives";
-import { WhereBand } from "./bands/WhereBand";
+import { WhereBand, type EditMemory } from "./bands/WhereBand";
 import { WhatBand, type WindowsLine } from "./bands/WhatBand";
 import { GenerateFrame } from "./bands/GenerateBand";
 import { armLandingCheck, type LandingCheck } from "@/lib/landing";
@@ -110,6 +110,9 @@ export interface BandStackProps {
   /** #460: the picker's last picture at this pin, for the aerial to show
    *  until its own is drawn.  Null = none. */
   pickerPicture?: string | null;
+  /** #485 E3: what the WHERE Edit panel's Cancel puts back besides the
+   *  scenario (the sidebar's picker memory). */
+  editMemory?: EditMemory;
 }
 
 export interface OpenRequest {
@@ -152,6 +155,7 @@ export function BandStack(props: BandStackProps) {
     openRequest = null,
     landRequest = 0,
     pickerPicture = null,
+    editMemory,
   } = props;
 
   // Rule 65: ONE id.  `null` hands the choice back to the column, which
@@ -238,6 +242,7 @@ export function BandStack(props: BandStackProps) {
           onMarkIntersection={onMarkIntersection}
           geometry={geometry}
           pickerPicture={pickerPicture}
+          editMemory={editMemory}
           crossStreet={crossStreet}
           crossMark={crossMark}
           sidesChanged={sidesChanged}

@@ -567,16 +567,9 @@ describe("#446: the tap answers on the aerial, then the card comes into view", (
   const DOORS: [string, () => Promise<void>][] = [
     ["Edit on map", () => click(q("where-open-picker"), "Edit on map")],
     ["the bar's big-map button", () => click(q("band-aerial-big-map"), "the big-map button")],
-    [
-      "Enter in the address field",
-      async () => {
-        const field = document.querySelector('[aria-label="Address or cross streets"]');
-        if (!field) throw new Error("no address field on screen");
-        await act(async () => {
-          fireEvent.keyDown(field, { key: "Enter" });
-        });
-      },
-    ],
+    // #485 E6: after the pin, with the CONFIRM card there, the address field
+    // is not on the band (the Edit panel has Road and Work starts, whose
+    // actions are the ledger door below; the picker has its own search).
     [
       "the ledger's action",
       () => click(document.querySelector('[data-testid^="move-action-"]'), "the ledger's action"),

@@ -318,6 +318,36 @@ export function GeneratorSidebar({
   // the WHERE band's card unmounts when the column moves on.
   const sidesChanged = useSideClearOnKindChange(scenario, setMeta, geometry);
 
+  // #485 E3 (P15): the WHERE Edit panel's Cancel puts the scenario back; this
+  // is the rest of what a picker Save inside the panel changed here, so a
+  // later Save compares against the same guards it would have without it.
+  type EditMem = {
+    detection: string | null;
+    cross: string | null;
+    hold: typeof approachConfirm;
+    handoff: HandoffEvent[];
+    picture: typeof pickerPicture;
+  };
+  const editMemory = {
+    take: (): EditMem => ({
+      detection: lastAppliedDetectionRef.current,
+      cross: lastAppliedCrossStreetRef.current,
+      hold: approachConfirmRef.current,
+      handoff,
+      picture: pickerPicture,
+    }),
+    restore: (m: unknown) => {
+      const mem = m as EditMem | undefined;
+      crossMark.clear();
+      if (!mem) return;
+      lastAppliedDetectionRef.current = mem.detection;
+      lastAppliedCrossStreetRef.current = mem.cross;
+      setApproachConfirm(mem.hold);
+      setHandoff(mem.handoff);
+      setPickerPicture(mem.picture);
+    },
+  };
+
   const onPickerSave = (r: LocationPickerResult) => {
     crossMark.clear(); // #446 T20: a tap's failed answer is over.
     // Dev-only snapshot wiring (Refs #102): keep the raw detection alive.
@@ -495,6 +525,7 @@ export function GeneratorSidebar({
         onKindCleared={onKindCleared}
         openRequest={openRequest}
         landRequest={landN}
+        editMemory={editMemory}
         pickerPicture={
           pickerPicture &&
           pickerPicture.lat === scenario.meta.lat &&
