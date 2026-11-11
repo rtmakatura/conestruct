@@ -9,7 +9,8 @@ least 60 s between any two that touch `/api/needs-you-map`.
 | Item | Result |
 |---|---|
 | #492 40 a minute, the 41st refused | **PASS**: requests 1-40 -> 400, request 41 -> 429 "Too many requests", all 41 inside one fixed window |
-| #493 the tap path on prod | **Not measured on prod**: the n=1 sample did not reach the tap path (both bodies answered `x-map-cross-source: lookup`, nothing drawn); see § 2 for why.  Covered by `tests/test_needs_you_map.py` (#493 tests) |
+| #493 the tap path, test pin (2) | **Not reached**: the test's synthetic pin did not reach the tap path (both bodies answered `x-map-cross-source: lookup`, nothing drawn); see § 2 for why |
+| #493 the tap path, sandbox pin (2b) | **PASS** (n=1): the sandbox's own body plus the tap record answered `x-map-cross-source: tap`, "Franklin Street" drawn, 2.44 s; see § 2b |
 | #493 re-tap keeps an edited approach | **Not walked on prod** (#489: the WHERE tap/picker is not walkable headless on live data); covered by the unit tests `cross-street-apply.test.ts` |
 | Generate CLS | **PASS**: CLS 0 at 1440x900, 1198x930, 390x844; outlines left 0; soft->sharp PASS |
 | axe / 44 px / console | **PASS**: axe 0, under 44 px 0 on the 3 NEEDS YOU maps x 3 widths soft and sharp and Details open; console errors 0, page errors 0 at all three widths |
@@ -50,9 +51,41 @@ data a nearer node wins.  This is a property of the synthetic pin, not evidence 
 § 3) frames its intersection question at 39.739906,-104.968453, about 9 m from the Franklin node, and draws "Franklin Street" (by the
 lookup: a search pin carries no tap record).
 
-A sample that reaches the tap path needs a third render with the sandbox's own pin and centerline and the tap record; the brief capped
-this check at 2 renders, so it is **not measured on prod**.  What the live node at (39.7401374, -104.969176) is (no motorized cross street
+A sample that reaches the tap path needs a third render with the sandbox's own pin and the tap record; the coordinator approved one more
+render for that (§ 2b).  What the live node at (39.7401374, -104.969176) is (no motorized cross street
 within 30 m) was not identified: the one direct Overpass query sent for it returned no JSON.
+
+## 2b. #493 on the sandbox pin (`script/map-493b-sandbox-pin.mjs`, log `logs/map-493b-sandbox-pin.txt`, body and image `map-493/`)
+
+Approved by the coordinator 2026-11-10: one more map render.
+
+    OUT=<extras> GATE_BYPASS_TOKEN=... node validation-artifacts/committed/missions/retap-and-cap/prod-check/script/map-493b-sandbox-pin.mjs
+
+Capture, with no map render: the script drives /sandbox at 1440x900 as `verify-generate-cls.mjs` does (1600 E Colfax Ave, road "East
+Colfax Avenue, eastbound", shoulder, first side, Generate) and captures the body the page POSTs to `/api/needs-you-map`.  Every
+`/api/needs-you-map` and `/api/corridor-map` request in that browser was aborted, so the walk drew no NEEDS YOU or corridor map.  The
+captured body: kind `shoulder`, pin 39.739781,-104.968249, no `meta.intersection` (a search pin carries no tap record).
+
+The one render: that body with flag `adjacent_intersection`, 846x423, no soft, and `meta.intersection` set to the committed tap record
+(`tests/fixtures/needs-you/colfax-franklin-tap.json`, Franklin Street with its 20-point line, written by the real producer), POSTed once
+to the site's `/api/needs-you-map` (body saved as `map-493/map-493b-body.json`).
+
+    render: status 200, 268625 bytes, wall 2.44 s
+      x-map-cross-source: tap
+      x-map-subject: drawn
+      x-map-cross-tag: 434,367
+      x-map-frame: 39.739906,-104.968453,18.00
+      x-map-cross-street: Franklin Street
+    RESULT PASS: x-map-cross-source tap, cross street Franklin Street, subject drawn, wall 2.44 s (n=1)
+
+The frame is the same one the sandbox's own intersection question uses (§ 4, 39.739906,-104.968453), about 9 m from the Franklin node.
+The image (`map-493/needs-you-map-493b.png`) shows Franklin Street dashed through the crossing.  The tag sits at 434,367 here; the
+lookup-drawn map in § 4 puts it at 434,329.  Both are inside the frame, and the tag's placement was not part of this check.
+
+Overpass: `x-map-cross-source: tap` means the backend took the branch that skips `cross_street_geometry` (render_api.py, #493), so no
+cross-street Overpass read ran on this render.  Whether the subject (crossing) read was an Overpass read or a memo hit is not in any log
+here: the backend's `print` lines go to Modal's logs, which this check did not read.  The 2.44 s wall time is n=1 and is not compared
+against a lookup sample on the same pin.
 
 ## 3. Generate CLS (`scripts/verify-generate-cls.mjs`, unmodified; log `logs/verify-generate-cls.txt`)
 
@@ -80,9 +113,10 @@ Not walked on prod: the WHERE tap and picker are not walkable headless on live d
 ## Not committed
 
 27 walk crops and the two #493 images are in `validation-artifacts-extra/retap-and-cap/` in the main checkout (untracked).  Committed here:
-`walk/walk.json`, `walk/extra.json`, `walk/1440x900-q3-sharp.png`, `map-493/needs-you-map-both.png`.
+`walk/walk.json`, `walk/extra.json`, `walk/1440x900-q3-sharp.png`, `map-493/needs-you-map-both.png`, `map-493/map-493b-body.json`,
+`map-493/needs-you-map-493b.png`.
 
 Processes: every browser was closed by its script; no dev server was started; 0 node processes left after the runs.
 
-Token scan of every output from this check (this folder, the extras folder, the scratchpad, the walk's task output; 54 files): **0**
+Token scan of every output from this check (this folder, the extras folder, the scratchpad, the walk's task output; 54 files, re-run after § 2b on 61 files): **0**
 hits of the gate token value, **0** of the render secret value, **0** log lines naming the gate header.

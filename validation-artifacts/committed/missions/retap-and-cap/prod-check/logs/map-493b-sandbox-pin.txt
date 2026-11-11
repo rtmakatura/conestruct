@@ -1,0 +1,10 @@
+road picked: East Colfax Avenue, eastbound
+captured: flag pedestrian_facility, 846x423, soft true; kind shoulder; pin 39.739781,-104.968249; road "undefined"; centerline 0 pts; meta.intersection before none
+render: status 200, 268625 bytes, wall 2.44 s
+  x-map-cross-source: tap
+  x-map-subject: drawn
+  x-map-cross-tag: 434,367
+  x-map-frame: 39.739906,-104.968453,18.00
+  x-map-point: 39.739906,-104.968453
+  x-map-cross-street: Franklin Street
+RESULT PASS: x-map-cross-source tap, cross street Franklin Street, subject drawn, wall 2.44 s (n=1)
