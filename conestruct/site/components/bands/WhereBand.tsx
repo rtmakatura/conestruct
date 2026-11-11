@@ -594,6 +594,22 @@ export function WhereBand({
   useEffect(() => {
     if (reasked.has("side") && sideAnswered) setReasked(new Set());
   }, [reasked, sideAnswered]);
+  // #488 (G1, G2): outside the panel ("Edit on map", "Use the big map
+  // instead"), a write that clears the side while it moves the pin or
+  // changes the road is #290 ruling 10's clear, so E2's line says why.
+  // Read from the cause, not the door, so the reason is always true.
+  const lastScenario = useRef(scenario);
+  useEffect(() => {
+    const prev = lastScenario.current;
+    lastScenario.current = scenario;
+    if (panelOpen || prev === scenario) return;
+    const roadOf = (s: Scenario) => s.meta.confirmedRoad?.candidate.way_id ?? null;
+    const movedOrNewRoad =
+      prev.meta.lat !== scenario.meta.lat ||
+      prev.meta.lng !== scenario.meta.lng ||
+      roadOf(prev) !== roadOf(scenario);
+    if (prev.meta.work !== undefined && !sideAnswered && movedOrNewRoad) setReasked(new Set(["side"]));
+  }, [scenario, panelOpen, sideAnswered]);
   const openEdit = (v: boolean) => {
     focusAfter.current = v && chipsShown ? "panel" : null;
     setEditChoice(v);
