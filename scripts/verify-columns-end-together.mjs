@@ -386,15 +386,24 @@ async function one(w, h, zoom) {
     const search = async (addr) => {
       await p.waitForTimeout(1500);
       await p.getByLabel("Address or intersection search").fill(addr);
+      // #489: in Move the picker opens with the old road picked, so Save &
+      // Close is enabled before this search's road answer exists; wait for
+      // that answer first (a stubbed answer emits a response too).
+      const roads = p.waitForResponse((r) => r.url().includes("/api/road-bearing"), { timeout: 90000 });
       await p.getByRole("button", { name: "SEARCH" }).click();
+      await roads;
       await p.waitForFunction(() => {
         const d = document.querySelector("[role=dialog]");
         const save = [...(d?.querySelectorAll("button") ?? [])].find((x) => /Save & Close/.test(x.innerText));
         return /PICK THE ROAD · \d+ FOUND|Which road/i.test(d?.innerText ?? "") || (save && !save.disabled);
       }, null, { timeout: 90000 });
       await p.waitForTimeout(1500);
-      const want = p.getByRole("dialog").locator("button", { hasText: /Colfax/ });
-      if (await want.count()) await want.first().click().catch(() => {});
+      const want = p.getByRole("dialog").getByRole("radio", { name: /Colfax/ });
+      if (await want.count()) {
+        await want.first().click();
+        await p.waitForFunction(() => [...document.querySelectorAll("[role=dialog] button")].some((x) => /Save & Close/.test(x.innerText) && !x.disabled), null, { timeout: 5000 })
+          .catch(() => { throw new Error(`search ${addr}: the Colfax road row was clicked but Save & Close stayed disabled`); });
+      }
       await p.waitForTimeout(2000);
       await p.getByRole("button", { name: "Save & Close" }).click();
       await p.waitForSelector("[role=dialog]", { state: "detached", timeout: 30000 }).catch(() => {});

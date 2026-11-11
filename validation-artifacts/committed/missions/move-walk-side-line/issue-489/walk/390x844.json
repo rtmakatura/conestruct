@@ -1,0 +1,1490 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "A-questions-confirm",
+   "y": 461,
+   "frameInBand": {
+    "dy": 341,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 909.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 799,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 513,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 545.8,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 668.8,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 545.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "1000",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-01-A-questions-confirm.png"
+  },
+  {
+   "name": "A-edit-panel",
+   "y": 238,
+   "frameInBand": {
+    "dy": 118,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 914.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 803.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 290,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 545.8,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 545.8,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 1002.8,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "1000",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-02-A-edit-panel.png"
+  },
+  {
+   "name": "A-cancelled",
+   "y": 238,
+   "frameInBand": {
+    "dy": 118,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 909.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 799,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 290,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 545.8,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 668.8,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 545.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "1000",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-03-A-cancelled.png"
+  },
+  {
+   "name": "B-length-typed",
+   "y": 238,
+   "frameInBand": {
+    "dy": 118,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 914.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 803.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 290,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 545.8,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 545.8,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 1002.8,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-04-B-length-typed.png"
+  },
+  {
+   "name": "B-done-nothing-reasked",
+   "y": 238,
+   "frameInBand": {
+    "dy": 118,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 909.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 799,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 290,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 545.8,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 668.8,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 545.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-05-B-done-nothing-reasked.png"
+  },
+  {
+   "name": "C-edit-panel",
+   "y": 238,
+   "frameInBand": {
+    "dy": 118,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 914.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 803.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 290,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 545.8,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 545.8,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 1002.8,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-06-C-edit-panel.png"
+  },
+  {
+   "name": "C-moved-panel-holds",
+   "y": 112,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 847.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 737,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 479.3,
+    "h": 523.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 479.3,
+    "h": 441,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 936.3,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 1 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-07-C-moved-panel-holds.png"
+  },
+  {
+   "name": "C-done-side-reasked",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 896.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 786,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 479.3,
+    "h": 572.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 602.3,
+    "h": 449.5,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 479.3,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": "Your edit changed the road or the work start, so this is asked again.",
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": false,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-08-C-done-side-reasked.png"
+  },
+  {
+   "name": "D-side-answered",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 909.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 799,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 545.8,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 668.8,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 545.8,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-09-D-side-answered.png"
+  },
+  {
+   "name": "D-reopened-after-confirm",
+   "y": 112,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 250
+   },
+   "band": {
+    "top": 172,
+    "h": 674,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 563.3,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 265.8,
+    "h": 281.5,
+    "left": 31,
+    "w": 328
+   },
+   "frame": {
+    "top": 265.8,
+    "h": 250,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 563.3,
+    "h": 265.8,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 686.3,
+    "h": 142.8,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 563.3,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": null,
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "relative",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work",
+    "Which side of the road is the work on: South side"
+   ],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-10-D-reopened-after-confirm.png"
+  },
+  {
+   "name": "D-edit-after-confirm",
+   "y": 112,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 948.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 837.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 559.5,
+    "h": 543.8,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 559.5,
+    "h": 461.3,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 1036.8,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-11-D-edit-after-confirm.png"
+  },
+  {
+   "name": "D-cancelled-after-confirm",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 250
+   },
+   "band": {
+    "top": 172,
+    "h": 746.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 635.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": {
+    "top": 265.8,
+    "h": 353.8,
+    "left": 31,
+    "w": 328
+   },
+   "frame": {
+    "top": 265.8,
+    "h": 250,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 635.5,
+    "h": 265.8,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 758.5,
+    "h": 142.8,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 635.5,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": null,
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "relative",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": null,
+   "records": [
+    "What kind of work is it: Shoulder work",
+    "Which side of the road is the work on: South side"
+   ],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-12-D-cancelled-after-confirm.png"
+  },
+  {
+   "name": "E-edit-after-confirm",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 948.3,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 837.5,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 559.5,
+    "h": 543.8,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 559.5,
+    "h": 461.3,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 1036.8,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 2 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-13-E-edit-after-confirm.png"
+  },
+  {
+   "name": "E-moved-panel-holds",
+   "y": 112,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 868,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 757.3,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 479.3,
+    "h": 543.8,
+    "left": 31,
+    "w": 328
+   },
+   "panel": {
+    "top": 479.3,
+    "h": 461.3,
+    "left": 31,
+    "w": 328
+   },
+   "wait": {
+    "top": 956.5,
+    "h": 66.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": null,
+   "summary": null,
+   "attrs": {
+    "card": "open",
+    "edit": true,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": "◌ Questions wait while you edit · 1 of 2 answered",
+   "waitIsControl": false,
+   "reasked": null,
+   "records": [],
+   "q": null,
+   "sideChecked": null,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-14-E-moved-panel-holds.png"
+  },
+  {
+   "name": "E-done-side-reasked",
+   "y": 172,
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 896.8,
+    "left": 14,
+    "w": 362
+   },
+   "stack": {
+    "top": 265.8,
+    "h": 786,
+    "left": 31,
+    "w": 328
+   },
+   "aerial": null,
+   "frame": {
+    "top": 265.8,
+    "h": 150,
+    "left": 31,
+    "w": 328
+   },
+   "side": {
+    "top": 479.3,
+    "h": 572.5,
+    "left": 31,
+    "w": 328
+   },
+   "panel": null,
+   "wait": null,
+   "card": {
+    "top": 602.3,
+    "h": 449.5,
+    "left": 31,
+    "w": 328
+   },
+   "summary": {
+    "top": 479.3,
+    "h": 107,
+    "left": 31,
+    "w": 328
+   },
+   "attrs": {
+    "card": "open",
+    "edit": false,
+    "tap": false
+   },
+   "framePos": "sticky",
+   "waitText": null,
+   "waitIsControl": null,
+   "reasked": "Your edit changed the road or the work start, so this is asked again.",
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": false,
+   "length": "600",
+   "open": "where",
+   "axe": [],
+   "small": [
+    {
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-15-E-done-side-reasked.png"
+  }
+ ],
+ "errors": [],
+ "console": []
+}

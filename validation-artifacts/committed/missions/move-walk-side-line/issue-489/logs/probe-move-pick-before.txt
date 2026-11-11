@@ -1,0 +1,25 @@
+  t=3287 req POST /api/geocode
+  t=3535 req POST /api/road-bearing
+  t=7091 resp 200 /api/road-bearing
+first pin: {"dialog":true,"head":"PICK THE ROAD · 3 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 0 m from your p","w":373},{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, westbound Primary road · 9 m from your p","w":373}],"searchVal":"1550 E Colfax Ave, Denver"}
+first pin after radio click: {"dialog":true,"head":null,"picked":true,"saveDisabled":false,"colfaxButtons":[],"searchVal":"1550 E Colfax Ave, Denver"}
+--- Move opened
+t=1505 before search: {"dialog":true,"head":null,"picked":true,"saveDisabled":false,"colfaxButtons":[],"searchVal":"1550 E Colfax Ave, Denver"}
+  t=1592 req POST /api/geocode
+t=1594 search clicked: {"dialog":true,"head":null,"picked":true,"saveDisabled":false,"colfaxButtons":[],"searchVal":"1600 E Colfax Ave, Denver"}
+t=1596 check's wait returned: {"dialog":true,"head":null,"picked":true,"saveDisabled":false,"colfaxButtons":[],"searchVal":"1600 E Colfax Ave, Denver"}
+  t=1794 req POST /api/road-bearing
+t=3099 check's locator count=0 {"dialog":true,"head":null,"picked":false,"saveDisabled":true,"colfaxButtons":[],"searchVal":"1600 E Colfax Ave, Denver"}
+t=4108 {"dialog":true,"head":null,"picked":false,"saveDisabled":true,"colfaxButtons":[],"searchVal":"1600 E Colfax Ave, Denver"}
+  t=4575 resp 200 /api/road-bearing
+t=5113 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=6120 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=7127 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=8132 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=9139 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=10147 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=11153 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=12157 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=13160 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=14168 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
+t=15174 {"dialog":true,"head":"PICK THE ROAD · 4 FOUND","picked":false,"saveDisabled":true,"colfaxButtons":[{"role":"radio","checked":"false","cls":"road-pick-row","text":"East Colfax Avenue, eastbound Primary road · 21 m from your ","w":373}],"searchVal":"1600 E Colfax Ave, Denver"}
