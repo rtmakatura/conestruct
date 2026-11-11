@@ -1,0 +1,4 @@
+CI run 43058901937 (Python tests) on 1c2d99d, 2026-11-11: 1 failed, 3982 passed, 21 skipped.
+FAILED tests/test_vercel_env_check.py::test_every_cite_is_real_and_one_names_the_variable
+  NEXT_PUBLIC_MAPBOX_TOKEN: none of [components/LocationPickerModal.tsx:328, components/bands/WhereBand.tsx:458] is a line containing it
+Alone: FAILED (real, not flaky). Cause: #507 shifted the cited lines. Fixed in scripts/production-env.txt:26 (328->377, 458->519); alone after fix: 14 passed.
