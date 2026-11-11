@@ -1,0 +1,508 @@
+{
+ "size": "390x844",
+ "steps": [
+  {
+   "name": "A0-side-question",
+   "frameInBand": {
+    "dy": 341,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 843.3,
+    "left": 14,
+    "w": 362
+   },
+   "side": {
+    "top": 479.3,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 602.3,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "framePos": "sticky",
+   "reaskedCount": 0,
+   "reasked": [],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": false,
+   "panelOpen": true,
+   "noteH": null,
+   "sideOptions": 1,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-01-A0-side-question.png"
+  },
+  {
+   "name": "A-questions-answered",
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 909.8,
+    "left": 14,
+    "w": 362
+   },
+   "side": {
+    "top": 545.8,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 668.8,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "framePos": "sticky",
+   "reaskedCount": 0,
+   "reasked": [],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "panelOpen": true,
+   "noteH": null,
+   "sideOptions": 1,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-02-A-questions-answered.png"
+  },
+  {
+   "name": "B-edit-on-map-moved",
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 896.8,
+    "left": 14,
+    "w": 362
+   },
+   "side": {
+    "top": 479.3,
+    "h": 572.5,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 602.3,
+    "h": 449.5,
+    "left": 31,
+    "w": 328
+   },
+   "framePos": "sticky",
+   "reaskedCount": 1,
+   "reasked": [
+    "Your edit changed the road or the work start, so this is asked again."
+   ],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": false,
+   "panelOpen": true,
+   "noteH": 37.5,
+   "sideOptions": 1,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-03-B-edit-on-map-moved.png"
+  },
+  {
+   "name": "C-side-answered-again",
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 909.8,
+    "left": 14,
+    "w": 362
+   },
+   "side": {
+    "top": 545.8,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 668.8,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "framePos": "sticky",
+   "reaskedCount": 0,
+   "reasked": [],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "panelOpen": true,
+   "noteH": null,
+   "sideOptions": 1,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-04-C-side-answered-again.png"
+  },
+  {
+   "name": "D-edit-on-map-unchanged",
+   "frameInBand": {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   "band": {
+    "top": 172,
+    "h": 909.8,
+    "left": 14,
+    "w": 362
+   },
+   "side": {
+    "top": 545.8,
+    "h": 519,
+    "left": 31,
+    "w": 328
+   },
+   "card": {
+    "top": 668.8,
+    "h": 396,
+    "left": 31,
+    "w": 328
+   },
+   "framePos": "sticky",
+   "reaskedCount": 0,
+   "reasked": [],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "panelOpen": true,
+   "noteH": null,
+   "sideOptions": 1,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    }
+   ],
+   "shot": "390x844-05-D-edit-on-map-unchanged.png"
+  }
+ ],
+ "errors": [],
+ "console": [],
+ "pageAxe": [],
+ "checks": {
+  "A0_options_noteless": [
+   1,
+   843.3,
+   519
+  ],
+  "B_options_note": [
+   1,
+   37.5
+  ],
+  "A_answered": true,
+  "B_one_line": true,
+  "B_side_cleared": true,
+  "B_kind_kept": true,
+  "C_line_gone": true,
+  "D_no_line_side_kept": true,
+  "band_h_A_B": [
+   909.8,
+   896.8
+  ],
+  "frame_A_B": [
+   {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   },
+   {
+    "dy": 93.8,
+    "left": 31,
+    "w": 328,
+    "h": 150
+   }
+  ]
+ },
+ "bad": [],
+ "doorReopenSaveDisabled": false,
+ "doorReopenRoadTicked": []
+}

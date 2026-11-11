@@ -1,0 +1,346 @@
+{
+ "size": "1440x900",
+ "steps": [
+  {
+   "name": "A-questions-answered",
+   "frameInBand": {
+    "dy": 97.5,
+    "left": 297,
+    "w": 411,
+    "h": 655
+   },
+   "band": {
+    "top": 159,
+    "h": 793.3,
+    "left": 280,
+    "w": 880
+   },
+   "side": {
+    "top": 256.5,
+    "h": 655,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 339,
+    "h": 572.5,
+    "left": 732,
+    "w": 411
+   },
+   "framePos": "relative",
+   "reaskedCount": 0,
+   "reasked": [],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "panelOpen": true,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    },
+    {
+     "tag": "button",
+     "cls": "a-aerial-zbtn",
+     "parent": "a-aerial-zoom",
+     "mapbox": false,
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "tag": "button",
+     "cls": "a-aerial-zbtn",
+     "parent": "a-aerial-zoom",
+     "mapbox": false,
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-01-A-questions-answered.png"
+  },
+  {
+   "name": "B-edit-on-map-moved",
+   "frameInBand": {
+    "dy": 97.5,
+    "left": 297,
+    "w": 411,
+    "h": 698.8
+   },
+   "band": {
+    "top": 159,
+    "h": 837,
+    "left": 280,
+    "w": 880
+   },
+   "side": {
+    "top": 256.5,
+    "h": 698.8,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 318.8,
+    "h": 636.5,
+    "left": 732,
+    "w": 411
+   },
+   "framePos": "relative",
+   "reaskedCount": 1,
+   "reasked": [
+    "Your edit changed the road or the work start, so this is asked again."
+   ],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": false,
+   "panelOpen": true,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    },
+    {
+     "tag": "button",
+     "cls": "a-aerial-zbtn",
+     "parent": "a-aerial-zoom",
+     "mapbox": false,
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "tag": "button",
+     "cls": "a-aerial-zbtn",
+     "parent": "a-aerial-zoom",
+     "mapbox": false,
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-02-B-edit-on-map-moved.png"
+  },
+  {
+   "name": "C-side-answered-again",
+   "frameInBand": {
+    "dy": 97.5,
+    "left": 297,
+    "w": 411,
+    "h": 655
+   },
+   "band": {
+    "top": 159,
+    "h": 793.3,
+    "left": 280,
+    "w": 880
+   },
+   "side": {
+    "top": 256.5,
+    "h": 655,
+    "left": 732,
+    "w": 411
+   },
+   "card": {
+    "top": 318.8,
+    "h": 592.8,
+    "left": 732,
+    "w": 411
+   },
+   "framePos": "relative",
+   "reaskedCount": 0,
+   "reasked": [],
+   "records": [
+    "What kind of work is it: Shoulder work"
+   ],
+   "q": "Which side of the road is the work on?",
+   "sideChecked": true,
+   "panelOpen": true,
+   "axe": [],
+   "small": [
+    {
+     "tag": "a",
+     "cls": "mapboxgl-ctrl-logo",
+     "parent": "mbx-logo",
+     "mapbox": true,
+     "text": "Mapbox logo",
+     "testid": null,
+     "w": 88,
+     "h": 23
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": false,
+     "text": "© Maxar",
+     "testid": null,
+     "w": 47,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© Mapbox",
+     "testid": null,
+     "w": 53.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "© OpenStreetMap",
+     "testid": null,
+     "w": 100.8,
+     "h": 14
+    },
+    {
+     "tag": "a",
+     "cls": "",
+     "parent": "",
+     "mapbox": true,
+     "text": "Improve this map",
+     "testid": null,
+     "w": 107.5,
+     "h": 14
+    },
+    {
+     "tag": "button",
+     "cls": "a-aerial-zbtn",
+     "parent": "a-aerial-zoom",
+     "mapbox": false,
+     "text": "+",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    },
+    {
+     "tag": "button",
+     "cls": "a-aerial-zbtn",
+     "parent": "a-aerial-zoom",
+     "mapbox": false,
+     "text": "−",
+     "testid": null,
+     "w": 32,
+     "h": 32
+    }
+   ],
+   "shot": "1440x900-03-C-side-answered-again.png"
+  }
+ ],
+ "errors": [
+  "walk: TimeoutError: page.waitForFunction: Timeout 60000ms exceeded."
+ ],
+ "console": [
+  "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+  "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+ ],
+ "pageAxe": null,
+ "checks": {}
+}
