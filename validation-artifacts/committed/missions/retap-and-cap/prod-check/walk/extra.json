@@ -1,0 +1,950 @@
+{
+  "1440x900": {
+    "console": [],
+    "pageerrors": [],
+    "maps": [
+      {
+        "soft": true,
+        "ms": 3116
+      },
+      {
+        "soft": false,
+        "ms": 437,
+        "status": 200,
+        "crossStreet": null,
+        "crossTag": null,
+        "frame": "39.739914,-104.968447,18.00"
+      },
+      {
+        "soft": true,
+        "ms": 2036
+      },
+      {
+        "soft": false,
+        "ms": 1427,
+        "status": 200,
+        "crossStreet": null,
+        "crossTag": null,
+        "frame": "39.739842,-104.968454,18.00"
+      },
+      {
+        "soft": true,
+        "ms": 2483
+      },
+      {
+        "soft": false,
+        "ms": 2491,
+        "status": 200,
+        "crossStreet": "Franklin Street",
+        "crossTag": "434,329",
+        "frame": "39.739906,-104.968453,18.00"
+      }
+    ],
+    "wait": {
+      "outlineGap": 24
+    },
+    "details": {
+      "question": "Are there sidewalks along the work zone?",
+      "closed": {
+        "needs": {
+          "top": 149,
+          "h": 1024.8,
+          "w": 880
+        },
+        "card": {
+          "top": 193.8,
+          "h": 792,
+          "w": 878
+        },
+        "foot": {
+          "top": 917.8,
+          "h": 44,
+          "w": 846
+        },
+        "toggle": {
+          "top": 917.8,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 985.8,
+          "h": 90,
+          "w": 878
+        },
+        "other": {
+          "top": 1187.8,
+          "h": 46,
+          "w": 880
+        },
+        "plan": {
+          "top": 1320.8,
+          "h": 203,
+          "w": 880
+        },
+        "downloads": {
+          "top": 1523.8,
+          "h": 339.6,
+          "w": 880
+        },
+        "refs": {
+          "top": 1887.4,
+          "h": 257,
+          "w": 880
+        },
+        "page": {
+          "scrollW": 1440,
+          "clientW": 1440
+        },
+        "inFlowDetails": 0
+      },
+      "axeClosed": [],
+      "smallClosed": [],
+      "open": {
+        "needs": {
+          "top": 149,
+          "h": 1024.8,
+          "w": 880
+        },
+        "card": {
+          "top": 193.8,
+          "h": 792,
+          "w": 878
+        },
+        "foot": {
+          "top": 917.8,
+          "h": 44,
+          "w": 846
+        },
+        "toggle": {
+          "top": 917.8,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 985.8,
+          "h": 90,
+          "w": 878
+        },
+        "other": {
+          "top": 1187.8,
+          "h": 46,
+          "w": 880
+        },
+        "plan": {
+          "top": 1320.8,
+          "h": 203,
+          "w": 880
+        },
+        "downloads": {
+          "top": 1523.8,
+          "h": 339.6,
+          "w": 880
+        },
+        "refs": {
+          "top": 1887.4,
+          "h": 257,
+          "w": 880
+        },
+        "page": {
+          "scrollW": 1440,
+          "clientW": 1440
+        },
+        "inFlowDetails": 0,
+        "panel": {
+          "position": "absolute",
+          "left": 297,
+          "right": 657,
+          "top": 965.8,
+          "h": 78.3,
+          "w": 360,
+          "inViewport": true,
+          "onTop": true
+        }
+      },
+      "shiftsOnOpen": [],
+      "axeOpen": [],
+      "smallOpen": [],
+      "afterEsc": {
+        "needs": {
+          "top": 149,
+          "h": 1024.8,
+          "w": 880
+        },
+        "card": {
+          "top": 193.8,
+          "h": 792,
+          "w": 878
+        },
+        "foot": {
+          "top": 917.8,
+          "h": 44,
+          "w": 846
+        },
+        "toggle": {
+          "top": 917.8,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 985.8,
+          "h": 90,
+          "w": 878
+        },
+        "other": {
+          "top": 1187.8,
+          "h": 46,
+          "w": 880
+        },
+        "plan": {
+          "top": 1320.8,
+          "h": 203,
+          "w": 880
+        },
+        "downloads": {
+          "top": 1523.8,
+          "h": 339.6,
+          "w": 880
+        },
+        "refs": {
+          "top": 1887.4,
+          "h": 257,
+          "w": 880
+        },
+        "page": {
+          "scrollW": 1440,
+          "clientW": 1440
+        },
+        "inFlowDetails": 0
+      },
+      "escFocusOnToggle": true,
+      "escClosed": true,
+      "moved": []
+    },
+    "settledGap": {
+      "gap": 30,
+      "strip": "⚠ Plan ready. Answer 3 quick questions before you send it."
+    },
+    "gapDetailAtSettle": {
+      "gap": 30,
+      "downloads": {
+        "el": "div#downloads.jump-anchor.outline-none",
+        "top": 1523.8,
+        "bottom": 1863.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "lastChild": {
+        "el": "section.dl-sec.mb-3",
+        "top": 1529.8,
+        "bottom": 1869.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "refs": {
+        "el": "div.results-disc",
+        "top": 1893.4,
+        "bottom": 2150.4,
+        "mt": "0px",
+        "mb": "24px",
+        "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+      },
+      "chain": [
+        {
+          "el": "div.",
+          "top": 1320.8,
+          "bottom": 1887.4,
+          "mt": "0px",
+          "mb": "0px",
+          "text": "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan shee"
+        },
+        {
+          "el": "div.results-disc",
+          "top": 1893.4,
+          "bottom": 2150.4,
+          "mt": "0px",
+          "mb": "24px",
+          "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+        }
+      ]
+    },
+    "gapDetailLater": {
+      "gap": 24,
+      "downloads": {
+        "el": "div#downloads.jump-anchor.outline-none",
+        "top": 1530.8,
+        "bottom": 1870.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "lastChild": {
+        "el": "section.dl-sec.mb-3",
+        "top": 1530.8,
+        "bottom": 1870.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "refs": {
+        "el": "div.results-disc",
+        "top": 1894.4,
+        "bottom": 2151.4,
+        "mt": "0px",
+        "mb": "24px",
+        "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+      },
+      "chain": [
+        {
+          "el": "div.results-stale",
+          "top": 1327.8,
+          "bottom": 1894.4,
+          "mt": "0px",
+          "mb": "0px",
+          "text": "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan shee"
+        },
+        {
+          "el": "div.results-disc",
+          "top": 1894.4,
+          "bottom": 2151.4,
+          "mt": "0px",
+          "mb": "24px",
+          "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+        }
+      ]
+    }
+  },
+  "1198x930": {
+    "console": [],
+    "pageerrors": [],
+    "maps": [
+      {
+        "soft": true,
+        "ms": 288
+      },
+      {
+        "soft": false,
+        "ms": 1093,
+        "status": 200,
+        "crossStreet": null,
+        "crossTag": null,
+        "frame": "39.739914,-104.968447,18.00"
+      },
+      {
+        "soft": true,
+        "ms": 493
+      },
+      {
+        "soft": false,
+        "ms": 1144,
+        "status": 200,
+        "crossStreet": null,
+        "crossTag": null,
+        "frame": "39.739842,-104.968454,18.00"
+      },
+      {
+        "soft": true,
+        "ms": 453
+      },
+      {
+        "soft": false,
+        "ms": 2145,
+        "status": 200,
+        "crossStreet": "Franklin Street",
+        "crossTag": "434,329",
+        "frame": "39.739906,-104.968453,18.00"
+      }
+    ],
+    "wait": {
+      "outlineGap": 24
+    },
+    "details": {
+      "question": "Are there sidewalks along the work zone?",
+      "closed": {
+        "needs": {
+          "top": 149,
+          "h": 1024.8,
+          "w": 880
+        },
+        "card": {
+          "top": 193.8,
+          "h": 792,
+          "w": 878
+        },
+        "foot": {
+          "top": 917.8,
+          "h": 44,
+          "w": 846
+        },
+        "toggle": {
+          "top": 917.8,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 985.8,
+          "h": 90,
+          "w": 878
+        },
+        "other": {
+          "top": 1187.8,
+          "h": 46,
+          "w": 880
+        },
+        "plan": {
+          "top": 1320.8,
+          "h": 203,
+          "w": 880
+        },
+        "downloads": {
+          "top": 1523.8,
+          "h": 339.6,
+          "w": 880
+        },
+        "refs": {
+          "top": 1887.4,
+          "h": 257,
+          "w": 880
+        },
+        "page": {
+          "scrollW": 1198,
+          "clientW": 1198
+        },
+        "inFlowDetails": 0
+      },
+      "axeClosed": [],
+      "smallClosed": [],
+      "open": {
+        "needs": {
+          "top": 149,
+          "h": 1024.8,
+          "w": 880
+        },
+        "card": {
+          "top": 193.8,
+          "h": 792,
+          "w": 878
+        },
+        "foot": {
+          "top": 917.8,
+          "h": 44,
+          "w": 846
+        },
+        "toggle": {
+          "top": 917.8,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 985.8,
+          "h": 90,
+          "w": 878
+        },
+        "other": {
+          "top": 1187.8,
+          "h": 46,
+          "w": 880
+        },
+        "plan": {
+          "top": 1320.8,
+          "h": 203,
+          "w": 880
+        },
+        "downloads": {
+          "top": 1523.8,
+          "h": 339.6,
+          "w": 880
+        },
+        "refs": {
+          "top": 1887.4,
+          "h": 257,
+          "w": 880
+        },
+        "page": {
+          "scrollW": 1198,
+          "clientW": 1198
+        },
+        "inFlowDetails": 0,
+        "panel": {
+          "position": "absolute",
+          "left": 176,
+          "right": 536,
+          "top": 965.8,
+          "h": 78.3,
+          "w": 360,
+          "inViewport": true,
+          "onTop": true
+        }
+      },
+      "shiftsOnOpen": [],
+      "axeOpen": [],
+      "smallOpen": [],
+      "afterEsc": {
+        "needs": {
+          "top": 149,
+          "h": 1024.8,
+          "w": 880
+        },
+        "card": {
+          "top": 193.8,
+          "h": 792,
+          "w": 878
+        },
+        "foot": {
+          "top": 917.8,
+          "h": 44,
+          "w": 846
+        },
+        "toggle": {
+          "top": 917.8,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 985.8,
+          "h": 90,
+          "w": 878
+        },
+        "other": {
+          "top": 1187.8,
+          "h": 46,
+          "w": 880
+        },
+        "plan": {
+          "top": 1320.8,
+          "h": 203,
+          "w": 880
+        },
+        "downloads": {
+          "top": 1523.8,
+          "h": 339.6,
+          "w": 880
+        },
+        "refs": {
+          "top": 1887.4,
+          "h": 257,
+          "w": 880
+        },
+        "page": {
+          "scrollW": 1198,
+          "clientW": 1198
+        },
+        "inFlowDetails": 0
+      },
+      "escFocusOnToggle": true,
+      "escClosed": true,
+      "moved": []
+    },
+    "settledGap": {
+      "gap": 30,
+      "strip": "⚠ Plan ready. Answer 3 quick questions before you send it."
+    },
+    "gapDetailAtSettle": {
+      "gap": 30,
+      "downloads": {
+        "el": "div#downloads.jump-anchor.outline-none",
+        "top": 1523.8,
+        "bottom": 1863.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "lastChild": {
+        "el": "section.dl-sec.mb-3",
+        "top": 1529.8,
+        "bottom": 1869.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "refs": {
+        "el": "div.results-disc",
+        "top": 1893.4,
+        "bottom": 2150.4,
+        "mt": "0px",
+        "mb": "24px",
+        "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+      },
+      "chain": [
+        {
+          "el": "div.",
+          "top": 1320.8,
+          "bottom": 1887.4,
+          "mt": "0px",
+          "mb": "0px",
+          "text": "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan shee"
+        },
+        {
+          "el": "div.results-disc",
+          "top": 1893.4,
+          "bottom": 2150.4,
+          "mt": "0px",
+          "mb": "24px",
+          "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+        }
+      ]
+    },
+    "gapDetailLater": {
+      "gap": 24,
+      "downloads": {
+        "el": "div#downloads.jump-anchor.outline-none",
+        "top": 1530.8,
+        "bottom": 1870.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "lastChild": {
+        "el": "section.dl-sec.mb-3",
+        "top": 1530.8,
+        "bottom": 1870.4,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "refs": {
+        "el": "div.results-disc",
+        "top": 1894.4,
+        "bottom": 2151.4,
+        "mt": "0px",
+        "mb": "24px",
+        "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+      },
+      "chain": [
+        {
+          "el": "div.results-stale",
+          "top": 1327.8,
+          "bottom": 1894.4,
+          "mt": "0px",
+          "mb": "0px",
+          "text": "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan shee"
+        },
+        {
+          "el": "div.results-disc",
+          "top": 1894.4,
+          "bottom": 2151.4,
+          "mt": "0px",
+          "mb": "24px",
+          "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+        }
+      ]
+    }
+  },
+  "390x844": {
+    "console": [],
+    "pageerrors": [],
+    "maps": [
+      {
+        "soft": true,
+        "ms": 2192
+      },
+      {
+        "soft": false,
+        "ms": 395,
+        "status": 200,
+        "crossStreet": null,
+        "crossTag": null,
+        "frame": "39.739914,-104.968447,18.00"
+      },
+      {
+        "soft": true,
+        "ms": 311
+      },
+      {
+        "soft": false,
+        "ms": 749,
+        "status": 200,
+        "crossStreet": null,
+        "crossTag": null,
+        "frame": "39.739842,-104.968454,18.00"
+      },
+      {
+        "soft": true,
+        "ms": 397
+      },
+      {
+        "soft": false,
+        "ms": 842,
+        "status": 200,
+        "crossStreet": "Franklin Street",
+        "crossTag": "26,17",
+        "frame": "39.739906,-104.968453,18.00"
+      }
+    ],
+    "wait": {
+      "outlineGap": 24
+    },
+    "details": {
+      "question": "Are there sidewalks along the work zone?",
+      "closed": {
+        "needs": {
+          "top": 162,
+          "h": 1135.3,
+          "w": 362
+        },
+        "card": {
+          "top": 206.8,
+          "h": 886.3,
+          "w": 360
+        },
+        "foot": {
+          "top": 987.5,
+          "h": 81.5,
+          "w": 328
+        },
+        "toggle": {
+          "top": 1025,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 1093,
+          "h": 90,
+          "w": 360
+        },
+        "other": {
+          "top": 1311.3,
+          "h": 46,
+          "w": 362
+        },
+        "plan": {
+          "top": 1504.3,
+          "h": 343.5,
+          "w": 362
+        },
+        "downloads": {
+          "top": 1847.8,
+          "h": 283.3,
+          "w": 362
+        },
+        "refs": {
+          "top": 2155,
+          "h": 284,
+          "w": 362
+        },
+        "page": {
+          "scrollW": 390,
+          "clientW": 390
+        },
+        "inFlowDetails": 0
+      },
+      "axeClosed": [],
+      "smallClosed": [],
+      "open": {
+        "needs": {
+          "top": 162,
+          "h": 1135.3,
+          "w": 362
+        },
+        "card": {
+          "top": 206.8,
+          "h": 886.3,
+          "w": 360
+        },
+        "foot": {
+          "top": 987.5,
+          "h": 81.5,
+          "w": 328
+        },
+        "toggle": {
+          "top": 1025,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 1093,
+          "h": 90,
+          "w": 360
+        },
+        "other": {
+          "top": 1311.3,
+          "h": 46,
+          "w": 362
+        },
+        "plan": {
+          "top": 1504.3,
+          "h": 343.5,
+          "w": 362
+        },
+        "downloads": {
+          "top": 1847.8,
+          "h": 283.3,
+          "w": 362
+        },
+        "refs": {
+          "top": 2155,
+          "h": 284,
+          "w": 362
+        },
+        "page": {
+          "scrollW": 390,
+          "clientW": 390
+        },
+        "inFlowDetails": 0,
+        "panel": {
+          "position": "absolute",
+          "left": 31,
+          "right": 359,
+          "top": 1073,
+          "h": 78.3,
+          "w": 328,
+          "inViewport": true,
+          "onTop": true
+        }
+      },
+      "shiftsOnOpen": [],
+      "axeOpen": [],
+      "smallOpen": [],
+      "afterEsc": {
+        "needs": {
+          "top": 162,
+          "h": 1135.3,
+          "w": 362
+        },
+        "card": {
+          "top": 206.8,
+          "h": 886.3,
+          "w": 360
+        },
+        "foot": {
+          "top": 987.5,
+          "h": 81.5,
+          "w": 328
+        },
+        "toggle": {
+          "top": 1025,
+          "h": 44,
+          "w": 49.5
+        },
+        "rows": {
+          "top": 1093,
+          "h": 90,
+          "w": 360
+        },
+        "other": {
+          "top": 1311.3,
+          "h": 46,
+          "w": 362
+        },
+        "plan": {
+          "top": 1504.3,
+          "h": 343.5,
+          "w": 362
+        },
+        "downloads": {
+          "top": 1847.8,
+          "h": 283.3,
+          "w": 362
+        },
+        "refs": {
+          "top": 2155,
+          "h": 284,
+          "w": 362
+        },
+        "page": {
+          "scrollW": 390,
+          "clientW": 390
+        },
+        "inFlowDetails": 0
+      },
+      "escFocusOnToggle": true,
+      "escClosed": true,
+      "moved": []
+    },
+    "settledGap": {
+      "gap": 30,
+      "strip": "⚠ Plan ready. Answer 3 quick questions before you send it."
+    },
+    "gapDetailAtSettle": {
+      "gap": 30,
+      "downloads": {
+        "el": "div#downloads.jump-anchor.outline-none",
+        "top": 1847.8,
+        "bottom": 2131,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "lastChild": {
+        "el": "section.dl-sec.mb-3",
+        "top": 1853.8,
+        "bottom": 2137,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "refs": {
+        "el": "div.results-disc",
+        "top": 2161,
+        "bottom": 2445,
+        "mt": "0px",
+        "mb": "24px",
+        "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+      },
+      "chain": [
+        {
+          "el": "div.",
+          "top": 1504.3,
+          "bottom": 2155,
+          "mt": "0px",
+          "mb": "0px",
+          "text": "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan shee"
+        },
+        {
+          "el": "div.results-disc",
+          "top": 2161,
+          "bottom": 2445,
+          "mt": "0px",
+          "mb": "24px",
+          "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+        }
+      ]
+    },
+    "gapDetailLater": {
+      "gap": 24,
+      "downloads": {
+        "el": "div#downloads.jump-anchor.outline-none",
+        "top": 1892.3,
+        "bottom": 2175.5,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "lastChild": {
+        "el": "section.dl-sec.mb-3",
+        "top": 1892.3,
+        "bottom": 2175.5,
+        "mt": "0px",
+        "mb": "0px",
+        "text": "DOWNLOADS 6 files, quote included Download all (.zip) ↓ ⚠ Th"
+      },
+      "refs": {
+        "el": "div.results-disc",
+        "top": 2199.5,
+        "bottom": 2483.5,
+        "mt": "0px",
+        "mb": "24px",
+        "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+      },
+      "chain": [
+        {
+          "el": "div.results-stale",
+          "top": 1548.8,
+          "bottom": 2199.5,
+          "mt": "0px",
+          "mb": "0px",
+          "text": "YOUR PLAN As it stands now TOTAL DEVICES 40 On the plan shee"
+        },
+        {
+          "el": "div.results-disc",
+          "top": 2199.5,
+          "bottom": 2483.5,
+          "mt": "0px",
+          "mb": "24px",
+          "text": "SEARCH THE DETAILS ✓ Checked and passed 13 checks, each cite"
+        }
+      ]
+    }
+  }
+}

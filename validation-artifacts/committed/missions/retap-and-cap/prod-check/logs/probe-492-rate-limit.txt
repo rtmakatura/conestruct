@@ -1,0 +1,43 @@
+1	400	805 ms	2026-11-11T03:50:01.001Z	Invalid scenario
+2	400	317 ms	2026-11-11T03:50:01.807Z	Invalid scenario
+3	400	192 ms	2026-11-11T03:50:02.124Z	Invalid scenario
+4	400	178 ms	2026-11-11T03:50:02.316Z	Invalid scenario
+5	400	181 ms	2026-11-11T03:50:02.494Z	Invalid scenario
+6	400	172 ms	2026-11-11T03:50:02.675Z	Invalid scenario
+7	400	176 ms	2026-11-11T03:50:02.847Z	Invalid scenario
+8	400	188 ms	2026-11-11T03:50:03.023Z	Invalid scenario
+9	400	173 ms	2026-11-11T03:50:03.211Z	Invalid scenario
+10	400	196 ms	2026-11-11T03:50:03.384Z	Invalid scenario
+11	400	183 ms	2026-11-11T03:50:03.580Z	Invalid scenario
+12	400	184 ms	2026-11-11T03:50:03.763Z	Invalid scenario
+13	400	154 ms	2026-11-11T03:50:03.948Z	Invalid scenario
+14	400	171 ms	2026-11-11T03:50:04.102Z	Invalid scenario
+15	400	166 ms	2026-11-11T03:50:04.273Z	Invalid scenario
+16	400	185 ms	2026-11-11T03:50:04.439Z	Invalid scenario
+17	400	177 ms	2026-11-11T03:50:04.624Z	Invalid scenario
+18	400	167 ms	2026-11-11T03:50:04.801Z	Invalid scenario
+19	400	176 ms	2026-11-11T03:50:04.968Z	Invalid scenario
+20	400	184 ms	2026-11-11T03:50:05.144Z	Invalid scenario
+21	400	196 ms	2026-11-11T03:50:05.328Z	Invalid scenario
+22	400	174 ms	2026-11-11T03:50:05.524Z	Invalid scenario
+23	400	184 ms	2026-11-11T03:50:05.698Z	Invalid scenario
+24	400	202 ms	2026-11-11T03:50:05.882Z	Invalid scenario
+25	400	188 ms	2026-11-11T03:50:06.084Z	Invalid scenario
+26	400	180 ms	2026-11-11T03:50:06.272Z	Invalid scenario
+27	400	201 ms	2026-11-11T03:50:06.453Z	Invalid scenario
+28	400	180 ms	2026-11-11T03:50:06.654Z	Invalid scenario
+29	400	180 ms	2026-11-11T03:50:06.834Z	Invalid scenario
+30	400	176 ms	2026-11-11T03:50:07.014Z	Invalid scenario
+31	400	185 ms	2026-11-11T03:50:07.190Z	Invalid scenario
+32	400	166 ms	2026-11-11T03:50:07.375Z	Invalid scenario
+33	400	171 ms	2026-11-11T03:50:07.541Z	Invalid scenario
+34	400	179 ms	2026-11-11T03:50:07.713Z	Invalid scenario
+35	400	189 ms	2026-11-11T03:50:07.892Z	Invalid scenario
+36	400	178 ms	2026-11-11T03:50:08.081Z	Invalid scenario
+37	400	154 ms	2026-11-11T03:50:08.259Z	Invalid scenario
+38	400	1070 ms	2026-11-11T03:50:08.413Z	Invalid scenario
+39	400	177 ms	2026-11-11T03:50:09.483Z	Invalid scenario
+40	400	202 ms	2026-11-11T03:50:09.660Z	Invalid scenario
+41	429	181 ms	2026-11-11T03:50:09.862Z	Too many requests
+window start 2026-11-11T03:50:01.000Z, last request sent 8861 ms after the first
+RESULT PASS: requests 1-40 -> 400 (429s: 0); request 41 -> 429

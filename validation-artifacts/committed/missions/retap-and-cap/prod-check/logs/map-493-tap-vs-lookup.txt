@@ -1,0 +1,13 @@
+with geometry: status 200, 234755 bytes, wall 2.98 s
+  x-map-cross-source: lookup
+  x-map-subject: none
+  x-map-cross-street: None
+  x-map-frame: 39.740137,-104.969176,18.00
+  x-map-point: 39.740137,-104.969176
+without geometry: status 200, 234755 bytes, wall 0.48 s
+  x-map-cross-source: lookup
+  x-map-subject: none
+  x-map-cross-street: None
+  x-map-frame: 39.740137,-104.969176,18.00
+  x-map-point: 39.740137,-104.969176
+RESULT FAIL: with geometry -> x-map-cross-source lookup in 2.98 s; without -> lookup in 0.48 s (n=1 each)

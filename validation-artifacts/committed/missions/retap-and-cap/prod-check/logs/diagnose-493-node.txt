@@ -1,0 +1,9 @@
+pin 39.7400504 -104.9691757
+radius m 30.0
+[needs-you map] cross street from the lookup
+status 200 x-map-cross-source lookup x-map-subject none
+node (39.7401374, -104.969176)
+tap_to_node_m 72.7
+bearing 269.8633585957896
+tap None
+lookup None
