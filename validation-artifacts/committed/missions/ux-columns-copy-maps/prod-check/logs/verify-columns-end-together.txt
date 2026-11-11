@@ -1,0 +1,184 @@
+1024x768 kind-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1024x768 kind-details-open          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1024x768 kind-near-intersection     PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1024x768 tap-question               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 tap-failed                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1024x768 tap-none                   PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1024x768 tap-found                  PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1024x768 tap-undone                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 side-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 side-answered              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 kind-reopened              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1024x768 kind-changed               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1024x768 side-undone                PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 side-again                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 edit-panel                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1024x768 edit-length-typed          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1024x768 edit-cancelled             PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 long-name-kind-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1024x768 long-name-kind-near-intersection PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1024x768 long-name-side-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 long-name-side-answered    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 long-name-edit-panel       PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1024x768 two-option-side            PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1024x768 sides-unavailable          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 793.25 | last where-questions | lines band-aerial-note,side-control-note | road lines 3
+1024x768 aerial-failed              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 793.25 | last where-questions | lines band-aerial-note,kind-gate-note | road lines 3
+1024x768 ERRORS states: locator.click: Timeout 30000ms exceeded.
+1024x768 results PASS | section.zone.results > div > section[your-plan] > div.hero | 3 columns (div.hero-cell, div.hero-cell, div.hero-meta) | bottoms 0 px | last buttons n/a px
+1024x768 results PASS | div > div[downloads] > section[downloads] > div[dl-cards] | 4 columns (div.dl-card, div.dl-card, div.dl-card, div.dl-card) | bottoms 0 px | last buttons 0 px
+1024x768@text200 kind-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1024x768@text200 kind-details-open          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1024x768@text200 kind-near-intersection     PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1413.25 | last where-questions | lines kind-gate-note | road lines 7
+1024x768@text200 tap-question               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1287.75 | last where-questions | lines - | road lines 7
+1024x768@text200 tap-failed                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1024x768@text200 tap-none                   PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1024x768@text200 tap-found                  PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1024x768@text200 tap-undone                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1287.75 | last where-questions | lines - | road lines 7
+1024x768@text200 side-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1363.25 | last where-questions | lines - | road lines 7
+1024x768@text200 side-answered              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1410.5 | last where-questions | lines - | road lines 7
+1024x768@text200 kind-reopened              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1541.5 | last where-questions | lines kind-gate-note | road lines 7
+1024x768@text200 kind-changed               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1381.5 | last where-questions | lines kind-gate-note | road lines 7
+1024x768@text200 side-undone                PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1162.75 | last where-questions | lines - | road lines 7
+1024x768@text200 side-again                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1024x768@text200 edit-panel                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1024x768@text200 edit-length-typed          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1024x768@text200 edit-cancelled             PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1024x768@text200 long-name-kind-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1024x768@text200 long-name-kind-near-intersection PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1413.25 | last where-questions | lines kind-gate-note | road lines 7
+1024x768@text200 long-name-side-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1162.75 | last where-questions | lines - | road lines 7
+1024x768@text200 long-name-side-answered    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1024x768@text200 long-name-edit-panel       PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1024x768@text200 two-option-side            PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1270.75 | last where-questions | lines - | road lines 7
+1024x768@text200 sides-unavailable          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 1137.75 | last where-questions | lines band-aerial-note,side-control-note | road lines 7
+1024x768@text200 aerial-failed              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 1293.75 | last where-questions | lines band-aerial-note,kind-gate-note | road lines 7
+1024x768@text200 ERRORS states: locator.click: Timeout 30000ms exceeded.
+1024x768@text200 results PASS | section.zone.results > div > section[your-plan] > div.hero | 3 columns (div.hero-cell, div.hero-cell, div.hero-meta) | bottoms 0 px | last buttons n/a px
+1024x768@text200 results PASS | div > div[downloads] > section[downloads] > div[dl-cards] | 4 columns (div.dl-card, div.dl-card, div.dl-card, div.dl-card) | bottoms 0 px | last buttons 0 px
+1198x930 kind-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1198x930 kind-details-open          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1198x930 kind-near-intersection     PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1198x930 tap-question               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 tap-failed                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1198x930 tap-none                   PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1198x930 tap-found                  PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1198x930 tap-undone                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 side-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 side-answered              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 kind-reopened              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1198x930 kind-changed               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1198x930 side-undone                PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 side-again                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 edit-panel                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1198x930 edit-length-typed          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1198x930 edit-cancelled             PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 long-name-kind-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1198x930 long-name-kind-near-intersection PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1198x930 long-name-side-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 long-name-side-answered    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 long-name-edit-panel       PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1198x930 two-option-side            PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 sides-unavailable          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 793.25 | last where-questions | lines band-aerial-note,side-control-note | road lines 3
+1198x930 aerial-failed              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 793.25 | last where-questions | lines band-aerial-note,kind-gate-note | road lines 3
+1198x930 ERRORS states: locator.click: Timeout 30000ms exceeded.
+1198x930 results PASS | section.zone.results > div > section[your-plan] > div.hero | 3 columns (div.hero-cell, div.hero-cell, div.hero-meta) | bottoms 0 px | last buttons n/a px
+1198x930 results PASS | div > div[downloads] > section[downloads] > div[dl-cards] | 4 columns (div.dl-card, div.dl-card, div.dl-card, div.dl-card) | bottoms 0 px | last buttons 0 px
+1198x930@text200 kind-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1198x930@text200 kind-details-open          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1198x930@text200 kind-near-intersection     PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1413.25 | last where-questions | lines kind-gate-note | road lines 7
+1198x930@text200 tap-question               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1287.75 | last where-questions | lines - | road lines 7
+1198x930@text200 tap-failed                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1198x930@text200 tap-none                   PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1198x930@text200 tap-found                  PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1198x930@text200 tap-undone                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1287.75 | last where-questions | lines - | road lines 7
+1198x930@text200 side-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1363.25 | last where-questions | lines - | road lines 7
+1198x930@text200 side-answered              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1410.5 | last where-questions | lines - | road lines 7
+1198x930@text200 kind-reopened              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1541.5 | last where-questions | lines kind-gate-note | road lines 7
+1198x930@text200 kind-changed               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1381.5 | last where-questions | lines kind-gate-note | road lines 7
+1198x930@text200 side-undone                PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1162.75 | last where-questions | lines - | road lines 7
+1198x930@text200 side-again                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1198x930@text200 edit-panel                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1198x930@text200 edit-length-typed          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1198x930@text200 edit-cancelled             PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1198x930@text200 long-name-kind-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1198x930@text200 long-name-kind-near-intersection PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1413.25 | last where-questions | lines kind-gate-note | road lines 7
+1198x930@text200 long-name-side-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1162.75 | last where-questions | lines - | road lines 7
+1198x930@text200 long-name-side-answered    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1198x930@text200 long-name-edit-panel       PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1198x930@text200 two-option-side            PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1270.75 | last where-questions | lines - | road lines 7
+1198x930@text200 sides-unavailable          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 1137.75 | last where-questions | lines band-aerial-note,side-control-note | road lines 7
+1198x930@text200 aerial-failed              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 1293.75 | last where-questions | lines band-aerial-note,kind-gate-note | road lines 7
+1198x930@text200 ERRORS states: locator.click: Timeout 30000ms exceeded.
+1198x930@text200 results PASS | section.zone.results > div > section[your-plan] > div.hero | 3 columns (div.hero-cell, div.hero-cell, div.hero-meta) | bottoms 0 px | last buttons n/a px
+1198x930@text200 results PASS | div > div[downloads] > section[downloads] > div[dl-cards] | 4 columns (div.dl-card, div.dl-card, div.dl-card, div.dl-card) | bottoms 0 px | last buttons 0 px
+1440x900 kind-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1440x900 kind-details-open          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1440x900 kind-near-intersection     PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1440x900 tap-question               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 tap-failed                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1440x900 tap-none                   PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1440x900 tap-found                  PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines cross-row | road lines 3
+1440x900 tap-undone                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 side-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 side-answered              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 kind-reopened              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1440x900 kind-changed               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1440x900 side-undone                PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 side-again                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 edit-panel                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1440x900 edit-length-typed          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1440x900 edit-cancelled             PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 long-name-kind-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1440x900 long-name-kind-near-intersection PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines kind-gate-note | road lines 3
+1440x900 long-name-side-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 long-name-side-answered    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 long-name-edit-panel       PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions-wait | lines -
+1440x900 two-option-side            PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1440x900 sides-unavailable          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 793.25 | last where-questions | lines band-aerial-note,side-control-note | road lines 3
+1440x900 aerial-failed              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 793.25 | last where-questions | lines band-aerial-note,kind-gate-note | road lines 3
+1440x900 ERRORS states: locator.click: Timeout 30000ms exceeded.
+1440x900 results PASS | section.zone.results > div > section[your-plan] > div.hero | 3 columns (div.hero-cell, div.hero-cell, div.hero-meta) | bottoms 0 px | last buttons n/a px
+1440x900 results PASS | div > div[downloads] > section[downloads] > div[dl-cards] | 4 columns (div.dl-card, div.dl-card, div.dl-card, div.dl-card) | bottoms 0 px | last buttons 0 px
+1440x900@text200 kind-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1440x900@text200 kind-details-open          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1440x900@text200 kind-near-intersection     PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1413.25 | last where-questions | lines kind-gate-note | road lines 7
+1440x900@text200 tap-question               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1287.75 | last where-questions | lines - | road lines 7
+1440x900@text200 tap-failed                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1440x900@text200 tap-none                   PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1440x900@text200 tap-found                  PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1639.25 | last where-questions | lines cross-row | road lines 7
+1440x900@text200 tap-undone                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1287.75 | last where-questions | lines - | road lines 7
+1440x900@text200 side-question              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1363.25 | last where-questions | lines - | road lines 7
+1440x900@text200 side-answered              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1410.5 | last where-questions | lines - | road lines 7
+1440x900@text200 kind-reopened              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1541.5 | last where-questions | lines kind-gate-note | road lines 7
+1440x900@text200 kind-changed               PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1381.5 | last where-questions | lines kind-gate-note | road lines 7
+1440x900@text200 side-undone                PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1162.75 | last where-questions | lines - | road lines 7
+1440x900@text200 side-again                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1440x900@text200 edit-panel                 PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1440x900@text200 edit-length-typed          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1440x900@text200 edit-cancelled             PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1440x900@text200 long-name-kind-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1293.75 | last where-questions | lines kind-gate-note | road lines 7
+1440x900@text200 long-name-kind-near-intersection PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1413.25 | last where-questions | lines kind-gate-note | road lines 7
+1440x900@text200 long-name-side-question    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1162.75 | last where-questions | lines - | road lines 7
+1440x900@text200 long-name-side-answered    PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1210 | last where-questions | lines - | road lines 7
+1440x900@text200 long-name-edit-panel       PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 987 | last where-questions-wait | lines -
+1440x900@text200 two-option-side            PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 1270.75 | last where-questions | lines - | road lines 7
+1440x900@text200 sides-unavailable          PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 1137.75 | last where-questions | lines band-aerial-note,side-control-note | road lines 7
+1440x900@text200 aerial-failed              PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution none) | past the band 0 | band 1293.75 | last where-questions | lines band-aerial-note,kind-gate-note | road lines 7
+1440x900@text200 ERRORS states: locator.click: Timeout 30000ms exceeded.
+1440x900@text200 results PASS | section.zone.results > div > section[your-plan] > div.hero | 3 columns (div.hero-cell, div.hero-cell, div.hero-meta) | bottoms 0 px | last buttons n/a px
+1440x900@text200 results PASS | div > div[downloads] > section[downloads] > div[dl-cards] | 4 columns (div.dl-card, div.dl-card, div.dl-card, div.dl-card) | bottoms 0 px | last buttons 0 px
+
+Layouts checked (largest bottom difference, px):
+  WHERE band: aerial ↔ right column, 25 states x 6 two-column size/zoom runs: max 0
+  WHERE frame: controls and lines against Mapbox's logo and attribution, 150 readings (6 size/zoom runs): 0 with an overlap
+  WHERE band: every text-bearing element against the band's bottom, 150 readings: 0 past it
+  Generate outline map placeholder (1024x768): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1024x768-generate-outline-map.png
+  Generate outline map placeholder (1024x768@text200): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1024x768@text200-generate-outline-map.png
+  Generate outline map placeholder (1198x930): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1198x930-generate-outline-map.png
+  Generate outline map placeholder (1198x930@text200): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1198x930@text200-generate-outline-map.png
+  Generate outline map placeholder (1440x900): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1440x900-generate-outline-map.png
+  Generate outline map placeholder (1440x900@text200): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1440x900@text200-generate-outline-map.png
+  section.zone.results > div > section[your-plan] > div.hero (div.hero-cell, div.hero-cell, div.hero-meta): 6 runs, max 0
+  div > div[downloads] > section[downloads] > div[dl-cards] (div.dl-card, div.dl-card, div.dl-card, div.dl-card): 6 runs, max 0
+
+RESULT FAIL
+exit 1

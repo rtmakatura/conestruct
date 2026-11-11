@@ -1,0 +1,13 @@
+1440x900 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline box check SKIPPED (HOLD_MS=0 < 2000: no in-flight outline boxes taken)
+   outlines left after the settle: 0 PASS
+   soft→sharp box check map 1 PASS (846x423, frame 39.739914,-104.968447,18.00)
+1198x930 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1025 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline box check SKIPPED (HOLD_MS=0 < 2000: no in-flight outline boxes taken)
+   outlines left after the settle: 0 PASS
+   soft→sharp box check map 1 PASS (846x423, frame 39.739914,-104.968447,18.00)
+390x844 generate CLS 0 PASS (< 0.1) | NEEDS YOU 1135 px | strip: ⚠ Plan ready. Answer 3 quick questions before you send it.
+   outline box check SKIPPED (HOLD_MS=0 < 2000: no in-flight outline boxes taken)
+   outlines left after the settle: 0 PASS
+   soft→sharp box check map 1 PASS (360x270, frame 39.739914,-104.968447,18.00)
+exit 0

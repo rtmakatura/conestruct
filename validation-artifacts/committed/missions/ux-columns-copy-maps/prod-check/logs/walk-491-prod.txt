@@ -1,0 +1,6 @@
+1440x900 aerial: PASS road "East Colfax Avenue, eastbound" text "The map didn't load. Edit on map opens the big map at your pin." class "a-aerial-note tr-note" font __Inter_176161 12.5px; page errors 0
+1440x900 sides: PASS road "East Colfax Avenue, eastbound" text "We couldn't load this road's sides." class "tr-note wq-line" font __Inter_176161 12.5px; page errors 0
+390x844 aerial: PASS road "East Colfax Avenue, eastbound" text "The map didn't load. Edit on map opens the big map at your pin." class "a-aerial-note tr-note" font __Inter_176161 12.5px; page errors 0
+390x844 sides: PASS road "East Colfax Avenue, eastbound" text "We couldn't load this road's sides." class "tr-note wq-line" font __Inter_176161 12.5px; page errors 0
+walk-491: all PASS
+exit 0

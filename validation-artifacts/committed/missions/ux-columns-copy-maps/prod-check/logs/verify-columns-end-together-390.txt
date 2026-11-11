@@ -1,0 +1,38 @@
+390x844 kind-question              ONE COLUMN | frame↔last 663 px | column↔column 663 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 923.25 | last where-questions | lines kind-gate-note | road lines 4
+390x844 kind-details-open          ONE COLUMN | frame↔last 663 px | column↔column 663 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 923.25 | last where-questions | lines kind-gate-note | road lines 4
+390x844 kind-near-intersection     ONE COLUMN | frame↔last 708 px | column↔column 708 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 968.25 | last where-questions | lines kind-gate-note | road lines 4
+390x844 tap-question               ONE COLUMN | frame↔last 570 px | column↔column 570 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 930.5 | last where-questions | lines - | road lines 4
+390x844 tap-failed                 ONE COLUMN | frame↔last 719 px | column↔column 719 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 1079.5 | last where-questions | lines cross-row | road lines 4
+390x844 tap-none                   ONE COLUMN | frame↔last 719 px | column↔column 719 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 1079.5 | last where-questions | lines cross-row | road lines 4
+390x844 tap-found                  ONE COLUMN | frame↔last 719 px | column↔column 719 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 1079.5 | last where-questions | lines cross-row | road lines 4
+390x844 tap-undone                 ONE COLUMN | frame↔last 570 px | column↔column 570 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 930.5 | last where-questions | lines - | road lines 4
+390x844 side-question              ONE COLUMN | frame↔last 383 px | column↔column 383 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 891.25 | last where-questions | lines - | road lines 4
+390x844 side-answered              ONE COLUMN | frame↔last 692 px | column↔column 692 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 957.75 | last where-questions | lines - | road lines 4
+390x844 kind-reopened              ONE COLUMN | frame↔last 776 px | column↔column 776 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 1041.75 | last where-questions | lines kind-gate-note | road lines 4
+390x844 kind-changed               ONE COLUMN | frame↔last 728 px | column↔column 728 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 993.75 | last where-questions | lines kind-gate-note | road lines 4
+390x844 side-undone                ONE COLUMN | frame↔last 335 px | column↔column 335 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 843.25 | last where-questions | lines - | road lines 4
+390x844 side-again                 ONE COLUMN | frame↔last 649 px | column↔column 649 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 909.75 | last where-questions | lines - | road lines 4
+390x844 edit-panel                 ONE COLUMN | frame↔last 654 px | column↔column 654 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 914.25 | last where-questions-wait | lines -
+390x844 edit-length-typed          ONE COLUMN | frame↔last 654 px | column↔column 654 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 914.25 | last where-questions-wait | lines -
+390x844 edit-cancelled             ONE COLUMN | frame↔last 649 px | column↔column 649 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 909.75 | last where-questions | lines - | road lines 4
+390x844 long-name-kind-question    ONE COLUMN | frame↔last 663 px | column↔column 663 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 923.25 | last where-questions | lines kind-gate-note | road lines 4
+390x844 long-name-kind-near-intersection ONE COLUMN | frame↔last 708 px | column↔column 708 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 968.25 | last where-questions | lines kind-gate-note | road lines 4
+390x844 long-name-side-question    ONE COLUMN | frame↔last 583 px | column↔column 583 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 843.25 | last where-questions | lines - | road lines 4
+390x844 long-name-side-answered    ONE COLUMN | frame↔last 649 px | column↔column 649 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 909.75 | last where-questions | lines - | road lines 4
+390x844 long-name-edit-panel       ONE COLUMN | frame↔last 654 px | column↔column 654 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 914.25 | last where-questions-wait | lines -
+390x844 two-option-side            ONE COLUMN | frame↔last 404 px | column↔column 404 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 912.25 | last where-questions | lines - | road lines 4
+390x844 sides-unavailable          ONE COLUMN | frame↔last 493 px | column↔column 493 px | marks overlaps 0 (attribution none) | past the band 0 | band 753.5 | last where-questions | lines band-aerial-note,side-control-note | road lines 4
+390x844 aerial-failed              ONE COLUMN | frame↔last 615 px | column↔column 615 px | marks overlaps 0 (attribution none) | past the band 0 | band 875.75 | last where-questions | lines band-aerial-note,kind-gate-note | road lines 4
+390x844 ERRORS states: locator.click: Timeout 30000ms exceeded.
+390x844 WHERE never in two columns at this size
+390x844 results PASS | section.zone.results > div > section[your-plan] > div.hero | 2 columns (div.hero-cell, div.hero-cell) | bottoms 0 px | last buttons n/a px
+
+Layouts checked (largest bottom difference, px):
+  WHERE band: aerial ↔ right column, 0 states x 0 two-column size/zoom runs: max n/a
+  WHERE frame: controls and lines against Mapbox's logo and attribution, 25 readings (1 size/zoom runs): 0 with an overlap
+  WHERE band: every text-bearing element against the band's bottom, 25 readings: 0 past it
+  Generate outline map placeholder (390x844): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 390x844-generate-outline-map.png
+  section.zone.results > div > section[your-plan] > div.hero (div.hero-cell, div.hero-cell): 1 runs, max 0
+
+RESULT FAIL
+exit 1
