@@ -24,7 +24,10 @@ import {
   DEFAULT_SHOULDER,
 } from "@/lib/scenarios";
 import type { Scenario, ShoulderScenario } from "@/lib/scenarios";
+import type { DetectedModel } from "@/lib/road-detection/detected-rows";
 import { PlanDetailCells, showsDividedToggle } from "./PlanDetails";
+import { listboxValue, pickOption } from "../__fixtures__/listbox";
+import { sourceWord, whyTip } from "../__fixtures__/what-section";
 
 afterEach(cleanup);
 
@@ -153,9 +156,12 @@ describe("the writes are the forms' own", () => {
   it("the reduction's limit cites S-630-1 Sheet 2 Note 3, with the stepped count", () => {
     // Δ20 > 15, so the note's arithmetic asks for two installations.
     mount({ ...DEFAULT_SHOULDER, speed: 55, workZoneSpeed: 35 } as Scenario);
-    expect(screen.getByTestId("prov-wz-speed").textContent).toBe(
-      "Δ20 mph · S-630-1 Sheet 2 Note 3: 2 stepped sign installations",
-    );
+    // #517 strings.md: "Δ<d> mph · S-630-1 ..." → the why tip, the
+    // citation kept verbatim.
+    expect(whyTip("wz-speed")).toEqual([
+      "20 mph below the posted speed.",
+      "S-630-1 Sheet 2 Note 3: 2 stepped sign installations.",
+    ]);
   });
 
   it("clearing the reduction drops the field rather than zeroing it", () => {
@@ -217,28 +223,40 @@ describe("street class is a row of The road, marked when guessed", () => {
       />,
     );
     const cell = screen.getByTestId("cell-street-class");
-    expect(screen.getByTestId("what-group-road").contains(cell)).toBe(true);
+    // #517 S1: a guessed street class is a row of the guesses box.
+    expect(screen.getByTestId("what-guesses").contains(cell)).toBe(true);
     // R107's label.
-    expect(cell.querySelector(".tr-field")!.textContent).toBe("Street class");
-    expect(screen.getByTestId("info-toggle-street-class").textContent).toBe("⚠ from the road");
-    expect(screen.getByTestId("prov-street-class").textContent).toBe(
-      "⚠ guessed, not confirmed · OSM highway=primary · from the road",
+    expect(cell.querySelector(".w-label")!.textContent).toBe("Street class");
+    // #517 ruling 2: the box's reason line, ⚠ until checked (S13).
+    expect(sourceWord("street-class")).toBe("Based on the road's map tag");
+    expect(screen.getByTestId("info-toggle-street-class").textContent!.startsWith("⚠")).toBe(true);
+    // The full line names the tag, in plain words (ruling 5, S14).
+    expect(whyTip("street-class")[0]).toBe(
+      "We matched the road's map tag (main road) to a street class.",
     );
     // R108: no confirm step, anywhere in the band.
     for (const name of [/^Confirm/, /^Dismiss$/, /^Undo$/]) {
       expect(screen.queryByRole("button", { name })).toBeNull();
     }
-    // R107: three options, one track each.
-    const seg = cell.querySelector(".a-seg") as HTMLElement;
-    expect(seg.style.gridTemplateColumns).toBe("repeat(3, minmax(0, 1fr))");
-    expect(screen.getByRole("button", { name: "Arterial" }).getAttribute("aria-pressed")).toBe(
-      "true",
+    // #517 S7: the three options are a listbox, the guess selected.
+    expect(listboxValue("what-street-class")).toBe("Arterial");
+    fireEvent.click(document.getElementById("what-street-class")!);
+    const opts = Array.from(
+      document.getElementById("what-street-class-list")!.querySelectorAll('[role="option"]'),
     );
+    expect(opts.map((o) => o.textContent!.trim().replace(/^✓\s*/, ""))).toEqual([
+      "Local",
+      "Collector",
+      "Arterial",
+    ]);
+    expect(
+      opts.find((o) => o.getAttribute("data-value") === "arterial")!.getAttribute("aria-selected"),
+    ).toBe("true");
   });
 
   it("the operator's pick replaces the guess and drops its record", () => {
     const setScenario = mount(guessed);
-    fireEvent.click(screen.getByRole("button", { name: "Local" }));
+    pickOption("what-street-class", "local");
     const next = setScenario.mock.calls[0][0] as Scenario;
     expect(next.street_class).toBe("local");
     expect(next.guesses ?? null).toBeNull();
@@ -246,10 +264,11 @@ describe("street class is a row of The road, marked when guessed", () => {
 
   it("the operator's own class reads '✓ yours'; none reads '◌ not set'", () => {
     mount({ ...DEFAULT_SHOULDER, street_class: "collector" } as Scenario);
-    expect(screen.getByTestId("info-toggle-street-class").textContent).toBe("✓ yours");
+    // #517 S4 / ruling 5: "Set by you" and "Not set yet".
+    expect(sourceWord("street-class")).toBe("Set by you");
     cleanup();
     mount(DEFAULT_SHOULDER);
-    expect(screen.getByTestId("info-toggle-street-class").textContent).toBe("◌ not set");
+    expect(sourceWord("street-class")).toBe("Not set yet");
   });
 });
 
@@ -258,13 +277,17 @@ describe("street class is a row of The road, marked when guessed", () => {
 describe("hours and the speed reduction say whose value they show", () => {
   it("default until changed", () => {
     mount(DEFAULT_SHOULDER);
-    expect(screen.getByTestId("cell-night").querySelector(".tr-field")!.textContent).toBe("Hours");
-    // #411 (Ryan, 2026-10-26, amending R110 Q8): plain "default", no mark.
-    expect(screen.getByTestId("info-toggle-night").textContent).toBe("default");
+    // #517 ruling 1: "Hours" reads "Work hours".
+    expect(screen.getByTestId("cell-night").querySelector(".w-label")!.textContent).toBe("Work hours");
+    // #411 (Ryan, 2026-10-26, amending R110 Q8): plain "default", no mark
+    // (#517 ruling 5: "Default", S13: no glyph).
+    expect(sourceWord("night")).toBe("Default");
+    expect(screen.getByTestId("info-toggle-night").getAttribute("data-source")).toBe("default");
     expect(
-      screen.getByTestId("cell-reduction").querySelector(".tr-field")!.textContent,
+      screen.getByTestId("cell-reduction").querySelector(".w-label")!.textContent,
     ).toBe("Speed reduction");
-    expect(screen.getByTestId("info-toggle-reduction").textContent).toBe("default");
+    expect(sourceWord("reduction")).toBe("Default");
+    expect(screen.getByTestId("info-toggle-reduction").getAttribute("data-source")).toBe("default");
   });
 
   it("yours once the operator has written it, even back to the default", () => {
@@ -273,8 +296,9 @@ describe("hours and the speed reduction say whose value they show", () => {
       night: false,
       meta: { ...DEFAULT_SHOULDER.meta, operatorSet: ["night", "workZoneSpeed"] },
     } as Scenario);
-    expect(screen.getByTestId("info-toggle-night").textContent).toBe("✓ yours");
-    expect(screen.getByTestId("info-toggle-reduction").textContent).toBe("✓ yours");
+    // #517 S4: "✓ yours" reads "Set by you".
+    expect(sourceWord("night")).toBe("Set by you");
+    expect(sourceWord("reduction")).toBe("Set by you");
   });
 
   it("the writes record the operator", () => {
@@ -326,6 +350,13 @@ describe("fix 1 — work dates is ONE control", () => {
   });
 });
 
+// #517 (ruling 5): the `dividedLine` prop is gone; the cells read the
+// band's detection model (`detected`) and the Divided row's words ride the
+// divided cell's own why tip, its source line saying whose value it is.
+function dividedModel(row: DetectedModel["rows"][number]): DetectedModel {
+  return { rows: [row], roadName: "Test Road", wayId: "1", method: "auto_single", geomDrives: false };
+}
+
 describe("fix 3 — divided's detection line sits under its control", () => {
   it("renders the line the WHAT band hands it, in the divided cell", () => {
     render(
@@ -335,13 +366,19 @@ describe("fix 3 — divided's detection line sits under its control", () => {
           { ...DEFAULT_SHOULDER, roadType: "urban_arterial" } as Scenario
         }
         setScenario={() => {}}
-        dividedLine={{ key: "divided", text: "Divided no · OSM · no", amber: false }}
+        detected={dividedModel({
+          label: "Divided",
+          applied: "no",
+          detected: "no",
+          detectedToken: "measured",
+          verdict: "match",
+        })}
       />,
     );
     const cell = screen.getByTestId("cell-divided");
-    expect(cell.querySelector('[data-testid="detect-divided"]')?.textContent).toBe(
-      "Divided no · OSM · no",
-    );
+    expect(cell.contains(screen.getByTestId("info-divided"))).toBe(true);
+    expect(whyTip("divided")[0]).toBe("The road's map record says no.");
+    expect(sourceWord("divided")).toBe("Measured from the map");
   });
 
   it("an amber clause keeps rule 13's second channel", () => {
@@ -352,11 +389,20 @@ describe("fix 3 — divided's detection line sits under its control", () => {
           { ...DEFAULT_SHOULDER, roadType: "urban_arterial" } as Scenario
         }
         setScenario={() => {}}
-        dividedLine={{ key: "divided", text: "Divided no · assumed", amber: true }}
+        detected={dividedModel({
+          label: "Divided",
+          applied: "no",
+          detected: "no",
+          detectedToken: "inferred",
+          verdict: "match",
+        })}
       />,
     );
-    const line = screen.getByTestId("detect-divided");
-    expect(line.textContent).toBe("⚠ Divided no · assumed");
-    expect(line.className).toContain("is-amber");
+    // The amber clause: ⚠ glyph beside the guess words, and the guess tone.
+    const toggle = screen.getByTestId("info-toggle-divided");
+    expect(toggle.textContent!.startsWith("⚠")).toBe(true);
+    expect(sourceWord("divided")).toBe("Our guess. Check it.");
+    expect(toggle.className).toContain("is-guess");
+    expect(whyTip("divided")[0]).toBe("The map's no is an estimate. Check it on site.");
   });
 });

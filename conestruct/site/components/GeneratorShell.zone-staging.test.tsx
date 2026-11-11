@@ -27,6 +27,7 @@ import {
   openWhat,
   openWhere,
 } from "./__fixtures__/band-helpers";
+import { pickDates } from "./__fixtures__/what-section";
 
 // #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
 // deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
@@ -296,10 +297,12 @@ describe("zone staging lifecycle", () => {
     // by the field itself: a schedule nobody entered is "Not set"
     // because there is no date.  Every edit still rides the same
     // scenario.schedule the strip and the hours chip read.
+    // #517 (ruling 7, S8): the dates are the DateRangePicker; one day is
+    // the same day picked twice.
     await openWhat();
-    const dateInput = document.getElementById("what-date") as HTMLInputElement;
-    expect(dateInput).not.toBeNull();
-    fireEvent.change(dateInput, { target: { value: "2026-08-04" } });
+    const dateButton = document.getElementById("what-date");
+    expect(dateButton).not.toBeNull();
+    pickDates("2026-08-04");
     await flushDebounce();
     await release(1, okBreakdown());
 
@@ -313,7 +316,13 @@ describe("zone staging lifecycle", () => {
     expect(last.scenario.schedule?.date_mode).toBe("single");
 
     // Clearing the date is the deliberate "Not set": no date, no mode.
-    fireEvent.change(dateInput, { target: { value: "" } });
+    // #517 (S8): the picker's Clear.
+    act(() => {
+      fireEvent.click(dateButton!);
+    });
+    act(() => {
+      fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+    });
     await flushDebounce();
     bodies = fetchMock.mock.calls
       .filter(([u, init]) => isGenerateAudit(u, init as RequestInit))

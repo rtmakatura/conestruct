@@ -34,6 +34,37 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { symClass } from "@/lib/design/symbols";
 import type { ProvenanceMarker } from "@/lib/scenarios/provenance-marker";
+import { SOURCE_WORDS, type SourceKind } from "@/lib/scenarios/why-lines";
+
+/** The popover's mechanics, shared by FieldCell and #517's WhyCell: it
+ *  stays mounted, `hidden` while closed (#198); it opens on click, tap,
+ *  Enter or Space, never on hover (rules 141, 142); a click away or Esc
+ *  closes it, Esc returning focus to its trigger (R101). */
+function usePopover() {
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  const cellRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (cellRef.current && !cellRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+  return { open, setOpen, panelId, cellRef, triggerRef };
+}
 
 /** A second marker in the same row (R110 Q7): its own field's word, the
  *  same popover. */
@@ -71,34 +102,12 @@ export function FieldCell({
   children: ReactNode;
   testid: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const panelId = useId();
-  const cellRef = useRef<HTMLDivElement | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const { open, setOpen, panelId, cellRef, triggerRef } = usePopover();
   const hasInfo = info !== null && info !== undefined && info !== false;
   const inlineLine = marker === null;
   // What the popover holds: the line (unless it is already on show) and
   // the field's details.  Nothing to hold, no popover and no trigger.
   const hasPopover = !inlineLine || hasInfo;
-
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: PointerEvent) => {
-      if (cellRef.current && !cellRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-    document.addEventListener("pointerdown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   const trigger = (
     m: ProvenanceMarker,
@@ -230,6 +239,114 @@ export function Segmented<V extends string | boolean>({
           <span className="a-seg-label">{o.l}</span>
         </button>
       ))}
+    </div>
+  );
+}
+
+/** #517 (ruling 5, S4): a What-section row.  The label, and under it the
+ *  field's source line: a plain Inter 12.5 button ("Measured from the
+ *  map", "Our guess. Check it.", "Default", "Not set yet", "Set by you",
+ *  "Checked") that opens the why tip (FieldCell's popover mechanics, via
+ *  `usePopover`).  The tip's first line is the plain-words reason; the
+ *  field's other details follow.  A line that needs the operator now (an
+ *  error, a ⚠ line, the boundary warnings) is on show under the control
+ *  (P3).  In the guesses box the source line is the guess's reason line
+ *  instead (`reason`), and "✓ Checked" once checked (ruling 3). */
+export function WhyCell({
+  label,
+  htmlFor,
+  testid,
+  source,
+  reason = null,
+  tip,
+  info = null,
+  error = null,
+  alertLine = null,
+  alert = null,
+  children,
+}: {
+  label: string;
+  htmlFor?: string;
+  testid: string;
+  source: SourceKind;
+  /** The guesses box's reason line, in place of the source word. */
+  reason?: string | null;
+  /** The tip's sentences, first the plain-words reason. */
+  tip: string[];
+  /** The field's other details, after the tip's sentences. */
+  info?: ReactNode;
+  error?: string | null;
+  alertLine?: string | null;
+  alert?: ReactNode;
+  children: ReactNode;
+}) {
+  const { open, setOpen, panelId, cellRef, triggerRef } = usePopover();
+  const w = SOURCE_WORDS[source];
+  // In the box: "⚠ Based on …" until checked, then "✓ Checked".
+  const glyph = reason !== null && source !== "checked" ? "⚠" : w.glyph;
+  const word = reason !== null && source !== "checked" ? reason : w.word;
+  const tone = glyph === "⚠" ? "guess" : glyph === "✓" ? "ok" : "plain";
+  return (
+    <div className="a-cell w-cell" data-testid={`cell-${testid}`} ref={cellRef}>
+      <div className="a-cell-head w-head">
+        {htmlFor ? (
+          <label className="w-label" htmlFor={htmlFor}>
+            {label}
+          </label>
+        ) : (
+          <span className="w-label">{label}</span>
+        )}
+        <button
+          ref={triggerRef}
+          type="button"
+          className={`w-src is-${tone}`}
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => setOpen((o) => !o)}
+          data-testid={`info-toggle-${testid}`}
+          data-source={source}
+        >
+          {glyph && (
+            <span className={`w-src-glyph ${symClass(glyph)}`} aria-hidden>
+              {glyph}
+            </span>
+          )}
+          <span className="w-src-word" data-testid={`prov-${testid}`}>
+            {word}
+          </span>
+          <span className="sr-only">{` (why: ${label})`}</span>
+        </button>
+      </div>
+      <div className="a-cell-ctl">
+        {children}
+        {error && (
+          <span className="w-line is-error" data-testid={`error-${testid}`}>
+            {error}
+          </span>
+        )}
+        {alertLine && (
+          <span className="w-line is-warn" data-testid={`alert-${testid}`}>
+            <span aria-hidden>⚠ </span>
+            {alertLine}
+          </span>
+        )}
+        {alert}
+      </div>
+      <div
+        id={panelId}
+        className="a-info a-pop w-tip"
+        role="group"
+        aria-label={`Why: ${label}`}
+        hidden={!open}
+        data-testid={`info-${testid}`}
+      >
+        {tip.map((t, i) => (
+          <p key={i} className="w-tip-line">
+            {t}
+          </p>
+        ))}
+        {info}
+      </div>
     </div>
   );
 }

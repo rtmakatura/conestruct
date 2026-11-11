@@ -163,6 +163,8 @@ vi.mock("./LocationPickerModal", () => ({
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
 import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { listboxValue, pickOptionUser } from "./__fixtures__/listbox";
+import { openMeasured } from "./__fixtures__/what-section";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -241,10 +243,9 @@ async function selectLanes(
   value: string,
 ): Promise<void> {
   await openWhat();
-  await user.selectOptions(
-    document.querySelector("#what-lanes") as HTMLSelectElement,
-    value,
-  );
+  // #517 (ruling 1, S7): the lanes listbox sits in "Measured from the map".
+  openMeasured();
+  await pickOptionUser(user, "what-lanes", value);
 }
 
 /** The lanes cell's value, opening the WHAT band first — the column
@@ -253,9 +254,8 @@ async function selectLanes(
  *  user. */
 async function expectLanes(value: string): Promise<void> {
   await openWhat();
-  expect(
-    (document.querySelector("#what-lanes") as HTMLSelectElement).value,
-  ).toBe(value);
+  // #517 (S7): the listbox button shows the picked option's label.
+  expect(listboxValue("what-lanes")).toBe(`${value} per side`);
 }
 
 async function generate(user: ReturnType<typeof userEvent.setup>) {

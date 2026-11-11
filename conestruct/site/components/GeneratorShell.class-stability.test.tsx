@@ -33,6 +33,8 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { changeOneThing, openWhat } from "./__fixtures__/band-helpers";
+import { pickOptionUser } from "./__fixtures__/listbox";
+import { openMeasured, whyTip } from "./__fixtures__/what-section";
 // A REAL audit answer, not a hand-built one: the prod capture committed
 // at validation-artifacts/committed/issue-256-scan-chain/acceptance/
 // run1-crashed-5d569d7/audit-denver-cold-01.json (TA-3, S-630-1,
@@ -236,9 +238,10 @@ function jurisdictionState(): string | null {
 }
 
 /** The cell's provenance line — rule 137's, and the words that say
- *  whether the value was evaluated or merely picked. */
+ *  whether the value was evaluated or merely picked.  #517 (ruling 5):
+ *  those words are the field's why tip now, under its source line. */
 function jurisdictionProv(): string {
-  return document.querySelector('[data-testid="prov-jurisdiction"]')?.textContent ?? "";
+  return whyTip("jurisdiction").join(" ");
 }
 
 /** The WHAT band's schedule windows block — the pre-generate home of
@@ -251,24 +254,25 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   const user = userEvent.setup();
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED} />);
   await releaseNext(okBreakdown(false));
-  const select = document.querySelector(
-    "#what-jurisdiction",
-  ) as HTMLSelectElement;
-  await user.selectOptions(select, "parker");
+  // #517 (S3): with no guess the jurisdiction sits in "Measured from the
+  // map"; its Change opens it.
+  openMeasured();
+  await pickOptionUser(user, "what-jurisdiction", "parker");
   // First load of the key: the cell says so in a WORD rather than a
   // skeleton (#252: no skeletons anywhere; rule 14: a value that is not
   // known renders as a word).  Ruling 196 named this state.
   expect(jurisdictionState()).toBe("evaluating");
-  expect(jurisdictionProv()).toContain("not yet confirmed for this plan");
-  // R127 Q5: the window table opens from the footer's windows line.
-  await user.click(screen.getByTestId("what-windows-line"));
+  expect(jurisdictionProv()).toContain("Checking the jurisdiction for this plan.");
+  // #517 ruling 7: the window table opens from the link under the hours
+  // result ("See all of <jurisdiction>'s work hours").
+  await user.click(screen.getByTestId("what-hours-all"));
   await flushDebounce();
   await releaseNext(okBreakdown(true));
   // Settled: the cell carries the EVALUATED answer and says which of the
   // two it is.
   expect(jurisdictionState()).toBe("evaluated");
   expect(jurisdictionCell()?.textContent).toContain("Parker");
-  expect(jurisdictionProv()).toContain("evaluated");
+  expect(jurisdictionProv()).toContain("Parker calls this plan a");
   await quiesce();
   return user;
 }
@@ -285,15 +289,21 @@ describe("#276 — the jurisdiction cell's states: no skeleton, one reserved lin
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED} />);
     await releaseNext(okBreakdown(false));
+    openMeasured();
     const prov = document.querySelector('[data-testid="prov-jurisdiction"]');
     expect(jurisdictionState()).toBe("unset");
-    expect(prov?.textContent).toBe("MUTCD + Colorado Supplement only");
+    // #517 (ruling 5): the source line says "Not set yet"; the old line's
+    // words are its why tip.
+    expect(prov?.textContent).toBe("Not set yet");
+    expect(whyTip("jurisdiction")[0]).toBe(
+      "No jurisdiction yet, so the plan follows the MUTCD and the Colorado Supplement only.",
+    );
 
     const noSkeleton = () =>
       expect(document.querySelector(".jbar-skel-line, [class*='skel'], .animate-pulse")).toBeNull();
     noSkeleton();
 
-    await user.selectOptions(document.querySelector("#what-jurisdiction") as HTMLSelectElement, "parker");
+    await pickOptionUser(user, "what-jurisdiction", "parker");
     expect(jurisdictionState()).toBe("evaluating");
     expect(document.querySelector('[data-testid="prov-jurisdiction"]')).toBe(prov);
     noSkeleton();
@@ -325,12 +335,12 @@ describe("class-switch stability (#152 D)", () => {
   it("a class switch holds the jurisdiction's content while the refetch is in flight — no skeleton, one reflow max", async () => {
     const user = await mountWithParker();
     // Settled: the hours verdict renders (parker fixture is "outside").
-    expect(windowsBlock()).toContain("PARKER WINDOWS");
+    expect(windowsBlock()).toContain("Parker's work hours");
     expect(windowsBlock()).toContain(
       "1 h outside the permitted 9:00 AM–3:30 PM window",
     );
 
-    await user.click(screen.getByRole("button", { name: "Arterial" }));
+    await pickOptionUser(user, "what-street-class", "arterial");
     await flushDebounce();
     // Refetch pending — nothing may flip to skeleton.
     expect(pending()).toBe(1);
@@ -340,7 +350,7 @@ describe("class-switch stability (#152 D)", () => {
     expect(jurisdictionState()).toBe("evaluated");
     expect(screen.queryByText(/Loading jurisdiction rules/)).toBeNull();
     // The content is still mounted mid-refetch.
-    expect(windowsBlock()).toContain("PARKER WINDOWS");
+    expect(windowsBlock()).toContain("Parker's work hours");
 
     await releaseNext(okBreakdown(true));
     expect(windowsBlock()).toContain(
@@ -351,12 +361,12 @@ describe("class-switch stability (#152 D)", () => {
   it("R127 Q5: the footer line says the same verdict in its own words, and checking while the refetch is in flight", async () => {
     const user = await mountWithParker();
     const line = () => screen.getByTestId("what-windows-line").textContent;
-    expect(line()).toBe("Parker windows · ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
-    await user.click(screen.getByRole("button", { name: "Arterial" }));
-    expect(line()).toBe("Parker windows · ◌ checking your dates");
+    expect(line()).toBe("Parker's work hours: ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
+    await pickOptionUser(user, "what-street-class", "arterial");
+    expect(line()).toBe("Parker's work hours: ◌ checking your dates");
     await flushDebounce();
     await releaseNext(okBreakdown(true));
-    expect(line()).toBe("Parker windows · ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
+    expect(line()).toBe("Parker's work hours: ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
   });
 
   it("the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)", async () => {
@@ -365,7 +375,7 @@ describe("class-switch stability (#152 D)", () => {
       "1 h outside the permitted 9:00 AM–3:30 PM window",
     );
 
-    await user.click(screen.getByRole("button", { name: "Arterial" }));
+    await pickOptionUser(user, "what-street-class", "arterial");
     // The stale "outside" verdict may not display as current — including
     // DURING the #182 debounce's deferred window, before the fetch has
     // even dispatched.  The row keeps its shape and loses its claim.
@@ -386,10 +396,7 @@ describe("class-switch stability (#152 D)", () => {
 
   it("a CHANGED jurisdiction key says CHECKING — a stale block from another jurisdiction never renders", async () => {
     const user = await mountWithParker();
-    const select = document.querySelector(
-      "#what-jurisdiction",
-    ) as HTMLSelectElement;
-    await user.selectOptions(select, "denver");
+    await pickOptionUser(user, "what-jurisdiction", "denver");
     // No held content from Parker.  The bar used to skeleton here; §8.31
     // dropped the bar and §8.21 moved the field into the WHAT grid, so
     // the same fact is stated in the cell's own word — and, critically,
@@ -397,16 +404,16 @@ describe("class-switch stability (#152 D)", () => {
     // Denver is loading.  That is the rule-10 claim this test has always
     // made; only the surface carrying it changed.
     expect(jurisdictionState()).toBe("evaluating");
-    expect(jurisdictionProv()).toContain("not yet confirmed for this plan");
-    expect(windowsBlock()).not.toContain("PARKER WINDOWS");
+    expect(jurisdictionProv()).toContain("Checking the jurisdiction for this plan.");
+    expect(windowsBlock()).not.toContain("Parker's work hours");
     await flushDebounce();
     expect(jurisdictionState()).toBe("evaluating");
-    expect(windowsBlock()).not.toContain("PARKER WINDOWS");
+    expect(windowsBlock()).not.toContain("Parker's work hours");
   });
 
   it("a breakdown ERROR clears the held block rather than presenting it as live", async () => {
     const user = await mountWithParker();
-    await user.click(screen.getByRole("button", { name: "Collector" }));
+    await pickOptionUser(user, "what-street-class", "collector");
     await flushDebounce();
     await releaseNext({
       ok: false,
@@ -418,7 +425,7 @@ describe("class-switch stability (#152 D)", () => {
     // says exactly that instead of holding Parker's block as current
     // (#425 ruling 3: "check failed").
     expect(jurisdictionState()).toBe("check-failed");
-    expect(jurisdictionProv()).toContain("check failed: the check didn't answer");
-    expect(windowsBlock()).not.toContain("PARKER WINDOWS");
+    expect(jurisdictionProv()).toContain("The check didn't answer. The option shown stands.");
+    expect(windowsBlock()).not.toContain("Parker's work hours");
   });
 });

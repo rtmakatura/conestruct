@@ -15,6 +15,7 @@
 // pass/fail = --pass/--fail · no verdict = chromaless --none.  No signal
 // relies on hue alone — every state carries a glyph or a word.
 
+import { tagWords } from "@/lib/scenarios/why-lines";
 import { type ReactNode } from "react";
 import {
   activeBandRow,
@@ -152,7 +153,9 @@ export function StreetClassEvidence({
   if (!tier && !jurisdiction?.class_required) return null;
   return (
     <div className="jbar-suggest">
-      {tier && <div className="sugg-reason">detected road tier: OSM {tier}</div>}
+      {/* #517 ruling 5: the map tag in plain words (was "detected road
+          tier: OSM <tag>"). */}
+      {tier && <div className="sugg-reason">The road&apos;s map tag: {tagWords(tier)}.</div>}
       {jurisdiction?.class_required && (
         <span className="mapchip">
           {map ? (
@@ -176,7 +179,7 @@ export function StreetClassEvidence({
           <a href={map} target="_blank" rel="noreferrer">
             {jurisdiction?.name}&apos;s functional-classification map
           </a>
-          . The road tier is a proxy; the adopted map governs.
+          . The map tag is only a stand-in; the adopted map governs.
         </div>
       )}
     </div>

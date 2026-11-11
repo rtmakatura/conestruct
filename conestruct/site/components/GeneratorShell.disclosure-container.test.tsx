@@ -87,6 +87,7 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { whyTip } from "./__fixtures__/what-section";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -166,16 +167,18 @@ describe("#227 → #289 correction 3 — the #198 notes' new clothes", () => {
     await mountWithNote(DEFAULT_SHOULDER);
     await openWhat();
     const note = screen.getByText(/snapped from 62 mph OSM detection/);
-    expect(note.classList.contains("tr-prov")).toBe(true);
-    expect(note.classList.contains("is-amber")).toBe(true);
+    // #517 (ruling 5): the why tip's line role, in its warn tone.
+    expect(note.classList.contains("w-tip-line")).toBe(true);
+    expect(note.classList.contains("is-warn")).toBe(true);
     // Rule 137's own line is still there and still first: the field says
     // where its value came from, then the handoff says what happened to
     // it on the way in.
     const cell = note.closest('[data-testid="cell-speed"]')!;
-    // R96 A: both live in the field's popover (the marker, at rest, is
-    // the line's one-click handle — R98).
-    const lines = Array.from(cell.querySelectorAll(".a-info .tr-prov"));
-    expect(lines[0]).toBe(cell.querySelector('[data-testid="prov-speed"]'));
+    // R96 A: both live in the field's popover (#517: the why tip; the
+    // source line, at rest, is its one-click handle — R98).
+    const lines = Array.from(cell.querySelectorAll('[data-testid="info-speed"] .w-tip-line'));
+    expect(lines[0]).not.toBe(note);
+    expect(lines[0].textContent).toBe(whyTip("speed")[0]);
     expect(lines).toContain(note);
   });
 });

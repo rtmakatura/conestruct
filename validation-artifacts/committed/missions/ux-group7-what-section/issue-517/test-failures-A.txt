@@ -1,0 +1,39 @@
+# Run A (brief A, 2026-11-11): npx vitest run components/WhatBand.*.test.tsx components/bands/PlanDetails.test.tsx
+# 37 failed | 55 passed (92). Expected churn: these suites drive the old native selects / read the old strings (see churn-suites.txt).
+components/WhatBand.declutter.test.tsx > two columns named for the user's question (R107, P20) > The road on the left, The job on the right, in WhatC5's order
+components/WhatBand.declutter.test.tsx > two columns named for the user's question (R107, P20) > each row is its label with the marker under it, beside the control
+components/WhatBand.declutter.test.tsx > one quiet marker per field (R98, P9) > at rest each field shows a symbol + word, not its sentence
+components/WhatBand.declutter.test.tsx > one quiet marker per field (R98, P9) > R126: one marker per row — the Lanes marker opens the one popover, holding both lines
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > street class '⚠ from the road', jurisdiction '⚠ from the pin', and the header counts them
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > the pin's evidence rides the jurisdiction's details, the TIGER caveat with it
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > an evaluation that failed is not an error: a guess keeps its line, the failure in its details (#425 ruling 3)
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > nothing guessed off a road: the header reads 'prefilled from the road' (R110 Q5)
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > one guess reads in the singular
+components/WhatBand.declutter.test.tsx > File details: the two optional fields behind a labelled count (P13) > closed by default, saying what is inside; open shows both fields
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > every WHAT row shows exactly its marker(s) at rest (R98)
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > road type at rest: the select and source · value · method — nothing else
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > jurisdiction at rest: the select and its marker; the pin's evidence is detail, with no row of its own
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > street class is its own row of The road — the segmented control and its marker, nothing else
+components/WhatBand.density.test.tsx > the details toggle — click / tap, never hover (rules 141, 142) > opens and closes on click, and says which it is (R101: a popover)
+components/WhatBand.density.test.tsx > the details toggle — click / tap, never hover (rules 141, 142) > every field's line is one click away (R98): one trigger per marker
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > each cell carries its own clause, under its own field (rule 137)
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > every provenance line rides the provenance role, not a new one
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > a fact the kind does not carry renders no footer row — flagger has no lanes or divided detection line
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > shoulder: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > flagger_lane_closure: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > near_intersection: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.speed-guess.test.tsx > R126: WHAT's Speed row > no posted speed: the estimate is the value, marked ⚠ from the road; no estimate line, no button
+components/WhatBand.speed-guess.test.tsx > R126: WHAT's Speed row > no road at the pin: ◌ not set, and the select shows Not set
+components/WhatBand.speed-guess.test.tsx > R126: WHAT's Speed row > a posted speed: measured, no guess
+components/WhatBand.step2-layout.test.tsx > R126 / D3: the footer is one line — windows, then File details, then open > the windows line comes first and opens the table; File details keeps its own open
+components/WhatBand.step2-layout.test.tsx > R126 / D3: the footer is one line — windows, then File details, then open > the table sits under the footer, never between the columns and the footer
+components/WhatBand.step2-layout.test.tsx > R126: one marker per row, none of them 'i about' > Carriageway: the label, and default-or-yours with no detection behind it
+components/WhatBand.step2-layout.test.tsx > R126: one marker per row, none of them 'i about' > the road-type option reads 'Urban street' (R127 Q4); the wire value is unchanged
+components/bands/PlanDetails.test.tsx > the writes are the forms' own > the reduction's limit cites S-630-1 Sheet 2 Note 3, with the stepped count
+components/bands/PlanDetails.test.tsx > street class is a row of The road, marked when guessed > reads '⚠ from the road', and its full line names the tag
+components/bands/PlanDetails.test.tsx > street class is a row of The road, marked when guessed > the operator's pick replaces the guess and drops its record
+components/bands/PlanDetails.test.tsx > street class is a row of The road, marked when guessed > the operator's own class reads '✓ yours'; none reads '◌ not set'
+components/bands/PlanDetails.test.tsx > hours and the speed reduction say whose value they show > default until changed
+components/bands/PlanDetails.test.tsx > hours and the speed reduction say whose value they show > yours once the operator has written it, even back to the default
+components/bands/PlanDetails.test.tsx > fix 3 — divided's detection line sits under its control > renders the line the WHAT band hands it, in the divided cell
+components/bands/PlanDetails.test.tsx > fix 3 — divided's detection line sits under its control > an amber clause keeps rule 13's second channel

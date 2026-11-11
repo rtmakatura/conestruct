@@ -14,6 +14,20 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { DEFAULT_NEAR_INTERSECTION, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { NearIntersectionScenario, Scenario, ShoulderScenario } from "@/lib/scenarios";
 import { PlanDetailCells } from "./PlanDetails";
+import { sourceWord, whyTip } from "../__fixtures__/what-section";
+
+// #517 (ruling 5, S6): the cell moves unchanged; its line is now a plain
+// source word with a why tip, and the undecided ask is the ⚠ line on show
+// under the control (P3).
+function expectAsks() {
+  expect(sourceWord("carriageway")).toBe("Not set yet");
+  expect(screen.getByTestId("alert-carriageway").textContent).toBe(
+    "⚠ The map couldn't tell. Pick one.",
+  );
+  expect(whyTip("carriageway")[0]).toBe(
+    "The map couldn't tell whether the other direction runs on a separate road.",
+  );
+}
 
 afterEach(cleanup);
 
@@ -47,9 +61,7 @@ describe("the carriageway cell", () => {
   it("asks when the test couldn't decide: neither answer pressed, ⚠ needs you", () => {
     mount(oneWay({ ...FACTS, twinSearched: false }));
     expect(screen.getByTestId("cell-carriageway")).toBeTruthy();
-    expect(screen.getByTestId("prov-carriageway").textContent).toBe(
-      "⚠ needs you · the map couldn't tell",
-    );
+    expectAsks();
     expect(chip("One-way").getAttribute("aria-pressed")).toBe("false");
     expect(chip("Divided").getAttribute("aria-pressed")).toBe("false");
   });
@@ -65,16 +77,18 @@ describe("the carriageway cell", () => {
   it("shows a decided one-way street with its evidence", () => {
     mount(oneWay({ ...FACTS, twinSearched: true }));
     expect(chip("One-way").getAttribute("aria-pressed")).toBe("true");
-    expect(screen.getByTestId("prov-carriageway").textContent).toBe(
-      "detected · no same-name carriageway within 100 m",
+    expect(sourceWord("carriageway")).toBe("Measured from the map");
+    expect(whyTip("carriageway")[0]).toBe(
+      "The map shows no road with the same name within 100 m, so we read it as one-way.",
     );
   });
 
   it("shows a twinned road as divided, and the operator can overrule it", () => {
     const set = mount(oneWay({ ...FACTS, twinDistanceM: 21.7, twinSearched: true }));
     expect(chip("Divided").getAttribute("aria-pressed")).toBe("true");
-    expect(screen.getByTestId("prov-carriageway").textContent).toBe(
-      "detected · a same-name carriageway 21.7 m away",
+    expect(sourceWord("carriageway")).toBe("Measured from the map");
+    expect(whyTip("carriageway")[0]).toBe(
+      "The map shows a road with the same name 21.7 m away, so we read it as divided.",
     );
     fireEvent.click(chip("One-way"));
     const next = set.mock.calls[0][0] as ShoulderScenario;
@@ -95,9 +109,9 @@ describe("the carriageway cell", () => {
   it("says the answer is the operator's once given", () => {
     mount(oneWay({ ...FACTS, twinSearched: false, confirmed: "divided" }));
     expect(chip("Divided").getAttribute("aria-pressed")).toBe("true");
-    expect(screen.getByTestId("prov-carriageway").textContent).toBe(
-      "your answer · operator-set from here on",
-    );
+    expect(sourceWord("carriageway")).toBe("Set by you");
+    expect(whyTip("carriageway")[0]).toBe("You answered this.");
+    expect(screen.queryByTestId("alert-carriageway")).toBeNull();
   });
 
   it("stands in for the Divided toggle on a one-way road (one control per fact)", () => {
@@ -120,9 +134,7 @@ describe("the carriageway cell on a near-intersection plan (#309 R114 Q4)", () =
   it("asks when the test couldn't decide", () => {
     mount(ni({ ...FACTS, twinSearched: false }));
     expect(screen.getByTestId("cell-carriageway")).toBeTruthy();
-    expect(screen.getByTestId("prov-carriageway").textContent).toBe(
-      "⚠ needs you · the map couldn't tell",
-    );
+    expectAsks();
   });
 
   it("writes only the answer: divided and the lane width stay (R114 Q3 (a))", () => {

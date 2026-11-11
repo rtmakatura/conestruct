@@ -5921,6 +5921,414 @@ input[type="number"] {
   }
 }
 
+/* ─── #517 (UX group 7, Ryan 2026-11-11, boards B and D) · the What
+   section, guesses first ───
+   validation-artifacts/committed/missions/ux-group7-what-section/issue-517/
+   rulings.md.  Ruling 1: "Inter throughout, sizes from group 1's scale,
+   tokens only.  No mono, no caps labels.  Every control 44 px.  The rule
+   lines inside the guesses box use an existing token: no new hex."  Sizes:
+   19 = --fs-step-question-520 (the heading), 15 = --fs-refusal (the box and
+   row titles, the listbox), 13.5 = --fs-body-value (values, buttons), 12.5
+   = --fs-field-label (labels, source lines, tips).  Colours: tokens only. */
+.workbench [data-testid="band-what"] .a-question {
+  font-size: var(--fs-step-question-520);
+}
+.workbench .w-what {
+  display: grid;
+  gap: var(--space-block);
+  font-family: var(--font-sans);
+}
+/* The guesses box: the verdict strip's flag border and ground (rule 53's
+   tokens); its row rules are the same flag line. */
+.workbench .w-box {
+  border: 1px solid var(--vd-flag-line);
+  background: var(--vd-flag-ground);
+  padding: 0 var(--space-block);
+}
+.workbench .w-box-head,
+.workbench .w-sec-head {
+  margin: 0;
+  padding: 12px 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-refusal);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.workbench .w-box > .a-cell {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 280px);
+  column-gap: var(--space-block);
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--vd-flag-line);
+}
+.workbench .w-box > .a-cell > .a-cell-head,
+.workbench .a-col > .a-cell.w-cell > .a-cell-head {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+}
+.workbench .w-box > .a-cell > .a-cell-ctl {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.workbench .w-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-field-label);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+/* Ruling 5: the source line is a plain Inter 12.5 button with a 44 px
+   target; it opens the why tip (never on hover). */
+.workbench .w-src {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: var(--fs-field-label);
+  line-height: 1.4;
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+.workbench .w-src .w-src-word {
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 3px;
+}
+.workbench .w-src:hover .w-src-word {
+  text-decoration-color: var(--act);
+}
+.workbench .w-src.is-guess {
+  color: var(--warn);
+}
+.workbench .w-src:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .w-tip-line {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-field-label);
+  line-height: 1.5;
+  color: var(--ink-on-dark);
+}
+.workbench .w-tip-line.is-warn,
+.workbench .w-line.is-warn {
+  color: var(--warn);
+}
+.workbench .w-line {
+  font-family: var(--font-sans);
+  font-size: var(--fs-field-label);
+  line-height: 1.4;
+}
+.workbench .w-line.is-error {
+  color: var(--fail);
+}
+/* "About the work" and the plain rows under it. */
+.workbench .w-row {
+  border: 1px solid var(--rule);
+  padding: 0 var(--space-block);
+}
+.workbench .w-row-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+}
+.workbench .w-row-text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+  padding: 12px 0;
+}
+.workbench .w-row-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-refusal);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.workbench .w-row-line {
+  overflow-wrap: anywhere;
+}
+.workbench .w-btn,
+.workbench .w-link {
+  flex: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--act);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.workbench .w-link {
+  justify-self: start;
+  text-align: left;
+}
+.workbench .w-btn:hover,
+.workbench .w-link:hover {
+  color: var(--act-bright);
+}
+.workbench .w-btn:focus-visible,
+.workbench .w-link:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .w-panel {
+  padding-bottom: var(--space-block);
+}
+.workbench .w-panel[hidden] {
+  display: none;
+}
+/* #520 (Ryan, 2026-11-11: "'About the work' has to end together"; ruling
+   1: "The rows end together (#490's column rule)").  The section's two
+   column grids are one grid of cells, two to a row (the .a-cols tracks),
+   so a row's two cells share its height and their hairlines line up.  A
+   cell's content sits at its top (.a-cell's align-content: start), except
+   in the last row, where it sits at the bottom, so both columns' content
+   ends on one line.  An odd last cell spans the row and ends both columns
+   (R145 S24).  One column (under 2 x 340 px): every rule here is inert. */
+.workbench .w-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  column-gap: 32px;
+  row-gap: 0;
+}
+.workbench .w-grid > .a-cell:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+.workbench .w-grid > .a-cell:last-child:nth-child(even),
+.workbench .w-grid > .a-cell:nth-last-child(2):nth-child(odd) {
+  align-content: end;
+}
+.workbench .w-hours {
+  display: grid;
+  gap: 2px;
+}
+/* #517 fold-in (ruling 1): #227's windows table, opened under the dates,
+   reads in the section's Inter with no caps or mono role. */
+.workbench .w-what .sched-windows,
+.workbench .w-what .sched-windows .tr-prov,
+.workbench .w-what .sched-windows .sw-glyph {
+  font-family: var(--font-sans);
+  text-transform: none;
+  letter-spacing: normal;
+}
+.workbench .w-what .sched-windows .sw-head {
+  font-weight: 600;
+  color: var(--ink-on-dark);
+}
+/* Ruling 6: the shared listbox (components/ui/Listbox.tsx). */
+.workbench .lb,
+.workbench .drp {
+  position: relative;
+  min-width: 0;
+}
+.workbench .lb-btn,
+.workbench .drp-btn {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-tight);
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-refusal);
+  text-align: left;
+  cursor: pointer;
+}
+.workbench .lb-val {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.workbench .lb-caret {
+  flex: none;
+  color: var(--ink-faint);
+}
+.workbench .lb-btn.is-unset,
+.workbench .drp-btn.is-unset {
+  color: var(--ink-faint);
+}
+.workbench .lb-btn:focus-visible,
+.workbench .drp-btn:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: -2px;
+}
+.workbench .lb-btn[aria-invalid="true"] {
+  border-color: var(--fld-invalid);
+}
+.workbench .lb-btn:disabled,
+.workbench .drp-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.workbench .lb-pop {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--raise);
+  border: 1px solid var(--act);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.4);
+}
+.workbench .lb-pop:focus-visible {
+  outline: none;
+}
+.workbench .lb-opt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  min-height: 44px;
+  padding: 0 12px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-refusal);
+  color: var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.workbench .lb-opt[data-active] {
+  background: var(--raise-hi);
+}
+.workbench .lb-opt.is-selected {
+  background: var(--pri-off);
+}
+.workbench .lb-opt.is-selected[data-active] {
+  box-shadow: inset 2px 0 0 var(--act);
+}
+.workbench .lb-opt[aria-disabled="true"] {
+  color: var(--ink-faint);
+  cursor: default;
+}
+.workbench .lb-check {
+  flex: none;
+  width: 16px;
+}
+/* Ruling 7: the date picker (components/ui/DateRangePicker.tsx). */
+.workbench .drp-pop {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  /* Anchored to the control's right edge: Work dates sits in the right
+     column, and a left-anchored grid ran past the band at 1440 (#517
+     walk, dates-picker-open). */
+  right: 0;
+  margin-top: 4px;
+  padding: var(--space-tight);
+  background: var(--raise);
+  border: 1px solid var(--act);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.4);
+  font-family: var(--font-sans);
+  max-width: calc(100vw - 32px);
+}
+.workbench .drp-head,
+.workbench .drp-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-tight);
+}
+.workbench .drp-month {
+  font-size: var(--fs-refusal);
+  font-weight: 600;
+  color: var(--ink);
+}
+.workbench .drp-nav,
+.workbench .drp-day,
+.workbench .drp-clear {
+  appearance: none;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  cursor: pointer;
+}
+.workbench .drp-nav {
+  font-size: var(--fs-refusal);
+  color: var(--act);
+}
+.workbench .drp-grid {
+  border-collapse: collapse;
+}
+.workbench .drp-grid th {
+  font-size: var(--fs-field-label);
+  font-weight: 500;
+  color: var(--ink-faint);
+  text-align: center;
+  padding: 4px 0;
+}
+.workbench .drp-grid td {
+  padding: 0;
+}
+.workbench .drp-day.is-between {
+  background: var(--pri-off);
+}
+.workbench .drp-day[aria-pressed="true"] {
+  background: var(--act);
+  color: var(--on-act);
+  font-weight: 600;
+}
+.workbench .drp-nav:focus-visible,
+.workbench .drp-day:focus-visible,
+.workbench .drp-clear:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: -2px;
+}
+.workbench .drp-clear {
+  color: var(--act);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.workbench .drp-clear:disabled {
+  color: var(--ink-faint);
+  cursor: default;
+  text-decoration: none;
+}
+.workbench .drp-hint {
+  font-size: var(--fs-field-label);
+  color: var(--ink-faint);
+}
+@media (max-width: 520px) {
+  .workbench .w-box > .a-cell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workbench .drp-pop {
+    left: auto;
+    right: 0;
+  }
+}
+
 /* #289 fidelity F4 (ruled Q3): the corridor's zone rows are the extent
    field's own provenance lines — a plain stack inside the cell.  The
    .a-detect block that held them (16 px margin, a dotted top rule, its

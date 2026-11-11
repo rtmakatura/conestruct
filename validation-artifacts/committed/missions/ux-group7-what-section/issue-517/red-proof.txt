@@ -1,0 +1,8 @@
+# #517 red-proof: each new suite run against the pre-change code (HEAD 7a77005d's
+# versions of the changed files, the new modules absent; the test helper
+# components/__fixtures__/listbox.ts kept), one line each.  Restored byte for byte after.
+components/WhatBand.guesses-first.test.tsx @ HEAD (pre-change): exit 1; 15 failed (15)
+components/ui/Listbox.test.tsx @ HEAD (pre-change): exit 1; no tests (the suite cannot load: ./Listbox does not exist before #517)
+components/ui/DateRangePicker.test.tsx @ HEAD (pre-change): exit 1; no tests (the suite cannot load: ./DateRangePicker does not exist before #517)
+lib/scenarios/why-lines.test.ts @ HEAD (pre-change): exit 1; no tests (the suite cannot load: ./why-lines does not exist before #517)
+# Post-change: guesses-first 15 passed (15); Listbox + DateRangePicker + why-lines 19 passed (19).

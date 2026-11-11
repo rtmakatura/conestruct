@@ -18,6 +18,8 @@ import { classifyFromOsmTags } from "@/lib/road-detection/classify";
 import { withCurrentGuesses } from "@/lib/scenarios/guesses";
 import { applyClassification } from "@/lib/scenarios/auto-apply";
 import { WhatBand } from "./bands/WhatBand";
+import { sourceWord } from "./__fixtures__/what-section";
+import { listboxValue } from "./__fixtures__/listbox";
 
 afterEach(cleanup);
 
@@ -87,29 +89,36 @@ function Harness({ initial }: { initial: Scenario }) {
   );
 }
 
-const marker = () =>
-  document.querySelector('[data-testid="info-toggle-speed"]')?.textContent?.replace(/\s+/g, " ").trim();
-const select = () => document.getElementById("what-speed") as HTMLSelectElement;
+// #517 ruling 5: the marker is the field's source line; in the guesses
+// box (S1: speed's R126 record) it is the guess's reason with its ⚠.
+const marker = () => sourceWord("speed");
+const glyph = () => document.querySelector('[data-testid="info-toggle-speed"] .w-src-glyph')?.textContent ?? null;
+// #517 ruling 6: the shared listbox shows the selected option's label.
+const select = () => listboxValue("what-speed");
 
 describe("R126: WHAT's Speed row", () => {
-  it("no posted speed: the estimate is the value, marked ⚠ from the road; no estimate line, no button", () => {
+  it("no posted speed: the estimate is the value, marked as a guess from the road; no estimate line, no button", () => {
     render(<Harness initial={scenarioOn(road(null))} />);
-    expect(select().value).toBe("25");
-    expect(marker()).toBe("⚠ from the road");
+    expect(select()).toBe("25 mph");
+    expect(screen.getByTestId("what-guesses").contains(screen.getByTestId("cell-speed"))).toBe(true);
+    expect(marker()).toBe("Based on the road's map tag. The map has no posted speed here.");
+    expect(glyph()).toBe("⚠");
     expect(document.querySelector('[data-testid="speed-estimate"]')).toBeNull();
     expect(screen.queryByRole("button", { name: /Use \d+ mph/ })).toBeNull();
   });
 
-  it("no road at the pin: ◌ not set, and the select shows Not set", () => {
+  it("no road at the pin: Not set yet, and the listbox shows Not set", () => {
     render(<Harness initial={scenarioOn(null)} />);
-    expect(marker()).toBe("◌ not set");
-    expect(select().value).toBe("");
-    expect(select().selectedOptions[0]?.textContent).toBe("Not set");
+    expect(marker()).toBe("Not set yet");
+    expect(glyph()).toBeNull();
+    expect(select()).toBe("Not set");
+    expect(document.getElementById("what-speed")!.className).toContain("is-unset");
   });
 
   it("a posted speed: measured, no guess", () => {
     render(<Harness initial={scenarioOn(road("30 mph"))} />);
-    expect(select().value).toBe("30");
-    expect(marker()).toBe("✓ measured");
+    expect(select()).toBe("30 mph");
+    expect(marker()).toBe("Measured from the map");
+    expect(glyph()).toBe("✓");
   });
 });

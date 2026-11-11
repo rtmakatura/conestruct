@@ -29,6 +29,8 @@ import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import { classifyFromOsmTags, suggestStreetClass } from "@/lib/road-detection/classify";
 import { setJurisdictionByOperator } from "@/lib/scenarios/guesses";
 import demo from "./__fixtures__/jurisdiction-demo.json";
+import { listboxValue, pickOptionUser } from "./__fixtures__/listbox";
+import { sourceWord } from "./__fixtures__/what-section";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -210,19 +212,17 @@ afterEach(() => {
 });
 
 const last = () => bodies[bodies.length - 1];
-const marker = () => screen.getByTestId("info-toggle-street-class").textContent;
+// #517 (ruling 5, S4): the field's source line, in its new words.
+const marker = () => sourceWord("street-class");
 
 describe("the road guesses the street class (R108)", () => {
   it("a confirmed primary road fills Arterial, marked, and relays its tag", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
     await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Arterial" }).getAttribute("aria-pressed")).toBe(
-        "true",
-      ),
-    );
-    expect(marker()).toBe("⚠ from the road");
+    // #517 (S7): street class is a listbox; its button shows the pick.
+    await waitFor(() => expect(listboxValue("what-street-class")).toBe("Arterial"));
+    expect(marker()).toBe("Our guess. Check it.");
     await waitFor(() => expect(last()?.street_class).toBe("arterial"));
     expect(last().guesses?.street_class).toEqual({ highwayClass: "primary" });
     // No confirm step anywhere.
@@ -234,7 +234,7 @@ describe("the road guesses the street class (R108)", () => {
   it("no confirmed road: nothing is guessed", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
     await waitFor(() => expect(bodies.length).toBeGreaterThan(0));
-    expect(marker()).toBe("◌ not set");
+    expect(marker()).toBe("Not set yet");
     for (const b of bodies) expect(b.street_class ?? null).toBeNull();
   });
 
@@ -242,9 +242,9 @@ describe("the road guesses the street class (R108)", () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
     await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() => expect(marker()).toBe("⚠ from the road"));
+    await waitFor(() => expect(marker()).toBe("Our guess. Check it."));
     await user.click(screen.getByText("stub-move-pin-only"));
-    expect(marker()).toBe("◌ not set");
+    expect(marker()).toBe("Not set yet");
     await waitFor(() => expect(last()?.street_class ?? null).toBeNull());
     expect(last().guesses ?? null).toBeNull();
   });
@@ -253,15 +253,15 @@ describe("the road guesses the street class (R108)", () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
     await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() => expect(marker()).toBe("⚠ from the road"));
-    await user.click(screen.getByRole("button", { name: "Local" }));
-    expect(marker()).toBe("✓ yours");
+    await waitFor(() => expect(marker()).toBe("Our guess. Check it."));
+    await pickOptionUser(user, "what-street-class", "local");
+    expect(marker()).toBe("Set by you");
     await waitFor(() => expect(last()?.street_class).toBe("local"));
     expect(last().guesses ?? null).toBeNull();
     (globalThis as { __road?: ConfirmedRoad }).__road = confirmedRoad("tertiary");
     await user.click(screen.getByText("stub-confirm-road"));
-    expect(marker()).toBe("✓ yours");
-    expect(screen.getByRole("button", { name: "Local" }).getAttribute("aria-pressed")).toBe("true");
+    expect(marker()).toBe("Set by you");
+    expect(listboxValue("what-street-class")).toBe("Local");
   });
 
   it("a tertiary road guesses Collector", async () => {
@@ -285,12 +285,12 @@ describe("the road guesses the street class (R108)", () => {
       "parker",
     );
     await user.click(screen.getByText("stub-confirm-road"));
-    await waitFor(() => expect(screen.getByText(/The road tier is a proxy/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/The map tag is only a stand-in/)).toBeTruthy());
     const link = screen.getByRole("link", {
       name: /Parker's functional-classification map/,
       hidden: true,
     }) as HTMLAnchorElement;
     expect(link.href).toContain("example.gov/classification-map");
-    expect(screen.getByText(/detected road tier: OSM primary/)).toBeTruthy();
+    expect(screen.getByText("The road's map tag: main road.")).toBeTruthy();
   });
 });

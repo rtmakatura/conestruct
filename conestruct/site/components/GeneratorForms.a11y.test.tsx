@@ -77,19 +77,20 @@ function mountWhere(scenario: Scenario) {
 describe("the WHAT grid's cells carry their visible labels", () => {
   it("shoulder: every cell resolves from its label", () => {
     mountWhat(DEFAULT_SHOULDER);
-    expect(byLabel(/^Road type/).tagName).toBe("SELECT");
-    expect(byLabel(/^Speed(?! reduction)/).tagName).toBe("SELECT");
-    expect(byLabel(/^Lane width/).tagName).toBe("SELECT");
-    expect(byLabel(/^Lanes per direction/).tagName).toBe("SELECT");
-    expect(byLabel(/^Jurisdiction/).tagName).toBe("SELECT");
-    expect((byLabel(/^Work dates/) as HTMLInputElement).type).toBe("date");
+    expect(byLabel(/^Road type/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
+    expect(byLabel(/^Speed(?! reduction)/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
+    expect(byLabel(/^Lane width/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
+    expect(byLabel(/^Lanes per direction/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
+    expect(byLabel(/^Jurisdiction/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
+    // #517 ruling 7: the dates are one 44 px button opening the picker.
+    expect(byLabel(/^Work dates/).getAttribute("aria-haspopup")).toBe("dialog");
   });
 
   it("flagger: the lanes cell is read-only with its reason, and still labelled", () => {
     mountWhat(DEFAULT_FLAGGER);
-    expect(byLabel(/^Road type/).tagName).toBe("SELECT");
-    expect(byLabel(/^Speed(?! reduction)/).tagName).toBe("SELECT");
-    expect(byLabel(/^Lane width/).tagName).toBe("SELECT");
+    expect(byLabel(/^Road type/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
+    expect(byLabel(/^Speed(?! reduction)/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
+    expect(byLabel(/^Lane width/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
     // #209's read-only-with-reason: the kind has no lane count, so the
     // cell states the one the plan uses rather than vanishing.
     const lanes = screen.getByLabelText(
@@ -122,11 +123,11 @@ describe("the per-kind forms' own controls carry their visible labels", () => {
     render(
       <PlanDetailCells group="job" scenario={DEFAULT_SHOULDER} setScenario={() => {}} />,
     );
-    expect(byLabel(/^Work type/).tagName).toBe("SELECT");
+    expect(byLabel(/^Type of work/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
   });
 
   it("the flagger's work type carries its label in the second group", () => {
     render(<PlanDetailCells group="job" scenario={DEFAULT_FLAGGER} setScenario={() => {}} />);
-    expect(byLabel(/^Work type/).tagName).toBe("SELECT");
+    expect(byLabel(/^Type of work/).getAttribute("aria-haspopup")).toBe("listbox"); // #517 ruling 6: the shared listbox
   });
 });

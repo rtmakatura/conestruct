@@ -38,7 +38,7 @@
 //   OUT     a folder for the JSON of every reading and a crop per state
 //           (optional; nothing is written without it)
 //   ONLY    run only these phases (comma-separated): states, long-name,
-//           two-option-side, sides-unavailable, aerial-failed, results
+//           two-option-side, sides-unavailable, aerial-failed, results, what
 //   STUB_ROAD  /api/road-bearing answered from the recorded Colfax fixture
 //           (default 1; 0 on production).  The variants below need it.
 // The variants (each a route on the page, never a backend change):
@@ -51,6 +51,19 @@
 //     other side added), in every phase since #507 picks a lone side for
 //     you, so a one-option question never opens;
 //   - the aerial's failure: /api/corridor-map 500 (a note on the frame).
+// #517 ruling 8 (Ryan, 2026-11-11): "Add this section's states to the
+// permanent checks: band and columns, 44 px, and axe."  The `what` phase
+// (after the WHERE phases, which are unchanged) confirms the recorded road
+// and walks the What section: first show, a guess checked (the box's rows
+// must not move), a why tip open, the jurisdiction dropdown open, the
+// measured row open, File details open, work dates set with times inside
+// and outside the hours, and #227's windows table open.  In each: the
+// section's side-by-side grids ("About the work", the measured row's and
+// File details' panels) end together (0 px), every shown control in the
+// What band is at least 44 px tall, and axe-core (the site's
+// node_modules) finds 0 violations in the band.  Then WHERE is reopened
+// and read as the other WHERE states (#469's band height).  The repo had
+// no other permanent 44 px or axe script, so they live here.
 // "0 px": the difference, rounded to the nearest whole px, is 0 (CHOSEN:
 // a box's edge falls on sub-pixel positions; half a px is not a visible
 // step at DPR 1).
@@ -288,12 +301,76 @@ function readRows(rootSel) {
   return found;
 }
 
+// #517: the What section.  Each two-column grid's column ends, every
+// shown control's height, and the box's rows (for "nothing moved").
+//
+// #520 (Ryan, 2026-11-11: "The columns check has to measure where each
+// column's content actually ends, not the grid boxes"): a grid's boxes
+// stretch to the row's height, so their bottoms always agree.  A column's
+// end here is where its content ends: the lowest bottom of any shown,
+// in-flow element inside the column's last cell (a floating tip or popup
+// is a layer over the page, not column content).  The cells are found by
+// class (`.a-cell`) under the grid, either straight under it or under a
+// `.a-col` stack, and put in a column by their left edge; a cell that spans
+// the grid's width ends every column it spans.  The last cell's own box
+// bottom is reported beside it (`cellDiff`); the verdict reads `diff`.
+function readWhat() {
+  const band = document.querySelector("[data-testid=band-what]");
+  if (!band) return null;
+  const shown = (e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none"; };
+  const floats = (e, stop) => { for (let x = e; x && x !== stop; x = x.parentElement) { const p = getComputedStyle(x).position; if (p === "absolute" || p === "fixed") return true; } return false; };
+  const contentEnd = (cell) => {
+    let end = -Infinity;
+    for (const d of cell.querySelectorAll("*")) {
+      if (!shown(d) || floats(d, cell)) continue;
+      end = Math.max(end, d.getBoundingClientRect().bottom);
+    }
+    return end === -Infinity ? cell.getBoundingClientRect().bottom : end;
+  };
+  const grids = [];
+  for (const [k, sec] of [["about", "[data-testid=what-about]"], ["measured", "[data-testid=what-measured-panel]"], ["files", "[data-testid=what-files-panel]"]]) {
+    const host = band.querySelector(sec);
+    if (!host || !shown(host)) continue;
+    const g = host.querySelector(".w-grid, .w-cols");
+    // A shown section with no grid is a FAIL, never a silent pass.
+    if (!g || !shown(g)) { grids.push({ grid: k, twoCol: true, missing: true, diff: NaN, cellDiff: NaN }); continue; }
+    const cells = [...g.querySelectorAll(":scope > .a-cell, :scope > .a-col > .a-cell")].filter(shown)
+      .map((c) => ({ c, r: c.getBoundingClientRect() }));
+    const lefts = [...new Set(cells.map(({ r }) => Math.round(r.left)))].sort((a, b) => a - b);
+    const gr = g.getBoundingClientRect();
+    const twoCol = lefts.length >= 2;
+    if (!twoCol) { grids.push({ grid: k, twoCol, diff: null, cellDiff: null }); continue; }
+    // Each column: its left edge to the next one's (the last to the grid's right).
+    const cols = lefts.map((l, i) => ({ l, r: i + 1 < lefts.length ? lefts[i + 1] - 1 : gr.right }));
+    const ends = cols.map(({ l, r }) => {
+      const mine = cells.filter(({ r: b }) => b.left < r && b.right > l + 1);
+      const last = mine.reduce((a, b) => (b.r.bottom > a.r.bottom ? b : a));
+      return { cell: last.c.getAttribute("data-testid"), box: last.r.bottom, content: contentEnd(last.c) };
+    });
+    const spread = (v) => +(Math.max(...v) - Math.min(...v)).toFixed(2);
+    grids.push({
+      grid: k, twoCol, columns: ends.length,
+      lastCells: ends.map((e) => e.cell),
+      ends: ends.map((e) => +(e.content + scrollY).toFixed(2)),
+      diff: spread(ends.map((e) => e.content)),
+      cellDiff: spread(ends.map((e) => e.box)),
+    });
+  }
+  const ctl = [...band.querySelectorAll("button, a[href], input, select, textarea, summary, [role=option], [role=radio], [role=button], [role=checkbox]")].filter(shown);
+  const name = (e) => (e.getAttribute("aria-label") || e.innerText || e.className || e.tagName).toString().replace(/\s+/g, " ").trim().slice(0, 30);
+  const under = ctl.filter((e) => e.getBoundingClientRect().height < 44).map((e) => `${name(e)} ${Math.round(e.getBoundingClientRect().height * 100) / 100}px`);
+  const rows = [...band.querySelectorAll("[data-testid=what-guesses] .a-cell")].map((e) => ({ id: e.getAttribute("data-testid"), top: +(e.getBoundingClientRect().top + scrollY).toFixed(2) }));
+  return { grids, controls: ctl.length, under, rows, head: document.querySelector("[data-testid=what-guesses-head]")?.innerText ?? null, bandH: +band.getBoundingClientRect().height.toFixed(2) };
+}
+const AXE_SRC = (() => { try { return fs.readFileSync(path.join(ROOT, "conestruct/site/node_modules/axe-core/axe.min.js"), "utf8"); } catch { return null; } })();
+
 async function one(w, h, zoom) {
   const tag = `${w}x${h}${zoom !== 1 ? `@text${zoom * 100}` : ""}`;
   const b = await chromium.launch();
   const steps = [];
   const rows = [];
   const errors = [];
+  const whatSteps = [];
   // #507 (R145-4): a lone offered side is now picked for you, so the side
   // question never opens on the recorded one-carriageway road.  Every phase
   // walks with the two-side answer (the mirrored side below) so the side
@@ -583,12 +660,109 @@ async function one(w, h, zoom) {
       for (const r of await p.evaluate(readRows, "body")) rows.push({ ...r, at: "results" });
       if (OUT) await p.screenshot({ path: path.join(OUT, `${tag}-results.png`), fullPage: true }).catch(() => {});
     });
+
+    // ── #517: the What section's states ──
+    await phase("what", async () => {
+      const W = "[data-testid=band-what]";
+      const settled = () => p.waitForFunction((sel) => {
+        const t = document.querySelector(sel)?.innerText ?? "";
+        return t && !/Checking|checking your dates|◌ loading/.test(t);
+      }, W, { timeout: 90000 }).catch(() => {});
+      const whatStep = async (name, wait = 800) => {
+        await p.waitForTimeout(wait);
+        await zoomNow();
+        await p.waitForTimeout(300);
+        if (AXE_SRC && !(await p.evaluate(() => !!window.axe))) await p.addScriptTag({ content: AXE_SRC });
+        const axe = AXE_SRC
+          ? await p.evaluate(async (sel) => (await window.axe.run({ include: [[sel]] }, { resultTypes: ["violations"] })).violations.map((v) => `${v.id}(${v.nodes.length}): ${v.nodes.slice(0, 2).map((n) => n.target.join(" ")).join(" | ")}`), W)
+          : ["axe-core not found"];
+        const s = { name, ...(await p.evaluate(readWhat)), axe };
+        whatSteps.push(s);
+        if (OUT) {
+          s.shot = `${tag}-what-${name}.png`;
+          await p.locator(W).screenshot({ path: path.join(OUT, s.shot) }).catch(() => {});
+        }
+        const cols = s.grids.filter((g) => g.twoCol);
+        s.ok = cols.every((g) => Math.round(g.diff) === 0) && s.under.length === 0 && s.axe.length === 0;
+        console.log(`${tag} what ${name.padEnd(22)} ${s.ok ? "PASS" : "FAIL"} | columns ${cols.length ? cols.map((g) => (g.missing ? `${g.grid} GRID MISSING` : `${g.grid} content ${g.diff} px (last cells ${g.lastCells.join("/")}, boxes ${g.cellDiff} px)`)).join(", ") : "one column"} | 44 px: ${s.controls} controls, ${s.under.length} under${s.under.length ? ` (${s.under.join(", ")})` : ""} | axe ${s.axe.length}${s.axe.length ? ` (${s.axe.join("; ")})` : ""} | band ${s.bandH}${s.head ? ` | box "${s.head}"` : ""}`);
+        return s;
+      };
+      const lb = async (id, value) => {
+        await p.locator(`#${id}`).click();
+        await p.waitForSelector("[role=listbox]", { timeout: 5000 });
+        await p.locator(`[role=listbox] [role=option][data-value="${value}"]`).click();
+        await p.waitForTimeout(1200);
+      };
+      await pin();
+      await pick("kind-chip-shoulder");
+      await p.waitForTimeout(1200);
+      await nextBtn();
+      await p.waitForSelector("[data-testid=side-option]", { state: "attached", timeout: 30000 });
+      await p.waitForTimeout(1200);
+      await pick("side-option");
+      await p.waitForTimeout(1500);
+      await p.locator("[data-testid=where-confirm]").click();
+      await p.waitForSelector(W, { timeout: 90000 });
+      await settled();
+      await p.locator(W).scrollIntoViewIfNeeded();
+      const first = await whatStep("first-show", 1500);
+      await p.getByTestId("info-toggle-road-type").click().catch(() => p.getByTestId("info-toggle-speed").click());
+      await whatStep("tip-open", 500);
+      await p.keyboard.press("Escape");
+      await p.locator("#what-jurisdiction").click();
+      await p.waitForSelector("[role=listbox]", { timeout: 5000 });
+      await whatStep("dropdown-open", 500);
+      await p.keyboard.press("Escape");
+      // A guess checked: the street class picked (P1: nothing moves).
+      if (await p.locator("[data-testid=what-guesses] #what-street-class").count()) {
+        await lb("what-street-class", "collector");
+        await settled();
+        const s = await whatStep("guess-checked");
+        const moved = first.rows.filter((r, i) => !s.rows[i] || Math.round(s.rows[i].top - r.top) !== 0);
+        if (moved.length) { s.ok = false; console.log(`${tag} what guess-checked FAIL | rows moved: ${moved.map((r) => r.id).join(", ")}`); }
+      } else console.log(`${tag} what guess-checked skipped: no street class guess at this pin`);
+      // The measured row the other way from its first show (it starts open
+      // when a field inside needs the operator now, #517 S19).
+      await p.getByTestId("what-measured-toggle").click();
+      const mOpen = (await p.getByTestId("what-measured-toggle").getAttribute("aria-expanded")) === "true";
+      await whatStep(mOpen ? "measured-open" : "measured-closed");
+      await p.getByTestId("what-measured-toggle").click();
+      await p.getByTestId("what-files-toggle").click();
+      await whatStep("files-open");
+      await p.getByTestId("what-files-toggle").click();
+      // Work dates Mon Nov 16 to Fri Nov 20 2026, then the hours.
+      await p.locator("#what-date").click();
+      await p.waitForSelector("[data-testid=date-picker]");
+      await whatStep("date-picker-open", 400);
+      await p.locator("[data-testid=date-picker] [data-date='2026-11-16']").click();
+      await p.waitForTimeout(400);
+      await p.locator("[data-testid=date-picker] [data-date='2026-11-20']").click();
+      await p.waitForTimeout(400);
+      if (await p.locator("[data-testid=date-picker]").count()) await p.keyboard.press("Escape");
+      await lb("sched-start", "9");
+      await lb("sched-end", "15");
+      await settled();
+      await whatStep("dates-inside");
+      const all = p.getByTestId("what-hours-all");
+      if (await all.count()) {
+        await all.click();
+        await whatStep("hours-all-open");
+        await all.click();
+      }
+      await lb("sched-start", "7");
+      await lb("sched-end", "17");
+      await settled();
+      await whatStep("dates-outside");
+      // #469: WHERE reopened after the What changes, read as the others.
+      await p.locator("[data-testid=fact-link-where]").click().catch(() => {});
+      await step("reopened-after-what", 1500);
+    });
   } catch (e) {
     errors.push(`walk: ${oneLine(e).slice(0, 220)}`);
   } finally {
     await b.close();
   }
-  return { tag, steps, rows, errors, outline };
+  return { tag, steps, rows, errors, outline, whatSteps };
 }
 
 const all = [];
@@ -601,6 +775,7 @@ for (const [w, h] of SIZES) {
     for (const s of r.steps) if ((s.twoCol && (s.frameDiff !== 0 || s.colDiff !== 0)) || s.overlaps.length || s.spills.length) failed = true;
     if (!r.steps.some((s) => s.twoCol)) console.log(`${r.tag} WHERE never in two columns at this size`);
     if (r.outline && !r.outline.marks) failed = true;
+    if (r.whatSteps.some((s) => !s.ok)) failed = true;
     for (const row of r.rows) {
       const ok = Math.round(row.diff) === 0 && (row.buttonDiff === null || Math.round(row.buttonDiff) === 0);
       if (!ok) failed = true;
@@ -624,6 +799,11 @@ for (const r of all) for (const row of r.rows) {
   byLayout.set(k, { max: Math.max(byLayout.get(k)?.max ?? 0, v), runs: (byLayout.get(k)?.runs ?? 0) + 1 });
 }
 for (const [k, v] of byLayout) console.log(`  ${k}: ${v.runs} runs, max ${+v.max.toFixed(2)}`);
+const ws = all.flatMap((r) => r.whatSteps);
+if (ws.length) {
+  const gd = ws.flatMap((s) => s.grids.filter((g) => g.twoCol).map((g) => g.diff));
+  console.log(`  WHAT section (#517): ${new Set(ws.map((s) => s.name)).size} states x ${all.filter((r) => r.whatSteps.length).length} size/zoom runs, ${ws.length} readings: two-column grids, where each column's content ends (#520), max ${gd.length ? Math.max(...gd) : "n/a"} px; controls under 44 px in ${ws.filter((s) => s.under.length).length} readings; axe violations in ${ws.filter((s) => s.axe.length).length} readings`);
+}
 if (OUT) fs.writeFileSync(path.join(OUT, "readings.json"), JSON.stringify(all, null, 1));
 console.log(failed ? "\nRESULT FAIL" : "\nRESULT PASS");
 process.exit(failed ? 1 : 0);

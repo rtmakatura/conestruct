@@ -27,6 +27,7 @@ import type { Scenario } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import { WhatBand } from "./bands/WhatBand";
 import { whereProvenance } from "@/lib/scenarios/band-facts";
+import { whyTip } from "./__fixtures__/what-section";
 
 afterEach(cleanup);
 
@@ -174,31 +175,36 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
 
   it("each cell carries its own clause, under its own field (rule 137)", () => {
     mount(pinnedShoulder());
-    expect(prov("speed")).toMatch(/^OSM · 30 mph ·/);
-    expect(prov("lanes")).toMatch(/^OSM · 1 ·/);
-    expect(prov("road-type")).toMatch(/OSM · Urban street ·/);
+    // #517 ruling 5: each field's own why tip, in plain words, no "OSM".
+    expect(whyTip("speed")[0]).toMatch(/^The road's map record says the posted speed is 30 mph\./);
+    expect(whyTip("lanes")[0]).toMatch(/^The road's map record says 1 lanes? each way\./);
+    expect(whyTip("road-type")[0]).toBe("The road's map tag (secondary road) sets this road type.");
+    for (const id of ["speed", "lanes", "road-type"]) expect(whyTip(id).join(" ")).not.toContain("OSM");
     // rule 137: a field with no provenance line is a defect — and the
     // two the ledger never had a row for say so in words rather than
     // being left blank.  R110 Q7: lane width says its own source, the
     // plan's standard lane, until the operator picks one; R126: as a line
     // in the Lanes row's details, named, not a second marker.
-    expect(prov("lane-width")).toBe(
-      "Lane width · default · the plan's standard lane; detection doesn't measure width",
-    );
+    expect(prov("lane-width")).toBe("Default");
+    expect(whyTip("lane-width")).toEqual([
+      "The plan's standard lane. The map doesn't measure lane width, so check it on site.",
+    ]);
     // Fix 1: the dates are ONE control and the mode derives from them,
     // so an unset date says so in its own line rather than calling
     // itself optional under a caption that promises lead times.
-    expect(prov("work-dates")).toBe(
-      "not set · windows and permit lead times need a date",
-    );
+    expect(prov("work-dates")).toBe("Not set yet");
+    expect(whyTip("work-dates")).toEqual(["The work-hour check and permit lead times need a date."]);
   });
 
-  it("every provenance line rides the provenance role, not a new one", () => {
+  it("every provenance line rides the source-line role, not a new one (#517 ruling 5)", () => {
     mount(pinnedShoulder());
     for (const id of ["speed", "lanes", "lane-width", "road-type", "jurisdiction", "work-dates"]) {
       const el = document.querySelector(`[data-testid="prov-${id}"]`)!;
-      expect(el.className, `${id} is tr-prov`).toContain("tr-prov");
+      expect(el.closest(".w-src"), `${id} is the source line`).not.toBeNull();
     }
+    // #517 round 1: lane width's source is its own row's line, not a
+    // line inside the Lanes tip.
+    expect(document.querySelector('[data-testid="info-lanes"] [data-testid="prov-lane-width"]')).toBeNull();
   });
 
   it("a fact the kind does not carry renders no footer row — flagger has no lanes or divided detection line", () => {
@@ -222,7 +228,7 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     // the grid renders the CELL read-only with the reason instead — rule
     // 136's read-only-with-reason.  An absent control tells the operator
     // nothing; a stated one tells them TA-10 fixes the count.
-    expect(prov("lanes")).toMatch(/TA-10/);
+    expect(whyTip("lanes")[0]).toMatch(/TA-10/);
     expect(
       document.querySelector('[data-testid="cell-lanes"] input'),
     ).toHaveProperty("readOnly", true);

@@ -48,6 +48,8 @@ vi.mock("./LocationPickerModal", () => ({
 import { GeneratorShell } from "./GeneratorShell";
 import { withOperatorSpeed } from "./test-fixtures";
 import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { listboxValue } from "./__fixtures__/listbox";
+import { whyTip } from "./__fixtures__/what-section";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -132,12 +134,9 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     await openWhat();
     // Speed and jurisdiction: their own cells, each with a provenance
     // line under it (rule 137).
-    expect(
-      (document.querySelector("#what-speed") as HTMLSelectElement).value,
-    ).toBe(String(DEFAULT_SHOULDER.speed));
-    expect(
-      (document.querySelector("#what-jurisdiction") as HTMLSelectElement).value,
-    ).toBe("");
+    // #517 (S7): the shared listbox; its button shows the picked label.
+    expect(listboxValue("what-speed")).toBe(`${DEFAULT_SHOULDER.speed} mph`);
+    expect(listboxValue("what-jurisdiction")).toBe("Not set: MUTCD + CDOT only");
     // The unset word, unchanged and still a direct text node (#257).
     expect(screen.getAllByText(/Not set/).length).toBeGreaterThan(0);
   });
@@ -153,12 +152,15 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     // 196: the cell shows the option the operator PICKED, and its
     // provenance line says which of the two you are looking at rather
     // than presenting the static label as an evaluation.
+    expect(listboxValue("what-jurisdiction")).toBe("Denver");
+    // #517 (ruling 5): the evaluation state is said in the why tip
+    // ("<name> calls this plan a …" was "evaluated ·").
+    const tip = whyTip("jurisdiction").join(" ");
+    expect(tip).not.toContain("calls this plan a");
+    expect(tip).toMatch(/The check didn't answer|Checking the jurisdiction/);
     expect(
-      (document.querySelector("#what-jurisdiction") as HTMLSelectElement).value,
-    ).toBe("denver");
-    const prov = document.querySelector('[data-testid="prov-jurisdiction"]')!;
-    expect(prov.textContent).not.toContain("evaluated ·");
-    expect(prov.textContent).toMatch(/check failed|evaluating/);
+      document.getElementById("what-jurisdiction")!.getAttribute("data-jurisdiction-state"),
+    ).toMatch(/^(check-failed|evaluating)$/);
   });
 });
 

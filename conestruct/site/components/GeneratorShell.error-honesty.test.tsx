@@ -12,7 +12,7 @@
 // exactly once, no Retry offered anywhere.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -27,6 +27,7 @@ import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import { PINNED_SHOULDER } from "./test-fixtures";
 import type { ShoulderScenario } from "@/lib/scenarios";
 import { openWhat } from "./__fixtures__/band-helpers";
+import { pickOption } from "./__fixtures__/listbox";
 
 // The issue's reproduction: each chip value valid alone, the combination
 // beyond the drawable half-road.
@@ -196,16 +197,14 @@ describe("strip error honesty (#184)", () => {
     // Drop lane width back into the drawable domain (10.5 ft fits 4 lanes
     // on the divided default).
     //
-    // #289 Phase 2: lane width is the WHAT grid's cell — a select at
+    // #289 Phase 2: lane width is the WHAT grid's cell — a list at
     // rule 136's 44 px, not a range slider.  The domain is the same one
     // the slider enforced (lib/scenarios/what-cells.ts, traced to the
-    // form it came from).
+    // form it came from).  #517 (S7): the shared listbox.
     await openWhat();
-    const width = document.querySelector("#what-lane-width") as HTMLSelectElement;
+    const width = document.querySelector("#what-lane-width");
     expect(width).toBeTruthy();
-    await act(async () => {
-      fireEvent.change(width, { target: { value: "10.5" } });
-    });
+    pickOption("what-lane-width", "10.5");
     expect(document.body.textContent).not.toContain("INVALID INPUT");
   });
 });

@@ -35,6 +35,7 @@ import type { Scenario } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import type { JurisdictionSuggestion } from "@/lib/jurisdiction";
 import { WhatBand } from "./bands/WhatBand";
+import { sourceWord, whyTip } from "./__fixtures__/what-section";
 
 afterEach(cleanup);
 
@@ -149,12 +150,17 @@ const cell = (id: string) => document.querySelector(`[data-testid="cell-${id}"]`
 const panel = (id: string) => document.querySelector(`[data-testid="info-${id}"]`) as HTMLElement | null;
 const toggle = (id: string) =>
   document.querySelector(`[data-testid="info-toggle-${id}"]`) as HTMLButtonElement | null;
-/** What a cell shows at rest: everything outside its (closed) panel. */
+/** What a cell shows at rest: everything outside its (closed) panel.
+ *  #517 ruling 5: the marker is now the source line (`.w-src`). */
 function atRest(el: HTMLElement): Element[] {
-  return [...el.querySelectorAll(".tr-prov, .sugg-row, .sugg-reason, .honesty, .warnrow, .mapchip")].filter(
+  return [...el.querySelectorAll(".w-src, .tr-prov, .sugg-row, .sugg-reason, .honesty, .warnrow, .mapchip")].filter(
     (n) => !n.closest(".a-info"),
   );
 }
+/** A node's words at rest: the source line's word (its glyph and its
+ *  screen-reader "(why: …)" aside), else its text. */
+const words = (n: Element) =>
+  n.classList.contains("w-src") ? n.querySelector(".w-src-word")!.textContent : n.textContent;
 
 describe("each field shows the control and ONE provenance marker (R108: no action line)", () => {
   it("every WHAT row shows exactly its marker(s) at rest (R98)", () => {
@@ -165,11 +171,11 @@ describe("each field shows the control and ONE provenance marker (R108: no actio
       const id = c.getAttribute("data-testid")!;
       // At rest nothing else in the row speaks: every other line is in
       // its closed popover.
-      const provs = [...c.querySelectorAll(".tr-prov")].filter(
+      const provs = [...c.querySelectorAll(".w-src, .tr-prov")].filter(
         (n) => !n.closest(".a-info") && !n.closest(".jbar-suggest"),
       );
       expect(provs, id).toHaveLength(markersIn(id));
-      expect(provs.every((n) => n.classList.contains("a-mark")), id).toBe(true);
+      expect(provs.every((n) => n.classList.contains("w-src")), id).toBe(true);
     }
   });
 
@@ -179,19 +185,19 @@ describe("each field shows the control and ONE provenance marker (R108: no actio
     expect(rt.querySelector("#what-road-type")).not.toBeNull();
     // R98: at rest, the marker; the line itself is one click away.
     // R108 / WhatC5: an inferred road type reads as a guess "from the road".
-    expect(atRest(rt).map((n) => n.textContent)).toEqual(["⚠ from the road"]);
+    // #517 ruling 5: "Our guess. Check it." with the ⚠.
+    expect(atRest(rt).map(words)).toEqual(["Our guess. Check it."]);
+    expect(atRest(rt)[0].textContent).toContain("⚠");
     const p = panel("road-type")!;
     expect(p.hasAttribute("hidden")).toBe(true);
-    expect(p.querySelector('[data-testid="prov-road-type"]')!.textContent).toBe(
-      "⚠ OSM · Urban street · inferred",
-    );
+    expect(whyTip("road-type")[0]).toBe("The map's Urban street is an estimate. Check it on site.");
     expect(document.querySelector('[data-testid="detect-bearing"]')).toBeNull();
   });
 
   it("jurisdiction at rest: the select and its marker; the pin's evidence is detail, with no row of its own", () => {
     mount();
     const j = cell("jurisdiction");
-    expect(atRest(j).map((n) => n.textContent)).toEqual(["◌ not set"]);
+    expect(atRest(j).map(words)).toEqual(["Not set yet"]);
     // R108: no suggestion row, no Confirm, no Dismiss.
     expect(document.querySelector('[data-testid="action-jurisdiction"]')).toBeNull();
     expect(j.querySelector("button.confirm, button.ghost")).toBeNull();
@@ -206,13 +212,15 @@ describe("each field shows the control and ONE provenance marker (R108: no actio
     );
   });
 
-  it("street class is its own row of The road — the segmented control and its marker, nothing else", () => {
+  it("street class is its own road row (in the measured panel, #517 S3) — the listbox and its source line, nothing else", () => {
     mount();
     const sc = cell("street-class");
-    expect(screen.getByTestId("what-group-road").contains(sc)).toBe(true);
+    expect(screen.getByTestId("what-measured-panel").contains(sc)).toBe(true);
     expect(cell("road-type").querySelector(".a-seg")).toBeNull();
-    expect(sc.querySelector('.a-seg[aria-label="Street class"]')).not.toBeNull();
-    expect(atRest(sc).map((n) => n.textContent)).toEqual(["◌ not set"]);
+    // #517 S7: a listbox, no longer the segmented control.
+    expect(sc.querySelector(".a-seg")).toBeNull();
+    expect(sc.querySelector("#what-street-class")!.getAttribute("aria-haspopup")).toBe("listbox");
+    expect(atRest(sc).map(words)).toEqual(["Not set yet"]);
     expect(document.querySelector('[data-testid="action-street-class"]')).toBeNull();
   });
 
@@ -256,9 +264,11 @@ describe("the details toggle — click / tap, never hover (rules 141, 142)", () 
     expect(t.tagName).toBe("BUTTON");
     expect(t.getAttribute("aria-expanded")).toBe("false");
     expect(t.getAttribute("aria-controls")).toBe(panel("jurisdiction")!.id);
-    expect(t.getAttribute("aria-label")).toMatch(/^Details for /);
-    // R98: the marker is the trigger — symbol + word.
-    expect(t.textContent).toBe("◌ not set");
+    // #517 S16: the button names the field it explains; the tip is "Why: <label>".
+    expect(t.textContent).toContain("(why: Jurisdiction)");
+    expect(panel("jurisdiction")!.getAttribute("aria-label")).toBe("Why: Jurisdiction");
+    // R98: the marker is the trigger — now the source line's words.
+    expect(sourceWord("jurisdiction")).toBe("Not set yet");
     await user.click(t);
     expect(t.getAttribute("aria-expanded")).toBe("true");
     expect(panel("jurisdiction")!.hasAttribute("hidden")).toBe(false);
@@ -312,7 +322,7 @@ describe("the details toggle — click / tap, never hover (rules 141, 142)", () 
       const id = c.getAttribute("data-testid")!;
       expect(c.querySelectorAll('[data-testid^="info-toggle-"]'), id).toHaveLength(markersIn(id));
     }
-    expect(toggle("work-dates")!.textContent).toBe("◌ not set");
+    expect(sourceWord("work-dates")).toBe("Not set yet");
   });
 });
 

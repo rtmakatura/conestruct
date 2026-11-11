@@ -27,6 +27,9 @@ import {
   type JurisdictionBlock,
 } from "@/lib/jurisdiction";
 import type { Scenario } from "@/lib/scenarios";
+import { Listbox } from "./ui/Listbox";
+import { WhyCell } from "./bands/FieldCell";
+import { timeWhy } from "@/lib/scenarios/why-lines";
 
 type Sched = NonNullable<Scenario["schedule"]>;
 type DateMode = Sched["date_mode"];
@@ -71,6 +74,9 @@ export function ScheduleField({
   // and lead times compute from it.
   const mode: DateMode = sched?.date_mode ?? "tbd";
 
+  const startWhy = timeWhy("start", sched?.start_time != null);
+  const endWhy = timeWhy("end", sched?.end_time != null);
+
   const patch = (p: Partial<Sched>) =>
     setScenario({
       ...scenario,
@@ -88,20 +94,35 @@ export function ScheduleField({
           question with a different field, and #188's whole contract. */}
       {mode !== "tbd" && (
         <>
-          <div className="a-cell" data-testid="cell-start-time">
-            <label className="tr-field" htmlFor="sched-start">
-              Start time
-            </label>
-            <select
+          {/* #517 ruling 6: the shared listbox (S7) in place of the native
+              select; #188's options and the stranded-end clear unchanged.
+              "Not set" is the clearing option (#199's display-only
+              default). */}
+          {/* #521 (ruling 5, S4): each time row has its source line,
+              "Set by you" or "Not set yet", as every other row does. */}
+          <WhyCell
+            label="Start time"
+            htmlFor="sched-start"
+            testid="start-time"
+            source={startWhy.source}
+            tip={startWhy.tip}
+          >
+            <Listbox
               id="sched-start"
-              className="a-fld"
-              data-write=""
-              value={sched?.start_time ?? ""}
-              onChange={(e) => {
-                const v = e.target.value === "" ? undefined : +e.target.value;
+              label="Start time"
+              value={sched?.start_time != null ? String(sched.start_time) : ""}
+              options={[
+                { value: "", label: "Not set" },
+                ...HALF_HOURS.map((h) => ({
+                  value: String(h),
+                  label: hhmm(h),
+                })),
+              ]}
+              onChange={(raw) => {
+                const v = raw === "" ? undefined : +raw;
                 // #188: end == start is rejected at the wire (ambiguous:
                 // zero-length vs 24 h wrap) — clear the end in the same
-                // patch rather than POSTing a value the select can no
+                // patch rather than POSTing a value the list can no
                 // longer display (the stranded-end bug).
                 patch(
                   v != null && sched?.end_time === v
@@ -109,50 +130,45 @@ export function ScheduleField({
                     : { start_time: v },
                 );
               }}
-            >
-              <option value="">—</option>
-              {HALF_HOURS.map((h) => (
-                <option key={h} value={h}>
-                  {hhmm(h)}
-                </option>
-              ))}
-            </select>
-            <span className="tr-prov">operator-set · local time</span>
-          </div>
+            />
+            <span className="tr-note">Local time.</span>
+          </WhyCell>
 
-          <div className="a-cell" data-testid="cell-end-time">
-            <label className="tr-field" htmlFor="sched-end">
-              End time
-            </label>
-            <select
+          <WhyCell
+            label="End time"
+            htmlFor="sched-end"
+            testid="end-time"
+            source={endWhy.source}
+            tip={endWhy.tip}
+          >
+            <Listbox
               id="sched-end"
-              className="a-fld"
-              data-write=""
-              value={sched?.end_time ?? ""}
-              onChange={(e) =>
-                patch({
-                  end_time:
-                    e.target.value === "" ? undefined : +e.target.value,
-                })
+              label="End time"
+              value={sched?.end_time != null ? String(sched.end_time) : ""}
+              options={[
+                { value: "", label: "Not set" },
+                // #188: an end at/before the start wraps past midnight —
+                // every half hour stays selectable, labeled "(next day)"
+                // when it lands after midnight.  Only end == start is
+                // excluded (rejected at the wire as ambiguous).
+                ...HALF_HOURS.filter((h) => h !== sched?.start_time).map(
+                  (h) => ({
+                    value: String(h),
+                    label:
+                      sched?.start_time != null && h < sched.start_time
+                        ? `${hhmm(h)} (next day)`
+                        : hhmm(h),
+                  }),
+                ),
+              ]}
+              onChange={(raw) =>
+                patch({ end_time: raw === "" ? undefined : +raw })
               }
-            >
-              <option value="">—</option>
-              {/* #188: an end at/before the start wraps past midnight —
-                  every half hour stays selectable, labeled "(next day)"
-                  when it lands after midnight.  Only end == start is
-                  excluded (rejected at the wire as ambiguous). */}
-              {HALF_HOURS.filter((h) => h !== sched?.start_time).map((h) => (
-                <option key={h} value={h}>
-                  {sched?.start_time != null && h < sched.start_time
-                    ? `${hhmm(h)} (next day)`
-                    : hhmm(h)}
-                </option>
-              ))}
-            </select>
-            <span className="tr-prov">
-              crosses midnight when it is earlier than the start
+            />
+            <span className="tr-note">
+              An end before the start runs past midnight.
             </span>
-          </div>
+          </WhyCell>
         </>
       )}
     </>
@@ -204,17 +220,32 @@ export function windowsSummary({
 }): { head: string; glyph: string; text: string; tone: string } {
   const none = "text-[color:var(--none)]";
   if (!scenario.jurisdiction_key) {
-    return { head: "Windows", glyph: "", text: "select a jurisdiction to check", tone: none };
+    return {
+      head: "Windows",
+      glyph: "",
+      text: "select a jurisdiction to check",
+      tone: none,
+    };
   }
   if (!jurisdiction) {
     // #398 (Rule 10): "loading" only while a check is open.  An answer
     // with no block says the windows weren't checked, and why.
     if (declined) {
-      return { head: "Windows", glyph: "", text: "not checked: the plan was declined", tone: none };
+      return {
+        head: "Windows",
+        glyph: "",
+        text: "not checked: the plan was declined",
+        tone: none,
+      };
     }
     if (errored) {
       // #425 (Ryan, 2026-10-29): a check that ran and failed.
-      return { head: "Windows", glyph: "", text: "check failed: the check didn't answer", tone: none };
+      return {
+        head: "Windows",
+        glyph: "",
+        text: "check failed: the check didn't answer",
+        tone: none,
+      };
     }
     return { head: "Windows", glyph: "◌", text: "loading", tone: none };
   }
@@ -231,10 +262,21 @@ export function windowsSummary({
     return { head, glyph: "", text: "set dates to check", tone: none };
   }
   if (jurisdiction.hours_eval.status === "inside") {
-    return { head, glyph: "✓", text: "fits your dates", tone: "text-[color:var(--pass)]" };
+    return {
+      head,
+      glyph: "✓",
+      text: "fits your dates",
+      tone: "text-[color:var(--pass)]",
+    };
   }
   const active = activeBandRow(rows, scenario.street_class ?? null);
-  const v = rowVerdict(active as BandRow, active, jurisdiction.hours_eval, true, false);
+  const v = rowVerdict(
+    active as BandRow,
+    active,
+    jurisdiction.hours_eval,
+    true,
+    false,
+  );
   return { head, ...v };
 }
 
@@ -299,7 +341,9 @@ function rowVerdict(
       ? `${v.overlap_hours} h overlaps the ${hhmm(v.window.start)}–${hhmm(v.window.end)} ban`
       : `${v.outside_hours} h outside the permitted ${(v.windows ?? [v.window])
           .map((w) => `${hhmm(w.start)}–${hhmm(w.end)}`)
-          .join(" / ")} ${v.windows && v.windows.length > 1 ? "windows" : "window"}`;
+          .join(
+            " / ",
+          )} ${v.windows && v.windows.length > 1 ? "windows" : "window"}`;
   return { glyph: "⚠", text, tone: "text-[color:var(--warn)]" };
 }
 
@@ -339,9 +383,7 @@ function ScheduleWindowsBlock({
           <span className="sw-glyph text-[color:var(--none)]" aria-hidden>
             ◌
           </span>
-          <span className="tr-prov">
-            Loading window data…
-          </span>
+          <span className="tr-prov">Loading window data…</span>
         </div>
       </div>
     );
@@ -356,9 +398,8 @@ function ScheduleWindowsBlock({
             ◌
           </span>
           <span className="tr-prov">
-            {jurisdiction.name} publishes no work-hour windows. No
-            restriction shown: none is on record. That doesn&apos;t mean
-            none exists.
+            {jurisdiction.name} publishes no work-hour windows. No restriction
+            shown: none is on record. That doesn&apos;t mean none exists.
           </span>
         </div>
       </div>
@@ -372,10 +413,11 @@ function ScheduleWindowsBlock({
 
   return (
     <div className="sched-windows">
-      {/* #289 fidelity F2: Part 2 rule 4 takes the CSS uppercase off the
-          step role ("write the string in caps"), so the caps this heading
-          always displayed are written into it. */}
-      <div className="tr-step mb-1">{`${jurisdiction.name.toUpperCase()} WINDOWS`}</div>
+      {/* #517 ruling 1 ("No mono, no caps labels"): the table opens inside
+          the What section now, so its heading is plain words in the
+          section's Inter (globals.css `.w-what .sched-windows`), replacing
+          #289 F2's written-in caps "<NAME> WINDOWS". */}
+      <div className="sw-head mb-1">{`${jurisdiction.name}'s work hours`}</div>
       {rows.map((r) => {
         const v = rowVerdict(
           r,

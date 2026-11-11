@@ -29,8 +29,16 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 import type { Scenario } from "@/lib/scenarios";
+import { whyTip } from "./__fixtures__/what-section";
 
 const PICKED: Scenario = { ...PINNED_SHOULDER, jurisdiction_key: "parker" } as Scenario;
+// #517 ruling 7: the hours result shows under set dates only, so the
+// suites that read the windows line give the plan a date (8:00-16:00 on a
+// weekday, as the class-stability suite does).
+const PICKED_DATED: Scenario = {
+  ...PICKED,
+  schedule: { date_mode: "single", work_date: "2026-10-07", start_time: 8, end_time: 16 },
+} as Scenario;
 // R108: a jurisdiction guessed at the plan's own pin.
 const GUESSED: Scenario = {
   ...PICKED,
@@ -84,20 +92,18 @@ async function mountAndAnswer(initial: Scenario, r: () => Response) {
   await settle();
 }
 
+// #517 (ruling 5, S4, S13): the row's source line ("Set by you", or the
+// guess's reason in the box) is one button with its glyph and tone; the
+// check's status is a sentence of the why tip.
 const line = () => screen.getByTestId("prov-jurisdiction");
-const toggle = () => screen.queryByTestId("info-toggle-jurisdiction");
-// The row's marker, when it has one (FieldCell renders it as `.a-mark`).
-const marker = () => {
-  const t = toggle();
-  return t && t.classList.contains("a-mark") ? t : null;
-};
+const toggle = () => screen.getByTestId("info-toggle-jurisdiction");
 const details = () => screen.getByTestId("info-jurisdiction");
 const state = () =>
   document.getElementById("what-jurisdiction")?.getAttribute("data-jurisdiction-state");
 const windowsLine = () => screen.getByTestId("what-windows-line").textContent;
 
-const DECLINED_LINE = "not checked: the plan was declined; the option shown stands";
-const FAILED_LINE = "check failed: the check didn't answer; the option shown stands";
+const DECLINED_LINE = "Not checked: the plan was declined. The option shown stands.";
+const FAILED_LINE = "The check didn't answer. The option shown stands.";
 
 beforeEach(() => {
   auditCalls = [];
@@ -112,75 +118,69 @@ afterEach(() => {
 
 describe("#425 / #406 — a declined plan's Jurisdiction cell", () => {
   it("says the plan was declined, not that the check didn't answer, in the windows line's words", async () => {
-    await mountAndAnswer(PICKED, declined400);
+    await mountAndAnswer(PICKED_DATED, declined400);
     expect(state()).toBe("declined");
-    expect(line().textContent).toBe(DECLINED_LINE);
-    expect(line().textContent).not.toContain("didn't answer");
-    // One verb in the band (#425): the windows line beside it.
-    expect(windowsLine()).toBe("Windows · not checked: the plan was declined");
+    expect(whyTip("jurisdiction")).toContain(DECLINED_LINE);
+    expect(details().textContent).not.toContain("didn't answer");
+    // One verb in the band (#425): the hours result under the dates.
+    expect(windowsLine()).toBe("Parker's work hours: not checked: the plan was declined");
   });
 
   it("is not an error: no is-error, and the line sits behind a ◌ marker (Rule 13: glyph and word)", async () => {
     await mountAndAnswer(PICKED, declined400);
-    expect(line().classList.contains("is-error")).toBe(false);
-    expect(line().classList.contains("is-amber")).toBe(false);
-    const m = marker();
-    expect(m, "the row has a marker").not.toBeNull();
-    expect(m!.textContent).toBe("◌ not checked");
-    expect(m!.classList.contains("is-pending")).toBe(true);
-    // R98: the line is one click away, in the row's details.
-    expect(line().closest('[data-testid="info-jurisdiction"]')).not.toBeNull();
+    // The operator's pick: "Set by you", chromaless (no verdict, Rule 13),
+    // never an error tone or an error line.
+    expect(line().textContent).toBe("Set by you");
+    expect(toggle().classList.contains("is-plain")).toBe(true);
+    expect(toggle().classList.contains("is-guess")).toBe(false);
+    expect(screen.queryByTestId("error-jurisdiction")).toBeNull();
+    // R98: the status is one click away, in the row's why tip.
+    expect(details().textContent).toContain(DECLINED_LINE);
   });
 
   it("a pin guess keeps '⚠ from the pin', with the decline in its details", async () => {
     await mountAndAnswer(GUESSED, declined400);
     expect(state()).toBe("declined");
-    const m = marker();
-    expect(m, "the guess keeps its marker").not.toBeNull();
-    expect(m!.textContent).toBe("⚠ from the pin");
-    expect(line().textContent).toBe("⚠ guessed, not confirmed · from the pin");
-    expect(line().classList.contains("is-error")).toBe(false);
-    expect(line().classList.contains("is-amber")).toBe(true);
+    // #517 (ruling 2, S13): the guess keeps its ⚠ and its reason line.
+    expect(toggle().textContent).toContain("⚠");
+    expect(line().textContent).toBe("Based on where your pin is");
+    expect(toggle().classList.contains("is-guess")).toBe(true);
+    expect(screen.queryByTestId("error-jurisdiction")).toBeNull();
     expect(details().textContent).toContain(DECLINED_LINE);
     // (The pin lookup's own evidence may say the boundary check failed;
     // answer; that is a different check, so only the cell's words count.)
-    expect(details().textContent).not.toContain("the check didn't answer");
+    expect(details().textContent).not.toContain(FAILED_LINE);
   });
 });
 
 describe("#425 round 4 — a check that ran and failed reads \"check failed\", no red", () => {
   it("says check failed behind a ◌ marker, not red, and the windows line says the same", async () => {
-    await mountAndAnswer(PICKED, failed500);
+    await mountAndAnswer(PICKED_DATED, failed500);
     expect(state()).toBe("check-failed");
-    expect(line().textContent).toBe(FAILED_LINE);
-    expect(line().textContent).not.toContain("not checked");
-    expect(line().classList.contains("is-error")).toBe(false);
-    expect(line().classList.contains("is-amber")).toBe(false);
-    const m = marker();
-    expect(m, "the row has a marker").not.toBeNull();
-    expect(m!.textContent).toBe("◌ check failed");
-    expect(m!.classList.contains("is-pending")).toBe(true);
-    // R98: the line is one click away, in the row's details.
-    expect(line().closest('[data-testid="info-jurisdiction"]')).not.toBeNull();
-    expect(windowsLine()).toBe("Windows · check failed: the check didn't answer");
+    expect(whyTip("jurisdiction")).toContain(FAILED_LINE);
+    expect(details().textContent).not.toContain("Not checked");
+    expect(line().textContent).toBe("Set by you");
+    expect(toggle().classList.contains("is-plain")).toBe(true);
+    expect(toggle().classList.contains("is-guess")).toBe(false);
+    expect(screen.queryByTestId("error-jurisdiction")).toBeNull();
+    expect(windowsLine()).toBe("Parker's work hours: check failed: the check didn't answer");
   });
 
   it("a pin guess keeps '⚠ from the pin', with the failed check in its details", async () => {
     await mountAndAnswer(GUESSED, failed500);
     expect(state()).toBe("check-failed");
-    const m = marker();
-    expect(m, "the guess keeps its marker").not.toBeNull();
-    expect(m!.textContent).toBe("⚠ from the pin");
-    expect(line().textContent).toBe("⚠ guessed, not confirmed · from the pin");
-    expect(line().classList.contains("is-error")).toBe(false);
-    expect(line().classList.contains("is-amber")).toBe(true);
+    // #517 (ruling 2, S13): the guess keeps its ⚠ and its reason line.
+    expect(toggle().textContent).toContain("⚠");
+    expect(line().textContent).toBe("Based on where your pin is");
+    expect(toggle().classList.contains("is-guess")).toBe(true);
+    expect(screen.queryByTestId("error-jurisdiction")).toBeNull();
     expect(details().textContent).toContain(FAILED_LINE);
     expect(details().textContent).not.toContain(DECLINED_LINE);
   });
 
   it("a decline still reads not checked, never check failed", async () => {
-    await mountAndAnswer(PICKED, declined400);
-    expect(line().textContent).not.toContain("check failed");
+    await mountAndAnswer(PICKED_DATED, declined400);
+    expect(details().textContent).not.toContain(FAILED_LINE);
     expect(windowsLine()).not.toContain("check failed");
   });
 });

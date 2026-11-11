@@ -54,8 +54,12 @@ vi.mock("../LocationPickerModal", () => ({
 
 import { GeneratorShell } from "../GeneratorShell";
 import { PlanDetailCells } from "./PlanDetails";
-import { WhatBand, whatHeader } from "./WhatBand";
+import { WhatBand } from "./WhatBand";
+import { PLAN_DETAILS } from "@/lib/scenarios/what-cells";
+import { introLine } from "@/lib/scenarios/why-lines";
 import { answerSide, openWhere } from "../__fixtures__/band-helpers";
+import { listboxValue, pickOption } from "../__fixtures__/listbox";
+import { measuredChecks, sourceWord, whyTip } from "../__fixtures__/what-section";
 import { corridorGeometryResponse, withOperatorSpeed } from "../test-fixtures";
 
 const fetchMock = vi.fn((input: RequestInfo | URL) => {
@@ -81,7 +85,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-const FALSE_CLAIMS = /\byours\b|\btyped\b|operator-set|your answer|your change/;
+// #517 (S4): "Set by you" is the What section's word for the operator's own.
+const FALSE_CLAIMS = /\byours\b|\btyped\b|operator-set|your answer|your change|Set by you/;
 
 describe("W1: the starting 1,000 ft reads 'default' until the operator commits a length", () => {
   it("mounted flow: the field says 'default' after the pin and side; typing a length flips it", async () => {
@@ -163,21 +168,23 @@ describe("W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, am
     ["near-intersection", DEFAULT_NEAR_INTERSECTION],
   ])("%s: the kind's own default reads plain 'default', no mark", (_k, s) => {
     mountJob(s);
-    expect(screen.getByTestId("info-toggle-work-type").textContent).toBe("default");
+    // #517 ruling 5: "Default", no glyph.
+    expect(sourceWord("work-type")).toBe("Default");
+    expect(screen.getByTestId("info-toggle-work-type").getAttribute("data-source")).toBe("default");
     expect(screen.getByTestId("prov-work-type").textContent).not.toMatch(FALSE_CLAIMS);
   });
 
   it("a pick is recorded and reads '✓ yours', even a pick back to the default", () => {
     const setScenario = mountJob(DEFAULT_SHOULDER);
-    const select = document.getElementById("pd-work-type") as HTMLSelectElement;
-    const other = Array.from(select.options).find((o) => o.value !== DEFAULT_SHOULDER.workType)!;
-    fireEvent.change(select, { target: { value: other.value } });
+    const other = PLAN_DETAILS.shoulder!.workTypes.find((o) => o.v !== DEFAULT_SHOULDER.workType)!;
+    pickOption("pd-work-type", other.v);
     const written = setScenario.mock.calls[0][0] as Scenario;
-    expect(written.workType).toBe(other.value);
+    expect(written.workType).toBe(other.v);
     expect(written.meta.operatorSet).toContain("workType");
     cleanup();
     mountJob({ ...written, workType: DEFAULT_SHOULDER.workType } as Scenario);
-    expect(screen.getByTestId("info-toggle-work-type").textContent).toBe("✓ yours");
+    // #517 S4: "✓ yours" reads "Set by you".
+    expect(sourceWord("work-type")).toBe("Set by you");
   });
 
   it("a kind switch starts the new kind's work type fresh, so its record goes", () => {
@@ -286,21 +293,24 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
   it("near-intersection on Wadsworth: the kind's 2 reads plain 'default', and the ⚠ sits on the line saying why the map's 4 isn't used", () => {
     mountWhat(pinned(DEFAULT_NEAR_INTERSECTION, road(4, 8)));
     // Ryan 2026-10-26 (#397): the row reads plain "default"; the ⚠ moves to
-    // the doubt line (Rule 10: the tool's doubt is still said).
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
-    expect(screen.getByTestId("prov-lanes").textContent).toBe("default · set the real count");
-    expect(screen.getByTestId("detect-lanes-doubt").textContent).toBe(
-      "⚠ not confirmed · the map reads 4 per side, but turn lanes can inflate counts near an intersection",
+    // the doubt line (Rule 10: the tool's doubt is still said).  #517: the
+    // source line reads "Default"; the full line and the doubt are the why
+    // tip's lines.
+    expect(sourceWord("lanes")).toBe("Default");
+    expect(whyTip("lanes")[0]).toBe("The plan's starting count. Set the real count.");
+    expect(whyTip("lanes")[1]).toBe(
+      "The map reads 4 each way, but turn lanes can inflate counts near an intersection.",
     );
     expect(lanesText()).not.toMatch(FALSE_CLAIMS);
     expect(lanesText()).not.toContain("withdrawn");
-    // Ryan 2026-10-27 (#420, replacing R145-14): the header counts the
-    // lane doubt as a guess (Rule 10: the count isn't from the road).  No
-    // row marker is a ⚠ on this fixture, so the doubt is the header's one.
+    // Ryan 2026-10-27 (#420, replacing R145-14): the doubt is still said as
+    // a check (Rule 10: the count isn't from the road).  #517 S1/S5: it is
+    // not a guess record, so it is no box row; the measured row's closed
+    // state names it with a ⚠ line instead of the old header count.
     expect(guessesOnShow()).toBe(0);
-    expect(document.body.textContent).toContain(whatHeader(1, true));
-    expect(document.body.textContent).toContain("1 guess marked ⚠ · change any that are wrong");
-    expect(document.body.textContent).not.toContain("prefilled from the road");
+    expect(screen.queryByTestId("what-guesses")).toBeNull();
+    expect(measuredChecks()).toContain("⚠ Lanes: Check it.");
+    expect(document.body.textContent).toContain(introLine(0, true));
   });
 
   it("#420: the lane doubt adds to the row guesses (a speed guess and the doubt read '2 guesses')", () => {
@@ -315,8 +325,12 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
       }),
     );
     expect(guessesOnShow()).toBe(1);
-    expect(screen.getByTestId("detect-lanes-doubt")).toBeTruthy();
-    expect(document.body.textContent).toContain("2 guesses marked ⚠ · change any that are wrong");
+    expect(whyTip("lanes").some((l) => l.startsWith("The map reads 4 each way"))).toBe(true);
+    // #517 S1: the speed guess is the box's one row; the lane doubt is the
+    // measured row's ⚠ check line (S5), not a guess count.
+    expect(screen.getByTestId("what-guesses-head").textContent).toBe("Check this guess");
+    expect(document.body.textContent).toContain(introLine(1, true));
+    expect(measuredChecks()).toContain("⚠ Lanes: Check it.");
   });
 
   it("near-intersection: the operator's count is recorded and reads '✓ yours'", () => {
@@ -324,7 +338,7 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
     const mine = setLanes(base, 3);
     expect(mine.meta.operatorSet).toContain("lanes");
     mountWhat(mine);
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("✓ yours");
+    expect(sourceWord("lanes")).toBe("Set by you");
   });
 
   it("shoulder after the operator's edit: 'withdrawn' is said in plain words in the row's details", () => {
@@ -332,9 +346,9 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
     // The edit cleared the relay (setLanes' ownership story): withdrawn.
     const edited = setLanes(pinned(DEFAULT_SHOULDER, r, { lanes: 2 }), 3);
     mountWhat(edited);
-    expect(screen.getByTestId("prov-lanes-withdrawn").textContent).toBe(
-      "withdrawn · you changed the count, so the plan no longer uses the map's",
-    );
+    // #517 strings.md: "withdrawn · you changed the count, so the plan no
+    // longer uses the map's" → the tip's plain sentence.
+    expect(whyTip("lanes")).toContain("You changed it, so the plan no longer uses the map's value.");
   });
 
   it("shoulder on a road with no lane count: the untouched count reads plain 'default', not '✓ yours'", () => {
@@ -344,7 +358,7 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
       classification: { ...r.classification, lanesPerDirection: undefined, detectedLanesTotal: undefined },
     } as unknown as ConfirmedRoad;
     mountWhat(pinned(DEFAULT_SHOULDER, noLanes));
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
+    expect(sourceWord("lanes")).toBe("Default");
     expect(screen.getByTestId("prov-lanes").textContent).not.toMatch(FALSE_CLAIMS);
   });
 
@@ -357,7 +371,7 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
     const picked = setLanes(pinned(DEFAULT_SHOULDER, noLanes, { lanes: 2 }), 2);
     expect(picked.meta.operatorSet).toContain("lanes");
     mountWhat(picked);
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("✓ yours");
+    expect(sourceWord("lanes")).toBe("Set by you");
   });
 
   it("shoulder: a divided flip that resets the count drops the operator's record of it", () => {
@@ -372,10 +386,10 @@ describe("W3: Lanes never read 'operator-set' for a count nobody picked", () => 
 // Repair cycle 3 (the reviewer's five findings, and Ryan's 2026-10-26
 // ruling: a default reads plain "default", no mark).
 
+// #517: a field reading as a guess carries `data-source="guess"` on its
+// source line (the ⚠ glyph is its second channel).
 const guessesOnShow = () =>
-  Array.from(document.querySelectorAll('[data-testid^="info-toggle-"]')).filter((e) =>
-    e.textContent!.startsWith("⚠"),
-  ).length;
+  document.querySelectorAll('[data-testid^="info-toggle-"][data-source="guess"]').length;
 
 function withoutLaneCount(r: ConfirmedRoad): ConfirmedRoad {
   return {
@@ -388,15 +402,22 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
   it("finding 1: with nothing detected the WHAT header doesn't call every value 'yours'", () => {
     mountWhat(DEFAULT_SHOULDER);
     const header = document.body.textContent!;
-    expect(header).toContain("nothing detected; set what the plan needs");
+    // #517 (strings.md, kept from WhatBand questionProvenance).
+    expect(header).toContain(
+      "No confirmed road at this pin, so nothing was prefilled. Set what the plan needs.",
+    );
     expect(header).not.toContain("every value here is yours");
   });
 
   it("finding 5: a shoulder plan with no detection names no map on its lanes line", () => {
     mountWhat(DEFAULT_SHOULDER);
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
-    expect(screen.getByTestId("prov-lanes").textContent).toBe("default · set the real count");
-    expect(lanesText()).not.toMatch(/\bmap\b/);
+    expect(sourceWord("lanes")).toBe("Default");
+    expect(whyTip("lanes")[0]).toBe("The plan's starting count. Set the real count.");
+    // #517: the lanes line is the tip's lines about the count; the lane
+    // width's own line ("Lane width: ...") rides the same tip.
+    const countLines = whyTip("lanes").filter((l) => !l.startsWith("Lane width:"));
+    for (const l of countLines) expect(l).not.toMatch(/\bmap\b/);
+    expect(sourceWord("lanes")).not.toMatch(/\bmap\b/);
   });
 
   it("finding 4: a count a road lookup wrote never reads 'yours' after a re-pick onto a road with no count", () => {
@@ -414,12 +435,12 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
     const again = applyClassification(relooked, bare.classification).scenario;
     expect((again as { lanes: number }).lanes).toBe(4);
     mountWhat(pinned(again as typeof DEFAULT_SHOULDER, bare));
-    expect((document.getElementById("what-lanes") as HTMLSelectElement).value).toBe("4");
+    expect(listboxValue("what-lanes")).toBe("4 per side");
     // #418 (stated): the kept 4 is neither the kind's default nor this
     // road's, so it reads as a guess to check, not "default".
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("⚠ from an earlier road");
-    expect(screen.getByTestId("prov-lanes").textContent).toBe(
-      "⚠ not confirmed · set the real count · from an earlier road",
+    expect(sourceWord("lanes")).toBe("Our guess. Check it.");
+    expect(whyTip("lanes")[0]).toBe(
+      "This count came from an earlier road. Set the real count for this one.",
     );
     expect(lanesText()).not.toMatch(FALSE_CLAIMS);
   });
@@ -428,15 +449,17 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
     const base = pinned(DEFAULT_NEAR_INTERSECTION, road(4, 8));
     mountWhat(base);
     const before = guessesOnShow();
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
-    expect(document.body.textContent).toContain(whatHeader(before + 1, true));
+    expect(sourceWord("lanes")).toBe("Default");
+    // #517 S1/S5: the doubt is the measured row's ⚠ check line, not a
+    // header count.
+    expect(measuredChecks()).toContain("⚠ Lanes: Check it.");
     cleanup();
     mountWhat(setLanes(base, 3));
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("✓ yours");
-    expect(screen.queryByTestId("detect-lanes-doubt")).toBeNull();
-    // The row markers don't change; the doubt and its guess go together.
+    expect(sourceWord("lanes")).toBe("Set by you");
+    expect(whyTip("lanes").some((l) => l.startsWith("The map reads"))).toBe(false);
+    // The row markers don't change; the doubt and its check go together.
     expect(guessesOnShow()).toBe(before);
-    expect(document.body.textContent).toContain(whatHeader(before, true));
+    expect(measuredChecks().some((c) => c.includes("Lanes:"))).toBe(false);
   });
 
   it("finding 3b (stated): a near-intersection way with lanes:forward and no total reads 'default' with the doubt line", () => {
@@ -446,27 +469,32 @@ describe("Repair 3: no false 'yours', no map where none was read", () => {
       classification: { ...r.classification, detectedLanesTotal: undefined, detectedLanesForward: 3 },
     } as unknown as ConfirmedRoad;
     mountWhat(pinned(DEFAULT_NEAR_INTERSECTION, forwardOnly));
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
-    expect(screen.getByTestId("detect-lanes-doubt").textContent).toContain("⚠ not confirmed · the map reads 3 per side");
+    expect(sourceWord("lanes")).toBe("Default");
+    expect(whyTip("lanes").some((l) => l.startsWith("The map reads 3 each way"))).toBe(true);
+    expect(measuredChecks()).toContain("⚠ Lanes: Check it.");
   });
 
   it("a near-intersection plan with no map count reads plain 'default'", () => {
     mountWhat(DEFAULT_NEAR_INTERSECTION);
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
-    expect(screen.getByTestId("prov-lanes").textContent).toBe("default · set the real count");
-    expect(screen.queryByTestId("detect-lanes-doubt")).toBeNull();
-    // #420: no doubt on show, so no lane guess in the header.
-    expect(document.body.textContent).toContain(whatHeader(guessesOnShow(), false));
+    expect(sourceWord("lanes")).toBe("Default");
+    expect(whyTip("lanes")[0]).toBe("The plan's starting count. Set the real count.");
+    expect(whyTip("lanes").some((l) => l.startsWith("The map reads"))).toBe(false);
+    // #420: no doubt on show, so no lane check (#517 S5: the measured
+    // row's ⚠ line replaces the header count).
+    expect(measuredChecks().some((c) => c.includes("Lanes:"))).toBe(false);
+    expect(document.body.textContent).toContain(introLine(guessesOnShow(), false));
   });
 
   // The length and work type rows are W1's and W2's.
   it("Ryan 2026-10-26: no '✓ default' on the lanes or road-type rows", () => {
     mountWhat(DEFAULT_SHOULDER);
     for (const id of ["lanes", "road-type"]) {
+      // #517 S13: "Default" carries no glyph.
       const t = screen.queryByTestId(`info-toggle-${id}`)?.textContent ?? "";
-      expect(t).not.toBe("✓ default");
+      expect(t).not.toMatch(/^✓/);
+      expect(sourceWord(id)).not.toBe("✓ default");
     }
-    expect(screen.getByTestId("info-toggle-road-type").textContent).toBe("default");
+    expect(sourceWord("road-type")).toBe("Default");
   });
 });
 
@@ -487,39 +515,47 @@ describe("#418: the Lanes row's carried count, doubt reason and one-clause line"
   it("(a) after a re-pick onto a road with no count, the kept 4 reads '⚠ from an earlier road', amber, and counts in the header", () => {
     mountWhat(repicked());
     const toggle = screen.getByTestId("info-toggle-lanes");
-    expect(toggle.textContent).toBe("⚠ from an earlier road");
-    expect(toggle.textContent).not.toContain("default");
+    expect(sourceWord("lanes")).toBe("Our guess. Check it.");
+    expect(whyTip("lanes")[0]).toBe(
+      "This count came from an earlier road. Set the real count for this one.",
+    );
+    expect(toggle.textContent).not.toMatch(/default/i);
     expect(lanesText()).not.toMatch(FALSE_CLAIMS);
-    expect(screen.getByTestId("prov-lanes").className).toContain("is-amber");
+    // #517: the amber tone is the source line's guess class, ⚠ its glyph.
+    expect(toggle.className).toContain("is-guess");
+    expect(toggle.textContent!.startsWith("⚠")).toBe(true);
     const n = guessesOnShow();
     expect(n).toBeGreaterThanOrEqual(1);
-    expect(document.body.textContent).toContain(whatHeader(n, true));
+    // S1/S5: a carried count has no guess record, so the measured row's
+    // closed state names it.
+    expect(measuredChecks()).toContain("⚠ Lanes: Check it.");
   });
 
   it("(a) the operator's pick over the kept count reads '✓ yours'", () => {
     mountWhat(setLanes(repicked(), 4));
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("✓ yours");
+    expect(sourceWord("lanes")).toBe("Set by you");
   });
 
   it("(a, c) a fresh plan on a road with no count keeps plain 'default' and says it once", () => {
     mountWhat(pinned(DEFAULT_SHOULDER, bare));
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
-    expect(screen.getByTestId("prov-lanes").textContent).toBe(
-      "default · the map has no count here; set the real count",
+    expect(sourceWord("lanes")).toBe("Default");
+    expect(whyTip("lanes")[0]).toBe(
+      "The plan's starting count. The map has no count here, so set the real count.",
     );
+    expect(whyTip("lanes").filter((l) => !l.startsWith("Lane width:"))).toHaveLength(1);
   });
 
   it("(a) a count the divided reset set (1 undivided) keeps plain 'default'", () => {
     const flipped = setRoadType(pinned(DEFAULT_SHOULDER, bare, { roadType: "rural_divided", divided: true }), "rural_undivided");
     expect((flipped as { lanes: number }).lanes).toBe(1);
     mountWhat(flipped);
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
+    expect(sourceWord("lanes")).toBe("Default");
   });
 
   it("(a) control: a count this road's map wrote reads the map's, not 'from an earlier road'", () => {
     mountWhat(pinned(DEFAULT_SHOULDER, counted, { lanes: 4 }));
     expect(lanesText()).not.toContain("earlier road");
-    expect(screen.getByTestId("info-toggle-lanes").textContent).not.toBe("default");
+    expect(sourceWord("lanes")).not.toBe("Default");
   });
 
   it.each([
@@ -527,17 +563,15 @@ describe("#418: the Lanes row's carried count, doubt reason and one-clause line"
     [2, 4],
   ])("(b) near-intersection: a map reading %i per side (not above the plan's 2) gives no turn-lane reason", (perSide, total) => {
     mountWhat(pinned(DEFAULT_NEAR_INTERSECTION, road(perSide, total)));
-    expect(screen.getByTestId("info-toggle-lanes").textContent).toBe("default");
-    expect(screen.getByTestId("detect-lanes-doubt").textContent).toBe(
-      `⚠ not confirmed · the map reads ${perSide} per side`,
-    );
+    expect(sourceWord("lanes")).toBe("Default");
+    expect(whyTip("lanes")[1]).toBe(`The map reads ${perSide} each way.`);
     expect(lanesText()).not.toContain("turn lanes");
   });
 
   it("(b) control: a map reading 3 per side keeps the turn-lane reason", () => {
     mountWhat(pinned(DEFAULT_NEAR_INTERSECTION, road(3, 6)));
-    expect(screen.getByTestId("detect-lanes-doubt").textContent).toBe(
-      "⚠ not confirmed · the map reads 3 per side, but turn lanes can inflate counts near an intersection",
+    expect(whyTip("lanes")[1]).toBe(
+      "The map reads 3 each way, but turn lanes can inflate counts near an intersection.",
     );
   });
 });

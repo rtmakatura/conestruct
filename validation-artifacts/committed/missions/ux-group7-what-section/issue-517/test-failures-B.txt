@@ -1,0 +1,154 @@
+# Run B1 (brief B, 2026-11-11), before any test edit: the churn suites other than WhatBand.* and bands/PlanDetails.test.tsx (those are in test-failures-A.txt).
+# 66 failed | 295 passed (361)
+components/GeneratorShell.class-stability.test.tsx > #276 — the jurisdiction cell's states: no skeleton, one reserved line > the provenance element survives every state, no skeleton at any point, and its height is reserved
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > a class switch holds the jurisdiction's content while the refetch is in flight — no skeleton, one reflow max
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > R127 Q5: the footer line says the same verdict in its own words, and checking while the refetch is in flight
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > a CHANGED jurisdiction key says CHECKING — a stale block from another jurisdiction never renders
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > a breakdown ERROR clears the held block rather than presenting it as live
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > a confirmed primary road fills Arterial, marked, and relays its tag
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > no confirmed road: nothing is guessed
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > a pin moved off the confirmed road drops the guess in the same write
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > the operator's pick replaces the guess, and a new road never overwrites it (R110 Q4)
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > the classification-map caveat rides the field's details when the jurisdiction publishes a map
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > says the plan was declined, not that the check didn't answer, in the windows line's words
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > is not an error: no is-error, and the line sits behind a ◌ marker (Rule 13: glyph and word)
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > a pin guess keeps '⚠ from the pin', with the decline in its details
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > says check failed behind a ◌ marker, not red, and the windows line says the same
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > a pin guess keeps '⚠ from the pin', with the failed check in its details
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > a decline still reads not checked, never check failed
+components/GeneratorShell.disclosure-container.test.tsx > #227 → #289 correction 3 — the #198 notes' new clothes > the note takes the provenance role, below the field's own provenance line
+components/GeneratorShell.error-honesty.test.tsx > strip error honesty (#184) > clearing the invalid combination returns the strip to the verifying path
+components/GeneratorShell.handoff-provenance.test.tsx > #198 handoff provenance — the four families produce visible notes > family 1: a changed detection overwriting a manual lane edit is named
+components/GeneratorShell.handoff-provenance.test.tsx > #198 handoff provenance — the four families produce visible notes > family 6 (correction 4): the clamp's width fits the sheet, and says it was narrowed
+components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > REGRESSION: a no-change re-apply keeps the user's lane selection in the payload
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > control: plain pin apply then chip selection reaches the payload
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > control: chip selection reaches the payload with a manual location and no detection
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > a CHANGED detection still applies over manual edits (new information wins)
+components/GeneratorShell.wait-cues.test.tsx > #398 W5 — the windows line on a plan with no answer > a declined plan says the windows weren't checked, never 'loading'
+components/GeneratorShell.wait-cues.test.tsx > #398 W5 — the windows line on a plan with no answer > a failed check (not a decline) says check failed, never 'loading'
+components/GeneratorShell.wait-cues.test.tsx > #398 W5 — the windows line on a plan with no answer > a plan that answers still reads the jurisdiction's verdict line
+components/GeneratorShell.zone-staging.test.tsx > zone staging lifecycle > panel schedule entry reaches the POSTed scenario (payload-level, inc-8)
+components/GeneratorSidebar.fact-strip.test.tsx > #227 fact strip — pin readout as labeled cells > pinned: the five facts survive the strip, each under the question it answers
+components/GeneratorSidebar.fact-strip.test.tsx > #227 fact strip — pin readout as labeled cells > a named jurisdiction reaches the cell, and says it is not evaluated yet
+components/GeneratorSidebar.jurisdiction-band.test.tsx > #227 jurisdiction band — a full-width sibling of Location > the fields are cells in the WHAT band, not a section of their own
+components/GeneratorSidebar.jurisdiction-band.test.tsx > #227 jurisdiction band — a full-width sibling of Location > pinned: the cell goes live and the select is usable
+components/JurisdictionSection.test.tsx > the street-class guess's evidence (R108) > names the tier, and points at the adopted map where one is on record
+components/NearIntersectionForm.approach-speed.test.tsx > WHAT's header counts the cross-street speed's ⚠ (Q4) > a guessed cross-street speed adds one to the count; a measured one doesn't
+components/severity-ramp.test.tsx > severity-ramp role assignments > the street class carries pressed state, not hue alone
+components/bands/PlanDetails.carriageway.test.tsx > the carriageway cell > asks when the test couldn't decide: neither answer pressed, ⚠ needs you
+components/bands/PlanDetails.carriageway.test.tsx > the carriageway cell > shows a decided one-way street with its evidence
+components/bands/PlanDetails.carriageway.test.tsx > the carriageway cell > shows a twinned road as divided, and the operator can overrule it
+components/bands/PlanDetails.carriageway.test.tsx > the carriageway cell > says the answer is the operator's once given
+components/bands/PlanDetails.carriageway.test.tsx > the carriageway cell on a near-intersection plan (#309 R114 Q4) > asks when the test couldn't decide
+components/bands/untouched-provenance.test.tsx > W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) > shoulder: the kind's own default reads plain 'default', no mark
+components/bands/untouched-provenance.test.tsx > W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) > flagger: the kind's own default reads plain 'default', no mark
+components/bands/untouched-provenance.test.tsx > W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) > near-intersection: the kind's own default reads plain 'default', no mark
+components/bands/untouched-provenance.test.tsx > W2: Work type reads plain 'default' until changed (Ryan 2026-10-26, amending R110 Q8) > a pick is recorded and reads '✓ yours', even a pick back to the default
+components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > near-intersection on Wadsworth: the kind's 2 reads plain 'default', and the ⚠ sits on the line saying why the map's 4 isn't used
+components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > #420: the lane doubt adds to the row guesses (a speed guess and the doubt read '2 guesses')
+components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > near-intersection: the operator's count is recorded and reads '✓ yours'
+components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > shoulder after the operator's edit: 'withdrawn' is said in plain words in the row's details
+components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > shoulder on a road with no lane count: the untouched count reads plain 'default', not '✓ yours'
+components/bands/untouched-provenance.test.tsx > W3: Lanes never read 'operator-set' for a count nobody picked > shoulder on a road with no lane count: a deliberate pick of 2 (the default) reads '✓ yours'
+components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > finding 1: with nothing detected the WHAT header doesn't call every value 'yours'
+components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > finding 5: a shoulder plan with no detection names no map on its lanes line
+components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > finding 4: a count a road lookup wrote never reads 'yours' after a re-pick onto a road with no count
+components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > finding 3a (stated, #420): an edited near-intersection count is '✓ yours', its doubt line goes, and the header's N drops by the doubt
+components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > finding 3b (stated): a near-intersection way with lanes:forward and no total reads 'default' with the doubt line
+components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > a near-intersection plan with no map count reads plain 'default'
+components/bands/untouched-provenance.test.tsx > Repair 3: no false 'yours', no map where none was read > Ryan 2026-10-26: no '✓ default' on the lanes or road-type rows
+components/bands/untouched-provenance.test.tsx > #418: the Lanes row's carried count, doubt reason and one-clause line > (a) after a re-pick onto a road with no count, the kept 4 reads '⚠ from an earlier road', amber, and counts in the header
+components/bands/untouched-provenance.test.tsx > #418: the Lanes row's carried count, doubt reason and one-clause line > (a) the operator's pick over the kept count reads '✓ yours'
+components/bands/untouched-provenance.test.tsx > #418: the Lanes row's carried count, doubt reason and one-clause line > (a, c) a fresh plan on a road with no count keeps plain 'default' and says it once
+components/bands/untouched-provenance.test.tsx > #418: the Lanes row's carried count, doubt reason and one-clause line > (a) a count the divided reset set (1 undivided) keeps plain 'default'
+components/bands/untouched-provenance.test.tsx > #418: the Lanes row's carried count, doubt reason and one-clause line > (b) near-intersection: a map reading 1 per side (not above the plan's 2) gives no turn-lane reason
+components/bands/untouched-provenance.test.tsx > #418: the Lanes row's carried count, doubt reason and one-clause line > (b) near-intersection: a map reading 2 per side (not above the plan's 2) gives no turn-lane reason
+components/bands/untouched-provenance.test.tsx > #418: the Lanes row's carried count, doubt reason and one-clause line > (b) control: a map reading 3 per side keeps the turn-lane reason
+# Fork class-suites, run 1 (before any edit to these four suites; matches run B1 for them).
+# 21 failed | 7 passed (28)
+components/GeneratorShell.class-stability.test.tsx > #276 — the jurisdiction cell's states: no skeleton, one reserved line > the provenance element survives every state, no skeleton at any point, and its height is reserved
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > a class switch holds the jurisdiction's content while the refetch is in flight — no skeleton, one reflow max
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > R127 Q5: the footer line says the same verdict in its own words, and checking while the refetch is in flight
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > a CHANGED jurisdiction key says CHECKING — a stale block from another jurisdiction never renders
+components/GeneratorShell.class-stability.test.tsx > class-switch stability (#152 D) > a breakdown ERROR clears the held block rather than presenting it as live
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > a confirmed primary road fills Arterial, marked, and relays its tag
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > no confirmed road: nothing is guessed
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > a pin moved off the confirmed road drops the guess in the same write
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > the operator's pick replaces the guess, and a new road never overwrites it (R110 Q4)
+components/GeneratorShell.class-suggest.test.tsx > the road guesses the street class (R108) > the classification-map caveat rides the field's details when the jurisdiction publishes a map
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > says the plan was declined, not that the check didn't answer, in the windows line's words
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > is not an error: no is-error, and the line sits behind a ◌ marker (Rule 13: glyph and word)
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 / #406 — a declined plan's Jurisdiction cell > a pin guess keeps '⚠ from the pin', with the decline in its details
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > says check failed behind a ◌ marker, not red, and the windows line says the same
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > a pin guess keeps '⚠ from the pin', with the failed check in its details
+components/GeneratorShell.declined-jurisdiction.test.tsx > #425 round 4 — a check that ran and failed reads "check failed", no red > a decline still reads not checked, never check failed
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > REGRESSION: a no-change re-apply keeps the user's lane selection in the payload
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > control: plain pin apply then chip selection reaches the payload
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > control: chip selection reaches the payload with a manual location and no detection
+components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > a CHANGED detection still applies over manual edits (new information wins)
+# Fork shell-sidebar, run 1 (before edits; same 13 as B1 for these suites)
+# 13 failed | 22 passed (35)
+components/GeneratorShell.disclosure-container.test.tsx > #227 → #289 correction 3 — the #198 notes' new clothes > the note takes the provenance role, below the field's own provenance line
+components/GeneratorShell.error-honesty.test.tsx > strip error honesty (#184) > clearing the invalid combination returns the strip to the verifying path
+components/GeneratorShell.handoff-provenance.test.tsx > #198 handoff provenance — the four families produce visible notes > family 1: a changed detection overwriting a manual lane edit is named
+components/GeneratorShell.handoff-provenance.test.tsx > #198 handoff provenance — the four families produce visible notes > family 6 (correction 4): the clamp's width fits the sheet, and says it was narrowed
+components/GeneratorShell.no-location.test.tsx > no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces
+components/GeneratorShell.wait-cues.test.tsx > #398 W5 — the windows line on a plan with no answer > a declined plan says the windows weren't checked, never 'loading'
+components/GeneratorShell.wait-cues.test.tsx > #398 W5 — the windows line on a plan with no answer > a failed check (not a decline) says check failed, never 'loading'
+components/GeneratorShell.wait-cues.test.tsx > #398 W5 — the windows line on a plan with no answer > a plan that answers still reads the jurisdiction's verdict line
+components/GeneratorShell.zone-staging.test.tsx > zone staging lifecycle > panel schedule entry reaches the POSTed scenario (payload-level, inc-8)
+components/GeneratorSidebar.fact-strip.test.tsx > #227 fact strip — pin readout as labeled cells > pinned: the five facts survive the strip, each under the question it answers
+components/GeneratorSidebar.fact-strip.test.tsx > #227 fact strip — pin readout as labeled cells > a named jurisdiction reaches the cell, and says it is not evaluated yet
+components/GeneratorSidebar.jurisdiction-band.test.tsx > #227 jurisdiction band — a full-width sibling of Location > the fields are cells in the WHAT band, not a section of their own
+components/GeneratorSidebar.jurisdiction-band.test.tsx > #227 jurisdiction band — a full-width sibling of Location > pinned: the cell goes live and the select is usable
+# Fork WhatBand, run 1 (before edits; recorded after run 2 started, late: the same 29 as test-failures-A.txt's WhatBand.* rows)
+# 29 failed | 25 passed (54)
+components/WhatBand.declutter.test.tsx > two columns named for the user's question (R107, P20) > The road on the left, The job on the right, in WhatC5's order
+components/WhatBand.declutter.test.tsx > two columns named for the user's question (R107, P20) > each row is its label with the marker under it, beside the control
+components/WhatBand.declutter.test.tsx > one quiet marker per field (R98, P9) > at rest each field shows a symbol + word, not its sentence
+components/WhatBand.declutter.test.tsx > one quiet marker per field (R98, P9) > R126: one marker per row — the Lanes marker opens the one popover, holding both lines
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > street class '⚠ from the road', jurisdiction '⚠ from the pin', and the header counts them
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > the pin's evidence rides the jurisdiction's details, the TIGER caveat with it
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > an evaluation that failed is not an error: a guess keeps its line, the failure in its details (#425 ruling 3)
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > nothing guessed off a road: the header reads 'prefilled from the road' (R110 Q5)
+components/WhatBand.declutter.test.tsx > guesses are marked, never confirmed (R108) > one guess reads in the singular
+components/WhatBand.declutter.test.tsx > File details: the two optional fields behind a labelled count (P13) > closed by default, saying what is inside; open shows both fields
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > every WHAT row shows exactly its marker(s) at rest (R98)
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > road type at rest: the select and source · value · method — nothing else
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > jurisdiction at rest: the select and its marker; the pin's evidence is detail, with no row of its own
+components/WhatBand.density.test.tsx > each field shows the control and ONE provenance marker (R108: no action line) > street class is its own row of The road — the segmented control and its marker, nothing else
+components/WhatBand.density.test.tsx > the details toggle — click / tap, never hover (rules 141, 142) > opens and closes on click, and says which it is (R101: a popover)
+components/WhatBand.density.test.tsx > the details toggle — click / tap, never hover (rules 141, 142) > every field's line is one click away (R98): one trigger per marker
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > each cell carries its own clause, under its own field (rule 137)
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > every provenance line rides the provenance role, not a new one
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > a fact the kind does not carry renders no footer row — flagger has no lanes or divided detection line
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > shoulder: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > flagger_lane_closure: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > near_intersection: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.speed-guess.test.tsx > R126: WHAT's Speed row > no posted speed: the estimate is the value, marked ⚠ from the road; no estimate line, no button
+components/WhatBand.speed-guess.test.tsx > R126: WHAT's Speed row > no road at the pin: ◌ not set, and the select shows Not set
+components/WhatBand.speed-guess.test.tsx > R126: WHAT's Speed row > a posted speed: measured, no guess
+components/WhatBand.step2-layout.test.tsx > R126 / D3: the footer is one line — windows, then File details, then open > the windows line comes first and opens the table; File details keeps its own open
+components/WhatBand.step2-layout.test.tsx > R126 / D3: the footer is one line — windows, then File details, then open > the table sits under the footer, never between the columns and the footer
+components/WhatBand.step2-layout.test.tsx > R126: one marker per row, none of them 'i about' > Carriageway: the label, and default-or-yours with no detection behind it
+components/WhatBand.step2-layout.test.tsx > R126: one marker per row, none of them 'i about' > the road-type option reads 'Urban street' (R127 Q4); the wire value is unchanged
+# Fork WhatBand, run 2
+# 1 failed | 54 passed (55)
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > each cell carries its own clause, under its own field (rule 137)
+# Fork WhatBand, run 3: 0 failed | 55 passed (55). Each suite alone: declutter 13/13, density 12/12, detection 7/7, every-kind 4/4, speed-guess 3/3, step2-layout 16/16 - every earlier-failing WhatBand.* test passes on its own.
+# Lead, run misc1 (JurisdictionSection, severity-ramp, NearIntersectionForm.approach-speed after edits)
+# 2 failed | 25 passed (27)
+components/NearIntersectionForm.approach-speed.test.tsx > WHAT's header counts the cross-street speed's ⚠ (Q4) > a guessed cross-street speed adds one to the count; a measured one doesn't
+components/severity-ramp.test.tsx > severity-ramp role assignments > the street class carries pressed state, not hue alone
+# Lead, run final1: all churn-suites.txt suites + the four new #517 suites (55 files). The one failure is left unedited: a ruling conflict, see the note below.
+# 1 failed | 472 passed (473)
+components/NearIntersectionForm.approach-speed.test.tsx > WHAT's header counts the cross-street speed's ⚠ (Q4) > a guessed cross-street speed adds one to the count; a measured one doesn't
+# Alone (lead's suites, after edits): untouched-provenance 29/29, bands/PlanDetails 23/23, bands/PlanDetails.carriageway 11/11, JurisdictionSection 16/16, severity-ramp 3/3: every earlier failure in them passed on its own. The forks' suites: each passed on its own (fork reports).
+# Left failing, not edited (ruling conflict, for the item lead):
+#   components/NearIntersectionForm.approach-speed.test.tsx:113 "a guessed cross-street speed adds one to the count".
+#   R129 Q4 (Ryan) has WHAT's header count the cross-street speed guess; ruling 1 says the number "comes from the backend's guess count",
+#   and guessCount() (lib/scenarios/guesses.ts:85) still counts approach_speed.  The rebuilt intro line counts box rows (S1), which leave the
+#   approach speed out, so a guessed cross-street speed no longer moves the number.  Re-pointing the test would encode S1 over R129 Q4.

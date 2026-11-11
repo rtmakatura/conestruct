@@ -10,12 +10,14 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DEFAULT_SCENARIO, DEFAULT_SHOULDER, type Scenario } from "@/lib/scenarios";
 import type { HoursEval, JurisdictionBlock } from "@/lib/jurisdiction";
 import { windowsSummary } from "./ScheduleField";
 import { WhatBand, type WindowsLine } from "./bands/WhatBand";
+import { sourceWord, whyTip } from "./__fixtures__/what-section";
+import { listboxValue } from "./__fixtures__/listbox";
 
 afterEach(cleanup);
 
@@ -164,26 +166,49 @@ const URBAN = {
   lanes: 1,
 } as unknown as Scenario;
 
-describe("R126 / D3: the footer is one line — windows, then File details, then open", () => {
-  it("the windows line comes first and opens the table; File details keeps its own open", async () => {
-    mount(URBAN, { head: "Denver windows", glyph: "", text: "set dates to check", tone: "" });
-    const head = document.querySelector(".a-filedetails-head")!;
-    const parts = [...head.children].map((c) => c.textContent);
-    expect(parts).toEqual(["Denver windows · set dates to check", "File details · ◌ 2 not set", "", "open ›"]);
+// #517 ruling 7 (Ryan, 2026-11-11): "The old 'Denver windows · set dates
+// to check' bottom row goes away."  Its claims move to their new homes:
+// the hours result sits right under the work dates and opens #227's table
+// ("See all of <jurisdiction>'s work hours"); File details is its own row
+// with its own Show (ruling 1).
+const DENVER_DATED = { ...URBAN, jurisdiction_key: "denver", schedule: DATED } as unknown as Scenario;
+const FITS: WindowsLine = { head: "Denver windows", glyph: "✓", text: "fits your dates", tone: "" };
+
+describe("#517 ruling 7 (was R126 / D3's footer): the hours result under the dates, File details its own row", () => {
+  it("unset dates: the line under them names the jurisdiction; no hours line, no table", () => {
+    mount({ ...URBAN, jurisdiction_key: "denver" } as unknown as Scenario, FITS);
+    expect(screen.getByTestId("what-dates-hint").textContent).toBe(
+      "Optional. We check them against Denver's work hours.",
+    );
+    expect(screen.queryByTestId("what-windows-line")).toBeNull();
     expect(document.querySelector(".sched-windows")).toBeNull();
-    const user = userEvent.setup();
-    const line = screen.getByTestId("what-windows-line");
-    expect(line.getAttribute("aria-expanded")).toBe("false");
-    await user.click(line);
-    expect(line.getAttribute("aria-expanded")).toBe("true");
-    expect(document.querySelector(".sched-windows")!.textContent).toBe("THE TABLE");
-    expect(document.querySelector("#what-project")).toBeNull();
+    expect(screen.queryByTestId("what-footer")).toBeNull();
+    expect(document.body.textContent).not.toContain("Denver windows");
   });
 
-  it("the table sits under the footer, never between the columns and the footer", () => {
-    mount(URBAN, { head: "Windows", glyph: "", text: "select a jurisdiction to check", tone: "" });
-    const footer = screen.getByTestId("what-footer");
-    expect(footer.previousElementSibling?.classList.contains("a-cols")).toBe(true);
+  it("set dates: the hours result in the check's own words, and its link opens the table; File details keeps its own Show", async () => {
+    mount(DENVER_DATED, FITS);
+    expect(screen.getByTestId("what-windows-line").textContent).toBe("Denver's work hours: ✓ fits your dates");
+    expect(document.querySelector(".sched-windows")).toBeNull();
+    const user = userEvent.setup();
+    const link = screen.getByTestId("what-hours-all");
+    expect(link.textContent).toBe("See all of Denver's work hours");
+    expect(link.getAttribute("aria-expanded")).toBe("false");
+    await user.click(link);
+    expect(link.getAttribute("aria-expanded")).toBe("true");
+    expect(document.querySelector(".sched-windows")!.textContent).toBe("THE TABLE");
+    // The table opening never opens File details.
+    expect(screen.getByTestId("what-files-panel").hasAttribute("hidden")).toBe(true);
+    expect(screen.getByTestId("what-files-toggle").textContent).toBe("Show");
+  });
+
+  it("the table sits under the hours result, in the dates' own row, never between the sections", async () => {
+    mount(DENVER_DATED, FITS);
+    await userEvent.setup().click(screen.getByTestId("what-hours-all"));
+    const table = document.querySelector(".sched-windows")!;
+    expect(table.closest('[data-testid="what-hours"]')).not.toBeNull();
+    expect(table.closest('[data-testid="cell-work-dates"]')).not.toBeNull();
+    expect(table.previousElementSibling?.getAttribute("data-testid")).toBe("what-hours-all");
   });
 });
 
@@ -200,15 +225,14 @@ describe("R126: one marker per row, none of them 'i about'", () => {
   it("Carriageway: the label, and default-or-yours with no detection behind it", () => {
     mount(URBAN);
     const cell = document.querySelector('[data-testid="cell-divided"]')!;
-    expect(cell.querySelector(".tr-field")!.textContent).toBe("Carriageway");
-    // #411 (Ryan, 2026-10-26): plain "default", no mark.
-    expect(screen.getByTestId("info-toggle-divided").textContent).toBe("default");
-    expect(screen.getByTestId("prov-divided").textContent).toBe(
-      "default · undivided until you say otherwise",
-    );
+    expect(cell.querySelector(".w-label")!.textContent).toBe("Carriageway");
+    // #411 (Ryan, 2026-10-26): plain "default", no mark (#517 ruling 5's "Default").
+    expect(sourceWord("divided")).toBe("Default");
+    expect(screen.getByTestId("info-toggle-divided").textContent).not.toMatch(/[✓⚠]/);
+    expect(whyTip("divided")).toEqual(["Undivided until you say otherwise."]);
     cleanup();
     mount({ ...URBAN, divided: true, lanes: 2 } as unknown as Scenario);
-    expect(screen.getByTestId("info-toggle-divided").textContent).toBe("✓ yours");
+    expect(sourceWord("divided")).toBe("Set by you");
   });
 
   it("R128: an empty kind row (shoulder) takes no strip and no second divider", () => {
@@ -223,8 +247,12 @@ describe("R126: one marker per row, none of them 'i about'", () => {
 
   it("the road-type option reads 'Urban street' (R127 Q4); the wire value is unchanged", () => {
     mount(URBAN);
-    const sel = document.querySelector("#what-road-type") as HTMLSelectElement;
-    expect(sel.value).toBe("urban_arterial");
-    expect(sel.selectedOptions[0].textContent).toBe("Urban street");
+    // #517 ruling 6: the shared listbox; its selected option carries the
+    // wire value, its label the words.
+    expect(listboxValue("what-road-type")).toBe("Urban street");
+    fireEvent.click(document.getElementById("what-road-type")!);
+    const sel = document.querySelector('#what-road-type-list [aria-selected="true"]')!;
+    expect(sel.getAttribute("data-value")).toBe("urban_arterial");
+    expect(sel.textContent).toContain("Urban street");
   });
 });

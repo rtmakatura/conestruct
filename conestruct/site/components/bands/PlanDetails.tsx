@@ -1,5 +1,13 @@
 "use client";
 
+// #517 (UX group 7, 2026-11-11): these rows now render as WhyCells — a
+// plain source line with a why tip (ruling 5) — and every list is the
+// shared Listbox (ruling 6).  Street class is a listbox (S7: every guess
+// row has a dropdown); the Carriageway answer moves into the "Measured
+// from the map" row unchanged (S6: same writer, same
+// `carriageway.confirmed`).  The job's rows are "About the work" (ruling
+// 1); "Hours" reads "Work hours" and "Work type" reads "Type of work".
+//
 // R107 (setup-what-redesign, 2026-10-07): the WHAT band's rows beyond its
 // first three — street class, the carriageway or the Divided toggle in
 // "The road"; work type, hours and the speed reduction in "The job" — as
@@ -30,26 +38,31 @@ import { PLAN_DETAILS } from "@/lib/scenarios/what-cells";
 import { laneWidthCeilingFt } from "@/lib/scenarios/validation";
 import { isKindDefault } from "@/lib/scenarios";
 import { setNight, setWorkType, setWorkZoneSpeed } from "@/lib/scenarios/what-writes";
-import {
-  isGuessed,
-  isOperatorSet,
-  setStreetClassByOperator,
-} from "@/lib/scenarios/guesses";
+import { isOperatorSet, setStreetClassByOperator } from "@/lib/scenarios/guesses";
 import {
   carriagewayApplies,
   carriagewayVerdict,
-  TWIN_RADIUS_M,
   type CarriagewayFacts,
 } from "@/lib/road-detection/carriageway";
-import { markerOf } from "@/lib/scenarios/provenance-marker";
+import {
+  carriagewayWhy,
+  dividedWhy,
+  nightWhy,
+  reductionWhy,
+  streetClassWhy,
+  workTypeWhy,
+  workZoneSpeedWhy,
+} from "@/lib/scenarios/why-lines";
+import type { DetectedModel } from "@/lib/road-detection/detected-rows";
 import { useWriteLock } from "../WriteLock";
-import { FieldCell, Segmented } from "./FieldCell";
+import { Segmented, WhyCell } from "./FieldCell";
+import { Listbox } from "../ui/Listbox";
 import { STREET_CLASSES, StreetClassEvidence } from "../JurisdictionSection";
 
 /** #308 — the carriageway facts when the road is a street-class one-way
  *  (the only roads the question applies to); null otherwise.  #309: the
  *  near-intersection kind relays them too (R114 Q4). */
-function oneWayFacts(scenario: Scenario): CarriagewayFacts | null {
+export function oneWayFacts(scenario: Scenario): CarriagewayFacts | null {
   if (scenario.kind !== "shoulder" && scenario.kind !== "near_intersection") return null;
   if (!scenario.carriageway) return null;
   const f = scenario.carriageway;
@@ -73,248 +86,129 @@ export function showsDividedToggle(scenario: Scenario): boolean {
   );
 }
 
-/** #308 — the carriageway row's provenance: whose answer it shows. */
-function carriagewayProvenance(f: CarriagewayFacts): string {
-  if (f.confirmed) return "your answer · operator-set from here on";
-  const verdict = carriagewayVerdict(f);
-  if (verdict === "undecided") return "⚠ needs you · the map couldn't tell";
-  if (verdict === "divided") return `detected · a same-name carriageway ${f.twinDistanceM} m away`;
-  return `detected · no same-name carriageway within ${TWIN_RADIUS_M} m`;
+/** #517: a guess row's state in the box (S1, S2), or null outside it. */
+export interface BoxState {
+  reason: string;
+  checked: boolean;
 }
 
-/** R108 — the street class's provenance: a guess off the road (its tag
- *  named), the operator's pick, or not set. */
-export function streetClassProvenance(scenario: Scenario): { text: string; amber: boolean } {
-  const guess = scenario.guesses?.street_class;
-  if (guess && isGuessed(scenario, "street_class")) {
-    return {
-      text: `guessed, not confirmed · OSM highway=${guess.highwayClass} · from the road`,
-      amber: true,
-    };
-  }
-  return scenario.street_class
-    ? { text: "your change · operator-set from here on", amber: false }
-    : { text: "not set · operator-set when picked", amber: false };
-}
-
-/** R110 Q8 (amended 2026-10-26, #411) — plain "default" until changed,
- *  then "✓ yours".  A value away
- *  from the default is the operator's even on a plan saved before the
- *  record existed. */
-function defaultOrYours(mine: boolean, defaultLine: string): string {
-  return mine ? "your change · operator-set from here on" : defaultLine;
-}
-
-/** One row, in the band's register — WhatBand's `Cell` in every respect
- *  that matters (label, control, rule 137's line as a marker), kept local
- *  because the WHAT rows own a detection model this group has no use for. */
-function Cell({
-  label,
-  htmlFor,
-  provenance,
-  amber = false,
-  line = null,
-  detail = null,
-  children,
-  testid,
-}: {
-  label: string;
-  htmlFor?: string;
-  provenance: string;
-  amber?: boolean;
-  /** A detection fact about THIS field (fix 3), behind its marker. */
-  line?: { key: string; text: string; amber: boolean } | null;
-  /** Anything else about the field (street class's evidence). */
-  detail?: ReactNode;
-  children: ReactNode;
-  testid: string;
-}) {
-  const hasDetail = line !== null || (detail !== null && detail !== undefined);
-  return (
-    <FieldCell
-      label={label}
-      htmlFor={htmlFor}
-      testid={testid}
-      provenance={
-        <span
-          className={`tr-prov${amber ? " is-amber" : ""}`}
-          data-testid={`prov-${testid}`}
-        >
-          {amber ? `⚠ ${provenance}` : provenance}
-        </span>
-      }
-      // R98: the line as one quiet marker; "⚠ needs you" stays a line.
-      marker={markerOf(provenance, { amber })}
-      info={
-        hasDetail ? (
-          <>
-            {line && (
-              <span
-                className={`tr-prov${line.amber ? " is-amber" : ""}`}
-                data-testid={`detect-${line.key}`}
-              >
-                {line.amber ? `⚠ ${line.text}` : line.text}
-              </span>
-            )}
-            {detail}
-          </>
-        ) : null
-      }
-    >
-      {children}
-    </FieldCell>
-  );
-}
-
-/** R107 — the rows the first three don't hold, rendered INSIDE the WHAT
- *  band's two columns (a fragment, never a wrapper: the column is the
- *  band's):
- *
- *    road  street class, then the Divided toggle or #308's carriageway;
- *    job   work type, hours, the speed reduction and its limit. */
-export function PlanDetailCells({
-  group,
+/** The job's rows (ruling 1's "About the work"): type of work, work
+ *  hours, the speed reduction and its limit. */
+export function JobCells({
   scenario,
   setScenario,
-  dividedLine = null,
-  dividedClause = null,
-  jurisdictionBlock = null,
 }: {
-  group: "road" | "job";
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
-  /** #289 hand-check, 2026-09-23, fix 3: "divided under the Divided
-   *  control."  Null when detection has nothing to say, or when there is
-   *  no Divided control to sit under — the road-type row takes it then. */
-  dividedLine?: { key: string; text: string; amber: boolean } | null;
-  /** R126: the same detection row's clause, as the Carriageway row's own
-   *  line and marker.  Null when detection did not report divided-ness. */
-  dividedClause?: { text: string; amber: boolean } | null;
-  /** For the street class's map caveat (the jurisdiction's adopted
-   *  classification map governs, not the road tier). */
-  jurisdictionBlock?: JurisdictionBlock | null;
 }): ReactNode {
   const locked = useWriteLock();
   const table = PLAN_DETAILS[scenario.kind as ScenarioKind];
   if (!table) return null;
-
   const wz = "workZoneSpeed" in scenario ? scenario.workZoneSpeed : undefined;
   const delta = wz !== undefined ? scenario.speed - wz : 0;
-  const carriageway = oneWayFacts(scenario);
+  // #397: the kind's own default reads "Default" until changed (Ryan,
+  // 2026-10-26, amending R110 Q8); never "Set by you" for a value nobody
+  // picked (Rule 10).
+  const workType = workTypeWhy(!isKindDefault(scenario, "workType"));
+  const night = nightWhy(isOperatorSet(scenario, "night") || scenario.night);
+  const reduction = reductionWhy(isOperatorSet(scenario, "workZoneSpeed") || wz !== undefined);
+  const wzWhy = workZoneSpeedWhy(delta);
+  return (
+    <>
+      <WhyCell
+        label="Type of work"
+        htmlFor="pd-work-type"
+        source={workType.source}
+        tip={workType.tip}
+        testid="work-type"
+      >
+        <Listbox
+          id="pd-work-type"
+          label="Type of work"
+          disabled={locked}
+          value={(scenario as { workType: string }).workType}
+          options={table.workTypes.map((w) => ({ value: w.v, label: w.l }))}
+          onChange={(v) => setScenario(setWorkType(scenario, v))}
+        />
+      </WhyCell>
 
-  if (group === "job") {
-    return (
-      <>
-        <Cell
-          label="Work type"
-          htmlFor="pd-work-type"
-          // #397: the kind's own default reads plain "default" until
-          // changed (Ryan, 2026-10-26, amending R110 Q8); never "✓ yours"
-          // for a value nobody picked (Rule 10).
-          provenance={defaultOrYours(
-            !isKindDefault(scenario, "workType"),
-            "default · this kind's usual job; change it if the job differs",
-          )}
-          testid="work-type"
-        >
-          <select
-            id="pd-work-type"
-            className="a-fld"
-            data-write=""
-            disabled={locked}
-            value={(scenario as { workType: string }).workType}
-            onChange={(e) =>
-              setScenario(setWorkType(scenario, e.target.value))
-            }
-          >
-            {table.workTypes.map((w) => (
-              <option key={w.v} value={w.v}>
-                {w.l}
-              </option>
-            ))}
-          </select>
-        </Cell>
+      <WhyCell label="Work hours" source={night.source} tip={night.tip} testid="night">
+        <Segmented
+          name="Work hours"
+          options={[
+            { v: false, l: "Daytime" },
+            { v: true, l: "Night" },
+          ]}
+          value={scenario.night}
+          onChange={(v) => setScenario(setNight(scenario, v))}
+          locked={locked}
+        />
+      </WhyCell>
 
-        <Cell
-          label="Hours"
-          provenance={defaultOrYours(
-            isOperatorSet(scenario, "night") || scenario.night,
-            "default · daytime; night work adds retroreflective devices",
-          )}
-          testid="night"
+      {table.speedReduction && (
+        <WhyCell
+          label="Speed reduction"
+          source={reduction.source}
+          tip={reduction.tip}
+          testid="reduction"
         >
           <Segmented
-            name="Hours"
+            name="Speed reduction"
             options={[
-              { v: false, l: "Daytime" },
-              { v: true, l: "Night" },
+              { v: false, l: "None" },
+              { v: true, l: "Reduced" },
             ]}
-            value={scenario.night}
-            onChange={(v) => setScenario(setNight(scenario, v))}
+            value={wz !== undefined}
+            onChange={(v) =>
+              setScenario(
+                setWorkZoneSpeed(scenario, v ? Math.max(25, scenario.speed - 10) : undefined),
+              )
+            }
             locked={locked}
           />
-        </Cell>
+        </WhyCell>
+      )}
 
-        {table.speedReduction && (
-          <Cell
-            label="Speed reduction"
-            provenance={defaultOrYours(
-              isOperatorSet(scenario, "workZoneSpeed") || wz !== undefined,
-              "default · no lower limit through the zone",
-            )}
-            testid="reduction"
-          >
-            <Segmented
-              name="Speed reduction"
-              options={[
-                { v: false, l: "None" },
-                { v: true, l: "Reduced" },
-              ]}
-              value={wz !== undefined}
-              onChange={(v) =>
-                setScenario(
-                  setWorkZoneSpeed(
-                    scenario,
-                    v ? Math.max(25, scenario.speed - 10) : undefined,
-                  ),
-                )
-              }
-              locked={locked}
-            />
-          </Cell>
-        )}
+      {table.speedReduction && wz !== undefined && (
+        <WhyCell
+          label="Work-zone speed limit"
+          htmlFor="pd-wz-speed"
+          source={wzWhy.source}
+          tip={wzWhy.tip}
+          testid="wz-speed"
+        >
+          <input
+            id="pd-wz-speed"
+            type="number"
+            className="a-fld w-fld"
+            data-write=""
+            disabled={locked}
+            min={20}
+            max={scenario.speed}
+            value={wz}
+            onChange={(e) => setScenario(setWorkZoneSpeed(scenario, +e.target.value || 0))}
+          />
+        </WhyCell>
+      )}
+    </>
+  );
+}
 
-        {table.speedReduction && wz !== undefined && (
-          <Cell
-            label="Work-zone speed limit"
-            htmlFor="pd-wz-speed"
-            provenance={
-              delta > 15
-                ? `Δ${delta} mph · S-630-1 Sheet 2 Note 3: ${Math.ceil(delta / 15)} stepped sign installations`
-                : `Δ${delta} mph · S-630-1 Sheet 2 Note 3: 1 advance sign`
-            }
-            testid="wz-speed"
-          >
-            <input
-              id="pd-wz-speed"
-              type="number"
-              className="a-fld"
-              data-write=""
-              disabled={locked}
-              min={20}
-              max={scenario.speed}
-              value={wz}
-              onChange={(e) =>
-                setScenario(setWorkZoneSpeed(scenario, +e.target.value || 0))
-              }
-            />
-          </Cell>
-        )}
-      </>
-    );
-  }
-
-  const classProv = streetClassProvenance(scenario);
+/** The street class row: a guess row in the box, or a road row in the
+ *  measured panel (S3). */
+export function StreetClassCell({
+  scenario,
+  setScenario,
+  jurisdictionBlock = null,
+  box = null,
+}: {
+  scenario: Scenario;
+  setScenario: (next: Scenario) => void;
+  jurisdictionBlock?: JurisdictionBlock | null;
+  box?: BoxState | null;
+}): ReactNode {
+  const locked = useWriteLock();
+  const why = streetClassWhy(scenario);
   const tier =
     scenario.guesses?.street_class?.highwayClass ??
     (scenario.meta.confirmedRoad &&
@@ -322,45 +216,49 @@ export function PlanDetailCells({
     scenario.meta.confirmedRoad.pinLng === scenario.meta.lng
       ? scenario.meta.confirmedRoad.candidate.highway_class
       : null);
-  const classEvidence = (
-    <StreetClassEvidence tier={tier} jurisdiction={jurisdictionBlock} />
+  return (
+    <WhyCell
+      label="Street class"
+      htmlFor="what-street-class"
+      source={box ? (box.checked ? "checked" : "guess") : why.source}
+      reason={box ? box.reason : null}
+      tip={why.tip}
+      info={<StreetClassEvidence tier={tier} jurisdiction={jurisdictionBlock} />}
+      testid="street-class"
+    >
+      <Listbox
+        id="what-street-class"
+        label="Street class"
+        disabled={locked}
+        value={scenario.street_class ?? null}
+        options={STREET_CLASSES.map(([v, l]) => ({ value: v, label: l }))}
+        // S2: picking a value, the one it holds included, is the check.
+        onChange={(c) => setScenario(setStreetClassByOperator(scenario, c as StreetClass))}
+      />
+    </WhyCell>
   );
+}
 
+/** The carriageway rows: the urban-arterial Divided control, or #308's
+ *  one-way answer (S6: this is the answer's one writer; the map window
+ *  reads it). */
+export function CarriagewayCells({
+  scenario,
+  setScenario,
+  detected,
+}: {
+  scenario: Scenario;
+  setScenario: (next: Scenario) => void;
+  detected: DetectedModel | null;
+}): ReactNode {
+  const locked = useWriteLock();
+  const carriageway = oneWayFacts(scenario);
+  const divided = showsDividedToggle(scenario) ? dividedWhy(scenario, detected) : null;
+  const cw = carriageway ? carriagewayWhy(carriageway) : null;
   return (
     <>
-      <Cell
-        label="Street class"
-        provenance={classProv.text}
-        amber={classProv.amber}
-        detail={classEvidence}
-        testid="street-class"
-      >
-        <Segmented<StreetClass>
-          name="Street class"
-          options={STREET_CLASSES.map(([v, l]) => ({ v, l }))}
-          value={scenario.street_class ?? null}
-          onChange={(c) => setScenario(setStreetClassByOperator(scenario, c))}
-          locked={locked}
-        />
-      </Cell>
-
-      {showsDividedToggle(scenario) && (
-        // R126: "Carriageway", and the row's own line instead of the
-        // "about" note: detection's clause when it reported the
-        // divided-ness, otherwise R110 Q8's default-or-yours.
-        <Cell
-          label="Carriageway"
-          provenance={
-            dividedClause?.text ??
-            defaultOrYours(
-              Boolean((scenario as { divided?: boolean }).divided),
-              "default · undivided until you say otherwise",
-            )
-          }
-          amber={dividedClause?.amber ?? false}
-          line={dividedLine}
-          testid="divided"
-        >
+      {divided && (
+        <WhyCell label="Carriageway" source={divided.source} tip={divided.tip} testid="divided">
           <Segmented
             name="Carriageway"
             options={[
@@ -381,13 +279,15 @@ export function PlanDetailCells({
             }
             locked={locked}
           />
-        </Cell>
+        </WhyCell>
       )}
 
-      {carriageway && (
-        <Cell
+      {carriageway && cw && (
+        <WhyCell
           label="Carriageway"
-          provenance={carriagewayProvenance(carriageway)}
+          source={cw.source}
+          tip={cw.tip}
+          alertLine={cw.alert ?? null}
           testid="carriageway"
         >
           <Segmented
@@ -425,8 +325,37 @@ export function PlanDetailCells({
             }}
             locked={locked}
           />
-        </Cell>
+        </WhyCell>
       )}
+    </>
+  );
+}
+
+/** The pre-#517 entry point, kept for callers that render one group:
+ *  road = street class then the carriageway rows; job = JobCells. */
+export function PlanDetailCells({
+  group,
+  scenario,
+  setScenario,
+  jurisdictionBlock = null,
+  detected = null,
+}: {
+  group: "road" | "job";
+  scenario: Scenario;
+  setScenario: (next: Scenario) => void;
+  jurisdictionBlock?: JurisdictionBlock | null;
+  detected?: DetectedModel | null;
+}): ReactNode {
+  if (!PLAN_DETAILS[scenario.kind as ScenarioKind]) return null;
+  if (group === "job") return <JobCells scenario={scenario} setScenario={setScenario} />;
+  return (
+    <>
+      <StreetClassCell
+        scenario={scenario}
+        setScenario={setScenario}
+        jurisdictionBlock={jurisdictionBlock}
+      />
+      <CarriagewayCells scenario={scenario} setScenario={setScenario} detected={detected} />
     </>
   );
 }

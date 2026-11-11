@@ -7,7 +7,7 @@
 // classes to the role tokens.
 
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
 import { ResultsHero } from "./ResultsHero";
 import { PlanDetailCells } from "./bands/PlanDetails";
@@ -85,11 +85,15 @@ describe("severity-ramp role assignments", () => {
         setScenario={noop}
       />,
     );
-    const pressed = Array.from(
-      container.querySelectorAll('.a-seg[aria-label="Street class"] button[aria-pressed="true"]'),
+    // #517 S7: the street class is the shared listbox; the selected option
+    // declares aria-selected and carries a ✓ (ruling 6), not hue alone.
+    fireEvent.click(container.querySelector("#what-street-class")!);
+    const selected = Array.from(
+      container.querySelectorAll('#what-street-class-list [role="option"][aria-selected="true"]'),
     );
-    expect(pressed).toHaveLength(1);
-    expect(pressed[0].textContent).toBe("Arterial");
+    expect(selected).toHaveLength(1);
+    expect(selected[0].querySelector(".lb-check")!.textContent).toBe("✓");
+    expect(selected[0].textContent).toBe("✓Arterial");
   });
 
   it("pricing card: the collapsed total is orange output only when a backend total exists", () => {

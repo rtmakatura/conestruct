@@ -221,8 +221,10 @@ describe("the street-class guess's evidence (R108)", () => {
         }}
       />,
     );
-    expect(screen.getByText("detected road tier: OSM primary")).toBeTruthy();
-    expect(screen.getByText(/The road tier is a proxy; the adopted map governs\./)).toBeTruthy();
+    // #517 ruling 5 / S20: the tier in plain words, no "OSM".
+    expect(screen.getByText("The road's map tag: main road.")).toBeTruthy();
+    expect(screen.getByText(/The map tag is only a stand-in; the adopted map governs\./)).toBeTruthy();
+    expect(document.body.textContent).not.toContain("OSM");
     expect(
       (screen.getByRole("link", { name: /Parker's functional-classification map/ }) as HTMLAnchorElement)
         .href,

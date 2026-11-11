@@ -395,6 +395,35 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
+  {
+    name: "the What section (#517)",
+    sizes: [
+      "var(--fs-step-question-520)",
+      "var(--fs-refusal)",
+      "var(--fs-body-value)",
+      "var(--fs-field-label)",
+    ],
+    reason:
+      "#517 ruling 1 (Ryan, 2026-11-11; validation-artifacts/committed/missions/ux-group7-what-section/issue-517/rulings.md): the What section in group 1's type, Inter throughout, no mono, no caps labels.  The heading is 19 / 600 on --fs-step-question-520 (as #507's map window); the box, section and row titles, the listbox (ruling 6: 'Inter at 15') and the date button read --fs-refusal; the Change / Show buttons, the hours link and the picker's days read --fs-body-value; labels, source lines (ruling 5: 'plain Inter 12.5'), tips and the picker's hints read --fs-field-label.  All existing tokens: no size joins the census.",
+    css: [
+      { selector: '.workbench [data-testid="band-what"] .a-question', size: "var(--fs-step-question-520)" },
+      { selector: ".workbench .w-box-head, .workbench .w-sec-head", size: "var(--fs-refusal)" },
+      { selector: ".workbench .w-label", size: "var(--fs-field-label)" },
+      { selector: ".workbench .w-src", size: "var(--fs-field-label)" },
+      { selector: ".workbench .w-tip-line", size: "var(--fs-field-label)" },
+      { selector: ".workbench .w-line", size: "var(--fs-field-label)" },
+      { selector: ".workbench .w-row-title", size: "var(--fs-refusal)" },
+      { selector: ".workbench .w-btn, .workbench .w-link", size: "var(--fs-body-value)" },
+      { selector: ".workbench .lb-btn, .workbench .drp-btn", size: "var(--fs-refusal)" },
+      { selector: ".workbench .lb-opt", size: "var(--fs-refusal)" },
+      { selector: ".workbench .drp-month", size: "var(--fs-refusal)" },
+      { selector: ".workbench .drp-nav, .workbench .drp-day, .workbench .drp-clear", size: "var(--fs-body-value)" },
+      { selector: ".workbench .drp-nav", size: "var(--fs-refusal)" },
+      { selector: ".workbench .drp-grid th", size: "var(--fs-field-label)" },
+      { selector: ".workbench .drp-hint", size: "var(--fs-field-label)" },
+    ],
+    tsx: [],
+  },
 ];
 
 export const TYPE_DEBT: readonly TypeDebt[] = [
@@ -809,7 +838,7 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 207, // #507: +8 (199 -> 207), the map window's rules (ruling 1); sizes unchanged, all existing tokens; // #456: +1 (198 -> 199), the strip's Hide map / Show map; sizes unchanged (ruling 5). #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 222, // #517: +15 (207 -> 222), the What section's rules (ruling 1), the listbox and the date picker; sizes unchanged, all existing tokens; // #507: +8 (199 -> 207), the map window's rules (ruling 1); sizes unchanged, all existing tokens; // #456: +1 (198 -> 199), the strip's Hide map / Show map; sizes unchanged (ruling 5). #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
   // #437: +4 (179 -> 183) — the question heading, the answer label, the
   // Next / Apply button and the strip's question sentence; sizes unchanged.
   // #437 branch 3: 183 -> 180 — seven out (the dismiss picker's legend,

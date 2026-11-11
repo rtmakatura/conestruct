@@ -37,6 +37,12 @@ const parker = (demo as { jurisdictions: Record<string, unknown> })
   .jurisdictions.parker as JurisdictionBlock;
 
 const WITH_PARKER: Scenario = { ...PINNED_SHOULDER, jurisdiction_key: "parker" } as Scenario;
+// #517 (ruling 7): the hours result shows under the dates once they are
+// set, so W5's plan carries a work date (no extra write, no extra audit).
+const WITH_PARKER_DATED: Scenario = {
+  ...WITH_PARKER,
+  schedule: { date_mode: "single", work_date: "2026-11-16" },
+} as Scenario;
 
 const BREAKDOWN = {
   devices: [],
@@ -140,29 +146,30 @@ describe("#398 W4 — the refreshing cue ends when the answer lands", () => {
 
 describe("#398 W5 — the windows line on a plan with no answer", () => {
   it("a declined plan says the windows weren't checked, never 'loading'", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER_DATED} />);
     await settle();
     // Before the answer, the check is open and the line says so.
-    expect(windowsLine()).toBe("Windows · ◌ loading");
+    expect(windowsLine()).toBe("Parker's work hours: ◌ loading");
     await answer(auditCalls, 0, declined400());
     await settle();
-    expect(windowsLine()).toBe("Windows · not checked: the plan was declined");
+    expect(windowsLine()).toBe("Parker's work hours: not checked: the plan was declined");
     expect(windowsLine()).not.toContain("loading");
   });
 
   it("a failed check (not a decline) says check failed, never 'loading'", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER_DATED} />);
     await settle();
     await answer(auditCalls, 0, failed500());
     await settle();
-    expect(windowsLine()).toBe("Windows · check failed: the check didn't answer");
+    expect(windowsLine()).toBe("Parker's work hours: check failed: the check didn't answer");
   });
 
   it("a plan that answers still reads the jurisdiction's verdict line", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER_DATED} />);
     await settle();
     await answer(auditCalls, 0, okAudit());
     await settle();
-    expect(windowsLine()).toMatch(/^Parker windows · /);
+    // #517 (ruling 7): the verdict's frame names the jurisdiction.
+    expect(windowsLine()).toMatch(/^Parker's work hours: /);
   });
 });

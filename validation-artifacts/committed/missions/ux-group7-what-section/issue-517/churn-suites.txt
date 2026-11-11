@@ -1,0 +1,61 @@
+# #517 churn suites (brief A): test files that reference the What section's changed ids, test ids or strings.
+# A grep SUPERSET: the old native selects (what-speed, what-lanes, what-lane-width, what-road-type, what-jurisdiction, pd-work-type, sched-start, sched-end, what-date/-end),
+# the old markers and lines (✓ measured, ✓ yours, ◌ not set, ⚠ from the …, whatHeader, 'Anything we got wrong', the footer, 'Denver windows', 'detected road tier: OSM'),
+# the 'Street class' / 'Hours' segmented groups (now a listbox / 'Work hours'), PlanDetailCells' dividedLine prop, and cell-/prov-/info-toggle- ids.
+# Some hits are false positives: WhereBand.* use FieldCell ids for the WHERE fields (unchanged), Landing/severity-ramp and the lib/ suites test unchanged functions.
+# tsc: PlanDetails.test.tsx (dividedLine prop, lines 338/355) and untouched-provenance.test.tsx (whatHeader import) no longer type-check.
+# Run A failures (components/WhatBand.* + bands/PlanDetails.test.tsx) are listed in test-failures-A.txt.
+
+components/AuditTrail.declined-stale.test.tsx
+components/GeneratorShell.a11y-announce.test.tsx
+components/GeneratorShell.batch-corrections.test.tsx
+components/GeneratorShell.class-stability.test.tsx
+components/GeneratorShell.class-suggest.test.tsx
+components/GeneratorShell.declined-jurisdiction.test.tsx
+components/GeneratorShell.disclosure-container.test.tsx
+components/GeneratorShell.disclosures.test.tsx
+components/GeneratorShell.error-honesty.test.tsx
+components/GeneratorShell.handoff-provenance.test.tsx
+components/GeneratorShell.no-location.test.tsx
+components/GeneratorShell.picker-reapply.test.tsx
+components/GeneratorShell.pre-generate-zone.test.tsx
+components/GeneratorShell.rail-vocabulary.test.tsx
+components/GeneratorShell.regenerate-mounted.test.tsx
+components/GeneratorShell.saved-dirty.test.tsx
+components/GeneratorShell.scan-disclosure.test.tsx
+components/GeneratorShell.scan-refusal.test.tsx
+components/GeneratorShell.scan-wire.test.tsx
+components/GeneratorShell.suggest-contract.test.tsx
+components/GeneratorShell.value-links.test.tsx
+components/GeneratorShell.wait-cues.test.tsx
+components/GeneratorShell.zone-staging.test.tsx
+components/GeneratorSidebar.corridor-bar.test.tsx
+components/GeneratorSidebar.fact-strip.test.tsx
+components/GeneratorSidebar.jurisdiction-band.test.tsx
+components/GeneratorSidebar.prepin-gating.test.tsx
+components/JurisdictionSection.test.tsx
+components/LocationPickerModal.road-pick.test.tsx
+components/NearIntersectionForm.approach-speed.test.tsx
+components/ResultsHead.grid.test.tsx
+components/ScheduleField.windows-block.test.tsx
+components/WhatBand.declutter.test.tsx
+components/WhatBand.density.test.tsx
+components/WhatBand.detection.test.tsx
+components/WhatBand.every-kind.test.tsx
+components/WhatBand.speed-guess.test.tsx
+components/WhatBand.step2-layout.test.tsx
+components/WorkingBand.render.test.tsx
+components/WorkingBand.test.tsx
+components/bands/FieldCell.marks.test.tsx
+components/bands/PlanDetails.carriageway.test.tsx
+components/bands/PlanDetails.test.tsx
+components/bands/WhereBand.edit-turns.test.tsx
+components/bands/WhereBand.work-length.test.tsx
+components/bands/untouched-provenance.test.tsx
+components/landing/Landing.test.tsx
+components/severity-ramp.test.tsx
+lib/scenarios/approach-speed.test.ts
+lib/scenarios/guesses.test.ts
+lib/scenarios/operator-set.test.ts
+lib/scenarios/speed-guess.test.ts
+components/__fixtures__/band-helpers.ts

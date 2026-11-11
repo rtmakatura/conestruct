@@ -105,7 +105,8 @@ describe("WHAT's header counts the cross-street speed's ⚠ (Q4)", () => {
     );
     const text = document.querySelector('[data-testid="band-what"]')!.textContent ?? "";
     cleanup();
-    const m = text.match(/(\d+) guess(es)? marked ⚠/);
+    // #517 ruling 1: the count now reads in the intro line.
+    const m = text.match(/Check our (\d+) guess(es)?,/);
     return m ? Number(m[1]) : 0;
   };
 

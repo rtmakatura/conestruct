@@ -316,6 +316,12 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         "var(--fs-body-value)",
         "var(--fs-refusal)",
         "var(--fs-field-label)",
+        // #517 ruling 1: the What section in group 1's type, on the same
+        // four existing tokens; no new size.
+        "var(--fs-step-question-520)",
+        "var(--fs-refusal)",
+        "var(--fs-body-value)",
+        "var(--fs-field-label)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",

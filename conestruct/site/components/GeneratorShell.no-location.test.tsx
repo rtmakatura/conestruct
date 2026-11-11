@@ -25,6 +25,8 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // /generate/i button on every mount now.
 import { GeneratorShell } from "./GeneratorShell";
 import { answerSide, confirmKind, openWhat, pickKind } from "./__fixtures__/band-helpers";
+import { pickOption } from "./__fixtures__/listbox";
+import { openMeasured } from "./__fixtures__/what-section";
 import { TEST_SIDE, corridorGeometryResponse } from "./test-fixtures";
 import { DEFAULT_SHOULDER, hasLocation } from "@/lib/scenarios";
 import type { ShoulderScenario } from "@/lib/scenarios";
@@ -300,11 +302,10 @@ describe("no location, no certification (#186)", () => {
     ).toContain("Set the speed in Step 2");
     expect(document.body.textContent).not.toContain("READY FOR TCS REVIEW");
     await openWhat();
-    await act(async () => {
-      fireEvent.change(document.getElementById("what-speed") as HTMLSelectElement, {
-        target: { value: "35" },
-      });
-    });
+    // #517 (S7): the shared listbox; an unset speed opens the measured
+    // row's panel (S19).
+    openMeasured();
+    pickOption("what-speed", "35");
     await flushDebounce();
     await settle();
     expect(btn().disabled).toBe(false);

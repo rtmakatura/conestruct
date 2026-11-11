@@ -52,7 +52,12 @@ const BREAKDOWN = {
   devices: [],
   total_devices: 42,
   unique_types: 6,
-  zone_geometry: { taper_l_ft: 183, buffer_b_ft: 495, device_spacing_ft: 55, work_len_ft: 500 },
+  zone_geometry: {
+    taper_l_ft: 183,
+    buffer_b_ft: 495,
+    device_spacing_ft: 55,
+    work_len_ft: 500,
+  },
 };
 
 beforeEach(() => {
@@ -65,7 +70,11 @@ beforeEach(() => {
         : url.includes("/api/render/device-breakdown")
           ? BREAKDOWN
           : {};
-      return { ok: true, status: 200, json: async () => json } as unknown as Response;
+      return {
+        ok: true,
+        status: 200,
+        json: async () => json,
+      } as unknown as Response;
     }),
   );
   Element.prototype.scrollIntoView = vi.fn() as never;
@@ -86,27 +95,61 @@ describe("#277 — the WHAT grid mounts for every live kind", () => {
 
   for (const kind of ENABLED_SCENARIO_KINDS) {
     it(`${kind}: the WHAT band opens on its grid, with the cells every kind carries`, async () => {
-      render(<GeneratorShell mode="sandbox" initialScenario={pinned(DEFAULT_OF[kind]) as Scenario} />);
+      render(
+        <GeneratorShell
+          mode="sandbox"
+          initialScenario={pinned(DEFAULT_OF[kind]) as Scenario}
+        />,
+      );
       await act(async () => {
         await new Promise((r) => setTimeout(r, 300));
       });
       await openWhat();
       const band = document.querySelector('[data-testid="band-stack"]')!;
       expect(band.getAttribute("data-open-band"), kind).toBe("what");
-      expect(band.querySelector(".a-cols"), `${kind}: WHAT columns`).not.toBeNull();
+      // #520: the section's cells sit in one shared-row grid.
+
+      expect(
+        band.querySelector(".w-grid"),
+        `${kind}: WHAT columns`,
+      ).not.toBeNull();
       // R107: the rows every live kind renders — each with its field and
       // its provenance line (rule 137).  Lane width is the Lanes row's
       // second control, with its own line (R110 Q7).
-      for (const cell of ["speed", "lanes", "road-type", "jurisdiction", "work-dates"]) {
-        const c = band.querySelector(`.a-cols [data-testid="cell-${cell}"]`);
+      // #517 ruling 1: a field sits in the guesses box, About the work, or
+      // the measured row's panel; ruling 6: lists are the shared listbox
+      // (`.lb-btn`), the dates the picker's button (`.drp-btn`); ruling 5:
+      // the provenance line is the field's source line.
+      for (const cell of [
+        "speed",
+        "lanes",
+        "road-type",
+        "jurisdiction",
+        "work-dates",
+      ]) {
+        const c = band.querySelector(
+          `[data-testid="band-what"] [data-testid="cell-${cell}"]`,
+        );
         expect(c, `${kind}: cell-${cell}`).not.toBeNull();
-        expect(c!.querySelector(".a-fld"), `${kind}: cell-${cell} field`).not.toBeNull();
-        expect(c!.querySelector(".tr-prov")?.textContent?.trim(), `${kind}: cell-${cell} provenance`).toBeTruthy();
+        expect(
+          c!.querySelector(".a-fld, .lb-btn, .drp-btn"),
+          `${kind}: cell-${cell} field`,
+        ).not.toBeNull();
+        expect(
+          c!.querySelector(".w-src-word")?.textContent?.trim(),
+          `${kind}: cell-${cell} provenance`,
+        ).toBeTruthy();
       }
-      const lanes = band.querySelector('[data-testid="cell-lanes"]')!;
-      expect(lanes.querySelector("#what-lane-width"), `${kind}: lane width`).not.toBeNull();
+      // #517 round 1: lane width is its own row with its own source line.
+      const lanes = band.querySelector('[data-testid="cell-lane-width"]')!;
       expect(
-        lanes.querySelector('[data-testid="prov-lane-width"]')?.textContent?.trim(),
+        lanes.querySelector("#what-lane-width"),
+        `${kind}: lane width`,
+      ).not.toBeNull();
+      expect(
+        lanes
+          .querySelector('[data-testid="prov-lane-width"]')
+          ?.textContent?.trim(),
         `${kind}: lane width provenance`,
       ).toBeTruthy();
     });

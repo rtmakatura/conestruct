@@ -1,0 +1,21 @@
+## Round 1 repair (item lead), first run after the repairs: 9 failed | 165 passed (174)
+components/DetectedVsApplied.confidence.test.tsx > #274 inferred must not look like measured > the marker is a word, not a colour (Rule 13 / P9)
+components/WhatBand.declutter.test.tsx > the section's rows, in ruling 1's order (was R107's two columns) > About the work holds the job's rows; the measured row's panel holds the road's
+components/WhatBand.declutter.test.tsx > one quiet source line per field (R98, P9; #517 ruling 5) > at rest each field shows its source words, not its sentence
+components/WhatBand.declutter.test.tsx > one quiet source line per field (R98, P9; #517 ruling 5) > R126: one marker per row — the Lanes marker opens the one popover, holding both lines
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > each cell carries its own clause, under its own field (rule 137)
+components/WhatBand.detection.test.tsx > #289 §8.23 — the clauses under the fields they are about > every provenance line rides the source-line role, not a new one (#517 ruling 5)
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > shoulder: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > flagger_lane_closure: the WHAT band opens on its grid, with the cells every kind carries
+components/WhatBand.every-kind.test.tsx > #277 — the WHAT grid mounts for every live kind > near_intersection: the WHAT band opens on its grid, with the cells every kind carries
+## Round 1, second run (all changed-file suites)
+# 5 failed | 222 passed (227)
+components/DetectedVsApplied.confidence.test.tsx > #274 inferred must not look like measured > the marker is a word, not a colour (Rule 13 / P9)
+components/GeneratorForms.a11y.test.tsx > the WHAT grid's cells carry their visible labels > shoulder: every cell resolves from its label
+components/GeneratorForms.a11y.test.tsx > the WHAT grid's cells carry their visible labels > flagger: the lanes cell is read-only with its reason, and still labelled
+components/GeneratorForms.a11y.test.tsx > the per-kind forms' own controls carry their visible labels > the shoulder's work type carries its label in the second group
+components/GeneratorForms.a11y.test.tsx > the per-kind forms' own controls carry their visible labels > the flagger's work type carries its label in the second group
+On their own / after repair:
+- DetectedVsApplied.confidence "the marker is a word, not a colour": reads app/globals.css relative to the working directory; both failures were runs from outside the site folder. Run from conestruct/site (as CI runs it): passed.
+- GeneratorForms.a11y x4: a suite brief B did not reach (it still expected native SELECTs, a date input and "Work type"); updated to the listbox, the date button and "Type of work"; then 2 files, 14 passed (14) from conestruct/site.
+- The first run's 8 WhatBand failures: the lane width row split (round 1, finding 1); tests updated; passed in the second run.

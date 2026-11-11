@@ -137,6 +137,8 @@ vi.mock("./LocationPickerModal", () => ({
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT, corridorGeometryResponse, withOperatorSpeed } from "./test-fixtures";
 import { answerSide, openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { listboxValue, pickOptionUser } from "./__fixtures__/listbox";
+import { openMeasured } from "./__fixtures__/what-section";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -206,8 +208,9 @@ async function mount(initial: Scenario) {
   });
 }
 
-// #289 Phase 2 — the lanes control is a SELECT in the WHAT band's grid
-// (§8.22, rule 136), not a chip row.  The handoff notes it feeds are
+// #289 Phase 2 — the lanes control is a list in the WHAT band's grid
+// (§8.22, rule 136), not a chip row.  #517 (S7, S3): the shared listbox,
+// in the "Measured from the map" row's panel.  The handoff notes it feeds are
 // unchanged, byte for byte (#198) — they moved to
 // components/bands/HandoffNotes.tsx and render in the WHERE band.
 async function selectLanes(
@@ -215,10 +218,8 @@ async function selectLanes(
   value: string,
 ): Promise<void> {
   await openWhat();
-  await user.selectOptions(
-    document.querySelector("#what-lanes") as HTMLSelectElement,
-    value,
-  );
+  openMeasured();
+  await pickOptionUser(user, "what-lanes", value);
 }
 
 describe("#198 handoff provenance — the four families produce visible notes", () => {
@@ -294,9 +295,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     // The width is the widest lane the sheet CAN draw at 4 divided
     // lanes, which is the backend's own arithmetic read backwards.
-    expect(
-      (document.getElementById("what-lane-width") as HTMLSelectElement).value,
-    ).toBe("10.5");
+    expect(listboxValue("what-lane-width")).toBe("10.5 ft");
 
     // And it is not silent: the narrowing is named under the field it
     // happened to, with the arithmetic in the order the backend states
@@ -309,9 +308,8 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     // The point of the whole correction: no red state the user did not
     // cause.  The lanes cell carries no error and Generate is live.
-    expect(
-      document.querySelector('[data-testid="prov-lanes"]')?.className,
-    ).not.toContain("is-error");
+    // #517: a lanes error is its own line under the control (error-lanes).
+    expect(document.querySelector('[data-testid="error-lanes"]')).toBeNull();
     expect(
       (screen.getByRole("button", { name: /Generate plan/ }) as HTMLButtonElement)
         .disabled,

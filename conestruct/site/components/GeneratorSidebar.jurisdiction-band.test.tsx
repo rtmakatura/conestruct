@@ -46,6 +46,8 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { listboxValue, pickOptionUser } from "./__fixtures__/listbox";
+import { openMeasured } from "./__fixtures__/what-section";
 
 // #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
 // control in another band is a click on its fact line, exactly as a user
@@ -118,13 +120,19 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     // out of the road-type cell."  Present, not dropped: the chips are in
     // that cell, and in no other.
     expect(document.querySelector(".jctl")).toBeNull();
-    // R107: the street class is a row of "The road", its control R107's
-    // segmented control — in that row, and in no other.
+    // R107: the street class is a road row.  #517 (S7, S3): its control
+    // is the shared listbox, in the guesses box or the "Measured from the
+    // map" row's panel — in that row, and in no other.
     const classCell = document.querySelector('[data-testid="cell-street-class"]')!;
-    const classSeg = classCell.querySelector('.a-seg[aria-label="Street class"]');
-    expect(classSeg).not.toBeNull();
-    expect(document.querySelector('[data-testid="what-group-road"]')!.contains(classCell)).toBe(true);
-    expect(document.querySelectorAll('.a-seg[aria-label="Street class"]')).toHaveLength(1);
+    const classList = classCell.querySelector('#what-street-class[aria-haspopup="listbox"]');
+    expect(classList).not.toBeNull();
+    const home =
+      document.querySelector('[data-testid="what-guesses"]')?.contains(classCell) ||
+      document.querySelector('[data-testid="what-measured-panel"]')!.contains(classCell);
+    expect(home).toBe(true);
+    expect(document.querySelectorAll('[data-testid="cell-street-class"]')).toHaveLength(1);
+    expect(document.querySelectorAll('#what-street-class')).toHaveLength(1);
+    expect(document.querySelector('.a-seg[aria-label="Street class"]')).toBeNull();
     // The old chips are gone with the confirm step (R108).
     expect(document.querySelector(".classpick")).toBeNull();
     // And the section that used to hold them is gone with the panel.
@@ -150,9 +158,11 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN"));
     await openWhat();
-    const select = screen.getByLabelText<HTMLSelectElement>(/^Jurisdiction/);
-    expect(select.disabled).toBe(false);
-    await user.selectOptions(select, "denver");
-    expect(select.value).toBe("denver");
+    // #517 (S7): the shared listbox.
+    const list = document.getElementById("what-jurisdiction") as HTMLButtonElement;
+    expect(list.disabled).toBe(false);
+    openMeasured();
+    await pickOptionUser(user, "what-jurisdiction", "denver");
+    expect(listboxValue("what-jurisdiction")).toBe("Denver");
   });
 });
