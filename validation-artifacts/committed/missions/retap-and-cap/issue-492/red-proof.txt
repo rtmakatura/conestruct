@@ -1,0 +1,15 @@
+#492 red proof — conestruct/site/app/api/needs-you-map/route.rate.test.ts
+
+Run against route.ts at 60f4a1c5 (cap 30, unchanged), 2026-11-10:
+  npx vitest run app/api/needs-you-map/route.rate.test.ts
+   x #492: the needs-you-map cap > allows the 40th request in a minute from one IP and refuses the 41st
+   v #492: the needs-you-map cap > counts each IP on its own
+  AssertionError: expected 30 to be 40 // Object.is equality
+        Tests  1 failed | 1 passed (2)
+  (The first 429 came at index 30, the 31st request.)
+
+Run with the cap at 40 (this branch):
+  npx vitest run --reporter=dot app/api/needs-you-map/route.rate.test.ts app/api/needs-you-map/route.test.ts lib/rate-limit.test.ts
+   Test Files  3 passed (3)
+        Tests  18 passed (18)
+  npx tsc --noEmit: no errors.

@@ -16,8 +16,15 @@ function px(v: unknown, min: number): number | null {
   return typeof v === "number" && Number.isInteger(v) && v >= min && v <= 1280 ? v : null;
 }
 
+// #492 — CHOSEN (Rule 12): 40 a minute per IP, approved by Ryan 2026-11-10
+// (was 30).  Worst case for one walk through the questions inside a minute:
+// 5 questions × (1 soft image + 5 zoom steps, −1 to +3) = 30 requests, so 30
+// left a margin of 0 and 40 leaves 10.  Only the open question's map is
+// mounted (QuestionSteps), so 1 soft image is asked for before any answer.
+const PER_MINUTE = 40;
+
 export async function POST(req: NextRequest) {
-  const over = await rateLimitOr429(req, "needs-you-map", 30);
+  const over = await rateLimitOr429(req, "needs-you-map", PER_MINUTE);
   if (over) return over;
 
   const len = Number(req.headers.get("content-length") ?? "0");

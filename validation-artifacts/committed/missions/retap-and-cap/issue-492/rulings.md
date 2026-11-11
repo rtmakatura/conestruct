@@ -1,0 +1,11 @@
+# #492 rulings (mission retap-and-cap, #494)
+
+**Ryan ruled 2026-11-10: cap 30→40.** In this mission's brief Ryan approved raising the NEEDS YOU map cap (`/api/needs-you-map`, `rateLimitOr429(req, "needs-you-map", …)`) from 30 to 40 requests a minute per IP. The 40 is marked `CHOSEN` in `conestruct/site/app/api/needs-you-map/route.ts` with the worst-case count (Rule 12). This was parked as money in the `ux-columns-copy-maps` report (question 1); this is its answer, not a self-ruling.
+
+**R145 self-ruled: the issue's other bullet (load only the open and the next question's soft image) is not built.** Its premise was wrong. #492 says soft images load "for every NEEDS YOU map at once"; the code mounts only the open question's card (`conestruct/site/components/QuestionSteps.tsx:177-199`, `<Card q={current} …>`; the others are list rows), and the map is that card's media (`components/NeedsYouQuestion.tsx:107`). So 1 soft image is asked for before any answer, already under the issue's "only 2". Loading the next one early would add a request sooner, not save one, and Ryan's approval covers the cap only. Fits R145: it is a design call inside the rules, no money, no safety distance, no reversed ruling.
+
+## #492's three acceptance lines
+
+1. *With 3+ NEEDS YOU questions, only 2 soft images are requested before any answer.* Met without change: 1 is requested (one card mounted; `NeedsYouMap.tsx:81-82` asks for a soft image only at step 0 before a full picture is shown and when the full one isn't cached). Code read at 60f4a1c5; not changed by this branch.
+2. *Worst-case requests per minute stay below the limit with a recorded margin.* Met: 5 questions (`lib/scenarios/types.ts:245-250`) × (1 soft + 5 zoom steps, −1 to +3 per `lib/corridor-aerial.ts:45-46` and `route.ts` zoom check) = 30, under 40, margin 10, recorded in the `route.ts` comment and `checkpoint.md`. Proven at the route by `route.rate.test.ts` (40th allowed, 41st 429; red at 30, `red-proof.txt`). Outside the count: a resize or going back over more than 24 cached pictures in the same minute asks again (as before #483).
+3. *#483's soft-then-sharp behavior is unchanged for the open question.* Met: `NeedsYouMap.tsx`, `lib/needs-you-map.ts` and `QuestionSteps.tsx` are byte-identical to 60f4a1c5; the existing `route.test.ts` #483 soft cases pass unchanged.
