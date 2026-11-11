@@ -22,6 +22,7 @@ SITE_INPUTS=(
   "../../tests/fixtures/tiering"
   "../../tests/fixtures/centerline"
   "../../tests/fixtures/site_scan"
+  "../../tests/fixtures/needs-you"
   "../../scripts/gate.cjs"
   "../../scripts/verify-generate-cls.mjs"
   "../../validation-artifacts/committed/ux-group3-where/evidence/overpass-fixture/c74c32bdc5114bff.json"

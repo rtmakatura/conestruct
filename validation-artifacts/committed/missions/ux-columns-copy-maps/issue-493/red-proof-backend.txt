@@ -1,0 +1,16 @@
+# #493 red proof: the new backend tests on the base backend (cf5ddffd, src/ unchanged), frontend fixture already written. The first test fails on its zero-Overpass assertion: the base made one cross-street read.
+E   AssertionError: the tap's line, not a second lookup
+E   KeyError: 'x-map-cross-source'
+E   KeyError: 'x-map-cross-source'
+E   KeyError: 'x-map-cross-source'
+E   KeyError: 'x-map-cross-source'
+E   KeyError: 'x-map-cross-source'
+E   AssertionError: assert 200 == 422
+FAILED tests/test_needs_you_map.py::test_493_a_tap_record_draws_the_cross_street_with_no_overpass_read
+FAILED tests/test_needs_you_map.py::test_493_the_tap_picture_matches_484s_lookup_on_e_colfax
+FAILED tests/test_needs_you_map.py::test_493_with_no_tap_record_at_the_crossing_the_lookup_runs_and_says_so[None]
+FAILED tests/test_needs_you_map.py::test_493_with_no_tap_record_at_the_crossing_the_lookup_runs_and_says_so[no line]
+FAILED tests/test_needs_you_map.py::test_493_with_no_tap_record_at_the_crossing_the_lookup_runs_and_says_so[another crossing]
+FAILED tests/test_needs_you_map.py::test_493_with_no_tap_record_at_the_crossing_the_lookup_runs_and_says_so[the mainline]
+FAILED tests/test_needs_you_map.py::test_493_the_record_is_capped_at_the_producers_300_points
+7 failed, 1 passed, 43 deselected in 1.96s

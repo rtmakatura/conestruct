@@ -10,6 +10,7 @@
 
 import type { IntersectionRecord } from "../scenarios/types";
 import { deriveCrossStreet, type CrossStreetCandidate } from "./cross-street";
+import { GEOMETRY_MAX_NODES } from "./stitch";
 import type { RoadCandidate, RoadDetectResponse } from "./types";
 
 /** A candidate's raw OSM bearing, normalised to 0–359.  (#290: never a
@@ -63,16 +64,25 @@ export async function lookupCrossStreet(
 
 /** `meta.intersection` for a freshly looked-up crossing (#234, #316): the
  *  point, the cross street's name, class and posted speed — the record the
- *  picker's Save has always written. */
+ *  picker's Save has always written.  #493: plus the cross street's line
+ *  when the lookup kept one, so the NEEDS YOU map reads no second time;
+ *  a record with no line is byte-identical to before.  A line longer than
+ *  GEOMETRY_MAX_NODES (an own-way line the stitch didn't trim) is left out,
+ *  not cut here: the map then looks the street up (Rule 3; the backend
+ *  drops one too, so a plan is never refused for it). */
 export function intersectionRecord(
   point: { lat: number; lng: number },
   cs: CrossStreetCandidate | null,
 ): IntersectionRecord {
+  const geometry = cs?.geometry;
   return {
     lat: point.lat,
     lng: point.lng,
     name: cs?.name ?? null,
     highwayClass: cs?.highwayClass ?? null,
     postedSpeedMph: cs?.speedMph ?? null,
+    ...(geometry && geometry.length >= 2 && geometry.length <= GEOMETRY_MAX_NODES
+      ? { geometry }
+      : {}),
   };
 }

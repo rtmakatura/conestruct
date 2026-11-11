@@ -1,0 +1,4 @@
+# #493: the one live Overpass read (script/live_time.py, run from the worktree root with
+# `uv run --extra dev python`). Output, verbatim (no secrets: Overpass takes none):
+query == committed: True
+2026-11-10T14:08:10 2649 ms err None elements 11 pick ('Franklin Street', 3)

@@ -1,0 +1,14 @@
+# #493 round 2: worst-case request bodies vs the 32 KB render-family cap.
+# script/measure-bodies.ts, run from conestruct/site with: npx tsx --tsconfig ./tsconfig.json <script>. Output, verbatim:
+## realistic (5 acknowledged)
+bundle (browser -> /api/render/bundle): 19165 bytes, under the 32768-byte cap (13603 left)
+quote-breakdown (browser -> /api/render/quote-breakdown): 19165 bytes, under the 32768-byte cap (13603 left)
+audit (browser -> /api/render/audit): 18957 bytes, under the 32768-byte cap (13811 left)
+needs-you map (browser -> route): 19026 bytes, under the 32768-byte cap (13742 left)
+upstream bundle part (proxy -> Modal, + derived centerline; no cap there): 27016 bytes, under the 32768-byte cap (5752 left)
+## backend max (50 acknowledged)
+bundle (browser -> /api/render/bundle): 21370 bytes, under the 32768-byte cap (11398 left)
+quote-breakdown (browser -> /api/render/quote-breakdown): 21370 bytes, under the 32768-byte cap (11398 left)
+audit (browser -> /api/render/audit): 21162 bytes, under the 32768-byte cap (11606 left)
+needs-you map (browser -> route): 21231 bytes, under the 32768-byte cap (11537 left)
+upstream bundle part (proxy -> Modal, + derived centerline; no cap there): 29221 bytes, under the 32768-byte cap (3547 left)

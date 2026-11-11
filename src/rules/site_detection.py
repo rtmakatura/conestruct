@@ -1280,6 +1280,39 @@ def cross_street_from_elements(
     return CrossStreet(name=name, lines=[w[2] for w in ways if w[1] and _street_key(w[1]) == key])
 
 
+def tapped_cross_street(
+    tapped: tuple[float, float],
+    name: str | None,
+    geometry: list[tuple[float, float]] | None,
+    node: tuple[float, float],
+    road_bearing_deg: float,
+    road_name: str | None,
+) -> CrossStreet | None:
+    """#493: the cross street the WHERE tap (or the picker) marked, when it
+    stands at this crossing; None: it doesn't, so the lookup runs.
+
+    Pure, no Overpass read.  It stands here when the tapped point and the
+    line both lie within ``CROSS_STREET_RADIUS_M`` of ``node``, and the line
+    is not the road itself: not parallel to it, and not named as it under
+    ``_street_key`` (the pick's own tests, R145-1/R145-3 of #484, the name
+    through ``_street_key`` as #487 does).  rulings.md (issue-493) R145-2,
+    R145-10.
+    """
+    if not geometry or len(geometry) < 2:
+        return None
+    if _haversine(tapped[0], tapped[1], node[0], node[1]) > CROSS_STREET_RADIUS_M:
+        return None
+    line = [(float(p[0]), float(p[1])) for p in geometry]
+    seg = _nearest_segment(node, line)
+    if seg is None or seg[0] > CROSS_STREET_RADIUS_M or _parallel(seg[1], road_bearing_deg):
+        return None
+    label = (name or "").strip() or None
+    own = _street_key(road_name)
+    if own and label and _street_key(label) == own:
+        return None
+    return CrossStreet(name=label, lines=[line])
+
+
 def cross_street_geometry(
     node: tuple[float, float], road_bearing_deg: float, road_name: str | None
 ) -> CrossStreet | None:

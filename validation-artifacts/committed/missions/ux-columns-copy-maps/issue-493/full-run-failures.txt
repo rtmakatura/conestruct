@@ -1,0 +1,6 @@
+# Note (2026-11-10): these full vitest runs are from the prior mission (ux-columns-copy-maps) and predate Ryan's 2026-11-10 ruling that forbids full local suites (R154 gate-and-test budget item 3); no full suite was run in retap-and-cap.
+# #493 first full vitest run after the change: 1 failed, 3035 passed, 1 skipped.
+tests/build-inputs.test.ts > the Vercel skip rule's inputs (R2) > every path outside the site that the site or its tests reach is on the list
+# Real, not flaky: the new cross-street-tap-record.test.ts reads tests/fixtures/needs-you/ outside the site.
+# Alone (before the fix): failed the same way. Fixed by listing "../../tests/fixtures/needs-you" in SITE_INPUTS
+# (conestruct/site/vercel-ignore.sh); alone after: passed; full re-run: 3036 passed, 1 skipped.

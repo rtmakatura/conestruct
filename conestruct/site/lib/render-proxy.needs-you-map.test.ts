@@ -21,6 +21,23 @@ afterEach(() => {
 });
 
 describe("fetchNeedsYouMap", () => {
+  it("#493: sends the tap's cross-street line on meta.intersection as it was written", async () => {
+    const f = vi.fn(async () => new Response("img", { status: 200, headers: { "content-type": "image/jpeg" } }));
+    vi.stubGlobal("fetch", f);
+    const geometry: Array<[number, number]> = [
+      [39.7395, -104.96836],
+      [39.7404, -104.96835],
+    ];
+    const intersection = { lat: 39.74, lng: -104.968, name: "Franklin Street", geometry };
+    await fetchNeedsYouMap(
+      { ...DEFAULT_SHOULDER, meta: { ...DEFAULT_SHOULDER.meta, intersection } },
+      { ...PICTURE, flag: "adjacent_intersection" },
+    );
+    const [, init] = f.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(init.body as string).scenario.meta.intersection).toEqual(intersection);
+  });
+
+
   it("posts the scenario and the picture, and relays the bytes and both headers", async () => {
     const f = vi.fn(
       async () =>
@@ -33,6 +50,7 @@ describe("fetchNeedsYouMap", () => {
             "x-map-frame": "39.740000,-104.970000,18.00",
             "x-map-cross-street": "Franklin%20Street",
             "x-map-cross-tag": "312,16",
+            "x-map-cross-source": "tap",
           },
         }),
     );
@@ -43,6 +61,8 @@ describe("fetchNeedsYouMap", () => {
     // #484: the cross street's name and its tag's place, relayed as they came.
     expect(r.headers.get("x-map-cross-street")).toBe("Franklin%20Street");
     expect(r.headers.get("x-map-cross-tag")).toBe("312,16");
+    // #493: which path drew it, relayed for the checks.
+    expect(r.headers.get("x-map-cross-source")).toBe("tap");
     const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("https://modal.example/render/needs-you-map");
     expect(JSON.parse(init.body as string)).toMatchObject(PICTURE);

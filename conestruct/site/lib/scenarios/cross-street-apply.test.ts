@@ -95,3 +95,58 @@ describe("the picker Save's cross-street apply is byte-identical after the move 
     expect(now.hold).toEqual({ pending: true, reason: "Check the lane count." });
   });
 });
+
+// #493: the candidate now carries the cross street's line, and the line can
+// differ between taps of the same street (trimmed around the snapped point,
+// or the whole own way when the stitch fails).  A line-only difference is
+// not new information: the #112 guard must still keep what the operator
+// edited since the first tap.
+describe("a re-tap of the same street with a different line is not new (#493, #112)", () => {
+  const LINE_A: Array<[number, number]> = [[39.7401, -104.9659], [39.7411, -104.9659]];
+  const LINE_B: Array<[number, number]> = [[39.7391, -104.9659], [39.7401, -104.9659], [39.7431, -104.9659]];
+
+  function firstTapThenEdit() {
+    const first = applyCrossStreetCandidate(NI, { ...CS, geometry: LINE_A }, null);
+    const s = first.scenario;
+    if (s.kind !== "near_intersection") throw new Error("kind");
+    // The operator edits an approach and a dispute is recorded after the tap.
+    const edited = {
+      ...s,
+      approaches: s.approaches.map((a, i) => (i === 0 ? { ...a, lanesPerDirection: 3 } : a)),
+      detectionOverrides: { someField: "disputed again" },
+    } as unknown as Scenario;
+    return { edited, memory: first.appliedJson };
+  }
+
+  it("keeps the edited approaches, the overrides and the hold off", () => {
+    const { edited, memory } = firstTapThenEdit();
+    const again = applyCrossStreetCandidate(edited, { ...CS, geometry: LINE_B }, memory);
+    expect(again.scenario).toBe(edited);
+    expect(again.hold).toBeNull();
+    expect(again.appliedJson).toBe(memory);
+    expect(memory).not.toContain("geometry");
+    const s = again.scenario as Extract<Scenario, { kind: "near_intersection" }>;
+    expect((s.approaches[0] as { lanesPerDirection: number }).lanesPerDirection).toBe(3);
+    expect(s.detectionOverrides).toEqual({ someField: "disputed again" });
+  });
+
+  it("a line dropped on the re-tap (stitch failed, no line kept) is not new either", () => {
+    const { edited, memory } = firstTapThenEdit();
+    const again = applyCrossStreetCandidate(edited, { ...CS, geometry: null }, memory);
+    expect(again.scenario).toBe(edited);
+    expect(again.hold).toBeNull();
+  });
+
+  it("a different street with the same line still replaces", () => {
+    const { edited, memory } = firstTapThenEdit();
+    const other = { ...CS, name: "Franklin Street", speedMph: 30, geometry: LINE_A };
+    const again = applyCrossStreetCandidate(edited, other, memory);
+    expect(again.scenario).not.toBe(edited);
+    expect(again.scenario.kind === "near_intersection" && again.scenario.approaches).toEqual(
+      approachesFromCrossStreet(other),
+    );
+    expect(again.scenario.kind === "near_intersection" && again.scenario.detectionOverrides).toBeUndefined();
+    expect(again.hold).toEqual({ pending: true, reason: "Check the lane count." });
+    expect(again.appliedJson).not.toBe(memory);
+  });
+});

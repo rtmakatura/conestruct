@@ -18,9 +18,9 @@ from __future__ import annotations
 import math
 from collections.abc import Callable
 from dataclasses import replace
-from typing import Annotated, Literal, Self
+from typing import Annotated, Any, Literal, Self
 
-from pydantic import BaseModel, Field, ValidationInfo, model_validator
+from pydantic import BaseModel, Field, ValidationInfo, field_validator, model_validator
 
 from src.api.site_scan import SiteScanRequest
 from src.generation.layout import (
@@ -208,6 +208,60 @@ class IntersectionPin(BaseModel):
     lat: float = Field(ge=-90.0, le=90.0)
     lng: float = Field(ge=-180.0, le=180.0)
     name: str | None = Field(default=None, max_length=200)
+    # #493: the cross street's line as the marking lookup fetched it
+    # (``[lat, lng]``), relayed like ``meta.centerline``.  Read only by
+    # /render/needs-you-map, which draws it instead of reading Overpass
+    # again when it stands at the question's crossing
+    # (``site_detection.tapped_cross_street``).  No deliverable reads it.
+    # Optional and never a reason to refuse a plan: a line longer than
+    # ``INTERSECTION_GEOMETRY_MAX_POINTS`` or not a list of in-range
+    # ``[lat, lng]`` pairs is dropped (None, a log line), and the map runs
+    # #484's lookup (``x-map-cross-source: lookup``).  rulings.md (issue-493)
+    # R145-4.
+    geometry: list[tuple[float, float]] | None = None
+
+    @field_validator("geometry", mode="before")
+    @classmethod
+    def _drop_unusable_geometry(cls, value: Any) -> list[tuple[float, float]] | None:
+        if value is None:
+            return None
+        line = _usable_line(value)
+        if line is None:
+            size = len(value) if isinstance(value, list) else type(value).__name__
+            print(f"[schemas] meta.intersection.geometry dropped ({size}); the map looks it up")
+        return line
+
+
+# #493 CHOSEN (not a safety number; it only bounds a relayed map line): the
+# road lookup's own cap, GEOMETRY_MAX_NODES (lib/road-detection/stitch.ts).
+INTERSECTION_GEOMETRY_MAX_POINTS: int = 300
+
+
+def _usable_line(value: Any) -> list[tuple[float, float]] | None:
+    """``value`` as a line of 2 to INTERSECTION_GEOMETRY_MAX_POINTS finite,
+    in-range ``[lat, lng]`` pairs; None when it is anything else."""
+    if not isinstance(value, list) or not 2 <= len(value) <= INTERSECTION_GEOMETRY_MAX_POINTS:
+        return None
+    line: list[tuple[float, float]] = []
+    for p in value:
+        if not isinstance(p, (list, tuple)) or len(p) != 2:
+            return None
+        lat, lng = p
+        if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in (lat, lng)):
+            return None
+        try:
+            # The range first: it compares a huge JSON integer exactly, where
+            # ``float()`` / ``isfinite`` would raise OverflowError (a 500).
+            # NaN and infinity fail it too.
+            if not (-90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0):
+                return None
+            point = (float(lat), float(lng))
+        except (OverflowError, TypeError, ValueError):
+            return None
+        if not (math.isfinite(point[0]) and math.isfinite(point[1])):
+            return None
+        line.append(point)
+    return line
 
 
 class ScenarioMeta(BaseModel):
@@ -241,7 +295,9 @@ class ScenarioMeta(BaseModel):
     work: WorkPlacement | None = None
     roadDirection: RoadDirection | None = None
     # #234 / #290 — see ``IntersectionPin``.  Read only by a work-start
-    # near_intersection plan; otherwise carried and ignored, as before.
+    # near_intersection plan; otherwise carried and ignored, as before,
+    # except its ``geometry`` (#493), which the NEEDS YOU map draws for any
+    # kind when it stands at the question's crossing.
     intersection: IntersectionPin | None = None
     # Engineering-style location text shown on the title block (e.g.
     # "I-25 NB, MP 144.5–146, Colorado Springs").  Distinct from

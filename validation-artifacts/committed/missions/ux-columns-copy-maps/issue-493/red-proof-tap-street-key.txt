@@ -1,0 +1,6 @@
+# #493 gate round 1 red proof: tapped_cross_street compared names with plain .lower()
+# Run: uv run --extra dev pytest tests/test_needs_you_map.py -q -k bend_named_as_the_road (new test in place, site_detection.py unfixed; base f9126089 + this branch's work)
+
+FAILED tests/test_needs_you_map.py::test_493_a_tapped_line_at_a_bend_named_as_the_road_is_not_the_cross_street[E Colfax Ave-False]
+FAILED tests/test_needs_you_map.py::test_493_a_tapped_line_at_a_bend_named_as_the_road_is_not_the_cross_street[E. Colfax Ave.-False]
+2 failed, 1 passed, 77 deselected in 0.76s

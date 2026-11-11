@@ -19,7 +19,8 @@ export interface ApproachHold {
 
 export interface CrossStreetApplied {
   scenario: Scenario;
-  /** The guard's new memory (the candidate's JSON), or the old one when
+  /** The guard's new memory (the candidate's JSON without its line,
+   *  #493), or the old one when
    *  nothing was applied. */
   appliedJson: string | null;
   /** The lane-count hold to set, or null when nothing was applied. */
@@ -34,7 +35,13 @@ export function applyCrossStreetCandidate(
   if (next.kind !== "near_intersection" || !crossStreet) {
     return { scenario: next, appliedJson: lastAppliedJson, hold: null };
   }
-  const crossJson = JSON.stringify(crossStreet);
+  // #493: the guard leaves the line out.  It can differ between taps of the
+  // same street (trimmed around the snapped point, or the whole own way
+  // when the stitch fails), and a line-only difference is not new
+  // information for the approaches.  The record's line is written by
+  // `intersectionRecord`, not here, so a re-tap still refreshes it.
+  const { geometry: _line, ...guarded } = crossStreet;
+  const crossJson = JSON.stringify(guarded);
   if (crossJson === lastAppliedJson) {
     return { scenario: next, appliedJson: lastAppliedJson, hold: null };
   }

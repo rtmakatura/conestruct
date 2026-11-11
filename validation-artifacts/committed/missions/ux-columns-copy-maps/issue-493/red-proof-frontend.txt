@@ -1,0 +1,5 @@
+# #493 red proof (frontend): cross-street-tap-record.test.ts with the base's
+# lib/road-detection/cross-street.ts and cross-street-lookup.ts (cf5ddffd)
+# put back for the run, then restored.
+AssertionError: expected 0 to be greater than or equal to 2   (record.geometry: the base record keeps no line)
+Tests  1 failed | 2 passed (3)

@@ -358,6 +358,304 @@ def test_484_the_other_questions_read_no_cross_street(
     assert "x-map-cross-tag" not in r.headers
 
 
+# #493: the intersection map draws the cross street the WHERE tap found
+# (#440), carried on ``meta.intersection.geometry``, with no second Overpass
+# read; #484's lookup runs only when no tap record stands at the crossing.
+# rulings.md (missions/ux-columns-copy-maps/issue-493) R145-1 to R145-5.
+
+_ROOT = Path(__file__).resolve().parents[1]
+# The tap's record on E Colfax, written by the real producer
+# (conestruct/site/lib/road-detection/cross-street-tap-record.test.ts).
+TAP_RECORD = Path(__file__).parent / "fixtures" / "needs-you" / "colfax-franklin-tap.json"
+# #484's own cross-street answer at the crossing, and the recorded ways it
+# was derived from (#484 evidence.md, "The local walk").
+LOOKUP_484 = (
+    _ROOT / "validation-artifacts/committed/missions/ux-token-map-load-edit/issue-484"
+    "/overpass-fixture/365beea785c9dba7.json"
+)
+WHERE_WAYS = (
+    _ROOT / "validation-artifacts/committed/ux-group3-where/evidence/overpass-fixture"
+    "/c74c32bdc5114bff.json"
+)
+# Node 7402343541, the crossing #484's walk framed on.
+CROSSING = (39.7399691, -104.968354)
+# East Colfax Avenue west of Franklin (the permanent check's COLFAX_WEST).
+COLFAX_WEST = [1547338997, 1547338998, 223788857, 600545918, 791808880]
+
+
+def colfax() -> dict[str, Any]:
+    """1600 E Colfax Ave, #484's walk, as a work-start scenario: the pin on
+    East Colfax Avenue west of Franklin Street, its chain the centerline."""
+    elements = json.loads(WHERE_WAYS.read_text(encoding="utf-8"))["elements"]
+    chain: list[list[float]] = []
+    for way_id in COLFAX_WEST:
+        way = next(e for e in elements if e.get("type") == "way" and e["id"] == way_id)
+        for p in way["geometry"]:
+            point = [p["lat"], p["lon"]]
+            if not chain or chain[-1] != point:
+                chain.append(point)
+    scenario = fixture()
+    meta = scenario["meta"]
+    meta.pop("confirmedRoad", None)
+    # The chain's vertex nearest 60 m west of the crossing.
+    want = (CROSSING[0], CROSSING[1] - 60 / 85_000)
+    lat, lng = min(chain, key=lambda p: sd._haversine(p[0], p[1], *want))
+    meta.update(
+        lat=lat,
+        lng=lng,
+        centerline=chain,
+        roadName="East Colfax Avenue",
+        roadDirection={"osmBearingDeg": 90.0, "oneway": None},
+        intersection=None,
+    )
+    return scenario
+
+
+def tap_record() -> dict[str, Any]:
+    record: dict[str, Any] = json.loads(TAP_RECORD.read_text(encoding="utf-8"))
+    return record
+
+
+@pytest.fixture()
+def colfax_overpass(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
+    """The subject read answers the crossing; #484's cross-street read
+    (``around:``) answers its committed fixture."""
+    state: dict[str, Any] = {"queries": []}
+    lookup = json.loads(LOOKUP_484.read_text(encoding="utf-8"))
+
+    def request(query: str, budget_s: float | None = None, **_kw: Any) -> Any:
+        state["queries"].append(query)
+        if "around:" in query:
+            return lookup, None
+        return {"elements": [signal(*CROSSING)]}, None
+
+    monkeypatch.setattr(sd, "_overpass_request_with_fallback", request)
+    return state
+
+
+def cross_reads(state: dict[str, Any]) -> int:
+    return sum("around:" in q for q in state["queries"])
+
+
+def test_493_a_tap_record_draws_the_cross_street_with_no_overpass_read(
+    client: TestClient, mapbox: list[dict[str, Any]], colfax_overpass: dict[str, Any]
+) -> None:
+    scenario = colfax()
+    scenario["meta"]["intersection"] = tap_record()
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert r.status_code == 200
+    assert cross_reads(colfax_overpass) == 0, "the tap's line, not a second lookup"
+    assert r.headers["x-map-cross-source"] == "tap"
+    assert r.headers["x-map-subject"] == "drawn"
+    assert r.headers["x-map-cross-street"] == "Franklin%20Street"
+    assert "x-map-cross-tag" in r.headers
+
+
+# (width, height, #484's lookup tag, the tap's tag).  The lookup's 846x423
+# tag is #484's own local walk's place at 1440 (#484 evidence.md); there the
+# tap's line runs further along Franklin, so its tag sits 8 px lower.
+COLFAX_SIZES = [
+    (800, 400, "375,344", "375,344"),
+    (846, 423, "397,360", "397,368"),
+    (390, 292, "170,182", "170,182"),
+]
+
+
+@pytest.mark.parametrize(("width", "height", "lookup_tag", "tap_tag"), COLFAX_SIZES)
+def test_493_the_tap_picture_matches_484s_lookup_on_e_colfax(
+    client: TestClient,
+    mapbox: list[dict[str, Any]],
+    colfax_overpass: dict[str, Any],
+    width: int,
+    height: int,
+    lookup_tag: str,
+    tap_tag: str,
+) -> None:
+    """R145-5: the same frame, point and name, the tag where the table says,
+    and every dash #484's lookup drew lies on the tap's line."""
+    from src.rules.corridor import _project_onto_segment_m
+
+    size = {"width": width, "height": height}
+    lookup = ask(client, colfax(), flag="adjacent_intersection", **size)
+    assert cross_reads(colfax_overpass) == 1
+    assert lookup.headers["x-map-cross-source"] == "lookup"
+    sd.clear_subject_memo()
+    scenario = colfax()
+    scenario["meta"]["intersection"] = tap_record()
+    tap = ask(client, scenario, flag="adjacent_intersection", **size)
+    assert cross_reads(colfax_overpass) == 1
+    assert tap.headers["x-map-cross-source"] == "tap"
+
+    for header in ("x-map-subject", "x-map-point", "x-map-frame", "x-map-cross-street"):
+        assert tap.headers[header] == lookup.headers[header], header
+    assert lookup.headers["x-map-cross-street"] == "Franklin%20Street"
+    assert lookup.headers["x-map-cross-tag"] == lookup_tag
+    assert tap.headers["x-map-cross-tag"] == tap_tag
+
+    # #484's lines, as its pick made them from its fixture.
+    elements = json.loads(LOOKUP_484.read_text(encoding="utf-8"))["elements"]
+    found = sd.cross_street_from_elements(elements, CROSSING, 90.0, "East Colfax Avenue")
+    assert found is not None and found.name == "Franklin Street"
+    lat, lng, z = frame_of(tap)
+    tap_line = [(p[0], p[1]) for p in tap_record()["geometry"]]
+    ends = [
+        q
+        for line in found.lines
+        for dash in sa._dashes(line, (lat, lng), z, width, height)
+        for q in dash
+    ]
+    assert ends
+    for q in ends:
+        off = min(
+            _project_onto_segment_m(q[0], q[1], a[0], a[1], b[0], b[1])[0]
+            for a, b in zip(tap_line, tap_line[1:], strict=False)
+            if a != b
+        )
+        assert off < 0.5, f"a #484 dash {off:.2f} m off the tap's line"
+    # The tap draws at least #484's dashes: the same street, reaching further.
+    drawn = [m["url"].count("path-3+3FD3A8-1(") for m in mapbox]
+    assert drawn[1] >= drawn[0] > 0
+
+
+def test_493_at_an_offset_crossing_the_tapped_street_is_drawn(
+    client: TestClient, mapbox: list[dict[str, Any]], colfax_overpass: dict[str, Any]
+) -> None:
+    """Two cross streets within 30 m (Franklin, and a second street the
+    operator tapped): the tapped one is drawn, not the lookup's nearest."""
+    scenario = colfax()
+    lat, lng = CROSSING
+    tapped = {
+        "lat": lat,
+        "lng": lng + 0.0001,
+        "name": "Offset Street",
+        "geometry": [[lat - 0.0008, lng + 0.0002], [lat + 0.0008, lng + 0.0002]],
+    }
+    scenario["meta"]["intersection"] = tapped
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert cross_reads(colfax_overpass) == 0
+    assert r.headers["x-map-cross-source"] == "tap"
+    assert r.headers["x-map-cross-street"] == "Offset%20Street"
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        None,
+        "no line",
+        "another crossing",
+        "the mainline",
+    ],
+)
+def test_493_with_no_tap_record_at_the_crossing_the_lookup_runs_and_says_so(
+    client: TestClient,
+    mapbox: list[dict[str, Any]],
+    colfax_overpass: dict[str, Any],
+    record: str | None,
+) -> None:
+    scenario = colfax()
+    tapped = tap_record()
+    if record == "no line":
+        tapped.pop("geometry")
+    elif record == "another crossing":
+        # A tap one block east: its own line, not this crossing's.
+        tapped["lng"] += 0.0012
+        tapped["geometry"] = [[p[0], p[1] + 0.0012] for p in tapped["geometry"]]
+    elif record == "the mainline":
+        tapped["geometry"] = scenario["meta"]["centerline"]
+    scenario["meta"]["intersection"] = None if record is None else tapped
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert r.status_code == 200
+    assert cross_reads(colfax_overpass) == 1
+    assert r.headers["x-map-cross-source"] == "lookup"
+    assert r.headers["x-map-cross-street"] == "Franklin%20Street"
+
+
+def test_493_the_soft_image_and_the_other_questions_say_no_source(
+    client: TestClient, mapbox: list[dict[str, Any]], colfax_overpass: dict[str, Any]
+) -> None:
+    scenario = colfax()
+    scenario["meta"]["intersection"] = tap_record()
+    soft = ask(client, scenario, flag="adjacent_intersection", soft=True)
+    other = ask(client, scenario)
+    assert "x-map-cross-source" not in soft.headers
+    assert "x-map-cross-source" not in other.headers
+    assert cross_reads(colfax_overpass) == 0
+
+
+def bad_lines() -> list[Any]:
+    long = [[CROSSING[0] + i * 1e-6, CROSSING[1]] for i in range(301)]
+    # A JSON integer past float range: float() would raise OverflowError.
+    huge = [[10**400, 0], [0, 0]]
+    return [
+        long,
+        [[CROSSING[0], 200.0], [CROSSING[0], CROSSING[1]]],
+        [[1.0, 2.0, 3.0]],
+        "line",
+        huge,
+    ]
+
+
+BAD_LINE_IDS = ["301 points", "out of range", "triple", "text", "past float range"]
+
+
+@pytest.mark.parametrize("line", bad_lines(), ids=BAD_LINE_IDS)
+def test_493_an_unusable_line_is_dropped_and_the_lookup_runs_never_a_refusal(
+    client: TestClient,
+    mapbox: list[dict[str, Any]],
+    colfax_overpass: dict[str, Any],
+    line: Any,
+) -> None:
+    """R145-4: the optional line never refuses a plan."""
+    scenario = colfax()
+    tapped = tap_record()
+    tapped["geometry"] = line
+    scenario["meta"]["intersection"] = tapped
+
+    r = ask(client, scenario, flag="adjacent_intersection")
+
+    assert r.status_code == 200
+    assert r.headers["x-map-cross-source"] == "lookup"
+    assert cross_reads(colfax_overpass) == 1
+    # The fixture's own 20-point line, sliced at the 300 cap, still draws from the tap.
+    sd.clear_subject_memo()
+    tapped["geometry"] = tap_record()["geometry"][:300]
+    assert (
+        ask(client, scenario, flag="adjacent_intersection").headers["x-map-cross-source"] == "tap"
+    )
+
+
+@pytest.mark.parametrize("bad", [0, 4], ids=["301 points", "past float range"])
+def test_493_an_unusable_line_never_refuses_the_audit_or_the_plan(
+    client: TestClient, mapbox: list[dict[str, Any]], colfax_overpass: dict[str, Any], bad: int
+) -> None:
+    """The line rides ``meta`` into every route: a saved plan with a 301-point
+    line, or one past float range, still renders its audit and its plan, as
+    with no line.  (The PDF's aerial needs real Mapbox bytes; /render/markdown and /render/xlsx read
+    the same Scenario model.)"""
+    from src.api.schemas import IntersectionPin
+
+    scenario = colfax()
+    tapped = tap_record()
+    tapped["geometry"] = bad_lines()[bad]
+    scenario["meta"]["intersection"] = tapped
+    assert IntersectionPin.model_validate(tapped).geometry is None
+    plain = colfax()
+    plain["meta"]["intersection"] = {k: v for k, v in tapped.items() if k != "geometry"}
+    for route in ("/render/audit", "/render/markdown", "/render/xlsx"):
+        got = client.post(route, headers=AUTH, json=scenario)
+        want = client.post(route, headers=AUTH, json=plain)
+        assert got.status_code == want.status_code == 200, (route, got.text[:200])
+    audit_got = client.post("/render/audit", headers=AUTH, json=scenario).json()
+    audit_want = client.post("/render/audit", headers=AUTH, json=plain).json()
+    assert audit_got == audit_want
+
+
 @pytest.mark.parametrize(("width", "height"), [(800, 400), (757, 360), (390, 292)])
 def test_484_the_tag_is_inside_the_frame_and_clear_of_the_work_and_the_controls(
     width: int, height: int
@@ -774,3 +1072,24 @@ def test_483_soft_must_be_a_boolean(
     client: TestClient, mapbox: list[dict[str, Any]], overpass: dict[str, Any]
 ) -> None:
     assert ask(client, fixture(), soft="yes please").status_code == 422
+
+
+# #493 gate round 1: the tap path tells the worked road the way #487's
+# lookup path does (_street_key), so an abbreviation is still the road.
+@pytest.mark.parametrize(
+    ("tapped_name", "drawn"),
+    [("E Colfax Ave", False), ("E. Colfax Ave.", False), ("North Franklin Street", True)],
+)
+def test_493_a_tapped_line_at_a_bend_named_as_the_road_is_not_the_cross_street(
+    tapped_name: str, drawn: bool
+) -> None:
+    """The road is "East Colfax Avenue", bearing 90°; the tapped line bends
+    40° off it (past 25°, CROSS_STREET_PARALLEL_DEG) and lies on the node."""
+    node = (39.7400, -104.9660)
+    d_lat = 0.0004 * math.cos(math.radians(130))
+    d_lng = 0.0004 * math.sin(math.radians(130)) / math.cos(math.radians(node[0]))
+    line = [(node[0] - d_lat, node[1] - d_lng), (node[0] + d_lat, node[1] + d_lng)]
+    found = sd.tapped_cross_street(node, tapped_name, line, node, 90.0, "East Colfax Avenue")
+    assert (found is not None) is drawn
+    if drawn:
+        assert found is not None and found.name == tapped_name

@@ -67,6 +67,14 @@ export interface CrossStreetCandidate {
   detectedLanesForward: number | null;
   detectedLanesBackward: number | null;
   detectedLanesBothWays: number | null;
+  /**
+   * #493: the cross street's line as the lookup already fetched it (the
+   * candidate's `geometry`, the stitched same-name chain, at most
+   * GEOMETRY_MAX_NODES points).  A relayed fact for the NEEDS YOU map,
+   * which draws it with no second Overpass read; the backend decides
+   * whether it is the question's crossing (Rule 3).  Null: none kept.
+   */
+  geometry?: Array<[number, number]> | null;
 }
 
 export interface DeriveCrossStreetInput {
@@ -267,5 +275,6 @@ export function deriveCrossStreet(
     detectedLanesForward: parseLaneNumber(cand.tags.lanes_forward),
     detectedLanesBackward: parseLaneNumber(cand.tags.lanes_backward),
     detectedLanesBothWays: parseLaneNumber(cand.tags.lanes_both_ways),
+    geometry: cand.geometry ?? null,
   };
 }

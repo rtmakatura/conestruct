@@ -1,0 +1,5 @@
+# #493: the default-scenario upstream (proxy -> Modal) /render/needs-you-map body, not the worst case (see size-measurement-bodies.txt) (cross-street-tap-record.test.ts,
+# "the worst case still fits the 32 KB render-family cap"), held by expect(...).toBe(24312):
+# DEFAULT_NEAR_INTERSECTION + a 300-point confirmed road + the 300-point centerline the wire
+# derives from it + a 300-point cross-street line, all at OSM's 7 decimals.
+24312 bytes (cap 32768). Unchanged by repair 1: the frontend still writes at most 300 points.

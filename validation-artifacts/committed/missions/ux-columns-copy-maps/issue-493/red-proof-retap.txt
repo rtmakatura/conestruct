@@ -1,0 +1,19 @@
+# #493 re-tap guard red proof
+# Run: npx vitest run lib/scenarios/cross-street-apply.test.ts (in conestruct/site), new tests in place, cross-street-apply.ts unfixed (base f912608 + this branch's staged work, guard compares JSON.stringify(crossStreet) with geometry).
+
+   ✓ the picker Save's cross-street apply is byte-identical after the move (X4) > a fresh candidate 2ms
+   ✓ the picker Save's cross-street apply is byte-identical after the move (X4) > the same candidate again (the guard) 0ms
+   ✓ the picker Save's cross-street apply is byte-identical after the move (X4) > a one-way candidate with no lane tag 0ms
+   ✓ the picker Save's cross-street apply is byte-identical after the move (X4) > no candidate (a cleared pin) 0ms
+   ✓ the picker Save's cross-street apply is byte-identical after the move (X4) > another kind 0ms
+   ✓ the picker Save's cross-street apply is byte-identical after the move (X4) > the fresh case writes what the Save always wrote 0ms
+   × a re-tap of the same street with a different line is not new (#493, #112) > keeps the edited approaches, the overrides and the hold off 10ms
+   × a re-tap of the same street with a different line is not new (#493, #112) > a line dropped on the re-tap (stitch failed, no line kept) is not new either 2ms
+   ✓ a re-tap of the same street with a different line is not new (#493, #112) > a different street with the same line still replaces 1ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  lib/scenarios/cross-street-apply.test.ts > a re-tap of the same street with a different line is not new (#493, #112) > keeps the edited approaches, the overrides and the hold off
+AssertionError: expected { kind: 'near_intersection', …(12) } to be { kind: 'near_intersection', …(12) } // Object.is equality
+ FAIL  lib/scenarios/cross-street-apply.test.ts > a re-tap of the same street with a different line is not new (#493, #112) > a line dropped on the re-tap (stitch failed, no line kept) is not new either
+AssertionError: expected { kind: 'near_intersection', …(12) } to be { kind: 'near_intersection', …(12) } // Object.is equality
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)

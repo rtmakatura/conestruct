@@ -103,7 +103,11 @@ from src.rules.kind_proposal import propose_kind
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
-from src.rules.site_detection import cross_street_geometry, subject_geometry
+from src.rules.site_detection import (
+    cross_street_geometry,
+    subject_geometry,
+    tapped_cross_street,
+)
 from src.rules.spacing import (
     buffer_space,
     device_spacing_in_taper,
@@ -2047,8 +2051,12 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
     ``x-map-subject`` (``drawn`` | ``none``), ``x-map-point`` (``lat,lng``,
     the street-level link's point) and ``x-map-frame`` (``lat,lng,zoom``, the
     frame; #483).  ``soft`` asks the same frame's quick image with nothing
-    drawn on it, so its ``x-map-subject`` is ``none``.  Anything that isn't a picture answers
-    the same JSON as ``/render/corridor-map``.
+    drawn on it, so its ``x-map-subject`` is ``none``.  The intersection
+    question's full image also answers ``x-map-cross-source`` (#493):
+    ``tap`` when ``meta.intersection.geometry`` stood at the crossing and
+    was drawn with no Overpass read, ``lookup`` when #484's read ran.
+    Anything that isn't a picture answers the same JSON as
+    ``/render/corridor-map``.
     """
     req = _validate_read_body(_NEEDS_YOU_MAP_ADAPTER, body)
     scenario, _side_refused = _read_scenario(req.scenario)
@@ -2091,12 +2099,30 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
     # #484 ruling 2: the intersection question frames on its crossing and
     # draws the cross street's line, never a ring; no cross street, no line
     # (Rule 10).  The soft image draws nothing, so it reads nothing more.
+    # #493: the cross street the WHERE tap marked is drawn with no second
+    # Overpass read when it stands at this crossing; else #484's lookup.
+    # ``x-map-cross-source`` says which ran (Rule 10).
     lines = None
     cross = None
+    cross_source: str | None = None
     if req.flag == "adjacent_intersection":
         lines = []
         if subject and approaches and not req.soft and params.bearing_deg is not None:
-            cross = cross_street_geometry(subject[0][0], params.bearing_deg, meta.roadName)
+            node = subject[0][0]
+            tapped = meta.intersection
+            if tapped is not None:
+                cross = tapped_cross_street(
+                    (tapped.lat, tapped.lng),
+                    tapped.name,
+                    tapped.geometry,
+                    node,
+                    params.bearing_deg,
+                    meta.roadName,
+                )
+            cross_source = "tap" if cross is not None else "lookup"
+            if cross is None:
+                cross = cross_street_geometry(node, params.bearing_deg, meta.roadName)
+            print(f"[needs-you map] cross street from the {cross_source}")
             if cross is not None:
                 lines = cross.lines
     url, query, point, drawn, view = _static_aerial.question_image_url(
@@ -2151,6 +2177,8 @@ def render_needs_you_map(body: Annotated[Any, Body()]) -> Response:
                 if tag is not None and cross is not None and cross.name
                 else {}
             ),
+            # #493: which path found the cross street (tap | lookup).
+            **({"x-map-cross-source": cross_source} if cross_source else {}),
         },
     )
 

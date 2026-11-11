@@ -443,13 +443,21 @@ export type OperatorSetField =
 /** #234 — the marked intersection, as the picker saves it; #316 adds the
  *  cross street's own facts from its detection (`highwayClass`, and the
  *  posted speed when it carries a readable one).  Provenance only: the
- *  backend ignores every key here but lat / lng / name. */
+ *  backend ignores every key here but lat / lng / name and (#493)
+ *  geometry. */
 export interface IntersectionRecord {
   lat: number;
   lng: number;
   name: string | null;
   highwayClass?: string | null;
   postedSpeedMph?: number | null;
+  /** #493: the cross street's line as the lookup fetched it, `[lat, lng]`,
+   *  written only with 2 to GEOMETRY_MAX_NODES (300) points.  Read only by
+   *  `/render/needs-you-map`, which draws it instead of reading Overpass
+   *  again when it stands at the question's crossing.  The backend
+   *  (`IntersectionPin.geometry`) drops a longer or malformed line rather
+   *  than refuse the plan, and looks the street up.  Absent: not kept. */
+  geometry?: Array<[number, number]>;
 }
 
 export interface ScenarioMeta {
