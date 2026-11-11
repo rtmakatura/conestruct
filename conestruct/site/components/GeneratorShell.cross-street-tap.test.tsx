@@ -96,6 +96,9 @@ const CS = deriveCrossStreet({
 })!;
 
 const SIDE = { work: { side: "right", travel: "with_geometry" }, label: "South side · eastbound traffic", built: true };
+// #507: a two-way street offers both sides; a lone side is picked for you
+// (ruling 3), which would answer the question these tests keep open.
+const SIDE_NORTH = { work: { side: "right", travel: "against_geometry" }, label: "North side · westbound traffic", built: true };
 
 let lastInitial: { scenario?: Scenario; armIntersection?: boolean } | null = null;
 const pinResult = () => ({
@@ -175,7 +178,7 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
       approaches: [],
       coverage_ft: null,
       message: notMarked ? "Mark the cross street on the map to lay out the sides." : null,
-      side_options: [SIDE],
+      side_options: [SIDE, SIDE_NORTH],
     });
   }
   if (url.includes("/api/aerial-point")) {
@@ -398,7 +401,8 @@ describe("#440: the cross-street question on the WHERE band", () => {
     await until(() => q("side-option") !== null, "the side question");
     const card = q("where-questions")!;
     expect(card.textContent).toContain("Question 3 of 3");
-    expect(card.textContent).toContain("Which side of the road is the work on?");
+    // #507 ruling 3: the question names the street confirmed at the pin.
+    expect(card.textContent).toContain("Which side of East Colfax Avenue is the work on?");
     expect(q("band-aerial-bar")).toBeNull(); // only the cross-street question arms the aerial
     expect(q("where-confirm")?.textContent).toBe("Confirm and lay out the plan");
     expect((q("where-confirm") as HTMLButtonElement).disabled).toBe(true);

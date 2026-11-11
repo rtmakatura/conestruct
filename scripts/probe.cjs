@@ -237,7 +237,7 @@ async function run(width, height, tag) {
   await page.getByPlaceholder(/^Latitude/).fill(PIN.lat);
   await page.getByPlaceholder(/^Longitude/).fill(PIN.lng);
   await page.waitForTimeout(2500);
-  const save = page.getByRole("button", { name: /Save & Close/ });
+  const save = page.getByRole("button", { name: /Save (&|and) [Cc]lose/ });
   const candidate = page
     .locator("button")
     .filter({ hasText: /\((primary|secondary|tertiary|residential|trunk|motorway)/ })

@@ -47,8 +47,9 @@
 //     answered 500 / with no cross street; found: with the recorded cross
 //     street (#469's walk);
 //   - the road's sides unavailable: /api/render/corridor-geometry 500;
-//   - the side question: one option on the recorded road (the default
-//     walk), and two (the geometry's answer with the other side added);
+//   - the side question: two options (the geometry's answer with the
+//     other side added), in every phase since #507 picks a lone side for
+//     you, so a one-option question never opens;
 //   - the aerial's failure: /api/corridor-map 500 (a note on the frame).
 // "0 px": the difference, rounded to the nearest whole px, is 0 (CHOSEN:
 // a box's edge falls on sub-pixel positions; half a px is not a visible
@@ -293,7 +294,11 @@ async function one(w, h, zoom) {
   const steps = [];
   const rows = [];
   const errors = [];
-  const mode = { name: null, cross: "off", geom: "real", sides: "all", map: "real", hold: 0 };
+  // #507 (R145-4): a lone offered side is now picked for you, so the side
+  // question never opens on the recorded one-carriageway road.  Every phase
+  // walks with the two-side answer (the mirrored side below) so the side
+  // states stay reachable; "all" replays the backend's answer as is.
+  const mode = { name: null, cross: "off", geom: "real", sides: "two", map: "real", hold: 0 };
   let outline = null;
   // Each phase on a fresh context (no plan carried over in storage).
   let ctx = null;
@@ -327,7 +332,7 @@ async function one(w, h, zoom) {
         const o = Array.isArray(body.side_options) ? body.side_options : [];
         if (o.length === 1) {
           const other = o[0].work?.side === "right" ? "left" : "right";
-          o.push({ ...o[0], work: { ...o[0].work, side: other }, label: "South side · Next to eastbound traffic" });
+          o.push({ ...o[0], work: { ...o[0].work, side: other }, label: "South side · eastbound traffic" });
         }
         return r.fulfill({ status: resp.status(), contentType: "application/json", body: JSON.stringify(body) });
       } catch { return r.abort().catch(() => {}); }
@@ -357,7 +362,7 @@ async function one(w, h, zoom) {
       errors.push(`${name}: ${oneLine(e).slice(0, 200)}`);
       if (OUT) await p?.screenshot({ path: path.join(OUT, `${tag}-${name}-error.png`) }).catch(() => {});
     } finally {
-      Object.assign(mode, { name: null, cross: "off", geom: "real", sides: "all", map: "real", hold: 0 });
+      Object.assign(mode, { name: null, cross: "off", geom: "real", sides: "two", map: "real", hold: 0 });
     }
   };
   try {
@@ -394,18 +399,18 @@ async function one(w, h, zoom) {
       await roads;
       await p.waitForFunction(() => {
         const d = document.querySelector("[role=dialog]");
-        const save = [...(d?.querySelectorAll("button") ?? [])].find((x) => /Save & Close/.test(x.innerText));
+        const save = [...(d?.querySelectorAll("button") ?? [])].find((x) => /Save (&|and) [Cc]lose/.test(x.innerText));
         return /PICK THE ROAD · \d+ FOUND|Which road/i.test(d?.innerText ?? "") || (save && !save.disabled);
       }, null, { timeout: 90000 });
       await p.waitForTimeout(1500);
       const want = p.getByRole("dialog").getByRole("radio", { name: /Colfax/ });
       if (await want.count()) {
         await want.first().click();
-        await p.waitForFunction(() => [...document.querySelectorAll("[role=dialog] button")].some((x) => /Save & Close/.test(x.innerText) && !x.disabled), null, { timeout: 5000 })
+        await p.waitForFunction(() => [...document.querySelectorAll("[role=dialog] button")].some((x) => /Save (&|and) [Cc]lose/.test(x.innerText) && !x.disabled), null, { timeout: 5000 })
           .catch(() => { throw new Error(`search ${addr}: the Colfax road row was clicked but Save & Close stayed disabled`); });
       }
       await p.waitForTimeout(2000);
-      await p.getByRole("button", { name: "Save & Close" }).click();
+      await p.getByRole("button", { name: /Save (&|and) [Cc]lose/ }).click();
       await p.waitForSelector("[role=dialog]", { state: "detached", timeout: 30000 }).catch(() => {});
     };
     const pin = async (addr = "1550 E Colfax Ave, Denver") => {
@@ -511,8 +516,7 @@ async function one(w, h, zoom) {
       await p.locator("[data-testid=where-edit]").click();
       await step("long-name-edit-panel", 1200);
     });
-    // The recorded road's side question has one option (the default walk);
-    // this is the two-option side.
+    // The two-option side on its own (every phase has it since #507).
     await phase("two-option-side", async () => {
       mode.sides = "two";
       await pin();

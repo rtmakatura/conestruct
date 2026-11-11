@@ -36,7 +36,14 @@ export interface StepQuestion {
   /** The chosen option's value, or null while unanswered. */
   answer: string | null;
   /** The collapsed record, while answered. */
-  record: { className: string; glyph: string; text: string } | null;
+  record: {
+    className: string;
+    glyph: string;
+    text: string;
+    /** #507 R145-12: no Undo for an answer the person didn't give and
+     *  can't change (a side the backend offers alone, picked for you). */
+    noUndo?: boolean;
+  } | null;
   /** The card's foot, left of the button.  `details` is the Details
    *  toggle, present when the question has a `details` line. */
   foot: (details: ReactNode) => ReactNode;
@@ -231,16 +238,18 @@ export function QuestionSteps({
                 </button>
                 {/* #457 rulings 1-3: every answered row's Undo is the one
                     shared link (U1); no caller hands it another look. */}
-                <button
-                  type="button"
-                  className="undo-link"
-                  data-write=""
-                  data-testid={`step-undo-${q.id}`}
-                  disabled={inFlight}
-                  onClick={() => undo(q)}
-                >
-                  Undo
-                </button>
+                {!q.record.noUndo && (
+                  <button
+                    type="button"
+                    className="undo-link"
+                    data-write=""
+                    data-testid={`step-undo-${q.id}`}
+                    disabled={inFlight}
+                    onClick={() => undo(q)}
+                  >
+                    Undo
+                  </button>
+                )}
               </li>
             ),
           )}

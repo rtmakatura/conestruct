@@ -127,12 +127,28 @@ class WorkPlacement(BaseModel):
     * ``travel`` — with a confirmed road (``meta.centerline``): the
       traffic runs with or against the relayed polyline's vertex order.
     * ``heading`` — with no confirmed road: the ruled four-way choice,
-      "traffic heads N / E / S / W" (the open-points ruling 1).
+      "traffic heads N / E / S / W" (the open-points ruling 1).  #507
+      ruling 5 adds the diagonals NE / SE / SW / NW, offered only for a
+      road the operator said runs diagonally (``ScenarioMeta.roadAxis``).
     """
 
     side: Literal["right", "left", "median"] | None = None
     travel: Literal["with_geometry", "against_geometry"] | None = None
-    heading: Literal["N", "E", "S", "W"] | None = None
+    heading: Literal["N", "E", "S", "W", "NE", "SE", "SW", "NW"] | None = None
+
+
+class TwinRoad(BaseModel):
+    """#507 ruling 2 — the confirmed street's other carriageway, relayed
+    with the same staleness key as ``centerline`` (lib/scenarios/
+    centerline-relay.ts): its geometry and raw direction facts.  Read only
+    by ``render_api._side_options``, which offers its outer edge as the
+    street's other side, naming the carriageway that side lays out.  No
+    deliverable reads it: choosing that side swaps the confirmed road on
+    the page, so the plan is built from that carriageway's own facts."""
+
+    centerline: list[tuple[float, float]] = Field(min_length=2, max_length=2000)
+    osmBearingDeg: float = Field(ge=0.0, lt=360.0)
+    oneway: str | None = Field(default=None, max_length=8)
 
 
 class RoadDirection(BaseModel):
@@ -294,6 +310,14 @@ class ScenarioMeta(BaseModel):
     # ``WorkPlacement`` / ``RoadDirection``.  Only read under "work_start".
     work: WorkPlacement | None = None
     roadDirection: RoadDirection | None = None
+    # #507 — see ``TwinRoad``.  Wire-only, read by the side options.
+    twinRoad: TwinRoad | None = None
+    # #507 ruling 4/5 — with no road found, which way the operator said the
+    # road runs; the side options offer only that axis's two headings.
+    # Absent ⇒ the four headings, as before.
+    roadAxis: (
+        Literal["east_west", "north_south", "northeast_southwest", "northwest_southeast"] | None
+    ) = None
     # #234 / #290 — see ``IntersectionPin``.  Read only by a work-start
     # near_intersection plan; otherwise carried and ignored, as before,
     # except its ``geometry`` (#493), which the NEEDS YOU map draws for any

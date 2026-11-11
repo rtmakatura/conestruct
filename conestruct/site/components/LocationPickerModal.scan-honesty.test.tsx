@@ -7,7 +7,7 @@
 // /api/road-bearing stub answers with the #213 wire shapes.
 //
 // The masquerade these pin against: an all-mirrors Overpass outage
-// used to render "No road detected within 30 m" (a measurement claim)
+// used to render "No mapped road runs within 30 m" (a measurement claim)
 // and stamp isUrban:false into detection context (the silent rural
 // default) — the 2026-08-17 triage capture in #213's body.
 
@@ -116,15 +116,15 @@ describe("unavailable scan renders as unavailable (#213)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText(/Road detection is unavailable right now/i);
+    // #507 ruling 4: the failed lookup says so in plain words.
+    await screen.findByText("We couldn't look up the roads here.");
     // The absence copy is reserved for a completed scan.
     expect(
-      screen.queryByText(/No road detected within 30 m/i),
+      screen.queryByText(/No mapped road runs within 30 m/i),
     ).toBeNull();
-    // The retry affordance stands (the existing fresh-analysis control).
-    expect(
-      screen.getByRole("button", { name: /Re-detect roads/i }),
-    ).toBeTruthy();
+    expect(screen.queryByText("We didn't find a road at your pin.")).toBeNull();
+    // The retry affordance stands (#507: "Try again").
+    expect(screen.getByRole("button", { name: "Try again" })).toBeTruthy();
   });
 
   it("claims no verdict: the property panel says unavailable, not Rural", async () => {
@@ -132,13 +132,13 @@ describe("unavailable scan renders as unavailable (#213)", () => {
     mountModal();
     typeCoords();
 
-    // The panel names the failure — not "No road detected at this
-    // point" (a measurement) and not any road-type claim derived from
-    // the silent isUrban:false default.  (Both the outcome card and
-    // the property panel voice it — findAll, at least one.)
-    const hits = await screen.findAllByText(/Detection service unavailable/i);
-    expect(hits.length).toBeGreaterThan(0);
+    // The panel names the failure — not the no-road line (a
+    // measurement) and not any road-type claim derived from the silent
+    // isUrban:false default.
+    const status = await screen.findByTestId("road-lookup-status");
+    expect(status.textContent).toContain("The road data service didn't answer.");
     expect(screen.queryByText(/No road detected at this point/i)).toBeNull();
+    expect(screen.queryByText("We didn't find a road at your pin.")).toBeNull();
     expect(screen.queryByText(/rural/i)).toBeNull();
   });
 
@@ -147,18 +147,18 @@ describe("unavailable scan renders as unavailable (#213)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText(/Road detection is unavailable right now/i);
-    fireEvent.click(screen.getByRole("button", { name: /Re-detect roads/i }));
+    await screen.findByText("We couldn't look up the roads here.");
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
 
-    await screen.findByTestId("road-picked");
-    expect(
-      screen.queryByText(/Road detection is unavailable right now/i),
-    ).toBeNull();
+    // The sole road found is the picked row; the failure is gone.
+    const row = await screen.findByRole("radio", { checked: true });
+    expect(row.textContent).toContain("from your pin");
+    expect(screen.queryByText("We couldn't look up the roads here.")).toBeNull();
   });
 
   it("a completed empty scan keeps the absence copy (pin)", async () => {
     // Green at baseline: acceptance bullet 2 of #213 — "a genuine
-    // empty scan still reads 'No road detected within 30 m'".
+    // empty scan still reads 'No mapped road runs within 30 m'".
     stubDetectionQueue([
       {
         scan_status: "ok",
@@ -171,9 +171,8 @@ describe("unavailable scan renders as unavailable (#213)", () => {
     mountModal();
     typeCoords();
 
-    await screen.findByText(/No road detected within 30 m/i);
-    expect(
-      screen.queryByText(/Road detection is unavailable right now/i),
-    ).toBeNull();
+    await screen.findByText(/No mapped road runs within 30 m/i);
+    expect(screen.queryByText("We couldn't look up the roads here.")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Try again" })).toBeNull();
   });
 });

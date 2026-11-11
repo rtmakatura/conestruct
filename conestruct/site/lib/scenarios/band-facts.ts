@@ -22,7 +22,7 @@
 // chain and the Generate gate; this module owns presentation only, and
 // imports `hasLocation` rather than re-deriving "is there a pin".
 
-import { candidateLabel, crossStreetLabel } from "../road-detection/labels";
+import { candidateLabel, crossStreetLabel, plannedDirection } from "../road-detection/labels";
 import { SCENARIO_KINDS, hasConfirmedSide, hasLocation } from "./index";
 import type { Scenario, ScenarioKind } from "./types";
 
@@ -114,7 +114,9 @@ export function confirmedRoadLabel(scenario: Scenario): string | null {
   const road = scenario.meta.confirmedRoad;
   if (!road) return null;
   const l = candidateLabel(road.candidate);
-  return `${l.primary} ${l.direction}`;
+  // #507: a grouped street has no direction until its side is picked.
+  const dir = plannedDirection(road.candidate, Boolean(scenario.meta.work?.side));
+  return dir ? `${l.primary} ${dir}` : l.primary;
 }
 
 /**
@@ -218,7 +220,9 @@ export function whereProvenance(
     road.method === "auto_single" ? "sole match auto-adopted" : "operator pick"
   }`;
   const cross = crossStreetProvenance ? ` · ${crossStreetProvenance}` : "";
-  return `${l.primary} ${l.direction.toLowerCase()}${place} · ${coords} · ${source}${cross}`;
+  const dir = plannedDirection(road.candidate, Boolean(scenario.meta.work?.side));
+  const named = dir ? `${l.primary} ${dir.toLowerCase()}` : l.primary;
+  return `${named}${place} · ${coords} · ${source}${cross}`;
 }
 
 /**

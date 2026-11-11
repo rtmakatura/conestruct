@@ -15,6 +15,8 @@
 
 import { NextRequest } from "next/server";
 import { dedupCandidates } from "@/lib/road-detection/dedup";
+import { groupCarriageways } from "@/lib/road-detection/group";
+import { attachRoadTravel } from "@/lib/road-detection/road-travel";
 import {
   GEOMETRY_RADIUS_M,
   stitchChain,
@@ -601,6 +603,11 @@ export async function POST(req: NextRequest) {
       // scope, not #213's.  #308: the twin search reads as not run.
     }
     attachTwinEvidence(response.candidates, pool);
+    // #507 ruling 2: a street's two carriageways become one entry, after
+    // each has its own stitched geometry and twin evidence (group.ts).
+    response.candidates = groupCarriageways(response.candidates);
+    // #512: each entry's travel words, from the backend's reading.
+    await attachRoadTravel(response.candidates);
   }
   return Response.json(response);
 }

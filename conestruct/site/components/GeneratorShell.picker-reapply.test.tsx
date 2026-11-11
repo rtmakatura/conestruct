@@ -139,7 +139,7 @@ vi.mock("./LocationPickerModal", () => ({
       </button>
       {/* #189-3: a settled zero-candidate save at a NEW pin —
           classification null, confirmedRoad null, exactly what the
-          modal emits after "No road detected within 30 m". */}
+          modal emits after "No mapped road runs within 30 m". */}
       <button
         type="button"
         onClick={() =>

@@ -7,7 +7,13 @@
 // "Say which side is occupied to lay out the work"; the band's SIDE_BLOCKER
 // keeps the #290 words (lib/scenarios/rail.ts).
 //
-// Rule 11: the sentence is drawn in two places, the map overlay and the
+// #507 ruling 1 (Ryan, 2026-11-10; validation-artifacts/committed/missions/
+// ux-group8-map-window/rulings.md) retires that sentence and the map
+// overlay that carried it (RULE 5, stated): the map carries zoom only, and
+// W1's line under the road list, "You'll pick the side of the road next,
+// on the page.", says what the sentence said.  This file now pins that.
+//
+// Rule 11: the sentence was drawn in two places, the map overlay and the
 // panel note, so the test mounts the REAL modal and reads both.  The overlay
 // lives inside the map pane, which renders only with a Mapbox token, so this
 // file sets one and stubs `mapbox-gl` with an object that accepts any call
@@ -33,14 +39,28 @@ import { LocationPickerModal } from "./LocationPickerModal";
 
 const PIN: [number, number] = [39.74, -104.98];
 
-const ROAD = {
+const ROAD: RoadCandidate = {
   way_id: "111001",
+  highway_class: "primary",
   name: "East Colfax Avenue",
-  highway: "primary",
-  bearing_deg: 90,
-  distance_m: 4,
-  oneway: false,
-} as unknown as RoadCandidate;
+  ref: null,
+  bearing: 90,
+  snap_distance_m: 4,
+  snapped_lat: PIN[0],
+  snapped_lng: PIN[1],
+  tags: {
+    oneway: null,
+    maxspeed: "30 mph",
+    lanes: "4",
+    lanes_forward: null,
+    lanes_backward: null,
+    lanes_both_ways: null,
+    turn_lanes: null,
+    turn_lanes_forward: null,
+    turn_lanes_backward: null,
+  },
+  signal_distance_m: null,
+};
 
 const PINNED: Scenario = {
   ...DEFAULT_SHOULDER,
@@ -103,8 +123,8 @@ afterEach(() => {
   delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 });
 
-describe("#402 ruling 2: the picker's side sentence", () => {
-  it("a pin waiting on its side: the map overlay and the panel both read the ruled sentence", async () => {
+describe("#507 ruling 1: the picker's side line (was #402 ruling 2's sentence)", () => {
+  it("a pin waiting on its side: W1's side-next line shows; no map overlay, no panel note, no #402 sentence", async () => {
     render(
       <LocationPickerModal
         open
@@ -113,16 +133,28 @@ describe("#402 ruling 2: the picker's side sentence", () => {
         onSave={vi.fn()}
       />,
     );
-    const overlay = await screen.findByTestId("picker-side-sentence", undefined, { timeout: 3000 });
-    expect(overlay.textContent).toBe("Save, then say which side is occupied.");
+    // The lookup on open finds the one road; the line sits under the list.
+    expect(
+      await screen.findByText("You'll pick the side of the road next, on the page.", undefined, {
+        timeout: 3000,
+      }),
+    ).toBeTruthy();
+    // The geometry was asked and answered "side not confirmed"...
     await waitFor(() =>
-      expect(screen.getByTestId("picker-corridor-note").textContent).toBe(
-        "Save, then say which side is occupied.",
-      ),
+      expect(
+        (fetch as unknown as { mock: { calls: unknown[][] } }).mock.calls.some((c) =>
+          String(c[0]).includes("/api/render/corridor-geometry"),
+        ),
+      ).toBe(true),
     );
+    await new Promise((r) => setTimeout(r, 50));
+    // ...and neither the overlay nor the panel speaks #402's sentence.
+    expect(screen.queryByTestId("picker-side-sentence")).toBeNull();
+    expect(screen.queryByTestId("picker-corridor-note")).toBeNull();
+    expect(document.body.textContent).not.toContain("Save, then say which side is occupied.");
     // The #290 words are gone from the picker...
     expect(document.body.textContent).not.toContain("lay out the work");
-    // ...and stay in the band's own constant (ruling 2: "in the picker only").
+    // ...and stay in the band's own constant.
     expect(SIDE_BLOCKER).toBe("Say which side is occupied to lay out the work");
   });
 });

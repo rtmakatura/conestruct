@@ -75,6 +75,9 @@ const DETECTION: RoadDetectOk = {
   placeName: null,
 };
 const SIDE = { work: { side: "right", travel: "with_geometry" }, label: "South side · eastbound traffic", built: true };
+// #507: a two-way street offers both sides; a lone side is picked for you
+// (ruling 3), which would answer the question these tests keep open.
+const SIDE_NORTH = { work: { side: "right", travel: "against_geometry" }, label: "North side · westbound traffic", built: true };
 
 // The picker's Save lands on `savePin`, confirming `saveWay`.
 let savePin = PIN;
@@ -127,7 +130,7 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
       approaches: [],
       coverage_ft: null,
       message: null,
-      side_options: [SIDE],
+      side_options: [SIDE, SIDE_NORTH],
     });
   }
   if (url.includes("/api/road-bearing")) return json(DETECTION);

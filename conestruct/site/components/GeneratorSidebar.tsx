@@ -312,7 +312,17 @@ export function GeneratorSidebar({
   });
 
   const setMeta = (meta: ScenarioMeta) => {
-    setScenario({ ...scenario, meta } as Scenario);
+    let next = { ...scenario, meta } as Scenario;
+    // #507 R145-3: a side on a grouped street's other carriageway swapped
+    // the confirmed road (lib/scenarios/carriageway-swap.ts).  Its facts
+    // apply exactly as the picker's Save applies a picked road's.
+    const was = scenario.meta.confirmedRoad?.candidate.way_id ?? null;
+    const swapped = meta.confirmedRoad;
+    if (swapped && was !== null && swapped.candidate.way_id !== was && swapped.candidate.twin?.way_id === was) {
+      next = applyClassification(next, swapped.classification).scenario;
+      lastAppliedDetectionRef.current = JSON.stringify(swapped.classification);
+    }
+    setScenario(next);
   };
   // #440 ruling 2 / X20: asked here, beside the geometry read, because
   // the WHERE band's card unmounts when the column moves on.
@@ -367,7 +377,9 @@ export function GeneratorSidebar({
     const moved = withPin(cur.meta, { lat: r.lat, lng: r.lng });
     const roadChanged =
       (cur.meta.confirmedRoad?.candidate.way_id ?? null) !==
-      (r.confirmedRoad?.candidate.way_id ?? null);
+        (r.confirmedRoad?.candidate.way_id ?? null) ||
+      // #507: a new fallback direction re-asks the side its heading named.
+      (cur.meta.roadAxis ?? null) !== (r.roadAxis ?? null);
     const { bearingDeg: _typed, ...keptMeta } = roadChanged ? withoutSide(moved) : moved;
     void _typed;
     let next: Scenario = {
@@ -380,6 +392,9 @@ export function GeneratorSidebar({
         // saved plan verbatim).  Null overwrites deliberately: a save
         // with no resolved road invalidates a stale confirmation.
         confirmedRoad: r.confirmedRoad,
+        // #507 ruling 4: the way the road runs, said in the fallback; null
+        // with a road (a road's own geometry decides its sides).
+        roadAxis: r.roadAxis ?? null,
         // #234: the intersection as the picker saved it — persisted the
         // same way, so a reopen restores its marker and the WHERE fact
         // line names the same crossing.  Null overwrites deliberately:
@@ -598,6 +613,7 @@ export function GeneratorSidebar({
             // kind, like every other live answer.
             kindConfirmed: kindState === "confirmed",
             confirmedRoad: scenario.meta.confirmedRoad ?? null,
+            roadAxis: scenario.meta.roadAxis ?? null,
             // #234: handed back so the picker restores the marker.
             intersection: scenario.meta.intersection ?? null,
             armIntersection: pickerArmsIntersection,

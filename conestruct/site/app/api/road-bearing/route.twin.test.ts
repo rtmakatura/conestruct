@@ -110,6 +110,22 @@ describe("twin evidence on the wire", () => {
     expect(c.twin_distance_m).toBeNull();
   });
 
+  // #507 ruling 2 (R145-2): both carriageways in reach of the pin are one
+  // street on the wire, the nearer leading with the other as `twin`.
+  it("lists a dual carriageway once: the nearer way leads, the other rides as twin", async () => {
+    const own = way(1, EASTBOUND);
+    const twin = way(2, EASTBOUND, 21.7, true);
+    queue.push({ kind: "ok", elements: [own, twin] });
+    queue.push({ kind: "ok", elements: [own, twin] });
+    const list = await candidates();
+    expect(list).toHaveLength(1);
+    expect(list[0].way_id).toBe("1");
+    const t = list[0].twin as Record<string, unknown>;
+    expect(t.way_id).toBe("2");
+    expect(t.snap_distance_m as number).toBeCloseTo(21.7, 0);
+    expect("twin" in t).toBe(false);
+  });
+
   it("adds nothing to a two-way candidate", async () => {
     const own = way(1, { highway: "primary", name: "East Colfax Avenue" });
     queue.push({ kind: "ok", elements: [own] });

@@ -5,7 +5,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useId,
   useState,
   type ClipboardEvent,
   type RefObject,
@@ -24,24 +23,19 @@ import type { CrossStreetCandidate } from "@/lib/road-detection/cross-street";
 import {
   intersectionRecord,
   lookupCrossStreet,
-  normaliseBearing,
 } from "@/lib/road-detection/cross-street-lookup";
-import { candidateLabel, crossStreetLabel, plainRoadClass } from "@/lib/road-detection/labels";
-import { symClass } from "@/lib/design/symbols";
-import { InfoToggle, useDetailsToggle } from "./InfoToggle";
+import { candidateLabel, crossStreetLabel } from "@/lib/road-detection/labels";
 import type { ScenarioKind } from "@/lib/scenarios";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
 import {
   CORRIDOR_ZONES,
   ZONE_CHANNEL,
   ZONE_COLOR,
-  ZONE_LABEL,
   type CorridorPolyline,
-  type CorridorZone,
 } from "@/lib/corridor-polyline";
-import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
 import type { Scenario } from "@/lib/scenarios";
-import type { IntersectionRecord } from "@/lib/scenarios/types";
+import type { IntersectionRecord, RoadAxis } from "@/lib/scenarios/types";
+import { ROAD_AXES } from "@/lib/road-axis";
 import { reconcileJurisdiction } from "@/lib/scenarios/guesses";
 import {
   geometryToPolyline,
@@ -112,6 +106,8 @@ export interface LocationPickerInitial {
    * jurisdiction's area (lib/geocode.ts).
    */
   jurisdictionKey?: string | null;
+  /** #507: the way the road runs, as saved with no confirmed road. */
+  roadAxis?: RoadAxis | null;
 }
 
 // What the modal hands back on save.  ``classification`` is null when
@@ -149,6 +145,9 @@ export interface LocationPickerResult {
    * clears any previous confirmation.
    */
   confirmedRoad: ConfirmedRoad | null;
+  /** #507 ruling 4: the way the road runs, said in the fallback; null
+   *  whenever a road is confirmed. */
+  roadAxis: RoadAxis | null;
   /**
    * #460 (Ryan, 2026-11-08): the map as it stood at Save, a JPEG data URL,
    * for the WHERE aerial to show until its own picture is drawn.  Absent
@@ -210,7 +209,9 @@ type ClassifyStatus =
   | { state: "resolving" }
   | { state: "awaiting_pick" }
   | { state: "detected"; result: RoadClassification }
-  | { state: "error"; message: string };
+  // #507 ruling 4: "failed" (the lookup didn't answer) or "none" (it
+  // answered with no road in reach).  The words are the panel's, below.
+  | { state: "error"; reason: "failed" | "none" };
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -318,6 +319,54 @@ function buildMarkerEl(): {
 // Main component
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// #507 (UX group 8): the map window's words.  Each is Ryan's ruling text
+// (2026-11-10) or the W1/F1 board's, except where marked R145; the list
+// with sources is validation-artifacts/committed/missions/
+// ux-group8-map-window/checkpoint.md § Strings.
+// ---------------------------------------------------------------------------
+
+/** Ruling 1. */
+export const MAP_WINDOW_HEADING = "Where is the work?";
+/** Ruling 1. */
+export const MAP_WINDOW_LINE =
+  "Search an address or tap the map where the work starts, then pick the road.";
+/** Ruling 1. */
+export const ROAD_QUESTION = "Which road is the work on?";
+/** W1 board. */
+export const SIDE_NEXT_LINE = "You'll pick the side of the road next, on the page.";
+/** Ruling 1. */
+export const WORK_START_HEADING = "Where the work starts";
+/** R145-7: W1's line names the pin; the cross-street distance it shows
+ *  is not read in the window, so the line stops at the pin. */
+export const WORK_START_AT_PIN = "At your pin.";
+/** R145: the old map overlay "Click the map or search to drop a pin",
+ *  moved off the map (ruling 1) and reworded to the heading's verbs. */
+export const WORK_START_NO_PIN = "Search an address or tap the map to place your pin.";
+/** Ruling 1, as a plain line (R145-7). */
+export const WORK_START_MOVE = "Tap the map to move it.";
+/** Ruling 4. */
+export const LOOKUP_FAILED_TITLE = "We couldn't look up the roads here.";
+/** Ruling 4. */
+export const LOOKUP_FAILED_LINE =
+  "The road data service didn't answer. Try again, or tell us which way the road runs and carry on.";
+/** R145-5: the lookup answered with no road in reach (replaces "No road
+ *  detected at this point" and its 30 m line). */
+export const LOOKUP_NONE_TITLE = "We didn't find a road at your pin.";
+/** R145-5: the 30 m is the route's SNAP_MAX_DISTANCE_M. */
+export const LOOKUP_NONE_LINE =
+  "No mapped road runs within 30 m. Move the pin onto the road, or tell us which way the road runs and carry on.";
+/** R145: replaces "Detecting roads at pin…". */
+export const LOOKUP_RUNNING = "Looking up the roads at your pin…";
+/** Ruling 4. */
+export const AXIS_QUESTION = "Which way does the road run?";
+/** Ruling 4. */
+export const AXIS_HINT = "Look at the map: which way do the lanes run past your pin?";
+/** Ruling 6. */
+export const SAVE_BLOCKED_LINE = "Pick a road, or a direction if the lookup failed.";
+/** R145: replaces "Detecting road… Save turns on once detection settles". */
+export const SAVE_WAITS_LINE = "Looking up the roads. Save turns on when that's done.";
+
 export function LocationPickerModal({
   open,
   initial,
@@ -406,6 +455,11 @@ export function LocationPickerModal({
 
   // ---- Bearing detection warning ----------------------------------------
   const [bearingWarning, setBearingWarning] = useState<string | null>(null);
+  // #507 ruling 4: the way the road runs, said in the fallback.  Restored
+  // from the saved plan only when no road was confirmed there.
+  const [roadAxis, setRoadAxis] = useState<RoadAxis | null>(
+    restoredRoad ? null : (initial.roadAxis ?? null),
+  );
   // Guidance line for an area-level geocode match ("Lafayette, CO"):
   // the map recentred but no pin was placed and no detection fired.
   const [coarseNotice, setCoarseNotice] = useState<string | null>(null);
@@ -448,7 +502,8 @@ export function LocationPickerModal({
   const crossTokenRef = useRef(0);
 
   // ---- Map / basemap -----------------------------------------------------
-  const [style, setStyle] = useState<MapStyle>("satellite");
+  // #507 ruling 1 (R145-6): the layer toggle left the map; satellite only.
+  const style: MapStyle = "satellite";
   // Toggle to surface the lat/lng fallback inputs when the user is
   // working without an interactive map.  Auto-enabled when the Mapbox
   // token is missing.
@@ -711,13 +766,9 @@ export function LocationPickerModal({
         });
         if (bearingTokenRef.current !== myToken) return;
         if (!r.ok) {
-          setBearingWarning("Couldn't reach road-detection service.");
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
-          setClassify({
-            state: "error",
-            message: "Detection service unavailable",
-          });
+          setClassify({ state: "error", reason: "failed" });
           return;
         }
         const j = (await r.json()) as RoadDetectResponse;
@@ -728,29 +779,18 @@ export function LocationPickerModal({
           // was the bug), and no absence claim (that copy is reserved
           // for a completed scan below).  The ↻ Re-detect roads control
           // is the retry affordance.
-          setBearingWarning(
-            "Road detection is unavailable right now. Use ↻ Re-detect roads to retry.",
-          );
+          // #507 ruling 4: the panel's plain message and Try again say it.
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
-          setClassify({
-            state: "error",
-            message: "Detection service unavailable",
-          });
+          setClassify({ state: "error", reason: "failed" });
           return;
         }
         const cands = j.candidates ?? [];
         setDetectionContext({ isUrban: j.isUrban, placeName: j.placeName });
         if (cands.length === 0) {
-          setBearingWarning(
-            "No road detected within 30 m. Verify the location. With no road, the band asks which way traffic heads.",
-          );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
-          setClassify({
-            state: "error",
-            message: "No road detected at this point",
-          });
+          setClassify({ state: "error", reason: "none" });
           return;
         }
         setBearingWarning(null);
@@ -774,13 +814,9 @@ export function LocationPickerModal({
         }
       } catch {
         if (bearingTokenRef.current === myToken) {
-          setBearingWarning("Couldn't reach road-detection service.");
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
-          setClassify({
-            state: "error",
-            message: "Detection service unavailable",
-          });
+          setClassify({ state: "error", reason: "failed" });
         }
       }
     },
@@ -931,6 +967,9 @@ export function LocationPickerModal({
       }
 
       if (opts.detect) {
+        // #507: a direction said for the old pin answers nothing at a new
+        // one (a reopen or Try again at the same pin keeps it).
+        setRoadAxis(null);
         void detectAt(newLat, newLng);
       }
     },
@@ -994,7 +1033,8 @@ export function LocationPickerModal({
       });
       mapRef.current = map;
 
-      map.addControl(new mapbox.NavigationControl(), "top-right");
+      // #507 ruling 1: zoom is the map's only control (no compass).
+      map.addControl(new mapbox.NavigationControl({ showCompass: false }), "top-right");
 
       map.on("click", (e: MapboxGL.MapMouseEvent) => {
         const { lat: clat, lng: clng } = e.lngLat;
@@ -1078,52 +1118,8 @@ export function LocationPickerModal({
             },
           });
         }
-        // Midpoint zone labels — the strongest non-colour channel (#131).
-        // One label per segment at its centre.  Zoom-gated (minzoom 13) and
-        // collision-managed (mapbox drops overlapping labels by default) so
-        // they never blanket the roadway at overview zoom; below the gate
-        // the dash + width channel still carries zone identity.
-        if (!map.getLayer(CORRIDOR_LABEL_LAYER_ID)) {
-          map.addLayer({
-            id: CORRIDOR_LABEL_LAYER_ID,
-            type: "symbol",
-            source: CORRIDOR_SOURCE_ID,
-            minzoom: 13,
-            // #211: zones can split into covered + extended features;
-            // exactly one per zone carries ``labeled`` so the
-            // line-center label never doubles.
-            filter: ["boolean", ["get", "labeled"], false],
-            layout: {
-              "symbol-placement": "line-center",
-              "text-field": [
-                "match",
-                ["get", "zone"],
-                "advance_warning",
-                ZONE_LABEL.advance_warning,
-                "transition",
-                ZONE_LABEL.transition,
-                "buffer",
-                ZONE_LABEL.buffer,
-                "work_zone",
-                ZONE_LABEL.work_zone,
-                "downstream",
-                ZONE_LABEL.downstream,
-                /* default */ "",
-              ],
-              "text-size": 11,
-              "text-letter-spacing": 0.05,
-              "text-padding": 4,
-            },
-            // #263 P11: DECORATIVE — zone-label paint inside a Mapbox style
-            // expression, where a CSS var() is impossible; declared in
-            // lib/design/ink-exceptions.ts.
-            paint: {
-              "text-color": "#ffffff",
-              "text-halo-color": "#000000",
-              "text-halo-width": 1.4,
-            },
-          });
-        }
+        // #507 ruling 1 (R145-6): the zone text labels left the map (a
+        // text overlay); the dash + width channel still carries each zone.
         const current = corridorDataRef.current;
         const source = map.getSource(CORRIDOR_SOURCE_ID) as
           | MapboxGL.GeoJSONSource
@@ -1184,9 +1180,7 @@ export function LocationPickerModal({
                 // Area-level match (town/region centroid) — recenter
                 // only.  No pin, no detection: a road detected at a
                 // centroid is a confidently wrong road.
-                setCoarseNotice(
-                  "Area located. Drop a pin on the road to detect roads.",
-                );
+                setCoarseNotice(COARSE_NOTICE);
                 mapRef.current?.flyTo({
                   center: [j.lng, j.lat],
                   zoom: COARSE_ZOOM,
@@ -1231,11 +1225,15 @@ export function LocationPickerModal({
   // Switch basemap style on the existing map without re-initialising.
   // ``setStyle`` clears all sources, so the corridor layer reinstalls
   // itself in the ``styledata`` listener above.
+
+  // #507 ruling 6: with no map, the open-time lookup above never runs, and
+  // Save (which now needs an answer) would stay shut on a located plan
+  // with no confirmed road.  Run the same one lookup on open here.
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    map.setStyle(MAPBOX_STYLES[style]);
-  }, [style]);
+    if (!open || tokenAvailable || !initialHasPin || restoredRoad) return;
+    void detectAt(initial.lat!, initial.lng!);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   // ---- Field handlers ---------------------------------------------------
 
@@ -1384,9 +1382,7 @@ export function LocationPickerModal({
           // recenter the map and ask for a pin.  Detection fires only
           // for address/intersection-precision results or a real pin
           // drop — never for a town centroid.
-          setCoarseNotice(
-            "Area located. Drop a pin on the road to detect roads.",
-          );
+          setCoarseNotice(COARSE_NOTICE);
           mapRef.current?.flyTo({
             center: [j.lng, j.lat],
             zoom: COARSE_ZOOM,
@@ -1415,7 +1411,8 @@ export function LocationPickerModal({
   // with the PREVIOUS location's road properties.  Deliberate behavior
   // change riding with the fix: a hand-typed bearing is no longer an
   // escape from the pick — road properties stay unresolved either way.
-  // Zero-candidate and detection-error paths remain saveable.
+  // #507 ruling 6 (#506) narrows Save further below: a failed or empty
+  // lookup saves only with a direction.
   const roadUnresolved =
     bearingCandidates.length > 1 && selectedCandidateIdx === null;
 
@@ -1423,8 +1420,13 @@ export function LocationPickerModal({
   // on gated kinds, the safety relays that arm the backend refusals) are
   // genuinely unknown for the moment, and saving would commit
   // ``classification: null`` as if detection had never run.  Only
-  // in-flight blocks: a settled failure (error / zero candidates) keeps
-  // its existing messaging and stays saveable.
+  // in-flight blocks here; a settled failure (error / zero candidates)
+  // keeps its messaging, and ruling 6 below decides its Save.
+  // #507 ruling 6 (#506): Save needs an answer, a road picked or, when the
+  // lookup failed or found none, the way the road runs.  Before this, a
+  // failed lookup saved with no road and the plan fell back to defaults.
+  const roadPicked = classify.state === "detected" && selectedCandidateIdx !== null;
+  const axisAnswers = classify.state === "error" && roadAxis !== null;
   const canSave =
     hasPin &&
     isValidLat(lat) &&
@@ -1432,7 +1434,8 @@ export function LocationPickerModal({
     !latError &&
     !lngError &&
     !roadUnresolved &&
-    classify.state !== "resolving";
+    // (an in-flight lookup, #189, is neither, so it blocks Save too)
+    (roadPicked || axisAnswers);
 
   const onClickSave = () => {
     if (!canSave) return;
@@ -1487,10 +1490,15 @@ export function LocationPickerModal({
             : intersectionRecord(crossPin, crossStreet)
           : null,
       confirmedRoad,
+      roadAxis: confirmedRoad ? null : roadAxis,
     });
   };
 
   if (!open) return null;
+
+  // #507 ruling 6: the one line under a disabled Save (not while the
+  // lookup runs; that has its own line).
+  const saveBlocked = !canSave && classify.state !== "resolving";
 
   return (
     <div
@@ -1500,38 +1508,29 @@ export function LocationPickerModal({
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className="border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"
+        className="map-window border border-[color:var(--rule)] bg-[color:var(--canvas)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label="Define work zone"
+        aria-labelledby="map-window-h"
       >
-        {/* Header */}
-        <div className="flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1">
-              Work zone · Define
-            </div>
-            <h2 className="text-white text-[17px] font-semibold m-0">
-              Define Work Zone
+        {/* #507 ruling 1 (W1): the heading and its line, Inter. */}
+        <div className="mw-head">
+          <div className="mw-head-text">
+            <h2 id="map-window-h" className="mw-title">
+              {MAP_WINDOW_HEADING}
             </h2>
-            {/* #290 hand-check item 4: the length field left the picker (the
-                band's Extent is the one length, P2), so the subtitle stops
-                asking for it; the pin's meaning is what it says instead. */}
-            <p
-              className="text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"
-              data-testid="picker-subtitle"
-            >
-              Drop a pin where the work starts, and pick the road.
+            <p className="mw-line" data-testid="picker-subtitle">
+              {MAP_WINDOW_LINE}
             </p>
           </div>
           <button
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="tap-44 flex items-center justify-center text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"
+            className="tap-44 mw-close"
           >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path
                 d="M3 3l12 12M15 3L3 15"
                 stroke="currentColor"
@@ -1542,73 +1541,48 @@ export function LocationPickerModal({
           </button>
         </div>
 
-        {/* Body: two columns at md — 980px in this repo's Tailwind config,
-            the closest breakpoint to the spec's ~900px (lg here is 1280,
-            NOT the stock 1024) — map column left, decision rail right,
-            rail scrolls on its own, map never leaves the viewport.  Below
-            md it collapses to today's stacked flow — map on top, panels
-            beneath, the whole body scrolls. */}
+        {/* Body: two columns at md (980 px here), map left and the rail
+            right; below md the map sits on top and the body scrolls. */}
         <div className="flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden">
-          {/* Map column: search, manual coords, the map itself, and the
-              detection warning all live here so the rail isn't pushed
-              down by them. */}
-          <div className="flex flex-col md:flex-1 md:min-w-0">
-            {/* Search bar */}
-            <form
-              onSubmit={onSubmitSearch}
-              className="flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"
-            >
+          <div className="mw-map-col flex flex-col md:flex-1 md:min-w-0">
+            <form onSubmit={onSubmitSearch} className="mw-search">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Address or intersection search"
                 placeholder="Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"
-                className="tap-44 field-input flex-1"
+                className="tap-44 field-input mw-search-input"
               />
               <button
                 type="submit"
-                disabled={
-                  searchStatus.state === "resolving" || !searchQuery.trim()
-                }
-                className="border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"
+                disabled={searchStatus.state === "resolving" || !searchQuery.trim()}
+                className="tap-44 mw-btn mw-btn-line"
               >
                 {searchStatus.state === "resolving" ? "Searching…" : "Search"}
               </button>
             </form>
             {searchStatus.state === "error" && (
-              <div className="px-6 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] flex-shrink-0">
+              <p className="mw-note mw-note-fail" role="status">
                 {searchStatus.message}
-              </div>
+              </p>
             )}
-            {coarseNotice && (
-              <div className="px-6 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark)] flex-shrink-0">
-                {coarseNotice}
-              </div>
-            )}
+            {coarseNotice && <p className="mw-note">{coarseNotice}</p>}
 
-            {/* Manual-coords toggle + collapsible row.  Sits directly under
-                the search bar so it reads as an alternative to address
-                search rather than a buried fallback at the modal foot.
-                Auto-expanded when the Mapbox token is missing. */}
-            <div className="border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between">
+            {/* Kept for need (R145-10): the only way in without a map. */}
+            <div className="mw-coords-toggle">
               <button
                 type="button"
                 onClick={() => setShowManualCoords((s) => !s)}
-                className="tap-44 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
+                className="tap-44 mw-link"
+                aria-expanded={showManualCoords}
               >
-                {showManualCoords
-                  ? "− Hide coordinate entry"
-                  : "+ Or enter coordinates manually"}
+                {showManualCoords ? "Hide coordinate entry" : "Or enter coordinates manually"}
               </button>
-              {showManualCoords && (
-                <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-                  Lat / Lng decimal degrees
-                </span>
-              )}
+              {showManualCoords && <span className="mw-hint">Latitude and longitude, in decimal degrees</span>}
             </div>
             {showManualCoords && (
-              <div className="grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0">
+              <div className="mw-coords">
                 <div>
                   <input
                     type="text"
@@ -1620,11 +1594,7 @@ export function LocationPickerModal({
                     placeholder="Latitude (e.g., 38.8862)"
                     className="tap-44 field-input w-full"
                   />
-                  {latError && (
-                    <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
-                      {latError}
-                    </div>
-                  )}
+                  {latError && <p className="mw-note mw-note-fail">{latError}</p>}
                 </div>
                 <div>
                   <input
@@ -1637,195 +1607,58 @@ export function LocationPickerModal({
                     placeholder="Longitude (e.g., -104.8354)"
                     className="tap-44 field-input w-full"
                   />
-                  {lngError && (
-                    <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
-                      {lngError}
-                    </div>
-                  )}
+                  {lngError && <p className="mw-note mw-note-fail">{lngError}</p>}
                 </div>
               </div>
             )}
 
-            {/* Map. Stacked mode keeps today's 44vh band; at md the pane
-                is flex-1 and fills whatever height the modal has. */}
+            {/* #507 ruling 1: the map carries zoom only (R145-6). */}
             {tokenAvailable ? (
               <div
                 ref={containerRef}
                 className="picker-map relative bg-black/30 flex-shrink-0 min-h-[320px] h-[44vh] md:h-auto md:shrink md:flex-1"
-              >
-                <button
-                  type="button"
-                  onClick={() =>
-                    setStyle(style === "satellite" ? "streets" : "satellite")
-                  }
-                  className="tap-44 absolute top-3 left-3 z-10 border border-white/30 bg-black/60 text-white font-mono text-[10px] uppercase tracking-[0.08em] px-3 py-1.5 hover:bg-black/80"
-                >
-                  {style === "satellite" ? "Streets" : "Satellite"}
-                </button>
-                {!hasPin && (
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none">
-                    Click the map or search to drop a pin
-                  </div>
-                )}
-                {/* #290, the pre-side ruling: "before the side is
-                    confirmed, the picker draws the pin and the sentence
-                    'Say which side is occupied to lay out the work' — no
-                    segment, and no direction-free circle".  The pin-only
-                    drawing stands; the sentence is superseded here by
-                    Ryan's #402 ruling 2 (2026-10-29), SIDE_SENTENCE. */}
-                {hasPin && awaitingSide && (
-                  <div
-                    className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none"
-                    data-testid="picker-side-sentence"
-                  >
-                    {SIDE_SENTENCE}
-                  </div>
-                )}
-                {/* Bottom-right stack: Recenter button (above) + legend.
-                    Recenter is the explicit "show me the whole corridor"
-                    control; we no longer auto-refit on pin drags. */}
-                {corridor && (
-                  <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => recenterToCorridor(corridor.bbox)}
-                      title="Recenter on corridor"
-                      aria-label="Recenter on corridor"
-                      className="bg-black/75 border border-white/20 text-white p-1.5 hover:bg-black/90 hover:border-[color:var(--act)] transition-colors flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
-                    >
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <circle
-                          cx="8"
-                          cy="8"
-                          r="5.5"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                        />
-                        <line
-                          x1="8"
-                          y1="0.5"
-                          x2="8"
-                          y2="3"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                        />
-                        <line
-                          x1="8"
-                          y1="13"
-                          x2="8"
-                          y2="15.5"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                        />
-                        <line
-                          x1="0.5"
-                          y1="8"
-                          x2="3"
-                          y2="8"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                        />
-                        <line
-                          x1="13"
-                          y1="8"
-                          x2="15.5"
-                          y2="8"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                        />
-                        <circle cx="8" cy="8" r="1.25" fill="currentColor" />
-                      </svg>
-                      Recenter
-                    </button>
-                    <CorridorLegend zones={corridor.segments.map((z) => z.zone)} />
-                  </div>
-                )}
-              </div>
+              />
             ) : (
-              <div
-                className="relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"
-              >
-                <div className="text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2">
-                    Map unavailable
-                  </div>
-                  NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
-                  map can&apos;t load. Enter coordinates manually below.
-                </div>
+              <div className="mw-map-off flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1">
+                <p className="mw-sub">The map can&apos;t load here.</p>
+                <p className="mw-line">Enter the coordinates above instead.</p>
               </div>
             )}
-
-            {/* Bearing detection warning lives just below the map so it's
-                visible the moment classification surfaces a problem. */}
-            {bearingWarning && (
-              <div className="border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0">
-                {bearingWarning}
-              </div>
-            )}
+            {bearingWarning && <p className="mw-note">{bearingWarning}</p>}
           </div>
 
-          {/* Decision rail: everything the operator decides, stacked in
-              one fixed-width column that scrolls independently at md.
-              Below md it renders beneath the map, as before. */}
-          <div className="flex flex-col border-t md:border-t-0 md:border-l border-[color:var(--rule)] md:w-[456px] md:flex-none">
-            <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
-              {/* Detection-outcome card — first block in the rail.  Once
-                  a pin exists and detection has run (or is running), it
-                  always shows exactly one of: in-flight skeleton,
-                  single-match confirmed card, multi-candidate pick list,
-                  or an explicit empty state — never nothing (#152 A).
-                  Keyed on the candidate set so a fresh detection resets
-                  the card's collapse state. */}
+          <div className="mw-rail flex flex-col border-t md:border-t-0 md:border-l border-[color:var(--rule)] md:w-[456px] md:flex-none">
+            <div className="mw-rail-body md:flex-1 md:min-h-0 md:overflow-y-auto">
               {hasPin && classify.state !== "idle" && (
-                <DetectionOutcomeCard
+                <RoadQuestion
                   key={bearingCandidates.map((c) => c.way_id).join("|")}
-                  classifyState={classify.state}
-                  emptyMessage={
-                    classify.state === "error" ? classify.message : null
-                  }
+                  classify={classify}
                   candidates={bearingCandidates}
                   selectedIdx={selectedCandidateIdx}
                   onPick={applyCandidate}
+                  roadAxis={roadAxis}
+                  onAxis={setRoadAxis}
+                  onTryAgain={onRedetect}
                 />
               )}
-              {/* #301 (R123 Q1): the road-properties panel is gone; WHAT is
-                  the one place speed, lanes, road type and divided are
-                  set.  Its explicit fresh-analysis affordance stays:
-                  reopening the dialog never re-detects (a restored
-                  confirmation stays put), so this is the one control that
-                  re-runs detection at an unmoved pin. */}
-              {hasPin && classify.state !== "resolving" && (
-                <div className="px-6 py-2 border-b border-[color:var(--rule)] flex justify-end">
-                  <button
-                    type="button"
-                    onClick={onRedetect}
-                    data-testid="picker-redetect"
-                    className="tap-44 border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-1 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
-                  >
-                    ↻ Re-detect roads
-                  </button>
-                </div>
+              {isNearIntersectionKind && (
+                <CrossStreetPanel
+                  hasPin={hasPin}
+                  intersectionMode={intersectionMode}
+                  onToggleMode={() => setIntersectionMode((v) => !v)}
+                  crossPin={crossPin}
+                  crossStatus={crossStatus}
+                  crossStreet={crossStreet}
+                  restoredName={restoredCross?.name ?? null}
+                  onClear={clearCrossPin}
+                />
               )}
-
-              <div className="border-t border-[color:var(--rule)]">
-                {isNearIntersectionKind && (
-                  <CrossStreetPanel
-                    hasPin={hasPin}
-                    intersectionMode={intersectionMode}
-                    onToggleMode={() => setIntersectionMode((v) => !v)}
-                    crossPin={crossPin}
-                    crossStatus={crossStatus}
-                    crossStreet={crossStreet}
-                    restoredName={restoredCross?.name ?? null}
-                    onClear={clearCrossPin}
-                  />
-                )}
+              <section className="mw-section" aria-labelledby="mw-start-h">
+                <h3 id="mw-start-h" className="mw-sub">
+                  {WORK_START_HEADING}
+                </h3>
+                <p className="mw-line">{hasPin ? WORK_START_AT_PIN : WORK_START_NO_PIN}</p>
+                <p className="mw-hint">{WORK_START_MOVE}</p>
                 <CorridorPreviewPanel
                   corridor={corridor}
                   hasPin={hasPin}
@@ -1843,48 +1676,39 @@ export function LocationPickerModal({
                             : refusal !== null
                               ? "refused"
                               : !kindConfirmed
-                              ? "kind"
-                              : "ready"
+                                ? "kind"
+                                : "ready"
                   }
                   pendingPick={pendingPick}
                   refusal={refusal}
                   declined={geometry.state === "error" ? (geometry.message ?? null) : null}
                 />
-              </div>
+              </section>
             </div>
           </div>
         </div>
 
-        {/* Footer.  Below md (#396 W14) the warning takes its own line
-            and Cancel / Save sit under it, so "Save & Close" never wraps
-            at 390 or 360; at md and up it is one row, as before (no
-            wrap, so the row gap never applies). */}
-        <div className="flex flex-wrap md:flex-nowrap items-center justify-end gap-3 border-t border-[color:var(--rule)] px-6 py-3 flex-shrink-0">
-          {roadUnresolved && (
-            <span className="basis-full md:basis-auto font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)]">
-              <span aria-hidden="true">⚠ </span>
-              Pick a road to continue
+        {/* Footer (ruling 1): Cancel and "Save and close".  Below md the
+            line takes its own row so the buttons never wrap (#396 W14). */}
+        <div className="mw-foot">
+          {saveBlocked && (
+            <span className="mw-foot-line" data-testid="picker-save-blocked">
+              {SAVE_BLOCKED_LINE}
             </span>
           )}
           {classify.state === "resolving" && (
-            <span className="basis-full md:basis-auto font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-              Detecting road… Save turns on once detection settles
-            </span>
+            <span className="mw-foot-line">{SAVE_WAITS_LINE}</span>
           )}
-          <button
-            type="button"
-            onClick={onCancel}
-            className="tap-44 px-4 py-2 font-sans text-[13px] text-[color:var(--ink-on-dark)] hover:text-white"
-          >
+          <button type="button" onClick={onCancel} className="tap-44 mw-btn mw-btn-quiet">
             Cancel
           </button>
           <button
             type="button"
             onClick={onClickSave}
             disabled={!canSave}
-            className="tap-44 whitespace-nowrap px-6 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="tap-44 mw-btn mw-btn-pri"
           >
-            Save &amp; Close
+            Save and close
           </button>
         </div>
       </div>
@@ -1922,16 +1746,14 @@ function CrossStreetPanel({
   onClear: () => void;
 }) {
   return (
-    <div className="border-t border-[color:var(--rule)] px-6 py-3">
-      <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--ink-on-dark-faint)] mb-2">
-        Cross street
-      </div>
+    <section className="mw-section">
+      <h3 className="mw-sub">Cross street</h3>
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={onToggleMode}
           disabled={!hasPin}
-          className={`px-3 py-1.5 font-sans text-[12px] border disabled:opacity-40 disabled:cursor-not-allowed ${
+          className={`tap-44 mw-btn border disabled:opacity-40 disabled:cursor-not-allowed ${
             intersectionMode
               ? "border-[color:var(--act)] text-[color:var(--act)]"
               : "border-[color:var(--rule)] text-[color:var(--ink-on-dark)] hover:text-white"
@@ -1947,354 +1769,182 @@ function CrossStreetPanel({
           <button
             type="button"
             onClick={onClear}
-            className="px-2 py-1.5 font-sans text-[12px] text-[color:var(--ink-on-dark-faint)] hover:text-white"
+            className="tap-44 mw-btn mw-btn-quiet"
           >
             Clear
           </button>
         )}
       </div>
       {!hasPin && (
-        <p className="text-[11px] text-[color:var(--ink-on-dark-faint)] mt-2 m-0">
+        <p className="mw-line">
           Drop the work-zone pin first, then mark where the cross street
           meets this road.
         </p>
       )}
       {crossStatus === "resolving" && (
-        <p className="text-[11px] text-[color:var(--ink-on-dark-faint)] mt-2 m-0">
+        <p className="mw-line">
           Looking up the cross street…
         </p>
       )}
       {crossStatus === "none" && (
-        <p className="text-[11px] text-[color:var(--warn)] mt-2 m-0">
+        <p className="mw-line">
           No cross street found at that point. You can still describe the
           approaches by hand in the form.
         </p>
       )}
       {crossStatus === "error" && (
-        <p className="text-[11px] text-[color:var(--fail)] mt-2 m-0">
-          Couldn&apos;t reach the road-detection service. Describe the
-          approaches by hand in the form.
+        <p className="mw-line">
+          {/* #507 ruling 4: plain words for the old service jargon. */}
+          The street lookup didn&apos;t answer. Describe the approaches by
+          hand in the form.
         </p>
       )}
       {crossStatus === "restored" && (
-        <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0" data-testid="cross-restored">
+        <p className="mw-line" data-testid="cross-restored">
           {/* #234: the saved crossing, named by the one producer the WHERE
               fact line reads — no detection fires on open. */}
           {crossStreetLabel(restoredName)}: marked at your last save. Move
           the intersection pin to look it up again.
         </p>
       )}
-    </div>
+    </section>
   );
 }
 
-// Static legend bar.  Positioning is owned by the parent — this is
-// rendered inside the bottom-right stack alongside the Recenter
-// button, so it shouldn't carry its own absolute coords.
-// Rule 109: a row per channel DRAWN — the work alone before the kind is
-// confirmed, all five once the approaches lay out.
-function CorridorLegend({ zones }: { zones: CorridorZone[] }) {
-  const order: CorridorZone[] = [
-    "advance_warning",
-    "transition",
-    "buffer",
-    "work_zone",
-    "downstream",
-  ];
-  const rows = order.filter((z) => zones.includes(z)).map((zone) => ({ zone }));
-  return (
-    <div className="bg-black/75 border border-white/15 px-3 py-2 flex flex-col gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-white max-w-[200px]">
-      {rows.map((r) => (
-        <div key={r.zone} className="flex items-center gap-2 whitespace-nowrap">
-          <ZoneChannelSwatch zone={r.zone} className="flex-shrink-0" />
-          <span>{ZONE_LABEL[r.zone]}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function DetectionOutcomeCard({
-  classifyState,
-  emptyMessage,
+// #507 (W1, F1): the rail's road question.  One of: the lookup running,
+// the roads found as one radio list (ruling 2: a grouped street is one
+// row), or the lookup failed / found nothing, with Try again and the
+// four-direction question (ruling 4).  Every word is in the constants
+// above; the rows read the route's candidates and compute nothing.
+function RoadQuestion({
+  classify,
   candidates,
   selectedIdx,
   onPick,
+  roadAxis,
+  onAxis,
+  onTryAgain,
 }: {
-  classifyState: ClassifyStatus["state"];
-  emptyMessage: string | null;
+  classify: ClassifyStatus;
   candidates: RoadCandidate[];
   selectedIdx: number | null;
   onPick: (idx: number) => void;
+  roadAxis: RoadAxis | null;
+  onAxis: (a: RoadAxis) => void;
+  onTryAgain: () => void;
 }) {
-  if (classifyState === "resolving") {
+  if (classify.state === "resolving") {
     return (
-      <div className="border-b border-[color:var(--rule)] px-6 py-3">
-        <div className="border border-[color:var(--rule)] px-3 py-2">
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] flex items-center gap-2">
-            <span
-              aria-hidden
-              className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[color:var(--act)]/40 border-t-[color:var(--act)] animate-spin"
-            />
-            Detecting roads at pin…
-          </div>
-          <div
-            className="w-3/4 mt-2 h-[10px] bg-[color:var(--rule)] animate-pulse"
-            aria-hidden
-          />
-        </div>
-      </div>
+      <section className="mw-section" aria-busy="true">
+        <h3 className="mw-sub">{ROAD_QUESTION}</h3>
+        <p className="mw-line" role="status">
+          {LOOKUP_RUNNING}
+        </p>
+      </section>
     );
   }
-  if (candidates.length === 0) {
-    // Empty and error states are both explicit outcomes (rule 10): the
-    // chromeless ◌ marks "nothing found", not a failure color.
+  if (classify.state === "error" || candidates.length === 0) {
+    const failed = classify.state === "error" && classify.reason === "failed";
     return (
-      <div className="border-b border-[color:var(--rule)] px-6 py-3">
-        <div className="border border-[color:var(--rule)] px-3 py-2">
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--none)]">
-            <span aria-hidden>◌ </span>
-            {emptyMessage ?? "No roads detected"}
-          </div>
-          <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
-            {/* #290: there is no direction to set here any more — with
-                no road, the band asks which way traffic heads. */}
-            Set road properties in Step 2, or drag the pin closer to the
-            roadway. With no road, the band asks which way traffic heads.
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (candidates.length === 1) {
-    // #435 ruling 5 (checkpoint call C6): one road found reads as the
-    // road-picked summary row; no Change, because there is no other road
-    // to change to.  The sole match is already applied (auto-adopted).
-    return (
-      <div className="border-b border-[color:var(--rule)] px-6 py-3">
-        <RoadPickedRow candidate={candidates[0]} />
-      </div>
-    );
-  }
-  return (
-    <WhichRoadCard
-      candidates={candidates}
-      selectedIdx={selectedIdx}
-      onPick={onPick}
-    />
-  );
-}
-
-// Multi-candidate disambiguation card (Concept A inc-3).  Rendered by
-// DetectionOutcomeCard when detection returned more than one candidate
-// road.  #435 ruling 4: a neutral band panel (the --da-ground band
-// ground and --rule border, not the amber frame), its header row "⚠ PICK
-// THE ROAD · N FOUND".  Once picked it collapses to the ruling-5 summary
-// row with a Change affordance.
-function WhichRoadCard({
-  candidates,
-  selectedIdx,
-  onPick,
-}: {
-  candidates: RoadCandidate[];
-  selectedIdx: number | null;
-  onPick: (idx: number) => void;
-}) {
-  // Collapse/re-expand after a pick is card-local UI state; the parent
-  // keys this component on the candidate set, so a fresh detection
-  // mounts a fresh card and the state can never go stale.
-  const [reExpanded, setReExpanded] = useState(false);
-  const expanded = selectedIdx === null || reExpanded;
-  const picked =
-    selectedIdx !== null ? (candidates[selectedIdx] ?? null) : null;
-  const headId = useId();
-  return (
-    <div className="border-b border-[color:var(--rule)] px-6 py-3">
-      {expanded ? (
-        <div className="road-pick-panel" data-testid="road-pick-panel">
-          <div className="road-pick-head">
-            {/* #402 (P9): the ⚠ asks the open question; once a road is
-                picked the question is answered, and it stays ✓ while
-                Change has the list open: the pick still stands. */}
-            <span
-              aria-hidden="true"
-              className={`road-pick-glyph ${symClass(picked ? "✓" : "⚠")}`}
+      <section className="mw-section">
+        <div className="mw-status" role="status" data-testid="road-lookup-status">
+          <p className="mw-sub">{failed ? LOOKUP_FAILED_TITLE : LOOKUP_NONE_TITLE}</p>
+          <p className="mw-line">{failed ? LOOKUP_FAILED_LINE : LOOKUP_NONE_LINE}</p>
+          {failed && (
+            <button
+              type="button"
+              onClick={onTryAgain}
+              data-testid="picker-redetect"
+              className="tap-44 mw-btn mw-btn-line mw-self-start"
             >
-              {picked ? "✓" : "⚠"}
-            </span>
-            <span id={headId} className="tr-step">
-              PICK THE ROAD · {candidates.length} FOUND
-            </span>
-            <InfoToggle label="the roads found" testid="road-pick" className="road-pick-info">
-              <ul className="road-pick-details">
-                {candidates.map((c, idx) => (
-                  <li key={`${c.way_id}-${idx}`}>
-                    <RoadDetails candidate={c} />
-                  </li>
-                ))}
-              </ul>
-            </InfoToggle>
+              Try again
+            </button>
+          )}
+        </div>
+        <fieldset className="mw-fieldset">
+          <legend className="mw-sub">{AXIS_QUESTION}</legend>
+          <div role="radiogroup" aria-label={AXIS_QUESTION} className="mw-axis-grid">
+            {ROAD_AXES.map((a) => {
+              const picked = roadAxis === a.value;
+              return (
+                <button
+                  key={a.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={picked}
+                  aria-label={a.label}
+                  onClick={() => onAxis(a.value)}
+                  className={`road-pick-row mw-axis${picked ? " is-picked" : ""}`}
+                  data-testid="road-axis"
+                >
+                  {/* #511 (Rule 13): the same mark the road rows carry, so
+                      the pick reads by shape as well as colour. */}
+                  <span className="road-pick-mark" aria-hidden="true" />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d={a.path} stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  <span className="road-pick-name">{a.label}</span>
+                </button>
+              );
+            })}
           </div>
-          <CandidatePicker
-            candidates={candidates}
-            selectedIdx={selectedIdx}
-            labelledBy={headId}
-            onPick={(idx) => {
-              setReExpanded(false);
-              onPick(idx);
-            }}
-          />
+          <p className="mw-hint">{AXIS_HINT}</p>
+        </fieldset>
+      </section>
+    );
+  }
+  return (
+    <section className="mw-section">
+      <div className="road-pick-panel mw-roads" data-testid="road-pick-panel">
+        <h3 id="mw-road-h" className="mw-sub">
+          {ROAD_QUESTION}
+        </h3>
+        <div role="radiogroup" aria-labelledby="mw-road-h" className="mw-road-rows">
+          {candidates.map((c, idx) => {
+            const picked = idx === selectedIdx;
+            return (
+              <button
+                key={`${c.way_id}-${idx}`}
+                type="button"
+                role="radio"
+                aria-checked={picked}
+                onClick={() => onPick(idx)}
+                className={`road-pick-row${picked ? " is-picked" : ""}`}
+              >
+                <span className="road-pick-mark" aria-hidden="true" />
+                <span className="road-pick-label">
+                  <span className="road-pick-name">{candidateLabel(c).primary}</span>
+                  <span className="road-pick-sub">{roadRowLine(c)}</span>
+                </span>
+              </button>
+            );
+          })}
         </div>
-      ) : (
-        picked && (
-          <RoadPickedRow candidate={picked} onChange={() => setReExpanded(true)} />
-        )
-      )}
-    </div>
-  );
-}
-
-// #436 rulings 1-5 (Ryan, 2026-11-02, Option A): the road-picked summary
-// in three lines.  Line 1: ✓, the mono ROAD label and Change, a borderless
-// --act text button with a 44 px hit area (absent when only one road was
-// found).  Line 2, 24 px in: the road name, Inter 15 / 600.  Line 3: the
-// road class in plain words, the distance from the pin and a "Details"
-// text button that opens the detected-from line in a block under it.
-function RoadPickedRow({
-  candidate,
-  onChange,
-}: {
-  candidate: RoadCandidate;
-  onChange?: () => void;
-}) {
-  const { open, setOpen, panelId, boxRef, triggerRef } =
-    useDetailsToggle<HTMLDivElement>();
-  return (
-    <div ref={boxRef} className="road-picked" data-testid="road-picked">
-      <div className="road-picked-head">
-        <span aria-hidden="true" className={`road-pick-glyph ${symClass("✓")}`}>
-          ✓
-        </span>
-        <span className="tr-step">ROAD</span>
-        {onChange && (
-          <button
-            type="button"
-            onClick={onChange}
-            className="tap-44 road-pick-change"
-          >
-            Change
-          </button>
-        )}
+        <p className="mw-hint">{SIDE_NEXT_LINE}</p>
       </div>
-      <div className="road-picked-body">
-        <span className="road-picked-name">{roadName(candidate)}</span>
-        <span className="road-picked-sub">
-          {plainRoadClass(candidate.highway_class)} ·{" "}
-          {candidate.snap_distance_m.toFixed(0)} m from your pin ·{" "}
-          <button
-            ref={triggerRef}
-            type="button"
-            aria-expanded={open}
-            aria-controls={panelId}
-            aria-label="Details for the picked road"
-            onClick={() => setOpen((o) => !o)}
-            data-testid="info-toggle-road-picked"
-            className="road-picked-details-toggle"
-          >
-            Details
-          </button>
-        </span>
-        <div
-          id={panelId}
-          className="road-picked-details tr-note"
-          role="group"
-          aria-label="Details for the picked road"
-          hidden={!open}
-          data-testid="info-road-picked"
-        >
-          <CandidateCaption candidate={candidate} />
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }
 
-/** #435 ruling 4: "East Colfax Avenue, westbound", sentence case; the
- *  OSM name keeps its own case. */
-function roadName(c: RoadCandidate): string {
-  const lbl = candidateLabel(c);
-  return `${lbl.primary}, ${lbl.direction.toLowerCase()}`;
-}
-
-// The detected-from line, behind the road-picked row's "Details" (#436
-// ruling 2; #435 rulings 4–5); the words are unchanged.
-function CandidateCaption({ candidate }: { candidate: RoadCandidate }) {
-  const lbl = candidateLabel(candidate);
-  const brg = normaliseBearing(candidate.bearing);
-  return (
-    <>
-      Detected from OSM: {brg}° ({lbl.primary} {lbl.direction.toLowerCase()},{" "}
-      {lbl.sub.toLowerCase()}) · way {candidate.way_id}
-    </>
-  );
-}
-
-// One road's detail line in the panel's "i details": the way ID, the
-// bearing and the source the default view no longer shows (P19).
-function RoadDetails({ candidate }: { candidate: RoadCandidate }) {
-  const brg = normaliseBearing(candidate.bearing);
-  return (
-    <>
-      {roadName(candidate)} · {brg}° · way {candidate.way_id} · from OSM
-    </>
-  );
-}
-
-// Picker rows shown inside the pick-the-road panel when /api/road-bearing
-// returns multiple candidates within snap range (the divided-highway
-// case).  Clicking a row sets the bearing field, the arrow, AND the
-// road-property panel (via classifyFromCandidate in the parent
-// applyCandidate handler).  #435 ruling 4 (checkpoint call C4): each row
-// is a radio in a radiogroup named by the header, so the picked state is
-// in words (aria-checked) as well as in the filled marker and the --act
-// border (Rule 13); the road class reads in plain words and the distance
-// from the pin rides the second line, so the carriageways stay apart.
-function CandidatePicker({
-  candidates,
-  selectedIdx,
-  labelledBy,
-  onPick,
-}: {
-  candidates: RoadCandidate[];
-  selectedIdx: number | null;
-  labelledBy: string;
-  onPick: (idx: number) => void;
-}) {
-  return (
-    <div role="radiogroup" aria-labelledby={labelledBy} className="road-pick-rows">
-      {candidates.map((c, idx) => {
-        const selected = idx === selectedIdx;
-        return (
-          <button
-            key={`${c.way_id}-${idx}`}
-            type="button"
-            role="radio"
-            aria-checked={selected}
-            onClick={() => onPick(idx)}
-            className={`road-pick-row${selected ? " is-picked" : ""}`}
-          >
-            <span className="road-pick-mark" aria-hidden="true" />
-            <span className="road-pick-label">
-              <span className="road-pick-name">{roadName(c)}</span>
-              <span className="road-pick-sub">
-                {plainRoadClass(c.highway_class)} · {c.snap_distance_m.toFixed(0)} m from your pin
-              </span>
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  );
+/** #507 ruling 2: "Traffic both ways · 9 m from your pin".  #512 (Ryan,
+ *  2026-11-11): the words are the backend's (`c.travel`, from
+ *  `/render/road-travel`: the one-way reading the side choices use, and
+ *  #308's carriageway verdict), never a rule here (Rule 3).  A one-way
+ *  entry is named by the verdict (R145-11, Rule 12): "One-way" for a
+ *  one-way street, "Divided road" for one carriageway of a divided road,
+ *  else "Traffic one way here".  A reversible or alternating way reads
+ *  "Direction changes by time".  No answer, or a road the backend can't
+ *  name a direction for (an untagged motorway), shows only the distance
+ *  (Rule 10).  The distance is the lead carriageway's, the nearer one. */
+export function roadRowLine(c: RoadCandidate): string {
+  const dist = `${c.snap_distance_m.toFixed(0)} m from your pin`;
+  const t = c.travel;
+  if (!t || t.travel === "unknown") return dist;
+  if (t.travel === "both_ways") return `Traffic both ways · ${dist}`;
+  if (t.travel === "changes_by_time") return `Direction changes by time · ${dist}`;
+  const v = t.carriageway;
+  const words = v === "one_way_street" ? "One-way" : v === "divided" ? "Divided road" : "Traffic one way here";
+  return `${words} · ${dist}`;
 }
 
 // ---- CorridorPreviewPanel -------------------------------------------------
@@ -2312,14 +1962,17 @@ type PreviewStatus =
   | "kind"
   | "refused";
 
-/** The pre-side sentence, one string for the map and the panel.  Ryan's
- *  #402 ruling 2 (2026-10-29), verbatim with its period: "#402 side
- *  sentence: "Save, then say which side is occupied." in the picker only."
- *  It supersedes #290's "Say which side is occupied to lay out the work"
- *  here only: the picker has no side control, so it says to save first.
- *  The rail's SIDE_BLOCKER (the band, where the control is) keeps the #290
- *  words, so the two strings differ on purpose. */
-const SIDE_SENTENCE = "Save, then say which side is occupied.";
+/** #513 (ruling 1/4, R145-9): the search found a town or area, not a
+ *  street, so no pin is set and no roads are looked up. */
+const COARSE_NOTICE = "That search found a town or area. Tap the map on the road where the work starts.";
+
+/** #507 ruling 4 (R145-9): the preview's failures in plain words. */
+const PREVIEW_FAILED =
+  "We couldn't draw the work on the map. You can still save; the plan is checked when it's made.";
+const PREVIEW_DECLINED = "The work can't be drawn here:";
+const PREVIEW_DECLINED_BARE = "The work can't be drawn here.";
+const PREVIEW_STILL_SAVE = "You can still save; the plan is checked when it's made.";
+const PREVIEW_REFUSED = "The work can't be laid out here:";
 
 function CorridorPreviewPanel({
   corridor,
@@ -2347,71 +2000,44 @@ function CorridorPreviewPanel({
 }) {
   const coverageStart = corridor?.coverageStartFt ?? 0;
   return (
-    <div className="border-t border-[color:var(--rule)]">
-      <div className="px-6 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-        Corridor extent
-      </div>
-
-      <div className="px-6 py-3">
-        {!hasPin && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
-            Drop a pin to compute the corridor.
-          </div>
-        )}
-        {hasPin && status === "loading" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
-            Computing corridor extent…
-          </div>
-        )}
+    // #507 ruling 1: no header of its own; it speaks under "Where the work
+    // starts", in Inter.
+    <div className="mw-preview">
+      <div>
+        {/* #507 ruling 1: the pin and wait lines left the panel; "Where
+            the work starts" says where the pin is. */}
         {hasPin && status === "error" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1">
-            Corridor preview unavailable. Couldn&apos;t reach the layout
-            service. You can still save; the plan is validated when
-            generated.
+          <div className="mw-note">
+            {/* #507 ruling 4: plain words for "Corridor preview
+                unavailable. Couldn't reach the layout service." */}
+            {PREVIEW_FAILED}
           </div>
         )}
         {hasPin && status === "declined" && (
           <div
-            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1"
+            className="mw-note"
             data-testid="picker-corridor-declined"
           >
             {/* #430 (Rule 10): a 400 is a refusal, not an outage.  Only the
                 backend's own message is quoted; with none, no answerer is
                 named (the route's own 400s come before the backend). */}
             {declined
-              ? `Corridor preview declined: ${asSentence(declined)}`
-              : "Corridor preview declined."}{" "}
-            You can still save; the plan is validated when generated.
+              ? `${PREVIEW_DECLINED} ${asSentence(declined)}`
+              : PREVIEW_DECLINED_BARE}{" "}
+            {PREVIEW_STILL_SAVE}
           </div>
         )}
         {hasPin && status === "refused" && (
           <div
-            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1"
+            className="mw-note"
             data-testid="picker-corridor-refused"
           >
-            Can&apos;t lay the corridor out here: {refusal}
+            {PREVIEW_REFUSED} {refusal}
           </div>
         )}
-        {hasPin && (status === "side" || status === "kind" || status === "idle") && (
-          <div
-            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1"
-            data-testid="picker-corridor-note"
-          >
-            {/* #289 finding 1: the lengths depend on the kind, and the
-                kind is not chosen yet — say so rather than draw a
-                corridor for the placeholder.  Rule 5, stated: on a first
-                pass the picker opens before the chips exist, so this is
-                what it shows then; the lengths appear in the WHERE band
-                once the kind is confirmed.  One element, two sentences —
-                the #263 type census counts elements, and this is the
-                same note in the same register. */}
-            {status === "side"
-              ? SIDE_SENTENCE
-              : status === "kind"
-                ? "Corridor lengths wait on the kind of work. Choose it after you save."
-                : "Save the pin; the corridor lays out on the band."}
-          </div>
-        )}
+        {/* #507 ruling 1: the side / kind / idle notes left; W1's "You'll
+            pick the side of the road next, on the page." follows #402's
+            side sentence. */}
         {corridor && status === "ready" && (
           <>
             {/* #301 piece 2 (ruling 7): "the audit is the one speaker; the
@@ -2424,7 +2050,7 @@ function CorridorPreviewPanel({
                 can never describe the same fact differently.  Absent
                 while a pick is pending (no geometry claim exists yet). */}
             {!pendingPick && (
-              <div className="flex items-baseline justify-between gap-3 pt-2 font-mono text-[10px] uppercase tracking-[0.08em]">
+              <div className="mw-note flex items-baseline justify-between gap-3">
                 <span className="text-[color:var(--ink-on-dark-faint)]">
                   Centerline
                 </span>

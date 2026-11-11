@@ -25,7 +25,11 @@ describe("LocationPickerModal stays on the spacing scale (#166)", () => {
   it("keeps finding the modal's spacing tokens (guard is non-vacuous)", () => {
     // #435: 115 -> 100; the road picker's card, rows and summary moved
     // their spacing into globals.css (.road-pick-*, on --space-* tokens).
-    expect(values.length).toBeGreaterThan(90);
+    // #507 ruling 1: 100 -> 4; the map window's spacing moved into its
+    // own .map-window rules (on --space-* tokens).  The four left are
+    // the backdrop's p-0 / md:p-6, the cross-street panel's gap-2 and
+    // the Centerline row's gap-3.
+    expect(values.length).toBeGreaterThanOrEqual(4);
   });
 
   it("every margin/padding/gap token is a scale step", () => {

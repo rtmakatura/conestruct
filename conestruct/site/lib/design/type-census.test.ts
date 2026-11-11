@@ -310,6 +310,12 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // #456 ruling 2: Hide map / Show map on the body-value token; no
         // new size.
         "var(--fs-body-value)",
+        // #507 ruling 1: the map window in group 1's type, on four
+        // existing tokens; no new size.
+        "var(--fs-step-question-520)",
+        "var(--fs-body-value)",
+        "var(--fs-refusal)",
+        "var(--fs-field-label)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",

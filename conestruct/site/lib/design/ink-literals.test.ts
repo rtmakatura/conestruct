@@ -182,7 +182,8 @@ const observedCode = codeHexLiterals(SITE_ROOT);
 describe("#263 ink literals — code (comments stripped)", () => {
   it("the scanner reads the tree", () => {
     // #239: the sentinel was TaperViz (18), deleted with the archived landing.
-    expect(observedCode.get("components/LocationPickerModal.tsx")?.length).toBe(4);
+    // #507 ruling 1: 4 -> 2, the zone-label paint left with the overlays.
+    expect(observedCode.get("components/LocationPickerModal.tsx")?.length).toBe(2);
   });
 
   it("every file with a literal is declared with its exact set and count; every declared file still has them", () => {
@@ -234,12 +235,13 @@ describe("#263 ink literals — the token mirrors equal their tokens", () => {
     expect(observedCode.has("components/GeneratorFormPrimitives.tsx")).toBe(false);
   });
 
-  it("Mapbox label paint is the only place #ffffff / #000000 appear in the picker", () => {
+  // #507 ruling 1 (RULE 5, stated): the map carries zoom only, so the
+  // zone-label layer and its #ffffff / #000000 paint are gone.
+  it("no #ffffff / #000000 in the picker: the Mapbox zone-label paint left with the overlays", () => {
     const code = stripComments(picker);
-    const paint = code.match(/paint: \{[^}]*"text-color": "#ffffff",[^}]*"text-halo-color": "#000000",[^}]*\}/);
-    expect(paint).not.toBeNull();
-    expect((code.match(/#ffffff/g) ?? []).length).toBe(1);
-    expect((code.match(/#000000/g) ?? []).length).toBe(1);
+    expect(code).not.toMatch(/"text-halo-color"/);
+    expect((code.match(/#ffffff/gi) ?? []).length).toBe(0);
+    expect((code.match(/#000000/g) ?? []).length).toBe(0);
   });
 });
 

@@ -79,6 +79,7 @@ from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor_layout import approach_travel_bearing_deg as _approach_travel
 from src.rules.corridor_layout import cardinal as _cardinal
+from src.rules.corridor_layout import compass8
 from src.rules.corridor_layout import laid_out as _laid_out
 from src.rules.corridor_layout import zone_parts as _zone_parts
 from src.rules.corridor_layout import zone_spans as _zone_spans
@@ -1573,6 +1574,51 @@ def jurisdiction_suggest(req: JurisdictionSuggestRequest) -> JSONResponse:
     return JSONResponse(suggest(req.lat, req.lng))
 
 
+class RoadTravelFacts(BaseModel):
+    """#512: one road-list entry's raw facts, relayed by /api/road-bearing."""
+
+    oneway: str | None = Field(default=None, max_length=16)
+    highway_class: str | None = Field(default=None, max_length=32)
+    twin_oneway: str | None = Field(default=None, max_length=16)
+    twin_distance_m: float | None = Field(default=None, ge=0.0)
+    twin_searched: bool = False
+
+
+class RoadTravelRequest(BaseModel):
+    roads: list[RoadTravelFacts] = Field(max_length=40)
+
+
+@app.post("/render/road-travel")
+def road_travel(req: RoadTravelRequest) -> JSONResponse:
+    """How traffic runs on each road-list entry (#507 ruling 2, #512).
+
+    Ryan (2026-11-11): the list's "Traffic both ways" / one-way words come
+    from the backend's one-way reading, the one that decides the sides
+    (``corridor.travel_reading`` on ``legal_offset_deg``), not a rule in
+    the Next route.  ``carriageway`` is #308's verdict (``carriageway.py``,
+    the one producer), which names a one-way entry: one-way street,
+    divided road, or undecided.  A read: no scenario, no Overpass call.
+    """
+    from src.rules.carriageway import carriageway_verdict
+    from src.rules.corridor import travel_reading
+
+    out = []
+    for r in req.roads:
+        out.append(
+            {
+                "travel": travel_reading(r.oneway, r.highway_class, twin_oneway=r.twin_oneway),
+                "carriageway": carriageway_verdict(
+                    oneway=r.oneway,
+                    highway_class=r.highway_class,
+                    twin_distance_m=r.twin_distance_m,
+                    twin_searched=r.twin_searched,
+                    confirmed=None,
+                ),
+            }
+        )
+    return JSONResponse({"roads": out})
+
+
 # #290 checkpoint (k) commit 7: the zone walk, the approaches and the
 # compass words live in src/rules/corridor_layout.py — one producer for
 # this endpoint (the picker) and the plan sheet's page 2 (P11).
@@ -1618,9 +1664,15 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
       ruling 2, "an option the user can't choose, named in jargon, is
       noise (P13, P18)".  Every option is ``built: True``.
     * No confirmed road: the four headings (the open-points ruling 1),
-      "traffic heads N / E / S / W", each with its right edge.
+      "traffic heads N / E / S / W", each with its right edge.  #507
+      ruling 5: with ``meta.roadAxis`` only that axis's two headings,
+      worded for it ("Northwest side · traffic heading southwest").
+    * #507 ruling 2: a grouped street's other carriageway adds its outer
+      side (``_twin_side_options``).  Ruling 5: diagonal roads are named
+      by their diagonal (``corridor_layout.side_label``).
     """
     from src.rules.corridor import HEADING_DEG, against_legal_direction, travel_bearing_at
+    from src.rules.corridor_layout import side_label
 
     meta = scenario.meta
     options: list[dict[str, Any]] = []
@@ -1635,35 +1687,92 @@ def _side_options(scenario: Scenario, params: Any) -> list[dict[str, Any]]:
                 bearing, road.osmBearingDeg, road.oneway
             ):
                 continue
-            right_side, bound = _cardinal(bearing + 90.0)[0], _cardinal(bearing)[1]
+            # #507 ruling 5 (R145-8): eight-point words; a cardinal-octant
+            # road reads exactly as before.
             options.append(
                 {
                     "work": {"side": "right", "travel": travel},
-                    "label": f"{right_side} side · {bound} traffic",
+                    "label": side_label(bearing + 90.0, bearing),
                     "built": True,
                 }
             )
             if left_built:
                 # #300: the same traffic's left curb, same travel direction.
-                left_side = _cardinal(bearing - 90.0)[0]
                 options.append(
                     {
                         "work": {"side": "left", "travel": travel},
-                        "label": f"{left_side} side · {bound} traffic",
+                        "label": side_label(bearing - 90.0, bearing),
                         "built": True,
                     }
                 )
+        options.extend(_twin_side_options(scenario))
         return options
+    headings = _AXIS_HEADINGS.get(meta.roadAxis or "")
     for heading, bearing in HEADING_DEG.items():
-        right_side, bound = _cardinal(bearing + 90.0)[0], _cardinal(bearing)[1]
+        if headings is None:
+            if heading not in ("N", "E", "S", "W"):
+                continue
+            # The legacy four headings (no road, no axis): unchanged.
+            right_side, bound = _cardinal(bearing + 90.0)[0], _cardinal(bearing)[1]
+            label = f"{right_side} side · traffic heads {bound.removesuffix('bound')}"
+        elif heading in headings:
+            # #507 ruling 5 (F2): only the said axis's two headings.
+            right_side = compass8(bearing + 90.0)
+            label = f"{right_side} side · traffic heading {compass8(bearing).lower()}"
+        else:
+            continue
         options.append(
-            {
-                "work": {"side": "right", "heading": heading},
-                "label": f"{right_side} side · traffic heads {bound.removesuffix('bound')}",
-                "built": True,
-            }
+            {"work": {"side": "right", "heading": heading}, "label": label, "built": True}
         )
     return options
+
+
+# #507 ruling 4/5: the two headings of each direction the operator can say
+# the road runs, when the lookup found no road.
+_AXIS_HEADINGS: dict[str, tuple[str, str]] = {
+    "east_west": ("E", "W"),
+    "north_south": ("N", "S"),
+    "northeast_southwest": ("NE", "SW"),
+    "northwest_southeast": ("NW", "SE"),
+}
+
+
+def _twin_side_options(scenario: Scenario) -> list[dict[str, Any]]:
+    """#507 ruling 2/3: the street's other carriageway's side (R145-2/3).
+
+    A street grouped from two one-way carriageways relays the other one as
+    ``meta.twinRoad``.  Its legal direction's right edge is the street's
+    other outer side; the median edges stay unoffered (#290).  The option
+    names the carriageway (``"carriageway": "twin"``) and its ``work`` is
+    worded against the twin's own polyline, so the page swaps the
+    confirmed road to the twin and writes ``work`` verbatim: the plan is
+    then built from that carriageway's own facts (Rule 3: the backend
+    decides which side lays out on which carriageway).
+    """
+    from src.rules.corridor import against_legal_direction, travel_bearing_at
+    from src.rules.corridor_layout import side_label
+
+    meta = scenario.meta
+    twin = meta.twinRoad
+    if twin is None or meta.roadDirection is None:
+        return []
+    line = tuple((float(a), float(b)) for a, b in twin.centerline)
+    out: list[dict[str, Any]] = []
+    for travel in ("with_geometry", "against_geometry"):
+        bearing = travel_bearing_at(
+            meta.lat, meta.lng, centerline=line, travel=travel, heading=None
+        )
+        if against_legal_direction(bearing, twin.osmBearingDeg, twin.oneway):
+            continue
+        out.append(
+            {
+                "work": {"side": "right", "travel": travel},
+                "label": side_label(bearing + 90.0, bearing),
+                "built": True,
+                "carriageway": "twin",
+            }
+        )
+    return out
 
 
 _SCENARIO_ADAPTER: TypeAdapter[Any] = TypeAdapter(Scenario)

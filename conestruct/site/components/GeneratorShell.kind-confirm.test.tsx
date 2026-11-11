@@ -411,7 +411,8 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(count()).toBe("2 of 2 answered");
     expect(records().map((r) => r.querySelector(".nyq-row-text")?.textContent)).toEqual([
       "What kind of work is it: Shoulder work",
-      "Which side of the road is the work on: East side",
+      // #507 ruling 3: the side's record names the confirmed street.
+      "Which side of East 17th Avenue is the work on: East side",
     ]);
     expect(screen.getByTestId("step-undo-side")).toBeTruthy();
   });

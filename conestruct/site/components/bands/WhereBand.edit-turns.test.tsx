@@ -72,6 +72,9 @@ const DETECTION: RoadDetectOk = {
   placeName: null,
 };
 const SIDE = { work: { side: "right", travel: "with_geometry" }, label: "South side · eastbound traffic", built: true };
+// #507: a two-way street offers both sides; a lone side is picked for you
+// (ruling 3), which would answer the question these tests keep open.
+const SIDE_NORTH = { work: { side: "right", travel: "against_geometry" }, label: "North side · westbound traffic", built: true };
 
 // The picker's Save lands on `savePin` (the test moves it for Move), with
 // `saveCross` as its crossing (null = none marked, or the person's Clear).
@@ -125,7 +128,7 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
       approaches: [],
       coverage_ft: null,
       message: null,
-      side_options: [SIDE],
+      side_options: [SIDE, SIDE_NORTH],
     });
   }
   if (url.includes("/api/road-bearing")) return json(DETECTION);
@@ -281,8 +284,11 @@ describe("#485 ruling 3: Cancel undoes the edit (P15, byte-identical wire)", () 
 
   it("a moved work start: Cancel brings the cleared side back", async () => {
     await toAnsweredQuestions();
-    const before = geometryAsked[geometryAsked.length - 1];
-    expect(JSON.parse(before).meta.work).toEqual(SIDE.work);
+    // With two sides offered, BandAerial prefetches the other side's
+    // geometry (prefetchGeometry), so the last read is not always the
+    // scenario itself: the picked side is the one the plan asked with.
+    expect(geometryAsked.some((s) => JSON.stringify(JSON.parse(s).meta.work) === JSON.stringify(SIDE.work))).toBe(true);
+    expect((q("side-option") as HTMLInputElement).checked).toBe(true);
     await openEdit();
     savePin = MOVED;
     await click(q("move-action-start"), "Move");

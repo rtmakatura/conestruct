@@ -13,7 +13,7 @@
 import { validRuns, type GeoPoint } from "./usable-ways";
 
 /** Travel bearings this far apart or more run opposite ways. */
-const OPPOSITE_MIN_DEG = 150;
+export const OPPOSITE_MIN_DEG = 150;
 const ONE_WAY_TAGS = new Set(["yes", "-1"]);
 
 export interface TwinCandidate {

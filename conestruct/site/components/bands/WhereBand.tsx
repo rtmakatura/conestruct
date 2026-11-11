@@ -63,7 +63,7 @@ import { WhereQuestions } from "./WhereQuestions";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
 import { FieldCell } from "./FieldCell";
 import { useWriteLock } from "../WriteLock";
-import { candidateLabel } from "@/lib/road-detection/labels";
+import { candidateLabel, plannedDirection } from "@/lib/road-detection/labels";
 
 /** The five zones, in the order the corridor lays them out — the same
  *  labels `ZONE_LABEL` gave the retired bar's rows, read from the one
@@ -318,7 +318,9 @@ export function summaryParts(
   const road = scenario.meta.confirmedRoad;
   if (road && !roadIsStale(scenario)) {
     const l = candidateLabel(road.candidate);
-    parts.push(`${l.primary} ${l.direction.toLowerCase()}`);
+    // #507: a grouped street has no direction until its side is picked.
+    const dir = plannedDirection(road.candidate, Boolean(scenario.meta.work?.side));
+    parts.push(dir ? `${l.primary} ${dir.toLowerCase()}` : l.primary);
   }
   if (crossStreetTag) parts.push(`starts ${crossStreetTag}`);
   if (!workLenIsEmpty(scenario) && !workLenIsRefused(scenario) && scenario.workLen > 0) {

@@ -53,7 +53,9 @@ function mount() {
       onSave={vi.fn()}
     />,
   );
-  fireEvent.click(screen.getByText(/enter coordinates manually/i));
+  // #507: with no map token the coordinate boxes are already open (the
+  // old click landed on the "Map unavailable" copy and did nothing).
+  expect(screen.getByLabelText("Latitude")).toBeTruthy();
 }
 const lat = () => screen.getByLabelText("Latitude") as HTMLInputElement;
 const lng = () => screen.getByLabelText("Longitude") as HTMLInputElement;

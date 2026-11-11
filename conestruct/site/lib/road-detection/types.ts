@@ -96,6 +96,26 @@ export interface RoadCandidate {
    */
   twin_distance_m?: number | null;
   twin_searched?: boolean;
+  /**
+   * #507 ruling 2: the street's other carriageway, when the lookup found
+   * both (`group.ts`, the grouping rule).  Present only on the nearer one,
+   * which leads the one list entry; the side picked on the page chooses
+   * between them (the backend's `_side_options`, Rule 3).  A twin never
+   * carries a twin of its own.
+   */
+  twin?: RoadCandidate;
+  /**
+   * #512 (Ryan, 2026-11-11): how traffic runs on this entry, the backend's
+   * answer (`/render/road-travel`: `corridor.travel_reading`, the reading
+   * the side choices use, plus #308's carriageway verdict).  Absent when
+   * the backend didn't answer: the list then says no direction (Rule 10).
+   */
+  travel?: RoadTravel;
+}
+
+export interface RoadTravel {
+  travel: "one_way" | "both_ways" | "changes_by_time" | "unknown";
+  carriageway: "one_way_street" | "divided" | "undivided" | "undecided" | "not_applicable";
 }
 
 // Full response from /api/road-bearing.  `isUrban` and `placeName`

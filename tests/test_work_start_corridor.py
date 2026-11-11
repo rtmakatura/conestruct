@@ -215,7 +215,8 @@ def test_direction_from_the_road_and_the_travel_choice() -> None:
 def test_direction_without_a_road_is_the_four_way_heading() -> None:
     for h, deg in HEADING_DEG.items():
         assert travel_bearing_at(*PIN, centerline=None, travel=None, heading=h) == deg
-    assert set(HEADING_DEG) == {"N", "E", "S", "W"}
+    # #507 ruling 5: the diagonals, offered only for a said diagonal axis.
+    assert set(HEADING_DEG) == {"N", "E", "S", "W", "NE", "SE", "SW", "NW"}
 
 
 def test_the_deciding_input_is_required() -> None:

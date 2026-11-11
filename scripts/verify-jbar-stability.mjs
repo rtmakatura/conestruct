@@ -69,7 +69,7 @@ async function toWhat(page) {
     await pick.scrollIntoViewIfNeeded();
     await pick.click();
   }
-  const save = page.getByRole("button", { name: /Save & Close/ });
+  const save = page.getByRole("button", { name: /Save (&|and) [Cc]lose/ });
   for (let i = 0; i < 60 && !(await save.isEnabled()); i += 1) await page.waitForTimeout(1000);
   await save.click();
   await page.locator('[data-testid="kind-chip-shoulder"]').first().click({ timeout: 60000 });

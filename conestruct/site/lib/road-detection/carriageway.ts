@@ -79,3 +79,19 @@ export function carriagewayVerdict(facts: CarriagewayFacts | undefined): Carriag
   if (!facts.twinSearched) return "undecided";
   return "one_way_street";
 }
+
+/** #507: the relayed facts for one detected candidate, the shape the
+ *  picker's Save relays (`CarriagewayFacts`), for the mirror's words only. */
+export function candidateCarriageway(c: {
+  highway_class: string;
+  tags: { oneway: string | null };
+  twin_distance_m?: number | null;
+  twin_searched?: boolean;
+}): CarriagewayFacts {
+  return {
+    oneway: c.tags.oneway,
+    highwayClass: c.highway_class,
+    twinDistanceM: c.twin_distance_m ?? null,
+    twinSearched: c.twin_searched ?? false,
+  };
+}

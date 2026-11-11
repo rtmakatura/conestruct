@@ -211,7 +211,7 @@ async function one(w, h) {
     // road data answers seconds later; the local stub answers in time).
     await p.waitForFunction(() => {
       const d = document.querySelector("[role=dialog]");
-      const save = [...(d?.querySelectorAll("button") ?? [])].find((x) => /Save & Close/.test(x.innerText));
+      const save = [...(d?.querySelectorAll("button") ?? [])].find((x) => /Save (&|and) [Cc]lose/.test(x.innerText));
       return /PICK THE ROAD · \d+ FOUND|Which road/i.test(d?.innerText ?? "") || (save && !save.disabled);
     }, null, { timeout: 90000 });
     await p.waitForTimeout(1500);
@@ -224,7 +224,7 @@ async function one(w, h) {
     // adopted sole road (the local stub) both show.
     const pickedName = await p.locator("[role=dialog] [data-testid=road-picked] .road-picked-name").first().innerText({ timeout: 1000 }).catch(() => "");
     if (!/Colfax/.test(pickedName)) console.log(`${w}x${h} WARN road pick: ${found && !clicked ? "Colfax option found but its click failed" : "no Colfax option found"}; walking with ${pickedName ? `"${pickedName}"` : "no road"} picked`);
-    await p.getByRole("button", { name: "Save & Close" }).click();
+    await p.getByRole("button", { name: /Save (&|and) [Cc]lose/ }).click();
     await p.waitForSelector("[data-testid^=kind-chip-]", { state: "attached", timeout: 60000 });
     await p.waitForTimeout(2500);
     await p.locator("label.nyq-answer:has([data-testid=kind-chip-shoulder])").click();

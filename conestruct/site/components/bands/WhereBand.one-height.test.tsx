@@ -98,6 +98,9 @@ const DETECTION: RoadDetectOk = {
   placeName: null,
 };
 const SIDE = { work: { side: "right", travel: "with_geometry" }, label: "South side · eastbound traffic", built: true };
+// #507 ruling 3: a lone side is picked for you, which would answer the
+// side question these states keep open; a two-way street offers both.
+const SIDE_NORTH = { work: { side: "right", travel: "against_geometry" }, label: "North side · westbound traffic", built: true };
 
 vi.mock("../LocationPickerModal", () => ({
   LocationPickerModal: ({ onSave }: { onSave: (r: unknown) => void }) => (
@@ -146,7 +149,7 @@ const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => 
       approaches: [],
       coverage_ft: null,
       message: notMarked ? "Mark the cross street on the map to lay out the sides." : null,
-      side_options: [SIDE],
+      side_options: [SIDE, SIDE_NORTH],
     });
   }
   if (url.includes("/api/aerial-point")) return json(POINT);

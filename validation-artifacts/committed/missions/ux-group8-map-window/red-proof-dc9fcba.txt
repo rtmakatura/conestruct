@@ -1,0 +1,7 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/LocationPickerModal.map-window.test.tsx > #506: Save needs a road, or a direction when the lookup failed > a failed lookup leaves Save disabled until a direction is picked
+ FAIL  components/LocationPickerModal.map-window.test.tsx > #506: Save needs a road, or a direction when the lookup failed > Try again re-runs the lookup, and a found road replaces the fallback
+ FAIL  components/LocationPickerModal.map-window.test.tsx > #506: Save needs a road, or a direction when the lookup failed > several roads and none picked: Save disabled with the line
+ FAIL  components/LocationPickerModal.map-window.test.tsx > ruling 2: one entry per street > a grouped dual carriageway lists once, with traffic both ways
+ FAIL  components/LocationPickerModal.map-window.test.tsx > ruling 2: one entry per street > a one-way street reads One-way
+      Tests  5 failed (5)

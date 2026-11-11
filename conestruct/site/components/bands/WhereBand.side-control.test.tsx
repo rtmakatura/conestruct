@@ -44,6 +44,14 @@ const ONE_WAY_OPTIONS = [
   },
 ];
 
+// #507 ruling 3: a lone built side is picked for you, so a case that clicks
+// a side reads a two-way street's two curbs instead.
+const TWO_WAY_OPTIONS = [
+  { work: { side: "right", travel: "with_geometry" }, label: "West side · southbound traffic", built: true },
+  { work: { side: "right", travel: "against_geometry" }, label: "East side · northbound traffic", built: true },
+];
+let sideOptions: unknown[] = ONE_WAY_OPTIONS;
+
 // #491: set to make the geometry read fail (a 502), as a down backend does.
 let geometryFails = false;
 
@@ -62,7 +70,7 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
         approaches: [],
         coverage_ft: null,
         message: null,
-        side_options: ONE_WAY_OPTIONS,
+        side_options: sideOptions,
       }
     : url.includes("/api/render/audit")
       ? MIN_AUDIT
@@ -72,6 +80,7 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
 
 beforeEach(() => {
   geometryFails = false;
+  sideOptions = ONE_WAY_OPTIONS;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
 });
@@ -102,12 +111,33 @@ async function waitForOptions(): Promise<HTMLElement[]> {
 }
 
 describe("the side control offers only the sides a plan can be built for", () => {
-  it("an unbuildable (median / left) side is not rendered — not greyed, not named", async () => {
+  // #507 ruling 3 (RULE 5, stated): the one built curb of a one-way is now
+  // picked for you, written verbatim from the backend's option; the
+  // unbuilt one is still never rendered or named.
+  it("an unbuildable (median / left) side is not rendered — not greyed, not named; the one built side is picked for you", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
     await openWhere();
-    const options = await waitForOptions();
-    expect(options.map(sideText)).toEqual(["West side / Next to southbound traffic"]);
+    const deadline = Date.now() + 3000;
+    const sent = () =>
+      fetchMock.mock.calls
+        .filter(([u]) => String(u).includes("/api/render/corridor-geometry"))
+        .map((c) => JSON.parse(String((c as unknown[])[1] ? ((c as unknown[])[1] as RequestInit).body : "{}")).scenario);
+    while (!sent().some((x) => x.meta.work) && Date.now() < deadline) {
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 50));
+      });
+    }
+    expect(sent().find((x) => x.meta.work)?.meta.work).toEqual({ side: "right", travel: "with_geometry" });
+    expect(sent().some((x) => x.meta.work?.side === "median")).toBe(false);
+    await openWhere();
     const control = document.querySelector('[data-testid="where-questions"]');
+    // #507 ruling 3: the side picked for you says why, in its row.
+    // R145-11: with no carriageway facts the line names no road kind.
+    expect(control?.textContent).toContain(
+      "Only the west side can be laid out here, so the work is on that side, next to its traffic.",
+    );
+    // R145-12: a side picked for you has no Undo (it could only re-pick it).
+    expect(document.querySelector('[data-testid="step-undo-side"]')).toBeNull();
     expect(control?.textContent).not.toContain("not built");
     expect(control?.textContent).not.toContain("median");
     expect(control?.textContent).not.toContain("East side");
@@ -148,6 +178,7 @@ describe("the chosen side is visible, and the options are spaced", () => {
   // #439 ruling 5: the side is a radio row (#437's), its marker the 14 px
   // square (Rule 13: shape, not hue); ● (#407) retires with the chip.
   it("clicking a side checks its radio row; the row marks the choice by shape", async () => {
+    sideOptions = TWO_WAY_OPTIONS;
     render(<GeneratorShell mode="sandbox" initialScenario={UNSIDED} />);
     await openWhere();
     const [option] = await waitForOptions();

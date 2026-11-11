@@ -38,8 +38,48 @@ import {
   scrollCrossRowIn,
 } from "@/lib/cross-street-reveal";
 import { QuestionSteps, type StepQuestion } from "../QuestionSteps";
+import { axisLine } from "@/lib/road-axis";
+import {
+  candidateCarriageway,
+  carriagewayVerdict,
+  type CarriagewayFacts,
+} from "@/lib/road-detection/carriageway";
+import { swapToTwin } from "@/lib/scenarios/carriageway-swap";
 
 export const SIDE_QUESTION = "Which side of the road is the work on?";
+/** #507 ruling 3: the question names the confirmed street. */
+export function sideQuestionFor(street: string | null): string {
+  return street ? `Which side of ${street} is the work on?` : SIDE_QUESTION;
+}
+/** #507 ruling 3, the example's words: the one side of a one-way, picked
+ *  for you.  `side` is the backend's side word, lower case ("east"). */
+export function oneWayLine(street: string | null, side: string): string {
+  return `${street ?? "The road"} is one-way here, so the work is on the ${side} side, next to its traffic.`;
+}
+
+/** #507 R145-11 (Rule 12): the line for a side picked for you, worded by
+ *  the carriageway verdict (the scenario's relayed facts, else the
+ *  confirmed candidate's; the MIRROR in carriageway.ts, for words only).
+ *  "one-way" is said of a one-way street only. */
+export function loneSideLine(scenario: Scenario, street: string | null, side: string): string {
+  const c = scenario.meta.confirmedRoad?.candidate;
+  const facts =
+    (scenario as { carriageway?: CarriagewayFacts }).carriageway ?? (c ? candidateCarriageway(c) : undefined);
+  const v = carriagewayVerdict(facts);
+  if (v === "one_way_street") return oneWayLine(street, side);
+  if (v === "divided") {
+    return `${street ?? "The road"} is divided here, so the work is on the ${side} side, next to the traffic on this side.`;
+  }
+  return `Only the ${side} side can be laid out here, so the work is on that side, next to its traffic.`;
+}
+
+/** #507: the confirmed road's name while it still describes the pin (the
+ *  wire relay's staleness key, lib/scenarios/centerline-relay.ts). */
+function confirmedStreet(meta: ScenarioMeta): string | null {
+  const c = meta.confirmedRoad;
+  if (!c || c.pinLat !== meta.lat || c.pinLng !== meta.lng) return null;
+  return c.candidate.name ?? c.candidate.ref ?? null;
+}
 export const KIND_QUESTION = "What kind of work is it?";
 /** W3: traces to `_side_options` (each option is the right edge of the
  *  traffic beside it) and the pin model (the corridor is laid out from the
@@ -152,6 +192,8 @@ export function sideLines(label: string): { line1: string; line2: string | null 
   const line1 = label.slice(0, at);
   const rest = label.slice(at + 3);
   if (/^\w+bound traffic$/.test(rest)) return { line1, line2: `Next to ${rest}` };
+  // #507 ruling 5 (F2): "traffic heading southwest" for a diagonal.
+  if (/^traffic heading \w+$/.test(rest)) return { line1, line2: `Next to ${rest}` };
   return { line1, line2: rest.charAt(0).toUpperCase() + rest.slice(1) };
 }
 
@@ -250,6 +292,24 @@ export function WhereQuestions({
   const options: SideOption[] = (g?.side_options ?? []).filter((o) => o.built);
   const selected = selectedSideOption(options, scenario.meta.work);
   const refused = g?.side_refused ?? null;
+  const street = confirmedStreet(scenario.meta);
+  // #507 ruling 3 (R145-4): the backend offers one side only (a one-way
+  // whose other curb isn't built, or one carriageway of a divided road),
+  // so it is picked for you and a line says why.  Written verbatim from
+  // the backend's option, like a click (Rule 3).
+  // Never over a stored side (a #315 refusal keeps its line, nothing reset).
+  const lone =
+    showSide && geometry.state === "ready" && options.length === 1 && !refused ? options[0] : null;
+  // Never over a side the band is asking again on purpose: a kind change
+  // that changed the sides (#440 X20, `sidesChanged`), a Done that cleared
+  // it (#485 E1, `reasked`), or while the Edit panel has the column (#485,
+  // `waiting`: Cancel must find the scenario as the edit left it).
+  const reasking = sidesChanged || waiting || Boolean(reasked?.has("side"));
+  useEffect(() => {
+    if (!lone || selected || locked || reasking || scenario.meta.work) return;
+    setMeta({ ...scenario.meta, work: { ...lone.work } });
+  }, [lone, selected, locked, reasking, scenario.meta, setMeta]);
+  const axis = !street && !g?.side_options?.some((o) => o.work.travel) ? scenario.meta.roadAxis : undefined;
 
   // #446 ruling 3: a tap that found a street focuses the ✓ row's heading,
   // then brings the row and "Next question" into view, once per tap.  A
@@ -356,8 +416,16 @@ export function WhereQuestions({
     sideQuestion = {
       id: "side",
       title: "which side of the road the work is on",
-      question: SIDE_QUESTION,
-      explanation: SIDE_WHY,
+      question: sideQuestionFor(street),
+      // #507: the one-way why-line (ruling 3), the fallback's line (ruling
+      // 5, F2), else W3's line.
+      // (Not while re-asking: the side isn't picked then, so the line
+      // would say a choice was made that wasn't.)
+      explanation: lone && !reasking
+        ? loneSideLine(scenario, street, sideLines(lone.label).line1.replace(/ side$/, "").toLowerCase())
+        : axis
+          ? axisLine(axis)
+          : SIDE_WHY,
       options: options.map((o) => {
         const lines = sideLines(o.label);
         return { value: o.label, label: lines.line1, consequence: lines.line2, testid: "side-option" };
@@ -367,7 +435,16 @@ export function WhereQuestions({
         ? {
             className: "confirmed",
             glyph: "✓",
-            text: `${SIDE_QUESTION.replace(/\?$/, "")}: ${sideLines(selected.label).line1}`,
+            // #507 R145-12: a side picked for you has no Undo (it would only
+            // re-pick the same side: a fake control, R145-7's rule).
+            noUndo: Boolean(lone && !reasking),
+            // #507 ruling 3: a side picked for you says why in its row
+            // (walk D1: the card moves on, so the question's line was never
+            // seen); any other answer names the street the question named.
+            text:
+              lone && !reasking
+                ? loneSideLine(scenario, street, sideLines(selected.label).line1.replace(/ side$/, "").toLowerCase())
+                : `${sideQuestionFor(street).replace(/\?$/, "")}: ${sideLines(selected.label).line1}`,
           }
         : null,
       foot: () => <span className="nyq-source" />,
@@ -581,7 +658,10 @@ export function WhereQuestions({
           if (locked) return;
           if (q.id === "side") {
             const o = options.find((x) => x.label === v);
-            if (o && o !== selected) setMeta({ ...scenario.meta, work: { ...o.work } });
+            if (!o || o === selected) return;
+            // #507 R145-3: a side on the other carriageway swaps the road.
+            const swapped = o.carriageway === "twin" ? swapToTwin(scenario.meta, o.work) : null;
+            setMeta(swapped ?? { ...scenario.meta, work: { ...o.work } });
           } else if (q.id === "kind") {
             onKindChange(v as ScenarioKind);
           }

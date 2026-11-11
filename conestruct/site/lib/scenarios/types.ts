@@ -377,7 +377,7 @@ export type PinModel = "corridor_end" | "work_start";
 export interface WorkPlacement {
   side?: "right" | "left" | "median";
   travel?: "with_geometry" | "against_geometry";
-  heading?: "N" | "E" | "S" | "W";
+  heading?: "N" | "E" | "S" | "W" | "NE" | "SE" | "SW" | "NW";
 }
 
 /**
@@ -387,6 +387,13 @@ export interface WorkPlacement {
  * serialization from ``confirmedRoad``; the backend honours the one-way
  * tag with it (ruling 8, #298).
  */
+/** #507 ruling 4: the four ways a road can run, as the fallback asks. */
+export type RoadAxis =
+  | "east_west"
+  | "north_south"
+  | "northeast_southwest"
+  | "northwest_southeast";
+
 export interface RoadDirection {
   osmBearingDeg: number;
   oneway: string | null;
@@ -488,6 +495,12 @@ export interface ScenarioMeta {
   work?: WorkPlacement;
   /** #290 — wire-only road direction facts; see ``RoadDirection``. */
   roadDirection?: RoadDirection;
+  /** #507 — wire-only: a grouped street's other carriageway, read only by
+   *  the backend's side options (``schemas.TwinRoad``). */
+  twinRoad?: { centerline: [number, number][]; osmBearingDeg: number; oneway: string | null };
+  /** #507 ruling 4/5 — with no road found, the way the operator said the
+   *  road runs; persisted, and read by the backend's side options. */
+  roadAxis?: RoadAxis;
   /**
    * #290 ruling 10 — set when a plan saved under ``"corridor_end"`` was
    * opened in the work-start model (``toScenario``): the pin is kept,

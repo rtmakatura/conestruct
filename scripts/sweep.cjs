@@ -130,7 +130,7 @@ async function openPickerAndPin(page) {
   await page.waitForTimeout(4000);
 }
 async function save(page) {
-  await page.getByRole("button", { name: "Save & Close" }).click();
+  await page.getByRole("button", { name: /Save (&|and) [Cc]lose/ }).click();
   await page.waitForTimeout(2000);
 }
 async function openWhere(page) {

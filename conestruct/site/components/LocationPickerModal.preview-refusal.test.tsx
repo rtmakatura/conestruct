@@ -7,7 +7,7 @@
 //
 // Rule 11: the bug lived in the request the modal sent (a jurisdiction
 // guess for the old pin) and in the line the panel printed for the
-// backend's 400 ("Couldn't reach the layout service").  The fetch stub
+// backend's 400 ("We couldn't draw the work on the map").  The fetch stub
 // applies the backend's own pin check (src/api/render_api.py `input_guesses`:
 // a jurisdiction guess whose pin isn't meta.lat/lng is a 400 guess_stale),
 // so the assertions read the payload and the rendered panel.
@@ -23,7 +23,8 @@ const PIN: [number, number] = [39.7402, -104.9636];
 // About 27 ft east of PIN (the issue's move).
 const MOVED: [number, number] = [39.7402, -104.9635];
 
-const UNREACHABLE = /Couldn.t reach the layout\s+service/;
+// #507 ruling 4 (R145-9): the outage line, in plain words.
+const UNREACHABLE = /We couldn.t draw the work on the map\./;
 const GUESS_STALE_MESSAGE =
   "Jurisdiction is marked as guessed, but it was guessed at a pin this plan no longer has. Set jurisdiction in Step 2, then generate again.";
 
@@ -220,7 +221,7 @@ describe("#430: moving the pin while the jurisdiction is a guess", () => {
 });
 
 describe("#430: a refusal reads as a refusal, an outage as an outage", () => {
-  it("a 400 shows the backend's message, not 'Couldn't reach the layout service'", async () => {
+  it("a 400 shows the backend's message, not 'We couldn't draw the work on the map'", async () => {
     stubFetches(() => ({
       ok: false,
       status: 400,
@@ -234,7 +235,7 @@ describe("#430: a refusal reads as a refusal, an outage as an outage", () => {
       timeout: 3000,
     });
     expect(line.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      `Corridor preview declined: ${GUESS_STALE_MESSAGE} You can still save; the plan is validated when generated.`,
+      `The work can't be drawn here: ${GUESS_STALE_MESSAGE} You can still save; the plan is checked when it's made.`,
     );
     expect(screen.queryByText(UNREACHABLE)).toBeNull();
   });
@@ -253,7 +254,7 @@ describe("#430: a refusal reads as a refusal, an outage as an outage", () => {
     // No closing punctuation in the backend's words: the line adds the
     // period, so "You can still save" starts its own sentence.
     expect(line.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Corridor preview declined: Unknown jurisdiction key: 'nowhere'. You can still save; the plan is validated when generated.",
+      "The work can't be drawn here: Unknown jurisdiction key: 'nowhere'. You can still save; the plan is checked when it's made.",
     );
     expect(screen.queryByText(UNREACHABLE)).toBeNull();
   });
@@ -272,11 +273,11 @@ describe("#430: a refusal reads as a refusal, an outage as an outage", () => {
       timeout: 3000,
     });
     expect(line.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Corridor preview declined. You can still save; the plan is validated when generated.",
+      "The work can't be drawn here. You can still save; the plan is checked when it's made.",
     );
   });
 
-  it("a network failure still says 'Couldn't reach the layout service'", async () => {
+  it("a network failure still says 'We couldn't draw the work on the map'", async () => {
     stubFetches("throw");
     mountModal();
     typeCoords(PIN);
@@ -284,7 +285,7 @@ describe("#430: a refusal reads as a refusal, an outage as an outage", () => {
     expect(screen.queryByTestId("picker-corridor-declined")).toBeNull();
   });
 
-  it("a 502 from the proxy still says 'Couldn't reach the layout service'", async () => {
+  it("a 502 from the proxy still says 'We couldn't draw the work on the map'", async () => {
     stubFetches(() => ({ ok: false, status: 502, json: async () => ({}) }));
     mountModal();
     typeCoords(PIN);

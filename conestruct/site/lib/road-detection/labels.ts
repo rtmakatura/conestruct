@@ -83,6 +83,15 @@ export function candidateLabel(c: RoadCandidate): CandidateLabel {
   return { primary, sub, direction };
 }
 
+/** #507 (Rule 10, ruling 2): a grouped street's direction, or null while
+ *  its side is unanswered.  The side sets the carriageway, so until then
+ *  the lead carriageway's direction is not the plan's: the street is
+ *  named without one. */
+export function plannedDirection(c: RoadCandidate, sided: boolean): string | null {
+  if (c.twin && !sided) return null;
+  return candidateLabel(c).direction;
+}
+
 /** #234 — the cross street as every surface names it: the picker's
  *  cross-street summary and the WHERE fact line both read this, so the
  *  two cannot name one crossing two ways (the confirmedRoadLabel idiom).

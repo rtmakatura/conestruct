@@ -39,7 +39,7 @@ from __future__ import annotations
 import math
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Literal
 
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
@@ -943,6 +943,9 @@ def build_corridor(
 # is a four-way choice, "traffic heads N / E / S / W" — coarse by design,
 # and labelled coarse where it is shown.
 HEADING_DEG: dict[str, float] = {"N": 0.0, "E": 90.0, "S": 180.0, "W": 270.0}
+# #507 ruling 5: the diagonals, offered only for a road the operator said
+# runs diagonally (``ScenarioMeta.roadAxis``); the four above are unchanged.
+HEADING_DEG.update({"NE": 45.0, "SE": 135.0, "SW": 225.0, "NW": 315.0})
 
 
 def travel_bearing_at(
@@ -979,7 +982,9 @@ def travel_bearing_at(
         tangent = _initial_bearing_deg(*centerline[best_seg], *centerline[best_seg + 1])
         return tangent if travel == "with_geometry" else (tangent + 180.0) % 360.0
     if heading not in HEADING_DEG:
-        raise ValueError("no confirmed road: meta.work.heading (N / E / S / W) sets the direction")
+        raise ValueError(
+            "no confirmed road: meta.work.heading (N / E / S / W or a diagonal) sets the direction"
+        )
     return HEADING_DEG[heading]
 
 
@@ -996,14 +1001,72 @@ def against_legal_direction(
     must never direct traffic that isn't there (#158's reason, #298).
     More than 90° from the legal direction is "against".
     """
-    if oneway == "yes":
-        legal = osm_bearing_deg % 360.0
-    elif oneway == "-1":
-        legal = (osm_bearing_deg + 180.0) % 360.0
-    else:
+    offset = legal_offset_deg(oneway)
+    if offset is None:
         return False
+    legal = (osm_bearing_deg + offset) % 360.0
     delta = abs(((travel_bearing_deg - legal + 540.0) % 360.0) - 180.0)
     return delta > 90.0
+
+
+def legal_offset_deg(oneway: str | None) -> float | None:
+    """The one-way tag reading the side choices use (#290 ruling 8, #298).
+
+    The legal direction relative to the way's OSM vertex order: ``yes``
+    runs with it (0), ``-1`` against it (180).  Anything else gives None:
+    no direction is ruled out, so ``_side_options`` offers both edges.
+    One producer for the side choices (``against_legal_direction``) and
+    the road list's words (``travel_reading``, #507 / #512).
+    """
+    if oneway == "yes":
+        return 0.0
+    if oneway == "-1":
+        return 180.0
+    return None
+
+
+# #512: the OSM tags that change direction by time of day.  Both ways can
+# arrive, never both at once, so neither "one way" nor "both ways" is true.
+CHANGES_BY_TIME_TAGS = frozenset({"reversible", "alternating"})
+
+# #512: classes OSM reads as one-way with no tag (carriageway.py, #332).
+# The side choices read an untagged way as two-way, so the list says no
+# direction for these until that reading changes (#512's follow-up).
+IMPLIED_ONE_WAY_CLASSES = frozenset({"motorway", "motorway_link"})
+
+TravelReading = Literal["one_way", "both_ways", "changes_by_time", "unknown"]
+
+
+def travel_reading(
+    oneway: str | None, highway_class: str | None, *, twin_oneway: str | None = None
+) -> TravelReading:
+    """How traffic runs on one road-list entry (#507 ruling 2, #512).
+
+    Built on ``legal_offset_deg``, the reading the side choices use, so
+    the list never names a direction the side question contradicts:
+
+    * a street grouped from two one-way carriageways (``twin_oneway``
+      set, both one-way) → ``both_ways``, one direction on each;
+    * a one-way tag → ``one_way``;
+    * ``reversible`` / ``alternating`` → ``changes_by_time``;
+    * an untagged (or oddly tagged) motorway or link → ``unknown``: OSM
+      implies one-way, the side choices offer both, so neither is said;
+    * untagged or ``oneway=no`` → ``both_ways``;
+    * any other tag value → ``unknown`` (Rule 10).
+    """
+    if twin_oneway is not None:
+        if legal_offset_deg(oneway) is not None and legal_offset_deg(twin_oneway) is not None:
+            return "both_ways"
+        return "unknown"
+    if legal_offset_deg(oneway) is not None:
+        return "one_way"
+    if oneway in CHANGES_BY_TIME_TAGS:
+        return "changes_by_time"
+    if highway_class in IMPLIED_ONE_WAY_CLASSES:
+        return "unknown"
+    if oneway is None or oneway == "no":
+        return "both_ways"
+    return "unknown"
 
 
 def opposing_work_start(primary: WorkCorridor) -> tuple[tuple[float, float], float]:

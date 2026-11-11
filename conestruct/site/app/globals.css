@@ -5401,6 +5401,243 @@ input[type="number"] {
   line-height: 1.4;
   color: var(--ink-mute);
 }
+/* #507 ruling 1 (W1, F1): the map window in group 1's type.  Inter
+   throughout, sentence case; every size and colour reads an existing
+   token (no new hex, ruling 8).  The heading is 19 / 600 (the existing
+   --fs-step-question-520), lines 13.5, hints 12.5. */
+.map-window {
+  font-family: var(--font-sans);
+  color: var(--ink);
+}
+.map-window .mw-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-block);
+  padding: var(--space-block) var(--space-section);
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.map-window .mw-head-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.map-window .mw-title {
+  margin: 0;
+  font-size: var(--fs-step-question-520);
+  font-weight: 600;
+  color: var(--ink);
+}
+.map-window .mw-line {
+  margin: 0;
+  font-size: var(--fs-body-value);
+  line-height: 1.5;
+  color: var(--ink-on-dark);
+}
+.map-window .mw-sub {
+  margin: 0;
+  font-size: var(--fs-refusal);
+  font-weight: 600;
+  color: var(--ink);
+}
+.map-window .mw-hint,
+.map-window .mw-note {
+  margin: 0;
+  font-size: var(--fs-field-label);
+  line-height: 1.4;
+  color: var(--ink-faint);
+}
+.map-window .mw-note-fail {
+  color: var(--fail);
+}
+.map-window .mw-close {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-mute);
+}
+.map-window .mw-close:hover {
+  color: var(--ink);
+}
+.map-window .mw-search {
+  display: flex;
+  gap: var(--space-tight);
+  padding: var(--space-block) 20px;
+  flex-shrink: 0;
+}
+.map-window .mw-search-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-refusal);
+}
+.map-window .mw-btn {
+  min-height: 44px;
+  padding: 0 var(--space-block);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  border-radius: 0;
+  white-space: nowrap;
+}
+.map-window .mw-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.map-window .mw-btn-line {
+  border: 1px solid var(--act);
+  background: transparent;
+  color: var(--act);
+}
+.map-window .mw-btn-line:hover:not(:disabled) {
+  border-color: var(--act-bright);
+  color: var(--act-bright);
+}
+.map-window .mw-btn-quiet {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+}
+.map-window .mw-btn-pri {
+  border: 0;
+  padding: 0 var(--space-section);
+  background: var(--act);
+  color: var(--on-act);
+}
+.map-window .mw-btn-pri:hover:not(:disabled) {
+  background: var(--act-bright);
+}
+.map-window .mw-self-start {
+  align-self: flex-start;
+}
+.map-window .mw-link {
+  min-height: 44px;
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  color: var(--act);
+}
+.map-window .mw-coords-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-tight);
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+.map-window .mw-coords {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 20px var(--space-tight);
+  flex-shrink: 0;
+}
+.map-window .mw-map-off {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-tight);
+  padding: var(--space-section);
+  text-align: center;
+  background: var(--da-ground);
+}
+/* Zoom is the map's one control (ruling 1), 44 px at every width. */
+.map-window .picker-map .mapboxgl-ctrl-group button {
+  width: 44px;
+  height: 44px;
+}
+.map-window .mw-rail-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-section);
+  padding: 20px var(--space-section);
+}
+.map-window .mw-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+.map-window .road-pick-panel.mw-roads {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  border: 0;
+  background: transparent;
+}
+.map-window .mw-road-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+.map-window .mw-road-rows .road-pick-row {
+  min-height: 64px;
+}
+/* F1: the lookup-failed message on the flag ground with the --warn
+   border, then the four directions two by two. */
+.map-window .mw-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: 12px var(--space-block);
+  border: 1px solid var(--warn);
+  background: var(--vd-flag-ground);
+  margin-bottom: 12px;
+}
+.map-window .mw-fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  min-width: 0;
+}
+.map-window .mw-fieldset > legend {
+  padding: 0 0 var(--space-tight);
+}
+.map-window .mw-axis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-tight);
+}
+.map-window .mw-axis {
+  color: var(--ink-on-dark);
+}
+.map-window .mw-axis.is-picked {
+  color: var(--act-bright);
+  /* #511: picked differs from hover (border colour only) by the filled
+     mark and a second border ring, drawn inside so nothing moves. */
+  box-shadow: inset 0 0 0 1px var(--act);
+}
+.map-window .mw-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-tight) 12px;
+  padding: 12px var(--space-section);
+  border-top: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.map-window .mw-foot-line {
+  flex-basis: 100%;
+  text-align: right;
+  font-size: var(--fs-field-label);
+  color: var(--ink-faint);
+}
+@media screen and (min-width: 980px) {
+  .map-window .mw-foot {
+    flex-wrap: nowrap;
+  }
+  .map-window .mw-foot-line {
+    flex-basis: auto;
+  }
+}
 /* #436 rulings 1-3 (design-refs: RoadA.dc.html): the road-picked row in
    three lines inside the band (padding 12 / 16).  Line 1 the ✓, ROAD and
    Change; 8 px; the name 24 px in (the 16 px glyph cell + 8); 4 px; the

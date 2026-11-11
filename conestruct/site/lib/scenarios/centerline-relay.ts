@@ -38,5 +38,22 @@ export function withRelayedCenterline<S extends Scenario>(scenario: S): S {
     ...(confirmed.candidate.name ? { roadName: confirmed.candidate.name } : {}),
     ...(confirmed.candidate.ref ? { roadRef: confirmed.candidate.ref } : {}),
   };
-  return { ...scenario, meta: { ...meta, centerline: geometry, ...roadDirection, ...identity } };
+  // #507 ruling 2: a grouped street's other carriageway rides with the
+  // same key and only under work_start, for the side options alone
+  // (render_api._twin_side_options).
+  const twin = confirmed.candidate.twin;
+  const twinRoad =
+    meta.pinModel === "work_start" && twin?.geometry && twin.geometry.length >= 2
+      ? {
+          twinRoad: {
+            centerline: twin.geometry,
+            osmBearingDeg: ((twin.bearing % 360) + 360) % 360,
+            oneway: twin.tags?.oneway ?? null,
+          },
+        }
+      : {};
+  return {
+    ...scenario,
+    meta: { ...meta, centerline: geometry, ...roadDirection, ...twinRoad, ...identity },
+  };
 }

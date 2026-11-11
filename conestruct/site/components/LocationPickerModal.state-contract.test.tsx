@@ -12,9 +12,11 @@
 //   fires zero detect calls.
 //
 //   LOST CONFIRMATIONS — reopening with a saved pin + confirmed road
-//   restores the selection with ZERO detect calls; the explicit
-//   "Re-detect roads" affordance is the only fresh-analysis path at an
-//   unmoved pin; a pin move after reopen clears and re-detects.
+//   restores the selection with ZERO detect calls; a pin move after
+//   reopen clears and re-detects.  #507 ruling 4 (RULE 5, stated): the
+//   "Re-detect roads" button left the found-roads state; the only
+//   fresh-analysis path at an unmoved pin is "Try again", and only after
+//   a failed lookup.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -47,6 +49,8 @@ function candidate(overrides: Partial<RoadCandidate>): RoadCandidate {
       turn_lanes_backward: null,
     },
     signal_distance_m: null,
+    // #512: the backend's answer for a one-way trunk (/render/road-travel).
+    travel: { travel: "one_way", carriageway: "divided" },
     ...overrides,
   };
 }
@@ -176,9 +180,14 @@ function typeCoords(lat = "40.0176", lng = "-105.1300") {
   });
 }
 
+// #507 ruling 2: the road list's rows (role=radio); a row names the road
+// and its distance, so rows are told apart by those, not by way IDs.
+const rows = () => screen.queryAllByRole("radio");
+const pickedRow = () => rows().find((r) => r.getAttribute("aria-checked") === "true") ?? null;
+
 function saveButton(): HTMLButtonElement {
   return screen.getByRole("button", {
-    name: "Save & Close",
+    name: "Save and close",
   }) as HTMLButtonElement;
 }
 
@@ -204,23 +213,21 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     typeCoords();
     await respond(pendingDetects[0], detection([EASTBOUND, WESTBOUND]));
 
-    await screen.findByText(/PICK THE ROAD · 2 FOUND/);
-    fireEvent.click(screen.getByRole("radio", { name: /eastbound/i }));
-    // Appears in both the collapsed card summary and the bearing caption.
-    expect(screen.getAllByText(/way 111001/).length).toBeGreaterThan(0);
+    await screen.findAllByRole("radio");
+    fireEvent.click(rows()[0]);
+    expect(pickedRow()?.textContent).toBe("E Baseline RdDivided road · 8 m from your pin");
 
     // Move the pin; the second request stays unanswered — this IS the
     // stale window.  Nothing from the previous pin may render, not
-    // even dimmed: no card, no selection caption, no property rows —
-    // only the loading skeleton.
+    // even dimmed: no rows, no selection — only the loading line.
     fireEvent.change(screen.getByLabelText("Latitude"), {
       target: { value: "40.1000" },
     });
     expect(pendingDetects).toHaveLength(2);
-    expect(screen.queryByText(/PICK THE ROAD/)).toBeNull();
-    expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.queryByTestId("road-picked")).toBeNull();
-    expect(screen.getByText(/Detecting roads at pin…/)).toBeTruthy();
+    expect(rows()).toHaveLength(0);
+    expect(screen.queryByText(/E Baseline Rd/)).toBeNull();
+    expect(screen.queryByTestId("road-pick-panel")).toBeNull();
+    expect(screen.getByText(/Looking up the roads at your pin…/)).toBeTruthy();
   });
 
   it("out-of-order responses: a slow answer from a superseded pin never renders", async () => {
@@ -233,13 +240,13 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
 
     // Fast new response renders.
     await respond(pendingDetects[1], detection([OTHER_ROAD]));
-    await screen.findAllByText(/way 222001/);
+    await screen.findByText("S Public Rd");
 
     // The old pin's response arrives late — dropped by the token guard.
     await respond(pendingDetects[0], detection([EASTBOUND, WESTBOUND]));
-    expect(screen.queryByText(/PICK THE ROAD/)).toBeNull();
-    expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.getAllByText(/way 222001/).length).toBeGreaterThan(0);
+    expect(rows()).toHaveLength(1);
+    expect(screen.queryByText(/E Baseline Rd/)).toBeNull();
+    expect(pickedRow()?.textContent).toContain("S Public Rd");
   });
 
   it("a coarse geocode (locality) fires ZERO detect calls and asks for a pin", async () => {
@@ -253,7 +260,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     fireEvent.click(screen.getByRole("button", { name: "Search" }));
 
     await screen.findByText(
-      "Area located. Drop a pin on the road to detect roads.",
+      "That search found a town or area. Tap the map on the road where the work starts.",
     );
     expect(pendingDetects).toHaveLength(0);
     // No pin was placed either — Save stays gated on a pin.
@@ -276,7 +283,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     expect(pendingDetects).toHaveLength(1);
     expect(
       screen.queryByText(
-        "Area located. Drop a pin on the road to detect roads.",
+        "That search found a town or area. Tap the map on the road where the work starts.",
       ),
     ).toBeNull();
   });
@@ -336,7 +343,7 @@ describe("#347 cross-street search", () => {
     search("Colfax & Main");
 
     await screen.findByText(
-      "Area located. Drop a pin on the road to detect roads.",
+      "That search found a town or area. Tap the map on the road where the work starts.",
     );
     expect(pendingDetects).toHaveLength(0);
   });
@@ -346,10 +353,10 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
   it("reopening with a saved pin + confirmed road restores the selection with ZERO detect calls", async () => {
     mountModal(RESTORE_INITIAL);
 
-    // The confirmed road is on screen as-is: selection caption, road
-    // properties, Save enabled — and no network round trip happened.
-    expect(screen.getAllByText(/way 111001/).length).toBeGreaterThan(0);
-    expect(screen.getByTestId("road-picked")).toBeTruthy();
+    // The confirmed road is on screen as-is: its row checked, Save
+    // enabled — and no network round trip happened.
+    expect(rows()).toHaveLength(1);
+    expect(pickedRow()?.textContent).toBe("E Baseline RdDivided road · 8 m from your pin");
     expect(saveButton().disabled).toBe(false);
     expect(pendingDetects).toHaveLength(0);
 
@@ -369,27 +376,43 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
       confirmedRoad: { ...CONFIRMED, pinLat: 39.0, pinLng: -104.0 },
     });
     // No restored selection; tokenless env runs no auto-detect either,
-    // so the panel sits at idle — but nothing claims a confirmed road.
-    expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.queryByTestId("road-picked")).toBeNull();
+    // so the panel sits at idle — but nothing claims a confirmed road,
+    // and (#507 ruling 6) Save does not pretend one was picked.
+    expect(rows()).toHaveLength(0);
+    expect(screen.queryByText(/E Baseline Rd/)).toBeNull();
+    expect(saveButton().disabled).toBe(true);
   });
 
-  it("'Re-detect roads' is the explicit fresh-analysis path at an unmoved pin", async () => {
+  // #507 ruling 4 (RULE 5, stated): no Re-detect beside a found road.
+  it("a restored road offers no re-detect control: nothing re-analyses an unmoved, answered pin", async () => {
     mountModal(RESTORE_INITIAL);
     expect(pendingDetects).toHaveLength(0);
+    expect(screen.queryByRole("button", { name: /Re-detect roads/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Try again" })).toBeNull();
+    expect(pendingDetects).toHaveLength(0);
+  });
 
-    fireEvent.click(screen.getByRole("button", { name: /Re-detect roads/ }));
+  it("'Try again' (after a failed lookup) is the explicit fresh-analysis path at an unmoved pin", async () => {
+    mountModal();
+    typeCoords();
+    await respond(pendingDetects[0], {
+      ...detection([]),
+      scan_status: "unavailable",
+    } as RoadDetectResponse);
+    await screen.findByText("We couldn't look up the roads here.");
 
-    // Detection fires at the SAME pin; the restored selection clears
-    // immediately (skeleton in its place).
-    expect(pendingDetects).toHaveLength(1);
-    expect(pendingDetects[0].body.lat).toBeCloseTo(40.0176);
-    expect(pendingDetects[0].body.lng).toBeCloseTo(-105.13);
-    expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.getByText(/Detecting roads at pin…/)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
 
-    await respond(pendingDetects[0], detection([WESTBOUND]));
-    await screen.findAllByText(/way 111002/);
+    // Detection fires at the SAME pin; the failure clears immediately
+    // (the loading line in its place).
+    expect(pendingDetects).toHaveLength(2);
+    expect(pendingDetects[1].body.lat).toBeCloseTo(40.0176);
+    expect(pendingDetects[1].body.lng).toBeCloseTo(-105.13);
+    expect(screen.queryByText("We couldn't look up the roads here.")).toBeNull();
+    expect(screen.getByText(/Looking up the roads at your pin…/)).toBeTruthy();
+
+    await respond(pendingDetects[1], detection([WESTBOUND]));
+    await screen.findByText("Divided road · 15 m from your pin");
   });
 
   it("a pin move after reopen clears the restored road and re-detects (rule 1 applies)", async () => {
@@ -401,11 +424,11 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     });
 
     expect(pendingDetects).toHaveLength(1);
-    expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.getByText(/Detecting roads at pin…/)).toBeTruthy();
+    expect(rows()).toHaveLength(0);
+    expect(screen.getByText(/Looking up the roads at your pin…/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([OTHER_ROAD]));
-    await screen.findAllByText(/way 222001/);
+    await screen.findByText("S Public Rd");
 
     // The re-save is keyed to the NEW pin with the new road.
     fireEvent.click(saveButton());
@@ -419,8 +442,8 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     mountModal();
     typeCoords();
     await respond(pendingDetects[0], detection([EASTBOUND, WESTBOUND]));
-    await screen.findByText(/PICK THE ROAD/);
-    fireEvent.click(screen.getByRole("radio", { name: /westbound/i }));
+    await screen.findAllByRole("radio");
+    fireEvent.click(rows()[1]);
     fireEvent.click(saveButton());
     expect(onSave.mock.calls[0][0].confirmedRoad.method).toBe("operator_pick");
     expect(onSave.mock.calls[0][0].confirmedRoad.candidate.way_id).toBe(
@@ -433,7 +456,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     mountModal();
     typeCoords();
     await respond(pendingDetects[0], detection([EASTBOUND]));
-    await screen.findByTestId("road-picked");
+    await screen.findByRole("radio", { checked: true });
     fireEvent.click(saveButton());
     expect(onSave.mock.calls[0][0].confirmedRoad.method).toBe("auto_single");
   });
@@ -442,9 +465,12 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     mountModal();
     typeCoords();
     await respond(pendingDetects[0], detection([]));
-    await screen.findByText(/No road detected within 30 m/i);
+    await screen.findByText(/No mapped road runs within 30 m/i);
+    // #507 ruling 6: the save needs the way the road runs first.
+    fireEvent.click(screen.getByRole("radio", { name: "Northeast–southwest" }));
     fireEvent.click(saveButton());
     expect(onSave.mock.calls[0][0].confirmedRoad).toBeNull();
+    expect(onSave.mock.calls[0][0].roadAxis).toBe("northeast_southwest");
   });
 });
 
@@ -457,22 +483,32 @@ describe("in-flight detection gates Save (#189)", () => {
     // classification and, on gated kinds, the safety relays.
     expect(pendingDetects).toHaveLength(1);
     expect(saveButton().disabled).toBe(true);
-    expect(screen.getByText(/Detecting road…/)).toBeTruthy();
+    expect(screen.getByText(/Looking up the roads. Save turns on/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([EASTBOUND]));
-    await screen.findByTestId("road-picked");
+    await screen.findByRole("radio", { checked: true });
     expect(saveButton().disabled).toBe(false);
-    expect(screen.queryByText(/Detecting road…/)).toBeNull();
+    expect(screen.queryByText(/Looking up the roads. Save turns on/)).toBeNull();
   });
 
-  it("a resolved-failed detection (zero candidates) still permits save — only in-flight blocks", async () => {
+  // #506 / #507 ruling 6 (RULE 5, stated): this used to pin "a settled
+  // failure stays saveable".  Reversed on purpose: Save waits for the way
+  // the road runs, and the waiting line gives way to the blocked line.
+  it("a resolved-failed detection (zero candidates) blocks Save until a direction is picked", async () => {
     mountModal();
     typeCoords();
     await respond(pendingDetects[0], detection([]));
-    await screen.findByText(/No road detected within 30 m/i);
+    await screen.findByText(/No mapped road runs within 30 m/i);
+    expect(saveButton().disabled).toBe(true);
+    expect(screen.queryByText(/Looking up the roads. Save turns on/)).toBeNull();
+    expect(screen.getByTestId("picker-save-blocked").textContent).toBe(
+      "Pick a road, or a direction if the lookup failed.",
+    );
+    fireEvent.click(screen.getByRole("radio", { name: "East–west" }));
     expect(saveButton().disabled).toBe(false);
-    expect(screen.queryByText(/Detecting road…/)).toBeNull();
     fireEvent.click(saveButton());
     expect(onSave.mock.calls[0][0].classification).toBeNull();
+    expect(onSave.mock.calls[0][0].confirmedRoad).toBeNull();
+    expect(onSave.mock.calls[0][0].roadAxis).toBe("east_west");
   });
 });

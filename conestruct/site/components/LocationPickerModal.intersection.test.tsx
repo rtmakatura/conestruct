@@ -12,7 +12,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { LocationPickerModal, type LocationPickerResult } from "./LocationPickerModal";
 import { crossStreetLabel } from "@/lib/road-detection/labels";
-import type { RoadCandidate } from "@/lib/road-detection/types";
+import type { ConfirmedRoad, RoadCandidate } from "@/lib/road-detection/types";
+import { classifyFromCandidate } from "@/lib/road-detection/classify";
 
 const PIN = { lat: 39.9936, lng: -105.0897 };
 const X = { lat: 39.9941, lng: -105.0897, name: "W 38th Ave" };
@@ -38,6 +39,19 @@ const MAIN: RoadCandidate = {
     turn_lanes_backward: null,
   },
   signal_distance_m: null,
+};
+
+// #507 ruling 6: Save needs a road (or, after a failed lookup, a
+// direction).  With no Mapbox token no lookup runs on open, so the plan
+// arrives with its road confirmed at this pin, as a saved plan does.
+const CONFIRMED: ConfirmedRoad = {
+  candidate: MAIN,
+  classification: classifyFromCandidate(MAIN, true, "Lafayette"),
+  method: "auto_single",
+  isUrban: true,
+  placeName: "Lafayette",
+  pinLat: PIN.lat,
+  pinLng: PIN.lng,
 };
 
 const bearingCalls: Array<{ lat: number; lng: number }> = [];
@@ -80,6 +94,7 @@ function mount(intersection: typeof X | null, armIntersection?: boolean) {
         lng: PIN.lng,
         intersection,
         armIntersection,
+        confirmedRoad: CONFIRMED,
       }}
       onCancel={() => {}}
       onSave={onSave}
@@ -101,7 +116,7 @@ describe("#234 — the picker restores a saved intersection and hands it back", 
   it("Save hands the same intersection back — the column's copy and the picker's stay one", async () => {
     const onSave = mount(X);
     await screen.findByTestId("cross-restored");
-    const save = screen.getByRole("button", { name: /Save & Close/ }) as HTMLButtonElement;
+    const save = screen.getByRole("button", { name: /Save and close/ }) as HTMLButtonElement;
     for (let i = 0; i < 30 && save.disabled; i += 1) await new Promise((r) => setTimeout(r, 100));
     fireEvent.click(save);
     expect(onSave).toHaveBeenCalledTimes(1);
@@ -113,7 +128,7 @@ describe("#234 — the picker restores a saved intersection and hands it back", 
     await screen.findByTestId("cross-restored");
     fireEvent.click(screen.getByRole("button", { name: "Clear" }));
     expect(screen.queryByTestId("cross-restored")).toBeNull();
-    const save = screen.getByRole("button", { name: /Save & Close/ }) as HTMLButtonElement;
+    const save = screen.getByRole("button", { name: /Save and close/ }) as HTMLButtonElement;
     for (let i = 0; i < 30 && save.disabled; i += 1) await new Promise((r) => setTimeout(r, 100));
     fireEvent.click(save);
     expect(onSave.mock.calls[0][0].intersection).toBeNull();

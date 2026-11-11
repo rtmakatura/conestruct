@@ -70,6 +70,45 @@ def cardinal(bearing_deg: float) -> tuple[str, str]:
     return _CARDINALS[int(((bearing_deg % 360.0) + 45.0) // 90.0) % 4]
 
 
+_POINTS8: tuple[str, ...] = (
+    "North",
+    "Northeast",
+    "East",
+    "Southeast",
+    "South",
+    "Southwest",
+    "West",
+    "Northwest",
+)
+
+
+def compass8(bearing_deg: float) -> str:
+    """The nearest of the eight compass points, as a word ("Northeast").
+
+    #507 ruling 5 (R145-8): the side control names a diagonal road by its
+    diagonal.  CHOSEN: octant bins, 22.5° either side of each point (the
+    bins of the picker's ``dedup.bearingOctant``), so a road at 20° still
+    reads north.  Page 2's ``cardinal`` words are not changed here.
+    """
+    return _POINTS8[int(((bearing_deg % 360.0) + 22.5) // 45.0) % 8]
+
+
+def side_label(edge_bearing_deg: float, travel_bearing_deg: float) -> str:
+    """One side option's words: "<Point> side · <traffic>" (#507 ruling 5).
+
+    A traffic direction in a cardinal octant keeps #290's "<x>bound
+    traffic", byte-identical to ``cardinal`` there; a diagonal one reads
+    "traffic heading <point>", the F2 board's words.  The side word is the
+    edge's own octant, so a road heading northeast has a southeast side,
+    never a "south" one.
+    """
+    side = compass8(edge_bearing_deg)
+    heads = compass8(travel_bearing_deg)
+    if heads in ("North", "East", "South", "West"):
+        return f"{side} side · {heads.lower()}bound traffic"
+    return f"{side} side · traffic heading {heads.lower()}"
+
+
 def zone_spans(c: WorkCorridor) -> list[tuple[str, float, float]]:
     """Each zone's station span, from the anchor, in corridor order."""
     lengths = (

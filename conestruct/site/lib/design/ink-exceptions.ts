@@ -69,11 +69,11 @@ export const CODE_LITERALS: readonly FileLiterals[] = [
   // decorative illustrations, left with the page.
   {
     file: "components/LocationPickerModal.tsx",
-    hexes: ["#000000", "#1EC8A5", "#E8710A", "#ffffff"],
-    count: 4,
+    hexes: ["#1EC8A5", "#E8710A"],
+    count: 2,
     disposition: "token mirror",
     reason:
-      "PIN_COLOR #E8710A === --dim-deep and CROSS_PIN_COLOR #1EC8A5 === ZONE_COLOR.work_zone (both pinned by value); #ffffff / #000000 are Mapbox zone-label paint inside a style-JSON expression, where var() is impossible — decorative",
+      "PIN_COLOR #E8710A === --dim-deep and CROSS_PIN_COLOR #1EC8A5 === ZONE_COLOR.work_zone (both pinned by value).  #507 ruling 1: the Mapbox zone-label layer (#ffffff / #000000 paint) left with the map's overlays",
   },
   // components/GeneratorFormPrimitives.tsx's row (the Generate spinner
   // ring's #0C1622 mirror of --on-act) is DELETED: rule 130 takes the

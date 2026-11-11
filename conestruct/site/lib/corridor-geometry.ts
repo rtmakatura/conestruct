@@ -56,6 +56,10 @@ export interface SideOption {
    *  none, and the band filters any an older backend sends. */
   built: boolean;
   note?: string;
+  /** #507: present when the side lays out on the street's other
+   *  carriageway (``render_api._twin_side_options``); the page swaps the
+   *  confirmed road to it and writes ``work`` verbatim. */
+  carriageway?: "twin";
 }
 
 /** #315: why a stored side doesn't count — the backend's reason, one line
@@ -115,6 +119,9 @@ export function selectedSideOption(
   return (
     options.find(
       (o) =>
+        // #507: a stored side always names the confirmed carriageway; a
+        // twin option is never the one stored.
+        !o.carriageway &&
         o.work.side === work.side &&
         (o.work.travel ?? null) === (work.travel ?? null) &&
         (o.work.heading ?? null) === (work.heading ?? null),

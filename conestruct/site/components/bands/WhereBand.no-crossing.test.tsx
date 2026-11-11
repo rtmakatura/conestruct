@@ -42,6 +42,13 @@ const RIGHT = {
   label: "West side · southbound traffic",
   built: true,
 };
+// #507 ruling 3: a lone side is picked for you, which would answer the
+// side these tests keep open; a two-way street offers both curbs.
+const EAST = {
+  work: { side: "right", travel: "against_geometry" },
+  label: "East side · northbound traffic",
+  built: true,
+};
 
 // The read answers by the request, the way the backend does: a
 // near-intersection plan with no `meta.intersection` is not marked.
@@ -57,7 +64,7 @@ function geometryFor(body: unknown): CorridorGeometry {
     approaches: [],
     coverage_ft: null,
     message: notMarked ? LINE : null,
-    side_options: [RIGHT],
+    side_options: [RIGHT, EAST],
   } as unknown as CorridorGeometry;
 }
 
@@ -109,7 +116,7 @@ describe("#317: no crossing marked", () => {
       fireEvent.click(document.querySelector('[data-testid="step-next-side"]')!);
     });
     expect(await waitFor('[data-testid="side-option"]')).not.toBeNull();
-    expect(document.querySelectorAll('[data-testid="side-option"]')).toHaveLength(1);
+    expect(document.querySelectorAll('[data-testid="side-option"]')).toHaveLength(2);
     expect(document.querySelector('[data-testid="side-control-not-marked"]')).toBeNull();
     expect(document.querySelector('[data-testid="side-control-mark"]')).toBeNull();
     expect(document.querySelector('[data-testid="side-control-note"]')).toBeNull();

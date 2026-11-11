@@ -20,8 +20,8 @@
 //   kind unconfirmed  → the work drawn, the lengths wait on the kind
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { LocationPickerModal } from "./LocationPickerModal";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { LocationPickerModal, MAP_WINDOW_LINE, SIDE_NEXT_LINE } from "./LocationPickerModal";
 import type { RoadCandidate, RoadDetectResponse } from "@/lib/road-detection/types";
 import type { CorridorGeometry } from "@/lib/corridor-geometry";
 import { DEFAULT_SHOULDER, type Scenario } from "@/lib/scenarios";
@@ -190,7 +190,9 @@ describe("the picker's subtitle", () => {
     mountModal();
     const subtitle = screen.getByTestId("picker-subtitle").textContent ?? "";
     expect(subtitle).not.toMatch(/length/i);
-    expect(subtitle).toContain("Drop a pin where the work starts");
+    // #507 ruling 1: the window's one line.
+    expect(subtitle).toBe(MAP_WINDOW_LINE);
+    expect(subtitle).toContain("where the work starts");
   });
 });
 
@@ -243,7 +245,7 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
     mountModal();
     typeCoords();
     const note = await screen.findByTestId("picker-corridor-refused", undefined, { timeout: 3000 });
-    expect(note.textContent).toContain("Can't lay the corridor out here");
+    expect(note.textContent).toContain("The work can't be laid out here");
     expect(note.textContent).toContain("the road geometry cannot carry the corridor");
     expect(note.textContent).not.toContain("ValueError");
     expect(screen.queryByText("Centerline")).toBeNull();
@@ -256,7 +258,9 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
     );
     mountModal();
     typeCoords();
-    await screen.findByText(/PICK THE ROAD · 2 FOUND/, undefined, { timeout: 3000 });
+    // #507 ruling 2: the two roads as one radio list, neither picked.
+    await waitFor(() => expect(screen.getAllByRole("radio")).toHaveLength(2), { timeout: 3000 });
+    expect(screen.getAllByRole("radio").every((r) => r.getAttribute("aria-checked") === "false")).toBe(true);
     expect(screen.queryByText("Centerline")).toBeNull();
     await new Promise((r) => setTimeout(r, 400));
     expect(geometryBodies()).toEqual([]);
@@ -276,30 +280,31 @@ describe("the Centerline provenance row (#211), on the backend's geometry", () =
 });
 
 describe("#290 — what the panel says before the answers it waits on", () => {
-  // #402 ruling 2 (Ryan, 2026-10-29) supersedes the #290 sentence in the
-  // picker: "Save, then say which side is occupied." (the band keeps #290's).
-  it("side unconfirmed: the pre-side ruling's sentence, and no extent", async () => {
+  // #507 ruling 1 (RULE 5, stated): #402's "Save, then say which side is
+  // occupied." left the picker; W1's line under the road list says the
+  // side comes next, on the page.  The panel still draws no extent.
+  it("side unconfirmed: W1's side-next line, not #402's sentence, and no extent", async () => {
     stubFetches(detection([ROAD]), SIDE_NOT_CONFIRMED);
     mountModal();
     typeCoords();
-    expect(
-      await screen.findByText("Save, then say which side is occupied.", undefined, {
-        timeout: 3000,
-      }),
-    ).toBeTruthy();
+    expect(await screen.findByText(SIDE_NEXT_LINE, undefined, { timeout: 3000 })).toBeTruthy();
+    await waitFor(() => expect(geometryBodies().length).toBeGreaterThan(0), { timeout: 3000 });
+    await new Promise((r) => setTimeout(r, 50));
+    expect(screen.queryByText("Save, then say which side is occupied.")).toBeNull();
     expect(screen.queryByText("Centerline")).toBeNull();
     expect(screen.queryByText(/^Total$/i)).toBeNull();
   });
 
-  it("kind unconfirmed: the lengths wait on the kind (#289 finding 1) — no extent rows", async () => {
+  // #507 ruling 1 (RULE 5, stated): the kind note left the panel; with the
+  // kind unconfirmed the panel still states no extent and no Centerline.
+  it("kind unconfirmed: no extent rows and no Centerline row (#289 finding 1)", async () => {
     stubFetches(detection([ROAD]), laidOut(5000));
     mountModal(SIDED, false);
     typeCoords();
-    expect(
-      await screen.findByText(/Corridor lengths wait on the kind of work/i, undefined, {
-        timeout: 3000,
-      }),
-    ).toBeTruthy();
+    await waitFor(() => expect(geometryBodies().length).toBeGreaterThan(0), { timeout: 3000 });
+    await new Promise((r) => setTimeout(r, 50));
+    expect(screen.queryByText("Centerline")).toBeNull();
+    expect(screen.queryByText(/Corridor lengths wait on the kind of work/i)).toBeNull();
     expect(screen.queryByText(/^Total$/i)).toBeNull();
   });
 });
@@ -328,9 +333,7 @@ describe("#290 — the geometry request: the modal's live pin and road, never a 
     stubFetches(detection([ROAD]), SIDE_NOT_CONFIRMED);
     mountModal();
     typeCoords(PIN[0] + 0.001, PIN[1]);
-    await screen.findByText("Save, then say which side is occupied.", undefined, {
-      timeout: 3000,
-    });
+    await waitFor(() => expect(geometryBodies().length).toBeGreaterThan(0), { timeout: 3000 });
     const body = geometryBodies().at(-1)!;
     expect(body.meta.lat).toBe(PIN[0] + 0.001);
     expect(body.meta.work).toBeUndefined();
