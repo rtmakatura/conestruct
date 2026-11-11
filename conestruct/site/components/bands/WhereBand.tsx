@@ -781,8 +781,12 @@ export function WhereBand({
   // a tap question.
   const ahead: Scenario[] = [];
   if (cardOpen && !panelOpen && !locked && (currentQ === "side" || currentQ === "kind")) {
+    // #516 (Rule 10): only the answer to THIS scenario offers its sides.
+    // The render after a save still holds the last pin's answer, whose
+    // road sides (`work.travel`) the backend refuses on a pin with no road.
     if (currentQ === "side") {
-      const options = (geometry.geometry?.side_options ?? []).filter((o) => o.built);
+      const current = geometry.state === "ready" && geometry.for === JSON.stringify(scenario);
+      const options = current ? (geometry.geometry?.side_options ?? []).filter((o) => o.built) : [];
       const selected = selectedSideOption(options, scenario.meta.work);
       for (const o of options) {
         if (o === selected) continue;

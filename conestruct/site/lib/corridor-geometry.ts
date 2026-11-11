@@ -236,7 +236,15 @@ export function geometryToPolyline(
 export type GeometryFetch =
   | { state: "idle"; geometry: null }
   | { state: "loading"; geometry: CorridorGeometry | null }
-  | { state: "ready"; geometry: CorridorGeometry }
+  | {
+      state: "ready";
+      geometry: CorridorGeometry;
+      /** #516: the scenario (its JSON) this answer is for, set by
+       *  `useCorridorGeometry`.  For the render after the scenario changes
+       *  the hook still holds the previous answer, so a reader that builds
+       *  new requests from it checks this first (Rule 10). */
+      for?: string;
+    }
   | {
       state: "error";
       geometry: null;
@@ -336,7 +344,7 @@ export function useCorridorGeometry(scenario: Scenario | null): GeometryFetch {
       // A fresh object each time it is served: consumers compare answers by
       // identity (useSideClearOnKindChange), and a remembered answer is a
       // new answer to them.
-      setResult(r.state === "ready" && r.geometry ? { ...r, geometry: { ...r.geometry } } : r);
+      setResult(r.state === "ready" && r.geometry ? { ...r, geometry: { ...r.geometry }, for: key ?? undefined } : r);
     };
     if (key === null) {
       setResult({ state: "idle", geometry: null });

@@ -1,0 +1,30 @@
+#516 red proof (2026-11-11)
+
+Test: conestruct/site/components/bands/WhereBand.stale-travel.test.tsx
+  "road → Edit on map → lookup fails → North–south → Save: no geometry read has a road-less work.travel"
+
+1. Against the unfixed sources (7a77005; the fix's two source files reversed with `git apply -R`, the final test file in place):
+
+AssertionError: expected [ …(2) ] to deeply equal []
++ Received
++ [
++   "{\"side\":\"right\",\"travel\":\"with_geometry\"}",
++   "{\"side\":\"right\",\"travel\":\"against_geometry\"}",
++ ]
+      Tests  1 failed (1)
+
+2. Which caller sends them (a temporary probe in the test's fetch mock printed the stack of each road-less work.travel read; probe removed before the final run):
+
+PROBE stale {"side":"right","travel":"with_geometry"}
+    at readGeometry (conestruct/site/lib/corridor-geometry.ts:315:3)
+    at prefetchGeometry (conestruct/site/lib/corridor-geometry.ts:325:65)
+    at conestruct/site/components/bands/BandAerial.tsx:323:12
+PROBE stale {"side":"right","travel":"against_geometry"}
+    at readGeometry (conestruct/site/lib/corridor-geometry.ts:315:3)
+    at prefetchGeometry (conestruct/site/lib/corridor-geometry.ts:325:65)
+    at conestruct/site/components/bands/BandAerial.tsx:323:12
+
+BandAerial.tsx:323 is the load ahead (#456 ruling 3), sending the `ahead` scenarios WhereBand.tsx:782-792 built from the previous pin's side_options. No stale read came from the debounced hook reads (the band's, the shell's, the picker's).
+
+3. With the fix:
+      Tests  1 passed (1)
