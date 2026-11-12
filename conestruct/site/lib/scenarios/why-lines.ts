@@ -515,6 +515,20 @@ export function jurisdictionLabel(
   return JURISDICTION_OPTIONS.find((o) => o.key === key)?.label ?? key;
 }
 
+/** #526 round-2 rework (R145 S21a): the jurisdiction's short name for the
+ *  Work dates line and the row under the grid: the picker's own label
+ *  without its parenthetical ("CDOT (state highway)" reads "CDOT"), else
+ *  the block's name.  Ruling 2's <jurisdiction> is the picked one, so this
+ *  stays inside it.  The work-hours window's title keeps the block's name. */
+export function shortName(
+  key: string | null | undefined,
+  fallback: string | null | undefined,
+): string | null {
+  const label = key ? JURISDICTION_OPTIONS.find((o) => o.key === key)?.label : undefined;
+  if (label) return label.replace(/\s*\([^)]*\)\s*$/, "").trim() || label;
+  return fallback ?? null;
+}
+
 export function jurisdictionWhy(opts: {
   s: Scenario;
   state: JurisdictionState;
@@ -651,19 +665,236 @@ export function timeWhy(which: "start" | "end", set: boolean): Why {
       };
 }
 
-/** Ruling 7: the line under unset dates; S9 when no jurisdiction is set. */
-export function datesHint(name: string | null): string {
-  return name
-    ? `Optional. We check them against ${name}'s work hours.`
-    : "Optional. Pick a jurisdiction to check them against its work hours.";
+// ---------------------------------------------------------------------------
+// #526 (Ryan, 2026-11-11, item 1 ruling 2): the Work dates result line, the
+// row under the grid and the work-hours window.  Every hour and date here
+// is the backend's (`hours_days`), formatted; the words are the ruling's or
+// rulings.md's R145 S2-S9.
+// ---------------------------------------------------------------------------
+
+/** "8:30 am", "noon", "midnight": the ruling's own clock words (a
+ *  non-breaking space before am/pm). */
+export function clock(h: number): string {
+  const t = ((h % 24) + 24) % 24;
+  if (t === 0) return "midnight";
+  if (t === 12) return "noon";
+  const hr = Math.floor(t);
+  const m = Math.round((t - hr) * 60);
+  const h12 = ((hr + 11) % 12) + 1;
+  // Round 3 (#531, S26): a non-breaking space, so "3:30 pm" never breaks.
+  return `${h12}${m ? `:${String(m).padStart(2, "0")}` : ""}\u00a0${hr < 12 ? "am" : "pm"}`;
 }
 
-export function hoursFrame(name: string | null): string {
-  return name ? `${name}'s work hours:` : "Work hours:";
+/** "Nov 21": an ISO date, by hand (no timezone shift). */
+export function monthDay(iso: string): string {
+  const [, m, d] = iso.split("-").map(Number);
+  return `${MONTHS[m - 1].slice(0, 3)} ${d}`;
 }
 
-export function seeAllHours(name: string): string {
-  return `See all of ${name}'s work hours`;
+/** "Nov 7 and 8", "Nov 30, Dec 1 and 2": the month once per run. */
+export function dateList(isos: string[]): string {
+  const parts = isos.map((iso, i) => {
+    const prev = isos[i - 1];
+    return prev && prev.slice(0, 7) === iso.slice(0, 7)
+      ? String(Number(iso.slice(8)))
+      : monthDay(iso);
+  });
+  return parts.length < 2
+    ? (parts[0] ?? "")
+    : `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
+}
+
+export const DATES_NO_JURISDICTION =
+  "Optional. Pick a jurisdiction to check your dates against its work hours.";
+export function datesOptional(name: string): string {
+  return `Optional. We check your dates and times against ${name}'s work hours.`;
+}
+export const ADD_TIMES = "Add a start and end time to finish the check.";
+/** R145 S2: the second cause of "set dates to check". */
+export const ADD_STREET_CLASS = "Pick a street class to finish the check.";
+export function fitsEveryDay(name: string): string {
+  return `Fits ${name}'s work hours on every day.`;
+}
+export function noHoursData(name: string): string {
+  return `We don't have ${name}'s work hours yet, so we can't check your dates.`;
+}
+export function checkingDates(name: string): string {
+  return `Checking your dates against ${name}'s work hours.`;
+}
+export const DATES_DECLINED = "Not checked: the plan was declined.";
+export const DATES_CHECK_FAILED = "Check failed: the check didn't answer.";
+
+/** The facts of one day kind's problem (the backend's `DayKindEval`). */
+export interface KindProblem {
+  no_closures: boolean;
+  starts_before: number | null;
+  ends_after: number | null;
+  misses: boolean;
+}
+
+/** R145 S4: an hours problem on one day kind (or "on every day"). */
+export function hoursProblem(on: "weekdays" | "weekends" | "every day", e: KindProblem): string | null {
+  const at = `on ${on}`;
+  if (e.misses) return `Falls outside the allowed hours ${at}.`;
+  if (e.starts_before != null && e.ends_after != null) {
+    return `Starts before ${clock(e.starts_before)} and ends after ${clock(e.ends_after)} ${at}.`;
+  }
+  if (e.starts_before != null) return `Starts before ${clock(e.starts_before)} ${at}.`;
+  if (e.ends_after != null) return `Runs past ${clock(e.ends_after)} ${at}.`;
+  return null;
+}
+
+/** R145 S4 / S12: a day kind with no closures allowed.  One date or two are
+ *  named; three or more are counted (the window keeps the detail). */
+export function noClosures(kind: "weekday" | "weekend", dates: string[], count: number): string {
+  if (count >= 3 || dates.length >= 3) {
+    return `${Math.max(count, dates.length)} ${kind === "weekday" ? "weekdays" : "weekend days"} in your dates: no closures.`;
+  }
+  if (dates.length === 2) {
+    return `${dateList(dates)} are ${kind === "weekday" ? "weekdays" : "a weekend"}: no closures.`;
+  }
+  return `${dateList(dates)} is ${kind === "weekday" ? "a weekday" : "a weekend day"}: no closures.`;
+}
+
+/** Round 2 (R145 S12, reworked by S21b): the Work dates line for an
+ *  "outside" answer is ONE problem statement, name-free.  One day kind with
+ *  a problem keeps its specific sentence ("Starts before ... on weekdays.",
+ *  "Runs past ...", "Falls outside ...", the no-closures date forms).  Both
+ *  kinds with the same hours problem: "... on every day."  Both with a
+ *  problem otherwise: one merged sentence, the detail left to the window:
+ *  "Outside the allowed hours on weekdays and weekends.", "Outside the
+ *  allowed hours on weekdays; no closures on weekends." (or swapped), "No
+ *  closures on weekdays or weekends."  A kind inside or with no record adds
+ *  nothing. */
+export function outsideLine(
+  kinds: Record<"weekday" | "weekend", KindProblem & { status: string | null }>,
+  job: { kinds: ("weekday" | "weekend")[]; kind_dates: Record<"weekday" | "weekend", string[]>; kind_days?: Record<"weekday" | "weekend", number> },
+): string | null {
+  const hours = job.kinds.filter((k) => kinds[k].status === "outside" && !kinds[k].no_closures);
+  const closed = job.kinds.filter((k) => kinds[k].no_closures);
+  const plural = (k: "weekday" | "weekend") => (k === "weekday" ? "weekdays" : "weekends");
+  if (hours.length === 2) {
+    const [a, b] = hours.map((k) => kinds[k]);
+    return a.starts_before === b.starts_before && a.ends_after === b.ends_after && a.misses === b.misses
+      ? hoursProblem("every day", a)
+      : "Outside the allowed hours on weekdays and weekends.";
+  }
+  if (hours.length === 1 && closed.length === 1) {
+    return `Outside the allowed hours on ${plural(hours[0])}; no closures on ${plural(closed[0])}.`;
+  }
+  if (closed.length === 2) return "No closures on weekdays or weekends.";
+  if (hours.length === 1) return hoursProblem(plural(hours[0]), kinds[hours[0]]);
+  if (closed.length === 1) {
+    const k = closed[0];
+    return noClosures(k, job.kind_dates[k] ?? [], job.kind_days?.[k] ?? 0);
+  }
+  return null;
+}
+
+/** Round 2 (R145 S10, Rule 10): some day kinds fit, the rest have no record. */
+export function fitsPartial(name: string, fits: "weekday" | "weekend"): string {
+  const [a, b] = fits === "weekday" ? ["weekday", "weekend"] : ["weekend", "weekday"];
+  return `Fits ${name}'s ${a} hours. We don't have its ${b} hours.`;
+}
+/** Round 2: no job day kind has a window on record. */
+export function noRecordDays(name: string): string {
+  return `We don't have ${name}'s hours for these days, so we can't check them.`;
+}
+/** Round 2 (finding 5): an older backend's answer the line can't word. */
+export function cantCheckYet(name: string): string {
+  return `We can't check your dates against ${name}'s work hours yet.`;
+}
+
+/** Ruling 2: the row under the grid. */
+export function hoursRowLine(name: string): string {
+  return `${name} limits when you can close a lane.`;
+}
+export function noHoursRowLine(name: string): string {
+  return `We don't have ${name}'s work hours yet.`;
+}
+export function seeHours(name: string): string {
+  return `See ${name}'s work hours`;
+}
+
+// The work-hours window (ruling 4).
+export function hoursTitle(name: string): string {
+  return `${name}'s work hours`;
+}
+export function hoursSub(
+  streetClass: string | null,
+  start: number | null,
+  end: number | null,
+): string {
+  const cls = streetClass
+    ? `When you can close a lane on ${streetClass === "arterial" ? "an arterial" : `a ${streetClass}`} street.`
+    : "Street class not set, so the hours for it aren't known.";
+  return start != null && end != null
+    ? `${cls} Your hours: ${clock(start)} to ${clock(end)}.`
+    : cls;
+}
+export function fixButton(a: number, b: number): string {
+  return `Change my hours to ${clock(a)} to ${clock(b)}`;
+}
+/** R145 S9: the fix's record, beside the shared Undo. */
+export function fixRecord(a: number, b: number): string {
+  return `Hours changed to ${clock(a)} to ${clock(b)}.`;
+}
+export function weekdayVerdict(name: string, status: "inside" | "outside"): string {
+  return status === "inside"
+    ? "Your hours fit on weekdays."
+    : `Your hours go outside what ${name} allows on weekdays.`;
+}
+export const SET_TIMES_TO_SEE = "Set a start and end time on the page to see your hours here.";
+export const SET_CLASS_TO_SEE = "Pick a street class on the page to see its hours here.";
+/** R145 S8 / round 2 (S10): the weekend line, from the backend's `record`
+ *  (Rule 10: no window on record is absence, never an allowed-all-day). */
+export function weekendLine(
+  e: { allowed: [number, number][] | null; record: "windows" | "none"; no_closures: boolean },
+  jobWeekend: string[],
+): string {
+  const base =
+    e.record === "none"
+      ? "Weekends: none on record."
+      : e.no_closures
+        ? "Weekends: no lane closures."
+        : e.allowed === null
+          ? "Weekends: needs a street class."
+          : `Weekends: ${e.allowed.map(([s, t]) => `${clock(s)} to ${clock(t)}`).join(" and ")}.`;
+  return jobWeekend.length
+    ? `${base} Your dates include ${dateList(jobWeekend)}.`
+    : base;
+}
+/** Round 2: the weekday view when weekdays have no window on record. */
+export function weekdayNoRecord(name: string): string {
+  return `We don't have ${name}'s weekday hours for this street class.`;
+}
+/** Round 2: the whole week's label for a day with no window on record. */
+export const NO_RECORD_LABEL = "No record";
+export const NO_RECORD_SR = "No hours on record.";
+/** R145 S7: holidays are in the data as a rule only. */
+export function holidayLine(rule: "none" | "holidays_banned" | "holidays_and_eves_banned"): string | null {
+  if (rule === "none") return null;
+  const what = rule === "holidays_banned" ? "holidays" : "holidays and the day before";
+  return `No closures on ${what}. We don't check your dates against holidays yet.`;
+}
+export function weekNote(job: { start: string; end: string; days: number; week: { in_job: boolean }[] } | null): string {
+  if (!job) return "Pick work dates on the page to see your days here.";
+  const span = job.days === 1 ? monthDay(job.start) : `${monthDay(job.start)} to ${monthDay(job.end)}`;
+  if (job.days > job.week.filter((d) => d.in_job).length) {
+    return `Your dates run ${span}. This is the first week; every week has the same hours.`;
+  }
+  return job.week.every((d) => d.in_job)
+    ? `Your dates run ${span}, the whole week.`
+    : `Your dates run ${span}, so the other days are greyed out.`;
+}
+export function sourceLine(sources: { doc: string; section?: string; date?: string }[]): string | null {
+  if (!sources.length) return null;
+  return `Source: ${sources
+    .map((s) => {
+      const d = s.date ? `, ${monthDay(s.date)}, ${s.date.slice(0, 4)}` : "";
+      return `${s.doc}${s.section ? ` ${s.section}` : ""}${d}`;
+    })
+    .join("; ")}`;
 }
 
 // ---------------------------------------------------------------------------

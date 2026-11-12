@@ -406,6 +406,114 @@
         "status": "inside",
         "violations": []
       },
+      "hours_days": {
+        "status": "inside",
+        "missing": null,
+        "holiday_rule": "none",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                7.0,
+                19.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "inside",
+            "outside": [],
+            "starts_before": null,
+            "ends_after": null,
+            "misses": false,
+            "fix": null,
+            "sources": [
+              {
+                "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+                "date": "2026-07-19",
+                "status": "provisional"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                8.0,
+                18.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "inside",
+            "outside": [],
+            "starts_before": null,
+            "ends_after": null,
+            "misses": false,
+            "fix": null,
+            "sources": [
+              {
+                "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+                "date": "2026-07-19",
+                "status": "provisional"
+              }
+            ]
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
+      },
       "permit": {
         "tier_suggested": null,
         "tier_reason": "jurisdiction publishes no permit tiers",
@@ -762,6 +870,129 @@
           }
         ]
       },
+      "hours_days": {
+        "status": "outside",
+        "missing": null,
+        "holiday_rule": "holidays_and_eves_banned",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                0.0,
+                6.0
+              ],
+              [
+                9.0,
+                15.0
+              ],
+              [
+                19.0,
+                24.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                9.0
+              ]
+            ],
+            "starts_before": 9.0,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              9.0,
+              15.0
+            ],
+            "sources": [
+              {
+                "doc": "E-470 Permit Manual",
+                "date": "2025-09-01",
+                "status": "verified"
+              },
+              {
+                "doc": "E-470 Permit Manual",
+                "date": "2025-09-01",
+                "status": "conflict"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                0.0,
+                24.0
+              ]
+            ],
+            "record": "none",
+            "no_closures": false,
+            "status": "no_record",
+            "outside": [],
+            "starts_before": null,
+            "ends_after": null,
+            "misses": false,
+            "fix": null,
+            "sources": []
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
+      },
       "permit": {
         "tier_suggested": null,
         "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
@@ -1064,6 +1295,7 @@
         "violations": [],
         "note": "jurisdiction publishes no work-hour windows"
       },
+      "hours_days": null,
       "permit": {
         "tier_suggested": null,
         "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
@@ -1751,6 +1983,138 @@
           }
         ]
       },
+      "hours_days": {
+        "status": "outside",
+        "missing": null,
+        "holiday_rule": "holidays_banned",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                9.0,
+                15.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                9.0
+              ]
+            ],
+            "starts_before": 9.0,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              9.0,
+              15.0
+            ],
+            "sources": [
+              {
+                "doc": "EMC 11-7-14(D)",
+                "date": "2024-01-01",
+                "status": "verified"
+              },
+              {
+                "doc": "TC-1 T17 + EMC 6-2-5(E)",
+                "date": "2020-09-22",
+                "status": "verified"
+              },
+              {
+                "doc": "Englewood ROW Permits Guide",
+                "date": "2024-06-14",
+                "status": "verified"
+              },
+              {
+                "doc": "Englewood Traffic Control Details TC-1",
+                "section": "T06",
+                "date": "2020-09-22",
+                "status": "conflict"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                7.0,
+                19.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "inside",
+            "outside": [],
+            "starts_before": null,
+            "ends_after": null,
+            "misses": false,
+            "fix": null,
+            "sources": [
+              {
+                "doc": "TC-1 T17 + EMC 6-2-5(E)",
+                "date": "2020-09-22",
+                "status": "verified"
+              }
+            ]
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
+      },
       "permit": {
         "tier_suggested": null,
         "tier_reason": "jurisdiction publishes no permit tiers",
@@ -2208,6 +2572,130 @@
             }
           }
         ]
+      },
+      "hours_days": {
+        "status": "outside",
+        "missing": null,
+        "holiday_rule": "none",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                8.5,
+                16.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                8.5
+              ]
+            ],
+            "starts_before": 8.5,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              8.5,
+              16.0
+            ],
+            "sources": [
+              {
+                "doc": "Greeley Permitting Requirements for Activities within Public Space",
+                "date": "2025-03-19",
+                "status": "verified"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                8.5,
+                16.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                8.5
+              ]
+            ],
+            "starts_before": 8.5,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              8.5,
+              16.0
+            ],
+            "sources": [
+              {
+                "doc": "Greeley Permitting Requirements for Activities within Public Space",
+                "date": "2025-03-19",
+                "status": "verified"
+              }
+            ]
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
       },
       "permit": {
         "tier_suggested": null,
@@ -2882,6 +3370,125 @@
         ],
         "exposure_estimate_cents": 70000
       },
+      "hours_days": {
+        "status": "outside",
+        "missing": null,
+        "holiday_rule": "none",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                0.0,
+                7.0
+              ],
+              [
+                8.5,
+                16.5
+              ],
+              [
+                17.5,
+                24.0
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                8.5
+              ]
+            ],
+            "starts_before": 8.5,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              8.5,
+              16.5
+            ],
+            "sources": [
+              {
+                "doc": "LCUASS Ch.6",
+                "section": "6.1.B.2",
+                "date": "2021-08-01",
+                "status": "verified"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                0.0,
+                24.0
+              ]
+            ],
+            "record": "none",
+            "no_closures": false,
+            "status": "no_record",
+            "outside": [],
+            "starts_before": null,
+            "ends_after": null,
+            "misses": false,
+            "fix": null,
+            "sources": []
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
+      },
       "permit": {
         "tier_suggested": "Major ROW Permit",
         "tier_reason": "Major ROW Permit: Major traffic control — e.g. arterial lane closures and/or detours.",
@@ -3486,6 +4093,117 @@
           }
         ]
       },
+      "hours_days": {
+        "status": "outside",
+        "missing": null,
+        "holiday_rule": "none",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                9.0,
+                15.5
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                9.0
+              ]
+            ],
+            "starts_before": 9.0,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              9.0,
+              15.5
+            ],
+            "sources": [
+              {
+                "doc": "Parker RDCCM",
+                "section": "8.7.6.1",
+                "date": "2026-01-01",
+                "status": "conflict"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                0.0,
+                24.0
+              ]
+            ],
+            "record": "none",
+            "no_closures": false,
+            "status": "no_record",
+            "outside": [],
+            "starts_before": null,
+            "ends_after": null,
+            "misses": false,
+            "fix": null,
+            "sources": []
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
+      },
       "permit": {
         "tier_suggested": null,
         "tier_reason": "jurisdiction publishes no permit tiers",
@@ -3831,6 +4549,116 @@
           }
         ]
       },
+      "hours_days": {
+        "status": "outside",
+        "missing": null,
+        "holiday_rule": "none",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                8.5,
+                15.5
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                8.5
+              ]
+            ],
+            "starts_before": 8.5,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              8.5,
+              15.5
+            ],
+            "sources": [
+              {
+                "doc": "Thornton Construction & TC Permit handout",
+                "section": "stipulation 31",
+                "status": "verified"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                0.0,
+                24.0
+              ]
+            ],
+            "record": "none",
+            "no_closures": false,
+            "status": "no_record",
+            "outside": [],
+            "starts_before": null,
+            "ends_after": null,
+            "misses": false,
+            "fix": null,
+            "sources": []
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
+      },
       "permit": {
         "tier_suggested": null,
         "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
@@ -4102,6 +4930,132 @@
             }
           }
         ]
+      },
+      "hours_days": {
+        "status": "outside",
+        "missing": null,
+        "holiday_rule": "none",
+        "kinds": {
+          "weekday": {
+            "allowed": [
+              [
+                8.5,
+                15.5
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                8.5
+              ]
+            ],
+            "starts_before": 8.5,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              8.5,
+              15.5
+            ],
+            "sources": [
+              {
+                "doc": "Westminster Standards & Specifications Ch. 8",
+                "section": "8.28.06",
+                "date": "2025-04-15",
+                "status": "verified"
+              }
+            ]
+          },
+          "weekend": {
+            "allowed": [
+              [
+                8.5,
+                15.5
+              ]
+            ],
+            "record": "windows",
+            "no_closures": false,
+            "status": "outside",
+            "outside": [
+              [
+                8.0,
+                8.5
+              ]
+            ],
+            "starts_before": 8.5,
+            "ends_after": null,
+            "misses": false,
+            "fix": [
+              8.5,
+              15.5
+            ],
+            "sources": [
+              {
+                "doc": "Westminster Standards & Specifications Ch. 8",
+                "section": "8.28.06",
+                "date": "2025-04-15",
+                "status": "verified"
+              }
+            ]
+          }
+        },
+        "job": {
+          "start": "2026-07-22",
+          "end": "2026-07-22",
+          "days": 1,
+          "kinds": [
+            "weekday"
+          ],
+          "kind_dates": {
+            "weekday": [
+              "2026-07-22"
+            ],
+            "weekend": []
+          },
+          "kind_days": {
+            "weekday": 1,
+            "weekend": 0
+          },
+          "week": [
+            {
+              "date": "2026-07-20",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-21",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-22",
+              "day_kind": "weekday",
+              "in_job": true
+            },
+            {
+              "date": "2026-07-23",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-24",
+              "day_kind": "weekday",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-25",
+              "day_kind": "weekend",
+              "in_job": false
+            },
+            {
+              "date": "2026-07-26",
+              "day_kind": "weekend",
+              "in_job": false
+            }
+          ]
+        }
       },
       "permit": {
         "tier_suggested": "Major TCP",

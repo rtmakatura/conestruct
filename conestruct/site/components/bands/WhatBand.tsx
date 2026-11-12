@@ -28,7 +28,7 @@
 // windows table, opened from the hours line; the writers in what-writes.ts
 // and guesses.ts.  Rule 3: nothing here computes a value the backend owns.
 
-import { useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Scenario, ScenarioMeta, RoadType } from "@/lib/scenarios";
 import {
   JURISDICTION_OPTIONS,
@@ -61,13 +61,14 @@ import {
   type BoxField,
   boxHeading,
   carriagewayWhy,
-  datesHint,
   detectionLine,
   dividedWhy,
   fileDetailsLine,
   notFromMap,
   guessReason,
-  hoursFrame,
+  hoursRowLine,
+  noHoursRowLine,
+  fixRecord,
   introLine,
   isOpenGuess,
   jurisdictionLabel,
@@ -77,7 +78,8 @@ import {
   locationWhy,
   projectWhy,
   roadTypeWhy,
-  seeAllHours,
+  seeHours,
+  shortName,
   speedWhy,
   streetClassWhy,
   workDatesWhy,
@@ -97,6 +99,7 @@ import { OpenBand } from "./BandPrimitives";
 import { WhyCell } from "./FieldCell";
 import { Listbox } from "../ui/Listbox";
 import { DateRangePicker } from "../ui/DateRangePicker";
+import { WorkHoursDialog, type FixRecord } from "../WorkHoursDialog";
 import {
   JurisdictionEvidence,
   JurisdictionWarnings,
@@ -133,12 +136,10 @@ export function jurisdictionCellState(opts: {
   return opts.errored ? "check-failed" : "evaluating";
 }
 
-/** The windows check's line (ScheduleField `windowsSummary`). */
+/** #526: the Work dates result line (ScheduleField `windowsSummary`). */
 export interface WindowsLine {
-  head: string;
-  glyph: string;
+  kind: "none" | "ok" | "bad";
   text: string;
-  tone: string;
 }
 
 /** #198's handoff sentences for one field, in its why tip: one text node
@@ -263,8 +264,8 @@ export function WhatBand({
   stepIndex,
   kindFields,
   scheduleCells,
-  scheduleWindows,
   windowsLine,
+  hoursVerifying = false,
   setMeta,
   handoff = [],
 }: {
@@ -285,10 +286,11 @@ export function WhatBand({
   kindFields?: ReactNode;
   /** The dates' time rows, under the work dates. */
   scheduleCells?: ReactNode;
-  /** #227's windows table, opened from the hours line (ruling 7). */
-  scheduleWindows?: ReactNode;
-  /** The windows check's verdict, framed under the dates (ruling 7). */
+  /** #526 ruling 2: the Work dates cell's result line. */
   windowsLine?: WindowsLine;
+  /** #152 D: a refetch for the same jurisdiction is in flight, so the
+   *  work-hours window's verdict reads as checking (Rule 10). */
+  hoursVerifying?: boolean;
   /** The title-block metadata (File details). */
   setMeta: (m: ScenarioMeta) => void;
   /** The picker → form handoff events; the sentences ride the rows they
@@ -333,7 +335,6 @@ export function WhatBand({
     declined: jurisdictionDeclined,
   });
   const pickedLabel = jurisdictionLabel(scenario.jurisdiction_key);
-  const jurisdictionName = jurisdictionBlock?.name ?? pickedLabel;
 
   // --- The fields' whys --------------------------------------------------------
   const speedIsSet = speedSet(scenario);
@@ -681,7 +682,43 @@ export function WhatBand({
   const workDate = schedule?.work_date ?? "";
   const workDateEnd = schedule?.work_date_end ?? "";
   const dates = workDatesWhy(workDate, workDateEnd);
-  const [windowsOpen, setWindowsOpen] = useState(false);
+  // #526 ruling 4: the work-hours window, and focus back to its link.
+  const [hoursOpen, setHoursOpen] = useState(false);
+  const hoursLinkRef = useRef<HTMLButtonElement>(null);
+  const closeHours = useCallback(() => {
+    setHoursOpen(false);
+    hoursLinkRef.current?.focus();
+  }, []);
+  // P15 (Ryan, 2026-11-12, replacing S9): the fix's record, with the
+  // schedule it replaced so Undo puts back the exact object.  It stays until
+  // Undo or a pin move; editing the times by hand doesn't clear it.
+  const [fix, setFix] = useState<{
+    applied: FixRecord;
+    prior: Scenario["schedule"];
+    pin: string;
+  } | null>(null);
+  const pinAt = `${scenario.meta.lat},${scenario.meta.lng}`;
+  const fixStands = fix !== null && fix.pin === pinAt;
+  useEffect(() => {
+    if (fix !== null && fix.pin !== pinAt) setFix(null);
+  }, [fix, pinAt]);
+  const applyFix = ([start, end]: [number, number]) => {
+    if (locked || !schedule) return;
+    setFix({ applied: { start, end }, prior: scenario.schedule, pin: pinAt });
+    setScenario({
+      ...scenario,
+      schedule: { ...schedule, start_time: start, end_time: end },
+    });
+  };
+  const undoFix = () => {
+    if (locked || !fix) return;
+    setScenario({ ...scenario, schedule: fix.prior });
+    setFix(null);
+  };
+  const hoursData =
+    jurisdictionBlock !== null &&
+    jurisdictionBlock.hours.shape !== "none" &&
+    jurisdictionBlock.hours.windows.length > 0;
 
   // --- File details (ruling 1) --------------------------------------------------
   const [filesOpen, setFilesOpen] = useState(false);
@@ -721,13 +758,20 @@ export function WhatBand({
             aria-labelledby="what-box-head"
             data-testid="what-guesses"
           >
-            <p
-              className="w-box-head"
-              id="what-box-head"
-              data-testid="what-guesses-head"
-            >
-              {boxHeading(n)}
-            </p>
+            {/* #526 ruling 1 (3c): the heading row, with the count of
+                guesses checked on its right. */}
+            <div className="w-box-top">
+              <p
+                className="w-box-head"
+                id="what-box-head"
+                data-testid="what-guesses-head"
+              >
+                {boxHeading(n)}
+              </p>
+              <span className="w-box-count" data-testid="what-guesses-count">
+                {`${boxFields.filter((f) => !isOpenGuess(scenario, f)).length} of ${n} checked`}
+              </span>
+            </div>
             {boxFields.map((f) => boxRows[f])}
           </div>
         )}
@@ -760,47 +804,94 @@ export function WhatBand({
                 start={workDate}
                 end={workDateEnd}
                 disabled={locked}
-                describedBy={workDate ? undefined : "what-date-hint"}
+                describedBy={windowsLine ? "what-date-hint" : undefined}
                 onPick={(d) => setScenario(setWorkDates(scenario, d))}
               />
-              {!workDate ? (
+              {/* #526 ruling 2: one result line, two lines reserved in
+                  every state, so the row never changes height. */}
+              {windowsLine && (
                 <span
-                  className="tr-note"
+                  className={`w-result is-${windowsLine.kind}`}
                   id="what-date-hint"
-                  data-testid="what-dates-hint"
+                  data-testid="what-windows-line"
                 >
-                  {datesHint(jurisdictionName)}
-                </span>
-              ) : (
-                windowsLine && (
-                  <div className="w-hours" data-testid="what-hours">
-                    <span className="tr-help" data-testid="what-windows-line">
-                      {hoursFrame(jurisdictionName)}{" "}
-                      <span className={windowsLine.tone}>
-                        {windowsLine.glyph ? `${windowsLine.glyph} ` : ""}
-                        {windowsLine.text}
-                      </span>
+                  {windowsLine.kind === "ok" && (
+                    <span className="w-result-mark sym-pass" aria-hidden>
+                      ✓
                     </span>
-                    {jurisdictionName && scheduleWindows && (
-                      <button
-                        type="button"
-                        className="w-link"
-                        data-read=""
-                        aria-expanded={windowsOpen}
-                        onClick={() => setWindowsOpen((o) => !o)}
-                        data-testid="what-hours-all"
-                      >
-                        {seeAllHours(jurisdictionName)}
-                      </button>
-                    )}
-                    {windowsOpen && scheduleWindows}
-                  </div>
-                )
+                  )}
+                  {windowsLine.kind === "bad" && (
+                    <span className="wd-bad" aria-hidden />
+                  )}
+                  <span>{windowsLine.text}</span>
+                </span>
               )}
             </WhyCell>
             {/* The dates' time rows (ScheduleField), once a date stands. */}
             {scheduleCells}
           </div>
+          {/* #526 ruling 2: the work hours get a row of their own under the
+              grid.  With no data for the jurisdiction it says so, with no
+              link (Rule 10). */}
+          {scenario.jurisdiction_key && jurisdictionBlock && (
+            <div className="w-hours-row" data-testid="what-hours">
+              <span className="w-line w-hours-text">
+                {/* Round-2 rework (R145 S21a): the short name, as the
+                    Work dates line; the window's title keeps the block's. */}
+                {hoursData
+                  ? hoursRowLine(shortName(scenario.jurisdiction_key, jurisdictionBlock.name) ?? jurisdictionBlock.name)
+                  : noHoursRowLine(shortName(scenario.jurisdiction_key, jurisdictionBlock.name) ?? jurisdictionBlock.name)}
+              </span>
+              {hoursData && (
+                <button
+                  ref={hoursLinkRef}
+                  type="button"
+                  className="w-link"
+                  data-read=""
+                  aria-haspopup="dialog"
+                  onClick={() => setHoursOpen(true)}
+                  data-testid="what-hours-all"
+                >
+                  {seeHours(shortName(scenario.jurisdiction_key, jurisdictionBlock.name) ?? jurisdictionBlock.name)}
+                </button>
+              )}
+              {/* Round 2 (finding 8): the record's line is always reserved,
+                  so "Hours changed ... Undo" appears and goes without
+                  moving anything. */}
+              {hoursData && (
+                <span className="w-hours-slot" data-testid="what-hours-slot">
+                  {fix && fixStands && (
+                    <span className="w-line w-hours-record" data-testid="what-hours-record">
+                      <span>{fixRecord(fix.applied.start, fix.applied.end)}</span>
+                      <button
+                        type="button"
+                        className="undo-link wq-link"
+                        data-write=""
+                        disabled={locked}
+                        onClick={undoFix}
+                        data-testid="what-hours-undo"
+                      >
+                        Undo
+                      </button>
+                    </span>
+                  )}
+                </span>
+              )}
+            </div>
+          )}
+          {hoursOpen && jurisdictionBlock && hoursData && (
+            <WorkHoursDialog
+              jurisdiction={jurisdictionBlock}
+              streetClass={scenario.street_class ?? null}
+              start={schedule?.start_time ?? null}
+              end={schedule?.end_time ?? null}
+              verifying={hoursVerifying}
+              fixed={fix && fixStands ? fix.applied : null}
+              onFix={applyFix}
+              onUndo={undoFix}
+              onClose={closeHours}
+            />
+          )}
         </div>
 
         <DisclosureRow

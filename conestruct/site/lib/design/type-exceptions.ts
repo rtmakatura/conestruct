@@ -424,6 +424,28 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
+  {
+    name: "the guesses box, the Work dates row and the work-hours dialog (#526)",
+    sizes: ["var(--fs-step-question-520)", "var(--fs-body-value)", "var(--fs-field-label)"],
+    reason:
+      "#526 (mission #527; validation-artifacts/committed/missions/ux-group7b-guesses-hours/issue-526/rulings.md), in #517's type: the dialog's title is 19 / 600 on --fs-step-question-520 (as #507's map window heading); its lines, view switch and fix button read --fs-body-value; the guesses count, the Work dates result line, the source line, ruler and week labels, clip arrows, legend and the 'No record' caption read --fs-field-label.  All existing tokens: no size joins the census.",
+    css: [
+      { selector: ".workbench .w-box-count", size: "var(--fs-field-label)" },
+      { selector: ".workbench .w-result", size: "var(--fs-field-label)" },
+      { selector: ".workbench .whd-title", size: "var(--fs-step-question-520)" },
+      { selector: ".workbench .whd-sub, .workbench .whd-line, .workbench .whd-source", size: "var(--fs-body-value)" },
+      { selector: ".workbench .whd-source", size: "var(--fs-field-label)" },
+      { selector: ".workbench .whd-seg", size: "var(--fs-body-value)" },
+      { selector: ".workbench .whd-labels, .workbench .whd-ticks", size: "var(--fs-field-label)" },
+      { selector: ".workbench .whd-clip", size: "var(--fs-field-label)" },
+      { selector: ".workbench .whd-fix", size: "var(--fs-body-value)" },
+      { selector: ".workbench .whd-vticks", size: "var(--fs-field-label)" },
+      { selector: ".workbench .whd-dayname", size: "var(--fs-field-label)" },
+      { selector: ".workbench .whd-legend", size: "var(--fs-field-label)" },
+      { selector: ".workbench .whd-none-label", size: "var(--fs-field-label)" },
+    ],
+    tsx: [],
+  },
 ];
 
 export const TYPE_DEBT: readonly TypeDebt[] = [
@@ -694,7 +716,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/QuotePanel.tsx", cls: "text-[13px]", count: 7 },
       { file: "components/QuotePanel.tsx", cls: "text-[16px]", count: 1 },
       { file: "components/QuotePanel.tsx", cls: "text-[28px]", count: 1 },
-      { file: "components/ScheduleField.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/WorkBeyondShoulderForm.tsx", cls: "text-[10px]", count: 2 },
     ],
   },
@@ -838,7 +859,7 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 222, // #517: +15 (207 -> 222), the What section's rules (ruling 1), the listbox and the date picker; sizes unchanged, all existing tokens; // #507: +8 (199 -> 207), the map window's rules (ruling 1); sizes unchanged, all existing tokens; // #456: +1 (198 -> 199), the strip's Hide map / Show map; sizes unchanged (ruling 5). #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 235, // #526: +13 (222 -> 235), the guesses count, the Work dates line and the work-hours dialog; sizes unchanged, all existing tokens; // #517: +15 (207 -> 222), the What section's rules (ruling 1), the listbox and the date picker; sizes unchanged, all existing tokens; // #507: +8 (199 -> 207), the map window's rules (ruling 1); sizes unchanged, all existing tokens; // #456: +1 (198 -> 199), the strip's Hide map / Show map; sizes unchanged (ruling 5). #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
   // #437: +4 (179 -> 183) — the question heading, the answer label, the
   // Next / Apply button and the strip's question sentence; sizes unchanged.
   // #437 branch 3: 183 -> 180 — seven out (the dismiss picker's legend,
@@ -888,7 +909,7 @@ export const CENSUS_PINS = {
   // coming-soon-gate C-Q8: the six legal-page sites leave (terms and
   // privacy, 36/15/11 px each); the wordmark's site moves AppNav ->
   // Wordmark (one out, one in).  92 -> 86.
-  tsxSites: 41, // #507: -6, the picker's six Tailwind size rows left with the restyle (47 -> 41); // #443: -10, TieredReference, DeviceBreakdown's shell and JurisdictionSection's cards (57 -> 47); // #239: -29, the archived landing's nine components deleted (86 -> 57)
+  tsxSites: 40, // #526: -1, ScheduleField's two faint text-[11px] notes left with the windows block (41 -> 40); // #507: -6, the picker's six Tailwind size rows left with the restyle (47 -> 41); // #443: -10, TieredReference, DeviceBreakdown's shell and JurisdictionSection's cards (57 -> 47); // #239: -29, the archived landing's nine components deleted (86 -> 57)
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -906,6 +927,6 @@ export const CENSUS_PINS = {
   // text-[10px].  283 -> 284.
   // #234: the picker's restored-intersection line takes the panel's own
   // text-[11px].  284 -> 285.
-  tsxUses: 91, // #507: -42, the picker's Tailwind size uses (25 + 6 + 5 + 3 + 1 + 2) left with the restyle; // #457: -1, the near-intersection note's Undo is the shared link (text-[12px] 2 -> 1); // #443: -65, the same; // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
-  tsxFiles: 21, // #507: -1, LocationPickerModal.tsx leaves the census (22 -> 21); // #443: -3 (25 -> 22); // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
+  tsxUses: 89, // #526: -2, the same two uses; // #507: -42, the picker's Tailwind size uses (25 + 6 + 5 + 3 + 1 + 2) left with the restyle; // #457: -1, the near-intersection note's Undo is the shared link (text-[12px] 2 -> 1); // #443: -65, the same; // #440: -1, the picker's detected-crossing paragraph (ruling 7, X10; sites and files unchanged); // #435: -6, the road picker's card and rows (CSS classes now; sites and files unchanged); // #430: +1, the picker's declined-preview line (sites and files unchanged); // #242: +1, AppNav's new-version button (sites and files unchanged); // #239: -48, the archived landing's nine components deleted; // #301 piece 3 (R123 Q1): -16, the road-properties panel out of the picker (sites and files unchanged); #290: -8 net (the work-zone panel out, the pre-side sentence in); hand-check +1 (the refused-corridor note); #301 piece 2: -4 (the extent rows' Total label and value, a zone's label and value); coming-soon-gate C-Q8: -6 (the legal pages' six uses; the wordmark's one use moves, net 0)
+  tsxFiles: 20, // #526: -1, ScheduleField.tsx leaves the census (21 -> 20); // #507: -1, LocationPickerModal.tsx leaves the census (22 -> 21); // #443: -3 (25 -> 22); // #239: -9, the archived landing's components deleted (34 -> 25); // coming-soon-gate C-Q8: app/terms and app/privacy leave, components/Wordmark.tsx enters.  35 -> 34.
 } as const;

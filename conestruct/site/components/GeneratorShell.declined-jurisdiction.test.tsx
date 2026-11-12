@@ -123,7 +123,7 @@ describe("#425 / #406 — a declined plan's Jurisdiction cell", () => {
     expect(whyTip("jurisdiction")).toContain(DECLINED_LINE);
     expect(details().textContent).not.toContain("didn't answer");
     // One verb in the band (#425): the hours result under the dates.
-    expect(windowsLine()).toBe("Parker's work hours: not checked: the plan was declined");
+    expect(windowsLine()).toBe("Not checked: the plan was declined.");
   });
 
   it("is not an error: no is-error, and the line sits behind a ◌ marker (Rule 13: glyph and word)", async () => {
@@ -163,7 +163,7 @@ describe("#425 round 4 — a check that ran and failed reads \"check failed\", n
     expect(toggle().classList.contains("is-plain")).toBe(true);
     expect(toggle().classList.contains("is-guess")).toBe(false);
     expect(screen.queryByTestId("error-jurisdiction")).toBeNull();
-    expect(windowsLine()).toBe("Parker's work hours: check failed: the check didn't answer");
+    expect(windowsLine()).toBe("Check failed: the check didn't answer.");
   });
 
   it("a pin guess keeps '⚠ from the pin', with the failed check in its details", async () => {
@@ -181,6 +181,6 @@ describe("#425 round 4 — a check that ran and failed reads \"check failed\", n
   it("a decline still reads not checked, never check failed", async () => {
     await mountAndAnswer(PICKED_DATED, declined400);
     expect(details().textContent).not.toContain(FAILED_LINE);
-    expect(windowsLine()).not.toContain("check failed");
+    expect(windowsLine()).not.toContain("Check failed");
   });
 });

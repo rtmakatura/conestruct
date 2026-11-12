@@ -64,6 +64,37 @@
 // node_modules) finds 0 violations in the band.  Then WHERE is reopened
 // and read as the other WHERE states (#469's band height).  The repo had
 // no other permanent 44 px or axe script, so they live here.
+// #526 (Ryan, 2026-11-11, item 1 ruling 2: "The Work dates row never
+// changes height. ... Add these states to #490's columns check."): the
+// `what` phase also walks the Work dates result line through its ruled
+// states and reads the Work dates cell's height (its grid row's, as the
+// row's cells stretch to it) in each: no dates, dates with
+// no times, fits (9 to 15 on Mon Nov 16 to Fri Nov 20 2026, street class
+// collector), outside (7 to 17), and no data (Jurisdiction switched to
+// CDOT, a jurisdiction with no work hours on record).  The recorded road's
+// carriageway question is answered (One-way) first: unanswered, the plan
+// is declined and every state would read "Not checked".  The row passes when
+// every state's height is the same (0 px, rounded).  The street class and
+// the jurisdiction are picked where they show: in the guesses box, or in
+// the measured row (opened when needed).  The old "#227's windows table
+// open" step is now the work-hours window (ruling 4): opened from
+// "See <jurisdiction>'s work hours" with fits on the page, read in both
+// views (axe, 44 px, and one fixed size: the views' boxes must match,
+// 0 px), closed with Esc, and focus must come back to the link.
+// #526 round 2 (finding 1): the line's worst cases, which no recorded road
+// produces, ride a page.route on the device-breakdown and audit answers (the block's
+// name and its hours_days replaced, layout content only): both day kinds
+// outside with different problems and the longest clock words, many
+// no-closure weekend days, and the records' longest name with no window on
+// record for these days and with weekdays only.  Each is a Work dates
+// state, so the row must read the same height in all of them too.
+// Round-2 rework (S21; S20 withdrawn): two lines are reserved at every
+// width, and the line names the picked jurisdiction by its short name, so
+// the worst cases run with the picker's longest (Centennial), plus its
+// no-data line, the longest ruled verbatim one.
+// Finding 8: the hours row reserves the fix's record line, so its height
+// is read before the fix, with "Hours changed ... Undo" showing, and after
+// Undo (0 px).
 // "0 px": the difference, rounded to the nearest whole px, is 0 (CHOSEN:
 // a box's edge falls on sub-pixel positions; half a px is not a visible
 // step at DPR 1).
@@ -360,7 +391,17 @@ function readWhat() {
   const name = (e) => (e.getAttribute("aria-label") || e.innerText || e.className || e.tagName).toString().replace(/\s+/g, " ").trim().slice(0, 30);
   const under = ctl.filter((e) => e.getBoundingClientRect().height < 44).map((e) => `${name(e)} ${Math.round(e.getBoundingClientRect().height * 100) / 100}px`);
   const rows = [...band.querySelectorAll("[data-testid=what-guesses] .a-cell")].map((e) => ({ id: e.getAttribute("data-testid"), top: +(e.getBoundingClientRect().top + scrollY).toFixed(2) }));
-  return { grids, controls: ctl.length, under, rows, head: document.querySelector("[data-testid=what-guesses-head]")?.innerText ?? null, bandH: +band.getBoundingClientRect().height.toFixed(2) };
+  // #526 ruling 2: the Work dates cell (its grid row's height) and its line.
+  const wd = band.querySelector("[data-testid=cell-work-dates]");
+  const wl = band.querySelector("[data-testid=what-windows-line]");
+  const dates = wd ? {
+    h: +wd.getBoundingClientRect().height.toFixed(2),
+    line: wl ? wl.innerText.replace(/\s+/g, " ").trim() : null,
+    kind: wl ? ([...wl.classList].find((c) => c.startsWith("is-")) ?? null) : null,
+  } : null;
+  const hr = band.querySelector("[data-testid=what-hours]");
+  const hoursRowH = hr ? +hr.getBoundingClientRect().height.toFixed(2) : null;
+  return { grids, controls: ctl.length, under, rows, dates, hoursRowH, head: document.querySelector("[data-testid=what-guesses-head]")?.innerText ?? null, count: document.querySelector("[data-testid=what-guesses-count]")?.innerText ?? null, bandH: +band.getBoundingClientRect().height.toFixed(2) };
 }
 const AXE_SRC = (() => { try { return fs.readFileSync(path.join(ROOT, "conestruct/site/node_modules/axe-core/axe.min.js"), "utf8"); } catch { return null; } })();
 
@@ -371,11 +412,15 @@ async function one(w, h, zoom) {
   const rows = [];
   const errors = [];
   const whatSteps = [];
+  // #526: the Work dates row's height in each ruled state, and the window.
+  const datesRow = [];
+  const hoursDialog = [];
+  const hoursRowCheck = [];
   // #507 (R145-4): a lone offered side is now picked for you, so the side
   // question never opens on the recorded one-carriageway road.  Every phase
   // walks with the two-side answer (the mirrored side below) so the side
   // states stay reachable; "all" replays the backend's answer as is.
-  const mode = { name: null, cross: "off", geom: "real", sides: "two", map: "real", hold: 0 };
+  const mode = { name: null, cross: "off", geom: "real", sides: "two", map: "real", hold: 0, block: null };
   let outline = null;
   // Each phase on a fresh context (no plan carried over in storage).
   let ctx = null;
@@ -414,17 +459,41 @@ async function one(w, h, zoom) {
         return r.fulfill({ status: resp.status(), contentType: "application/json", body: JSON.stringify(body) });
       } catch { return r.abort().catch(() => {}); }
     });
+    // #526 round 2: the line's worst cases, through the breakdown's answer.
+    await p.route("**/api/render/device-breakdown**", async (r) => {
+      if (!mode.block) return r.fallback();
+      try {
+        const own = isSiteRequest(r.request().url(), SITE) ? gateHeaders(SITE) : {};
+        const resp = await r.fetch({ headers: { ...r.request().headers(), ...own } });
+        const body = await resp.json();
+        if (body?.jurisdiction?.hours) mode.block(body.jurisdiction);
+        return r.fulfill({ status: resp.status(), contentType: "application/json", body: JSON.stringify(body) });
+      } catch { return r.abort().catch(() => {}); }
+    });
     await p.route("**/api/corridor-map**", (r) => (mode.map === "fail" ? r.fulfill({ status: 500, body: "check: forced failure" }) : r.fallback()));
     // Repair 2: the audit held (as verify-generate-cls.mjs holds it) so the
     // Generate outline stays on screen to be read and cropped.
     await p.route("**/api/render/audit", async (r) => {
-      if (!mode.hold) return r.fallback();
+      if (!mode.hold && !mode.block) return r.fallback();
       try {
         const own = isSiteRequest(r.request().url(), SITE) ? gateHeaders(SITE) : {};
         const resp = await r.fetch({ headers: { ...r.request().headers(), ...own } });
-        const body = await resp.body();
+        let body = await resp.body();
+        // #526 round 2: the block also rides the audit's breakdown.
+        if (mode.block) {
+          try {
+            const j = JSON.parse(body.toString("utf8"));
+            if (j?.breakdown?.jurisdiction?.hours) {
+              mode.block(j.breakdown.jurisdiction);
+              body = Buffer.from(JSON.stringify(j));
+            }
+          } catch { /* not JSON: as is */ }
+        }
         await new Promise((res) => setTimeout(res, mode.hold));
-        return await r.fulfill({ status: resp.status(), headers: resp.headers(), body });
+        const headers = { ...resp.headers() };
+        delete headers["content-length"];
+        delete headers["content-encoding"];
+        return await r.fulfill({ status: resp.status(), headers, body });
       } catch {
         await r.abort().catch(() => {});
       }
@@ -439,7 +508,7 @@ async function one(w, h, zoom) {
       errors.push(`${name}: ${oneLine(e).slice(0, 200)}`);
       if (OUT) await p?.screenshot({ path: path.join(OUT, `${tag}-${name}-error.png`) }).catch(() => {});
     } finally {
-      Object.assign(mode, { name: null, cross: "off", geom: "real", sides: "two", map: "real", hold: 0 });
+      Object.assign(mode, { name: null, cross: "off", geom: "real", sides: "two", map: "real", hold: 0, block: null });
     }
   };
   try {
@@ -668,7 +737,7 @@ async function one(w, h, zoom) {
         const t = document.querySelector(sel)?.innerText ?? "";
         return t && !/Checking|checking your dates|◌ loading/.test(t);
       }, W, { timeout: 90000 }).catch(() => {});
-      const whatStep = async (name, wait = 800) => {
+      const whatStep = async (name, wait = 800, crop = W) => {
         await p.waitForTimeout(wait);
         await zoomNow();
         await p.waitForTimeout(300);
@@ -680,7 +749,7 @@ async function one(w, h, zoom) {
         whatSteps.push(s);
         if (OUT) {
           s.shot = `${tag}-what-${name}.png`;
-          await p.locator(W).screenshot({ path: path.join(OUT, s.shot) }).catch(() => {});
+          await p.locator(crop).screenshot({ path: path.join(OUT, s.shot) }).catch(() => {});
         }
         const cols = s.grids.filter((g) => g.twoCol);
         s.ok = cols.every((g) => Math.round(g.diff) === 0) && s.under.length === 0 && s.axe.length === 0;
@@ -692,6 +761,20 @@ async function one(w, h, zoom) {
         await p.waitForSelector("[role=listbox]", { timeout: 5000 });
         await p.locator(`[role=listbox] [role=option][data-value="${value}"]`).click();
         await p.waitForTimeout(1200);
+      };
+      // #526: a field in the guesses box or in the measured row (opened
+      // when it is shut).
+      const reveal = async (id) => {
+        if (await p.locator(`#${id}`).isVisible().catch(() => false)) return;
+        if ((await p.getByTestId("what-measured-toggle").getAttribute("aria-expanded")) !== "true") {
+          await p.getByTestId("what-measured-toggle").click();
+          await p.waitForTimeout(400);
+        }
+      };
+      // #526 ruling 2: one Work dates state, its row height and its line.
+      const dateState = async (state, s) => {
+        datesRow.push({ state, h: s.dates?.h ?? NaN, line: s.dates?.line ?? null, kind: s.dates?.kind ?? null });
+        console.log(`${tag} what work-dates ${state.padEnd(9)} | row ${s.dates?.h ?? "MISSING"} px | ${s.dates?.kind ?? "no line"} "${s.dates?.line ?? ""}"`);
       };
       await pin();
       await pick("kind-chip-shoulder");
@@ -720,7 +803,14 @@ async function one(w, h, zoom) {
         const s = await whatStep("guess-checked");
         const moved = first.rows.filter((r, i) => !s.rows[i] || Math.round(s.rows[i].top - r.top) !== 0);
         if (moved.length) { s.ok = false; console.log(`${tag} what guess-checked FAIL | rows moved: ${moved.map((r) => r.id).join(", ")}`); }
-      } else console.log(`${tag} what guess-checked skipped: no street class guess at this pin`);
+      } else {
+        console.log(`${tag} what guess-checked skipped: no street class guess at this pin`);
+        // #526: the fits state needs a street class (Denver's windows are
+        // class-scoped).
+        await reveal("what-street-class");
+        await lb("what-street-class", "collector");
+        await settled();
+      }
       // The measured row the other way from its first show (it starts open
       // when a field inside needs the operator now, #517 S19).
       await p.getByTestId("what-measured-toggle").click();
@@ -730,6 +820,22 @@ async function one(w, h, zoom) {
       await p.getByTestId("what-files-toggle").click();
       await whatStep("files-open");
       await p.getByTestId("what-files-toggle").click();
+      // #526: the recorded road's carriageway is a question the map can't
+      // answer ("Pick one").  Unanswered, the plan is declined and every
+      // Work dates state reads "Not checked: the plan was declined.", so
+      // the walk answers it (One-way, as the recorded road is) before the
+      // dates states.  The measured row holds it (opened when shut).
+      if ((await p.getByTestId("what-measured-toggle").getAttribute("aria-expanded")) !== "true") {
+        await p.getByTestId("what-measured-toggle").click();
+        await p.waitForTimeout(400);
+      }
+      const oneWay = p.locator(`${W} [data-testid*=carriageway] button`, { hasText: /^One-way$/ });
+      if (await oneWay.count()) {
+        await oneWay.first().click();
+        await p.waitForTimeout(1200);
+        await settled();
+      }
+      await dateState("no-dates", await whatStep("dates-none"));
       // Work dates Mon Nov 16 to Fri Nov 20 2026, then the hours.
       await p.locator("#what-date").click();
       await p.waitForSelector("[data-testid=date-picker]");
@@ -739,20 +845,98 @@ async function one(w, h, zoom) {
       await p.locator("[data-testid=date-picker] [data-date='2026-11-20']").click();
       await p.waitForTimeout(400);
       if (await p.locator("[data-testid=date-picker]").count()) await p.keyboard.press("Escape");
+      await settled();
+      await dateState("no-times", await whatStep("dates-no-times"));
       await lb("sched-start", "9");
       await lb("sched-end", "15");
       await settled();
-      await whatStep("dates-inside");
+      await dateState("fits", await whatStep("dates-inside"));
+      // #526 ruling 4: the work-hours window, from its link.
       const all = p.getByTestId("what-hours-all");
       if (await all.count()) {
         await all.click();
-        await whatStep("hours-all-open");
-        await all.click();
+        const D = "[data-testid=hours-dialog]";
+        await p.waitForSelector(D, { timeout: 5000 });
+        const day = await whatStep("hours-dialog-day", 500, D);
+        const dayBox = await p.locator(D).boundingBox();
+        await p.getByTestId("hours-view-week").click();
+        const week = await whatStep("hours-dialog-week", 400, D);
+        const weekBox = await p.locator(D).boundingBox();
+        const sizeDiff = dayBox && weekBox ? +Math.max(Math.abs(dayBox.width - weekBox.width), Math.abs(dayBox.height - weekBox.height)).toFixed(2) : NaN;
+        await p.keyboard.press("Escape");
+        await p.waitForTimeout(300);
+        const closed = !(await p.locator(D).count());
+        const focusBack = (await p.evaluate(() => document.activeElement?.getAttribute("data-testid") ?? null)) === "what-hours-all";
+        const ok = Math.round(sizeDiff) === 0 && closed && focusBack;
+        if (!ok) week.ok = false;
+        hoursDialog.push({ size: dayBox ? `${Math.round(dayBox.width)}x${Math.round(dayBox.height)}` : null, sizeDiff, closed, focusBack, ok, dayOk: day.ok, weekOk: week.ok });
+        console.log(`${tag} what hours-dialog ${ok ? "PASS" : "FAIL"} | size ${dayBox ? `${Math.round(dayBox.width)}x${Math.round(dayBox.height)}` : "?"}, day vs week ${sizeDiff} px | Esc closes: ${closed} | focus back to the link: ${focusBack}`);
+      } else {
+        hoursDialog.push({ ok: false, missing: true });
+        console.log(`${tag} what hours-dialog FAIL | no "See <jurisdiction>'s work hours" link`);
       }
       await lb("sched-start", "7");
       await lb("sched-end", "17");
       await settled();
-      await whatStep("dates-outside");
+      const outside = await whatStep("dates-outside");
+      await dateState("outside", outside);
+      // Finding 8: the hours row before the fix, with the record, after Undo.
+      const hoursRow = [{ at: "before", h: outside.hoursRowH }];
+      await p.getByTestId("what-hours-all").click();
+      await p.waitForSelector("[data-testid=hours-fix]", { timeout: 5000 });
+      await p.getByTestId("hours-fix").click();
+      await p.waitForTimeout(800);
+      await p.keyboard.press("Escape");
+      await settled();
+      hoursRow.push({ at: "fixed", h: (await whatStep("hours-fixed")).hoursRowH });
+      await p.getByTestId("what-hours-undo").click();
+      await settled();
+      hoursRow.push({ at: "undone", h: (await whatStep("hours-undone")).hoursRowH });
+      const hrDiff = +(Math.max(...hoursRow.map((x) => x.h)) - Math.min(...hoursRow.map((x) => x.h))).toFixed(2);
+      hoursRowCheck.push({ rows: hoursRow, diff: hrDiff, ok: hoursRow.every((x) => Number.isFinite(x.h)) && Math.round(hrDiff) === 0 });
+      console.log(`${tag} what hours-row ${hoursRowCheck.at(-1).ok ? "PASS" : "FAIL"} | ${hoursRow.map((x) => `${x.at} ${x.h}`).join(", ")} px; diff ${hrDiff} px`);
+      // Finding 1: the worst cases (see the header).  Each takes effect on the
+      // next breakdown answer, so an input changes (the end time) to ask it.
+      const LONG = "E-470 Public Highway Authority";
+      const K = { allowed: [[8.5, 15.5]], record: "windows", no_closures: false, status: "inside", outside: [], starts_before: null, ends_after: null, misses: false, fix: null, sources: [] };
+      const NONE = { ...K, allowed: [[0, 24]], record: "none", status: "no_record" };
+      const both = (j, kinds, status, name = j.name) => {
+        j.name = name;
+        j.hours_days = { ...j.hours_days, status, missing: null, kinds, job: { ...j.hours_days.job, kinds: ["weekday", "weekend"], kind_dates: { weekday: ["2026-11-16"], weekend: ["2026-11-21", "2026-11-22"] }, kind_days: { weekday: 90, weekend: 36 } } };
+      };
+      const worst = [
+        ["worst-two-kinds", (j) => both(j, { weekday: { ...K, status: "outside", starts_before: 12.5, ends_after: 12.5, outside: [[7, 12.5]], fix: [12.5, 12.5] }, weekend: { ...K, status: "outside", ends_after: 12.5, outside: [[12.5, 17]], fix: [8.5, 12.5] } }, "outside", LONG)],
+        ["worst-closures", (j) => both(j, { weekday: { ...K, status: "outside", starts_before: 12.5, ends_after: 12.5, outside: [[7, 12.5]], fix: [12.5, 12.5] }, weekend: { ...K, allowed: [], no_closures: true, status: "outside", outside: [[7, 17]] } }, "outside", LONG)],
+        ["worst-no-record", (j) => both(j, { weekday: NONE, weekend: NONE }, "no_record", LONG)],
+        ["worst-partial", (j) => both(j, { weekday: K, weekend: NONE }, "partial", LONG)],
+        // S21: the longest ruled verbatim line, no data, with the longest short name.
+        ["worst-no-data", (j) => { j.hours = { ...j.hours, shape: "none", windows: [] }; j.hours_days = null; }],
+      ];
+      // S21a: the line names the picked jurisdiction by its short name, so
+      // the worst cases run on the picker's longest one (Centennial).
+      await reveal("what-jurisdiction");
+      await lb("what-jurisdiction", "centennial");
+      await settled();
+      let end = 17;
+      for (const [name, fn] of worst) {
+        mode.block = fn;
+        end = end === 17 ? 16.5 : 17;
+        await lb("sched-end", String(end));
+        await settled();
+        await dateState(name, await whatStep(`dates-${name}`));
+      }
+      mode.block = null;
+      // No data for the jurisdiction (Rule 10): CDOT.
+      await reveal("what-jurisdiction");
+      await lb("what-jurisdiction", "cdot");
+      await settled();
+      await dateState("no-data", await whatStep("dates-no-data"));
+      const hs = datesRow.map((r) => r.h);
+      const rowDiff = +(Math.max(...hs) - Math.min(...hs)).toFixed(2);
+      const rowOk = datesRow.length === 10 && hs.every(Number.isFinite) && Math.round(rowDiff) === 0;
+      datesRow.diff = rowDiff;
+      datesRow.ok = rowOk;
+      console.log(`${tag} what work-dates row ${rowOk ? "PASS" : "FAIL"} | ${datesRow.length} states, height diff ${rowDiff} px`);
       // #469: WHERE reopened after the What changes, read as the others.
       await p.locator("[data-testid=fact-link-where]").click().catch(() => {});
       await step("reopened-after-what", 1500);
@@ -762,7 +946,7 @@ async function one(w, h, zoom) {
   } finally {
     await b.close();
   }
-  return { tag, steps, rows, errors, outline, whatSteps };
+  return { tag, steps, rows, errors, outline, whatSteps, datesRow, hoursDialog, hoursRowCheck };
 }
 
 const all = [];
@@ -776,6 +960,7 @@ for (const [w, h] of SIZES) {
     if (!r.steps.some((s) => s.twoCol)) console.log(`${r.tag} WHERE never in two columns at this size`);
     if (r.outline && !r.outline.marks) failed = true;
     if (r.whatSteps.some((s) => !s.ok)) failed = true;
+    if (r.whatSteps.length && (!r.datesRow.ok || r.hoursDialog.some((d) => !d.ok) || !r.hoursRowCheck.length || r.hoursRowCheck.some((d) => !d.ok))) failed = true;
     for (const row of r.rows) {
       const ok = Math.round(row.diff) === 0 && (row.buttonDiff === null || Math.round(row.buttonDiff) === 0);
       if (!ok) failed = true;
@@ -802,6 +987,9 @@ for (const [k, v] of byLayout) console.log(`  ${k}: ${v.runs} runs, max ${+v.max
 const ws = all.flatMap((r) => r.whatSteps);
 if (ws.length) {
   const gd = ws.flatMap((s) => s.grids.filter((g) => g.twoCol).map((g) => g.diff));
+  for (const r of all) if (r.datesRow.length) console.log(`  Work dates row (#526), ${r.tag}: ${r.datesRow.map((d) => `${d.state} ${d.h}`).join(", ")} px; diff ${r.datesRow.diff} px ${r.datesRow.ok ? "PASS" : "FAIL"}`);
+  for (const r of all) for (const d of r.hoursRowCheck) console.log(`  Hours row reserve (#526 round 2), ${r.tag}: ${d.rows.map((x) => `${x.at} ${x.h}`).join(", ")} px; diff ${d.diff} px ${d.ok ? "PASS" : "FAIL"}`);
+  for (const r of all) for (const d of r.hoursDialog) console.log(`  Work-hours window (#526), ${r.tag}: ${d.missing ? "NO LINK" : `size ${d.size}, day vs week ${d.sizeDiff} px, Esc closes ${d.closed}, focus back ${d.focusBack}`} ${d.ok ? "PASS" : "FAIL"}`);
   console.log(`  WHAT section (#517): ${new Set(ws.map((s) => s.name)).size} states x ${all.filter((r) => r.whatSteps.length).length} size/zoom runs, ${ws.length} readings: two-column grids, where each column's content ends (#520), max ${gd.length ? Math.max(...gd) : "n/a"} px; controls under 44 px in ${ws.filter((s) => s.under.length).length} readings; axe violations in ${ws.filter((s) => s.axe.length).length} readings`);
 }
 if (OUT) fs.writeFileSync(path.join(OUT, "readings.json"), JSON.stringify(all, null, 1));

@@ -24,6 +24,9 @@ import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import { classifyFromOsmTags } from "@/lib/road-detection/classify";
 import { WhatBand } from "./bands/WhatBand";
 import { pickOption } from "./__fixtures__/listbox";
+import { windowsSummary } from "./ScheduleField";
+import { denverBlock, denverDays } from "./__fixtures__/what-section";
+import type { JurisdictionBlock } from "@/lib/jurisdiction";
 
 afterEach(cleanup);
 
@@ -95,7 +98,14 @@ function sc(guesses: ScenarioGuesses, withRoad = true): Scenario {
 }
 
 let latest: Scenario | null = null;
-function Harness({ initial }: { initial: Scenario }) {
+function Harness({
+  initial,
+  block = null,
+}: {
+  initial: Scenario;
+  /** #526: a block, so the Work dates line reads (as the sidebar passes it). */
+  block?: JurisdictionBlock | null;
+}) {
   const [scenario, setScenario] = useState(initial);
   latest = scenario;
   return (
@@ -103,10 +113,11 @@ function Harness({ initial }: { initial: Scenario }) {
       scenario={scenario}
       setScenario={setScenario}
       setMeta={() => {}}
-      jurisdictionBlock={null}
+      jurisdictionBlock={block}
       jurisdictionLoading={false}
       jurisdictionErrored={false}
       stepIndex="STEP 2 OF 4"
+      windowsLine={windowsSummary({ scenario, jurisdiction: block })}
     />
   );
 }
@@ -134,6 +145,8 @@ describe("#517 ruling 1: the heading, the intro line and the guesses box", () =>
       "We filled this in from the road you confirmed. Check our 3 guesses, then tell us about the work.",
     );
     expect(text("what-guesses-head")).toBe("Check these 3 guesses");
+    // #526 ruling 1 (3c): the count of guesses checked, on the heading row.
+    expect(text("what-guesses-count")).toBe("0 of 3 checked");
     expect(boxOrder()).toEqual([
       "cell-road-type",
       "cell-street-class",
@@ -197,6 +210,9 @@ describe("#517 ruling 3 (P1, S2): a checked guess stays put", () => {
     pickOption("what-road-type", latest!.roadType as string);
     expect(text("prov-road-type")).toBe("Checked");
     expect(latest?.meta.operatorSet).toContain("roadType");
+    // #526 ruling 1: the count follows; the heading's n never changes.
+    expect(text("what-guesses-count")).toBe("2 of 3 checked");
+    expect(text("what-guesses-head")).toBe("Check these 3 guesses");
     expect(boxOrder()).toEqual([
       "cell-road-type",
       "cell-street-class",
@@ -307,31 +323,34 @@ describe("#517 ruling 5: the source line and its why tip", () => {
   });
 });
 
-describe("#517 ruling 7, S9: the work dates", () => {
-  it("unset: the button and the line naming the jurisdiction", () => {
-    render(<Harness initial={sc(THREE)} />);
+describe("#517 ruling 7, S9, #526 ruling 2: the work dates", () => {
+  it("unset: the button and the result line naming the jurisdiction", () => {
+    render(<Harness initial={sc(THREE)} block={denverBlock(denverDays("dates"))} />);
     expect(
       screen.getByRole("button", {
         name: "Work dates Pick start and end dates",
       }).id,
     ).toBe("what-date");
-    expect(text("what-dates-hint")).toBe(
-      "Optional. We check them against Denver's work hours.",
+    expect(text("what-windows-line")).toBe(
+      "Optional. We check your dates and times against Denver's work hours.",
     );
   });
 
-  it("no jurisdiction: S9's line", () => {
+  it("no jurisdiction: S2's line", () => {
     const s = sc({});
     s.jurisdiction_key = null;
     render(<Harness initial={s} />);
-    expect(text("what-dates-hint")).toBe(
-      "Optional. Pick a jurisdiction to check them against its work hours.",
+    expect(text("what-windows-line")).toBe(
+      "Optional. Pick a jurisdiction to check your dates against its work hours.",
     );
+    // No jurisdiction, no hours row (ruling 2).
+    expect(q('[data-testid="what-hours"]')).toBeNull();
   });
 
-  it("the old footer is gone", () => {
-    render(<Harness initial={sc(THREE)} />);
+  it("the old footer and the old words are gone", () => {
+    render(<Harness initial={sc(THREE)} block={denverBlock(denverDays("dates"))} />);
     expect(q('[data-testid="what-footer"]')).toBeNull();
+    expect(q('[data-testid="what-dates-hint"]')).toBeNull();
     expect(document.body.textContent).not.toContain("set dates to check");
     expect(text("what-files-line")).toBe(
       "Project name and location description. They print on the plan's title block. 2 not set.",

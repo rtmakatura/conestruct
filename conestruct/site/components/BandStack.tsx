@@ -82,10 +82,10 @@ export interface BandStackProps {
   kindFields?: ReactNode;
   /** Correction 1 — the dates control's cells, for the second group. */
   scheduleCells?: ReactNode;
-  /** #227's window reference block, behind the footer line. */
-  scheduleWindows?: ReactNode;
   /** R127 Q5: the window check's footer line. */
   windowsLine?: WindowsLine;
+  /** #526: the work-hours window's verdict is checking (#152 D). */
+  hoursVerifying?: boolean;
   /** R108: the pin lookup, for the jurisdiction cell. */
   jurisdictionLookup?: JurisdictionLookup;
   /** #289 hand-check, 2026-09-23, defect 1 — the shell's record of the
@@ -145,8 +145,8 @@ export function BandStack(props: BandStackProps) {
     jurisdictionName,
     kindFields,
     scheduleCells,
-    scheduleWindows,
     windowsLine,
+    hoursVerifying,
     jurisdictionLookup,
     kindState = "confirmed",
     onKindPicked,
@@ -297,8 +297,8 @@ export function BandStack(props: BandStackProps) {
         stepIndex={model.stepIndex}
         kindFields={kindFields}
         scheduleCells={scheduleCells}
-        scheduleWindows={scheduleWindows}
         windowsLine={windowsLine}
+        hoursVerifying={hoursVerifying}
         jurisdictionLookup={jurisdictionLookup}
       />
     );

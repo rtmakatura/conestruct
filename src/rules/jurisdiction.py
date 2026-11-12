@@ -410,6 +410,270 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
     return result
 
 
+# ---------------------------------------------------------------------------
+# #526: the hours check per day kind (the What section's Work dates line and
+# the work-hours window).  Additive: ``evaluate_hours`` above, and with it
+# ``hours_eval``, the PDF, the tier ledger and the exposure figure, are
+# unchanged.  Same window rules as ``evaluate_hours``: windows apply by day
+# kind and street class; bans subtract; work windows sharing a scope are
+# alternatives (their union) and distinct scopes are cumulative (#206).
+# ---------------------------------------------------------------------------
+
+_DAY_KINDS = ("weekday", "weekend")
+# CHOSEN (#526 S4): how many of a day kind's job dates the line names.
+_NAMED_DATES = 4
+
+
+def _subtract(
+    spans: list[tuple[float, float]], cut: tuple[float, float]
+) -> list[tuple[float, float]]:
+    out: list[tuple[float, float]] = []
+    for s, e in spans:
+        if cut[1] <= s or cut[0] >= e:
+            out.append((s, e))
+            continue
+        if cut[0] > s:
+            out.append((s, cut[0]))
+        if cut[1] < e:
+            out.append((cut[1], e))
+    return out
+
+
+def _intersect(
+    a: list[tuple[float, float]], b: list[tuple[float, float]]
+) -> list[tuple[float, float]]:
+    out = []
+    for a0, a1 in a:
+        for b0, b1 in b:
+            s, e = max(a0, b0), min(a1, b1)
+            if e > s:
+                out.append((s, e))
+    return sorted(out)
+
+
+def _allowed_spans(
+    windows: list[dict[str, Any]], ctx: PlanContext, day_kind: str
+) -> tuple[list[tuple[float, float]] | None, list[dict[str, Any]]]:
+    """The hours a closure is allowed on one day kind, within 0..24.
+
+    ``None`` when a window that could apply is class-scoped and the plan
+    has no street class (``evaluate_hours``'s ``indeterminate``).  Also
+    returns the windows that applied, for the source line.
+    """
+    applied: list[dict[str, Any]] = []
+    groups: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
+    bans: list[dict[str, Any]] = []
+    for w in windows:
+        applies = _window_applies(w, ctx, day_kind)
+        if applies == UNKNOWN:
+            return None, []
+        if applies == ABSTAINS:
+            continue
+        applied.append(w)
+        if w["kind"] == "ban":
+            bans.append(w)
+        else:
+            groups.setdefault((w["days"], tuple(w.get("classes") or ())), []).append(w)
+    allowed: list[tuple[float, float]] = [(0.0, 24.0)]
+    for group in groups.values():
+        allowed = _intersect(allowed, _merged_union(group))
+    for b in bans:
+        allowed = _subtract(allowed, (b["start"], b["end"]))
+    return sorted(allowed), applied
+
+
+def _wrapped_windows(allowed: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    """Allowed spans as windows a person can pick: a span ending at
+    midnight and one starting at midnight are one overnight window
+    (20-24 + 0-5 is 8 pm to 5 am).  ``end < start`` wraps, as #188's
+    schedule does."""
+    spans = list(allowed)
+    if len(spans) > 1 and spans[0][0] == 0.0 and spans[-1][1] == 24.0:
+        head, tail = spans[0], spans[-1]
+        spans = [(tail[0], head[1])] + spans[1:-1]
+    return spans
+
+
+def _unwrap(s: float, e: float) -> tuple[float, float]:
+    return (s, e if e > s else e + 24.0)
+
+
+def _day_kind_eval(
+    windows: list[dict[str, Any]], ctx: PlanContext, day_kind: str
+) -> dict[str, Any]:
+    allowed, applied = _allowed_spans(windows, ctx, day_kind)
+    sources: list[dict[str, Any]] = []
+    for w in applied:
+        if w["source"] not in sources:
+            sources.append(w["source"])
+    # #526 round 2 (R145 S10, Rule 10): "none" when no window applies to
+    # this day kind after the day and class filter.  The spans then read
+    # 0..24, but that is the absence of a rule, not a permission: the
+    # status says "no_record" and the page draws no allowed band.  While a
+    # class-scoped window waits on the street class (``allowed`` None) a
+    # window may apply, so the record reads "windows".
+    record = "none" if allowed is not None and not applied else "windows"
+    out: dict[str, Any] = {
+        "allowed": None if allowed is None else [[s, e] for s, e in allowed],
+        "record": record,
+        "no_closures": allowed is not None and not allowed,
+        "status": "no_record" if record == "none" else None,
+        "outside": [],
+        "starts_before": None,
+        "ends_after": None,
+        "misses": False,
+        "fix": None,
+        "sources": sources,
+    }
+    sched = ctx.schedule
+    if (
+        record == "none"
+        or allowed is None
+        or sched is None
+        or sched.start_time is None
+        or sched.end_time is None
+    ):
+        return out
+    segments = _schedule_segments(sched.start_time, sched.end_time)
+    outside: list[tuple[float, float]] = []
+    for seg in segments:
+        rest = [seg]
+        for span in allowed:
+            rest = _subtract(rest, span)
+        outside.extend(rest)
+    outside = [(round(a, 2), round(b, 2)) for a, b in outside if b - a > 1e-9]
+    out["outside"] = [[a, b] for a, b in outside]
+    out["status"] = "outside" if outside else "inside"
+    if not outside or not allowed:
+        return out
+    # The window to offer (#526 S3, CHOSEN): the one overlapping the hours
+    # most, the longer on a tie.  Compared on the hours' own timeline, so a
+    # window that wraps midnight lines up with hours that do.
+    s0, s1 = _unwrap(sched.start_time, sched.end_time)
+    best: tuple[float, float, float, float, float] | None = None
+    for ws, we in _wrapped_windows(allowed):
+        w0, w1 = _unwrap(ws, we) if (ws, we) != (0.0, 24.0) else (0.0, 24.0)
+        for shift in (-24.0, 0.0, 24.0):
+            a, b = w0 + shift, w1 + shift
+            ov = max(0.0, min(s1, b) - max(s0, a))
+            key = (ov, b - a)
+            if best is None or key > (best[0], best[1]):
+                best = (ov, b - a, a, b, ws)
+    assert best is not None
+    ov, _length, a, b, _ws = best
+    fix_start = a % 24.0
+    fix_end = b % 24.0
+    out["fix"] = [fix_start, fix_end]
+    if ov <= 0:
+        out["misses"] = True
+    else:
+        if s0 < a:
+            out["starts_before"] = fix_start
+        if s1 > b:
+            out["ends_after"] = fix_end
+    return out
+
+
+def _week_of(first: date) -> list[date]:
+    """#526 S5 (CHOSEN): the Monday-to-Sunday week holding the first date."""
+    monday = first.toordinal() - first.weekday()
+    return [date.fromordinal(monday + i) for i in range(7)]
+
+
+def _day_kind_of(d: date) -> str:
+    return "weekday" if d.weekday() < 5 else "weekend"
+
+
+def evaluate_hours_days(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any] | None:
+    """#526: the hours check for every day kind in the job.
+
+    ``None`` when the jurisdiction publishes no windows (the page says it
+    has no work hours for that jurisdiction, Rule 10).  ``missing`` names
+    what the check waits on (``dates``, ``times``, ``street_class``) or is
+    ``None`` once ``status`` is a verdict for every day kind in the job.
+    ``status`` is then ``outside``, ``inside``, ``partial`` (some day kinds
+    inside, the rest with no window on record) or ``no_record``.
+    """
+    hours = record.get("hours", {})
+    windows = hours.get("windows", [])
+    if hours.get("shape") == "none" or not windows:
+        return None
+    kinds = {k: _day_kind_eval(windows, ctx, k) for k in _DAY_KINDS}
+    sched = ctx.schedule
+    job: dict[str, Any] | None = None
+    if sched is not None and sched.date_mode != "tbd" and sched.work_date is not None:
+        first = sched.work_date
+        last = (
+            sched.work_date_end
+            if sched.date_mode == "range"
+            and sched.work_date_end is not None
+            and sched.work_date_end >= first
+            else first
+        )
+        n = last.toordinal() - first.toordinal() + 1
+        kind_dates: dict[str, list[str]] = {k: [] for k in _DAY_KINDS}
+        kind_count: dict[str, int] = {k: 0 for k in _DAY_KINDS}
+        for i in range(min(n, 7)):
+            d = date.fromordinal(first.toordinal() + i)
+            k = _day_kind_of(d)
+            kind_count[k] += 1
+            if len(kind_dates[k]) < _NAMED_DATES:
+                kind_dates[k].append(d.isoformat())
+        if n > 7:
+            # Past the first week every day kind is in the job.
+            for k in _DAY_KINDS:
+                kind_count[k] = max(kind_count[k], 1)
+        # #526 round 2 (R145 S11): each day kind's count over the whole job,
+        # for "<n> weekend days in your dates".
+        kind_days: dict[str, int] = {k: 0 for k in _DAY_KINDS}
+        for i in range(n):
+            kind_days[_day_kind_of(date.fromordinal(first.toordinal() + i))] += 1
+        job = {
+            "start": first.isoformat(),
+            "end": last.isoformat(),
+            "days": n,
+            "kinds": [k for k in _DAY_KINDS if kind_count[k]],
+            "kind_dates": kind_dates,
+            "kind_days": kind_days,
+            "week": [
+                {
+                    "date": d.isoformat(),
+                    "day_kind": _day_kind_of(d),
+                    "in_job": first <= d <= last,
+                }
+                for d in _week_of(first)
+            ],
+        }
+    missing: str | None = None
+    status = "unknown"
+    if job is None:
+        missing = "dates"
+    elif sched is None or sched.start_time is None or sched.end_time is None:
+        missing = "times"
+    elif any(kinds[k]["allowed"] is None for k in job["kinds"]):
+        missing = "street_class"
+    else:
+        # #526 round 2 (R145 S10): "outside" if any job day kind is outside;
+        # "inside" if every one is inside; "partial" if some are inside and
+        # the rest have no record; "no_record" if none has a record.
+        got = [kinds[k]["status"] for k in job["kinds"]]
+        if "outside" in got:
+            status = "outside"
+        elif all(g == "inside" for g in got):
+            status = "inside"
+        elif all(g == "no_record" for g in got):
+            status = "no_record"
+        else:
+            status = "partial"
+    return {
+        "status": status,
+        "missing": missing,
+        "holiday_rule": hours.get("holiday_rule", "none"),
+        "kinds": kinds,
+        "job": job,
+    }
+
+
 def _schedule_day_count(sched: WorkSchedule) -> int:
     if (
         sched.date_mode == "range"
@@ -645,6 +909,9 @@ def evaluate(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         "applied_deltas": applied_deltas,
         "chips": chips,
         "hours_eval": evaluate_hours(record, ctx),
+        # #526: per day kind, for the Work dates line and the work-hours
+        # window.  Additive; ``hours_eval`` above is unchanged.
+        "hours_days": evaluate_hours_days(record, ctx),
         "permit": permit,
         "conflicts": conflicts,
         "provisional": _any_provisional(record),

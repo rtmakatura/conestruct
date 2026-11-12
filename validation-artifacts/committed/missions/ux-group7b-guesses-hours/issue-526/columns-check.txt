@@ -1,0 +1,122 @@
+# #526 round-2 rework: scripts/verify-columns-end-together.mjs, what phase (ONLY=what SIZES=1440x900,1198x930,390x844 ZOOMS=1), on this branch's final uncommitted code, local next dev against scripts/verify-generate-cls-stub.py (Overpass replayed), 2026-11-11. S20 (the 3-line reserve) is withdrawn; two lines are reserved at every width, and the line uses the picked jurisdiction's short name (S21). The worst cases (injected into the breakdown and audit answers) run on Centennial, the picker's longest short name, and include its no-data line, the longest ruled verbatim one. The hours row's reserve is read before the fix, with the record, and after Undo. Written as UTF-8. Crops and readings.json: validation-artifacts-extra/ux-group7b-guesses-hours/issue-526/columns-rework/.
+1440x900 what first-show             PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 27 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1440x900 what tip-open               PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 27 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1440x900 what dropdown-open          PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 38 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1440x900 what guess-checked          PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 27 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1440x900 what measured-closed        PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px) | 44 px: 18 controls, 0 under | axe 0 | band 891.25 | box "Check these 3 guesses"
+1440x900 what files-open             PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px), files content 0 px (last cells cell-project/cell-location-description, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1157.25 | box "Check these 3 guesses"
+1440x900 what dates-none             PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 28 controls, 0 under | axe 0 | band 1152.75 | box "Check these 3 guesses"
+1440x900 what work-dates no-dates  | row 106 px | is-none "Optional. We check your dates and times against Denver's work hours."
+1440x900 what date-picker-open       PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 61 controls, 0 under | axe 0 | band 1152.75 | box "Check these 3 guesses"
+1440x900 what dates-no-times         PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what work-dates no-times  | row 106 px | is-none "Add a start and end time to finish the check."
+1440x900 what dates-inside           PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what work-dates fits      | row 106 px | is-ok "✓ Fits Denver's work hours on every day."
+1440x900 what hours-dialog-day       PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what hours-dialog-week      PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what hours-dialog PASS | size 560x600, day vs week 0 px | Esc closes: true | focus back to the link: true
+1440x900 what dates-outside          PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what work-dates outside   | row 106 px | is-bad "Starts before 8:30 am and ends after 3:30 pm on weekdays."
+1440x900 what hours-fixed            PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 33 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what hours-undone           PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what hours-row PASS | before 100, fixed 100, undone 100 px; diff 0 px
+1440x900 what dates-worst-two-kinds  PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what work-dates worst-two-kinds | row 106 px | is-bad "Outside the allowed hours on weekdays and weekends."
+1440x900 what dates-worst-closures   PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what work-dates worst-closures | row 106 px | is-bad "Outside the allowed hours on weekdays; no closures on weekends."
+1440x900 what dates-worst-no-record  PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what work-dates worst-no-record | row 106 px | is-none "We don't have Centennial's hours for these days, so we can't check them."
+1440x900 what dates-worst-partial    PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1440x900 what work-dates worst-partial | row 106 px | is-none "Fits Centennial's weekday hours. We don't have its weekend hours."
+1440x900 what dates-worst-no-data    PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1172 | box "Check these 3 guesses"
+1440x900 what work-dates worst-no-data | row 106 px | is-none "We don't have Centennial's work hours yet, so we can't check your dates."
+1440x900 what dates-no-data          PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1172 | box "Check these 3 guesses"
+1440x900 what work-dates no-data   | row 106 px | is-none "We don't have CDOT's work hours yet, so we can't check your dates."
+1440x900 what work-dates row PASS | 10 states, height diff 0 px
+1440x900 reopened-after-what        PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+1198x930 what first-show             PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 27 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1198x930 what tip-open               PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 27 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1198x930 what dropdown-open          PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 38 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1198x930 what guess-checked          PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 27 controls, 0 under | axe 0 | band 1058.75 | box "Check these 3 guesses"
+1198x930 what measured-closed        PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px) | 44 px: 18 controls, 0 under | axe 0 | band 891.25 | box "Check these 3 guesses"
+1198x930 what files-open             PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px), files content 0 px (last cells cell-project/cell-location-description, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1157.25 | box "Check these 3 guesses"
+1198x930 what dates-none             PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 28 controls, 0 under | axe 0 | band 1152.75 | box "Check these 3 guesses"
+1198x930 what work-dates no-dates  | row 106 px | is-none "Optional. We check your dates and times against Denver's work hours."
+1198x930 what date-picker-open       PASS | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 61 controls, 0 under | axe 0 | band 1152.75 | box "Check these 3 guesses"
+1198x930 what dates-no-times         PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what work-dates no-times  | row 106 px | is-none "Add a start and end time to finish the check."
+1198x930 what dates-inside           PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what work-dates fits      | row 106 px | is-ok "✓ Fits Denver's work hours on every day."
+1198x930 what hours-dialog-day       PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what hours-dialog-week      PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what hours-dialog PASS | size 560x600, day vs week 0 px | Esc closes: true | focus back to the link: true
+1198x930 what dates-outside          PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what work-dates outside   | row 106 px | is-bad "Starts before 8:30 am and ends after 3:30 pm on weekdays."
+1198x930 what hours-fixed            PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 33 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what hours-undone           PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what hours-row PASS | before 100, fixed 100, undone 100 px; diff 0 px
+1198x930 what dates-worst-two-kinds  PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what work-dates worst-two-kinds | row 106 px | is-bad "Outside the allowed hours on weekdays and weekends."
+1198x930 what dates-worst-closures   PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what work-dates worst-closures | row 106 px | is-bad "Outside the allowed hours on weekdays; no closures on weekends."
+1198x930 what dates-worst-no-record  PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what work-dates worst-no-record | row 106 px | is-none "We don't have Centennial's hours for these days, so we can't check them."
+1198x930 what dates-worst-partial    PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1242.5 | box "Check these 3 guesses"
+1198x930 what work-dates worst-partial | row 106 px | is-none "Fits Centennial's weekday hours. We don't have its weekend hours."
+1198x930 what dates-worst-no-data    PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1172 | box "Check these 3 guesses"
+1198x930 what work-dates worst-no-data | row 106 px | is-none "We don't have Centennial's work hours yet, so we can't check your dates."
+1198x930 what dates-no-data          PASS | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 0 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1172 | box "Check these 3 guesses"
+1198x930 what work-dates no-data   | row 106 px | is-none "We don't have CDOT's work hours yet, so we can't check your dates."
+1198x930 what work-dates row PASS | 10 states, height diff 0 px
+1198x930 reopened-after-what        PASS | frame↔last 0 px | column↔column 0 px | marks overlaps 0 (attribution on the frame) | past the band 0 | band 793.25 | last where-questions | lines - | road lines 3
+390x844 what first-show             PASS | columns one column | 44 px: 27 controls, 0 under | axe 0 | band 2054.75 | box "Check these 3 guesses"
+390x844 what tip-open               PASS | columns one column | 44 px: 27 controls, 0 under | axe 0 | band 2054.75 | box "Check these 3 guesses"
+390x844 what dropdown-open          PASS | columns one column | 44 px: 38 controls, 0 under | axe 0 | band 2054.75 | box "Check these 3 guesses"
+390x844 what guess-checked          PASS | columns one column | 44 px: 27 controls, 0 under | axe 0 | band 2054.75 | box "Check these 3 guesses"
+390x844 what measured-closed        PASS | columns one column | 44 px: 18 controls, 0 under | axe 0 | band 1522.25 | box "Check these 3 guesses"
+390x844 what files-open             PASS | columns one column | 44 px: 31 controls, 0 under | axe 0 | band 2335.75 | box "Check these 3 guesses"
+390x844 what dates-none             PASS | columns one column | 44 px: 28 controls, 0 under | axe 0 | band 2148.75 | box "Check these 3 guesses"
+390x844 what work-dates no-dates  | row 173.5 px | is-none "Optional. We check your dates and times against Denver's work hours."
+390x844 what date-picker-open       PASS | columns one column | 44 px: 61 controls, 0 under | axe 0 | band 2148.75 | box "Check these 3 guesses"
+390x844 what dates-no-times         PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what work-dates no-times  | row 173.5 px | is-none "Add a start and end time to finish the check."
+390x844 what dates-inside           PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what work-dates fits      | row 173.5 px | is-ok "✓ Fits Denver's work hours on every day."
+390x844 what hours-dialog-day       PASS | columns one column | 44 px: 35 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what hours-dialog-week      PASS | columns one column | 44 px: 35 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what hours-dialog PASS | size 358x600, day vs week 0 px | Esc closes: true | focus back to the link: true
+390x844 what dates-outside          PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what work-dates outside   | row 173.5 px | is-bad "Starts before 8:30 am and ends after 3:30 pm on weekdays."
+390x844 what hours-fixed            PASS | columns one column | 44 px: 33 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what hours-undone           PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what hours-row PASS | before 117.5, fixed 117.5, undone 117.5 px; diff 0 px
+390x844 what dates-worst-two-kinds  PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what work-dates worst-two-kinds | row 173.5 px | is-bad "Outside the allowed hours on weekdays and weekends."
+390x844 what dates-worst-closures   PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what work-dates worst-closures | row 173.5 px | is-bad "Outside the allowed hours on weekdays; no closures on weekends."
+390x844 what dates-worst-no-record  PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what work-dates worst-no-record | row 173.5 px | is-none "We don't have Centennial's hours for these days, so we can't check them."
+390x844 what dates-worst-partial    PASS | columns one column | 44 px: 32 controls, 0 under | axe 0 | band 2463.25 | box "Check these 3 guesses"
+390x844 what work-dates worst-partial | row 173.5 px | is-none "Fits Centennial's weekday hours. We don't have its weekend hours."
+390x844 what dates-worst-no-data    PASS | columns one column | 44 px: 31 controls, 0 under | axe 0 | band 2375.25 | box "Check these 3 guesses"
+390x844 what work-dates worst-no-data | row 173.5 px | is-none "We don't have Centennial's work hours yet, so we can't check your dates."
+390x844 what dates-no-data          PASS | columns one column | 44 px: 31 controls, 0 under | axe 0 | band 2375.25 | box "Check these 3 guesses"
+390x844 what work-dates no-data   | row 173.5 px | is-none "We don't have CDOT's work hours yet, so we can't check your dates."
+390x844 what work-dates row PASS | 10 states, height diff 0 px
+390x844 reopened-after-what        ONE COLUMN | frame↔last 393 px | column↔column 282 px | marks overlaps 0 (attribution under the frame) | past the band 0 | band 753.25 | last where-questions | lines - | road lines 4
+390x844 WHERE never in two columns at this size
+Layouts checked (largest bottom difference, px):
+  WHERE band: aerial ↔ right column, 1 states x 2 two-column size/zoom runs: max 0
+  WHERE frame: controls and lines against Mapbox's logo and attribution, 3 readings (3 size/zoom runs): 0 with an overlap
+  WHERE band: every text-bearing element against the band's bottom, 3 readings: 0 past it
+  Work dates row (#526), 1440x900: no-dates 106, no-times 106, fits 106, outside 106, worst-two-kinds 106, worst-closures 106, worst-no-record 106, worst-partial 106, worst-no-data 106, no-data 106 px; diff 0 px PASS
+  Work dates row (#526), 1198x930: no-dates 106, no-times 106, fits 106, outside 106, worst-two-kinds 106, worst-closures 106, worst-no-record 106, worst-partial 106, worst-no-data 106, no-data 106 px; diff 0 px PASS
+  Work dates row (#526), 390x844: no-dates 173.5, no-times 173.5, fits 173.5, outside 173.5, worst-two-kinds 173.5, worst-closures 173.5, worst-no-record 173.5, worst-partial 173.5, worst-no-data 173.5, no-data 173.5 px; diff 0 px PASS
+  Hours row reserve (#526 round 2), 1440x900: before 100, fixed 100, undone 100 px; diff 0 px PASS
+  Hours row reserve (#526 round 2), 1198x930: before 100, fixed 100, undone 100 px; diff 0 px PASS
+  Hours row reserve (#526 round 2), 390x844: before 117.5, fixed 117.5, undone 117.5 px; diff 0 px PASS
+  Work-hours window (#526), 1440x900: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  Work-hours window (#526), 1198x930: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  Work-hours window (#526), 390x844: size 358x600, day vs week 0 px, Esc closes true, focus back true PASS
+  WHAT section (#517): 21 states x 3 size/zoom runs, 63 readings: two-column grids, where each column's content ends (#520), max 0 px; controls under 44 px in 0 readings; axe violations in 0 readings
+RESULT PASS

@@ -213,7 +213,9 @@ describe("#263 type census — globals.css font-sizes", () => {
 
 describe("#263 type census — Tailwind size classes in components/ and app/", () => {
   it("the scanner reads the tree", () => {
-    expect(observedTsx.length).toBeGreaterThan(40);
+    // A sanity floor that the scanner found the tree, not a pin (the
+    // pins are CENSUS_PINS).  #526: 40 sites now, so the floor is 30.
+    expect(observedTsx.length).toBeGreaterThan(30);
     // #289 fidelity F4: the anchor was the H1's text-[28px], which left
     // the screen (sr-only now).  The nav wordmark's rule-22 size is the
     // anchor instead — a real site with a spec-traced value.
@@ -320,6 +322,11 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // four existing tokens; no new size.
         "var(--fs-step-question-520)",
         "var(--fs-refusal)",
+        "var(--fs-body-value)",
+        "var(--fs-field-label)",
+        // #526: the guesses box, the Work dates row and the work-hours
+        // dialog, on three existing tokens; no new size.
+        "var(--fs-step-question-520)",
         "var(--fs-body-value)",
         "var(--fs-field-label)",
         // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.

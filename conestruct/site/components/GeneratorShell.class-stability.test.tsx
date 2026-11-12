@@ -61,10 +61,10 @@ const parker = (demo as { jurisdictions: Record<string, unknown> })
 // pinned so the controls are live, exactly as a user switching classes
 // would be.
 // #289 hand-check, 2026-09-23, correction 2: the schedule is part of the
-// mount now.  Pre-generate the hours VERDICT lives in the WHAT band's
-// windows block, and that block reports "set dates to check" for a
-// schedule nobody entered (#199) — an honest answer, and not the one
-// this suite is about.  8:00–16:00 on a weekday straddles Parker's
+// mount now.  Pre-generate the hours VERDICT lives in the WHAT band (#526:
+// the Work dates line and the work-hours window), and with no schedule it
+// asks for one (#199) — an honest answer, and not the one this suite is
+// about.  8:00–16:00 on a weekday straddles Parker's
 // 9:00–15:30 window, which is what makes the fixture's `outside` verdict
 // the right one to assert.
 const PINNED: Scenario = {
@@ -244,11 +244,26 @@ function jurisdictionProv(): string {
   return whyTip("jurisdiction").join(" ");
 }
 
-/** The WHAT band's schedule windows block — the pre-generate home of
- *  the one class-dependent VERDICT (hours_eval). */
-function windowsBlock(): string {
-  return document.querySelector(".sched-windows")?.textContent ?? "";
+/** #526 ruling 4: the work-hours window — the pre-generate home of the
+ *  one class-dependent VERDICT (the backend's hours_days).  A person reads
+ *  it the way the page offers it: open it from the link under the grid,
+ *  read, close (the dialog is modal, so nothing else is pressed while it is
+ *  open).  No link (no block on screen): "". */
+async function windowsBlock(user: ReturnType<typeof userEvent.setup>): Promise<string> {
+  const link = screen.queryByTestId("what-hours-all");
+  if (!link) return "";
+  await user.click(link);
+  const text = screen.getByTestId("hours-dialog").textContent ?? "";
+  await user.click(screen.getByTestId("hours-dialog-close"));
+  expect(screen.queryByTestId("hours-dialog")).toBeNull();
+  return text;
 }
+
+// The demo fixture's hours_days is the backend's for its own context (an
+// 8 am to 3 pm weekday, regen_jurisdiction_demo_fixtures.py): Parker's
+// 9 am start makes it "outside".
+const PARKER_VERDICT = "Your hours go outside what Parker allows on weekdays.";
+const PARKER_LINE = "Starts before 9\u00a0am on weekdays.";
 
 async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   const user = userEvent.setup();
@@ -263,9 +278,8 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   // known renders as a word).  Ruling 196 named this state.
   expect(jurisdictionState()).toBe("evaluating");
   expect(jurisdictionProv()).toContain("Checking the jurisdiction for this plan.");
-  // #517 ruling 7: the window table opens from the link under the hours
-  // result ("See all of <jurisdiction>'s work hours").
-  await user.click(screen.getByTestId("what-hours-all"));
+  // #526 ruling 2: no block yet, so no hours row and no link.
+  expect(screen.queryByTestId("what-hours-all")).toBeNull();
   await flushDebounce();
   await releaseNext(okBreakdown(true));
   // Settled: the cell carries the EVALUATED answer and says which of the
@@ -335,10 +349,9 @@ describe("class-switch stability (#152 D)", () => {
   it("a class switch holds the jurisdiction's content while the refetch is in flight — no skeleton, one reflow max", async () => {
     const user = await mountWithParker();
     // Settled: the hours verdict renders (parker fixture is "outside").
-    expect(windowsBlock()).toContain("Parker's work hours");
-    expect(windowsBlock()).toContain(
-      "1 h outside the permitted 9:00 AM–3:30 PM window",
-    );
+    let hours = await windowsBlock(user);
+    expect(hours).toContain("Parker's work hours");
+    expect(hours).toContain(PARKER_VERDICT);
 
     await pickOptionUser(user, "what-street-class", "arterial");
     await flushDebounce();
@@ -349,49 +362,42 @@ describe("class-switch stability (#152 D)", () => {
     expect(jurisdictionCell()?.textContent).toContain("Parker");
     expect(jurisdictionState()).toBe("evaluated");
     expect(screen.queryByText(/Loading jurisdiction rules/)).toBeNull();
-    // The content is still mounted mid-refetch.
-    expect(windowsBlock()).toContain("Parker's work hours");
+    // The content is still mounted mid-refetch: the link and the window.
+    hours = await windowsBlock(user);
+    expect(hours).toContain("Parker's work hours");
 
     await releaseNext(okBreakdown(true));
-    expect(windowsBlock()).toContain(
-      "1 h outside the permitted 9:00 AM–3:30 PM window",
-    );
+    expect(await windowsBlock(user)).toContain(PARKER_VERDICT);
   });
 
-  it("R127 Q5: the footer line says the same verdict in its own words, and checking while the refetch is in flight", async () => {
+  it("R127 Q5 / #526 ruling 2: the Work dates line says the verdict in its own words, and checking while the refetch is in flight", async () => {
     const user = await mountWithParker();
     const line = () => screen.getByTestId("what-windows-line").textContent;
-    expect(line()).toBe("Parker's work hours: ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
+    expect(line()).toBe(PARKER_LINE);
     await pickOptionUser(user, "what-street-class", "arterial");
-    expect(line()).toBe("Parker's work hours: ◌ checking your dates");
+    expect(line()).toBe("Checking your dates against Parker's work hours.");
     await flushDebounce();
     await releaseNext(okBreakdown(true));
-    expect(line()).toBe("Parker's work hours: ⚠ 1 h outside the permitted 9:00 AM–3:30 PM window");
+    expect(line()).toBe(PARKER_LINE);
   });
 
   it("the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)", async () => {
     const user = await mountWithParker();
-    expect(windowsBlock()).toContain(
-      "1 h outside the permitted 9:00 AM–3:30 PM window",
-    );
+    expect(await windowsBlock(user)).toContain(PARKER_VERDICT);
 
     await pickOptionUser(user, "what-street-class", "arterial");
     // The stale "outside" verdict may not display as current — including
     // DURING the #182 debounce's deferred window, before the fetch has
-    // even dispatched.  The row keeps its shape and loses its claim.
-    expect(windowsBlock()).not.toContain(
-      "1 h outside the permitted 9:00 AM–3:30 PM window",
-    );
-    expect(windowsBlock()).toContain("checking these inputs");
+    // even dispatched.  The window keeps its shape and loses its claim.
+    let hours = await windowsBlock(user);
+    expect(hours).not.toContain(PARKER_VERDICT);
+    expect(hours).toContain("Checking your dates against Parker's work hours.");
 
     await flushDebounce();
-    expect(windowsBlock()).not.toContain(
-      "1 h outside the permitted 9:00 AM–3:30 PM window",
-    );
+    hours = await windowsBlock(user);
+    expect(hours).not.toContain(PARKER_VERDICT);
     await releaseNext(okBreakdown(true));
-    expect(windowsBlock()).toContain(
-      "1 h outside the permitted 9:00 AM–3:30 PM window",
-    );
+    expect(await windowsBlock(user)).toContain(PARKER_VERDICT);
   });
 
   it("a CHANGED jurisdiction key says CHECKING — a stale block from another jurisdiction never renders", async () => {
@@ -405,10 +411,12 @@ describe("class-switch stability (#152 D)", () => {
     // made; only the surface carrying it changed.
     expect(jurisdictionState()).toBe("evaluating");
     expect(jurisdictionProv()).toContain("Checking the jurisdiction for this plan.");
-    expect(windowsBlock()).not.toContain("Parker's work hours");
+    expect(await windowsBlock(user)).not.toContain("Parker's work hours");
+    expect(screen.getByTestId("what-windows-line").textContent).not.toContain("Parker");
     await flushDebounce();
     expect(jurisdictionState()).toBe("evaluating");
-    expect(windowsBlock()).not.toContain("Parker's work hours");
+    expect(await windowsBlock(user)).not.toContain("Parker's work hours");
+    expect(screen.getByTestId("what-windows-line").textContent).not.toContain("Parker");
   });
 
   it("a breakdown ERROR clears the held block rather than presenting it as live", async () => {
@@ -426,6 +434,9 @@ describe("class-switch stability (#152 D)", () => {
     // (#425 ruling 3: "check failed").
     expect(jurisdictionState()).toBe("check-failed");
     expect(jurisdictionProv()).toContain("The check didn't answer. The option shown stands.");
-    expect(windowsBlock()).not.toContain("Parker's work hours");
+    expect(await windowsBlock(user)).not.toContain("Parker's work hours");
+    expect(screen.getByTestId("what-windows-line").textContent).toBe(
+      "Check failed: the check didn't answer.",
+    );
   });
 });

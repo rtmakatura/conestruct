@@ -149,11 +149,11 @@ describe("#398 W5 — the windows line on a plan with no answer", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={WITH_PARKER_DATED} />);
     await settle();
     // Before the answer, the check is open and the line says so.
-    expect(windowsLine()).toBe("Parker's work hours: ◌ loading");
+    expect(windowsLine()).toBe("Checking your dates against Parker's work hours.");
     await answer(auditCalls, 0, declined400());
     await settle();
-    expect(windowsLine()).toBe("Parker's work hours: not checked: the plan was declined");
-    expect(windowsLine()).not.toContain("loading");
+    expect(windowsLine()).toBe("Not checked: the plan was declined.");
+    expect(windowsLine()).not.toContain("Checking");
   });
 
   it("a failed check (not a decline) says check failed, never 'loading'", async () => {
@@ -161,7 +161,7 @@ describe("#398 W5 — the windows line on a plan with no answer", () => {
     await settle();
     await answer(auditCalls, 0, failed500());
     await settle();
-    expect(windowsLine()).toBe("Parker's work hours: check failed: the check didn't answer");
+    expect(windowsLine()).toBe("Check failed: the check didn't answer.");
   });
 
   it("a plan that answers still reads the jurisdiction's verdict line", async () => {
@@ -169,7 +169,10 @@ describe("#398 W5 — the windows line on a plan with no answer", () => {
     await settle();
     await answer(auditCalls, 0, okAudit());
     await settle();
-    // #517 (ruling 7): the verdict's frame names the jurisdiction.
-    expect(windowsLine()).toMatch(/^Parker's work hours: /);
+    // #526 ruling 2: the answered block's own state, never a wait line.
+    // (The fixture's hours_days is the backend's for its own demo context,
+    // an 8 am to 3 pm weekday: Parker's verdict on it.)
+    expect(windowsLine()).not.toMatch(/^(Checking|Not checked|Check failed)/);
+    expect(windowsLine()).toBe("Starts before 9\u00a0am on weekdays.");
   });
 });

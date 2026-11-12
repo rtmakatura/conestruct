@@ -5938,12 +5938,39 @@ input[type="number"] {
   gap: var(--space-block);
   font-family: var(--font-sans);
 }
-/* The guesses box: the verdict strip's flag border and ground (rule 53's
-   tokens); its row rules are the same flag line. */
+/* #526 ruling 1 (Ryan, 2026-11-11, look 3c): the guesses box.  A 3 px
+   --warn strip along the top, the heading row on --pri-off with "<k> of <n>
+   checked" on its right in --ink-mute, the rows on --da-ground with
+   hairline (--rule-soft) rules.  No mustard fill: --vd-flag-ground is no
+   longer used here. */
 .workbench .w-box {
-  border: 1px solid var(--vd-flag-line);
-  background: var(--vd-flag-ground);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--warn);
+  background: var(--da-ground);
+  padding: 0;
+}
+.workbench .w-box-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--space-block);
   padding: 0 var(--space-block);
+  background: var(--pri-off);
+}
+.workbench .w-box-count {
+  font-family: var(--font-sans);
+  font-size: var(--fs-field-label);
+  line-height: 1.4;
+  color: var(--ink-mute);
+}
+/* Unchecked reason lines: --ink-mute with the small warn triangle (the
+   glyph keeps its --warn symbol colour); checked: "Checked" in --pass. */
+.workbench .w-box .w-src.is-guess {
+  color: var(--ink-mute);
+}
+.workbench .w-box .w-src.is-ok {
+  color: var(--pass);
 }
 .workbench .w-box-head,
 .workbench .w-sec-head {
@@ -5959,8 +5986,8 @@ input[type="number"] {
   grid-template-columns: minmax(0, 1fr) minmax(0, 280px);
   column-gap: var(--space-block);
   align-items: center;
-  padding: 10px 0;
-  border-top: 1px solid var(--vd-flag-line);
+  padding: 10px var(--space-block);
+  border-top: 1px solid var(--rule-soft);
 }
 .workbench .w-box > .a-cell > .a-cell-head,
 .workbench .a-col > .a-cell.w-cell > .a-cell-head {
@@ -6117,22 +6144,380 @@ input[type="number"] {
 .workbench .w-grid > .a-cell:nth-last-child(2):nth-child(odd) {
   align-content: end;
 }
-.workbench .w-hours {
-  display: grid;
-  gap: 2px;
-}
-/* #517 fold-in (ruling 1): #227's windows table, opened under the dates,
-   reads in the section's Inter with no caps or mono role. */
-.workbench .w-what .sched-windows,
-.workbench .w-what .sched-windows .tr-prov,
-.workbench .w-what .sched-windows .sw-glyph {
+/* #526 ruling 2: the Work dates result line.  Two lines are reserved in
+   every state (2 x the 1.4 line height, in em so it follows text zoom), so
+   the row never changes height.  The mark: a check in --pass for "fits",
+   an 8 px --dim square for "outside" (Rule 13: shape plus the sentence). */
+.workbench .w-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: calc(2 * 1.4em);
   font-family: var(--font-sans);
-  text-transform: none;
-  letter-spacing: normal;
+  font-size: var(--fs-field-label);
+  line-height: 1.4;
+  color: var(--ink-faint);
 }
-.workbench .w-what .sched-windows .sw-head {
-  font-weight: 600;
+.workbench .w-result.is-ok,
+.workbench .w-result.is-bad {
+  color: var(--ink);
+}
+.workbench .w-result-mark {
+  flex: none;
+}
+.workbench .wd-bad {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 0.35em;
+  background: var(--dim);
+}
+/* The row under the grid: "<j> limits when you can close a lane." and the
+   link (ruling 2), and the fix's record with the shared Undo (S9). */
+.workbench .w-hours-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-tight);
+  padding: 4px 0 8px;
   color: var(--ink-on-dark);
+}
+.workbench .w-hours-record {
+  display: inline-flex;
+  align-items: center;
+}
+/* Round 2 (finding 8): the record's line, always reserved.  Its height is
+   the shared Undo's 44 px target, so the reserve is that target (the text
+   beside it is one 1.4em line, shorter). */
+.workbench .w-hours-slot {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  min-height: 44px;
+}
+/* #526 ruling 4: the work-hours window.  One fixed size in both views
+   (CHOSEN: 560 x 600, inside a 16 px margin at any width); the body
+   scrolls if a view is taller.  Tokens only. */
+.workbench .whd-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, var(--da-ground) 80%, transparent);
+}
+.workbench .whd {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 12px;
+  width: min(560px, calc(100vw - 32px));
+  height: min(600px, calc(100vh - 32px));
+  padding: var(--space-block);
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+  font-family: var(--font-sans);
+  color: var(--ink);
+  box-sizing: border-box;
+}
+.workbench .whd:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .whd-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-tight);
+}
+.workbench .whd-heading {
+  flex: 1;
+  min-width: 0;
+}
+.workbench .whd-title {
+  margin: 0;
+  font-size: var(--fs-step-question-520);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.workbench .whd-sub,
+.workbench .whd-line,
+.workbench .whd-source {
+  margin: 4px 0 0;
+  font-size: var(--fs-body-value);
+  line-height: 1.45;
+  color: var(--ink-on-dark);
+}
+.workbench .whd-source {
+  font-size: var(--fs-field-label);
+  color: var(--ink-faint);
+}
+.workbench .whd-switch {
+  display: flex;
+}
+.workbench .whd-seg {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  cursor: pointer;
+}
+.workbench .whd-seg + .whd-seg {
+  border-left: 0;
+}
+.workbench .whd-seg[aria-pressed="true"] {
+  border-color: var(--act);
+  background: var(--pri-off);
+}
+.workbench .whd-seg:focus-visible,
+.workbench .whd-fix:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: -2px;
+}
+.workbench .whd-body {
+  overflow-y: auto;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+.workbench .whd-verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--ink);
+}
+.workbench .whd-ruler {
+  position: relative;
+  margin: 8px 6px 0;
+}
+.workbench .whd-labels,
+.workbench .whd-ticks {
+  position: relative;
+  height: 18px;
+  font-size: var(--fs-field-label);
+  line-height: 18px;
+}
+.workbench .whd-cap,
+.workbench .whd-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.workbench .whd-cap {
+  color: var(--act);
+  font-weight: 600;
+}
+.workbench .whd-tick {
+  color: var(--ink-faint);
+}
+.workbench .whd-track {
+  position: relative;
+  height: 28px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .whd-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--pri-off);
+  border: 1px solid var(--act);
+  box-sizing: border-box;
+}
+.workbench .whd-yours {
+  position: absolute;
+  top: 11px;
+  height: 6px;
+  background: var(--ink);
+}
+.workbench .whd-yours.is-out {
+  background: var(--dim);
+}
+/* Round 2 (finding 7): a clipped end is --ink-faint ("more this way");
+   --dim only when the clipped part is outside what's allowed. */
+.workbench .whd-clip {
+  position: absolute;
+  top: 4px;
+  font-size: var(--fs-field-label);
+  line-height: 1;
+  color: var(--ink-faint);
+}
+.workbench .whd-clip.is-out {
+  color: var(--dim);
+}
+.workbench .whd-clip.is-top,
+.workbench .whd-clip.is-bottom {
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.workbench .whd-clip.is-top {
+  top: -1px;
+}
+.workbench .whd-clip.is-bottom {
+  top: auto;
+  bottom: -1px;
+}
+.workbench .whd-clip.is-left {
+  left: -10px;
+}
+.workbench .whd-clip.is-right {
+  right: -10px;
+}
+.workbench .whd-fix {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--act);
+  background: transparent;
+  color: var(--act);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  font-weight: 600;
+  cursor: pointer;
+}
+.workbench .whd-record {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.workbench .whd-week {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px repeat(7, minmax(0, 1fr));
+  /* Round 3 (#531, S23): a caption row under the columns, reserved in
+     every week (two 15 px lines), so "No record" appears and goes without
+     moving anything. */
+  grid-template-rows: auto minmax(32px, auto);
+  column-gap: 4px;
+}
+.workbench .whd-vticks {
+  position: relative;
+  margin-top: 34px;
+  height: 240px;
+  font-size: var(--fs-field-label);
+  color: var(--ink-faint);
+}
+.workbench .whd-vticks span {
+  position: absolute;
+  right: 4px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+.workbench .whd-day {
+  display: grid;
+  grid-template-rows: 34px 240px;
+  min-width: 0;
+}
+/* Name over date (two 16 px lines), so seven days fit at 390. */
+.workbench .whd-dayname {
+  font-size: var(--fs-field-label);
+  line-height: 16px;
+  text-align: center;
+  color: var(--ink);
+}
+.workbench .whd-dayname > span {
+  display: block;
+}
+.workbench .whd-day.is-dim .whd-dayname {
+  color: var(--ink-faint);
+}
+.workbench .whd-day.is-dim .whd-col {
+  opacity: 0.45;
+}
+.workbench .whd-col {
+  position: relative;
+  border: 1px solid var(--rule-soft);
+}
+.workbench .whd-band.is-v {
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: auto;
+}
+.workbench .whd-yours.is-v {
+  top: auto;
+  left: calc(50% - 3px);
+  width: 6px;
+  height: auto;
+}
+.workbench .whd-closed {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--da-ground) 0 6px,
+    var(--pri-off) 6px 12px
+  );
+}
+.workbench .whd-foot {
+  display: grid;
+  gap: 4px;
+  border-top: 1px solid var(--rule-soft);
+  padding-top: 8px;
+}
+.workbench .whd-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-field-label);
+  color: var(--ink-on-dark);
+}
+.workbench .whd-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.workbench .whd-key {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+}
+.workbench .whd-key.is-allowed {
+  background: var(--pri-off);
+  border: 1px solid var(--act);
+}
+.workbench .whd-key.is-yours {
+  height: 4px;
+  background: var(--ink);
+}
+.workbench .whd-key.is-out {
+  height: 4px;
+  background: var(--dim);
+}
+/* Round 2 (R145 S10, Rule 10): a day with no window on record is an empty
+   column with a dashed --rule border, labelled "No record". */
+.workbench .whd-key.is-none {
+  border: 1px dashed var(--rule);
+}
+.workbench .whd-day.is-none .whd-col {
+  border: 1px dashed var(--rule);
+}
+/* Round 3 (#531, S23): no-record days are always one run (Mon-Fri or
+   Sat-Sun: the record is by day kind), so "No record" is one caption
+   spanning the run, under the columns.  Two columns are ~70 px at 390;
+   one ~33 px column was narrower than "record". */
+.workbench .whd-none-label {
+  grid-row: 2;
+  padding-top: 2px;
+  font-size: var(--fs-field-label);
+  line-height: 15px;
+  text-align: center;
+  color: var(--ink-faint);
+  min-width: 0;
+}
+/* Round 3 (#531, S24, Rule 10): on a no-record day your hours are not
+   checked, so they never take the inside ink: a hollow dashed bar. */
+.workbench .whd-yours.is-unchecked {
+  background: transparent;
+  border: 1px dashed var(--ink-faint);
 }
 /* Ruling 6: the shared listbox (components/ui/Listbox.tsx). */
 .workbench .lb,

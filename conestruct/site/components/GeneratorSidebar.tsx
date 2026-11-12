@@ -33,7 +33,8 @@ import { WorkBeyondShoulderForm } from "./WorkBeyondShoulderForm";
 import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
 import { NearIntersectionForm } from "./NearIntersectionForm";
-import { ScheduleField, ScheduleWindows, windowsSummary } from "./ScheduleField";
+import { ScheduleField, windowsSummary } from "./ScheduleField";
+import { jurisdictionLabel } from "@/lib/scenarios/why-lines";
 import {
   LocationPickerModal,
   type LocationPickerResult,
@@ -576,15 +577,10 @@ export function GeneratorSidebar({
         scheduleCells={
           <ScheduleField scenario={scenario} setScenario={setScenario} />
         }
-        scheduleWindows={
-          <ScheduleWindows
-            scenario={scenario}
-            jurisdiction={jurisdictionBlock ?? null}
-            verifying={jurisdictionRevalidating}
-          />
-        }
+        hoursVerifying={jurisdictionRevalidating}
         windowsLine={windowsSummary({
           scenario,
+          name: jurisdictionName ?? jurisdictionLabel(scenario.jurisdiction_key),
           jurisdiction: jurisdictionBlock ?? null,
           verifying: jurisdictionRevalidating,
           declined: jurisdictionDeclined,

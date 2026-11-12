@@ -17,19 +17,31 @@
 // scenario.schedule fields, and the Zone 3 hours chip READS them (it no
 // longer hosts inputs) — one fact, one home, everywhere in sync.
 
-import {
-  activeBandRow,
-  dayLabel,
-  deriveBandRows,
-  hhmm,
-  type BandRow,
-  type HoursEval,
-  type JurisdictionBlock,
-} from "@/lib/jurisdiction";
+import { hhmm, type JurisdictionBlock } from "@/lib/jurisdiction";
 import type { Scenario } from "@/lib/scenarios";
 import { Listbox } from "./ui/Listbox";
 import { WhyCell } from "./bands/FieldCell";
-import { timeWhy } from "@/lib/scenarios/why-lines";
+import {
+  ADD_STREET_CLASS,
+  ADD_TIMES,
+  DATES_CHECK_FAILED,
+  DATES_DECLINED,
+  DATES_NO_JURISDICTION,
+  cantCheckYet,
+  checkingDates,
+  datesOptional,
+  fitsEveryDay,
+  fitsPartial,
+  noHoursData,
+  noRecordDays,
+  outsideLine,
+  shortName,
+  timeWhy,
+} from "@/lib/scenarios/why-lines";
+
+/** The backend's `hours_eval` note for dates with no times
+ *  (src/rules/jurisdiction.py `NO_SCHEDULE_NOTE`). */
+const NO_SCHEDULE_NOTE = "no work schedule provided";
 
 type Sched = NonNullable<Scenario["schedule"]>;
 type DateMode = Sched["date_mode"];
@@ -175,41 +187,24 @@ export function ScheduleField({
   );
 }
 
-/** #227's window reference block — a reference table, not a field, so it
- *  sits under the second group's grid rather than inside it. */
-export function ScheduleWindows({
-  scenario,
-  jurisdiction = null,
-  verifying = false,
-}: {
-  scenario: Scenario;
-  jurisdiction?: JurisdictionBlock | null;
-  verifying?: boolean;
-}) {
-  const mode: DateMode = scenario.schedule?.date_mode ?? "tbd";
-  return (
-    <ScheduleWindowsBlock
-      scenario={scenario}
-      jurisdiction={jurisdiction}
-      scheduleMode={mode}
-      verifying={verifying}
-    />
-  );
-}
-
-/** R126 / R127 Q5 — the windows check as one footer line, beside File
- *  details: the active street class's verdict in the check's own words
- *  (`rowVerdict`'s, for the row the backend evaluated).  The table above
- *  opens from it, unchanged.  `glyph` is empty where D3 prints none
- *  ("set dates to check"). */
+/** #526 (Ryan, 2026-11-11, item 1 ruling 2): the Work dates cell's result
+ *  line, in one of its states.  `kind` picks the mark: "ok" a check mark,
+ *  "bad" the orange (`--dim`) square, "none" no mark.  Every verdict, hour
+ *  and date is the backend's `hours_days` (Rule 3); this picks the words.
+ *  Ruling 3's trace: "set dates to check" was every `unknown`, and the
+ *  backend says `unknown` both for dates with no times and for a
+ *  class-scoped window with no street class (rulings.md R145 S2). */
 export function windowsSummary({
   scenario,
+  name = null,
   jurisdiction = null,
   verifying = false,
   declined = false,
   errored = false,
 }: {
   scenario: Scenario;
+  /** The jurisdiction's name: the block's, else the picked option's. */
+  name?: string | null;
   jurisdiction?: JurisdictionBlock | null;
   verifying?: boolean;
   /** #398: the plan's check answered with a decline (400), so no block
@@ -217,228 +212,65 @@ export function windowsSummary({
   declined?: boolean;
   /** #398: the check failed without a decline; no block is coming. */
   errored?: boolean;
-}): { head: string; glyph: string; text: string; tone: string } {
-  const none = "text-[color:var(--none)]";
-  if (!scenario.jurisdiction_key) {
-    return {
-      head: "Windows",
-      glyph: "",
-      text: "select a jurisdiction to check",
-      tone: none,
-    };
-  }
+}): { kind: "none" | "ok" | "bad"; text: string } {
+  const none = (text: string) => ({ kind: "none" as const, text });
+  if (!scenario.jurisdiction_key) return none(DATES_NO_JURISDICTION);
+  name = jurisdiction?.name ?? name;
+  if (!name) return none(DATES_NO_JURISDICTION);
+  // Round-2 rework (R145 S21a): the line names the picked jurisdiction by
+  // its short name, so every state fits ruling 2's two lines.
+  const j = shortName(scenario.jurisdiction_key, name) ?? name;
   if (!jurisdiction) {
-    // #398 (Rule 10): "loading" only while a check is open.  An answer
-    // with no block says the windows weren't checked, and why.
-    if (declined) {
-      return {
-        head: "Windows",
-        glyph: "",
-        text: "not checked: the plan was declined",
-        tone: none,
-      };
+    // #398 (Rule 10): a decline or a failure is an answer; otherwise the
+    // check is open.
+    if (declined) return none(DATES_DECLINED);
+    if (errored) return none(DATES_CHECK_FAILED);
+    return none(checkingDates(j));
+  }
+  const days = jurisdiction.hours_days;
+  if (
+    jurisdiction.hours.shape === "none" ||
+    jurisdiction.hours.windows.length === 0 ||
+    days === null
+  ) {
+    return none(noHoursData(j));
+  }
+  const dated = Boolean(scenario.schedule?.work_date);
+  if (!dated) return none(datesOptional(j));
+  if (verifying) return none(checkingDates(j));
+  if (days === undefined) {
+    // Round 2 (finding 5, R145 S15): an older backend without the per-day
+    // check.  Say what is missing when its answer says so; otherwise a
+    // plain line that is no verdict and no endless "Checking" (Rule 10).
+    const ev = jurisdiction.hours_eval;
+    const timed =
+      scenario.schedule?.start_time != null && scenario.schedule?.end_time != null;
+    if (ev.status === "unknown" && ev.note === NO_SCHEDULE_NOTE && !timed) {
+      return none(ADD_TIMES);
     }
-    if (errored) {
-      // #425 (Ryan, 2026-10-29): a check that ran and failed.
-      return {
-        head: "Windows",
-        glyph: "",
-        text: "check failed: the check didn't answer",
-        tone: none,
-      };
+    if (ev.status === "unknown" && !scenario.street_class && ev.note !== NO_SCHEDULE_NOTE) {
+      return none(ADD_STREET_CLASS);
     }
-    return { head: "Windows", glyph: "◌", text: "loading", tone: none };
+    return none(cantCheckYet(j));
   }
-  const head = `${jurisdiction.name} windows`;
-  const rows = deriveBandRows(jurisdiction.hours);
-  if (jurisdiction.hours.shape === "none" || rows.length === 0) {
-    return { head, glyph: "◌", text: "none published", tone: none };
+  if (days.missing === "dates") return none(datesOptional(j));
+  if (days.missing === "times") return none(ADD_TIMES);
+  if (days.missing === "street_class") return none(ADD_STREET_CLASS);
+  if (days.status === "inside") {
+    return { kind: "ok", text: fitsEveryDay(j) };
   }
-  if (verifying) {
-    return { head, glyph: "◌", text: "checking your dates", tone: none };
+  // Round 2 (R145 S10, Rule 10): a day kind with no window on record is
+  // absence, never a fit: no check mark.
+  if (days.status === "partial") {
+    const fits = (days.job?.kinds ?? []).find((k) => days.kinds[k].status === "inside") ?? "weekday";
+    return none(fitsPartial(j, fits));
   }
-  const scheduleChecked = (scenario.schedule?.date_mode ?? "tbd") !== "tbd";
-  if (!scheduleChecked || jurisdiction.hours_eval.status === "unknown") {
-    return { head, glyph: "", text: "set dates to check", tone: none };
+  if (days.status === "no_record") return none(noRecordDays(j));
+  if (days.status !== "outside" || !days.job) {
+    return none(cantCheckYet(j));
   }
-  if (jurisdiction.hours_eval.status === "inside") {
-    return {
-      head,
-      glyph: "✓",
-      text: "fits your dates",
-      tone: "text-[color:var(--pass)]",
-    };
-  }
-  const active = activeBandRow(rows, scenario.street_class ?? null);
-  const v = rowVerdict(
-    active as BandRow,
-    active,
-    jurisdiction.hours_eval,
-    true,
-    false,
-  );
-  return { head, ...v };
-}
-
-// One reference row's verdict — PRESENTATION OF ONE BACKEND VERDICT
-// (rule 3 mirror, GO ruling 6): ``hours_eval`` is the jurisdiction
-// block's evaluated answer; this join only attributes its violations to
-// the window rows they name (matched by the day scope the backend
-// echoed back) and renders the remaining active-scope rows with the
-// verdict's own status.  No client-side time arithmetic anywhere —
-// backend authoritative.
-function rowVerdict(
-  row: BandRow,
-  active: BandRow | null,
-  hoursEval: HoursEval,
-  scheduleChecked: boolean,
-  verifying: boolean,
-): { glyph: string; text: string; tone: string } {
-  // #152 D (correction 2): a refetch is in flight for these inputs, so
-  // the last answer is not an answer to THIS question yet.  Chromeless
-  // and in a word — never the previous verdict, never a skeleton.
-  if (verifying) {
-    return {
-      glyph: "◌",
-      text: "checking these inputs",
-      tone: "text-[color:var(--none)]",
-    };
-  }
-  if (!scheduleChecked || hoursEval.status === "unknown") {
-    return {
-      glyph: "◌",
-      text: "set dates to check",
-      tone: "text-[color:var(--none)]",
-    };
-  }
-  if (row !== active) {
-    // The backend evaluates the active street class's scope; other
-    // rows stay reference (a fact about scope, not a verdict).
-    return {
-      glyph: "◌",
-      text: "reference (other street class)",
-      tone: "text-[color:var(--none)]",
-    };
-  }
-  if (hoursEval.status === "inside") {
-    return { glyph: "✓", text: "clear", tone: "text-[color:var(--pass)]" };
-  }
-  // outside: the evaluation is for the active scope, so the active row
-  // carries it — worded with the backend's own violation facts (day
-  // scope picks among multiple; the first stands in otherwise).
-  const v =
-    hoursEval.violations.find((x) => x.window.days === row.days) ??
-    hoursEval.violations[0];
-  if (!v) {
-    return {
-      glyph: "⚠",
-      text: "conflicts with the schedule",
-      tone: "text-[color:var(--warn)]",
-    };
-  }
-  const text =
-    v.kind === "ban_window_overlap"
-      ? `${v.overlap_hours} h overlaps the ${hhmm(v.window.start)}–${hhmm(v.window.end)} ban`
-      : `${v.outside_hours} h outside the permitted ${(v.windows ?? [v.window])
-          .map((w) => `${hhmm(w.start)}–${hhmm(w.end)}`)
-          .join(
-            " / ",
-          )} ${v.windows && v.windows.length > 1 ? "windows" : "window"}`;
-  return { glyph: "⚠", text, tone: "text-[color:var(--warn)]" };
-}
-
-function ScheduleWindowsBlock({
-  scenario,
-  jurisdiction,
-  scheduleMode,
-  verifying,
-}: {
-  scenario: Scenario;
-  jurisdiction: JurisdictionBlock | null;
-  scheduleMode: DateMode;
-  verifying: boolean;
-}) {
-  const keyNamed = Boolean(scenario.jurisdiction_key);
-
-  // No jurisdiction selected: one row, a real answer (issue #227 — the
-  // PDF couldn't design this state; the ruling wrote it).
-  if (!keyNamed) {
-    return (
-      <div className="sched-windows">
-        <div className="sched-window-row">
-          <span className="sw-glyph text-[color:var(--none)]" aria-hidden>
-            ◌
-          </span>
-          <span className="tr-prov">
-            Select a jurisdiction to see its windows
-          </span>
-        </div>
-      </div>
-    );
-  }
-  if (!jurisdiction) {
-    return (
-      <div className="sched-windows">
-        <div className="sched-window-row">
-          <span className="sw-glyph text-[color:var(--none)]" aria-hidden>
-            ◌
-          </span>
-          <span className="tr-prov">Loading window data…</span>
-        </div>
-      </div>
-    );
-  }
-
-  const rows = deriveBandRows(jurisdiction.hours);
-  if (jurisdiction.hours.shape === "none" || rows.length === 0) {
-    return (
-      <div className="sched-windows">
-        <div className="sched-window-row">
-          <span className="sw-glyph text-[color:var(--none)]" aria-hidden>
-            ◌
-          </span>
-          <span className="tr-prov">
-            {jurisdiction.name} publishes no work-hour windows. No restriction
-            shown: none is on record. That doesn&apos;t mean none exists.
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  const active = activeBandRow(rows, scenario.street_class ?? null);
-  // "Checked" mirrors the hours card's reading of the SAME schedule
-  // fact: a tbd/absent schedule is deliberately unchecked (#199).
-  const scheduleChecked = scheduleMode !== "tbd";
-
-  return (
-    <div className="sched-windows">
-      {/* #517 ruling 1 ("No mono, no caps labels"): the table opens inside
-          the What section now, so its heading is plain words in the
-          section's Inter (globals.css `.w-what .sched-windows`), replacing
-          #289 F2's written-in caps "<NAME> WINDOWS". */}
-      <div className="sw-head mb-1">{`${jurisdiction.name}'s work hours`}</div>
-      {rows.map((r) => {
-        const v = rowVerdict(
-          r,
-          active,
-          jurisdiction.hours_eval,
-          scheduleChecked,
-          verifying,
-        );
-        return (
-          <div key={`${r.scope}-${r.days}`} className="sched-window-row">
-            <span className={`sw-glyph ${v.tone}`} aria-hidden>
-              {v.glyph}
-            </span>
-            <span className="text-[11px] text-[color:var(--ink-on-dark)] leading-tight">
-              {r.scope}
-              <span className="tr-prov"> · {dayLabel(r.days)}</span>
-            </span>
-            <span className={`text-[11px] ${v.tone} text-right`}>{v.text}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
+  return {
+    kind: "bad",
+    text: outsideLine(days.kinds, days.job) ?? `Goes outside ${j}'s work hours.`,
+  };
 }

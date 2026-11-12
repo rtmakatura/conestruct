@@ -69,6 +69,48 @@ export interface HoursEval {
   note?: string;
 }
 
+/** #526: one day kind's check (src/rules/jurisdiction.py
+ *  `_day_kind_eval`).  Spans are decimal hours within 0..24; `fix` may
+ *  wrap (end < start runs past midnight, #188). */
+export interface DayKindEval {
+  /** Null when a class-scoped window needs a street class. */
+  allowed: [number, number][] | null;
+  /** #526 round 2 (R145 S10, Rule 10): "none" when no window applies to
+   *  this day kind and street class.  `allowed` then reads 0..24, which is
+   *  the absence of a rule, never drawn as Allowed. */
+  record: "windows" | "none";
+  no_closures: boolean;
+  status: "inside" | "outside" | "no_record" | null;
+  outside: [number, number][];
+  starts_before: number | null;
+  ends_after: number | null;
+  misses: boolean;
+  fix: [number, number] | null;
+  sources: SourceRef[];
+}
+
+export type DayKind = "weekday" | "weekend";
+
+/** #526: the hours check for every day kind in the job (backend-owned,
+ *  Rule 3).  Absent on an older wire; null when no windows are on record. */
+export interface HoursDays {
+  /** Round 2: "partial" = some job day kinds inside, the rest no record. */
+  status: "inside" | "outside" | "partial" | "no_record" | "unknown";
+  missing: "dates" | "times" | "street_class" | null;
+  holiday_rule: JurisdictionHours["holiday_rule"];
+  kinds: Record<DayKind, DayKindEval>;
+  job: {
+    start: string;
+    end: string;
+    days: number;
+    kinds: DayKind[];
+    kind_dates: Record<DayKind, string[]>;
+    /** Round 2 (R145 S11): each day kind's count over the whole job. */
+    kind_days: Record<DayKind, number>;
+    week: { date: string; day_kind: DayKind; in_job: boolean }[];
+  } | null;
+}
+
 export type TriggerStatus = "fires" | "unknown" | "conditional";
 
 export interface AppliedDelta {
@@ -210,6 +252,8 @@ export interface JurisdictionBlock {
   applied_deltas: AppliedDelta[];
   chips: { personnel: Chip[]; device: Chip[]; hazard: Chip[] };
   hours_eval: HoursEval;
+  /** #526: see HoursDays. */
+  hours_days?: HoursDays | null;
   permit: PermitBlock;
   conflicts: ConflictBlock[];
   provisional: boolean;
