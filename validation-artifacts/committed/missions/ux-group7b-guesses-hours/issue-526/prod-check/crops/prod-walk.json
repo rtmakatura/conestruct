@@ -1,0 +1,149 @@
+[
+ {
+  "size": "1440x900",
+  "steps": {
+   "dates-week": "Work dates Set by you (why: Work dates) Mon Nov 16 to Sun Nov 22 Fits Denver's weekday hours. We don't have its weekend hours.",
+   "hours-row": "Denver limits when you can close a lane. See Denver's work hours",
+   "dialog-day": "Denver's work hours When you can close a lane on an arterial street. Your hours: 9 am to 3 pm. Close A weekday The whole week \u2713 Your hours fit on weekdays. 8:30 am 3:30 pm 8 pm 6 am 9 am noon 3 pm 6 pm Weekends: none on record. Your dates include Nov 21 and 22. Allowed Your hours Outside what's allowed Source: Rule 22.3 IV.4, Apr 22, 2022",
+   "dialog-week": "Denver's work hours When you can close a lane on an arterial street. Your hours: 9 am to 3 pm. Close A weekday The whole week 6 am 9 am noon 3 pm 6 pm Mon 16 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Tue 17 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Wed 18 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Thu 19 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Fri 20 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Sat 21 No hours on record. Sun 22 No hours on record. No record Your dates run Nov 16 to Nov 22, the whole week. Allowed Your hours Outside what's allowed No record Source: Rule 22.3 IV.4, Apr 22, 2022",
+   "dates-outside": "Work dates Set by you (why: Work dates) Mon Nov 16 to Sun Nov 22 Starts before 8:30 am and ends after 3:30 pm on weekdays.",
+   "hours-row-fixed": "Denver limits when you can close a lane. See Denver's work hours Hours changed to 8:30 am to 3:30 pm. Undo"
+  },
+  "errors": [],
+  "inter": true,
+  "caption": {
+   "n": 1,
+   "text": [
+    "No record"
+   ],
+   "widths": [
+    134
+   ],
+   "fits": true,
+   "inside": true,
+   "overlap": false,
+   "unchecked": 2,
+   "inkOnNone": 0,
+   "sr": [
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "No hours on record.",
+    "No hours on record."
+   ]
+  },
+  "axe": [],
+  "focusBack": "what-hours-all",
+  "nbsp": true,
+  "srOutside": 5,
+  "fixOffered": "Change my hours to 8:30\u00a0am to 3:30\u00a0pm",
+  "recordAfterHandEdit": "Hours changed to 8:30 am to 3:30 pm. Undo",
+  "afterUndo": {
+   "start": "7:00 AM \u25be",
+   "end": "5:00 PM \u25be",
+   "record": 0,
+   "fixedStart": "8:30 AM \u25be"
+  },
+  "console_errors": 0
+ },
+ {
+  "size": "1198x930",
+  "steps": {
+   "dates-week": "Work dates Set by you (why: Work dates) Mon Nov 16 to Sun Nov 22 Fits Denver's weekday hours. We don't have its weekend hours.",
+   "hours-row": "Denver limits when you can close a lane. See Denver's work hours",
+   "dialog-day": "Denver's work hours When you can close a lane on an arterial street. Your hours: 9 am to 3 pm. Close A weekday The whole week \u2713 Your hours fit on weekdays. 8:30 am 3:30 pm 8 pm 6 am 9 am noon 3 pm 6 pm Weekends: none on record. Your dates include Nov 21 and 22. Allowed Your hours Outside what's allowed Source: Rule 22.3 IV.4, Apr 22, 2022",
+   "dialog-week": "Denver's work hours When you can close a lane on an arterial street. Your hours: 9 am to 3 pm. Close A weekday The whole week 6 am 9 am noon 3 pm 6 pm Mon 16 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Tue 17 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Wed 18 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Thu 19 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Fri 20 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Sat 21 No hours on record. Sun 22 No hours on record. No record Your dates run Nov 16 to Nov 22, the whole week. Allowed Your hours Outside what's allowed No record Source: Rule 22.3 IV.4, Apr 22, 2022",
+   "dates-outside": "Work dates Set by you (why: Work dates) Mon Nov 16 to Sun Nov 22 Starts before 8:30 am and ends after 3:30 pm on weekdays.",
+   "hours-row-fixed": "Denver limits when you can close a lane. See Denver's work hours Hours changed to 8:30 am to 3:30 pm. Undo"
+  },
+  "errors": [],
+  "inter": true,
+  "caption": {
+   "n": 1,
+   "text": [
+    "No record"
+   ],
+   "widths": [
+    134
+   ],
+   "fits": true,
+   "inside": true,
+   "overlap": false,
+   "unchecked": 2,
+   "inkOnNone": 0,
+   "sr": [
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "No hours on record.",
+    "No hours on record."
+   ]
+  },
+  "axe": [],
+  "focusBack": "what-hours-all",
+  "nbsp": true,
+  "srOutside": 5,
+  "fixOffered": "Change my hours to 8:30\u00a0am to 3:30\u00a0pm",
+  "recordAfterHandEdit": "Hours changed to 8:30 am to 3:30 pm. Undo",
+  "afterUndo": {
+   "start": "7:00 AM \u25be",
+   "end": "5:00 PM \u25be",
+   "record": 0,
+   "fixedStart": "8:30 AM \u25be"
+  },
+  "console_errors": 0
+ },
+ {
+  "size": "390x844",
+  "steps": {
+   "dates-week": "Work dates Set by you (why: Work dates) Mon Nov 16 to Sun Nov 22 Fits Denver's weekday hours. We don't have its weekend hours.",
+   "hours-row": "Denver limits when you can close a lane. See Denver's work hours",
+   "dialog-day": "Denver's work hours When you can close a lane on an arterial street. Your hours: 9 am to 3 pm. Close A weekday The whole week \u2713 Your hours fit on weekdays. 8:30 am 3:30 pm 8 pm 6 am 9 am noon 3 pm 6 pm Weekends: none on record. Your dates include Nov 21 and 22. Allowed Your hours Outside what's allowed Source: Rule 22.3 IV.4, Apr 22, 2022",
+   "dialog-week": "Denver's work hours When you can close a lane on an arterial street. Your hours: 9 am to 3 pm. Close A weekday The whole week 6 am 9 am noon 3 pm 6 pm Mon 16 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Tue 17 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Wed 18 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Thu 19 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Fri 20 Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Sat 21 No hours on record. Sun 22 No hours on record. No record Your dates run Nov 16 to Nov 22, the whole week. Allowed Your hours Outside what's allowed No record Source: Rule 22.3 IV.4, Apr 22, 2022",
+   "dates-outside": "Work dates Set by you (why: Work dates) Mon Nov 16 to Sun Nov 22 Starts before 8:30 am and ends after 3:30 pm on weekdays.",
+   "hours-row-fixed": "Denver limits when you can close a lane. See Denver's work hours Hours changed to 8:30 am to 3:30 pm. Undo"
+  },
+  "errors": [],
+  "inter": true,
+  "caption": {
+   "n": 1,
+   "text": [
+    "No record"
+   ],
+   "widths": [
+    76
+   ],
+   "fits": true,
+   "inside": true,
+   "overlap": false,
+   "unchecked": 2,
+   "inkOnNone": 0,
+   "sr": [
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "Allowed midnight to 5\u00a0am, 8:30\u00a0am to 3:30\u00a0pm, 8\u00a0pm to midnight.",
+    "No hours on record.",
+    "No hours on record."
+   ]
+  },
+  "axe": [],
+  "focusBack": "what-hours-all",
+  "nbsp": true,
+  "srOutside": 5,
+  "fixOffered": "Change my hours to 8:30\u00a0am to 3:30\u00a0pm",
+  "recordAfterHandEdit": "Hours changed to 8:30 am to 3:30 pm. Undo",
+  "afterUndo": {
+   "start": "7:00 AM \u25be",
+   "end": "5:00 PM \u25be",
+   "record": 0,
+   "fixedStart": "8:30 AM \u25be"
+  },
+  "console_errors": 0
+ }
+]
