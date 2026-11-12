@@ -1,0 +1,64 @@
+[
+ {
+  "size": "1440x900",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin \u00b7 at East Colfax Avenue",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin \u00b7 at Pennsylvania Street"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 17,
+   "under": [
+    "Latitude 385x43",
+    "Longitude 385x43"
+   ],
+   "excepted": [
+    "\u00a9 Mapbox 55x14",
+    "\u00a9 OpenStreetMap 97x14",
+    "Improve this map 99x14",
+    "\u00a9 Maxar 46x14",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "crop": "after-1440-colfax-pennsylvania.png"
+ },
+ {
+  "size": "1198x930",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin \u00b7 at East Colfax Avenue",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin \u00b7 at Pennsylvania Street"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 14,
+   "under": [
+    "Latitude 284x43",
+    "Longitude 284x43"
+   ],
+   "excepted": [
+    "Toggle attribution 24x24",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "crop": "after-1198-colfax-pennsylvania.png"
+ },
+ {
+  "size": "390x844",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin \u00b7 at East Colfax Avenue",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin \u00b7 at Pennsylvania Street"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 14,
+   "under": [],
+   "excepted": [
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "crop": "after-390-colfax-pennsylvania.png"
+ }
+]

@@ -111,6 +111,15 @@ export interface RoadCandidate {
    * the backend didn't answer: the list then says no direction (Rule 10).
    */
   travel?: RoadTravel;
+  /**
+   * #525 (Ryan, 2026-11-11): the street this entry meets at the pin, by
+   * its OSM name (or ref), when they share a node within 30 m of it
+   * (`same-street.ts`, the road list's server producer).  The list's
+   * second line adds "at <cross street>".  Absent when there is none.
+   * A list label only: the plan's cross street is still the picker's
+   * cross-street step and the backend's.
+   */
+  cross_street?: string | null;
 }
 
 export interface RoadTravel {

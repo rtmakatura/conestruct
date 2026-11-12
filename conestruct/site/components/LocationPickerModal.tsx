@@ -1935,8 +1935,16 @@ function RoadQuestion({
  *  else "Traffic one way here".  A reversible or alternating way reads
  *  "Direction changes by time".  No answer, or a road the backend can't
  *  name a direction for (an untagged motorway), shows only the distance
- *  (Rule 10).  The distance is the lead carriageway's, the nearer one. */
+ *  (Rule 10).  The distance is the lead carriageway's, the nearer one.
+ *  #525 (Ryan, 2026-11-11): when the pin is at an intersection with the
+ *  street, the line adds "at <cross street>" (`c.cross_street`, the
+ *  route's reading). */
 export function roadRowLine(c: RoadCandidate): string {
+  const at = c.cross_street ? ` · at ${c.cross_street}` : "";
+  return `${travelAndDistance(c)}${at}`;
+}
+
+function travelAndDistance(c: RoadCandidate): string {
   const dist = `${c.snap_distance_m.toFixed(0)} m from your pin`;
   const t = c.travel;
   if (!t || t.travel === "unknown") return dist;

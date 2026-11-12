@@ -1,0 +1,67 @@
+[
+ {
+  "size": "1440x900",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin",
+   "Pennsylvania Street / Traffic both ways \u00b7 22 m from your pin"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 18,
+   "under": [
+    "Latitude 385x43",
+    "Longitude 385x43"
+   ],
+   "excepted": [
+    "\u00a9 Mapbox 55x14",
+    "\u00a9 OpenStreetMap 97x14",
+    "Improve this map 99x14",
+    "\u00a9 Maxar 46x14",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "crop": "before-1440-colfax-pennsylvania.png"
+ },
+ {
+  "size": "1198x930",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin",
+   "Pennsylvania Street / Traffic both ways \u00b7 22 m from your pin"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 15,
+   "under": [
+    "Latitude 284x43",
+    "Longitude 284x43"
+   ],
+   "excepted": [
+    "Toggle attribution 24x24",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "crop": "before-1198-colfax-pennsylvania.png"
+ },
+ {
+  "size": "390x844",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin",
+   "Pennsylvania Street / Traffic both ways \u00b7 22 m from your pin"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 15,
+   "under": [],
+   "excepted": [
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "crop": "before-390-colfax-pennsylvania.png"
+ }
+]

@@ -220,6 +220,25 @@ describe("ruling 2: one entry per street", () => {
     expect(row.querySelector(".road-pick-sub")?.textContent).toBe("Direction changes by time · 9 m from your pin");
   });
 
+  // #525 (Ryan, 2026-11-11): at an intersection the line adds "at <cross street>".
+  it("#525: the street met at the pin is named on the line, after the distance", async () => {
+    stubQueue([ok([candidate({ name: "Pennsylvania Street", bearing: 0, snap_distance_m: 1.69, cross_street: "East Colfax Avenue", travel: { travel: "both_ways", carriageway: "not_applicable" } })])]);
+    mount();
+    typeCoords();
+    const row = await screen.findByRole("radio", { name: /Pennsylvania Street/ });
+    expect(row.querySelector(".road-pick-sub")?.textContent).toBe("Traffic both ways · 2 m from your pin · at East Colfax Avenue");
+  });
+
+  it("#525: with no cross street, or no travel answer, the line is as before", async () => {
+    stubQueue([ok([candidate({ cross_street: null, travel: undefined }), candidate({ way_id: "2", name: "Race Street", bearing: 0, snap_distance_m: 20, cross_street: "East Colfax Avenue" })])]);
+    mount();
+    typeCoords();
+    const colfax = await screen.findByRole("radio", { name: /^East Colfax Avenue/ });
+    expect(colfax.querySelector(".road-pick-sub")?.textContent).toBe("9 m from your pin");
+    const race = screen.getByRole("radio", { name: /Race Street/ });
+    expect(race.querySelector(".road-pick-sub")?.textContent).toBe("Traffic both ways · 20 m from your pin · at East Colfax Avenue");
+  });
+
   it("#512: no backend answer shows only the distance, whatever the tag says", async () => {
     stubQueue([ok([candidate({ travel: undefined })])]);
     mount();

@@ -16,6 +16,7 @@
 import { NextRequest } from "next/server";
 import { dedupCandidates } from "@/lib/road-detection/dedup";
 import { groupCarriageways } from "@/lib/road-detection/group";
+import { attachCrossStreets, mergeSameStreet } from "@/lib/road-detection/same-street";
 import { attachRoadTravel } from "@/lib/road-detection/road-travel";
 import {
   GEOMETRY_RADIUS_M,
@@ -424,9 +425,14 @@ function buildResponse(
   // source in raw Overpass output), then sort what remains by snap
   // distance so primary_index points at the geometrically nearest
   // *logical road*.
-  const deduped = dedupCandidates(candidates).sort(
-    (a, b) => a.snap_distance_m - b.snap_distance_m,
+  // #525: then one entry per street, at its nearest way, and the street
+  // each entry meets at the pin (same-street.ts).  Both read the ways'
+  // own geometry, before the centerline is stitched.
+  const deduped = mergeSameStreet(
+    candidates,
+    dedupCandidates(candidates).sort((a, b) => a.snap_distance_m - b.snap_distance_m),
   );
+  attachCrossStreets(candidates, deduped, lat, lng);
 
   return {
     scan_status: "ok",

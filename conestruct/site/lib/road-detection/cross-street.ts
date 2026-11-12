@@ -27,8 +27,8 @@ const SIGNAL_NEARBY_M = 30;
 // A candidate whose bearing is within this many degrees of the
 // mainline's (mod 180 — either direction of travel) is the mainline
 // itself, or a frontage road running parallel to it; never propose it
-// as the cross street.
-const PARALLEL_TOLERANCE_DEG = 25;
+// as the cross street.  #525: the road list's same-line test reads it too.
+export const PARALLEL_TOLERANCE_DEG = 25;
 
 export interface CrossStreetCandidate {
   /** Display name of the proposed cross street, when OSM has one.
