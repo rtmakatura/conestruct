@@ -1,0 +1,146 @@
+[
+ {
+  "where": "colfax-pennsylvania",
+  "size": "1440x900",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin \u00b7 at East Colfax Avenue",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin \u00b7 at Pennsylvania Street"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 17,
+   "under": [
+    "Latitude 385x43",
+    "Longitude 385x43"
+   ],
+   "excepted": [
+    "\u00a9 Mapbox 55x14",
+    "\u00a9 OpenStreetMap 97x14",
+    "Improve this map 99x14",
+    "\u00a9 Maxar 46x14",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "console_errors": 0,
+  "crop": "prod-1440-colfax-pennsylvania.png"
+ },
+ {
+  "where": "colfax-pennsylvania",
+  "size": "1198x930",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin \u00b7 at East Colfax Avenue",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin \u00b7 at Pennsylvania Street"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 14,
+   "under": [
+    "Latitude 284x43",
+    "Longitude 284x43"
+   ],
+   "excepted": [
+    "Toggle attribution 24x24",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "console_errors": 0,
+  "crop": "prod-1198-colfax-pennsylvania.png"
+ },
+ {
+  "where": "colfax-pennsylvania",
+  "size": "390x844",
+  "inter": true,
+  "rows": [
+   "Pennsylvania Street / Traffic both ways \u00b7 2 m from your pin \u00b7 at East Colfax Avenue",
+   "East Colfax Avenue / Traffic both ways \u00b7 5 m from your pin \u00b7 at Pennsylvania Street"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 14,
+   "under": [],
+   "excepted": [
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "console_errors": 0,
+  "crop": "prod-390-colfax-pennsylvania.png"
+ },
+ {
+  "where": "colfax-williams",
+  "size": "1440x900",
+  "inter": true,
+  "rows": [
+   "East Colfax Avenue / Traffic both ways \u00b7 1 m from your pin \u00b7 at Williams Street",
+   "Williams Street / Traffic both ways \u00b7 27 m from your pin \u00b7 at East Colfax Avenue"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 17,
+   "under": [
+    "Latitude 385x43",
+    "Longitude 385x43"
+   ],
+   "excepted": [
+    "\u00a9 Mapbox 55x14",
+    "\u00a9 OpenStreetMap 97x14",
+    "Improve this map 99x14",
+    "\u00a9 Maxar 46x14",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "console_errors": 0,
+  "crop": "prod-1440-colfax-williams.png"
+ },
+ {
+  "where": "lincoln",
+  "size": "1440x900",
+  "inter": true,
+  "rows": [
+   "North Lincoln Street / One-way \u00b7 6 m from your pin"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 16,
+   "under": [
+    "Latitude 385x43",
+    "Longitude 385x43"
+   ],
+   "excepted": [
+    "\u00a9 Mapbox 55x14",
+    "\u00a9 OpenStreetMap 97x14",
+    "Improve this map 99x14",
+    "\u00a9 Maxar 46x14",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "console_errors": 0,
+  "crop": "prod-1440-lincoln.png"
+ },
+ {
+  "where": "speer",
+  "size": "1440x900",
+  "inter": true,
+  "rows": [
+   "East Speer Boulevard / Divided road \u00b7 0 m from your pin"
+  ],
+  "axe": [],
+  "small": {
+   "checked": 16,
+   "under": [
+    "Latitude 385x43",
+    "Longitude 385x43"
+   ],
+   "excepted": [
+    "\u00a9 Mapbox 55x14",
+    "\u00a9 OpenStreetMap 97x14",
+    "Improve this map 99x14",
+    "\u00a9 Maxar 46x14",
+    "Mapbox homepage 88x23"
+   ]
+  },
+  "console_errors": 0,
+  "crop": "prod-1440-speer.png"
+ }
+]
