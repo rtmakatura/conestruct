@@ -3,8 +3,9 @@
 // #526 (Ryan, 2026-11-11, item 1 ruling 4): the work-hours window.  "A real
 // dialog: focus moves in, Tab stays inside, Esc and Close close it, and
 // focus returns to the link."  The fix button "sets the page's start and
-// end times and shows group U's Undo link (P15)"; R145 S9: Undo restores the
-// schedule object exactly.  The whole week dims "days outside your dates".
+// end times and shows group U's Undo link (P15)"; #535 (Ryan, 2026-11-12):
+// Undo restores only the times the fix changed, never a later date change.
+// The whole week dims "days outside your dates".
 // Every span and verdict is the backend's hours_days (fixtures in the
 // backend's own shapes, __fixtures__/what-section.ts).
 
@@ -102,8 +103,13 @@ describe("#526 ruling 4: a weekday", () => {
     expect(onFix).toHaveBeenCalledWith([8.5, 15.5]);
   });
 
-  it("with the fix applied: the record and Undo, no fix button", async () => {
-    const { onUndo } = open({ start: 8.5, end: 15.5, fixed: { start: 8.5, end: 15.5 } });
+  it("with the fix applied and the hours inside: the record and Undo, no fix button", async () => {
+    const { onUndo } = open({
+      block: denverBlock(denverDays("inside")),
+      start: 8.5,
+      end: 15.5,
+      fixed: { start: 8.5, end: 15.5 },
+    });
     expect(screen.queryByTestId("hours-fix")).toBeNull();
     expect(screen.getByTestId("hours-fix-record").textContent).toBe("Hours changed to 8:30\u00a0am to 3:30\u00a0pm.Undo");
     await userEvent.setup().click(screen.getByTestId("hours-fix-undo"));
@@ -213,7 +219,7 @@ describe("#526 ruling 4, R145 S9: the fix and Undo on the page", () => {
     schedule: OUTSIDE_SCHEDULE,
   } as unknown as Scenario;
 
-  it("the fix sets the page's times; Undo restores the exact prior schedule object", async () => {
+  it("the fix sets the page's times; Undo restores the prior times", async () => {
     const user = userEvent.setup();
     render(<Harness initial={initial} block={denverBlock(denverDays("outside"))} />);
     const prior = latest!.schedule;
@@ -225,7 +231,7 @@ describe("#526 ruling 4, R145 S9: the fix and Undo on the page", () => {
     expect(screen.getByTestId("hours-fix-record").textContent).toContain("Hours changed to 8:30\u00a0am to 3:30\u00a0pm.");
     expect(screen.getByTestId("what-hours-record").textContent).toBe("Hours changed to 8:30\u00a0am to 3:30\u00a0pm.Undo");
     await user.click(screen.getByTestId("hours-fix-undo"));
-    expect(latest!.schedule).toBe(prior);
+    expect(latest!.schedule).toStrictEqual(prior);
     expect(latest!.schedule).toStrictEqual(OUTSIDE_SCHEDULE);
     expect(screen.queryByTestId("hours-fix-record")).toBeNull();
     expect(screen.queryByTestId("what-hours-record")).toBeNull();
@@ -239,7 +245,7 @@ describe("#526 ruling 4, R145 S9: the fix and Undo on the page", () => {
     await user.click(screen.getByTestId("hours-fix"));
     await user.click(screen.getByTestId("hours-dialog-close"));
     await user.click(screen.getByTestId("what-hours-undo"));
-    expect(latest!.schedule).toBe(prior);
+    expect(latest!.schedule).toStrictEqual(prior);
   });
 
   it("closing the dialog returns focus to the link (Close and Esc)", async () => {
@@ -525,7 +531,7 @@ describe("#532 P15 (Ryan, 2026-11-12): the Undo record stays until Undo or a pin
     );
   }
 
-  it("a hand edit of the times keeps the record; Undo still restores the prior schedule", async () => {
+  it("a hand edit of the times keeps the record; Undo still restores the prior times", async () => {
     const user = userEvent.setup();
     render(<Outer block={denverBlock(denverDays("outside"))} />);
     const prior = latest!.schedule;
@@ -537,7 +543,7 @@ describe("#532 P15 (Ryan, 2026-11-12): the Undo record stays until Undo or a pin
       "Hours changed to 8:30\u00a0am to 3:30\u00a0pm.Undo",
     );
     await user.click(screen.getByTestId("what-hours-undo"));
-    expect(latest!.schedule).toBe(prior);
+    expect(latest!.schedule).toStrictEqual(prior);
     expect(screen.queryByTestId("what-hours-record")).toBeNull();
   });
 
@@ -552,6 +558,60 @@ describe("#532 P15 (Ryan, 2026-11-12): the Undo record stays until Undo or a pin
     expect(screen.queryByTestId("what-hours-record")).toBeNull();
     act(() => setOuter!({ ...latest!, meta }));
     expect(screen.queryByTestId("what-hours-record")).toBeNull();
+  });
+
+  it("#535: Undo restores only the times; a date change made after the fix stays", async () => {
+    const user = userEvent.setup();
+    render(<Outer block={denverBlock(denverDays("outside"))} />);
+    await user.click(screen.getByTestId("what-hours-all"));
+    await user.click(screen.getByTestId("hours-fix"));
+    await user.click(screen.getByTestId("hours-dialog-close"));
+    act(() =>
+      setOuter!({
+        ...latest!,
+        schedule: { ...latest!.schedule!, work_date: "2026-11-23", work_date_end: "2026-11-27" },
+      }),
+    );
+    await user.click(screen.getByTestId("what-hours-undo"));
+    expect(latest!.schedule).toStrictEqual({
+      ...OUTSIDE_SCHEDULE,
+      work_date: "2026-11-23",
+      work_date_end: "2026-11-27",
+    });
+    expect(screen.queryByTestId("what-hours-record")).toBeNull();
+  });
+
+  it("#535: the fix comes back while the record stands when the hours are outside again", async () => {
+    const user = userEvent.setup();
+    render(<Outer block={denverBlock(denverDays("outside"))} />);
+    await user.click(screen.getByTestId("what-hours-all"));
+    await user.click(screen.getByTestId("hours-fix"));
+    // The block still reads outside (a hand edit back out): record and fix both show.
+    act(() => setOuter!({ ...latest!, schedule: { ...latest!.schedule!, start_time: 6 } }));
+    expect(screen.getByTestId("hours-fix-record").textContent).toBe(
+      "Hours changed to 8:30 am to 3:30 pm.Undo",
+    );
+    const again = screen.getByTestId("hours-fix");
+    expect(again.textContent).toBe("Change my hours to 8:30 am to 3:30 pm");
+    // R145 self-ruled (#535 S1): a second fix replaces the record, and its
+    // Undo puts back the times that fix changed (the hand-edited ones).
+    await user.click(again);
+    expect(latest!.schedule).toStrictEqual({ ...OUTSIDE_SCHEDULE, start_time: 8.5, end_time: 15.5 });
+    await user.click(screen.getByTestId("hours-fix-undo"));
+    expect(latest!.schedule).toStrictEqual({ ...OUTSIDE_SCHEDULE, start_time: 6, end_time: 15.5 });
+    expect(screen.queryByTestId("hours-fix-record")).toBeNull();
+  });
+});
+
+describe("#535 (Ryan, 2026-11-12): the fix and the record together in the window", () => {
+  it("the record stands and the hours are outside: the record, Undo and the fix button all show", async () => {
+    const { onFix, onUndo } = open({ start: 6, end: 15.5, fixed: { start: 8.5, end: 15.5 } });
+    expect(screen.getByTestId("hours-fix-record").textContent).toBe("Hours changed to 8:30 am to 3:30 pm.Undo");
+    const user = userEvent.setup();
+    await user.click(screen.getByTestId("hours-fix"));
+    expect(onFix).toHaveBeenCalledWith([8.5, 15.5]);
+    await user.click(screen.getByTestId("hours-fix-undo"));
+    expect(onUndo).toHaveBeenCalledTimes(1);
   });
 });
 

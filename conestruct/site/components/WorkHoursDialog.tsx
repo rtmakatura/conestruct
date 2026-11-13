@@ -427,7 +427,7 @@ function Weekday({
           ))}
         </div>
       </div>
-      {fixed ? (
+      {fixed && (
         <p className="whd-line whd-record" data-testid="hours-fix-record">
           <span>{fixRecord(fixed.start, fixed.end)}</span>
           <button
@@ -440,20 +440,19 @@ function Weekday({
             Undo
           </button>
         </p>
-      ) : (
-        timed &&
-        wd.status === "outside" &&
-        wd.fix && (
-          <button
-            type="button"
-            className="whd-fix"
-            data-write=""
-            onClick={() => onFix(wd.fix as [number, number])}
-            data-testid="hours-fix"
-          >
-            {fixButton(wd.fix[0], wd.fix[1])}
-          </button>
-        )
+      )}
+      {/* #535 (Ryan, 2026-11-12): the fix comes back whenever the hours are
+          outside again, even while the record stands. */}
+      {timed && wd.status === "outside" && wd.fix && (
+        <button
+          type="button"
+          className="whd-fix"
+          data-write=""
+          onClick={() => onFix(wd.fix as [number, number])}
+          data-testid="hours-fix"
+        >
+          {fixButton(wd.fix[0], wd.fix[1])}
+        </button>
       )}
       <p className="whd-line" data-testid="hours-weekend">
         {weekendLine(

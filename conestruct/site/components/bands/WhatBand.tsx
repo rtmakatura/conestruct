@@ -689,12 +689,13 @@ export function WhatBand({
     setHoursOpen(false);
     hoursLinkRef.current?.focus();
   }, []);
-  // P15 (Ryan, 2026-11-12, replacing S9): the fix's record, with the
-  // schedule it replaced so Undo puts back the exact object.  It stays until
-  // Undo or a pin move; editing the times by hand doesn't clear it.
+  // P15 (Ryan, 2026-11-12, replacing S9): the fix's record, with the times
+  // it replaced.  It stays until Undo or a pin move; editing the times by
+  // hand doesn't clear it.  #535 (Ryan, 2026-11-12): Undo restores only the
+  // times the fix changed, never a later date change.
   const [fix, setFix] = useState<{
     applied: FixRecord;
-    prior: Scenario["schedule"];
+    prior: Pick<NonNullable<Scenario["schedule"]>, "start_time" | "end_time">;
     pin: string;
   } | null>(null);
   const pinAt = `${scenario.meta.lat},${scenario.meta.lng}`;
@@ -704,7 +705,12 @@ export function WhatBand({
   }, [fix, pinAt]);
   const applyFix = ([start, end]: [number, number]) => {
     if (locked || !schedule) return;
-    setFix({ applied: { start, end }, prior: scenario.schedule, pin: pinAt });
+    setFix({
+      applied: { start, end },
+      // The fix is offered only with both times set (`timed`), so both exist.
+      prior: { start_time: schedule.start_time, end_time: schedule.end_time },
+      pin: pinAt,
+    });
     setScenario({
       ...scenario,
       schedule: { ...schedule, start_time: start, end_time: end },
@@ -712,7 +718,7 @@ export function WhatBand({
   };
   const undoFix = () => {
     if (locked || !fix) return;
-    setScenario({ ...scenario, schedule: fix.prior });
+    if (schedule) setScenario({ ...scenario, schedule: { ...schedule, ...fix.prior } });
     setFix(null);
   };
   const hoursData =
