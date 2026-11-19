@@ -1,0 +1,107 @@
+[
+ {
+  "size": "1440x900",
+  "opening": {
+   "zoom": 6,
+   "center": [
+    -105.5,
+    39
+   ],
+   "moving": false,
+   "loaded": false
+  },
+  "applied": {
+   "zoom": 16,
+   "center": [
+    -104.9811,
+    39.7401
+   ],
+   "moving": false,
+   "loaded": false
+  },
+  "sameNumbers": {
+   "lookupsBefore": 1,
+   "lookupsAfter": 1,
+   "barOpen": false,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false,
+    "loaded": true
+   }
+  }
+ },
+ {
+  "size": "1198x930",
+  "opening": {
+   "zoom": 6,
+   "center": [
+    -105.5,
+    39
+   ],
+   "moving": false,
+   "loaded": false
+  },
+  "applied": {
+   "zoom": 16,
+   "center": [
+    -104.9811,
+    39.7401
+   ],
+   "moving": false,
+   "loaded": true
+  },
+  "sameNumbers": {
+   "lookupsBefore": 1,
+   "lookupsAfter": 1,
+   "barOpen": false,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false,
+    "loaded": true
+   }
+  }
+ },
+ {
+  "size": "390x844",
+  "opening": {
+   "zoom": 6,
+   "center": [
+    -105.5,
+    39
+   ],
+   "moving": false,
+   "loaded": false
+  },
+  "applied": {
+   "zoom": 16,
+   "center": [
+    -104.9811,
+    39.7401
+   ],
+   "moving": false,
+   "loaded": false
+  },
+  "sameNumbers": {
+   "lookupsBefore": 1,
+   "lookupsAfter": 1,
+   "barOpen": false,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false,
+    "loaded": true
+   }
+  }
+ }
+]

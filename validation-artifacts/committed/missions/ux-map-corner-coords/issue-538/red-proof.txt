@@ -1,0 +1,19 @@
+# #538 red proof: the new tests in LocationPickerModal.coords-bar.test.tsx run on
+# b621c72's LocationPickerModal.tsx (the component not yet changed), 2026-11-19.
+# Command: npx vitest run --reporter=verbose components/LocationPickerModal.coords-bar.test.tsx
+
+ x #538 applying coordinates centres the map on the pin at the search zoom > from the state view, Enter flies to the typed pin at PIN_ZOOM (16)
+   -> expected undefined to match object { Object (center, zoom) }
+ x #538 applying coordinates centres the map on the pin at the search zoom > a view already closer than 16 keeps its zoom (a search's rule)
+   -> expected undefined to match object { center: [ -104.9811, 39.742 ], ...(1) }
+ x #538 fold-in (a): Go with the pin's own numbers keeps the road pick > no new lookup, the pick and Save stay; the bar closes and the map centres on the pin
+   -> expected [ ...(2) ] to have a length of 1 but got 2
+ ok #537 typed but not applied: Save waits (Rule 10) > with a road picked and Save open, typed numbers alone shut Save; Esc opens it again
+   (fold-in (b) covers behaviour #537 already has; it is green on the old code by design)
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 14 passed (17)
+
+# Reading: on the state view the map never moved (no flyTo at all: the typed
+# point was inside the bounds), and Enter with the pin's own numbers ran a
+# second road lookup.

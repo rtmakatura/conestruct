@@ -952,10 +952,20 @@ export function LocationPickerModal({
   // fires /api/road-bearing (the unified detection endpoint).
   //
   // ``targetZoom`` only matters when ``fly`` is true.  Pass it for
-  // initial-load / search-bar navigation (bumps up from a state-level
-  // view to street level).  Omit it for pin drags / typed-coord moves
-  // so the camera *preserves* whatever zoom the operator landed on
-  // — small refinements shouldn't suddenly jump them to street level.
+  // search results and typed coordinates (bumps up from a state-level
+  // view to street level; a closer view is kept).  Pin drags and map taps
+  // don't fly, so the camera *preserves* whatever zoom the operator
+  // landed on.
+  const flyToPin = useCallback((pinLat: number, pinLng: number, targetZoom?: number) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const z = map.getZoom();
+    map.flyTo({
+      center: [pinLng, pinLat],
+      zoom: targetZoom !== undefined && z < targetZoom ? targetZoom : z,
+      essential: true,
+    });
+  }, []);
   const applyPinPosition = useCallback(
     (
       newLat: number,
@@ -979,19 +989,7 @@ export function LocationPickerModal({
 
       ensureMarker(newLat, newLng, markerTravelRef.current);
 
-      const map = mapRef.current;
-      if (map && opts.fly) {
-        const z = map.getZoom();
-        const targetZ =
-          opts.targetZoom !== undefined && z < opts.targetZoom
-            ? opts.targetZoom
-            : z;
-        map.flyTo({
-          center: [newLng, newLat],
-          zoom: targetZ,
-          essential: true,
-        });
-      }
+      if (opts.fly) flyToPin(newLat, newLng, opts.targetZoom);
 
       if (opts.detect) {
         // #507: a direction said for the old pin answers nothing at a new
@@ -1001,22 +999,19 @@ export function LocationPickerModal({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ensureMarker, detectAt],
+    [ensureMarker, detectAt, flyToPin],
   );
 
-  // Snap the map (if pin is off-screen) and the pin to provided coords.
-  // Used after typing-in coordinates.
+  // The pin goes to typed coordinates and the map flies to it at a search
+  // result's zoom.  #538 (ruling 3): this used to fly only when the point
+  // was off screen, at the zoom already set, so a pin typed on the state
+  // view (whose bounds hold all of Colorado) left the map zoomed out.
   const applyTypedCoords = useCallback(
     (newLat: number, newLng: number) => {
-      const map = mapRef.current;
-      let needFly = true;
-      if (map) {
-        const bounds = map.getBounds();
-        if (bounds && bounds.contains([newLng, newLat])) needFly = false;
-      }
       applyPinPosition(newLat, newLng, {
         detect: true,
-        fly: needFly,
+        fly: true,
+        targetZoom: PIN_ZOOM,
       });
     },
     [applyPinPosition],
@@ -1350,7 +1345,17 @@ export function LocationPickerModal({
             : null;
     setCoordError(error);
     closeCoordsEditing();
-    if (error === null) applyTypedCoords(la!, lo!);
+    if (error !== null) return;
+    if (hasPin && fmt4(la!) === fmt4(lat) && fmt4(lo!) === fmt4(lng)) {
+      // #538 fold-in (a): the pin's own numbers (at the shown precision)
+      // move nothing: no lookup, so the road pick and the direction stay.
+      // The map still centres on the pin, as Go does for new numbers.
+      setLatInput(fmt4(lat));
+      setLngInput(fmt4(lng));
+      flyToPin(lat, lng, PIN_ZOOM);
+      return;
+    }
+    applyTypedCoords(la!, lo!);
   };
 
   const onCoordsKeyDown = (e: ReactKeyboardEvent<HTMLFormElement>) => {

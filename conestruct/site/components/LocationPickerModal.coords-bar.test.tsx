@@ -19,20 +19,50 @@
 // without one.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+// #538: the camera, as the map reports it.  `flyTo` moves it; `getZoom`
+// and `getBounds` read it (the bounds of the opening state view hold all
+// of Colorado, so a Colorado pin is "on screen" there).
+const camera = vi.hoisted(() => ({
+  zoom: 6, // DEFAULT_ZOOM, the state view
+  center: [-105.5, 39.0] as [number, number],
+  flies: [] as { center: [number, number]; zoom: number }[],
+  built: 0, // `new` calls; the map is the first, once mapbox-gl has loaded
+}));
+
 vi.mock("mapbox-gl", () => {
-  // Every property is this same callable, constructible object; never a thenable.
+  // Every property is this same callable, constructible object; never a
+  // thenable.  The camera calls (#538) answer from `camera` above.
+  const camCalls: Record<string, unknown> = {
+    getZoom: () => camera.zoom,
+    getBounds: () => ({ contains: () => true }),
+    flyTo: (o: { center: [number, number]; zoom: number }) => {
+      camera.flies.push(o);
+      camera.center = o.center;
+      camera.zoom = o.zoom;
+      return any;
+    },
+  };
   const any: object = new Proxy(function () {}, {
-    get: (_t, prop) => (prop === "then" || typeof prop === "symbol" ? undefined : any),
+    get: (_t, prop) =>
+      prop === "then" || typeof prop === "symbol"
+        ? undefined
+        : typeof prop === "string" && prop in camCalls
+          ? camCalls[prop]
+          : any,
     apply: () => any,
-    construct: () => any,
+    construct: () => {
+      camera.built += 1;
+      return any;
+    },
   });
   return { default: any };
 });
 
 import { LocationPickerModal } from "./LocationPickerModal";
+import type { RoadCandidate, RoadDetectResponse } from "@/lib/road-detection/types";
 
 let detects: { lat: number; lng: number }[] = [];
 let onCancel = vi.fn();
@@ -40,6 +70,10 @@ let onCancel = vi.fn();
 beforeEach(() => {
   detects = [];
   onCancel = vi.fn();
+  camera.zoom = 6;
+  camera.center = [-105.5, 39.0];
+  camera.flies = [];
+  camera.built = 0;
   process.env.NEXT_PUBLIC_MAPBOX_TOKEN = "pk.test";
   vi.stubGlobal(
     "fetch",
@@ -197,6 +231,136 @@ describe("#537 typed but not applied: Save waits (Rule 10)", () => {
     );
     await user.keyboard("{Escape}");
     expect(screen.queryByText("Press Go to use the coordinates you typed.")).toBeNull();
+  });
+
+  it("with a road picked and Save open, typed numbers alone shut Save; Esc opens it again", async () => {
+    stubRoads();
+    const user = userEvent.setup();
+    mount({ lat: 39.7401, lng: -104.9811 });
+    await pickFirstRoad(user);
+    expect(save().disabled).toBe(false);
+    expect(screen.queryByTestId("picker-save-blocked")).toBeNull();
+    await user.click(coordsButton());
+    expect(save().disabled).toBe(false); // the pin's own numbers hold nothing
+    await user.clear(lat());
+    await user.type(lat(), "39.75");
+    expect(save().disabled).toBe(true);
+    expect(screen.getByTestId("picker-save-blocked").textContent).toBe(
+      "Press Go to use the coordinates you typed.",
+    );
+    await user.keyboard("{Escape}");
+    expect(save().disabled).toBe(false);
+    expect(screen.queryByTestId("picker-save-blocked")).toBeNull();
+  });
+});
+
+// #538 fixtures: an opening lookup that answers with two roads, so a road
+// can be picked and Save opens.
+function road(way_id: string, bearing: number): RoadCandidate {
+  return {
+    way_id,
+    highway_class: "primary",
+    name: "Broadway",
+    ref: null,
+    bearing,
+    snap_distance_m: 6,
+    snapped_lat: 39.7401,
+    snapped_lng: -104.9811,
+    tags: {
+      oneway: "no",
+      maxspeed: "30 mph",
+      lanes: "4",
+      lanes_forward: null,
+      lanes_backward: null,
+      lanes_both_ways: null,
+      turn_lanes: null,
+      turn_lanes_forward: null,
+      turn_lanes_backward: null,
+    },
+    signal_distance_m: null,
+    travel: { travel: "both_ways", carriageway: "undivided" },
+  };
+}
+
+function stubRoads() {
+  const answer: RoadDetectResponse = {
+    scan_status: "ok",
+    candidates: [road("201", 0), road("202", 90)],
+    primary_index: null,
+    isUrban: true,
+    placeName: "Denver",
+  };
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      if (String(url).includes("/api/road-bearing")) {
+        detects.push(JSON.parse(String(init?.body)) as { lat: number; lng: number });
+        return { ok: true, status: 200, json: async () => answer };
+      }
+      return { ok: false, status: 500, json: async () => ({}) };
+    }),
+  );
+}
+
+const save = () => screen.getByRole("button", { name: "Save and close" }) as HTMLButtonElement;
+const rows = () => screen.getAllByRole("radio");
+
+async function pickFirstRoad(user: ReturnType<typeof userEvent.setup>) {
+  await waitFor(() => expect(rows()).toHaveLength(2));
+  await user.click(rows()[0]);
+  expect(rows()[0].getAttribute("aria-checked")).toBe("true");
+}
+
+// The map is built once mapbox-gl's dynamic import resolves.
+const mapBuilt = () => waitFor(() => expect(camera.built).toBeGreaterThan(0));
+
+describe("#538 applying coordinates centres the map on the pin at the search zoom", () => {
+  it("from the state view, Enter flies to the typed pin at PIN_ZOOM (16)", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await user.click(coordsButton());
+    await user.type(lat(), "39.7401");
+    await user.type(lng(), "-104.9811");
+    await user.keyboard("{Enter}");
+    expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.7401], zoom: 16 });
+    expect(camera.zoom).toBe(16);
+  });
+
+  it("a view already closer than 16 keeps its zoom (a search's rule)", async () => {
+    const user = userEvent.setup();
+    mount({ lat: 39.7401, lng: -104.9811 });
+    await mapBuilt();
+    camera.zoom = 18;
+    await user.click(coordsButton());
+    await user.clear(lat());
+    await user.type(lat(), "39.7420");
+    await user.keyboard("{Enter}");
+    expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.742], zoom: 18 });
+  });
+});
+
+describe("#538 fold-in (a): Go with the pin's own numbers keeps the road pick", () => {
+  it("no new lookup, the pick and Save stay; the bar closes and the map centres on the pin", async () => {
+    stubRoads();
+    const user = userEvent.setup();
+    mount({ lat: 39.7401, lng: -104.9811 });
+    await mapBuilt();
+    await pickFirstRoad(user);
+    expect(detects).toHaveLength(1); // the opening lookup
+    await user.click(coordsButton());
+    await user.clear(lat());
+    await user.type(lat(), "39.74010"); // the same latitude at the shown precision
+    await user.keyboard("{Enter}");
+    expect(detects).toHaveLength(1);
+    expect(rows()[0].getAttribute("aria-checked")).toBe("true");
+    expect(save().disabled).toBe(false);
+    expect(inBar().queryByLabelText("Latitude")).toBeNull();
+    expect(inBar().getByRole("button", { name: "39.7401, -104.9811" })).toBe(document.activeElement);
+    expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.7401], zoom: 16 });
+    // Reopening starts from the pin's text, not the typed "39.74010".
+    await user.click(coordsButton());
+    expect(lat().value).toBe("39.7401");
   });
 });
 
