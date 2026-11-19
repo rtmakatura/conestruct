@@ -1913,7 +1913,14 @@ function RoadQuestion({
               >
                 <span className="road-pick-mark" aria-hidden="true" />
                 <span className="road-pick-label">
-                  <span className="road-pick-name">{candidateLabel(c).primary}</span>
+                  {/* #536 (Ryan, 2026-11-12, N2): the corner is in the
+                      title, "<street> at <cross street>", the cross street
+                      in 400 --ink-mute on the same line.  The row's
+                      accessible name is its text, so it carries the corner. */}
+                  <span className="road-pick-name">
+                    {candidateLabel(c).primary}
+                    {c.cross_street ? <span className="road-pick-at">{` at ${c.cross_street}`}</span> : null}
+                  </span>
                   <span className="road-pick-sub">{roadRowLine(c)}</span>
                 </span>
               </button>
@@ -1936,12 +1943,10 @@ function RoadQuestion({
  *  "Direction changes by time".  No answer, or a road the backend can't
  *  name a direction for (an untagged motorway), shows only the distance
  *  (Rule 10).  The distance is the lead carriageway's, the nearer one.
- *  #525 (Ryan, 2026-11-11): when the pin is at an intersection with the
- *  street, the line adds "at <cross street>" (`c.cross_street`, the
- *  route's reading). */
+ *  #536 (Ryan, 2026-11-12, N2): the cross street (#525's
+ *  `c.cross_street`) is named in the row's title, not on this line. */
 export function roadRowLine(c: RoadCandidate): string {
-  const at = c.cross_street ? ` · at ${c.cross_street}` : "";
-  return `${travelAndDistance(c)}${at}`;
+  return travelAndDistance(c);
 }
 
 function travelAndDistance(c: RoadCandidate): string {

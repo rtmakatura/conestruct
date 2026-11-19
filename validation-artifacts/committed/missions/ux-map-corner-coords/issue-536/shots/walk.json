@@ -1,0 +1,392 @@
+[
+ {
+  "size": "1440x900",
+  "pin": "colfax-pennsylvania",
+  "lat": 39.7401,
+  "lng": -104.9811,
+  "inter": true,
+  "rows": [
+   {
+    "title": "Pennsylvania Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 2 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   },
+   {
+    "title": "East Colfax Avenue at Pennsylvania Street",
+    "at": " at Pennsylvania Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7 2 m from your pin",
+   "East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7 5 m from your pin"
+  ],
+  "ariaLabels": [
+   null,
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"Pennsylvania Street at East Colfax Avenue Traffic both ways \u00b7 2 m from your pin\"\n  - radio \"East Colfax Avenue at Pennsylvania Street Traffic both ways \u00b7 5 m from your pin\"\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "1440x900",
+  "pin": "colfax-humboldt",
+  "lat": 39.7401,
+  "lng": -104.9696,
+  "inter": true,
+  "rows": [
+   {
+    "title": "East Colfax Avenue at Humboldt Street",
+    "at": " at Humboldt Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   },
+   {
+    "title": "Humboldt Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 8 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "East Colfax Avenue at Humboldt StreetTraffic both ways \u00b7 5 m from your pin",
+   "Humboldt Street at East Colfax AvenueTraffic both ways \u00b7 8 m from your pin"
+  ],
+  "ariaLabels": [
+   null,
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"East Colfax Avenue at Humboldt Street Traffic both ways \u00b7 5 m from your pin\"\n  - radio \"Humboldt Street at East Colfax Avenue Traffic both ways \u00b7 8 m from your pin\"\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "1440x900",
+  "pin": "no-cross-street",
+  "lat": 39.7401,
+  "lng": -104.9757,
+  "inter": true,
+  "rows": [
+   {
+    "title": "East Colfax Avenue",
+    "at": null,
+    "sub": "Traffic both ways \u00b7 6 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": null,
+    "atColor": null,
+    "atSize": null,
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "East Colfax AvenueTraffic both ways \u00b7 6 m from your pin"
+  ],
+  "ariaLabels": [
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"East Colfax Avenue Traffic both ways \u00b7 6 m from your pin\" [checked]\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "1198x930",
+  "pin": "colfax-pennsylvania",
+  "lat": 39.7401,
+  "lng": -104.9811,
+  "inter": true,
+  "rows": [
+   {
+    "title": "Pennsylvania Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 2 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   },
+   {
+    "title": "East Colfax Avenue at Pennsylvania Street",
+    "at": " at Pennsylvania Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7 2 m from your pin",
+   "East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7 5 m from your pin"
+  ],
+  "ariaLabels": [
+   null,
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"Pennsylvania Street at East Colfax Avenue Traffic both ways \u00b7 2 m from your pin\"\n  - radio \"East Colfax Avenue at Pennsylvania Street Traffic both ways \u00b7 5 m from your pin\"\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "1198x930",
+  "pin": "colfax-humboldt",
+  "lat": 39.7401,
+  "lng": -104.9696,
+  "inter": true,
+  "rows": [
+   {
+    "title": "East Colfax Avenue at Humboldt Street",
+    "at": " at Humboldt Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   },
+   {
+    "title": "Humboldt Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 8 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "East Colfax Avenue at Humboldt StreetTraffic both ways \u00b7 5 m from your pin",
+   "Humboldt Street at East Colfax AvenueTraffic both ways \u00b7 8 m from your pin"
+  ],
+  "ariaLabels": [
+   null,
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"East Colfax Avenue at Humboldt Street Traffic both ways \u00b7 5 m from your pin\"\n  - radio \"Humboldt Street at East Colfax Avenue Traffic both ways \u00b7 8 m from your pin\"\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "1198x930",
+  "pin": "no-cross-street",
+  "lat": 39.7401,
+  "lng": -104.9757,
+  "inter": true,
+  "rows": [
+   {
+    "title": "East Colfax Avenue",
+    "at": null,
+    "sub": "Traffic both ways \u00b7 6 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": null,
+    "atColor": null,
+    "atSize": null,
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "East Colfax AvenueTraffic both ways \u00b7 6 m from your pin"
+  ],
+  "ariaLabels": [
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"East Colfax Avenue Traffic both ways \u00b7 6 m from your pin\" [checked]\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "390x844",
+  "pin": "colfax-pennsylvania",
+  "lat": 39.7401,
+  "lng": -104.9811,
+  "inter": true,
+  "rows": [
+   {
+    "title": "Pennsylvania Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 2 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   },
+   {
+    "title": "East Colfax Avenue at Pennsylvania Street",
+    "at": " at Pennsylvania Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7 2 m from your pin",
+   "East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7 5 m from your pin"
+  ],
+  "ariaLabels": [
+   null,
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"Pennsylvania Street at East Colfax Avenue Traffic both ways \u00b7 2 m from your pin\"\n  - radio \"East Colfax Avenue at Pennsylvania Street Traffic both ways \u00b7 5 m from your pin\"\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "390x844",
+  "pin": "colfax-humboldt",
+  "lat": 39.7401,
+  "lng": -104.9696,
+  "inter": true,
+  "rows": [
+   {
+    "title": "East Colfax Avenue at Humboldt Street",
+    "at": " at Humboldt Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   },
+   {
+    "title": "Humboldt Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 8 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "atSize": "13.5px",
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "East Colfax Avenue at Humboldt StreetTraffic both ways \u00b7 5 m from your pin",
+   "Humboldt Street at East Colfax AvenueTraffic both ways \u00b7 8 m from your pin"
+  ],
+  "ariaLabels": [
+   null,
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"East Colfax Avenue at Humboldt Street Traffic both ways \u00b7 5 m from your pin\"\n  - radio \"Humboldt Street at East Colfax Avenue Traffic both ways \u00b7 8 m from your pin\"\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ },
+ {
+  "size": "390x844",
+  "pin": "no-cross-street",
+  "lat": 39.7401,
+  "lng": -104.9757,
+  "inter": true,
+  "rows": [
+   {
+    "title": "East Colfax Avenue",
+    "at": null,
+    "sub": "Traffic both ways \u00b7 6 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "nameSize": "13.5px",
+    "nameFamily": "__Inter_176161",
+    "atWeight": null,
+    "atColor": null,
+    "atSize": null,
+    "subColor": "rgb(174, 187, 204)",
+    "titleLines": 1,
+    "rowH": 64
+   }
+  ],
+  "textNames": [
+   "East Colfax AvenueTraffic both ways \u00b7 6 m from your pin"
+  ],
+  "ariaLabels": [
+   null
+  ],
+  "ariaSnapshot": "- heading \"Which road is the work on?\" [level=3]\n- radiogroup \"Which road is the work on?\":\n  - radio \"East Colfax Avenue Traffic both ways \u00b7 6 m from your pin\" [checked]\n- paragraph: You'll pick the side of the road next, on the page.",
+  "axe": []
+ }
+]

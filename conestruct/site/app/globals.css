@@ -5395,6 +5395,13 @@ input[type="number"] {
   color: var(--ink);
   overflow-wrap: anywhere;
 }
+/* #536 (Ryan, 2026-11-12, N2): " at <cross street>" in the row's title,
+   400 weight in --ink-mute, inline so it wraps with the name.  Size and
+   family inherit .road-pick-name's (no size joins the census). */
+.workbench .road-pick-at {
+  font-weight: 400;
+  color: var(--ink-mute);
+}
 .workbench .road-pick-sub {
   font-family: var(--font-sans);
   font-size: var(--fs-field-label);

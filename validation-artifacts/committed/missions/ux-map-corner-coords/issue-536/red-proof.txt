@@ -1,0 +1,8 @@
+Red proof on bed68a4 (old roadRowLine/row JSX), new #536 assertions, run 2026-11-19:
+npx vitest run --reporter=dot components/LocationPickerModal.map-window.test.tsx
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/LocationPickerModal.map-window.test.tsx > ruling 2: one entry per street > #536: the corner is in the title, the second line drops it, the name carries it
+TestingLibraryElementError: Unable to find role="radio" and name `/Pennsylvania Street at East Colfax Avenue/`
+ FAIL  components/LocationPickerModal.map-window.test.tsx > ruling 2: one entry per street > #536: with no cross street, or no travel answer, the row is as before
+TestingLibraryElementError: Unable to find an accessible element with the role "radio" and name `/Race Street at East Colfax Avenue/`
+      Tests  2 failed | 10 passed (12)
