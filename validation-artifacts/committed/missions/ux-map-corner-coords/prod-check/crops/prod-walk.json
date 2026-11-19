@@ -1,0 +1,961 @@
+[
+ {
+  "size": "1440x900",
+  "console": [],
+  "failed": [
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED"
+  ],
+  "step": "no-cross",
+  "camera": {
+   "zoom": 16,
+   "center": [
+    39.7401,
+    -104.9811
+   ],
+   "moving": false
+  },
+  "cameraAfterList": {
+   "zoom": 16,
+   "center": [
+    39.7401,
+    -104.9811
+   ],
+   "moving": false
+  },
+  "rowsCorner": [
+   {
+    "title": "Pennsylvania Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 2 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7 2 m from your pin"
+   },
+   {
+    "title": "East Colfax Avenue at Pennsylvania Street",
+    "at": " at Pennsylvania Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7 5 m from your pin"
+   }
+  ],
+  "afterEsc": {
+   "dialogOpen": 1,
+   "barText": "Pin at39.7401, -104.9811Tap the numbers to change them"
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "No pin yet. Search, tap the map, or enter coordinates.Enter coordinates",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "editing": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 264.53,
+      "h": 44
+     },
+     {
+      "what": "input Longitude",
+      "w": 264.53,
+      "h": 44
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "error": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "Enter coordinatesUse numbers in decimal degrees, like 39.7401",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "Pin at39.7401, -104.9811Tap the numbers to change them",
+    "controls": [
+     {
+      "what": "button \"39.7401, -104.9811\"",
+      "w": 155.06,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "editingPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 264.53,
+      "h": 44
+     },
+     {
+      "what": "input Longitude",
+      "w": 264.53,
+      "h": 44
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44
+     }
+    ],
+    "axe": []
+   }
+  },
+  "mapMoves": 0,
+  "railMoves": 0,
+  "barHeights": [
+   44,
+   44,
+   44,
+   44,
+   44
+  ],
+  "minControl": 44,
+  "axe": {
+   "noPin": [],
+   "editing": [],
+   "error": [],
+   "pin": [],
+   "editingPin": []
+  },
+  "rowsNoCross": [
+   {
+    "title": "East Colfax Avenue",
+    "at": null,
+    "sub": "Traffic both ways \u00b7 6 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": null,
+    "atColor": null,
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "East Colfax AvenueTraffic both ways \u00b7 6 m from your pin"
+   }
+  ],
+  "axeNoCross": []
+ },
+ {
+  "size": "1198x930",
+  "console": [],
+  "failed": [
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED"
+  ],
+  "step": "no-cross",
+  "camera": {
+   "zoom": 16,
+   "center": [
+    39.7401,
+    -104.9811
+   ],
+   "moving": false
+  },
+  "cameraAfterList": {
+   "zoom": 16,
+   "center": [
+    39.7401,
+    -104.9811
+   ],
+   "moving": false
+  },
+  "rowsCorner": [
+   {
+    "title": "Pennsylvania Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 2 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7 2 m from your pin"
+   },
+   {
+    "title": "East Colfax Avenue at Pennsylvania Street",
+    "at": " at Pennsylvania Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7 5 m from your pin"
+   }
+  ],
+  "afterEsc": {
+   "dialogOpen": 1,
+   "barText": "Pin at39.7401, -104.9811Tap the numbers to change them"
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "No pin yet. Search, tap the map, or enter coordinates.Enter coordinates",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "editing": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 163.63,
+      "h": 44
+     },
+     {
+      "what": "input Longitude",
+      "w": 163.63,
+      "h": 44
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "error": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "Enter coordinatesUse numbers in decimal degrees, like 39.7401",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "Pin at39.7401, -104.9811Tap the numbers to change them",
+    "controls": [
+     {
+      "what": "button \"39.7401, -104.9811\"",
+      "w": 155.06,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "editingPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 163.63,
+      "h": 44
+     },
+     {
+      "what": "input Longitude",
+      "w": 163.63,
+      "h": 44
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44
+     }
+    ],
+    "axe": []
+   }
+  },
+  "mapMoves": 0,
+  "railMoves": 0,
+  "barHeights": [
+   44,
+   44,
+   44,
+   44,
+   44
+  ],
+  "minControl": 44,
+  "axe": {
+   "noPin": [],
+   "editing": [],
+   "error": [],
+   "pin": [],
+   "editingPin": []
+  },
+  "rowsNoCross": [
+   {
+    "title": "East Colfax Avenue",
+    "at": null,
+    "sub": "Traffic both ways \u00b7 6 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": null,
+    "atColor": null,
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "East Colfax AvenueTraffic both ways \u00b7 6 m from your pin"
+   }
+  ],
+  "axeNoCross": []
+ },
+ {
+  "size": "390x844",
+  "console": [],
+  "failed": [
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED",
+   "api.mapbox.com net::ERR_ABORTED"
+  ],
+  "step": "no-cross",
+  "camera": {
+   "zoom": 16,
+   "center": [
+    39.7401,
+    -104.9811
+   ],
+   "moving": false
+  },
+  "cameraAfterList": {
+   "zoom": 16,
+   "center": [
+    39.7401,
+    -104.9811
+   ],
+   "moving": false
+  },
+  "rowsCorner": [
+   {
+    "title": "Pennsylvania Street at East Colfax Avenue",
+    "at": " at East Colfax Avenue",
+    "sub": "Traffic both ways \u00b7 2 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7 2 m from your pin"
+   },
+   {
+    "title": "East Colfax Avenue at Pennsylvania Street",
+    "at": " at Pennsylvania Street",
+    "sub": "Traffic both ways \u00b7 5 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": "400",
+    "atColor": "rgb(174, 187, 204)",
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7 5 m from your pin"
+   }
+  ],
+  "afterEsc": {
+   "dialogOpen": 1,
+   "barText": "Pin at39.7401, -104.9811Tap the numbers to change them"
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "No pin yet. Search, tap the map, or enter coordinates.Enter coordinates",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "editing": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 88.34,
+      "h": 44
+     },
+     {
+      "what": "input Longitude",
+      "w": 88.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "error": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "Enter coordinatesUse numbers in decimal degrees, like 39.7401",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "Pin at39.7401, -104.9811Tap the numbers to change them",
+    "controls": [
+     {
+      "what": "button \"39.7401, -104.9811\"",
+      "w": 155.06,
+      "h": 44
+     }
+    ],
+    "axe": []
+   },
+   "editingPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 88.34,
+      "h": 44
+     },
+     {
+      "what": "input Longitude",
+      "w": 88.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44
+     }
+    ],
+    "axe": []
+   }
+  },
+  "mapMoves": 0,
+  "railMoves": 1,
+  "barHeights": [
+   44,
+   44,
+   44,
+   44,
+   44
+  ],
+  "minControl": 44,
+  "axe": {
+   "noPin": [],
+   "editing": [],
+   "error": [],
+   "pin": [],
+   "editingPin": []
+  },
+  "rowsNoCross": [
+   {
+    "title": "East Colfax Avenue",
+    "at": null,
+    "sub": "Traffic both ways \u00b7 6 m from your pin",
+    "nameWeight": "600",
+    "nameColor": "rgb(234, 240, 247)",
+    "atWeight": null,
+    "atColor": null,
+    "subColor": "rgb(174, 187, 204)",
+    "inkMute": "rgb(174, 187, 204)",
+    "ariaName": "East Colfax AvenueTraffic both ways \u00b7 6 m from your pin"
+   }
+  ],
+  "axeNoCross": []
+ }
+]
