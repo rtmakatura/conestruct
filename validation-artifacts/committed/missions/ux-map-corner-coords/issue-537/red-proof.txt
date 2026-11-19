@@ -1,0 +1,18 @@
+# #537 red proof: LocationPickerModal.coords-bar.test.tsx on 26df927's LocationPickerModal.tsx (the test file added, no code change)
+# npx vitest run components/LocationPickerModal.coords-bar.test.tsx, 2026-11-19T16:19Z
+      Tests  12 failed (12)
+   × #537 bad input: a short error in the bar, the pin untouched > latitude out of range
+   × #537 bad input: a short error in the bar, the pin untouched > longitude out of range
+   × #537 bad input: a short error in the bar, the pin untouched > not numbers
+   × #537 editing in the bar > Cancel does what Esc does
+   × #537 editing in the bar > Enter applies: one lookup at the typed pair, the bar then shows the pin
+   × #537 editing in the bar > Esc cancels: no lookup, the old pin stays, the window stays open
+   × #537 editing in the bar > Go applies the same way
+   × #537 editing in the bar > a pasted 'lat, long' in the first box fills both; Enter then applies
+   × #537 editing in the bar > the button opens two labelled boxes, Go and Cancel; Latitude has focus
+   × #537 the bar, before and after a pin > a pin: Pin at, then the coordinates as the button at today's precision
+   × #537 the bar, before and after a pin > no pin: the ruled line and an Enter coordinates button; no boxes, no old link
+   × #537 without a map (no Mapbox token) > the bar opens on the boxes, and its no-pin line drops the map
+ Test Files  1 failed (1)
+TestingLibraryElementError: Unable to find an element by: [data-testid="coords-bar"]
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯

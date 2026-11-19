@@ -15,8 +15,11 @@
 //                a pair pasted over prior text replaces both boxes.
 //
 // Detection timing is deliberately NOT asserted beyond "the last POST
-// is the full pair": the pin still follows every valid prefix as before
-// (ruling 4, s2-arc14) and the state-contract suite owns that window.
+// is the full pair"; the state-contract suite owns that window.
+//
+// #537 (S2, RULE 5, stated): the boxes now sit in the coordinates bar and
+// are a draft: Enter (or Go) applies them, so every case here presses
+// Enter, and a pasted pair fills both boxes without moving the pin.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -55,13 +58,14 @@ function mount() {
   );
   // #507: with no map token the coordinate boxes are already open (the
   // old click landed on the "Map unavailable" copy and did nothing).
+  // #537: they open in the coordinates bar, as before.
   expect(screen.getByLabelText("Latitude")).toBeTruthy();
 }
 const lat = () => screen.getByLabelText("Latitude") as HTMLInputElement;
 const lng = () => screen.getByLabelText("Longitude") as HTMLInputElement;
 const errors = () =>
   Array.from(
-    document.querySelectorAll(".text-\\[color\\:var\\(--fail\\)\\]"),
+    document.querySelectorAll(".mw-note-fail"),
   ).map((e) => e.textContent);
 const last = () => detects[detects.length - 1];
 
@@ -73,6 +77,7 @@ describe("#230 typed entry, keystroke by keystroke", () => {
     await user.type(lng(), "-105.0815");
     expect(lat().value).toBe("39.7113");
     expect(lng().value).toBe("-105.0815");
+    await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });
@@ -84,6 +89,7 @@ describe("#230 typed entry, keystroke by keystroke", () => {
     await user.type(lat(), "39.7113");
     expect(lat().value).toBe("39.7113");
     expect(lng().value).toBe("-105.0815");
+    await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });
@@ -93,6 +99,7 @@ describe("#230 typed entry, keystroke by keystroke", () => {
     mount();
     await user.type(lat(), "39.7113");
     await user.type(lng(), "−105.0815");
+    await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });
@@ -106,6 +113,8 @@ describe("#230 pasted pair", () => {
     await user.paste("39.7113, -105.0815");
     expect(lat().value).toBe("39.7113");
     expect(lng().value).toBe("-105.0815");
+    expect(detects).toHaveLength(0); // #537: a paste fills, Enter applies
+    await user.keyboard("{Enter}");
     expect(detects).toHaveLength(1);
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });
@@ -117,6 +126,7 @@ describe("#230 pasted pair", () => {
     await user.paste("39.7113, −105.0815");
     expect(lat().value).toBe("39.7113");
     expect(lng().value).toBe("-105.0815");
+    await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });
@@ -128,6 +138,7 @@ describe("#230 pasted pair", () => {
     await user.paste(" 39.7113 , -105.0815 ");
     expect(lat().value).toBe("39.7113");
     expect(lng().value).toBe("-105.0815");
+    await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });
@@ -139,6 +150,7 @@ describe("#230 pasted pair", () => {
     await user.paste("39.7113, -105.0815");
     expect(lat().value).toBe("39.7113");
     expect(lng().value).toBe("-105.0815");
+    await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });

@@ -90,9 +90,11 @@ function mount(onSave: (r: LocationPickerResult) => void = () => {}) {
   );
 }
 
+// #537: the coordinates bar opens on the boxes without a map; type, then Go.
 function typeCoords() {
   fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "39.73997" } });
   fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: "-104.96632" } });
+  fireEvent.submit(screen.getByTestId("coords-bar"));
 }
 
 const saveButton = () => screen.getByRole("button", { name: /^Save (&|and) close$/i });

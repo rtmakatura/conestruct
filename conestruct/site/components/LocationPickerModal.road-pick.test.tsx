@@ -105,6 +105,16 @@ function typeCoords() {
   fireEvent.change(screen.getByLabelText("Longitude"), {
     target: { value: "-105.1300" },
   });
+  // #537: Go applies (a keystroke no longer moves the pin).
+  fireEvent.submit(screen.getByTestId("coords-bar"));
+}
+
+// #537: a pin move by latitude alone: open the bar on the pin, retype the
+// latitude, Go.
+function moveLat(value: string) {
+  fireEvent.click(screen.getByTestId("coords-bar").querySelector("button")!);
+  fireEvent.change(screen.getByLabelText("Latitude"), { target: { value } });
+  fireEvent.submit(screen.getByTestId("coords-bar"));
 }
 
 function saveButton(): HTMLButtonElement {
@@ -340,9 +350,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(rows()[0].getAttribute("aria-checked")).toBe("true");
 
     phase = 1;
-    fireEvent.change(screen.getByLabelText("Latitude"), {
-      target: { value: "40.1000" },
-    });
+    moveLat("40.1000");
 
     await waitFor(() => expect(rows()).toHaveLength(2));
     for (const r of rows()) expect(r.getAttribute("aria-checked")).toBe("false");

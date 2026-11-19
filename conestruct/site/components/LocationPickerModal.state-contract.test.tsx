@@ -178,6 +178,18 @@ function typeCoords(lat = "40.0176", lng = "-105.1300") {
   fireEvent.change(screen.getByLabelText("Longitude"), {
     target: { value: lng },
   });
+  // #537: Go applies (a keystroke no longer moves the pin).
+  fireEvent.submit(screen.getByTestId("coords-bar"));
+}
+
+// #537: a pin move by latitude alone: open the bar if it shows the pin,
+// retype the latitude, Go.
+function moveLat(value: string) {
+  if (!screen.queryByLabelText("Latitude")) {
+    fireEvent.click(screen.getByTestId("coords-bar").querySelector("button")!);
+  }
+  fireEvent.change(screen.getByLabelText("Latitude"), { target: { value } });
+  fireEvent.submit(screen.getByTestId("coords-bar"));
 }
 
 // #507 ruling 2: the road list's rows (role=radio); a row names the road
@@ -220,9 +232,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     // Move the pin; the second request stays unanswered — this IS the
     // stale window.  Nothing from the previous pin may render, not
     // even dimmed: no rows, no selection — only the loading line.
-    fireEvent.change(screen.getByLabelText("Latitude"), {
-      target: { value: "40.1000" },
-    });
+    moveLat("40.1000");
     expect(pendingDetects).toHaveLength(2);
     expect(rows()).toHaveLength(0);
     expect(screen.queryByText(/E Baseline Rd/)).toBeNull();
@@ -233,9 +243,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
   it("out-of-order responses: a slow answer from a superseded pin never renders", async () => {
     mountModal();
     typeCoords(); // request 0 — will resolve LAST
-    fireEvent.change(screen.getByLabelText("Latitude"), {
-      target: { value: "40.1000" },
-    }); // request 1 — the current pin
+    moveLat("40.1000"); // request 1 — the current pin
     expect(pendingDetects).toHaveLength(2);
 
     // Fast new response renders.
@@ -419,9 +427,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     mountModal(RESTORE_INITIAL);
     expect(pendingDetects).toHaveLength(0);
 
-    fireEvent.change(screen.getByLabelText("Latitude"), {
-      target: { value: "40.1000" },
-    });
+    moveLat("40.1000");
 
     expect(pendingDetects).toHaveLength(1);
     expect(rows()).toHaveLength(0);

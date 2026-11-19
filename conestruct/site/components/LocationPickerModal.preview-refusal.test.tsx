@@ -156,9 +156,13 @@ function mountModal(scenario: Scenario = GUESSED) {
   );
 }
 
+// #537: the coordinates bar; open it when it shows the pin, type, then Go.
 function typeCoords([lat, lng]: [number, number]) {
+  const bar = screen.getByTestId("coords-bar");
+  if (!screen.queryByLabelText("Latitude")) fireEvent.click(bar.querySelector("button")!);
   fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: String(lat) } });
   fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: String(lng) } });
+  fireEvent.submit(screen.getByTestId("coords-bar"));
 }
 
 const geometryBodies = () =>

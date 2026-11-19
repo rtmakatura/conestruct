@@ -5528,20 +5528,127 @@ input[type="number"] {
   font-weight: 600;
   color: var(--act);
 }
-.map-window .mw-coords-toggle {
+/* #537 (Ryan, 2026-11-12, S2): the coordinates bar under the map, one
+   fixed height in every state (no pin, pin, editing, error) so the map and
+   the rail never move (P1).  Every control is 44 px tall; the coordinates
+   button draws the S2 board's 32 px dashed face inside its 44 px box.
+   Lines read --fs-body-value, the hint and the error .mw-hint / .mw-note
+   (two lines at most, inside the 44).  Tokens only: the ground is
+   --da-ground, the board's #101c29. */
+.map-window .mw-cbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-tight);
-  padding: 0 20px;
-  flex-shrink: 0;
-}
-.map-window .mw-coords {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  padding: 0 20px var(--space-tight);
+  height: 44px;
   flex-shrink: 0;
+  padding: 0 20px;
+  background: var(--da-ground);
+  line-height: 1.4;
+  color: var(--ink);
+}
+.map-window .mw-cbar,
+.map-window .mw-cbar-input,
+.map-window .mw-cbar-coords {
+  font-size: var(--fs-body-value);
+}
+.map-window .mw-cbar-edit {
+  gap: var(--space-tight);
+  container-type: inline-size;
+}
+.map-window .mw-cbar-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--dim);
+}
+.map-window .mw-cbar-lead,
+.map-window .mw-cbar-label {
+  flex: none;
+  white-space: nowrap;
+  color: var(--ink-mute);
+}
+.map-window .mw-cbar-say {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.map-window .mw-cbar-end {
+  text-align: right;
+}
+.map-window .mw-cbar-coords {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+.map-window .mw-cbar-face {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px dashed var(--ink-faint);
+  white-space: nowrap;
+}
+.map-window .mw-cbar-coords:hover .mw-cbar-face {
+  border-color: var(--act);
+}
+.map-window .mw-cbar-input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 44px;
+  padding: 0 8px;
+  font-variant-numeric: tabular-nums;
+}
+.map-window .mw-cbar-go,
+.map-window .mw-cbar-cancel {
+  flex: none;
+  height: 44px;
+  min-width: 44px;
+}
+.map-window .mw-cbar-go {
+  padding: 0 12px;
+}
+.map-window .mw-cbar-cancel {
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+}
+/* A narrow bar (the phone, or two columns just past md) shows "Lat" and
+   "Long" so each box holds "-104.9811"; the rest of the word stays in the
+   label, hidden from sight only, so the name is still "Latitude". */
+@container (max-width: 479px) {
+  .map-window .mw-cbar-more {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .map-window .mw-cbar-input {
+    padding: 0 4px;
+  }
+}
+/* On a phone the bar takes the 16 px side gutter and tighter gaps, so the
+   two boxes still hold a whole longitude. */
+@media (max-width: 479px) {
+  .map-window .mw-cbar {
+    padding: 0 16px;
+  }
+  .map-window .mw-cbar-edit {
+    gap: 6px;
+  }
 }
 .map-window .mw-map-off {
   display: flex;

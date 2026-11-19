@@ -98,6 +98,8 @@ function typeCoords() {
   fireEvent.change(screen.getByLabelText("Longitude"), {
     target: { value: "-104.94071" },
   });
+  // #537: Go applies (a keystroke no longer moves the pin).
+  fireEvent.submit(screen.getByTestId("coords-bar"));
 }
 
 beforeEach(() => {

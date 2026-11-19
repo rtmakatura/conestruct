@@ -1,0 +1,716 @@
+[
+ {
+  "size": "1440x900",
+  "inter": true,
+  "kept": "abc",
+  "pasted": [
+   "39.7401",
+   "-104.9811"
+  ],
+  "afterEsc": {
+   "dialogOpen": 1,
+   "barText": "Pin at39.7401, -104.9811Tap the numbers to change them"
+  },
+  "mapMoves": 0,
+  "railMoves": 0,
+  "barMoves": 0,
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "No pin yet. Search, tap the map, or enter coordinates.Enter coordinates",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "No pin yet. Search, tap the map, or enter coordinates.",
+      "clipped": false,
+      "h": 18
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "editing": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 264.53,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "input Longitude",
+      "w": 264.53,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44,
+      "overflows": null
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [],
+    "scrollTop": 0,
+    "axe": [],
+    "focus": "Latitude"
+   },
+   "error": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "Enter coordinatesUse numbers in decimal degrees, like 39.7401",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "Use numbers in decimal degrees, like 39.7401",
+      "clipped": false,
+      "h": 18
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "Pin at39.7401, -104.9811Tap the numbers to change them",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"39.7401, -104.9811\"",
+      "w": 155.06,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "Tap the numbers to change them",
+      "clipped": false,
+      "h": 18
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "editingPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 264.53,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "input Longitude",
+      "w": 264.53,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44,
+      "overflows": null
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [],
+    "scrollTop": 0,
+    "axe": []
+   }
+  }
+ },
+ {
+  "size": "1198x930",
+  "inter": true,
+  "kept": "abc",
+  "pasted": [
+   "39.7401",
+   "-104.9811"
+  ],
+  "afterEsc": {
+   "dialogOpen": 1,
+   "barText": "Pin at39.7401, -104.9811Tap the numbers to change them"
+  },
+  "mapMoves": 0,
+  "railMoves": 0,
+  "barMoves": 0,
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "No pin yet. Search, tap the map, or enter coordinates.Enter coordinates",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "No pin yet. Search, tap the map, or enter coordinates.",
+      "clipped": false,
+      "h": 18
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "editing": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 163.63,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "input Longitude",
+      "w": 163.63,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44,
+      "overflows": null
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [],
+    "scrollTop": 0,
+    "axe": [],
+    "focus": "Latitude"
+   },
+   "error": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "Enter coordinatesUse numbers in decimal degrees, like 39.7401",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "Use numbers in decimal degrees, like 39.7401",
+      "clipped": false,
+      "h": 18
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "Pin at39.7401, -104.9811Tap the numbers to change them",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"39.7401, -104.9811\"",
+      "w": 155.06,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "Tap the numbers to change them",
+      "clipped": false,
+      "h": 18
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "editingPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 163.63,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "input Longitude",
+      "w": 163.63,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44,
+      "overflows": null
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [],
+    "scrollTop": 0,
+    "axe": []
+   }
+  }
+ },
+ {
+  "size": "390x844",
+  "inter": true,
+  "kept": "abc",
+  "pasted": [
+   "39.7401",
+   "-104.9811"
+  ],
+  "afterEsc": {
+   "dialogOpen": 1,
+   "barText": "Pin at39.7401, -104.9811Tap the numbers to change them"
+  },
+  "mapMoves": 0,
+  "railMoves": 1,
+  "barMoves": 0,
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "No pin yet. Search, tap the map, or enter coordinates.Enter coordinates",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "No pin yet. Search, tap the map, or enter coordinates.",
+      "clipped": false,
+      "h": 35
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "editing": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 88.34,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "input Longitude",
+      "w": 88.34,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44,
+      "overflows": null
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [],
+    "scrollTop": 0,
+    "axe": [],
+    "focus": "Latitude"
+   },
+   "error": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "Enter coordinatesUse numbers in decimal degrees, like 39.7401",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"Enter coordinates\"",
+      "w": 130.09,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "Use numbers in decimal degrees, like 39.7401",
+      "clipped": false,
+      "h": 35
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "Pin at39.7401, -104.9811Tap the numbers to change them",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "button \"39.7401, -104.9811\"",
+      "w": 155.06,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [
+     {
+      "text": "Tap the numbers to change them",
+      "clipped": false,
+      "h": 35
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "editingPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barText": "LatitudeLongitudeGoCancel",
+    "barFont": "__Inter_176161 13.5px",
+    "controls": [
+     {
+      "what": "input Latitude",
+      "w": 88.34,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "input Longitude",
+      "w": 88.34,
+      "h": 44,
+      "overflows": false
+     },
+     {
+      "what": "button \"Go\"",
+      "w": 44.34,
+      "h": 44,
+      "overflows": null
+     },
+     {
+      "what": "button \"Cancel coordinate entry\"",
+      "w": 53.34,
+      "h": 44,
+      "overflows": null
+     }
+    ],
+    "says": [],
+    "scrollTop": 0,
+    "axe": []
+   }
+  }
+ }
+]

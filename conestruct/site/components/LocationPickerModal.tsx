@@ -7,6 +7,8 @@ import {
   useRef,
   useState,
   type ClipboardEvent,
+  type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type RefObject,
 } from "react";
 import type * as MapboxGL from "mapbox-gl";
@@ -238,6 +240,14 @@ function normaliseCoordText(raw: string): string {
   return raw.replace(/[\u2212\u2013]/g, "-").replace(/[\s\u00a0]+/g, "");
 }
 
+// #537: one box of the coordinates bar, as a number, or null when it is
+// not a plain decimal (empty, letters, DMS glyphs, "1e3").
+function parseCoord(raw: string): number | null {
+  const text = normaliseCoordText(raw);
+  if (!/^[-+]?(\d+\.?\d*|\.\d+)$/.test(text)) return null;
+  return Number(text);
+}
+
 function fmtFt(n: number): string {
   if (!Number.isFinite(n)) return "0";
   return Math.round(n).toLocaleString("en-US");
@@ -366,6 +376,25 @@ export const AXIS_HINT = "Look at the map: which way do the lanes run past your 
 export const SAVE_BLOCKED_LINE = "Pick a road, or a direction if the lookup failed.";
 /** R145: replaces "Detecting road… Save turns on once detection settles". */
 export const SAVE_WAITS_LINE = "Looking up the roads. Save turns on when that's done.";
+/** #537 (S2, prompt ruling 2): the coordinates bar under the map. */
+export const COORDS_NO_PIN = "No pin yet. Search, tap the map, or enter coordinates.";
+/** #537 R145: with no map there is no map to tap (Rule 10). */
+export const COORDS_NO_PIN_NO_MAP = "No pin yet. Search or enter coordinates.";
+/** #537: S2 ruling 2. */
+export const COORDS_PIN_AT = "Pin at";
+/** #537: S2 ruling 2. */
+export const COORDS_ENTER = "Enter coordinates";
+/** #537: the Ideas2 board's S2 hint, beside the pin's coordinates. */
+export const COORDS_HINT = "Tap the numbers to change them";
+/** #537 R145: S2's "not numbers" error (replaces "Invalid number" and the
+ *  DMS line; its example is the issue's pin). */
+export const COORDS_NOT_NUMBERS = "Use numbers in decimal degrees, like 39.7401";
+/** #537: the old boxes' range errors, kept word for word. */
+export const COORDS_LAT_RANGE = "Latitude must be between -90 and 90";
+/** #537 R145: Save waits on numbers typed in the bar but not applied. */
+export const SAVE_COORDS_LINE = "Press Go to use the coordinates you typed.";
+/** #537: the old boxes' range errors, kept word for word. */
+export const COORDS_LNG_RANGE = "Longitude must be between -180 and 180";
 
 export function LocationPickerModal({
   open,
@@ -442,8 +471,9 @@ export function LocationPickerModal({
   const [lngInput, setLngInput] = useState(
     initialHasPin ? fmt4(initial.lng!) : "",
   );
-  const [latError, setLatError] = useState<string | null>(null);
-  const [lngError, setLngError] = useState<string | null>(null);
+  // #537 (S2): the two boxes are a draft in the coordinates bar; nothing
+  // moves the pin until Go or Enter.  A bad entry is said in the bar.
+  const [coordError, setCoordError] = useState<string | null>(null);
 
   // ---- Search / geocode --------------------------------------------------
   const [searchQuery, setSearchQuery] = useState(initial.address ?? "");
@@ -504,10 +534,12 @@ export function LocationPickerModal({
   // ---- Map / basemap -----------------------------------------------------
   // #507 ruling 1 (R145-6): the layer toggle left the map; satellite only.
   const style: MapStyle = "satellite";
-  // Toggle to surface the lat/lng fallback inputs when the user is
-  // working without an interactive map.  Auto-enabled when the Mapbox
-  // token is missing.
-  const [showManualCoords, setShowManualCoords] = useState(!tokenAvailable);
+  // #537 (S2): the coordinates bar is editing (the two boxes) or showing
+  // the pin.  Without a Mapbox token it opens on the boxes, the only way
+  // in (R145 self-ruled, issue-537/rulings.md), as the old boxes did.
+  const [coordsEditing, setCoordsEditing] = useState(!tokenAvailable);
+  const coordsButtonRef = useRef<HTMLButtonElement | null>(null);
+  const latBoxRef = useRef<HTMLInputElement | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapboxGL.Map | null>(null);
@@ -932,10 +964,6 @@ export function LocationPickerModal({
         detect: boolean;
         fly: boolean;
         targetZoom?: number;
-        // #230: a typed change never has its box rewritten under the
-        // caret — the keystroke path owns the box text; the pin/detect
-        // still follow every valid prefix exactly as before.
-        keepInputs?: boolean;
       },
     ) => {
       if (!isValidLat(newLat) || !isValidLng(newLng)) return;
@@ -943,12 +971,11 @@ export function LocationPickerModal({
       setCoarseNotice(null);
       setLat(newLat);
       setLng(newLng);
-      if (!opts.keepInputs) {
-        setLatInput(fmt4(newLat));
-        setLngInput(fmt4(newLng));
-      }
-      setLatError(null);
-      setLngError(null);
+      // #537: the bar's boxes follow the pin; a keystroke never moves the
+      // pin now (Go or Enter does), so no box is rewritten under the caret.
+      setLatInput(fmt4(newLat));
+      setLngInput(fmt4(newLng));
+      setCoordError(null);
 
       ensureMarker(newLat, newLng, markerTravelRef.current);
 
@@ -980,7 +1007,7 @@ export function LocationPickerModal({
   // Snap the map (if pin is off-screen) and the pin to provided coords.
   // Used after typing-in coordinates.
   const applyTypedCoords = useCallback(
-    (newLat: number, newLng: number, keepInputs = false) => {
+    (newLat: number, newLng: number) => {
       const map = mapRef.current;
       let needFly = true;
       if (map) {
@@ -990,7 +1017,6 @@ export function LocationPickerModal({
       applyPinPosition(newLat, newLng, {
         detect: true,
         fly: needFly,
-        keepInputs,
       });
     },
     [applyPinPosition],
@@ -1238,8 +1264,9 @@ export function LocationPickerModal({
   // ---- Field handlers ---------------------------------------------------
 
   // #230: a pasted "lat, lng" pair in EITHER box fills both (replacing
-  // whatever they held) and places the pin.  Returns false when the
-  // text is not a pair so the caller continues as a single value.
+  // whatever they held).  #537: it no longer places the pin; Go or Enter
+  // does, as for typed numbers.  Returns false when the text is not a
+  // pair so the caller continues as a single value.
   const trySplitPair = (text: string): boolean => {
     if (!text.includes(",")) return false;
     const [a, b] = text.split(",");
@@ -1248,11 +1275,6 @@ export function LocationPickerModal({
     if (!Number.isFinite(la) || !Number.isFinite(lo)) return false;
     setLatInput(fmt4(la));
     setLngInput(fmt4(lo));
-    setLatError(isValidLat(la) ? null : "Latitude must be between -90 and 90");
-    setLngError(isValidLng(lo) ? null : "Longitude must be between -180 and 180");
-    if (isValidLat(la) && isValidLng(lo)) {
-      applyTypedCoords(la, lo);
-    }
     return true;
   };
 
@@ -1264,60 +1286,81 @@ export function LocationPickerModal({
     if (trySplitPair(text)) e.preventDefault();
   };
 
+  // #537: a keystroke only edits the draft (DMS glyphs are kept as typed,
+  // so the error on Go can name what is wrong).
   const onLatChange = (raw: string) => {
     if (/[°'"NSEW]/i.test(raw)) {
-      setLatError("Use decimal degrees (e.g., 38.8862). DMS not supported.");
       setLatInput(raw);
       return;
     }
     const text = normaliseCoordText(raw);
     if (trySplitPair(text)) return;
     setLatInput(text);
-    if (text === "") {
-      setLatError(null);
-      return;
-    }
-    const n = parseFloat(text);
-    if (!Number.isFinite(n)) {
-      setLatError("Invalid number");
-      return;
-    }
-    if (!isValidLat(n)) {
-      setLatError("Latitude must be between -90 and 90");
-      return;
-    }
-    setLatError(null);
-    if (isValidLng(parseFloat(lngInput))) {
-      applyTypedCoords(n, parseFloat(lngInput), true);
-    }
   };
 
   const onLngChange = (raw: string) => {
     if (/[°'"NSEW]/i.test(raw)) {
-      setLngError("Use decimal degrees (e.g., -104.8354). DMS not supported.");
       setLngInput(raw);
       return;
     }
     const text = normaliseCoordText(raw);
     if (trySplitPair(text)) return;
     setLngInput(text);
-    if (text === "") {
-      setLngError(null);
-      return;
-    }
-    const n = parseFloat(text);
-    if (!Number.isFinite(n)) {
-      setLngError("Invalid number");
-      return;
-    }
-    if (!isValidLng(n)) {
-      setLngError("Longitude must be between -180 and 180");
-      return;
-    }
-    setLngError(null);
-    if (isValidLat(parseFloat(latInput))) {
-      applyTypedCoords(parseFloat(latInput), n, true);
-    }
+  };
+
+  // #537 (S2): the bar's Go / Enter, Cancel / Esc.  Focus moves to the
+  // Latitude box on open and back to the bar's button on close.
+  const coordsFocusRef = useRef<"lat" | "button" | null>(null);
+  useEffect(() => {
+    const target = coordsFocusRef.current;
+    coordsFocusRef.current = null;
+    if (target === "lat") latBoxRef.current?.focus();
+    if (target === "button") coordsButtonRef.current?.focus();
+  }, [coordsEditing]);
+
+  const openCoordsEditing = () => {
+    setCoordError(null);
+    coordsFocusRef.current = "lat";
+    setCoordsEditing(true);
+  };
+
+  const closeCoordsEditing = () => {
+    coordsFocusRef.current = "button";
+    setCoordsEditing(false);
+  };
+
+  const cancelCoordsEditing = () => {
+    setLatInput(hasPin ? fmt4(lat) : "");
+    setLngInput(hasPin ? fmt4(lng) : "");
+    setCoordError(null);
+    closeCoordsEditing();
+  };
+
+  const applyCoordsEditing = (e: FormEvent) => {
+    e.preventDefault();
+    const la = parseCoord(latInput);
+    const lo = parseCoord(lngInput);
+    const error =
+      la === null || lo === null
+        ? COORDS_NOT_NUMBERS
+        : !isValidLat(la)
+          ? COORDS_LAT_RANGE
+          : !isValidLng(lo)
+            ? COORDS_LNG_RANGE
+            : null;
+    setCoordError(error);
+    closeCoordsEditing();
+    if (error === null) applyTypedCoords(la!, lo!);
+  };
+
+  const onCoordsKeyDown = (e: ReactKeyboardEvent<HTMLFormElement>) => {
+    if (e.key !== "Escape") return;
+    // The window's own Esc (close, on document) must not see this one.  In
+    // the App Router React's root is the document itself, so both listeners
+    // sit on one node: stopPropagation alone would not hold it.
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    cancelCoordsEditing();
   };
 
   // Apply a specific candidate: select it and synthesize the road
@@ -1427,12 +1470,16 @@ export function LocationPickerModal({
   // failed lookup saved with no road and the plan fell back to defaults.
   const roadPicked = classify.state === "detected" && selectedCandidateIdx !== null;
   const axisAnswers = classify.state === "error" && roadAxis !== null;
+  const coordsHeld =
+    coordsEditing && hasPin && (latInput !== fmt4(lat) || lngInput !== fmt4(lng));
   const canSave =
     hasPin &&
     isValidLat(lat) &&
     isValidLng(lng) &&
-    !latError &&
-    !lngError &&
+    // #537: numbers typed in the bar but not yet applied hold Save, so the
+    // old pin is never saved under them (Rule 10).  A bad entry never
+    // reaches the pin; once the bar has closed, the pin as it stands decides.
+    !coordsHeld &&
     !roadUnresolved &&
     // (an in-flight lookup, #189, is neither, so it blocks Save too)
     (roadPicked || axisAnswers);
@@ -1569,49 +1616,6 @@ export function LocationPickerModal({
             )}
             {coarseNotice && <p className="mw-note">{coarseNotice}</p>}
 
-            {/* Kept for need (R145-10): the only way in without a map. */}
-            <div className="mw-coords-toggle">
-              <button
-                type="button"
-                onClick={() => setShowManualCoords((s) => !s)}
-                className="tap-44 mw-link"
-                aria-expanded={showManualCoords}
-              >
-                {showManualCoords ? "Hide coordinate entry" : "Or enter coordinates manually"}
-              </button>
-              {showManualCoords && <span className="mw-hint">Latitude and longitude, in decimal degrees</span>}
-            </div>
-            {showManualCoords && (
-              <div className="mw-coords">
-                <div>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    value={latInput}
-                    onChange={(e) => onLatChange(e.target.value)}
-                    onPaste={onCoordPaste}
-                    aria-label="Latitude"
-                    placeholder="Latitude (e.g., 38.8862)"
-                    className="tap-44 field-input w-full"
-                  />
-                  {latError && <p className="mw-note mw-note-fail">{latError}</p>}
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    value={lngInput}
-                    onChange={(e) => onLngChange(e.target.value)}
-                    onPaste={onCoordPaste}
-                    aria-label="Longitude"
-                    placeholder="Longitude (e.g., -104.8354)"
-                    className="tap-44 field-input w-full"
-                  />
-                  {lngError && <p className="mw-note mw-note-fail">{lngError}</p>}
-                </div>
-              </div>
-            )}
-
             {/* #507 ruling 1: the map carries zoom only (R145-6). */}
             {tokenAvailable ? (
               <div
@@ -1621,7 +1625,89 @@ export function LocationPickerModal({
             ) : (
               <div className="mw-map-off flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1">
                 <p className="mw-sub">The map can&apos;t load here.</p>
-                <p className="mw-line">Enter the coordinates above instead.</p>
+                <p className="mw-line">Enter the coordinates below instead.</p>
+              </div>
+            )}
+
+            {/* #537 (S2): the pin's coordinates, always here at 44 px, so
+                no state of the bar moves the map or the rail (P1). */}
+            {coordsEditing ? (
+              <form
+                className="mw-cbar mw-cbar-edit"
+                data-testid="coords-bar"
+                onSubmit={applyCoordsEditing}
+                onKeyDown={onCoordsKeyDown}
+                noValidate
+              >
+                {/* A narrow bar shows "Lat" and "Long"; the rest of each word
+                    stays in the label for screen readers (its name is whole). */}
+                <label htmlFor="mw-cbar-lat" className="mw-cbar-label">
+                  Lat
+                  <span className="mw-cbar-more">itude</span>
+                </label>
+                <input
+                  id="mw-cbar-lat"
+                  ref={latBoxRef}
+                  type="text"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  value={latInput}
+                  onChange={(e) => onLatChange(e.target.value)}
+                  onPaste={onCoordPaste}
+                  className="field-input mw-cbar-input"
+                />
+                <label htmlFor="mw-cbar-lng" className="mw-cbar-label">
+                  Long
+                  <span className="mw-cbar-more">itude</span>
+                </label>
+                <input
+                  id="mw-cbar-lng"
+                  type="text"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  value={lngInput}
+                  onChange={(e) => onLngChange(e.target.value)}
+                  onPaste={onCoordPaste}
+                  className="field-input mw-cbar-input"
+                />
+                <button type="submit" className="mw-btn mw-btn-line mw-cbar-go">
+                  Go
+                </button>
+                <button
+                  type="button"
+                  onClick={cancelCoordsEditing}
+                  aria-label="Cancel coordinate entry"
+                  className="mw-link mw-cbar-cancel"
+                >
+                  Cancel
+                </button>
+              </form>
+            ) : (
+              <div className="mw-cbar" data-testid="coords-bar">
+                <span className="mw-cbar-dot" aria-hidden="true" />
+                {hasPin && <span className="mw-cbar-lead">{COORDS_PIN_AT}</span>}
+                {!hasPin && !coordError && (
+                  <span className="mw-hint mw-cbar-say">
+                    {tokenAvailable ? COORDS_NO_PIN : COORDS_NO_PIN_NO_MAP}
+                  </span>
+                )}
+                <button
+                  type="button"
+                  ref={coordsButtonRef}
+                  onClick={openCoordsEditing}
+                  className="mw-cbar-coords"
+                >
+                  <span className="mw-cbar-face">
+                    {hasPin ? `${fmt4(lat)}, ${fmt4(lng)}` : COORDS_ENTER}
+                  </span>
+                </button>
+                {coordError ? (
+                  <span className="mw-note mw-note-fail mw-cbar-say mw-cbar-end" role="alert">
+                    {coordError}
+                  </span>
+                ) : (
+                  hasPin && <span className="mw-hint mw-cbar-say mw-cbar-end">{COORDS_HINT}</span>
+                )}
               </div>
             )}
             {bearingWarning && <p className="mw-note">{bearingWarning}</p>}
@@ -1693,7 +1779,7 @@ export function LocationPickerModal({
         <div className="mw-foot">
           {saveBlocked && (
             <span className="mw-foot-line" data-testid="picker-save-blocked">
-              {SAVE_BLOCKED_LINE}
+              {coordsHeld ? SAVE_COORDS_LINE : SAVE_BLOCKED_LINE}
             </span>
           )}
           {classify.state === "resolving" && (
