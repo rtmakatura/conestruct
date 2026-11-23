@@ -14,6 +14,11 @@
 //   "39.7401 N 104.9811 W"      the letter without the sign
 //   "N 39.7401, W 104.9811"     the letter in front
 //   "104.9811° W, 39.7401° N"   letters name the axis, so either order
+// #544 (Ryan's ruling 3, 2026-11-22, docs/prompts/
+// cc-prompt-ux-map-window-tidy.md): any of these inside one pair of
+// brackets is read the same way, the brackets dropped:
+//   "(39.7401, -104.9811)"      round brackets
+//   "[39.7401, -104.9811]"      square brackets
 // The Unicode minus (U+2212), the en dash (U+2013) and NBSP are read as
 // "-" and a space (#230).  The order is latitude then longitude unless a
 // letter says otherwise.  Nothing is clamped or swapped silently (Rule 10).
@@ -36,6 +41,10 @@ const DEG = String.raw`\s*[°º]?`;
 // One half: the letter in front, or the number then an optional letter.
 const PART = String.raw`(?:([NSEW])\s*(${NUM})${DEG}|(${NUM})${DEG}\s*([NSEW])?)`;
 const PAIR = new RegExp(String.raw`^${PART}(\s*,\s*|\s+)${PART}$`, "i");
+// #544: one matching pair of brackets round the whole text, with no other
+// bracket inside it.  CHOSEN: a mismatched pair, two pairs or a bracket
+// round each number is left as typed (an address).
+const WRAPPED = /^(?:\(([^()[\]]*)\)|\[([^()[\]]*)\])$/;
 
 function validLat(n: number): boolean {
   return Number.isFinite(n) && n >= -90 && n <= 90;
@@ -47,10 +56,12 @@ function validLng(n: number): boolean {
 type Half = { text: string; letter: string | null };
 
 export function readSearchCoords(raw: string): SearchCoords {
-  const text = raw
+  const typed = raw
     .replace(/[−–]/g, "-")
     .replace(/[\s ]+/g, " ")
     .trim();
+  const wrapped = WRAPPED.exec(typed);
+  const text = wrapped ? (wrapped[1] ?? wrapped[2]).trim() : typed;
   const m = PAIR.exec(text);
   if (!m) {
     // A degree sign is never part of an address: "39°44'24\"N 104°59'W"

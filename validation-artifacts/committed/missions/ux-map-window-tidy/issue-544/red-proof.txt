@@ -1,0 +1,48 @@
+# #544 red proof: the new tests in conestruct/site/lib/search-coords.test.ts
+# and conestruct/site/components/LocationPickerModal.coords-bar.test.tsx run
+# on 52b80674's code (the worktree before any edit to search-coords.ts,
+# LocationPickerModal.tsx or globals.css), 2026-11-22.
+# Command: NO_COLOR=1 npx vitest run --reporter=verbose lib/search-coords.test.ts components/LocationPickerModal.coords-bar.test.tsx -t "#544"
+# 13 of 25 fail.  The 12 that pass on the base are controls: bracket forms
+# that are not read as coordinates, before the fix or after it.
+
+ × lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > round brackets: (39.7401, -104.9811) is the point
+   → expected { kind: 'address' } to deeply equal { kind: 'point', lat: 39.7401, …(1) }
+ × lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > square brackets: [39.7401, -104.9811] is the point
+   → expected { kind: 'address' } to deeply equal { kind: 'point', lat: 39.7401, …(1) }
+ × lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > the bracketed text is read as the bare text is: ( 39.7401, -104.9811 )
+   → expected { kind: 'address' } to deeply equal { kind: 'point', lat: 39.7401, …(1) }
+ × lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > the bracketed text is read as the bare text is:  [39.7401 -104.9811] 
+   → expected { kind: 'address' } to deeply equal { kind: 'point', lat: 39.7401, …(1) }
+ × lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > the bracketed text is read as the bare text is: (39.7401° N, 104.9811° W)
+   → expected { kind: 'unreadable' } to deeply equal { kind: 'point', lat: 39.7401, …(1) }
+ × lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > the bracketed text is read as the bare text is: [104.9811° W, 39.7401° N]
+   → expected { kind: 'unreadable' } to deeply equal { kind: 'point', lat: 39.7401, …(1) }
+ × lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > brackets change nothing else: out of range, swapped and unreadable are still refused
+   → expected { kind: 'address' } to deeply equal { kind: 'out-of-range', …(2) }
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "(39.7401, -104.9811]"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "[39.7401, -104.9811)"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "(39.7401, -104.9811"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "39.7401, -104.9811)"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "((39.7401, -104.9811))"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "(39.7401), (-104.9811)"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "{39.7401, -104.9811}"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "(39.7401, -104.9811) Denver"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "(1600 80202)"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "(Denver)"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "()"
+ ✓ lib/search-coords.test.ts > readSearchCoords: one pair of brackets round the whole text (#544) > still an address: "[]"
+ × components/LocationPickerModal.coords-bar.test.tsx > #544: bracketed coordinates, and the choice's numbers > round brackets in the search box: Enter places the pin; nothing goes to /api/geocode
+   → expected [ { …(2) } ] to deeply equal []
+ × components/LocationPickerModal.coords-bar.test.tsx > #544: bracketed coordinates, and the choice's numbers > square brackets in the search box: Enter places the pin; nothing goes to /api/geocode
+   → expected [ { …(2) } ] to deeply equal []
+ × components/LocationPickerModal.coords-bar.test.tsx > #544: bracketed coordinates, and the choice's numbers > round brackets in a saved address (the open-time sender): the pin is placed and nothing is geocoded
+   → expected [] to deeply equal [ { lat: 39.7401, lng: -104.9811 } ]
+ × components/LocationPickerModal.coords-bar.test.tsx > #544: bracketed coordinates, and the choice's numbers > square brackets in a saved address (the open-time sender): the pin is placed and nothing is geocoded
+   → expected [] to deeply equal [ { lat: 39.7401, lng: -104.9811 } ]
+ × components/LocationPickerModal.coords-bar.test.tsx > #544: bracketed coordinates, and the choice's numbers > a bracketed pair typed the wrong way round gets the choice, and is not geocoded
+   → Unable to find an accessible element with the role "button" and name "Did you mean 39.7401, -104.9811?"
+ × components/LocationPickerModal.coords-bar.test.tsx > #544: bracketed coordinates, and the choice's numbers > the choice's two numbers and its question mark are one .mw-search-pair element, and globals.css gives .mw-search-pair white-space: nowrap
+   → expected  to have a length of 1 but got +0
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  13 failed | 12 passed | 92 skipped (117)

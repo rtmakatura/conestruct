@@ -146,3 +146,52 @@ describe("readSearchCoords: an address (the geocoder's business)", () => {
     expect(readSearchCoords(text)).toEqual({ kind: "address" });
   });
 });
+
+// #544 (mission ux-map-window-tidy, ruling 3): "Coordinates in brackets,
+// e.g. "(39.7401, -104.9811)" or "[39.7401, -104.9811]", parse as
+// coordinates and never reach the geocoder.  Add a test for each form."
+describe("readSearchCoords: one pair of brackets round the whole text (#544)", () => {
+  it("round brackets: (39.7401, -104.9811) is the point", () => {
+    expect(readSearchCoords("(39.7401, -104.9811)")).toEqual(POINT);
+  });
+
+  it("square brackets: [39.7401, -104.9811] is the point", () => {
+    expect(readSearchCoords("[39.7401, -104.9811]")).toEqual(POINT);
+  });
+
+  it.each([
+    "( 39.7401, -104.9811 )", // spaces inside
+    " [39.7401 -104.9811] ", // spaces outside, a space between
+    "(39.7401° N, 104.9811° W)",
+    "[104.9811° W, 39.7401° N]",
+  ])("the bracketed text is read as the bare text is: %s", (text) => {
+    expect(readSearchCoords(text)).toEqual(POINT);
+  });
+
+  it("brackets change nothing else: out of range, swapped and unreadable are still refused", () => {
+    expect(readSearchCoords("(139.7401, -104.9811)")).toEqual({ kind: "out-of-range", axis: "lat", swap: null });
+    expect(readSearchCoords("[-104.9811, 39.7401]")).toEqual({
+      kind: "out-of-range",
+      axis: "lat",
+      swap: { lat: 39.7401, lng: -104.9811 },
+    });
+    expect(readSearchCoords("(39.7401°)")).toEqual({ kind: "unreadable" });
+  });
+
+  it.each([
+    "(39.7401, -104.9811]", // a mismatched pair
+    "[39.7401, -104.9811)",
+    "(39.7401, -104.9811", // one bracket alone
+    "39.7401, -104.9811)",
+    "((39.7401, -104.9811))", // two pairs
+    "(39.7401), (-104.9811)", // brackets round each number
+    "{39.7401, -104.9811}", // not a ruled bracket
+    "(39.7401, -104.9811) Denver", // text outside the brackets
+    "(1600 80202)", // two bare whole numbers are an address, bracketed or not
+    "(Denver)",
+    "()",
+    "[]",
+  ])("still an address: %j", (text) => {
+    expect(readSearchCoords(text)).toEqual({ kind: "address" });
+  });
+});

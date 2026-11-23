@@ -368,9 +368,12 @@ export const SEARCH_LABEL = "Address, intersection or coordinates search";
 export const COORDS_NO_PIN = "No pin yet";
 /** #537 S2 ruling 2, kept by #541 ruling 2 ("Pin at 39.7401, -104.9811"). */
 export const COORDS_PIN_AT = "Pin at";
-/** #541 ruling 1: the choice offered for a pair typed the wrong way round. */
-export const coordsDidYouMean = (lat: number, lng: number) =>
-  `Did you mean ${fmt4(lat)}, ${fmt4(lng)}?`;
+/** #541 ruling 1: the choice offered for a pair typed the wrong way round,
+ *  "Did you mean 39.7401, -104.9811?".  #544 ruling 3: the two numbers are
+ *  their own piece, rendered with the question mark in a span that can't
+ *  wrap. */
+export const COORDS_DID_YOU_MEAN = "Did you mean";
+export const coordsPair = (lat: number, lng: number) => `${fmt4(lat)}, ${fmt4(lng)}`;
 /** #541 R145: coordinates the box can't read (degrees and minutes, half a
  *  pair).  #537's "Use numbers in decimal degrees, like 39.7401", with a
  *  pair as the example now that one box takes both. */
@@ -1546,7 +1549,10 @@ export function LocationPickerModal({
                         onClick={() => onTakeSwap(searchStatus.swap!)}
                         className="mw-link mw-search-pick"
                       >
-                        {coordsDidYouMean(searchStatus.swap.lat, searchStatus.swap.lng)}
+                        {COORDS_DID_YOU_MEAN}{" "}
+                        <span className="mw-search-pair">
+                          {coordsPair(searchStatus.swap.lat, searchStatus.swap.lng)}?
+                        </span>
                       </button>
                     ) : (
                       <p className="mw-note mw-note-fail mw-search-line">{searchStatus.line}</p>

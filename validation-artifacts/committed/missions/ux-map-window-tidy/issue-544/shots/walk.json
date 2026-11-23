@@ -1,0 +1,1232 @@
+[
+ {
+  "size": "1440x900",
+  "inter": true,
+  "choice": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 692.16,
+    "h": 44
+   },
+   "roomForText": 668.16,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 1,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceWithoutRule": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 692.16,
+    "h": 44
+   },
+   "roomForText": 668.16,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 1,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "normal"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceAgain": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 692.16,
+    "h": 44
+   },
+   "roomForText": 668.16,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 1,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceMovesPx": {
+   "map": 0,
+   "search": 0,
+   "rail": 0,
+   "bar": 0,
+   "column": 0,
+   "dialog": 0,
+   "scrollHeight": 0
+  },
+  "choicePosts": {
+   "geocode": 0,
+   "roads": 0
+  },
+  "round": {
+   "typed": "(39.7401, -104.9811)",
+   "boxValue": "(39.7401, -104.9811)",
+   "geocodePosts": 0,
+   "roadPosts": 1,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   },
+   "pinPlaced": true
+  },
+  "square": {
+   "typed": "[39.7401, -104.9811]",
+   "boxValue": "[39.7401, -104.9811]",
+   "geocodePosts": 0,
+   "roadPosts": 1,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   },
+   "pinPlaced": true,
+   "noPinBarText": "No pin yet"
+  },
+  "totalPosts": {
+   "geocode": 0,
+   "roads": 2
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"\u00a9 Mapbox\"",
+      "cls": "",
+      "w": 54.88,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 OpenStreetMap\"",
+      "cls": "",
+      "w": 96.89,
+      "h": 14
+     },
+     {
+      "what": "a \"Improve this map\"",
+      "cls": "mapbox-improve-map",
+      "w": 99.36,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 Maxar\"",
+      "cls": "",
+      "w": 45.52,
+      "h": 14
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "choice": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 694.16,
+     "h": 46,
+     "position": "absolute",
+     "text": "Did you mean 39.7401, -104.9811?"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Did you mean 39.7401, -104.9811?\"",
+      "w": 692.16,
+      "h": 44
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"\u00a9 Mapbox\"",
+      "cls": "",
+      "w": 54.88,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 OpenStreetMap\"",
+      "cls": "",
+      "w": 96.89,
+      "h": 14
+     },
+     {
+      "what": "a \"Improve this map\"",
+      "cls": "mapbox-improve-map",
+      "w": 99.36,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 Maxar\"",
+      "cls": "",
+      "w": 45.52,
+      "h": 14
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "round": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "Pin at 39.7401, -104.9811",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"\u00a9 Mapbox\"",
+      "cls": "",
+      "w": 54.88,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 OpenStreetMap\"",
+      "cls": "",
+      "w": 96.89,
+      "h": 14
+     },
+     {
+      "what": "a \"Improve this map\"",
+      "cls": "mapbox-improve-map",
+      "w": 99.36,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 Maxar\"",
+      "cls": "",
+      "w": 45.52,
+      "h": 14
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "square": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "Pin at 39.7401, -104.9811",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"\u00a9 Mapbox\"",
+      "cls": "",
+      "w": 54.88,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 OpenStreetMap\"",
+      "cls": "",
+      "w": 96.89,
+      "h": 14
+     },
+     {
+      "what": "a \"Improve this map\"",
+      "cls": "mapbox-improve-map",
+      "w": 99.36,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 Maxar\"",
+      "cls": "",
+      "w": 45.52,
+      "h": 14
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  }
+ },
+ {
+  "size": "1198x930",
+  "inter": true,
+  "choice": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 490.34,
+    "h": 44
+   },
+   "roomForText": 466.34,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 1,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceWithoutRule": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 490.34,
+    "h": 44
+   },
+   "roomForText": 466.34,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 1,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "normal"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceAgain": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 490.34,
+    "h": 44
+   },
+   "roomForText": 466.34,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 1,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceMovesPx": {
+   "map": 0,
+   "search": 0,
+   "rail": 0,
+   "bar": 0,
+   "column": 0,
+   "dialog": 0,
+   "scrollHeight": 0
+  },
+  "choicePosts": {
+   "geocode": 0,
+   "roads": 0
+  },
+  "round": {
+   "typed": "(39.7401, -104.9811)",
+   "boxValue": "(39.7401, -104.9811)",
+   "geocodePosts": 0,
+   "roadPosts": 1,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   },
+   "pinPlaced": true
+  },
+  "square": {
+   "typed": "[39.7401, -104.9811]",
+   "boxValue": "[39.7401, -104.9811]",
+   "geocodePosts": 0,
+   "roadPosts": 1,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   },
+   "pinPlaced": true,
+   "noPinBarText": "No pin yet"
+  },
+  "totalPosts": {
+   "geocode": 0,
+   "roads": 2
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "button \"Toggle attribution\"",
+      "cls": "mapboxgl-ctrl-attrib-button",
+      "w": 24,
+      "h": 24
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "choice": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 492.34,
+     "h": 46,
+     "position": "absolute",
+     "text": "Did you mean 39.7401, -104.9811?"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Did you mean 39.7401, -104.9811?\"",
+      "w": 490.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "button \"Toggle attribution\"",
+      "cls": "mapboxgl-ctrl-attrib-button",
+      "w": 24,
+      "h": 24
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "round": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "Pin at 39.7401, -104.9811",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "button \"Toggle attribution\"",
+      "cls": "mapboxgl-ctrl-attrib-button",
+      "w": 24,
+      "h": 24
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "square": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "Pin at 39.7401, -104.9811",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "button \"Toggle attribution\"",
+      "cls": "mapboxgl-ctrl-attrib-button",
+      "w": 24,
+      "h": 24
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  }
+ },
+ {
+  "size": "390x844",
+  "inter": true,
+  "choice": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 258.16,
+    "h": 44
+   },
+   "roomForText": 234.16,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 2,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceWithoutRule": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 258.16,
+    "h": 44
+   },
+   "roomForText": 234.16,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 2,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 152.72,
+    "h": 36.25,
+    "lines": 2,
+    "whiteSpace": "normal"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceAgain": {
+   "text": "Did you mean 39.7401, -104.9811?",
+   "button": {
+    "w": 258.16,
+    "h": 44
+   },
+   "roomForText": 234.16,
+   "sentenceOnOneLine": 237.17,
+   "choiceLines": 2,
+   "pair": {
+    "text": "39.7401, -104.9811?",
+    "w": 144.13,
+    "h": 16,
+    "lines": 1,
+    "whiteSpace": "nowrap"
+   },
+   "font": "__Inter_176161 13.5px",
+   "lineHeight": 20.25,
+   "color": "rgb(52, 169, 232)"
+  },
+  "choiceMovesPx": {
+   "map": 0,
+   "search": 0,
+   "rail": 0,
+   "bar": 0,
+   "column": 0,
+   "dialog": 0,
+   "scrollHeight": 0
+  },
+  "choicePosts": {
+   "geocode": 0,
+   "roads": 0
+  },
+  "round": {
+   "typed": "(39.7401, -104.9811)",
+   "boxValue": "(39.7401, -104.9811)",
+   "geocodePosts": 0,
+   "roadPosts": 1,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   },
+   "pinPlaced": true
+  },
+  "square": {
+   "typed": "[39.7401, -104.9811]",
+   "boxValue": "[39.7401, -104.9811]",
+   "geocodePosts": 0,
+   "roadPosts": 1,
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   },
+   "pinPlaced": true,
+   "noPinBarText": "No pin yet"
+  },
+  "totalPosts": {
+   "geocode": 0,
+   "roads": 2
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "choice": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "list": {
+     "x": 21,
+     "y": 171.5,
+     "w": 260.16,
+     "h": 46,
+     "position": "absolute",
+     "text": "Did you mean 39.7401, -104.9811?"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Did you mean 39.7401, -104.9811?\"",
+      "w": 258.16,
+      "h": 44
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "round": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 833,
+    "barText": "Pin at 39.7401, -104.9811",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "square": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 833,
+    "barText": "Pin at 39.7401, -104.9811",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "under44": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "cls": "mapboxgl-ctrl-logo",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  }
+ }
+]

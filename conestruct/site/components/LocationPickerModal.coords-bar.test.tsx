@@ -511,3 +511,69 @@ describe("#543: the notices float in the search's list", () => {
     expect(src.match(/\{coarseNotice &&/g)?.length).toBe(1);
   });
 });
+
+// #544 (mission ux-map-window-tidy, ruling 3): "Coordinates in brackets,
+// e.g. "(39.7401, -104.9811)" or "[39.7401, -104.9811]", parse as
+// coordinates and never reach the geocoder."  And: "At 390, "Did you mean
+// 39.7401, -104.9811?" keeps the numbers together on one line."
+describe("#544: bracketed coordinates, and the choice's numbers", () => {
+  it.each([
+    ["round brackets", "(39.7401, -104.9811)"],
+    ["square brackets", "[39.7401, -104.9811]"],
+  ])("%s in the search box: Enter places the pin; nothing goes to /api/geocode", async (_name, text) => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await user.clear(box());
+    // user-event reads "[" as the start of a key name; "[[" types one "[".
+    await user.type(box(), text.replace("[", "[["));
+    expect(box().value).toBe(text);
+    await user.keyboard("{Enter}");
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([PIN]);
+    expect(camera.flies).toEqual([expect.objectContaining({ center: [-104.9811, 39.7401], zoom: 16 })]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(list().textContent).toBe("");
+  });
+
+  it.each([
+    ["round brackets", "(39.7401, -104.9811)"],
+    ["square brackets", "[39.7401, -104.9811]"],
+  ])("%s in a saved address (the open-time sender): the pin is placed and nothing is geocoded", async (_name, address) => {
+    mount({ address });
+    await waitFor(() => expect(detects).toEqual([PIN]));
+    expect(geocodes).toEqual([]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+  });
+
+  it("a bracketed pair typed the wrong way round gets the choice, and is not geocoded", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "(-104.9811, 39.7401)");
+    expect(within(list()).getByRole("button", { name: "Did you mean 39.7401, -104.9811?" })).toBeTruthy();
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([]);
+  });
+
+  // happy-dom lays nothing out, so this can't measure a line.  It checks
+  // the two things the one line rests on; the line itself is measured in a
+  // browser (the walk in validation-artifacts/committed/missions/
+  // ux-map-window-tidy/issue-544/).
+  it("the choice's two numbers and its question mark are one .mw-search-pair element, and globals.css gives .mw-search-pair white-space: nowrap", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "-104.9811, 39.7401");
+    const choice = within(list()).getByRole("button", { name: "Did you mean 39.7401, -104.9811?" });
+    expect(choice.textContent).toBe("Did you mean 39.7401, -104.9811?");
+    const pairs = choice.querySelectorAll(".mw-search-pair");
+    expect(pairs).toHaveLength(1);
+    expect(pairs[0].textContent).toBe("39.7401, -104.9811?");
+
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    expect(css).toContain("\n.map-window .mw-search-pair {\n  white-space: nowrap;\n}\n");
+  });
+});

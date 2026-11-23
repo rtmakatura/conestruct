@@ -5523,6 +5523,12 @@ input[type="number"] {
 .map-window .mw-search-pick:hover {
   color: var(--act-bright);
 }
+/* #544 (ruling 3): the two numbers in the "Did you mean" choice (and the
+   question mark after them) stay on one line; the choice can break only
+   before them. */
+.map-window .mw-search-pair {
+  white-space: nowrap;
+}
 .map-window .mw-btn {
   min-height: 44px;
   padding: 0 var(--space-block);
