@@ -5486,7 +5486,8 @@ input[type="number"] {
 /* #541 (ruling 1): the search's lines (a failed search, coordinates out
    of range, the "Did you mean" choice) float under the box, over the top
    of the map, so nothing on the page changes size (P1).  The list is the
-   box's width, so it never covers the map's zoom control. */
+   box's width, so it never covers the map's zoom control.
+   #543: the coarse-match notice and the bearing note are lines in it too. */
 .map-window .mw-search-box {
   position: relative;
   flex: 1;

@@ -1,0 +1,19 @@
+# #543 red proof: the new mounted-flow tests in
+# conestruct/site/components/LocationPickerModal.coords-bar.test.tsx run on
+# 5ab10324's component (the worktree before any edit to
+# LocationPickerModal.tsx or globals.css), 2026-11-22.
+# Command: npx vitest run --reporter=verbose components/LocationPickerModal.coords-bar.test.tsx -t "#543"
+# 4 of 5 fail.  The one that passes on the base is a control: a pin placed
+# after the notice takes the line away (the same before and after the fix).
+
+ × components/LocationPickerModal.coords-bar.test.tsx > #543: the notices float in the search's list > a search that finds a town: the notice is a line in the list, and the column's flow is unchanged
+   → expected false to be true // Object.is equality
+ × components/LocationPickerModal.coords-bar.test.tsx > #543: the notices float in the search's list > the open-time lookup of a saved town (the other sender): the same line, the same flow
+   → expected false to be true // Object.is equality
+ ✓ components/LocationPickerModal.coords-bar.test.tsx > #543: the notices float in the search's list > a pin placed after the notice takes the line away; the flow is still the same
+ × components/LocationPickerModal.coords-bar.test.tsx > #543: the notices float in the search's list > no token: the notice floats the same way over the map-off panel
+   → expected false to be true // Object.is equality
+ × components/LocationPickerModal.coords-bar.test.tsx > #543: the notices float in the search's list > the bearing note's slot is in the list, not in the flow
+   → expected '<div className="mw-search-list" role=…' to contain '{bearingWarning && <p className="mw-n…'
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 1 passed | 30 skipped (35)

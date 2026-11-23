@@ -433,3 +433,81 @@ describe("#541 without a map (no Mapbox token)", () => {
     expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
   });
 });
+
+// #543 (mission ux-map-window-tidy, ruling 2): the coarse-match notice and
+// the bearing note are lines in the search's floating list, not paragraphs
+// in the map column's flow, so neither can resize the map or move the
+// right panel.  The sizes are measured in a browser (the walk in
+// validation-artifacts/committed/missions/ux-map-window-tidy/issue-543/);
+// here the mounted window is asked where each line is.
+describe("#543: the notices float in the search's list", () => {
+  const COARSE = "That search found a town or area. Tap the map on the road where the work starts.";
+  const column = () => document.querySelector(".mw-map-col") as HTMLElement;
+  /** Every element in the map column's flow: its own children. */
+  const inFlow = () => Array.from(column().children).map((e) => e.className.split(" ")[0]);
+  const FLOW = ["mw-search", "picker-map", "mw-cbar"];
+
+  it("a search that finds a town: the notice is a line in the list, and the column's flow is unchanged", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    expect(inFlow()).toEqual(FLOW);
+    geocodeAnswer = { lat: 39.9936, lng: -105.0897, placeType: "place" };
+    await searchFor(user, "Lafayette, CO");
+    const line = await screen.findByText(COARSE);
+    expect(list().contains(line)).toBe(true);
+    expect(line.className).toBe("mw-note mw-search-line");
+    expect(list().textContent).toBe(COARSE);
+    expect(inFlow()).toEqual(FLOW);
+    // What the notice goes with is as before: no pin, no road lookup.
+    expect(bar().textContent).toBe("No pin yet");
+    expect(detects).toEqual([]);
+  });
+
+  it("the open-time lookup of a saved town (the other sender): the same line, the same flow", async () => {
+    geocodeAnswer = { lat: 39.9936, lng: -105.0897, placeType: "place" };
+    mount({ address: "Lafayette, CO" });
+    const line = await screen.findByText(COARSE);
+    expect(list().contains(line)).toBe(true);
+    expect(inFlow()).toEqual(FLOW);
+  });
+
+  it("a pin placed after the notice takes the line away; the flow is still the same", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    geocodeAnswer = { lat: 39.9936, lng: -105.0897, placeType: "place" };
+    await searchFor(user, "Lafayette, CO");
+    await screen.findByText(COARSE);
+    await searchFor(user, "39.7401, -104.9811");
+    expect(screen.queryByText(COARSE)).toBeNull();
+    expect(list().textContent).toBe("");
+    expect(inFlow()).toEqual(FLOW);
+  });
+
+  it("no token: the notice floats the same way over the map-off panel", async () => {
+    delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+    const user = userEvent.setup();
+    mount();
+    geocodeAnswer = { lat: 39.9936, lng: -105.0897, placeType: "place" };
+    await searchFor(user, "Lafayette, CO");
+    const line = await screen.findByText(COARSE);
+    expect(list().contains(line)).toBe(true);
+    expect(inFlow()).toEqual(["mw-search", "mw-map-off", "mw-cbar"]);
+  });
+
+  // The bearing note has had no words since #507 (nothing sets it), so it
+  // can't be mounted.  Its slot is pinned in the source: inside the list,
+  // and nowhere in the column's flow.
+  it("the bearing note's slot is in the list, not in the flow", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const src = readFileSync(join(__dirname, "LocationPickerModal.tsx"), "utf-8").replace(/\r\n/g, "\n");
+    const open = src.indexOf('<div className="mw-search-list"');
+    const listSrc = src.slice(open, src.indexOf("</div>", open));
+    expect(listSrc).toContain('{bearingWarning && <p className="mw-note mw-search-line">{bearingWarning}</p>}');
+    expect(listSrc).toContain('{coarseNotice && <p className="mw-note mw-search-line">{coarseNotice}</p>}');
+    expect(src.match(/\{bearingWarning &&/g)?.length).toBe(1);
+    expect(src.match(/\{coarseNotice &&/g)?.length).toBe(1);
+  });
+});

@@ -1530,8 +1530,12 @@ export function LocationPickerModal({
                 {/* #541 ruling 1: the search's lines float under the box,
                     over the top of the map, so none of them resizes the
                     map or moves the rail (P1).  Always mounted, so a line
-                    that arrives is announced. */}
+                    that arrives is announced.
+                    #543 (ruling 2): the coarse-match notice and the bearing
+                    note are lines here too; neither is in the column's flow.
+                    (The bearing note has had no words since #507.) */}
                 <div className="mw-search-list" role="status" data-testid="search-list">
+                  {coarseNotice && <p className="mw-note mw-search-line">{coarseNotice}</p>}
                   {searchStatus.state === "error" && (
                     <p className="mw-note mw-note-fail mw-search-line">{searchStatus.message}</p>
                   )}
@@ -1547,6 +1551,7 @@ export function LocationPickerModal({
                     ) : (
                       <p className="mw-note mw-note-fail mw-search-line">{searchStatus.line}</p>
                     ))}
+                  {bearingWarning && <p className="mw-note mw-search-line">{bearingWarning}</p>}
                 </div>
               </div>
               <button
@@ -1557,7 +1562,6 @@ export function LocationPickerModal({
                 {searchStatus.state === "resolving" ? "Searching…" : "Search"}
               </button>
             </form>
-            {coarseNotice && <p className="mw-note">{coarseNotice}</p>}
 
             {/* #507 ruling 1: the map carries zoom only (R145-6). */}
             {tokenAvailable ? (
@@ -1586,7 +1590,6 @@ export function LocationPickerModal({
                 <span className="mw-cbar-lead">{COORDS_NO_PIN}</span>
               )}
             </div>
-            {bearingWarning && <p className="mw-note">{bearingWarning}</p>}
           </div>
 
           <div className="mw-rail flex flex-col border-t md:border-t-0 md:border-l border-[color:var(--rule)] md:w-[456px] md:flex-none">
