@@ -392,12 +392,10 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".map-window .mw-btn", size: "var(--fs-body-value)" },
       { selector: ".map-window .mw-link", size: "var(--fs-body-value)" },
       { selector: ".map-window .mw-foot-line", size: "var(--fs-field-label)" },
-      // #537 (S2): the coordinates bar's line, boxes and button; its hint
-      // and error reuse .mw-hint / .mw-note.  No size joins the census.
-      {
-        selector: ".map-window .mw-cbar, .map-window .mw-cbar-input, .map-window .mw-cbar-coords",
-        size: "var(--fs-body-value)",
-      },
+      // #541 (it replaces #537's S2 bar): the read-only coordinates line.
+      // The search's floating lines reuse .mw-note / .mw-link.  No size
+      // joins the census.
+      { selector: ".map-window .mw-cbar", size: "var(--fs-body-value)" },
     ],
     tsx: [],
   },

@@ -1,0 +1,1073 @@
+[
+ {
+  "size": "1440x900",
+  "inter": true,
+  "placeholder": "Address, intersection or coordinates",
+  "mapMoves": 0,
+  "railMoves": 0,
+  "barMoves": 0,
+  "searchMoves": 0,
+  "dialogMoves": 0,
+  "scrollHeightMoves": 0,
+  "beforeChoice": {
+   "geocode": 0,
+   "roads": 0
+  },
+  "afterChoice": {
+   "geocode": 0,
+   "roads": 1,
+   "boxValue": "39.7401, -104.9811",
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   }
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "outOfRange": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 694.16,
+     "h": 35.5,
+     "position": "absolute",
+     "text": "Latitude must be between -90 and 90",
+     "font": "__Inter_176161"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "didYouMean": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 694.16,
+     "h": 46,
+     "position": "absolute",
+     "text": "Did you mean 39.7401, -104.9811?",
+     "font": "__Inter_176161"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Did you mean 39.7401, -104.9811?\"",
+      "w": 692.16,
+      "h": 44
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "scrollHeight": 653,
+    "barText": "Pin at 39.7401, -104.9811",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": "all",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 694.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  },
+  "formats": [
+   {
+    "name": "comma-space",
+    "text": "39.7401, -104.9811",
+    "boxValue": "39.7401, -104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "space",
+    "text": "39.7401 -104.9811",
+    "boxValue": "39.7401 -104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "comma",
+    "text": "39.7401,-104.9811",
+    "boxValue": "39.7401,-104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "degrees",
+    "text": "39.7401\u00b0 N, 104.9811\u00b0 W",
+    "boxValue": "39.7401\u00b0 N, 104.9811\u00b0 W",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   }
+  ]
+ },
+ {
+  "size": "1198x930",
+  "inter": true,
+  "placeholder": "Address, intersection or coordinates",
+  "mapMoves": 0,
+  "railMoves": 0,
+  "barMoves": 0,
+  "searchMoves": 0,
+  "dialogMoves": 0,
+  "scrollHeightMoves": 0,
+  "beforeChoice": {
+   "geocode": 0,
+   "roads": 0
+  },
+  "afterChoice": {
+   "geocode": 0,
+   "roads": 1,
+   "boxValue": "39.7401, -104.9811",
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   }
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "outOfRange": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 492.34,
+     "h": 35.5,
+     "position": "absolute",
+     "text": "Latitude must be between -90 and 90",
+     "font": "__Inter_176161"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "didYouMean": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 492.34,
+     "h": 46,
+     "position": "absolute",
+     "text": "Did you mean 39.7401, -104.9811?",
+     "font": "__Inter_176161"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Did you mean 39.7401, -104.9811?\"",
+      "w": 490.34,
+      "h": 44
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "scrollHeight": 680,
+    "barText": "Pin at 39.7401, -104.9811",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": "all",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 492.34,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  },
+  "formats": [
+   {
+    "name": "comma-space",
+    "text": "39.7401, -104.9811",
+    "boxValue": "39.7401, -104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "space",
+    "text": "39.7401 -104.9811",
+    "boxValue": "39.7401 -104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "comma",
+    "text": "39.7401,-104.9811",
+    "boxValue": "39.7401,-104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "degrees",
+    "text": "39.7401\u00b0 N, 104.9811\u00b0 W",
+    "boxValue": "39.7401\u00b0 N, 104.9811\u00b0 W",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   }
+  ]
+ },
+ {
+  "size": "390x844",
+  "inter": true,
+  "placeholder": "Address, intersection or coordinates",
+  "mapMoves": 0,
+  "railMoves": 1,
+  "barMoves": 0,
+  "searchMoves": 0,
+  "dialogMoves": 0,
+  "scrollHeightMoves": 1,
+  "beforeChoice": {
+   "geocode": 0,
+   "roads": 0
+  },
+  "afterChoice": {
+   "geocode": 0,
+   "roads": 1,
+   "boxValue": "39.7401, -104.9811",
+   "camera": {
+    "zoom": 16,
+    "center": [
+     -104.9811,
+     39.7401
+    ],
+    "moving": false
+   }
+  },
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "outOfRange": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": {
+     "x": 21,
+     "y": 171.5,
+     "w": 260.16,
+     "h": 35.5,
+     "position": "absolute",
+     "text": "Latitude must be between -90 and 90",
+     "font": "__Inter_176161"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "didYouMean": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": null,
+    "list": {
+     "x": 21,
+     "y": 171.5,
+     "w": 260.16,
+     "h": 46,
+     "position": "absolute",
+     "text": "Did you mean 39.7401, -104.9811?",
+     "font": "__Inter_176161"
+    },
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Did you mean 39.7401, -104.9811?\"",
+      "w": 258.16,
+      "h": 44
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "scrollHeight": 833,
+    "barText": "Pin at 39.7401, -104.9811",
+    "barFont": "__Inter_176161 13.5px",
+    "barControls": 0,
+    "coordsSelect": "all",
+    "list": null,
+    "controls": [
+     {
+      "what": "search box",
+      "w": 260.16,
+      "h": 44.5
+     },
+     {
+      "what": "button \"Search\"",
+      "w": 79.84,
+      "h": 44.5
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  },
+  "formats": [
+   {
+    "name": "comma-space",
+    "text": "39.7401, -104.9811",
+    "boxValue": "39.7401, -104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "space",
+    "text": "39.7401 -104.9811",
+    "boxValue": "39.7401 -104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "comma",
+    "text": "39.7401,-104.9811",
+    "boxValue": "39.7401,-104.9811",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   },
+   {
+    "name": "degrees",
+    "text": "39.7401\u00b0 N, 104.9811\u00b0 W",
+    "boxValue": "39.7401\u00b0 N, 104.9811\u00b0 W",
+    "opening": {
+     "zoom": 6,
+     "center": [
+      -105.5,
+      39
+     ],
+     "moving": false
+    },
+    "camera": {
+     "zoom": 16,
+     "center": [
+      -104.9811,
+      39.7401
+     ],
+     "moving": false
+    },
+    "rows": 2,
+    "barText": "Pin at 39.7401, -104.9811",
+    "geocodePosts": 0,
+    "roadPostsOnEnter": 1,
+    "lookupRetries": 0
+   }
+  ]
+ }
+]

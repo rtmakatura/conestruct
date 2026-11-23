@@ -91,15 +91,14 @@ function mountModal() {
   );
 }
 
+// #541: coordinates go in the search box; Enter (the form's submit) places
+// the pin.  No request goes to the geocoder for them.
 function typeCoords() {
-  fireEvent.change(screen.getByLabelText("Latitude"), {
-    target: { value: "39.71466" },
-  });
-  fireEvent.change(screen.getByLabelText("Longitude"), {
-    target: { value: "-104.94071" },
-  });
-  // #537: Go applies (a keystroke no longer moves the pin).
-  fireEvent.submit(screen.getByTestId("coords-bar"));
+  const box = screen.getByLabelText(
+    "Address, intersection or coordinates search",
+  ) as HTMLInputElement;
+  fireEvent.change(box, { target: { value: "39.71466, -104.94071" } });
+  fireEvent.submit(box.form!);
 }
 
 beforeEach(() => {

@@ -204,7 +204,7 @@ async function one(w, h) {
     await p.waitForSelector(".a-open .a-head", { timeout: 120000 });
     await p.getByRole("button", { name: "Pick on map" }).click();
     await p.waitForTimeout(1500);
-    await p.getByLabel("Address or intersection search").fill("1600 E Colfax Ave, Denver");
+    await p.getByLabel("Address, intersection or coordinates search").fill("1600 E Colfax Ave, Denver");
     await p.getByRole("button", { name: "SEARCH" }).click();
     // #476: wait for the road list itself, not the "Save & Close" text, which
     // is in the dialog while it still reads DETECTING ROADS AT PIN (live

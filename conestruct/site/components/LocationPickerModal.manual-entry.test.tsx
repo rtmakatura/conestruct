@@ -1,35 +1,34 @@
 // @vitest-environment happy-dom
 //
-// #230 — the picker's manual coordinate boxes, driven the way a person
-// drives them: keystroke by keystroke (user-event) and by paste.  The
-// five sibling picker suites drive these boxes with a single
-// fireEvent.change of a whole value, which never hits the per-keystroke
-// rewrite that mangled typed entry (Rule 11: test where the bug lives).
+// #230: coordinates entered by hand, driven the way a person drives them:
+// keystroke by keystroke (user-event) and by paste.  The sibling picker
+// suites enter a pair with a single fireEvent.change of a whole value,
+// which never hits per-keystroke handling (Rule 11: test where the bug
+// lives).
 //
-//   typed      — lat then lng, and lng then lat, one key at a time: the
-//                box ends holding exactly what was typed and the LAST
-//                detect POST carries the full pair.
-//   pasted     — an ASCII pair into an empty box splits (control, green
-//                before the fix); the same pair with the Unicode minus
-//                (U+2212, what docs and some map apps copy) splits too;
-//                a pair pasted over prior text replaces both boxes.
-//
-// Detection timing is deliberately NOT asserted beyond "the last POST
-// is the full pair"; the state-contract suite owns that window.
-//
-// #537 (S2, RULE 5, stated): the boxes now sit in the coordinates bar and
-// are a draft: Enter (or Go) applies them, so every case here presses
-// Enter, and a pasted pair fills both boxes without moving the pin.
+// #541 (RULE 5, stated): the Latitude and Longitude boxes are gone;
+// coordinates go in the search box (Ryan, 2026-11-22, docs/prompts/
+// cc-prompt-ux-coords-in-search.md, ruling 1).  #230's contract carries
+// over to that box: what was typed or pasted stays in the box as it was
+// entered, nothing moves the pin until Enter, and the pair that reaches the
+// road lookup is the full pair, with the Unicode minus (U+2212, what docs
+// and some map apps copy) and stray whitespace incl. NBSP read correctly.
+// The split of a pasted pair across two boxes has no counterpart: there is
+// one box.  No Mapbox token here: the search box needs no map, and
+// coordinates need no geocoder.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
 import { LocationPickerModal } from "./LocationPickerModal";
 
 let detects: { lat: number; lng: number }[] = [];
+let geocodes = 0;
 
 beforeEach(() => {
   detects = [];
+  geocodes = 0;
   vi.stubGlobal(
     "fetch",
     vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
@@ -38,6 +37,7 @@ beforeEach(() => {
         detects.push(JSON.parse(String(init?.body)) as { lat: number; lng: number });
         return new Promise(() => {}); // parked: the response never matters here
       }
+      if (u.includes("/api/geocode")) geocodes += 1;
       return Promise.resolve({ ok: false, status: 500, json: async () => ({}) });
     }),
   );
@@ -56,102 +56,69 @@ function mount() {
       onSave={vi.fn()}
     />,
   );
-  // #507: with no map token the coordinate boxes are already open (the
-  // old click landed on the "Map unavailable" copy and did nothing).
-  // #537: they open in the coordinates bar, as before.
-  expect(screen.getByLabelText("Latitude")).toBeTruthy();
 }
-const lat = () => screen.getByLabelText("Latitude") as HTMLInputElement;
-const lng = () => screen.getByLabelText("Longitude") as HTMLInputElement;
+const box = () =>
+  screen.getByLabelText("Address, intersection or coordinates search") as HTMLInputElement;
 const errors = () =>
-  Array.from(
-    document.querySelectorAll(".mw-note-fail"),
-  ).map((e) => e.textContent);
-const last = () => detects[detects.length - 1];
+  Array.from(document.querySelectorAll(".mw-note-fail")).map((e) => e.textContent);
+const PAIR = { lat: 39.7113, lng: -105.0815 };
 
 describe("#230 typed entry, keystroke by keystroke", () => {
-  it("lat then lng: the boxes hold what was typed; the last detect is the pair", async () => {
+  it("the box holds what was typed; nothing moves until Enter; the lookup gets the pair", async () => {
     const user = userEvent.setup();
     mount();
-    await user.type(lat(), "39.7113");
-    await user.type(lng(), "-105.0815");
-    expect(lat().value).toBe("39.7113");
-    expect(lng().value).toBe("-105.0815");
+    await user.type(box(), "39.7113, -105.0815");
+    expect(box().value).toBe("39.7113, -105.0815");
+    expect(detects).toHaveLength(0);
     await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
-    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
-  });
-
-  it("lng then lat: same contract in the other order", async () => {
-    const user = userEvent.setup();
-    mount();
-    await user.type(lng(), "-105.0815");
-    await user.type(lat(), "39.7113");
-    expect(lat().value).toBe("39.7113");
-    expect(lng().value).toBe("-105.0815");
-    await user.keyboard("{Enter}");
-    expect(errors()).toEqual([]);
-    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
+    expect(detects).toEqual([PAIR]);
+    expect(geocodes).toBe(0);
   });
 
   it("a Unicode minus typed by hand is accepted", async () => {
     const user = userEvent.setup();
     mount();
-    await user.type(lat(), "39.7113");
-    await user.type(lng(), "−105.0815");
+    await user.type(box(), "39.7113, −105.0815");
     await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
-    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
+    expect(detects).toEqual([PAIR]);
+    expect(geocodes).toBe(0);
   });
 });
 
 describe("#230 pasted pair", () => {
-  it("ASCII pair into an empty box splits (control — green before the fix)", async () => {
+  it("an ASCII pair pasted into the empty box waits for Enter, then places the pin", async () => {
     const user = userEvent.setup();
     mount();
-    await user.click(lat());
+    await user.click(box());
     await user.paste("39.7113, -105.0815");
-    expect(lat().value).toBe("39.7113");
-    expect(lng().value).toBe("-105.0815");
-    expect(detects).toHaveLength(0); // #537: a paste fills, Enter applies
+    expect(box().value).toBe("39.7113, -105.0815");
+    expect(detects).toHaveLength(0);
     await user.keyboard("{Enter}");
-    expect(detects).toHaveLength(1);
-    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
+    expect(detects).toEqual([PAIR]);
+    expect(geocodes).toBe(0);
   });
 
-  it("the U+2212 pair splits and validates", async () => {
+  it("the U+2212 pair is read", async () => {
     const user = userEvent.setup();
     mount();
-    await user.click(lat());
+    await user.click(box());
     await user.paste("39.7113, −105.0815");
-    expect(lat().value).toBe("39.7113");
-    expect(lng().value).toBe("-105.0815");
     await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
-    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
+    expect(detects).toEqual([PAIR]);
+    expect(geocodes).toBe(0);
   });
 
-  it("stray whitespace incl. NBSP around a pasted pair is stripped", async () => {
+  it("stray whitespace incl. NBSP around a pasted pair is read through", async () => {
     const user = userEvent.setup();
     mount();
-    await user.click(lat());
-    await user.paste(" 39.7113 , -105.0815 ");
-    expect(lat().value).toBe("39.7113");
-    expect(lng().value).toBe("-105.0815");
+    await user.click(box());
+    await user.paste(" 39.7113 , -105.0815 ");
     await user.keyboard("{Enter}");
     expect(errors()).toEqual([]);
-    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
-  });
-
-  it("a pair pasted over prior text replaces both boxes", async () => {
-    const user = userEvent.setup();
-    mount();
-    await user.type(lat(), "39.7");
-    await user.paste("39.7113, -105.0815");
-    expect(lat().value).toBe("39.7113");
-    expect(lng().value).toBe("-105.0815");
-    await user.keyboard("{Enter}");
-    expect(errors()).toEqual([]);
-    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
+    expect(detects).toEqual([PAIR]);
+    expect(geocodes).toBe(0);
   });
 });

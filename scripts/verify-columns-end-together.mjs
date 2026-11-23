@@ -536,7 +536,7 @@ async function one(w, h, zoom) {
     const details = () => p.locator("[data-testid=where-questions] .nyq-details-btn").first().click();
     const search = async (addr) => {
       await p.waitForTimeout(1500);
-      await p.getByLabel("Address or intersection search").fill(addr);
+      await p.getByLabel("Address, intersection or coordinates search").fill(addr);
       // #489: in Move the picker opens with the old road picked, so Save &
       // Close is enabled before this search's road answer exists; wait for
       // that answer first (a stubbed answer emits a response too).

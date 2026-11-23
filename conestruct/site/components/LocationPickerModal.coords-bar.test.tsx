@@ -1,30 +1,32 @@
 // @vitest-environment happy-dom
 //
-// #537, Ryan's ruling of 2026-11-12, board Ideas2 option S2
-// (docs/prompts/cc-prompt-ux-map-corner-coords.md, ruling 2;
-// validation-artifacts/committed/missions/ux-map-corner-coords/issue-537/rulings.md):
-// the pin's coordinates sit in a bar under the map that is always there.
-// No pin: "No pin yet. Search, tap the map, or enter coordinates." and an
-// "Enter coordinates" button.  A pin: "Pin at" and the coordinates as the
-// button.  The button opens, in the same bar, Latitude and Longitude with
-// real labels, "Go" and "Cancel"; Enter applies, Esc cancels; a pasted
-// "lat, long" fills both; bad input shows a short error in the bar.
+// #541, Ryan's rulings of 2026-11-22 (docs/prompts/
+// cc-prompt-ux-coords-in-search.md; validation-artifacts/committed/missions/
+// ux-coords-in-search/issue-541/rulings.md).  They replace #537's bar:
+//
+//   1. Coordinates are typed in the address search box.  Search or Enter
+//      places the pin there, flies as #538 does and runs the road lookup.
+//      A string that reads as coordinates never goes to the geocoder.  Out
+//      of range: one line in the search's floating list; a pair typed the
+//      wrong way round is offered back as "Did you mean <lat>, <long>?".
+//   2. The bar under the map only reads: "No pin yet", or "Pin at" and the
+//      numbers.  No boxes, no Go, no Cancel, no button, no hint.
 //
 // Rule 11: the real modal is mounted and driven the way a person drives it
-// (user-event keys, clicks and paste); the lookup POSTs are counted, since
-// "applies" means the pin moved and the road lookup ran.  The bar's ruled
-// path is the one with a map, so most of this file sets a token and stubs
-// `mapbox-gl` with an object that accepts any call (as
-// LocationPickerModal.side-sentence.test.tsx does); the last block runs
-// without one.
+// (user-event keys and clicks).  Every request is recorded: "never goes to
+// the geocoder" is asserted on the /api/geocode calls themselves, at both
+// senders (the search form and the open-time lookup of a saved address),
+// and "places the pin" on the road-lookup POST and the camera.  `mapbox-gl`
+// is stubbed with an object that accepts any call (as
+// LocationPickerModal.side-sentence.test.tsx does); one block runs without
+// a token.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 // #538: the camera, as the map reports it.  `flyTo` moves it; `getZoom`
-// and `getBounds` read it (the bounds of the opening state view hold all
-// of Colorado, so a Colorado pin is "on screen" there).
+// reads it.
 const camera = vi.hoisted(() => ({
   zoom: 6, // DEFAULT_ZOOM, the state view
   center: [-105.5, 39.0] as [number, number],
@@ -64,12 +66,20 @@ vi.mock("mapbox-gl", () => {
 import { LocationPickerModal } from "./LocationPickerModal";
 import type { RoadCandidate, RoadDetectResponse } from "@/lib/road-detection/types";
 
+const PIN = { lat: 39.7401, lng: -104.9811 };
+
 let detects: { lat: number; lng: number }[] = [];
-let onCancel = vi.fn();
+let geocodes: { address: string }[] = [];
+// What the geocoder answers, when it is asked.
+let geocodeAnswer: { lat: number; lng: number; placeType: string } | null = null;
+// null parks every road lookup (the answer doesn't matter); set, it answers.
+let roadAnswer: RoadDetectResponse | null = null;
 
 beforeEach(() => {
   detects = [];
-  onCancel = vi.fn();
+  geocodes = [];
+  geocodeAnswer = null;
+  roadAnswer = null;
   camera.zoom = 6;
   camera.center = [-105.5, 39.0];
   camera.flies = [];
@@ -78,9 +88,20 @@ beforeEach(() => {
   vi.stubGlobal(
     "fetch",
     vi.fn((url: RequestInfo | URL, init?: RequestInit) => {
-      if (String(url).includes("/api/road-bearing")) {
+      const u = String(url);
+      if (u.includes("/api/road-bearing")) {
         detects.push(JSON.parse(String(init?.body)) as { lat: number; lng: number });
-        return new Promise(() => {}); // parked: the answer doesn't matter here
+        if (roadAnswer === null) return new Promise(() => {});
+        const answer = roadAnswer;
+        return Promise.resolve({ ok: true, status: 200, json: async () => answer });
+      }
+      if (u.includes("/api/geocode")) {
+        geocodes.push(JSON.parse(String(init?.body)) as { address: string });
+        if (geocodeAnswer === null) {
+          return Promise.resolve({ ok: false, status: 422, json: async () => ({}) });
+        }
+        const answer = geocodeAnswer;
+        return Promise.resolve({ ok: true, status: 200, json: async () => answer });
       }
       return Promise.resolve({ ok: false, status: 500, json: async () => ({}) });
     }),
@@ -92,170 +113,224 @@ afterEach(() => {
   delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 });
 
-function mount(initial: { lat?: number; lng?: number } = {}) {
+function mount(initial: { lat?: number; lng?: number; address?: string } = {}) {
   render(
     <LocationPickerModal
       open
       initial={{ scenarioKind: "shoulder", ...initial }}
-      onCancel={onCancel}
+      onCancel={vi.fn()}
       onSave={vi.fn()}
     />,
   );
 }
 
 const bar = () => screen.getByTestId("coords-bar");
-const inBar = () => within(bar());
-const lat = () => inBar().getByLabelText("Latitude") as HTMLInputElement;
-const lng = () => inBar().getByLabelText("Longitude") as HTMLInputElement;
-// Lookups anywhere but the opening pin (the window runs its own lookup at
-// the pin it opens on; only a move matters here).
-const detectsAway = () => detects.filter((d) => d.lat !== 39.7401 || d.lng !== -104.9811);
-const coordsButton = () => inBar().getByRole("button", { name: /Enter coordinates|^-?\d/ });
+const box = () =>
+  screen.getByLabelText("Address, intersection or coordinates search") as HTMLInputElement;
+const list = () => screen.getByTestId("search-list");
+// The map is built once mapbox-gl's dynamic import resolves.
+const mapBuilt = () => waitFor(() => expect(camera.built).toBeGreaterThan(0));
 
-describe("#537 the bar, before and after a pin", () => {
-  it("no pin: the ruled line and an Enter coordinates button; no boxes, no old link", () => {
+type User = ReturnType<typeof userEvent.setup>;
+/** Replace the box's text and press Enter. */
+async function searchFor(user: User, text: string) {
+  await user.clear(box());
+  await user.type(box(), text);
+  await user.keyboard("{Enter}");
+}
+
+describe("#541 ruling 2: the bar only reads", () => {
+  it("no pin: 'No pin yet' and nothing to press or type", () => {
     mount();
-    expect(bar().textContent).toContain("No pin yet. Search, tap the map, or enter coordinates.");
-    expect(inBar().getByRole("button", { name: "Enter coordinates" })).toBeTruthy();
-    expect(inBar().queryByLabelText("Latitude")).toBeNull();
-    expect(screen.queryByText("Or enter coordinates manually")).toBeNull();
-    expect(screen.queryByText("Hide coordinate entry")).toBeNull();
+    expect(bar().textContent).toBe("No pin yet");
+    expect(bar().querySelector("button, input, form, a, [role=button], [tabindex]")).toBeNull();
   });
 
-  it("a pin: Pin at, then the coordinates as the button at today's precision", () => {
+  it("a pin: 'Pin at 39.7401, -104.9811' at the shown precision, still no control", () => {
     mount({ lat: 39.74012, lng: -104.98113 });
-    expect(bar().textContent).toContain("Pin at");
-    expect(inBar().getByRole("button", { name: "39.7401, -104.9811" })).toBeTruthy();
-    expect(bar().textContent).not.toContain("No pin yet");
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(bar().querySelector("button, input, form, a, [role=button], [tabindex]")).toBeNull();
+  });
+
+  it("the numbers are their own element, so they select whole for copying", () => {
+    mount(PIN);
+    expect(bar().querySelector(".mw-cbar-coords")?.textContent).toBe("39.7401, -104.9811");
+  });
+
+  it("#537's controls and words are gone from the window", () => {
+    mount(PIN);
+    expect(screen.queryByLabelText("Latitude")).toBeNull();
+    expect(screen.queryByLabelText("Longitude")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Go" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Enter coordinates" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Cancel coordinate entry/ })).toBeNull();
+    expect(screen.queryByText("Tap the numbers to change them")).toBeNull();
+    cleanup();
+    mount();
+    expect(screen.queryByRole("button", { name: "Enter coordinates" })).toBeNull();
+    expect(screen.queryByText(/enter coordinates\./)).toBeNull();
   });
 });
 
-describe("#537 editing in the bar", () => {
-  it("the button opens two labelled boxes, Go and Cancel; Latitude has focus", async () => {
-    const user = userEvent.setup();
+describe("#541 ruling 1: the search box takes coordinates", () => {
+  it("the placeholder is the ruled one", () => {
     mount();
-    await user.click(coordsButton());
-    expect(document.activeElement).toBe(lat());
-    for (const box of [lat(), lng()]) {
-      const label = box.labels?.[0];
-      expect(label?.tagName).toBe("LABEL");
-    }
-    expect(lat().labels?.[0].textContent).toContain("Latitude");
-    expect(lng().labels?.[0].textContent).toContain("Longitude");
-    expect(inBar().getByRole("button", { name: "Go" })).toBeTruthy();
-    expect(inBar().getByRole("button", { name: /^Cancel/ })).toBeTruthy();
+    expect(box().placeholder).toBe("Address, intersection or coordinates");
   });
 
-  it("Enter applies: one lookup at the typed pair, the bar then shows the pin", async () => {
+  // Each accepted format: the pin at 39.7401, -104.9811, #538's fly at the
+  // search zoom, one road lookup there, and NO geocoder request.
+  it.each([
+    ["comma and space", "39.7401, -104.9811"],
+    ["space alone", "39.7401 -104.9811"],
+    ["comma alone", "39.7401,-104.9811"],
+    ["degree sign and letters", "39.7401° N, 104.9811° W"],
+    ["letters without the sign", "39.7401 N 104.9811 W"],
+    ["letters in front", "N 39.7401, W 104.9811"],
+    ["longitude first, named by its letter", "104.9811° W, 39.7401° N"],
+    ["the Unicode minus", "39.7401, −104.9811"],
+  ])("%s: Enter places the pin; nothing goes to /api/geocode", async (_name, text) => {
     const user = userEvent.setup();
     mount();
-    await user.click(coordsButton());
-    await user.type(lat(), "39.7401");
-    await user.type(lng(), "-104.9811");
-    expect(detects).toHaveLength(0); // typing alone moves nothing
-    await user.keyboard("{Enter}");
-    expect(detects).toEqual([{ lat: 39.7401, lng: -104.9811 }]);
-    expect(inBar().queryByLabelText("Latitude")).toBeNull();
-    expect(inBar().getByRole("button", { name: "39.7401, -104.9811" })).toBe(document.activeElement);
-    expect(bar().textContent).toContain("Pin at");
+    await mapBuilt();
+    await searchFor(user, text);
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([PIN]);
+    expect(camera.flies).toEqual([expect.objectContaining({ center: [-104.9811, 39.7401], zoom: 16 })]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(list().textContent).toBe("");
   });
 
-  it("Go applies the same way", async () => {
+  it("the Search button does what Enter does", async () => {
     const user = userEvent.setup();
     mount();
-    await user.click(coordsButton());
-    await user.type(lat(), "39.7401");
-    await user.type(lng(), "-104.9811");
-    await user.click(inBar().getByRole("button", { name: "Go" }));
-    expect(detects).toEqual([{ lat: 39.7401, lng: -104.9811 }]);
-    expect(inBar().getByRole("button", { name: "39.7401, -104.9811" })).toBeTruthy();
+    await mapBuilt();
+    await user.type(box(), "39.7401, -104.9811");
+    await user.click(screen.getByRole("button", { name: "Search" }));
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([PIN]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
   });
 
-  it("Esc cancels: no lookup, the old pin stays, the window stays open", async () => {
-    const user = userEvent.setup();
-    mount({ lat: 39.7401, lng: -104.9811 });
-    await user.click(coordsButton());
-    await user.clear(lat());
-    await user.type(lat(), "40.1");
-    await user.keyboard("{Escape}");
-    expect(onCancel).not.toHaveBeenCalled();
-    expect(detectsAway()).toEqual([]);
-    expect(inBar().queryByLabelText("Latitude")).toBeNull();
-    expect(inBar().getByRole("button", { name: "39.7401, -104.9811" })).toBe(document.activeElement);
-    // Reopening starts from the pin, not from the cancelled text.
-    await user.click(coordsButton());
-    expect(lat().value).toBe("39.7401");
-  });
-
-  it("Cancel does what Esc does", async () => {
+  it("control: an address still goes to the geocoder, with the body it always had", async () => {
+    geocodeAnswer = { lat: 39.74, lng: -104.966, placeType: "address" };
     const user = userEvent.setup();
     mount();
-    await user.click(coordsButton());
-    await user.type(lat(), "39.7401");
-    await user.click(inBar().getByRole("button", { name: /^Cancel/ }));
-    expect(detects).toHaveLength(0);
-    expect(inBar().getByRole("button", { name: "Enter coordinates" })).toBeTruthy();
-    expect(onCancel).not.toHaveBeenCalled();
+    await mapBuilt();
+    await searchFor(user, "1600 E Colfax Ave, Denver");
+    await waitFor(() => expect(detects).toEqual([{ lat: 39.74, lng: -104.966 }]));
+    expect(geocodes).toEqual([{ address: "1600 E Colfax Ave, Denver", jurisdiction_key: null }]);
+    expect(bar().textContent).toBe("Pin at 39.7400, -104.9660");
   });
 
-  it("a pasted 'lat, long' in the first box fills both; Enter then applies", async () => {
+  it("control: two bare whole numbers are an address, not coordinates", async () => {
     const user = userEvent.setup();
     mount();
-    await user.click(coordsButton());
-    await user.paste("39.7401, -104.9811");
-    expect(lat().value).toBe("39.7401");
-    expect(lng().value).toBe("-104.9811");
-    expect(detects).toHaveLength(0);
-    await user.keyboard("{Enter}");
-    expect(detects).toEqual([{ lat: 39.7401, lng: -104.9811 }]);
+    await searchFor(user, "1600 80202");
+    await waitFor(() => expect(geocodes).toHaveLength(1));
+    expect(geocodes[0].address).toBe("1600 80202");
+    expect(detects).toEqual([]);
+  });
+
+  it("a failed address search says so in the floating list, not in the page's flow", async () => {
+    const user = userEvent.setup();
+    mount();
+    await searchFor(user, "nowhere at all");
+    await waitFor(() => expect(list().textContent).not.toBe(""));
+    expect(list().closest(".mw-search-box")).not.toBeNull();
+    expect(bar().textContent).toBe("No pin yet");
   });
 });
 
-describe("#537 typed but not applied: Save waits (Rule 10)", () => {
-  it("new numbers in the boxes hold Save and say so; Esc lets go", async () => {
-    // The opening lookup fails, so Save is shut and its line shows (a
-    // parked lookup shows the "Looking up" line instead).
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) })),
-    );
+describe("#541 ruling 1: out of range or swapped", () => {
+  it("out of range: one plain line in the list, no pin, no lookup, no geocoder", async () => {
     const user = userEvent.setup();
-    mount({ lat: 39.7401, lng: -104.9811 });
-    await user.click(coordsButton());
-    expect(await screen.findByTestId("picker-save-blocked")).toBeTruthy();
-    expect(screen.queryByText("Press Go to use the coordinates you typed.")).toBeNull();
-    await user.clear(lat());
-    await user.type(lat(), "39.75");
-    expect(screen.getByTestId("picker-save-blocked").textContent).toBe(
-      "Press Go to use the coordinates you typed.",
-    );
-    await user.keyboard("{Escape}");
-    expect(screen.queryByText("Press Go to use the coordinates you typed.")).toBeNull();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "139.7401, -104.9811");
+    expect(list().textContent).toBe("Latitude must be between -90 and 90");
+    expect(within(list()).queryByRole("button")).toBeNull();
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([]);
+    expect(camera.flies).toEqual([]);
+    expect(bar().textContent).toBe("No pin yet");
   });
 
-  it("with a road picked and Save open, typed numbers alone shut Save; Esc opens it again", async () => {
-    stubRoads();
+  it("longitude out of range names the longitude; a pin already placed stays", async () => {
     const user = userEvent.setup();
-    mount({ lat: 39.7401, lng: -104.9811 });
-    await pickFirstRoad(user);
-    expect(save().disabled).toBe(false);
-    expect(screen.queryByTestId("picker-save-blocked")).toBeNull();
-    await user.click(coordsButton());
-    expect(save().disabled).toBe(false); // the pin's own numbers hold nothing
-    await user.clear(lat());
-    await user.type(lat(), "39.75");
-    expect(save().disabled).toBe(true);
-    expect(screen.getByTestId("picker-save-blocked").textContent).toBe(
-      "Press Go to use the coordinates you typed.",
-    );
-    await user.keyboard("{Escape}");
-    expect(save().disabled).toBe(false);
-    expect(screen.queryByTestId("picker-save-blocked")).toBeNull();
+    mount(PIN);
+    await mapBuilt();
+    await searchFor(user, "39.7401, -204.9811");
+    expect(list().textContent).toBe("Longitude must be between -180 and 180");
+    expect(geocodes).toEqual([]);
+    expect(detects.filter((d) => d.lat !== PIN.lat || d.lng !== PIN.lng)).toEqual([]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+  });
+
+  it("swapped: the line is the choice 'Did you mean 39.7401, -104.9811?'; nothing moves until it is taken", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "-104.9811, 39.7401");
+    const choice = within(list()).getByRole("button", { name: "Did you mean 39.7401, -104.9811?" });
+    expect(list().textContent).toBe("Did you mean 39.7401, -104.9811?");
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([]);
+    expect(bar().textContent).toBe("No pin yet");
+
+    await user.click(choice);
+    expect(detects).toEqual([PIN]);
+    expect(geocodes).toEqual([]);
+    expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.7401], zoom: 16 });
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(box().value).toBe("39.7401, -104.9811");
+    expect(list().textContent).toBe("");
+  });
+
+  it("degrees and minutes are refused with a line, not geocoded", async () => {
+    const user = userEvent.setup();
+    mount();
+    await searchFor(user, "39°44'24\"N 104°59'W");
+    expect(list().textContent).toBe("Use decimal degrees, like 39.7401, -104.9811");
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([]);
+  });
+
+  it("editing the box withdraws the line", async () => {
+    const user = userEvent.setup();
+    mount();
+    await searchFor(user, "139.7401, -104.9811");
+    expect(list().textContent).not.toBe("");
+    await user.type(box(), "{Backspace}");
+    expect(list().textContent).toBe("");
   });
 });
 
-// #538 fixtures: an opening lookup that answers with two roads, so a road
-// can be picked and Save opens.
+describe("#541 ruling 1: the open-time lookup of a saved address (the other geocode sender)", () => {
+  it("a saved address that is coordinates places the pin and is not geocoded", async () => {
+    mount({ address: "39.7401, -104.9811" });
+    await waitFor(() => expect(detects).toEqual([PIN]));
+    expect(geocodes).toEqual([]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+  });
+
+  it("a saved address that is out-of-range coordinates shows the line and is not geocoded", async () => {
+    mount({ address: "139.7401, -104.9811" });
+    await waitFor(() => expect(list().textContent).toBe("Latitude must be between -90 and 90"));
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([]);
+  });
+
+  it("control: a saved address that is an address is geocoded on open, as before", async () => {
+    geocodeAnswer = { lat: 39.74, lng: -104.966, placeType: "address" };
+    mount({ address: "1600 E Colfax Ave, Denver" });
+    await waitFor(() => expect(geocodes).toHaveLength(1));
+    expect(geocodes[0].address).toBe("1600 E Colfax Ave, Denver");
+  });
+});
+
+// #538 fixtures: a lookup that answers with two roads, so a road can be
+// picked and Save opens.
 function road(way_id: string, bearing: number): RoadCandidate {
   return {
     way_id,
@@ -281,139 +356,80 @@ function road(way_id: string, bearing: number): RoadCandidate {
     travel: { travel: "both_ways", carriageway: "undivided" },
   };
 }
-
-function stubRoads() {
-  const answer: RoadDetectResponse = {
-    scan_status: "ok",
-    candidates: [road("201", 0), road("202", 90)],
-    primary_index: null,
-    isUrban: true,
-    placeName: "Denver",
-  };
-  vi.stubGlobal(
-    "fetch",
-    vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
-      if (String(url).includes("/api/road-bearing")) {
-        detects.push(JSON.parse(String(init?.body)) as { lat: number; lng: number });
-        return { ok: true, status: 200, json: async () => answer };
-      }
-      return { ok: false, status: 500, json: async () => ({}) };
-    }),
-  );
-}
+const TWO_ROADS: RoadDetectResponse = {
+  scan_status: "ok",
+  candidates: [road("201", 0), road("202", 90)],
+  primary_index: null,
+  isUrban: true,
+  placeName: "Denver",
+};
 
 const save = () => screen.getByRole("button", { name: "Save and close" }) as HTMLButtonElement;
 const rows = () => screen.getAllByRole("radio");
 
-async function pickFirstRoad(user: ReturnType<typeof userEvent.setup>) {
-  await waitFor(() => expect(rows()).toHaveLength(2));
-  await user.click(rows()[0]);
-  expect(rows()[0].getAttribute("aria-checked")).toBe("true");
-}
-
-// The map is built once mapbox-gl's dynamic import resolves.
-const mapBuilt = () => waitFor(() => expect(camera.built).toBeGreaterThan(0));
-
-describe("#538 applying coordinates centres the map on the pin at the search zoom", () => {
-  it("from the state view, Enter flies to the typed pin at PIN_ZOOM (16)", async () => {
+describe("#541: coordinates in the search box load the road list", () => {
+  it("the lookup's roads show as rows; picking one opens Save", async () => {
+    roadAnswer = TWO_ROADS;
     const user = userEvent.setup();
     mount();
     await mapBuilt();
-    await user.click(coordsButton());
-    await user.type(lat(), "39.7401");
-    await user.type(lng(), "-104.9811");
-    await user.keyboard("{Enter}");
-    expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.7401], zoom: 16 });
-    expect(camera.zoom).toBe(16);
-  });
-
-  it("a view already closer than 16 keeps its zoom (a search's rule)", async () => {
-    const user = userEvent.setup();
-    mount({ lat: 39.7401, lng: -104.9811 });
-    await mapBuilt();
-    camera.zoom = 18;
-    await user.click(coordsButton());
-    await user.clear(lat());
-    await user.type(lat(), "39.7420");
-    await user.keyboard("{Enter}");
-    expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.742], zoom: 18 });
+    await searchFor(user, "39.7401, -104.9811");
+    await waitFor(() => expect(rows()).toHaveLength(2));
+    await user.click(rows()[0]);
+    expect(save().disabled).toBe(false);
+    expect(geocodes).toEqual([]);
   });
 });
 
-describe("#538 fold-in (a): Go with the pin's own numbers keeps the road pick", () => {
-  it("no new lookup, the pick and Save stay; the bar closes and the map centres on the pin", async () => {
-    stubRoads();
+describe("#538 kept: the search box's coordinates fly as typed coordinates did", () => {
+  it("a view already closer than 16 keeps its zoom (a search's rule)", async () => {
     const user = userEvent.setup();
-    mount({ lat: 39.7401, lng: -104.9811 });
+    mount(PIN);
     await mapBuilt();
-    await pickFirstRoad(user);
+    camera.zoom = 18;
+    await searchFor(user, "39.7420, -104.9811");
+    expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.742], zoom: 18 });
+  });
+
+  it("fold-in (a): the pin's own numbers keep the road pick: no new lookup, the map centres", async () => {
+    roadAnswer = TWO_ROADS;
+    const user = userEvent.setup();
+    mount(PIN);
+    await mapBuilt();
+    await waitFor(() => expect(rows()).toHaveLength(2));
+    await user.click(rows()[0]);
     expect(detects).toHaveLength(1); // the opening lookup
-    await user.click(coordsButton());
-    await user.clear(lat());
-    await user.type(lat(), "39.74010"); // the same latitude at the shown precision
-    await user.keyboard("{Enter}");
+    await searchFor(user, "39.74010, -104.98110"); // the pin at the shown precision
     expect(detects).toHaveLength(1);
     expect(rows()[0].getAttribute("aria-checked")).toBe("true");
     expect(save().disabled).toBe(false);
-    expect(inBar().queryByLabelText("Latitude")).toBeNull();
-    expect(inBar().getByRole("button", { name: "39.7401, -104.9811" })).toBe(document.activeElement);
     expect(camera.flies.at(-1)).toMatchObject({ center: [-104.9811, 39.7401], zoom: 16 });
-    // Reopening starts from the pin's text, not the typed "39.74010".
-    await user.click(coordsButton());
-    expect(lat().value).toBe("39.7401");
+  });
+
+  it("text typed in the box and not searched holds nothing: Save follows the pin", async () => {
+    roadAnswer = TWO_ROADS;
+    const user = userEvent.setup();
+    mount(PIN);
+    await waitFor(() => expect(rows()).toHaveLength(2));
+    await user.click(rows()[0]);
+    expect(save().disabled).toBe(false);
+    await user.type(box(), "39.75, -104.99");
+    expect(save().disabled).toBe(false);
+    expect(screen.queryByTestId("picker-save-blocked")).toBeNull();
   });
 });
 
-describe("#537 bad input: a short error in the bar, the pin untouched", () => {
-  it("not numbers", async () => {
-    const user = userEvent.setup();
-    mount();
-    await user.click(coordsButton());
-    await user.type(lat(), "abc");
-    await user.type(lng(), "-104.9811");
-    await user.keyboard("{Enter}");
-    expect(detects).toHaveLength(0);
-    expect(bar().textContent).toContain("Use numbers in decimal degrees, like 39.7401");
-    expect(bar().textContent).not.toContain("No pin yet");
-    // The typed text is kept: the button reopens it.
-    await user.click(coordsButton());
-    expect(lat().value).toBe("abc");
-    expect(bar().textContent).not.toContain("Use numbers");
-  });
-
-  it("latitude out of range", async () => {
-    const user = userEvent.setup();
-    mount({ lat: 39.7401, lng: -104.9811 });
-    await user.click(coordsButton());
-    await user.clear(lat());
-    await user.type(lat(), "95");
-    await user.keyboard("{Enter}");
-    expect(detectsAway()).toEqual([]);
-    expect(bar().textContent).toContain("Latitude must be between -90 and 90");
-    expect(inBar().getByRole("button", { name: "39.7401, -104.9811" })).toBeTruthy();
-  });
-
-  it("longitude out of range", async () => {
-    const user = userEvent.setup();
-    mount();
-    await user.click(coordsButton());
-    await user.type(lat(), "39.7401");
-    await user.type(lng(), "200");
-    await user.keyboard("{Enter}");
-    expect(detects).toHaveLength(0);
-    expect(bar().textContent).toContain("Longitude must be between -180 and 180");
-  });
-});
-
-describe("#537 without a map (no Mapbox token)", () => {
-  it("the bar opens on the boxes, and its no-pin line drops the map", async () => {
+describe("#541 without a map (no Mapbox token)", () => {
+  it("the map-off line points at the search box, and coordinates there place the pin", async () => {
     delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
     const user = userEvent.setup();
     mount();
-    expect(lat()).toBeTruthy();
-    expect(screen.getByText("Enter the coordinates below instead.")).toBeTruthy();
-    await user.click(inBar().getByRole("button", { name: /^Cancel/ }));
-    expect(bar().textContent).toContain("No pin yet. Search or enter coordinates.");
-    expect(bar().textContent).not.toContain("tap the map");
+    expect(screen.getByText("Type the coordinates in the search box instead.")).toBeTruthy();
+    expect(screen.queryByText("Enter the coordinates below instead.")).toBeNull();
+    expect(bar().textContent).toBe("No pin yet");
+    await searchFor(user, "39.7401, -104.9811");
+    expect(detects).toEqual([PIN]);
+    expect(geocodes).toEqual([]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
   });
 });

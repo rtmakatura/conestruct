@@ -171,25 +171,19 @@ const RESTORE_INITIAL = {
   confirmedRoad: CONFIRMED,
 };
 
+// #541: coordinates go in the search box; Enter (the form's submit) places
+// the pin.  No request goes to the geocoder for them.
 function typeCoords(lat = "40.0176", lng = "-105.1300") {
-  fireEvent.change(screen.getByLabelText("Latitude"), {
-    target: { value: lat },
-  });
-  fireEvent.change(screen.getByLabelText("Longitude"), {
-    target: { value: lng },
-  });
-  // #537: Go applies (a keystroke no longer moves the pin).
-  fireEvent.submit(screen.getByTestId("coords-bar"));
+  const box = screen.getByLabelText(
+    "Address, intersection or coordinates search",
+  ) as HTMLInputElement;
+  fireEvent.change(box, { target: { value: `${lat}, ${lng}` } });
+  fireEvent.submit(box.form!);
 }
 
-// #537: a pin move by latitude alone: open the bar if it shows the pin,
-// retype the latitude, Go.
+// A pin move by latitude alone: the same longitude, a new latitude.
 function moveLat(value: string) {
-  if (!screen.queryByLabelText("Latitude")) {
-    fireEvent.click(screen.getByTestId("coords-bar").querySelector("button")!);
-  }
-  fireEvent.change(screen.getByLabelText("Latitude"), { target: { value } });
-  fireEvent.submit(screen.getByTestId("coords-bar"));
+  typeCoords(value);
 }
 
 // #507 ruling 2: the road list's rows (role=radio); a row names the road
@@ -262,7 +256,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     mountModal();
 
     fireEvent.change(
-      screen.getByLabelText("Address or intersection search"),
+      screen.getByLabelText("Address, intersection or coordinates search"),
       { target: { value: "Lafayette, CO" } },
     );
     fireEvent.click(screen.getByRole("button", { name: "Search" }));
@@ -280,7 +274,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     mountModal();
 
     fireEvent.change(
-      screen.getByLabelText("Address or intersection search"),
+      screen.getByLabelText("Address, intersection or coordinates search"),
       { target: { value: "400 E Baseline Rd, Lafayette" } },
     );
     fireEvent.click(screen.getByRole("button", { name: "Search" }));
@@ -300,7 +294,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
 describe("#347 cross-street search", () => {
   function search(q: string) {
     fireEvent.change(
-      screen.getByLabelText("Address or intersection search"),
+      screen.getByLabelText("Address, intersection or coordinates search"),
       { target: { value: q } },
     );
     fireEvent.click(screen.getByRole("button", { name: "Search" }));

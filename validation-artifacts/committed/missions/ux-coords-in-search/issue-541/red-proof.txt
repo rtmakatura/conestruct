@@ -1,0 +1,67 @@
+# #541 red proof: the new mounted-flow tests in
+# conestruct/site/components/LocationPickerModal.coords-bar.test.tsx run on
+# 5074c98e's code (git archive of HEAD into a scratch folder; the component not
+# yet changed), 2026-11-22.
+# Command: npx vitest run --reporter=verbose components/LocationPickerModal.coords-bar.test.tsx
+# One edit for this run only: the test finds the search box by its old
+# accessible name ("Address or intersection search"), so each failure below is
+# the behaviour and not the renamed label.
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 26 ⎯⎯⎯⎯⎯⎯⎯
+ x #541 ruling 2: the bar only reads > no pin: 'No pin yet' and nothing to press or type
+   -> expected 'No pin yet. Search, tap the map, or e…' to be 'No pin yet' // Object.is equality
+ x #541 ruling 2: the bar only reads > a pin: 'Pin at 39.7401, -104.9811' at the shown precision, still no control
+   -> expected 'Pin at39.7401, -104.9811Tap the numbe…' to be 'Pin at 39.7401, -104.9811' // Object.is equality
+ x #541 ruling 2: the bar only reads > #537's controls and words are gone from the window
+   -> expected <span …(1)></span> to be null
+ x #541 ruling 1: the search box takes coordinates > the placeholder is the ruled one
+   -> expected 'Address or intersection (e.g., I-25 &…' to be 'Address, intersection or coordinates' // Object.is equality
+ x #541 ruling 1: the search box takes coordinates > comma and space: Enter places the pin; nothing goes to /api/geocode
+ x #541 ruling 1: the search box takes coordinates > space alone: Enter places the pin; nothing goes to /api/geocode
+ x #541 ruling 1: the search box takes coordinates > comma alone: Enter places the pin; nothing goes to /api/geocode
+ x #541 ruling 1: the search box takes coordinates > degree sign and letters: Enter places the pin; nothing goes to /api/geocode
+ x #541 ruling 1: the search box takes coordinates > letters without the sign: Enter places the pin; nothing goes to /api/geocode
+ x #541 ruling 1: the search box takes coordinates > letters in front: Enter places the pin; nothing goes to /api/geocode
+ x #541 ruling 1: the search box takes coordinates > longitude first, named by its letter: Enter places the pin; nothing goes to /api/geocode
+ x #541 ruling 1: the search box takes coordinates > the Unicode minus: Enter places the pin; nothing goes to /api/geocode
+   -> expected [ { …(2) } ] to deeply equal []
+ x #541 ruling 1: the search box takes coordinates > the Search button does what Enter does
+   -> expected [ { …(2) } ] to deeply equal []
+ x #541 ruling 1: the search box takes coordinates > control: an address still goes to the geocoder, with the body it always had
+   -> expected 'Pin at39.7400, -104.9660Tap the numbe…' to be 'Pin at 39.7400, -104.9660' // Object.is equality
+ x #541 ruling 1: the search box takes coordinates > a failed address search says so in the floating list, not in the page's flow
+   -> Unable to find an element by: [data-testid="search-list"]
+ x #541 ruling 1: out of range or swapped > out of range: one plain line in the list, no pin, no lookup, no geocoder
+   -> Unable to find an element by: [data-testid="search-list"]
+ x #541 ruling 1: out of range or swapped > longitude out of range names the longitude; a pin already placed stays
+   -> Unable to find an element by: [data-testid="search-list"]
+ x #541 ruling 1: out of range or swapped > swapped: the line is the choice 'Did you mean 39.7401, -104.9811?'; nothing moves until it is taken
+   -> Unable to find an element by: [data-testid="search-list"]
+ x #541 ruling 1: out of range or swapped > degrees and minutes are refused with a line, not geocoded
+   -> Unable to find an element by: [data-testid="search-list"]
+ x #541 ruling 1: out of range or swapped > editing the box withdraws the line
+   -> Unable to find an element by: [data-testid="search-list"]
+ x #541 ruling 1: the open-time lookup of a saved address (the other geocode sender) > a saved address that is coordinates places the pin and is not geocoded
+   -> expected [] to deeply equal [ { lat: 39.7401, lng: -104.9811 } ]
+ x #541 ruling 1: the open-time lookup of a saved address (the other geocode sender) > a saved address that is out-of-range coordinates shows the line and is not geocoded
+   -> Unable to find an element by: [data-testid="search-list"]
+ x #541: coordinates in the search box load the road list > the lookup's roads show as rows; picking one opens Save
+   -> Unable to find role="radio"
+ x #538 kept: the search box's coordinates fly as typed coordinates did > a view already closer than 16 keeps its zoom (a search's rule)
+   -> expected undefined to match object { center: [ -104.9811, 39.742 ], …(1) }
+ x #538 kept: the search box's coordinates fly as typed coordinates did > fold-in (a): the pin's own numbers keep the road pick: no new lookup, the map centres
+   -> expected undefined to match object { Object (center, zoom) }
+ x #541 without a map (no Mapbox token) > the map-off line points at the search box, and coordinates there place the pin
+   -> Unable to find an element with the text: Type the coordinates in the search box instead.
+ Test Files  1 failed (1)
+      Tests  26 failed | 4 passed (30)
+
+ ok (4, green on the old code by design): the numbers' own element (#537 had
+    .mw-cbar-coords as its button); two bare whole numbers are an address; a
+    saved address is geocoded on open; text typed and not searched holds no Save.
+
+# Reading: on the old code every accepted format went to /api/geocode
+# ("expected [ { …(2) } ] to deeply equal []" is the recorded geocode request;
+# the eight format cases share that one failure line), a saved address that is
+# coordinates placed no pin, there was no floating list, and the bar held the
+# button and the hint.

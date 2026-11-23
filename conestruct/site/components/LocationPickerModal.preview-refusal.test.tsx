@@ -156,13 +156,14 @@ function mountModal(scenario: Scenario = GUESSED) {
   );
 }
 
-// #537: the coordinates bar; open it when it shows the pin, type, then Go.
+// #541: coordinates go in the search box; Enter (the form's submit) places
+// the pin.  No request goes to the geocoder for them.
 function typeCoords([lat, lng]: [number, number]) {
-  const bar = screen.getByTestId("coords-bar");
-  if (!screen.queryByLabelText("Latitude")) fireEvent.click(bar.querySelector("button")!);
-  fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: String(lat) } });
-  fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: String(lng) } });
-  fireEvent.submit(screen.getByTestId("coords-bar"));
+  const box = screen.getByLabelText(
+    "Address, intersection or coordinates search",
+  ) as HTMLInputElement;
+  fireEvent.change(box, { target: { value: `${lat}, ${lng}` } });
+  fireEvent.submit(box.form!);
 }
 
 const geometryBodies = () =>

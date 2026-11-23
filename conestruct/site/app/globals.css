@@ -5483,6 +5483,45 @@ input[type="number"] {
   font-family: var(--font-sans);
   font-size: var(--fs-refusal);
 }
+/* #541 (ruling 1): the search's lines (a failed search, coordinates out
+   of range, the "Did you mean" choice) float under the box, over the top
+   of the map, so nothing on the page changes size (P1).  The list is the
+   box's width, so it never covers the map's zoom control. */
+.map-window .mw-search-box {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+.map-window .mw-search-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 3;
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.map-window .mw-search-list:empty {
+  display: none;
+}
+.map-window .mw-search-line {
+  padding: 8px 12px;
+}
+.map-window .mw-search-pick {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+.map-window .mw-search-pick:hover {
+  color: var(--act-bright);
+}
 .map-window .mw-btn {
   min-height: 44px;
   padding: 0 var(--space-block);
@@ -5528,13 +5567,11 @@ input[type="number"] {
   font-weight: 600;
   color: var(--act);
 }
-/* #537 (Ryan, 2026-11-12, S2): the coordinates bar under the map, one
-   fixed height in every state (no pin, pin, editing, error) so the map and
-   the rail never move (P1).  Every control is 44 px tall; the coordinates
-   button draws the S2 board's 32 px dashed face inside its 44 px box.
-   Lines read --fs-body-value, the hint and the error .mw-hint / .mw-note
-   (two lines at most, inside the 44).  Tokens only: the ground is
-   --da-ground, the board's #101c29. */
+/* #541 (Ryan, 2026-11-22, ruling 2; it replaces #537's S2 bar): the
+   read-only line under the map, one fixed height with or without a pin so
+   the map and the rail never move (P1).  The pin mark, then "Pin at" and
+   the numbers, which select whole for copying.  Nothing in it is a
+   control.  Tokens only: the ground is --da-ground. */
 .map-window .mw-cbar {
   display: flex;
   align-items: center;
@@ -5543,17 +5580,9 @@ input[type="number"] {
   flex-shrink: 0;
   padding: 0 20px;
   background: var(--da-ground);
+  font-size: var(--fs-body-value);
   line-height: 1.4;
   color: var(--ink);
-}
-.map-window .mw-cbar,
-.map-window .mw-cbar-input,
-.map-window .mw-cbar-coords {
-  font-size: var(--fs-body-value);
-}
-.map-window .mw-cbar-edit {
-  gap: var(--space-tight);
-  container-type: inline-size;
 }
 .map-window .mw-cbar-dot {
   flex: none;
@@ -5562,92 +5591,21 @@ input[type="number"] {
   border-radius: 50%;
   background: var(--dim);
 }
-.map-window .mw-cbar-lead,
-.map-window .mw-cbar-label {
-  flex: none;
+.map-window .mw-cbar-line {
+  min-width: 0;
   white-space: nowrap;
+}
+.map-window .mw-cbar-lead {
   color: var(--ink-mute);
 }
-.map-window .mw-cbar-say {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-.map-window .mw-cbar-end {
-  text-align: right;
-}
 .map-window .mw-cbar-coords {
-  flex: none;
-  display: flex;
-  align-items: center;
-  height: 44px;
-  min-width: 44px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
+  user-select: all;
 }
-.map-window .mw-cbar-face {
-  display: flex;
-  align-items: center;
-  height: 32px;
-  padding: 0 8px;
-  border: 1px dashed var(--ink-faint);
-  white-space: nowrap;
-}
-.map-window .mw-cbar-coords:hover .mw-cbar-face {
-  border-color: var(--act);
-}
-.map-window .mw-cbar-input {
-  flex: 1 1 0;
-  min-width: 0;
-  height: 44px;
-  padding: 0 8px;
-  font-variant-numeric: tabular-nums;
-}
-.map-window .mw-cbar-go,
-.map-window .mw-cbar-cancel {
-  flex: none;
-  height: 44px;
-  min-width: 44px;
-}
-.map-window .mw-cbar-go {
-  padding: 0 12px;
-}
-.map-window .mw-cbar-cancel {
-  padding: 0 4px;
-  border: 0;
-  background: transparent;
-}
-/* A narrow bar (the phone, or two columns just past md) shows "Lat" and
-   "Long" so each box holds "-104.9811"; the rest of the word stays in the
-   label, hidden from sight only, so the name is still "Latitude". */
-@container (max-width: 479px) {
-  .map-window .mw-cbar-more {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  .map-window .mw-cbar-input {
-    padding: 0 4px;
-  }
-}
-/* On a phone the bar takes the 16 px side gutter and tighter gaps, so the
-   two boxes still hold a whole longitude. */
+/* On a phone the line takes the 16 px side gutter. */
 @media (max-width: 479px) {
   .map-window .mw-cbar {
     padding: 0 16px;
-  }
-  .map-window .mw-cbar-edit {
-    gap: 6px;
   }
 }
 .map-window .mw-map-off {

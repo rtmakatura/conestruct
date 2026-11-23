@@ -96,25 +96,21 @@ function mountModal() {
   );
 }
 
-// Type coordinates into the manual inputs — the tokenless path into the
+// Type coordinates into the search box: the tokenless path into the
 // real detection pipeline.
-function typeCoords() {
-  fireEvent.change(screen.getByLabelText("Latitude"), {
-    target: { value: "40.0176" },
-  });
-  fireEvent.change(screen.getByLabelText("Longitude"), {
-    target: { value: "-105.1300" },
-  });
-  // #537: Go applies (a keystroke no longer moves the pin).
-  fireEvent.submit(screen.getByTestId("coords-bar"));
+// #541: coordinates go in the search box; Enter (the form's submit) places
+// the pin.  No request goes to the geocoder for them.
+function typeCoords(lat = "40.0176", lng = "-105.1300") {
+  const box = screen.getByLabelText(
+    "Address, intersection or coordinates search",
+  ) as HTMLInputElement;
+  fireEvent.change(box, { target: { value: `${lat}, ${lng}` } });
+  fireEvent.submit(box.form!);
 }
 
-// #537: a pin move by latitude alone: open the bar on the pin, retype the
-// latitude, Go.
+// A pin move by latitude alone: the same longitude, a new latitude.
 function moveLat(value: string) {
-  fireEvent.click(screen.getByTestId("coords-bar").querySelector("button")!);
-  fireEvent.change(screen.getByLabelText("Latitude"), { target: { value } });
-  fireEvent.submit(screen.getByTestId("coords-bar"));
+  typeCoords(value);
 }
 
 function saveButton(): HTMLButtonElement {

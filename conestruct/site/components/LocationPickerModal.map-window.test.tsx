@@ -90,11 +90,14 @@ function mount(onSave: (r: LocationPickerResult) => void = () => {}) {
   );
 }
 
-// #537: the coordinates bar opens on the boxes without a map; type, then Go.
+// #541: coordinates go in the search box; Enter (the form's submit) places
+// the pin.  No request goes to the geocoder for them.
 function typeCoords() {
-  fireEvent.change(screen.getByLabelText("Latitude"), { target: { value: "39.73997" } });
-  fireEvent.change(screen.getByLabelText("Longitude"), { target: { value: "-104.96632" } });
-  fireEvent.submit(screen.getByTestId("coords-bar"));
+  const box = screen.getByLabelText(
+    "Address, intersection or coordinates search",
+  ) as HTMLInputElement;
+  fireEvent.change(box, { target: { value: "39.73997, -104.96632" } });
+  fireEvent.submit(box.form!);
 }
 
 const saveButton = () => screen.getByRole("button", { name: /^Save (&|and) close$/i });
