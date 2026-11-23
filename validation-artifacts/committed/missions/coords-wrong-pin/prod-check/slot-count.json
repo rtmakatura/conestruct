@@ -1,0 +1,15 @@
+{
+ "ranAt": "2026-11-23T19:25:59.446Z",
+ "site": "https://www.conestruct.com",
+ "size": "1440x900",
+ "string": "mw-note mw-search-line",
+ "scriptsLoaded": 14,
+ "scriptsRead": 14,
+ "scriptsHoldingTheNoticeText": 1,
+ "stringCountInThoseScripts": [
+  1
+ ],
+ "stringCountInAllScripts": 1,
+ "nonGetRequestsToTheSite": 0,
+ "finishedAt": "2026-11-23T19:26:04.579Z"
+}

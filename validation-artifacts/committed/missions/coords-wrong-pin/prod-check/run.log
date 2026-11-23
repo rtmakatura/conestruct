@@ -1,0 +1,19 @@
+healthz sha db810a0 equals head: true
+served /api/version sha db810a0 after 1 poll(s): head true feat false
+1440x900: ok | every check passed
+  Inter true | noPin: list none children 0 map 163.25,532.75 bar 696 axe 0 | vs local px 0 html same true all same true
+  coarse: list 694.16x35.5 at 21,151.25 children 1 map 163.25,532.75 bar 696 axe 0 | vs local px 0 html same true all same true
+  outOfRange: list 694.16x35.5 at 21,151.25 children 1 map 163.25,532.75 bar 696 axe 0 | vs local px 0 html same true all same true
+  scripts {"loaded":14,"read":14,"bearingWarning":0,"coarseNotice":0,"noticeText":1,"listClass":1} chunk shas db810a0,db810a0 | posts {"geocode":1,"roads":0} nonGet 1 | console errors 0 (mapbox telemetry 0) | failed {"api.mapbox.com net::ERR_ABORTED":22} | token checks 3 hits 0
+1198x930: ok | every check passed
+  Inter true | noPin: list none children 0 map 163.25,559.75 bar 723 axe 0 | vs local px 0 html same true all same true
+  coarse: list 492.34x53 at 21,151.25 children 1 map 163.25,559.75 bar 723 axe 0 | vs local px 0 html same true all same true
+  outOfRange: list 492.34x35.5 at 21,151.25 children 1 map 163.25,559.75 bar 723 axe 0 | vs local px 0 html same true all same true
+  scripts {"loaded":14,"read":14,"bearingWarning":0,"coarseNotice":0,"noticeText":1,"listClass":1} chunk shas db810a0,db810a0 | posts {"geocode":1,"roads":0} nonGet 1 | console errors 0 (mapbox telemetry 0) | failed {"api.mapbox.com net::ERR_ABORTED":16} | token checks 3 hits 0
+390x844: ok | every check passed
+  Inter true | noPin: list none children 0 map 183.5,371.36 bar 554.86 axe 0 | vs local px 0 html same true all same true
+  coarse: list 260.16x70.5 at 21,171.5 children 1 map 183.5,371.36 bar 554.86 axe 0 | vs local px 0 html same true all same true
+  outOfRange: list 260.16x35.5 at 21,171.5 children 1 map 183.5,371.36 bar 554.86 axe 0 | vs local px 0 html same true all same true
+  scripts {"loaded":14,"read":14,"bearingWarning":0,"coarseNotice":0,"noticeText":1,"listClass":1} chunk shas db810a0,db810a0 | posts {"geocode":1,"roads":0} nonGet 1 | console errors 0 (mapbox telemetry 0) | failed {"api.mapbox.com net::ERR_ABORTED":5} | token checks 3 hits 0
+overall: PASS
+{"ranAt":"2026-11-23T19:25:59.446Z","site":"https://www.conestruct.com","size":"1440x900","string":"mw-note mw-search-line","scriptsLoaded":14,"scriptsRead":14,"scriptsHoldingTheNoticeText":1,"stringCountInThoseScripts":[1],"stringCountInAllScripts":1,"nonGetRequestsToTheSite":0,"finishedAt":"2026-11-23T19:26:04.579Z"}

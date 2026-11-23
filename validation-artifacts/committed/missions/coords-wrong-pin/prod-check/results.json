@@ -1,0 +1,743 @@
+{
+ "ranAt": "2026-11-23T19:25:02.120Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "db810a0e3a4a100b56c1cde18f29b863bafd6921",
+ "featSha": "e51cda003199aa1c2d5d60cbe5b626b901d05c94",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "step": "4 done",
+   "console": [],
+   "chunkShas": [
+    "db810a0e3a4a100b56c1cde18f29b863bafd6921",
+    "db810a0"
+   ],
+   "nonGet": [
+    {
+     "step": "2 coarse search",
+     "method": "POST",
+     "path": "/api/geocode"
+    }
+   ],
+   "tokenChecks": 3,
+   "tokenHits": 0,
+   "states": {
+    "noPin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "list": null,
+     "listDisplay": "none",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"></div>",
+     "listChildren": 0,
+     "scrollHeight": 653,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    },
+    "coarse": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 694.16,
+      "h": 35.5
+     },
+     "listDisplay": "block",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-search-line\">That search found a town or area. Tap the map on the road where the work starts.</p></div>",
+     "listChildren": 1,
+     "scrollHeight": 653,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    },
+    "outOfRange": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 694.16,
+      "h": 35.5
+     },
+     "listDisplay": "block",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-note-fail mw-search-line\">Latitude must be between -90 and 90</p></div>",
+     "listChildren": 1,
+     "scrollHeight": 653,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    }
+   },
+   "vsLocal": {
+    "noPin": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    },
+    "coarse": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    },
+    "outOfRange": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    }
+   },
+   "landedOn": "/sandbox",
+   "inter": true,
+   "outOfRangeText": "Latitude must be between -90 and 90",
+   "posts": {
+    "geocode": 1,
+    "roads": 0
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "bearingWarning": 0,
+    "coarseNotice": 0,
+    "noticeText": 1,
+    "listClass": 1
+   },
+   "consoleErrors": 0,
+   "consoleTelemetry": 0,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 22
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "noLineListHiddenAndEmpty": true,
+    "noticeIsOneChild": true,
+    "outOfRangeIsOneChild": true,
+    "pxVsLocalZero": true,
+    "listHtmlVsLocalSame": true,
+    "mapAndBarSameInAllStates": true,
+    "noScriptNamesBearingWarning": true,
+    "controlStringFound": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesMapboxTelemetry": true,
+    "no429": true,
+    "oneGeocodePostNoRoadPost": true,
+    "onlyGeocodeNonGet": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "1198x930",
+   "step": "4 done",
+   "console": [],
+   "chunkShas": [
+    "db810a0e3a4a100b56c1cde18f29b863bafd6921",
+    "db810a0"
+   ],
+   "nonGet": [
+    {
+     "step": "2 coarse search",
+     "method": "POST",
+     "path": "/api/geocode"
+    }
+   ],
+   "tokenChecks": 3,
+   "tokenHits": 0,
+   "states": {
+    "noPin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "list": null,
+     "listDisplay": "none",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"></div>",
+     "listChildren": 0,
+     "scrollHeight": 680,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    },
+    "coarse": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 492.34,
+      "h": 53
+     },
+     "listDisplay": "block",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-search-line\">That search found a town or area. Tap the map on the road where the work starts.</p></div>",
+     "listChildren": 1,
+     "scrollHeight": 680,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    },
+    "outOfRange": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 492.34,
+      "h": 35.5
+     },
+     "listDisplay": "block",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-note-fail mw-search-line\">Latitude must be between -90 and 90</p></div>",
+     "listChildren": 1,
+     "scrollHeight": 680,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    }
+   },
+   "vsLocal": {
+    "noPin": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    },
+    "coarse": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    },
+    "outOfRange": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    }
+   },
+   "landedOn": "/sandbox",
+   "inter": true,
+   "outOfRangeText": "Latitude must be between -90 and 90",
+   "posts": {
+    "geocode": 1,
+    "roads": 0
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "bearingWarning": 0,
+    "coarseNotice": 0,
+    "noticeText": 1,
+    "listClass": 1
+   },
+   "consoleErrors": 0,
+   "consoleTelemetry": 0,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 16
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "noLineListHiddenAndEmpty": true,
+    "noticeIsOneChild": true,
+    "outOfRangeIsOneChild": true,
+    "pxVsLocalZero": true,
+    "listHtmlVsLocalSame": true,
+    "mapAndBarSameInAllStates": true,
+    "noScriptNamesBearingWarning": true,
+    "controlStringFound": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesMapboxTelemetry": true,
+    "no429": true,
+    "oneGeocodePostNoRoadPost": true,
+    "onlyGeocodeNonGet": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "390x844",
+   "step": "4 done",
+   "console": [],
+   "chunkShas": [
+    "db810a0e3a4a100b56c1cde18f29b863bafd6921",
+    "db810a0"
+   ],
+   "nonGet": [
+    {
+     "step": "2 coarse search",
+     "method": "POST",
+     "path": "/api/geocode"
+    }
+   ],
+   "tokenChecks": 3,
+   "tokenHits": 0,
+   "states": {
+    "noPin": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "list": null,
+     "listDisplay": "none",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"></div>",
+     "listChildren": 0,
+     "scrollHeight": 640,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    },
+    "coarse": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "list": {
+      "x": 21,
+      "y": 171.5,
+      "w": 260.16,
+      "h": 70.5
+     },
+     "listDisplay": "block",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-search-line\">That search found a town or area. Tap the map on the road where the work starts.</p></div>",
+     "listChildren": 1,
+     "scrollHeight": 640,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    },
+    "outOfRange": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "list": {
+      "x": 21,
+      "y": 171.5,
+      "w": 260.16,
+      "h": 35.5
+     },
+     "listDisplay": "block",
+     "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-note-fail mw-search-line\">Latitude must be between -90 and 90</p></div>",
+     "listChildren": 1,
+     "scrollHeight": 640,
+     "barText": "No pin yet",
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "axe": []
+    }
+   },
+   "vsLocal": {
+    "noPin": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    },
+    "coarse": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    },
+    "outOfRange": {
+     "largestPx": 0,
+     "diffs": [],
+     "listHtmlSame": true,
+     "barTextSame": true,
+     "flowSame": true,
+     "everyValueSame": true
+    }
+   },
+   "landedOn": "/sandbox",
+   "inter": true,
+   "outOfRangeText": "Latitude must be between -90 and 90",
+   "posts": {
+    "geocode": 1,
+    "roads": 0
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "bearingWarning": 0,
+    "coarseNotice": 0,
+    "noticeText": 1,
+    "listClass": 1
+   },
+   "consoleErrors": 0,
+   "consoleTelemetry": 0,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 5
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "noLineListHiddenAndEmpty": true,
+    "noticeIsOneChild": true,
+    "outOfRangeIsOneChild": true,
+    "pxVsLocalZero": true,
+    "listHtmlVsLocalSame": true,
+    "mapAndBarSameInAllStates": true,
+    "noScriptNamesBearingWarning": true,
+    "controlStringFound": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesMapboxTelemetry": true,
+    "no429": true,
+    "oneGeocodePostNoRoadPost": true,
+    "onlyGeocodeNonGet": true,
+    "tokenNotInPage": true
+   }
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "db810a0e3a4a100b56c1cde18f29b863bafd6921",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "polls": 1,
+  "status": 200,
+  "sha": "db810a0e3a4a100b56c1cde18f29b863bafd6921",
+  "isHead": true,
+  "isFeat": false
+ },
+ "finishedAt": "2026-11-23T19:25:32.593Z",
+ "pass": true
+}
