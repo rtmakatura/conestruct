@@ -1,0 +1,5 @@
+CI run 45274139271 (Python tests) on 2929a5c, 2026-11-23: 1 failed, 3996 passed, 21 skipped.
+
+tests/test_vercel_env_check.py:98 AssertionError: MAPBOX_TOKEN: none of ['lib/geocode.ts:221'] is a line containing it
+
+Cause: scripts/production-env.txt cites the line of geocode.ts that reads MAPBOX_TOKEN; this change moved it from 221 to 236. The cite is corrected. tests/test_vercel_env_check.py run on its own after the correction: passed (see the summary line in rulings.md § Tests).
